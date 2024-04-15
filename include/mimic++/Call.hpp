@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <format>
 #include <optional>
 #include <string>
 #include <tuple>
@@ -47,7 +48,39 @@ namespace mimicpp::call
 		partial,
 		ok
 	};
+}
 
+template <typename Char>
+struct std::formatter<mimicpp::call::MatchCategory, Char>
+	: public std::formatter<std::basic_string_view<Char>, Char>
+{
+	using MatchCategoryT = mimicpp::call::MatchCategory;
+
+	auto format(
+		const MatchCategoryT category,
+		std::format_context& ctx
+	) const
+	{
+		constexpr auto toString = [](const MatchCategoryT cat)
+		{
+			switch (cat)
+			{
+			case MatchCategoryT::no: return "MatchCategory::no";
+			case MatchCategoryT::partial: return "MatchCategory::partial";
+			case MatchCategoryT::ok: return "MatchCategory::ok";
+			}
+
+			throw std::runtime_error{"Unknown category value."};
+		};
+
+		return std::formatter<std::basic_string_view<Char>, Char>::format(
+			toString(category),
+			ctx);
+	}
+};
+
+namespace mimicpp::call
+{
 	template <MatchCategory category>
 	struct GenericSubMatchResult
 		: public std::integral_constant<MatchCategory, category>
