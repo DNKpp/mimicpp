@@ -8,7 +8,11 @@
 
 #pragma once
 
+#include <optional>
+#include <string>
 #include <tuple>
+#include <variant>
+#include <vector>
 
 namespace mimicpp::call
 {
@@ -33,6 +37,98 @@ namespace mimicpp::call
 		ValueCategory fromCategory{};
 		bool fromConst{};
 	};
+}
+
+namespace mimicpp::call
+{
+	enum class MatchCategory
+	{
+		no,
+		partial,
+		ok
+	};
+
+	template <MatchCategory category>
+	struct GenericSubMatchResult
+		: public std::integral_constant<MatchCategory, category>
+	{
+		std::optional<std::string> msg{};
+	};
+
+	using SubMatchResult_NoT = GenericSubMatchResult<MatchCategory::no>;
+	using SubMatchResult_PartialT = GenericSubMatchResult<MatchCategory::partial>;
+	using SubMatchResult_OkT = GenericSubMatchResult<MatchCategory::ok>;
+
+	using SubMatchResultT = std::variant<
+		SubMatchResult_NoT,
+		SubMatchResult_PartialT,
+		SubMatchResult_OkT
+	>;
+
+	template <MatchCategory category>
+	struct GenericMatchResult
+		: public std::integral_constant<MatchCategory, category>
+	{
+		std::vector<GenericSubMatchResult<category>> subMatchResults{};
+	};
+
+	using MatchResult_NoT = GenericMatchResult<MatchCategory::no>;
+	using MatchResult_PartialT = GenericMatchResult<MatchCategory::partial>;
+	using MatchResult_OkT = GenericMatchResult<MatchCategory::ok>;
+
+	using MatchResultT = std::variant<
+		MatchResult_NoT,
+		MatchResult_PartialT,
+		MatchResult_OkT
+	>;
+}
+
+namespace mimicpp::call::detail
+{
+	[[nodiscard]]
+	inline MatchResultT evaluate_sub_match_results(std::vector<SubMatchResultT> subResults)
+	{
+		std::vector<SubMatchResult_NoT> noResults{};
+		std::vector<SubMatchResult_PartialT> partialResults{};
+		std::vector<SubMatchResult_OkT> okResults{};
+
+		static_assert(3 == std::variant_size_v<SubMatchResultT>, "Unexpected SubMatchResult alternative count.");
+		static_assert(3 == std::variant_size_v<MatchResultT>, "Unexpected MatchResult alternative count.");
+
+		for (auto& result : subResults)
+		{
+			if (std::holds_alternative<SubMatchResult_NoT>(result))
+			{
+				noResults.emplace_back(std::get<SubMatchResult_NoT>(std::move(result)));
+			}
+			else if (std::holds_alternative<SubMatchResult_PartialT>(result))
+			{
+				partialResults.emplace_back(std::get<SubMatchResult_PartialT>(std::move(result)));
+			}
+			else
+			{
+				okResults.emplace_back(std::get<SubMatchResult_OkT>(std::move(result)));
+			}
+		}
+
+		if (!std::ranges::empty(noResults))
+		{
+			return MatchResult_NoT{
+				.subMatchResults = std::move(noResults)
+			};
+		}
+
+		if (!std::ranges::empty(partialResults))
+		{
+			return MatchResult_PartialT{
+				.subMatchResults = std::move(partialResults)
+			};
+		}
+
+		return MatchResult_OkT{
+			.subMatchResults = std::move(okResults)
+		};
+	}
 }
 
 #endif
