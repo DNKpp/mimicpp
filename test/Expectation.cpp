@@ -6,6 +6,7 @@
 #include "mimic++/Expectation.hpp"
 
 #include <functional>
+#include <optional>
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -364,4 +365,129 @@ TEMPLATE_TEST_CASE(
 			expectation.consume(call);
 		}
 	}
+}
+
+TEST_CASE("ScopedExpectation is a non-copyable, but movable type.")
+{
+	using ScopedExpectationT = mimicpp::ScopedExpectation<void()>;
+
+	STATIC_REQUIRE(!std::is_copy_constructible_v<ScopedExpectationT>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<ScopedExpectationT>);
+	STATIC_REQUIRE(std::is_move_constructible_v<ScopedExpectationT>);
+	STATIC_REQUIRE(std::is_move_assignable_v<ScopedExpectationT>);
+}
+
+TEST_CASE(
+	"ScopedExpectation handles expectation lifetime and reports when not satisfied.",
+	"[expectation]")
+{
+	using trompeloeil::_;
+	using PolicyMockT = PolicyMock<void()>;
+	using PolicyRefT = PolicyFacade<void(), std::reference_wrapper<PolicyMock<void()>>, UnwrapReferenceWrapper>;
+	using ExpectationT = mimicpp::BasicExpectation<void(), PolicyRefT>;
+	using ScopedExpectationT = mimicpp::ScopedExpectation<void()>;
+	using CollectionT = mimicpp::ExpectationCollection<void()>;
+
+	auto collection = std::make_shared<CollectionT>();
+
+	PolicyMockT policy{};
+	std::optional<ScopedExpectationT> expectation{
+		std::in_place,
+		collection,
+		std::make_unique<ExpectationT>(std::ref(policy))
+	};
+
+	SECTION("When calling is_satisfied()")
+	{
+		const bool isSatisfied = GENERATE(false, true);
+		REQUIRE_CALL(policy, is_satisfied())
+			.RETURN(isSatisfied);
+		REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
+	}
+
+	SECTION("When calling is_saturated()")
+	{
+		const bool isSaturated = GENERATE(false, true);
+		REQUIRE_CALL(policy, is_saturated())
+			.RETURN(isSaturated);
+		REQUIRE(isSaturated == std::as_const(expectation)->is_saturated());
+	}
+
+	SECTION("When ScopedExpectation is moved.")
+	{
+		ScopedExpectationT otherExpectation = *std::move(expectation);
+
+		SECTION("When calling is_satisfied()")
+		{
+			const bool isSatisfied = GENERATE(false, true);
+			REQUIRE_CALL(policy, is_satisfied())
+				.RETURN(isSatisfied);
+			REQUIRE(isSatisfied == std::as_const(otherExpectation).is_satisfied());
+			REQUIRE_THROWS_AS(std::as_const(expectation)->is_satisfied(), std::runtime_error);
+		}
+
+		SECTION("When calling is_saturated()")
+		{
+			const bool isSaturated = GENERATE(false, true);
+			REQUIRE_CALL(policy, is_saturated())
+				.RETURN(isSaturated);
+			REQUIRE(isSaturated == std::as_const(otherExpectation).is_saturated());
+			REQUIRE_THROWS_AS(std::as_const(expectation)->is_saturated(), std::runtime_error);
+		}
+
+		SECTION("And then move assigned.")
+		{
+			expectation = std::move(otherExpectation);
+
+			SECTION("When calling is_satisfied()")
+			{
+				const bool isSatisfied = GENERATE(false, true);
+				REQUIRE_CALL(policy, is_satisfied())
+					.RETURN(isSatisfied);
+				REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
+				REQUIRE_THROWS_AS(std::as_const(otherExpectation).is_satisfied(), std::runtime_error);
+			}
+
+			SECTION("When calling is_saturated()")
+			{
+				const bool isSaturated = GENERATE(false, true);
+				REQUIRE_CALL(policy, is_saturated())
+					.RETURN(isSaturated);
+				REQUIRE(isSaturated == std::as_const(expectation)->is_saturated());
+				REQUIRE_THROWS_AS(std::as_const(otherExpectation).is_saturated(), std::runtime_error);
+			}
+
+			// just move back, so we can unify the cleanup process
+			otherExpectation = *std::move(expectation);
+		}
+
+		SECTION("And then self move assigned.")
+		{
+			otherExpectation = std::move(otherExpectation);
+
+			SECTION("When calling is_satisfied()")
+			{
+				const bool isSatisfied = GENERATE(false, true);
+				REQUIRE_CALL(policy, is_satisfied())
+					.RETURN(isSatisfied);
+				REQUIRE(isSatisfied == std::as_const(otherExpectation).is_satisfied());
+			}
+
+			SECTION("When calling is_saturated()")
+			{
+				const bool isSaturated = GENERATE(false, true);
+				REQUIRE_CALL(policy, is_saturated())
+					.RETURN(isSaturated);
+				REQUIRE(isSaturated == std::as_const(otherExpectation).is_saturated());
+			}
+		}
+
+		// just move back, so we can unify the cleanup process
+		expectation = std::move(otherExpectation);
+	}
+
+	// collection asserts on that in remove
+	ALLOW_CALL(policy, is_satisfied())
+		.RETURN(true);
+	expectation.reset();
 }

@@ -200,6 +200,67 @@ namespace mimicpp
 	private:
 		PolicyListT m_Policies;
 	};
+
+	template <typename Signature>
+	class ScopedExpectation
+	{
+	public:
+		using StorageT = ExpectationCollection<Signature>;
+		using ExpectationT = Expectation<Signature>;
+
+		~ScopedExpectation()
+		{
+			if (m_Storage
+				&& m_Expectation)
+			{
+				m_Storage->remove(m_Expectation);
+			}
+		}
+
+		explicit ScopedExpectation(
+			std::shared_ptr<StorageT> storage,
+			std::shared_ptr<ExpectationT> expectation
+		) noexcept
+			: m_Storage{std::move(storage)},
+			m_Expectation{std::move(expectation)}
+		{
+			assert(m_Storage && "Storage is nullptr.");
+			assert(m_Expectation && "Expectation is nullptr.");
+
+			m_Storage->push(m_Expectation);
+		}
+
+		ScopedExpectation(const ScopedExpectation&) = delete;
+		ScopedExpectation& operator =(const ScopedExpectation&) = delete;
+
+		[[nodiscard]]
+		ScopedExpectation(ScopedExpectation&&) = default;
+		ScopedExpectation& operator =(ScopedExpectation&&) = default;
+
+		[[nodiscard]]
+		bool is_satisfied() const
+		{
+			if (m_Expectation)
+			{
+				return m_Expectation->is_satisfied();
+			}
+			throw std::runtime_error{"Expired expectation."};
+		}
+
+		[[nodiscard]]
+		bool is_saturated() const
+		{
+			if (m_Expectation)
+			{
+				return m_Expectation->is_saturated();
+			}
+			throw std::runtime_error{"Expired expectation."};
+		}
+
+	private:
+		std::shared_ptr<StorageT> m_Storage{};
+		std::shared_ptr<ExpectationT> m_Expectation{};
+	};
 }
 
 #endif
