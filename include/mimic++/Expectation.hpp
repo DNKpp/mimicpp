@@ -136,14 +136,16 @@ namespace mimicpp
 
 		template <typename... PolicyArgs>
 			requires std::constructible_from<PolicyListT, PolicyArgs...>
-		explicit BasicExpectation(PolicyArgs&&... args) noexcept((std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
+		constexpr explicit BasicExpectation(
+			PolicyArgs&&... args
+		) noexcept((std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
 			: m_Policies{std::forward<PolicyArgs>(args)...}
 		{
 		}
 
 		template <typename... OtherPolicies, typename PolicyArg>
 			requires std::constructible_from<PolicyListT, OtherPolicies&&..., PolicyArg>
-		explicit BasicExpectation(BasicExpectation<Signature, OtherPolicies...>&& other, PolicyArg&& arg)
+		constexpr explicit BasicExpectation(BasicExpectation<Signature, OtherPolicies...>&& other, PolicyArg&& arg)
 			: m_Policies{
 				std::tuple_cat(
 					std::move(other).m_Policies,
@@ -153,7 +155,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		bool is_satisfied() const noexcept override
+		constexpr bool is_satisfied() const noexcept override
 		{
 			return std::apply(
 				[](const auto&... policies) noexcept
@@ -164,7 +166,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		bool is_saturated() const noexcept override
+		constexpr bool is_saturated() const noexcept override
 		{
 			return std::apply(
 				[](const auto&... policies) noexcept
@@ -175,7 +177,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		bool matches(const CallT& call) const noexcept override
+		constexpr bool matches(const CallT& call) const noexcept override
 		{
 			return std::apply(
 				[&](const auto&... policies) noexcept
@@ -185,7 +187,7 @@ namespace mimicpp
 				m_Policies);
 		}
 
-		void consume(const CallT& call) noexcept override
+		constexpr void consume(const CallT& call) noexcept override
 		{
 			std::apply(
 				[&](auto&... policies) noexcept
