@@ -25,7 +25,7 @@ namespace mimicpp
 	class Expectation
 	{
 	public:
-		using CallT = Call<Signature>;
+		using CallInfoT = call::Info<Signature>;
 
 		virtual ~Expectation() = default;
 
@@ -44,15 +44,15 @@ namespace mimicpp
 		virtual bool is_saturated() const noexcept = 0;
 
 		[[nodiscard]]
-		virtual bool matches(const CallT& call) const noexcept = 0;
-		virtual void consume(const CallT& call) noexcept = 0;
+		virtual bool matches(const CallInfoT& call) const noexcept = 0;
+		virtual void consume(const CallInfoT& call) noexcept = 0;
 	};
 
 	template <typename Signature>
 	class ExpectationCollection
 	{
 	public:
-		using CallT = Call<Signature>;
+		using CallInfoT = call::Info<Signature>;
 		using ExpectationT = Expectation<Signature>;
 
 		~ExpectationCollection() = default;
@@ -89,7 +89,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		bool consume(const CallT& call) noexcept
+		bool consume(const CallInfoT& call) noexcept
 		{
 			const std::scoped_lock lock{m_ExpectationsMx};
 
@@ -118,11 +118,11 @@ namespace mimicpp
 	concept expectation_policy_for = std::movable<T>
 									&& std::is_destructible_v<T>
 									&& std::same_as<T, std::remove_cvref_t<T>>
-									&& requires(T& policy, const Call<Signature>& call)
+									&& requires(T& policy, const call::Info<Signature>& call)
 									{
-										{ policy.is_satisfied() } noexcept -> std::convertible_to<bool>;
-										{ policy.is_saturated() } noexcept -> std::convertible_to<bool>;
-										{ policy.matches(call) } noexcept -> std::convertible_to<bool>;
+										{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
+										{ std::as_const(policy).is_saturated() } noexcept -> std::convertible_to<bool>;
+										{ std::as_const(policy).matches(call) } noexcept -> std::convertible_to<bool>;
 										{ policy.consume(call) } noexcept;
 									};
 
@@ -132,7 +132,7 @@ namespace mimicpp
 	{
 	public:
 		using PolicyListT = std::tuple<Policies...>;
-		using CallT = Call<Signature>;
+		using CallInfoT = call::Info<Signature>;
 
 		template <typename... PolicyArgs>
 			requires std::constructible_from<PolicyListT, PolicyArgs...>
@@ -177,7 +177,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr bool matches(const CallT& call) const noexcept override
+		constexpr bool matches(const CallInfoT& call) const noexcept override
 		{
 			return std::apply(
 				[&](const auto&... policies) noexcept
@@ -187,7 +187,7 @@ namespace mimicpp
 				m_Policies);
 		}
 
-		constexpr void consume(const CallT& call) noexcept override
+		constexpr void consume(const CallInfoT& call) noexcept override
 		{
 			std::apply(
 				[&](auto&... policies) noexcept

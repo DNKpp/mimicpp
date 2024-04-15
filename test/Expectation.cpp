@@ -19,12 +19,12 @@ namespace
 		: public mimicpp::Expectation<void()>
 	{
 	public:
-		using CallT = mimicpp::Call<void()>;
+		using CallInfoT = mimicpp::call::Info<void()>;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
 		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept override);
-		MAKE_CONST_MOCK1(matches, bool(const CallT&), noexcept override);
-		MAKE_MOCK1(consume, void(const CallT&), noexcept override);
+		MAKE_CONST_MOCK1(matches, bool(const CallInfoT&), noexcept override);
+		MAKE_MOCK1(consume, void(const CallInfoT&), noexcept override);
 	};
 }
 
@@ -51,7 +51,7 @@ TEST_CASE(
 )
 {
 	using StorageT = mimicpp::ExpectationCollection<void()>;
-	using CallT = mimicpp::Call<void()>;
+	using CallInfoT = mimicpp::call::Info<void()>;
 	using trompeloeil::_;
 
 	StorageT storage{};
@@ -62,10 +62,10 @@ TEST_CASE(
 		storage.push(exp);
 	}
 
-	const CallT call{
+	const CallInfoT call{
 		.params = {},
 		.fromUuid = 0,
-		.fromCategory = mimicpp::ValueCategory::lvalue,
+		.fromCategory = mimicpp::call::ValueCategory::lvalue,
 		.fromConst = false
 	};
 
@@ -123,21 +123,21 @@ namespace
 	class PolicyMock
 	{
 	public:
-		using CallT = mimicpp::Call<Signature>;
+		using CallInfoT = mimicpp::call::Info<Signature>;
 
 		static constexpr bool trompeloeil_movable_mock = true;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
 		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept);
-		MAKE_CONST_MOCK1(matches, bool(const CallT&), noexcept);
-		MAKE_MOCK1(consume, void(const CallT&), noexcept);
+		MAKE_CONST_MOCK1(matches, bool(const CallInfoT&), noexcept);
+		MAKE_MOCK1(consume, void(const CallInfoT&), noexcept);
 	};
 
 	template <typename Signature>
 	class PolicyFake
 	{
 	public:
-		using CallT = mimicpp::Call<Signature>;
+		using CallInfoT = mimicpp::call::Info<Signature>;
 
 		[[nodiscard]]
 		static constexpr bool is_satisfied() noexcept
@@ -152,12 +152,12 @@ namespace
 		}
 
 		[[nodiscard]]
-		static constexpr bool matches(const CallT& call) noexcept
+		static constexpr bool matches(const CallInfoT& call) noexcept
 		{
 			return matches(call);
 		}
 
-		static constexpr void consume(const CallT& call) noexcept
+		static constexpr void consume(const CallInfoT& call) noexcept
 		{
 		}
 	};
@@ -170,7 +170,7 @@ namespace
 	class PolicyFacade
 	{
 	public:
-		using CallT = mimicpp::Call<Signature>;
+		using CallT = mimicpp::call::Info<Signature>;
 
 		Policy policy{};
 		Projection projection{};
@@ -237,12 +237,12 @@ TEMPLATE_TEST_CASE(
 	using trompeloeil::_;
 	using PolicyMockT = PolicyMock<TestType>;
 	using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
-	using CallT = mimicpp::Call<TestType>;
+	using CallInfoT = mimicpp::call::Info<TestType>;
 
-	const CallT call{
+	const CallInfoT call{
 		.params = {},
 		.fromUuid = 0,
-		.fromCategory = mimicpp::ValueCategory::lvalue,
+		.fromCategory = mimicpp::call::ValueCategory::lvalue,
 		.fromConst = false
 	};
 

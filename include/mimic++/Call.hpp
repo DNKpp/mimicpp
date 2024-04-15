@@ -10,7 +10,7 @@
 
 #include <tuple>
 
-namespace mimicpp
+namespace mimicpp::call
 {
 	enum class ValueCategory
 	{
@@ -19,10 +19,10 @@ namespace mimicpp
 	};
 
 	template <typename Signature>
-	class Call;
+	class Info;
 
 	template <typename Return, typename... Args>
-	class Call<Return(Args...)>
+	class Info<Return(Args...)>
 	{
 	public:
 		using ParamListT = std::tuple<std::reference_wrapper<std::remove_reference_t<Args>>...>;
