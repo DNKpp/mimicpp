@@ -226,3 +226,142 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::expectation_policy_for<Policy, Signature>);
 }
 
+TEMPLATE_TEST_CASE(
+	"mimicpp::BasicExpectation can be extended with an arbitrary policy amount.",
+	"[expectation]",
+	void(),
+	int()
+)
+{
+	using trompeloeil::_;
+	using PolicyMockT = PolicyMock<TestType>;
+	using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
+	using CallT = mimicpp::Call<TestType>;
+
+	const CallT call{
+		.params = {},
+		.fromUuid = 0,
+		.fromCategory = mimicpp::ValueCategory::lvalue,
+		.fromConst = false
+	};
+
+	SECTION("With no policies at all.")
+	{
+		mimicpp::BasicExpectation<TestType> expectation{};
+
+		REQUIRE(std::as_const(expectation).is_satisfied());
+		REQUIRE(!std::as_const(expectation).is_saturated());
+		REQUIRE(std::as_const(expectation).matches(call));
+		REQUIRE_NOTHROW(expectation.consume(call));
+	}
+
+	SECTION("With one policy.")
+	{
+		PolicyMockT policy{};
+		mimicpp::BasicExpectation<TestType, PolicyRefT> expectation{PolicyRefT{std::ref(policy)}};
+
+		const bool isSatisfied = GENERATE(false, true);
+		REQUIRE_CALL(policy, is_satisfied())
+			.RETURN(isSatisfied);
+		REQUIRE(isSatisfied == std::as_const(expectation).is_satisfied());
+
+		const bool isSaturated = GENERATE(false, true);
+		REQUIRE_CALL(policy, is_saturated())
+			.RETURN(isSaturated);
+		REQUIRE(isSaturated == std::as_const(expectation).is_saturated());
+
+		const bool matches = GENERATE(false, true);
+		REQUIRE_CALL(policy, matches(_))
+			.LR_WITH(&_1 == &call)
+			.RETURN(matches);
+		REQUIRE(matches == std::as_const(expectation).matches(call));
+
+		REQUIRE_CALL(policy, consume(_))
+			.LR_WITH(&_1 == &call);
+		expectation.consume(call);
+	}
+
+	SECTION("With two policies.")
+	{
+		PolicyMockT policy1{};
+		PolicyMockT policy2{};
+		mimicpp::BasicExpectation<TestType, PolicyRefT, PolicyRefT> expectation{
+			PolicyRefT{std::ref(policy1)},
+			PolicyRefT{std::ref(policy2)}
+		};
+
+		SECTION("When calling is_satisfied()")
+		{
+			const bool isSatisfied1 = GENERATE(false, true);
+			const bool isSatisfied2 = GENERATE(false, true);
+			const bool expectedIsSatisfied = isSatisfied1 && isSatisfied2;
+			REQUIRE_CALL(policy1, is_satisfied())
+				.RETURN(isSatisfied1);
+			auto policy2Expectation = std::invoke(
+				[&]() -> std::unique_ptr<trompeloeil::expectation>
+				{
+					if (isSatisfied1)
+					{
+						return NAMED_REQUIRE_CALL(policy2, is_satisfied())
+							.RETURN(isSatisfied2);
+					}
+					return nullptr;
+				});
+
+			REQUIRE(expectedIsSatisfied == std::as_const(expectation).is_satisfied());
+		}
+
+		SECTION("When calling is_saturated()")
+		{
+			const bool isSaturated1 = GENERATE(false, true);
+			const bool isSaturated2 = GENERATE(false, true);
+			const bool expectedIsSaturated = isSaturated1 || isSaturated2;
+			REQUIRE_CALL(policy1, is_saturated())
+				.RETURN(isSaturated1);
+			auto policy2Expectation = std::invoke(
+				[&]() -> std::unique_ptr<trompeloeil::expectation>
+				{
+					if (!isSaturated1)
+					{
+						return NAMED_REQUIRE_CALL(policy2, is_saturated())
+							.RETURN(isSaturated2);
+					}
+					return nullptr;
+				});
+
+			REQUIRE(expectedIsSaturated == std::as_const(expectation).is_saturated());
+		}
+
+		SECTION("When calling matches()")
+		{
+			const bool matches1 = GENERATE(false, true);
+			const bool matches2 = GENERATE(false, true);
+			const bool expectedMatches = matches1 && matches2;
+			REQUIRE_CALL(policy1, matches(_))
+				.LR_WITH(&_1 == &call)
+				.RETURN(matches1);
+			auto policy2Expectation = std::invoke(
+				[&]() -> std::unique_ptr<trompeloeil::expectation>
+				{
+					if (matches1)
+					{
+						return NAMED_REQUIRE_CALL(policy2, matches(_))
+								.LR_WITH(&_1 == &call)
+								.RETURN(matches2);
+					}
+					return nullptr;
+				});
+
+			REQUIRE(expectedMatches == std::as_const(expectation).matches(call));
+		}
+
+		SECTION("When calling consume()")
+		{
+			REQUIRE_CALL(policy1, consume(_))
+			   .LR_WITH(&_1 == &call);
+			REQUIRE_CALL(policy2, consume(_))
+				.LR_WITH(&_1 == &call);
+			expectation.consume(call);
+		}
+	}
+}

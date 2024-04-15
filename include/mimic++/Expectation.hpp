@@ -125,6 +125,79 @@ namespace mimicpp
 										{ policy.matches(call) } noexcept -> std::convertible_to<bool>;
 										{ policy.consume(call) } noexcept;
 									};
+
+	template <typename Signature, expectation_policy_for<Signature>... Policies>
+	class BasicExpectation final
+		: public Expectation<Signature>
+	{
+	public:
+		using PolicyListT = std::tuple<Policies...>;
+		using CallT = Call<Signature>;
+
+		template <typename... PolicyArgs>
+			requires std::constructible_from<PolicyListT, PolicyArgs...>
+		explicit BasicExpectation(PolicyArgs&&... args) noexcept((std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
+			: m_Policies{std::forward<PolicyArgs>(args)...}
+		{
+		}
+
+		template <typename... OtherPolicies, typename PolicyArg>
+			requires std::constructible_from<PolicyListT, OtherPolicies&&..., PolicyArg>
+		explicit BasicExpectation(BasicExpectation<Signature, OtherPolicies...>&& other, PolicyArg&& arg)
+			: m_Policies{
+				std::tuple_cat(
+					std::move(other).m_Policies,
+					std::forward_as_tuple(std::forward<PolicyArg>(arg)))
+			}
+		{
+		}
+
+		[[nodiscard]]
+		bool is_satisfied() const noexcept override
+		{
+			return std::apply(
+				[](const auto&... policies) noexcept
+				{
+					return (... && policies.is_satisfied());
+				},
+				m_Policies);
+		}
+
+		[[nodiscard]]
+		bool is_saturated() const noexcept override
+		{
+			return std::apply(
+				[](const auto&... policies) noexcept
+				{
+					return (... || policies.is_saturated());
+				},
+				m_Policies);
+		}
+
+		[[nodiscard]]
+		bool matches(const CallT& call) const noexcept override
+		{
+			return std::apply(
+				[&](const auto&... policies) noexcept
+				{
+					return (... && policies.matches(call));
+				},
+				m_Policies);
+		}
+
+		void consume(const CallT& call) noexcept override
+		{
+			std::apply(
+				[&](auto&... policies) noexcept
+				{
+					(..., policies.consume(call));
+				},
+				m_Policies);
+		}
+
+	private:
+		PolicyListT m_Policies;
+	};
 }
 
 #endif
