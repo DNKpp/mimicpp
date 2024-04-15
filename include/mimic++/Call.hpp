@@ -86,6 +86,9 @@ namespace mimicpp::call
 		: public std::integral_constant<MatchCategory, category>
 	{
 		std::optional<std::string> msg{};
+
+		[[nodiscard]]
+		friend bool operator==(const GenericSubMatchResult&, const GenericSubMatchResult&) = default;
 	};
 
 	using SubMatchResult_NoT = GenericSubMatchResult<MatchCategory::no>;
@@ -103,6 +106,9 @@ namespace mimicpp::call
 		: public std::integral_constant<MatchCategory, category>
 	{
 		std::vector<GenericSubMatchResult<category>> subMatchResults{};
+
+		[[nodiscard]]
+		friend bool operator==(const GenericMatchResult&, const GenericMatchResult&) = default;
 	};
 
 	using MatchResult_NoT = GenericMatchResult<MatchCategory::no>;
