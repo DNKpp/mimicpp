@@ -7,11 +7,14 @@
 
 #include <functional>
 #include <optional>
+#include <ranges>
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/trompeloeil.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/generators/catch_generators_range.hpp>
+#include <catch2/matchers/catch_matchers_templated.hpp>
 
 namespace
 {
@@ -20,16 +23,17 @@ namespace
 	{
 	public:
 		using CallInfoT = mimicpp::call::Info<void()>;
+		using MatchResultT = mimicpp::call::MatchResultT;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
 		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept override);
-		MAKE_CONST_MOCK1(matches, bool(const CallInfoT&), noexcept override);
-		MAKE_MOCK1(consume, void(const CallInfoT&), noexcept override);
+		MAKE_CONST_MOCK1(matches, MatchResultT(const CallInfoT&), override);
+		MAKE_MOCK1(consume, void(const CallInfoT&), override);
 	};
 }
 
 TEST_CASE(
-	"mimicpp::ExpectationCollection collects expectation references.",
+	"mimicpp::ExpectationCollection collects expectations.",
 	"[expectation]"
 )
 {
@@ -50,8 +54,9 @@ TEST_CASE(
 	"[expectation]"
 )
 {
+	using namespace mimicpp::call;
 	using StorageT = mimicpp::ExpectationCollection<void()>;
-	using CallInfoT = mimicpp::call::Info<void()>;
+	using CallInfoT = Info<void()>;
 	using trompeloeil::_;
 
 	StorageT storage{};
@@ -65,7 +70,7 @@ TEST_CASE(
 	const CallInfoT call{
 		.params = {},
 		.fromUuid = 0,
-		.fromCategory = mimicpp::call::ValueCategory::lvalue,
+		.fromCategory = ValueCategory::lvalue,
 		.fromConst = false
 	};
 
@@ -79,14 +84,14 @@ TEST_CASE(
 	REQUIRE_CALL(*expectations[1], matches(_))
 		.LR_WITH(&_1 == &call)
 		.IN_SEQUENCE(sequence)
-		.RETURN(false);
+		.RETURN(MatchResult_NoT{});
 	REQUIRE_CALL(*expectations[2], is_saturated())
 		.IN_SEQUENCE(sequence)
 		.RETURN(false);
 	REQUIRE_CALL(*expectations[2], matches(_))
 		.LR_WITH(&_1 == &call)
 		.IN_SEQUENCE(sequence)
-		.RETURN(true);
+		.RETURN(MatchResult_OkT{});
 	// expectations[3] is never queried
 	REQUIRE_CALL(*expectations[2], consume(_))
 		.LR_WITH(&_1 == &call)
@@ -96,22 +101,27 @@ TEST_CASE(
 
 	SECTION("All expectations are still part of the collection.")
 	{
+		trompeloeil::sequence secondSequence{};
 		REQUIRE_CALL(*expectations[0], is_saturated())
-			.IN_SEQUENCE(sequence)
+			.IN_SEQUENCE(secondSequence)
 			.RETURN(true);
 		REQUIRE_CALL(*expectations[1], is_saturated())
-			.IN_SEQUENCE(sequence)
-			.RETURN(true);
+			.IN_SEQUENCE(secondSequence)
+			.RETURN(false);
+		REQUIRE_CALL(*expectations[1], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(secondSequence)
+			.RETURN(MatchResult_PartialT{});
 		REQUIRE_CALL(*expectations[2], is_saturated())
-			.IN_SEQUENCE(sequence)
+			.IN_SEQUENCE(secondSequence)
 			.RETURN(true);
 		REQUIRE_CALL(*expectations[3], is_saturated())
-			.IN_SEQUENCE(sequence)
+			.IN_SEQUENCE(secondSequence)
 			.RETURN(false);
 		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
-			.IN_SEQUENCE(sequence)
-			.RETURN(false);
+			.IN_SEQUENCE(secondSequence)
+			.RETURN(MatchResult_NoT{});
 
 		REQUIRE(!storage.consume(call));
 	}
@@ -124,12 +134,13 @@ namespace
 	{
 	public:
 		using CallInfoT = mimicpp::call::Info<Signature>;
+		using SubMatchT = mimicpp::call::SubMatchResultT;
 
 		static constexpr bool trompeloeil_movable_mock = true;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
 		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept);
-		MAKE_CONST_MOCK1(matches, bool(const CallInfoT&), noexcept);
+		MAKE_CONST_MOCK1(matches, SubMatchT(const CallInfoT&), noexcept);
 		MAKE_MOCK1(consume, void(const CallInfoT&), noexcept);
 	};
 
@@ -138,6 +149,7 @@ namespace
 	{
 	public:
 		using CallInfoT = mimicpp::call::Info<Signature>;
+		using SubMatchT = mimicpp::call::SubMatchResultT;
 
 		[[nodiscard]]
 		static constexpr bool is_satisfied() noexcept
@@ -152,7 +164,7 @@ namespace
 		}
 
 		[[nodiscard]]
-		static constexpr bool matches(const CallInfoT& call) noexcept
+		static constexpr SubMatchT matches(const CallInfoT& call) noexcept
 		{
 			return matches(call);
 		}
@@ -171,32 +183,33 @@ namespace
 	{
 	public:
 		using CallT = mimicpp::call::Info<Signature>;
+		using SubMatchT = mimicpp::call::SubMatchResultT;
 
 		Policy policy{};
 		Projection projection{};
 
 		[[nodiscard]]
-		bool is_satisfied() const noexcept
+		constexpr bool is_satisfied() const noexcept
 		{
 			return std::invoke(projection, policy)
 				.is_satisfied();
 		}
 
 		[[nodiscard]]
-		bool is_saturated() const noexcept
+		constexpr bool is_saturated() const noexcept
 		{
 			return std::invoke(projection, policy)
 				.is_saturated();
 		}
 
 		[[nodiscard]]
-		bool matches(const CallT& call) const noexcept
+		constexpr SubMatchT matches(const CallT& call) const noexcept
 		{
 			return std::invoke(projection, policy)
 				.matches(call);
 		}
 
-		void consume(const CallT& call) noexcept
+		constexpr void consume(const CallT& call) noexcept
 		{
 			std::invoke(projection, policy)
 				.consume(call);
@@ -227,6 +240,78 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::expectation_policy_for<Policy, Signature>);
 }
 
+namespace
+{
+	const std::array allSubMatchResultAlternatives = std::to_array<mimicpp::call::SubMatchResultT>(
+		{
+			mimicpp::call::SubMatchResult_NoT{},
+			mimicpp::call::SubMatchResult_PartialT{},
+			mimicpp::call::SubMatchResult_OkT{}
+		});
+
+	class CallMatchCategoryMatcher final
+		: public Catch::Matchers::MatcherGenericBase
+	{
+	public:
+		using CategoryT = mimicpp::call::MatchCategory;
+
+		[[nodiscard]]
+		explicit CallMatchCategoryMatcher(const CategoryT category) noexcept
+			: m_Category{category}
+		{
+		}
+
+		bool match(const auto& result) const
+		{
+			return m_Category == std::visit(
+						[](const auto& inner) { return inner.value; },
+						result);
+		}
+
+		std::string describe() const override
+		{
+			return std::format(
+				"matches category: {}",
+				m_Category);
+		}
+
+	private:
+		CategoryT m_Category;
+	};
+
+	[[nodiscard]]
+	CallMatchCategoryMatcher matches_category(const mimicpp::call::MatchCategory category) noexcept
+	{
+		return CallMatchCategoryMatcher{category};
+	}
+
+	[[nodiscard]]
+	CallMatchCategoryMatcher matches_category_of(const auto& result) noexcept
+	{
+		return matches_category(
+			std::visit(
+				[](const auto& inner) { return inner.value; },
+				result));
+	}
+
+	template <std::ranges::input_range Range>
+	[[nodiscard]]
+	CallMatchCategoryMatcher matches_least_category_of(Range&& results) noexcept
+	{
+		auto categories = std::forward<Range>(results)
+						| std::views::transform(
+							[](const auto& el) noexcept
+							{
+								return std::visit(
+									[](const auto& inner) noexcept { return inner.value; },
+									el);
+							});
+
+		return matches_category(
+			std::ranges::min(categories));
+	}
+}
+
 TEMPLATE_TEST_CASE(
 	"mimicpp::BasicExpectation can be extended with an arbitrary policy amount.",
 	"[expectation]",
@@ -252,7 +337,7 @@ TEMPLATE_TEST_CASE(
 
 		REQUIRE(std::as_const(expectation).is_satisfied());
 		REQUIRE(!std::as_const(expectation).is_saturated());
-		REQUIRE(std::as_const(expectation).matches(call));
+		REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
 		REQUIRE_NOTHROW(expectation.consume(call));
 	}
 
@@ -271,11 +356,13 @@ TEMPLATE_TEST_CASE(
 			.RETURN(isSaturated);
 		REQUIRE(isSaturated == std::as_const(expectation).is_saturated());
 
-		const bool matches = GENERATE(false, true);
+		const auto matchesResult = GENERATE(from_range(allSubMatchResultAlternatives));
 		REQUIRE_CALL(policy, matches(_))
 			.LR_WITH(&_1 == &call)
-			.RETURN(matches);
-		REQUIRE(matches == std::as_const(expectation).matches(call));
+			.RETURN(matchesResult);
+		REQUIRE_THAT(
+			std::as_const(expectation).matches(call),
+			matches_category_of(matchesResult));
 
 		REQUIRE_CALL(policy, consume(_))
 			.LR_WITH(&_1 == &call);
@@ -335,25 +422,19 @@ TEMPLATE_TEST_CASE(
 
 		SECTION("When calling matches()")
 		{
-			const bool matches1 = GENERATE(false, true);
-			const bool matches2 = GENERATE(false, true);
-			const bool expectedMatches = matches1 && matches2;
+			const auto matchResult1 = GENERATE(from_range(allSubMatchResultAlternatives));
+			const auto matchResult2 = GENERATE(from_range(allSubMatchResultAlternatives));
+
 			REQUIRE_CALL(policy1, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(matches1);
-			auto policy2Expectation = std::invoke(
-				[&]() -> std::unique_ptr<trompeloeil::expectation>
-				{
-					if (matches1)
-					{
-						return NAMED_REQUIRE_CALL(policy2, matches(_))
-								.LR_WITH(&_1 == &call)
-								.RETURN(matches2);
-					}
-					return nullptr;
-				});
+				.RETURN(matchResult1);
+			REQUIRE_CALL(policy2, matches(_))
+				.LR_WITH(&_1 == &call)
+				.RETURN(matchResult2);
 
-			REQUIRE(expectedMatches == std::as_const(expectation).matches(call));
+			REQUIRE_THAT(
+				std::as_const(expectation).matches(call),
+				matches_least_category_of(std::array{matchResult1, matchResult2}));
 		}
 
 		SECTION("When calling consume()")

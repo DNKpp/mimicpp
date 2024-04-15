@@ -44,8 +44,8 @@ namespace mimicpp
 		virtual bool is_saturated() const noexcept = 0;
 
 		[[nodiscard]]
-		virtual bool matches(const CallInfoT& call) const noexcept = 0;
-		virtual void consume(const CallInfoT& call) noexcept = 0;
+		virtual call::MatchResultT matches(const CallInfoT& call) const = 0;
+		virtual void consume(const CallInfoT& call) = 0;
 	};
 
 	template <typename Signature>
@@ -89,21 +89,18 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		bool consume(const CallInfoT& call) noexcept
+		bool consume(const CallInfoT& call)
 		{
 			const std::scoped_lock lock{m_ExpectationsMx};
 
-			if (const auto iter = std::ranges::find_if(
-				m_Expectations,
-				[&](const auto& exp)
-				{
-					return !exp->is_saturated()
-							&& exp->matches(call);
-				});
-				iter != std::ranges::end(m_Expectations))
+			for (auto& exp : m_Expectations)
 			{
-				(*iter)->consume(call);
-				return true;
+				if (!exp->is_saturated()
+					&& std::holds_alternative<call::MatchResult_OkT>(exp->matches(call)))
+				{
+					exp->consume(call);
+					return true;
+				}
 			}
 
 			return false;
@@ -122,7 +119,7 @@ namespace mimicpp
 									{
 										{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
 										{ std::as_const(policy).is_saturated() } noexcept -> std::convertible_to<bool>;
-										{ std::as_const(policy).matches(call) } noexcept -> std::convertible_to<bool>;
+										{ std::as_const(policy).matches(call) } noexcept -> std::convertible_to<call::SubMatchResultT>;
 										{ policy.consume(call) } noexcept;
 									};
 
@@ -177,17 +174,20 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr bool matches(const CallInfoT& call) const noexcept override
+		constexpr call::MatchResultT matches(const CallInfoT& call) const override
 		{
-			return std::apply(
-				[&](const auto&... policies) noexcept
-				{
-					return (... && policies.matches(call));
-				},
-				m_Policies);
+			return call::detail::evaluate_sub_match_results(
+				std::apply(
+					[&](const auto&... policies)
+					{
+						return std::vector<call::SubMatchResultT>{
+							policies.matches(call)...
+						};
+					},
+					m_Policies));
 		}
 
-		constexpr void consume(const CallInfoT& call) noexcept override
+		constexpr void consume(const CallInfoT& call) override
 		{
 			std::apply(
 				[&](auto&... policies) noexcept
