@@ -113,6 +113,18 @@ namespace mimicpp
 		std::vector<std::shared_ptr<ExpectationT>> m_Expectations{};
 		std::mutex m_ExpectationsMx{};
 	};
+
+	template <typename T, typename Signature>
+	concept expectation_policy_for = std::movable<T>
+									&& std::is_destructible_v<T>
+									&& std::same_as<T, std::remove_cvref_t<T>>
+									&& requires(T& policy, const Call<Signature>& call)
+									{
+										{ policy.is_satisfied() } noexcept -> std::convertible_to<bool>;
+										{ policy.is_saturated() } noexcept -> std::convertible_to<bool>;
+										{ policy.matches(call) } noexcept -> std::convertible_to<bool>;
+										{ policy.consume(call) } noexcept;
+									};
 }
 
 #endif

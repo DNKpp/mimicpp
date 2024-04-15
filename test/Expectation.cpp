@@ -115,3 +115,114 @@ TEST_CASE(
 		REQUIRE(!storage.consume(call));
 	}
 }
+
+namespace
+{
+	template <typename Signature>
+	class PolicyMock
+	{
+	public:
+		using CallT = mimicpp::Call<Signature>;
+
+		static constexpr bool trompeloeil_movable_mock = true;
+
+		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
+		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept);
+		MAKE_CONST_MOCK1(matches, bool(const CallT&), noexcept);
+		MAKE_MOCK1(consume, void(const CallT&), noexcept);
+	};
+
+	template <typename Signature>
+	class PolicyFake
+	{
+	public:
+		using CallT = mimicpp::Call<Signature>;
+
+		[[nodiscard]]
+		static constexpr bool is_satisfied() noexcept
+		{
+			return false;
+		}
+
+		[[nodiscard]]
+		static constexpr bool is_saturated() noexcept
+		{
+			return false;
+		}
+
+		[[nodiscard]]
+		static constexpr bool matches(const CallT& call) noexcept
+		{
+			return matches(call);
+		}
+
+		static constexpr void consume(const CallT& call) noexcept
+		{
+		}
+	};
+
+	template <typename Signature, typename Policy, typename Projection>
+	// enable, when trompeloeil fully supports movable mocks
+	//requires mimicpp::expectation_policy_for<
+	//	std::remove_cvref_t<std::invoke_result_t<Projection, Policy>>,
+	//	Signature>
+	class PolicyFacade
+	{
+	public:
+		using CallT = mimicpp::Call<Signature>;
+
+		Policy policy{};
+		Projection projection{};
+
+		[[nodiscard]]
+		bool is_satisfied() const noexcept
+		{
+			return std::invoke(projection, policy)
+				.is_satisfied();
+		}
+
+		[[nodiscard]]
+		bool is_saturated() const noexcept
+		{
+			return std::invoke(projection, policy)
+				.is_saturated();
+		}
+
+		[[nodiscard]]
+		bool matches(const CallT& call) const noexcept
+		{
+			return std::invoke(projection, policy)
+				.matches(call);
+		}
+
+		void consume(const CallT& call) noexcept
+		{
+			std::invoke(projection, policy)
+				.consume(call);
+		}
+	};
+
+	class UnwrapReferenceWrapper
+	{
+	public:
+		template <typename T>
+		constexpr T& operator ()(const std::reference_wrapper<T> ref) const noexcept
+		{
+			return ref.get();
+		}
+	};
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"mimicpp::expectation_policy_for determines, whether the type can be used in combination with the given signature.",
+	"[expectation]",
+	((bool expected, typename Policy, typename Signature), expected, Policy, Signature),
+	(false, PolicyFake<void()>, int()),	// incompatible return type
+	(false, PolicyFake<void()>, void(int)),	// incompatible param
+	(true, PolicyFake<void()>, void()),
+	(true, PolicyFacade<void(), std::reference_wrapper<PolicyFake<void()>>, UnwrapReferenceWrapper>, void())
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::expectation_policy_for<Policy, Signature>);
+}
+
