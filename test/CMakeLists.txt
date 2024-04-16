@@ -6,6 +6,7 @@ add_executable(
 	mimicpp-tests
 	"Call.cpp"
 	"Expectation.cpp"
+	"TypeTraits.cpp"
 )
 
 target_link_libraries(
