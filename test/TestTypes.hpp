@@ -25,16 +25,20 @@ public:
 	using CallInfoT = mimicpp::call::Info<Signature>;
 	using SubMatchT = mimicpp::call::SubMatchResultT;
 
-	[[nodiscard]]
-	static constexpr bool is_satisfied() noexcept
-	{
-		return false;
-	}
+	bool isSatisfied{};
 
 	[[nodiscard]]
-	static constexpr SubMatchT matches(const CallInfoT& call) noexcept
+	constexpr bool is_satisfied() const noexcept
 	{
-		return matches(call);
+		return isSatisfied;
+	}
+
+	SubMatchT matchResult{};
+
+	[[nodiscard]]
+	constexpr SubMatchT matches(const CallInfoT& call) const noexcept
+	{
+		return matchResult;
 	}
 
 	static constexpr void consume(const CallInfoT& call) noexcept
