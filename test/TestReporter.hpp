@@ -12,10 +12,10 @@
 
 #define MIMICPP_REPORTER_DEFINED
 
-inline static std::vector<mimicpp::call::MatchResult_NoT> g_NoMatchResults{};
-inline static std::vector<mimicpp::call::MatchResult_PartialT> g_PartialMatchResults{};
-inline static std::vector<mimicpp::call::MatchResult_OkT> g_OkMatchResults{};
-inline static std::vector<std::any> g_UnsatisfiedExpectations{};
+inline std::vector<mimicpp::call::MatchResult_NoT> g_NoMatchResults{};
+inline std::vector<mimicpp::call::MatchResult_PartialT> g_PartialMatchResults{};
+inline std::vector<mimicpp::call::MatchResult_OkT> g_OkMatchResults{};
+inline std::vector<std::any> g_UnsatisfiedExpectations{};
 
 class TestExpectationError
 {
