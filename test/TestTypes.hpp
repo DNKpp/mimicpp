@@ -32,12 +32,6 @@ public:
 	}
 
 	[[nodiscard]]
-	static constexpr bool is_saturated() noexcept
-	{
-		return false;
-	}
-
-	[[nodiscard]]
 	static constexpr SubMatchT matches(const CallInfoT& call) noexcept
 	{
 		return matches(call);
@@ -67,13 +61,6 @@ public:
 	{
 		return std::invoke(projection, policy)
 			.is_satisfied();
-	}
-
-	[[nodiscard]]
-	constexpr bool is_saturated() const noexcept
-	{
-		return std::invoke(projection, policy)
-			.is_saturated();
 	}
 
 	[[nodiscard]]
