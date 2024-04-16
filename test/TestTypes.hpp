@@ -23,7 +23,7 @@ class PolicyFake
 {
 public:
 	using CallInfoT = mimicpp::call::Info<Signature>;
-	using SubMatchT = mimicpp::call::SubMatchResultT;
+	using SubMatchT = mimicpp::call::SubMatchResult;
 
 	bool isSatisfied{};
 
@@ -55,7 +55,7 @@ class PolicyFacade
 {
 public:
 	using CallT = mimicpp::call::Info<Signature>;
-	using SubMatchT = mimicpp::call::SubMatchResultT;
+	using SubMatchT = mimicpp::call::SubMatchResult;
 
 	Policy policy{};
 	Projection projection{};

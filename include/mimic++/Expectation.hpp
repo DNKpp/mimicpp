@@ -171,7 +171,7 @@ namespace mimicpp
 									&& requires(T& policy, const call::Info<Signature>& call)
 									{
 										{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-										{ std::as_const(policy).matches(call) } noexcept -> std::convertible_to<call::SubMatchResultT>;
+										{ std::as_const(policy).matches(call) } noexcept -> std::convertible_to<call::SubMatchResult>;
 										{ policy.consume(call) } noexcept;
 									};
 
@@ -230,7 +230,7 @@ namespace mimicpp
 				std::apply(
 					[&](const auto&... policies)
 					{
-						return std::vector<call::SubMatchResultT>{
+						return std::vector<call::SubMatchResult>{
 							policies.matches(call)...
 						};
 					},

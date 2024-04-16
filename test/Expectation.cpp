@@ -223,7 +223,7 @@ namespace
 	{
 	public:
 		using CallInfoT = mimicpp::call::Info<Signature>;
-		using SubMatchT = mimicpp::call::SubMatchResultT;
+		using SubMatchT = mimicpp::call::SubMatchResult;
 
 		static constexpr bool trompeloeil_movable_mock = true;
 
@@ -272,11 +272,10 @@ TEMPLATE_TEST_CASE_SIG(
 
 namespace
 {
-	const std::array allSubMatchResultAlternatives = std::to_array<mimicpp::call::SubMatchResultT>(
+	const std::array allSubMatchResultAlternatives = std::to_array<mimicpp::call::SubMatchResult>(
 		{
-			mimicpp::call::SubMatchResult_NoT{},
-			mimicpp::call::SubMatchResult_PartialT{},
-			mimicpp::call::SubMatchResult_OkT{}
+			{.matched = false},
+			{.matched = true}
 		});
 
 	class CallMatchCategoryMatcher final
@@ -315,30 +314,29 @@ namespace
 		return CallMatchCategoryMatcher{category};
 	}
 
+	template <typename Range>
+		requires std::same_as<bool, std::ranges::range_value_t<Range>>
 	[[nodiscard]]
-	CallMatchCategoryMatcher matches_category_of(const auto& result) noexcept
+	CallMatchCategoryMatcher matches_match_result_combination(Range&& results) noexcept
 	{
-		return matches_category(
-			std::visit(
-				[](const auto& inner) { return inner.value; },
-				result));
-	}
+		using CategoryT = mimicpp::call::MatchCategory;
+		const CategoryT category = std::invoke(
+			[&]
+			{
+				if (std::ranges::all_of(results, std::bind_front(std::equal_to{}, true)))
+				{
+					return CategoryT::ok;
+				}
 
-	template <std::ranges::input_range Range>
-	[[nodiscard]]
-	CallMatchCategoryMatcher matches_least_category_of(Range&& results) noexcept
-	{
-		auto categories = std::forward<Range>(results)
-						| std::views::transform(
-							[](const auto& el) noexcept
-							{
-								return std::visit(
-									[](const auto& inner) noexcept { return inner.value; },
-									el);
-							});
+				if (std::ranges::all_of(results, std::bind_front(std::equal_to{}, false)))
+				{
+					return CategoryT::no;
+				}
 
-		return matches_category(
-			std::ranges::min(categories));
+				return CategoryT::partial;
+			});
+
+		return matches_category(category);
 	}
 }
 
@@ -392,7 +390,7 @@ TEMPLATE_TEST_CASE(
 			.RETURN(matchesResult);
 		REQUIRE_THAT(
 			std::as_const(expectation).matches(call),
-			matches_category_of(matchesResult));
+			matches_match_result_combination(std::array{matchesResult.matched}));
 
 		REQUIRE_CALL(policy, consume(_))
 			.LR_WITH(&_1 == &call);
@@ -444,7 +442,7 @@ TEMPLATE_TEST_CASE(
 
 			REQUIRE_THAT(
 				std::as_const(expectation).matches(call),
-				matches_least_category_of(std::array{matchResult1, matchResult2}));
+				matches_match_result_combination(std::array{matchResult1.matched, matchResult2.matched}));
 		}
 
 		SECTION("When calling consume()")
