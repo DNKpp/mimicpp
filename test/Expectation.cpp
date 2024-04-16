@@ -90,7 +90,7 @@ TEST_CASE(
 		storage.push(exp);
 	}
 
-	const CallInfoT call{
+	constexpr CallInfoT call{
 		.params = {},
 		.fromUuid = 0,
 		.fromCategory = ValueCategory::lvalue,
@@ -411,7 +411,7 @@ namespace
 		{
 		}
 
-		bool match(const auto& result) const
+		[[maybe_unused]] bool match(const auto& result) const
 		{
 			return m_Category == std::visit(
 						[](const auto& inner) { return inner.value; },
