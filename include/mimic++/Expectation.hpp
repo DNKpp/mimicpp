@@ -304,6 +304,109 @@ namespace mimicpp
 		std::shared_ptr<StorageT> m_Storage{};
 		std::shared_ptr<ExpectationT> m_Expectation{};
 	};
+
+	class DummyFinalizePolicy
+	{
+	public:
+		template <typename Signature>
+		static constexpr void finalize_call(const call::Info<Signature>&) noexcept
+		{
+		}
+	};
+
+	template <typename Signature, typename FinalizePolicy, expectation_policy_for<Signature>... Policies>
+	class BasicExpectationBuilder
+	{
+	public:
+		using StorageT = ExpectationCollection<Signature>;
+		using ScopedExpectationT = ScopedExpectation<Signature>;
+		using PolicyListT = std::tuple<Policies...>;
+		using ReturnT = typename Expectation<Signature>::ReturnT;
+
+		~BasicExpectationBuilder() = default;
+
+		template <typename FinalizePolicyArg, typename PolicyListArg>
+			requires std::constructible_from<FinalizePolicy, FinalizePolicyArg>
+					&& std::constructible_from<PolicyListT, PolicyListArg>
+		[[nodiscard]]
+		explicit constexpr BasicExpectationBuilder(
+			std::shared_ptr<StorageT> storage,
+			FinalizePolicyArg&& finalizePolicyArg,
+			PolicyListArg&& policyListArg
+		) noexcept
+			: m_Storage{std::move(storage)},
+			m_FinalizePolicy{std::forward<FinalizePolicyArg>(finalizePolicyArg)},
+			m_ExpectationPolicies{std::forward<PolicyListArg>(policyListArg)}
+		{
+			assert(m_Storage && "Storage is nullptr.");
+		}
+
+		BasicExpectationBuilder(const BasicExpectationBuilder&) = delete;
+		BasicExpectationBuilder& operator =(const BasicExpectationBuilder&) = delete;
+
+		[[nodiscard]]
+		BasicExpectationBuilder(BasicExpectationBuilder&&) = default;
+		BasicExpectationBuilder& operator =(BasicExpectationBuilder&&) = default;
+
+		template <typename Policy>
+			requires std::same_as<DummyFinalizePolicy, FinalizePolicy>
+					&& finalize_policy_for<std::remove_cvref_t<Policy>, Signature>
+		[[nodiscard]]
+		constexpr auto operator |(Policy&& policy) &&
+		{
+			return BasicExpectationBuilder<Signature, std::remove_cvref_t<Policy>, Policies...>{
+				std::move(m_Storage),
+				std::forward<Policy>(policy),
+				std::move(m_ExpectationPolicies)
+			};
+		}
+
+		template <typename Policy>
+			requires expectation_policy_for<std::remove_cvref_t<Policy>, Signature>
+		[[nodiscard]]
+		constexpr auto operator |(Policy&& policy) &&
+		{
+			return BasicExpectationBuilder<Signature, FinalizePolicy, Policies..., std::remove_cvref_t<Policy>>{
+				std::move(m_Storage),
+				std::move(m_FinalizePolicy),
+				std::apply(
+					[&](auto&... policies) noexcept
+					{
+						return std::forward_as_tuple(
+							std::move(policies)...,
+							std::forward<Policy>(policy));
+					},
+					m_ExpectationPolicies)
+			};
+		}
+
+		[[nodiscard]]
+		explicit(false) constexpr operator ScopedExpectationT() &&
+		{
+			static_assert(
+				finalize_policy_for<FinalizePolicy, Signature>,
+				"For non-void return types, a finalize policy must be set.");
+
+			using ExpectationT = BasicExpectation<Signature, FinalizePolicy, Policies...>;
+
+			return ScopedExpectationT{
+				std::move(m_Storage),
+				std::apply(
+					[&](auto&... policies)
+					{
+						return std::make_unique<ExpectationT>(
+							std::move(m_FinalizePolicy),
+							std::move(policies)...);
+					},
+					m_ExpectationPolicies)
+			};
+		}
+
+	private:
+		std::shared_ptr<StorageT> m_Storage;
+		FinalizePolicy m_FinalizePolicy{};
+		PolicyListT m_ExpectationPolicies{};
+	};
 }
 
 #endif

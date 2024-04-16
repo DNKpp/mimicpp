@@ -683,3 +683,154 @@ TEST_CASE(
 		.RETURN(true);
 	expectation.reset();
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"Finalize policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
+	"[expectation]",
+	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
+	(true, mimicpp::BasicExpectationBuilder<void(), mimicpp::DummyFinalizePolicy>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<int(), mimicpp::DummyFinalizePolicy>, FinalizerFake<int()>),
+	(false, mimicpp::BasicExpectationBuilder<void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<int(), FinalizerFake<int()>>, FinalizerFake<int()>)
+)
+{
+	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | std::declval<Policy&&>(); });
+}
+
+TEST_CASE(
+	"Finalize policy of mimicpp::BasicExpectationBuilder for void return may be exchanged.",
+	"[expectation]"
+)
+{
+	using trompeloeil::_;
+
+	using SignatureT = void();
+	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, mimicpp::DummyFinalizePolicy>;
+	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
+	using CallInfoT = mimicpp::call::Info<SignatureT>;
+
+	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
+	constexpr CallInfoT call{
+		.params = {},
+		.fromUuid = 0,
+		.fromCategory = mimicpp::call::ValueCategory::lvalue,
+		.fromConst = false
+	};
+
+	BaseBuilderT builder{collection, mimicpp::DummyFinalizePolicy{}, std::tuple{}};
+
+	SECTION("It is allowed to omit the finalize policy.")
+	{
+		ScopedExpectationT expectation = std::move(builder);
+
+		REQUIRE_NOTHROW(expectation.is_satisfied());
+		REQUIRE_NOTHROW(collection->handle_call(call));
+	}
+
+	SECTION("Or exchange it once.")
+	{
+		using FinalizerT = FinalizerMock<SignatureT>;
+		using FinalizerPolicyT = FinalizerFacade<
+			SignatureT,
+			std::reference_wrapper<FinalizerMock<SignatureT>>,
+			UnwrapReferenceWrapper>;
+		FinalizerT finalizer{};
+		ScopedExpectationT expectation = std::move(builder)
+										| FinalizerPolicyT{std::ref(finalizer)};
+
+		REQUIRE_CALL(finalizer, finalize_call(_))
+			.LR_WITH(&_1 == &call);
+
+		REQUIRE_NOTHROW(expectation.is_satisfied());
+		REQUIRE_NOTHROW(collection->handle_call(call));
+	}
+}
+
+TEST_CASE(
+	"Finalize policy of mimicpp::BasicExpectationBuilder for non-void return must be exchanged.",
+	"[expectation]"
+)
+{
+	using trompeloeil::_;
+
+	using SignatureT = int();
+	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, mimicpp::DummyFinalizePolicy>;
+	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
+	using CallInfoT = mimicpp::call::Info<SignatureT>;
+
+	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
+	constexpr CallInfoT call{
+		.params = {},
+		.fromUuid = 0,
+		.fromCategory = mimicpp::call::ValueCategory::lvalue,
+		.fromConst = false
+	};
+
+	using FinalizerT = FinalizerMock<SignatureT>;
+	using FinalizerPolicyT = FinalizerFacade<
+		SignatureT,
+		std::reference_wrapper<FinalizerMock<SignatureT>>,
+		UnwrapReferenceWrapper>;
+	FinalizerT finalizer{};
+	ScopedExpectationT expectation = BaseBuilderT{collection, mimicpp::DummyFinalizePolicy{}, std::tuple{}}
+									| FinalizerPolicyT{std::ref(finalizer)};
+
+	REQUIRE_CALL(finalizer, finalize_call(_))
+		.LR_WITH(&_1 == &call)
+		.RETURN(0);
+
+	REQUIRE_NOTHROW(expectation.is_satisfied());
+	REQUIRE_NOTHROW(collection->handle_call(call));
+}
+
+TEST_CASE(
+	"mimicpp::BasicExpectationBuilder allows expectation extension via suitable polices.",
+	"[expectation]"
+)
+{
+	using SignatureT = void();
+	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, mimicpp::DummyFinalizePolicy>;
+	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
+	using ExpectationPolicyT = PolicyMock<SignatureT>;
+	using PolicyT = PolicyFacade<SignatureT, std::reference_wrapper<ExpectationPolicyT>, UnwrapReferenceWrapper>;
+
+	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
+
+	SECTION("Just once.")
+	{
+		ExpectationPolicyT policy{};
+
+		// may be asserted on
+		ALLOW_CALL(policy, is_satisfied())
+			.RETURN(true);
+
+		ScopedExpectationT expectation = BaseBuilderT{collection, mimicpp::DummyFinalizePolicy{}, std::tuple{}}
+										| PolicyT{std::ref(policy)};
+
+		REQUIRE_CALL(policy, is_satisfied())
+			.RETURN(true);
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("Just twice.")
+	{
+		ExpectationPolicyT policy1{};
+		ExpectationPolicyT policy2{};
+
+		// may be asserted on
+		ALLOW_CALL(policy1, is_satisfied())
+			.RETURN(true);
+		ALLOW_CALL(policy2, is_satisfied())
+			.RETURN(true);
+
+		ScopedExpectationT expectation = BaseBuilderT{collection, mimicpp::DummyFinalizePolicy{}, std::tuple{}}
+										| PolicyT{std::ref(policy1)}
+										| PolicyT{std::ref(policy2)};
+
+		REQUIRE_CALL(policy1, is_satisfied())
+			.RETURN(true);
+		REQUIRE_CALL(policy2, is_satisfied())
+			.RETURN(true);
+		REQUIRE(expectation.is_satisfied());
+	}
+}
