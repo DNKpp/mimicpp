@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Call.hpp"
+#include "TypeTraits.hpp"
 
 #include <cassert>
 #include <concepts>
@@ -26,6 +27,7 @@ namespace mimicpp
 	{
 	public:
 		using CallInfoT = call::Info<Signature>;
+		using ReturnT = signature_return_type_t<Signature>;
 
 		virtual ~Expectation() = default;
 
@@ -46,6 +48,9 @@ namespace mimicpp
 		[[nodiscard]]
 		virtual call::MatchResultT matches(const CallInfoT& call) const = 0;
 		virtual void consume(const CallInfoT& call) = 0;
+
+		[[nodiscard]]
+		virtual constexpr ReturnT finalize_call(const CallInfoT& call) = 0;
 	};
 
 	template <typename Signature>
@@ -123,31 +128,40 @@ namespace mimicpp
 										{ policy.consume(call) } noexcept;
 									};
 
-	template <typename Signature, expectation_policy_for<Signature>... Policies>
+	template <typename T, typename Signature>
+	concept finalize_policy_for = std::movable<T>
+								&& std::is_destructible_v<T>
+								&& std::same_as<T, std::remove_cvref_t<T>>
+								&& requires(T& policy, const call::Info<Signature>& call)
+								{
+									{ policy.finalize_call(call) } -> std::convertible_to<signature_return_type_t<Signature>>;
+								};
+
+	template <
+		typename Signature,
+		finalize_policy_for<Signature> FinalizePolicy,
+		expectation_policy_for<Signature>... Policies
+	>
 	class BasicExpectation final
 		: public Expectation<Signature>
 	{
 	public:
+		using FinalizerT = FinalizePolicy;
 		using PolicyListT = std::tuple<Policies...>;
 		using CallInfoT = call::Info<Signature>;
+		using ReturnT = typename Expectation<Signature>::ReturnT;
 
-		template <typename... PolicyArgs>
-			requires std::constructible_from<PolicyListT, PolicyArgs...>
+		template <typename FinalizerArg, typename... PolicyArgs>
+			requires std::constructible_from<FinalizerT, FinalizerArg>
+					&& std::constructible_from<PolicyListT, PolicyArgs...>
 		constexpr explicit BasicExpectation(
+			FinalizerArg&& finalizerArg,
 			PolicyArgs&&... args
-		) noexcept((std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
-			: m_Policies{std::forward<PolicyArgs>(args)...}
-		{
-		}
-
-		template <typename... OtherPolicies, typename PolicyArg>
-			requires std::constructible_from<PolicyListT, OtherPolicies&&..., PolicyArg>
-		constexpr explicit BasicExpectation(BasicExpectation<Signature, OtherPolicies...>&& other, PolicyArg&& arg)
-			: m_Policies{
-				std::tuple_cat(
-					std::move(other).m_Policies,
-					std::forward_as_tuple(std::forward<PolicyArg>(arg)))
-			}
+		) noexcept(
+			std::is_nothrow_constructible_v<FinalizerT, PolicyArgs>
+			&& (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
+			: m_Finalizer{std::forward<FinalizerArg>(finalizerArg)},
+			m_Policies{std::forward<PolicyArgs>(args)...}
 		{
 		}
 
@@ -197,7 +211,14 @@ namespace mimicpp
 				m_Policies);
 		}
 
+		[[nodiscard]]
+		constexpr ReturnT finalize_call(const CallInfoT& call) override
+		{
+			return m_Finalizer.finalize_call(call);
+		}
+
 	private:
+		[[no_unique_address]] FinalizerT m_Finalizer{};
 		PolicyListT m_Policies;
 	};
 

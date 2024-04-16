@@ -29,6 +29,7 @@ namespace
 		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept override);
 		MAKE_CONST_MOCK1(matches, MatchResultT(const CallInfoT&), override);
 		MAKE_MOCK1(consume, void(const CallInfoT&), override);
+		MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
 	};
 }
 
@@ -225,6 +226,55 @@ namespace
 			return ref.get();
 		}
 	};
+
+	template <typename Signature>
+	class FinalizerFake
+	{
+	public:
+		using CallInfoT = mimicpp::call::Info<Signature>;
+		using ReturnT = mimicpp::signature_return_type_t<Signature>;
+
+		class Exception
+		{
+		};
+
+		static ReturnT finalize_call(const CallInfoT& call)
+		{
+			throw Exception{};
+		}
+	};
+
+	template <typename Signature>
+	class FinalizerMock
+	{
+	public:
+		using CallInfoT = mimicpp::call::Info<Signature>;
+		using ReturnT = mimicpp::signature_return_type_t<Signature>;
+
+		MAKE_MOCK1(finalize_call, ReturnT(const CallInfoT&));
+	};
+
+	template <typename Signature, typename Policy, typename Projection>
+	// enable, when trompeloeil fully supports movable mocks
+	//requires mimicpp::finalize_policy_for<
+	//	std::remove_cvref_t<std::invoke_result_t<Projection, Policy>>,
+	//	Signature>
+	class FinalizerFacade
+	{
+	public:
+		using CallInfoT = mimicpp::call::Info<Signature>;
+		using ReturnT = mimicpp::signature_return_type_t<Signature>;
+
+		Policy policy{};
+		Projection projection{};
+
+		[[nodiscard]]
+		constexpr ReturnT finalize_call(const CallInfoT& call)
+		{
+			return std::invoke(projection, policy)
+				.finalize_call(call);
+		}
+	};
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -238,6 +288,19 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == mimicpp::expectation_policy_for<Policy, Signature>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"mimicpp::finalize_policy_for determines, whether the type can be used in combination with the given signature.",
+	"[expectation]",
+	((bool expected, typename Policy, typename Signature), expected, Policy, Signature),
+	(false, FinalizerFake<void()>, int()),	// incompatible return type
+	(false, FinalizerFake<void()>, void(int)),	// incompatible param
+	(true, FinalizerFake<void()>, void()),
+	(true, FinalizerFacade<void(), std::reference_wrapper<FinalizerFake<void()>>, UnwrapReferenceWrapper>, void())
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::finalize_policy_for<Policy, Signature>);
 }
 
 namespace
@@ -320,6 +383,7 @@ TEMPLATE_TEST_CASE(
 )
 {
 	using trompeloeil::_;
+	using FinalizerT = FinalizerFake<TestType>;
 	using PolicyMockT = PolicyMock<TestType>;
 	using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::Info<TestType>;
@@ -333,7 +397,9 @@ TEMPLATE_TEST_CASE(
 
 	SECTION("With no policies at all.")
 	{
-		mimicpp::BasicExpectation<TestType> expectation{};
+		mimicpp::BasicExpectation<TestType, FinalizerT> expectation{
+			FinalizerT{}
+		};
 
 		REQUIRE(std::as_const(expectation).is_satisfied());
 		REQUIRE(!std::as_const(expectation).is_saturated());
@@ -344,7 +410,10 @@ TEMPLATE_TEST_CASE(
 	SECTION("With one policy.")
 	{
 		PolicyMockT policy{};
-		mimicpp::BasicExpectation<TestType, PolicyRefT> expectation{PolicyRefT{std::ref(policy)}};
+		mimicpp::BasicExpectation<TestType, FinalizerT, PolicyRefT> expectation{
+			FinalizerT{},
+			PolicyRefT{std::ref(policy)}
+		};
 
 		const bool isSatisfied = GENERATE(false, true);
 		REQUIRE_CALL(policy, is_satisfied())
@@ -373,7 +442,8 @@ TEMPLATE_TEST_CASE(
 	{
 		PolicyMockT policy1{};
 		PolicyMockT policy2{};
-		mimicpp::BasicExpectation<TestType, PolicyRefT, PolicyRefT> expectation{
+		mimicpp::BasicExpectation<TestType, FinalizerT, PolicyRefT, PolicyRefT> expectation{
+			FinalizerT{},
 			PolicyRefT{std::ref(policy1)},
 			PolicyRefT{std::ref(policy2)}
 		};
@@ -448,6 +518,40 @@ TEMPLATE_TEST_CASE(
 	}
 }
 
+TEMPLATE_TEST_CASE(
+	"mimicpp::BasicExpectation finalizer can be exchanged.",
+	"[expectation]",
+	void(),
+	int()
+)
+{
+	using trompeloeil::_;
+	using SignatureT = TestType;
+	using FinalizerT = FinalizerMock<SignatureT>;
+	using FinalizerRefT = FinalizerFacade<SignatureT, std::reference_wrapper<FinalizerT>, UnwrapReferenceWrapper>;
+	using CallInfoT = mimicpp::call::Info<SignatureT>;
+
+	const CallInfoT call{
+		.params = {},
+		.fromUuid = 0,
+		.fromCategory = mimicpp::call::ValueCategory::lvalue,
+		.fromConst = false
+	};
+
+	FinalizerT finalizer{};
+	mimicpp::BasicExpectation<SignatureT, FinalizerRefT> expectation{
+		std::ref(finalizer)
+	};
+
+	class Exception
+	{
+	};
+	REQUIRE_CALL(finalizer, finalize_call(_))
+		.LR_WITH(&_1 == &call)
+		.THROW(Exception{});
+	REQUIRE_THROWS_AS(expectation.finalize_call(call), Exception);
+}
+
 TEST_CASE("ScopedExpectation is a non-copyable, but movable type.")
 {
 	using ScopedExpectationT = mimicpp::ScopedExpectation<void()>;
@@ -465,7 +569,8 @@ TEST_CASE(
 	using trompeloeil::_;
 	using PolicyMockT = PolicyMock<void()>;
 	using PolicyRefT = PolicyFacade<void(), std::reference_wrapper<PolicyMock<void()>>, UnwrapReferenceWrapper>;
-	using ExpectationT = mimicpp::BasicExpectation<void(), PolicyRefT>;
+	using FinalizerT = FinalizerFake<void()>;
+	using ExpectationT = mimicpp::BasicExpectation<void(), FinalizerT, PolicyRefT>;
 	using ScopedExpectationT = mimicpp::ScopedExpectation<void()>;
 	using CollectionT = mimicpp::ExpectationCollection<void()>;
 
@@ -475,7 +580,7 @@ TEST_CASE(
 	std::optional<ScopedExpectationT> expectation{
 		std::in_place,
 		collection,
-		std::make_unique<ExpectationT>(std::ref(policy))
+		std::make_unique<ExpectationT>(FinalizerT{}, std::ref(policy))
 	};
 
 	SECTION("When calling is_satisfied()")
