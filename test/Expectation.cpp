@@ -93,8 +93,8 @@ TEST_CASE(
 
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = 0,
-		.fromCategory = ValueCategory::lvalue,
+		.fromUuid = mimicpp::Uuid{1337},
+		.fromCategory = mimicpp::ValueCategory::lvalue,
 		.fromConst = false
 	};
 
@@ -355,8 +355,8 @@ TEMPLATE_TEST_CASE(
 
 	const CallInfoT call{
 		.params = {},
-		.fromUuid = 0,
-		.fromCategory = mimicpp::call::ValueCategory::lvalue,
+		.fromUuid = mimicpp::Uuid{1337},
+		.fromCategory = mimicpp::ValueCategory::lvalue,
 		.fromConst = false
 	};
 
@@ -471,8 +471,8 @@ TEMPLATE_TEST_CASE(
 
 	const CallInfoT call{
 		.params = {},
-		.fromUuid = 0,
-		.fromCategory = mimicpp::call::ValueCategory::lvalue,
+		.fromUuid = mimicpp::Uuid{1337},
+		.fromCategory = mimicpp::ValueCategory::lvalue,
 		.fromConst = false
 	};
 
@@ -610,8 +610,8 @@ TEST_CASE(
 	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = 0,
-		.fromCategory = mimicpp::call::ValueCategory::lvalue,
+		.fromUuid = mimicpp::Uuid{1337},
+		.fromCategory = mimicpp::ValueCategory::lvalue,
 		.fromConst = false
 	};
 
@@ -659,8 +659,8 @@ TEST_CASE(
 	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = 0,
-		.fromCategory = mimicpp::call::ValueCategory::lvalue,
+		.fromUuid = mimicpp::Uuid{1337},
+		.fromCategory = mimicpp::ValueCategory::lvalue,
 		.fromConst = false
 	};
 

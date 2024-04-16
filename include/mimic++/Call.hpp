@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "mimic++/Utility.hpp"
+
 #include <algorithm>
 #include <format>
 #include <optional>
@@ -19,12 +21,6 @@
 
 namespace mimicpp::call
 {
-	enum class ValueCategory
-	{
-		lvalue,
-		rvalue
-	};
-
 	template <typename Signature>
 	class Info;
 
@@ -33,10 +29,9 @@ namespace mimicpp::call
 	{
 	public:
 		using ParamListT = std::tuple<std::reference_wrapper<std::remove_reference_t<Args>>...>;
-		using UuidT = std::ptrdiff_t;
 
 		ParamListT params;
-		UuidT fromUuid{};
+		Uuid fromUuid{};
 		ValueCategory fromCategory{};
 		bool fromConst{};
 	};
