@@ -7,6 +7,7 @@
 
 #include "mimic++/Reporter.hpp"
 
+#include <any>
 #include <ranges>
 
 #define MIMICPP_REPORTER_DEFINED
@@ -14,6 +15,7 @@
 inline static std::vector<mimicpp::call::MatchResult_NoT> g_NoMatchResults{};
 inline static std::vector<mimicpp::call::MatchResult_PartialT> g_PartialMatchResults{};
 inline static std::vector<mimicpp::call::MatchResult_OkT> g_OkMatchResults{};
+inline static std::vector<std::any> g_UnsatisfiedExpectations{};
 
 class TestExpectationError
 {
@@ -50,6 +52,14 @@ namespace mimicpp
 	}
 
 	template <typename Signature>
+	void report_unsatisfied_expectation(
+		std::shared_ptr<Expectation<Signature>> expectation
+	)
+	{
+		g_UnsatisfiedExpectations.emplace_back(std::move(expectation));
+	}
+
+	template <typename Signature>
 	void report_ok(
 		call::Info<Signature> callInfo,
 		call::MatchResult_OkT result
@@ -66,6 +76,7 @@ namespace mimicpp
 			g_OkMatchResults.clear();
 			g_PartialMatchResults.clear();
 			g_NoMatchResults.clear();
+			g_UnsatisfiedExpectations.clear();
 		}
 
 		ScopedReporter() noexcept
@@ -73,6 +84,7 @@ namespace mimicpp
 			g_OkMatchResults.clear();
 			g_PartialMatchResults.clear();
 			g_NoMatchResults.clear();
+			g_UnsatisfiedExpectations.clear();
 		}
 
 		ScopedReporter(const ScopedReporter&) = delete;
@@ -96,6 +108,12 @@ namespace mimicpp
 		auto& ok_match_reports() noexcept
 		{
 			return g_OkMatchResults;
+		}
+
+		// ReSharper disable once CppMemberFunctionMayBeStatic
+		auto& unsatisfied_expectations() noexcept
+		{
+			return g_UnsatisfiedExpectations;
 		}
 	};
 }

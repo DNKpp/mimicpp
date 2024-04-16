@@ -29,6 +29,14 @@ namespace mimicpp
 	);
 
 	template <typename Signature>
+	class Expectation;
+
+	template <typename Signature>
+	void report_unsatisfied_expectation(
+		std::shared_ptr<Expectation<Signature>> expectation
+	);
+
+	template <typename Signature>
 	void report_ok(
 		call::Info<Signature> callInfo,
 		call::MatchResult_OkT result

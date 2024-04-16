@@ -113,8 +113,12 @@ namespace mimicpp
 
 			auto iter = std::ranges::find(m_Expectations, expectation);
 			assert(iter != std::ranges::end(m_Expectations) && "Expectation does not belong to this storage.");
-			assert((*iter)->is_satisfied() && "Expectation is unsatisfied.");
 			m_Expectations.erase(iter);
+
+			if (!expectation->is_satisfied())
+			{
+				report_unsatisfied_expectation(std::move(expectation));
+			}
 		}
 
 		[[nodiscard]]

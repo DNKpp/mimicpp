@@ -35,7 +35,7 @@ namespace
 }
 
 TEST_CASE(
-	"mimicpp::ExpectationCollection collects expectations.",
+	"mimicpp::ExpectationCollection collects expectations and reports when they are removed but unsatisfied.",
 	"[expectation]"
 )
 {
@@ -46,9 +46,29 @@ TEST_CASE(
 
 	REQUIRE_NOTHROW(storage.push(expectation));
 
-	ALLOW_CALL(*expectation, is_satisfied())
-		.RETURN(true);
-	REQUIRE_NOTHROW(storage.remove(expectation));
+	mimicpp::ScopedReporter reporter{};
+	SECTION("When expectation is satisfied, nothing is reported.")
+	{
+		REQUIRE_CALL(*expectation, is_satisfied())
+			.RETURN(true);
+		REQUIRE_NOTHROW(storage.remove(expectation));
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("When expectation is unsatisfied, get's reported.")
+	{
+		REQUIRE_CALL(*expectation, is_satisfied())
+			.RETURN(false);
+		REQUIRE_NOTHROW(storage.remove(expectation));
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::SizeIs(1));
+		auto reportedExpectation = std::any_cast<std::shared_ptr<mimicpp::Expectation<void()>>>(
+			reporter.unsatisfied_expectations().at(0));
+		REQUIRE(expectation == reportedExpectation);
+	}
 }
 
 TEST_CASE(
@@ -603,7 +623,7 @@ TEST_CASE("ScopedExpectation is a non-copyable, but movable type.")
 }
 
 TEST_CASE(
-	"ScopedExpectation handles expectation lifetime and reports when not satisfied.",
+	"ScopedExpectation handles expectation lifetime and removes from the ExpectationCollection.",
 	"[expectation]")
 {
 	using trompeloeil::_;
@@ -678,8 +698,8 @@ TEST_CASE(
 		expectation = std::move(otherExpectation);
 	}
 
-	// collection asserts on that in remove
-	ALLOW_CALL(policy, is_satisfied())
+	// indirectly via remove
+	REQUIRE_CALL(policy, is_satisfied())
 		.RETURN(true);
 	expectation.reset();
 }
@@ -800,8 +820,8 @@ TEST_CASE(
 	{
 		ExpectationPolicyT policy{};
 
-		// may be asserted on
-		ALLOW_CALL(policy, is_satisfied())
+		// in ExpectationCollection::remove
+		REQUIRE_CALL(policy, is_satisfied())
 			.RETURN(true);
 
 		ScopedExpectationT expectation = BaseBuilderT{collection, mimicpp::DummyFinalizePolicy{}, std::tuple{}}
@@ -817,10 +837,10 @@ TEST_CASE(
 		ExpectationPolicyT policy1{};
 		ExpectationPolicyT policy2{};
 
-		// may be asserted on
-		ALLOW_CALL(policy1, is_satisfied())
+		// in ExpectationCollection::remove
+		REQUIRE_CALL(policy1, is_satisfied())
 			.RETURN(true);
-		ALLOW_CALL(policy2, is_satisfied())
+		REQUIRE_CALL(policy2, is_satisfied())
 			.RETURN(true);
 
 		ScopedExpectationT expectation = BaseBuilderT{collection, mimicpp::DummyFinalizePolicy{}, std::tuple{}}
