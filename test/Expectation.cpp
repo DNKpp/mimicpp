@@ -4,6 +4,7 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Expectation.hpp"
+#include "TestReporter.hpp"
 
 #include <functional>
 #include <optional>
@@ -14,6 +15,7 @@
 #include <catch2/trompeloeil.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
+#include <catch2/matchers/catch_matchers_container_properties.hpp>
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
 namespace
@@ -60,6 +62,7 @@ TEST_CASE(
 	using CallInfoT = Info<void()>;
 	using trompeloeil::_;
 
+	mimicpp::ScopedReporter reporter{};
 	StorageT storage{};
 	std::vector<std::shared_ptr<ExpectationMock>> expectations(4);
 	for (auto& exp : expectations)
@@ -75,56 +78,121 @@ TEST_CASE(
 		.fromConst = false
 	};
 
-	trompeloeil::sequence sequence{};
-	REQUIRE_CALL(*expectations[0], is_saturated())
-		.IN_SEQUENCE(sequence)
-		.RETURN(true);
-	REQUIRE_CALL(*expectations[1], is_saturated())
-		.IN_SEQUENCE(sequence)
-		.RETURN(false);
-	REQUIRE_CALL(*expectations[1], matches(_))
-		.LR_WITH(&_1 == &call)
-		.IN_SEQUENCE(sequence)
-		.RETURN(MatchResult_NoT{});
-	REQUIRE_CALL(*expectations[2], is_saturated())
-		.IN_SEQUENCE(sequence)
-		.RETURN(false);
-	REQUIRE_CALL(*expectations[2], matches(_))
-		.LR_WITH(&_1 == &call)
-		.IN_SEQUENCE(sequence)
-		.RETURN(MatchResult_OkT{});
-	// expectations[3] is never queried
-	REQUIRE_CALL(*expectations[2], consume(_))
-		.LR_WITH(&_1 == &call)
-		.IN_SEQUENCE(sequence);
-
-	REQUIRE(storage.consume(call));
-
-	SECTION("All expectations are still part of the collection.")
+	SECTION("If a full match is found.")
 	{
-		trompeloeil::sequence secondSequence{};
-		REQUIRE_CALL(*expectations[0], is_saturated())
-			.IN_SEQUENCE(secondSequence)
-			.RETURN(true);
-		REQUIRE_CALL(*expectations[1], is_saturated())
-			.IN_SEQUENCE(secondSequence)
-			.RETURN(false);
+		trompeloeil::sequence sequence{};
+		REQUIRE_CALL(*expectations[0], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(MatchResult_NoT{});
 		REQUIRE_CALL(*expectations[1], matches(_))
 			.LR_WITH(&_1 == &call)
-			.IN_SEQUENCE(secondSequence)
-			.RETURN(MatchResult_PartialT{});
-		REQUIRE_CALL(*expectations[2], is_saturated())
-			.IN_SEQUENCE(secondSequence)
-			.RETURN(true);
-		REQUIRE_CALL(*expectations[3], is_saturated())
-			.IN_SEQUENCE(secondSequence)
-			.RETURN(false);
+			.IN_SEQUENCE(sequence)
+			.RETURN(MatchResult_NoT{});
+		REQUIRE_CALL(*expectations[2], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(MatchResult_OkT{});
+		// expectations[3] is never queried
+		REQUIRE_CALL(*expectations[2], consume(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence);
+		REQUIRE_CALL(*expectations[2], finalize_call(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence);
+
+		REQUIRE_NOTHROW(storage.handle_call(call));
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("If none matches full, but at least one matches partially.")
+	{
+		const auto [count, result0, result1, result2, result3] = GENERATE(
+			(table<std::size_t, MatchResultT, MatchResultT, MatchResultT, MatchResultT>)(
+				{
+				{1u, MatchResult_PartialT{}, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NoT{}},
+				{1u, MatchResult_NoT{}, MatchResult_PartialT{}, MatchResult_NoT{}, MatchResult_NoT{}},
+				{1u, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_PartialT{}, MatchResult_NoT{}},
+				{1u, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_PartialT{}},
+
+				{2u, MatchResult_PartialT{}, MatchResult_NoT{}, MatchResult_PartialT{}, MatchResult_NoT{}},
+				{2u, MatchResult_NoT{}, MatchResult_PartialT{}, MatchResult_NoT{}, MatchResult_PartialT{}},
+				{3u, MatchResult_PartialT{}, MatchResult_NoT{}, MatchResult_PartialT{}, MatchResult_PartialT{}},
+				{4u, MatchResult_PartialT{}, MatchResult_PartialT{}, MatchResult_PartialT{}, MatchResult_PartialT{}}
+				}));
+
+		trompeloeil::sequence sequence{};
+		REQUIRE_CALL(*expectations[0], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(result0);
+		REQUIRE_CALL(*expectations[1], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(result1);
+		REQUIRE_CALL(*expectations[2], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(result2);
 		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
-			.IN_SEQUENCE(secondSequence)
+			.IN_SEQUENCE(sequence)
+			.RETURN(result3);
+
+		REQUIRE_THROWS_AS(
+			storage.handle_call(call),
+			TestExpectationError);
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::SizeIs(count));
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("If all do not match.")
+	{
+		trompeloeil::sequence sequence{};
+		REQUIRE_CALL(*expectations[0], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(MatchResult_NoT{});
+		REQUIRE_CALL(*expectations[1], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(MatchResult_NoT{});
+		REQUIRE_CALL(*expectations[2], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(MatchResult_NoT{});
+		REQUIRE_CALL(*expectations[3], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
 			.RETURN(MatchResult_NoT{});
 
-		REQUIRE(!storage.consume(call));
+		REQUIRE_THROWS_AS(
+			storage.handle_call(call),
+			TestExpectationError);
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(4));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
 	}
 }
 

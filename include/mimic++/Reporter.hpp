@@ -15,12 +15,14 @@
 namespace mimicpp
 {
 	template <typename Signature>
+	[[noreturn]]
 	void report_fail(
 		call::Info<Signature> callInfo,
 		std::vector<call::MatchResult_NoT> results
 	);
 
 	template <typename Signature>
+	[[noreturn]]
 	void report_fail(
 		call::Info<Signature> callInfo,
 		std::vector<call::MatchResult_PartialT> results

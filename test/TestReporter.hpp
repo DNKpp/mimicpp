@@ -15,6 +15,10 @@ inline static std::vector<mimicpp::call::MatchResult_NoT> g_NoMatchResults{};
 inline static std::vector<mimicpp::call::MatchResult_PartialT> g_PartialMatchResults{};
 inline static std::vector<mimicpp::call::MatchResult_OkT> g_OkMatchResults{};
 
+class TestExpectationError
+{
+};
+
 namespace mimicpp
 {
 	template <typename Signature>
@@ -27,6 +31,8 @@ namespace mimicpp
 			std::ranges::end(g_NoMatchResults),
 			std::ranges::begin(results),
 			std::ranges::end(results));
+
+		throw TestExpectationError{};
 	}
 
 	template <typename Signature>
@@ -39,6 +45,8 @@ namespace mimicpp
 			std::ranges::end(g_PartialMatchResults),
 			std::ranges::begin(results),
 			std::ranges::end(results));
+
+		throw TestExpectationError{};
 	}
 
 	template <typename Signature>

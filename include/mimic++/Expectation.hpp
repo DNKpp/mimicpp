@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Call.hpp"
+#include "Reporter.hpp"
 #include "TypeTraits.hpp"
 
 #include <cassert>
@@ -19,6 +20,31 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+
+namespace mimicpp::detail
+{
+	template <typename Signature>
+	[[noreturn]]
+	void handle_call_match_fail(
+		call::Info<Signature> call,
+		std::vector<call::MatchResult_NoT> noMatches,
+		std::vector<call::MatchResult_PartialT> partialMatches
+	)
+	{
+		if (!std::ranges::empty(partialMatches))
+		{
+			report_fail(
+				std::move(call),
+				std::move(partialMatches));
+		}
+		else
+		{
+			report_fail(
+				std::move(call),
+				std::move(noMatches));
+		}
+	}
+}
 
 namespace mimicpp
 {
@@ -59,6 +85,7 @@ namespace mimicpp
 	public:
 		using CallInfoT = call::Info<Signature>;
 		using ExpectationT = Expectation<Signature>;
+		using ReturnT = signature_return_type_t<Signature>;
 
 		~ExpectationCollection() = default;
 
@@ -94,21 +121,41 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		bool consume(const CallInfoT& call)
+		constexpr ReturnT handle_call(const CallInfoT& call)
 		{
+			static_assert(3 == std::variant_size_v<call::MatchResultT>, "Unexpected MatchResult alternative count.");
+
 			const std::scoped_lock lock{m_ExpectationsMx};
+
+			std::vector<call::MatchResult_NoT> noMatches{};
+			std::vector<call::MatchResult_PartialT> partialMatches{};
 
 			for (auto& exp : m_Expectations)
 			{
-				if (!exp->is_saturated()
-					&& std::holds_alternative<call::MatchResult_OkT>(exp->matches(call)))
+				auto matchResult = exp->matches(call);
+				if (auto* match = std::get_if<call::MatchResult_OkT>(&matchResult))
 				{
+					report_ok(
+						call,
+						std::move(*match));
 					exp->consume(call);
-					return true;
+					return exp->finalize_call(call);
+				}
+
+				if (auto* match = std::get_if<call::MatchResult_NoT>(&matchResult))
+				{
+					noMatches.emplace_back(std::move(*match));
+				}
+				else
+				{
+					partialMatches.emplace_back(std::get<call::MatchResult_PartialT>(std::move(matchResult)));
 				}
 			}
 
-			return false;
+			detail::handle_call_match_fail(
+				call,
+				std::move(noMatches),
+				std::move(partialMatches));
 		}
 
 	private:
