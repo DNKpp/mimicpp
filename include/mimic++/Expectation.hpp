@@ -69,9 +69,6 @@ namespace mimicpp
 		virtual bool is_satisfied() const noexcept = 0;
 
 		[[nodiscard]]
-		virtual bool is_saturated() const noexcept = 0;
-
-		[[nodiscard]]
 		virtual call::MatchResultT matches(const CallInfoT& call) const = 0;
 		virtual void consume(const CallInfoT& call) = 0;
 
@@ -170,7 +167,6 @@ namespace mimicpp
 									&& requires(T& policy, const call::Info<Signature>& call)
 									{
 										{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-										{ std::as_const(policy).is_saturated() } noexcept -> std::convertible_to<bool>;
 										{ std::as_const(policy).matches(call) } noexcept -> std::convertible_to<call::SubMatchResultT>;
 										{ policy.consume(call) } noexcept;
 									};
@@ -219,17 +215,6 @@ namespace mimicpp
 				[](const auto&... policies) noexcept
 				{
 					return (... && policies.is_satisfied());
-				},
-				m_Policies);
-		}
-
-		[[nodiscard]]
-		constexpr bool is_saturated() const noexcept override
-		{
-			return std::apply(
-				[](const auto&... policies) noexcept
-				{
-					return (... || policies.is_saturated());
 				},
 				m_Policies);
 		}
@@ -311,16 +296,6 @@ namespace mimicpp
 			if (m_Expectation)
 			{
 				return m_Expectation->is_satisfied();
-			}
-			throw std::runtime_error{"Expired expectation."};
-		}
-
-		[[nodiscard]]
-		bool is_saturated() const
-		{
-			if (m_Expectation)
-			{
-				return m_Expectation->is_saturated();
 			}
 			throw std::runtime_error{"Expired expectation."};
 		}

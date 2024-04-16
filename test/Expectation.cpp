@@ -28,7 +28,6 @@ namespace
 		using MatchResultT = mimicpp::call::MatchResultT;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
-		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept override);
 		MAKE_CONST_MOCK1(matches, MatchResultT(const CallInfoT&), override);
 		MAKE_MOCK1(consume, void(const CallInfoT&), override);
 		MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
@@ -470,7 +469,6 @@ TEMPLATE_TEST_CASE(
 		};
 
 		REQUIRE(std::as_const(expectation).is_satisfied());
-		REQUIRE(!std::as_const(expectation).is_saturated());
 		REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
 		REQUIRE_NOTHROW(expectation.consume(call));
 	}
@@ -487,11 +485,6 @@ TEMPLATE_TEST_CASE(
 		REQUIRE_CALL(policy, is_satisfied())
 			.RETURN(isSatisfied);
 		REQUIRE(isSatisfied == std::as_const(expectation).is_satisfied());
-
-		const bool isSaturated = GENERATE(false, true);
-		REQUIRE_CALL(policy, is_saturated())
-			.RETURN(isSaturated);
-		REQUIRE(isSaturated == std::as_const(expectation).is_saturated());
 
 		const auto matchesResult = GENERATE(from_range(allSubMatchResultAlternatives));
 		REQUIRE_CALL(policy, matches(_))
@@ -535,27 +528,6 @@ TEMPLATE_TEST_CASE(
 				});
 
 			REQUIRE(expectedIsSatisfied == std::as_const(expectation).is_satisfied());
-		}
-
-		SECTION("When calling is_saturated()")
-		{
-			const bool isSaturated1 = GENERATE(false, true);
-			const bool isSaturated2 = GENERATE(false, true);
-			const bool expectedIsSaturated = isSaturated1 || isSaturated2;
-			REQUIRE_CALL(policy1, is_saturated())
-				.RETURN(isSaturated1);
-			auto policy2Expectation = std::invoke(
-				[&]() -> std::unique_ptr<trompeloeil::expectation>
-				{
-					if (!isSaturated1)
-					{
-						return NAMED_REQUIRE_CALL(policy2, is_saturated())
-							.RETURN(isSaturated2);
-					}
-					return nullptr;
-				});
-
-			REQUIRE(expectedIsSaturated == std::as_const(expectation).is_saturated());
 		}
 
 		SECTION("When calling matches()")
@@ -659,14 +631,6 @@ TEST_CASE(
 		REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
 	}
 
-	SECTION("When calling is_saturated()")
-	{
-		const bool isSaturated = GENERATE(false, true);
-		REQUIRE_CALL(policy, is_saturated())
-			.RETURN(isSaturated);
-		REQUIRE(isSaturated == std::as_const(expectation)->is_saturated());
-	}
-
 	SECTION("When ScopedExpectation is moved.")
 	{
 		ScopedExpectationT otherExpectation = *std::move(expectation);
@@ -680,15 +644,6 @@ TEST_CASE(
 			REQUIRE_THROWS_AS(std::as_const(expectation)->is_satisfied(), std::runtime_error);
 		}
 
-		SECTION("When calling is_saturated()")
-		{
-			const bool isSaturated = GENERATE(false, true);
-			REQUIRE_CALL(policy, is_saturated())
-				.RETURN(isSaturated);
-			REQUIRE(isSaturated == std::as_const(otherExpectation).is_saturated());
-			REQUIRE_THROWS_AS(std::as_const(expectation)->is_saturated(), std::runtime_error);
-		}
-
 		SECTION("And then move assigned.")
 		{
 			expectation = std::move(otherExpectation);
@@ -700,15 +655,6 @@ TEST_CASE(
 					.RETURN(isSatisfied);
 				REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
 				REQUIRE_THROWS_AS(std::as_const(otherExpectation).is_satisfied(), std::runtime_error);
-			}
-
-			SECTION("When calling is_saturated()")
-			{
-				const bool isSaturated = GENERATE(false, true);
-				REQUIRE_CALL(policy, is_saturated())
-					.RETURN(isSaturated);
-				REQUIRE(isSaturated == std::as_const(expectation)->is_saturated());
-				REQUIRE_THROWS_AS(std::as_const(otherExpectation).is_saturated(), std::runtime_error);
 			}
 
 			// just move back, so we can unify the cleanup process
@@ -725,14 +671,6 @@ TEST_CASE(
 				REQUIRE_CALL(policy, is_satisfied())
 					.RETURN(isSatisfied);
 				REQUIRE(isSatisfied == std::as_const(otherExpectation).is_satisfied());
-			}
-
-			SECTION("When calling is_saturated()")
-			{
-				const bool isSaturated = GENERATE(false, true);
-				REQUIRE_CALL(policy, is_saturated())
-					.RETURN(isSaturated);
-				REQUIRE(isSaturated == std::as_const(otherExpectation).is_saturated());
 			}
 		}
 
