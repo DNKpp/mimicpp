@@ -50,3 +50,27 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, typename mimicpp::signature_add_noexcept<SignatureNoexceptT>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, mimicpp::signature_add_noexcept_t<SignatureNoexceptT>>);
 }
+
+TEMPLATE_TEST_CASE(
+	"signature_remove_noexcept removes noexcept qualifier present.",
+	"[type_traits]",
+	void(),
+	void(int),
+	void(...),
+	void(float, int),
+	void(float, ...),
+	double(),
+	double(int),
+	double(...),
+	double(float, int),
+	double(float, ...)
+)
+{
+	using SignatureT = TestType;
+	STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureT>::type>);
+	STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureT>>);
+
+	using SignatureNoexceptT = typename signature_helper<SignatureT>::sig_noexcept;
+	STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureNoexceptT>::type>);
+	STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureNoexceptT>>);
+}

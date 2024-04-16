@@ -41,6 +41,36 @@ namespace mimicpp
 	{
 		using type = Return(Params..., ...) noexcept;
 	};
+
+	template <typename Signature>
+	struct signature_remove_noexcept;
+
+	template <typename Signature>
+	using signature_remove_noexcept_t = typename signature_remove_noexcept<Signature>::type;
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...)>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...)>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) noexcept>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) noexcept>
+	{
+		using type = Return(Params..., ...);
+	};
 }
 
 #endif
