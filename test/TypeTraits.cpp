@@ -137,5 +137,14 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(
 		std::same_as<
 		Expected,
+		mimicpp::signature_return_type_t<Signature>>);
+
+	STATIC_REQUIRE(
+		std::same_as<
+		Expected,
+		typename mimicpp::signature_return_type<mimicpp::signature_add_noexcept_t<Signature>>::type>);
+	STATIC_REQUIRE(
+		std::same_as<
+		Expected,
 		mimicpp::signature_return_type_t<mimicpp::signature_add_noexcept_t<Signature>>>);
 }
