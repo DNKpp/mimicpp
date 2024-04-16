@@ -148,3 +148,35 @@ TEMPLATE_TEST_CASE_SIG(
 		Expected,
 		mimicpp::signature_return_type_t<mimicpp::signature_add_noexcept_t<Signature>>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"signature_param_type extracts the n-th param type of the given signature.",
+	"[type_traits]",
+	((typename Expected, std::size_t index, typename Signature), Expected, index, Signature),
+	(int, 0, void(int)),
+	(int, 0, void(int, double)),
+	(double, 1, void(int, double))
+)
+{
+	STATIC_REQUIRE(
+		(
+		std::same_as<
+		Expected,
+		typename mimicpp::signature_param_type<index,Signature>::type>));
+	STATIC_REQUIRE(
+		(
+		std::same_as<
+		Expected,
+		mimicpp::signature_param_type_t<index, Signature>>));
+
+	STATIC_REQUIRE(
+		(
+		std::same_as<
+		Expected,
+		typename mimicpp::signature_param_type<index, mimicpp::signature_add_noexcept_t<Signature>>::type>));
+	STATIC_REQUIRE(
+		(
+		std::same_as<
+		Expected,
+		mimicpp::signature_param_type_t<index, mimicpp::signature_add_noexcept_t<Signature>>>));
+}

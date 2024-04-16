@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <tuple>
+
 namespace mimicpp
 {
 	template <typename Signature>
@@ -98,6 +100,24 @@ namespace mimicpp
 	struct signature_return_type<Return(Params..., ...) noexcept>
 	{
 		using type = Return;
+	};
+
+	template <std::size_t index, typename Signature>
+	struct signature_param_type;
+
+	template <std::size_t index, typename Signature>
+	using signature_param_type_t = typename signature_param_type<index, Signature>::type;
+
+	template <std::size_t index, typename Return, typename... Params>
+	struct signature_param_type<index, Return(Params...)>
+		: public std::tuple_element<index, std::tuple<Params...>>
+	{
+	};
+
+	template <std::size_t index, typename Return, typename... Params>
+	struct signature_param_type<index, Return(Params...) noexcept>
+		: public std::tuple_element<index, std::tuple<Params...>>
+	{
 	};
 }
 
