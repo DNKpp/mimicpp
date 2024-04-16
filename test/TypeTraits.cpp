@@ -17,12 +17,14 @@ namespace
 	template <typename Return, typename... Args>
 	struct signature_helper<Return(Args...)>
 	{
+		using sig = Return(Args...);
 		using sig_noexcept = Return(Args...) noexcept;
 	};
 
 	template <typename Return, typename... Args>
 	struct signature_helper<Return(Args..., ...)>
 	{
+		using sig = Return(Args..., ...);
 		using sig_noexcept = Return(Args..., ...) noexcept;
 	};
 }
@@ -73,4 +75,67 @@ TEMPLATE_TEST_CASE(
 	using SignatureNoexceptT = typename signature_helper<SignatureT>::sig_noexcept;
 	STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureNoexceptT>::type>);
 	STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureNoexceptT>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"signature_return_type extracts the return type from the given signature.",
+	"[type_traits]",
+	((bool dummy, typename Expected, typename Signature), dummy, Expected, Signature),
+	(true, void, void()),
+	(true, void, void(int)),
+	(true, void, void(...)),
+	(true, void, void(float, int)),
+	(true, void, void(float, ...)),
+
+	(true, double, double()),
+	(true, double, double(int)),
+	(true, double, double(...)),
+	(true, double, double(float, int)),
+	(true, double, double(float, ...)),
+
+	(true, double&, double&()),
+	(true, double&, double&(int)),
+	(true, double&, double&(...)),
+	(true, double&, double&(float, int)),
+	(true, double&, double&(float, ...)),
+
+	(true, const double&, const double&()),
+	(true, const double&, const double&(int)),
+	(true, const double&, const double&(...)),
+	(true, const double&, const double&(float, int)),
+	(true, const double&, const double&(float, ...)),
+
+	(true, double&&, double&&()),
+	(true, double&&, double&&(int)),
+	(true, double&&, double&&(...)),
+	(true, double&&, double&&(float, int)),
+	(true, double&&, double&&(float, ...)),
+
+	(true, const double&&, const double&&()),
+	(true, const double&&, const double&&(int)),
+	(true, const double&&, const double&&(...)),
+	(true, const double&&, const double&&(float, int)),
+	(true, const double&&, const double&&(float, ...)),
+
+	(true, void*, void*()),
+	(true, void*, void*(int)),
+	(true, void*, void*(...)),
+	(true, void*, void*(float, int)),
+	(true, void*, void*(float, ...)),
+
+	(true, const void*, const void*()),
+	(true, const void*, const void*(int)),
+	(true, const void*, const void*(...)),
+	(true, const void*, const void*(float, int)),
+	(true, const void*, const void*(float, ...))
+)
+{
+	STATIC_REQUIRE(
+		std::same_as<
+		Expected,
+		typename mimicpp::signature_return_type<Signature>::type>);
+	STATIC_REQUIRE(
+		std::same_as<
+		Expected,
+		mimicpp::signature_return_type_t<mimicpp::signature_add_noexcept_t<Signature>>>);
 }

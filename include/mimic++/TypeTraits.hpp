@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <type_traits>
-
 namespace mimicpp
 {
 	template <typename Signature>
@@ -70,6 +68,36 @@ namespace mimicpp
 	struct signature_remove_noexcept<Return(Params..., ...) noexcept>
 	{
 		using type = Return(Params..., ...);
+	};
+
+	template <typename Signature>
+	struct signature_return_type;
+
+	template <typename Signature>
+	using signature_return_type_t = typename signature_return_type<Signature>::type;
+
+	template <typename Return, typename... Params>
+	struct signature_return_type<Return(Params...)>
+	{
+		using type = Return;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_return_type<Return(Params..., ...)>
+	{
+		using type = Return;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_return_type<Return(Params...) noexcept>
+	{
+		using type = Return;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_return_type<Return(Params..., ...) noexcept>
+	{
+		using type = Return;
 	};
 }
 
