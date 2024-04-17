@@ -15,25 +15,6 @@
 
 namespace mimicpp::detail
 {
-	template <typename Signature>
-	class MockBase
-	{
-	public:
-		using SignatureT = Signature;
-
-		~MockBase() = default;
-
-		MockBase() = default;
-
-		MockBase(const MockBase&) = delete;
-		MockBase& operator =(const MockBase&) = delete;
-		MockBase(MockBase&&) = default;
-		MockBase& operator =(MockBase&&) = default;
-
-	private:
-		std::shared_ptr<ExpectationCollection<SignatureT>> m_Expectations{};
-	};
-
 	class UuidOwner
 	{
 	public:
@@ -70,7 +51,7 @@ namespace mimicpp::detail
 
 	template <typename Signature, typename Builder, std::size_t... indices, typename... Args>
 	[[nodiscard]]
-	auto extend_builder_with_arg_policies(
+	constexpr auto extend_builder_with_arg_policies(
 		Builder&& builder,
 		const std::index_sequence<indices...>,
 		Args&&... args
@@ -82,6 +63,131 @@ namespace mimicpp::detail
 			| expectation_policies::make_argument_matcher<Signature, indices>(
 				std::bind_front(std::equal_to{}, std::forward<Args>(args))));
 	}
+
+	template <ValueCategory category, bool constness, typename Signature, typename... Args>
+	constexpr auto make_expectation_builder(
+		std::shared_ptr<ExpectationCollection<Signature>> expectations,
+		Args&&... args
+	)
+	{
+		return detail::extend_builder_with_arg_policies<Signature>(
+			BasicExpectationBuilder<Signature, DummyFinalizePolicy>{
+				std::move(expectations),
+				DummyFinalizePolicy{},
+				std::tuple{}
+			}
+			| expectation_policies::Category<Signature, category>{}
+			| expectation_policies::Constness<Signature, constness>{},
+			std::make_index_sequence<sizeof...(Args)>{},
+			std::forward<Args>(args)...);
+	}
+
+	template <typename Signature, typename Return, typename... Params>
+	class MockBase
+	{
+	public:
+		using SignatureT = Signature;
+		using CallInfoT = call::Info<SignatureT>;
+
+		MockBase(const MockBase&) = delete;
+		MockBase& operator =(const MockBase&) = delete;
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_call(Args&&... args) const &
+		{
+			return detail::make_expectation_builder<ValueCategory::lvalue, true>(
+				m_Expectations,
+				std::forward<Args>(args)...);
+		}
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_call(Args&&... args) &
+		{
+			return detail::make_expectation_builder<ValueCategory::lvalue, false>(
+				m_Expectations,
+				std::forward<Args>(args)...);
+		}
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_call(Args&&... args) const &&
+		{
+			return detail::make_expectation_builder<ValueCategory::rvalue, true>(
+				m_Expectations,
+				std::forward<Args>(args)...);
+		}
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_call(Args&&... args) &&
+		{
+			return detail::make_expectation_builder<ValueCategory::rvalue, false>(
+				m_Expectations,
+				std::forward<Args>(args)...);
+		}
+
+	protected:
+		~MockBase() = default;
+		MockBase() = default;
+		MockBase(MockBase&&) = default;
+		MockBase& operator =(MockBase&&) = default;
+
+		[[nodiscard]]
+		constexpr Return handle_call(Params... params) const &
+		{
+			return m_Expectations->handle_call(
+				CallInfoT{
+					.params = {std::ref(params)...},
+					.fromUuid = m_Uuid.uuid(),
+					.fromCategory = ValueCategory::lvalue,
+					.fromConst = true
+				});
+		}
+
+		[[nodiscard]]
+		constexpr Return handle_call(Params... params) &
+		{
+			return m_Expectations->handle_call(
+				CallInfoT{
+					.params = {std::ref(params)...},
+					.fromUuid = m_Uuid.uuid(),
+					.fromCategory = ValueCategory::lvalue,
+					.fromConst = false
+				});
+		}
+
+		[[nodiscard]]
+		constexpr Return handle_call(Params... params) const &&
+		{
+			return m_Expectations->handle_call(
+				CallInfoT{
+					.params = {std::ref(params)...},
+					.fromUuid = m_Uuid.uuid(),
+					.fromCategory = ValueCategory::rvalue,
+					.fromConst = true
+				});
+		}
+
+		[[nodiscard]]
+		constexpr Return handle_call(Params... params) &&
+		{
+			return m_Expectations->handle_call(
+				CallInfoT{
+					.params = {std::ref(params)...},
+					.fromUuid = m_Uuid.uuid(),
+					.fromCategory = ValueCategory::rvalue,
+					.fromConst = false
+				});
+		}
+
+	private:
+		UuidOwner m_Uuid{};
+		std::shared_ptr<ExpectationCollection<SignatureT>> m_Expectations{
+			std::make_shared<ExpectationCollection<SignatureT>>()
+		};
+	};
 }
 
 namespace mimicpp
@@ -91,13 +197,17 @@ namespace mimicpp
 
 	template <typename Return, typename... Params>
 	class Mock<Return(Params...)>
+		: public detail::MockBase<Return(Params...), Return, Params...>
 	{
+		using SuperT = detail::MockBase<Return(Params...), Return, Params...>;
+		using SuperT::handle_call;
+
 	public:
 		using SignatureT = Return(Params...);
 		using CallInfoT = call::Info<SignatureT>;
+		using SuperT::expect_call;
 
 		~Mock() = default;
-
 		Mock() = default;
 
 		Mock(const Mock&) = delete;
@@ -107,69 +217,23 @@ namespace mimicpp
 
 		constexpr Return operator ()(Params... params) const &
 		{
-			return m_Expectations->handle_call(
-				CallInfoT{
-					.params = {std::ref(params)...},
-					.fromUuid = m_Uuid.uuid(),
-					.fromCategory = ValueCategory::lvalue,
-					.fromConst = true
-				});
+			return handle_call(std::forward<Params>(params)...);
 		}
 
 		constexpr Return operator ()(Params... params) &
 		{
-			return m_Expectations->handle_call(
-				CallInfoT{
-					.params = {std::ref(params)...},
-					.fromUuid = m_Uuid.uuid(),
-					.fromCategory = ValueCategory::lvalue,
-					.fromConst = false
-				});
+			return handle_call(std::forward<Params>(params)...);
 		}
 
 		constexpr Return operator ()(Params... params) const &&
 		{
-			return m_Expectations->handle_call(
-				CallInfoT{
-					.params = {std::ref(params)...},
-					.fromUuid = m_Uuid.uuid(),
-					.fromCategory = ValueCategory::rvalue,
-					.fromConst = true
-				});
+			return std::move(*this).handle_call(std::forward<Params>(params)...);
 		}
 
 		constexpr Return operator ()(Params... params) &&
 		{
-			return m_Expectations->handle_call(
-				CallInfoT{
-					.params = {std::ref(params)...},
-					.fromUuid = m_Uuid.uuid(),
-					.fromCategory = ValueCategory::rvalue,
-					.fromConst = false
-				});
+			return std::move(*this).handle_call(std::forward<Params>(params)...);
 		}
-
-		template <typename... Args>
-		[[nodiscard]]
-		constexpr auto expect(Args&&... args) &
-		{
-			return detail::extend_builder_with_arg_policies<SignatureT>(
-				BasicExpectationBuilder<SignatureT, DummyFinalizePolicy>{
-					m_Expectations,
-					DummyFinalizePolicy{},
-					std::tuple{}
-				}
-				| expectation_policies::Category<SignatureT, ValueCategory::lvalue>{}
-				| expectation_policies::Constness<SignatureT, false>{},
-				std::make_index_sequence<sizeof...(Args)>{},
-				std::forward<Args>(args)...);
-		}
-
-	private:
-		detail::UuidOwner m_Uuid{};
-		std::shared_ptr<ExpectationCollection<SignatureT>> m_Expectations{
-			std::make_shared<ExpectationCollection<SignatureT>>()
-		};
 	};
 }
 

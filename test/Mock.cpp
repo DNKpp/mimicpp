@@ -43,7 +43,7 @@ TEST_CASE("Mock::expect creates a new expectation.", "[mock]")
 
 	const auto makeExpectation = [&](auto& m)
 	{
-		return m.expect(1, 4.2)
+		return m.expect_call(1, 4.2)
 				| PolicyFacade<SignatureT, std::reference_wrapper<PolicyFake<SignatureT>>, UnwrapReferenceWrapper>{
 					std::ref(configurablePolicy)
 				};
