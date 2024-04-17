@@ -34,6 +34,685 @@ TEMPLATE_TEST_CASE(
 	STATIC_REQUIRE(std::is_default_constructible_v<TestType>);
 }
 
+TEST_CASE("Mock<void()>::expect_call expectes a call with the same category and constness.", "[mock]")
+{
+	using ExpectationT = mimicpp::ScopedExpectation<void()>;
+	mimicpp::ScopedReporter reporter{};
+	mimicpp::Mock<void()> mock{};
+
+	SECTION("Expect const lvalue call.")
+	{
+		ExpectationT expectation = std::as_const(mock).expect_call();
+
+		SECTION("As const lvalue succeeds.")
+		{
+			REQUIRE_NOTHROW(std::as_const(mock)());
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::SizeIs(1));
+		}
+
+		SECTION("As lvalue fails partially.")
+		{
+			REQUIRE_THROWS_AS(
+				mock(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As const rvalue fails partially.")
+		{
+			REQUIRE_THROWS_AS(
+				std::move(std::as_const(mock))(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As rvalue fails.")
+		{
+			REQUIRE_THROWS_AS(
+				std::move(mock)(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+	}
+
+	SECTION("Expect lvalue call.")
+	{
+		ExpectationT expectation = mock.expect_call();
+
+		SECTION("As const lvalue fails partially.")
+		{
+			REQUIRE_THROWS_AS(
+				std::as_const(mock)(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As lvalue succeeds.")
+		{
+			REQUIRE_NOTHROW(mock());
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::SizeIs(1));
+		}
+
+		SECTION("As const rvalue fails.")
+		{
+			REQUIRE_THROWS_AS(
+				std::move(std::as_const(mock))(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As rvalue fails partially.")
+		{
+			REQUIRE_THROWS_AS(
+				std::move(mock)(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+	}
+
+	SECTION("Expect const rvalue call.")
+	{
+		ExpectationT expectation = std::move(std::as_const(mock)).expect_call();
+
+		SECTION("As const lvalue fails partially.")
+		{
+			REQUIRE_THROWS_AS(
+				std::as_const(mock)(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As lvalue fails.")
+		{
+			REQUIRE_THROWS_AS(
+				mock(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As const rvalue succeeds.")
+		{
+			REQUIRE_NOTHROW(std::move(std::as_const(mock))());
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::SizeIs(1));
+		}
+
+		SECTION("As rvalue fails partially.")
+		{
+			REQUIRE_THROWS_AS(
+				std::move(mock)(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+	}
+
+	SECTION("Expect rvalue call.")
+	{
+		ExpectationT expectation = std::move(mock).expect_call();
+
+		SECTION("As const lvalue fails.")
+		{
+			REQUIRE_THROWS_AS(
+				std::as_const(mock)(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As lvalue fails partially.")
+		{
+			REQUIRE_THROWS_AS(
+				mock(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As const rvalue fails partially.")
+		{
+			REQUIRE_THROWS_AS(
+				std::move(std::as_const(mock))(),
+				TestExpectationError);
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::IsEmpty());
+		}
+
+		SECTION("As rvalue succeeds.")
+		{
+			REQUIRE_NOTHROW(std::move(mock)());
+
+			REQUIRE_THAT(
+				reporter.no_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.partial_match_reports(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.unsatisfied_expectations(),
+				Catch::Matchers::IsEmpty());
+			REQUIRE_THAT(
+				reporter.ok_match_reports(),
+				Catch::Matchers::SizeIs(1));
+		}
+	}
+}
+
+TEST_CASE("Mock<void()>::expect_lvalue_call expectes a call with lvalue category.", "[mock]")
+{
+	using ExpectationT = mimicpp::ScopedExpectation<void()>;
+	mimicpp::ScopedReporter reporter{};
+	mimicpp::Mock<void()> mock{};
+
+	ExpectationT expectation = std::as_const(mock).expect_lvalue_call();
+
+	SECTION("As const lvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(std::as_const(mock)());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As lvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(mock());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As const rvalue fails.")
+	{
+		REQUIRE_THROWS_AS(
+			std::move(std::as_const(mock))(),
+			TestExpectationError);
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("As rvalue fails.")
+	{
+		REQUIRE_THROWS_AS(
+			std::move(mock)(),
+			TestExpectationError);
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+}
+
+TEST_CASE("Mock<void()>::expect_rvalue_call expectes a call with rvalue category.", "[mock]")
+{
+	using ExpectationT = mimicpp::ScopedExpectation<void()>;
+	mimicpp::ScopedReporter reporter{};
+	mimicpp::Mock<void()> mock{};
+
+	ExpectationT expectation = std::as_const(mock).expect_rvalue_call();
+
+	SECTION("As const lvalue fails.")
+	{
+		REQUIRE_THROWS_AS(
+			std::as_const(mock)(),
+			TestExpectationError);
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("As lvalue fails.")
+	{
+		REQUIRE_THROWS_AS(
+			mock(),
+			TestExpectationError);
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("As const rvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(std::move(std::as_const(mock))());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As rvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(std::move(mock)());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+}
+
+TEST_CASE("Mock<void()>::expect_const_call expectes a call from const.", "[mock]")
+{
+	using ExpectationT = mimicpp::ScopedExpectation<void()>;
+	mimicpp::ScopedReporter reporter{};
+	mimicpp::Mock<void()> mock{};
+
+	ExpectationT expectation = std::as_const(mock).expect_const_call();
+
+	SECTION("As const lvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(std::as_const(mock)());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As lvalue fails.")
+	{
+		REQUIRE_THROWS_AS(
+			mock(),
+			TestExpectationError);
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("As const rvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(std::move(std::as_const(mock))());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As rvalue fails.")
+	{
+		REQUIRE_THROWS_AS(
+			std::move(mock)(),
+			TestExpectationError);
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+}
+
+TEST_CASE("Mock<void()>::expect_const_call expectes a call from non-const.", "[mock]")
+{
+	using ExpectationT = mimicpp::ScopedExpectation<void()>;
+	mimicpp::ScopedReporter reporter{};
+	mimicpp::Mock<void()> mock{};
+
+	ExpectationT expectation = std::as_const(mock).expect_mutable_call();
+
+	SECTION("As const lvalue fails.")
+	{
+		REQUIRE_THROWS_AS(
+			std::as_const(mock)(),
+			TestExpectationError);
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("As lvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(mock());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As const rvalue fails.")
+	{
+		REQUIRE_THROWS_AS(
+			std::move(std::as_const(mock))(),
+			TestExpectationError);
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("As rvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(std::move(mock)());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+}
+
 TEST_CASE("Mock::expect creates a new expectation.", "[mock]")
 {
 	using SignatureT = void(int, double);

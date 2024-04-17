@@ -64,7 +64,7 @@ namespace mimicpp::detail
 				std::bind_front(std::equal_to{}, std::forward<Args>(args))));
 	}
 
-	template <ValueCategory category, bool constness, typename Signature, typename... Args>
+	template <typename Signature, typename... Args>
 	constexpr auto make_expectation_builder(
 		std::shared_ptr<ExpectationCollection<Signature>> expectations,
 		Args&&... args
@@ -75,9 +75,7 @@ namespace mimicpp::detail
 				std::move(expectations),
 				DummyFinalizePolicy{},
 				std::tuple{}
-			}
-			| expectation_policies::Category<Signature, category>{}
-			| expectation_policies::Constness<Signature, constness>{},
+			},
 			std::make_index_sequence<sizeof...(Args)>{},
 			std::forward<Args>(args)...);
 	}
@@ -96,36 +94,84 @@ namespace mimicpp::detail
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) const &
 		{
-			return detail::make_expectation_builder<ValueCategory::lvalue, true>(
-				m_Expectations,
-				std::forward<Args>(args)...);
+			return detail::make_expectation_builder(
+						m_Expectations,
+						std::forward<Args>(args)...)
+					| expectation_policies::Category<Signature, ValueCategory::lvalue>{}
+					| expectation_policies::Constness<Signature, true>{};
 		}
 
 		template <typename... Args>
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) &
 		{
-			return detail::make_expectation_builder<ValueCategory::lvalue, false>(
-				m_Expectations,
-				std::forward<Args>(args)...);
+			return detail::make_expectation_builder(
+						m_Expectations,
+						std::forward<Args>(args)...)
+					| expectation_policies::Category<Signature, ValueCategory::lvalue>{}
+					| expectation_policies::Constness<Signature, false>{};
 		}
 
 		template <typename... Args>
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) const &&
 		{
-			return detail::make_expectation_builder<ValueCategory::rvalue, true>(
-				m_Expectations,
-				std::forward<Args>(args)...);
+			return detail::make_expectation_builder(
+						m_Expectations,
+						std::forward<Args>(args)...)
+					| expectation_policies::Category<Signature, ValueCategory::rvalue>{}
+					| expectation_policies::Constness<Signature, true>{};
 		}
 
 		template <typename... Args>
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) &&
 		{
-			return detail::make_expectation_builder<ValueCategory::rvalue, false>(
-				m_Expectations,
-				std::forward<Args>(args)...);
+			return detail::make_expectation_builder(
+						m_Expectations,
+						std::forward<Args>(args)...)
+					| expectation_policies::Category<Signature, ValueCategory::rvalue>{}
+					| expectation_policies::Constness<Signature, false>{};
+		}
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_lvalue_call(Args&&... args) const
+		{
+			return detail::make_expectation_builder(
+						m_Expectations,
+						std::forward<Args>(args)...)
+					| expectation_policies::Category<Signature, ValueCategory::lvalue>{};
+		}
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_rvalue_call(Args&&... args) const
+		{
+			return detail::make_expectation_builder(
+						m_Expectations,
+						std::forward<Args>(args)...)
+					| expectation_policies::Category<Signature, ValueCategory::rvalue>{};
+		}
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_const_call(Args&&... args) const
+		{
+			return detail::make_expectation_builder(
+						m_Expectations,
+						std::forward<Args>(args)...)
+					| expectation_policies::Constness<Signature, true>{};
+		}
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_mutable_call(Args&&... args) const
+		{
+			return detail::make_expectation_builder(
+						m_Expectations,
+						std::forward<Args>(args)...)
+					| expectation_policies::Constness<Signature, false>{};
 		}
 
 	protected:
