@@ -6,6 +6,7 @@ add_executable(
 	mimicpp-tests
 	"Call.cpp"
 	"Expectation.cpp"
+	"Printer.cpp"
 	"TypeTraits.cpp"
 )
 
