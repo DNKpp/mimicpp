@@ -171,8 +171,8 @@ namespace mimicpp
 									&& requires(T& policy, const call::Info<Signature>& call)
 									{
 										{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-										{ std::as_const(policy).matches(call) } noexcept -> std::convertible_to<call::SubMatchResult>;
-										{ policy.consume(call) } noexcept;
+										{ std::as_const(policy).matches(call) } -> std::convertible_to<call::SubMatchResult>;
+										{ policy.consume(call) };
 									};
 
 	template <typename T, typename Signature>
