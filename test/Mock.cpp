@@ -713,6 +713,87 @@ TEST_CASE("Mock<void()>::expect_const_call expectes a call from non-const.", "[m
 	}
 }
 
+TEST_CASE("Mock<void()>::expect_any_call expects call from any category and constness.", "[mock]")
+{
+	using ExpectationT = mimicpp::ScopedExpectation<void()>;
+	mimicpp::ScopedReporter reporter{};
+	mimicpp::Mock<void()> mock{};
+
+	ExpectationT expectation = std::as_const(mock).expect_any_call();
+
+	SECTION("As const lvalue fails.")
+	{
+		REQUIRE_NOTHROW(std::as_const(mock)());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As lvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(mock());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As const rvalue fails.")
+	{
+		REQUIRE_NOTHROW(std::move(std::as_const(mock))());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+
+	SECTION("As rvalue succeeds.")
+	{
+		REQUIRE_NOTHROW(std::move(mock)());
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::IsEmpty());
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::SizeIs(1));
+	}
+}
+
 TEST_CASE("Mock::expect creates a new expectation.", "[mock]")
 {
 	using SignatureT = void(int, double);

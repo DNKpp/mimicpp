@@ -174,6 +174,15 @@ namespace mimicpp::detail
 					| expectation_policies::Constness<Signature, false>{};
 		}
 
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr auto expect_any_call(Args&&... args) const
+		{
+			return detail::make_expectation_builder(
+				m_Expectations,
+				std::forward<Args>(args)...);
+		}
+
 	protected:
 		~MockBase() = default;
 		MockBase() = default;
