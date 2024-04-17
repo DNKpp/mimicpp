@@ -9,10 +9,13 @@
 #pragma once
 
 #include <format>
+#include <sstream>
 
 namespace mimicpp
 {
 	using CharT = char;
+	using StringT = std::basic_string<CharT>;
+	using StringStreamT = std::basic_stringstream<CharT>;
 
 	template <typename T>
 	concept print_iterator = std::output_iterator<T, CharT>;
