@@ -27,9 +27,10 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	using SignatureT = void();
 	using CallInfoT = call::Info<SignatureT>;
-	using CategoryPolicyT = expectation_policies::Category<SignatureT, category>;
+	using PolicyT = expectation_policies::Category<SignatureT, category>;
+	STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
 
-	constexpr CategoryPolicyT policy{};
+	constexpr PolicyT policy{};
 	SECTION("Policy is always satisfied.")
 	{
 		REQUIRE(policy.is_satisfied());
@@ -83,9 +84,10 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	using SignatureT = void();
 	using CallInfoT = call::Info<SignatureT>;
-	using CategoryPolicyT = expectation_policies::Constness<SignatureT, constness>;
+	using PolicyT = expectation_policies::Constness<SignatureT, constness>;
+	STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
 
-	constexpr CategoryPolicyT policy{};
+	constexpr PolicyT policy{};
 	SECTION("Policy is always satisfied.")
 	{
 		REQUIRE(policy.is_satisfied());
@@ -174,6 +176,7 @@ TEST_CASE(
 			std::ref(predicate),
 			std::ref(describe)
 		);
+		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy)>, SignatureT>);
 
 		int param{42};
 		const CallInfoT call{
@@ -228,6 +231,7 @@ TEST_CASE(
 			std::ref(predicate1),
 			std::ref(describe1)
 		);
+		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy1)>, SignatureT>);
 
 		PredicateMock<std::string> predicate2{};
 		DescribeMock<std::string> describe2{};
@@ -235,6 +239,7 @@ TEST_CASE(
 			std::ref(predicate2),
 			std::ref(describe2)
 		);
+		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy2)>, SignatureT>);
 
 		int param0{42};
 		const std::string param1{"Hello, World!"};
