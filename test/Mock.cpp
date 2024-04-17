@@ -75,12 +75,38 @@ TEST_CASE("Mock::expect creates a new expectation.", "[mock]")
 			Catch::Matchers::SizeIs(1));
 	}
 
-	SECTION("When not matched, gets reported as no match and unsatisfied.")
+	SECTION("When partial matched, gets reported as partial match and unsatisfied.")
 	{
 		{
 			mimicpp::ScopedExpectation<SignatureT> expectation = makeExpectation(mock);
 			REQUIRE_THROWS_AS(
 				mock(42, 4.2),
+				TestExpectationError);
+		}
+
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Catch::Matchers::IsEmpty());
+
+		REQUIRE_THAT(
+			reporter.partial_match_reports(),
+			Catch::Matchers::SizeIs(1));
+
+		REQUIRE_THAT(
+			reporter.unsatisfied_expectations(),
+			Catch::Matchers::SizeIs(1));
+
+		REQUIRE_THAT(
+			reporter.ok_match_reports(),
+			Catch::Matchers::IsEmpty());
+	}
+
+	SECTION("When not matched, gets reported as no match and unsatisfied.")
+	{
+		{
+			mimicpp::ScopedExpectation<SignatureT> expectation = makeExpectation(mock);
+			REQUIRE_THROWS_AS(
+				std::move(std::as_const(mock))(42, 8.4),
 				TestExpectationError);
 		}
 

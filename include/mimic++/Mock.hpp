@@ -105,16 +105,48 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
+		constexpr Return operator ()(Params... params) const &
+		{
+			return m_Expectations->handle_call(
+				CallInfoT{
+					.params = {std::ref(params)...},
+					.fromUuid = m_Uuid.uuid(),
+					.fromCategory = ValueCategory::lvalue,
+					.fromConst = true
+				});
+		}
+
 		constexpr Return operator ()(Params... params) &
 		{
-			const CallInfoT call{
-				.params = {std::ref(params)...},
-				.fromUuid = m_Uuid.uuid(),
-				.fromCategory = ValueCategory::lvalue,
-				.fromConst = false
-			};
+			return m_Expectations->handle_call(
+				CallInfoT{
+					.params = {std::ref(params)...},
+					.fromUuid = m_Uuid.uuid(),
+					.fromCategory = ValueCategory::lvalue,
+					.fromConst = false
+				});
+		}
 
-			return m_Expectations->handle_call(call);
+		constexpr Return operator ()(Params... params) const &&
+		{
+			return m_Expectations->handle_call(
+				CallInfoT{
+					.params = {std::ref(params)...},
+					.fromUuid = m_Uuid.uuid(),
+					.fromCategory = ValueCategory::rvalue,
+					.fromConst = true
+				});
+		}
+
+		constexpr Return operator ()(Params... params) &&
+		{
+			return m_Expectations->handle_call(
+				CallInfoT{
+					.params = {std::ref(params)...},
+					.fromUuid = m_Uuid.uuid(),
+					.fromCategory = ValueCategory::rvalue,
+					.fromConst = false
+				});
 		}
 
 		template <typename... Args>
