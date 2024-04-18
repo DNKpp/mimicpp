@@ -27,7 +27,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	using SignatureT = void();
 	using CallInfoT = call::Info<SignatureT>;
-	using PolicyT = expectation_policies::Category<SignatureT, category>;
+	using PolicyT = expectation_policies::Category<category>;
 	STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
 
 	constexpr PolicyT policy{};

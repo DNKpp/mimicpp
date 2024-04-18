@@ -97,7 +97,7 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Category<Signature, ValueCategory::lvalue>{}
+					| expectation_policies::Category<ValueCategory::lvalue>{}
 					| expectation_policies::Constness<Signature, true>{};
 		}
 
@@ -108,7 +108,7 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Category<Signature, ValueCategory::lvalue>{}
+					| expectation_policies::Category<ValueCategory::lvalue>{}
 					| expectation_policies::Constness<Signature, false>{};
 		}
 
@@ -119,7 +119,7 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Category<Signature, ValueCategory::rvalue>{}
+					| expectation_policies::Category<ValueCategory::rvalue>{}
 					| expectation_policies::Constness<Signature, true>{};
 		}
 
@@ -130,7 +130,7 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Category<Signature, ValueCategory::rvalue>{}
+					| expectation_policies::Category<ValueCategory::rvalue>{}
 					| expectation_policies::Constness<Signature, false>{};
 		}
 
@@ -141,7 +141,7 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Category<Signature, ValueCategory::lvalue>{};
+					| expectation_policies::Category<ValueCategory::lvalue>{};
 		}
 
 		template <typename... Args>
@@ -151,7 +151,7 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Category<Signature, ValueCategory::rvalue>{};
+					| expectation_policies::Category<ValueCategory::rvalue>{};
 		}
 
 		template <typename... Args>

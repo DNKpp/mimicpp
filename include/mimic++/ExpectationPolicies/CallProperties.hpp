@@ -16,18 +16,17 @@
 
 namespace mimicpp::expectation_policies
 {
-	template <typename Signature, ValueCategory expected>
+	template <ValueCategory expected>
 	class Category
 	{
 	public:
-		using CallInfoT = call::Info<Signature>;
-
 		static constexpr bool is_satisfied() noexcept
 		{
 			return true;
 		}
 
-		static constexpr call::SubMatchResult matches(const CallInfoT& info)
+		template <typename Signature>
+		static constexpr call::SubMatchResult matches(const call::Info<Signature>& info)
 		{
 			if (info.fromCategory == expected)
 			{
@@ -43,7 +42,8 @@ namespace mimicpp::expectation_policies
 			};
 		}
 
-		static constexpr void consume(const CallInfoT& call) noexcept
+		template <typename Signature>
+		static constexpr void consume(const call::Info<Signature>& call) noexcept
 		{
 			assert(call.fromCategory == expected && "Call does not match.");
 		}
