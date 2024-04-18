@@ -25,7 +25,7 @@ namespace mimicpp
 	[[noreturn]]
 	void report_fail(
 		call::Info<Signature> callInfo,
-		std::vector<call::MatchResult_PartialT> results
+		std::vector<call::MatchResult_ExhaustedT> results
 	);
 
 	template <typename Signature>

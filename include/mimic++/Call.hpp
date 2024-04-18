@@ -42,7 +42,7 @@ namespace mimicpp::call
 	enum class MatchCategory
 	{
 		no,
-		partial,
+		exhausted,
 		ok
 	};
 }
@@ -63,7 +63,7 @@ struct std::formatter<mimicpp::call::MatchCategory, Char>
 			switch (cat)
 			{
 			case MatchCategoryT::no: return "MatchCategory::no";
-			case MatchCategoryT::partial: return "MatchCategory::partial";
+			case MatchCategoryT::exhausted: return "MatchCategory::exhausted";
 			case MatchCategoryT::ok: return "MatchCategory::ok";
 			}
 
@@ -100,12 +100,12 @@ namespace mimicpp::call
 	};
 
 	using MatchResult_NoT = GenericMatchResult<MatchCategory::no>;
-	using MatchResult_PartialT = GenericMatchResult<MatchCategory::partial>;
+	using MatchResult_ExhaustedT = GenericMatchResult<MatchCategory::exhausted>;
 	using MatchResult_OkT = GenericMatchResult<MatchCategory::ok>;
 
 	using MatchResultT = std::variant<
 		MatchResult_NoT,
-		MatchResult_PartialT,
+		MatchResult_ExhaustedT,
 		MatchResult_OkT
 	>;
 }
@@ -113,26 +113,22 @@ namespace mimicpp::call
 namespace mimicpp::call::detail
 {
 	[[nodiscard]]
-	inline MatchResultT evaluate_sub_match_results(std::vector<SubMatchResult> subResults) noexcept
+	inline MatchResultT evaluate_sub_match_results(const bool isSaturated, std::vector<SubMatchResult> subResults) noexcept
 	{
 		static_assert(3 == std::variant_size_v<MatchResultT>, "Unexpected MatchResult alternative count.");
 
-		if (!std::ranges::empty(subResults))
+		if (!std::ranges::all_of(subResults, &SubMatchResult::matched))
 		{
-			if (const auto iter = std::ranges::adjacent_find(subResults, std::not_equal_to{}, &SubMatchResult::matched);
-				iter != std::ranges::end(subResults))
-			{
-				return MatchResult_PartialT{
-					.subMatchResults = std::move(subResults)
-				};
-			}
+			return MatchResult_NoT{
+				.subMatchResults = std::move(subResults)
+			};
+		}
 
-			if (!subResults.front().matched)
-			{
-				return MatchResult_NoT{
-					.subMatchResults = std::move(subResults)
-				};
-			}
+		if (isSaturated)
+		{
+			return MatchResult_ExhaustedT{
+				.subMatchResults = std::move(subResults)
+			};
 		}
 
 		return MatchResult_OkT{

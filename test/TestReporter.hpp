@@ -13,7 +13,7 @@
 #define MIMICPP_REPORTER_DEFINED
 
 inline std::vector<mimicpp::call::MatchResult_NoT> g_NoMatchResults{};
-inline std::vector<mimicpp::call::MatchResult_PartialT> g_PartialMatchResults{};
+inline std::vector<mimicpp::call::MatchResult_ExhaustedT> g_ExhaustedMatchResults{};
 inline std::vector<mimicpp::call::MatchResult_OkT> g_OkMatchResults{};
 inline std::vector<std::any> g_UnsatisfiedExpectations{};
 
@@ -40,11 +40,11 @@ namespace mimicpp
 	template <typename Signature>
 	void report_fail(
 		call::Info<Signature> callInfo,
-		std::vector<call::MatchResult_PartialT> results
+		std::vector<call::MatchResult_ExhaustedT> results
 	)
 	{
-		g_PartialMatchResults.insert(
-			std::ranges::end(g_PartialMatchResults),
+		g_ExhaustedMatchResults.insert(
+			std::ranges::end(g_ExhaustedMatchResults),
 			std::ranges::begin(results),
 			std::ranges::end(results));
 
@@ -74,7 +74,7 @@ namespace mimicpp
 		~ScopedReporter() noexcept
 		{
 			g_OkMatchResults.clear();
-			g_PartialMatchResults.clear();
+			g_ExhaustedMatchResults.clear();
 			g_NoMatchResults.clear();
 			g_UnsatisfiedExpectations.clear();
 		}
@@ -82,7 +82,7 @@ namespace mimicpp
 		ScopedReporter() noexcept
 		{
 			g_OkMatchResults.clear();
-			g_PartialMatchResults.clear();
+			g_ExhaustedMatchResults.clear();
 			g_NoMatchResults.clear();
 			g_UnsatisfiedExpectations.clear();
 		}
@@ -99,9 +99,9 @@ namespace mimicpp
 		}
 
 		// ReSharper disable once CppMemberFunctionMayBeStatic
-		auto& partial_match_reports() noexcept
+		auto& exhausted_match_reports() noexcept
 		{
-			return g_PartialMatchResults;
+			return g_ExhaustedMatchResults;
 		}
 
 		// ReSharper disable once CppMemberFunctionMayBeStatic

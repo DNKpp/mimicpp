@@ -28,7 +28,7 @@ namespace mimicpp::detail
 	void handle_call_match_fail(
 		call::Info<Signature> call,
 		std::vector<call::MatchResult_NoT> noMatches,
-		std::vector<call::MatchResult_PartialT> partialMatches
+		std::vector<call::MatchResult_ExhaustedT> partialMatches
 	)
 	{
 		if (!std::ranges::empty(partialMatches))
@@ -129,7 +129,7 @@ namespace mimicpp
 			const std::scoped_lock lock{m_ExpectationsMx};
 
 			std::vector<call::MatchResult_NoT> noMatches{};
-			std::vector<call::MatchResult_PartialT> partialMatches{};
+			std::vector<call::MatchResult_ExhaustedT> partialMatches{};
 
 			for (auto& exp : m_Expectations)
 			{
@@ -149,7 +149,7 @@ namespace mimicpp
 				}
 				else
 				{
-					partialMatches.emplace_back(std::get<call::MatchResult_PartialT>(std::move(matchResult)));
+					partialMatches.emplace_back(std::get<call::MatchResult_ExhaustedT>(std::move(matchResult)));
 				}
 			}
 
@@ -244,8 +244,8 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr call::MatchResultT matches(const CallInfoT& call) const override
 		{
-			// Todo: evaluate times
 			return call::detail::evaluate_sub_match_results(
+				m_Times.is_saturated(),
 				std::apply(
 					[&](const auto&... policies)
 					{
