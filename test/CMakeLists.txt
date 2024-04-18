@@ -7,6 +7,7 @@ add_executable(
 	"Call.cpp"
 	"CallProperties.cpp"
 	"Expectation.cpp"
+	"ExpectationBuilder.cpp"
 	"Mock.cpp"
 	"Printer.cpp"
 	"TypeTraits.cpp"

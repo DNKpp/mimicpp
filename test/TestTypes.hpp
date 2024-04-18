@@ -8,6 +8,9 @@
 #include "mimic++/Call.hpp"
 #include "mimic++/Expectation.hpp"
 
+#include "catch2/catch_test_macros.hpp"
+#include "catch2/trompeloeil.hpp"
+
 class UnwrapReferenceWrapper
 {
 public:
@@ -44,6 +47,16 @@ public:
 	static constexpr void consume(const CallInfoT& call) noexcept
 	{
 	}
+};
+
+template <typename Signature>
+class FinalizerMock
+{
+public:
+	using CallInfoT = mimicpp::call::Info<Signature>;
+	using ReturnT = mimicpp::signature_return_type_t<Signature>;
+
+	MAKE_MOCK1(finalize_call, ReturnT (const CallInfoT&));
 };
 
 template <typename Signature, typename Policy, typename Projection>
@@ -98,6 +111,20 @@ public:
 	}
 };
 
+template <typename Signature>
+class PolicyMock
+{
+public:
+	using CallInfoT = mimicpp::call::Info<Signature>;
+	using SubMatchT = mimicpp::call::SubMatchResult;
+
+	static constexpr bool trompeloeil_movable_mock = true;
+
+	MAKE_CONST_MOCK0(is_satisfied, bool (), noexcept);
+	MAKE_CONST_MOCK1(matches, SubMatchT (const CallInfoT&), noexcept);
+	MAKE_MOCK1(consume, void (const CallInfoT&), noexcept);
+};
+
 template <typename Signature, typename Policy, typename Projection>
 // enable, when trompeloeil fully supports movable mocks
 //requires mimicpp::finalize_policy_for<
@@ -142,6 +169,14 @@ public:
 	static constexpr void consume() noexcept
 	{
 	}
+};
+
+class TimesMock
+{
+public:
+	MAKE_CONST_MOCK0(is_satisfied, bool (), noexcept);
+	MAKE_CONST_MOCK0(is_saturated, bool (), noexcept);
+	MAKE_MOCK0(consume, void ());
 };
 
 template <typename Policy, typename Projection>
