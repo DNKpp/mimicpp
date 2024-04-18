@@ -71,8 +71,9 @@ namespace mimicpp::detail
 	)
 	{
 		return detail::extend_builder_with_arg_policies<Signature>(
-			BasicExpectationBuilder<Signature, InitFinalizePolicy>{
+			BasicExpectationBuilder<Signature, InitTimesPolicy, InitFinalizePolicy>{
 				std::move(expectations),
+				InitTimesPolicy{},
 				InitFinalizePolicy{},
 				std::tuple{}
 			},

@@ -119,3 +119,55 @@ public:
 			.finalize_call(call);
 	}
 };
+
+class TimesFake
+{
+public:
+	bool isSatisfied{};
+
+	[[nodiscard]]
+	constexpr bool is_satisfied() const noexcept
+	{
+		return isSatisfied;
+	}
+
+	bool isSaturated{};
+
+	[[nodiscard]]
+	constexpr bool is_saturated() const noexcept
+	{
+		return isSaturated;
+	}
+
+	static constexpr void consume() noexcept
+	{
+	}
+};
+
+template <typename Policy, typename Projection>
+class TimesFacade
+{
+public:
+	Policy policy{};
+	Projection projection{};
+
+	[[nodiscard]]
+	constexpr bool is_satisfied() const noexcept
+	{
+		return std::invoke(projection, policy)
+			.is_satisfied();
+	}
+
+	[[nodiscard]]
+	constexpr bool is_saturated() const noexcept
+	{
+		return std::invoke(projection, policy)
+			.is_saturated();
+	}
+
+	constexpr void consume() noexcept
+	{
+		return std::invoke(projection, policy)
+			.consume();
+	}
+};

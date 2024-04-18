@@ -228,7 +228,6 @@ namespace
 		static constexpr bool trompeloeil_movable_mock = true;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
-		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept);
 		MAKE_CONST_MOCK1(matches, SubMatchT(const CallInfoT&), noexcept);
 		MAKE_MOCK1(consume, void(const CallInfoT&), noexcept);
 	};
@@ -241,6 +240,14 @@ namespace
 		using ReturnT = mimicpp::signature_return_type_t<Signature>;
 
 		MAKE_MOCK1(finalize_call, ReturnT(const CallInfoT&));
+	};
+
+	class TimesMock
+	{
+	public:
+		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
+		MAKE_CONST_MOCK0(is_saturated, bool(), noexcept);
+		MAKE_MOCK0(consume, void());
 	};
 }
 
@@ -268,6 +275,17 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == mimicpp::finalize_policy_for<Policy, Signature>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"mimicpp::times_policy determines, whether the type satisfies the requirements.",
+	"[expectation]",
+	((bool expected, typename Policy), expected, Policy),
+	(true, TimesFake),
+	(true, TimesFacade<std::reference_wrapper<TimesFake>, UnwrapReferenceWrapper>)
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::times_policy<Policy>);
 }
 
 namespace
@@ -362,7 +380,8 @@ TEMPLATE_TEST_CASE(
 
 	SECTION("With no policies at all.")
 	{
-		mimicpp::BasicExpectation<TestType, FinalizerT> expectation{
+		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT> expectation{
+			TimesFake{.isSatisfied = true},
 			FinalizerT{}
 		};
 
@@ -374,7 +393,8 @@ TEMPLATE_TEST_CASE(
 	SECTION("With one policy.")
 	{
 		PolicyMockT policy{};
-		mimicpp::BasicExpectation<TestType, FinalizerT, PolicyRefT> expectation{
+		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT, PolicyRefT> expectation{
+			TimesFake{.isSatisfied = true},
 			FinalizerT{},
 			PolicyRefT{std::ref(policy)}
 		};
@@ -401,7 +421,8 @@ TEMPLATE_TEST_CASE(
 	{
 		PolicyMockT policy1{};
 		PolicyMockT policy2{};
-		mimicpp::BasicExpectation<TestType, FinalizerT, PolicyRefT, PolicyRefT> expectation{
+		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
+			TimesFake{.isSatisfied = true},
 			FinalizerT{},
 			PolicyRefT{std::ref(policy1)},
 			PolicyRefT{std::ref(policy2)}
@@ -477,7 +498,8 @@ TEMPLATE_TEST_CASE(
 	};
 
 	FinalizerT finalizer{};
-	mimicpp::BasicExpectation<SignatureT, FinalizerRefT> expectation{
+	mimicpp::BasicExpectation<SignatureT, TimesFake, FinalizerRefT> expectation{
+		TimesFake{},
 		std::ref(finalizer)
 	};
 
@@ -508,7 +530,7 @@ TEST_CASE(
 	using PolicyMockT = PolicyMock<void()>;
 	using PolicyRefT = PolicyFacade<void(), std::reference_wrapper<PolicyMock<void()>>, UnwrapReferenceWrapper>;
 	using FinalizerT = FinalizerFake<void()>;
-	using ExpectationT = mimicpp::BasicExpectation<void(), FinalizerT, PolicyRefT>;
+	using ExpectationT = mimicpp::BasicExpectation<void(), TimesFake, FinalizerT, PolicyRefT>;
 	using ScopedExpectationT = mimicpp::ScopedExpectation<void()>;
 	using CollectionT = mimicpp::ExpectationCollection<void()>;
 
@@ -518,7 +540,10 @@ TEST_CASE(
 	std::optional<ScopedExpectationT> expectation{
 		std::in_place,
 		collection,
-		std::make_unique<ExpectationT>(FinalizerT{}, std::ref(policy))
+		std::make_unique<ExpectationT>(
+			TimesFake{.isSatisfied = true},
+			FinalizerT{},
+			std::ref(policy))
 	};
 
 	SECTION("When calling is_satisfied()")
@@ -586,10 +611,10 @@ TEMPLATE_TEST_CASE_SIG(
 	"Finalize policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
 	"[expectation]",
 	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
-	(true, mimicpp::BasicExpectationBuilder<void(), mimicpp::InitFinalizePolicy>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<int(), mimicpp::InitFinalizePolicy>, FinalizerFake<int()>),
-	(false, mimicpp::BasicExpectationBuilder<void(), FinalizerFake<void()>>, FinalizerFake<void()>),
-	(false, mimicpp::BasicExpectationBuilder<int(), FinalizerFake<int()>>, FinalizerFake<int()>)
+	(true, mimicpp::BasicExpectationBuilder<void(), TimesFake, mimicpp::InitFinalizePolicy>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<int(), TimesFake, mimicpp::InitFinalizePolicy>, FinalizerFake<int()>),
+	(false, mimicpp::BasicExpectationBuilder<void(), TimesFake, FinalizerFake<void()>>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<int(), TimesFake, FinalizerFake<int()>>, FinalizerFake<int()>)
 )
 {
 	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | std::declval<Policy&&>(); });
@@ -603,7 +628,7 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	using SignatureT = void();
-	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, mimicpp::InitFinalizePolicy>;
+	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, TimesFake, mimicpp::InitFinalizePolicy>;
 	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
 	using CallInfoT = mimicpp::call::Info<SignatureT>;
 
@@ -615,7 +640,11 @@ TEST_CASE(
 		.fromConst = false
 	};
 
-	BaseBuilderT builder{collection, mimicpp::InitFinalizePolicy{}, std::tuple{}};
+	BaseBuilderT builder{
+		collection,
+		TimesFake{},
+		mimicpp::InitFinalizePolicy{},
+		std::tuple{}};
 
 	SECTION("It is allowed to omit the finalize policy.")
 	{
@@ -652,7 +681,7 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	using SignatureT = int();
-	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, mimicpp::InitFinalizePolicy>;
+	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, TimesFake, mimicpp::InitFinalizePolicy>;
 	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
 	using CallInfoT = mimicpp::call::Info<SignatureT>;
 
@@ -670,7 +699,7 @@ TEST_CASE(
 		std::reference_wrapper<FinalizerMock<SignatureT>>,
 		UnwrapReferenceWrapper>;
 	FinalizerT finalizer{};
-	ScopedExpectationT expectation = BaseBuilderT{collection, mimicpp::InitFinalizePolicy{}, std::tuple{}}
+	ScopedExpectationT expectation = BaseBuilderT{collection, TimesFake{}, mimicpp::InitFinalizePolicy{}, std::tuple{}}
 									| FinalizerPolicyT{std::ref(finalizer)};
 
 	REQUIRE_CALL(finalizer, finalize_call(_))
@@ -687,7 +716,7 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, mimicpp::InitFinalizePolicy>;
+	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, TimesFake, mimicpp::InitFinalizePolicy>;
 	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
 	using ExpectationPolicyT = PolicyMock<SignatureT>;
 	using PolicyT = PolicyFacade<SignatureT, std::reference_wrapper<ExpectationPolicyT>, UnwrapReferenceWrapper>;
@@ -702,7 +731,11 @@ TEST_CASE(
 		REQUIRE_CALL(policy, is_satisfied())
 			.RETURN(true);
 
-		ScopedExpectationT expectation = BaseBuilderT{collection, mimicpp::InitFinalizePolicy{}, std::tuple{}}
+		ScopedExpectationT expectation = BaseBuilderT{
+											collection,
+											TimesFake{.isSatisfied = true},
+											mimicpp::InitFinalizePolicy{},
+											std::tuple{}}
 										| PolicyT{std::ref(policy)};
 
 		REQUIRE_CALL(policy, is_satisfied())
@@ -721,7 +754,11 @@ TEST_CASE(
 		REQUIRE_CALL(policy2, is_satisfied())
 			.RETURN(true);
 
-		ScopedExpectationT expectation = BaseBuilderT{collection, mimicpp::InitFinalizePolicy{}, std::tuple{}}
+		ScopedExpectationT expectation = BaseBuilderT{
+											collection,
+											TimesFake{.isSatisfied = true},
+											mimicpp::InitFinalizePolicy{},
+											std::tuple{}}
 										| PolicyT{std::ref(policy1)}
 										| PolicyT{std::ref(policy2)};
 

@@ -184,8 +184,20 @@ namespace mimicpp
 									{ policy.finalize_call(call) } -> std::convertible_to<signature_return_type_t<Signature>>;
 								};
 
+	template <typename T>
+	concept times_policy = std::movable<T>
+							&& std::is_destructible_v<T>
+							&& std::same_as<T, std::remove_cvref_t<T>>
+							&& requires(T& policy)
+							{
+								{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
+								{ std::as_const(policy).is_saturated() } noexcept -> std::convertible_to<bool>;
+								policy.consume();
+							};
+
 	template <
 		typename Signature,
+		times_policy TimesPolicy,
 		finalize_policy_for<Signature> FinalizePolicy,
 		expectation_policy_for<Signature>... Policies
 	>
@@ -193,21 +205,26 @@ namespace mimicpp
 		: public Expectation<Signature>
 	{
 	public:
+		using TimesT = TimesPolicy;
 		using FinalizerT = FinalizePolicy;
 		using PolicyListT = std::tuple<Policies...>;
 		using CallInfoT = call::Info<Signature>;
 		using ReturnT = typename Expectation<Signature>::ReturnT;
 
-		template <typename FinalizerArg, typename... PolicyArgs>
-			requires std::constructible_from<FinalizerT, FinalizerArg>
+		template <typename TimesArg, typename FinalizerArg, typename... PolicyArgs>
+			requires std::constructible_from<TimesT, TimesArg>
+					&& std::constructible_from<FinalizerT, FinalizerArg>
 					&& std::constructible_from<PolicyListT, PolicyArgs...>
 		constexpr explicit BasicExpectation(
+			TimesArg&& timesArg,
 			FinalizerArg&& finalizerArg,
 			PolicyArgs&&... args
 		) noexcept(
-			std::is_nothrow_constructible_v<FinalizerT, PolicyArgs>
+			std::is_nothrow_constructible_v<TimesT, TimesArg>
+			&& std::is_nothrow_constructible_v<FinalizerT, FinalizerArg>
 			&& (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
-			: m_Finalizer{std::forward<FinalizerArg>(finalizerArg)},
+			: m_Times{std::forward<TimesArg>(timesArg)},
+			m_Finalizer{std::forward<FinalizerArg>(finalizerArg)},
 			m_Policies{std::forward<PolicyArgs>(args)...}
 		{
 		}
@@ -215,17 +232,19 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr bool is_satisfied() const noexcept override
 		{
-			return std::apply(
-				[](const auto&... policies) noexcept
-				{
-					return (... && policies.is_satisfied());
-				},
-				m_Policies);
+			return m_Times.is_satisfied()
+					&& std::apply(
+						[](const auto&... policies) noexcept
+						{
+							return (... && policies.is_satisfied());
+						},
+						m_Policies);
 		}
 
 		[[nodiscard]]
 		constexpr call::MatchResultT matches(const CallInfoT& call) const override
 		{
+			// Todo: evaluate times
 			return call::detail::evaluate_sub_match_results(
 				std::apply(
 					[&](const auto&... policies)
@@ -239,6 +258,7 @@ namespace mimicpp
 
 		constexpr void consume(const CallInfoT& call) override
 		{
+			m_Times.consume();
 			std::apply(
 				[&](auto&... policies) noexcept
 				{
@@ -254,6 +274,7 @@ namespace mimicpp
 		}
 
 	private:
+		[[no_unique_address]] TimesT m_Times{};
 		[[no_unique_address]] FinalizerT m_Finalizer{};
 		PolicyListT m_Policies;
 	};
@@ -320,7 +341,38 @@ namespace mimicpp
 
 	static_assert(finalize_policy_for<InitFinalizePolicy, void()>);
 
-	template <typename Signature, typename FinalizePolicy, expectation_policy_for<Signature>... Policies>
+	class InitTimesPolicy
+	{
+	public:
+		[[nodiscard]]
+		constexpr bool is_satisfied() const noexcept
+		{
+			return m_Called;
+		}
+
+		[[nodiscard]]
+		constexpr bool is_saturated() const noexcept
+		{
+			return m_Called;
+		}
+
+		constexpr void consume() noexcept
+		{
+			assert(!m_Called && "Times policy is already saturated.");
+			m_Called = true;
+		}
+
+	private:
+		bool m_Called{};
+	};
+
+	static_assert(times_policy<InitTimesPolicy>);
+
+	template <
+		typename Signature,
+		times_policy TimesPolicy,
+		typename FinalizePolicy,
+		expectation_policy_for<Signature>... Policies>
 	class BasicExpectationBuilder
 	{
 	public:
@@ -331,16 +383,19 @@ namespace mimicpp
 
 		~BasicExpectationBuilder() = default;
 
-		template <typename FinalizePolicyArg, typename PolicyListArg>
-			requires std::constructible_from<FinalizePolicy, FinalizePolicyArg>
+		template <typename TimesPolicyArg, typename FinalizePolicyArg, typename PolicyListArg>
+			requires std::constructible_from<TimesPolicy, TimesPolicyArg>
+					&& std::constructible_from<FinalizePolicy, FinalizePolicyArg>
 					&& std::constructible_from<PolicyListT, PolicyListArg>
 		[[nodiscard]]
 		explicit constexpr BasicExpectationBuilder(
 			std::shared_ptr<StorageT> storage,
+			TimesPolicyArg&& timesPolicyArg,
 			FinalizePolicyArg&& finalizePolicyArg,
 			PolicyListArg&& policyListArg
 		) noexcept
 			: m_Storage{std::move(storage)},
+			m_TimesPolicy{std::forward<TimesPolicyArg>(timesPolicyArg)},
 			m_FinalizePolicy{std::forward<FinalizePolicyArg>(finalizePolicyArg)},
 			m_ExpectationPolicies{std::forward<PolicyListArg>(policyListArg)}
 		{
@@ -361,8 +416,15 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr auto operator |(Policy&& policy) &&
 		{
-			return BasicExpectationBuilder<Signature, std::remove_cvref_t<Policy>, Policies...>{
+			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
+				Signature,
+				TimesPolicy,
+				std::remove_cvref_t<Policy>,
+				Policies...>;
+
+			return ExtendedExpectationBuilderT{
 				std::move(m_Storage),
+				std::move(m_TimesPolicy),
 				std::forward<Policy>(policy),
 				std::move(m_ExpectationPolicies)
 			};
@@ -373,8 +435,16 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr auto operator |(Policy&& policy) &&
 		{
-			return BasicExpectationBuilder<Signature, FinalizePolicy, Policies..., std::remove_cvref_t<Policy>>{
+			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
+				Signature,
+				TimesPolicy,
+				FinalizePolicy,
+				Policies...,
+				std::remove_cvref_t<Policy>>;
+
+			return ExtendedExpectationBuilderT{
 				std::move(m_Storage),
+				std::move(m_TimesPolicy),
 				std::move(m_FinalizePolicy),
 				std::apply(
 					[&](auto&... policies) noexcept
@@ -394,7 +464,7 @@ namespace mimicpp
 				finalize_policy_for<FinalizePolicy, Signature>,
 				"For non-void return types, a finalize policy must be set.");
 
-			using ExpectationT = BasicExpectation<Signature, FinalizePolicy, Policies...>;
+			using ExpectationT = BasicExpectation<Signature, TimesPolicy, FinalizePolicy, Policies...>;
 
 			return ScopedExpectationT{
 				std::move(m_Storage),
@@ -402,6 +472,7 @@ namespace mimicpp
 					[&](auto&... policies)
 					{
 						return std::make_unique<ExpectationT>(
+							std::move(m_TimesPolicy),
 							std::move(m_FinalizePolicy),
 							std::move(policies)...);
 					},
@@ -411,6 +482,7 @@ namespace mimicpp
 
 	private:
 		std::shared_ptr<StorageT> m_Storage;
+		TimesPolicy m_TimesPolicy{};
 		FinalizePolicy m_FinalizePolicy{};
 		PolicyListT m_ExpectationPolicies{};
 	};
