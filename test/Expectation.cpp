@@ -677,29 +677,23 @@ TEST_CASE(
 	"[expectation]")
 {
 	using trompeloeil::_;
-	using PolicyMockT = PolicyMock<void()>;
-	using PolicyRefT = PolicyFacade<void(), std::reference_wrapper<PolicyMock<void()>>, UnwrapReferenceWrapper>;
-	using FinalizerT = FinalizerFake<void()>;
-	using ExpectationT = mimicpp::BasicExpectation<void(), TimesFake, FinalizerT, PolicyRefT>;
-	using ScopedExpectationT = mimicpp::ScopedExpectation<void()>;
-	using CollectionT = mimicpp::ExpectationCollection<void()>;
+	using SignatureT = void();
+	using ExpectationT = ExpectationMock;
+	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
+	using CollectionT = mimicpp::ExpectationCollection<SignatureT>;
 
 	auto collection = std::make_shared<CollectionT>();
-
-	PolicyMockT policy{};
+	auto innerExpectation = std::make_shared<ExpectationT>();
 	std::optional<ScopedExpectationT> expectation{
 		std::in_place,
 		collection,
-		std::make_unique<ExpectationT>(
-			TimesFake{.isSatisfied = true},
-			FinalizerT{},
-			std::ref(policy))
+		innerExpectation
 	};
 
 	SECTION("When calling is_satisfied()")
 	{
 		const bool isSatisfied = GENERATE(false, true);
-		REQUIRE_CALL(policy, is_satisfied())
+		REQUIRE_CALL(*innerExpectation, is_satisfied())
 			.RETURN(isSatisfied);
 		REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
 	}
@@ -711,7 +705,7 @@ TEST_CASE(
 		SECTION("When calling is_satisfied()")
 		{
 			const bool isSatisfied = GENERATE(false, true);
-			REQUIRE_CALL(policy, is_satisfied())
+			REQUIRE_CALL(*innerExpectation, is_satisfied())
 				.RETURN(isSatisfied);
 			REQUIRE(isSatisfied == std::as_const(otherExpectation).is_satisfied());
 			REQUIRE_THROWS_AS(std::as_const(expectation)->is_satisfied(), std::runtime_error);
@@ -724,7 +718,7 @@ TEST_CASE(
 			SECTION("When calling is_satisfied()")
 			{
 				const bool isSatisfied = GENERATE(false, true);
-				REQUIRE_CALL(policy, is_satisfied())
+				REQUIRE_CALL(*innerExpectation, is_satisfied())
 					.RETURN(isSatisfied);
 				REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
 				REQUIRE_THROWS_AS(std::as_const(otherExpectation).is_satisfied(), std::runtime_error);
@@ -741,7 +735,7 @@ TEST_CASE(
 			SECTION("When calling is_satisfied()")
 			{
 				const bool isSatisfied = GENERATE(false, true);
-				REQUIRE_CALL(policy, is_satisfied())
+				REQUIRE_CALL(*innerExpectation, is_satisfied())
 					.RETURN(isSatisfied);
 				REQUIRE(isSatisfied == std::as_const(otherExpectation).is_satisfied());
 			}
@@ -752,7 +746,7 @@ TEST_CASE(
 	}
 
 	// indirectly via remove
-	REQUIRE_CALL(policy, is_satisfied())
+	REQUIRE_CALL(*innerExpectation, is_satisfied())
 		.RETURN(true);
 	expectation.reset();
 }
