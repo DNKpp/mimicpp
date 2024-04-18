@@ -98,7 +98,7 @@ namespace mimicpp::detail
 						m_Expectations,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::lvalue>{}
-					| expectation_policies::Constness<Signature, true>{};
+					| expectation_policies::Constness<true>{};
 		}
 
 		template <typename... Args>
@@ -109,7 +109,7 @@ namespace mimicpp::detail
 						m_Expectations,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::lvalue>{}
-					| expectation_policies::Constness<Signature, false>{};
+					| expectation_policies::Constness<false>{};
 		}
 
 		template <typename... Args>
@@ -120,7 +120,7 @@ namespace mimicpp::detail
 						m_Expectations,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::rvalue>{}
-					| expectation_policies::Constness<Signature, true>{};
+					| expectation_policies::Constness<true>{};
 		}
 
 		template <typename... Args>
@@ -131,7 +131,7 @@ namespace mimicpp::detail
 						m_Expectations,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::rvalue>{}
-					| expectation_policies::Constness<Signature, false>{};
+					| expectation_policies::Constness<false>{};
 		}
 
 		template <typename... Args>
@@ -161,7 +161,7 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Constness<Signature, true>{};
+					| expectation_policies::Constness<true>{};
 		}
 
 		template <typename... Args>
@@ -171,7 +171,7 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Constness<Signature, false>{};
+					| expectation_policies::Constness<false>{};
 		}
 
 		template <typename... Args>

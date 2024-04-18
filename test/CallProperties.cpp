@@ -84,7 +84,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	using SignatureT = void();
 	using CallInfoT = call::Info<SignatureT>;
-	using PolicyT = expectation_policies::Constness<SignatureT, constness>;
+	using PolicyT = expectation_policies::Constness<constness>;
 	STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
 
 	constexpr PolicyT policy{};
