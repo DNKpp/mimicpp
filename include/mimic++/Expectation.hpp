@@ -309,7 +309,7 @@ namespace mimicpp
 		std::shared_ptr<ExpectationT> m_Expectation{};
 	};
 
-	class DummyFinalizePolicy
+	class InitFinalizePolicy
 	{
 	public:
 		template <typename Signature>
@@ -317,6 +317,8 @@ namespace mimicpp
 		{
 		}
 	};
+
+	static_assert(finalize_policy_for<InitFinalizePolicy, void()>);
 
 	template <typename Signature, typename FinalizePolicy, expectation_policy_for<Signature>... Policies>
 	class BasicExpectationBuilder
@@ -353,7 +355,8 @@ namespace mimicpp
 		BasicExpectationBuilder& operator =(BasicExpectationBuilder&&) = default;
 
 		template <typename Policy>
-			requires std::same_as<DummyFinalizePolicy, FinalizePolicy>
+			requires std::same_as<InitFinalizePolicy, FinalizePolicy>
+					&& (!std::same_as<InitFinalizePolicy, std::remove_cvref_t<Policy>>)
 					&& finalize_policy_for<std::remove_cvref_t<Policy>, Signature>
 		[[nodiscard]]
 		constexpr auto operator |(Policy&& policy) &&
