@@ -9,47 +9,10 @@
 #pragma once
 
 #include "mimic++/Expectation.hpp"
+#include "mimic++/ExpectationPolicies/CallProperties.hpp"
 
 namespace mimicpp
 {
-	class InitFinalizePolicy
-	{
-	public:
-		template <typename Signature>
-		static constexpr void finalize_call(const call::Info<Signature>&) noexcept
-		{
-		}
-	};
-
-	static_assert(finalize_policy_for<InitFinalizePolicy, void()>);
-
-	class InitTimesPolicy
-	{
-	public:
-		[[nodiscard]]
-		constexpr bool is_satisfied() const noexcept
-		{
-			return m_Called;
-		}
-
-		[[nodiscard]]
-		constexpr bool is_saturated() const noexcept
-		{
-			return m_Called;
-		}
-
-		constexpr void consume() noexcept
-		{
-			assert(!m_Called && "Times policy is already saturated.");
-			m_Called = true;
-		}
-
-	private:
-		bool m_Called{};
-	};
-
-	static_assert(times_policy<InitTimesPolicy>);
-
 	template <
 		typename Signature,
 		times_policy TimesPolicy,
@@ -92,8 +55,8 @@ namespace mimicpp
 		BasicExpectationBuilder& operator =(BasicExpectationBuilder&&) = default;
 
 		template <typename Policy>
-			requires std::same_as<InitTimesPolicy, TimesPolicy>
-					&& (!std::same_as<InitTimesPolicy, std::remove_cvref_t<Policy>>)
+			requires std::same_as<expectation_policies::InitTimes, TimesPolicy>
+					&& (!std::same_as<expectation_policies::InitTimes, std::remove_cvref_t<Policy>>)
 					&& times_policy<std::remove_cvref_t<Policy>>
 		[[nodiscard]]
 		constexpr auto operator |(Policy&& policy) &&
@@ -113,8 +76,8 @@ namespace mimicpp
 		}
 
 		template <typename Policy>
-			requires std::same_as<InitFinalizePolicy, FinalizePolicy>
-					&& (!std::same_as<InitFinalizePolicy, std::remove_cvref_t<Policy>>)
+			requires std::same_as<expectation_policies::InitFinalize, FinalizePolicy>
+					&& (!std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>)
 					&& finalize_policy_for<std::remove_cvref_t<Policy>, Signature>
 		[[nodiscard]]
 		constexpr auto operator |(Policy&& policy) &&

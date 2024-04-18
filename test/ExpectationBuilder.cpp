@@ -10,14 +10,16 @@
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
+using namespace mimicpp;
+
 TEMPLATE_TEST_CASE_SIG(
 	"Times policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
-	"[expectation]",
+	"[expectation][expectation::builder]",
 	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
-	(true, mimicpp::BasicExpectationBuilder<void(), mimicpp::InitTimesPolicy, FinalizerFake<void()>>, TimesFake),
-	(true, mimicpp::BasicExpectationBuilder<int(), mimicpp::InitTimesPolicy, FinalizerFake<int()>>, TimesFake),
-	(false, mimicpp::BasicExpectationBuilder<void(), TimesFake, FinalizerFake<void()>>, TimesFake),
-	(false, mimicpp::BasicExpectationBuilder<int(), TimesFake, FinalizerFake<int()>>, TimesFake)
+	(true, BasicExpectationBuilder<void(), expectation_policies::InitTimes, FinalizerFake<void()>>, TimesFake),
+	(true, BasicExpectationBuilder<int(), expectation_policies::InitTimes, FinalizerFake<int()>>, TimesFake),
+	(false, BasicExpectationBuilder<void(), TimesFake, FinalizerFake<void()>>, TimesFake),
+	(false,BasicExpectationBuilder<int(), TimesFake, FinalizerFake<int()>>, TimesFake)
 )
 {
 	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | std::declval<Policy&&>(); });
@@ -25,28 +27,28 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEST_CASE(
 	"Times policy of mimicpp::BasicExpectationBuilder may be exchanged.",
-	"[expectation]"
+	"[expectation][expectation::builder]"
 )
 {
 	using trompeloeil::_;
 
 	using SignatureT = void();
-	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, mimicpp::InitTimesPolicy, mimicpp::InitFinalizePolicy>;
-	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
-	using CallInfoT = mimicpp::call::Info<SignatureT>;
+	using BaseBuilderT = BasicExpectationBuilder<SignatureT, expectation_policies::InitTimes, expectation_policies::InitFinalize>;
+	using ScopedExpectationT = ScopedExpectation<SignatureT>;
+	using CallInfoT = call::Info<SignatureT>;
 
-	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
+	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = mimicpp::Uuid{1337},
-		.fromCategory = mimicpp::ValueCategory::lvalue,
+		.fromUuid = Uuid{1337},
+		.fromCategory = ValueCategory::lvalue,
 		.fromConst = false
 	};
 
 	BaseBuilderT builder{
 		collection,
-		mimicpp::InitTimesPolicy{},
-		mimicpp::InitFinalizePolicy{},
+		expectation_policies::InitTimes{},
+		expectation_policies::InitFinalize{},
 		std::tuple{}};
 
 	SECTION("It is allowed to omit the times policy.")
@@ -103,10 +105,10 @@ TEST_CASE(
 
 TEMPLATE_TEST_CASE_SIG(
 	"Finalize policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
-	"[expectation]",
+	"[expectation][expectation::builder]",
 	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
-	(true, mimicpp::BasicExpectationBuilder<void(), TimesFake, mimicpp::InitFinalizePolicy>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<int(), TimesFake, mimicpp::InitFinalizePolicy>, FinalizerFake<int()>),
+	(true, mimicpp::BasicExpectationBuilder<void(), TimesFake, expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<int(), TimesFake, expectation_policies::InitFinalize>, FinalizerFake<int()>),
 	(false, mimicpp::BasicExpectationBuilder<void(), TimesFake, FinalizerFake<void()>>, FinalizerFake<void()>),
 	(false, mimicpp::BasicExpectationBuilder<int(), TimesFake, FinalizerFake<int()>>, FinalizerFake<int()>)
 )
@@ -116,28 +118,28 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEST_CASE(
 	"Finalize policy of mimicpp::BasicExpectationBuilder for void return may be exchanged.",
-	"[expectation]"
+	"[expectation][expectation::builder]"
 )
 {
 	using trompeloeil::_;
 
 	using SignatureT = void();
-	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, TimesFake, mimicpp::InitFinalizePolicy>;
-	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
-	using CallInfoT = mimicpp::call::Info<SignatureT>;
+	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
+	using ScopedExpectationT = ScopedExpectation<SignatureT>;
+	using CallInfoT = call::Info<SignatureT>;
 
-	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
+	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = mimicpp::Uuid{1337},
-		.fromCategory = mimicpp::ValueCategory::lvalue,
+		.fromUuid = Uuid{1337},
+		.fromCategory = ValueCategory::lvalue,
 		.fromConst = false
 	};
 
 	BaseBuilderT builder{
 		collection,
 		TimesFake{},
-		mimicpp::InitFinalizePolicy{},
+		expectation_policies::InitFinalize{},
 		std::tuple{}};
 
 	SECTION("It is allowed to omit the finalize policy.")
@@ -169,21 +171,21 @@ TEST_CASE(
 
 TEST_CASE(
 	"Finalize policy of mimicpp::BasicExpectationBuilder for non-void return must be exchanged.",
-	"[expectation]"
+	"[expectation][expectation::builder]"
 )
 {
 	using trompeloeil::_;
 
 	using SignatureT = int();
-	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, TimesFake, mimicpp::InitFinalizePolicy>;
-	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
-	using CallInfoT = mimicpp::call::Info<SignatureT>;
+	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
+	using ScopedExpectationT = ScopedExpectation<SignatureT>;
+	using CallInfoT = call::Info<SignatureT>;
 
-	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
+	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = mimicpp::Uuid{1337},
-		.fromCategory = mimicpp::ValueCategory::lvalue,
+		.fromUuid = Uuid{1337},
+		.fromCategory = ValueCategory::lvalue,
 		.fromConst = false
 	};
 
@@ -193,7 +195,7 @@ TEST_CASE(
 		std::reference_wrapper<FinalizerMock<SignatureT>>,
 		UnwrapReferenceWrapper>;
 	FinalizerT finalizer{};
-	ScopedExpectationT expectation = BaseBuilderT{collection, TimesFake{}, mimicpp::InitFinalizePolicy{}, std::tuple{}}
+	ScopedExpectationT expectation = BaseBuilderT{collection, TimesFake{}, expectation_policies::InitFinalize{}, std::tuple{}}
 									| FinalizerPolicyT{std::ref(finalizer)};
 
 	REQUIRE_CALL(finalizer, finalize_call(_))
@@ -206,16 +208,16 @@ TEST_CASE(
 
 TEST_CASE(
 	"mimicpp::BasicExpectationBuilder allows expectation extension via suitable polices.",
-	"[expectation]"
+	"[expectation][expectation::builder]"
 )
 {
 	using SignatureT = void();
-	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, TimesFake, mimicpp::InitFinalizePolicy>;
-	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
+	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
+	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using ExpectationPolicyT = PolicyMock<SignatureT>;
 	using PolicyT = PolicyFacade<SignatureT, std::reference_wrapper<ExpectationPolicyT>, UnwrapReferenceWrapper>;
 
-	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
+	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 
 	SECTION("Just once.")
 	{
@@ -228,7 +230,7 @@ TEST_CASE(
 		ScopedExpectationT expectation = BaseBuilderT{
 											collection,
 											TimesFake{.isSatisfied = true},
-											mimicpp::InitFinalizePolicy{},
+											expectation_policies::InitFinalize{},
 											std::tuple{}}
 										| PolicyT{std::ref(policy)};
 
@@ -251,7 +253,7 @@ TEST_CASE(
 		ScopedExpectationT expectation = BaseBuilderT{
 											collection,
 											TimesFake{.isSatisfied = true},
-											mimicpp::InitFinalizePolicy{},
+											expectation_policies::InitFinalize{},
 											std::tuple{}}
 										| PolicyT{std::ref(policy1)}
 										| PolicyT{std::ref(policy2)};

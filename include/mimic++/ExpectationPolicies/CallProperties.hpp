@@ -16,6 +16,86 @@
 
 namespace mimicpp::expectation_policies
 {
+	class InitFinalize
+	{
+	public:
+		template <typename Signature>
+		static constexpr void finalize_call(const call::Info<Signature>&) noexcept
+		{
+		}
+	};
+
+	template <std::size_t min, std::size_t max = min>
+		requires (min <= max)
+	class Times
+	{
+	public:
+		[[nodiscard]]
+		constexpr bool is_satisfied() const noexcept
+		{
+			return min <= m_Count
+					&& m_Count <= max;
+		}
+
+		[[nodiscard]]
+		constexpr bool is_saturated() const noexcept
+		{
+			return m_Count == max;
+		}
+
+		constexpr void consume() noexcept
+		{
+			++m_Count;
+		}
+
+	private:
+		std::size_t m_Count{};
+	};
+
+	class InitTimes
+		: public Times<1u>
+	{
+	};
+
+	class RuntimeTimes
+	{
+	public:
+		constexpr explicit RuntimeTimes(const std::size_t min, const std::size_t max) noexcept
+			: m_Min{min},
+			m_Max{max}
+		{
+		}
+
+		constexpr explicit RuntimeTimes(const std::size_t min) noexcept
+			: m_Min{min},
+			m_Max{min}
+		{
+		}
+
+		[[nodiscard]]
+		constexpr bool is_satisfied() const noexcept
+		{
+			return m_Min <= m_Count
+					&& m_Count <= m_Max;
+		}
+
+		[[nodiscard]]
+		constexpr bool is_saturated() const noexcept
+		{
+			return m_Count == m_Max;
+		}
+
+		constexpr void consume() noexcept
+		{
+			++m_Count;
+		}
+
+	private:
+		std::size_t m_Min;
+		std::size_t m_Max;
+		std::size_t m_Count{};
+	};
+
 	template <ValueCategory expected>
 	class Category
 	{
