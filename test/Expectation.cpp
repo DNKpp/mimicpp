@@ -758,6 +758,97 @@ TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"Times policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
+	"[expectation]",
+	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
+	(true, mimicpp::BasicExpectationBuilder<void(), mimicpp::InitTimesPolicy, FinalizerFake<void()>>, TimesFake),
+	(true, mimicpp::BasicExpectationBuilder<int(), mimicpp::InitTimesPolicy, FinalizerFake<int()>>, TimesFake),
+	(false, mimicpp::BasicExpectationBuilder<void(), TimesFake, FinalizerFake<void()>>, TimesFake),
+	(false, mimicpp::BasicExpectationBuilder<int(), TimesFake, FinalizerFake<int()>>, TimesFake)
+)
+{
+	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | std::declval<Policy&&>(); });
+}
+
+TEST_CASE(
+	"Times policy of mimicpp::BasicExpectationBuilder may be exchanged.",
+	"[expectation]"
+)
+{
+	using trompeloeil::_;
+
+	using SignatureT = void();
+	using BaseBuilderT = mimicpp::BasicExpectationBuilder<SignatureT, mimicpp::InitTimesPolicy, mimicpp::InitFinalizePolicy>;
+	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
+	using CallInfoT = mimicpp::call::Info<SignatureT>;
+
+	auto collection = std::make_shared<mimicpp::ExpectationCollection<SignatureT>>();
+	constexpr CallInfoT call{
+		.params = {},
+		.fromUuid = mimicpp::Uuid{1337},
+		.fromCategory = mimicpp::ValueCategory::lvalue,
+		.fromConst = false
+	};
+
+	BaseBuilderT builder{
+		collection,
+		mimicpp::InitTimesPolicy{},
+		mimicpp::InitFinalizePolicy{},
+		std::tuple{}};
+
+	SECTION("It is allowed to omit the times policy.")
+	{
+		ScopedExpectationT expectation = std::move(builder);
+
+		REQUIRE(!expectation.is_satisfied());
+		REQUIRE_NOTHROW(collection->handle_call(call));
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("Or exchange it once.")
+	{
+		using TimesPolicyT = TimesFacade<
+			std::reference_wrapper<TimesMock>,
+			UnwrapReferenceWrapper>;
+		TimesMock times{};
+
+		// during destruction
+		REQUIRE_CALL(times, is_satisfied())
+			.RETURN(true);
+		ScopedExpectationT expectation = std::move(builder)
+										| TimesPolicyT{std::ref(times)};
+
+		SECTION("When is_satisfied() is called.")
+		{
+			const bool isSatisfied = GENERATE(false, true);
+			REQUIRE_CALL(times, is_satisfied())
+				.RETURN(isSatisfied);
+			REQUIRE(isSatisfied == expectation.is_satisfied());
+		}
+
+		SECTION("When handle_call() is called.")
+		{
+			SECTION("And when times is not saturated.")
+			{
+				REQUIRE_CALL(times, is_saturated())
+					.RETURN(false);
+				REQUIRE_CALL(times, consume());
+				REQUIRE_NOTHROW(collection->handle_call(call));
+			}
+
+			SECTION("And when times is saturated.")
+			{
+				REQUIRE_CALL(times, is_saturated())
+					.RETURN(true);
+				REQUIRE_THROWS_AS(
+					collection->handle_call(call),
+					TestExpectationError);
+			}
+		}
+	}
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"Finalize policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
 	"[expectation]",
 	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),

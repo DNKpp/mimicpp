@@ -129,7 +129,7 @@ namespace mimicpp
 			const std::scoped_lock lock{m_ExpectationsMx};
 
 			std::vector<call::MatchResult_NoT> noMatches{};
-			std::vector<call::MatchResult_ExhaustedT> partialMatches{};
+			std::vector<call::MatchResult_ExhaustedT> exhaustedMatches{};
 
 			for (auto& exp : m_Expectations)
 			{
@@ -149,14 +149,14 @@ namespace mimicpp
 				}
 				else
 				{
-					partialMatches.emplace_back(std::get<call::MatchResult_ExhaustedT>(std::move(matchResult)));
+					exhaustedMatches.emplace_back(std::get<call::MatchResult_ExhaustedT>(std::move(matchResult)));
 				}
 			}
 
 			detail::handle_call_match_fail(
 				call,
 				std::move(noMatches),
-				std::move(partialMatches));
+				std::move(exhaustedMatches));
 		}
 
 	private:
@@ -408,6 +408,27 @@ namespace mimicpp
 		[[nodiscard]]
 		BasicExpectationBuilder(BasicExpectationBuilder&&) = default;
 		BasicExpectationBuilder& operator =(BasicExpectationBuilder&&) = default;
+
+		template <typename Policy>
+			requires std::same_as<InitTimesPolicy, TimesPolicy>
+					&& (!std::same_as<InitTimesPolicy, std::remove_cvref_t<Policy>>)
+					&& times_policy<std::remove_cvref_t<Policy>>
+		[[nodiscard]]
+		constexpr auto operator |(Policy&& policy) &&
+		{
+			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
+				Signature,
+				std::remove_cvref_t<Policy>,
+				FinalizePolicy,
+				Policies...>;
+
+			return ExtendedExpectationBuilderT{
+				std::move(m_Storage),
+				std::forward<Policy>(policy),
+				std::move(m_FinalizePolicy),
+				std::move(m_ExpectationPolicies)
+			};
+		}
 
 		template <typename Policy>
 			requires std::same_as<InitFinalizePolicy, FinalizePolicy>
