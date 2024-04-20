@@ -124,7 +124,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		explicit(false) constexpr operator ScopedExpectationT() &&
+		constexpr ScopedExpectationT finalize() &&
 		{
 			static_assert(
 				finalize_policy_for<FinalizePolicy, Signature>,
@@ -153,5 +153,33 @@ namespace mimicpp
 		PolicyListT m_ExpectationPolicies{};
 	};
 }
+
+namespace mimicpp::detail
+{
+	class BuildFinalizer
+	{
+	public:
+		template <
+			typename Signature,
+			times_policy TimesPolicy,
+			finalize_policy_for<Signature> FinalizePolicy,
+			expectation_policy_for<Signature>... Policies>
+		[[nodiscard]]
+		friend constexpr ScopedExpectation<Signature> operator <<=(
+			const BuildFinalizer&&,
+			BasicExpectationBuilder<Signature, TimesPolicy, FinalizePolicy, Policies...>&& builder
+			)
+		{
+			return std::move(builder).finalize();
+		}
+	};
+}
+
+#define MIMICPP_UNIQUE_NAME(prefix, counter) prefix##counter
+#define MIMICPP_SCOPED_EXPECTATION_IMPL(counter) \
+	[[maybe_unused]] const ::mimicpp::ScopedExpectation MIMICPP_UNIQUE_NAME(_mimicpp_expectation_, counter) = \
+	mimicpp::detail::BuildFinalizer{} <<= 
+
+#define MIMICPP_SCOPED_EXPECTATION MIMICPP_SCOPED_EXPECTATION_IMPL(__COUNTER__)
 
 #endif

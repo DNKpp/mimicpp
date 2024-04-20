@@ -265,3 +265,34 @@ TEST_CASE(
 		REQUIRE(expectation.is_satisfied());
 	}
 }
+
+TEST_CASE(
+	"MIMICPP_SCOPED_EXPECTATION ScopedExpectation with unique name from a builder.",
+	"[expectation][expectation::builder]"
+)
+{
+	using SignatureT = void();
+	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
+
+	ScopedReporter reporter{};
+
+	{
+		const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
+
+		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
+									collection,
+									TimesFake{.isSatisfied = true},
+									expectation_policies::InitFinalize{},
+									std::tuple{}};
+
+		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
+									collection,
+									TimesFake{.isSatisfied = true},
+									expectation_policies::InitFinalize{},
+									std::tuple{}};
+	}
+
+	REQUIRE_THAT(
+		reporter.unsatisfied_expectations(),
+		Catch::Matchers::IsEmpty());
+}

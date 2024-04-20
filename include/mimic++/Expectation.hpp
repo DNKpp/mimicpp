@@ -295,6 +295,7 @@ namespace mimicpp
 			}
 		}
 
+		[[nodiscard]]
 		explicit ScopedExpectation(
 			std::shared_ptr<StorageT> storage,
 			std::shared_ptr<ExpectationT> expectation
@@ -306,6 +307,17 @@ namespace mimicpp
 			assert(m_Expectation && "Expectation is nullptr.");
 
 			m_Storage->push(m_Expectation);
+		}
+
+		template <typename T>
+			requires requires
+			{
+				{ std::declval<T&&>().finalize() } -> std::convertible_to<ScopedExpectation>;
+			}
+		[[nodiscard]]
+		explicit(false) constexpr ScopedExpectation(T&& object)
+			: ScopedExpectation{std::forward<T>(object).finalize()}
+		{
 		}
 
 		ScopedExpectation(const ScopedExpectation&) = delete;
