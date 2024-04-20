@@ -3,9 +3,9 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/ExpectationPolicies/CallProperties.hpp"
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
+#include "mimic++/ExpectationPolicies.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -37,7 +37,10 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, expectation_policies::InitFinalize, void(int)),
 	(true, expectation_policies::Returns<int>, int()),
 	(true, expectation_policies::Returns<int>, int(float)),
-	(true, expectation_policies::Returns<float>, double())
+	(true, expectation_policies::Returns<float>, double()),
+	(true, expectation_policies::Throws<std::runtime_error>, void()),
+	(true, expectation_policies::Throws<std::runtime_error>, void(int)),
+	(true, expectation_policies::Throws<std::runtime_error>, double(int))
 )
 {
 	STATIC_REQUIRE(mimicpp::finalize_policy_for<Policy, Sig>);
@@ -436,6 +439,58 @@ TEST_CASE(
 		PolicyT policy{42u};
 
 		REQUIRE(42 == policy.finalize_call(call));
+	}
+}
+
+TEST_CASE(
+	"expectation_policies::Throws always throws an exception during finalize_call().",
+	"[expectation][expectation::policy]"
+)
+{
+	struct test_exception
+	{
+	};
+
+	SECTION("When void is returned.")
+	{
+		using SignatureT = void();
+		using CallInfoT = call::Info<SignatureT>;
+		using PolicyT = expectation_policies::Throws<test_exception>;
+		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+
+		constexpr CallInfoT call{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = ValueCategory::lvalue,
+			.fromConst = false
+		};
+
+		PolicyT policy{test_exception{}};
+
+		REQUIRE_THROWS_AS(
+			policy.finalize_call(call),
+			test_exception);
+	}
+
+	SECTION("When non-void is returned.")
+	{
+		using SignatureT = int&&();
+		using CallInfoT = call::Info<SignatureT>;
+		using PolicyT = expectation_policies::Throws<test_exception>;
+		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+
+		constexpr CallInfoT call{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = ValueCategory::lvalue,
+			.fromConst = false
+		};
+
+		PolicyT policy{test_exception{}};
+
+		REQUIRE_THROWS_AS(
+			policy.finalize_call(call),
+			test_exception);
 	}
 }
 

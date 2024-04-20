@@ -9,7 +9,7 @@
 #pragma once
 
 #include "mimic++/Expectation.hpp"
-#include "mimic++/ExpectationPolicies/CallProperties.hpp"
+#include "mimic++/ExpectationPolicies.hpp"
 
 namespace mimicpp
 {

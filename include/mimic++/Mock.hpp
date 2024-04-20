@@ -10,7 +10,7 @@
 
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
-#include "mimic++/ExpectationPolicies/CallProperties.hpp"
+#include "mimic++/ExpectationPolicies.hpp"
 
 #include <atomic>
 #include <source_location>

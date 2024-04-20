@@ -3,8 +3,8 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_EXPECTATION_POLICIES_CALL_PROPERTIES_HPP
-#define MIMICPP_EXPECTATION_POLICIES_CALL_PROPERTIES_HPP
+#ifndef MIMICPP_EXPECTATION_POLICIES_HPP
+#define MIMICPP_EXPECTATION_POLICIES_HPP
 
 #pragma once
 
@@ -229,11 +229,11 @@ namespace mimicpp::expectation_policies
 		explicit constexpr Returns(ValueT value) noexcept(std::is_nothrow_move_constructible_v<ValueT>)
 			: m_Value{std::move(value)}
 		{
-			
 		}
 
 		template <typename Signature>
 			requires std::convertible_to<ValueT&, signature_return_type_t<Signature>>
+		[[nodiscard]]
 		constexpr signature_return_type_t<Signature> finalize_call(
 			[[maybe_unused]] const call::Info<Signature>& call
 		) noexcept(std::is_nothrow_convertible_v<ValueT&, signature_return_type_t<Signature>>)
@@ -244,6 +244,7 @@ namespace mimicpp::expectation_policies
 		template <typename Signature>
 			requires (!std::convertible_to<ValueT&, signature_return_type_t<Signature>>)
 					&& std::convertible_to<ValueT&&, signature_return_type_t<Signature>>
+		[[nodiscard]]
 		constexpr signature_return_type_t<Signature> finalize_call(
 			[[maybe_unused]] const call::Info<Signature>& call
 		) noexcept(std::is_nothrow_convertible_v<ValueT&&, signature_return_type_t<Signature>>)
@@ -253,6 +254,30 @@ namespace mimicpp::expectation_policies
 
 	private:
 		ValueT m_Value;
+	};
+
+	template <typename Exception>
+		requires (!std::is_reference_v<Exception>)
+				&& std::copyable<Exception>
+	class Throws
+	{
+	public:
+		[[nodiscard]]
+		explicit constexpr Throws(Exception exception) noexcept(std::is_nothrow_move_constructible_v<Exception>)
+			: m_Exception{std::move(exception)}
+		{
+		}
+
+		template <typename Signature>
+		constexpr signature_return_type_t<Signature> finalize_call(
+			[[maybe_unused]] const call::Info<Signature>& call
+		)
+		{
+			throw m_Exception;
+		}
+
+	private:
+		Exception m_Exception;
 	};
 
 	class NullDescriber
