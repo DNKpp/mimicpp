@@ -13,6 +13,7 @@
 #include "mimic++/ExpectationPolicies/CallProperties.hpp"
 
 #include <atomic>
+#include <source_location>
 
 namespace mimicpp::detail
 {
@@ -192,50 +193,54 @@ namespace mimicpp::detail
 		MockBase& operator =(MockBase&&) = default;
 
 		[[nodiscard]]
-		constexpr Return handle_call(Params... params) const &
+		constexpr Return handle_call(const std::source_location& from, Params... params) const &
 		{
 			return m_Expectations->handle_call(
 				CallInfoT{
 					.params = {std::ref(params)...},
 					.fromUuid = m_Uuid.uuid(),
 					.fromCategory = ValueCategory::lvalue,
-					.fromConst = true
+					.fromConst = true,
+					.fromSourceLocation = from
 				});
 		}
 
 		[[nodiscard]]
-		constexpr Return handle_call(Params... params) &
+		constexpr Return handle_call(const std::source_location& from, Params... params) &
 		{
 			return m_Expectations->handle_call(
 				CallInfoT{
 					.params = {std::ref(params)...},
 					.fromUuid = m_Uuid.uuid(),
 					.fromCategory = ValueCategory::lvalue,
-					.fromConst = false
+					.fromConst = false,
+					.fromSourceLocation = from
 				});
 		}
 
 		[[nodiscard]]
-		constexpr Return handle_call(Params... params) const &&
+		constexpr Return handle_call(const std::source_location& from, Params... params) const &&
 		{
 			return m_Expectations->handle_call(
 				CallInfoT{
 					.params = {std::ref(params)...},
 					.fromUuid = m_Uuid.uuid(),
 					.fromCategory = ValueCategory::rvalue,
-					.fromConst = true
+					.fromConst = true,
+					.fromSourceLocation = from
 				});
 		}
 
 		[[nodiscard]]
-		constexpr Return handle_call(Params... params) &&
+		constexpr Return handle_call(const std::source_location& from, Params... params) &&
 		{
 			return m_Expectations->handle_call(
 				CallInfoT{
 					.params = {std::ref(params)...},
 					.fromUuid = m_Uuid.uuid(),
 					.fromCategory = ValueCategory::rvalue,
-					.fromConst = false
+					.fromConst = false,
+					.fromSourceLocation = from
 				});
 		}
 
@@ -272,24 +277,24 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		constexpr Return operator ()(Params... params) const &
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const &
 		{
-			return handle_call(std::forward<Params>(params)...);
+			return handle_call(from, std::forward<Params>(params)...);
 		}
 
-		constexpr Return operator ()(Params... params) &
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) &
 		{
-			return handle_call(std::forward<Params>(params)...);
+			return handle_call(from, std::forward<Params>(params)...);
 		}
 
-		constexpr Return operator ()(Params... params) const &&
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const &&
 		{
-			return std::move(*this).handle_call(std::forward<Params>(params)...);
+			return std::move(*this).handle_call(from, std::forward<Params>(params)...);
 		}
 
-		constexpr Return operator ()(Params... params) &&
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) &&
 		{
-			return std::move(*this).handle_call(std::forward<Params>(params)...);
+			return std::move(*this).handle_call(from, std::forward<Params>(params)...);
 		}
 	};
 }

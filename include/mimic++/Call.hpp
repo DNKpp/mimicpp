@@ -14,6 +14,7 @@
 #include <format>
 #include <optional>
 #include <ranges>
+#include <source_location>
 #include <string>
 #include <tuple>
 #include <variant>
@@ -34,6 +35,7 @@ namespace mimicpp::call
 		Uuid fromUuid{};
 		ValueCategory fromCategory{};
 		bool fromConst{};
+		std::source_location fromSourceLocation{};
 	};
 }
 

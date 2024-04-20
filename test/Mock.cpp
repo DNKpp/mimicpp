@@ -4,7 +4,6 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Mock.hpp"
-#include "mimic++/ExpectationPolicies/CallProperties.hpp"
 
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
@@ -15,30 +14,61 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
 
+using namespace mimicpp;
+
 TEMPLATE_TEST_CASE(
 	"Mocks are non-copyable but movable and can be default constructed.",
 	"[mock]",
-	mimicpp::Mock<void()>,
-	mimicpp::Mock<void(int)>,
-	mimicpp::Mock<void(int, double)>,
-	mimicpp::Mock<int()>,
-	mimicpp::Mock<int(float)>,
-	mimicpp::Mock<int(float, double)>
+	void(),
+	void(int),
+	void(int, double),
+	int(),
+	int(float),
+	int(float, double)
 )
 {
-	STATIC_REQUIRE(!std::is_copy_constructible_v<TestType>);
-	STATIC_REQUIRE(!std::is_copy_assignable_v<TestType>);
+	using MockT = Mock<TestType>;
 
-	STATIC_REQUIRE(std::is_move_constructible_v<TestType>);
-	STATIC_REQUIRE(std::is_move_assignable_v<TestType>);
-	STATIC_REQUIRE(std::is_default_constructible_v<TestType>);
+	STATIC_REQUIRE(!std::is_copy_constructible_v<MockT>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<MockT>);
+
+	STATIC_REQUIRE(std::is_move_constructible_v<MockT>);
+	STATIC_REQUIRE(std::is_move_assignable_v<MockT>);
+	STATIC_REQUIRE(std::is_default_constructible_v<MockT>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"Mocks satisfy std::invocable concept and std::is_invocable type-trait.",
+	"[mock]",
+	((bool dummy, typename Return, typename... Params), dummy, Return, Params...),
+	(true, void),
+	(true, void, int),
+	(true, void, int, double),
+	(true, int),
+	(true, int, float),
+	(true, int, float, double)
+)
+{
+	using MockT = Mock<Return(Params...)>;
+
+	STATIC_REQUIRE(std::invocable<const MockT&, Params...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<Return, const MockT&, Params...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&, Params...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<Return, MockT&, Params...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT&&, Params...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<Return, const MockT&&, Params...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&&, Params...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<Return, MockT&&, Params...>);
 }
 
 TEST_CASE("Mock<void()>::expect_call expectes a call with the same category and constness.", "[mock]")
 {
-	using ExpectationT = mimicpp::ScopedExpectation<void()>;
-	mimicpp::ScopedReporter reporter{};
-	mimicpp::Mock<void()> mock{};
+	using ExpectationT = ScopedExpectation<void()>;
+	ScopedReporter reporter{};
+	Mock<void()> mock{};
 
 	SECTION("Expect const lvalue call.")
 	{
@@ -319,9 +349,9 @@ TEST_CASE("Mock<void()>::expect_call expectes a call with the same category and 
 
 TEST_CASE("Mock<void()>::expect_lvalue_call expectes a call with lvalue category.", "[mock]")
 {
-	using ExpectationT = mimicpp::ScopedExpectation<void()>;
-	mimicpp::ScopedReporter reporter{};
-	mimicpp::Mock<void()> mock{};
+	using ExpectationT = ScopedExpectation<void()>;
+	ScopedReporter reporter{};
+	Mock<void()> mock{};
 
 	SECTION("Succeeds as any lvalue.")
 	{
@@ -394,9 +424,9 @@ TEST_CASE("Mock<void()>::expect_lvalue_call expectes a call with lvalue category
 
 TEST_CASE("Mock<void()>::expect_rvalue_call expectes a call with rvalue category.", "[mock]")
 {
-	using ExpectationT = mimicpp::ScopedExpectation<void()>;
-	mimicpp::ScopedReporter reporter{};
-	mimicpp::Mock<void()> mock{};
+	using ExpectationT = ScopedExpectation<void()>;
+	ScopedReporter reporter{};
+	Mock<void()> mock{};
 
 	SECTION("Succeeds as any rvalue.")
 	{
@@ -469,9 +499,9 @@ TEST_CASE("Mock<void()>::expect_rvalue_call expectes a call with rvalue category
 
 TEST_CASE("Mock<void()>::expect_const_call expectes a const call.", "[mock]")
 {
-	using ExpectationT = mimicpp::ScopedExpectation<void()>;
-	mimicpp::ScopedReporter reporter{};
-	mimicpp::Mock<void()> mock{};
+	using ExpectationT = ScopedExpectation<void()>;
+	ScopedReporter reporter{};
+	Mock<void()> mock{};
 
 	SECTION("Succeeds as any const.")
 	{
@@ -544,9 +574,9 @@ TEST_CASE("Mock<void()>::expect_const_call expectes a const call.", "[mock]")
 
 TEST_CASE("Mock<void()>::expect_mutable_call expectes a mutable call.", "[mock]")
 {
-	using ExpectationT = mimicpp::ScopedExpectation<void()>;
-	mimicpp::ScopedReporter reporter{};
-	mimicpp::Mock<void()> mock{};
+	using ExpectationT = ScopedExpectation<void()>;
+	ScopedReporter reporter{};
+	Mock<void()> mock{};
 
 	SECTION("Succeeds as any mutable.")
 	{
@@ -619,9 +649,9 @@ TEST_CASE("Mock<void()>::expect_mutable_call expectes a mutable call.", "[mock]"
 
 TEST_CASE("Mock<void()>::expect_any_call expects call from any category and constness.", "[mock]")
 {
-	using ExpectationT = mimicpp::ScopedExpectation<void()>;
-	mimicpp::ScopedReporter reporter{};
-	mimicpp::Mock<void()> mock{};
+	using ExpectationT = ScopedExpectation<void()>;
+	ScopedReporter reporter{};
+	Mock<void()> mock{};
 
 	{
 		ExpectationT expectation = std::as_const(mock).expect_any_call();
