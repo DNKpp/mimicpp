@@ -29,13 +29,18 @@ TEMPLATE_TEST_CASE(
 	STATIC_REQUIRE(mimicpp::times_policy<TestType>);
 }
 
-TEMPLATE_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
 	"Given types satisfy mimicpp::finalize_policy_for concept.",
 	"[expectation][expectation::builder]",
-	expectation_policies::InitFinalize
+	((bool dummy, typename Policy, typename Sig), dummy, Policy, Sig),
+	(true, expectation_policies::InitFinalize, void()),
+	(true, expectation_policies::InitFinalize, void(int)),
+	(true, expectation_policies::Returns<int>, int()),
+	(true, expectation_policies::Returns<int>, int(float)),
+	(true, expectation_policies::Returns<float>, double())
 )
 {
-	STATIC_REQUIRE(mimicpp::finalize_policy_for<TestType, void()>);
+	STATIC_REQUIRE(mimicpp::finalize_policy_for<Policy, Sig>);
 }
 
 TEMPLATE_TEST_CASE(
@@ -307,6 +312,130 @@ TEMPLATE_TEST_CASE_SIG(
 				result.msg.value(),
 				Catch::Matchers::Equals(std::format(" does not match Constness {}", constness)));
 		}
+	}
+}
+
+TEST_CASE(
+	"expectation_policies::Returns returns a pre-set value during finalze_call().",
+	"[expectation][expectation::policy]"
+)
+{
+	SECTION("When the exact value is returned.")
+	{
+		using SignatureT = int();
+		using CallInfoT = call::Info<SignatureT>;
+		using PolicyT = expectation_policies::Returns<int>;
+		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+
+		constexpr CallInfoT call{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = ValueCategory::lvalue,
+			.fromConst = false
+		};
+
+		PolicyT policy{42};
+
+		REQUIRE(42 == policy.finalize_call(call));
+	}
+
+	SECTION("When a lvalue is returned.")
+	{
+		using SignatureT = int&();
+		using CallInfoT = call::Info<SignatureT>;
+		using PolicyT = expectation_policies::Returns<int>;
+		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+
+		constexpr CallInfoT call{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = ValueCategory::lvalue,
+			.fromConst = false
+		};
+
+		PolicyT policy{42};
+
+		int& ret = policy.finalize_call(call);
+		REQUIRE(42 == ret);
+	}
+
+	SECTION("When a const lvalue is returned.")
+	{
+		using SignatureT = const int&();
+		using CallInfoT = call::Info<SignatureT>;
+		using PolicyT = expectation_policies::Returns<int>;
+		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+
+		constexpr CallInfoT call{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = ValueCategory::lvalue,
+			.fromConst = false
+		};
+
+		PolicyT policy{42};
+
+		const int& ret = policy.finalize_call(call);
+		REQUIRE(42 == ret);
+	}
+
+	SECTION("When a rvalue is returned.")
+	{
+		using SignatureT = int&&();
+		using CallInfoT = call::Info<SignatureT>;
+		using PolicyT = expectation_policies::Returns<int>;
+		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+
+		constexpr CallInfoT call{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = ValueCategory::lvalue,
+			.fromConst = false
+		};
+
+		PolicyT policy{42};
+
+		int&& ret = policy.finalize_call(call);
+		REQUIRE(42 == ret);
+	}
+
+	SECTION("When a const rvalue is returned.")
+	{
+		using SignatureT = const int&&();
+		using CallInfoT = call::Info<SignatureT>;
+		using PolicyT = expectation_policies::Returns<int>;
+		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+
+		constexpr CallInfoT call{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = ValueCategory::lvalue,
+			.fromConst = false
+		};
+
+		PolicyT policy{42};
+
+		const int&& ret = policy.finalize_call(call);
+		REQUIRE(42 == ret);
+	}
+
+	SECTION("When a convertible value is returned.")
+	{
+		using SignatureT = int();
+		using CallInfoT = call::Info<SignatureT>;
+		using PolicyT = expectation_policies::Returns<unsigned int>;
+		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+
+		constexpr CallInfoT call{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = ValueCategory::lvalue,
+			.fromConst = false
+		};
+
+		PolicyT policy{42u};
+
+		REQUIRE(42 == policy.finalize_call(call));
 	}
 }
 

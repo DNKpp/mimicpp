@@ -217,6 +217,44 @@ namespace mimicpp::expectation_policies
 		}
 	};
 
+	template <typename Value>
+		requires (!std::is_reference_v<Value>)
+				&& std::movable<Value>
+	class Returns
+	{
+	public:
+		using ValueT = Value;
+
+		[[nodiscard]]
+		explicit constexpr Returns(ValueT value) noexcept(std::is_nothrow_move_constructible_v<ValueT>)
+			: m_Value{std::move(value)}
+		{
+			
+		}
+
+		template <typename Signature>
+			requires std::convertible_to<ValueT&, signature_return_type_t<Signature>>
+		constexpr signature_return_type_t<Signature> finalize_call(
+			[[maybe_unused]] const call::Info<Signature>& call
+		) noexcept(std::is_nothrow_convertible_v<ValueT&, signature_return_type_t<Signature>>)
+		{
+			return static_cast<signature_return_type_t<Signature>>(m_Value);
+		}
+
+		template <typename Signature>
+			requires (!std::convertible_to<ValueT&, signature_return_type_t<Signature>>)
+					&& std::convertible_to<ValueT&&, signature_return_type_t<Signature>>
+		constexpr signature_return_type_t<Signature> finalize_call(
+			[[maybe_unused]] const call::Info<Signature>& call
+		) noexcept(std::is_nothrow_convertible_v<ValueT&&, signature_return_type_t<Signature>>)
+		{
+			return static_cast<signature_return_type_t<Signature>>(std::move(m_Value));
+		}
+
+	private:
+		ValueT m_Value;
+	};
+
 	class NullDescriber
 	{
 	public:
