@@ -425,6 +425,28 @@ namespace mimicpp::expect
 	{
 		return expectation_policies::RuntimeTimes{0u, max};
 	}
+
+	template <typename T>
+	[[nodiscard]]
+	constexpr expectation_policies::Returns<std::remove_cvref_t<T>> returns(
+		T&& value
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
+	{
+		return expectation_policies::Returns<std::remove_cvref_t<T>>{
+			std::forward<T>(value)
+		};
+	}
+
+	template <typename T>
+	[[nodiscard]]
+	constexpr expectation_policies::Throws<std::remove_cvref_t<T>> throws(
+		T&& exception
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
+	{
+		return expectation_policies::Throws<std::remove_cvref_t<T>>{
+			std::forward<T>(exception)
+		};
+	}
 }
 
 #endif

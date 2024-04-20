@@ -893,3 +893,49 @@ TEST_CASE(
 		}
 	}
 }
+
+TEST_CASE(
+	"mimicpp::expect::returns creates expectation_policies::Returns.",
+	"[expectation][expectation::factories]"
+)
+{
+	using CallInfoT = call::Info<int()>;
+
+	const int value = GENERATE(range(0, 5));
+	expectation_policies::Returns policy = expect::returns(value);
+
+	constexpr CallInfoT call{
+		.params = {},
+		.fromUuid = Uuid{1337},
+		.fromCategory = ValueCategory::lvalue,
+		.fromConst = false
+	};
+
+	REQUIRE(value == policy.finalize_call(call));
+	REQUIRE(value == policy.finalize_call(call));
+}
+
+TEST_CASE(
+	"mimicpp::expect::throws creates expectation_policies::Throws.",
+	"[expectation][expectation::factories]"
+)
+{
+	using CallInfoT = call::Info<int()>;
+
+	const int value = GENERATE(range(0, 5));
+	expectation_policies::Throws policy = expect::throws(value);
+
+	constexpr CallInfoT call{
+		.params = {},
+		.fromUuid = Uuid{1337},
+		.fromCategory = ValueCategory::lvalue,
+		.fromConst = false
+	};
+
+	REQUIRE_THROWS_AS(
+		policy.finalize_call(call),
+		int);
+	REQUIRE_THROWS_AS(
+		policy.finalize_call(call),
+		int);
+}
