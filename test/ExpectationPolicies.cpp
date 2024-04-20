@@ -159,6 +159,19 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"expectation_policies::Times does throw, when invalid config is given.",
+	"[expectation][expectation::builder]"
+)
+{
+	const std::size_t max = GENERATE(0u, 1u, 2u, 3u, 4u);
+	const std::size_t min = max + GENERATE(1u, 2u, 3u, 4u);
+
+	REQUIRE_THROWS_AS(
+		(expectation_policies::RuntimeTimes{min, max}),
+		std::runtime_error);
+}
+
+TEST_CASE(
 	"expectation_policies::SourceLocation just reports the stored source location.",
 	"[expectation][expectation::policy]"
 )
@@ -672,6 +685,211 @@ TEST_CASE(
 					result.msg.value(),
 					Catch::Matchers::Equals(msg));
 			}
+		}
+	}
+}
+
+TEST_CASE(
+	"mimicpp::expect::times and similar factories with nttp limits create expectation_policies::Times.",
+	"[expectation][expectation::factories]"
+)
+{
+	SECTION("times with binary limits.")
+	{
+		expectation_policies::Times times = expect::times<2, 5>();
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(times.is_saturated());
+	}
+
+	SECTION("times with unary limits.")
+	{
+		expectation_policies::Times times = expect::times<3>();
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(times.is_saturated());
+	}
+
+	SECTION("at_most")
+	{
+		expectation_policies::Times times = expect::at_most<3>();
+		REQUIRE(times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(times.is_saturated());
+	}
+
+	SECTION("at_least")
+	{
+		expectation_policies::Times times = expect::at_least<3>();
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		for ([[maybe_unused]] const auto i : std::views::iota(0, 10))
+		{
+			times.consume();
+
+			REQUIRE(times.is_satisfied());
+			REQUIRE(!times.is_saturated());
+		}
+	}
+
+	SECTION("once")
+	{
+		expectation_policies::Times times = expect::once();
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(times.is_saturated());
+	}
+
+	SECTION("twice")
+	{
+		expectation_policies::Times times = expect::twice();
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(times.is_saturated());
+	}
+}
+
+TEST_CASE(
+	"mimicpp::expect::times and similar factories with runtime limits create expectation_policies::RuntimeTimes.",
+	"[expectation][expectation::factories]"
+)
+{
+	SECTION("times with binary limits.")
+	{
+		expectation_policies::RuntimeTimes times = expect::times(2, 5);
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(times.is_saturated());
+	}
+
+	SECTION("times with unary limits.")
+	{
+		expectation_policies::RuntimeTimes times = expect::times(3);
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(times.is_saturated());
+	}
+
+	SECTION("at_most")
+	{
+		expectation_policies::RuntimeTimes times = expect::at_most(3);
+		REQUIRE(times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(times.is_saturated());
+	}
+
+	SECTION("at_least")
+	{
+		expectation_policies::RuntimeTimes times = expect::at_least(3);
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+		times.consume();
+
+		REQUIRE(!times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		times.consume();
+
+		REQUIRE(times.is_satisfied());
+		REQUIRE(!times.is_saturated());
+
+		for ([[maybe_unused]] const auto i : std::views::iota(0, 10))
+		{
+			times.consume();
+
+			REQUIRE(times.is_satisfied());
+			REQUIRE(!times.is_saturated());
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace mimicpp::expectation_policies
 		}
 	};
 
-	template <std::size_t min, std::size_t max = min>
+	template <std::size_t min, std::size_t max>
 		requires (min <= max)
 	class Times
 	{
@@ -53,23 +53,22 @@ namespace mimicpp::expectation_policies
 	};
 
 	class InitTimes
-		: public Times<1u>
+		: public Times<1u, 1u>
 	{
 	};
 
 	class RuntimeTimes
 	{
 	public:
-		constexpr explicit RuntimeTimes(const std::size_t min, const std::size_t max) noexcept
+		[[nodiscard]]
+		constexpr explicit RuntimeTimes(const std::size_t min, const std::size_t max)
 			: m_Min{min},
 			m_Max{max}
 		{
-		}
-
-		constexpr explicit RuntimeTimes(const std::size_t min) noexcept
-			: m_Min{min},
-			m_Max{min}
-		{
+			if (m_Max < m_Min)
+			{
+				throw std::runtime_error{"min must be less or equal to max."};
+			}
 		}
 
 		[[nodiscard]]
@@ -365,6 +364,66 @@ namespace mimicpp::expectation_policies
 			std::move(predicate),
 			std::move(describer)
 		};
+	}
+}
+
+namespace mimicpp::expect
+{
+	template <std::size_t min, std::size_t max = min>
+	[[nodiscard]]
+	consteval expectation_policies::Times<min, max> times() noexcept
+	{
+		return {};
+	}
+
+	template <std::size_t min>
+	[[nodiscard]]
+	consteval expectation_policies::Times<min, std::numeric_limits<std::size_t>::max()> at_least() noexcept
+	{
+		return {};
+	}
+
+	template <std::size_t max>
+	[[nodiscard]]
+	consteval expectation_policies::Times<0u, max> at_most() noexcept
+	{
+		return {};
+	}
+
+	[[nodiscard]]
+	consteval expectation_policies::Times<1u, 1u> once() noexcept
+	{
+		return {};
+	}
+
+	[[nodiscard]]
+	consteval expectation_policies::Times<2u, 2u> twice() noexcept
+	{
+		return {};
+	}
+
+	[[nodiscard]]
+	constexpr expectation_policies::RuntimeTimes times(const std::size_t min, const std::size_t max)
+	{
+		return expectation_policies::RuntimeTimes{min, max};
+	}
+
+	[[nodiscard]]
+	constexpr expectation_policies::RuntimeTimes times(const std::size_t exactly) noexcept
+	{
+		return times(exactly, exactly);
+	}
+
+	[[nodiscard]]
+	constexpr expectation_policies::RuntimeTimes at_least(const std::size_t min) noexcept
+	{
+		return expectation_policies::RuntimeTimes{min, std::numeric_limits<std::size_t>::max()};
+	}
+
+	[[nodiscard]]
+	constexpr expectation_policies::RuntimeTimes at_most(const std::size_t max) noexcept
+	{
+		return expectation_policies::RuntimeTimes{0u, max};
 	}
 }
 
