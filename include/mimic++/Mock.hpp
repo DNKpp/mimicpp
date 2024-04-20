@@ -69,15 +69,25 @@ namespace mimicpp::detail
 	template <typename Signature, typename... Args>
 	constexpr auto make_expectation_builder(
 		std::shared_ptr<ExpectationCollection<Signature>> expectations,
+		const std::source_location& from,
 		Args&&... args
 	)
 	{
+		using BaseBuilderT = BasicExpectationBuilder<
+			Signature,
+			expectation_policies::InitTimes,
+			expectation_policies::InitFinalize,
+			expectation_policies::SourceLocation
+		>;
+
 		return detail::extend_builder_with_arg_policies<Signature>(
-			BasicExpectationBuilder<Signature, expectation_policies::InitTimes, expectation_policies::InitFinalize>{
+			BaseBuilderT{
 				std::move(expectations),
 				expectation_policies::InitTimes{},
 				expectation_policies::InitFinalize{},
-				std::tuple{}
+				std::tuple{
+					expectation_policies::SourceLocation{from}
+				}
 			},
 			std::make_index_sequence<sizeof...(Args)>{},
 			std::forward<Args>(args)...);
@@ -94,95 +104,113 @@ namespace mimicpp::detail
 		MockBase& operator =(const MockBase&) = delete;
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_call(Args&&... args) const &
+		constexpr auto expect_call(Args&&... args, const std::source_location& from = std::source_location::current()) const &
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
+						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::lvalue>{}
 					| expectation_policies::Constness<true>{};
 		}
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_call(Args&&... args) &
+		constexpr auto expect_call(Args&&... args, const std::source_location& from = std::source_location::current()) &
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
+						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::lvalue>{}
 					| expectation_policies::Constness<false>{};
 		}
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_call(Args&&... args) const &&
+		constexpr auto expect_call(Args&&... args, const std::source_location& from = std::source_location::current()) const &&
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
+						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::rvalue>{}
 					| expectation_policies::Constness<true>{};
 		}
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_call(Args&&... args) &&
+		constexpr auto expect_call(Args&&... args, const std::source_location& from = std::source_location::current()) &&
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
+						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::rvalue>{}
 					| expectation_policies::Constness<false>{};
 		}
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_lvalue_call(Args&&... args) const
+		constexpr auto expect_lvalue_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
+						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::lvalue>{};
 		}
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_rvalue_call(Args&&... args) const
+		constexpr auto expect_rvalue_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
+						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<ValueCategory::rvalue>{};
 		}
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_const_call(Args&&... args) const
+		constexpr auto expect_const_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
+						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Constness<true>{};
 		}
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_mutable_call(Args&&... args) const
+		constexpr auto expect_mutable_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
+						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Constness<false>{};
 		}
 
 		template <typename... Args>
+			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_any_call(Args&&... args) const
+		constexpr auto expect_any_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
 		{
 			return detail::make_expectation_builder(
 				m_Expectations,
+				from,
 				std::forward<Args>(args)...);
 		}
 

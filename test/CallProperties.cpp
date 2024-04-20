@@ -38,6 +38,19 @@ TEMPLATE_TEST_CASE(
 	STATIC_REQUIRE(mimicpp::finalize_policy_for<TestType, void()>);
 }
 
+TEMPLATE_TEST_CASE(
+	"Given types satisfy mimicpp::expectation_policy_for concept.",
+	"[expectation][expectation::builder]",
+	expectation_policies::SourceLocation,
+	expectation_policies::Category<ValueCategory::lvalue>,
+	expectation_policies::Category<ValueCategory::rvalue>,
+	expectation_policies::Constness<true>,
+	expectation_policies::Constness<false>
+)
+{
+	STATIC_REQUIRE(mimicpp::expectation_policy_for<TestType, void()>);
+}
+
 TEST_CASE(
 	"expectation_policies::InitFinalize does nothing.",
 	"[expectation][expectation::builder]"
@@ -135,6 +148,52 @@ TEST_CASE(
 
 	REQUIRE(policy.is_satisfied());
 	REQUIRE(policy.is_saturated());
+}
+
+TEST_CASE(
+	"expectation_policies::SourceLocation just reports the stored source location.",
+	"[expectation][expectation::policy]"
+)
+{
+	using SignatureT = void();
+	using CallInfoT = call::Info<SignatureT>;
+	using PolicyT = expectation_policies::SourceLocation;
+
+	constexpr auto sourceLoc = std::source_location::current();
+	constexpr PolicyT policy{sourceLoc};
+
+	SECTION("Policy is always satisfied.")
+	{
+		STATIC_REQUIRE(policy.is_satisfied());
+	}
+
+	const CallInfoT call{
+		.params = {},
+		.fromUuid = Uuid{1337},
+		.fromCategory = ValueCategory::lvalue,
+		.fromConst = GENERATE(true, false)
+	};
+
+	SECTION("Consume is a no-op.")
+	{
+		REQUIRE_NOTHROW(policy.consume(call));
+	}
+
+	SECTION("Policy does always match.")
+	{
+		const call::SubMatchResult result = policy.matches(call);
+		REQUIRE(result.matched);
+		REQUIRE(result.msg);
+		REQUIRE_THAT(
+			*result.msg,
+			Catch::Matchers::Matches(R"( expectation from .+\(\d+\:\d+\), function `.+`)")
+			&& Catch::Matchers::ContainsSubstring(std::format(
+				"{}({}:{})",
+				sourceLoc.file_name(),
+				sourceLoc.line(),
+				sourceLoc.column()))
+			&& Catch::Matchers::ContainsSubstring(sourceLoc.function_name()));
+	}
 }
 
 TEMPLATE_TEST_CASE_SIG(
