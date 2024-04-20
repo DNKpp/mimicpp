@@ -69,7 +69,7 @@ namespace mimicpp::detail
 	template <typename Signature, typename... Args>
 	constexpr auto make_expectation_builder(
 		std::shared_ptr<ExpectationCollection<Signature>> expectations,
-		const std::source_location& from,
+		const expectation_policies::SourceLocation::data& from,
 		Args&&... args
 	)
 	{
@@ -96,6 +96,7 @@ namespace mimicpp::detail
 	template <typename Signature, typename Return, typename... Params>
 	class MockBase
 	{
+		using SourceLocT = expectation_policies::SourceLocation::data;
 	public:
 		using SignatureT = Signature;
 		using CallInfoT = call::Info<SignatureT>;
@@ -103,10 +104,10 @@ namespace mimicpp::detail
 		MockBase(const MockBase&) = delete;
 		MockBase& operator =(const MockBase&) = delete;
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_call(Args&&... args, const std::source_location& from = std::source_location::current()) const &
+		constexpr auto expect_call(Args&&... args) const &
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
@@ -116,10 +117,10 @@ namespace mimicpp::detail
 					| expectation_policies::Constness<true>{};
 		}
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_call(Args&&... args, const std::source_location& from = std::source_location::current()) &
+		constexpr auto expect_call(Args&&... args) &
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
@@ -129,10 +130,10 @@ namespace mimicpp::detail
 					| expectation_policies::Constness<false>{};
 		}
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_call(Args&&... args, const std::source_location& from = std::source_location::current()) const &&
+		constexpr auto expect_call(Args&&... args) const &&
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
@@ -142,10 +143,10 @@ namespace mimicpp::detail
 					| expectation_policies::Constness<true>{};
 		}
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_call(Args&&... args, const std::source_location& from = std::source_location::current()) &&
+		constexpr auto expect_call(Args&&... args) &&
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
@@ -155,10 +156,10 @@ namespace mimicpp::detail
 					| expectation_policies::Constness<false>{};
 		}
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_lvalue_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
+		constexpr auto expect_lvalue_call(Args&&... args) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
@@ -167,10 +168,10 @@ namespace mimicpp::detail
 					| expectation_policies::Category<ValueCategory::lvalue>{};
 		}
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_rvalue_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
+		constexpr auto expect_rvalue_call(Args&&... args) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
@@ -179,10 +180,10 @@ namespace mimicpp::detail
 					| expectation_policies::Category<ValueCategory::rvalue>{};
 		}
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_const_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
+		constexpr auto expect_const_call(Args&&... args) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
@@ -191,10 +192,10 @@ namespace mimicpp::detail
 					| expectation_policies::Constness<true>{};
 		}
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_mutable_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
+		constexpr auto expect_mutable_call(Args&&... args) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
@@ -203,10 +204,10 @@ namespace mimicpp::detail
 					| expectation_policies::Constness<false>{};
 		}
 
-		template <typename... Args>
+		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
-		constexpr auto expect_any_call(Args&&... args, const std::source_location& from = std::source_location::current()) const
+		constexpr auto expect_any_call(Args&&... args) const
 		{
 			return detail::make_expectation_builder(
 				m_Expectations,

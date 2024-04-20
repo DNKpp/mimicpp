@@ -99,8 +99,24 @@ namespace mimicpp::expectation_policies
 	class SourceLocation
 	{
 	public:
+		struct data
+		{
+			const char* fileName;
+			std::uint_least32_t line;
+			std::uint_least32_t column;
+			const char* functionName;
+
+			explicit consteval data(const std::source_location& loc) noexcept
+				: fileName{loc.file_name()},
+				line{loc.line()},
+				column{loc.column()},
+				functionName{loc.function_name()}
+			{
+			}
+		};
+
 		[[nodiscard]]
-		explicit constexpr SourceLocation(const std::source_location& loc) noexcept
+		explicit constexpr SourceLocation(const data& loc) noexcept
 			: m_Location{loc}
 		{
 		}
@@ -119,10 +135,10 @@ namespace mimicpp::expectation_policies
 				.matched = true,
 				.msg = std::format(
 					" expectation from {}({}:{}), function `{}`",
-					m_Location.file_name(),
-					m_Location.line(),
-					m_Location.column(),
-					m_Location.function_name())
+					m_Location.fileName,
+					m_Location.line,
+					m_Location.column,
+					m_Location.functionName)
 			};
 		}
 
@@ -132,7 +148,7 @@ namespace mimicpp::expectation_policies
 		}
 
 	private:
-		std::source_location m_Location;
+		data m_Location;
 	};
 
 	template <ValueCategory expected>

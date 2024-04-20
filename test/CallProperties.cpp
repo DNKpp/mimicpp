@@ -159,7 +159,7 @@ TEST_CASE(
 	using CallInfoT = call::Info<SignatureT>;
 	using PolicyT = expectation_policies::SourceLocation;
 
-	constexpr auto sourceLoc = std::source_location::current();
+	constexpr PolicyT::data sourceLoc{std::source_location::current()};
 	constexpr PolicyT policy{sourceLoc};
 
 	SECTION("Policy is always satisfied.")
@@ -189,10 +189,10 @@ TEST_CASE(
 			Catch::Matchers::Matches(R"( expectation from .+\(\d+\:\d+\), function `.+`)")
 			&& Catch::Matchers::ContainsSubstring(std::format(
 				"{}({}:{})",
-				sourceLoc.file_name(),
-				sourceLoc.line(),
-				sourceLoc.column()))
-			&& Catch::Matchers::ContainsSubstring(sourceLoc.function_name()));
+				sourceLoc.fileName,
+				sourceLoc.line,
+				sourceLoc.column))
+			&& Catch::Matchers::ContainsSubstring(sourceLoc.functionName));
 	}
 }
 
