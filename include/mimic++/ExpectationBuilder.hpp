@@ -159,16 +159,12 @@ namespace mimicpp::detail
 	class BuildFinalizer
 	{
 	public:
-		template <
-			typename Signature,
-			times_policy TimesPolicy,
-			finalize_policy_for<Signature> FinalizePolicy,
-			expectation_policy_for<Signature>... Policies>
+		template <typename Signature, typename... Policies>
 		[[nodiscard]]
 		friend constexpr ScopedExpectation<Signature> operator <<=(
 			const BuildFinalizer&&,
-			BasicExpectationBuilder<Signature, TimesPolicy, FinalizePolicy, Policies...>&& builder
-			)
+			BasicExpectationBuilder<Signature, Policies...>&& builder
+		)
 		{
 			return std::move(builder).finalize();
 		}
