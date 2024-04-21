@@ -13,6 +13,7 @@
 
 #include "mimic++/Expectation.hpp"
 #include "mimic++/Printer.hpp"
+#include "mimic++/Utility.hpp"
 
 namespace mimicpp::expectation_policies
 {
@@ -98,24 +99,8 @@ namespace mimicpp::expectation_policies
 	class SourceLocation
 	{
 	public:
-		struct data
-		{
-			const char* fileName;
-			std::uint_least32_t line;
-			std::uint_least32_t column;
-			const char* functionName;
-
-			explicit consteval data(const std::source_location& loc) noexcept
-				: fileName{loc.file_name()},
-				line{loc.line()},
-				column{loc.column()},
-				functionName{loc.function_name()}
-			{
-			}
-		};
-
 		[[nodiscard]]
-		explicit constexpr SourceLocation(const data& loc) noexcept
+		explicit constexpr SourceLocation(const source_location_data& loc) noexcept
 			: m_Location{loc}
 		{
 		}
@@ -147,7 +132,7 @@ namespace mimicpp::expectation_policies
 		}
 
 	private:
-		data m_Location;
+		source_location_data m_Location;
 	};
 
 	template <ValueCategory expected>

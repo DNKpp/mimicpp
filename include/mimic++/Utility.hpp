@@ -10,6 +10,7 @@
 
 #include <cstddef>
 #include <format>
+#include <source_location>
 
 namespace mimicpp
 {
@@ -124,5 +125,24 @@ struct std::formatter<mimicpp::Constness, char>
 			ctx);
 	}
 };
+
+namespace mimicpp
+{
+	struct source_location_data
+	{
+		const char* fileName;
+		std::uint_least32_t line;
+		std::uint_least32_t column;
+		const char* functionName;
+
+		explicit consteval source_location_data(const std::source_location& loc) noexcept
+			: fileName{loc.file_name()},
+			line{loc.line()},
+			column{loc.column()},
+			functionName{loc.function_name()}
+		{
+		}
+	};
+}
 
 #endif

@@ -174,7 +174,7 @@ namespace mimicpp::detail
 	template <typename Signature, typename... Args>
 	constexpr auto make_expectation_builder(
 		std::shared_ptr<ExpectationCollection<Signature>> expectations,
-		const expectation_policies::SourceLocation::data& from,
+		const source_location_data& from,
 		Args&&... args
 	)
 	{

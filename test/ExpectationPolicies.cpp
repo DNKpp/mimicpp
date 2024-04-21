@@ -182,7 +182,7 @@ TEST_CASE(
 	using CallInfoT = call::Info<SignatureT>;
 	using PolicyT = expectation_policies::SourceLocation;
 
-	constexpr PolicyT::data sourceLoc{std::source_location::current()};
+	constexpr source_location_data sourceLoc{std::source_location::current()};
 	constexpr PolicyT policy{sourceLoc};
 
 	SECTION("Policy is always satisfied.")
