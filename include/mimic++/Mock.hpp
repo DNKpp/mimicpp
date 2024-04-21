@@ -51,48 +51,6 @@ namespace mimicpp::detail
 		Uuid m_Uuid{m_NextUuid++};
 	};
 
-	template <typename Signature, typename Builder, std::size_t... indices, typename... Args>
-	[[nodiscard]]
-	constexpr auto extend_builder_with_arg_policies(
-		Builder&& builder,
-		const std::index_sequence<indices...>,
-		Args&&... args
-	)
-	{
-		return (
-			std::forward<Builder>(builder)
-			| ...
-			| expectation_policies::make_argument_matcher<Signature, indices>(
-				std::bind_front(std::equal_to{}, std::forward<Args>(args))));
-	}
-
-	template <typename Signature, typename... Args>
-	constexpr auto make_expectation_builder(
-		std::shared_ptr<ExpectationCollection<Signature>> expectations,
-		const expectation_policies::SourceLocation::data& from,
-		Args&&... args
-	)
-	{
-		using BaseBuilderT = BasicExpectationBuilder<
-			Signature,
-			expectation_policies::InitTimes,
-			expectation_policies::InitFinalize,
-			expectation_policies::SourceLocation
-		>;
-
-		return detail::extend_builder_with_arg_policies<Signature>(
-			BaseBuilderT{
-				std::move(expectations),
-				expectation_policies::InitTimes{},
-				expectation_policies::InitFinalize{},
-				std::tuple{
-					expectation_policies::SourceLocation{from}
-				}
-			},
-			std::make_index_sequence<sizeof...(Args)>{},
-			std::forward<Args>(args)...);
-	}
-
 	template <typename Signature, typename Return, typename... Params>
 	class MockBase
 	{
