@@ -246,7 +246,7 @@ TEMPLATE_TEST_CASE_SIG(
 		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 	};
 
-	if (matches(call.fromCategory, category))
+	if (is_matching(call.fromCategory, category))
 	{
 		SECTION("When call and policy category matches, success is returned.")
 		{
@@ -304,7 +304,7 @@ TEMPLATE_TEST_CASE_SIG(
 		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 	};
 
-	if (matches(call.fromConstness, constness))
+	if (is_matching(call.fromConstness, constness))
 	{
 		SECTION("When call and policy constness matches, success is returned.")
 		{

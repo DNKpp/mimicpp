@@ -47,7 +47,7 @@ namespace mimicpp
 	};
 
 	[[nodiscard]]
-	constexpr bool matches(const Constness lhs, const Constness rhs) noexcept
+	constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
 	{
 		using UnderlyingT = std::underlying_type_t<Constness>;
 		return UnderlyingT{0} != (static_cast<UnderlyingT>(lhs) & static_cast<UnderlyingT>(rhs));
@@ -61,7 +61,7 @@ namespace mimicpp
 	};
 
 	[[nodiscard]]
-	constexpr bool matches(const ValueCategory lhs, const ValueCategory rhs) noexcept
+	constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept
 	{
 		using UnderlyingT = std::underlying_type_t<ValueCategory>;
 		return UnderlyingT{0} != (static_cast<UnderlyingT>(lhs) & static_cast<UnderlyingT>(rhs));

@@ -147,7 +147,7 @@ namespace mimicpp::expectation_policies
 		template <typename Return, typename... Params>
 		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>& info)
 		{
-			if (mimicpp::matches(info.fromCategory, expected))
+			if (mimicpp::is_matching(info.fromCategory, expected))
 			{
 				return {
 					.matched = true,
@@ -164,7 +164,7 @@ namespace mimicpp::expectation_policies
 		template <typename Return, typename... Params>
 		static constexpr void consume(const call::Info<Return, Params...>& info) noexcept
 		{
-			assert(mimicpp::matches(info.fromCategory, expected) && "Call does not match.");
+			assert(mimicpp::is_matching(info.fromCategory, expected) && "Call does not match.");
 		}
 	};
 
@@ -180,7 +180,7 @@ namespace mimicpp::expectation_policies
 		template <typename Return, typename... Params>
 		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>& info) noexcept
 		{
-			if (mimicpp::matches(info.fromConstness, constness))
+			if (mimicpp::is_matching(info.fromConstness, constness))
 			{
 				return {
 					.matched = true,
@@ -197,7 +197,7 @@ namespace mimicpp::expectation_policies
 		template <typename Return, typename... Params>
 		static constexpr void consume(const call::Info<Return, Params...>& info) noexcept
 		{
-			assert(mimicpp::matches(info.fromConstness, constness) && "Call does not match.");
+			assert(mimicpp::is_matching(info.fromConstness, constness) && "Call does not match.");
 		}
 	};
 
