@@ -3,9 +3,9 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "mimic++/ExpectationPolicies.hpp"
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
-#include "mimic++/ExpectationPolicies.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -66,7 +66,7 @@ TEST_CASE(
 	"[expectation][expectation::builder]"
 )
 {
-	const call::Info<void()> call{
+	const call::Info<void> call{
 		.params = {},
 		.fromUuid = Uuid{1337},
 		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
@@ -179,7 +179,7 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using CallInfoT = call::Info<SignatureT>;
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
 	using PolicyT = expectation_policies::SourceLocation;
 
 	constexpr source_location_data sourceLoc{std::source_location::current()};
@@ -229,7 +229,7 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	using SignatureT = void();
-	using CallInfoT = call::Info<SignatureT>;
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
 	using PolicyT = expectation_policies::Category<category>;
 	STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
 
@@ -287,7 +287,7 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	using SignatureT = void();
-	using CallInfoT = call::Info<SignatureT>;
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
 	using PolicyT = expectation_policies::Constness<constness>;
 	STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
 
@@ -343,7 +343,7 @@ TEST_CASE(
 	SECTION("When the exact value is returned.")
 	{
 		using SignatureT = int();
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
@@ -362,7 +362,7 @@ TEST_CASE(
 	SECTION("When a lvalue is returned.")
 	{
 		using SignatureT = int&();
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
@@ -382,7 +382,7 @@ TEST_CASE(
 	SECTION("When a const lvalue is returned.")
 	{
 		using SignatureT = const int&();
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
@@ -402,7 +402,7 @@ TEST_CASE(
 	SECTION("When a rvalue is returned.")
 	{
 		using SignatureT = int&&();
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
@@ -422,7 +422,7 @@ TEST_CASE(
 	SECTION("When a const rvalue is returned.")
 	{
 		using SignatureT = const int&&();
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
@@ -442,7 +442,7 @@ TEST_CASE(
 	SECTION("When a convertible value is returned.")
 	{
 		using SignatureT = int();
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 		using PolicyT = expectation_policies::Returns<unsigned int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
@@ -471,7 +471,7 @@ TEST_CASE(
 	SECTION("When void is returned.")
 	{
 		using SignatureT = void();
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 		using PolicyT = expectation_policies::Throws<test_exception>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
@@ -492,7 +492,7 @@ TEST_CASE(
 	SECTION("When non-void is returned.")
 	{
 		using SignatureT = int&&();
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 		using PolicyT = expectation_policies::Throws<test_exception>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
@@ -548,7 +548,7 @@ TEST_CASE(
 	SECTION("Policy works on unary signature.")
 	{
 		using SignatureT = void(int);
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 		PredicateMock<int> predicate{};
 		DescribeMock<int> describe{};
@@ -603,7 +603,7 @@ TEST_CASE(
 	SECTION("Policy works on binary signature.")
 	{
 		using SignatureT = void(int, const std::string&);
-		using CallInfoT = call::Info<SignatureT>;
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 		PredicateMock<int> predicate1{};
 		DescribeMock<int> describe1{};
@@ -903,7 +903,7 @@ TEST_CASE(
 	"[expectation][expectation::factories]"
 )
 {
-	using CallInfoT = call::Info<int()>;
+	using CallInfoT = call::Info<int>;
 
 	const int value = GENERATE(range(0, 5));
 	expectation_policies::Returns policy = expect::returns(value);
@@ -924,7 +924,7 @@ TEST_CASE(
 	"[expectation][expectation::factories]"
 )
 {
-	using CallInfoT = call::Info<int()>;
+	using CallInfoT = call::Info<int>;
 
 	const int value = GENERATE(range(0, 5));
 	expectation_policies::Throws policy = expect::throws(value);

@@ -25,7 +25,7 @@ template <typename Signature>
 class PolicyFake
 {
 public:
-	using CallInfoT = mimicpp::call::Info<Signature>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
 	using SubMatchT = mimicpp::call::SubMatchResult;
 
 	bool isSatisfied{};
@@ -53,7 +53,7 @@ template <typename Signature>
 class FinalizerMock
 {
 public:
-	using CallInfoT = mimicpp::call::Info<Signature>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
 	using ReturnT = mimicpp::signature_return_type_t<Signature>;
 
 	MAKE_MOCK1(finalize_call, ReturnT (const CallInfoT&));
@@ -67,7 +67,7 @@ template <typename Signature, typename Policy, typename Projection>
 class PolicyFacade
 {
 public:
-	using CallT = mimicpp::call::Info<Signature>;
+	using CallT = mimicpp::call::info_for_signature_t<Signature>;
 	using SubMatchT = mimicpp::call::SubMatchResult;
 
 	Policy policy{};
@@ -98,7 +98,7 @@ template <typename Signature>
 class FinalizerFake
 {
 public:
-	using CallInfoT = mimicpp::call::Info<Signature>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
 	using ReturnT = mimicpp::signature_return_type_t<Signature>;
 
 	class Exception
@@ -115,7 +115,7 @@ template <typename Signature>
 class PolicyMock
 {
 public:
-	using CallInfoT = mimicpp::call::Info<Signature>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
 	using SubMatchT = mimicpp::call::SubMatchResult;
 
 	static constexpr bool trompeloeil_movable_mock = true;
@@ -133,7 +133,7 @@ template <typename Signature, typename Policy, typename Projection>
 class FinalizerFacade
 {
 public:
-	using CallInfoT = mimicpp::call::Info<Signature>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
 	using ReturnT = mimicpp::signature_return_type_t<Signature>;
 
 	Policy policy{};

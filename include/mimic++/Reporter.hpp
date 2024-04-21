@@ -14,17 +14,17 @@
 
 namespace mimicpp
 {
-	template <typename Signature>
+	template <typename Return, typename... Params>
 	[[noreturn]]
 	void report_fail(
-		call::Info<Signature> callInfo,
+		call::Info<Return, Params...> callInfo,
 		std::vector<call::MatchResult_NoT> results
 	);
 
-	template <typename Signature>
+	template <typename Return, typename... Params>
 	[[noreturn]]
 	void report_fail(
-		call::Info<Signature> callInfo,
+		call::Info<Return, Params...> callInfo,
 		std::vector<call::MatchResult_ExhaustedT> results
 	);
 
@@ -36,9 +36,9 @@ namespace mimicpp
 		std::shared_ptr<Expectation<Signature>> expectation
 	);
 
-	template <typename Signature>
+	template <typename Return, typename... Params>
 	void report_ok(
-		call::Info<Signature> callInfo,
+		call::Info<Return, Params...> callInfo,
 		call::MatchResult_OkT result
 	);
 }

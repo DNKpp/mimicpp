@@ -20,8 +20,8 @@ namespace mimicpp::expectation_policies
 	class InitFinalize
 	{
 	public:
-		template <typename Signature>
-		static constexpr void finalize_call(const call::Info<Signature>&) noexcept
+		template <typename Return, typename... Params>
+		static constexpr void finalize_call(const call::Info<Return, Params...>&) noexcept
 		{
 		}
 	};
@@ -111,9 +111,9 @@ namespace mimicpp::expectation_policies
 			return true;
 		}
 
-		template <typename Signature>
+		template <typename Return, typename... Params>
 		[[nodiscard]]
-		constexpr call::SubMatchResult matches(const call::Info<Signature>&) const
+		constexpr call::SubMatchResult matches(const call::Info<Return, Params...>&) const
 		{
 			return call::SubMatchResult{
 				.matched = true,
@@ -126,8 +126,8 @@ namespace mimicpp::expectation_policies
 			};
 		}
 
-		template <typename Signature>
-		static constexpr void consume(const call::Info<Signature>&) noexcept
+		template <typename Return, typename... Params>
+		static constexpr void consume(const call::Info<Return, Params...>&) noexcept
 		{
 		}
 
@@ -144,8 +144,8 @@ namespace mimicpp::expectation_policies
 			return true;
 		}
 
-		template <typename Signature>
-		static constexpr call::SubMatchResult matches(const call::Info<Signature>& info)
+		template <typename Return, typename... Params>
+		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>& info)
 		{
 			if (mimicpp::matches(info.fromCategory, expected))
 			{
@@ -161,8 +161,8 @@ namespace mimicpp::expectation_policies
 			};
 		}
 
-		template <typename Signature>
-		static constexpr void consume(const call::Info<Signature>& info) noexcept
+		template <typename Return, typename... Params>
+		static constexpr void consume(const call::Info<Return, Params...>& info) noexcept
 		{
 			assert(mimicpp::matches(info.fromCategory, expected) && "Call does not match.");
 		}
@@ -177,8 +177,8 @@ namespace mimicpp::expectation_policies
 			return true;
 		}
 
-		template <typename Signature>
-		static constexpr call::SubMatchResult matches(const call::Info<Signature>& info) noexcept
+		template <typename Return, typename... Params>
+		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>& info) noexcept
 		{
 			if (mimicpp::matches(info.fromConstness, constness))
 			{
@@ -194,8 +194,8 @@ namespace mimicpp::expectation_policies
 			};
 		}
 
-		template <typename Signature>
-		static constexpr void consume(const call::Info<Signature>& info) noexcept
+		template <typename Return, typename... Params>
+		static constexpr void consume(const call::Info<Return, Params...>& info) noexcept
 		{
 			assert(mimicpp::matches(info.fromConstness, constness) && "Call does not match.");
 		}
@@ -215,25 +215,25 @@ namespace mimicpp::expectation_policies
 		{
 		}
 
-		template <typename Signature>
-			requires std::convertible_to<ValueT&, signature_return_type_t<Signature>>
+		template <typename Return, typename... Params>
+			requires std::convertible_to<ValueT&, Return>
 		[[nodiscard]]
-		constexpr signature_return_type_t<Signature> finalize_call(
-			[[maybe_unused]] const call::Info<Signature>& call
-		) noexcept(std::is_nothrow_convertible_v<ValueT&, signature_return_type_t<Signature>>)
+		constexpr Return finalize_call(
+			[[maybe_unused]] const call::Info<Return, Params...>& call
+		) noexcept(std::is_nothrow_convertible_v<ValueT&, Return>)
 		{
-			return static_cast<signature_return_type_t<Signature>>(m_Value);
+			return static_cast<Return>(m_Value);
 		}
 
-		template <typename Signature>
-			requires (!std::convertible_to<ValueT&, signature_return_type_t<Signature>>)
-					&& std::convertible_to<ValueT&&, signature_return_type_t<Signature>>
+		template <typename Return, typename... Params>
+			requires (!std::convertible_to<ValueT&, Return>)
+					&& std::convertible_to<ValueT&&, Return>
 		[[nodiscard]]
-		constexpr signature_return_type_t<Signature> finalize_call(
-			[[maybe_unused]] const call::Info<Signature>& call
-		) noexcept(std::is_nothrow_convertible_v<ValueT&&, signature_return_type_t<Signature>>)
+		constexpr Return finalize_call(
+			[[maybe_unused]] const call::Info<Return, Params...>& call
+		) noexcept(std::is_nothrow_convertible_v<ValueT&&, Return>)
 		{
-			return static_cast<signature_return_type_t<Signature>>(std::move(m_Value));
+			return static_cast<Return>(std::move(m_Value));
 		}
 
 	private:
@@ -252,9 +252,9 @@ namespace mimicpp::expectation_policies
 		{
 		}
 
-		template <typename Signature>
-		constexpr signature_return_type_t<Signature> finalize_call(
-			[[maybe_unused]] const call::Info<Signature>& call
+		template <typename Return, typename... Params>
+		constexpr Return finalize_call(
+			[[maybe_unused]] const call::Info<Return, Params...>& call
 		)
 		{
 			throw m_Exception;
@@ -288,7 +288,7 @@ namespace mimicpp::expectation_policies
 	{
 	public:
 		using ParamT = signature_param_type_t<index, Signature>;
-		using CallInfoT = call::Info<Signature>;
+		using CallInfoT = call::info_for_signature_t<Signature>;
 
 		~ArgumentMatcher() = default;
 

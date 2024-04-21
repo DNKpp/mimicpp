@@ -25,7 +25,7 @@ namespace
 		: public mimicpp::Expectation<void()>
 	{
 	public:
-		using CallInfoT = mimicpp::call::Info<void()>;
+		using CallInfoT = mimicpp::call::info_for_signature_t<void()>;
 		using MatchResultT = mimicpp::call::MatchResultT;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
@@ -79,7 +79,7 @@ TEST_CASE(
 {
 	using namespace mimicpp::call;
 	using StorageT = mimicpp::ExpectationCollection<void()>;
-	using CallInfoT = Info<void()>;
+	using CallInfoT = Info<void>;
 	using trompeloeil::_;
 
 	mimicpp::ScopedReporter reporter{};
@@ -334,7 +334,7 @@ TEST_CASE(
 	using PolicyMockT = PolicyMock<SignatureT>;
 	using PolicyRefT = PolicyFacade<SignatureT, std::reference_wrapper<PolicyMock<SignatureT>>, UnwrapReferenceWrapper>;
 	using TimesPolicyT = TimesFacade<std::reference_wrapper<TimesMock>, UnwrapReferenceWrapper>;
-	using CallInfoT = mimicpp::call::Info<SignatureT>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
 
 	const CallInfoT call{
 		.params = {},
@@ -462,7 +462,7 @@ TEMPLATE_TEST_CASE(
 	using FinalizerT = FinalizerFake<TestType>;
 	using PolicyMockT = PolicyMock<TestType>;
 	using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
-	using CallInfoT = mimicpp::call::Info<TestType>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<TestType>;
 
 	const CallInfoT call{
 		.params = {},
@@ -603,7 +603,7 @@ TEMPLATE_TEST_CASE(
 	using SignatureT = TestType;
 	using FinalizerT = FinalizerMock<SignatureT>;
 	using FinalizerRefT = FinalizerFacade<SignatureT, std::reference_wrapper<FinalizerT>, UnwrapReferenceWrapper>;
-	using CallInfoT = mimicpp::call::Info<SignatureT>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
 
 	const CallInfoT call{
 		.params = {},

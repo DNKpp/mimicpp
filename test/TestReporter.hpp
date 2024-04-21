@@ -23,9 +23,9 @@ class TestExpectationError
 
 namespace mimicpp
 {
-	template <typename Signature>
+	template <typename Return, typename... Params>
 	void report_fail(
-		call::Info<Signature> callInfo,
+		call::Info<Return, Params...> callInfo,
 		std::vector<call::MatchResult_NoT> results
 	)
 	{
@@ -37,9 +37,9 @@ namespace mimicpp
 		throw TestExpectationError{};
 	}
 
-	template <typename Signature>
+	template <typename Return, typename... Params>
 	void report_fail(
-		call::Info<Signature> callInfo,
+		call::Info<Return, Params...> callInfo,
 		std::vector<call::MatchResult_ExhaustedT> results
 	)
 	{
@@ -59,9 +59,9 @@ namespace mimicpp
 		g_UnsatisfiedExpectations.emplace_back(std::move(expectation));
 	}
 
-	template <typename Signature>
+	template <typename Return, typename... Params>
 	void report_ok(
-		call::Info<Signature> callInfo,
+		call::Info<Return, Params...> callInfo,
 		call::MatchResult_OkT result
 	)
 	{

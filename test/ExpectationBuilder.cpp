@@ -35,7 +35,7 @@ TEST_CASE(
 	using SignatureT = void();
 	using BaseBuilderT = BasicExpectationBuilder<SignatureT, expectation_policies::InitTimes, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
-	using CallInfoT = call::Info<SignatureT>;
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
@@ -126,7 +126,7 @@ TEST_CASE(
 	using SignatureT = void();
 	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
-	using CallInfoT = call::Info<SignatureT>;
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
@@ -179,7 +179,7 @@ TEST_CASE(
 	using SignatureT = int();
 	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
-	using CallInfoT = call::Info<SignatureT>;
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 
 #include <algorithm>
@@ -22,11 +23,8 @@
 
 namespace mimicpp::call
 {
-	template <typename Signature>
-	class Info;
-
 	template <typename Return, typename... Args>
-	class Info<Return(Args...)>
+	class Info
 	{
 	public:
 		using ParamListT = std::tuple<std::reference_wrapper<std::remove_reference_t<Args>>...>;
@@ -36,6 +34,21 @@ namespace mimicpp::call
 		ValueCategory fromCategory{};
 		Constness fromConstness{};
 		std::source_location fromSourceLocation{};
+	};
+
+	template <typename Signature>
+	struct info_for_signature
+		: public info_for_signature<signature_decay_t<Signature>>
+	{
+	};
+
+	template <typename Signature>
+	using info_for_signature_t = typename info_for_signature<Signature>::type;
+
+	template <typename Return, typename... Args>
+	struct info_for_signature<Return(Args...)>
+	{
+		using type = Info<Return, Args...>;
 	};
 }
 
@@ -137,6 +150,67 @@ namespace mimicpp::call::detail
 			.subMatchResults = std::move(subResults)
 		};
 	}
+}
+
+namespace mimicpp::detail
+{
+	template <typename Derived, typename Base>
+	[[nodiscard]]
+	constexpr const Derived& derived_cast(const Base& self) noexcept
+	{
+		static_assert(
+			std::derived_from<Derived, Derived>,
+			"Derived must inherit from Base.");
+		return static_cast<const Derived&>(self);
+	}
+}
+
+namespace mimicpp
+{
+	//template <typename Signature, typename Derived>
+	//class EnableCallOperator;
+
+	//template <typename Return, typename... Params, typename Derived>
+	//class EnableCallOperator<Return(Params...), Derived>
+	//{
+	//	using SourceLocT = source_location_data;
+	//	using CallInfoT = call::Info<Return(Params...)>;
+
+	//public:
+	//	template <SourceLocT from = SourceLocT{std::source_location::current()}>
+	//	constexpr Return operator ()(Params... params)
+	//	{
+	//		return detail::derived_cast<Derived>()
+	//			.handle_call(
+	//				CallInfoT{
+	//					.params = {std::ref(params)...},
+	//					.fromCategory = ValueCategory::any,
+	//					.fromConstness = Constness::non_const,
+	//					.fromSourceLocation = from
+	//				});
+	//	}
+	//};
+
+	//template <typename Return, typename... Params, typename Derived>
+	//class EnableCallOperator<Return(Params...) const, Derived>
+	//{
+	//	using SourceLocT = source_location_data;
+	//	using CallInfoT = call::Info<Return(Params...)>;
+
+	//public:
+	//	template <SourceLocT from = SourceLocT{std::source_location::current()}>
+	//	constexpr Return operator ()(Params... params) const
+	//	{
+	//		return detail::derived_cast<Derived>()
+	//			.handle_call(
+	//				CallInfoT{
+	//					.params = {std::ref(params)...},
+	//					.fromCategory = ValueCategory::any,
+	//					.fromConstness = Constness::as_const,
+	//					.fromSourceLocation = from
+	//				});
+	//	}
+	//};
 }
 
 #endif

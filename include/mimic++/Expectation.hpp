@@ -23,10 +23,10 @@
 
 namespace mimicpp::detail
 {
-	template <typename Signature>
+	template <typename Return, typename... Params>
 	[[noreturn]]
 	void handle_call_match_fail(
-		call::Info<Signature> call,
+		call::Info<Return, Params...> call,
 		std::vector<call::MatchResult_NoT> noMatches,
 		std::vector<call::MatchResult_ExhaustedT> partialMatches
 	)
@@ -52,7 +52,7 @@ namespace mimicpp
 	class Expectation
 	{
 	public:
-		using CallInfoT = call::Info<Signature>;
+		using CallInfoT = call::info_for_signature_t<Signature>;
 		using ReturnT = signature_return_type_t<Signature>;
 
 		virtual ~Expectation() = default;
@@ -80,7 +80,7 @@ namespace mimicpp
 	class ExpectationCollection
 	{
 	public:
-		using CallInfoT = call::Info<Signature>;
+		using CallInfoT = call::info_for_signature_t<Signature>;
 		using ExpectationT = Expectation<Signature>;
 		using ReturnT = signature_return_type_t<Signature>;
 
@@ -168,20 +168,20 @@ namespace mimicpp
 	concept expectation_policy_for = std::movable<T>
 									&& std::is_destructible_v<T>
 									&& std::same_as<T, std::remove_cvref_t<T>>
-									&& requires(T& policy, const call::Info<Signature>& call)
+									&& requires(T& policy, const call::info_for_signature_t<Signature>& info)
 									{
 										{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-										{ std::as_const(policy).matches(call) } -> std::convertible_to<call::SubMatchResult>;
-										{ policy.consume(call) };
+										{ std::as_const(policy).matches(info) } -> std::convertible_to<call::SubMatchResult>;
+										{ policy.consume(info) };
 									};
 
 	template <typename T, typename Signature>
 	concept finalize_policy_for = std::movable<T>
 								&& std::is_destructible_v<T>
 								&& std::same_as<T, std::remove_cvref_t<T>>
-								&& requires(T& policy, const call::Info<Signature>& call)
+								&& requires(T& policy, const call::info_for_signature_t<Signature>& info)
 								{
-									{ policy.finalize_call(call) } -> std::convertible_to<signature_return_type_t<Signature>>;
+									{ policy.finalize_call(info) } -> std::convertible_to<signature_return_type_t<Signature>>;
 								};
 
 	template <typename T>
@@ -208,7 +208,7 @@ namespace mimicpp
 		using TimesT = TimesPolicy;
 		using FinalizerT = FinalizePolicy;
 		using PolicyListT = std::tuple<Policies...>;
-		using CallInfoT = call::Info<Signature>;
+		using CallInfoT = call::info_for_signature_t<Signature>;
 		using ReturnT = typename Expectation<Signature>::ReturnT;
 
 		template <typename TimesArg, typename FinalizerArg, typename... PolicyArgs>
