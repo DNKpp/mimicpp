@@ -152,6 +152,9 @@ namespace mimicpp
 		FinalizePolicy m_FinalizePolicy{};
 		PolicyListT m_ExpectationPolicies{};
 	};
+
+	template <typename Signature, typename... Policies>
+	ScopedExpectation(BasicExpectationBuilder<Signature, Policies...>&&) -> ScopedExpectation<Signature>;
 }
 
 namespace mimicpp::detail
