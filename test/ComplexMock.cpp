@@ -3,7 +3,7 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/Mock.hpp"
+#include "mimic++/ComplexMock.hpp"
 
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
@@ -27,7 +27,7 @@ TEMPLATE_TEST_CASE(
 	int(float, double)
 )
 {
-	using MockT = Mock<TestType>;
+	using MockT = ComplexMock<TestType>;
 
 	STATIC_REQUIRE(!std::is_copy_constructible_v<MockT>);
 	STATIC_REQUIRE(!std::is_copy_assignable_v<MockT>);
@@ -49,7 +49,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, int, float, double)
 )
 {
-	using MockT = Mock<Return(Params...)>;
+	using MockT = ComplexMock<Return(Params...)>;
 
 	STATIC_REQUIRE(std::invocable<const MockT&, Params...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<Return, const MockT&, Params...>);
@@ -64,11 +64,11 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::is_invocable_r_v<Return, MockT&&, Params...>);
 }
 
-TEST_CASE("Mock<void()>::expect_call expectes a call with the same category and constness.", "[mock]")
+TEST_CASE("ComplexMock<void()>::expect_call expectes a call with the same category and constness.", "[mock]")
 {
 	using ExpectationT = ScopedExpectation<void()>;
 	ScopedReporter reporter{};
-	Mock<void()> mock{};
+	ComplexMock<void()> mock{};
 
 	SECTION("Expect const lvalue call.")
 	{
@@ -347,11 +347,11 @@ TEST_CASE("Mock<void()>::expect_call expectes a call with the same category and 
 	}
 }
 
-TEST_CASE("Mock<void()>::expect_lvalue_call expectes a call with lvalue category.", "[mock]")
+TEST_CASE("ComplexMock<void()>::expect_lvalue_call expectes a call with lvalue category.", "[mock]")
 {
 	using ExpectationT = ScopedExpectation<void()>;
 	ScopedReporter reporter{};
-	Mock<void()> mock{};
+	ComplexMock<void()> mock{};
 
 	SECTION("Succeeds as any lvalue.")
 	{
@@ -422,11 +422,11 @@ TEST_CASE("Mock<void()>::expect_lvalue_call expectes a call with lvalue category
 	}
 }
 
-TEST_CASE("Mock<void()>::expect_rvalue_call expectes a call with rvalue category.", "[mock]")
+TEST_CASE("ComplexMock<void()>::expect_rvalue_call expectes a call with rvalue category.", "[mock]")
 {
 	using ExpectationT = ScopedExpectation<void()>;
 	ScopedReporter reporter{};
-	Mock<void()> mock{};
+	ComplexMock<void()> mock{};
 
 	SECTION("Succeeds as any rvalue.")
 	{
@@ -497,11 +497,11 @@ TEST_CASE("Mock<void()>::expect_rvalue_call expectes a call with rvalue category
 	}
 }
 
-TEST_CASE("Mock<void()>::expect_const_call expectes a const call.", "[mock]")
+TEST_CASE("ComplexMock<void()>::expect_const_call expectes a const call.", "[mock]")
 {
 	using ExpectationT = ScopedExpectation<void()>;
 	ScopedReporter reporter{};
-	Mock<void()> mock{};
+	ComplexMock<void()> mock{};
 
 	SECTION("Succeeds as any const.")
 	{
@@ -572,11 +572,11 @@ TEST_CASE("Mock<void()>::expect_const_call expectes a const call.", "[mock]")
 	}
 }
 
-TEST_CASE("Mock<void()>::expect_mutable_call expectes a mutable call.", "[mock]")
+TEST_CASE("ComplexMock<void()>::expect_mutable_call expectes a mutable call.", "[mock]")
 {
 	using ExpectationT = ScopedExpectation<void()>;
 	ScopedReporter reporter{};
-	Mock<void()> mock{};
+	ComplexMock<void()> mock{};
 
 	SECTION("Succeeds as any mutable.")
 	{
@@ -647,11 +647,11 @@ TEST_CASE("Mock<void()>::expect_mutable_call expectes a mutable call.", "[mock]"
 	}
 }
 
-TEST_CASE("Mock<void()>::expect_any_call expects call from any category and constness.", "[mock]")
+TEST_CASE("ComplexMock<void()>::expect_any_call expects call from any category and constness.", "[mock]")
 {
 	using ExpectationT = ScopedExpectation<void()>;
 	ScopedReporter reporter{};
-	Mock<void()> mock{};
+	ComplexMock<void()> mock{};
 
 	{
 		ExpectationT expectation = std::as_const(mock).expect_any_call();
@@ -693,7 +693,7 @@ TEST_CASE("Mock<void()>::expect_any_call expects call from any category and cons
 }
 
 TEST_CASE(
-	"Mock supports arbitrary signatures.",
+	"ComplexMock supports arbitrary signatures.",
 	"[mock]"
 )
 {
@@ -702,7 +702,7 @@ TEST_CASE(
 	SECTION("With value params.")
 	{
 		using SignatureT = void(int);
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
@@ -716,7 +716,7 @@ TEST_CASE(
 	SECTION("With lvalue ref params.")
 	{
 		using SignatureT = void(int&);
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
@@ -730,7 +730,7 @@ TEST_CASE(
 	SECTION("With const lvalue ref params.")
 	{
 		using SignatureT = void(const int&);
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
@@ -744,7 +744,7 @@ TEST_CASE(
 	SECTION("With rvalue ref params.")
 	{
 		using SignatureT = void(int&&);
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
@@ -758,7 +758,7 @@ TEST_CASE(
 	SECTION("With const rvalue ref params.")
 	{
 		using SignatureT = void(const int&&);
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
@@ -772,7 +772,7 @@ TEST_CASE(
 	SECTION("With value return type.")
 	{
 		using SignatureT = int();
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation =
@@ -787,7 +787,7 @@ TEST_CASE(
 	SECTION("With lvalue ref return type.")
 	{
 		using SignatureT = int&();
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation =
@@ -803,7 +803,7 @@ TEST_CASE(
 	SECTION("With const lvalue ref return type.")
 	{
 		using SignatureT = const int&();
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation =
@@ -819,7 +819,7 @@ TEST_CASE(
 	SECTION("With const lvalue ref return type.")
 	{
 		using SignatureT = int&&();
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation =
@@ -835,7 +835,7 @@ TEST_CASE(
 	SECTION("With const lvalue ref return type.")
 	{
 		using SignatureT = const int&&();
-		using MockT = Mock<SignatureT>;
+		using MockT = ComplexMock<SignatureT>;
 
 		MockT mock{};
 		const ScopedExpectation<SignatureT> expectation =

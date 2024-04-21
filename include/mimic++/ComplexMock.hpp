@@ -3,8 +3,8 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_MOCK_HPP
-#define MIMICPP_MOCK_HPP
+#ifndef MIMICPP_COMPLEX_MOCK_HPP
+#define MIMICPP_COMPLEX_MOCK_HPP
 
 #pragma once
 
@@ -52,15 +52,15 @@ namespace mimicpp::detail
 	};
 
 	template <typename Signature, typename Return, typename... Params>
-	class MockBase
+	class ComplexMockBase
 	{
 		using SourceLocT = expectation_policies::SourceLocation::data;
 	public:
 		using SignatureT = Signature;
 		using CallInfoT = call::Info<SignatureT>;
 
-		MockBase(const MockBase&) = delete;
-		MockBase& operator =(const MockBase&) = delete;
+		ComplexMockBase(const ComplexMockBase&) = delete;
+		ComplexMockBase& operator =(const ComplexMockBase&) = delete;
 
 		template <typename... Args, SourceLocT from = SourceLocT{std::source_location::current()}>
 			requires (sizeof...(Params) == sizeof...(Args))
@@ -174,10 +174,10 @@ namespace mimicpp::detail
 		}
 
 	protected:
-		~MockBase() = default;
-		MockBase() = default;
-		MockBase(MockBase&&) = default;
-		MockBase& operator =(MockBase&&) = default;
+		~ComplexMockBase() = default;
+		ComplexMockBase() = default;
+		ComplexMockBase(ComplexMockBase&&) = default;
+		ComplexMockBase& operator =(ComplexMockBase&&) = default;
 
 		[[nodiscard]]
 		constexpr Return handle_call(const std::source_location& from, Params... params) const &
@@ -242,13 +242,13 @@ namespace mimicpp::detail
 namespace mimicpp
 {
 	template <typename T>
-	class Mock;
+	class ComplexMock;
 
 	template <typename Return, typename... Params>
-	class Mock<Return(Params...)>
-		: public detail::MockBase<Return(Params...), Return, Params...>
+	class ComplexMock<Return(Params...)>
+		: public detail::ComplexMockBase<Return(Params...), Return, Params...>
 	{
-		using SuperT = detail::MockBase<Return(Params...), Return, Params...>;
+		using SuperT = detail::ComplexMockBase<Return(Params...), Return, Params...>;
 		using SuperT::handle_call;
 
 	public:
@@ -256,13 +256,13 @@ namespace mimicpp
 		using CallInfoT = call::Info<SignatureT>;
 		using SuperT::expect_call;
 
-		~Mock() = default;
-		Mock() = default;
+		~ComplexMock() = default;
+		ComplexMock() = default;
 
-		Mock(const Mock&) = delete;
-		Mock& operator =(const Mock&) = delete;
-		Mock(Mock&&) = default;
-		Mock& operator =(Mock&&) = default;
+		ComplexMock(const ComplexMock&) = delete;
+		ComplexMock& operator =(const ComplexMock&) = delete;
+		ComplexMock(ComplexMock&&) = default;
+		ComplexMock& operator =(ComplexMock&&) = default;
 
 		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const &
 		{
