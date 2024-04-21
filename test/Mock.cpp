@@ -692,120 +692,159 @@ TEST_CASE("Mock<void()>::expect_any_call expects call from any category and cons
 		Catch::Matchers::IsEmpty());
 }
 
-//
-//TEST_CASE("Mock::expect creates a new expectation.", "[mock]")
-//{
-//	using SignatureT = void(int, double);
-//	mimicpp::ScopedReporter reporter{};
-//	mimicpp::Mock<SignatureT> mock{};
-//	PolicyFake<SignatureT> configurablePolicy{};
-//
-//	const auto makeExpectation = [&](auto& m)
-//	{
-//		return m.expect_call(1, 4.2)
-//				| PolicyFacade<SignatureT, std::reference_wrapper<PolicyFake<SignatureT>>, UnwrapReferenceWrapper>{
-//					std::ref(configurablePolicy)
-//				};
-//	};
-//
-//	SECTION("When matched, gets reported as ok.")
-//	{
-//		{
-//			configurablePolicy.matchResult = mimicpp::call::SubMatchResult{true};
-//			mimicpp::ScopedExpectation<SignatureT> expectation = makeExpectation(mock);
-//			REQUIRE_NOTHROW(mock(1, 4.2));
-//			configurablePolicy.isSatisfied = true; // mark as accepted
-//		}
-//
-//		REQUIRE_THAT(
-//			reporter.no_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//
-//		REQUIRE_THAT(
-//			reporter.exhausted_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//
-//		REQUIRE_THAT(
-//			reporter.unsatisfied_expectations(),
-//			Catch::Matchers::IsEmpty());
-//
-//		REQUIRE_THAT(
-//			reporter.ok_match_reports(),
-//			Catch::Matchers::SizeIs(1));
-//	}
-//
-//	SECTION("When partial matched, gets reported as partial match and unsatisfied.")
-//	{
-//		{
-//			mimicpp::ScopedExpectation<SignatureT> expectation = makeExpectation(mock);
-//			REQUIRE_THROWS_AS(
-//				mock(42, 4.2),
-//				TestExpectationError);
-//		}
-//
-//		REQUIRE_THAT(
-//			reporter.no_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//
-//		REQUIRE_THAT(
-//			reporter.exhausted_match_reports(),
-//			Catch::Matchers::SizeIs(1));
-//
-//		REQUIRE_THAT(
-//			reporter.unsatisfied_expectations(),
-//			Catch::Matchers::SizeIs(1));
-//
-//		REQUIRE_THAT(
-//			reporter.ok_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//	}
-//
-//	SECTION("When not matched, gets reported as no match and unsatisfied.")
-//	{
-//		{
-//			mimicpp::ScopedExpectation<SignatureT> expectation = makeExpectation(mock);
-//			REQUIRE_THROWS_AS(
-//				std::move(std::as_const(mock))(42, 8.4),
-//				TestExpectationError);
-//		}
-//
-//		REQUIRE_THAT(
-//			reporter.no_match_reports(),
-//			Catch::Matchers::SizeIs(1));
-//
-//		REQUIRE_THAT(
-//			reporter.exhausted_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//
-//		REQUIRE_THAT(
-//			reporter.unsatisfied_expectations(),
-//			Catch::Matchers::SizeIs(1));
-//
-//		REQUIRE_THAT(
-//			reporter.ok_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//	}
-//
-//	SECTION("When nothing is invoked, gets reported as unsatisfied.")
-//	{
-//		{
-//			mimicpp::ScopedExpectation<SignatureT> expectation = makeExpectation(mock);
-//		}
-//
-//		REQUIRE_THAT(
-//			reporter.no_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//
-//		REQUIRE_THAT(
-//			reporter.exhausted_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//
-//		REQUIRE_THAT(
-//			reporter.unsatisfied_expectations(),
-//			Catch::Matchers::SizeIs(1));
-//
-//		REQUIRE_THAT(
-//			reporter.ok_match_reports(),
-//			Catch::Matchers::IsEmpty());
-//	}
-//}
+TEST_CASE(
+	"Mock supports arbitrary signatures.",
+	"[mock]"
+)
+{
+	const ScopedReporter reporter{};
+
+	SECTION("With value params.")
+	{
+		using SignatureT = void(int);
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
+
+		constexpr int value{42};
+		mock(value);
+
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With lvalue ref params.")
+	{
+		using SignatureT = void(int&);
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
+
+		int value{42};
+		mock(value);
+
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With const lvalue ref params.")
+	{
+		using SignatureT = void(const int&);
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
+
+		constexpr int value{42};
+		mock(value);
+
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With rvalue ref params.")
+	{
+		using SignatureT = void(int&&);
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
+
+		int value{42};
+		mock(std::move(value));
+
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With const rvalue ref params.")
+	{
+		using SignatureT = void(const int&&);
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation = mock.expect_any_call(42);
+
+		constexpr int value{42};
+		mock(std::move(value));
+
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With value return type.")
+	{
+		using SignatureT = int();
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation =
+			mock.expect_any_call()
+			| expectation_policies::Returns{42};
+
+		REQUIRE(42 == mock());
+
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With lvalue ref return type.")
+	{
+		using SignatureT = int&();
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation =
+			mock.expect_any_call()
+			| expectation_policies::Returns{42};
+
+		int& ret = mock();
+
+		REQUIRE(42 == ret);
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With const lvalue ref return type.")
+	{
+		using SignatureT = const int&();
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation =
+			mock.expect_any_call()
+			| expectation_policies::Returns{42};
+
+		const int& ret = mock();
+
+		REQUIRE(42 == ret);
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With const lvalue ref return type.")
+	{
+		using SignatureT = int&&();
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation =
+			mock.expect_any_call()
+			| expectation_policies::Returns{42};
+
+		int&& ret = mock();
+
+		REQUIRE(42 == ret);
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("With const lvalue ref return type.")
+	{
+		using SignatureT = const int&&();
+		using MockT = Mock<SignatureT>;
+
+		MockT mock{};
+		const ScopedExpectation<SignatureT> expectation =
+			mock.expect_any_call()
+			| expectation_policies::Returns{42};
+
+		const int&& ret = mock();
+
+		REQUIRE(42 == ret);
+		REQUIRE(expectation.is_satisfied());
+	}
+}
