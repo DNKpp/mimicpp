@@ -146,6 +146,16 @@ namespace mimicpp::detail
 				std::forward<T>(value),
 				priority_tag<3>{});
 		}
+
+		template <typename T>
+		constexpr StringT operator ()(T&& value) const
+		{
+			StringStreamT stream{};
+			operator()(
+				std::ostreambuf_iterator{stream},
+				std::forward<T>(value));
+			return std::move(stream).str();
+		}
 	};
 
 	template <typename OutIter, std::ranges::forward_range Range>
