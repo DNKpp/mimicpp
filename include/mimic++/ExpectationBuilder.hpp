@@ -170,8 +170,7 @@ namespace mimicpp::detail
 		return (
 			std::forward<Builder>(builder)
 			| ...
-			| expectation_policies::make_argument_matcher<Signature, indices>(
-				std::bind_front(std::equal_to{}, std::forward<Args>(args))));
+			| expectation_policies::make_argument_matcher<Signature, indices>(std::forward<Args>(args)));
 	}
 
 	template <typename Signature, typename... Args>
@@ -197,7 +196,7 @@ namespace mimicpp::detail
 					expectation_policies::SourceLocation{from}
 				}
 			},
-			std::make_index_sequence<sizeof...(Args)>{},
+			std::index_sequence_for<Args...>{},
 			std::forward<Args>(args)...);
 	}
 

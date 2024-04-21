@@ -12,6 +12,7 @@
 #include <functional>
 
 #include "mimic++/Expectation.hpp"
+#include "mimic++/Matcher.hpp"
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
@@ -282,8 +283,7 @@ namespace mimicpp::expectation_policies
 	template <
 		typename Signature,
 		std::size_t index,
-		std::predicate<signature_param_type_t<index, Signature>> Predicate,
-		describer<signature_param_type_t<index, Signature>> Describer = NullDescriber>
+		matcher_for<signature_param_type_t<index, Signature>> Matcher>
 	class ArgumentMatcher
 	{
 	public:
@@ -294,13 +294,9 @@ namespace mimicpp::expectation_policies
 
 		[[nodiscard]]
 		explicit constexpr ArgumentMatcher(
-			Predicate predicate = {},
-			Describer describer = {}
-		) noexcept(
-			std::is_nothrow_move_constructible_v<Predicate>
-			&& std::is_nothrow_move_constructible_v<Describer>)
-			: m_Predicate{std::move(predicate)},
-			m_Describer{std::move(describer)}
+			Matcher&& matcher
+		) noexcept(std::is_nothrow_move_constructible_v<Matcher>)
+			: m_Matcher{std::move(matcher)}
 		{
 		}
 
@@ -320,10 +316,23 @@ namespace mimicpp::expectation_policies
 		constexpr call::SubMatchResult matches(const CallInfoT& info) const noexcept
 		{
 			const std::reference_wrapper param = std::get<index>(info.params);
-			const bool matched = std::invoke(m_Predicate, param.get());
+			if (m_Matcher.matches(param.get()))
+			{
+				return {
+					.matched = true,
+					.msg = std::format(
+						"param[{}] matches {}",
+						index,
+						m_Matcher.describe(param.get()))
+				};
+			}
+
 			return {
-				.matched = matched,
-				.msg = std::invoke(m_Describer, matched, param.get())
+				.matched = false,
+				.msg = std::format(
+					"param[{}] does not match {}",
+					index,
+					m_Matcher.describe(param.get()))
 			};
 		}
 
@@ -332,22 +341,29 @@ namespace mimicpp::expectation_policies
 		}
 
 	private:
-		[[no_unique_address]] Predicate m_Predicate;
-		[[no_unique_address]] Describer m_Describer;
+		[[no_unique_address]] Matcher m_Matcher;
 	};
 
-	template <typename Signature, std::size_t index, typename Predicate, typename Describer = NullDescriber>
+	template <typename Signature, std::size_t index, typename Matcher>
+		requires matcher_for<std::remove_cvref_t<Matcher>, signature_param_type_t<index, Signature>>
 	[[nodiscard]]
-	constexpr ArgumentMatcher<Signature, index, Predicate, Describer> make_argument_matcher(
-		Predicate predicate = {},
-		Describer describer = {}
-	) noexcept(
-		std::is_nothrow_move_constructible_v<Predicate>
-		&& std::is_nothrow_move_constructible_v<Describer>)
+	constexpr ArgumentMatcher<Signature, index, std::remove_cvref_t<Matcher>> make_argument_matcher(
+		Matcher&& matcher
+	) noexcept(std::is_nothrow_move_constructible_v<std::remove_cvref_t<Matcher>>)
 	{
-		return ArgumentMatcher<Signature, index, Predicate, Describer>{
-			std::move(predicate),
-			std::move(describer)
+		return ArgumentMatcher<Signature, index, std::remove_cvref_t<Matcher>>{
+			std::forward<Matcher>(matcher)
+		};
+	}
+
+	template <typename Signature, std::size_t index, std::equality_comparable_with<signature_param_type_t<index, Signature>> Value>
+	[[nodiscard]]
+	constexpr ArgumentMatcher<Signature, index, decltype(matches::eq(std::declval<Value>()))> make_argument_matcher(
+		Value&& value
+	)
+	{
+		return ArgumentMatcher<Signature, index, decltype(matches::eq(std::declval<Value>()))>{
+			matches::eq(std::forward<Value>(value))
 		};
 	}
 }

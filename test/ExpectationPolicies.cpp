@@ -514,29 +514,43 @@ TEST_CASE(
 namespace
 {
 	template <typename T>
-	class PredicateMock
+	class MatcherMock
 	{
 	public:
-		MAKE_CONST_MOCK1(Call, bool(const T&));
-
-		[[nodiscard]]
-		auto operator ()(const T& value) const
-		{
-			return Call(value);
-		}
+		MAKE_CONST_MOCK1(matches, bool(T));
+		MAKE_CONST_MOCK1(describe, StringT(T));
 	};
 
-	template <typename T>
-	class DescribeMock
+	template <typename Matcher, typename Projection>
+	class [[maybe_unused]] MatcherFacade
 	{
 	public:
-		MAKE_CONST_MOCK2(Call, std::optional<StringT>(bool, const T&));
-
 		[[nodiscard]]
-		auto operator ()(const bool result, const T& value) const
+		MatcherFacade(Matcher matcher, Projection projection)
+			: m_Matcher{std::move(matcher)},
+			m_Projection{std::move(projection)}
 		{
-			return Call(result, value);
 		}
+
+		template <typename T>
+		[[nodiscard]]
+		constexpr bool matches(T&& target) const
+		{
+			return std::invoke(m_Projection, m_Matcher)
+				.matches(std::forward<T>(target));
+		}
+
+		template <typename T>
+		[[nodiscard]]
+		constexpr StringT describe(T&& target) const
+		{
+			return std::invoke(m_Projection, m_Matcher)
+				.describe(std::forward<T>(target));
+		}
+
+	private:
+		Matcher m_Matcher;
+		Projection m_Projection;
 	};
 }
 
@@ -550,12 +564,9 @@ TEST_CASE(
 		using SignatureT = void(int);
 		using CallInfoT = call::info_for_signature_t<SignatureT>;
 
-		PredicateMock<int> predicate{};
-		DescribeMock<int> describe{};
+		MatcherMock<int> matcher{};
 		const auto policy = expectation_policies::make_argument_matcher<SignatureT, 0>(
-			std::ref(predicate),
-			std::ref(describe)
-		);
+			MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}});
 		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy)>, SignatureT>);
 
 		int param{42};
@@ -580,17 +591,17 @@ TEST_CASE(
 		{
 			const auto [match, msg] = GENERATE(
 				(table<bool, std::string>)({
-					{false, " does not match"},
-					{true, " matches"}
+					{false, "param[0] does not match 42"},
+					{true, "param[0] matches 42"}
 					}));
 
 			trompeloeil::sequence sequence{};
-			REQUIRE_CALL(predicate, Call(42))
+			REQUIRE_CALL(matcher, matches(42))
 				.IN_SEQUENCE(sequence)
 				.RETURN(match);
-			REQUIRE_CALL(describe, Call(match, 42))
+			REQUIRE_CALL(matcher, describe(42))
 				.IN_SEQUENCE(sequence)
-				.RETURN(msg);
+				.RETURN("42");
 
 			const auto result = policy.matches(call);
 			REQUIRE(match == result.matched);
@@ -605,20 +616,14 @@ TEST_CASE(
 		using SignatureT = void(int, const std::string&);
 		using CallInfoT = call::info_for_signature_t<SignatureT>;
 
-		PredicateMock<int> predicate1{};
-		DescribeMock<int> describe1{};
+		MatcherMock<int> matcher1{};
 		const auto policy1 = expectation_policies::make_argument_matcher<SignatureT, 0>(
-			std::ref(predicate1),
-			std::ref(describe1)
-		);
+			MatcherFacade{std::ref(matcher1), UnwrapReferenceWrapper{}});
 		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy1)>, SignatureT>);
 
-		PredicateMock<std::string> predicate2{};
-		DescribeMock<std::string> describe2{};
+		MatcherMock<std::string> matcher2{};
 		const auto policy2 = expectation_policies::make_argument_matcher<SignatureT, 1>(
-			std::ref(predicate2),
-			std::ref(describe2)
-		);
+			MatcherFacade{std::ref(matcher2), UnwrapReferenceWrapper{}});
 		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy2)>, SignatureT>);
 
 		int param0{42};
@@ -648,17 +653,17 @@ TEST_CASE(
 			{
 				const auto [match, msg] = GENERATE(
 					(table<bool, std::string>)({
-						{false, " does not match"},
-						{true, " matches"}
+						{false, "param[0] does not match 42"},
+						{true, "param[0] matches 42"}
 						}));
 
 				trompeloeil::sequence sequence{};
-				REQUIRE_CALL(predicate1, Call(42))
+				REQUIRE_CALL(matcher1, matches(42))
 					.IN_SEQUENCE(sequence)
 					.RETURN(match);
-				REQUIRE_CALL(describe1, Call(match, 42))
+				REQUIRE_CALL(matcher1, describe(42))
 					.IN_SEQUENCE(sequence)
-					.RETURN(msg);
+					.RETURN("42");
 
 				const auto result = policy1.matches(call);
 				REQUIRE(match == result.matched);
@@ -671,17 +676,17 @@ TEST_CASE(
 			{
 				const auto [match, msg] = GENERATE(
 					(table<bool, std::string>)({
-						{false, " does not match"},
-						{true, " matches"}
+						{false, "param[1] does not match Hello, World!"},
+						{true, "param[1] matches Hello, World!"}
 						}));
 
 				trompeloeil::sequence sequence{};
-				REQUIRE_CALL(predicate2, Call(param1))
+				REQUIRE_CALL(matcher2, matches(param1))
 					.IN_SEQUENCE(sequence)
 					.RETURN(match);
-				REQUIRE_CALL(describe2, Call(match, param1))
+				REQUIRE_CALL(matcher2, describe(param1))
 					.IN_SEQUENCE(sequence)
-					.RETURN(msg);
+					.RETURN("Hello, World!");
 
 				const auto result = policy2.matches(call);
 				REQUIRE(match == result.matched);
