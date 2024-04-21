@@ -52,8 +52,10 @@ TEMPLATE_TEST_CASE(
 	expectation_policies::SourceLocation,
 	expectation_policies::Category<ValueCategory::lvalue>,
 	expectation_policies::Category<ValueCategory::rvalue>,
-	expectation_policies::Constness<true>,
-	expectation_policies::Constness<false>
+	expectation_policies::Category<ValueCategory::any>,
+	expectation_policies::Constness<Constness::as_const>,
+	expectation_policies::Constness<Constness::non_const>,
+	expectation_policies::Constness<Constness::any>
 )
 {
 	STATIC_REQUIRE(mimicpp::expectation_policy_for<TestType, void()>);
@@ -64,11 +66,11 @@ TEST_CASE(
 	"[expectation][expectation::builder]"
 )
 {
-	constexpr call::Info<void()> call{
+	const call::Info<void()> call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 	};
 
 	constexpr expectation_policies::InitFinalize policy{};
@@ -191,8 +193,8 @@ TEST_CASE(
 	const CallInfoT call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = ValueCategory::lvalue,
-		.fromConst = GENERATE(true, false)
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 	};
 
 	SECTION("Consume is a no-op.")
@@ -222,7 +224,8 @@ TEMPLATE_TEST_CASE_SIG(
 	"[expectation][expectation::policy]",
 	((ValueCategory category), category),
 	(ValueCategory::lvalue),
-	(ValueCategory::rvalue)
+	(ValueCategory::rvalue),
+	(ValueCategory::any)
 )
 {
 	using SignatureT = void();
@@ -239,11 +242,11 @@ TEMPLATE_TEST_CASE_SIG(
 	const CallInfoT call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue),
-		.fromConst = false
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 	};
 
-	if (call.fromCategory == category)
+	if (matches(call.fromCategory, category))
 	{
 		SECTION("When call and policy category matches, success is returned.")
 		{
@@ -277,9 +280,10 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"expectation_policies::Constness checks whether the given call::Info matches.",
 	"[expectation][expectation::policy]",
-	((bool constness), constness),
-	(true),
-	(false)
+	((Constness constness), constness),
+	(Constness::as_const),
+	(Constness::non_const),
+	(Constness::any)
 )
 {
 	using SignatureT = void();
@@ -296,11 +300,11 @@ TEMPLATE_TEST_CASE_SIG(
 	const CallInfoT call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = ValueCategory::lvalue,
-		.fromConst = GENERATE(true, false)
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 	};
 
-	if (call.fromConst == constness)
+	if (matches(call.fromConstness, constness))
 	{
 		SECTION("When call and policy constness matches, success is returned.")
 		{
@@ -343,11 +347,11 @@ TEST_CASE(
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
-		constexpr CallInfoT call{
+		const CallInfoT call{
 			.params = {},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		PolicyT policy{42};
@@ -362,11 +366,11 @@ TEST_CASE(
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
-		constexpr CallInfoT call{
+		const CallInfoT call{
 			.params = {},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		PolicyT policy{42};
@@ -382,11 +386,11 @@ TEST_CASE(
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
-		constexpr CallInfoT call{
+		const CallInfoT call{
 			.params = {},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		PolicyT policy{42};
@@ -402,11 +406,11 @@ TEST_CASE(
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
-		constexpr CallInfoT call{
+		const CallInfoT call{
 			.params = {},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		PolicyT policy{42};
@@ -422,11 +426,11 @@ TEST_CASE(
 		using PolicyT = expectation_policies::Returns<int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
-		constexpr CallInfoT call{
+		const CallInfoT call{
 			.params = {},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		PolicyT policy{42};
@@ -442,11 +446,11 @@ TEST_CASE(
 		using PolicyT = expectation_policies::Returns<unsigned int>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
-		constexpr CallInfoT call{
+		const CallInfoT call{
 			.params = {},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		PolicyT policy{42u};
@@ -471,11 +475,11 @@ TEST_CASE(
 		using PolicyT = expectation_policies::Throws<test_exception>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
-		constexpr CallInfoT call{
+		const CallInfoT call{
 			.params = {},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		PolicyT policy{test_exception{}};
@@ -492,11 +496,11 @@ TEST_CASE(
 		using PolicyT = expectation_policies::Throws<test_exception>;
 		STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
 
-		constexpr CallInfoT call{
+		const CallInfoT call{
 			.params = {},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		PolicyT policy{test_exception{}};
@@ -558,8 +562,8 @@ TEST_CASE(
 		const CallInfoT call{
 			.params = {param},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		SECTION("Policy is always satisfied.")
@@ -622,8 +626,8 @@ TEST_CASE(
 		const CallInfoT call{
 			.params = {param0, param1},
 			.fromUuid = Uuid{1337},
-			.fromCategory = ValueCategory::lvalue,
-			.fromConst = false
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
 		SECTION("Policy is always satisfied.")
@@ -904,11 +908,11 @@ TEST_CASE(
 	const int value = GENERATE(range(0, 5));
 	expectation_policies::Returns policy = expect::returns(value);
 
-	constexpr CallInfoT call{
+	const CallInfoT call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 	};
 
 	REQUIRE(value == policy.finalize_call(call));
@@ -925,11 +929,11 @@ TEST_CASE(
 	const int value = GENERATE(range(0, 5));
 	expectation_policies::Throws policy = expect::throws(value);
 
-	constexpr CallInfoT call{
+	const CallInfoT call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 	};
 
 	REQUIRE_THROWS_AS(

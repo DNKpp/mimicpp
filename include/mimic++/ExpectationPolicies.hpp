@@ -162,7 +162,7 @@ namespace mimicpp::expectation_policies
 		template <typename Signature>
 		static constexpr call::SubMatchResult matches(const call::Info<Signature>& info)
 		{
-			if (info.fromCategory == expected)
+			if (mimicpp::matches(info.fromCategory, expected))
 			{
 				return {
 					.matched = true,
@@ -177,13 +177,13 @@ namespace mimicpp::expectation_policies
 		}
 
 		template <typename Signature>
-		static constexpr void consume(const call::Info<Signature>& call) noexcept
+		static constexpr void consume(const call::Info<Signature>& info) noexcept
 		{
-			assert(call.fromCategory == expected && "Call does not match.");
+			assert(mimicpp::matches(info.fromCategory, expected) && "Call does not match.");
 		}
 	};
 
-	template <bool expectsConst>
+	template <Constness constness>
 	class Constness
 	{
 	public:
@@ -195,24 +195,24 @@ namespace mimicpp::expectation_policies
 		template <typename Signature>
 		static constexpr call::SubMatchResult matches(const call::Info<Signature>& info) noexcept
 		{
-			if (info.fromConst == expectsConst)
+			if (mimicpp::matches(info.fromConstness, constness))
 			{
 				return {
 					.matched = true,
-					.msg = std::format(" matches Constness {}", expectsConst)
+					.msg = std::format(" matches Constness {}", constness)
 				};
 			}
 
 			return {
 				.matched = false,
-				.msg = std::format(" does not match Constness {}", expectsConst)
+				.msg = std::format(" does not match Constness {}", constness)
 			};
 		}
 
 		template <typename Signature>
-		static constexpr void consume(const call::Info<Signature>& call) noexcept
+		static constexpr void consume(const call::Info<Signature>& info) noexcept
 		{
-			assert(call.fromConst == expectsConst && "Call does not match.");
+			assert(mimicpp::matches(info.fromConstness, constness) && "Call does not match.");
 		}
 	};
 

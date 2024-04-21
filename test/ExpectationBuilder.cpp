@@ -41,8 +41,8 @@ TEST_CASE(
 	constexpr CallInfoT call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = ValueCategory::any,
+		.fromConstness = Constness::any
 	};
 
 	BaseBuilderT builder{
@@ -132,8 +132,8 @@ TEST_CASE(
 	constexpr CallInfoT call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = ValueCategory::any,
+		.fromConstness = Constness::any
 	};
 
 	BaseBuilderT builder{
@@ -185,8 +185,8 @@ TEST_CASE(
 	constexpr CallInfoT call{
 		.params = {},
 		.fromUuid = Uuid{1337},
-		.fromCategory = ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = ValueCategory::any,
+		.fromConstness = Constness::any
 	};
 
 	using FinalizerT = FinalizerMock<SignatureT>;

@@ -38,11 +38,33 @@ struct std::formatter<mimicpp::Uuid, char>
 
 namespace mimicpp
 {
+	enum class Constness
+	{
+		non_const = 0b01,
+		as_const = 0b10,
+		any = non_const | as_const
+	};
+
+	[[nodiscard]]
+	constexpr bool matches(const Constness lhs, const Constness rhs) noexcept
+	{
+		using UnderlyingT = std::underlying_type_t<Constness>;
+		return UnderlyingT{0} != (static_cast<UnderlyingT>(lhs) & static_cast<UnderlyingT>(rhs));
+	}
+
 	enum class ValueCategory
 	{
-		lvalue,
-		rvalue
+		lvalue = 0b01,
+		rvalue = 0b10,
+		any    = lvalue | rvalue
 	};
+
+	[[nodiscard]]
+	constexpr bool matches(const ValueCategory lhs, const ValueCategory rhs) noexcept
+	{
+		using UnderlyingT = std::underlying_type_t<ValueCategory>;
+		return UnderlyingT{0} != (static_cast<UnderlyingT>(lhs) & static_cast<UnderlyingT>(rhs));
+	}
 }
 
 template <>
@@ -62,9 +84,39 @@ struct std::formatter<mimicpp::ValueCategory, char>
 			{
 			case ValueCategoryT::lvalue: return "lvalue";
 			case ValueCategoryT::rvalue: return "rvalue";
+			case ValueCategoryT::any: return "any";
 			}
 
 			throw std::runtime_error{"Unknown category value."};
+		};
+
+		return std::formatter<std::string_view, char>::format(
+			toString(category),
+			ctx);
+	}
+};
+
+template <>
+struct std::formatter<mimicpp::Constness, char>
+	: public std::formatter<std::string_view, char>
+{
+	using ConstnessT = mimicpp::Constness;
+
+	auto format(
+		const ConstnessT category,
+		std::format_context& ctx
+	) const
+	{
+		constexpr auto toString = [](const ConstnessT value)
+		{
+			switch (value)
+			{
+			case ConstnessT::non_const: return "mutable";
+			case ConstnessT::as_const: return "const";
+			case ConstnessT::any: return "any";
+			}
+
+			throw std::runtime_error{"Unknown constness value."};
 		};
 
 		return std::formatter<std::string_view, char>::format(

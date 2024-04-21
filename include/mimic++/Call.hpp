@@ -34,7 +34,7 @@ namespace mimicpp::call
 		ParamListT params;
 		Uuid fromUuid{};
 		ValueCategory fromCategory{};
-		bool fromConst{};
+		Constness fromConstness{};
 		std::source_location fromSourceLocation{};
 	};
 }

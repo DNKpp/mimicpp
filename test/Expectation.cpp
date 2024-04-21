@@ -94,8 +94,8 @@ TEST_CASE(
 	constexpr CallInfoT call{
 		.params = {},
 		.fromUuid = mimicpp::Uuid{1337},
-		.fromCategory = mimicpp::ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = mimicpp::ValueCategory::any,
+		.fromConstness = mimicpp::Constness::any
 	};
 
 	SECTION("If a full match is found.")
@@ -339,8 +339,8 @@ TEST_CASE(
 	const CallInfoT call{
 		.params = {},
 		.fromUuid = mimicpp::Uuid{1337},
-		.fromCategory = mimicpp::ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = mimicpp::ValueCategory::any,
+		.fromConstness = mimicpp::Constness::any
 	};
 
 	TimesMock times{};
@@ -467,8 +467,8 @@ TEMPLATE_TEST_CASE(
 	const CallInfoT call{
 		.params = {},
 		.fromUuid = mimicpp::Uuid{1337},
-		.fromCategory = mimicpp::ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = mimicpp::ValueCategory::any,
+		.fromConstness = mimicpp::Constness::any
 	};
 
 	SECTION("With no policies at all.")
@@ -608,8 +608,8 @@ TEMPLATE_TEST_CASE(
 	const CallInfoT call{
 		.params = {},
 		.fromUuid = mimicpp::Uuid{1337},
-		.fromCategory = mimicpp::ValueCategory::lvalue,
-		.fromConst = false
+		.fromCategory = mimicpp::ValueCategory::any,
+		.fromConstness = mimicpp::Constness::any
 	};
 
 	FinalizerT finalizer{};
