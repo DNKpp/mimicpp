@@ -73,6 +73,156 @@ namespace mimicpp
 	};
 
 	template <typename Signature>
+	struct signature_decay;
+
+	template <typename Signature>
+	using signature_decay_t = typename signature_decay<Signature>::type;
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...)>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) const>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) &>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) const &>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) &&>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) const &&>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) noexcept>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) const noexcept>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) & noexcept>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) const & noexcept>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) && noexcept>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params...) const && noexcept>
+	{
+		using type = Return(Params...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...)>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) const>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) &>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) const &>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) &&>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) const &&>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) noexcept>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) const noexcept>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) & noexcept>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) const & noexcept>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) && noexcept>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_decay<Return(Params..., ...) const && noexcept>
+	{
+		using type = Return(Params..., ...);
+	};
+
+	template <typename Signature>
 	struct signature_return_type;
 
 	template <typename Signature>
