@@ -223,7 +223,10 @@ namespace mimicpp
 	};
 
 	template <typename Signature>
-	struct signature_return_type;
+	struct signature_return_type
+		: public signature_return_type<signature_decay_t<Signature>>
+	{
+	};
 
 	template <typename Signature>
 	using signature_return_type_t = typename signature_return_type<Signature>::type;
@@ -236,18 +239,6 @@ namespace mimicpp
 
 	template <typename Return, typename... Params>
 	struct signature_return_type<Return(Params..., ...)>
-	{
-		using type = Return;
-	};
-
-	template <typename Return, typename... Params>
-	struct signature_return_type<Return(Params...) noexcept>
-	{
-		using type = Return;
-	};
-
-	template <typename Return, typename... Params>
-	struct signature_return_type<Return(Params..., ...) noexcept>
 	{
 		using type = Return;
 	};
