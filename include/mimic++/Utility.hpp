@@ -135,7 +135,7 @@ namespace mimicpp
 		std::uint_least32_t column;
 		const char* functionName;
 
-		explicit consteval source_location_data(const std::source_location& loc) noexcept
+		explicit constexpr source_location_data(const std::source_location& loc) noexcept
 			: fileName{loc.file_name()},
 			line{loc.line()},
 			column{loc.column()},

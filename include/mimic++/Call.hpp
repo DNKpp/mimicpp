@@ -33,7 +33,7 @@ namespace mimicpp::call
 		Uuid fromUuid{};
 		ValueCategory fromCategory{};
 		Constness fromConstness{};
-		std::source_location fromSourceLocation{};
+		source_location_data fromSourceLocation{std::source_location::current()};
 	};
 
 	template <typename Signature>
