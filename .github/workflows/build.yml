@@ -14,7 +14,7 @@ jobs:
         name: ${{ matrix.config.name }}
         runs-on: ${{ matrix.config.os }}
         container:
-            image: ${{ env.IMAGE_PREFIX }}${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}
+            image: ${{ vars.IMAGE_PREFIX }}${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}
 
         strategy:
             fail-fast: false
