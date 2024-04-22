@@ -11,7 +11,7 @@ on:
 
 jobs:
     build:
-        name: ${{ matrix.config.name }} (${{ matrix.build_mode }})
+        name: ${{ matrix.config.name }} ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} C++${{ matrix.config.cxx_standard }} (${{ matrix.build_mode }})
         runs-on: ${{ matrix.config.os }}
         container:
             image: ghcr.io/dnkpp/${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}
@@ -21,32 +21,79 @@ jobs:
             matrix:
                 build_mode: [Debug, Release]
                 config:
+                    #clang-18
                     - {
-                        name: "Linux Clang 18 C++23",
+                        name: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 18,
                         cxx_standard: 23
                     }
                     - {
-                        name: "Linux Clang 18 C++20",
+                        name: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 18,
                         cxx_standard: 20
                     }
+                    #clang-17
                     - {
-                        name: "Linux Clang 17 C++23",
+                        name: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 17,
                         cxx_standard: 23
                     }
                     - {
-                        name: "Linux Clang 17 C++20",
+                        name: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 17,
+                        cxx_standard: 20
+                    }
+                    #clang-16
+                    - {
+                        name: "Linux",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 16,
+                        cxx_standard: 23
+                    }
+                    - {
+                        name: "Linux",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 16,
+                        cxx_standard: 20
+                    }
+                    #clang-15
+                    - {
+                        name: "Linux",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 15,
+                        cxx_standard: 23
+                    }
+                    - {
+                        name: "Linux",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 15,
+                        cxx_standard: 20
+                    }
+                    #clang-14
+                    - {
+                        name: "Linux",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 14,
+                        cxx_standard: 23
+                    }
+                    - {
+                        name: "Linux",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 14,
                         cxx_standard: 20
                     }
 
