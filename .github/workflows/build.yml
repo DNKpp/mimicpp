@@ -11,7 +11,12 @@ on:
 
 jobs:
     build:
-        name: ${{ matrix.config.name }} ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} C++${{ matrix.config.cxx_standard }} (${{ matrix.build_mode }})
+        name: |
+            ${{ matrix.config.prefix }} \
+            ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} \
+            C++${{ matrix.cxx_standard }} \
+            ${{ matrix.config.suffix }} \
+            (${{ matrix.build_mode }})
         runs-on: ${{ matrix.config.os }}
         container:
             image: ghcr.io/dnkpp/${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}
@@ -20,95 +25,116 @@ jobs:
             fail-fast: false
             matrix:
                 build_mode: [Debug, Release]
+                cxx_standard: [20, 23]
                 config:
                     #clang-18
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
+                        suffix: "/libc++",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 18,
-                        cxx_standard: 23
+                        libcxx: true
                     }
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 18,
-                        cxx_standard: 20
+                        libcxx: false
                     }
                     #clang-17
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
+                        suffix: "/libc++",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 17,
-                        cxx_standard: 23
+                        libcxx: true
                     }
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 17,
-                        cxx_standard: 20
+                        libcxx: false
                     }
                     #clang-16
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
+                        suffix: "/libc++",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 16,
-                        cxx_standard: 23
+                        libcxx: true
                     }
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 16,
-                        cxx_standard: 20
+                        libcxx: false
                     }
                     #clang-15
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
+                        suffix: "/libc++",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 15,
-                        cxx_standard: 23
+                        libcxx: true
                     }
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 15,
-                        cxx_standard: 20
+                        libcxx: false
                     }
                     #clang-14
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
+                        suffix: "/libc++",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 14,
-                        cxx_standard: 23
+                        libcxx: true
                     }
                     - {
-                        name: "Linux",
+                        prefix: "Linux",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 14,
-                        cxx_standard: 20
+                        libcxx: false
                     }
 
         steps:
             - uses: actions/checkout@v4
   
-            - name: Compile tests
+            - name: Install libc++
+              if: ${{ (matrix.config.compiler_name  == 'clang') && (matrix.config.libcxx  == 'true') }}
+              run: |
+                apt-get update
+                apt-get install -y \
+                    libc++-${{ matrix.config.compiler_version }}-dev \
+                    libc++abi-${{ matrix.config.compiler_version }}-dev
+
+                echo "CXX_FLAGS=$(echo CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
+                echo "LINK_FLAGS=$(echo LINK_FLAGS -lc++ab)" >> $GITHUB_ENV
+  
+            - name: Configure
               run: |
                 cmake \
-                -D CMAKE_BUILD_TYPE=${{ matrix.build_mode }} \
-                -D CMAKE_VERBOSE_MAKEFILE=yes \
-                -D mimicpp_BUILD_TESTS=yes \
-                -D mimicpp_FORCED_CXX_STANDARD=${{ matrix.config.cxx_standard }} \
-                -B build -S .
+                    -D CMAKE_BUILD_TYPE=${{ matrix.build_mode }} \
+                    -D CMAKE_VERBOSE_MAKEFILE=yes \
+                    -D mimicpp_BUILD_TESTS=yes \
+                    -D mimicpp_FORCED_CXX_STANDARD:STRING="${{ matrix.cxx_standard }}" \
+                    -D CMAKE_CXX_FLAGS:STRING="${{ env.CXX_FLAGS }}" \
+                    -D CMAKE_EXE_LINKER_FLAGS:STRING="${{ env.LINK_FLAGS }}" \
+                    -B build -S .
 
+            - name: Build
+              run: |
                 cmake --build build -j4
 
             - name: Run tests
