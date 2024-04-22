@@ -12,6 +12,7 @@
 #include <sstream>
 #include <string>
 #include <string_view>
+#include <utility>
 
 namespace mimicpp
 {
@@ -152,7 +153,7 @@ namespace mimicpp::detail
 		}
 
 		template <typename T>
-		constexpr StringT operator ()(T&& value) const
+		StringT operator ()(T&& value) const
 		{
 			StringStreamT stream{};
 			operator()(

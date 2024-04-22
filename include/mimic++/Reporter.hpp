@@ -10,6 +10,7 @@
 
 #include "mimic++/Call.hpp"
 
+#include <memory>
 #include <vector>
 
 namespace mimicpp
