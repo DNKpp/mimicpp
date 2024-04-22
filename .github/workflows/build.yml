@@ -32,14 +32,14 @@ jobs:
                         prefix: "Linux",
                         suffix: "/libc++",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 18,
                         libcxx: true
                     }
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 18,
                         libcxx: false
                     }
@@ -48,14 +48,14 @@ jobs:
                         prefix: "Linux",
                         suffix: "/libc++",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 17,
                         libcxx: true
                     }
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 17,
                         libcxx: false
                     }
@@ -64,14 +64,14 @@ jobs:
                         prefix: "Linux",
                         suffix: "/libc++",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 16,
                         libcxx: true
                     }
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 16,
                         libcxx: false
                     }
@@ -80,14 +80,14 @@ jobs:
                         prefix: "Linux",
                         suffix: "/libc++",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 15,
                         libcxx: true
                     }
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 15,
                         libcxx: false
                     }
@@ -96,14 +96,14 @@ jobs:
                         prefix: "Linux",
                         suffix: "/libc++",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 14,
                         libcxx: true
                     }
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
-                        compiler_name: clang,
+                        compiler_name: "clang",
                         compiler_version: 14,
                         libcxx: false
                     }
