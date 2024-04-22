@@ -14,9 +14,8 @@ jobs:
         name: |
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
-            C++${{ matrix.cxx_standard }} 
             ${{ matrix.config.suffix }} 
-            (${{ matrix.build_mode }})
+            (C++${{ matrix.cxx_standard }} ${{ matrix.build_mode }})
         runs-on: ${{ matrix.config.os }}
         container:
             image: ghcr.io/dnkpp/${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}
@@ -112,7 +111,7 @@ jobs:
             - uses: actions/checkout@v4
   
             - name: Install libc++
-              if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == 'true' }}
+              if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
               run: |
                 apt-get update
                 apt-get install -y \
