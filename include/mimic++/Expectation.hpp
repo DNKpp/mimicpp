@@ -122,7 +122,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr ReturnT handle_call(const CallInfoT& call)
+		ReturnT handle_call(const CallInfoT& call)
 		{
 			static_assert(3 == std::variant_size_v<call::MatchResultT>, "Unexpected MatchResult alternative count.");
 
