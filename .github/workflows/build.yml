@@ -15,7 +15,7 @@ jobs:
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
             ${{ matrix.config.suffix }} 
-            (C++${{ matrix.cxx_standard }} ${{ matrix.build_mode }})
+            (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }})
         runs-on: ${{ matrix.config.os }}
         container:
             image: ghcr.io/dnkpp/${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}
@@ -118,8 +118,8 @@ jobs:
                     libc++-${{ matrix.config.compiler_version }}-dev \
                     libc++abi-${{ matrix.config.compiler_version }}-dev
 
-                echo "CXX_FLAGS=$(echo CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
-                echo "LINK_FLAGS=$(echo LINK_FLAGS -lc++ab)" >> $GITHUB_ENV
+                echo "CXX_FLAGS=$(echo $CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
+                echo "LINK_FLAGS=$(echo $LINK_FLAGS -lc++ab)" >> $GITHUB_ENV
   
             - name: Configure
               run: |
