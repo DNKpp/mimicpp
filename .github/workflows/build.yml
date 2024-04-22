@@ -74,30 +74,6 @@ jobs:
                         compiler_version: 13,
                         libcxx: false
                     }
-                    #gcc-12
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        compiler_name: "gcc",
-                        compiler_version: 12,
-                        libcxx: false
-                    }
-                    #gcc-11
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        compiler_name: "gcc",
-                        compiler_version: 11,
-                        libcxx: false
-                    }
-                    #gcc-10
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        compiler_name: "gcc",
-                        compiler_version: 10,
-                        libcxx: false
-                    }
 
         steps:
             - uses: actions/checkout@v4
