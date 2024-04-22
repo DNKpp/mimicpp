@@ -44,9 +44,10 @@ namespace mimicpp::matcher
 		[[nodiscard]]
 		StringT operator()(T& target) const
 		{
+			const auto text = mimicpp::print(target);
 			return std::vformat(
 				m_PredicateDescription,
-				std::make_format_args(mimicpp::print(target)));
+				std::make_format_args(text));
 		}
 
 	private:
