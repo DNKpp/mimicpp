@@ -11,7 +11,7 @@ on:
 
 jobs:
     build:
-        name: ${{ matrix.config.name }}
+        name: ${{ matrix.config.name }} (${{ matrix.build_mode }})
         runs-on: ${{ matrix.config.os }}
         container:
             image: ghcr.io/dnkpp/${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}
@@ -22,28 +22,28 @@ jobs:
                 build_mode: [Debug, Release]
                 config:
                     - {
-                        name: "Linux Clang 18 C++23 ${{ matrix.build_mode }}",
+                        name: "Linux Clang 18 C++23",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 18,
                         cxx_standard: 23
                     }
                     - {
-                        name: "Linux Clang 18 C++20 ${{ matrix.build_mode }}",
+                        name: "Linux Clang 18 C++20",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 18,
                         cxx_standard: 20
                     }
                     - {
-                        name: "Linux Clang 17 C++23 ${{ matrix.build_mode }}",
+                        name: "Linux Clang 17 C++23",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 17,
                         cxx_standard: 23
                     }
                     - {
-                        name: "Linux Clang 17 C++20 ${{ matrix.build_mode }}",
+                        name: "Linux Clang 17 C++20",
                         os: ubuntu-latest,
                         compiler_name: clang,
                         compiler_version: 17,
