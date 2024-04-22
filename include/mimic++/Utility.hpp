@@ -147,9 +147,8 @@ namespace mimicpp
 	class AlwaysTruePredicate
 	{
 	public:
-		template <typename... Args>
 		[[nodiscard]]
-		constexpr bool operator ()(Args&&...) const noexcept
+		constexpr bool operator ()([[maybe_unused]] auto&&...) const noexcept
 		{
 			return true;
 		}
