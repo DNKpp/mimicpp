@@ -55,7 +55,11 @@ jobs:
   
             - name: Compile tests
               run: |
-                cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -B build -S .
+                cmake \
+                -D CMAKE_BUILD_TYPE=${{ matrix.build_mode }} \
+                -D mimicpp_BUILD_TESTS=yes \
+                -B build -S .
+
                 cmake --build build -j4
 
             - name: Run tests
