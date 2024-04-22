@@ -28,10 +28,39 @@ namespace mimicpp
 
 namespace mimicpp::format
 {
+#ifndef _LIBCPP_VERSION
+
 	using std::format;
 	using std::format_to;
 	using std::vformat;
 	using std::vformat_to;
+
+#else
+
+	// libc++ has some serious trouble when using its std::format implementation.
+	// Let's simply redirect any calls to std::vformat instead.
+
+	using std::vformat;
+	using std::vformat_to;
+
+	template <typename... Args>
+	StringT format(const StringViewT fmt, Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
+	{
+		return format::vformat(
+			fmt,
+			std::make_format_args(args...));
+	}
+
+	template <class OutputIt, typename... Args>
+	StringT format_to(const OutputIt out, const StringViewT fmt, Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
+	{
+		return format::vformat_to(
+			out,
+			fmt,
+			std::make_format_args(args...));
+	}
+
+#endif
 }
 
 namespace mimicpp::custom
