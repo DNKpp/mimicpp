@@ -128,22 +128,6 @@ struct std::formatter<mimicpp::Constness, char>
 
 namespace mimicpp
 {
-	struct source_location_data
-	{
-		const char* fileName;
-		std::uint_least32_t line;
-		std::uint_least32_t column;
-		const char* functionName;
-
-		explicit constexpr source_location_data(const std::source_location& loc) noexcept
-			: fileName{loc.file_name()},
-			line{loc.line()},
-			column{loc.column()},
-			functionName{loc.function_name()}
-		{
-		}
-	};
-
 	class AlwaysTruePredicate
 	{
 	public:

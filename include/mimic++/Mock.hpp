@@ -29,14 +29,13 @@ namespace mimicpp::detail
 		MockBase(const MockBase&) = delete;
 		MockBase& operator =(const MockBase&) = delete;
 
-		template <typename... Args, source_location_data from = source_location_data{std::source_location::current()}>
+		template <typename... Args>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args)
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
-						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<category>{}
 					| expectation_policies::Constness<constness>{};
@@ -53,7 +52,7 @@ namespace mimicpp::detail
 		MockBase& operator =(MockBase&&) = default;
 
 		[[nodiscard]]
-		constexpr Return handle_call(const source_location_data& from, Params... params)
+		constexpr Return handle_call(const std::source_location& from, Params... params)
 		{
 			using CallInfoT = call::Info<Return, Params...>;
 
@@ -84,14 +83,13 @@ namespace mimicpp::detail
 		MockBase(const MockBase&) = delete;
 		MockBase& operator =(const MockBase&) = delete;
 
-		template <typename... Args, source_location_data from = source_location_data{std::source_location::current()}>
+		template <typename... Args>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) const
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
-						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<category>{}
 					| expectation_policies::Constness<constness>{};
@@ -108,7 +106,7 @@ namespace mimicpp::detail
 		MockBase& operator =(MockBase&&) = default;
 
 		[[nodiscard]]
-		constexpr Return handle_call(const source_location_data& from, Params... params) const
+		constexpr Return handle_call(const std::source_location& from, Params... params) const
 		{
 			using CallInfoT = call::Info<Return, Params...>;
 
@@ -139,14 +137,13 @@ namespace mimicpp::detail
 		MockBase(const MockBase&) = delete;
 		MockBase& operator =(const MockBase&) = delete;
 
-		template <typename... Args, source_location_data from = source_location_data{std::source_location::current()}>
+		template <typename... Args>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) &
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
-						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<category>{}
 					| expectation_policies::Constness<constness>{};
@@ -163,7 +160,7 @@ namespace mimicpp::detail
 		MockBase& operator =(MockBase&&) = default;
 
 		[[nodiscard]]
-		constexpr Return handle_call(const source_location_data& from, Params... params) &
+		constexpr Return handle_call(const std::source_location& from, Params... params) &
 		{
 			using CallInfoT = call::Info<Return, Params...>;
 
@@ -194,14 +191,13 @@ namespace mimicpp::detail
 		MockBase(const MockBase&) = delete;
 		MockBase& operator =(const MockBase&) = delete;
 
-		template <typename... Args, source_location_data from = source_location_data{std::source_location::current()}>
+		template <typename... Args>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) const &
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
-						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<category>{}
 					| expectation_policies::Constness<constness>{};
@@ -218,7 +214,7 @@ namespace mimicpp::detail
 		MockBase& operator =(MockBase&&) = default;
 
 		[[nodiscard]]
-		constexpr Return handle_call(const source_location_data& from, Params... params) const &
+		constexpr Return handle_call(const std::source_location& from, Params... params) const &
 		{
 			using CallInfoT = call::Info<Return, Params...>;
 
@@ -249,14 +245,13 @@ namespace mimicpp::detail
 		MockBase(const MockBase&) = delete;
 		MockBase& operator =(const MockBase&) = delete;
 
-		template <typename... Args, source_location_data from = source_location_data{std::source_location::current()}>
+		template <typename... Args>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) &&
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
-						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<category>{}
 					| expectation_policies::Constness<constness>{};
@@ -273,7 +268,7 @@ namespace mimicpp::detail
 		MockBase& operator =(MockBase&&) = default;
 
 		[[nodiscard]]
-		constexpr Return handle_call(const source_location_data& from, Params... params) &&
+		constexpr Return handle_call(const std::source_location& from, Params... params) &&
 		{
 			using CallInfoT = call::Info<Return, Params...>;
 
@@ -304,14 +299,13 @@ namespace mimicpp::detail
 		MockBase(const MockBase&) = delete;
 		MockBase& operator =(const MockBase&) = delete;
 
-		template <typename... Args, source_location_data from = source_location_data{std::source_location::current()}>
+		template <typename... Args>
 			requires (sizeof...(Params) == sizeof...(Args))
 		[[nodiscard]]
 		constexpr auto expect_call(Args&&... args) const &&
 		{
 			return detail::make_expectation_builder(
 						m_Expectations,
-						from,
 						std::forward<Args>(args)...)
 					| expectation_policies::Category<category>{}
 					| expectation_policies::Constness<constness>{};
@@ -328,7 +322,7 @@ namespace mimicpp::detail
 		MockBase& operator =(MockBase&&) = default;
 
 		[[nodiscard]]
-		constexpr Return handle_call(const source_location_data& from, Params... params) const &&
+		constexpr Return handle_call(const std::source_location& from, Params... params) const &&
 		{
 			using CallInfoT = call::Info<Return, Params...>;
 
@@ -372,8 +366,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params)
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current())
 		{
 			return SuperT::handle_call(
 				from,
@@ -400,8 +393,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) const
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const
 		{
 			return SuperT::handle_call(
 				from,
@@ -428,8 +420,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) &
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) &
 		{
 			return SuperT::handle_call(
 				from,
@@ -456,8 +447,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) const &
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const &
 		{
 			return SuperT::handle_call(
 				from,
@@ -484,8 +474,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) &&
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) &&
 		{
 			return std::move(*this).SuperT::handle_call(
 				from,
@@ -512,8 +501,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) const &&
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const &&
 		{
 			return std::move(*this).handle_call(
 				from,
@@ -540,8 +528,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) noexcept
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) noexcept
 		{
 			return SuperT::handle_call(
 				from,
@@ -568,8 +555,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) const noexcept
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const noexcept
 		{
 			return SuperT::handle_call(
 				from,
@@ -596,8 +582,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) & noexcept
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) & noexcept
 		{
 			return SuperT::handle_call(
 				from,
@@ -624,8 +609,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) const & noexcept
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const & noexcept
 		{
 			return SuperT::handle_call(
 				from,
@@ -652,8 +636,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) && noexcept
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) && noexcept
 		{
 			return std::move(*this).SuperT::handle_call(
 				from,
@@ -680,8 +663,7 @@ namespace mimicpp
 		Mock(Mock&&) = default;
 		Mock& operator =(Mock&&) = default;
 
-		template <source_location_data from = source_location_data{std::source_location::current()}>
-		constexpr Return operator ()(Params... params) const && noexcept
+		constexpr Return operator ()(Params... params, const std::source_location& from = std::source_location::current()) const && noexcept
 		{
 			return std::move(*this).SuperT::handle_call(
 				from,

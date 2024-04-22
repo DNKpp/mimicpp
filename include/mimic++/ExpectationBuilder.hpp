@@ -176,15 +176,13 @@ namespace mimicpp::detail
 	template <typename Signature, typename... Args>
 	constexpr auto make_expectation_builder(
 		std::shared_ptr<ExpectationCollection<Signature>> expectations,
-		const source_location_data& from,
 		Args&&... args
 	)
 	{
 		using BaseBuilderT = BasicExpectationBuilder<
 			Signature,
 			expectation_policies::InitTimes,
-			expectation_policies::InitFinalize,
-			expectation_policies::SourceLocation
+			expectation_policies::InitFinalize
 		>;
 
 		return detail::extend_builder_with_arg_policies<Signature>(
@@ -192,9 +190,7 @@ namespace mimicpp::detail
 				std::move(expectations),
 				expectation_policies::InitTimes{},
 				expectation_policies::InitFinalize{},
-				std::tuple{
-					expectation_policies::SourceLocation{from}
-				}
+				std::tuple{}
 			},
 			std::index_sequence_for<Args...>{},
 			std::forward<Args>(args)...);

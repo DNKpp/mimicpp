@@ -97,45 +97,6 @@ namespace mimicpp::expectation_policies
 		std::size_t m_Count{};
 	};
 
-	class SourceLocation
-	{
-	public:
-		[[nodiscard]]
-		explicit constexpr SourceLocation(const source_location_data& loc) noexcept
-			: m_Location{loc}
-		{
-		}
-
-		[[nodiscard]]
-		static constexpr bool is_satisfied() noexcept
-		{
-			return true;
-		}
-
-		template <typename Return, typename... Params>
-		[[nodiscard]]
-		constexpr call::SubMatchResult matches(const call::Info<Return, Params...>&) const
-		{
-			return call::SubMatchResult{
-				.matched = true,
-				.msg = std::format(
-					" expectation from {}({}:{}), function `{}`",
-					m_Location.fileName,
-					m_Location.line,
-					m_Location.column,
-					m_Location.functionName)
-			};
-		}
-
-		template <typename Return, typename... Params>
-		static constexpr void consume(const call::Info<Return, Params...>&) noexcept
-		{
-		}
-
-	private:
-		source_location_data m_Location;
-	};
-
 	template <ValueCategory expected>
 	class Category
 	{

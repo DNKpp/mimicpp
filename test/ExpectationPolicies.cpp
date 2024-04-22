@@ -49,7 +49,6 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE(
 	"Given types satisfy mimicpp::expectation_policy_for concept.",
 	"[expectation][expectation::builder]",
-	expectation_policies::SourceLocation,
 	expectation_policies::Category<ValueCategory::lvalue>,
 	expectation_policies::Category<ValueCategory::rvalue>,
 	expectation_policies::Category<ValueCategory::any>,
@@ -171,52 +170,6 @@ TEST_CASE(
 	REQUIRE_THROWS_AS(
 		(expectation_policies::RuntimeTimes{min, max}),
 		std::runtime_error);
-}
-
-TEST_CASE(
-	"expectation_policies::SourceLocation just reports the stored source location.",
-	"[expectation][expectation::policy]"
-)
-{
-	using SignatureT = void();
-	using CallInfoT = call::info_for_signature_t<SignatureT>;
-	using PolicyT = expectation_policies::SourceLocation;
-
-	constexpr source_location_data sourceLoc{std::source_location::current()};
-	constexpr PolicyT policy{sourceLoc};
-
-	SECTION("Policy is always satisfied.")
-	{
-		STATIC_REQUIRE(policy.is_satisfied());
-	}
-
-	const CallInfoT call{
-		.params = {},
-		.fromUuid = Uuid{1337},
-		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-	};
-
-	SECTION("Consume is a no-op.")
-	{
-		REQUIRE_NOTHROW(policy.consume(call));
-	}
-
-	SECTION("Policy does always match.")
-	{
-		const call::SubMatchResult result = policy.matches(call);
-		REQUIRE(result.matched);
-		REQUIRE(result.msg);
-		REQUIRE_THAT(
-			*result.msg,
-			Catch::Matchers::Matches(R"( expectation from .+\(\d+\:\d+\), function `.+`)")
-			&& Catch::Matchers::ContainsSubstring(std::format(
-				"{}({}:{})",
-				sourceLoc.fileName,
-				sourceLoc.line,
-				sourceLoc.column))
-			&& Catch::Matchers::ContainsSubstring(sourceLoc.functionName));
-	}
 }
 
 TEMPLATE_TEST_CASE_SIG(
