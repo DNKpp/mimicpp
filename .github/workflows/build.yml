@@ -12,10 +12,10 @@ on:
 jobs:
     build:
         name: |
-            ${{ matrix.config.prefix }} \
-            ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} \
-            C++${{ matrix.cxx_standard }} \
-            ${{ matrix.config.suffix }} \
+            ${{ matrix.config.prefix }} 
+            ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
+            C++${{ matrix.cxx_standard }} 
+            ${{ matrix.config.suffix }} 
             (${{ matrix.build_mode }})
         runs-on: ${{ matrix.config.os }}
         container:
@@ -112,7 +112,7 @@ jobs:
             - uses: actions/checkout@v4
   
             - name: Install libc++
-              if: ${{ (matrix.config.compiler_name  == 'clang') && (matrix.config.libcxx  == 'true') }}
+              if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == 'true' }}
               run: |
                 apt-get update
                 apt-get install -y \
