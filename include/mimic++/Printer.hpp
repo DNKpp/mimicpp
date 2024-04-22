@@ -10,12 +10,16 @@
 
 #include <format>
 #include <sstream>
+#include <string>
+#include <string_view>
 
 namespace mimicpp
 {
 	using CharT = char;
-	using StringT = std::basic_string<CharT>;
-	using StringStreamT = std::basic_stringstream<CharT>;
+	using CharTraitsT = std::char_traits<CharT>;
+	using StringT = std::basic_string<CharT, CharTraitsT>;
+	using StringViewT = std::basic_string_view<CharT, CharTraitsT>;
+	using StringStreamT = std::basic_stringstream<CharT, CharTraitsT>;
 
 	template <typename T>
 	concept print_iterator = std::output_iterator<T, CharT>;
