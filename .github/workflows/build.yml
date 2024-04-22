@@ -119,7 +119,7 @@ jobs:
                     libc++abi-${{ matrix.config.compiler_version }}-dev
 
                 echo "CXX_FLAGS=$(echo $CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
-                echo "LINK_FLAGS=$(echo $LINK_FLAGS -lc++ab)" >> $GITHUB_ENV
+                echo "LINK_FLAGS=$(echo $LINK_FLAGS -lc++abi)" >> $GITHUB_ENV
   
             - name: Configure
               run: |
