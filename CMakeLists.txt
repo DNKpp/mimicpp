@@ -4,7 +4,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(get_cpm)
 
 project(
-	mimic++
+	mimicpp
 	LANGUAGES CXX
 )
 
