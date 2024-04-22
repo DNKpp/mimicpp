@@ -58,6 +58,8 @@ jobs:
                 cmake \
                 -D CMAKE_BUILD_TYPE=${{ matrix.build_mode }} \
                 -D mimicpp_BUILD_TESTS=yes \
+                -D CMAKE_VERBOSE_MAKEFILE=yes \
+                -D CXX_STANDARD=${{ matrix.config.cxx_standard }} \
                 -B build -S .
 
                 cmake --build build -j4
