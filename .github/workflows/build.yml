@@ -110,14 +110,9 @@ jobs:
         steps:
             - uses: actions/checkout@v4
   
-            - name: Install libc++
+            - name: Choose libc++
               if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
               run: |
-                apt-get update
-                apt-get install -y \
-                    libc++-${{ matrix.config.compiler_version }}-dev \
-                    libc++abi-${{ matrix.config.compiler_version }}-dev
-
                 echo "CXX_FLAGS=$(echo $CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
                 echo "LINK_FLAGS=$(echo $LINK_FLAGS -lc++abi)" >> $GITHUB_ENV
   
