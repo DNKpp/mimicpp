@@ -59,7 +59,7 @@ public:
 	static auto print(print_iterator auto out, const CustomPrintable&)
 	{
 		++printCallCounter;
-		return std::format_to(out, "CustomPrintable");
+		return format::format_to(out, "CustomPrintable");
 	}
 };
 
@@ -76,7 +76,7 @@ struct std::formatter<StdFormatPrintable, Char>
 	static auto format(const StdFormatPrintable&, std::format_context& ctx)
 	{
 		++printCallCounter;
-		return std::format_to(ctx.out(), "StdFormatPrintable");
+		return format::format_to(ctx.out(), "StdFormatPrintable");
 	}
 };
 
@@ -89,7 +89,7 @@ public:
 	static auto print(print_iterator auto out, const StdFormatAndCustomPrintable&)
 	{
 		++printCallCounter;
-		return std::format_to(out, "StdFormatAndCustomPrintable");
+		return format::format_to(out, "StdFormatAndCustomPrintable");
 	}
 };
 
@@ -106,7 +106,7 @@ struct std::formatter<StdFormatAndCustomPrintable, Char>
 	static auto format(const StdFormatAndCustomPrintable&, std::format_context& ctx)
 	{
 		++printCallCounter;
-		return std::format_to(ctx.out(), "StdFormatAndCustomPrintable");
+		return format::format_to(ctx.out(), "StdFormatAndCustomPrintable");
 	}
 };
 

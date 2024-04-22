@@ -26,6 +26,14 @@ namespace mimicpp
 	concept print_iterator = std::output_iterator<T, CharT>;
 }
 
+namespace mimicpp::format
+{
+	using std::format;
+	using std::format_to;
+	using std::vformat;
+	using std::vformat_to;
+}
+
 namespace mimicpp::custom
 {
 	template <typename>
@@ -46,7 +54,7 @@ namespace mimicpp::detail
 	};
 
 	template <print_iterator OutIter, typename T, typename Printer = custom::Printer<std::remove_cvref_t<T>>>
-	constexpr OutIter print(
+	OutIter print(
 		OutIter out,
 		T&& value,
 		const priority_tag<3>
@@ -104,13 +112,13 @@ namespace mimicpp::detail
 		};
 
 	template <typename OutIter, formattable<CharT> T>
-	constexpr OutIter print(
+	OutIter print(
 		OutIter out,
 		T& value,
 		const priority_tag<2>
 	)
 	{
-		return std::format_to(out, "{}", value);
+		return format::format_to(out, "{}", value);
 	}
 
 	template <typename OutIter, std::ranges::forward_range Range>
@@ -121,20 +129,20 @@ namespace mimicpp::detail
 	);
 
 	template <typename OutIter>
-	constexpr OutIter print(
+	OutIter print(
 		OutIter out,
 		auto&,
 		const priority_tag<0>
 	)
 	{
-		return std::format_to(out, "{{?}}");
+		return format::format_to(out, "{{?}}");
 	}
 
 	class PrintFn
 	{
 	public:
 		template <print_iterator OutIter, typename T>
-		constexpr OutIter operator ()(
+		OutIter operator ()(
 			OutIter out,
 			T&& value
 		) const
@@ -170,7 +178,7 @@ namespace mimicpp::detail
 		const priority_tag<1>
 	)
 	{
-		out = std::format_to(out, "{{ ");
+		out = format::format_to(out, "{{ ");
 		auto iter = std::ranges::begin(range);
 		if (const auto end = std::ranges::end(range);
 			iter != end)
@@ -181,12 +189,12 @@ namespace mimicpp::detail
 			for (; iter != end; ++iter)
 			{
 				out = print(
-					std::format_to(out, ", "),
+					format::format_to(out, ", "),
 					*iter);
 			}
 		}
 
-		return std::format_to(out, " }}");
+		return format::format_to(out, " }}");
 	}
 }
 

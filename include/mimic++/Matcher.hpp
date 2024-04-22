@@ -45,7 +45,7 @@ namespace mimicpp::matcher
 		StringT operator()(T& target) const
 		{
 			const auto text = mimicpp::print(target);
-			return std::vformat(
+			return format::vformat(
 				m_PredicateDescription,
 				std::make_format_args(text));
 		}
@@ -147,7 +147,7 @@ namespace mimicpp::matcher
 				auto& target
 			) -> StringT  // NOLINT(bugprone-use-after-move)
 			{
-				return std::format(
+				return format::format(
 					"!({})",
 					std::invoke(describer, target));
 			};
@@ -175,7 +175,7 @@ namespace mimicpp::matches
 		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
 			std::bind_front(std::ranges::equal_to{}, std::forward<T>(value)),
 			matcher::TargetPredicateDescriber{
-				std::format("{{}} == {}", mimicpp::print(value))
+				format::format("{{}} == {}", mimicpp::print(value))
 			});
 	}
 }

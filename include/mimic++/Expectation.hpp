@@ -242,7 +242,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr call::MatchResultT matches(const CallInfoT& call) const override
+		call::MatchResultT matches(const CallInfoT& call) const override
 		{
 			return call::detail::evaluate_sub_match_results(
 				m_Times.is_saturated(),

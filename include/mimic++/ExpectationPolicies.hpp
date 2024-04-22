@@ -107,19 +107,19 @@ namespace mimicpp::expectation_policies
 		}
 
 		template <typename Return, typename... Params>
-		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>& info)
+		static call::SubMatchResult matches(const call::Info<Return, Params...>& info)
 		{
 			if (mimicpp::is_matching(info.fromCategory, expected))
 			{
 				return {
 					.matched = true,
-					.msg = std::format(" matches Category {}", expected)
+					.msg = format::format(" matches Category {}", expected)
 				};
 			}
 
 			return {
 				.matched = false,
-				.msg = std::format(" does not match Category {}", expected)
+				.msg = format::format(" does not match Category {}", expected)
 			};
 		}
 
@@ -146,13 +146,13 @@ namespace mimicpp::expectation_policies
 			{
 				return {
 					.matched = true,
-					.msg = std::format(" matches Constness {}", constness)
+					.msg = format::format(" matches Constness {}", constness)
 				};
 			}
 
 			return {
 				.matched = false,
-				.msg = std::format(" does not match Constness {}", constness)
+				.msg = format::format(" does not match Constness {}", constness)
 			};
 		}
 
@@ -281,7 +281,7 @@ namespace mimicpp::expectation_policies
 			{
 				return {
 					.matched = true,
-					.msg = std::format(
+					.msg = format::format(
 						"param[{}] matches {}",
 						index,
 						m_Matcher.describe(param.get()))
@@ -290,7 +290,7 @@ namespace mimicpp::expectation_policies
 
 			return {
 				.matched = false,
-				.msg = std::format(
+				.msg = format::format(
 					"param[{}] does not match {}",
 					index,
 					m_Matcher.describe(param.get()))
