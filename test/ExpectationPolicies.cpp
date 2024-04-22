@@ -511,49 +511,6 @@ TEST_CASE(
 	}
 }
 
-namespace
-{
-	template <typename T>
-	class MatcherMock
-	{
-	public:
-		MAKE_CONST_MOCK1(matches, bool(T));
-		MAKE_CONST_MOCK1(describe, StringT(T));
-	};
-
-	template <typename Matcher, typename Projection>
-	class [[maybe_unused]] MatcherFacade
-	{
-	public:
-		[[nodiscard]]
-		MatcherFacade(Matcher matcher, Projection projection)
-			: m_Matcher{std::move(matcher)},
-			m_Projection{std::move(projection)}
-		{
-		}
-
-		template <typename T>
-		[[nodiscard]]
-		constexpr bool matches(T&& target) const
-		{
-			return std::invoke(m_Projection, m_Matcher)
-				.matches(std::forward<T>(target));
-		}
-
-		template <typename T>
-		[[nodiscard]]
-		constexpr StringT describe(T&& target) const
-		{
-			return std::invoke(m_Projection, m_Matcher)
-				.describe(std::forward<T>(target));
-		}
-
-	private:
-		Matcher m_Matcher;
-		Projection m_Projection;
-	};
-}
-
 TEST_CASE(
 	"expectation_policies::ArgumentMatcher checks whether the given call::Info matches.",
 	"[expectation][expectation::policy]"
