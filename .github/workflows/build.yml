@@ -58,54 +58,6 @@ jobs:
                         compiler_version: 17,
                         libcxx: false
                     }
-                    #clang-16
-                    - {
-                        prefix: "Linux",
-                        suffix: "/libc++",
-                        os: ubuntu-latest,
-                        compiler_name: "clang",
-                        compiler_version: 16,
-                        libcxx: true
-                    }
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        compiler_name: "clang",
-                        compiler_version: 16,
-                        libcxx: false
-                    }
-                    #clang-15
-                    - {
-                        prefix: "Linux",
-                        suffix: "/libc++",
-                        os: ubuntu-latest,
-                        compiler_name: "clang",
-                        compiler_version: 15,
-                        libcxx: true
-                    }
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        compiler_name: "clang",
-                        compiler_version: 15,
-                        libcxx: false
-                    }
-                    #clang-14
-                    - {
-                        prefix: "Linux",
-                        suffix: "/libc++",
-                        os: ubuntu-latest,
-                        compiler_name: "clang",
-                        compiler_version: 14,
-                        libcxx: true
-                    }
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        compiler_name: "clang",
-                        compiler_version: 14,
-                        libcxx: false
-                    }
 
         steps:
             - uses: actions/checkout@v4
