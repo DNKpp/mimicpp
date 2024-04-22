@@ -1,0 +1,64 @@
+name: build & test
+
+env:
+    IMAGE_PREFIX: "ghcr.io/dnkpp/"
+
+on:
+    push:
+        branches: [master, dev]
+    pull_request:
+        branches: [master, dev]
+
+jobs:
+    build:
+        name: ${{ matrix.config.name }}
+        runs-on: ${{ matrix.config.os }}
+        container:
+            image: "${{ env.IMAGE_PREFIX }}/${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}"
+
+        strategy:
+            fail-fast: false
+            matrix:
+                build_mode: [Debug, Release]
+                config:
+                    - {
+                        name: "Linux Clang 18 C++23",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 18,
+                        cxx_standard: 23
+                    }
+                    - {
+                        name: "Linux Clang 18 C++20",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 18,
+                        cxx_standard: 20
+                    }
+                    - {
+                        name: "Linux Clang 17 C++23",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 17,
+                        cxx_standard: 23
+                    }
+                    - {
+                        name: "Linux Clang 17 C++20",
+                        os: ubuntu-latest,
+                        compiler_name: clang,
+                        compiler_version: 17,
+                        cxx_standard: 20
+                    }
+
+        steps:
+            - uses: actions/checkout@v4
+  
+            - name: Compile tests
+              run: |
+                cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -B build -S .
+                cmake --build build -j4
+
+            - name: Run tests
+              env:
+                CTEST_OUTPUT_ON_FAILURE: 1
+              run: ctest --test-dir build/test -C ${{ matrix.build_mode }} -j4
