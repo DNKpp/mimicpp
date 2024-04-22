@@ -4,6 +4,8 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Expectation.hpp"
+#include "mimic++/Printer.hpp"
+
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
 
@@ -282,7 +284,7 @@ namespace
 
 		std::string describe() const override
 		{
-			return std::format(
+			return mimicpp::format::format(
 				"matches category: {}",
 				m_Category);
 		}
@@ -295,31 +297,6 @@ namespace
 	CallMatchCategoryMatcher matches_category(const mimicpp::call::MatchCategory category) noexcept
 	{
 		return CallMatchCategoryMatcher{category};
-	}
-
-	template <typename Range>
-		requires std::same_as<bool, std::ranges::range_value_t<Range>>
-	[[nodiscard]]
-	CallMatchCategoryMatcher matches_match_result_combination(Range&& results) noexcept
-	{
-		using CategoryT = mimicpp::call::MatchCategory;
-		const CategoryT category = std::invoke(
-			[&]
-			{
-				if (std::ranges::all_of(results, std::bind_front(std::equal_to{}, true)))
-				{
-					return CategoryT::ok;
-				}
-
-				if (std::ranges::all_of(results, std::bind_front(std::equal_to{}, false)))
-				{
-					return CategoryT::no;
-				}
-
-				return CategoryT::exhausted;
-			});
-
-		return matches_category(category);
 	}
 }
 

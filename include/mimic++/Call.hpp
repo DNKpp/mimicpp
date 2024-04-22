@@ -70,7 +70,7 @@ struct std::formatter<mimicpp::call::MatchCategory, Char>
 
 	auto format(
 		const MatchCategoryT category,
-		std::format_context& ctx
+		auto& ctx
 	) const
 	{
 		constexpr auto toString = [](const MatchCategoryT cat)

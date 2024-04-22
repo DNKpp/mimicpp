@@ -208,7 +208,7 @@ TEMPLATE_TEST_CASE_SIG(
 			REQUIRE(result.matched);
 			REQUIRE_THAT(
 				result.msg.value(),
-				Catch::Matchers::Equals(std::format(" matches Category {}", category)));
+				Catch::Matchers::Equals(format::format(" matches Category {}", category)));
 		}
 
 		SECTION("Policy doesn't consume, but asserts on wrong category.")
@@ -225,7 +225,7 @@ TEMPLATE_TEST_CASE_SIG(
 			REQUIRE(!result.matched);
 			REQUIRE_THAT(
 				result.msg.value(),
-				Catch::Matchers::Equals(std::format(" does not match Category {}", category)));
+				Catch::Matchers::Equals(format::format(" does not match Category {}", category)));
 		}
 	}
 }
@@ -266,7 +266,7 @@ TEMPLATE_TEST_CASE_SIG(
 			REQUIRE(result.matched);
 			REQUIRE_THAT(
 				result.msg.value(),
-				Catch::Matchers::Equals(std::format(" matches Constness {}", constness)));
+				Catch::Matchers::Equals(format::format(" matches Constness {}", constness)));
 		}
 
 		SECTION("Policy doesn't consume, but asserts on wrong constness.")
@@ -283,7 +283,7 @@ TEMPLATE_TEST_CASE_SIG(
 			REQUIRE(!result.matched);
 			REQUIRE_THAT(
 				result.msg.value(),
-				Catch::Matchers::Equals(std::format(" does not match Constness {}", constness)));
+				Catch::Matchers::Equals(format::format(" does not match Constness {}", constness)));
 		}
 	}
 }

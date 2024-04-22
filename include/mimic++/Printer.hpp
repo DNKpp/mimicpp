@@ -44,6 +44,7 @@ namespace mimicpp::format
 	using std::vformat_to;
 
 	template <typename... Args>
+	[[nodiscard]]
 	StringT format(const StringViewT fmt, Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
 	{
 		return format::vformat(
@@ -52,7 +53,7 @@ namespace mimicpp::format
 	}
 
 	template <class OutputIt, typename... Args>
-	StringT format_to(const OutputIt out, const StringViewT fmt, Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
+	OutputIt format_to(const OutputIt out, const StringViewT fmt, Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
 	{
 		return format::vformat_to(
 			out,

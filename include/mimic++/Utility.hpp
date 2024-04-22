@@ -76,7 +76,7 @@ struct std::formatter<mimicpp::ValueCategory, char>
 
 	auto format(
 		const ValueCategoryT category,
-		std::format_context& ctx
+		auto& ctx
 	) const
 	{
 		constexpr auto toString = [](const ValueCategoryT cat)
@@ -105,7 +105,7 @@ struct std::formatter<mimicpp::Constness, char>
 
 	auto format(
 		const ConstnessT category,
-		std::format_context& ctx
+		auto& ctx
 	) const
 	{
 		constexpr auto toString = [](const ConstnessT value)

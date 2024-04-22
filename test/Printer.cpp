@@ -68,12 +68,12 @@ struct std::formatter<StdFormatPrintable, Char>
 {
 	inline static int printCallCounter{0};
 
-	static constexpr auto parse(std::format_parse_context& ctx)
+	static constexpr auto parse(auto& ctx)
 	{
 		return ctx.begin();
 	}
 
-	static auto format(const StdFormatPrintable&, std::format_context& ctx)
+	static auto format(const StdFormatPrintable&, auto& ctx)
 	{
 		++printCallCounter;
 		return format::format_to(ctx.out(), "StdFormatPrintable");
@@ -98,12 +98,12 @@ struct std::formatter<StdFormatAndCustomPrintable, Char>
 {
 	inline static int printCallCounter{0};
 
-	static constexpr auto parse(std::format_parse_context& ctx)
+	static constexpr auto parse(auto& ctx)
 	{
 		return ctx.begin();
 	}
 
-	static auto format(const StdFormatAndCustomPrintable&, std::format_context& ctx)
+	static auto format(const StdFormatAndCustomPrintable&, auto& ctx)
 	{
 		++printCallCounter;
 		return format::format_to(ctx.out(), "StdFormatAndCustomPrintable");
