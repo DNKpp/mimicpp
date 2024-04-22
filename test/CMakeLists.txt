@@ -23,4 +23,10 @@ target_link_libraries(
 	trompeloeil::trompeloeil
 )
 
+target_compile_features(
+	mimicpp
+	INTERFACE
+	cxx_std_${CMAKE_CXX_STANDARD}
+)
+
 catch_discover_tests(mimicpp-tests)

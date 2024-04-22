@@ -29,6 +29,10 @@ else()
 	set(IS_TOP_LEVEL_PROJECT OFF)
 endif()
 
+if (mimicpp_FORCED_CXX_STANDARD)
+	set(CMAKE_CXX_STANDARD ${mimicpp_FORCED_CXX_STANDARD})
+endif()
+
 OPTION(mimicpp_BUILD_TESTS "Determines whether tests shall be built." ${IS_TOP_LEVEL_PROJECT})
 if (mimicpp_BUILD_TESTS)
 	include(CTest)
