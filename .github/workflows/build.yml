@@ -91,25 +91,6 @@ jobs:
                         libcxx: false,
                         sanitize: false
                     }
-                    # msvc v142
-                    - {
-                        prefix: "Windows 2022",
-                        os: windows-2022,
-                        compiler_name: "msvc",
-                        compiler_version: v142,
-                        cmake_generator: Visual Studio 17 2022,
-                        libcxx: false,
-                        sanitize: false
-                    }
-                    - {
-                        prefix: "Windows 2019",
-                        os: windows-2019,
-                        compiler_name: "msvc",
-                        compiler_version: v142,
-                        cmake_generator: Visual Studio 16 2019,
-                        libcxx: false,
-                        sanitize: false
-                    }
                     # msvc ClangCl
                     - {
                         prefix: "Windows 2022",

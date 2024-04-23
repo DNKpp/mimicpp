@@ -15,7 +15,7 @@ add_executable(
 	"TypeTraits.cpp"
 )
 
-if (MSVC AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+if (MSVC)
 
 	# When using github ci clang-cl, exceptions seems to be disabled by default.
 	target_compile_options(
