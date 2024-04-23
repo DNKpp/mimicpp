@@ -104,17 +104,20 @@ jobs:
                     # AppleClang
                     - {
                         prefix: "macOS",
-                        suffix: "/libc++",
                         os: macos-latest,
                         compiler_name: "AppleClang",
-                        libcxx: true,
+                        compiler_version: "17.0.6",
+                        compiler_url: "https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/clang+llvm-17.0.6-arm64-apple-darwin22.0.tar.xz",
+                        package_name: "clang+llvm-17.0.6-arm64-apple-darwin22.0",
                         asan: true
                     }
                     - {
                         prefix: "macOS",
                         os: macos-latest,
                         compiler_name: "AppleClang",
-                        libcxx: false,
+                        compiler_version: "16.0.5",
+                        compiler_url: "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.5/clang+llvm-16.0.5-arm64-apple-darwin22.0.tar.xz",
+                        package_name: "clang+llvm-16.0.5-arm64-apple-darwin22.0",
                         asan: true
                     }
 
@@ -127,10 +130,11 @@ jobs:
               shell: bash
               run: |
                 env brew install ninja
-                $CLANG
-                curl -sS -L -o clang.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/clang+llvm-17.0.6-arm64-apple-darwin22.0.tar.xz
+                # download into current directory and follow http redirects (-L)
+                curl -sS -L -o clang.tar.xz ${{ matrix.config.compiler_url }}
+                # extract into subdirectory
                 tar -xf clang.tar.xz -C ..
-                CLANG_PATH=$PWD/../clang+llvm-17.0.6-arm64-apple-darwin22.0/bin
+                CLANG_PATH=$PWD/../${{ matrix.config.package_name }}/bin
                 echo "CC=$(echo $CLANG_PATH/clang)" >> $GITHUB_ENV
                 echo "CXX=$(echo $CLANG_PATH/clang++)" >> $GITHUB_ENV
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
