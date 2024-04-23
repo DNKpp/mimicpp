@@ -135,23 +135,27 @@ jobs:
   
             - name: Clang libc++ setup
               if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
+              shell: bash
               run: |
                 echo "CXX_FLAGS=$(echo $CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
                 echo "LINK_FLAGS=$(echo $LINK_FLAGS -lc++abi)" >> $GITHUB_ENV
 
             - name: Setup cmake linux
               if: ${{ matrix.config.prefix  == 'Linux' }}
+              shell: bash
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
             - name: Setup cmake msvc
               if: ${{ matrix.config.compiler_name  == 'msvc' }}
+              shell: bash
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
                 echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA ---config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
             - name: Enable Address and Undefined Sanitizer
               if: ${{ matrix.config.sanitize == true }}
+              shell: bash
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo CMAKE_CONFIG_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
 
@@ -168,12 +172,14 @@ jobs:
                     ${{ env.CMAKE_CONFIG_EXTRA }}
 
             - name: Build
+              shell: bash
               run: |
                 cmake --build build \
                     -j4 \
                     ${{ env.CMAKE_BUILD_EXTRA }}
 
             - name: Run tests
+              shell: bash
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
               run: ctest --test-dir build/test -C ${{ matrix.build_mode }} -j4
