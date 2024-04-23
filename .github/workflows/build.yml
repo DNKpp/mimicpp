@@ -120,15 +120,7 @@ jobs:
                         libcxx: false,
                         sanitize: false
                     }
-                    - {
-                        prefix: "Windows 2019",
-                        os: windows-2019,
-                        compiler_name: "msvc",
-                        compiler_version: ClangCl,
-                        cmake_generator: Visual Studio 16 2019,
-                        libcxx: false,
-                        sanitize: false
-                    }
+
 
         steps:
             - uses: actions/checkout@v4
