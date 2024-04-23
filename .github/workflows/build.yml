@@ -144,7 +144,7 @@ jobs:
                 echo "CMAKE_EXTRA=$(echo CMAKE_EXTRA -G'${{ matrix.config.cmake_generator }} -T'${{ matrix.config.compiler_version }} -Ax64')" >> $GITHUB_ENV
 
             - name: Enable Address and Undefined Sanitizer
-              if: ${{ matrix.config.sanitizer == true }}
+              if: ${{ matrix.config.sanitize == true }}
               run: |
                 echo "CMAKE_EXTRA=$(echo CMAKE_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
 
