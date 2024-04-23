@@ -111,16 +111,6 @@ jobs:
                         package_name: "clang+llvm-17.0.6-arm64-apple-darwin22.0",
                         asan: true
                     }
-                    - {
-                        prefix: "macOS",
-                        os: macos-latest,
-                        compiler_name: "AppleClang",
-                        compiler_version: "16.0.5",
-                        compiler_url: "https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.5/clang+llvm-16.0.5-arm64-apple-darwin22.0.tar.xz",
-                        package_name: "clang+llvm-16.0.5-arm64-apple-darwin22.0",
-                        asan: true
-                    }
-
 
         steps:
             - uses: actions/checkout@v4
