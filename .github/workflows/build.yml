@@ -104,16 +104,17 @@ jobs:
                     # AppleClang
                     - {
                         prefix: "macOS",
+                        suffix: "/libc++",
                         os: macos-latest,
                         compiler_name: "AppleClang",
-                        libcxx: false,
+                        libcxx: true,
                         asan: true
                     }
                     - {
                         prefix: "macOS",
                         os: macos-latest,
                         compiler_name: "AppleClang",
-                        libcxx: true,
+                        libcxx: false,
                         asan: true
                     }
 
@@ -125,7 +126,10 @@ jobs:
               if: startsWith(matrix.config.os, 'macos')
               shell: bash
               run: |
+                clang -v
                 env brew install parallel ninja
+                env brew install --with-toolchain llvm
+                clang -v
                 echo "CC=clang" >> $GITHUB_ENV
                 echo "CXX=clang++" >> $GITHUB_ENV
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
