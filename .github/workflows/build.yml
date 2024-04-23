@@ -78,19 +78,18 @@ jobs:
         steps:
             - uses: actions/checkout@v4
   
-            - name: Choose libc++
+            - name: Clang libc++ setup
               if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
               run: |
                 echo "CXX_FLAGS=$(echo $CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
                 echo "LINK_FLAGS=$(echo $LINK_FLAGS -lc++abi)" >> $GITHUB_ENV
-  
+
             - name: Configure
               run: |
                 cmake \
                     -D CMAKE_BUILD_TYPE=${{ matrix.build_mode }} \
                     -D CMAKE_VERBOSE_MAKEFILE=yes \
-                    -D mimicpp_BUILD_TESTS=yes \
-                    -D mimicpp_FORCED_CXX_STANDARD:STRING="${{ matrix.cxx_standard }}" \
+                    -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
                     -D CMAKE_CXX_FLAGS:STRING="${{ env.CXX_FLAGS }}" \
                     -D CMAKE_EXE_LINKER_FLAGS:STRING="${{ env.LINK_FLAGS }}" \
                     -B build -S .
