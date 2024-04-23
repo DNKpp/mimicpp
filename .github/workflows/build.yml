@@ -17,8 +17,7 @@ jobs:
             ${{ matrix.config.suffix }} 
             (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }})
         runs-on: ${{ matrix.config.os }}
-        container:
-            image: ghcr.io/dnkpp/${{ matrix.config.compiler_name }}:${{ matrix.config.compiler_version }}
+        container: ${{ matrix.config.container }}
 
         strategy:
             fail-fast: false
@@ -31,6 +30,7 @@ jobs:
                         prefix: "Linux",
                         suffix: "/libc++",
                         os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:18" },
                         compiler_name: "clang",
                         compiler_version: 18,
                         libcxx: true,
@@ -39,6 +39,7 @@ jobs:
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:18" },
                         compiler_name: "clang",
                         compiler_version: 18,
                         libcxx: false,
@@ -49,6 +50,7 @@ jobs:
                         prefix: "Linux",
                         suffix: "/libc++",
                         os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:17" },
                         compiler_name: "clang",
                         compiler_version: 17,
                         libcxx: true,
@@ -57,6 +59,7 @@ jobs:
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:17" },
                         compiler_name: "clang",
                         compiler_version: 17,
                         libcxx: false,
@@ -66,6 +69,7 @@ jobs:
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/gcc:14" },
                         compiler_name: "gcc",
                         compiler_version: 14,
                         libcxx: false,
@@ -75,6 +79,7 @@ jobs:
                     - {
                         prefix: "Linux",
                         os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/gcc:13" },
                         compiler_name: "gcc",
                         compiler_version: 13,
                         libcxx: false,
