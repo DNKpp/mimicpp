@@ -23,7 +23,7 @@ jobs:
   
             - name: Install gcovr
               run: |
-                pip install gcovr
+                apt-get install python3-gcovr
 
             - name: Configure
               env:
