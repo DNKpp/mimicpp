@@ -15,16 +15,12 @@ add_executable(
 	"TypeTraits.cpp"
 )
 
-if (MSVC)
-
-	# When using github ci clang-cl, exceptions seems to be disabled by default.
-	target_compile_options(
-		mimicpp-tests
-		PRIVATE
-		/EHsc
-	)
-
-endif()
+target_compile_options(
+	mimicpp-tests
+	PRIVATE
+	# When using github ci, exceptions seems to be disabled by default.
+	$<$<CXX_COMPILER_ID:MSVC>:/EHsc>
+)
 
 if (SANITIZE_ADDRESS)
 

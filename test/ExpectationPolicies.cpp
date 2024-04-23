@@ -160,7 +160,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"expectation_policies::Times does throw, when invalid config is given.",
+	"expectation_policies::RuntimeTimes does throw, when invalid config is given.",
 	"[expectation][expectation::builder]"
 )
 {
