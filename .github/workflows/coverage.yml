@@ -25,6 +25,7 @@ jobs:
               run: |
                 python -m pip install gcovr
 
+
             - name: Configure
               env:
                 LDFLAGS: "-fprofile-arcs"
@@ -38,19 +39,25 @@ jobs:
               run: |
                 cmake --build build -j4
 
+            - name: Run tests
+              env:
+                CTEST_OUTPUT_ON_FAILURE: 1
+              run: ctest --test-dir build/test -C Debug -j4
+
             - name: Run gcovr
               run: |
                 # circumvnet "fatal: detected dubious ownership in repository" error
                 git config --global --add safe.directory /__w/mimicpp/mimicpp
-                gcovr --root build/test --filter "include/mimic++" --keep -j 4 \
-                --exclude-lines-by-pattern "\s*assert\(" \
-                --exclude-unreachable-branches \
-                --exclude-noncode-lines \
-                --exclude-throw-branches \
-                --decisions \
-                --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
-                --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
-                --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
+                gcovr --root build/test --filter "include/mimic++" --keep -j4 -v \
+                    --exclude-lines-by-pattern "\s*assert\(" \
+                    --exclude-unreachable-branches \
+                    --exclude-noncode-lines \
+                    --exclude-throw-branches \
+                    --decisions \
+                    --calls \
+                    --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
+                    --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
+                    --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
 
             - name: Upload gcov coverage report artifacts
               uses: actions/upload-artifact@v4
