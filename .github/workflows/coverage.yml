@@ -40,7 +40,9 @@ jobs:
 
             - name: Run gcovr
               run: |
-                gcovr --root build/test --filter include/mimic++ --keep -j 4 \
+                # circumvnet "fatal: detected dubious ownership in repository" error
+                git config --global --add safe.directory /__w/mimicpp/mimicpp
+                gcovr --root build/test --filter "include/mimic++" --keep -j 4 \
                 --exclude-lines-by-pattern "\s*assert\(" \
                 --exclude-unreachable-branches \
                 --exclude-noncode-lines \
