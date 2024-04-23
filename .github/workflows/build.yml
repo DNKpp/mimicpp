@@ -152,7 +152,7 @@ jobs:
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
                 echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
-                echo $(VCToolsInstallDir)/Hostx64/x64
+                echo %VCToolsInstallDir%/Hostx64/x64
                 echo "PATH=$(echo $PATH '$(VCToolsInstallDir)/Hostx64/x64')" >> $GITHUB_ENV
 
             - name: Enable Address and Undefined Sanitizer
