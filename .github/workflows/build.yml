@@ -142,18 +142,18 @@ jobs:
             - name: Setup cmake linux
               if: ${{ matrix.config.prefix  == 'Linux' }}
               run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
             - name: Setup cmake msvc
               if: ${{ matrix.config.compiler_name  == 'msvc' }}
               run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo CMAKE_CONFIG_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
-                echo "CMAKE_BUILD_EXTRA=$(echo CMAKE_BUILD_EXTRA ---config ${{ matrix.build_mode }})" >> $GITHUB_ENV
+                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
+                echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA ---config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
             - name: Enable Address and Undefined Sanitizer
               if: ${{ matrix.config.sanitize == true }}
               run: |
-                echo "CMAKE_EXTRA=$(echo CMAKE_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
+                echo "CMAKE_CONFIG_EXTRA=$(echo CMAKE_CONFIG_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
 
             - name: Configure
               shell: bash
@@ -171,7 +171,7 @@ jobs:
               run: |
                 cmake --build build \
                     -j4 \
-                    ${{ env.CMAKE_CONFIG_EXTRA }}
+                    ${{ env.CMAKE_BUILD_EXTRA }}
 
             - name: Run tests
               env:
