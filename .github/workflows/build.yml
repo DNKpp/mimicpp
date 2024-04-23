@@ -88,7 +88,7 @@ jobs:
                     # msvc v143
                     - {
                         prefix: "Windows 2022",
-                        os: windows_2022,
+                        os: windows-2022,
                         compiler_name: "msvc",
                         compiler_version: "v143",
                         cmake_generator: "Visual Studio 17 2022",
@@ -98,7 +98,7 @@ jobs:
                     # msvc v142
                     - {
                         prefix: "Windows 2022",
-                        os: windows_2022,
+                        os: windows-2022,
                         compiler_name: "msvc",
                         compiler_version: "v142",
                         cmake_generator: "Visual Studio 17 2022",
@@ -107,7 +107,7 @@ jobs:
                     }
                     - {
                         prefix: "Windows 2019",
-                        os: windows_2019,
+                        os: windows-2019,
                         compiler_name: "msvc",
                         compiler_version: "v142",
                         cmake_generator: "Visual Studio 16 2019",
@@ -117,7 +117,7 @@ jobs:
                     # msvc ClangCl
                     - {
                         prefix: "Windows 2022",
-                        os: windows_2022,
+                        os: windows-2022,
                         compiler_name: "msvc",
                         compiler_version: "ClangCl",
                         cmake_generator: "Visual Studio 17 2022",
@@ -126,7 +126,7 @@ jobs:
                     }
                     - {
                         prefix: "Windows 2019",
-                        os: windows_2019,
+                        os: windows-2019,
                         compiler_name: "msvc",
                         compiler_version: "ClangCl",
                         cmake_generator: "Visual Studio 16 2019",
