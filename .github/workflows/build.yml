@@ -128,7 +128,8 @@ jobs:
               run: |
                 env brew install parallel ninja
                 curl -o clang.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/clang+llvm-17.0.6-arm64-apple-darwin22.0.tar.xz
-                tar -xvf clang.tar.xz clang
+                tar -xvf clang.tar.xz
+                ls
                 pwd >> $CUR
                 echo "CC=$CUR/clang/bin/clang" >> $GITHUB_ENV
                 echo "CXX=$CUR/clang/bin/clang++" >> $GITHUB_ENV
