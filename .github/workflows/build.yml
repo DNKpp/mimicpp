@@ -1,8 +1,4 @@
 name: build & test
-
-env:
-    IMAGE_PREFIX: "ghcr.io/dnkpp/"
-
 on:
     push:
         branches: [master, dev]
@@ -143,10 +139,16 @@ jobs:
                 echo "CXX_FLAGS=$(echo $CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
                 echo "LINK_FLAGS=$(echo $LINK_FLAGS -lc++abi)" >> $GITHUB_ENV
 
-            - name: Setup msvc flags
+            - name: Setup cmake linux
+              if: ${{ matrix.config.prefix  == 'Linux' }}
+              run: |
+                echo "CMAKE_CONFIG_EXTRA=$(echo CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+
+            - name: Setup cmake msvc
               if: ${{ matrix.config.compiler_name  == 'msvc' }}
               run: |
-                echo "CMAKE_EXTRA=$(echo CMAKE_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
+                echo "CMAKE_CONFIG_EXTRA=$(echo CMAKE_CONFIG_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
+                echo "CMAKE_BUILD_EXTRA=$(echo CMAKE_BUILD_EXTRA ---config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
             - name: Enable Address and Undefined Sanitizer
               if: ${{ matrix.config.sanitize == true }}
@@ -159,16 +161,17 @@ jobs:
                 cmake \
                     -S . \
                     -B build \
-                    -D CMAKE_BUILD_TYPE=${{ matrix.build_mode }} \
                     -D CMAKE_VERBOSE_MAKEFILE=yes \
                     -D CMAKE_CXX_FLAGS:STRING="${{ env.CXX_FLAGS }}" \
                     -D CMAKE_EXE_LINKER_FLAGS:STRING="${{ env.LINK_FLAGS }}" \
                     -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
-                    ${{ env.CMAKE_EXTRA }}
+                    ${{ env.CMAKE_CONFIG_EXTRA }}
 
             - name: Build
               run: |
-                cmake --build build -j4
+                cmake --build build \
+                    -j4 \
+                    ${{ env.CMAKE_CONFIG_EXTRA }}
 
             - name: Run tests
               env:
