@@ -129,7 +129,7 @@ jobs:
                 env brew install ninja
                 curl -o clang.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/clang+llvm-17.0.6-arm64-apple-darwin22.0.tar.xz
                 tar -xvf clang.tar.xz -C ..
-                ls -lisa ../clang
+                ls -lisa ..
                 echo "CC=$(echo $pwd/../clang/bin/clang)" >> $GITHUB_ENV
                 echo "CXX=$(echo $pwd/../clang/bin/clang++)" >> $GITHUB_ENV
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
