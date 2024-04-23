@@ -14,13 +14,16 @@ add_executable(
 	"Printer.cpp"
 	"TypeTraits.cpp"
 )
+if (MSVC)
 
-target_compile_options(
-	mimicpp-tests
-	PRIVATE
 	# When using github ci, exceptions seems to be disabled by default.
-	$<$<CXX_COMPILER_ID:MSVC>:/EHsc>
-)
+	target_compile_options(
+		mimicpp-tests
+		PRIVATE
+		/EHsc
+	)
+
+endif()
 
 if (SANITIZE_ADDRESS)
 
