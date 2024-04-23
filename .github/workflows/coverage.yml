@@ -23,7 +23,7 @@ jobs:
   
             - name: Install gcovr
               run: |
-                python -m pip install gcovr --no-cache-dir
+                python -m pip install gcovr
 
             - name: Configure
               env:
