@@ -131,7 +131,6 @@ jobs:
               shell: bash
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
-                echo "CXX_FLAGS=$(echo $CXX_FLAGS -fsanitize-recover=address)" >> $GITHUB_ENV
 
             # ASan has some serious trouble with libc++ exception mechanism
             # see: https://github.com/llvm/llvm-project/issues/59432
@@ -139,7 +138,7 @@ jobs:
               if: ${{ matrix.config.sanitize == true && matrix.config.libcxx  == true}}
               shell: bash
               run: |
-                #echo "ASAN_OPTIONS=$(echo $ASAN_OPTIONS:halt_on_error=0)" >> $GITHUB_ENV
+                echo "ASAN_OPTIONS=$(echo $ASAN_OPTIONS:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
 
             - name: Configure
               shell: bash
