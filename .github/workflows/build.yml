@@ -138,7 +138,7 @@ jobs:
               if: ${{ matrix.config.sanitize == true && matrix.config.libcxx  == true}}
               shell: bash
               run: |
-                echo "ASAN_OPTIONS=$(echo $ASAN_OPTIONS=alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
+                echo "ASAN_OPTIONS=$(echo $ASAN_OPTIONS:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
 
             - name: Configure
               shell: bash
