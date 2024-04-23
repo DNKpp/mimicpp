@@ -1,0 +1,128 @@
+name: coverage
+
+env:
+    COBERTURA_REPORT: cobertura.xml
+    COVERALLS_REPORT: coveralls.json
+    HTML_REPORT_DIR: html/
+    COVERAGE_ARTIFACT_NAME: coverage-report
+
+on:
+    push:
+        branches: [master, development]
+    pull_request:
+        branches: [master, development]
+
+jobs:
+    create-coverage-report:
+        runs-on: ubuntu-latest
+        container:
+            image: "ghcr.io/dnkpp/gcc:14"
+
+        steps:
+            - uses: actions/checkout@v4
+  
+            - name: Install gcovr
+              run: |
+                python -m pip install gcovr
+
+
+            - name: Configure
+              env:
+                LDFLAGS: "-fprofile-arcs"
+              run: |
+                cmake -S . \
+                    -B build \
+                    -D CMAKE_CXX_FLAGS="-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions" \
+                    -D CMAKE_BUILD_TYPE="Debug"
+
+            - name: Build
+              run: |
+                cmake --build build -j4
+
+            - name: Run tests
+              env:
+                CTEST_OUTPUT_ON_FAILURE: 1
+              run: ctest --test-dir build/test -C Debug -j4
+
+            - name: Run gcovr
+              run: |
+                # circumvnet "fatal: detected dubious ownership in repository" error
+                git config --global --add safe.directory /__w/mimicpp/mimicpp
+                gcovr --root build/test --filter "include/mimic++" --keep -j4 -v \
+                    --exclude-lines-by-pattern "\s*assert\(" \
+                    --exclude-unreachable-branches \
+                    --exclude-noncode-lines \
+                    --exclude-throw-branches \
+                    --decisions \
+                    --calls \
+                    --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
+                    --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
+                    --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
+
+            - name: Upload gcov coverage report artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: gcov-files
+                path: "build/test/*.gcov"
+
+            - name: Upload generated report artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: ${{env.COVERAGE_ARTIFACT_NAME}}
+                path: |
+                  ${{env.COBERTURA_REPORT}}
+                  ${{env.COVERALLS_REPORT}}
+                  ${{env.HTML_REPORT_DIR}}
+
+    codacy-report:
+        needs: create-coverage-report
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+  
+            - uses: actions/download-artifact@v4
+              with:
+                name: ${{env.COVERAGE_ARTIFACT_NAME}}
+
+            - name: Upload coverage to Codacy
+              uses: codacy/codacy-coverage-reporter-action@v1
+              with:
+                project-token: ${{secrets.CODACY_PROJECT_TOKEN}}
+                coverage-reports: ${{env.COBERTURA_REPORT}}
+
+    codecov-report:
+        needs: create-coverage-report
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/download-artifact@v4
+              with:
+                name: ${{env.COVERAGE_ARTIFACT_NAME}}
+
+            - name: Upload coverage to Codecov
+              uses: codecov/codecov-action@v4
+              with:
+                name: $GITHUB_REPOSITORY
+                token: ${{secrets.CODECOV_TOKEN}}
+                files: ${{env.COBERTURA_REPORT}}
+                fail_ci_if_error: true
+                verbose: true
+
+    coveralls-report:
+        needs: create-coverage-report
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+  
+            - uses: actions/download-artifact@v4
+              with:
+                name: ${{env.COVERAGE_ARTIFACT_NAME}}
+
+            - name: Upload coverage to Coveralls
+              uses: coverallsapp/github-action@v2
+              with:
+                github-token: ${{secrets.GITHUB_TOKEN}}
+                file: ${{env.COVERALLS_REPORT}}
+                format: coveralls
+                fail-on-error: true

@@ -4,9 +4,20 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(get_cpm)
 
 project(
-	mimic++
+	mimicpp
 	LANGUAGES CXX
 )
+
+CPMAddPackage(
+	NAME sanitizers-cmake
+	GITHUB_REPOSITORY "arsenm/sanitizers-cmake"
+	GIT_TAG "3f0542e4e034aab417c51b2b22c94f83355dee15"
+	SYSTEM YES
+	EXCLUDE_FROM_ALL YES
+	DOWNLOAD_ONLY YES
+)
+list(APPEND CMAKE_MODULE_PATH "${sanitizers-cmake_SOURCE_DIR}/cmake")
+find_package(Sanitizers)
 
 add_library(mimicpp INTERFACE)
 add_library(mimicpp::mimicpp ALIAS mimicpp)
@@ -29,8 +40,12 @@ else()
 	set(IS_TOP_LEVEL_PROJECT OFF)
 endif()
 
-OPTION(mimicpp_BUILD_TESTS "Determines whether tests shall be built." ${IS_TOP_LEVEL_PROJECT})
-if (mimicpp_BUILD_TESTS)
+if (MIMICPP_FORCED_CXX_STANDARD)
+	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
+endif()
+
+OPTION(MIMICPP_BUILD_TESTS "Determines whether tests shall be built." ${IS_TOP_LEVEL_PROJECT})
+if (MIMICPP_BUILD_TESTS)
 	include(CTest)
 	add_subdirectory("test")
 endif()
