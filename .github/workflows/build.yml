@@ -146,7 +146,7 @@ jobs:
             - name: Setup msvc flags
               if: ${{ matrix.config.compiler_name  == 'msvc' }}
               run: |
-                echo "CMAKE_EXTRA=$(echo CMAKE_EXTRA -G'${{ matrix.config.cmake_generator }} -T'${{ matrix.config.compiler_version }} -Ax64')" >> $GITHUB_ENV
+                echo "CMAKE_EXTRA=$(echo CMAKE_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
 
             - name: Enable Address and Undefined Sanitizer
               if: ${{ matrix.config.sanitize == true }}
