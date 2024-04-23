@@ -130,7 +130,7 @@ jobs:
                 $CLANG
                 curl -sS -L -o clang.tar.xz https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/clang+llvm-17.0.6-arm64-apple-darwin22.0.tar.xz
                 tar -xf clang.tar.xz -C ..
-                echo "$PWD/../clang+llvm-17.0.6-arm64-apple-darwin22.0/bin/clang" >> $CLANG_PATH
+                CLANG_PATH=$PWD/../clang+llvm-17.0.6-arm64-apple-darwin22.0/bin
                 echo "CC=$(echo $CLANG_PATH/clang)" >> $GITHUB_ENV
                 echo "CXX=$(echo $CLANG_PATH/clang++)" >> $GITHUB_ENV
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
