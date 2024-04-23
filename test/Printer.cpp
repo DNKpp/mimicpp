@@ -112,7 +112,7 @@ struct std::formatter<StdFormatAndCustomPrintable, Char>
 
 // the config clang, libc++ and c++23 currently prints { as [ and } as ]; I have no idea what's going on...
 #if defined(_LIBCPP_VERSION) \
-	&& __clang_major__ == 17 \
+	&& __clang_major__ >= 17 \
 	&& __cplusplus >= 202101L
 
 TEST_CASE(
