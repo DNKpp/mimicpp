@@ -154,6 +154,7 @@ jobs:
                 echo "CMAKE_EXTRA=$(echo CMAKE_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
 
             - name: Configure
+              shell: bash
               run: |
                 cmake \
                     -S . \
