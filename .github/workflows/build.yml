@@ -151,7 +151,7 @@ jobs:
               shell: bash
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
-                echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA ---config ${{ matrix.build_mode }})" >> $GITHUB_ENV
+                echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
             - name: Enable Address and Undefined Sanitizer
               if: ${{ matrix.config.sanitize == true }}
