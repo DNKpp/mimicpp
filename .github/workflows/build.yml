@@ -86,8 +86,8 @@ jobs:
                         prefix: "Windows 2022",
                         os: windows-2022,
                         compiler_name: "msvc",
-                        compiler_version: "v143",
-                        cmake_generator: "Visual Studio 17 2022",
+                        compiler_version: v143",
+                        cmake_generator: Visual Studio 17 2022,
                         libcxx: false,
                         sanitize: true
                     }
@@ -96,8 +96,8 @@ jobs:
                         prefix: "Windows 2022",
                         os: windows-2022,
                         compiler_name: "msvc",
-                        compiler_version: "v142",
-                        cmake_generator: "Visual Studio 17 2022",
+                        compiler_version: v142,
+                        cmake_generator: Visual Studio 17 2022,
                         libcxx: false,
                         sanitize: true
                     }
@@ -105,8 +105,8 @@ jobs:
                         prefix: "Windows 2019",
                         os: windows-2019,
                         compiler_name: "msvc",
-                        compiler_version: "v142",
-                        cmake_generator: "Visual Studio 16 2019",
+                        compiler_version: 142,
+                        cmake_generator: Visual Studio 16 2019,
                         libcxx: false,
                         sanitize: true
                     }
@@ -115,8 +115,8 @@ jobs:
                         prefix: "Windows 2022",
                         os: windows-2022,
                         compiler_name: "msvc",
-                        compiler_version: "ClangCl",
-                        cmake_generator: "Visual Studio 17 2022",
+                        compiler_version: ClangCl,
+                        cmake_generator: Visual Studio 17 2022,
                         libcxx: false,
                         sanitize: true
                     }
@@ -124,8 +124,8 @@ jobs:
                         prefix: "Windows 2019",
                         os: windows-2019,
                         compiler_name: "msvc",
-                        compiler_version: "ClangCl",
-                        cmake_generator: "Visual Studio 16 2019",
+                        compiler_version: ClangCl,
+                        cmake_generator: Visual Studio 16 2019,
                         libcxx: false,
                         sanitize: true
                     }
@@ -152,7 +152,7 @@ jobs:
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G'${{ matrix.config.cmake_generator }}' -T'${{ matrix.config.compiler_version }}' -Ax64)" >> $GITHUB_ENV
                 echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
-                echo $VCToolsInstallDir/Hostx64/x64
+                echo $PATH
                 echo "PATH=$(echo $PATH '$(VCToolsInstallDir)/Hostx64/x64')" >> $GITHUB_ENV
 
             - name: Enable Address and Undefined Sanitizer
