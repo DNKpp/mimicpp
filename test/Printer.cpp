@@ -110,16 +110,25 @@ struct std::formatter<StdFormatAndCustomPrintable, Char>
 	}
 };
 
-TEST_CASE(
-	"print selects the best option to print a given value.",
-	"[print]"
+// the config clang, libc++ and c++23 currently prints { as [ and } as ]; I have no idea what's going on...
 #if defined(_LIBCPP_VERSION) \
 	&& __clang_major__ == 17 \
 	&& __cplusplus >= 202101L
-	// the config clang, libc++ and c++23 currently prints { as [ and } as ]; I have no idea what's going on...
-	"[!mayfail]"
-#endif
+
+TEST_CASE(
+	"print selects the best option to print a given value.",
+	"[print]""[!mayfail]"
 )
+
+#else
+
+TEST_CASE(
+	"print selects the best option to print a given value.",
+	"[print]"
+)
+
+#endif
+
 {
 	std::basic_stringstream<CharT> stream{};
 
