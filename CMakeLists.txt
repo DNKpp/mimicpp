@@ -8,6 +8,17 @@ project(
 	LANGUAGES CXX
 )
 
+CPMAddPackage(
+	NAME sanitizers-cmake
+	GITHUB_REPOSITORY "arsenm/sanitizers-cmake"
+	GIT_TAG "3f0542e4e034aab417c51b2b22c94f83355dee15"
+	SYSTEM YES
+	EXCLUDE_FROM_ALL YES
+	DOWNLOAD_ONLY YES
+)
+list(APPEND CMAKE_MODULE_PATH "${sanitizers-cmake_SOURCE_DIR}/cmake")
+find_package(Sanitizers)
+
 add_library(mimicpp INTERFACE)
 add_library(mimicpp::mimicpp ALIAS mimicpp)
 target_include_directories(

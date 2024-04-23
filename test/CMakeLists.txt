@@ -15,6 +15,21 @@ add_executable(
 	"TypeTraits.cpp"
 )
 
+if (SANITIZE_ADDRESS)
+
+	# workaround linker errors on msvc
+	# see: https://learn.microsoft.com/en-us/answers/questions/864574/enabling-address-sanitizer-results-in-error-lnk203
+	target_compile_definitions(
+		mimicpp-tests
+		PRIVATE
+		$<$<CXX_COMPILER_ID:MSVC>:_DISABLE_VECTOR_ANNOTATION>
+		$<$<CXX_COMPILER_ID:MSVC>:_DISABLE_STRING_ANNOTATION>
+	)
+
+endif()
+
+add_sanitizers(mimicpp-tests)
+
 target_link_libraries(
 	mimicpp-tests
 	PRIVATE
