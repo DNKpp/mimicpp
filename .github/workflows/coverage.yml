@@ -21,17 +21,15 @@ jobs:
         steps:
             - uses: actions/checkout@v4
   
-            - name: Install prerequisites
+            - name: Install gcovr
               run: |
-                apt-get update
-                apt-get install pip -y
                 pip install gcovr
 
             - name: Configure
               env:
                 LDFLAGS: "-fprofile-arcs"
               run: |
-                cmake -S \
+                cmake -S . \
                     -B build \
                     -D CMAKE_CXX_FLAGS="-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions" \
                     -D CMAKE_BUILD_TYPE="Debug"
