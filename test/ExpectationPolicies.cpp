@@ -1030,6 +1030,56 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"then::apply_all_params creates expectation_policies::AllParamsSideEffect.",
+	"[expectation][expectation::factories]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("When signature has zero params.")
+	{
+		const call::Info<void> info{
+			.params = {}
+		};
+
+		InvocableMock<void> action{};
+		expectation_policies::AllParamsSideEffect policy = then::apply_all_params(std::ref(action));
+		REQUIRE_CALL(action, Invoke());
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("When signature has one param.")
+	{
+		int param0{1337};
+		const call::Info<void, int&> info{
+			.params = {param0}
+		};
+
+		InvocableMock<void, int&> action{};
+		expectation_policies::AllParamsSideEffect policy = then::apply_all_params(std::ref(action));
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&_1 == &param0);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("When signature has multiple params.")
+	{
+		int param0{1337};
+		double param1{4.2};
+		const call::Info<void, int&, double&> info{
+			.params = {param0, param1}
+		};
+
+		InvocableMock<void, int&, double&> action{};
+		expectation_policies::AllParamsSideEffect policy = then::apply_all_params(std::ref(action));
+		REQUIRE_CALL(action, Invoke(_, _))
+			.LR_WITH(&_1 == &param0)
+			.LR_WITH(&_2 == &param1);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+}
+
+TEST_CASE(
 	"then::apply creates expectation_policies::ParamsSideEffect.",
 	"[expectation][expectation::factories]"
 )
