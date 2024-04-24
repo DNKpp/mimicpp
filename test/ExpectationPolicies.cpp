@@ -1009,6 +1009,47 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"then::apply_param creates expectation_policies::ParamsSideEffect.",
+	"[expectation][expectation::factories]"
+)
+{
+	using trompeloeil::_;
+
+	int param0{1337};
+	double param1{4.2};
+	std::string param2{"Hello, World!"};
+	const call::Info<void, int&, double&, std::string&> info{
+		.params = {param0, param1, param2}
+	};
+
+	SECTION("Index 0.")
+	{
+		InvocableMock<void, int&> action{};
+		expectation_policies::ParamsSideEffect policy = then::apply_param<0>(std::ref(action));
+		REQUIRE_CALL(action, Invoke(_))
+				.LR_WITH(&_1 == &param0);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Index 1.")
+	{
+		InvocableMock<void, const double&> action{};
+		expectation_policies::ParamsSideEffect policy = then::apply_param<1>(std::ref(action));
+		REQUIRE_CALL(action, Invoke(_))
+				.LR_WITH(&_1 == &param1);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Index 2.")
+	{
+		InvocableMock<void, std::string> action{};
+		expectation_policies::ParamsSideEffect policy = then::apply_param<2>(std::ref(action));
+		REQUIRE_CALL(action, Invoke("Hello, World!"));
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+}
+
+TEST_CASE(
 	"mimicpp::expect::times and similar factories with nttp limits create expectation_policies::Times.",
 	"[expectation][expectation::factories]"
 )

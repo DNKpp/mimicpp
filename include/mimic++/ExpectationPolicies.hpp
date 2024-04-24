@@ -470,4 +470,16 @@ namespace mimicpp::expect
 	}
 }
 
+namespace mimicpp::then
+{
+	template <std::size_t index, typename Action>
+	[[nodiscard]]
+	constexpr expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>, index> apply_param(
+		Action&& action
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+	{
+		return expectation_policies::make_param_side_effect<index>(std::forward<Action>(action));
+	}
+}
+
 #endif
