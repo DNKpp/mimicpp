@@ -647,111 +647,6 @@ TEST_CASE(
 {
 	using trompeloeil::_;
 
-	SECTION("Forwards value params as lvalue.")
-	{
-		int param0{42};
-		const call::Info<void, int> info{
-			.params = {param0},
-			.fromUuid = Uuid{1337},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-		};
-
-		InvocableMock<void, int&> action{};
-		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int)>);
-		REQUIRE(policy.is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
-
-		REQUIRE_CALL(action, Invoke(_))
-			.LR_WITH(&param0 == &_1);
-		REQUIRE_NOTHROW(policy.consume(info));
-	}
-
-	SECTION("Forwards lvalue params as lvalue.")
-	{
-		int param0{42};
-		const call::Info<void, int&> info{
-			.params = {param0},
-			.fromUuid = Uuid{1337},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-		};
-
-		InvocableMock<void, int&> action{};
-		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&)>);
-		REQUIRE(policy.is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
-
-		REQUIRE_CALL(action, Invoke(_))
-			.LR_WITH(&param0 == &_1);
-		REQUIRE_NOTHROW(policy.consume(info));
-	}
-
-	SECTION("Forwards const lvalue params as lvalue.")
-	{
-		int param0{42};
-		const call::Info<void, const int&> info{
-			.params = {param0},
-			.fromUuid = Uuid{1337},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-		};
-
-		InvocableMock<void, const int&> action{};
-		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(const int&)>);
-		REQUIRE(policy.is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
-
-		REQUIRE_CALL(action, Invoke(_))
-			.LR_WITH(&param0 == &_1);
-		REQUIRE_NOTHROW(policy.consume(info));
-	}
-
-	SECTION("Forwards rvalue params as lvalue.")
-	{
-		int param0{42};
-		const call::Info<void, int&&> info{
-			.params = {param0},
-			.fromUuid = Uuid{1337},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-		};
-
-		InvocableMock<void, int&> action{};
-		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&&)>);
-		REQUIRE(policy.is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
-
-		REQUIRE_CALL(action, Invoke(_))
-			.LR_WITH(&param0 == &_1);
-		REQUIRE_NOTHROW(policy.consume(info));
-	}
-
-	SECTION("Forwards const rvalue params as lvalue.")
-	{
-		int param0{42};
-		const call::Info<void, const int&&> info{
-			.params = {param0},
-			.fromUuid = Uuid{1337},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-		};
-
-		InvocableMock<void, const int&> action{};
-		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(const int&&)>);
-		REQUIRE(policy.is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
-
-		REQUIRE_CALL(action, Invoke(_))
-			.LR_WITH(&param0 == &_1);
-		REQUIRE_NOTHROW(policy.consume(info));
-	}
-
 	SECTION("Supports multiple params.")
 	{
 		int param0{1337};
@@ -768,8 +663,8 @@ TEST_CASE(
 			InvocableMock<void, int&, const double&> action{};
 			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0, 1>(std::ref(action));
 			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(policy.is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+			REQUIRE(std::as_const(policy).is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 
 			REQUIRE_CALL(action, Invoke(_, _))
 				.LR_WITH(&param0 == &_1)
@@ -782,8 +677,8 @@ TEST_CASE(
 			InvocableMock<void, const double&, int&> action{};
 			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1, 0>(std::ref(action));
 			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(policy.is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+			REQUIRE(std::as_const(policy).is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 
 			REQUIRE_CALL(action, Invoke(_, _))
 				.LR_WITH(&param0 == &_2)
@@ -796,8 +691,8 @@ TEST_CASE(
 			InvocableMock<void, int&> action{};
 			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
 			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(policy.is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+			REQUIRE(std::as_const(policy).is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 
 			REQUIRE_CALL(action, Invoke(_))
 				.LR_WITH(&param0 == &_1);
@@ -809,8 +704,8 @@ TEST_CASE(
 			InvocableMock<void, const double&> action{};
 			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1>(std::ref(action));
 			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(policy.is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+			REQUIRE(std::as_const(policy).is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 
 			REQUIRE_CALL(action, Invoke(_))
 				.LR_WITH(&param1 == &_1);
@@ -823,8 +718,8 @@ TEST_CASE(
 			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1, 0, 0, 1, 1, 0>(
 				std::ref(action));
 			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(policy.is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+			REQUIRE(std::as_const(policy).is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 
 			REQUIRE_CALL(action, Invoke(_, _, _, _, _, _))
 				.LR_WITH(&_1 == &param1)
@@ -836,6 +731,47 @@ TEST_CASE(
 			REQUIRE_NOTHROW(policy.consume(info));
 		}
 	}
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"expectation_policies::ParamsSideEffect takes the param category into account.",
+	"[expectation][expectation::policy]",
+	((bool expectSameAddress, typename ActionParam, typename SigParam), expectSameAddress, ActionParam, SigParam),
+	(false, int, int),
+	(false, int, int&),
+	(false, int, const int&),
+	(false, int, int&&),
+	(false, int, const int&&),
+
+	(true, int&, int),
+	(true, int&, int&),
+	(true, int&, int&&),
+
+	(true, const int&, int),
+	(true, const int&, int&),
+	(true, const int&, const int&),
+	(true, const int&, int&&),
+	(true, const int&, const int&&)
+)
+{
+	using trompeloeil::_;
+
+	int param0{1337};
+	const call::Info<void, SigParam> info{
+		.params = {param0},
+		.fromUuid = Uuid{1337},
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	};
+
+	InvocableMock<void, ActionParam> action{};
+	expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
+	STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(SigParam)>);
+	REQUIRE(std::as_const(policy).is_satisfied());
+	REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+	REQUIRE_CALL(action, Invoke(param0))
+		.LR_WITH(expectSameAddress == (&_1 == &param0));
+	REQUIRE_NOTHROW(policy.consume(info));
 }
 
 TEST_CASE(
