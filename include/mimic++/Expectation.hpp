@@ -131,7 +131,7 @@ namespace mimicpp
 			std::vector<call::MatchResult_NoT> noMatches{};
 			std::vector<call::MatchResult_ExhaustedT> exhaustedMatches{};
 
-			for (auto& exp : m_Expectations)
+			for (auto& exp : m_Expectations | std::views::reverse)
 			{
 				auto matchResult = exp->matches(call);
 				if (auto* match = std::get_if<call::MatchResult_OkT>(&matchResult))

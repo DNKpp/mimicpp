@@ -75,7 +75,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"mimicpp::ExpectationCollection queries expectation, whether they match the call.",
+	"mimicpp::ExpectationCollection queries expectation, whether they match the call, in reverse order of construction.",
 	"[expectation]"
 )
 {
@@ -103,23 +103,23 @@ TEST_CASE(
 	SECTION("If a full match is found.")
 	{
 		trompeloeil::sequence sequence{};
-		REQUIRE_CALL(*expectations[0], matches(_))
-			.LR_WITH(&_1 == &call)
-			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_NoT{});
-		REQUIRE_CALL(*expectations[1], matches(_))
+		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
 			.RETURN(MatchResult_NoT{});
 		REQUIRE_CALL(*expectations[2], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
+			.RETURN(MatchResult_NoT{});
+		REQUIRE_CALL(*expectations[1], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
 			.RETURN(MatchResult_OkT{});
 		// expectations[3] is never queried
-		REQUIRE_CALL(*expectations[2], consume(_))
+		REQUIRE_CALL(*expectations[1], consume(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence);
-		REQUIRE_CALL(*expectations[2], finalize_call(_))
+		REQUIRE_CALL(*expectations[1], finalize_call(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence);
 
@@ -152,19 +152,19 @@ TEST_CASE(
 				}));
 
 		trompeloeil::sequence sequence{};
-		REQUIRE_CALL(*expectations[0], matches(_))
+		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
 			.RETURN(result0);
-		REQUIRE_CALL(*expectations[1], matches(_))
-			.LR_WITH(&_1 == &call)
-			.IN_SEQUENCE(sequence)
-			.RETURN(result1);
 		REQUIRE_CALL(*expectations[2], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
+			.RETURN(result1);
+		REQUIRE_CALL(*expectations[1], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
 			.RETURN(result2);
-		REQUIRE_CALL(*expectations[3], matches(_))
+		REQUIRE_CALL(*expectations[0], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
 			.RETURN(result3);
@@ -186,11 +186,7 @@ TEST_CASE(
 	SECTION("If all do not match.")
 	{
 		trompeloeil::sequence sequence{};
-		REQUIRE_CALL(*expectations[0], matches(_))
-			.LR_WITH(&_1 == &call)
-			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_NoT{});
-		REQUIRE_CALL(*expectations[1], matches(_))
+		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
 			.RETURN(MatchResult_NoT{});
@@ -198,7 +194,11 @@ TEST_CASE(
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
 			.RETURN(MatchResult_NoT{});
-		REQUIRE_CALL(*expectations[3], matches(_))
+		REQUIRE_CALL(*expectations[1], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(MatchResult_NoT{});
+		REQUIRE_CALL(*expectations[0], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
 			.RETURN(MatchResult_NoT{});
