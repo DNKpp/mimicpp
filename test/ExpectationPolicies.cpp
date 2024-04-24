@@ -1009,6 +1009,157 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"Invalid configurations of expectation_policies::AllParamsSideEffect do not satisfy expectation_policy_for concept.",
+	"[expectation][expectation::policy]"
+)
+{
+	using ActionT = InvocableMock<void, int>;
+	SECTION("Action has more params than expected.")
+	{
+		STATIC_REQUIRE(
+			!expectation_policy_for<
+			expectation_policies::AllParamsSideEffect<ActionT>,
+			void()>);
+	}
+
+	SECTION("Action has less params than expected.")
+	{
+		STATIC_REQUIRE(
+			!expectation_policy_for<
+			expectation_policies::AllParamsSideEffect<ActionT>,
+			void(double, int)>);
+	}
+}
+
+TEST_CASE(
+	"expectation_policies::AllParamsSideEffect invokes the specified function on consume.",
+	"[expectation][expectation::policy]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("Signatures without params.")
+	{
+		const call::Info<void> info{
+			.params = {},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void> action{};
+		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+		REQUIRE(std::as_const(policy).is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+		REQUIRE_CALL(action, Invoke());
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Unary signatures.")
+	{
+		int param0{1337};
+		const call::Info<void, int&> info{
+			.params = {param0},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void, int&> action{};
+		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+		REQUIRE(std::as_const(policy).is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&_1 == &param0);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Binary signatures.")
+	{
+		int param0{1337};
+		double param1{4.2};
+		const call::Info<void, int&, double&> info{
+			.params = {param0, param1},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void, int&, double&> action{};
+		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+		REQUIRE(std::as_const(policy).is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+		REQUIRE_CALL(action, Invoke(_, _))
+			.LR_WITH(&_1 == &param0)
+			.LR_WITH(&_2 == &param1);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Arbitrary signatures.")
+	{
+		int param0{1337};
+		double param1{4.2};
+		std::string param2{"Hello, World!"};
+		const call::Info<void, int&, double&, std::string&> info{
+			.params = {param0, param1, param2},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void, int&, double&, std::string&> action{};
+		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+		REQUIRE(std::as_const(policy).is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+		REQUIRE_CALL(action, Invoke(_, _, _))
+			.LR_WITH(&_1 == &param0)
+			.LR_WITH(&_2 == &param1)
+			.LR_WITH(&_3 == &param2);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"expectation_policies::AllParamsSideEffect takes the param category into account.",
+	"[expectation][expectation::policy]",
+	((bool expectSameAddress, typename ActionParam, typename SigParam), expectSameAddress, ActionParam, SigParam),
+	(false, int, int),
+	(false, int, int&),
+	(false, int, const int&),
+	(false, int, int&&),
+	(false, int, const int&&),
+
+	(true, int&, int),
+	(true, int&, int&),
+	(true, int&, int&&),
+
+	(true, const int&, int),
+	(true, const int&, int&),
+	(true, const int&, const int&),
+	(true, const int&, int&&),
+	(true, const int&, const int&&)
+)
+{
+	using trompeloeil::_;
+
+	int param0{1337};
+	const call::Info<void, SigParam> info{
+		.params = {param0},
+		.fromUuid = Uuid{1337},
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	};
+
+	InvocableMock<void, ActionParam> action{};
+	expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+	REQUIRE(std::as_const(policy).is_satisfied());
+	REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+	REQUIRE_CALL(action, Invoke(param0))
+		.LR_WITH(expectSameAddress == (&_1 == &param0));
+	REQUIRE_NOTHROW(policy.consume(info));
+}
+
+TEST_CASE(
 	"then::apply_param creates expectation_policies::ParamsSideEffect.",
 	"[expectation][expectation::factories]"
 )

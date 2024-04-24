@@ -386,6 +386,52 @@ namespace mimicpp::expectation_policies
 			std::forward<Action>(action)
 		};
 	}
+
+	template <typename Action>
+	class AllParamsSideEffect
+	{
+	public:
+		~AllParamsSideEffect() = default;
+
+		[[nodiscard]]
+		explicit constexpr AllParamsSideEffect(
+			Action&& action
+		) noexcept(std::is_nothrow_move_constructible_v<Action>)
+			: m_Action{std::move(action)}
+		{
+		}
+
+		AllParamsSideEffect(const AllParamsSideEffect&) = delete;
+		AllParamsSideEffect& operator =(const AllParamsSideEffect&) = delete;
+
+		[[nodiscard]]
+		AllParamsSideEffect(AllParamsSideEffect&&) = default;
+		AllParamsSideEffect& operator =(AllParamsSideEffect&&) = default;
+
+		static constexpr bool is_satisfied() noexcept
+		{
+			return true;
+		}
+
+		template <typename Return, typename... Params>
+		[[nodiscard]]
+		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>&) noexcept
+		{
+			return {true};
+		}
+
+		template <typename Return, typename... Params>
+			requires std::invocable<Action&, Params&...>
+		constexpr void consume(const call::Info<Return, Params...>& info)
+		{
+			return std::apply(
+				[this](auto&... params) { return std::invoke(m_Action, params.get()...); },
+				info.params);
+		}
+
+	private:
+		Action m_Action;
+	};
 }
 
 namespace mimicpp::expect
