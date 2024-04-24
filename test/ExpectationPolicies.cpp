@@ -1108,6 +1108,24 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"then::apply creates expectation_policies::ParamsSideEffect.",
+	"[expectation][expectation::factories]"
+)
+{
+	int param0{1337};
+	double param1{4.2};
+	std::string param2{"Hello, World!"};
+	const call::Info<void, int&, double&, std::string&> info{
+		.params = {param0, param1, param2}
+	};
+
+	InvocableMock<void> action{};
+	expectation_policies::ParamsSideEffect policy = then::apply(std::ref(action));
+	REQUIRE_CALL(action, Invoke());
+	REQUIRE_NOTHROW(policy.consume(info));
+}
+
+TEST_CASE(
 	"mimicpp::expect::times and similar factories with nttp limits create expectation_policies::Times.",
 	"[expectation][expectation::factories]"
 )

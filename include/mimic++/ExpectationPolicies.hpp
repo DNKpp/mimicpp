@@ -489,6 +489,17 @@ namespace mimicpp::then
 	{
 		return expectation_policies::make_param_side_effect<indices...>(std::forward<Action>(action));
 	}
+
+	template <std::invocable Action>
+	[[nodiscard]]
+	constexpr expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>> apply(
+		Action&& action
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+	{
+		return expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>>{
+			std::forward<Action>(action)
+		};
+	}
 }
 
 #endif
