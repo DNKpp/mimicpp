@@ -522,6 +522,30 @@ namespace mimicpp::expect
 
 namespace mimicpp::then
 {
+	/**
+	 * \defgroup EXPECTATION_SIDE_EFFECTS side effects
+	 * \ingroup EXPECTATION
+	 * \brief Side effects are an easy way to apply actions on matched expectations.
+	 * \details After an expectation match has been found, side effects will be applied during the ``consume`` step.
+	 * They may alter the call params and capture any variable from the outside scope. Beware that those captured variables
+	 * must outlive the expectation they are attached on.
+	 *
+	 * Side effects will be executed in their construction order, but they should actually never throw. If it is intended to
+	 * actually throw an exception as a result, use ``expect::throws`` instead.
+	 *
+	 * As side effects actually are ``expectation policies``, they are in fact treated as such and may carry out special
+	 * behavior during ``is_satisfied`` and ``matches`` calls. That being said, the provided side effects are actually no-ops
+	 * on these functions, but custom side effects may behave differently.
+	 *\{
+	 */
+
+	/**
+	 * \brief Applies the ``param[index]`` on the given action.
+	 * \tparam index The param index.
+	 * \tparam Action The action type.
+	 * \param action The action to be applied.
+	 * \return Newly created side effect action.
+	 */
 	template <std::size_t index, typename Action>
 	[[nodiscard]]
 	constexpr expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>, index> apply_param(
@@ -531,6 +555,15 @@ namespace mimicpp::then
 		return expectation_policies::make_param_side_effect<index>(std::forward<Action>(action));
 	}
 
+	/**
+	 * \brief Applies ``param[indices]...`` in the specified order on the given action.
+	 * \details This functions creates a side effect policy and applies the desired params in the specified order.
+	 * The indices can be in any order and may also contain duplicates.
+	 * \tparam indices The param indices.
+	 * \tparam Action The action type.
+	 * \param action The action to be applied.
+	 * \return Newly created side effect action.
+	 */
 	template <std::size_t... indices, typename Action>
 	[[nodiscard]]
 	constexpr expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>, indices...> apply_params(
@@ -540,6 +573,12 @@ namespace mimicpp::then
 		return expectation_policies::make_param_side_effect<indices...>(std::forward<Action>(action));
 	}
 
+	/**
+	 * \brief Applies all available params on the given action.
+	 * \tparam Action The action type.
+	 * \param action The action to be applied.
+	 * \return Newly created side effect action.
+	 */
 	template <typename Action>
 	[[nodiscard]]
 	constexpr expectation_policies::AllParamsSideEffect<std::remove_cvref_t<Action>> apply_all_params(
@@ -549,6 +588,12 @@ namespace mimicpp::then
 		return expectation_policies::AllParamsSideEffect{std::forward<Action>(action)};
 	}
 
+	/**
+	 * \brief Invokes the given function.
+	 * \tparam Action  The action type.
+	 * \param action The action to be invoked.
+	 * \return Newly created side effect action.
+	 */
 	template <std::invocable Action>
 	[[nodiscard]]
 	constexpr expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>> apply(
@@ -559,6 +604,10 @@ namespace mimicpp::then
 			std::forward<Action>(action)
 		};
 	}
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
