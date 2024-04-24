@@ -219,7 +219,7 @@ namespace mimicpp::expectation_policies
 			[[maybe_unused]] const call::Info<Return, Params...>& call
 		)
 		{
-			throw m_Exception;
+			throw m_Exception;  // NOLINT(hicpp-exception-baseclass)
 		}
 
 	private:
@@ -367,9 +367,9 @@ namespace mimicpp::expectation_policies
 					&& std::invocable<Action&, std::tuple_element_t<indices, std::tuple<Params...>>&...>
 		constexpr void consume(const call::Info<Return, Params...>& info)
 		{
-			std::apply(
+			std::invoke(
 				m_Action,
-				std::tie(std::get<indices>(info.params).get()...));
+				std::get<indices>(info.params).get()...);
 		}
 
 	private:
