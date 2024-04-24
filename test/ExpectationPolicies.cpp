@@ -879,6 +879,7 @@ TEST_CASE(
 
 		InvocableMock<void> action{};
 		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void()>);
 		REQUIRE(std::as_const(policy).is_satisfied());
 		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 		REQUIRE_CALL(action, Invoke());
@@ -897,6 +898,7 @@ TEST_CASE(
 
 		InvocableMock<void, int&> action{};
 		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&)>);
 		REQUIRE(std::as_const(policy).is_satisfied());
 		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 		REQUIRE_CALL(action, Invoke(_))
@@ -917,6 +919,7 @@ TEST_CASE(
 
 		InvocableMock<void, int&, double&> action{};
 		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&)>);
 		REQUIRE(std::as_const(policy).is_satisfied());
 		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 		REQUIRE_CALL(action, Invoke(_, _))
@@ -939,6 +942,7 @@ TEST_CASE(
 
 		InvocableMock<void, int&, double&, std::string&> action{};
 		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&, std::string&)>);
 		REQUIRE(std::as_const(policy).is_satisfied());
 		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 		REQUIRE_CALL(action, Invoke(_, _, _))
@@ -982,6 +986,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 	InvocableMock<void, ActionParam> action{};
 	expectation_policies::AllParamsSideEffect policy{std::ref(action)};
+	STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(SigParam)>);
 	REQUIRE(std::as_const(policy).is_satisfied());
 	REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
 	REQUIRE_CALL(action, Invoke(param0))
