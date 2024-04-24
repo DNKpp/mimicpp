@@ -365,7 +365,9 @@ namespace mimicpp::expectation_policies
 		template <typename Return, typename... Params>
 			requires (... && (indices < sizeof...(Params)))
 					&& std::invocable<Action&, std::tuple_element_t<indices, std::tuple<Params...>>&...>
-		constexpr void consume(const call::Info<Return, Params...>& info)
+		constexpr void consume(
+			const call::Info<Return, Params...>& info
+		) noexcept(std::is_nothrow_invocable_v<Action&, std::tuple_element_t<indices, std::tuple<Params...>>&...>)
 		{
 			std::invoke(
 				m_Action,
@@ -422,7 +424,9 @@ namespace mimicpp::expectation_policies
 
 		template <typename Return, typename... Params>
 			requires std::invocable<Action&, Params&...>
-		constexpr void consume(const call::Info<Return, Params...>& info)
+		constexpr void consume(
+			const call::Info<Return, Params...>& info
+		) noexcept(std::is_nothrow_invocable_v<Action&, Params&...>)
 		{
 			return std::apply(
 				[this](auto&... params) { return std::invoke(m_Action, params.get()...); },
