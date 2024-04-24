@@ -44,6 +44,11 @@ jobs:
                 CTEST_OUTPUT_ON_FAILURE: 1
               run: ctest --test-dir build/test -C Debug -j4
 
+            - name: Run examples
+              env:
+                CTEST_OUTPUT_ON_FAILURE: 1
+              run: ctest --test-dir build/examples -C Debug -j4
+
             - name: Run gcovr
               run: |
                 # circumvnet "fatal: detected dubious ownership in repository" error
