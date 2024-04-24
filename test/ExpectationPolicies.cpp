@@ -1050,6 +1050,64 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"then::apply_params creates expectation_policies::ParamsSideEffect.",
+	"[expectation][expectation::factories]"
+)
+{
+	using trompeloeil::_;
+
+	int param0{1337};
+	double param1{4.2};
+	std::string param2{"Hello, World!"};
+	const call::Info<void, int&, double&, std::string&> info{
+		.params = {param0, param1, param2}
+	};
+
+	SECTION("Indices 0, 1, 2.")
+	{
+		InvocableMock<void, int&, double&, std::string&> action{};
+		expectation_policies::ParamsSideEffect policy = then::apply_params<0, 1, 2>(std::ref(action));
+		REQUIRE_CALL(action, Invoke(_, _, _))
+				.LR_WITH(&_1 == &param0)
+				.LR_WITH(&_2 == &param1)
+				.LR_WITH(&_3 == &param2);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Indices 2, 1, 0")
+	{
+		InvocableMock<void, std::string&, double&, int&> action{};
+		expectation_policies::ParamsSideEffect policy = then::apply_params<2, 1, 0>(std::ref(action));
+		REQUIRE_CALL(action, Invoke(_, _, _))
+				.LR_WITH(&_1 == &param2)
+				.LR_WITH(&_2 == &param1)
+				.LR_WITH(&_3 == &param0);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Zero indices.")
+	{
+		InvocableMock<void> action{};
+		expectation_policies::ParamsSideEffect policy = then::apply_params<>(std::ref(action));
+		REQUIRE_CALL(action, Invoke());
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Arbitrarily mixed.")
+	{
+		InvocableMock<void, double&, int&, std::string&, std::string&, int&> action{};
+		expectation_policies::ParamsSideEffect policy = then::apply_params<1, 0, 2, 2, 0>(std::ref(action));
+		REQUIRE_CALL(action, Invoke(_, _, _, _, _))
+				.LR_WITH(&_1 == &param1)
+				.LR_WITH(&_2 == &param0)
+				.LR_WITH(&_3 == &param2)
+				.LR_WITH(&_4 == &param2)
+				.LR_WITH(&_5 == &param0);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+}
+
+TEST_CASE(
 	"mimicpp::expect::times and similar factories with nttp limits create expectation_policies::Times.",
 	"[expectation][expectation::factories]"
 )
