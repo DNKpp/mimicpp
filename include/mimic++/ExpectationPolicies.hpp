@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include <cassert>
-#include <functional>
-
 #include "mimic++/Expectation.hpp"
 #include "mimic++/Matcher.hpp"
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
+
+#include <cassert>
+#include <functional>
 
 namespace mimicpp::expectation_policies
 {
@@ -325,6 +325,65 @@ namespace mimicpp::expectation_policies
 	{
 		return ArgumentMatcher<Signature, index, decltype(matches::eq(std::declval<Value>()))>{
 			matches::eq(std::forward<Value>(value))
+		};
+	}
+
+	template <typename Action, std::size_t... indices>
+	class ParamsSideEffect
+	{
+	public:
+		~ParamsSideEffect() = default;
+
+		[[nodiscard]]
+		explicit constexpr ParamsSideEffect(
+			Action&& action
+		) noexcept(std::is_nothrow_move_constructible_v<Action>)
+			: m_Action{std::move(action)}
+		{
+		}
+
+		ParamsSideEffect(const ParamsSideEffect&) = delete;
+		ParamsSideEffect& operator =(const ParamsSideEffect&) = delete;
+
+		[[nodiscard]]
+		ParamsSideEffect(ParamsSideEffect&&) = default;
+		ParamsSideEffect& operator =(ParamsSideEffect&&) = default;
+
+		static constexpr bool is_satisfied() noexcept
+		{
+			return true;
+		}
+
+		template <typename Return, typename... Params>
+			requires (... && (indices < sizeof...(Params)))
+		[[nodiscard]]
+		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>&) noexcept
+		{
+			return {true};
+		}
+
+		template <typename Return, typename... Params>
+			requires (... && (indices < sizeof...(Params)))
+					&& std::invocable<Action&, std::tuple_element_t<indices, std::tuple<Params...>>&...>
+		constexpr void consume(const call::Info<Return, Params...>& info)
+		{
+			std::apply(
+				m_Action,
+				std::tie(std::get<indices>(info.params).get()...));
+		}
+
+	private:
+		Action m_Action;
+	};
+
+	template <std::size_t... indices, typename Action>
+	[[nodiscard]]
+	constexpr ParamsSideEffect<std::remove_cvref_t<Action>, indices...> make_param_side_effect(
+		Action&& action
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+	{
+		return ParamsSideEffect<std::remove_cvref_t<Action>, indices...>{
+			std::forward<Action>(action)
 		};
 	}
 }

@@ -608,6 +608,406 @@ TEST_CASE(
 	}
 }
 
+namespace
+{
+	template <typename Return, typename... Params>
+	class InvocableMockBase;
+
+	template <typename Return, typename... Params>
+		requires (0u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK0(Invoke, Return(Params...));
+		MAKE_CONST_MOCK0(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (1u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK1(Invoke, Return(Params...));
+		MAKE_CONST_MOCK1(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (2u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK2(Invoke, Return(Params...));
+		MAKE_CONST_MOCK2(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (3u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK3(Invoke, Return(Params...));
+		MAKE_CONST_MOCK3(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (4u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK4(Invoke, Return(Params...));
+		MAKE_CONST_MOCK4(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (5u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK5(Invoke, Return(Params...));
+		MAKE_CONST_MOCK5(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (6u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK6(Invoke, Return(Params...));
+		MAKE_CONST_MOCK6(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (7u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK7(Invoke, Return(Params...));
+		MAKE_CONST_MOCK7(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (8u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK8(Invoke, Return(Params...));
+		MAKE_CONST_MOCK8(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (9u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK9(Invoke, Return(Params...));
+		MAKE_CONST_MOCK9(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (10u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK10(Invoke, Return(Params...));
+		MAKE_CONST_MOCK10(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (11u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK11(Invoke, Return(Params...));
+		MAKE_CONST_MOCK11(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (12u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK12(Invoke, Return(Params...));
+		MAKE_CONST_MOCK12(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (13u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK13(Invoke, Return(Params...));
+		MAKE_CONST_MOCK13(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (14u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK14(Invoke, Return(Params...));
+		MAKE_CONST_MOCK14(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+		requires (15u == sizeof...(Params))
+	class InvocableMockBase<Return, Params...>
+	{
+	public:
+		MAKE_MOCK15(Invoke, Return(Params...));
+		MAKE_CONST_MOCK15(Invoke, Return(Params...));
+	};
+
+	template <typename Return, typename... Params>
+	class InvocableMock
+		: public InvocableMockBase<Return, Params...>
+	{
+	public:
+		using ReturnT = Return;
+		using ParamListT = std::tuple<Params...>;
+		using InvocableMockBase<Return, Params...>::Invoke;
+
+		constexpr ReturnT operator ()(Params... params)
+		{
+			return Invoke(std::forward<Params>(params)...);
+		}
+
+		constexpr ReturnT operator ()(Params... params) const
+		{
+			return Invoke(std::forward<Params>(params)...);
+		}
+	};
+}
+
+TEST_CASE(
+	"Invalid configurations of expectation_policies::ParamsSideEffect do not satisfy expectation_policy_for concept.",
+	"[expectation][expectation::policy]"
+)
+{
+	using ActionT = InvocableMock<void, int>;
+
+	SECTION("Signature without params.")
+	{
+		STATIC_REQUIRE(
+			!expectation_policy_for<
+			decltype(expectation_policies::make_param_side_effect<0>(std::declval<ActionT>())),
+			void()>);
+	}
+
+	SECTION("Index out of bounds.")
+	{
+		STATIC_REQUIRE(
+			!expectation_policy_for<
+			decltype(expectation_policies::make_param_side_effect<1>(std::declval<ActionT>())),
+			void(int)>);
+	}
+
+	SECTION("Action not applicable.")
+	{
+		STATIC_REQUIRE(
+			!expectation_policy_for<
+			decltype(expectation_policies::make_param_side_effect<0, 0>(std::declval<ActionT>())),
+			void(int)>);
+	}
+}
+
+TEST_CASE(
+	"expectation_policies::ParamsSideEffect invokes the specified function on consume.",
+	"[expectation][expectation::policy]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("Forwards value params as lvalue.")
+	{
+		int param0{42};
+		const call::Info<void, int> info{
+			.params = {param0},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void, int&> action{};
+		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int)>);
+		REQUIRE(policy.is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&param0 == &_1);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Forwards lvalue params as lvalue.")
+	{
+		int param0{42};
+		const call::Info<void, int&> info{
+			.params = {param0},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void, int&> action{};
+		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&)>);
+		REQUIRE(policy.is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&param0 == &_1);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Forwards const lvalue params as lvalue.")
+	{
+		int param0{42};
+		const call::Info<void, const int&> info{
+			.params = {param0},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void, const int&> action{};
+		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(const int&)>);
+		REQUIRE(policy.is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&param0 == &_1);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Forwards rvalue params as lvalue.")
+	{
+		int param0{42};
+		const call::Info<void, int&&> info{
+			.params = {param0},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void, int&> action{};
+		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&&)>);
+		REQUIRE(policy.is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&param0 == &_1);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Forwards const rvalue params as lvalue.")
+	{
+		int param0{42};
+		const call::Info<void, const int&&> info{
+			.params = {param0},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<void, const int&> action{};
+		expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
+		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(const int&&)>);
+		REQUIRE(policy.is_satisfied());
+		REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&param0 == &_1);
+		REQUIRE_NOTHROW(policy.consume(info));
+	}
+
+	SECTION("Supports multiple params.")
+	{
+		int param0{1337};
+		double param1{4.2};
+		const call::Info<void, int&, double&&> info{
+			.params = {param0, param1},
+			.fromUuid = Uuid{1337},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		SECTION("In order.")
+		{
+			InvocableMock<void, int&, const double&> action{};
+			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0, 1>(std::ref(action));
+			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
+			REQUIRE(policy.is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+			REQUIRE_CALL(action, Invoke(_, _))
+				.LR_WITH(&param0 == &_1)
+				.LR_WITH(&param1 == &_2);
+			REQUIRE_NOTHROW(policy.consume(info));
+		}
+
+		SECTION("In reverse order.")
+		{
+			InvocableMock<void, const double&, int&> action{};
+			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1, 0>(std::ref(action));
+			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
+			REQUIRE(policy.is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+			REQUIRE_CALL(action, Invoke(_, _))
+				.LR_WITH(&param0 == &_2)
+				.LR_WITH(&param1 == &_1);
+			REQUIRE_NOTHROW(policy.consume(info));
+		}
+
+		SECTION("Just the first.")
+		{
+			InvocableMock<void, int&> action{};
+			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
+			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
+			REQUIRE(policy.is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+			REQUIRE_CALL(action, Invoke(_))
+				.LR_WITH(&param0 == &_1);
+			REQUIRE_NOTHROW(policy.consume(info));
+		}
+
+		SECTION("Just the second.")
+		{
+			InvocableMock<void, const double&> action{};
+			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1>(std::ref(action));
+			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
+			REQUIRE(policy.is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+			REQUIRE_CALL(action, Invoke(_))
+				.LR_WITH(&param1 == &_1);
+			REQUIRE_NOTHROW(policy.consume(info));
+		}
+
+		SECTION("Arbitrarily mixed.")
+		{
+			InvocableMock<void, const double&, int&, int&, const double&, const double&, int&> action{};
+			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1, 0, 0, 1, 1, 0>(
+				std::ref(action));
+			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
+			REQUIRE(policy.is_satisfied());
+			REQUIRE(call::SubMatchResult{true} == policy.matches(info));
+
+			REQUIRE_CALL(action, Invoke(_, _, _, _, _, _))
+				.LR_WITH(&_1 == &param1)
+				.LR_WITH(&_2 == &param0)
+				.LR_WITH(&_3 == &param0)
+				.LR_WITH(&_4 == &param1)
+				.LR_WITH(&_5 == &param1)
+				.LR_WITH(&_6 == &param0);
+			REQUIRE_NOTHROW(policy.consume(info));
+		}
+	}
+}
+
 TEST_CASE(
 	"mimicpp::expect::times and similar factories with nttp limits create expectation_policies::Times.",
 	"[expectation][expectation::factories]"
