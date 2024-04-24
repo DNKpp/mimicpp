@@ -165,7 +165,7 @@ namespace mimicpp
 	};
 
 	template <typename T, typename Signature>
-	concept expectation_policy_for = std::movable<T>
+	concept expectation_policy_for = std::is_move_constructible_v<T>
 									&& std::is_destructible_v<T>
 									&& std::same_as<T, std::remove_cvref_t<T>>
 									&& requires(T& policy, const call::info_for_signature_t<Signature>& info)
@@ -176,7 +176,7 @@ namespace mimicpp
 									};
 
 	template <typename T, typename Signature>
-	concept finalize_policy_for = std::movable<T>
+	concept finalize_policy_for = std::is_move_constructible_v<T>
 								&& std::is_destructible_v<T>
 								&& std::same_as<T, std::remove_cvref_t<T>>
 								&& requires(T& policy, const call::info_for_signature_t<Signature>& info)
@@ -185,7 +185,7 @@ namespace mimicpp
 								};
 
 	template <typename T>
-	concept times_policy = std::movable<T>
+	concept times_policy = std::is_move_constructible_v<T>
 							&& std::is_destructible_v<T>
 							&& std::same_as<T, std::remove_cvref_t<T>>
 							&& requires(T& policy)
