@@ -195,27 +195,12 @@ namespace mimicpp::detail
 			std::index_sequence_for<Args...>{},
 			std::forward<Args>(args)...);
 	}
-
-	class BuildFinalizer
-	{
-	public:
-		template <typename Signature, typename... Policies>
-		[[nodiscard]]
-		friend constexpr ScopedExpectation<Signature> operator <<=(
-			const BuildFinalizer&&,
-			BasicExpectationBuilder<Signature, Policies...>&& builder
-		)
-		{
-			return std::move(builder).finalize();
-		}
-	};
 }
 
 #define MIMICPP_UNIQUE_NAME(prefix, counter) prefix##counter
 #define MIMICPP_SCOPED_EXPECTATION_IMPL(counter)													\
 	[[maybe_unused]]																				\
-	const ::mimicpp::ScopedExpectation MIMICPP_UNIQUE_NAME(_mimicpp_expectation_, counter) =		\
-		mimicpp::detail::BuildFinalizer{} <<=
+	const ::mimicpp::ScopedExpectation MIMICPP_UNIQUE_NAME(_mimicpp_expectation_, counter) = 
 
 #define MIMICPP_SCOPED_EXPECTATION MIMICPP_SCOPED_EXPECTATION_IMPL(__COUNTER__)
 #define SCOPED_EXP MIMICPP_SCOPED_EXPECTATION
