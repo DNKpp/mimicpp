@@ -159,6 +159,6 @@ TEST_CASE(
 	SCOPED_EXP mock.expect_call()
 				| MyFinalizer{};
 
-	REQUIRE(1379 == mock());
+	REQUIRE(1337 == mock());
 	//! [custom finalizer]
 }
