@@ -163,43 +163,40 @@ namespace mimicpp::expectation_policies
 		}
 	};
 
-	template <typename Value>
-		requires (!std::is_reference_v<Value>)
-				&& std::movable<Value>
-	class Returns
+	template <typename Action>
+		requires std::same_as<Action, std::remove_cvref_t<Action>>
+				&& std::is_move_constructible_v<Action>
+	class ReturnsResultOf
 	{
 	public:
-		using ValueT = Value;
-
 		[[nodiscard]]
-		explicit constexpr Returns(ValueT value) noexcept(std::is_nothrow_move_constructible_v<ValueT>)
-			: m_Value{std::move(value)}
+		explicit constexpr ReturnsResultOf(
+			Action&& action
+		) noexcept(std::is_nothrow_move_constructible_v<Action>)
+			: m_Action{std::move(action)}
 		{
 		}
 
 		template <typename Return, typename... Params>
-			requires std::convertible_to<ValueT&, Return>
+			requires std::invocable<Action&, const call::Info<Return, Params...>&>
+					&& explicitly_convertible_to<
+						std::invoke_result_t<Action&, const call::Info<Return, Params...>&>,
+						Return>
 		[[nodiscard]]
 		constexpr Return finalize_call(
 			[[maybe_unused]] const call::Info<Return, Params...>& call
-		) noexcept(std::is_nothrow_convertible_v<ValueT&, Return>)
+		) noexcept(
+			std::is_nothrow_invocable_v<Action&, const call::Info<Return, Params...>&>
+			&& nothrow_explicitly_convertible_to<
+				std::invoke_result_t<Action&, const call::Info<Return, Params...>&>,
+				Return>)
 		{
-			return static_cast<Return>(m_Value);
-		}
-
-		template <typename Return, typename... Params>
-			requires (!std::convertible_to<ValueT&, Return>)
-					&& std::convertible_to<ValueT&&, Return>
-		[[nodiscard]]
-		constexpr Return finalize_call(
-			[[maybe_unused]] const call::Info<Return, Params...>& call
-		) noexcept(std::is_nothrow_convertible_v<ValueT&&, Return>)
-		{
-			return static_cast<Return>(std::move(m_Value));
+			return static_cast<Return>(
+				std::invoke(m_Action, call));
 		}
 
 	private:
-		ValueT m_Value;
+		Action m_Action;
 	};
 
 	template <typename Exception>
@@ -225,21 +222,6 @@ namespace mimicpp::expectation_policies
 	private:
 		Exception m_Exception;
 	};
-
-	class NullDescriber
-	{
-	public:
-		constexpr std::optional<StringT> operator ()(const bool, const auto&) const noexcept
-		{
-			return std::nullopt;
-		}
-	};
-
-	template <typename T, typename Param>
-	concept describer = std::regular_invocable<T, bool, Param>
-						&& std::convertible_to<
-							std::invoke_result_t<T, bool, Param>,
-							std::optional<StringT>>;
 
 	template <
 		typename Signature,
@@ -501,17 +483,22 @@ namespace mimicpp::expect
 namespace mimicpp::finally
 {
 	template <typename T>
+		requires std::copyable<std::remove_cvref_t<T>>
 	[[nodiscard]]
-	constexpr expectation_policies::Returns<std::remove_cvref_t<T>> returns(
-		T&& value
+	constexpr auto returns(
+		T&& value  // NOLINT(cppcoreguidelines-missing-std-forward)
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
 	{
-		return expectation_policies::Returns<std::remove_cvref_t<T>>{
-			std::forward<T>(value)
+		return expectation_policies::ReturnsResultOf{
+			[v = std::forward<T>(value)]([[maybe_unused]] const auto& call) mutable noexcept -> auto&
+			{
+				return static_cast<std::unwrap_reference_t<decltype(v)>&>(v);
+			}			
 		};
 	}
 
 	template <typename T>
+		requires std::copyable<std::remove_cvref_t<T>>
 	[[nodiscard]]
 	constexpr expectation_policies::Throws<std::remove_cvref_t<T>> throws(
 		T&& exception
