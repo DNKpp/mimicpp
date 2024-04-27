@@ -482,6 +482,24 @@ namespace mimicpp::expect
 
 namespace mimicpp::finally
 {
+	template <typename Action>
+		requires std::invocable<std::remove_cvref_t<Action>&>
+				&& (!std::is_void_v<std::invoke_result_t<std::remove_cvref_t<Action>&>>)
+	[[nodiscard]]
+	constexpr auto returns_result_of(
+		Action&& action  // NOLINT(cppcoreguidelines-missing-std-forward)
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+	{
+		return expectation_policies::ReturnsResultOf{
+			[
+				action = std::forward<Action>(action)
+			]([[maybe_unused]] const auto& call) mutable noexcept(std::is_nothrow_invocable_v<decltype(action)>) -> decltype(auto)
+			{
+				return std::invoke(action);
+			}
+		};
+	}
+
 	template <typename T>
 		requires std::copyable<std::remove_cvref_t<T>>
 	[[nodiscard]]

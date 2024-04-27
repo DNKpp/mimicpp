@@ -1190,6 +1190,33 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"mimicpp::expect::returns_result_of creates expectation_policies::ReturnsResultOf.",
+	"[expectation][expectation::factories]"
+)
+{
+	using trompeloeil::_;
+
+	using SignatureT = int&();
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
+
+	const CallInfoT call{
+		.params = {},
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	};
+
+	InvocableMock<int&> action{};
+	expectation_policies::ReturnsResultOf policy = finally::returns_result_of(std::ref(action));
+	STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+
+	int value{42};
+	REQUIRE_CALL(action, Invoke())
+		.LR_RETURN(value);
+	int& result = policy.finalize_call(call);
+	REQUIRE(&value == &result);
+}
+
+TEST_CASE(
 	"mimicpp::expect::returns creates expectation_policies::ReturnsResultOf.",
 	"[expectation][expectation::factories]"
 )
