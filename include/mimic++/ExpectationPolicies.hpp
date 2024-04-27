@@ -579,18 +579,29 @@ namespace mimicpp::finally
 		};
 	}
 
+	namespace detail
+	{
+		struct forward_fn
+		{
+			template <typename T>
+			[[nodiscard]]
+			constexpr T&& operator ()(T&& obj) const noexcept
+			{
+				return std::forward<T>(obj);
+			}
+		};
+	}
+
 	template <std::size_t index>
 	[[nodiscard]]
 	constexpr auto returns_param() noexcept
 	{
-		using ActionT = decltype(
-			[]<typename T>(T&& param) -> T&& { return std::forward<T>(param); }); // NOLINT(cppcoreguidelines-missing-std-forward)
 		return expectation_policies::ReturnsResultOf{
 			expectation_policies::ApplyParamsAction<
-				ActionT,
+				detail::forward_fn,
 				std::add_rvalue_reference_t,
 				index>{
-				ActionT{}
+				detail::forward_fn{}
 			}
 		};
 	}
