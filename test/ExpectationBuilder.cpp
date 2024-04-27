@@ -96,7 +96,7 @@ TEST_CASE(
 					.RETURN(true);
 				REQUIRE_THROWS_AS(
 					collection->handle_call(call),
-					TestExpectationError);
+					ExhaustedMatchError);
 			}
 		}
 	}

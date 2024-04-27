@@ -44,6 +44,27 @@ namespace mimicpp::detail
 				std::move(noMatches));
 		}
 	}
+
+	template <typename Return, typename... Params, typename Signature>
+	std::optional<call::MatchResultT> make_match_result(
+		const call::Info<Return, Params...>& call,
+		const std::shared_ptr<Expectation<Signature>>& expectation
+	) noexcept
+	{
+		try
+		{
+			return expectation->matches(call);
+		}
+		catch (...)
+		{
+			report_unhandled_exception(
+				call,
+				expectation,
+				std::current_exception());
+		}
+
+		return std::nullopt;
+	}
 }
 
 namespace mimicpp
@@ -126,30 +147,31 @@ namespace mimicpp
 		{
 			static_assert(3 == std::variant_size_v<call::MatchResultT>, "Unexpected MatchResult alternative count.");
 
-			const std::scoped_lock lock{m_ExpectationsMx};
-
 			std::vector<call::MatchResult_NoT> noMatches{};
 			std::vector<call::MatchResult_ExhaustedT> exhaustedMatches{};
 
-			for (auto& exp : m_Expectations | std::views::reverse)
+			for (const std::scoped_lock lock{m_ExpectationsMx};
+				auto& exp : m_Expectations | std::views::reverse)
 			{
-				auto matchResult = exp->matches(call);
-				if (auto* match = std::get_if<call::MatchResult_OkT>(&matchResult))
+				if (std::optional matchResult = detail::make_match_result(call, exp))
 				{
-					report_ok(
-						call,
-						std::move(*match));
-					exp->consume(call);
-					return exp->finalize_call(call);
-				}
+					if (auto* match = std::get_if<call::MatchResult_OkT>(&*matchResult))
+					{
+						report_ok(
+							call,
+							std::move(*match));
+						exp->consume(call);
+						return exp->finalize_call(call);
+					}
 
-				if (auto* match = std::get_if<call::MatchResult_NoT>(&matchResult))
-				{
-					noMatches.emplace_back(std::move(*match));
-				}
-				else
-				{
-					exhaustedMatches.emplace_back(std::get<call::MatchResult_ExhaustedT>(std::move(matchResult)));
+					if (auto* match = std::get_if<call::MatchResult_NoT>(&*matchResult))
+					{
+						noMatches.emplace_back(std::move(*match));
+					}
+					else
+					{
+						exhaustedMatches.emplace_back(std::get<call::MatchResult_ExhaustedT>(*std::move(matchResult)));
+					}
 				}
 			}
 

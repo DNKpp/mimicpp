@@ -170,7 +170,7 @@ TEST_CASE(
 
 		REQUIRE_THROWS_AS(
 			storage.handle_call(call),
-			TestExpectationError);
+			ExhaustedMatchError);
 		REQUIRE_THAT(
 			reporter.no_match_reports(),
 			Catch::Matchers::IsEmpty());
@@ -204,7 +204,7 @@ TEST_CASE(
 
 		REQUIRE_THROWS_AS(
 			storage.handle_call(call),
-			TestExpectationError);
+			NoMatchError);
 		REQUIRE_THAT(
 			reporter.no_match_reports(),
 			Catch::Matchers::SizeIs(4));
@@ -214,6 +214,79 @@ TEST_CASE(
 		REQUIRE_THAT(
 			reporter.ok_match_reports(),
 			Catch::Matchers::IsEmpty());
+	}
+}
+
+TEST_CASE(
+	"Unhandled exceptions during mimicpp::ExpectationCollection::handle_call are reported.",
+	"[expectation]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	using namespace mimicpp::call;
+	using StorageT = mimicpp::ExpectationCollection<void()>;
+	using CallInfoT = Info<void>;
+	using trompeloeil::_;
+
+	mimicpp::ScopedReporter reporter{};
+	StorageT storage{};
+	auto throwingExpectation = std::make_shared<ExpectationMock>();
+	auto otherExpectation = std::make_shared<ExpectationMock>();
+	storage.push(otherExpectation);
+	storage.push(throwingExpectation);
+
+	constexpr CallInfoT call{
+		.params = {},
+		.fromCategory = mimicpp::ValueCategory::any,
+		.fromConstness = mimicpp::Constness::any
+	};
+
+	struct Exception
+	{
+	};
+
+	const auto matches = [&](const unhandled_exception_info& info)
+	{
+		try
+		{
+			std::rethrow_exception(info.exception);
+		}
+		catch (const Exception&)
+		{
+			return call == std::any_cast<CallInfoT>(info.call)
+				&& throwingExpectation == std::any_cast<std::shared_ptr<mimicpp::Expectation<void()>>>(info.expectation);
+		}
+		catch (...)
+		{
+			return false;
+		}
+	};
+
+	SECTION("When thrown during matches.")
+	{
+		REQUIRE_CALL(*throwingExpectation, matches(_))
+			.THROW(Exception{});
+		REQUIRE_CALL(*otherExpectation, matches(_))
+			.RETURN(MatchResult_OkT{});
+		REQUIRE_CALL(*otherExpectation, consume(_));
+		REQUIRE_CALL(*otherExpectation, finalize_call(_));
+		REQUIRE_NOTHROW(storage.handle_call(call));
+
+		CHECK_THAT(
+			reporter.ok_match_reports(),
+			Matches::SizeIs(1));
+		CHECK_THAT(
+			reporter.no_match_reports(),
+			Matches::IsEmpty());
+		CHECK_THAT(
+			reporter.exhausted_match_reports(),
+			Matches::IsEmpty());
+
+		REQUIRE_THAT(
+			reporter.unhandled_exceptions(),
+			Matches::SizeIs(1));
+		REQUIRE(matches(reporter.unhandled_exceptions().front()));
 	}
 }
 

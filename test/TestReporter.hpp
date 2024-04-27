@@ -15,9 +15,21 @@
 inline std::vector<mimicpp::call::MatchResult_NoT> g_NoMatchResults{};
 inline std::vector<mimicpp::call::MatchResult_ExhaustedT> g_ExhaustedMatchResults{};
 inline std::vector<mimicpp::call::MatchResult_OkT> g_OkMatchResults{};
+
+struct unhandled_exception_info
+{
+	std::any call{};
+	std::any expectation{};
+	std::exception_ptr exception{};
+};
+inline std::vector<unhandled_exception_info> g_UnhandledExceptions{};
 inline std::vector<std::any> g_UnsatisfiedExpectations{};
 
-class TestExpectationError
+class NoMatchError
+{
+};
+
+class ExhaustedMatchError
 {
 };
 
@@ -25,7 +37,7 @@ namespace mimicpp
 {
 	template <typename Return, typename... Params>
 	void report_fail(
-		call::Info<Return, Params...> callInfo,
+		const call::Info<Return, Params...>& callInfo,
 		std::vector<call::MatchResult_NoT> results
 	)
 	{
@@ -34,12 +46,12 @@ namespace mimicpp
 			std::ranges::begin(results),
 			std::ranges::end(results));
 
-		throw TestExpectationError{};
+		throw NoMatchError{};
 	}
 
 	template <typename Return, typename... Params>
 	void report_fail(
-		call::Info<Return, Params...> callInfo,
+		const call::Info<Return, Params...>& callInfo,
 		std::vector<call::MatchResult_ExhaustedT> results
 	)
 	{
@@ -48,7 +60,31 @@ namespace mimicpp
 			std::ranges::begin(results),
 			std::ranges::end(results));
 
-		throw TestExpectationError{};
+		throw ExhaustedMatchError{};
+	}
+
+	template <typename Return, typename... Params>
+	void report_ok(
+		const call::Info<Return, Params...>& callInfo,
+		call::MatchResult_OkT result
+	)
+	{
+		g_OkMatchResults.emplace_back(std::move(result));
+	}
+
+	template <typename Return, typename... Params, typename Signature>
+	void report_unhandled_exception(
+		const call::Info<Return, Params...>& callInfo,
+		std::shared_ptr<Expectation<Signature>> expectation,
+		std::exception_ptr exception
+	)
+	{
+		g_UnhandledExceptions.emplace_back(
+			unhandled_exception_info{
+				.call = callInfo,
+				.expectation = std::move(expectation),
+				.exception = exception
+			});
 	}
 
 	template <typename Signature>
@@ -59,31 +95,27 @@ namespace mimicpp
 		g_UnsatisfiedExpectations.emplace_back(std::move(expectation));
 	}
 
-	template <typename Return, typename... Params>
-	void report_ok(
-		call::Info<Return, Params...> callInfo,
-		call::MatchResult_OkT result
-	)
-	{
-		g_OkMatchResults.emplace_back(std::move(result));
-	}
-
 	class ScopedReporter
 	{
 	public:
+		// ReSharper disable CppMemberFunctionMayBeStatic
+
 		~ScopedReporter() noexcept
 		{
-			g_OkMatchResults.clear();
-			g_ExhaustedMatchResults.clear();
-			g_NoMatchResults.clear();
-			g_UnsatisfiedExpectations.clear();
+			clear();
 		}
 
 		ScopedReporter() noexcept
 		{
+			clear();
+		}
+
+		void clear()
+		{
 			g_OkMatchResults.clear();
 			g_ExhaustedMatchResults.clear();
 			g_NoMatchResults.clear();
+			g_UnhandledExceptions.clear();
 			g_UnsatisfiedExpectations.clear();
 		}
 
@@ -92,28 +124,31 @@ namespace mimicpp
 		ScopedReporter(ScopedReporter&&) = delete;
 		ScopedReporter& operator =(ScopedReporter&&) = delete;
 
-		// ReSharper disable once CppMemberFunctionMayBeStatic
 		auto& no_match_reports() noexcept
 		{
 			return g_NoMatchResults;
 		}
 
-		// ReSharper disable once CppMemberFunctionMayBeStatic
 		auto& exhausted_match_reports() noexcept
 		{
 			return g_ExhaustedMatchResults;
 		}
 
-		// ReSharper disable once CppMemberFunctionMayBeStatic
 		auto& ok_match_reports() noexcept
 		{
 			return g_OkMatchResults;
 		}
 
-		// ReSharper disable once CppMemberFunctionMayBeStatic
+		auto& unhandled_exceptions() noexcept
+		{
+			return g_UnhandledExceptions;
+		}
+
 		auto& unsatisfied_expectations() noexcept
 		{
 			return g_UnsatisfiedExpectations;
 		}
+
+		// ReSharper restore CppMemberFunctionMayBeStatic
 	};
 }
