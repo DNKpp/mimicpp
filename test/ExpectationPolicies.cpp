@@ -1208,6 +1208,7 @@ TEST_CASE(
 		SECTION("And when value is stored.")
 		{
 			expectation_policies::ReturnsResultOf policy = finally::returns(value);
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), int()>);
 
 			REQUIRE(value == policy.finalize_call(call));
 			REQUIRE(value == policy.finalize_call(call));
@@ -1216,6 +1217,7 @@ TEST_CASE(
 		SECTION("And when std::reference_wrapper is stored.")
 		{
 			expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), int()>);
 
 			REQUIRE(value == policy.finalize_call(call));
 			REQUIRE(value == policy.finalize_call(call));
@@ -1234,6 +1236,7 @@ TEST_CASE(
 		SECTION("And when value is stored.")
 		{
 			expectation_policies::ReturnsResultOf policy = finally::returns(42);
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&()>);
 
 			int& result = policy.finalize_call(call);
 			REQUIRE(42 == result);
@@ -1244,6 +1247,7 @@ TEST_CASE(
 		{
 			int value{42};
 			expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&()>);
 
 			REQUIRE(&value == &policy.finalize_call(call));
 			REQUIRE(&value == &policy.finalize_call(call));
@@ -1262,6 +1266,7 @@ TEST_CASE(
 		SECTION("And when value is stored.")
 		{
 			expectation_policies::ReturnsResultOf policy = finally::returns(42);
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), const int&()>);
 
 			const int& result = policy.finalize_call(call);
 			REQUIRE(42 == result);
@@ -1272,6 +1277,7 @@ TEST_CASE(
 		{
 			constexpr int value{42};
 			expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), const int&()>);
 
 			REQUIRE(&value == &policy.finalize_call(call));
 			REQUIRE(&value == &policy.finalize_call(call));
@@ -1290,6 +1296,7 @@ TEST_CASE(
 		SECTION("And when value is stored.")
 		{
 			expectation_policies::ReturnsResultOf policy = finally::returns(42);
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&&()>);
 
 			int&& result = policy.finalize_call(call);
 			REQUIRE(42 == result);
@@ -1300,6 +1307,7 @@ TEST_CASE(
 		{
 			int value{42};
 			expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&&()>);
 
 			int&& result = policy.finalize_call(call);
 			REQUIRE(&value == std::addressof(result));
@@ -1320,6 +1328,7 @@ TEST_CASE(
 		SECTION("And when value is stored.")
 		{
 			expectation_policies::ReturnsResultOf policy = finally::returns(42);
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), const int&&()>);
 
 			const int&& result = policy.finalize_call(call);
 			REQUIRE(42 == result);
@@ -1330,6 +1339,7 @@ TEST_CASE(
 		{
 			int value{42};
 			expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+			STATIC_REQUIRE(finalize_policy_for<decltype(policy), const int&&()>);
 
 			const int&& result = policy.finalize_call(call);
 			REQUIRE(&value == std::addressof(result));
