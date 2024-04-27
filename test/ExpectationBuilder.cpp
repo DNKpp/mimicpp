@@ -40,7 +40,6 @@ TEST_CASE(
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = Uuid{1337},
 		.fromCategory = ValueCategory::any,
 		.fromConstness = Constness::any
 	};
@@ -131,7 +130,6 @@ TEST_CASE(
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = Uuid{1337},
 		.fromCategory = ValueCategory::any,
 		.fromConstness = Constness::any
 	};
@@ -184,7 +182,6 @@ TEST_CASE(
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = Uuid{1337},
 		.fromCategory = ValueCategory::any,
 		.fromConstness = Constness::any
 	};

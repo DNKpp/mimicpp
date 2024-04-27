@@ -8,34 +8,7 @@
 
 #pragma once
 
-#include <cstddef>
 #include <format>
-#include <source_location>
-
-namespace mimicpp
-{
-	enum class Uuid
-		: std::size_t
-	{
-	};
-}
-
-template <>
-struct std::formatter<mimicpp::Uuid, char>
-{
-	using UuidT = mimicpp::Uuid;
-
-	static auto format(
-		const UuidT uuid,
-		std::format_context& ctx
-	)
-	{
-		return std::format_to(
-			ctx.out(),
-			"UUID{{}}",
-			static_cast<std::underlying_type_t<UuidT>>(uuid));
-	}
-};
 
 namespace mimicpp
 {

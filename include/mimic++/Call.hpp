@@ -30,7 +30,6 @@ namespace mimicpp::call
 		using ParamListT = std::tuple<std::reference_wrapper<std::remove_reference_t<Args>>...>;
 
 		ParamListT params;
-		Uuid fromUuid{};
 		ValueCategory fromCategory{};
 		Constness fromConstness{};
 		std::source_location fromSourceLocation{};

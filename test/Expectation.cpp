@@ -95,7 +95,6 @@ TEST_CASE(
 
 	constexpr CallInfoT call{
 		.params = {},
-		.fromUuid = mimicpp::Uuid{1337},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};
@@ -315,7 +314,6 @@ TEST_CASE(
 
 	const CallInfoT call{
 		.params = {},
-		.fromUuid = mimicpp::Uuid{1337},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};
@@ -443,7 +441,6 @@ TEMPLATE_TEST_CASE(
 
 	const CallInfoT call{
 		.params = {},
-		.fromUuid = mimicpp::Uuid{1337},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};
@@ -584,7 +581,6 @@ TEMPLATE_TEST_CASE(
 
 	const CallInfoT call{
 		.params = {},
-		.fromUuid = mimicpp::Uuid{1337},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};
