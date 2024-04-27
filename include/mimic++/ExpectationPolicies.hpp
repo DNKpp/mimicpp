@@ -418,6 +418,39 @@ namespace mimicpp::expectation_policies
 	private:
 		Action m_Action;
 	};
+
+	template <typename Action, std::size_t... indices>
+		requires std::same_as<Action, std::remove_cvref_t<Action>>
+	class ApplyParamsAction
+	{
+	public:
+		explicit constexpr ApplyParamsAction(
+			Action&& action
+		) noexcept(std::is_nothrow_move_constructible_v<Action>)
+			: m_Action{std::move(action)}
+		{
+		}
+
+		template <typename Return, typename... Params>
+			requires (... && (indices < sizeof...(Params)))
+					&& std::invocable<
+						Action,
+						std::tuple_element_t<indices, std::tuple<Params...>>&...>
+		constexpr decltype(auto) operator ()(
+			const call::Info<Return, Params...>& callInfo
+		) noexcept(
+			std::is_nothrow_invocable_v<
+				Action&,
+				std::tuple_element_t<indices, std::tuple<Params...>>&...>)
+		{
+			return std::invoke(
+				m_Action,
+				std::get<indices>(callInfo.params).get()...);
+}
+
+	private:
+		Action m_Action;
+	};
 }
 
 namespace mimicpp::expect
@@ -512,6 +545,22 @@ namespace mimicpp::finally
 			{
 				return static_cast<std::unwrap_reference_t<decltype(v)>&>(v);
 			}			
+		};
+	}
+
+	template <std::size_t index, std::size_t... otherIndices, typename Action>
+	[[nodiscard]]
+	constexpr auto returns_apply_result_of(
+		Action&& action  // NOLINT(cppcoreguidelines-missing-std-forward)
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+	{
+		return expectation_policies::ReturnsResultOf{
+			expectation_policies::ApplyParamsAction<
+				std::remove_cvref_t<Action>,
+				index,
+				otherIndices...>{
+				std::forward<Action>(action)
+			}
 		};
 	}
 

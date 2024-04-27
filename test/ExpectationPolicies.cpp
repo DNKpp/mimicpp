@@ -1377,6 +1377,69 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"mimicpp::expect::returns_apply_result_of creates expectation_policies::ReturnsResultOf.",
+	"[expectation][expectation::factories]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("When a single index is chosen.")
+	{
+		using SignatureT = std::string&&(int, double, std::string&&);
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
+
+		int param0{1337};
+		double param1{4.2};
+		std::string param2{"Hello, World!"};
+		const CallInfoT info{
+			.params = {param0, param1, param2},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		expectation_policies::ReturnsResultOf policy = finally::returns_apply_result_of<2>(
+			[](std::string& str) noexcept -> std::string&& { return std::move(str); });
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+
+		std::string&& result = policy.finalize_call(info);
+		REQUIRE(&param2 == std::addressof(result));
+	}
+
+	SECTION("When an arbitrary index sequence is chosen")
+	{
+		using SignatureT = std::tuple<double, std::string&&, int, double&>(int, double, std::string&&);
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
+
+		int param0{1337};
+		double param1{4.2};
+		std::string param2{"Hello, World!"};
+		const CallInfoT info{
+			.params = {param0, param1, param2},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		expectation_policies::ReturnsResultOf policy = finally::returns_apply_result_of<1, 2, 0, 1>(
+			[](double& p0, std::string& p1, int& p2, double& p3)
+			{
+				return std::tuple<double, std::string&&, int, double&>{
+					p0,
+					std::move(p1),
+					p2,
+					p3
+				};
+			});
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+
+		auto&& [r0, r1, r2, r3] = policy.finalize_call(info);
+		REQUIRE(r0 == param1);
+		REQUIRE(std::addressof(r1) == &param2);
+		REQUIRE(r2 == param0);
+		REQUIRE(&r3 == &param1);
+	}
+}
+
+TEST_CASE(
 	"mimicpp::expect::throws creates expectation_policies::Throws.",
 	"[expectation][expectation::factories]"
 )
