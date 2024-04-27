@@ -123,6 +123,21 @@ namespace mimicpp
 				&& lhs.line() == rhs.line()
 				&& lhs.column() == rhs.column();
 	}
+
+	template <typename From, typename To>
+	concept explicitly_convertible_to =
+		requires
+		{
+			static_cast<To>(std::declval<From>());
+		};
+
+	template <typename From, typename To>
+	concept nothrow_explicitly_convertible_to =
+		explicitly_convertible_to<From, To>
+		&& requires
+		{
+			{ static_cast<To>(std::declval<From>()) } noexcept;
+		};
 }
 
 #endif
