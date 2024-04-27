@@ -675,9 +675,9 @@ namespace mimicpp::finally
 
 	/**
 	 * \brief During the finalization step, the given exception is thrown.
-	 * \tparam T The value type.
-	 * \param value The value to be returned.
-	 * \return Returns a copy of ``value``.
+	 * \tparam T The exception type.
+	 * \param exception The exception to be thrown.
+	 * \throws A copy of ``exception``.
 	 *
 	 * \details The provided exception must be copyable, because multiple invocations must be possible.
 	 * \snippet Finalizers.cpp finally::throws
