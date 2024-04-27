@@ -140,6 +140,23 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"Finalizers can apply all argument to a function and then return the invocation result.",
+	"[example][example::finalizer]"
+)
+{
+	//! [finally::returns_apply_all_result_of]
+	namespace finally = mimicpp::finally;
+
+	mimicpp::Mock<int(int, int)> mock{};
+
+	SCOPED_EXP mock.expect_call(1337, 42)
+				| finally::returns_apply_all_result_of(std::plus{});
+
+	REQUIRE(1379 == mock(1337, 42));
+	//! [finally::returns_apply_all_result_of]
+}
+
+TEST_CASE(
 	"Custom finalizers are supported.",
 	"[example][example::finalizer]"
 )

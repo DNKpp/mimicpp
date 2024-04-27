@@ -635,6 +635,31 @@ namespace mimicpp::finally
 	}
 
 	/**
+	 * \brief During the finalization step, the all call arguments are applied on the given action.
+	 * \tparam Action The action type.
+	 * \param action The action to be applied to.
+	 * \return Returns the invocation result of the given action.
+	 *
+	 * \details All call arguments are applied as (possibly const qualified) lvalue-references. The action may proceed with them
+	 * as desired, but be aware that this may actually affect objects outside the call (e.g. if call params are lvalues.).
+	 * \snippet Finalizers.cpp finally::returns_apply_all_result_of
+	 */
+	template <typename Action>
+	[[nodiscard]]
+	constexpr auto returns_apply_all_result_of(
+		Action&& action
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+	{
+		return expectation_policies::ReturnsResultOf{
+			expectation_policies::ApplyAllParamsAction<
+				std::remove_cvref_t<Action>,
+				std::add_lvalue_reference_t>{
+				std::forward<Action>(action)
+			}
+		};
+	}
+
+	/**
 	 * \brief During the finalization step, the selected call argument is returned.
 	 * \return Returns the forwarded and explicitly converted argument.
 	 *

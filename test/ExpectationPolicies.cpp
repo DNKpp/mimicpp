@@ -1566,6 +1566,74 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"expect::returns_apply_all_result_of creates expectation_policies::ReturnsResultOf.",
+	"[expectation][expectation::factories]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("When signature has zero params.")
+	{
+		const call::Info<int&> info{
+			.params = {},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<int&> action{};
+		expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&()>);
+
+		int value{42};
+		REQUIRE_CALL(action, Invoke())
+			.LR_RETURN(std::ref(value));
+		REQUIRE(&value == &policy.finalize_call(info));
+	}
+
+	SECTION("When signature has one param.")
+	{
+		int param0{1337};
+		const call::Info<int&, int&> info{
+			.params = {std::ref(param0)},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<int&, int&> action{};
+		expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&(int&)>);
+
+		int value{42};
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&_1 == &param0)
+			.LR_RETURN(std::ref(value));
+		REQUIRE(&value == &policy.finalize_call(info));
+	}
+
+	SECTION("When signature has multiple params.")
+	{
+		int param0{1337};
+		double param1{4.2};
+		const call::Info<int&, int&, double&> info{
+			.params = {param0, param1},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		InvocableMock<int&, int&, double&> action{};
+		expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&(int&, double&)>);
+
+		int value{42};
+		REQUIRE_CALL(action, Invoke(_, _))
+			.LR_WITH(&_1 == &param0)
+			.LR_WITH(&_2 == &param1)
+			.LR_RETURN(std::ref(value));
+		REQUIRE(&value == &policy.finalize_call(info));
+	}
+}
+
+TEST_CASE(
 	"mimicpp::expect::returns_param creates expectation_policies::ReturnsResultOf.",
 	"[expectation][expectation::factories]"
 )
