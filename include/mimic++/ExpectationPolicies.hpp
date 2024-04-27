@@ -310,26 +310,26 @@ namespace mimicpp::expectation_policies
 		};
 	}
 
-	template <typename Action, std::size_t... indices>
-	class ParamsSideEffect
+	template <typename Action>
+	class SideEffectAction
 	{
 	public:
-		~ParamsSideEffect() = default;
+		~SideEffectAction() = default;
 
 		[[nodiscard]]
-		explicit constexpr ParamsSideEffect(
+		explicit constexpr SideEffectAction(
 			Action&& action
 		) noexcept(std::is_nothrow_move_constructible_v<Action>)
 			: m_Action{std::move(action)}
 		{
 		}
 
-		ParamsSideEffect(const ParamsSideEffect&) = delete;
-		ParamsSideEffect& operator =(const ParamsSideEffect&) = delete;
+		SideEffectAction(const SideEffectAction&) = delete;
+		SideEffectAction& operator =(const SideEffectAction&) = delete;
 
 		[[nodiscard]]
-		ParamsSideEffect(ParamsSideEffect&&) = default;
-		ParamsSideEffect& operator =(ParamsSideEffect&&) = default;
+		SideEffectAction(SideEffectAction&&) = default;
+		SideEffectAction& operator =(SideEffectAction&&) = default;
 
 		static constexpr bool is_satisfied() noexcept
 		{
@@ -337,7 +337,6 @@ namespace mimicpp::expectation_policies
 		}
 
 		template <typename Return, typename... Params>
-			requires (... && (indices < sizeof...(Params)))
 		[[nodiscard]]
 		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>&) noexcept
 		{
@@ -345,74 +344,58 @@ namespace mimicpp::expectation_policies
 		}
 
 		template <typename Return, typename... Params>
-			requires (... && (indices < sizeof...(Params)))
-					&& std::invocable<Action&, std::tuple_element_t<indices, std::tuple<Params...>>&...>
+			requires std::invocable<Action&, const call::Info<Return, Params...>&>
 		constexpr void consume(
 			const call::Info<Return, Params...>& info
-		) noexcept(std::is_nothrow_invocable_v<Action&, std::tuple_element_t<indices, std::tuple<Params...>>&...>)
+		) noexcept(std::is_nothrow_invocable_v<Action&, const call::Info<Return, Params...>&>)
 		{
-			std::invoke(
-				m_Action,
-				std::get<indices>(info.params).get()...);
+			std::invoke(m_Action, info);
 		}
 
 	private:
 		Action m_Action;
 	};
 
-	template <std::size_t... indices, typename Action>
-	[[nodiscard]]
-	constexpr ParamsSideEffect<std::remove_cvref_t<Action>, indices...> make_param_side_effect(
-		Action&& action
-	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
-	{
-		return ParamsSideEffect<std::remove_cvref_t<Action>, indices...>{
-			std::forward<Action>(action)
-		};
-	}
-
-	template <typename Action>
-	class AllParamsSideEffect
+	template <typename Action, template <typename> typename Projection>
+		requires std::same_as<Action, std::remove_cvref_t<Action>>
+	class ApplyAllParamsAction
 	{
 	public:
-		~AllParamsSideEffect() = default;
-
 		[[nodiscard]]
-		explicit constexpr AllParamsSideEffect(
+		explicit constexpr ApplyAllParamsAction(
 			Action&& action
 		) noexcept(std::is_nothrow_move_constructible_v<Action>)
 			: m_Action{std::move(action)}
 		{
 		}
 
-		AllParamsSideEffect(const AllParamsSideEffect&) = delete;
-		AllParamsSideEffect& operator =(const AllParamsSideEffect&) = delete;
-
-		[[nodiscard]]
-		AllParamsSideEffect(AllParamsSideEffect&&) = default;
-		AllParamsSideEffect& operator =(AllParamsSideEffect&&) = default;
-
-		static constexpr bool is_satisfied() noexcept
-		{
-			return true;
-		}
+		template <typename Param>
+		using ProjectedParamElementT = Projection<Param>;
 
 		template <typename Return, typename... Params>
-		[[nodiscard]]
-		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>&) noexcept
+			requires std::invocable<
+				Action&,
+				ProjectedParamElementT<Params>...>
+		constexpr decltype(auto) operator ()(
+			const call::Info<Return, Params...>& callInfo
+		) noexcept(
+			std::is_nothrow_invocable_v<
+				Action&,
+				ProjectedParamElementT<Params>...>)
 		{
-			return {true};
-		}
+			static_assert(
+				(... && explicitly_convertible_to<Params&, ProjectedParamElementT<Params>>),
+				"Projection can not be applied.");
 
-		template <typename Return, typename... Params>
-			requires std::invocable<Action&, Params&...>
-		constexpr void consume(
-			const call::Info<Return, Params...>& info
-		) noexcept(std::is_nothrow_invocable_v<Action&, Params&...>)
-		{
 			return std::apply(
-				[this](auto&... params) { return std::invoke(m_Action, params.get()...); },
-				info.params);
+				[this](auto&... params) -> decltype(auto)
+				{
+					return std::invoke(
+						m_Action,
+						static_cast<ProjectedParamElementT<Params>>(
+							params.get())...);
+				},
+				callInfo.params);
 		}
 
 	private:
@@ -616,10 +599,9 @@ namespace mimicpp::finally
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
 	{
 		return expectation_policies::ReturnsResultOf{
-			[v = std::forward<T>(value)]([[maybe_unused]] const auto& call) mutable noexcept -> auto&
-			{
+			[v = std::forward<T>(value)]([[maybe_unused]] const auto& call) mutable noexcept -> auto& {
 				return static_cast<std::unwrap_reference_t<decltype(v)>&>(v);
-			}			
+			}
 		};
 	}
 
@@ -729,29 +711,45 @@ namespace mimicpp::then
 	 */
 	template <std::size_t index, typename Action>
 	[[nodiscard]]
-	constexpr expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>, index> apply_param(
+	constexpr auto apply_param(
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
-		return expectation_policies::make_param_side_effect<index>(std::forward<Action>(action));
+		return expectation_policies::SideEffectAction{
+			expectation_policies::ApplyParamsAction<
+				std::remove_cvref_t<Action>,
+				std::add_lvalue_reference_t,
+				index>{
+				std::forward<Action>(action)
+			}
+		};
 	}
 
 	/**
 	 * \brief Applies ``param[indices]...`` in the specified order on the given action.
 	 * \details This functions creates a side effect policy and applies the desired params in the specified order.
 	 * The indices can be in any order and may also contain duplicates.
-	 * \tparam indices The param indices.
+	 * \tparam index The first param index.
+	 * \tparam additionalIndices Additional param indices.
 	 * \tparam Action The action type.
 	 * \param action The action to be applied.
 	 * \return Newly created side effect action.
 	 */
-	template <std::size_t... indices, typename Action>
+	template <std::size_t index, std::size_t... additionalIndices, typename Action>
 	[[nodiscard]]
-	constexpr expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>, indices...> apply_params(
+	constexpr auto apply_params(
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
-		return expectation_policies::make_param_side_effect<indices...>(std::forward<Action>(action));
+		return expectation_policies::SideEffectAction{
+			expectation_policies::ApplyParamsAction<
+				std::remove_cvref_t<Action>,
+				std::add_lvalue_reference_t,
+				index,
+				additionalIndices...>{
+				std::forward<Action>(action)
+			}
+		};
 	}
 
 	/**
@@ -762,11 +760,17 @@ namespace mimicpp::then
 	 */
 	template <typename Action>
 	[[nodiscard]]
-	constexpr expectation_policies::AllParamsSideEffect<std::remove_cvref_t<Action>> apply_all_params(
+	constexpr auto apply_all_params(
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
-		return expectation_policies::AllParamsSideEffect{std::forward<Action>(action)};
+		return expectation_policies::SideEffectAction{
+			expectation_policies::ApplyAllParamsAction<
+				std::remove_cvref_t<Action>,
+				std::add_lvalue_reference_t>{
+				std::forward<Action>(action)
+			}
+		};
 	}
 
 	/**
@@ -777,12 +781,17 @@ namespace mimicpp::then
 	 */
 	template <std::invocable Action>
 	[[nodiscard]]
-	constexpr expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>> apply(
-		Action&& action
+	constexpr auto apply(
+		Action&& action  // NOLINT(cppcoreguidelines-missing-std-forward)
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
-		return expectation_policies::ParamsSideEffect<std::remove_cvref_t<Action>>{
-			std::forward<Action>(action)
+		return expectation_policies::SideEffectAction{
+			[
+				action = std::forward<Action>(action)
+			]([[maybe_unused]] const auto& call) mutable noexcept(std::is_nothrow_invocable_v<Action&>)
+			{
+				std::invoke(action);
+			}
 		};
 	}
 

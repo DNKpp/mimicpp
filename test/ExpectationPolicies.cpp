@@ -503,131 +503,199 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"Invalid configurations of expectation_policies::ParamsSideEffect do not satisfy expectation_policy_for concept.",
+	"Invalid configurations of expectation_policies::SideEffectAction do not satisfy expectation_policy_for concept.",
 	"[expectation][expectation::policy]"
 )
 {
 	using ActionT = InvocableMock<void, int>;
 
-	SECTION("Signature without params.")
+	SECTION("When action is not applicable.")
 	{
 		STATIC_REQUIRE(
 			!expectation_policy_for<
-			decltype(expectation_policies::make_param_side_effect<0>(std::declval<ActionT>())),
-			void()>);
-	}
-
-	SECTION("Index out of bounds.")
-	{
-		STATIC_REQUIRE(
-			!expectation_policy_for<
-			decltype(expectation_policies::make_param_side_effect<1>(std::declval<ActionT>())),
-			void(int)>);
-	}
-
-	SECTION("Action not applicable.")
-	{
-		STATIC_REQUIRE(
-			!expectation_policy_for<
-			decltype(expectation_policies::make_param_side_effect<0, 0>(std::declval<ActionT>())),
+			expectation_policies::SideEffectAction<ActionT>,
 			void(int)>);
 	}
 }
 
 TEST_CASE(
-	"expectation_policies::ParamsSideEffect invokes the specified function on consume.",
+	"expectation_policies::SideEffectAction invokes the specified function on consume.",
 	"[expectation][expectation::policy]"
 )
 {
 	using trompeloeil::_;
 
-	SECTION("Supports multiple params.")
-	{
-		int param0{1337};
-		double param1{4.2};
-		const call::Info<void, int&, double&&> info{
-			.params = {param0, param1},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-		};
+	const call::Info<void> info{
+		.params = {},
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	};
 
-		SECTION("In order.")
+	InvocableMock<void, const call::Info<void>&> action{};
+	expectation_policies::SideEffectAction policy{std::ref(action)};
+	STATIC_REQUIRE(expectation_policy_for<decltype(policy), void()>);
+	REQUIRE(std::as_const(policy).is_satisfied());
+	REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+
+	REQUIRE_CALL(action, Invoke(_))
+		.LR_WITH(&info == &_1);
+	REQUIRE_NOTHROW(policy.consume(info));
+}
+
+TEST_CASE(
+	"expectation_policies::ApplyParamsAction invokes the specified function on consume.",
+	"[expectation][expectation::policy]"
+)
+{
+	using trompeloeil::_;
+
+	int param0{1337};
+	double param1{4.2};
+	const call::Info<void, int&, double&&> info{
+		.params = {param0, param1},
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	};
+
+	SECTION("When void is returned.")
+	{
+		SECTION("When specified in order.")
 		{
-			InvocableMock<void, int&, const double&> action{};
-			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0, 1>(std::ref(action));
-			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(std::as_const(policy).is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+			using ActionT = InvocableMock<void, int&, double&&>;
+			ActionT action{};
+			expectation_policies::ApplyParamsAction<
+				std::reference_wrapper<ActionT>,
+				std::type_identity_t,
+				0u,
+				1u
+			> applyAction{
+				std::ref(action)
+			};
 
 			REQUIRE_CALL(action, Invoke(_, _))
 				.LR_WITH(&param0 == &_1)
 				.LR_WITH(&param1 == &_2);
-			REQUIRE_NOTHROW(policy.consume(info));
+			REQUIRE_NOTHROW(applyAction(info));
 		}
 
 		SECTION("In reverse order.")
 		{
-			InvocableMock<void, const double&, int&> action{};
-			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1, 0>(std::ref(action));
-			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(std::as_const(policy).is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+			using ActionT = InvocableMock<void, double&&, int&>;
+			ActionT action{};
+			expectation_policies::ApplyParamsAction<
+				std::reference_wrapper<ActionT>,
+				std::type_identity_t,
+				1u,
+				0u
+			> applyAction{
+				std::ref(action)
+			};
 
 			REQUIRE_CALL(action, Invoke(_, _))
 				.LR_WITH(&param0 == &_2)
 				.LR_WITH(&param1 == &_1);
-			REQUIRE_NOTHROW(policy.consume(info));
+			REQUIRE_NOTHROW(applyAction(info));
 		}
 
 		SECTION("Just the first.")
 		{
-			InvocableMock<void, int&> action{};
-			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
-			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(std::as_const(policy).is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+			using ActionT = InvocableMock<void, int&>;
+			ActionT action{};
+			expectation_policies::ApplyParamsAction<
+				std::reference_wrapper<ActionT>,
+				std::type_identity_t,
+				0u
+			> applyAction{
+				std::ref(action)
+			};
 
 			REQUIRE_CALL(action, Invoke(_))
 				.LR_WITH(&param0 == &_1);
-			REQUIRE_NOTHROW(policy.consume(info));
+			REQUIRE_NOTHROW(applyAction(info));
 		}
 
 		SECTION("Just the second.")
 		{
-			InvocableMock<void, const double&> action{};
-			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1>(std::ref(action));
-			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(std::as_const(policy).is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+			using ActionT = InvocableMock<void, double&&>;
+			ActionT action{};
+			expectation_policies::ApplyParamsAction<
+				std::reference_wrapper<ActionT>,
+				std::type_identity_t,
+				1u
+			> applyAction{
+				std::ref(action)
+			};
 
 			REQUIRE_CALL(action, Invoke(_))
 				.LR_WITH(&param1 == &_1);
-			REQUIRE_NOTHROW(policy.consume(info));
+			REQUIRE_NOTHROW(applyAction(info));
 		}
 
 		SECTION("Arbitrarily mixed.")
 		{
-			InvocableMock<void, const double&, int&, int&, const double&, const double&, int&> action{};
-			expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<1, 0, 0, 1, 1, 0>(
-				std::ref(action));
-			STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&&)>);
-			REQUIRE(std::as_const(policy).is_satisfied());
-			REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+			using ActionT = InvocableMock<void, double&&, int&, int&, double&&>;
+			ActionT action{};
+			expectation_policies::ApplyParamsAction<
+				std::reference_wrapper<ActionT>,
+				std::type_identity_t,
+				1u,
+				0u,
+				0u,
+				1u
+			> applyAction{
+				std::ref(action)
+			};
 
-			REQUIRE_CALL(action, Invoke(_, _, _, _, _, _))
+			REQUIRE_CALL(action, Invoke(_, _, _, _))
 				.LR_WITH(&_1 == &param1)
 				.LR_WITH(&_2 == &param0)
 				.LR_WITH(&_3 == &param0)
-				.LR_WITH(&_4 == &param1)
-				.LR_WITH(&_5 == &param1)
-				.LR_WITH(&_6 == &param0);
-			REQUIRE_NOTHROW(policy.consume(info));
+				.LR_WITH(&_4 == &param1);
+			REQUIRE_NOTHROW(applyAction(info));
 		}
+	}
+
+	SECTION("When non-void is returned.")
+	{
+		using ActionT = InvocableMock<int&, double&&>;
+		ActionT action{};
+		expectation_policies::ApplyParamsAction<
+			std::reference_wrapper<ActionT>,
+			std::type_identity_t,
+			1u
+		> applyAction{
+			std::ref(action)
+		};
+
+		int value{42};
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&_1 == &param1)
+			.LR_RETURN(std::ref(value));
+		REQUIRE(&value == &applyAction(info));
+	}
+
+	SECTION("When different projection is applied.")
+	{
+		using ActionT = InvocableMock<int&, double&>;
+		ActionT action{};
+		expectation_policies::ApplyParamsAction<
+			std::reference_wrapper<ActionT>,
+			std::add_lvalue_reference_t,
+			1u
+		> applyAction{
+			std::ref(action)
+		};
+
+		int value{42};
+		REQUIRE_CALL(action, Invoke(_))
+			.LR_WITH(&_1 == &param1)
+			.LR_RETURN(std::ref(value));
+		REQUIRE(&value == &applyAction(info));
 	}
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"expectation_policies::ParamsSideEffect takes the param category into account.",
+	"expectation_policies::ApplyParamsAction takes the param category into account.",
 	"[expectation][expectation::policy]",
 	((bool expectSameAddress, typename ActionParam, typename SigParam), expectSameAddress, ActionParam, SigParam),
 	(false, int, int),
@@ -636,11 +704,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, int, int&&),
 	(false, int, const int&&),
 
-	(true, int&, int),
 	(true, int&, int&),
-	(true, int&, int&&),
 
-	(true, const int&, int),
+	(false, const int&, int),
 	(true, const int&, int&),
 	(true, const int&, const int&),
 	(true, const int&, int&&),
@@ -657,40 +723,21 @@ TEMPLATE_TEST_CASE_SIG(
 	};
 
 	InvocableMock<void, ActionParam> action{};
-	expectation_policies::ParamsSideEffect policy = expectation_policies::make_param_side_effect<0>(std::ref(action));
-	STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(SigParam)>);
-	REQUIRE(std::as_const(policy).is_satisfied());
-	REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+	expectation_policies::ApplyParamsAction<
+		std::reference_wrapper<InvocableMock<void, ActionParam>>,
+		std::type_identity_t,
+		0u
+	> policy{
+		std::ref(action)
+	};
+
 	REQUIRE_CALL(action, Invoke(param0))
 		.LR_WITH(expectSameAddress == (&_1 == &param0));
-	REQUIRE_NOTHROW(policy.consume(info));
+	REQUIRE_NOTHROW(policy(info));
 }
 
 TEST_CASE(
-	"Invalid configurations of expectation_policies::AllParamsSideEffect do not satisfy expectation_policy_for concept.",
-	"[expectation][expectation::policy]"
-)
-{
-	using ActionT = InvocableMock<void, int>;
-	SECTION("Action has more params than expected.")
-	{
-		STATIC_REQUIRE(
-			!expectation_policy_for<
-			expectation_policies::AllParamsSideEffect<ActionT>,
-			void()>);
-	}
-
-	SECTION("Action has less params than expected.")
-	{
-		STATIC_REQUIRE(
-			!expectation_policy_for<
-			expectation_policies::AllParamsSideEffect<ActionT>,
-			void(double, int)>);
-	}
-}
-
-TEST_CASE(
-	"expectation_policies::AllParamsSideEffect invokes the specified function on consume.",
+	"expectation_policies::ApplyParamsAction invokes the specified function with all params.",
 	"[expectation][expectation::policy]"
 )
 {
@@ -704,81 +751,167 @@ TEST_CASE(
 			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
-		InvocableMock<void> action{};
-		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void()>);
-		REQUIRE(std::as_const(policy).is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
-		REQUIRE_CALL(action, Invoke());
-		REQUIRE_NOTHROW(policy.consume(info));
+		SECTION("When void is returned.")
+		{
+			InvocableMock<void> action{};
+			expectation_policies::ApplyAllParamsAction<
+				std::reference_wrapper<InvocableMock<void>>,
+				std::type_identity_t
+			> applyAction{
+				std::ref(action)
+			};
+			REQUIRE_CALL(action, Invoke());
+			REQUIRE_NOTHROW(applyAction(info));
+		}
+
+		SECTION("When non-void is returned.")
+		{
+			InvocableMock<int&> action{};
+			expectation_policies::ApplyAllParamsAction<
+				std::reference_wrapper<InvocableMock<int&>>,
+				std::type_identity_t
+			> applyAction{
+				std::ref(action)
+			};
+
+			int value{42};
+			REQUIRE_CALL(action, Invoke())
+				.LR_RETURN(std::ref(value));
+			REQUIRE(&value == &applyAction(info));
+		}
 	}
 
 	SECTION("Unary signatures.")
 	{
 		int param0{1337};
-		const call::Info<void, int&> info{
+		const call::Info<void, int&&> info{
 			.params = {param0},
 			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
 			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
-		InvocableMock<void, int&> action{};
-		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&)>);
-		REQUIRE(std::as_const(policy).is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
-		REQUIRE_CALL(action, Invoke(_))
-			.LR_WITH(&_1 == &param0);
-		REQUIRE_NOTHROW(policy.consume(info));
+		SECTION("When void is returned.")
+		{
+			InvocableMock<void, int&&> action{};
+			expectation_policies::ApplyAllParamsAction<
+				std::reference_wrapper<InvocableMock<void, int&&>>,
+				std::type_identity_t
+			> applyAction{
+				std::ref(action)
+			};
+			REQUIRE_CALL(action, Invoke(_))
+				.LR_WITH(&_1 == &param0);
+			REQUIRE_NOTHROW(applyAction(info));
+		}
+
+		SECTION("When non-void is returned.")
+		{
+			InvocableMock<int&, int&&> action{};
+			expectation_policies::ApplyAllParamsAction<
+				std::reference_wrapper<InvocableMock<int&, int&&>>,
+				std::type_identity_t
+			> applyAction{
+				std::ref(action)
+			};
+
+			int value{42};
+			REQUIRE_CALL(action, Invoke(_))
+				.LR_WITH(&_1 == &param0)
+				.LR_RETURN(std::ref(value));
+			REQUIRE(&value == &applyAction(info));
+		}
+
+		SECTION("When other projection is applied.")
+		{
+			InvocableMock<int&, int&> action{};
+			expectation_policies::ApplyAllParamsAction<
+				std::reference_wrapper<InvocableMock<int&, int&>>,
+				std::add_lvalue_reference_t
+			> applyAction{
+				std::ref(action)
+			};
+
+			int value{42};
+			REQUIRE_CALL(action, Invoke(_))
+				.LR_WITH(&_1 == &param0)
+				.LR_RETURN(std::ref(value));
+			REQUIRE(&value == &applyAction(info));
+		}
 	}
 
-	SECTION("Binary signatures.")
-	{
-		int param0{1337};
-		double param1{4.2};
-		const call::Info<void, int&, double&> info{
-			.params = {param0, param1},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-		};
-
-		InvocableMock<void, int&, double&> action{};
-		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&)>);
-		REQUIRE(std::as_const(policy).is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
-		REQUIRE_CALL(action, Invoke(_, _))
-			.LR_WITH(&_1 == &param0)
-			.LR_WITH(&_2 == &param1);
-		REQUIRE_NOTHROW(policy.consume(info));
-	}
-
-	SECTION("Arbitrary signatures.")
+	SECTION("With arbitrary signatures.")
 	{
 		int param0{1337};
 		double param1{4.2};
 		std::string param2{"Hello, World!"};
-		const call::Info<void, int&, double&, std::string&> info{
+		const call::Info<void, int&, double&, std::string&&> info{
 			.params = {param0, param1, param2},
 			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
 			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
-		InvocableMock<void, int&, double&, std::string&> action{};
-		expectation_policies::AllParamsSideEffect policy{std::ref(action)};
-		STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(int&, double&, std::string&)>);
-		REQUIRE(std::as_const(policy).is_satisfied());
-		REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
-		REQUIRE_CALL(action, Invoke(_, _, _))
-			.LR_WITH(&_1 == &param0)
-			.LR_WITH(&_2 == &param1)
-			.LR_WITH(&_3 == &param2);
-		REQUIRE_NOTHROW(policy.consume(info));
+		SECTION("When void is returned.")
+		{
+			using ActionT = InvocableMock<void, int&, double&, std::string&&>;
+			ActionT action{};
+			expectation_policies::ApplyAllParamsAction<
+				std::reference_wrapper<ActionT>,
+				std::type_identity_t
+			> applyAction{
+				std::ref(action)
+			};
+
+			REQUIRE_CALL(action, Invoke(_, _, _))
+				.LR_WITH(&_1 == &param0)
+				.LR_WITH(&_2 == &param1)
+				.LR_WITH(&_3 == &param2);
+			REQUIRE_NOTHROW(applyAction(info));
+		}
+
+		SECTION("When non-void is returned.")
+		{
+			using ActionT = InvocableMock<int&, int&, double&, std::string&&>;
+			ActionT action{};
+			expectation_policies::ApplyAllParamsAction<
+				std::reference_wrapper<ActionT>,
+				std::type_identity_t
+			> applyAction{
+				std::ref(action)
+			};
+
+			int value{42};
+			REQUIRE_CALL(action, Invoke(_, _, _))
+				.LR_WITH(&_1 == &param0)
+				.LR_WITH(&_2 == &param1)
+				.LR_WITH(&_3 == &param2)
+				.LR_RETURN(std::ref(value));
+			REQUIRE(&value == &applyAction(info));
+		}
+
+		SECTION("When other projection is applied.")
+		{
+			using ActionT = InvocableMock<int&, int&, double&, std::string&>;
+			ActionT action{};
+			expectation_policies::ApplyAllParamsAction<
+				std::reference_wrapper<ActionT>,
+				std::add_lvalue_reference_t
+			> applyAction{
+				std::ref(action)
+			};
+
+			int value{42};
+			REQUIRE_CALL(action, Invoke(_, _, _))
+				.LR_WITH(&_1 == &param0)
+				.LR_WITH(&_2 == &param1)
+				.LR_WITH(&_3 == &param2)
+				.LR_RETURN(std::ref(value));
+			REQUIRE(&value == &applyAction(info));
+		}
 	}
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"expectation_policies::AllParamsSideEffect takes the param category into account.",
+	"expectation_policies::ApplyAllParamsAction takes the param category into account.",
 	"[expectation][expectation::policy]",
 	((bool expectSameAddress, typename ActionParam, typename SigParam), expectSameAddress, ActionParam, SigParam),
 	(false, int, int),
@@ -787,11 +920,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, int, int&&),
 	(false, int, const int&&),
 
-	(true, int&, int),
 	(true, int&, int&),
-	(true, int&, int&&),
 
-	(true, const int&, int),
+	(false, const int&, int),
 	(true, const int&, int&),
 	(true, const int&, const int&),
 	(true, const int&, int&&),
@@ -808,13 +939,16 @@ TEMPLATE_TEST_CASE_SIG(
 	};
 
 	InvocableMock<void, ActionParam> action{};
-	expectation_policies::AllParamsSideEffect policy{std::ref(action)};
-	STATIC_REQUIRE(expectation_policy_for<decltype(policy), void(SigParam)>);
-	REQUIRE(std::as_const(policy).is_satisfied());
-	REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+	expectation_policies::ApplyAllParamsAction<
+		std::reference_wrapper<InvocableMock<void, ActionParam>>,
+		std::type_identity_t
+	> policy{
+		std::ref(action)
+	};
+
 	REQUIRE_CALL(action, Invoke(param0))
 		.LR_WITH(expectSameAddress == (&_1 == &param0));
-	REQUIRE_NOTHROW(policy.consume(info));
+	REQUIRE_NOTHROW(policy(info));
 }
 
 TEST_CASE(
@@ -834,7 +968,7 @@ TEST_CASE(
 	SECTION("Index 0.")
 	{
 		InvocableMock<void, int&> action{};
-		expectation_policies::ParamsSideEffect policy = then::apply_param<0>(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_param<0>(std::ref(action));
 		REQUIRE_CALL(action, Invoke(_))
 				.LR_WITH(&_1 == &param0);
 		REQUIRE_NOTHROW(policy.consume(info));
@@ -843,7 +977,7 @@ TEST_CASE(
 	SECTION("Index 1.")
 	{
 		InvocableMock<void, const double&> action{};
-		expectation_policies::ParamsSideEffect policy = then::apply_param<1>(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_param<1>(std::ref(action));
 		REQUIRE_CALL(action, Invoke(_))
 				.LR_WITH(&_1 == &param1);
 		REQUIRE_NOTHROW(policy.consume(info));
@@ -852,7 +986,7 @@ TEST_CASE(
 	SECTION("Index 2.")
 	{
 		InvocableMock<void, std::string> action{};
-		expectation_policies::ParamsSideEffect policy = then::apply_param<2>(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_param<2>(std::ref(action));
 		REQUIRE_CALL(action, Invoke("Hello, World!"));
 		REQUIRE_NOTHROW(policy.consume(info));
 	}
@@ -875,7 +1009,7 @@ TEST_CASE(
 	SECTION("Indices 0, 1, 2.")
 	{
 		InvocableMock<void, int&, double&, std::string&> action{};
-		expectation_policies::ParamsSideEffect policy = then::apply_params<0, 1, 2>(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_params<0, 1, 2>(std::ref(action));
 		REQUIRE_CALL(action, Invoke(_, _, _))
 				.LR_WITH(&_1 == &param0)
 				.LR_WITH(&_2 == &param1)
@@ -886,7 +1020,7 @@ TEST_CASE(
 	SECTION("Indices 2, 1, 0")
 	{
 		InvocableMock<void, std::string&, double&, int&> action{};
-		expectation_policies::ParamsSideEffect policy = then::apply_params<2, 1, 0>(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_params<2, 1, 0>(std::ref(action));
 		REQUIRE_CALL(action, Invoke(_, _, _))
 				.LR_WITH(&_1 == &param2)
 				.LR_WITH(&_2 == &param1)
@@ -894,18 +1028,10 @@ TEST_CASE(
 		REQUIRE_NOTHROW(policy.consume(info));
 	}
 
-	SECTION("Zero indices.")
-	{
-		InvocableMock<void> action{};
-		expectation_policies::ParamsSideEffect policy = then::apply_params<>(std::ref(action));
-		REQUIRE_CALL(action, Invoke());
-		REQUIRE_NOTHROW(policy.consume(info));
-	}
-
 	SECTION("Arbitrarily mixed.")
 	{
 		InvocableMock<void, double&, int&, std::string&, std::string&, int&> action{};
-		expectation_policies::ParamsSideEffect policy = then::apply_params<1, 0, 2, 2, 0>(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_params<1, 0, 2, 2, 0>(std::ref(action));
 		REQUIRE_CALL(action, Invoke(_, _, _, _, _))
 				.LR_WITH(&_1 == &param1)
 				.LR_WITH(&_2 == &param0)
@@ -930,7 +1056,7 @@ TEST_CASE(
 		};
 
 		InvocableMock<void> action{};
-		expectation_policies::AllParamsSideEffect policy = then::apply_all_params(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_all_params(std::ref(action));
 		REQUIRE_CALL(action, Invoke());
 		REQUIRE_NOTHROW(policy.consume(info));
 	}
@@ -943,7 +1069,7 @@ TEST_CASE(
 		};
 
 		InvocableMock<void, int&> action{};
-		expectation_policies::AllParamsSideEffect policy = then::apply_all_params(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_all_params(std::ref(action));
 		REQUIRE_CALL(action, Invoke(_))
 			.LR_WITH(&_1 == &param0);
 		REQUIRE_NOTHROW(policy.consume(info));
@@ -958,7 +1084,7 @@ TEST_CASE(
 		};
 
 		InvocableMock<void, int&, double&> action{};
-		expectation_policies::AllParamsSideEffect policy = then::apply_all_params(std::ref(action));
+		expectation_policies::SideEffectAction policy = then::apply_all_params(std::ref(action));
 		REQUIRE_CALL(action, Invoke(_, _))
 			.LR_WITH(&_1 == &param0)
 			.LR_WITH(&_2 == &param1);
@@ -979,7 +1105,7 @@ TEST_CASE(
 	};
 
 	InvocableMock<void> action{};
-	expectation_policies::ParamsSideEffect policy = then::apply(std::ref(action));
+	expectation_policies::SideEffectAction policy = then::apply(std::ref(action));
 	REQUIRE_CALL(action, Invoke());
 	REQUIRE_NOTHROW(policy.consume(info));
 }
