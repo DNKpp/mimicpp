@@ -496,7 +496,10 @@ namespace mimicpp::expect
 	{
 		return expectation_policies::RuntimeTimes{0u, max};
 	}
+}
 
+namespace mimicpp::finally
+{
 	template <typename T>
 	[[nodiscard]]
 	constexpr expectation_policies::Returns<std::remove_cvref_t<T>> returns(

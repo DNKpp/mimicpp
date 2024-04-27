@@ -71,7 +71,7 @@ TEST_CASE(
 		Mock<int()> mock{};
 
 		const ScopedExpectation expectation = mock.expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == mock());
@@ -103,7 +103,7 @@ TEST_CASE(
 		Mock<int() const> mock{};
 
 		const ScopedExpectation expectation = mock.expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == mock());
@@ -135,7 +135,7 @@ TEST_CASE(
 		Mock<int() &> mock{};
 
 		const ScopedExpectation expectation = mock.expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == mock());
@@ -167,7 +167,7 @@ TEST_CASE(
 		Mock<int() const &> mock{};
 
 		const ScopedExpectation expectation = mock.expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == mock());
@@ -199,7 +199,7 @@ TEST_CASE(
 		Mock<int() &&> mock{};
 
 		const ScopedExpectation expectation = std::move(mock).expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == std::move(mock)());
@@ -231,7 +231,7 @@ TEST_CASE(
 		Mock<int() const &&> mock{};
 
 		const ScopedExpectation expectation = std::move(mock).expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == std::move(mock)());
@@ -263,7 +263,7 @@ TEST_CASE(
 		Mock<int() noexcept> mock{};
 
 		const ScopedExpectation expectation = mock.expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == mock());
@@ -295,7 +295,7 @@ TEST_CASE(
 		Mock<int() const noexcept> mock{};
 
 		const ScopedExpectation expectation = mock.expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == mock());
@@ -327,7 +327,7 @@ TEST_CASE(
 		Mock<int() & noexcept> mock{};
 
 		const ScopedExpectation expectation = mock.expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == mock());
@@ -359,7 +359,7 @@ TEST_CASE(
 		Mock<int() const & noexcept> mock{};
 
 		const ScopedExpectation expectation = mock.expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == mock());
@@ -391,7 +391,7 @@ TEST_CASE(
 		Mock<int() && noexcept> mock{};
 
 		const ScopedExpectation expectation = std::move(mock).expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == std::move(mock)());
@@ -423,7 +423,7 @@ TEST_CASE(
 		Mock<int() const && noexcept> mock{};
 
 		const ScopedExpectation expectation = std::move(mock).expect_call()
-											| expect::returns(42);
+											| finally::returns(42);
 		CHECK(!expectation.is_satisfied());
 
 		REQUIRE(42 == std::move(mock)());

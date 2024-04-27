@@ -1290,7 +1290,7 @@ TEST_CASE(
 	using CallInfoT = call::Info<int>;
 
 	const int value = GENERATE(range(0, 5));
-	expectation_policies::Returns policy = expect::returns(value);
+	expectation_policies::Returns policy = finally::returns(value);
 
 	const CallInfoT call{
 		.params = {},
@@ -1310,7 +1310,7 @@ TEST_CASE(
 	using CallInfoT = call::Info<int>;
 
 	const int value = GENERATE(range(0, 5));
-	expectation_policies::Throws policy = expect::throws(value);
+	expectation_policies::Throws policy = finally::throws(value);
 
 	const CallInfoT call{
 		.params = {},
