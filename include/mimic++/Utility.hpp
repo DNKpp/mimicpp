@@ -9,6 +9,7 @@
 #pragma once
 
 #include <format>
+#include <source_location>
 
 namespace mimicpp
 {
@@ -110,6 +111,18 @@ namespace mimicpp
 			return true;
 		}
 	};
+
+	[[nodiscard]]
+	constexpr bool is_same_source_location(
+		const std::source_location& lhs,
+		const std::source_location& rhs
+	) noexcept
+	{
+		return std::string_view{lhs.file_name()} == std::string_view{rhs.file_name()}
+				&& std::string_view{lhs.function_name()} == std::string_view{rhs.function_name()}
+				&& lhs.line() == rhs.line()
+				&& lhs.column() == rhs.column();
+	}
 }
 
 #endif
