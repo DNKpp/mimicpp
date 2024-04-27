@@ -419,7 +419,7 @@ namespace mimicpp::expectation_policies
 		Action m_Action;
 	};
 
-	template <typename Action, std::size_t... indices>
+	template <typename Action, template <typename> typename Projection, std::size_t... indices>
 		requires std::same_as<Action, std::remove_cvref_t<Action>>
 	class ApplyParamsAction
 	{
@@ -431,22 +431,36 @@ namespace mimicpp::expectation_policies
 		{
 		}
 
+		template <std::size_t index, typename... Params>
+		using ParamElementT = std::tuple_element_t<index, std::tuple<Params...>>;
+
+		template <std::size_t index, typename... Params>
+		using ProjectedParamElementT = Projection<ParamElementT<index, Params...>>;
+
 		template <typename Return, typename... Params>
 			requires (... && (indices < sizeof...(Params)))
 					&& std::invocable<
 						Action,
-						std::tuple_element_t<indices, std::tuple<Params...>>&...>
+						ProjectedParamElementT<indices, Params...>...>
 		constexpr decltype(auto) operator ()(
 			const call::Info<Return, Params...>& callInfo
 		) noexcept(
 			std::is_nothrow_invocable_v<
 				Action&,
-				std::tuple_element_t<indices, std::tuple<Params...>>&...>)
+				ProjectedParamElementT<indices, Params...>...>)
 		{
+			static_assert(
+				(explicitly_convertible_to<
+						ParamElementT<indices, Params...>&,
+						ProjectedParamElementT<indices, Params...>>
+					&& ...),
+				"Projection can not be applied.");
+
 			return std::invoke(
 				m_Action,
-				std::get<indices>(callInfo.params).get()...);
-}
+				static_cast<ProjectedParamElementT<indices, Params...>>(
+					std::get<indices>(callInfo.params).get())...);
+		}
 
 	private:
 		Action m_Action;
@@ -557,9 +571,26 @@ namespace mimicpp::finally
 		return expectation_policies::ReturnsResultOf{
 			expectation_policies::ApplyParamsAction<
 				std::remove_cvref_t<Action>,
+				std::add_lvalue_reference_t,
 				index,
 				otherIndices...>{
 				std::forward<Action>(action)
+			}
+		};
+	}
+
+	template <std::size_t index>
+	[[nodiscard]]
+	constexpr auto returns_param() noexcept
+	{
+		using ActionT = decltype(
+			[]<typename T>(T&& param) -> T&& { return std::forward<T>(param); }); // NOLINT(cppcoreguidelines-missing-std-forward)
+		return expectation_policies::ReturnsResultOf{
+			expectation_policies::ApplyParamsAction<
+				ActionT,
+				std::add_rvalue_reference_t,
+				index>{
+				ActionT{}
 			}
 		};
 	}

@@ -1440,6 +1440,93 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"mimicpp::expect::returns_param creates expectation_policies::ReturnsResultOf.",
+	"[expectation][expectation::factories]"
+)
+{
+	int param0{1337};
+	double param1{4.2};
+	std::string param2{"Hello, World!"};
+
+	SECTION("When value is selected.")
+	{
+		using SignatureT = int(int, double&, std::string&&);
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
+		const CallInfoT info{
+			.params = {param0, param1, param2},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		expectation_policies::ReturnsResultOf policy = finally::returns_param<0>();
+
+		REQUIRE(1337 == policy.finalize_call(info));
+	}
+
+	SECTION("When lvalue ref is selected.")
+	{
+		using SignatureT = double&(int, double&, std::string&&);
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
+		const CallInfoT info{
+			.params = {param0, param1, param2},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		expectation_policies::ReturnsResultOf policy = finally::returns_param<1>();
+
+		REQUIRE(&param1 == &policy.finalize_call(info));
+	}
+
+	SECTION("When const lvalue ref is selected.")
+	{
+		using SignatureT = const double&(int, const double&, std::string&&);
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
+		const CallInfoT info{
+			.params = {param0, param1, param2},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		expectation_policies::ReturnsResultOf policy = finally::returns_param<1>();
+
+		REQUIRE(&param1 == &policy.finalize_call(info));
+	}
+
+	SECTION("When rvalue ref is selected.")
+	{
+		using SignatureT = std::string&&(int, double&, std::string&&);
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
+		const CallInfoT info{
+			.params = {param0, param1, param2},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		expectation_policies::ReturnsResultOf policy = finally::returns_param<2>();
+
+		std::string&& result = policy.finalize_call(info);
+		REQUIRE(&param2 == std::addressof(result));
+	}
+
+	SECTION("When const rvalue ref is selected.")
+	{
+		using SignatureT = const std::string&&(int, double&, const std::string&&);
+		using CallInfoT = call::info_for_signature_t<SignatureT>;
+		const CallInfoT info{
+			.params = {param0, param1, param2},
+			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+		};
+
+		expectation_policies::ReturnsResultOf policy = finally::returns_param<2>();
+
+		const std::string&& result = policy.finalize_call(info);
+		REQUIRE(&param2 == std::addressof(result));
+	}
+}
+
+TEST_CASE(
 	"mimicpp::expect::throws creates expectation_policies::Throws.",
 	"[expectation][expectation::factories]"
 )
