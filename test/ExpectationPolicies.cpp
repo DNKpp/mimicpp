@@ -1459,6 +1459,7 @@ TEST_CASE(
 		};
 
 		expectation_policies::ReturnsResultOf policy = finally::returns_param<0>();
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
 
 		REQUIRE(1337 == policy.finalize_call(info));
 	}
@@ -1474,6 +1475,7 @@ TEST_CASE(
 		};
 
 		expectation_policies::ReturnsResultOf policy = finally::returns_param<1>();
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
 
 		REQUIRE(&param1 == &policy.finalize_call(info));
 	}
@@ -1489,6 +1491,7 @@ TEST_CASE(
 		};
 
 		expectation_policies::ReturnsResultOf policy = finally::returns_param<1>();
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
 
 		REQUIRE(&param1 == &policy.finalize_call(info));
 	}
@@ -1504,6 +1507,7 @@ TEST_CASE(
 		};
 
 		expectation_policies::ReturnsResultOf policy = finally::returns_param<2>();
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
 
 		std::string&& result = policy.finalize_call(info);
 		REQUIRE(&param2 == std::addressof(result));
@@ -1520,6 +1524,7 @@ TEST_CASE(
 		};
 
 		expectation_policies::ReturnsResultOf policy = finally::returns_param<2>();
+		STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
 
 		const std::string&& result = policy.finalize_call(info);
 		REQUIRE(&param2 == std::addressof(result));
