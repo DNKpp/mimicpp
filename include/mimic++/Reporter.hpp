@@ -10,6 +10,7 @@
 
 #include "mimic++/Call.hpp"
 
+#include <exception>
 #include <memory>
 #include <vector>
 
