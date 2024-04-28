@@ -33,7 +33,7 @@ TEST_CASE(
 	static int value2{42};
 
 	const CallInfoT info{
-		.params = {std::ref(value1)},
+		.args = {std::ref(value1)},
 		.fromCategory = ValueCategory::any,
 		.fromConstness = Constness::any,
 		.fromSourceLocation = loc1

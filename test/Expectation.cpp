@@ -94,7 +94,7 @@ TEST_CASE(
 	}
 
 	constexpr CallInfoT call{
-		.params = {},
+		.args = {},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};
@@ -237,7 +237,7 @@ TEST_CASE(
 	storage.push(throwingExpectation);
 
 	constexpr CallInfoT call{
-		.params = {},
+		.args = {},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};
@@ -386,7 +386,7 @@ TEST_CASE(
 	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
 
 	const CallInfoT call{
-		.params = {},
+		.args = {},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};
@@ -513,7 +513,7 @@ TEMPLATE_TEST_CASE(
 	using CallInfoT = mimicpp::call::info_for_signature_t<TestType>;
 
 	const CallInfoT call{
-		.params = {},
+		.args = {},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};
@@ -653,7 +653,7 @@ TEMPLATE_TEST_CASE(
 	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
 
 	const CallInfoT call{
-		.params = {},
+		.args = {},
 		.fromCategory = mimicpp::ValueCategory::any,
 		.fromConstness = mimicpp::Constness::any
 	};

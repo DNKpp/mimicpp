@@ -46,9 +46,9 @@ namespace mimicpp::call
 	class Info
 	{
 	public:
-		using ParamListT = std::tuple<std::reference_wrapper<std::remove_reference_t<Args>>...>;
+		using ArgListT = std::tuple<std::reference_wrapper<std::remove_reference_t<Args>>...>;
 
-		ParamListT params;
+		ArgListT args;
 		ValueCategory fromCategory{};
 		Constness fromConstness{};
 		std::source_location fromSourceLocation{};
@@ -58,7 +58,7 @@ namespace mimicpp::call
 		{
 			return lhs.fromCategory == rhs.fromCategory
 					&& lhs.fromConstness == rhs.fromConstness
-					&& detail::is_equal_param_list(lhs.params, rhs.params, std::index_sequence_for<Args...>{})
+					&& detail::is_equal_param_list(lhs.args, rhs.args, std::index_sequence_for<Args...>{})
 					&& is_same_source_location(lhs.fromSourceLocation, rhs.fromSourceLocation);
 		}
 	};

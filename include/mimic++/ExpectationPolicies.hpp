@@ -258,15 +258,15 @@ namespace mimicpp::expectation_policies
 		[[nodiscard]]
 		constexpr call::SubMatchResult matches(const CallInfoT& info) const noexcept
 		{
-			const std::reference_wrapper param = std::get<index>(info.params);
-			if (m_Matcher.matches(param.get()))
+			auto& arg = std::get<index>(info.args).get();
+			if (m_Matcher.matches(arg))
 			{
 				return {
 					.matched = true,
 					.msg = format::format(
 						"param[{}] matches {}",
 						index,
-						m_Matcher.describe(param.get()))
+						m_Matcher.describe(arg))
 				};
 			}
 
@@ -275,7 +275,7 @@ namespace mimicpp::expectation_policies
 				.msg = format::format(
 					"param[{}] does not match {}",
 					index,
-					m_Matcher.describe(param.get()))
+					m_Matcher.describe(arg))
 			};
 		}
 
@@ -395,7 +395,7 @@ namespace mimicpp::expectation_policies
 						static_cast<ProjectedArgT<Args>>(
 							args.get())...);
 				},
-				callInfo.params);
+				callInfo.args);
 		}
 
 	private:
@@ -442,7 +442,7 @@ namespace mimicpp::expectation_policies
 			return std::invoke(
 				m_Action,
 				static_cast<ProjectedArgListElementT<indices, Args...>>(
-					std::get<indices>(callInfo.params).get())...);
+					std::get<indices>(callInfo.args).get())...);
 		}
 
 	private:
