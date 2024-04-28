@@ -20,7 +20,7 @@ TEST_CASE(
 
 	std::string outText{};
 	SCOPED_EXP mock.expect_call(42)
-				| then::apply([&] { outText = "Hello, mimic++!"; });
+				| then::invoke([&] { outText = "Hello, mimic++!"; });
 
 	mock(42);
 

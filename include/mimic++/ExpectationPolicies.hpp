@@ -806,7 +806,7 @@ namespace mimicpp::then
 	 */
 	template <std::invocable Action>
 	[[nodiscard]]
-	constexpr auto apply(
+	constexpr auto invoke(
 		Action&& action  // NOLINT(cppcoreguidelines-missing-std-forward)
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{

@@ -1093,7 +1093,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"then::apply creates expectation_policies::ParamsSideEffect.",
+	"then::invoke creates expectation_policies::ParamsSideEffect.",
 	"[expectation][expectation::factories]"
 )
 {
@@ -1105,7 +1105,7 @@ TEST_CASE(
 	};
 
 	InvocableMock<void> action{};
-	expectation_policies::SideEffectAction policy = then::apply(std::ref(action));
+	expectation_policies::SideEffectAction policy = then::invoke(std::ref(action));
 	REQUIRE_CALL(action, Invoke());
 	REQUIRE_NOTHROW(policy.consume(info));
 }
