@@ -116,7 +116,7 @@ TEST_CASE(
 	mimicpp::Mock<int(int, int)> mock{};
 
 	SCOPED_EXP mock.expect_call(1337, 42)
-				| finally::returns_param<1>();
+				| finally::returns_arg<1>();
 
 	REQUIRE(42 == mock(1337, 42));
 	//! [finally::returns_param]

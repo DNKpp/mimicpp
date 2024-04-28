@@ -21,8 +21,8 @@ namespace mimicpp::expectation_policies
 	class InitFinalize
 	{
 	public:
-		template <typename Return, typename... Params>
-		static constexpr void finalize_call(const call::Info<Return, Params...>&) noexcept
+		template <typename Return, typename... Args>
+		static constexpr void finalize_call(const call::Info<Return, Args...>&) noexcept
 		{
 		}
 	};
@@ -106,8 +106,8 @@ namespace mimicpp::expectation_policies
 			return true;
 		}
 
-		template <typename Return, typename... Params>
-		static call::SubMatchResult matches(const call::Info<Return, Params...>& info)
+		template <typename Return, typename... Args>
+		static call::SubMatchResult matches(const call::Info<Return, Args...>& info)
 		{
 			if (mimicpp::is_matching(info.fromCategory, expected))
 			{
@@ -123,8 +123,8 @@ namespace mimicpp::expectation_policies
 			};
 		}
 
-		template <typename Return, typename... Params>
-		static constexpr void consume(const call::Info<Return, Params...>& info) noexcept
+		template <typename Return, typename... Args>
+		static constexpr void consume(const call::Info<Return, Args...>& info) noexcept
 		{
 			assert(mimicpp::is_matching(info.fromCategory, expected) && "Call does not match.");
 		}
@@ -139,8 +139,8 @@ namespace mimicpp::expectation_policies
 			return true;
 		}
 
-		template <typename Return, typename... Params>
-		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>& info) noexcept
+		template <typename Return, typename... Args>
+		static constexpr call::SubMatchResult matches(const call::Info<Return, Args...>& info) noexcept
 		{
 			if (mimicpp::is_matching(info.fromConstness, constness))
 			{
@@ -156,8 +156,8 @@ namespace mimicpp::expectation_policies
 			};
 		}
 
-		template <typename Return, typename... Params>
-		static constexpr void consume(const call::Info<Return, Params...>& info) noexcept
+		template <typename Return, typename... Args>
+		static constexpr void consume(const call::Info<Return, Args...>& info) noexcept
 		{
 			assert(mimicpp::is_matching(info.fromConstness, constness) && "Call does not match.");
 		}
@@ -177,18 +177,18 @@ namespace mimicpp::expectation_policies
 		{
 		}
 
-		template <typename Return, typename... Params>
-			requires std::invocable<Action&, const call::Info<Return, Params...>&>
+		template <typename Return, typename... Args>
+			requires std::invocable<Action&, const call::Info<Return, Args...>&>
 					&& explicitly_convertible_to<
-						std::invoke_result_t<Action&, const call::Info<Return, Params...>&>,
+						std::invoke_result_t<Action&, const call::Info<Return, Args...>&>,
 						Return>
 		[[nodiscard]]
 		constexpr Return finalize_call(
-			[[maybe_unused]] const call::Info<Return, Params...>& call
+			[[maybe_unused]] const call::Info<Return, Args...>& call
 		) noexcept(
-			std::is_nothrow_invocable_v<Action&, const call::Info<Return, Params...>&>
+			std::is_nothrow_invocable_v<Action&, const call::Info<Return, Args...>&>
 			&& nothrow_explicitly_convertible_to<
-				std::invoke_result_t<Action&, const call::Info<Return, Params...>&>,
+				std::invoke_result_t<Action&, const call::Info<Return, Args...>&>,
 				Return>)
 		{
 			return static_cast<Return>(
@@ -211,9 +211,9 @@ namespace mimicpp::expectation_policies
 		{
 		}
 
-		template <typename Return, typename... Params>
+		template <typename Return, typename... Args>
 		constexpr Return finalize_call(
-			[[maybe_unused]] const call::Info<Return, Params...>& call
+			[[maybe_unused]] const call::Info<Return, Args...>& call
 		)
 		{
 			throw m_Exception;  // NOLINT(hicpp-exception-baseclass)
@@ -336,18 +336,18 @@ namespace mimicpp::expectation_policies
 			return true;
 		}
 
-		template <typename Return, typename... Params>
+		template <typename Return, typename... Args>
 		[[nodiscard]]
-		static constexpr call::SubMatchResult matches(const call::Info<Return, Params...>&) noexcept
+		static constexpr call::SubMatchResult matches(const call::Info<Return, Args...>&) noexcept
 		{
 			return {true};
 		}
 
-		template <typename Return, typename... Params>
-			requires std::invocable<Action&, const call::Info<Return, Params...>&>
+		template <typename Return, typename... Args>
+			requires std::invocable<Action&, const call::Info<Return, Args...>&>
 		constexpr void consume(
-			const call::Info<Return, Params...>& info
-		) noexcept(std::is_nothrow_invocable_v<Action&, const call::Info<Return, Params...>&>)
+			const call::Info<Return, Args...>& info
+		) noexcept(std::is_nothrow_invocable_v<Action&, const call::Info<Return, Args...>&>)
 		{
 			std::invoke(m_Action, info);
 		}
@@ -358,42 +358,42 @@ namespace mimicpp::expectation_policies
 
 	template <typename Action, template <typename> typename Projection>
 		requires std::same_as<Action, std::remove_cvref_t<Action>>
-	class ApplyAllParamsAction
+	class ApplyAllArgsAction
 	{
 	public:
 		[[nodiscard]]
-		explicit constexpr ApplyAllParamsAction(
+		explicit constexpr ApplyAllArgsAction(
 			Action&& action
 		) noexcept(std::is_nothrow_move_constructible_v<Action>)
 			: m_Action{std::move(action)}
 		{
 		}
 
-		template <typename Param>
-		using ProjectedParamElementT = Projection<Param>;
+		template <typename Arg>
+		using ProjectedArgT = Projection<Arg>;
 
-		template <typename Return, typename... Params>
+		template <typename Return, typename... Args>
 			requires std::invocable<
 				Action&,
-				ProjectedParamElementT<Params>...>
+				ProjectedArgT<Args>...>
 		constexpr decltype(auto) operator ()(
-			const call::Info<Return, Params...>& callInfo
+			const call::Info<Return, Args...>& callInfo
 		) noexcept(
 			std::is_nothrow_invocable_v<
 				Action&,
-				ProjectedParamElementT<Params>...>)
+				ProjectedArgT<Args>...>)
 		{
 			static_assert(
-				(... && explicitly_convertible_to<Params&, ProjectedParamElementT<Params>>),
+				(... && explicitly_convertible_to<Args&, ProjectedArgT<Args>>),
 				"Projection can not be applied.");
 
 			return std::apply(
-				[this](auto&... params) -> decltype(auto)
+				[this](auto&... args) -> decltype(auto)
 				{
 					return std::invoke(
 						m_Action,
-						static_cast<ProjectedParamElementT<Params>>(
-							params.get())...);
+						static_cast<ProjectedArgT<Args>>(
+							args.get())...);
 				},
 				callInfo.params);
 		}
@@ -404,44 +404,44 @@ namespace mimicpp::expectation_policies
 
 	template <typename Action, template <typename> typename Projection, std::size_t... indices>
 		requires std::same_as<Action, std::remove_cvref_t<Action>>
-	class ApplyParamsAction
+	class ApplyArgsAction
 	{
 	public:
-		explicit constexpr ApplyParamsAction(
+		explicit constexpr ApplyArgsAction(
 			Action&& action
 		) noexcept(std::is_nothrow_move_constructible_v<Action>)
 			: m_Action{std::move(action)}
 		{
 		}
 
-		template <std::size_t index, typename... Params>
-		using ParamElementT = std::tuple_element_t<index, std::tuple<Params...>>;
+		template <std::size_t index, typename... Args>
+		using ArgListElementT = std::tuple_element_t<index, std::tuple<Args...>>;
 
-		template <std::size_t index, typename... Params>
-		using ProjectedParamElementT = Projection<ParamElementT<index, Params...>>;
+		template <std::size_t index, typename... Args>
+		using ProjectedArgListElementT = Projection<ArgListElementT<index, Args...>>;
 
-		template <typename Return, typename... Params>
-			requires (... && (indices < sizeof...(Params)))
+		template <typename Return, typename... Args>
+			requires (... && (indices < sizeof...(Args)))
 					&& std::invocable<
 						Action,
-						ProjectedParamElementT<indices, Params...>...>
+						ProjectedArgListElementT<indices, Args...>...>
 		constexpr decltype(auto) operator ()(
-			const call::Info<Return, Params...>& callInfo
+			const call::Info<Return, Args...>& callInfo
 		) noexcept(
 			std::is_nothrow_invocable_v<
 				Action&,
-				ProjectedParamElementT<indices, Params...>...>)
+				ProjectedArgListElementT<indices, Args...>...>)
 		{
 			static_assert(
 				(explicitly_convertible_to<
-						ParamElementT<indices, Params...>&,
-						ProjectedParamElementT<indices, Params...>>
+						ArgListElementT<indices, Args...>&,
+						ProjectedArgListElementT<indices, Args...>>
 					&& ...),
 				"Projection can not be applied.");
 
 			return std::invoke(
 				m_Action,
-				static_cast<ProjectedParamElementT<indices, Params...>>(
+				static_cast<ProjectedArgListElementT<indices, Args...>>(
 					std::get<indices>(callInfo.params).get())...);
 		}
 
@@ -614,7 +614,7 @@ namespace mimicpp::finally
 	 * \return Returns the invocation result of the given action.
 	 *
 	 * \details The selected call arguments are applied as (possibly const qualified) lvalue-references. The action may proceed with them
-	 * as desired, but be aware that this may actually affect objects outside the call (e.g. if call params are lvalues.).
+	 * as desired, but be aware that this may actually affect objects outside the call (e.g. if call arguments are lvalues.).
 	 * \snippet Finalizers.cpp finally::returns_apply_result_of
 	 */
 	template <std::size_t index, std::size_t... otherIndices, typename Action>
@@ -624,7 +624,7 @@ namespace mimicpp::finally
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
 		return expectation_policies::ReturnsResultOf{
-			expectation_policies::ApplyParamsAction<
+			expectation_policies::ApplyArgsAction<
 				std::remove_cvref_t<Action>,
 				std::add_lvalue_reference_t,
 				index,
@@ -635,13 +635,13 @@ namespace mimicpp::finally
 	}
 
 	/**
-	 * \brief During the finalization step, the all call arguments are applied on the given action.
+	 * \brief During the finalization step, all call arguments are applied on the given action.
 	 * \tparam Action The action type.
 	 * \param action The action to be applied to.
 	 * \return Returns the invocation result of the given action.
 	 *
 	 * \details All call arguments are applied as (possibly const qualified) lvalue-references. The action may proceed with them
-	 * as desired, but be aware that this may actually affect objects outside the call (e.g. if call params are lvalues.).
+	 * as desired, but be aware that this may actually affect objects outside the call (e.g. if call arguments are lvalues.).
 	 * \snippet Finalizers.cpp finally::returns_apply_all_result_of
 	 */
 	template <typename Action>
@@ -651,7 +651,7 @@ namespace mimicpp::finally
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
 		return expectation_policies::ReturnsResultOf{
-			expectation_policies::ApplyAllParamsAction<
+			expectation_policies::ApplyAllArgsAction<
 				std::remove_cvref_t<Action>,
 				std::add_lvalue_reference_t>{
 				std::forward<Action>(action)
@@ -668,10 +668,10 @@ namespace mimicpp::finally
 	 */
 	template <std::size_t index>
 	[[nodiscard]]
-	constexpr auto returns_param() noexcept
+	constexpr auto returns_arg() noexcept
 	{
 		return expectation_policies::ReturnsResultOf{
-			expectation_policies::ApplyParamsAction<
+			expectation_policies::ApplyArgsAction<
 				detail::forward_fn,
 				std::add_rvalue_reference_t,
 				index>{
@@ -715,7 +715,7 @@ namespace mimicpp::then
 	 * \ingroup EXPECTATION
 	 * \brief Side effects are an easy way to apply actions on matched expectations.
 	 * \details After an expectation match has been found, side effects will be applied during the ``consume`` step.
-	 * They may alter the call params and capture any variable from the outside scope. Beware that those captured variables
+	 * They may alter the call arguments and capture any variable from the outside scope. Beware that those captured variables
 	 * must outlive the expectation they are attached on.
 	 *
 	 * Side effects will be executed in their construction order, but they should actually never throw. If it is intended to
@@ -728,20 +728,20 @@ namespace mimicpp::then
 	 */
 
 	/**
-	 * \brief Applies the ``param[index]`` on the given action.
-	 * \tparam index The param index.
+	 * \brief Applies the argument at the specified index on the given action.
+	 * \tparam index The argument index.
 	 * \tparam Action The action type.
 	 * \param action The action to be applied.
 	 * \return Newly created side effect action.
 	 */
 	template <std::size_t index, typename Action>
 	[[nodiscard]]
-	constexpr auto apply_param(
+	constexpr auto apply_arg(
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
 		return expectation_policies::SideEffectAction{
-			expectation_policies::ApplyParamsAction<
+			expectation_policies::ApplyArgsAction<
 				std::remove_cvref_t<Action>,
 				std::add_lvalue_reference_t,
 				index>{
@@ -751,23 +751,23 @@ namespace mimicpp::then
 	}
 
 	/**
-	 * \brief Applies ``param[indices]...`` in the specified order on the given action.
-	 * \details This functions creates a side effect policy and applies the desired params in the specified order.
+	 * \brief Applies the arguments at the specified index and in that order on the given action.
+	 * \details This functions creates a side effect policy and applies the selected arguments in the specified order.
 	 * The indices can be in any order and may also contain duplicates.
-	 * \tparam index The first param index.
-	 * \tparam additionalIndices Additional param indices.
+	 * \tparam index The first argument index.
+	 * \tparam additionalIndices Additional argument indices.
 	 * \tparam Action The action type.
 	 * \param action The action to be applied.
 	 * \return Newly created side effect action.
 	 */
 	template <std::size_t index, std::size_t... additionalIndices, typename Action>
 	[[nodiscard]]
-	constexpr auto apply_params(
+	constexpr auto apply_args(
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
 		return expectation_policies::SideEffectAction{
-			expectation_policies::ApplyParamsAction<
+			expectation_policies::ApplyArgsAction<
 				std::remove_cvref_t<Action>,
 				std::add_lvalue_reference_t,
 				index,
@@ -778,19 +778,19 @@ namespace mimicpp::then
 	}
 
 	/**
-	 * \brief Applies all available params on the given action.
+	 * \brief Applies all arguments on the given action.
 	 * \tparam Action The action type.
 	 * \param action The action to be applied.
 	 * \return Newly created side effect action.
 	 */
 	template <typename Action>
 	[[nodiscard]]
-	constexpr auto apply_all_params(
+	constexpr auto apply_all(
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
 		return expectation_policies::SideEffectAction{
-			expectation_policies::ApplyAllParamsAction<
+			expectation_policies::ApplyAllArgsAction<
 				std::remove_cvref_t<Action>,
 				std::add_lvalue_reference_t>{
 				std::forward<Action>(action)
