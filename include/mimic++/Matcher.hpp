@@ -292,7 +292,7 @@ namespace mimicpp::matches::range
 					range,
 					std::ref(comp));
 			},
-			"{} range is equal to {}",
+			"range {} is equal to {}",
 			std::tuple{std::views::all(std::forward<Range>(expected))});
 	}
 
@@ -312,7 +312,7 @@ namespace mimicpp::matches::range
 					range,
 					std::ref(comp));
 			},
-			"{} range is permutation of {}",
+			"range {} is permutation of {}",
 			std::tuple{std::views::all(std::forward<Range>(expected))});
 	}
 
@@ -331,7 +331,7 @@ namespace mimicpp::matches::range
 					target,
 					std::ref(rel));
 			},
-			"{} range is sorted",
+			"range {} is sorted",
 			std::tuple{});
 	}
 }
