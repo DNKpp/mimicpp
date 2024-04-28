@@ -14,6 +14,8 @@
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include "TestTypes.hpp"
+
 using namespace mimicpp;
 
 TEMPLATE_TEST_CASE(
@@ -459,5 +461,41 @@ TEST_CASE(
 				invertedMatcher.describe(target),
 				Catch::Matchers::Equals(format::format("!({} >= 42)", target)));
 		}
+	}
+}
+
+TEST_CASE(
+	"matches::predicate matches when the given predicate is satisfied.",
+	"[matcher]"
+)
+{
+	using trompeloeil::_;
+
+	const int target = GENERATE(42, 43, std::numeric_limits<int>::max());
+
+	InvocableMock<bool, const int&> predicate{};
+	const auto expectedResult = GENERATE(true, false);
+	REQUIRE_CALL(predicate, Invoke(_))
+		.LR_WITH(&_1 == &target)
+		.RETURN(expectedResult);
+
+	const auto matcher = matches::predicate(std::ref(predicate));
+	REQUIRE(expectedResult == matcher.matches(target));
+	REQUIRE_THAT(
+		matcher.describe(target),
+		Catch::Matchers::Equals(format::format("{} satisfies predicate", target)));
+
+	SECTION("When matcher is inverted.")
+	{
+		const auto invertedMatcher = !matches::predicate(std::ref(predicate));
+
+		REQUIRE_CALL(predicate, Invoke(_))
+			.LR_WITH(&_1 == &target)
+			.RETURN(expectedResult);
+
+		REQUIRE(expectedResult == !invertedMatcher.matches(target));
+		REQUIRE_THAT(
+			invertedMatcher.describe(target),
+			Catch::Matchers::Equals(format::format("!({} satisfies predicate)", target)));
 	}
 }

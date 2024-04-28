@@ -233,6 +233,17 @@ namespace mimicpp::matches
 				format::format("{{}} >= {}", mimicpp::print(value))
 			});
 	}
+
+	template <typename UnaryPredicate>
+	[[nodiscard]]
+	constexpr auto predicate(UnaryPredicate&& predicate)
+	{
+		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+			std::forward<UnaryPredicate>(predicate),
+			matcher::TargetPredicateDescriber{
+				"{} satisfies predicate"
+			});
+	}
 }
 
 #endif
