@@ -9,13 +9,12 @@
 #pragma once
 
 #include "mimic++/Printer.hpp"
+#include "mimic++/Utility.hpp"
 
 #include <concepts>
 #include <functional>
 #include <tuple>
 #include <type_traits>
-
-#include "Utility.hpp"
 
 namespace mimicpp
 {
@@ -118,11 +117,13 @@ namespace mimicpp::matcher
 			return std::apply(
 				[&, this](auto&... additionalArgs)
 				{
+					// std::make_format_args requires lvalue-refs, so let's transform rvalue-refs to const lvalue-refs
+					constexpr auto makeLvalue = [](auto&& val) noexcept -> const auto& { return val; };
 					return format::vformat(
 						m_FormatString,
 						format::make_format_args(
-							mimicpp::print(target),
-							mimicpp::print(additionalArgs)...));
+							makeLvalue(mimicpp::print(target)),
+							makeLvalue(mimicpp::print(additionalArgs))...));
 				},
 				m_AdditionalArgs);
 		}
