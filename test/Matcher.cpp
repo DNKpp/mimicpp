@@ -363,3 +363,52 @@ TEST_CASE(
 		}
 	}
 }
+
+TEST_CASE(
+	"matches::gt matches when target value is greater than the stored one.",
+	"[matcher]"
+)
+{
+	const auto matcher = matches::gt(42);
+
+	SECTION("When target is greater.")
+	{
+		const int target = GENERATE(43, std::numeric_limits<int>::max());
+		REQUIRE(matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals(format::format("{} > 42", target)));
+	}
+
+	SECTION("When target is not greater.")
+	{
+		const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 41, 42);
+		REQUIRE(!matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals(format::format("{} > 42", target)));
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		const auto invertedMatcher = !matches::gt(42);
+
+		SECTION("When target is greater.")
+		{
+			const int target = GENERATE(43, std::numeric_limits<int>::max());
+			REQUIRE(!invertedMatcher.matches(target));
+			REQUIRE_THAT(
+				invertedMatcher.describe(target),
+				Catch::Matchers::Equals(format::format("!({} > 42)", target)));
+		}
+
+		SECTION("When target is not greater.")
+		{
+			const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 41, 42);
+			REQUIRE(invertedMatcher.matches(target));
+			REQUIRE_THAT(
+				invertedMatcher.describe(target),
+				Catch::Matchers::Equals(format::format("!({} > 42)", target)));
+		}
+	}
+}
