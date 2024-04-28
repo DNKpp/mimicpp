@@ -292,7 +292,6 @@ namespace mimicpp::matches::range
 					range,
 					std::ref(comp));
 			},
-
 			"{} range is equal to {}",
 			std::tuple{std::views::all(std::forward<Range>(expected))});
 	}
@@ -313,9 +312,27 @@ namespace mimicpp::matches::range
 					range,
 					std::ref(comp));
 			},
-
 			"{} range is permutation of {}",
 			std::tuple{std::views::all(std::forward<Range>(expected))});
+	}
+
+	template <typename Relation = std::ranges::less>
+	[[nodiscard]]
+	constexpr auto is_sorted(Relation relation = Relation{})
+	{
+		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+			[rel = std::move(relation)]<typename Target>(Target&& target)  // NOLINT(cppcoreguidelines-missing-std-forward)
+				requires std::equivalence_relation<
+					const Relation&,
+					std::ranges::range_reference_t<Target>,
+					std::ranges::range_reference_t<Target>>
+			{
+				return std::ranges::is_sorted(
+					target,
+					std::ref(rel));
+			},
+			"{} range is sorted",
+			std::tuple{});
 	}
 }
 

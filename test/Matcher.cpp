@@ -726,3 +726,91 @@ TEST_CASE(
 			Catch::Matchers::Equals("{ 1337, 42 } range is permutation of { 1337, 42 }"));
 	}
 }
+
+TEST_CASE(
+	"matches::range::is_sorted matches when target range is sorted.",
+	"[matcher]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("When target is empty, it's a match.")
+	{
+		const auto matcher = matches::range::is_sorted();
+
+		const std::vector<int> target{};
+
+		REQUIRE(matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals("{  } range is sorted"));
+	}
+
+	SECTION("When a non-empty range is stored.")
+	{
+		const auto matcher = matches::range::is_sorted();
+
+		SECTION("When target is sorted, it's a match.")
+		{
+			const std::vector target{42, 1337};
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("{ 42, 1337 } range is sorted"));
+		}
+
+		SECTION("When target is not sorted, it's no match.")
+		{
+			const std::vector target{1337, 42};
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("{ 1337, 42 } range is sorted"));
+		}
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		const auto matcher = !matches::range::is_sorted();
+
+		SECTION("When target is sorted, it's no match.")
+		{
+			const std::vector target{42, 1337};
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!({ 42, 1337 } range is sorted)"));
+		}
+
+		SECTION("When target is not sorted, it's a match.")
+		{
+			const std::vector target{1337, 42};
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!({ 1337, 42 } range is sorted)"));
+		}
+	}
+
+	SECTION("Custom relations can be provided.")
+	{
+		using ComparatorT = InvocableMock<bool, int, int>;
+		ComparatorT comparator{};
+		const auto matcher = matches::range::is_sorted(
+			std::ref(comparator));
+
+		const std::vector target{1337, 42};
+
+		REQUIRE_CALL(comparator, Invoke(42, 1337))
+			.RETURN(false);
+
+		REQUIRE(matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals("{ 1337, 42 } range is sorted"));
+	}
+}
