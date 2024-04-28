@@ -511,7 +511,7 @@ TEST_CASE(
 		}
 	}
 
-	SECTION("When an empty range is stored.")
+	SECTION("When a non-empty range is stored.")
 	{
 		const auto matcher = matches::range::eq(std::vector{1337, 42});
 
@@ -600,5 +600,129 @@ TEST_CASE(
 		REQUIRE_THAT(
 			matcher.describe(target),
 			Catch::Matchers::Equals("{ 1337, 42 } range is equal to { 1337, 42 }"));
+	}
+}
+
+TEST_CASE(
+	"matches::range::unordered_eq matches when target range is a permuation of the stored one.",
+	"[matcher]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("When an empty range is stored.")
+	{
+		const auto matcher = matches::range::unordered_eq(std::vector<int>{});
+
+		SECTION("When target is also empty, they match.")
+		{
+			const std::vector<int> target{};
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("{  } range is permutation of {  }"));
+		}
+
+		SECTION("When target is not empty, they do not match.")
+		{
+			const std::vector target{42};
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("{ 42 } range is permutation of {  }"));
+		}
+	}
+
+	SECTION("When a non-empty range is stored.")
+	{
+		const auto matcher = matches::range::unordered_eq(std::vector{1337, 42});
+
+		SECTION("When target is equal, they match.")
+		{
+			const std::vector target{1337, 42};
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("{ 1337, 42 } range is permutation of { 1337, 42 }"));
+		}
+
+		SECTION("When target has same elements, but in different order, they do match.")
+		{
+			const std::vector target{42, 1337};
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("{ 42, 1337 } range is permutation of { 1337, 42 }"));
+		}
+
+		SECTION("When target is not equal, they do not match.")
+		{
+			const std::vector target{42};
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("{ 42 } range is permutation of { 1337, 42 }"));
+		}
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		const auto matcher = !matches::range::unordered_eq(std::vector{1337, 42});
+
+		SECTION("When target is equal, they do not match.")
+		{
+			const std::vector target{1337, 42};
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!({ 1337, 42 } range is permutation of { 1337, 42 })"));
+		}
+
+		SECTION("When target has same elements, but in different order, they do not match.")
+		{
+			const std::vector target{42, 1337};
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!({ 42, 1337 } range is permutation of { 1337, 42 })"));
+		}
+
+		SECTION("When target is not equal, they do match.")
+		{
+			const std::vector target{42};
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!({ 42 } range is permutation of { 1337, 42 })"));
+		}
+	}
+
+	SECTION("Custom comparators can be provided.")
+	{
+		using ComparatorT = InvocableMock<bool, int, int>;
+		ComparatorT comparator{};
+		const auto matcher = matches::range::unordered_eq(
+			std::vector{1337, 42},
+			std::ref(comparator));
+
+		const std::vector target{1337, 42};
+
+		REQUIRE_CALL(comparator, Invoke(1337, 1337))
+			.RETURN(true);
+		REQUIRE_CALL(comparator, Invoke(42, 42))
+			.RETURN(true);
+
+		REQUIRE(matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals("{ 1337, 42 } range is permutation of { 1337, 42 }"));
 	}
 }

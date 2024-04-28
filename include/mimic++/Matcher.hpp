@@ -281,7 +281,7 @@ namespace mimicpp::matches::range
 	constexpr auto eq(Range&& expected, Comparator comparator = Comparator{})
 	{
 		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
-			[comp = std::move(comparator)]<typename Target>(Target&& target, auto& range)
+			[comp = std::move(comparator)]<typename Target>(Target&& target, auto& range)  // NOLINT(cppcoreguidelines-missing-std-forward)
 				requires std::predicate<
 					const Comparator&,
 					std::ranges::range_reference_t<Target>,
@@ -294,6 +294,27 @@ namespace mimicpp::matches::range
 			},
 
 			"{} range is equal to {}",
+			std::tuple{std::views::all(std::forward<Range>(expected))});
+	}
+
+	template <std::ranges::forward_range Range, typename Comparator = std::equal_to<>>
+	[[nodiscard]]
+	constexpr auto unordered_eq(Range&& expected, Comparator comparator = Comparator{})
+	{
+		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+			[comp = std::move(comparator)]<typename Target>(Target&& target, auto& range)  // NOLINT(cppcoreguidelines-missing-std-forward)
+				requires std::predicate<
+					const Comparator&,
+					std::ranges::range_reference_t<Target>,
+					std::ranges::range_reference_t<Range>>
+			{
+				return std::ranges::is_permutation(
+					target,
+					range,
+					std::ref(comp));
+			},
+
+			"{} range is permutation of {}",
 			std::tuple{std::views::all(std::forward<Range>(expected))});
 	}
 }
