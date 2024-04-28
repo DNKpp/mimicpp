@@ -34,6 +34,7 @@ namespace mimicpp::format
 	using std::format_to;
 	using std::vformat;
 	using std::vformat_to;
+	using std::make_format_args;
 
 #else
 
@@ -42,6 +43,7 @@ namespace mimicpp::format
 
 	using std::vformat;
 	using std::vformat_to;
+	using std::make_format_args;
 
 	template <typename... Args>
 	[[nodiscard]]

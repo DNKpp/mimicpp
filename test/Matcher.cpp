@@ -68,10 +68,10 @@ TEST_CASE(
 	"[matcher]")
 {
 	MatcherPredicateMock<int> predicate{};
-	MatcherDescriberMock<int> describer{};
 	matcher::PredicateMatcher matcher{
 		std::ref(predicate),
-		std::ref(describer)
+		"Hello, {}!",
+		std::tuple<>{}
 	};
 
 	SECTION("When matches() is called, argument is forwarded to the predicate.")
@@ -87,11 +87,8 @@ TEST_CASE(
 
 	SECTION("When describe() is called, argument is forwarded to the functional.")
 	{
-		REQUIRE_CALL(describer, describe(42))
-			.RETURN("Hello, World!");
-
 		constexpr int value{42};
-		REQUIRE("Hello, World!" == matcher.describe(value));
+		REQUIRE("Hello, 42!" == matcher.describe(value));
 	}
 }
 
@@ -100,15 +97,14 @@ TEST_CASE(
 	"[matcher]")
 {
 	MatcherPredicateMock<int> predicate{};
-	MatcherDescriberMock<int> describer{};
 	matcher::PredicateMatcher<
 			std::reference_wrapper<MatcherPredicateMock<int>>,
-			std::reference_wrapper<MatcherDescriberMock<int>>,
+			std::tuple<>,
 			matcher::InvertiblePolicy
 		>
 		matcher{
 			std::ref(predicate),
-			std::ref(describer)
+			"Hello, {}!"
 		};
 
 	matcher::PredicateMatcher negatedMatcher = !std::move(matcher);
@@ -127,26 +123,9 @@ TEST_CASE(
 
 	SECTION("When describe() is called, argument is forwarded to the functional.")
 	{
-		REQUIRE_CALL(describer, describe(42))
-				.RETURN("Hello, World!");
-
 		constexpr int value{42};
-		REQUIRE("!(Hello, World!)" == negatedMatcher.describe(value));
+		REQUIRE("!(Hello, 42!)" == negatedMatcher.describe(value));
 	}
-}
-
-TEST_CASE(
-	"matcher::TargetPredicateDescriber serves as a helper for pre-defined formatting descriptions.",
-	"[matcher]"
-)
-{
-	const matcher::TargetPredicateDescriber describer{"Hello, {} World!"};
-
-	constexpr int value{42};
-	REQUIRE("Hello, 42 World!" == describer(value));
-
-	const StringT str{" test "};
-	REQUIRE("Hello,  test  World!" == describer(str));
 }
 
 TEST_CASE(
