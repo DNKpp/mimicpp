@@ -223,92 +223,76 @@ namespace mimicpp::expectation_policies
 		Exception m_Exception;
 	};
 
-	template <
-		typename Signature,
-		std::size_t index,
-		matcher_for<signature_param_type_t<index, Signature>> Matcher>
-	class ArgumentMatcher
+	template <typename Matcher, typename Projection, typename Describer>
+		requires std::same_as<Matcher, std::remove_cvref_t<Matcher>>
+				&& std::same_as<Projection, std::remove_cvref_t<Projection>>
+				&& std::same_as<Describer, std::remove_cvref_t<Describer>>
+				&& std::is_move_constructible_v<Matcher>
+				&& std::is_move_constructible_v<Projection>
+				&& std::is_move_constructible_v<Describer>
+	class Requirement
 	{
 	public:
-		using ParamT = signature_param_type_t<index, Signature>;
-		using CallInfoT = call::info_for_signature_t<Signature>;
-
-		~ArgumentMatcher() = default;
-
 		[[nodiscard]]
-		explicit constexpr ArgumentMatcher(
-			Matcher&& matcher
-		) noexcept(std::is_nothrow_move_constructible_v<Matcher>)
-			: m_Matcher{std::move(matcher)}
+		explicit constexpr Requirement(
+			Matcher&& matcher,
+			Projection projection = Projection{},
+			Describer describer = Describer{}
+		) noexcept(
+			std::is_nothrow_move_constructible_v<Matcher>
+			&& std::is_nothrow_move_constructible_v<Projection>
+			&& std::is_nothrow_move_constructible_v<Describer>)
+			: m_Matcher{std::move(matcher)},
+			m_Projection{std::move(projection)},
+			m_Describer{std::move(describer)}
 		{
 		}
-
-		ArgumentMatcher(const ArgumentMatcher&) = delete;
-		ArgumentMatcher& operator =(const ArgumentMatcher&) = delete;
-
-		[[nodiscard]]
-		ArgumentMatcher(ArgumentMatcher&&) = default;
-		ArgumentMatcher& operator =(ArgumentMatcher&&) = default;
 
 		static constexpr bool is_satisfied() noexcept
 		{
 			return true;
 		}
 
+		template <typename Return, typename... Args>
+			requires std::invocable<const Projection&, const call::Info<Return, Args...>&>
+					&& requires(std::invoke_result_t<const Projection&, const call::Info<Return, Args...>&> target)
+					{
+						requires matcher_for<
+							Matcher,
+							decltype(target)>;
+						requires std::convertible_to<
+							std::invoke_result_t<
+								const Describer&,
+								decltype(target),
+								StringT,
+								bool>,
+							std::optional<StringT>>;
+					}
 		[[nodiscard]]
-		constexpr call::SubMatchResult matches(const CallInfoT& info) const noexcept
+		constexpr call::SubMatchResult matches(const call::Info<Return, Args...>& info) const
 		{
-			auto& arg = std::get<index>(info.args).get();
-			if (m_Matcher.matches(arg))
-			{
+			auto& target = std::invoke(m_Projection, info);
+			const bool matchResult = m_Matcher.matches(target);
 				return {
-					.matched = true,
-					.msg = format::format(
-						"param[{}] matches {}",
-						index,
-						m_Matcher.describe(arg))
+				.matched = matchResult,
+				.msg = std::invoke(
+					m_Describer,
+					target,
+					m_Matcher.describe(target),
+					matchResult)
 				};
 			}
 
-			return {
-				.matched = false,
-				.msg = format::format(
-					"param[{}] does not match {}",
-					index,
-					m_Matcher.describe(arg))
-			};
-		}
-
-		static constexpr void consume(const CallInfoT&) noexcept
+		template <typename Return, typename... Args>
+		static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
 		{
 		}
 
 	private:
 		[[no_unique_address]] Matcher m_Matcher;
-	};
-
-	template <typename Signature, std::size_t index, typename Matcher>
-		requires matcher_for<std::remove_cvref_t<Matcher>, signature_param_type_t<index, Signature>>
-	[[nodiscard]]
-	constexpr ArgumentMatcher<Signature, index, std::remove_cvref_t<Matcher>> make_argument_matcher(
-		Matcher&& matcher
-	) noexcept(std::is_nothrow_move_constructible_v<std::remove_cvref_t<Matcher>>)
-	{
-		return ArgumentMatcher<Signature, index, std::remove_cvref_t<Matcher>>{
-			std::forward<Matcher>(matcher)
+		[[no_unique_address]] Projection m_Projection;
+		[[no_unique_address]] Describer m_Describer;
 		};
-	}
-
-	template <typename Signature, std::size_t index, std::equality_comparable_with<signature_param_type_t<index, Signature>> Value>
-	[[nodiscard]]
-	constexpr ArgumentMatcher<Signature, index, decltype(matches::eq(std::declval<Value>()))> make_argument_matcher(
-		Value&& value
-	)
-	{
-		return ArgumentMatcher<Signature, index, decltype(matches::eq(std::declval<Value>()))>{
-			matches::eq(std::forward<Value>(value))
-		};
-	}
 
 	template <typename Action>
 	class SideEffectAction
@@ -363,7 +347,7 @@ namespace mimicpp::expectation_policies
 	public:
 		[[nodiscard]]
 		explicit constexpr ApplyAllArgsAction(
-			Action&& action
+			Action action = Action{}
 		) noexcept(std::is_nothrow_move_constructible_v<Action>)
 			: m_Action{std::move(action)}
 		{
@@ -374,13 +358,13 @@ namespace mimicpp::expectation_policies
 
 		template <typename Return, typename... Args>
 			requires std::invocable<
-				Action&,
+				const Action&,
 				ProjectedArgT<Args>...>
 		constexpr decltype(auto) operator ()(
 			const call::Info<Return, Args...>& callInfo
-		) noexcept(
+		) const noexcept(
 			std::is_nothrow_invocable_v<
-				Action&,
+				const Action&,
 				ProjectedArgT<Args>...>)
 		{
 			static_assert(
@@ -407,8 +391,9 @@ namespace mimicpp::expectation_policies
 	class ApplyArgsAction
 	{
 	public:
+		[[nodiscard]]
 		explicit constexpr ApplyArgsAction(
-			Action&& action
+			Action action = Action{}
 		) noexcept(std::is_nothrow_move_constructible_v<Action>)
 			: m_Action{std::move(action)}
 		{
@@ -423,13 +408,13 @@ namespace mimicpp::expectation_policies
 		template <typename Return, typename... Args>
 			requires (... && (indices < sizeof...(Args)))
 					&& std::invocable<
-						Action,
+						const Action&,
 						ProjectedArgListElementT<indices, Args...>...>
 		constexpr decltype(auto) operator ()(
 			const call::Info<Return, Args...>& callInfo
-		) noexcept(
+		) const noexcept(
 			std::is_nothrow_invocable_v<
-				Action&,
+				const Action&,
 				ProjectedArgListElementT<indices, Args...>...>)
 		{
 			static_assert(
@@ -447,6 +432,19 @@ namespace mimicpp::expectation_policies
 
 	private:
 		Action m_Action;
+	};
+}
+
+namespace mimicpp::expectation_policies::detail
+{
+	struct forward_fn
+	{
+		template <typename T>
+		[[nodiscard]]
+		constexpr T&& operator ()(T&& obj) const noexcept
+		{
+			return std::forward<T>(obj);
+		}
 	};
 }
 
@@ -508,19 +506,29 @@ namespace mimicpp::expect
 	{
 		return expectation_policies::RuntimeTimes{0u, max};
 	}
-}
 
-namespace mimicpp::finally::detail
+	namespace detail
 {
-	struct forward_fn
+		template <std::size_t index>
+		struct arg_requirement_describer
 	{
-		template <typename T>
 		[[nodiscard]]
-		constexpr T&& operator ()(T&& obj) const noexcept
+			constexpr StringT operator ()(
+				[[maybe_unused]] auto&& target,
+				const StringViewT matcherDescription,
+				const bool result
+			) const
 		{
-			return std::forward<T>(obj);
+				return format::format(
+					"arg[{}] {} requirement: {}",
+					index,
+					result ? "passed" : "failed",
+					matcherDescription);
+			}
+		};
 		}
 	};
+}
 }
 
 namespace mimicpp::finally
@@ -672,10 +680,10 @@ namespace mimicpp::finally
 	{
 		return expectation_policies::ReturnsResultOf{
 			expectation_policies::ApplyArgsAction<
-				detail::forward_fn,
+				expectation_policies::detail::forward_fn,
 				std::add_rvalue_reference_t,
 				index>{
-				detail::forward_fn{}
+				expectation_policies::detail::forward_fn{}
 			}
 		};
 	}

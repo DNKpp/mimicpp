@@ -159,6 +159,32 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
+	template <typename Signature, std::size_t index, typename Arg>
+		requires matcher_for<
+			std::remove_cvref_t<Arg>,
+			signature_param_type_t<index, Signature>>
+	[[nodiscard]]
+	constexpr auto make_arg_policy(Arg&& arg, [[maybe_unused]] const priority_tag<2>)
+	{
+		return expect::arg<index>(std::forward<Arg>(arg));
+	}
+
+	template <typename Signature, std::size_t index, std::equality_comparable_with<signature_param_type_t<index, Signature>> Arg>
+	[[nodiscard]]
+	constexpr auto make_arg_policy(Arg&& arg, [[maybe_unused]] const priority_tag<1>)
+	{
+		return expect::arg<index>(
+			matches::eq(std::forward<Arg>(arg)));
+	}
+
+	template <typename Signature, std::size_t index, typename Arg>
+	constexpr void make_arg_policy([[maybe_unused]] Arg&& arg, [[maybe_unused]] const priority_tag<0>) noexcept  // NOLINT(cppcoreguidelines-missing-std-forward)
+	{
+		static_assert(
+			always_false<Arg>{},
+			"The provided argument is neither a matcher, nor is it equality comparable with the selected param.");
+	}
+
 	template <typename Signature, typename Builder, std::size_t... indices, typename... Args>
 	[[nodiscard]]
 	constexpr auto extend_builder_with_arg_policies(
@@ -170,7 +196,9 @@ namespace mimicpp::detail
 		return (
 			std::forward<Builder>(builder)
 			| ...
-			| expectation_policies::make_argument_matcher<Signature, indices>(std::forward<Args>(args)));
+			| detail::make_arg_policy<Signature, indices>(
+					std::forward<Args>(args),
+					priority_tag<2>{}));
 	}
 
 	template <typename Signature, typename... Args>

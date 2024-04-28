@@ -361,146 +361,92 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"expectation_policies::ArgumentMatcher checks whether the given call::Info matches.",
+	"expectation_policies::Requirement checks whether the given call::Info matches.",
 	"[expectation][expectation::policy]"
 )
 {
-	SECTION("Policy works on unary signature.")
-	{
+	using trompeloeil::_;
+	namespace Matches = Catch::Matchers;
+
 		using SignatureT = void(int);
 		using CallInfoT = call::info_for_signature_t<SignatureT>;
-
-		MatcherMock<int> matcher{};
-		const auto policy = expectation_policies::make_argument_matcher<SignatureT, 0>(
-			MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}});
-		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy)>, SignatureT>);
-
-		int param{42};
-		const CallInfoT call{
-			.args = {param},
+	int arg0{42};
+	const CallInfoT info{
+		.args = {arg0},
 			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
 			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
 		};
 
-		SECTION("Policy is always satisfied.")
-		{
-			REQUIRE(policy.is_satisfied());
-		}
+	using ProjectionT = InvocableMock<int&, const CallInfoT&>;
+	using DescriberT = InvocableMock<StringT, int&, StringViewT, bool>;
+	using MatcherT = MatcherMock<int&>;
+	STATIC_CHECK(matcher_for<MatcherT, int&>);
 
-		SECTION("Policy doesn't consume.")
-		{
-			REQUIRE_NOTHROW(policy.consume(call));
-		}
+	ProjectionT projection{};
+	DescriberT describer{};
+	MatcherT matcher{};
 
-		SECTION("When matches is called, policy forwards param to predicate and describer.")
-		{
-			const auto [match, msg] = GENERATE(
-				(table<bool, std::string>)({
-					{false, "param[0] does not match 42"},
-					{true, "param[0] matches 42"}
-					}));
-
-			trompeloeil::sequence sequence{};
-			REQUIRE_CALL(matcher, matches(42))
-				.IN_SEQUENCE(sequence)
-				.RETURN(match);
-			REQUIRE_CALL(matcher, describe(42))
-				.IN_SEQUENCE(sequence)
-				.RETURN("42");
-
-			const auto result = policy.matches(call);
-			REQUIRE(match == result.matched);
-			REQUIRE_THAT(
-				result.msg.value(),
-				Catch::Matchers::Equals(msg));
-		}
-	}
-
-	SECTION("Policy works on binary signature.")
-	{
-		using SignatureT = void(int, const std::string&);
-		using CallInfoT = call::info_for_signature_t<SignatureT>;
-
-		MatcherMock<int> matcher1{};
-		const auto policy1 = expectation_policies::make_argument_matcher<SignatureT, 0>(
-			MatcherFacade{std::ref(matcher1), UnwrapReferenceWrapper{}});
-		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy1)>, SignatureT>);
-
-		MatcherMock<std::string> matcher2{};
-		const auto policy2 = expectation_policies::make_argument_matcher<SignatureT, 1>(
-			MatcherFacade{std::ref(matcher2), UnwrapReferenceWrapper{}});
-		STATIC_REQUIRE(expectation_policy_for<std::remove_const_t<decltype(policy2)>, SignatureT>);
-
-		int param0{42};
-		const std::string param1{"Hello, World!"};
-		const CallInfoT call{
-			.args = {param0, param1},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	expectation_policies::Requirement<
+		MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>,
+		std::reference_wrapper<ProjectionT>,
+		std::reference_wrapper<DescriberT>
+	> policy{
+		MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
+		projection,
+		describer
 		};
 
-		SECTION("Policy is always satisfied.")
+	STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+
+	REQUIRE(std::as_const(policy).is_satisfied());
+	REQUIRE_NOTHROW(policy.consume(info));
+
+	SECTION("When matched.")
 		{
-			REQUIRE(policy1.is_satisfied());
-			REQUIRE(policy2.is_satisfied());
-		}
+		REQUIRE_CALL(projection, Invoke(_))
+			.LR_WITH(&_1 == &info)
+			.LR_RETURN(std::ref(arg0));
+		REQUIRE_CALL(matcher, matches(_))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN(true);
+		REQUIRE_CALL(matcher, describe(_))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN("success");
+		REQUIRE_CALL(describer, Invoke(_, "success", true))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN("succeeded!");
 
-		SECTION("Policy doesn't consume.")
-		{
-			REQUIRE_NOTHROW(policy1.consume(call));
-			REQUIRE_NOTHROW(policy2.consume(call));
-		}
-
-		SECTION("When matches is called, policy forwards param to predicate and describer.")
-		{
-			SECTION("On param0.")
-			{
-				const auto [match, msg] = GENERATE(
-					(table<bool, std::string>)({
-						{false, "param[0] does not match 42"},
-						{true, "param[0] matches 42"}
-						}));
-
-				trompeloeil::sequence sequence{};
-				REQUIRE_CALL(matcher1, matches(42))
-					.IN_SEQUENCE(sequence)
-					.RETURN(match);
-				REQUIRE_CALL(matcher1, describe(42))
-					.IN_SEQUENCE(sequence)
-					.RETURN("42");
-
-				const auto result = policy1.matches(call);
-				REQUIRE(match == result.matched);
+		const call::SubMatchResult result = std::as_const(policy).matches(info);
+		REQUIRE(result.matched);
+		REQUIRE(result.msg);
 				REQUIRE_THAT(
-					result.msg.value(),
-					Catch::Matchers::Equals(msg));
+			*result.msg,
+			Matches::Equals("succeeded!"));
 			}
 
-			SECTION("On param2.")
+	SECTION("When not matched.")
 			{
-				const auto [match, msg] = GENERATE(
-					(table<bool, std::string>)({
-						{false, "param[1] does not match Hello, World!"},
-						{true, "param[1] matches Hello, World!"}
-						}));
+		REQUIRE_CALL(projection, Invoke(_))
+			.LR_WITH(&_1 == &info)
+			.LR_RETURN(std::ref(arg0));
+		REQUIRE_CALL(matcher, matches(_))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN(false);
+		REQUIRE_CALL(matcher, describe(_))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN("failed");
+		REQUIRE_CALL(describer, Invoke(_, "failed", false))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN("failure!");
 
-				trompeloeil::sequence sequence{};
-				REQUIRE_CALL(matcher2, matches(param1))
-					.IN_SEQUENCE(sequence)
-					.RETURN(match);
-				REQUIRE_CALL(matcher2, describe(param1))
-					.IN_SEQUENCE(sequence)
-					.RETURN("Hello, World!");
-
-				const auto result = policy2.matches(call);
-				REQUIRE(match == result.matched);
+		const call::SubMatchResult result = std::as_const(policy).matches(info);
+		REQUIRE(!result.matched);
+		REQUIRE(result.msg);
 				REQUIRE_THAT(
-					result.msg.value(),
-					Catch::Matchers::Equals(msg));
+			*result.msg,
+			Matches::Equals("failure!"));
 			}
 		}
-	}
-}
 
 TEST_CASE(
 	"Invalid configurations of expectation_policies::SideEffectAction do not satisfy expectation_policy_for concept.",
