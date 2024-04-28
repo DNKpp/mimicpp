@@ -189,6 +189,17 @@ namespace mimicpp::matches
 				format::format("{{}} != {}", mimicpp::print(value))
 			});
 	}
+
+	template <typename T>
+	[[nodiscard]]
+	constexpr auto lt(T&& value)
+	{
+		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+			std::bind_front(std::ranges::greater{}, std::forward<T>(value)),
+			matcher::TargetPredicateDescriber{
+				format::format("{{}} < {}", mimicpp::print(value))
+			});
+	}
 }
 
 #endif
