@@ -9,6 +9,7 @@
 #pragma once
 
 #include <format>
+#include <iterator>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -20,7 +21,7 @@ namespace mimicpp
 	using CharTraitsT = std::char_traits<CharT>;
 	using StringT = std::basic_string<CharT, CharTraitsT>;
 	using StringViewT = std::basic_string_view<CharT, CharTraitsT>;
-	using StringStreamT = std::basic_stringstream<CharT, CharTraitsT>;
+	using StringStreamT = std::basic_ostringstream<CharT, CharTraitsT>;
 
 	template <typename T>
 	concept print_iterator = std::output_iterator<T, CharT>;
@@ -99,6 +100,14 @@ namespace mimicpp::detail
 		return Printer::print(out, std::forward<T>(value));
 	}
 
+	template <typename OutIter, std::ranges::forward_range Range>
+	OutIter print(
+		OutIter out,
+		Range&& range,
+		priority_tag<2>
+	);
+
+
 	template <typename Char>
 	struct format_context;
 
@@ -147,18 +156,11 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T& value,
-		const priority_tag<2>
+		const priority_tag<1>
 	)
 	{
 		return format::format_to(out, "{}", value);
 	}
-
-	template <typename OutIter, std::ranges::forward_range Range>
-	OutIter print(
-		OutIter out,
-		Range&& range,
-		priority_tag<1>
-	);
 
 	template <typename OutIter>
 	OutIter print(
@@ -207,7 +209,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		Range&& range,
-		const priority_tag<1>
+		const priority_tag<2>
 	)
 	{
 		out = format::format_to(out, "{{ ");
