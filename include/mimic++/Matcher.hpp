@@ -11,8 +11,10 @@
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
+#include <algorithm>
 #include <concepts>
 #include <functional>
+#include <ranges>
 #include <tuple>
 #include <type_traits>
 
@@ -40,7 +42,7 @@ namespace mimicpp::matcher
 		struct is_applicable_helper<Trait, Return, Predicate, Target, std::tuple<OtherArgs...>>
 			: public std::bool_constant<Trait<Return, Predicate, Target&, const OtherArgs&...>::value>
 		{
-	};
+		};
 
 		template <typename Predicate, typename Target, typename OtherArgsTuple>
 		concept applicable_predicate =
@@ -102,8 +104,8 @@ namespace mimicpp::matcher
 			return std::apply(
 				[&, this](auto&... additionalArgs)
 				{
-			return std::invoke(
-				m_Predicate,
+					return std::invoke(
+						m_Predicate,
 						target,
 						additionalArgs...);
 				},
@@ -269,6 +271,30 @@ namespace mimicpp::matches
 		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
 			std::forward<UnaryPredicate>(predicate),
 			"{} satisfies predicate");
+	}
+}
+
+namespace mimicpp::matches::range
+{
+	template <std::ranges::forward_range Range, typename Comparator = std::equal_to<>>
+	[[nodiscard]]
+	constexpr auto eq(Range&& expected, Comparator comparator = Comparator{})
+	{
+		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+			[comp = std::move(comparator)]<typename Target>(Target&& target, auto& range)
+				requires std::predicate<
+					const Comparator&,
+					std::ranges::range_reference_t<Target>,
+					std::ranges::range_reference_t<Range>>
+			{
+				return std::ranges::equal(
+					target,
+					range,
+					std::ref(comp));
+			},
+
+			"{} range is equal to {}",
+			std::tuple{std::views::all(std::forward<Range>(expected))});
 	}
 }
 
