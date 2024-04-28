@@ -102,6 +102,12 @@ struct std::formatter<mimicpp::Constness, char>
 
 namespace mimicpp
 {
+	template <typename ...>
+	struct always_false
+		: public std::bool_constant<false>
+	{
+	};
+
 	class AlwaysTruePredicate
 	{
 	public:
