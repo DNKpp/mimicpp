@@ -273,15 +273,15 @@ namespace mimicpp::expectation_policies
 		{
 			auto& target = std::invoke(m_Projection, info);
 			const bool matchResult = m_Matcher.matches(target);
-				return {
+			return {
 				.matched = matchResult,
 				.msg = std::invoke(
 					m_Describer,
 					target,
 					m_Matcher.describe(target),
 					matchResult)
-				};
-			}
+			};
+		}
 
 		template <typename Return, typename... Args>
 		static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
@@ -292,7 +292,7 @@ namespace mimicpp::expectation_policies
 		[[no_unique_address]] Matcher m_Matcher;
 		[[no_unique_address]] Projection m_Projection;
 		[[no_unique_address]] Describer m_Describer;
-		};
+	};
 
 	template <typename Action>
 	class SideEffectAction
@@ -508,17 +508,17 @@ namespace mimicpp::expect
 	}
 
 	namespace detail
-{
+	{
 		template <std::size_t index>
 		struct arg_requirement_describer
-	{
-		[[nodiscard]]
+		{
+			[[nodiscard]]
 			constexpr StringT operator ()(
 				[[maybe_unused]] auto&& target,
 				const StringViewT matcherDescription,
 				const bool result
 			) const
-		{
+			{
 				return format::format(
 					"arg[{}] {} requirement: {}",
 					index,
@@ -526,9 +526,24 @@ namespace mimicpp::expect
 					matcherDescription);
 			}
 		};
-		}
-	};
-}
+	}
+
+	template <std::size_t index, typename Matcher>
+	[[nodiscard]]
+	constexpr auto arg(
+		Matcher&& matcher
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher&&>)
+	{
+		return expectation_policies::Requirement<
+			std::remove_cvref_t<Matcher>,
+			expectation_policies::ApplyArgsAction<
+				expectation_policies::detail::forward_fn,
+				std::add_lvalue_reference_t,
+				index>,
+			detail::arg_requirement_describer<index>>{
+			std::forward<Matcher>(matcher),
+		};
+	}
 }
 
 namespace mimicpp::finally

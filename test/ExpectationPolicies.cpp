@@ -368,14 +368,14 @@ TEST_CASE(
 	using trompeloeil::_;
 	namespace Matches = Catch::Matchers;
 
-		using SignatureT = void(int);
-		using CallInfoT = call::info_for_signature_t<SignatureT>;
+	using SignatureT = void(int);
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
 	int arg0{42};
 	const CallInfoT info{
 		.args = {arg0},
-			.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-			.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-		};
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	};
 
 	using ProjectionT = InvocableMock<int&, const CallInfoT&>;
 	using DescriberT = InvocableMock<StringT, int&, StringViewT, bool>;
@@ -394,7 +394,7 @@ TEST_CASE(
 		MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
 		projection,
 		describer
-		};
+	};
 
 	STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
 
@@ -402,7 +402,7 @@ TEST_CASE(
 	REQUIRE_NOTHROW(policy.consume(info));
 
 	SECTION("When matched.")
-		{
+	{
 		REQUIRE_CALL(projection, Invoke(_))
 			.LR_WITH(&_1 == &info)
 			.LR_RETURN(std::ref(arg0));
@@ -419,13 +419,13 @@ TEST_CASE(
 		const call::SubMatchResult result = std::as_const(policy).matches(info);
 		REQUIRE(result.matched);
 		REQUIRE(result.msg);
-				REQUIRE_THAT(
+		REQUIRE_THAT(
 			*result.msg,
 			Matches::Equals("succeeded!"));
-			}
+	}
 
 	SECTION("When not matched.")
-			{
+	{
 		REQUIRE_CALL(projection, Invoke(_))
 			.LR_WITH(&_1 == &info)
 			.LR_RETURN(std::ref(arg0));
@@ -442,11 +442,11 @@ TEST_CASE(
 		const call::SubMatchResult result = std::as_const(policy).matches(info);
 		REQUIRE(!result.matched);
 		REQUIRE(result.msg);
-				REQUIRE_THAT(
+		REQUIRE_THAT(
 			*result.msg,
 			Matches::Equals("failure!"));
-			}
-		}
+	}
+}
 
 TEST_CASE(
 	"Invalid configurations of expectation_policies::SideEffectAction do not satisfy expectation_policy_for concept.",
@@ -1054,6 +1054,72 @@ TEST_CASE(
 	expectation_policies::SideEffectAction policy = then::invoke(std::ref(action));
 	REQUIRE_CALL(action, Invoke());
 	REQUIRE_NOTHROW(policy.consume(info));
+}
+
+TEST_CASE(
+	":expect::arg creates a expectation_policies::Requirement policy.",
+	"[expectation][expectation::factories]"
+)
+{
+	using trompeloeil::_;
+	namespace Matches = Catch::Matchers;
+
+	using SignatureT = void(int);
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
+	int arg0{42};
+	const CallInfoT info{
+		.args = {arg0},
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	};
+
+	using MatcherT = MatcherMock<int&>;
+	STATIC_CHECK(matcher_for<MatcherT, int&>);
+	MatcherT matcher{};
+
+	expectation_policies::Requirement policy = expect::arg<0>(
+		MatcherFacade{
+			std::ref(matcher),
+			UnwrapReferenceWrapper{}
+		});
+	STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+
+	REQUIRE(std::as_const(policy).is_satisfied());
+	REQUIRE_NOTHROW(policy.consume(info));
+
+	SECTION("When matched.")
+	{
+		REQUIRE_CALL(matcher, matches(_))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN(true);
+		REQUIRE_CALL(matcher, describe(_))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN("custom requirement");
+
+		const call::SubMatchResult result = std::as_const(policy).matches(info);
+		REQUIRE(result.matched);
+		REQUIRE(result.msg);
+		REQUIRE_THAT(
+			*result.msg,
+			Matches::Equals("arg[0] passed requirement: custom requirement"));
+	}
+
+	SECTION("When not matched.")
+	{
+		REQUIRE_CALL(matcher, matches(_))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN(false);
+		REQUIRE_CALL(matcher, describe(_))
+			.LR_WITH(&_1 == &arg0)
+			.RETURN("custom requirement");
+
+		const call::SubMatchResult result = std::as_const(policy).matches(info);
+		REQUIRE(!result.matched);
+		REQUIRE(result.msg);
+		REQUIRE_THAT(
+			*result.msg,
+			Matches::Equals("arg[0] failed requirement: custom requirement"));
+	}
 }
 
 TEST_CASE(
