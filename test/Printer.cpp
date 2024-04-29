@@ -160,6 +160,45 @@ TEST_CASE(
 			Catch::Matchers::Equals("StdFormatAndCustomPrintable"));
 	}
 
+	SECTION("Strings have special treatment.")
+	{
+		SECTION("Empty strings are supported.")
+		{
+			const std::string str{};
+
+			print(std::ostreambuf_iterator{stream}, str);
+			REQUIRE_THAT(
+				std::move(stream).str(),
+				Catch::Matchers::Equals("\"\""));
+		}
+
+		SECTION("Strings with arbitrary size are supported.")
+		{
+			const std::string str{"Hello, World!"};
+
+			print(std::ostreambuf_iterator{stream}, str);
+			REQUIRE_THAT(
+				std::move(stream).str(),
+				Catch::Matchers::Equals("\"Hello, World!\""));
+		}
+
+		SECTION("Raw string literals are supported.")
+		{
+			print(std::ostreambuf_iterator{stream}, "Hello, World!");
+			REQUIRE_THAT(
+				std::move(stream).str(),
+				Catch::Matchers::Equals("\"Hello, World!\""));
+		}
+
+		SECTION("std::string_views are supported.")
+		{
+			print(std::ostreambuf_iterator{stream}, StringViewT{"Hello, World!"});
+			REQUIRE_THAT(
+				std::move(stream).str(),
+				Catch::Matchers::Equals("\"Hello, World!\""));
+		}
+	}
+
 	SECTION("Ranges have special treatment.")
 	{
 		SECTION("Empty ranges are supported.")

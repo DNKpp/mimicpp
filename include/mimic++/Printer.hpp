@@ -90,7 +90,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
-		const priority_tag<3>
+		const priority_tag<4>
 	)
 		requires requires
 		{
@@ -98,6 +98,19 @@ namespace mimicpp::detail
 		}
 	{
 		return Printer::print(out, std::forward<T>(value));
+	}
+
+	template <typename OutIter, std::convertible_to<StringViewT> String>
+	OutIter print(
+		OutIter out,
+		String&& str,
+		priority_tag<3>
+	)
+	{
+		return format::format_to(
+			out,
+			"\"{}\"",
+			static_cast<StringViewT>(str));
 	}
 
 	template <typename OutIter, std::ranges::forward_range Range>
@@ -182,7 +195,7 @@ namespace mimicpp::detail
 		) const
 		{
 			static_assert(
-				requires(const priority_tag<3> tag)
+				requires(const priority_tag<4> tag)
 				{
 					{ print(out, std::forward<T>(value), tag) } -> std::convertible_to<OutIter>;
 				},
@@ -191,7 +204,7 @@ namespace mimicpp::detail
 			return print(
 				out,
 				std::forward<T>(value),
-				priority_tag<3>{});
+				priority_tag<4>{});
 		}
 
 		template <typename T>
