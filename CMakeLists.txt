@@ -57,7 +57,11 @@ if (MIMICPP_BUILD_EXAMPLES)
 	add_subdirectory("examples")
 endif()
 
-OPTION(MIMICPP_ENABLE_GENERATE_DOCS "Enable the doxygen documentation target." OFF)
-if (MIMICPP_ENABLE_GENERATE_DOCS)
+OPTION(MIMICPP_CONFIGURE_DOXYGEN "Determines, whether the doxyfile shall be configured." OFF)
+if (MIMICPP_CONFIGURE_DOXYGEN)
+
+	OPTION(MIMICPP_ENABLE_GENERATE_DOCS "Enable the doxygen documentation target." OFF)
+
 	add_subdirectory("docs")
+
 endif()

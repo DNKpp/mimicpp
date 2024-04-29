@@ -23,7 +23,7 @@ jobs:
         cmake \
             -S . \
             -B build \
-            -DMIMICPP_ENABLE_GENERATE_DOCS=ON \
+            -DMIMICPP_CONFIGURE_DOXYGEN=ON \
             -DMIMICPP_BUILD_TESTS=OFF \
             -DMIMICPP_BUILD_EXAMPLES=OFF
 
