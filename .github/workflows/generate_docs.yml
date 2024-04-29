@@ -28,7 +28,7 @@ jobs:
             -DMIMICPP_BUILD_TESTS=OFF \
             -DMIMICPP_BUILD_EXAMPLES=OFF
 
-    - name: Generate Doxygen Documentation (html and latex)
+    - name: Generate Doxygen Documentation
       uses: mattnotmitt/doxygen-action@edge
       with:
         doxyfile-path: build/docs/Doxyfile
@@ -38,9 +38,3 @@ jobs:
       with:
         name: HTML-Documentation
         path: build/docs/html
-
-    - name: Upload latex files
-      uses: actions/upload-artifact@v4
-      with:
-        name: Latex-Project
-        path: build/docs/latex
