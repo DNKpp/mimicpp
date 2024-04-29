@@ -5,7 +5,7 @@ add_executable(
 	mimicpp-examples
 	"Finalizers.cpp"
 	"SideEffects.cpp"
-)
+ "Requirements.cpp")
 if (MSVC)
 
 	# When using github ci, exceptions seems to be disabled by default.
