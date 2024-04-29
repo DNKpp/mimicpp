@@ -85,33 +85,42 @@ namespace mimicpp
 				m_AdditionalArgs);
 		}
 
-		//[[nodiscard]]
-		//constexpr auto operator !() const &
-		//	requires std::is_copy_constructible_v<Predicate>
-		//			&& std::is_copy_constructible_v<AdditionalArgsTuple>
-		//{
-		//	return PredicateMatcher{
-		//		std::not_fn(m_Predicate),
-		//		"!(" + m_FormatString + ")",
-		//		m_AdditionalArgs
-		//	};
-		//}
+		[[nodiscard]]
+		constexpr auto operator !() const &
+			requires std::is_copy_constructible_v<Predicate>
+					&& (... && std::is_copy_constructible_v<AdditionalArgs>)
+		{
+			return make_inverted(
+				m_Predicate,
+				m_FormatString,
+				std::move(m_AdditionalArgs));
+		}
 
 		[[nodiscard]]
 		constexpr auto operator !() &&
 		{
-			using NotFnT = decltype(std::not_fn(std::move(m_Predicate)));
-			return PredicateMatcher<NotFnT, AdditionalArgs...>{
-				std::not_fn(std::move(m_Predicate)),
-				"!(" + m_FormatString + ")",
-				std::move(m_AdditionalArgs)
-			};
+			return make_inverted(
+				std::move(m_Predicate),
+				m_FormatString,
+				std::move(m_AdditionalArgs));
 		}
 
 	private:
 		[[no_unique_address]] Predicate m_Predicate;
 		StringT m_FormatString;
-		std::tuple<AdditionalArgs...> m_AdditionalArgs{};
+		mutable std::tuple<AdditionalArgs...> m_AdditionalArgs{};
+
+		template <typename Fn>
+		[[nodiscard]]
+		static constexpr auto make_inverted(Fn&& fn, const StringViewT fmt, std::tuple<AdditionalArgs...> tuple)
+		{
+			using NotFnT = decltype(std::not_fn(std::forward<Fn>(fn)));
+			return PredicateMatcher<NotFnT, AdditionalArgs...>{
+				std::not_fn(std::forward<Fn>(fn)),
+				format::format("!({})", fmt),
+				std::move(tuple)
+			};
+		}
 	};
 }
 

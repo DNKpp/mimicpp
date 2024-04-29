@@ -96,31 +96,82 @@ TEST_CASE(
 	"matcher::PredicateMatcher can be negated.",
 	"[matcher]")
 {
-	MatcherPredicateMock<int> predicate{};
-	PredicateMatcher
-		matcher{
+	SECTION("As rvalue.")
+	{
+		MatcherPredicateMock<int> predicate{};
+		PredicateMatcher matcher{
 			std::ref(predicate),
 			"Hello, {}!"
 		};
 
-	PredicateMatcher negatedMatcher = !std::move(matcher);
-	STATIC_REQUIRE(matcher_for<decltype(negatedMatcher), int>);
+		PredicateMatcher negatedMatcher = !std::move(matcher);
+		STATIC_REQUIRE(matcher_for<decltype(negatedMatcher), int>);
 
-	SECTION("When matches() is called, argument is forwarded to the predicate.")
-	{
-		const bool result = GENERATE(true, false);
+		SECTION("When matches() is called, argument is forwarded to the predicate.")
+		{
+			const bool result = GENERATE(true, false);
 
-		REQUIRE_CALL(predicate, check(42))
-			.RETURN(result);
+			REQUIRE_CALL(predicate, check(42))
+				.RETURN(result);
 
-		constexpr int value{42};
-		REQUIRE(result == !negatedMatcher.matches(value));
+			constexpr int value{42};
+			REQUIRE(result == !negatedMatcher.matches(value));
+		}
+
+		SECTION("When describe() is called, argument is forwarded to the functional.")
+		{
+			constexpr int value{42};
+			REQUIRE("!(Hello, 42!)" == negatedMatcher.describe(value));
+		}
 	}
 
-	SECTION("When describe() is called, argument is forwarded to the functional.")
+	SECTION("As const lvalue.")
 	{
-		constexpr int value{42};
-		REQUIRE("!(Hello, 42!)" == negatedMatcher.describe(value));
+		MatcherPredicateMock<int> predicate{};
+		const PredicateMatcher matcher{
+			std::ref(predicate),
+			"Hello, {}!"
+		};
+
+		PredicateMatcher negatedMatcher = !matcher;
+		STATIC_REQUIRE(matcher_for<decltype(negatedMatcher), int>);
+
+		SECTION("When matches() is called, argument is forwarded to the predicate.")
+		{
+			const bool result = GENERATE(true, false);
+
+			REQUIRE_CALL(predicate, check(42))
+				.RETURN(result);
+
+			constexpr int value{42};
+			REQUIRE(result == !negatedMatcher.matches(value));
+		}
+
+		SECTION("When describe() is called, argument is forwarded to the functional.")
+		{
+			constexpr int value{42};
+			REQUIRE("!(Hello, 42!)" == negatedMatcher.describe(value));
+		}
+
+		SECTION("And original matcher is still working.")
+		{
+			SECTION("When matches() is called, argument is forwarded to the predicate.")
+			{
+				const bool result = GENERATE(true, false);
+
+				REQUIRE_CALL(predicate, check(42))
+					.RETURN(result);
+
+				constexpr int value{42};
+				REQUIRE(result == matcher.matches(value));
+			}
+
+			SECTION("When describe() is called, argument is forwarded to the functional.")
+			{
+				constexpr int value{42};
+				REQUIRE("Hello, 42!" == matcher.describe(value));
+			}
+		}
 	}
 }
 
