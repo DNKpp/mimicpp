@@ -531,14 +531,14 @@ namespace mimicpp::expect
 	/**
 	 * \defgroup EXPECTATION_REQUIREMENT requirement
 	 * \ingroup EXPECTATION
-	 * \brief Requirements determine, whether an expectation and a call match.
-	 * \details Requirements are those building blocks, which determine whether a call matches the expectation. If any of the specified
+	 * \brief Requirements determine, whether an expectation matches an incoming call.
+	 * \details Requirements are the building blocks, which determine whether a call satisfies the expectation. If any of the specified
 	 * requirements fail, there is no match.
 	 * \note An expectation without requirements matches any call.
 	 *
 	 * \details Requirements are checked during the ``matches`` step. If all requirements match, an additional ``is_saturated`` check is
-	 * performed on all requirements. If this hook returns ``true``, the expectation is treated as ``exhausted`` and will be skipped (but
-	 * reported if no match was found).
+	 * performed on all requirements. If this returns ``true``, the expectation is treated as ``exhausted`` and will be skipped (but
+	 * reported if no match was found). Otherwise, the call is matched.
 	 *
 	 *\{
 	 */
@@ -766,17 +766,21 @@ namespace mimicpp::then
 	/**
 	 * \defgroup EXPECTATION_SIDE_EFFECTS side effects
 	 * \ingroup EXPECTATION
-	 * \brief Side effects are an easy way to apply actions on matched expectations.
-	 * \details After an expectation match has been found, side effects will be applied during the ``consume`` step.
+	 * \brief Side effects are a convenient way to apply actions on matched expectations.
+	 * \details After a match has been created, side effects will be applied during the ``consume`` step.
 	 * They may alter the call arguments and capture any variable from the outside scope. Beware that those captured variables
 	 * must outlive the expectation they are attached on.
 	 *
-	 * Side effects will be executed in their construction order, but they should actually never throw. If it is intended to
-	 * actually throw an exception as a result, use ``expect::throws`` instead.
+	 * Side effects will be executed in order of their construction and later side effects will observe any changes applied on
+	 * arguments by prior side effects.
 	 *
-	 * As side effects actually are ``expectation policies``, they are in fact treated as such and may carry out special
-	 * behavior during ``is_satisfied`` and ``matches`` calls. That being said, the provided side effects are actually no-ops
-	 * on these functions, but custom side effects may behave differently.
+	 * \attention Side effects should never throw. If it is actually intended to throw an exception as a result, use
+	 * ``finally::throws`` instead.
+	 *
+	 * As side effects actually are ``expectation policies``, they may execute special behavior during ``is_satisfied`` and
+	 * ``matches`` steps. That being said, the provided side effects are actually no-ops on these functions, but custom side
+	 * effects may behave differently.
+	 *
 	 *\{
 	 */
 
