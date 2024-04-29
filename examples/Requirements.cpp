@@ -14,12 +14,14 @@ TEST_CASE(
 	"[example][example::requirements]"
 )
 {
+	//! [expect arg matcher]
 	namespace matches = mimicpp::matches;
 
 	mimicpp::Mock<void(int)> mock{};
 
 	SCOPED_EXP mock.expect_call(matches::eq(42));
 	mock(42);
+	//! [expect arg matcher]
 }
 
 TEST_CASE(
@@ -27,10 +29,12 @@ TEST_CASE(
 	"[example][example::requirements]"
 )
 {
+	//! [expect arg equal short]
 	mimicpp::Mock<void(int)> mock{};
 
 	SCOPED_EXP mock.expect_call(42);
 	mock(42);
+	//! [expect arg equal short]
 }
 
 TEST_CASE(
@@ -38,12 +42,14 @@ TEST_CASE(
 	"[example][example::requirements]"
 )
 {
+	//! [matcher wildcard]
 	using mimicpp::matches::_;
 
 	mimicpp::Mock<void(int)> mock{};
 
 	SCOPED_EXP mock.expect_call(_);
 	mock(1337);
+	//! [matcher wildcard]
 }
 
 TEST_CASE(
@@ -51,6 +57,7 @@ TEST_CASE(
 	"[example][example::requirements]"
 )
 {
+	//! [expect::arg]
 	using mimicpp::matches::_;
 	namespace matches = mimicpp::matches;
 	namespace expect = mimicpp::expect;
@@ -60,6 +67,7 @@ TEST_CASE(
 	SCOPED_EXP mock.expect_call(_)
 				| expect::arg<0>(matches::gt(42));
 	mock(1337);
+	//! [expect::arg]
 }
 
 TEST_CASE(
@@ -83,6 +91,7 @@ TEST_CASE(
 	"[example][example::requirements]"
 )
 {
+	//! [matcher inverted]
 	using mimicpp::matches::_;
 	namespace matches = mimicpp::matches;
 	namespace expect = mimicpp::expect;
@@ -92,6 +101,7 @@ TEST_CASE(
 	SCOPED_EXP mock.expect_call(_)	// in fact, the _ is the only built-in matcher, which isn't invertible
 				| expect::arg<0>(!matches::le(42));	// note the !
 	mock(1337);
+	//! [matcher inverted]
 }
 
 TEST_CASE(
@@ -99,6 +109,7 @@ TEST_CASE(
 	"[example][example::requirements]"
 )
 {
+	//! [matcher predicate]
 	using mimicpp::matches::_;
 	namespace matches = mimicpp::matches;
 	namespace expect = mimicpp::expect;
@@ -110,6 +121,7 @@ TEST_CASE(
 	SCOPED_EXP mock.expect_call(_)
 				| expect::arg<0>(matches::predicate(isOdd));
 	mock(1337);
+	//! [matcher predicate]
 }
 
 TEST_CASE(
@@ -117,6 +129,7 @@ TEST_CASE(
 	"[example][example::requirements]"
 )
 {
+	//! [matcher range sorted]
 	using mimicpp::matches::_;
 	namespace matches = mimicpp::matches;
 	namespace expect = mimicpp::expect;
@@ -128,6 +141,7 @@ TEST_CASE(
 
 	std::vector collection{42, 1337};
 	mock(collection);
+	//! [matcher range sorted]
 }
 
 TEST_CASE(
@@ -135,6 +149,7 @@ TEST_CASE(
 	"[example][example::requirements]"
 )
 {
+	//! [matcher predicate matcher]
 	using mimicpp::matches::_;
 	namespace matches = mimicpp::matches;
 	namespace expect = mimicpp::expect;
@@ -158,4 +173,5 @@ TEST_CASE(
 
 	std::vector collection{42, 1337};
 	mock(collection);
+	//! [matcher predicate matcher]
 }

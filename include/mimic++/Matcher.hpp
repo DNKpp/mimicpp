@@ -134,6 +134,7 @@ namespace mimicpp
 	 * \brief Matcher, which never fails.
 	 * \ingroup EXPECTATION_REQUIREMENT
 	 * \ingroup EXPECTATION_MATCHER
+	 * \snippet Requirements.cpp matcher wildcard
 	 */
 	class WildcardMatcher
 	{
@@ -161,7 +162,24 @@ namespace mimicpp::matches
 	 * \details Matchers can be used to check various argument properties and are highly customizable. In general,
 	 * they simply compare their arguments with a pre-defined predicate, but also provide a meaningful description.
 	 *
-	 * Most of the built-in matchers support the inversion operator (!), which then tests for the opposite condition.
+	 * In general matchers can be applied via the ``expect::arg<n>`` factory, but they can also be directly used
+	 * at the expect statement.
+	 * \snippet Requirements.cpp matcher inverted
+	 *
+	 * \details Most of the built-in matchers support the inversion operator (!), which then tests for the opposite
+	 * condition.
+	 * \snippet Requirements.cpp expect::arg
+	 * \snippet Requirements.cpp expect arg matcher
+	 *
+	 * \details There is also an even shorter syntax for equal testing.
+	 * \snippet Requirements.cpp expect arg equal short
+	 *
+	 * \details # Custom Matcher
+	 * Matchers are highly customizable. In fact, any type which satisfies ``matcher_for`` concept can be used.
+	 * There exists no base or interface type, but the ``PredicateMatcher`` servers as a convenient generic type, which
+	 * simply contains a predicate, a format string and optional additional arguments. But, this is just one option. If
+	 * you have some very specific needs, go and create your matcher from scratch.
+	 * \snippet Requirements.cpp matcher predicate matcher
 	 *
 	 * \attention Matchers receive their arguments as possibly non-const, which is due to workaround some restrictions
 	 * on const qualified views. Either way, matchers should never modify any of their arguments.
@@ -171,6 +189,7 @@ namespace mimicpp::matches
 
 	/**
 	 * \brief The wildcard matcher, always matching.
+	 * \snippet Requirements.cpp matcher wildcard
 	 */
 	inline constexpr WildcardMatcher _{};
 
@@ -275,6 +294,7 @@ namespace mimicpp::matches
 	 * \tparam UnaryPredicate Predicate type.
 	 * \param predicate The predicate to test.
 	 * \param description The formatting string. May contain a ``{}``-token for the target.
+	 * \snippet Requirements.cpp matcher predicate
 	 */
 	template <typename UnaryPredicate>
 	[[nodiscard]]
@@ -349,7 +369,7 @@ namespace mimicpp::matches::range
 	 * \ingroup EXPECTATION_REQUIREMENT
 	 * \ingroup EXPECTATION_MATCHER
 	 * \brief Range specific matchers.
-	 *
+	 * \snippet Requirements.cpp matcher range sorted
 	 *\{
 	 */
 
