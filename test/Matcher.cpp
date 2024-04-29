@@ -814,3 +814,60 @@ TEST_CASE(
 			Catch::Matchers::Equals("range { 1337, 42 } is sorted"));
 	}
 }
+
+TEST_CASE(
+	"matches::range::is_empty matches when target range is empty.",
+	"[matcher]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("When target is empty, it's a match.")
+	{
+		const auto matcher = matches::range::is_empty();
+
+		const std::vector<int> target{};
+
+		REQUIRE(matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals("range {  } is empty"));
+	}
+
+	SECTION("When a non-empty range is stored, it's no match.")
+	{
+		const auto matcher = matches::range::is_empty();
+
+		const std::vector target{42};
+
+		REQUIRE(!matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals("range { 42 } is empty"));
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		const auto matcher = !matches::range::is_empty();
+
+		SECTION("When target is empty, it's no match.")
+		{
+			const std::vector<int> target{};
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!(range {  } is empty)"));
+		}
+
+		SECTION("When a non-empty range is stored, it's a match.")
+		{
+			const std::vector target{42};
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!(range { 42 } is empty)"));
+		}
+	}
+}

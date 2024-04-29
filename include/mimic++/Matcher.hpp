@@ -331,8 +331,20 @@ namespace mimicpp::matches::range
 					target,
 					std::ref(rel));
 			},
-			"range {} is sorted",
-			std::tuple{});
+			"range {} is sorted");
+	}
+
+	[[nodiscard]]
+	constexpr auto is_empty()
+	{
+		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+			[]<typename Target>(Target&& target)  // NOLINT(cppcoreguidelines-missing-std-forward)
+				requires std::ranges::range<Target>
+			{
+				return std::ranges::empty(target);
+			},
+			"range {} is empty");
+	}
 	}
 }
 
