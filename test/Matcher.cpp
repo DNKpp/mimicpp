@@ -48,19 +48,6 @@ namespace
 			return check(value);
 		}
 	};
-
-	template <typename T>
-	class MatcherDescriberMock
-	{
-	public:
-		MAKE_CONST_MOCK1(describe, StringT(T));
-
-		[[nodiscard]]
-		constexpr StringT operator ()(T value) const
-		{
-			return describe(value);
-		}
-	};
 }
 
 TEST_CASE(
