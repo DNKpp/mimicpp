@@ -6,6 +6,7 @@ include(get_cpm)
 project(
 	mimicpp
 	LANGUAGES CXX
+	VERSION 1
 )
 
 CPMAddPackage(
@@ -44,14 +45,19 @@ if (MIMICPP_FORCED_CXX_STANDARD)
 	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
 endif()
 
-OPTION(MIMICPP_BUILD_TESTS "Determines whether tests shall be built." ${IS_TOP_LEVEL_PROJECT})
+OPTION(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_TESTS)
 	include(CTest)
 	add_subdirectory("test")
 endif()
 
-OPTION(MIMICPP_BUILD_EXAMPLES "Determines whether examples shall be built." ${IS_TOP_LEVEL_PROJECT})
+OPTION(MIMICPP_BUILD_EXAMPLES "Determines, whether the examples shall be built." ${IS_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_EXAMPLES)
 	include(CTest)
 	add_subdirectory("examples")
+endif()
+
+OPTION(MIMICPP_ENABLE_GENERATE_DOCS "Enable the doxygen documentation target." OFF)
+if (MIMICPP_ENABLE_GENERATE_DOCS)
+	add_subdirectory("docs")
 endif()
