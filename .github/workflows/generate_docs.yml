@@ -32,7 +32,6 @@ jobs:
       uses: mattnotmitt/doxygen-action@edge
       with:
         doxyfile-path: build/docs/Doxyfile
-        enable-latex: true
 
     - name: Upload html documentation
       uses: actions/upload-artifact@v4
