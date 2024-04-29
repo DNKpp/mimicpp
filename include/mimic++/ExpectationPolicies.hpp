@@ -235,7 +235,7 @@ namespace mimicpp::expectation_policies
 	public:
 		[[nodiscard]]
 		explicit constexpr Requirement(
-			Matcher&& matcher,
+			Matcher matcher,
 			Projection projection = Projection{},
 			Describer describer = Describer{}
 		) noexcept(
