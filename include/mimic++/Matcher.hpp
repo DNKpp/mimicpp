@@ -30,6 +30,13 @@ namespace mimicpp
 							{ matcher.describe(target) } -> std::convertible_to<StringT>;
 						};
 
+	/**
+	 * \brief Generic matcher and the basic building block of most of the built-in matchers.
+	 * \tparam Predicate The predicate type.
+	 * \tparam AdditionalArgs Addition argument types.
+	 * \ingroup EXPECTATION_REQUIREMENT
+	 * \ingroup EXPECTATION_MATCHER
+	 */
 	template <typename Predicate, typename... AdditionalArgs>
 		requires std::is_move_constructible_v<Predicate>
 				&& (... && std::is_move_constructible_v<AdditionalArgs>)
@@ -123,6 +130,11 @@ namespace mimicpp
 		}
 	};
 
+	/**
+	 * \brief Matcher, which never fails.
+	 * \ingroup EXPECTATION_REQUIREMENT
+	 * \ingroup EXPECTATION_MATCHER
+	 */
 	class WildcardMatcher
 	{
 	public:
@@ -156,7 +168,7 @@ namespace mimicpp::matches
 	 *
 	 *\{
 	 */
-	
+
 	/**
 	 * \brief The wildcard matcher, always matching.
 	 */
@@ -353,7 +365,8 @@ namespace mimicpp::matches::range
 	constexpr auto eq(Range&& expected, Comparator comparator = Comparator{})
 	{
 		return PredicateMatcher{
-			[comp = std::move(comparator)]<typename Target>(Target&& target, auto& range)  // NOLINT(cppcoreguidelines-missing-std-forward)
+			[comp = std::move(comparator)]
+			<typename Target>(Target&& target, auto& range)  // NOLINT(cppcoreguidelines-missing-std-forward)
 				requires std::predicate<
 					const Comparator&,
 					std::ranges::range_reference_t<Target>,
@@ -381,7 +394,8 @@ namespace mimicpp::matches::range
 	constexpr auto unordered_eq(Range&& expected, Comparator comparator = Comparator{})
 	{
 		return PredicateMatcher{
-			[comp = std::move(comparator)]<typename Target>(Target&& target, auto& range)  // NOLINT(cppcoreguidelines-missing-std-forward)
+			[comp = std::move(comparator)]<typename Target
+			>(Target&& target, auto& range)  // NOLINT(cppcoreguidelines-missing-std-forward)
 				requires std::predicate<
 					const Comparator&,
 					std::ranges::range_reference_t<Target>,

@@ -533,7 +533,7 @@ TEST_CASE(
 	{
 		const auto customMatcher = matches::predicate(
 			std::ref(predicate),
-			"custom predicate is satisfied"	);
+			"custom predicate is satisfied");
 
 		REQUIRE_CALL(predicate, Invoke(_))
 			.LR_WITH(&_1 == &target)
