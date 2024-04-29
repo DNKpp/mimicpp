@@ -10,10 +10,12 @@ set(DOXY_PROJECT_VERSION ${PROJECT_VERSION})
 set(DOXY_INPUT_DIR "include")
 set(DOXY_EXAMPLE_DIR "examples")
 set(DOXY_README_PATH "README.md")
-set(DOXY_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+cmake_path(
+	RELATIVE_PATH CMAKE_CURRENT_BINARY_DIR
+	BASE_DIRECTORY "${PROJECT_SOURCE_DIR}"
+	OUTPUT_VARIABLE DOXY_OUTPUT_DIR
+)
 set(DOXY_HTML_EXTRA_STYLESHEET "${doxygen-awesome-css_SOURCE_DIR}/doxygen-awesome.css")
-	
-configure_file(Doxyfile.in Doxyfile @ONLY)
 
 if (MIMICPP_ENABLE_GENERATE_DOCS)
 
@@ -40,5 +42,7 @@ if (MIMICPP_ENABLE_GENERATE_DOCS)
 	message(TRACE "End configure docs target")
 
 endif()
+
+configure_file(Doxyfile.in Doxyfile @ONLY)
 	
 message(TRACE "Finished generating docs")
