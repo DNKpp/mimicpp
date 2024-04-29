@@ -23,7 +23,7 @@ jobs:
         cmake \
             -S . \
             -B build \
-            --verbose \
+            --log-level=VERBOSE \
             -DMIMICPP_CONFIGURE_DOXYGEN=ON \
             -DMIMICPP_BUILD_TESTS=OFF \
             -DMIMICPP_BUILD_EXAMPLES=OFF
