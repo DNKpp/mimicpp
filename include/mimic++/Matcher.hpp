@@ -122,6 +122,22 @@ namespace mimicpp
 			};
 		}
 	};
+
+	class WildcardMatcher
+	{
+	public:
+		static constexpr bool matches(auto&& target) noexcept
+		{
+			return true;
+		}
+
+		static constexpr StringT describe(auto&& target)
+		{
+			return format::format(
+				"{} without constraints",
+				mimicpp::print(target));
+		}
+	};
 }
 
 namespace mimicpp::matches
@@ -140,15 +156,11 @@ namespace mimicpp::matches
 	 *
 	 *\{
 	 */
-
+	
 	/**
 	 * \brief The wildcard matcher, always matching.
 	 */
-	inline static const PredicateMatcher _{
-		AlwaysTruePredicate{},
-		"{} without constraints",
-		std::tuple{}
-	};
+	inline constexpr WildcardMatcher _{};
 
 	/**
 	 * \brief Tests, whether the target compares equal to the expected value.

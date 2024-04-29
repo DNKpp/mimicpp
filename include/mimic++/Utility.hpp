@@ -108,16 +108,6 @@ namespace mimicpp
 	{
 	};
 
-	class AlwaysTruePredicate
-	{
-	public:
-		[[nodiscard]]
-		constexpr bool operator ()([[maybe_unused]] auto&&...) const noexcept
-		{
-			return true;
-		}
-	};
-
 	[[nodiscard]]
 	constexpr bool is_same_source_location(
 		const std::source_location& lhs,
