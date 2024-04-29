@@ -871,3 +871,63 @@ TEST_CASE(
 		}
 	}
 }
+
+TEST_CASE(
+	"matches::range::has_size matches when target range has the expected size.",
+	"[matcher]"
+)
+{
+	using trompeloeil::_;
+
+	SECTION("When target has the expected size, it's a match.")
+	{
+		const auto matcher = matches::range::has_size(2);
+		const std::vector target{42, 1337};
+
+		REQUIRE(matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals("range { 42, 1337 } has size 2"));
+	}
+
+	SECTION("When target has different size, it's no match.")
+	{
+		const auto matcher = matches::range::has_size(1);
+		const std::vector target = GENERATE(
+			std::vector<int>{},
+			(std::vector{42, 1337}));
+
+		REQUIRE(!matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals(
+				format::format(
+					"range {} has size 1",
+					mimicpp::print(target))));
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		const auto matcher = !matches::range::has_size(2);
+
+		SECTION("When target has the expected size, it's no match.")
+		{
+			const std::vector target{42, 1337};
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!(range { 42, 1337 } has size 2)"));
+		}
+
+		SECTION("When target has different size, it's a match.")
+		{
+			const std::vector target{42};
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(target),
+				Catch::Matchers::Equals("!(range { 42 } has size 2)"));
+		}
+	}
+}

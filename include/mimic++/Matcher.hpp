@@ -338,13 +338,25 @@ namespace mimicpp::matches::range
 	constexpr auto is_empty()
 	{
 		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
-			[]<typename Target>(Target&& target)  // NOLINT(cppcoreguidelines-missing-std-forward)
-				requires std::ranges::range<Target>
+			[](std::ranges::range auto&& target)
 			{
 				return std::ranges::empty(target);
 			},
 			"range {} is empty");
 	}
+
+	[[nodiscard]]
+	constexpr auto has_size(const std::integral auto expected)
+	{
+		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+			[](std::ranges::range auto&& target, const std::integral auto size)
+			{
+				return std::cmp_equal(
+					size,
+					std::ranges::size(target));
+			},
+			"range {} has size {}",
+			std::tuple{expected});
 	}
 }
 
