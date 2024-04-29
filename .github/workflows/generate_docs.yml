@@ -24,8 +24,8 @@ jobs:
             -S . \
             -B build \
             -DMIMICPP_ENABLE_GENERATE_DOCS=ON \
-            -MIMICPP_BUILD_TESTS=OFF \
-            -MIMICPP_BUILD_EXAMPLES=OFF
+            -DMIMICPP_BUILD_TESTS=OFF \
+            -DMIMICPP_BUILD_EXAMPLES=OFF
 
     - name: Generate Doxygen Documentation (html and pdf)
       uses: mattnotmitt/doxygen-action@edge
