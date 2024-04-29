@@ -44,7 +44,7 @@ jobs:
         path: build/docs/html
 
     # publish to main gh-pages, when main branch is pushed
-    - name: Deploy to GitHub Pages
+    - name: Deploy to GitHub main Pages
       uses: peaceiris/actions-gh-pages@v4
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       with:
@@ -52,7 +52,7 @@ jobs:
         publish_dir: build/docs/html
 
     # publish to dev gh-pages, when development branch is pushed
-    - name: Deploy to GitHub Pages
+    - name: Deploy to GitHub dev Pages
       uses: peaceiris/actions-gh-pages@v4
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development' }}
       with:
