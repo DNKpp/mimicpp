@@ -478,6 +478,22 @@ TEST_CASE(
 			Catch::Matchers::Equals(format::format("!({} satisfies predicate)", target)));
 	}
 
+	SECTION("Custom descriptions are supported.")
+	{
+		const auto customMatcher = matches::predicate(
+			std::ref(predicate),
+			"custom predicate is satisfied"	);
+
+		REQUIRE_CALL(predicate, Invoke(_))
+			.LR_WITH(&_1 == &target)
+			.RETURN(expectedResult);
+		REQUIRE(expectedResult == customMatcher.matches(target));
+		REQUIRE_THAT(
+			customMatcher.describe(target),
+			Catch::Matchers::Equals("custom predicate is satisfied"));
+	}
+}
+
 TEST_CASE(
 	"matches::str::eq matches when target string compares equal to the stored one.",
 	"[matcher]"
@@ -495,7 +511,7 @@ TEST_CASE(
 		REQUIRE_THAT(
 			matcher.describe(target),
 			Catch::Matchers::Equals("string \"Hello, World!\" is equal to \"Hello, World!\""));
-}
+	}
 
 	SECTION("When target is not equal, they do not match.")
 	{

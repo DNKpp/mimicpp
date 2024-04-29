@@ -266,11 +266,11 @@ namespace mimicpp::matches
 
 	template <typename UnaryPredicate>
 	[[nodiscard]]
-	constexpr auto predicate(UnaryPredicate&& predicate)
+	constexpr auto predicate(UnaryPredicate&& predicate, StringT description = "{} satisfies predicate")
 	{
 		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
 			std::forward<UnaryPredicate>(predicate),
-			"{} satisfies predicate");
+			std::move(description));
 	}
 }
 
@@ -345,7 +345,7 @@ namespace mimicpp::matches::range
 	[[nodiscard]]
 	constexpr auto is_sorted(Relation relation = Relation{})
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return matches::predicate(
 			[rel = std::move(relation)]<typename Target>(Target&& target)  // NOLINT(cppcoreguidelines-missing-std-forward)
 				requires std::equivalence_relation<
 					const Relation&,
@@ -362,7 +362,7 @@ namespace mimicpp::matches::range
 	[[nodiscard]]
 	constexpr auto is_empty()
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return matches::predicate(
 			[](std::ranges::range auto&& target)
 			{
 				return std::ranges::empty(target);
