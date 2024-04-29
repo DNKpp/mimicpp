@@ -528,6 +528,31 @@ namespace mimicpp::expect
 		};
 	}
 
+	/**
+	 * \defgroup EXPECTATION_REQUIREMENT requirement
+	 * \ingroup EXPECTATION
+	 * \brief Requirements determine, whether an expectation and a call match.
+	 * \details Requirements are those building blocks, which determine whether a call matches the expectation. If any of the specified
+	 * requirements fail, there is no match.
+	 * \note An expectation without requirements matches any call.
+	 *
+	 * \details Requirements are checked during the ``matches`` step. If all requirements match, an additional ``is_saturated`` check is
+	 * performed on all requirements. If this hook returns ``true``, the expectation is treated as ``exhausted`` and will be skipped (but
+	 * reported if no match was found).
+	 *
+	 *\{
+	 */
+
+	/**
+	 * \brief Checks, whether the selected argument matches the given matcher.
+	 * \tparam Matcher The matcher type.
+	 * \param matcher The matcher.
+	 *
+	 * \details This requirement checks, whether the selected argument matches the given matcher. One argument can be checked multiple times
+	 * in different requirements and all results will be reduced via a conjunction.
+	 *
+	 * For a list of built-in matchers, see \ref EXPECTATION_MATCHER "matcher" page.
+	 */
 	template <std::size_t index, typename Matcher>
 	[[nodiscard]]
 	constexpr auto arg(
@@ -544,6 +569,10 @@ namespace mimicpp::expect
 			std::forward<Matcher>(matcher),
 		};
 	}
+
+	/**
+	 * \}
+	 */
 }
 
 namespace mimicpp::finally

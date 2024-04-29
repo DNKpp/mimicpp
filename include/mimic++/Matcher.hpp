@@ -198,12 +198,35 @@ namespace mimicpp::matcher
 
 namespace mimicpp::matches
 {
+	/**
+	 * \defgroup EXPECTATION_MATCHER matchers
+	 * \ingroup EXPECTATION_REQUIREMENT
+	 * \brief Matchers check various argument properties.
+	 * \details Matchers can be used to check various argument properties and are highly customizable. In general,
+	 * they simply compare their arguments with a pre-defined predicate, but also provide a meaningful description.
+	 *
+	 * Most of the built-in matchers support the inversion operator (!), which then tests for the opposite condition.
+	 *
+	 * \attention Matchers receive their arguments as possibly non-const, which is due to workaround some restrictions
+	 * on const qualified views. Either way, matchers should never modify any of their arguments.
+	 *
+	 *\{
+	 */
+
+	/**
+	 * \brief The wildcard matcher, always matching.
+	 */
 	inline static const matcher::PredicateMatcher _{
 		AlwaysTruePredicate{},
 		"{} without constraints",
 		std::tuple{}
 	};
 
+	/**
+	 * \brief Tests, whether the target compares equal to the expected value.
+	 * \tparam T Expected type.
+	 * \param value Expected value.
+	 */
 	template <typename T>
 	[[nodiscard]]
 	constexpr auto eq(T&& value)
@@ -214,6 +237,11 @@ namespace mimicpp::matches
 			std::tuple{std::forward<T>(value)});
 	}
 
+	/**
+	 * \brief Tests, whether the target compares not equal to the expected value.
+	 * \tparam T Expected type.
+	 * \param value Expected value.
+	 */
 	template <typename T>
 	[[nodiscard]]
 	constexpr auto ne(T&& value)
@@ -224,6 +252,11 @@ namespace mimicpp::matches
 			std::tuple{std::forward<T>(value)});
 	}
 
+	/**
+	 * \brief Tests, whether the target is less than the expected value.
+	 * \tparam T Expected type.
+	 * \param value Expected value.
+	 */
 	template <typename T>
 	[[nodiscard]]
 	constexpr auto lt(T&& value)
@@ -234,6 +267,11 @@ namespace mimicpp::matches
 			std::tuple{std::forward<T>(value)});
 	}
 
+	/**
+	 * \brief Tests, whether the target is less than or equal to the expected value.
+	 * \tparam T Expected type.
+	 * \param value Expected value.
+	 */
 	template <typename T>
 	[[nodiscard]]
 	constexpr auto le(T&& value)
@@ -244,6 +282,11 @@ namespace mimicpp::matches
 			std::tuple{std::forward<T>(value)});
 	}
 
+	/**
+	 * \brief Tests, whether the target is greater than the expected value.
+	 * \tparam T Expected type.
+	 * \param value Expected value.
+	 */
 	template <typename T>
 	[[nodiscard]]
 	constexpr auto gt(T&& value)
@@ -254,6 +297,11 @@ namespace mimicpp::matches
 			std::tuple{std::forward<T>(value)});
 	}
 
+	/**
+	 * \brief Tests, whether the target is greater than or equal to the expected value.
+	 * \tparam T Expected type.
+	 * \param value Expected value.
+	 */
 	template <typename T>
 	[[nodiscard]]
 	constexpr auto ge(T&& value)
@@ -264,6 +312,12 @@ namespace mimicpp::matches
 			std::tuple{std::forward<T>(value)});
 	}
 
+	/**
+	 * \brief Tests, whether the target fulfills the given predicate.
+	 * \tparam UnaryPredicate Predicate type.
+	 * \param predicate The predicate to test.
+	 * \param description The formatting string. May contain a ``{}``-token for the target.
+	 */
 	template <typename UnaryPredicate>
 	[[nodiscard]]
 	constexpr auto predicate(UnaryPredicate&& predicate, StringT description = "{} satisfies predicate")
@@ -272,10 +326,30 @@ namespace mimicpp::matches
 			std::forward<UnaryPredicate>(predicate),
 			std::move(description));
 	}
+
+	/**
+	 * \}
+	 */
 }
 
 namespace mimicpp::matches::str
 {
+	/**
+	 * \defgroup EXPECTATION_MATCHERS_STRING string matchers
+	 * \ingroup EXPECTATION_REQUIREMENT
+	 * \ingroup EXPECTATION_MATCHERS
+	 * \brief String specific matchers.
+	 *
+	 *\{
+	 */
+
+	/**
+	 * \brief Tests, whether the target string compares equal to the expected string.
+	 * \tparam Char The character type.
+	 * \tparam Traits The character traits type.
+	 * \tparam Allocator The allocator type.
+	 * \param expected The expected string.
+	 */
 	template <typename Char, typename Traits, typename Allocator>
 	[[nodiscard]]
 	constexpr auto eq(std::basic_string<Char, Traits, Allocator> expected)
@@ -290,6 +364,11 @@ namespace mimicpp::matches::str
 			std::tuple{std::move(expected)});
 	}
 
+	/**
+	 * \brief Tests, whether the target string compares equal to the expected string.
+	 * \tparam Char The character type.
+	 * \param expected The expected string.
+	 */
 	template <typename Char>
 	[[nodiscard]]
 	constexpr auto eq(const Char* expected)
@@ -297,10 +376,30 @@ namespace mimicpp::matches::str
 		return eq(
 			std::basic_string<Char>{expected});
 	}
+
+	/**
+	 * \}
+	 */
 }
 
 namespace mimicpp::matches::range
 {
+	/**
+	 * \defgroup EXPECTATION_MATCHER_RANGE range matchers
+	 * \ingroup EXPECTATION_REQUIREMENT
+	 * \ingroup EXPECTATION_MATCHER
+	 * \brief Range specific matchers.
+	 *
+	 *\{
+	 */
+
+	/**
+	 * \brief Tests, whether the target range compares equal to the expected range, by comparing them element-wise.
+	 * \tparam Range Expected range type.
+	 * \tparam Comparator Comparator type.
+	 * \param expected The expected range.
+	 * \param comparator The comparator.
+	 */
 	template <std::ranges::forward_range Range, typename Comparator = std::equal_to<>>
 	[[nodiscard]]
 	constexpr auto eq(Range&& expected, Comparator comparator = Comparator{})
@@ -321,6 +420,13 @@ namespace mimicpp::matches::range
 			std::tuple{std::views::all(std::forward<Range>(expected))});
 	}
 
+	/**
+	 * \brief Tests, whether the target range is a permutation of the expected range, by comparing them element-wise.
+	 * \tparam Range Expected range type.
+	 * \tparam Comparator Comparator type.
+	 * \param expected The expected range.
+	 * \param comparator The comparator.
+	 */
 	template <std::ranges::forward_range Range, typename Comparator = std::equal_to<>>
 	[[nodiscard]]
 	constexpr auto unordered_eq(Range&& expected, Comparator comparator = Comparator{})
@@ -341,6 +447,11 @@ namespace mimicpp::matches::range
 			std::tuple{std::views::all(std::forward<Range>(expected))});
 	}
 
+	/**
+	 * \brief Tests, whether the target range is sorted, by applying the relation on each adjacent elements.
+	 * \tparam Relation Relation type.
+	 * \param relation The relation.
+	 */
 	template <typename Relation = std::ranges::less>
 	[[nodiscard]]
 	constexpr auto is_sorted(Relation relation = Relation{})
@@ -359,6 +470,9 @@ namespace mimicpp::matches::range
 			"range {} is sorted");
 	}
 
+	/**
+	 * \brief Tests, whether the target range is empty.
+	 */
 	[[nodiscard]]
 	constexpr auto is_empty()
 	{
@@ -370,6 +484,10 @@ namespace mimicpp::matches::range
 			"range {} is empty");
 	}
 
+	/**
+	 * \brief Tests, whether the target range has the expected size.
+	 * \param expected The expected size.
+	 */
 	[[nodiscard]]
 	constexpr auto has_size(const std::integral auto expected)
 	{
@@ -383,6 +501,10 @@ namespace mimicpp::matches::range
 			"range {} has size {}",
 			std::tuple{expected});
 	}
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
