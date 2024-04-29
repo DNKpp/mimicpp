@@ -1,0 +1,46 @@
+name: generate docs
+
+on:
+    push:
+        branches: [main, development]
+    pull_request:
+        branches: [main, development]
+    release:
+        types: [released]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    container:
+        image: ghcr.io/dnkpp/gcc:14
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # we must configure, because the Doxyfile is generated via cmake
+    - name: Configure
+      run: |
+        cmake \
+            -S . \
+            -B build \
+            -DMIMICPP_ENABLE_GENERATE_DOCS=ON \
+            -MIMICPP_BUILD_TESTS=OFF \
+            -MIMICPP_BUILD_EXAMPLES=OFF
+
+    - name: Generate Doxygen Documentation (html and pdf)
+      uses: mattnotmitt/doxygen-action@edge
+      with:
+        doxyfile-path: docs/Doxygen
+        enable-latex: true
+
+    - name: Upload html documentation
+      uses: actions/upload-artifact@v4
+      with:
+        name: HTML-Documentation
+        path: docs/html
+
+    - name: Upload pdf documentation
+      uses: actions/upload-artifact@v4
+      with:
+        name: Latex-Documentation
+        path: docs/latex
