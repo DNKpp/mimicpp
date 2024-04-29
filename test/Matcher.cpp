@@ -68,7 +68,7 @@ TEST_CASE(
 	"[matcher]")
 {
 	MatcherPredicateMock<int> predicate{};
-	matcher::PredicateMatcher matcher{
+	PredicateMatcher matcher{
 		std::ref(predicate),
 		"Hello, {}!",
 		std::tuple<>{}
@@ -93,21 +93,17 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"matcher::PredicateMatcher can be extended with matcher::InvertiblePolicy.",
+	"matcher::PredicateMatcher can be negated.",
 	"[matcher]")
 {
 	MatcherPredicateMock<int> predicate{};
-	matcher::PredicateMatcher<
-			std::reference_wrapper<MatcherPredicateMock<int>>,
-			std::tuple<>,
-			matcher::InvertiblePolicy
-		>
+	PredicateMatcher
 		matcher{
 			std::ref(predicate),
 			"Hello, {}!"
 		};
 
-	matcher::PredicateMatcher negatedMatcher = !std::move(matcher);
+	PredicateMatcher negatedMatcher = !std::move(matcher);
 	STATIC_REQUIRE(matcher_for<decltype(negatedMatcher), int>);
 
 	SECTION("When matches() is called, argument is forwarded to the predicate.")
@@ -133,6 +129,10 @@ TEST_CASE(
 	"[matcher]"
 )
 {
+	using AnyT = std::remove_cvref_t<decltype(matches::_)>;
+	STATIC_REQUIRE(matcher_for<AnyT, int>);
+	STATIC_REQUIRE(matcher_for<AnyT, const std::string&>);
+
 	constexpr int value{42};
 	REQUIRE(matches::_.matches(value));
 	REQUIRE_THAT(

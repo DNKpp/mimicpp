@@ -29,65 +29,20 @@ namespace mimicpp
 							{ matcher.matches(target) } -> std::convertible_to<bool>;
 							{ matcher.describe(target) } -> std::convertible_to<StringT>;
 						};
-}
 
-namespace mimicpp::matcher
-{
-	namespace detail
-	{
-		template <template <typename...> typename Trait, typename Return, typename Predicate, typename Target, typename OtherArgsTuple>
-		struct is_applicable_helper;
-
-		template <template <typename...> typename Trait, typename Return, typename Predicate, typename Target, typename... OtherArgs>
-		struct is_applicable_helper<Trait, Return, Predicate, Target, std::tuple<OtherArgs...>>
-			: public std::bool_constant<Trait<Return, Predicate, Target&, const OtherArgs&...>::value>
-		{
-		};
-
-		template <typename Predicate, typename Target, typename OtherArgsTuple>
-		concept applicable_predicate =
-			is_applicable_helper<
-				std::is_invocable_r,
-				bool,
-				Predicate,
-				Target,
-				OtherArgsTuple
-			>::value;
-
-		template <typename Predicate, typename Target, typename OtherArgsTuple>
-		concept nothrow_applicable_predicate =
-			applicable_predicate<Predicate, Target, OtherArgsTuple>
-			&& is_applicable_helper<
-				std::is_nothrow_invocable_r,
-				bool,
-				Predicate,
-				Target,
-				OtherArgsTuple
-			>::value;
-	}
-
-	template <
-		typename Predicate,
-		typename AdditionalArgsTuple,
-		template <typename Derived> typename... Policies
-	>
+	template <typename Predicate, typename... AdditionalArgs>
 		requires std::is_move_constructible_v<Predicate>
-				&& std::is_move_constructible_v<AdditionalArgsTuple>
-				&& (0 <= std::tuple_size_v<AdditionalArgsTuple>)
+				&& (... && std::is_move_constructible_v<AdditionalArgs>)
 	class PredicateMatcher
-		: public Policies<PredicateMatcher<Predicate, AdditionalArgsTuple, Policies...>>...
 	{
 	public:
-		template <typename OtherPredicate>
-		using RebindT = PredicateMatcher<OtherPredicate, AdditionalArgsTuple, Policies...>;
-
 		[[nodiscard]]
 		explicit constexpr PredicateMatcher(
 			Predicate predicate,
 			StringT fmt,
-			AdditionalArgsTuple additionalArgs = AdditionalArgsTuple{}
+			std::tuple<AdditionalArgs...> additionalArgs = std::tuple{}
 		) noexcept(std::is_nothrow_move_constructible_v<Predicate>
-					&& std::is_nothrow_move_constructible_v<AdditionalArgsTuple>)
+					&& (... && std::is_nothrow_move_constructible_v<AdditionalArgs>))
 			: m_Predicate{std::move(predicate)},
 			m_FormatString{std::move(fmt)},
 			m_AdditionalArgs{std::move(additionalArgs)}
@@ -95,11 +50,11 @@ namespace mimicpp::matcher
 		}
 
 		template <typename T>
-			requires detail::applicable_predicate<const Predicate&, T, AdditionalArgsTuple>
+			requires std::predicate<const Predicate&, T&, const AdditionalArgs&...>
 		[[nodiscard]]
 		constexpr bool matches(
 			T& target
-		) const noexcept(detail::nothrow_applicable_predicate<const Predicate&, T, AdditionalArgsTuple>)
+		) const noexcept(std::is_nothrow_invocable_v<const Predicate&, T&, const AdditionalArgs&...>)
 		{
 			return std::apply(
 				[&, this](auto&... additionalArgs)
@@ -130,69 +85,33 @@ namespace mimicpp::matcher
 				m_AdditionalArgs);
 		}
 
-		[[nodiscard]]
-		constexpr Predicate&& predicate() && noexcept
-		{
-			return std::move(m_Predicate);
-		}
+		//[[nodiscard]]
+		//constexpr auto operator !() const &
+		//	requires std::is_copy_constructible_v<Predicate>
+		//			&& std::is_copy_constructible_v<AdditionalArgsTuple>
+		//{
+		//	return PredicateMatcher{
+		//		std::not_fn(m_Predicate),
+		//		"!(" + m_FormatString + ")",
+		//		m_AdditionalArgs
+		//	};
+		//}
 
 		[[nodiscard]]
-		constexpr StringT&& format_string() && noexcept
+		constexpr auto operator !() &&
 		{
-			return std::move(m_FormatString);
-		}
-
-		[[nodiscard]]
-		constexpr AdditionalArgsTuple&& additional_args() && noexcept
-		{
-			return std::move(m_AdditionalArgs);
+			using NotFnT = decltype(std::not_fn(std::move(m_Predicate)));
+			return PredicateMatcher<NotFnT, AdditionalArgs...>{
+				std::not_fn(std::move(m_Predicate)),
+				"!(" + m_FormatString + ")",
+				std::move(m_AdditionalArgs)
+			};
 		}
 
 	private:
 		[[no_unique_address]] Predicate m_Predicate;
 		StringT m_FormatString;
-		AdditionalArgsTuple m_AdditionalArgs{};
-	};
-
-	template <
-		template <typename> typename... Policies,
-		typename Predicate,
-		typename AdditionalArgsTuple = std::tuple<>>
-	[[nodiscard]]
-	constexpr PredicateMatcher<Predicate, AdditionalArgsTuple, Policies...> make_predicate_matcher(
-		Predicate predicate,
-		StringT formatString,
-		AdditionalArgsTuple additionalArgsTuple = AdditionalArgsTuple{}
-	) noexcept(std::is_nothrow_move_constructible_v<Predicate>
-				&& std::is_nothrow_move_constructible_v<AdditionalArgsTuple>)
-	{
-		return PredicateMatcher<
-			Predicate,
-			AdditionalArgsTuple,
-			Policies...>{
-			std::move(predicate),
-			std::move(formatString),
-			std::move(additionalArgsTuple)
-		};
-	}
-
-	template <typename Derived>
-	class InvertiblePolicy
-	{
-	public:
-		[[nodiscard]]
-		constexpr auto operator !() &&
-		{
-			auto& self = static_cast<Derived&>(*this);
-
-			auto notPredicate = std::not_fn(std::move(self).predicate());
-			using InvertedMatcherT = typename Derived::template RebindT<decltype(notPredicate)>;
-			return InvertedMatcherT{
-				std::move(notPredicate),
-				"!(" + std::move(self).format_string() + ")",
-				std::move(self).additional_args()
-			};
-		}
+		std::tuple<AdditionalArgs...> m_AdditionalArgs{};
 	};
 }
 
@@ -216,7 +135,7 @@ namespace mimicpp::matches
 	/**
 	 * \brief The wildcard matcher, always matching.
 	 */
-	inline static const matcher::PredicateMatcher _{
+	inline static const PredicateMatcher _{
 		AlwaysTruePredicate{},
 		"{} without constraints",
 		std::tuple{}
@@ -231,10 +150,11 @@ namespace mimicpp::matches
 	[[nodiscard]]
 	constexpr auto eq(T&& value)
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			std::ranges::equal_to{},
 			"{} == {}",
-			std::tuple{std::forward<T>(value)});
+			std::tuple{std::forward<T>(value)}
+		};
 	}
 
 	/**
@@ -246,10 +166,11 @@ namespace mimicpp::matches
 	[[nodiscard]]
 	constexpr auto ne(T&& value)
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			std::ranges::not_equal_to{},
 			"{} != {}",
-			std::tuple{std::forward<T>(value)});
+			std::tuple{std::forward<T>(value)}
+		};
 	}
 
 	/**
@@ -261,10 +182,11 @@ namespace mimicpp::matches
 	[[nodiscard]]
 	constexpr auto lt(T&& value)
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			std::ranges::less{},
 			"{} < {}",
-			std::tuple{std::forward<T>(value)});
+			std::tuple{std::forward<T>(value)}
+		};
 	}
 
 	/**
@@ -276,10 +198,11 @@ namespace mimicpp::matches
 	[[nodiscard]]
 	constexpr auto le(T&& value)
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			std::ranges::less_equal{},
 			"{} <= {}",
-			std::tuple{std::forward<T>(value)});
+			std::tuple{std::forward<T>(value)}
+		};
 	}
 
 	/**
@@ -291,10 +214,11 @@ namespace mimicpp::matches
 	[[nodiscard]]
 	constexpr auto gt(T&& value)
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			std::ranges::greater{},
 			"{} > {}",
-			std::tuple{std::forward<T>(value)});
+			std::tuple{std::forward<T>(value)}
+		};
 	}
 
 	/**
@@ -306,10 +230,11 @@ namespace mimicpp::matches
 	[[nodiscard]]
 	constexpr auto ge(T&& value)
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			std::ranges::greater_equal{},
 			"{} >= {}",
-			std::tuple{std::forward<T>(value)});
+			std::tuple{std::forward<T>(value)}
+		};
 	}
 
 	/**
@@ -322,9 +247,10 @@ namespace mimicpp::matches
 	[[nodiscard]]
 	constexpr auto predicate(UnaryPredicate&& predicate, StringT description = "{} satisfies predicate")
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			std::forward<UnaryPredicate>(predicate),
-			std::move(description));
+			std::move(description)
+		};
 	}
 
 	/**
@@ -355,13 +281,14 @@ namespace mimicpp::matches::str
 	constexpr auto eq(std::basic_string<Char, Traits, Allocator> expected)
 	{
 		using ViewT = std::basic_string_view<Char>;
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			[](const ViewT target, const ViewT exp)
 			{
 				return target == exp;
 			},
 			"string {} is equal to {}",
-			std::tuple{std::move(expected)});
+			std::tuple{std::move(expected)}
+		};
 	}
 
 	/**
@@ -404,7 +331,7 @@ namespace mimicpp::matches::range
 	[[nodiscard]]
 	constexpr auto eq(Range&& expected, Comparator comparator = Comparator{})
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			[comp = std::move(comparator)]<typename Target>(Target&& target, auto& range)  // NOLINT(cppcoreguidelines-missing-std-forward)
 				requires std::predicate<
 					const Comparator&,
@@ -417,7 +344,8 @@ namespace mimicpp::matches::range
 					std::ref(comp));
 			},
 			"range {} is equal to {}",
-			std::tuple{std::views::all(std::forward<Range>(expected))});
+			std::tuple{std::views::all(std::forward<Range>(expected))}
+		};
 	}
 
 	/**
@@ -431,7 +359,7 @@ namespace mimicpp::matches::range
 	[[nodiscard]]
 	constexpr auto unordered_eq(Range&& expected, Comparator comparator = Comparator{})
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			[comp = std::move(comparator)]<typename Target>(Target&& target, auto& range)  // NOLINT(cppcoreguidelines-missing-std-forward)
 				requires std::predicate<
 					const Comparator&,
@@ -444,7 +372,8 @@ namespace mimicpp::matches::range
 					std::ref(comp));
 			},
 			"range {} is permutation of {}",
-			std::tuple{std::views::all(std::forward<Range>(expected))});
+			std::tuple{std::views::all(std::forward<Range>(expected))}
+		};
 	}
 
 	/**
@@ -456,7 +385,7 @@ namespace mimicpp::matches::range
 	[[nodiscard]]
 	constexpr auto is_sorted(Relation relation = Relation{})
 	{
-		return matches::predicate(
+		return PredicateMatcher{
 			[rel = std::move(relation)]<typename Target>(Target&& target)  // NOLINT(cppcoreguidelines-missing-std-forward)
 				requires std::equivalence_relation<
 					const Relation&,
@@ -467,7 +396,8 @@ namespace mimicpp::matches::range
 					target,
 					std::ref(rel));
 			},
-			"range {} is sorted");
+			"range {} is sorted"
+		};
 	}
 
 	/**
@@ -476,12 +406,13 @@ namespace mimicpp::matches::range
 	[[nodiscard]]
 	constexpr auto is_empty()
 	{
-		return matches::predicate(
+		return PredicateMatcher{
 			[](std::ranges::range auto&& target)
 			{
 				return std::ranges::empty(target);
 			},
-			"range {} is empty");
+			"range {} is empty"
+		};
 	}
 
 	/**
@@ -491,7 +422,7 @@ namespace mimicpp::matches::range
 	[[nodiscard]]
 	constexpr auto has_size(const std::integral auto expected)
 	{
-		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+		return PredicateMatcher{
 			[](std::ranges::range auto&& target, const std::integral auto size)
 			{
 				return std::cmp_equal(
@@ -499,7 +430,8 @@ namespace mimicpp::matches::range
 					std::ranges::size(target));
 			},
 			"range {} has size {}",
-			std::tuple{expected});
+			std::tuple{expected}
+		};
 	}
 
 	/**
