@@ -162,27 +162,28 @@ namespace mimicpp::matches
 	 * \details Matchers can be used to check various argument properties and are highly customizable. In general,
 	 * they simply compare their arguments with a pre-defined predicate, but also provide a meaningful description.
 	 *
+	 * \attention Matchers receive their arguments as possibly non-const, which is due to workaround some restrictions
+	 * on const qualified views. Either way, matchers should never modify any of their arguments.
+	 *
+	 * # Matching arguments
 	 * In general matchers can be applied via the ``expect::arg<n>`` factory, but they can also be directly used
 	 * at the expect statement.
-	 * \snippet Requirements.cpp matcher inverted
-	 *
-	 * \details Most of the built-in matchers support the inversion operator (!), which then tests for the opposite
-	 * condition.
 	 * \snippet Requirements.cpp expect::arg
 	 * \snippet Requirements.cpp expect arg matcher
 	 *
-	 * \details There is also an even shorter syntax for equal testing.
+	 * \details For equality testing, there exists an even shorter syntax.
 	 * \snippet Requirements.cpp expect arg equal short
 	 *
-	 * \details # Custom Matcher
+	 * \details Most of the built-in matchers support the inversion operator (``operator !``), which then tests for the opposite
+	 * condition.
+	 * \snippet Requirements.cpp matcher inverted
+	 *
+	 * # Custom Matcher
 	 * Matchers are highly customizable. In fact, any type which satisfies ``matcher_for`` concept can be used.
 	 * There exists no base or interface type, but the ``PredicateMatcher`` servers as a convenient generic type, which
 	 * simply contains a predicate, a format string and optional additional arguments. But, this is just one option. If
 	 * you have some very specific needs, go and create your matcher from scratch.
 	 * \snippet Requirements.cpp matcher predicate matcher
-	 *
-	 * \attention Matchers receive their arguments as possibly non-const, which is due to workaround some restrictions
-	 * on const qualified views. Either way, matchers should never modify any of their arguments.
 	 *
 	 *\{
 	 */
@@ -316,7 +317,7 @@ namespace mimicpp::matches::str
 	/**
 	 * \defgroup EXPECTATION_MATCHERS_STRING string matchers
 	 * \ingroup EXPECTATION_REQUIREMENT
-	 * \ingroup EXPECTATION_MATCHERS
+	 * \ingroup EXPECTATION_MATCHER
 	 * \brief String specific matchers.
 	 *
 	 *\{

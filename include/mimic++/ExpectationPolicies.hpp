@@ -549,7 +549,7 @@ namespace mimicpp::expect
 	 * \param matcher The matcher.
 	 *
 	 * \details This requirement checks, whether the selected argument matches the given matcher. One argument can be checked multiple times
-	 * in different requirements and all results will be reduced via a conjunction.
+	 * in different requirements and all results will be combined as conjunction.
 	 *
 	 * For a list of built-in matchers, see \ref EXPECTATION_MATCHER "matcher" section.
 	 * \snippet Requirements.cpp expect::arg

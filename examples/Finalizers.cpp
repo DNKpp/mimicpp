@@ -66,7 +66,7 @@ TEST_CASE(
 
 	result = 1337;
 	REQUIRE(1337 == mock());
-	//! [finally::returns std::ref]
+	//! [finally::returns ref]
 }
 
 TEST_CASE(

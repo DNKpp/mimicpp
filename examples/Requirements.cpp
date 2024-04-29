@@ -99,7 +99,7 @@ TEST_CASE(
 	mimicpp::Mock<void(int)> mock{};
 
 	SCOPED_EXP mock.expect_call(_)	// in fact, the _ is the only built-in matcher, which isn't invertible
-				| expect::arg<0>(!matches::le(42));	// note the !
+				| expect::arg<0>(!matches::le(42));	// note the !, as this makes it an actual > test 
 	mock(1337);
 	//! [matcher inverted]
 }
