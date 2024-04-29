@@ -30,7 +30,7 @@ jobs:
     - name: Generate Doxygen Documentation (html and pdf)
       uses: mattnotmitt/doxygen-action@edge
       with:
-        doxyfile-path: docs/Doxygen
+        doxyfile-path: docs/Doxyfile
         enable-latex: true
 
     - name: Upload html documentation
