@@ -477,6 +477,60 @@ TEST_CASE(
 			invertedMatcher.describe(target),
 			Catch::Matchers::Equals(format::format("!({} satisfies predicate)", target)));
 	}
+
+TEST_CASE(
+	"matches::str::eq matches when target string compares equal to the stored one.",
+	"[matcher]"
+)
+{
+	using trompeloeil::_;
+
+	const auto matcher = matches::str::eq("Hello, World!");
+
+	SECTION("When target is equal, they match.")
+	{
+		const std::string target{"Hello, World!"};
+
+		REQUIRE(matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals("string \"Hello, World!\" is equal to \"Hello, World!\""));
+}
+
+	SECTION("When target is not equal, they do not match.")
+	{
+		const std::string target{"Hello, WOrld!"};
+
+		REQUIRE(!matcher.matches(target));
+		REQUIRE_THAT(
+			matcher.describe(target),
+			Catch::Matchers::Equals("string \"Hello, WOrld!\" is equal to \"Hello, World!\""));
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		const auto invertedMatcher = !matches::str::eq("Hello, World!");
+
+		SECTION("When target is equal, they do not match.")
+		{
+			const std::string target{"Hello, World!"};
+
+			REQUIRE(!invertedMatcher.matches(target));
+			REQUIRE_THAT(
+				invertedMatcher.describe(target),
+				Catch::Matchers::Equals("!(string \"Hello, World!\" is equal to \"Hello, World!\")"));
+		}
+
+		SECTION("When target is not equal, they do match.")
+		{
+			const std::string target{"Hello, WOrld!"};
+
+			REQUIRE(invertedMatcher.matches(target));
+			REQUIRE_THAT(
+				invertedMatcher.describe(target),
+				Catch::Matchers::Equals("!(string \"Hello, WOrld!\" is equal to \"Hello, World!\")"));
+		}
+	}
 }
 
 TEST_CASE(

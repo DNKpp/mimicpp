@@ -274,6 +274,31 @@ namespace mimicpp::matches
 	}
 }
 
+namespace mimicpp::matches::str
+{
+	template <typename Char, typename Traits, typename Allocator>
+	[[nodiscard]]
+	constexpr auto eq(std::basic_string<Char, Traits, Allocator> expected)
+	{
+		using ViewT = std::basic_string_view<Char>;
+		return matcher::make_predicate_matcher<matcher::InvertiblePolicy>(
+			[](const ViewT target, const ViewT exp)
+			{
+				return target == exp;
+			},
+			"string {} is equal to {}",
+			std::tuple{std::move(expected)});
+	}
+
+	template <typename Char>
+	[[nodiscard]]
+	constexpr auto eq(const Char* expected)
+	{
+		return eq(
+			std::basic_string<Char>{expected});
+	}
+}
+
 namespace mimicpp::matches::range
 {
 	template <std::ranges::forward_range Range, typename Comparator = std::equal_to<>>
