@@ -121,7 +121,7 @@ TEST_CASE(
 		SECTION("When describe() is called, argument is forwarded to the functional.")
 		{
 			constexpr int value{42};
-			REQUIRE("!(Hello, 42!)" == negatedMatcher.describe(value));
+			REQUIRE("not (Hello, 42!)" == negatedMatcher.describe(value));
 		}
 	}
 
@@ -150,7 +150,7 @@ TEST_CASE(
 		SECTION("When describe() is called, argument is forwarded to the functional.")
 		{
 			constexpr int value{42};
-			REQUIRE("!(Hello, 42!)" == negatedMatcher.describe(value));
+			REQUIRE("not (Hello, 42!)" == negatedMatcher.describe(value));
 		}
 
 		SECTION("And original matcher is still working.")
@@ -230,7 +230,7 @@ TEST_CASE(
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
 				Catch::Matchers::EndsWith(" == 42)")
-				&& Catch::Matchers::StartsWith("!(42"));
+				&& Catch::Matchers::StartsWith("not (42"));
 		}
 
 		SECTION("When target is not equal.")
@@ -240,7 +240,7 @@ TEST_CASE(
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
 				Catch::Matchers::EndsWith(" == 42)")
-				&& Catch::Matchers::StartsWith("!(1337"));
+				&& Catch::Matchers::StartsWith("not (1337"));
 		}
 	}
 }
@@ -283,7 +283,7 @@ TEST_CASE(
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
 				Catch::Matchers::EndsWith(" != 42)")
-				&& Catch::Matchers::StartsWith("!(1337"));
+				&& Catch::Matchers::StartsWith("not (1337"));
 		}
 
 		SECTION("When target is equal.")
@@ -293,7 +293,7 @@ TEST_CASE(
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
 				Catch::Matchers::EndsWith(" != 42)")
-				&& Catch::Matchers::StartsWith("!(42"));
+				&& Catch::Matchers::StartsWith("not (42"));
 		}
 	}
 }
@@ -333,7 +333,7 @@ TEST_CASE(
 			REQUIRE(!invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("!({} < 42)", target)));
+				Catch::Matchers::Equals(format::format("not ({} < 42)", target)));
 		}
 
 		SECTION("When target is not less.")
@@ -342,7 +342,7 @@ TEST_CASE(
 			REQUIRE(invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("!({} < 42)", target)));
+				Catch::Matchers::Equals(format::format("not ({} < 42)", target)));
 		}
 	}
 }
@@ -382,7 +382,7 @@ TEST_CASE(
 			REQUIRE(!invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("!({} <= 42)", target)));
+				Catch::Matchers::Equals(format::format("not ({} <= 42)", target)));
 		}
 
 		SECTION("When target is greater.")
@@ -391,7 +391,7 @@ TEST_CASE(
 			REQUIRE(invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("!({} <= 42)", target)));
+				Catch::Matchers::Equals(format::format("not ({} <= 42)", target)));
 		}
 	}
 }
@@ -431,7 +431,7 @@ TEST_CASE(
 			REQUIRE(!invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("!({} > 42)", target)));
+				Catch::Matchers::Equals(format::format("not ({} > 42)", target)));
 		}
 
 		SECTION("When target is not greater.")
@@ -440,7 +440,7 @@ TEST_CASE(
 			REQUIRE(invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("!({} > 42)", target)));
+				Catch::Matchers::Equals(format::format("not ({} > 42)", target)));
 		}
 	}
 }
@@ -480,7 +480,7 @@ TEST_CASE(
 			REQUIRE(!invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("!({} >= 42)", target)));
+				Catch::Matchers::Equals(format::format("not ({} >= 42)", target)));
 		}
 
 		SECTION("When target is less.")
@@ -489,7 +489,7 @@ TEST_CASE(
 			REQUIRE(invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("!({} >= 42)", target)));
+				Catch::Matchers::Equals(format::format("not ({} >= 42)", target)));
 		}
 	}
 }
@@ -526,7 +526,7 @@ TEST_CASE(
 		REQUIRE(expectedResult == !invertedMatcher.matches(target));
 		REQUIRE_THAT(
 			invertedMatcher.describe(target),
-			Catch::Matchers::Equals(format::format("!({} satisfies predicate)", target)));
+			Catch::Matchers::Equals(format::format("not ({} satisfies predicate)", target)));
 	}
 
 	SECTION("Custom descriptions are supported.")
@@ -585,7 +585,7 @@ TEST_CASE(
 			REQUIRE(!invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals("!(string \"Hello, World!\" is equal to \"Hello, World!\")"));
+				Catch::Matchers::Equals("not (string \"Hello, World!\" is equal to \"Hello, World!\")"));
 		}
 
 		SECTION("When target is not equal, they do match.")
@@ -595,7 +595,7 @@ TEST_CASE(
 			REQUIRE(invertedMatcher.matches(target));
 			REQUIRE_THAT(
 				invertedMatcher.describe(target),
-				Catch::Matchers::Equals("!(string \"Hello, WOrld!\" is equal to \"Hello, World!\")"));
+				Catch::Matchers::Equals("not (string \"Hello, WOrld!\" is equal to \"Hello, World!\")"));
 		}
 	}
 }
@@ -678,7 +678,7 @@ TEST_CASE(
 			REQUIRE(!matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 1337, 42 } is equal to { 1337, 42 })"));
+				Catch::Matchers::Equals("not (range { 1337, 42 } is equal to { 1337, 42 })"));
 		}
 
 		SECTION("When target has same elements, but in different order, they do match.")
@@ -688,7 +688,7 @@ TEST_CASE(
 			REQUIRE(matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 42, 1337 } is equal to { 1337, 42 })"));
+				Catch::Matchers::Equals("not (range { 42, 1337 } is equal to { 1337, 42 })"));
 		}
 
 		SECTION("When target is not equal, they do match.")
@@ -698,7 +698,7 @@ TEST_CASE(
 			REQUIRE(matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 42 } is equal to { 1337, 42 })"));
+				Catch::Matchers::Equals("not (range { 42 } is equal to { 1337, 42 })"));
 		}
 	}
 
@@ -802,7 +802,7 @@ TEST_CASE(
 			REQUIRE(!matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 1337, 42 } is permutation of { 1337, 42 })"));
+				Catch::Matchers::Equals("not (range { 1337, 42 } is permutation of { 1337, 42 })"));
 		}
 
 		SECTION("When target has same elements, but in different order, they do not match.")
@@ -812,7 +812,7 @@ TEST_CASE(
 			REQUIRE(!matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 42, 1337 } is permutation of { 1337, 42 })"));
+				Catch::Matchers::Equals("not (range { 42, 1337 } is permutation of { 1337, 42 })"));
 		}
 
 		SECTION("When target is not equal, they do match.")
@@ -822,7 +822,7 @@ TEST_CASE(
 			REQUIRE(matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 42 } is permutation of { 1337, 42 })"));
+				Catch::Matchers::Equals("not (range { 42 } is permutation of { 1337, 42 })"));
 		}
 	}
 
@@ -903,7 +903,7 @@ TEST_CASE(
 			REQUIRE(!matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 42, 1337 } is sorted)"));
+				Catch::Matchers::Equals("not (range { 42, 1337 } is sorted)"));
 		}
 
 		SECTION("When target is not sorted, it's a match.")
@@ -913,7 +913,7 @@ TEST_CASE(
 			REQUIRE(matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 1337, 42 } is sorted)"));
+				Catch::Matchers::Equals("not (range { 1337, 42 } is sorted)"));
 		}
 	}
 
@@ -978,7 +978,7 @@ TEST_CASE(
 			REQUIRE(!matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range {  } is empty)"));
+				Catch::Matchers::Equals("not (range {  } is empty)"));
 		}
 
 		SECTION("When a non-empty range is stored, it's a match.")
@@ -988,7 +988,7 @@ TEST_CASE(
 			REQUIRE(matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 42 } is empty)"));
+				Catch::Matchers::Equals("not (range { 42 } is empty)"));
 		}
 	}
 }
@@ -1038,7 +1038,7 @@ TEST_CASE(
 			REQUIRE(!matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 42, 1337 } has size 2)"));
+				Catch::Matchers::Equals("not (range { 42, 1337 } has size 2)"));
 		}
 
 		SECTION("When target has different size, it's a match.")
@@ -1048,7 +1048,7 @@ TEST_CASE(
 			REQUIRE(matcher.matches(target));
 			REQUIRE_THAT(
 				matcher.describe(target),
-				Catch::Matchers::Equals("!(range { 42 } has size 2)"));
+				Catch::Matchers::Equals("not (range { 42 } has size 2)"));
 		}
 	}
 }

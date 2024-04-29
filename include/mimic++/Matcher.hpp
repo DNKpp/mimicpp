@@ -117,7 +117,7 @@ namespace mimicpp
 			using NotFnT = decltype(std::not_fn(std::forward<Fn>(fn)));
 			return PredicateMatcher<NotFnT, AdditionalArgs...>{
 				std::not_fn(std::forward<Fn>(fn)),
-				format::format("!({})", fmt),
+				format::format("not ({})", fmt),
 				std::move(tuple)
 			};
 		}
