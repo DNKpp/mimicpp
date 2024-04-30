@@ -4,8 +4,11 @@ include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 add_executable(
 	mimicpp-examples
 	"Finalizers.cpp"
+	"Requirements.cpp"
+	"Sequences.cpp"
 	"SideEffects.cpp"
- "Requirements.cpp")
+)
+
 if (MSVC)
 
 	# When using github ci, exceptions seems to be disabled by default.
