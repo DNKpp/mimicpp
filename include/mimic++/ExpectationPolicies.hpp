@@ -40,9 +40,9 @@ namespace mimicpp::expectation_policies
 		}
 
 		[[nodiscard]]
-		constexpr bool is_saturated() const noexcept
+		constexpr bool is_applicable() const noexcept
 		{
-			return m_Count == max;
+			return m_Count < max;
 		}
 
 		constexpr void consume() noexcept
@@ -81,9 +81,9 @@ namespace mimicpp::expectation_policies
 		}
 
 		[[nodiscard]]
-		constexpr bool is_saturated() const noexcept
+		constexpr bool is_applicable() const noexcept
 		{
-			return m_Count == m_Max;
+			return m_Count < m_Max;
 		}
 
 		constexpr void consume() noexcept
@@ -536,9 +536,9 @@ namespace mimicpp::expect
 	 * requirements fail, there is no match.
 	 * \note An expectation without requirements matches any call.
 	 *
-	 * \details Requirements are checked during the ``matches`` step. If all requirements match, an additional ``is_saturated`` check is
-	 * performed on all requirements. If this returns ``true``, the expectation is treated as ``exhausted`` and will be skipped (but
-	 * reported if no match was found). Otherwise, the call is matched.
+	 * \details Requirements are checked during the ``matches`` step. If all requirements match, an additional ``is_applicable`` check is
+	 * performed on the times requirements. If this returns ``false``, the expectation is treated as ``non-applicable`` and will be skipped
+	 * (but reported if no other match can be found). Otherwise, the call is matched.
 	 *
 	 *\{
 	 */

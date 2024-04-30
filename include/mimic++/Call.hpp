@@ -84,7 +84,7 @@ namespace mimicpp::call
 	enum class MatchCategory
 	{
 		no,
-		exhausted,
+		non_applicable,
 		ok
 	};
 }
@@ -104,9 +104,9 @@ struct std::formatter<mimicpp::call::MatchCategory, Char>
 		{
 			switch (cat)
 			{
-			case MatchCategoryT::no: return "MatchCategory::no";
-			case MatchCategoryT::exhausted: return "MatchCategory::exhausted";
-			case MatchCategoryT::ok: return "MatchCategory::ok";
+			case MatchCategoryT::no: return "no match";
+			case MatchCategoryT::non_applicable: return "non applicable match";
+			case MatchCategoryT::ok: return "full match";
 			}
 
 			throw std::runtime_error{"Unknown category value."};
@@ -142,12 +142,12 @@ namespace mimicpp::call
 	};
 
 	using MatchResult_NoT = GenericMatchResult<MatchCategory::no>;
-	using MatchResult_ExhaustedT = GenericMatchResult<MatchCategory::exhausted>;
+	using MatchResult_NotApplicableT = GenericMatchResult<MatchCategory::non_applicable>;
 	using MatchResult_OkT = GenericMatchResult<MatchCategory::ok>;
 
 	using MatchResultT = std::variant<
 		MatchResult_NoT,
-		MatchResult_ExhaustedT,
+		MatchResult_NotApplicableT,
 		MatchResult_OkT
 	>;
 }
@@ -155,7 +155,7 @@ namespace mimicpp::call
 namespace mimicpp::call::detail
 {
 	[[nodiscard]]
-	inline MatchResultT evaluate_sub_match_results(const bool isSaturated, std::vector<SubMatchResult> subResults) noexcept
+	inline MatchResultT evaluate_sub_match_results(const bool isApplicable, std::vector<SubMatchResult> subResults) noexcept
 	{
 		static_assert(3 == std::variant_size_v<MatchResultT>, "Unexpected MatchResult alternative count.");
 
@@ -166,9 +166,9 @@ namespace mimicpp::call::detail
 			};
 		}
 
-		if (isSaturated)
+		if (!isApplicable)
 		{
-			return MatchResult_ExhaustedT{
+			return MatchResult_NotApplicableT{
 				.subMatchResults = std::move(subResults)
 			};
 		}

@@ -82,21 +82,21 @@ TEST_CASE(
 
 		SECTION("When handle_call() is called.")
 		{
-			SECTION("And when times is not saturated.")
+			SECTION("And when times is applicable.")
 			{
-				REQUIRE_CALL(times, is_saturated())
-					.RETURN(false);
+				REQUIRE_CALL(times, is_applicable())
+					.RETURN(true);
 				REQUIRE_CALL(times, consume());
 				REQUIRE_NOTHROW(collection->handle_call(call));
 			}
 
 			SECTION("And when times is saturated.")
 			{
-				REQUIRE_CALL(times, is_saturated())
-					.RETURN(true);
+				REQUIRE_CALL(times, is_applicable())
+					.RETURN(false);
 				REQUIRE_THROWS_AS(
 					collection->handle_call(call),
-					ExhaustedMatchError);
+					NonApplicableMatchError);
 			}
 		}
 	}

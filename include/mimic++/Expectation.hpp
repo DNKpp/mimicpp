@@ -28,7 +28,7 @@ namespace mimicpp::detail
 	void handle_call_match_fail(
 		call::Info<Return, Params...> call,
 		std::vector<call::MatchResult_NoT> noMatches,
-		std::vector<call::MatchResult_ExhaustedT> partialMatches
+		std::vector<call::MatchResult_NotApplicableT> partialMatches
 	)
 	{
 		if (!std::ranges::empty(partialMatches))
@@ -148,7 +148,7 @@ namespace mimicpp
 			static_assert(3 == std::variant_size_v<call::MatchResultT>, "Unexpected MatchResult alternative count.");
 
 			std::vector<call::MatchResult_NoT> noMatches{};
-			std::vector<call::MatchResult_ExhaustedT> exhaustedMatches{};
+			std::vector<call::MatchResult_NotApplicableT> exhaustedMatches{};
 
 			for (const std::scoped_lock lock{m_ExpectationsMx};
 				auto& exp : m_Expectations | std::views::reverse)
@@ -170,7 +170,7 @@ namespace mimicpp
 					}
 					else
 					{
-						exhaustedMatches.emplace_back(std::get<call::MatchResult_ExhaustedT>(*std::move(matchResult)));
+						exhaustedMatches.emplace_back(std::get<call::MatchResult_NotApplicableT>(*std::move(matchResult)));
 					}
 				}
 			}
@@ -213,7 +213,7 @@ namespace mimicpp
 							&& requires(T& policy)
 							{
 								{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-								{ std::as_const(policy).is_saturated() } noexcept -> std::convertible_to<bool>;
+								{ std::as_const(policy).is_applicable() } noexcept -> std::convertible_to<bool>;
 								policy.consume();
 							};
 
@@ -267,7 +267,7 @@ namespace mimicpp
 		call::MatchResultT matches(const CallInfoT& call) const override
 		{
 			return call::detail::evaluate_sub_match_results(
-				m_Times.is_saturated(),
+				m_Times.is_applicable(),
 				std::apply(
 					[&](const auto&... policies)
 					{

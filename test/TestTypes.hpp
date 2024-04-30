@@ -158,12 +158,12 @@ public:
 		return isSatisfied;
 	}
 
-	bool isSaturated{};
+	bool isApplicable{true};
 
 	[[nodiscard]]
-	constexpr bool is_saturated() const noexcept
+	constexpr bool is_applicable() const noexcept
 	{
-		return isSaturated;
+		return isApplicable;
 	}
 
 	static constexpr void consume() noexcept
@@ -175,7 +175,7 @@ class TimesMock
 {
 public:
 	MAKE_CONST_MOCK0(is_satisfied, bool (), noexcept);
-	MAKE_CONST_MOCK0(is_saturated, bool (), noexcept);
+	MAKE_CONST_MOCK0(is_applicable, bool (), noexcept);
 	MAKE_MOCK0(consume, void ());
 };
 
@@ -194,10 +194,10 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr bool is_saturated() const noexcept
+	constexpr bool is_applicable() const noexcept
 	{
 		return std::invoke(projection, policy)
-			.is_saturated();
+			.is_applicable();
 	}
 
 	constexpr void consume() noexcept

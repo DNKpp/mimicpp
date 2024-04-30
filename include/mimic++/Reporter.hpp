@@ -28,7 +28,7 @@ namespace mimicpp
 	[[noreturn]]
 	void report_fail(
 		const call::Info<Return, Params...>& callInfo,
-		std::vector<call::MatchResult_ExhaustedT> results
+		std::vector<call::MatchResult_NotApplicableT> results
 	);
 
 	template <typename Return, typename... Params>

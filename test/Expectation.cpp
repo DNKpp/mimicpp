@@ -127,7 +127,7 @@ TEST_CASE(
 			reporter.no_match_reports(),
 			Catch::Matchers::IsEmpty());
 		REQUIRE_THAT(
-			reporter.exhausted_match_reports(),
+			reporter.non_applicable_match_reports(),
 			Catch::Matchers::IsEmpty());
 		REQUIRE_THAT(
 			reporter.ok_match_reports(),
@@ -139,15 +139,15 @@ TEST_CASE(
 		const auto [count, result0, result1, result2, result3] = GENERATE(
 			(table<std::size_t, MatchResultT, MatchResultT, MatchResultT, MatchResultT>)(
 				{
-				{1u, MatchResult_ExhaustedT{}, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NoT{}},
-				{1u, MatchResult_NoT{}, MatchResult_ExhaustedT{}, MatchResult_NoT{}, MatchResult_NoT{}},
-				{1u, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_ExhaustedT{}, MatchResult_NoT{}},
-				{1u, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_ExhaustedT{}},
+				{1u, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NoT{}},
+				{1u, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NoT{}},
+				{1u, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NoT{}},
+				{1u, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}},
 
-				{2u, MatchResult_ExhaustedT{}, MatchResult_NoT{}, MatchResult_ExhaustedT{}, MatchResult_NoT{}},
-				{2u, MatchResult_NoT{}, MatchResult_ExhaustedT{}, MatchResult_NoT{}, MatchResult_ExhaustedT{}},
-				{3u, MatchResult_ExhaustedT{}, MatchResult_NoT{}, MatchResult_ExhaustedT{}, MatchResult_ExhaustedT{}},
-				{4u, MatchResult_ExhaustedT{}, MatchResult_ExhaustedT{}, MatchResult_ExhaustedT{}, MatchResult_ExhaustedT{}}
+				{2u, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NoT{}},
+				{2u, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}},
+				{3u, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NotApplicableT{}},
+				{4u, MatchResult_NotApplicableT{}, MatchResult_NotApplicableT{}, MatchResult_NotApplicableT{}, MatchResult_NotApplicableT{}}
 				}));
 
 		trompeloeil::sequence sequence{};
@@ -170,12 +170,12 @@ TEST_CASE(
 
 		REQUIRE_THROWS_AS(
 			storage.handle_call(call),
-			ExhaustedMatchError);
+			NonApplicableMatchError);
 		REQUIRE_THAT(
 			reporter.no_match_reports(),
 			Catch::Matchers::IsEmpty());
 		REQUIRE_THAT(
-			reporter.exhausted_match_reports(),
+			reporter.non_applicable_match_reports(),
 			Catch::Matchers::SizeIs(count));
 		REQUIRE_THAT(
 			reporter.ok_match_reports(),
@@ -209,7 +209,7 @@ TEST_CASE(
 			reporter.no_match_reports(),
 			Catch::Matchers::SizeIs(4));
 		REQUIRE_THAT(
-			reporter.exhausted_match_reports(),
+			reporter.non_applicable_match_reports(),
 			Catch::Matchers::IsEmpty());
 		REQUIRE_THAT(
 			reporter.ok_match_reports(),
@@ -280,7 +280,7 @@ TEST_CASE(
 			reporter.no_match_reports(),
 			Matches::IsEmpty());
 		CHECK_THAT(
-			reporter.exhausted_match_reports(),
+			reporter.non_applicable_match_reports(),
 			Matches::IsEmpty());
 
 		REQUIRE_THAT(
@@ -410,16 +410,16 @@ TEST_CASE(
 
 		SECTION("When times is not saturated, call is matched.")
 		{
-			REQUIRE_CALL(times, is_saturated())
-				.RETURN(false);
+			REQUIRE_CALL(times, is_applicable())
+				.RETURN(true);
 			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
 		}
 
 		SECTION("When times is saturated, match exhausted.")
 		{
-			REQUIRE_CALL(times, is_saturated())
-				.RETURN(true);
-			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_ExhaustedT>(std::as_const(expectation).matches(call)));
+			REQUIRE_CALL(times, is_applicable())
+				.RETURN(false);
+			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NotApplicableT>(std::as_const(expectation).matches(call)));
 		}
 
 		SECTION("Consume calls times.consume().")
@@ -457,9 +457,9 @@ TEST_CASE(
 
 		SECTION("When policy is not matched, then the result is always no match.")
 		{
-			const bool isSaturated = GENERATE(false, true);
-			REQUIRE_CALL(times, is_saturated())
-				.RETURN(isSaturated);
+			const bool isApplicable = GENERATE(false, true);
+			REQUIRE_CALL(times, is_applicable())
+				.RETURN(isApplicable);
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(mimicpp::call::SubMatchResult{false});
@@ -468,10 +468,10 @@ TEST_CASE(
 
 		SECTION("When policy is matched.")
 		{
-			SECTION("And when times is not saturated => ok")
+			SECTION("And when times is applicable => ok")
 			{
-				REQUIRE_CALL(times, is_saturated())
-					.RETURN(false);
+				REQUIRE_CALL(times, is_applicable())
+					.RETURN(true);
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
 					.RETURN(mimicpp::call::SubMatchResult{true});
@@ -480,12 +480,12 @@ TEST_CASE(
 
 			SECTION("And when times is saturated => exhausted")
 			{
-				REQUIRE_CALL(times, is_saturated())
-					.RETURN(true);
+				REQUIRE_CALL(times, is_applicable())
+					.RETURN(false);
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
 					.RETURN(mimicpp::call::SubMatchResult{true});
-				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_ExhaustedT>(std::as_const(expectation).matches(call)));
+				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NotApplicableT>(std::as_const(expectation).matches(call)));
 			}
 		}
 

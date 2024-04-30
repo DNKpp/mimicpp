@@ -80,12 +80,12 @@ TEST_CASE(
 {
 	expectation_policies::InitTimes policy{};
 	REQUIRE(!policy.is_satisfied());
-	REQUIRE(!policy.is_saturated());
+	REQUIRE(policy.is_applicable());
 
 	REQUIRE_NOTHROW(policy.consume());
 
 	REQUIRE(policy.is_satisfied());
-	REQUIRE(policy.is_saturated());
+	REQUIRE(!policy.is_applicable());
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -104,7 +104,7 @@ TEMPLATE_TEST_CASE_SIG(
 	for ([[maybe_unused]] auto i : std::views::iota(0u, min))
 	{
 		REQUIRE(!policy.is_satisfied());
-		REQUIRE(!policy.is_saturated());
+		REQUIRE(policy.is_applicable());
 
 		REQUIRE_NOTHROW(policy.consume());
 	}
@@ -114,13 +114,13 @@ TEMPLATE_TEST_CASE_SIG(
 	for ([[maybe_unused]] auto i : std::views::iota(min, max))
 	{
 		REQUIRE(policy.is_satisfied());
-		REQUIRE(!policy.is_saturated());
+		REQUIRE(policy.is_applicable());
 
 		REQUIRE_NOTHROW(policy.consume());
 	}
 
 	REQUIRE(policy.is_satisfied());
-	REQUIRE(policy.is_saturated());
+	REQUIRE(!policy.is_applicable());
 }
 
 TEST_CASE(
@@ -136,7 +136,7 @@ TEST_CASE(
 	for ([[maybe_unused]] auto i : std::views::iota(0u, min))
 	{
 		REQUIRE(!policy.is_satisfied());
-		REQUIRE(!policy.is_saturated());
+		REQUIRE(policy.is_applicable());
 
 		REQUIRE_NOTHROW(policy.consume());
 	}
@@ -146,13 +146,13 @@ TEST_CASE(
 	for ([[maybe_unused]] auto i : std::views::iota(min, max))
 	{
 		REQUIRE(policy.is_satisfied());
-		REQUIRE(!policy.is_saturated());
+		REQUIRE(policy.is_applicable());
 
 		REQUIRE_NOTHROW(policy.consume());
 	}
 
 	REQUIRE(policy.is_satisfied());
-	REQUIRE(policy.is_saturated());
+	REQUIRE(!policy.is_applicable());
 }
 
 TEST_CASE(
@@ -1131,81 +1131,81 @@ TEST_CASE(
 	{
 		expectation_policies::Times times = expect::times<2, 5>();
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(times.is_saturated());
+		REQUIRE(!times.is_applicable());
 	}
 
 	SECTION("times with unary limits.")
 	{
 		expectation_policies::Times times = expect::times<3>();
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(times.is_saturated());
+		REQUIRE(!times.is_applicable());
 	}
 
 	SECTION("at_most")
 	{
 		expectation_policies::Times times = expect::at_most<3>();
 		REQUIRE(times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(times.is_saturated());
+		REQUIRE(!times.is_applicable());
 	}
 
 	SECTION("at_least")
 	{
 		expectation_policies::Times times = expect::at_least<3>();
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		for ([[maybe_unused]] const auto i : std::views::iota(0, 10))
 		{
 			times.consume();
 
 			REQUIRE(times.is_satisfied());
-			REQUIRE(!times.is_saturated());
+			REQUIRE(times.is_applicable());
 		}
 	}
 
@@ -1213,29 +1213,29 @@ TEST_CASE(
 	{
 		expectation_policies::Times times = expect::once();
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(times.is_saturated());
+		REQUIRE(!times.is_applicable());
 	}
 
 	SECTION("twice")
 	{
 		expectation_policies::Times times = expect::twice();
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(times.is_saturated());
+		REQUIRE(!times.is_applicable());
 	}
 }
 
@@ -1248,81 +1248,81 @@ TEST_CASE(
 	{
 		expectation_policies::RuntimeTimes times = expect::times(2, 5);
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(times.is_saturated());
+		REQUIRE(!times.is_applicable());
 	}
 
 	SECTION("times with unary limits.")
 	{
 		expectation_policies::RuntimeTimes times = expect::times(3);
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(times.is_saturated());
+		REQUIRE(!times.is_applicable());
 	}
 
 	SECTION("at_most")
 	{
 		expectation_policies::RuntimeTimes times = expect::at_most(3);
 		REQUIRE(times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(times.is_saturated());
+		REQUIRE(!times.is_applicable());
 	}
 
 	SECTION("at_least")
 	{
 		expectation_policies::RuntimeTimes times = expect::at_least(3);
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 		times.consume();
 
 		REQUIRE(!times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		times.consume();
 
 		REQUIRE(times.is_satisfied());
-		REQUIRE(!times.is_saturated());
+		REQUIRE(times.is_applicable());
 
 		for ([[maybe_unused]] const auto i : std::views::iota(0, 10))
 		{
 			times.consume();
 
 			REQUIRE(times.is_satisfied());
-			REQUIRE(!times.is_saturated());
+			REQUIRE(times.is_applicable());
 		}
 	}
 }

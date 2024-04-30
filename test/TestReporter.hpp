@@ -13,7 +13,7 @@
 #define MIMICPP_REPORTER_DEFINED
 
 inline std::vector<mimicpp::call::MatchResult_NoT> g_NoMatchResults{};
-inline std::vector<mimicpp::call::MatchResult_ExhaustedT> g_ExhaustedMatchResults{};
+inline std::vector<mimicpp::call::MatchResult_NotApplicableT> g_NonApplicableMatchResults{};
 inline std::vector<mimicpp::call::MatchResult_OkT> g_OkMatchResults{};
 
 struct unhandled_exception_info
@@ -30,7 +30,7 @@ class NoMatchError
 {
 };
 
-class ExhaustedMatchError
+class NonApplicableMatchError
 {
 };
 
@@ -53,15 +53,15 @@ namespace mimicpp
 	template <typename Return, typename... Params>
 	void report_fail(
 		const call::Info<Return, Params...>& callInfo,
-		std::vector<call::MatchResult_ExhaustedT> results
+		std::vector<call::MatchResult_NotApplicableT> results
 	)
 	{
-		g_ExhaustedMatchResults.insert(
-			std::ranges::end(g_ExhaustedMatchResults),
+		g_NonApplicableMatchResults.insert(
+			std::ranges::end(g_NonApplicableMatchResults),
 			std::ranges::begin(results),
 			std::ranges::end(results));
 
-		throw ExhaustedMatchError{};
+		throw NonApplicableMatchError{};
 	}
 
 	template <typename Return, typename... Params>
@@ -119,7 +119,7 @@ namespace mimicpp
 		void clear()
 		{
 			g_OkMatchResults.clear();
-			g_ExhaustedMatchResults.clear();
+			g_NonApplicableMatchResults.clear();
 			g_NoMatchResults.clear();
 			g_Errors.clear();
 			g_UnhandledExceptions.clear();
@@ -136,9 +136,9 @@ namespace mimicpp
 			return g_NoMatchResults;
 		}
 
-		auto& exhausted_match_reports() noexcept
+		auto& non_applicable_match_reports() noexcept
 		{
-			return g_ExhaustedMatchResults;
+			return g_NonApplicableMatchResults;
 		}
 
 		auto& ok_match_reports() noexcept
