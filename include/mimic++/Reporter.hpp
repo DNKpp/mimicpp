@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/Call.hpp"
+#include "mimic++/Printer.hpp"
 
 #include <exception>
 #include <memory>
@@ -35,6 +36,8 @@ namespace mimicpp
 		const call::Info<Return, Params...>& callInfo,
 		call::MatchResult_OkT result
 	);
+
+	inline void report_error(StringT message);
 
 	template <typename Signature>
 	class Expectation;
