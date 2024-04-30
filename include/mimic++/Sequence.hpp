@@ -13,8 +13,6 @@
 
 #include <cassert>
 
-#include "Sequence.hpp"
-
 namespace mimicpp::expectation_policies
 {
 	class Sequence;
@@ -27,6 +25,8 @@ namespace mimicpp
 	{
 	};
 
+	namespace detail
+	{
 	class Sequence
 	{
 	public:
@@ -64,6 +64,27 @@ namespace mimicpp
 	private:
 		std::underlying_type_t<SequenceId> m_MaxId{-1};
 		SequenceId m_Current{};
+	};
+}
+
+	class Sequence
+	{
+		friend class expectation_policies::Sequence;
+	public:
+		~Sequence() = default;
+
+		[[nodiscard]]
+		Sequence() = default;
+
+		Sequence(const Sequence&) = delete;
+		Sequence& operator =(const Sequence&) = delete;
+		Sequence(Sequence&&) = delete;
+		Sequence& operator =(Sequence&&) = delete;
+
+	private:
+		std::shared_ptr<detail::Sequence> m_Sequence{
+			std::make_shared<detail::Sequence>()
+		};
 	};
 }
 	};

@@ -9,14 +9,26 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
-#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include "TestReporter.hpp"
 
 using namespace mimicpp;
 
 TEST_CASE(
-	"Sequences are default constructible, but immobile.",
+	"detail::Sequence is default constructible, but immobile.",
+	"[sequence]"
+)
+{
+	STATIC_REQUIRE(std::is_default_constructible_v<detail::Sequence>);
+
+	STATIC_REQUIRE(!std::is_copy_constructible_v<detail::Sequence>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<detail::Sequence>);
+	STATIC_REQUIRE(!std::is_move_constructible_v<detail::Sequence>);
+	STATIC_REQUIRE(!std::is_move_assignable_v<detail::Sequence>);
+}
+
+TEST_CASE(
+	"Sequence is default constructible, but immobile.",
 	"[sequence]"
 )
 {
@@ -36,7 +48,7 @@ TEST_CASE(
 	namespace Matches = Catch::Matchers;
 
 	ScopedReporter reporter{};
-	std::optional<Sequence> sequence{std::in_place};
+	std::optional<detail::Sequence> sequence{std::in_place};
 
 	SECTION("When sequence contains one id, that id can be consumed.")
 	{
