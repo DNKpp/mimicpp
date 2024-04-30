@@ -38,51 +38,22 @@ TEST_CASE(
 	ScopedReporter reporter{};
 	std::optional<Sequence> sequence{std::in_place};
 
-	SECTION("When sequence contains zero ids, it does not report errors during destruction.")
-	{
-		sequence.reset();
-
-		REQUIRE_THAT(
-			reporter.errors(),
-			Matches::IsEmpty());
-	}
-
-	SECTION("When sequence contains one id.")
+	SECTION("When sequence contains one id, that id can be consumed.")
 	{
 		const SequenceId id = sequence->add();
 
-		SECTION("When sequence is destroyed, before id is consumed, an error is reported.")
+		REQUIRE(sequence->is_consumable(id));
+		REQUIRE_NOTHROW(sequence->consume(id));
+
+		SECTION("Even multiple times in a row.")
 		{
-			sequence.reset();
-
-			REQUIRE_THAT(
-				reporter.errors(),
-				Matches::SizeIs(1));
-			REQUIRE_THAT(
-				reporter.errors().front(),
-				Matches::Equals("Unfulfilled sequence. 0 out of 1 expectation(s) where consumed."));
-		}
-
-		SECTION("Sequence can consume that id.")
-		{
-			REQUIRE(sequence->is_consumable(id));
-			REQUIRE_NOTHROW(sequence->consume(id));
-
-			SECTION("Even multiple times in a row.")
+			for ([[maybe_unused]] const int i : std::views::iota(0, GENERATE(1, 5)))
 			{
-				for ([[maybe_unused]] const int i : std::views::iota(0, GENERATE(1, 5)))
-				{
-					REQUIRE(sequence->is_consumable(id));
-					REQUIRE_NOTHROW(sequence->consume(id));
-				}
-
 				REQUIRE(sequence->is_consumable(id));
+				REQUIRE_NOTHROW(sequence->consume(id));
 			}
 
-			sequence.reset();
-			REQUIRE_THAT(
-				reporter.errors(),
-				Matches::IsEmpty());
+			REQUIRE(sequence->is_consumable(id));
 		}
 	}
 
@@ -97,20 +68,9 @@ TEST_CASE(
 		SECTION("Sequence can consume ids.")
 		{
 			REQUIRE(sequence->is_consumable(ids[0]));
-			REQUIRE(!sequence->is_consumable(ids[1]));
-			REQUIRE(!sequence->is_consumable(ids[2]));
+			REQUIRE(sequence->is_consumable(ids[1]));
+			REQUIRE(sequence->is_consumable(ids[2]));
 			REQUIRE_NOTHROW(sequence->consume(ids[0]));
-
-			SECTION("And when the sequence is destroyed, it still reports an error.")
-			{
-				sequence.reset();
-				REQUIRE_THAT(
-					reporter.errors(),
-					Matches::SizeIs(1));
-				REQUIRE_THAT(
-					reporter.errors().front(),
-					Matches::Equals("Unfulfilled sequence. 1 out of 3 expectation(s) where consumed."));
-			}
 
 			SECTION("And then the same id is consumable again.")
 			{
@@ -118,13 +78,13 @@ TEST_CASE(
 				{
 					REQUIRE(sequence->is_consumable(ids[0]));
 					REQUIRE(sequence->is_consumable(ids[1]));
-					REQUIRE(!sequence->is_consumable(ids[2]));
+					REQUIRE(sequence->is_consumable(ids[2]));
 					REQUIRE_NOTHROW(sequence->consume(ids[0]));
 				}
 
 				REQUIRE(sequence->is_consumable(ids[0]));
 				REQUIRE(sequence->is_consumable(ids[1]));
-				REQUIRE(!sequence->is_consumable(ids[2]));
+				REQUIRE(sequence->is_consumable(ids[2]));
 				REQUIRE_NOTHROW(sequence->consume(ids[1]));
 			}
 
@@ -132,19 +92,8 @@ TEST_CASE(
 			{
 				REQUIRE(sequence->is_consumable(ids[0]));
 				REQUIRE(sequence->is_consumable(ids[1]));
-				REQUIRE(!sequence->is_consumable(ids[2]));
+				REQUIRE(sequence->is_consumable(ids[2]));
 				REQUIRE_NOTHROW(sequence->consume(ids[1]));
-
-				SECTION("And when the sequence is destroyed, it still reports an error.")
-				{
-					sequence.reset();
-					REQUIRE_THAT(
-						reporter.errors(),
-						Matches::SizeIs(1));
-					REQUIRE_THAT(
-						reporter.errors().front(),
-						Matches::Equals("Unfulfilled sequence. 2 out of 3 expectation(s) where consumed."));
-				}
 
 				SECTION("And then the same id is consumable again.")
 				{
@@ -183,12 +132,51 @@ TEST_CASE(
 						REQUIRE(!sequence->is_consumable(ids[1]));
 						REQUIRE(sequence->is_consumable(ids[2]));
 					}
-
-					sequence.reset();
-					REQUIRE_THAT(
-						reporter.errors(),
-						Matches::IsEmpty());
 				}
+			}
+		}
+
+		SECTION("Individual ids can be skipped.")
+		{
+			SECTION("When first id is skipped.")
+			{
+				REQUIRE(sequence->is_consumable(ids[0]));
+				REQUIRE(sequence->is_consumable(ids[1]));
+				REQUIRE(sequence->is_consumable(ids[2]));
+				REQUIRE_NOTHROW(sequence->consume(ids[1]));
+
+				REQUIRE(!sequence->is_consumable(ids[0]));
+				REQUIRE(sequence->is_consumable(ids[1]));
+				REQUIRE(sequence->is_consumable(ids[2]));
+			}
+
+			SECTION("When second id is skipped.")
+			{
+				REQUIRE(sequence->is_consumable(ids[0]));
+				REQUIRE(sequence->is_consumable(ids[1]));
+				REQUIRE(sequence->is_consumable(ids[2]));
+				REQUIRE_NOTHROW(sequence->consume(ids[0]));
+
+				REQUIRE(sequence->is_consumable(ids[0]));
+				REQUIRE(sequence->is_consumable(ids[1]));
+				REQUIRE(sequence->is_consumable(ids[2]));
+				REQUIRE_NOTHROW(sequence->consume(ids[2]));
+
+				REQUIRE(!sequence->is_consumable(ids[0]));
+				REQUIRE(!sequence->is_consumable(ids[1]));
+				REQUIRE(sequence->is_consumable(ids[2]));
+			}
+
+			SECTION("When first and second ids are skipped.")
+			{
+				REQUIRE(sequence->is_consumable(ids[0]));
+				REQUIRE(sequence->is_consumable(ids[1]));
+				REQUIRE(sequence->is_consumable(ids[2]));
+				REQUIRE_NOTHROW(sequence->consume(ids[2]));
+
+				REQUIRE(!sequence->is_consumable(ids[0]));
+				REQUIRE(!sequence->is_consumable(ids[1]));
+				REQUIRE(sequence->is_consumable(ids[2]));
 			}
 		}
 	}

@@ -29,24 +29,8 @@ namespace mimicpp
 
 	class Sequence
 	{
-		friend class expectation_policies::Sequence;
-
 	public:
-		~Sequence() noexcept(false)
-		{
-			if (0 <= m_MaxId
-				&& (!m_Current
-					|| to_underlying(*m_Current) != m_MaxId))
-			{
-				const int consumedExpectations = 1 + to_underlying(m_Current.value_or(SequenceId{-1}));
-
-				report_error(
-					format::format(
-						"Unfulfilled sequence. {} out of {} expectation(s) where consumed.",
-						consumedExpectations,
-						m_MaxId + 1));
-			}
-		}
+		~Sequence() = default;
 
 		[[nodiscard]]
 		Sequence() = default;
@@ -61,14 +45,8 @@ namespace mimicpp
 		{
 			assert(0 <= to_underlying(id) && to_underlying(id) <= m_MaxId);
 
-			if (m_Current)
-			{
-				return to_underlying(id) == to_underlying(*m_Current)
-						|| to_underlying(id) == to_underlying(*m_Current) + 1;
+			return to_underlying(m_Current) <= to_underlying(id);
 			}
-
-			return id == SequenceId{0};
-		}
 
 		constexpr void consume(const SequenceId id) noexcept
 		{
@@ -85,7 +63,9 @@ namespace mimicpp
 
 	private:
 		std::underlying_type_t<SequenceId> m_MaxId{-1};
-		std::optional<SequenceId> m_Current{};
+		SequenceId m_Current{};
+	};
+}
 	};
 }
 
