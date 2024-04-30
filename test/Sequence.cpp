@@ -8,6 +8,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
@@ -59,147 +60,154 @@ TEST_CASE(
 	"[sequence]"
 )
 {
-	detail::Sequence sequence{};
+	namespace Matches = Catch::Matchers;
 
-	SECTION("When sequence contains one id, that id can be consumed.")
+	ScopedReporter reporter{};
+	std::optional<detail::Sequence> sequence{std::in_place};
+
+	SECTION("When attempted to add a new id with zero or negative count, an std::invalid_argument is thrown.")
 	{
-		const SequenceId id = sequence.add();
+		REQUIRE_THROWS_AS(
+			sequence->add(0),
+			std::invalid_argument);
+	}
 
-		REQUIRE(sequence.is_consumable(id));
-		REQUIRE_NOTHROW(sequence.consume(id));
+	SECTION("When sequence contains one id, that id must be fully consumed.")
+	{
+		const std::size_t count = GENERATE(1u, 2u, 3u);
+		const SequenceId id = sequence->add(count);
 
-		SECTION("Even multiple times in a row.")
+		for ([[maybe_unused]] const auto i : std::views::iota(0u, count - 1u))
 		{
-			for ([[maybe_unused]] const int i : std::views::iota(0, GENERATE(1, 5)))
-			{
-				REQUIRE(sequence.is_consumable(id));
-				REQUIRE_NOTHROW(sequence.consume(id));
-			}
+			REQUIRE(sequence->is_consumable(id));
+			REQUIRE(!sequence->is_saturated(id));
+			REQUIRE_NOTHROW(sequence->consume(id));
+		}
+		REQUIRE(sequence->is_consumable(id));
+		REQUIRE(!sequence->is_saturated(id));
 
-			REQUIRE(sequence.is_consumable(id));
+		SECTION("When id is not fully consumed, an error is reported.")
+		{
+			sequence.reset();
+			REQUIRE_THAT(
+				reporter.errors(),
+				Matches::SizeIs(1));
+			REQUIRE_THAT(
+				reporter.errors().front(),
+				Matches::Equals("Unfulfilled sequence. 0 out of 1 expectation(s) where fully consumed."));
+		}
+
+		SECTION("When id is fully consumed, nothing is reported.")
+		{
+			REQUIRE_NOTHROW(sequence->consume(id));
+			REQUIRE(!sequence->is_consumable(id));
+			REQUIRE(sequence->is_saturated(id));
+
+			sequence.reset();
+			REQUIRE_THAT(
+				reporter.errors(),
+				Matches::IsEmpty());
 		}
 	}
 
 	SECTION("When sequence contains multiple ids.")
 	{
 		const std::vector ids{
-			sequence.add(),
-			sequence.add(),
-			sequence.add()
+			sequence->add(3u),
+			sequence->add(2u),
+			sequence->add(1u)
 		};
 
-		SECTION("Sequence can consume ids.")
+		SECTION("Sequence can consume first id.")
 		{
-			REQUIRE(sequence.is_consumable(ids[0]));
-			REQUIRE(sequence.is_consumable(ids[1]));
-			REQUIRE(sequence.is_consumable(ids[2]));
-			REQUIRE_NOTHROW(sequence.consume(ids[0]));
-
-			SECTION("And then the same id is consumable again.")
+			for ([[maybe_unused]] const auto i : std::views::iota(0u, 3u))
 			{
-				for ([[maybe_unused]] const int i : std::views::iota(0, GENERATE(1, 5)))
-				{
-					REQUIRE(sequence.is_consumable(ids[0]));
-					REQUIRE(sequence.is_consumable(ids[1]));
-					REQUIRE(sequence.is_consumable(ids[2]));
-					REQUIRE_NOTHROW(sequence.consume(ids[0]));
-				}
+				REQUIRE(sequence->is_consumable(ids[0]));
+				REQUIRE(!sequence->is_saturated(ids[0]));
 
-				REQUIRE(sequence.is_consumable(ids[0]));
-				REQUIRE(sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
-				REQUIRE_NOTHROW(sequence.consume(ids[1]));
+				REQUIRE(!sequence->is_consumable(ids[1]));
+				REQUIRE(!sequence->is_saturated(ids[1]));
+
+				REQUIRE(!sequence->is_consumable(ids[2]));
+				REQUIRE(!sequence->is_saturated(ids[2]));
+
+				REQUIRE_NOTHROW(sequence->consume(ids[0]));
+			}
+
+			SECTION("When sequence is destroyed, an error is reported.")
+			{
+				sequence.reset();
+
+				REQUIRE_THAT(
+					reporter.errors(),
+					Matches::SizeIs(1));
+				REQUIRE_THAT(
+					reporter.errors().front(),
+					Matches::Equals("Unfulfilled sequence. 1 out of 3 expectation(s) where fully consumed."));
 			}
 
 			SECTION("And then the next id is consumable.")
 			{
-				REQUIRE(sequence.is_consumable(ids[0]));
-				REQUIRE(sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
-				REQUIRE_NOTHROW(sequence.consume(ids[1]));
-
-				SECTION("And then the same id is consumable again.")
+				for ([[maybe_unused]] const auto i : std::views::iota(0u, 2u))
 				{
-					for ([[maybe_unused]] const int i : std::views::iota(0, GENERATE(1, 5)))
-					{
-						REQUIRE(!sequence.is_consumable(ids[0]));
-						REQUIRE(sequence.is_consumable(ids[1]));
-						REQUIRE(sequence.is_consumable(ids[2]));
-						REQUIRE_NOTHROW(sequence.consume(ids[1]));
-					}
+					REQUIRE(!sequence->is_consumable(ids[0]));
+					REQUIRE(sequence->is_saturated(ids[0]));
 
-					REQUIRE(!sequence.is_consumable(ids[0]));
-					REQUIRE(sequence.is_consumable(ids[1]));
-					REQUIRE(sequence.is_consumable(ids[2]));
-					REQUIRE_NOTHROW(sequence.consume(ids[2]));
+					REQUIRE(sequence->is_consumable(ids[1]));
+					REQUIRE(!sequence->is_saturated(ids[1]));
+
+					REQUIRE(!sequence->is_consumable(ids[2]));
+					REQUIRE(!sequence->is_saturated(ids[2]));
+
+					REQUIRE_NOTHROW(sequence->consume(ids[1]));
+				}
+
+				SECTION("When sequence is destroyed, an error is reported.")
+				{
+					sequence.reset();
+
+					REQUIRE_THAT(
+						reporter.errors(),
+						Matches::SizeIs(1));
+					REQUIRE_THAT(
+						reporter.errors().front(),
+						Matches::Equals("Unfulfilled sequence. 2 out of 3 expectation(s) where fully consumed."));
 				}
 
 				SECTION("And then last id is consumable.")
 				{
-					REQUIRE(!sequence.is_consumable(ids[0]));
-					REQUIRE(sequence.is_consumable(ids[1]));
-					REQUIRE(sequence.is_consumable(ids[2]));
-					REQUIRE_NOTHROW(sequence.consume(ids[2]));
+					REQUIRE(!sequence->is_consumable(ids[0]));
+					REQUIRE(sequence->is_saturated(ids[0]));
 
-					SECTION("And again...")
+					REQUIRE(!sequence->is_consumable(ids[1]));
+					REQUIRE(sequence->is_saturated(ids[1]));
+
+					REQUIRE(sequence->is_consumable(ids[2]));
+					REQUIRE(!sequence->is_saturated(ids[2]));
+
+					REQUIRE_NOTHROW(sequence->consume(ids[2]));
+
+					SECTION("When sequence is destroyed, no error is reported.")
 					{
-						for ([[maybe_unused]] const int i : std::views::iota(0, GENERATE(1, 5)))
-						{
-							REQUIRE(!sequence.is_consumable(ids[0]));
-							REQUIRE(!sequence.is_consumable(ids[1]));
-							REQUIRE(sequence.is_consumable(ids[2]));
-							REQUIRE_NOTHROW(sequence.consume(ids[2]));
-						}
+						sequence.reset();
 
-						REQUIRE(!sequence.is_consumable(ids[0]));
-						REQUIRE(!sequence.is_consumable(ids[1]));
-						REQUIRE(sequence.is_consumable(ids[2]));
+						REQUIRE_THAT(
+							reporter.errors(),
+							Matches::IsEmpty());
+					}
+
+					SECTION("And then, nothing is consumable.")
+					{
+						REQUIRE(!sequence->is_consumable(ids[0]));
+						REQUIRE(sequence->is_saturated(ids[0]));
+
+						REQUIRE(!sequence->is_consumable(ids[1]));
+						REQUIRE(sequence->is_saturated(ids[1]));
+
+						REQUIRE(!sequence->is_consumable(ids[2]));
+						REQUIRE(sequence->is_saturated(ids[2]));
 					}
 				}
-			}
-		}
-
-		SECTION("Individual ids can be skipped.")
-		{
-			SECTION("When first id is skipped.")
-			{
-				REQUIRE(sequence.is_consumable(ids[0]));
-				REQUIRE(sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
-				REQUIRE_NOTHROW(sequence.consume(ids[1]));
-
-				REQUIRE(!sequence.is_consumable(ids[0]));
-				REQUIRE(sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
-			}
-
-			SECTION("When second id is skipped.")
-			{
-				REQUIRE(sequence.is_consumable(ids[0]));
-				REQUIRE(sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
-				REQUIRE_NOTHROW(sequence.consume(ids[0]));
-
-				REQUIRE(sequence.is_consumable(ids[0]));
-				REQUIRE(sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
-				REQUIRE_NOTHROW(sequence.consume(ids[2]));
-
-				REQUIRE(!sequence.is_consumable(ids[0]));
-				REQUIRE(!sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
-			}
-
-			SECTION("When first and second ids are skipped.")
-			{
-				REQUIRE(sequence.is_consumable(ids[0]));
-				REQUIRE(sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
-				REQUIRE_NOTHROW(sequence.consume(ids[2]));
-
-				REQUIRE(!sequence.is_consumable(ids[0]));
-				REQUIRE(!sequence.is_consumable(ids[1]));
-				REQUIRE(sequence.is_consumable(ids[2]));
 			}
 		}
 	}
@@ -212,97 +220,59 @@ TEST_CASE(
 {
 	namespace Matches = Catch::Matchers;
 
-	using SignatureT = void();
-	using CallInfoT = call::info_for_signature_t<SignatureT>;
 	using PolicyT = expectation_policies::Sequence;
-	STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
+	STATIC_REQUIRE(times_policy<PolicyT>);
 
 	Sequence sequence{};
-	PolicyT policy = expect::in_sequence(sequence);
-	SECTION("Policy is always satisfied.")
-	{
-		REQUIRE(policy.is_satisfied());
-	}
 
-	const CallInfoT call{
-		.args = {},
-		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
-	};
-
-	SECTION("When sequence has just a single expectation, that expectation always matches.")
+	SECTION("When sequence contains just a single expectation.")
 	{
-		for ([[maybe_unused]] const int i : std::views::iota(0, GENERATE(1, 5)))
+		const auto count = GENERATE(range(1, 5));
+		PolicyT policy = expect::in_sequence(sequence, count);
+
+		for ([[maybe_unused]] const int i : std::views::iota(0, count))
 		{
-			const call::SubMatchResult result = policy.matches(call);
-
-			REQUIRE(result.matched);
-			REQUIRE(result.msg);
-			REQUIRE_THAT(
-				*result.msg,
-				Matches::Equals(" is in sequence"));
-
-			REQUIRE_NOTHROW(policy.consume(call));
+			REQUIRE(!policy.is_satisfied());
+			REQUIRE(policy.is_applicable());
+			REQUIRE_NOTHROW(policy.consume());
 		}
+
+		REQUIRE(policy.is_satisfied());
+		REQUIRE(!policy.is_applicable());
 	}
 
 	SECTION("When sequence has multiple expectations, the order matters.")
 	{
-		PolicyT policy2 = expect::in_sequence(sequence);
+		PolicyT policy1 = expect::in_sequence(sequence);
+		const auto count2 = GENERATE(range(1, 5));
+		PolicyT policy2 = expect::in_sequence(sequence, count2);
 
-		SECTION("When nothing is consumed yet, both policies matches.")
+		SECTION("When first expection is satisfied, then the second one becomes applicable.")
 		{
-			const call::SubMatchResult result1 = policy.matches(call);
-			REQUIRE(result1.matched);
-			REQUIRE(result1.msg);
-			REQUIRE_THAT(
-				*result1.msg,
-				Matches::Equals(" is in sequence"));
+			REQUIRE(!policy1.is_satisfied());
+			REQUIRE(policy1.is_applicable());
 
-			const call::SubMatchResult result2 = policy2.matches(call);
-			REQUIRE(result2.matched);
-			REQUIRE(result2.msg);
-			REQUIRE_THAT(
-				*result2.msg,
-				Matches::Equals(" is in sequence"));
-		}
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
 
-		SECTION("When first policy is consumed, both policies still matches.")
-		{
-			REQUIRE_NOTHROW(policy.consume(call));
+			REQUIRE_NOTHROW(policy1.consume());
 
-			const call::SubMatchResult result1 = policy.matches(call);
-			REQUIRE(result1.matched);
-			REQUIRE(result1.msg);
-			REQUIRE_THAT(
-				*result1.msg,
-				Matches::Equals(" is in sequence"));
+			for ([[maybe_unused]] const int i : std::views::iota(0, count2))
+			{
+				REQUIRE(policy1.is_satisfied());
+				REQUIRE(!policy1.is_applicable());
 
-			const call::SubMatchResult result2 = policy2.matches(call);
-			REQUIRE(result2.matched);
-			REQUIRE(result2.msg);
-			REQUIRE_THAT(
-				*result2.msg,
-				Matches::Equals(" is in sequence"));
-		}
+				REQUIRE(!policy2.is_satisfied());
+				REQUIRE(policy2.is_applicable());
 
-		SECTION("When second policy is consumed, only second one matches.")
-		{
-			REQUIRE_NOTHROW(policy2.consume(call));
+				REQUIRE_NOTHROW(policy2.consume());
+			}
 
-			const call::SubMatchResult result1 = policy.matches(call);
-			REQUIRE(!result1.matched);
-			REQUIRE(result1.msg);
-			REQUIRE_THAT(
-				*result1.msg,
-				Matches::Equals(" is not in sequence"));
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
 
-			const call::SubMatchResult result2 = policy2.matches(call);
-			REQUIRE(result2.matched);
-			REQUIRE(result2.msg);
-			REQUIRE_THAT(
-				*result2.msg,
-				Matches::Equals(" is in sequence"));
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
 		}
 	}
 }
