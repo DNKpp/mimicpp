@@ -12,6 +12,7 @@ add_executable(
 	"Matcher.cpp"
 	"Mock.cpp"
 	"Printer.cpp"
+	"Sequence.cpp"
 	"TypeTraits.cpp"
 )
 if (MSVC)
