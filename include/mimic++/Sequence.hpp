@@ -132,7 +132,7 @@ namespace mimicpp::expectation_policies
 		~Sequence() = default;
 
 		// ReSharper disable once CppParameterMayBeConstPtrOrRef
-		explicit Sequence(mimicpp::Sequence& sequence, const std::size_t times) noexcept
+		explicit Sequence(mimicpp::Sequence& sequence, const std::size_t times)
 			: m_Sequence{sequence.m_Sequence},
 			m_SequenceId{m_Sequence->add(times)}
 		{
