@@ -134,6 +134,14 @@ namespace mimicpp
 		{
 			{ static_cast<To>(std::declval<From>()) } noexcept;
 		};
+
+	template <typename T>
+		requires std::is_enum_v<T>
+	[[nodiscard]]
+	constexpr std::underlying_type_t<T> to_underlying(const T value) noexcept
+	{
+		return static_cast<std::underlying_type_t<T>>(value);
+	}
 }
 
 #endif
