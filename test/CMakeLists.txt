@@ -14,7 +14,9 @@ add_executable(
 	"Printer.cpp"
 	"Sequence.cpp"
 	"TypeTraits.cpp"
+	"Utility.cpp"
 )
+
 if (MSVC)
 
 	# When using github ci, exceptions seems to be disabled by default.
