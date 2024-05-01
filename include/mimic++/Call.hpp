@@ -109,7 +109,7 @@ struct std::formatter<mimicpp::call::MatchCategory, Char>
 			case MatchCategoryT::ok: return "full match";
 			}
 
-			throw std::runtime_error{"Unknown category value."};
+			throw std::invalid_argument{"Unknown category value."};
 		};
 
 		return std::formatter<std::basic_string_view<Char>, Char>::format(

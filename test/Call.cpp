@@ -4,6 +4,7 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Call.hpp"
+#include "mimic++/Printer.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -11,7 +12,7 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
-#include <catch2/matchers/catch_matchers_templated.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 using namespace mimicpp;
 
@@ -52,4 +53,33 @@ TEST_CASE(
 	REQUIRE(expected == (other == info));
 	REQUIRE(expected == !(info != other));
 	REQUIRE(expected == !(other != info));
+}
+
+TEST_CASE(
+	"call::MatchCategory is formattable.",
+	"[call]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When valid category is given.")
+	{
+		const auto [expected, category] = GENERATE(
+			(table<StringT, call::MatchCategory>)({
+				{"no match", call::MatchCategory::no},
+				{"non applicable match", call::MatchCategory::non_applicable},
+				{"full match", call::MatchCategory::ok},
+			}));
+
+		REQUIRE_THAT(
+			format::format("{}", category),
+			Matches::Equals(expected));
+	}
+
+	SECTION("When an invalid category is given, std::invalid_argument is thrown.")
+	{
+		REQUIRE_THROWS_AS(
+			format::format("{}", call::MatchCategory{42}),
+			std::invalid_argument);
+	}
 }
