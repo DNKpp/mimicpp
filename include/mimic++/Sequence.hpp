@@ -11,7 +11,10 @@
 #include "mimic++/Reporter.hpp"
 #include "mimic++/Utility.hpp"
 
+#include <algorithm>
+#include <array>
 #include <cassert>
+#include <functional>
 
 namespace mimicpp::expectation_policies
 {
@@ -194,10 +197,19 @@ namespace mimicpp::expectation_policies
 		~Sequence() = default;
 
 		// ReSharper disable once CppParameterMayBeConstPtrOrRef
-		explicit Sequence(mimicpp::Sequence& sequence, const std::size_t times)
-			: m_Sequence{sequence.m_Sequence},
-			m_SequenceId{m_Sequence->add(times)}
+		explicit Sequence(
+			const std::span<const std::reference_wrapper<mimicpp::Sequence>> sequences,
+			const std::size_t times
+		)
 		{
+			m_SequenceInfos.reserve(sequences.size());
+			// ReSharper disable once CppRangeBasedForIncompatibleReference
+			for (mimicpp::Sequence& sequence : sequences)
+			{
+				m_SequenceInfos.emplace_back(
+					sequence.m_Sequence,
+					sequence.m_Sequence->add(times));
+			}
 		}
 
 		Sequence(const Sequence&) = delete;
@@ -208,13 +220,17 @@ namespace mimicpp::expectation_policies
 		[[nodiscard]]
 		constexpr bool is_satisfied() const noexcept
 		{
-			return m_Sequence->is_saturated(m_SequenceId);
+			return std::ranges::all_of(
+				m_SequenceInfos,
+				[](const entry& info){ return info.sequence->is_saturated(info.id); });
 		}
 
 		[[nodiscard]]
 		constexpr bool is_applicable() const noexcept
 		{
-			return m_Sequence->is_consumable(m_SequenceId);
+			return std::ranges::all_of(
+				m_SequenceInfos,
+				[](const entry& info){ return info.sequence->is_consumable(info.id); });
 		}
 
 		// ReSharper disable once CppMemberFunctionMayBeConst
@@ -222,12 +238,19 @@ namespace mimicpp::expectation_policies
 		{
 			assert(is_applicable());
 
-			m_Sequence->consume(m_SequenceId);
+			for (auto& [sequence, id] : m_SequenceInfos)
+			{
+				sequence->consume(id);
+			}
 		}
 
 	private:
-		std::shared_ptr<mimicpp::detail::Sequence> m_Sequence;
-		SequenceId m_SequenceId;
+		struct entry
+		{
+			std::shared_ptr<mimicpp::detail::Sequence> sequence;
+			SequenceId id;
+		};
+		std::vector<entry> m_SequenceInfos;
 	};
 }
 
@@ -245,8 +268,34 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	inline auto in_sequence(Sequence& sequence, const std::size_t times = 1u)
 	{
+		const std::array collection{std::ref(sequence)};
 		return expectation_policies::Sequence{
-			sequence,
+			collection,
+			times
+		};
+	}
+
+	/**
+	 * \brief Attaches the expectation onto the listed sequences.
+	 * \ingroup EXPECTATION_REQUIREMENT_TIMES
+	 * \ingroup EXPECTATION_SEQUENCE
+	 * \param sequences The sequences to be attached to.
+	 * \param times The expected times.
+	 * \snippet Sequences.cpp sequence multiple sequences
+	 */
+	template <std::size_t size>
+	[[nodiscard]]
+	auto in_sequences(
+		const std::reference_wrapper<Sequence> (&sequences)[size],
+		const std::size_t times = 1u
+	)
+	{
+		static_assert(
+			0u < size,
+			"Zero sequences are not allowed. Use times instead.");
+
+		return expectation_policies::Sequence{
+			sequences,
 			times
 		};
 	}

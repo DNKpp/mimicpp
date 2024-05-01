@@ -215,7 +215,7 @@ TEST_CASE(
 
 TEST_CASE(
 	"expectation_policies::Sequence checks whether the given call::Info occurs in sequence.",
-	"[expectation][expectation::policy][sequence]"
+	"[expectation][expectation::policy][expectation::factories][sequence]"
 )
 {
 	namespace Matches = Catch::Matchers;
@@ -273,6 +273,99 @@ TEST_CASE(
 
 			REQUIRE(policy2.is_satisfied());
 			REQUIRE(!policy2.is_applicable());
+		}
+	}
+}
+
+TEST_CASE(
+	"An expectation can be part of multiple sequences.",
+	"[expectation][expectation::policy][expectation::factories][sequence]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	using PolicyT = expectation_policies::Sequence;
+
+	SECTION("When multiple sequences are given.")
+	{
+		Sequence sequence1{};
+		Sequence sequence2{};
+
+		SECTION("When the first expectation is the prefix of multiple sequences.")
+		{
+			PolicyT policy1 = expect::in_sequences({sequence1, sequence2});
+			PolicyT policy2 = expect::in_sequences({sequence2});
+
+			REQUIRE(!policy1.is_satisfied());
+			REQUIRE(policy1.is_applicable());
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+
+			policy1.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(policy2.is_applicable());
+
+			policy2.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+		}
+		
+		SECTION("When an expectation waits for multiple sequences.")
+		{
+			PolicyT policy1 = expect::in_sequences({sequence1});
+			PolicyT policy2 = expect::in_sequences({sequence2});
+			PolicyT policy3 = expect::in_sequences({sequence1, sequence2});
+
+			REQUIRE(!policy1.is_satisfied());
+			REQUIRE(policy1.is_applicable());
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(policy2.is_applicable());
+
+			REQUIRE(!policy3.is_satisfied());
+			REQUIRE(!policy3.is_applicable());
+
+			policy1.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(policy2.is_applicable());
+
+			REQUIRE(!policy3.is_satisfied());
+			REQUIRE(!policy3.is_applicable());
+
+			policy2.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+
+			REQUIRE(!policy3.is_satisfied());
+			REQUIRE(policy3.is_applicable());
+
+			policy3.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+
+			REQUIRE(policy3.is_satisfied());
+			REQUIRE(!policy3.is_applicable());
 		}
 	}
 }

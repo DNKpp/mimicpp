@@ -23,9 +23,9 @@ TEST_CASE(
 
 	mimicpp::Sequence sequence{};
 	SCOPED_EXP mock.expect_call(matches::ne(0))
-		| expect::in_sequence(sequence);
+				| expect::in_sequence(sequence);
 	SCOPED_EXP mock.expect_call(matches::le(42))
-		| expect::in_sequence(sequence);
+				| expect::in_sequence(sequence);
 
 	// a call with arg != 0 is expected before a call with arg <= 42
 	mock(42); // matches the first expectation
@@ -49,9 +49,9 @@ TEST_CASE(
 
 	mimicpp::Sequence sequence{};
 	SCOPED_EXP mock2.expect_call(_)	// mock2 must go first
-		| expect::in_sequence(sequence);
+				| expect::in_sequence(sequence);
 	SCOPED_EXP mock1.expect_call(_)	// mock1 must go second
-		| expect::in_sequence(sequence);
+				| expect::in_sequence(sequence);
 
 	mock2(42);
 	mock1(1337);
@@ -75,12 +75,12 @@ TEST_CASE(
 
 	mimicpp::Sequence sequence{};
 	SCOPED_EXP mock.expect_call(1337)  // (3)
-		| expect::in_sequence(sequence);
+				| expect::in_sequence(sequence);
 
 	SCOPED_EXP mock.expect_call(1337); // (4)
 
 	SCOPED_EXP mock.expect_call(42)  // (5)
-		| expect::in_sequence(sequence);
+				| expect::in_sequence(sequence);
 
 	mock(42); // matches (1), because (5) is the second element of the sequence
 	mock(1337); // matches (4), because it's the "youngest" available alternative
@@ -88,4 +88,30 @@ TEST_CASE(
 	mock(42); // matches (5). The sequence is now fulfilled.
 	mock(1337); // finally matches (2)
 	//! [sequence mixed]
+}
+
+TEST_CASE(
+	"Expectations can be part of multiple sequences.",
+	"[example][example::sequence]"
+)
+{
+	//! [sequence multiple sequences]
+	using mimicpp::matches::_;
+	namespace expect = mimicpp::expect;
+
+	mimicpp::Mock<void()> mock{};
+
+	mimicpp::Sequence sequence1{};
+	mimicpp::Sequence sequence2{};
+	SCOPED_EXP mock.expect_call() // (1)
+				| expect::in_sequence(sequence1);
+	SCOPED_EXP mock.expect_call() // (2)
+				| expect::in_sequences({sequence1, sequence2});
+	SCOPED_EXP mock.expect_call() // (3)
+				| expect::in_sequence(sequence2);
+
+	mock();	// (1) is used here, because (3) is second in sequence2 and (2) is second in sequence1
+	mock(); // (2) is used here, because it's the first in both sequences now
+	mock(); // now (3) is used
+	//! [sequence multiple sequences]
 }
