@@ -47,7 +47,7 @@ public:
 	static void report_error(const mimicpp::StringT& message);
 
 	template <typename Return, typename... Params, typename Signature>
-	static constexpr void report_unhandled_exception(
+	static void report_unhandled_exception(
 		const mimicpp::call::Info<Return, Params...>& callInfo,
 		std::shared_ptr<mimicpp::Expectation<Signature>> expectation,
 		std::exception_ptr exception
@@ -121,7 +121,7 @@ inline void TestReporter::report_error(const mimicpp::StringT& message)
 }
 
 template <typename Return, typename... Params, typename Signature>
-constexpr void TestReporter::report_unhandled_exception(
+void TestReporter::report_unhandled_exception(
 	const mimicpp::call::Info<Return, Params...>& callInfo,
 	std::shared_ptr<mimicpp::Expectation<Signature>> expectation,
 	std::exception_ptr exception

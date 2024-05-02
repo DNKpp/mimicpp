@@ -61,7 +61,7 @@ namespace mimicpp
 		}
 
 		template <typename Return, typename... Params, typename Signature>
-		static constexpr void report_unhandled_exception(
+		static void report_unhandled_exception(
 			const call::Info<Return, Params...>& callInfo,
 			std::shared_ptr<Expectation<Signature>> expectation,
 			std::exception_ptr exception
