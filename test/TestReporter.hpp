@@ -8,6 +8,7 @@
 #include "mimic++/Fwd.hpp"
 
 #include <any>
+#include <exception>
 #include <memory>
 #include <ranges>
 #include <vector>
