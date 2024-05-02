@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 
@@ -79,16 +80,6 @@ namespace mimicpp::call
 	};
 }
 
-namespace mimicpp::call
-{
-	enum class MatchCategory
-	{
-		no,
-		non_applicable,
-		ok
-	};
-}
-
 template <typename Char>
 struct std::formatter<mimicpp::call::MatchCategory, Char>
 	: public std::formatter<std::basic_string_view<Char>, Char>
@@ -140,16 +131,6 @@ namespace mimicpp::call
 		[[nodiscard]]
 		friend bool operator ==(const GenericMatchResult&, const GenericMatchResult&) = default;
 	};
-
-	using MatchResult_NoT = GenericMatchResult<MatchCategory::no>;
-	using MatchResult_NotApplicableT = GenericMatchResult<MatchCategory::non_applicable>;
-	using MatchResult_OkT = GenericMatchResult<MatchCategory::ok>;
-
-	using MatchResultT = std::variant<
-		MatchResult_NoT,
-		MatchResult_NotApplicableT,
-		MatchResult_OkT
-	>;
 }
 
 namespace mimicpp::call::detail

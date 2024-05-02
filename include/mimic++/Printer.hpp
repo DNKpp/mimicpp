@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Fwd.hpp"
+
 #include <format>
 #include <iterator>
 #include <sstream>
@@ -17,9 +19,6 @@
 
 namespace mimicpp
 {
-	using CharT = char;
-	using CharTraitsT = std::char_traits<CharT>;
-	using StringT = std::basic_string<CharT, CharTraitsT>;
 	using StringViewT = std::basic_string_view<CharT, CharTraitsT>;
 	using StringStreamT = std::basic_ostringstream<CharT, CharTraitsT>;
 
