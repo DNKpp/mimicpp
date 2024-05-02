@@ -27,7 +27,7 @@ namespace mimicpp
 						&& requires(const T& matcher, Target& target)
 						{
 							{ matcher.matches(target) } -> std::convertible_to<bool>;
-							{ matcher.describe(target) } -> std::convertible_to<StringT>;
+							{ matcher.describe() } -> std::convertible_to<StringT>;
 						};
 
 	/**
@@ -47,11 +47,13 @@ namespace mimicpp
 		explicit constexpr PredicateMatcher(
 			Predicate predicate,
 			StringT fmt,
+			StringT invertedFmt,
 			std::tuple<AdditionalArgs...> additionalArgs = std::tuple{}
 		) noexcept(std::is_nothrow_move_constructible_v<Predicate>
 					&& (... && std::is_nothrow_move_constructible_v<AdditionalArgs>))
 			: m_Predicate{std::move(predicate)},
 			m_FormatString{std::move(fmt)},
+			m_InvertedFormatString{std::move(invertedFmt)},
 			m_AdditionalArgs{std::move(additionalArgs)}
 		{
 		}
@@ -74,9 +76,8 @@ namespace mimicpp
 				m_AdditionalArgs);
 		}
 
-		template <typename T>
 		[[nodiscard]]
-		constexpr StringT describe(T& target) const
+		constexpr StringT describe() const
 		{
 			return std::apply(
 				[&, this](auto&... additionalArgs)
@@ -86,7 +87,6 @@ namespace mimicpp
 					return format::vformat(
 						m_FormatString,
 						format::make_format_args(
-							makeLvalue(mimicpp::print(target)),
 							makeLvalue(mimicpp::print(additionalArgs))...));
 				},
 				m_AdditionalArgs);
@@ -99,6 +99,7 @@ namespace mimicpp
 		{
 			return make_inverted(
 				m_Predicate,
+				m_InvertedFormatString,
 				m_FormatString,
 				std::move(m_AdditionalArgs));
 		}
@@ -108,23 +109,31 @@ namespace mimicpp
 		{
 			return make_inverted(
 				std::move(m_Predicate),
-				m_FormatString,
+				std::move(m_InvertedFormatString),
+				std::move(m_FormatString),
 				std::move(m_AdditionalArgs));
 		}
 
 	private:
 		[[no_unique_address]] Predicate m_Predicate;
 		StringT m_FormatString;
+		StringT m_InvertedFormatString;
 		mutable std::tuple<AdditionalArgs...> m_AdditionalArgs{};
 
 		template <typename Fn>
 		[[nodiscard]]
-		static constexpr auto make_inverted(Fn&& fn, const StringViewT fmt, std::tuple<AdditionalArgs...> tuple)
+		static constexpr auto make_inverted(
+			Fn&& fn,
+			StringT fmt,
+			StringT invertedFmt,
+			std::tuple<AdditionalArgs...> tuple
+		)
 		{
 			using NotFnT = decltype(std::not_fn(std::forward<Fn>(fn)));
 			return PredicateMatcher<NotFnT, AdditionalArgs...>{
 				std::not_fn(std::forward<Fn>(fn)),
-				format::format("not ({})", fmt),
+				std::move(fmt),
+				std::move(invertedFmt),
 				std::move(tuple)
 			};
 		}
@@ -144,11 +153,9 @@ namespace mimicpp
 			return true;
 		}
 
-		static constexpr StringT describe(auto&& target)
+		static constexpr StringT describe()
 		{
-			return format::format(
-				"{} without constraints",
-				mimicpp::print(target));
+			return "has no constraints";
 		}
 	};
 }
@@ -205,7 +212,8 @@ namespace mimicpp::matches
 	{
 		return PredicateMatcher{
 			std::ranges::equal_to{},
-			"{} == {}",
+			"== {}",
+			"!= {}",
 			std::tuple{std::forward<T>(value)}
 		};
 	}
@@ -221,7 +229,8 @@ namespace mimicpp::matches
 	{
 		return PredicateMatcher{
 			std::ranges::not_equal_to{},
-			"{} != {}",
+			"!= {}",
+			"== {}",
 			std::tuple{std::forward<T>(value)}
 		};
 	}
@@ -237,7 +246,8 @@ namespace mimicpp::matches
 	{
 		return PredicateMatcher{
 			std::ranges::less{},
-			"{} < {}",
+			"< {}",
+			">= {}",
 			std::tuple{std::forward<T>(value)}
 		};
 	}
@@ -253,7 +263,8 @@ namespace mimicpp::matches
 	{
 		return PredicateMatcher{
 			std::ranges::less_equal{},
-			"{} <= {}",
+			"<= {}",
+			"> {}",
 			std::tuple{std::forward<T>(value)}
 		};
 	}
@@ -269,7 +280,8 @@ namespace mimicpp::matches
 	{
 		return PredicateMatcher{
 			std::ranges::greater{},
-			"{} > {}",
+			"> {}",
+			"<= {}",
 			std::tuple{std::forward<T>(value)}
 		};
 	}
@@ -285,7 +297,8 @@ namespace mimicpp::matches
 	{
 		return PredicateMatcher{
 			std::ranges::greater_equal{},
-			"{} >= {}",
+			">= {}",
+			"< {}",
 			std::tuple{std::forward<T>(value)}
 		};
 	}
@@ -294,16 +307,22 @@ namespace mimicpp::matches
 	 * \brief Tests, whether the target fulfills the given predicate.
 	 * \tparam UnaryPredicate Predicate type.
 	 * \param predicate The predicate to test.
-	 * \param description The formatting string. May contain a ``{}``-token for the target.
+	 * \param description The formatting string.
+	 * \param invertedDescription The formatting string for the inversion.
 	 * \snippet Requirements.cpp matcher predicate
 	 */
 	template <typename UnaryPredicate>
 	[[nodiscard]]
-	constexpr auto predicate(UnaryPredicate&& predicate, StringT description = "{} satisfies predicate")
+	constexpr auto predicate(
+		UnaryPredicate&& predicate,
+		StringT description = "passes predicate",
+		StringT invertedDescription = "fails predicate"
+	)
 	{
 		return PredicateMatcher{
 			std::forward<UnaryPredicate>(predicate),
-			std::move(description)
+			std::move(description),
+			std::move(invertedDescription),
 		};
 	}
 
@@ -340,7 +359,8 @@ namespace mimicpp::matches::str
 			{
 				return target == exp;
 			},
-			"string {} is equal to {}",
+			"is equal to {}",
+			"is not equal to {}",
 			std::tuple{std::move(expected)}
 		};
 	}
@@ -398,7 +418,8 @@ namespace mimicpp::matches::range
 					range,
 					std::ref(comp));
 			},
-			"range {} is equal to {}",
+			"elements are {}",
+			"elements are not {}",
 			std::tuple{std::views::all(std::forward<Range>(expected))}
 		};
 	}
@@ -427,7 +448,8 @@ namespace mimicpp::matches::range
 					range,
 					std::ref(comp));
 			},
-			"range {} is permutation of {}",
+			"is a permutation of {}",
+			"is not a permutation of {}",
 			std::tuple{std::views::all(std::forward<Range>(expected))}
 		};
 	}
@@ -452,7 +474,8 @@ namespace mimicpp::matches::range
 					target,
 					std::ref(rel));
 			},
-			"range {} is sorted"
+			"is a sorted range",
+			"is an unsorted range"
 		};
 	}
 
@@ -467,7 +490,8 @@ namespace mimicpp::matches::range
 			{
 				return std::ranges::empty(target);
 			},
-			"range {} is empty"
+			"is an empty range",
+			"is not an empty range"
 		};
 	}
 
@@ -485,7 +509,8 @@ namespace mimicpp::matches::range
 					size,
 					std::ranges::size(target));
 			},
-			"range {} has size {}",
+			"has size of {}",
+			"has different size than {}",
 			std::tuple{expected}
 		};
 	}

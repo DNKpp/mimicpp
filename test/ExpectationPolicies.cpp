@@ -411,8 +411,7 @@ TEST_CASE(
 		REQUIRE_CALL(matcher, matches(_))
 			.LR_WITH(&_1 == &arg0)
 			.RETURN(true);
-		REQUIRE_CALL(matcher, describe(_))
-			.LR_WITH(&_1 == &arg0)
+		REQUIRE_CALL(matcher, describe())
 			.RETURN("success");
 		REQUIRE_CALL(describer, Invoke(_, "success", true))
 			.LR_WITH(&_1 == &arg0)
@@ -434,8 +433,7 @@ TEST_CASE(
 		REQUIRE_CALL(matcher, matches(_))
 			.LR_WITH(&_1 == &arg0)
 			.RETURN(false);
-		REQUIRE_CALL(matcher, describe(_))
-			.LR_WITH(&_1 == &arg0)
+		REQUIRE_CALL(matcher, describe())
 			.RETURN("failed");
 		REQUIRE_CALL(describer, Invoke(_, "failed", false))
 			.LR_WITH(&_1 == &arg0)
@@ -1094,8 +1092,7 @@ TEST_CASE(
 		REQUIRE_CALL(matcher, matches(_))
 			.LR_WITH(&_1 == &arg0)
 			.RETURN(true);
-		REQUIRE_CALL(matcher, describe(_))
-			.LR_WITH(&_1 == &arg0)
+		REQUIRE_CALL(matcher, describe())
 			.RETURN("custom requirement");
 
 		const call::SubMatchResult result = std::as_const(policy).matches(info);
@@ -1111,8 +1108,7 @@ TEST_CASE(
 		REQUIRE_CALL(matcher, matches(_))
 			.LR_WITH(&_1 == &arg0)
 			.RETURN(false);
-		REQUIRE_CALL(matcher, describe(_))
-			.LR_WITH(&_1 == &arg0)
+		REQUIRE_CALL(matcher, describe())
 			.RETURN("custom requirement");
 
 		const call::SubMatchResult result = std::as_const(policy).matches(info);

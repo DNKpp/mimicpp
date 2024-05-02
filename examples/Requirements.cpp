@@ -161,7 +161,9 @@ TEST_CASE(
 			return std::ranges::find(target, element) != std::ranges::end(target);
 		},
 		// specify a descriptive format message, which will be applied to std::format.
-		"range {} contains the element {}",
+		"contains element {}",
+		// specify the inverted message, which will also be applied to std::format, when inversion is used
+		"contains not element {}",
 		// capture additional data, which will be forwarded to both, the predicate and the description
 		std::tuple{42}
 	};

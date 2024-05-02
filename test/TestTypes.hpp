@@ -212,7 +212,7 @@ class MatcherMock
 {
 public:
 	MAKE_CONST_MOCK1(matches, bool(T));
-	MAKE_CONST_MOCK1(describe, mimicpp::StringT(T));
+	MAKE_CONST_MOCK0(describe, mimicpp::StringT());
 };
 
 template <typename Matcher, typename Projection>
@@ -234,12 +234,11 @@ public:
 			.matches(std::forward<T>(target));
 	}
 
-	template <typename T>
 	[[nodiscard]]
-	constexpr mimicpp::StringT describe(T&& target) const
+	constexpr mimicpp::StringT describe() const
 	{
 		return std::invoke(m_Projection, m_Matcher)
-			.describe(std::forward<T>(target));
+			.describe();
 	}
 
 private:

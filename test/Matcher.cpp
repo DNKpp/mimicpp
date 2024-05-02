@@ -57,8 +57,8 @@ TEST_CASE(
 	MatcherPredicateMock<int> predicate{};
 	PredicateMatcher matcher{
 		std::ref(predicate),
-		"Hello, {}!",
-		std::tuple<>{}
+		"Hello, World!",
+		"not Hello, World!"
 	};
 
 	SECTION("When matches() is called, argument is forwarded to the predicate.")
@@ -72,10 +72,9 @@ TEST_CASE(
 		REQUIRE(result == matcher.matches(value));
 	}
 
-	SECTION("When describe() is called, argument is forwarded to the functional.")
+	SECTION("When describe() is called.")
 	{
-		constexpr int value{42};
-		REQUIRE("Hello, 42!" == matcher.describe(value));
+		REQUIRE("Hello, World!" == matcher.describe());
 	}
 }
 
@@ -88,7 +87,8 @@ TEST_CASE(
 		MatcherPredicateMock<int> predicate{};
 		PredicateMatcher matcher{
 			std::ref(predicate),
-			"Hello, {}!"
+			"Hello, World!",
+			"not Hello, World!"
 		};
 
 		PredicateMatcher negatedMatcher = !std::move(matcher);
@@ -105,10 +105,9 @@ TEST_CASE(
 			REQUIRE(result == !negatedMatcher.matches(value));
 		}
 
-		SECTION("When describe() is called, argument is forwarded to the functional.")
+		SECTION("When describe() is called.")
 		{
-			constexpr int value{42};
-			REQUIRE("not (Hello, 42!)" == negatedMatcher.describe(value));
+			REQUIRE("not Hello, World!" == negatedMatcher.describe());
 		}
 	}
 
@@ -117,7 +116,8 @@ TEST_CASE(
 		MatcherPredicateMock<int> predicate{};
 		const PredicateMatcher matcher{
 			std::ref(predicate),
-			"Hello, {}!"
+			"Hello, World!",
+			"not Hello, World!"
 		};
 
 		PredicateMatcher negatedMatcher = !matcher;
@@ -134,10 +134,9 @@ TEST_CASE(
 			REQUIRE(result == !negatedMatcher.matches(value));
 		}
 
-		SECTION("When describe() is called, argument is forwarded to the functional.")
+		SECTION("When describe() is called.")
 		{
-			constexpr int value{42};
-			REQUIRE("not (Hello, 42!)" == negatedMatcher.describe(value));
+			REQUIRE("not Hello, World!" == negatedMatcher.describe());
 		}
 
 		SECTION("And original matcher is still working.")
@@ -153,10 +152,9 @@ TEST_CASE(
 				REQUIRE(result == matcher.matches(value));
 			}
 
-			SECTION("When describe() is called, argument is forwarded to the functional.")
+			SECTION("When describe() is called.")
 			{
-				constexpr int value{42};
-				REQUIRE("Hello, 42!" == matcher.describe(value));
+				REQUIRE("Hello, World!" == matcher.describe());
 			}
 		}
 	}
@@ -174,9 +172,8 @@ TEST_CASE(
 	constexpr int value{42};
 	REQUIRE(matches::_.matches(value));
 	REQUIRE_THAT(
-		matches::_.describe(value),
-		Catch::Matchers::EndsWith(" without constraints")
-		&& Catch::Matchers::StartsWith("42"));
+		matches::_.describe(),
+		Catch::Matchers::Equals("has no constraints"));
 }
 
 TEST_CASE(
@@ -185,49 +182,40 @@ TEST_CASE(
 )
 {
 	const auto matcher = matches::eq(42);
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Equals("== 42"));
 
 	SECTION("When target is equal.")
 	{
 		constexpr int target{42};
 		REQUIRE(matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::EndsWith(" == 42")
-			&& Catch::Matchers::StartsWith("42"));
 	}
 
 	SECTION("When target is not equal.")
 	{
 		constexpr int target{1337};
 		REQUIRE(!matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::EndsWith(" == 42")
-			&& Catch::Matchers::StartsWith("1337"));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto invertedMatcher = !matches::eq(42);
 
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals("!= 42"));
+
 		SECTION("When target is equal.")
 		{
 			constexpr int target{42};
 			REQUIRE(!invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::EndsWith(" == 42)")
-				&& Catch::Matchers::StartsWith("not (42"));
 		}
 
 		SECTION("When target is not equal.")
 		{
 			constexpr int target{1337};
 			REQUIRE(invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::EndsWith(" == 42)")
-				&& Catch::Matchers::StartsWith("not (1337"));
 		}
 	}
 }
@@ -239,48 +227,40 @@ TEST_CASE(
 {
 	const auto matcher = matches::ne(42);
 
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Equals("!= 42"));
+
 	SECTION("When target is not equal.")
 	{
 		constexpr int target{1337};
 		REQUIRE(matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::EndsWith(" != 42")
-			&& Catch::Matchers::StartsWith("1337"));
 	}
 
 	SECTION("When target is equal.")
 	{
 		constexpr int target{42};
 		REQUIRE(!matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::EndsWith(" != 42")
-			&& Catch::Matchers::StartsWith("42"));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto invertedMatcher = !matches::ne(42);
 
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals("== 42"));
+
 		SECTION("When target is not equal.")
 		{
 			constexpr int target{1337};
 			REQUIRE(!invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::EndsWith(" != 42)")
-				&& Catch::Matchers::StartsWith("not (1337"));
 		}
 
 		SECTION("When target is equal.")
 		{
 			constexpr int target{42};
 			REQUIRE(invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::EndsWith(" != 42)")
-				&& Catch::Matchers::StartsWith("not (42"));
 		}
 	}
 }
@@ -292,44 +272,40 @@ TEST_CASE(
 {
 	const auto matcher = matches::lt(42);
 
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Equals("< 42"));
+
 	SECTION("When target is less.")
 	{
 		const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 41);
 		REQUIRE(matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(format::format("{} < 42", target)));
 	}
 
 	SECTION("When target is not less.")
 	{
 		const int target = GENERATE(42, 43, std::numeric_limits<int>::max());
 		REQUIRE(!matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(format::format("{} < 42", target)));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto invertedMatcher = !matches::lt(42);
 
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals(">= 42"));
+
 		SECTION("When target is less.")
 		{
 			const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 41);
 			REQUIRE(!invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("not ({} < 42)", target)));
 		}
 
 		SECTION("When target is not less.")
 		{
 			const int target = GENERATE(42, 43, std::numeric_limits<int>::max());
 			REQUIRE(invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("not ({} < 42)", target)));
 		}
 	}
 }
@@ -341,44 +317,40 @@ TEST_CASE(
 {
 	const auto matcher = matches::le(42);
 
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Equals("<= 42"));
+
 	SECTION("When target is less or equal.")
 	{
 		const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 42);
 		REQUIRE(matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(format::format("{} <= 42", target)));
 	}
 
 	SECTION("When target is greater.")
 	{
 		const int target = GENERATE(43, std::numeric_limits<int>::max());
 		REQUIRE(!matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(format::format("{} <= 42", target)));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto invertedMatcher = !matches::le(42);
 
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals("> 42"));
+
 		SECTION("When target is less or equal.")
 		{
 			const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 42);
 			REQUIRE(!invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("not ({} <= 42)", target)));
 		}
 
 		SECTION("When target is greater.")
 		{
 			const int target = GENERATE(43, std::numeric_limits<int>::max());
 			REQUIRE(invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("not ({} <= 42)", target)));
 		}
 	}
 }
@@ -390,44 +362,40 @@ TEST_CASE(
 {
 	const auto matcher = matches::gt(42);
 
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Equals("> 42"));
+
 	SECTION("When target is greater.")
 	{
 		const int target = GENERATE(43, std::numeric_limits<int>::max());
 		REQUIRE(matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(format::format("{} > 42", target)));
 	}
 
 	SECTION("When target is not greater.")
 	{
 		const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 41, 42);
 		REQUIRE(!matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(format::format("{} > 42", target)));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto invertedMatcher = !matches::gt(42);
 
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals("<= 42"));
+
 		SECTION("When target is greater.")
 		{
 			const int target = GENERATE(43, std::numeric_limits<int>::max());
 			REQUIRE(!invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("not ({} > 42)", target)));
 		}
 
 		SECTION("When target is not greater.")
 		{
 			const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 41, 42);
 			REQUIRE(invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("not ({} > 42)", target)));
 		}
 	}
 }
@@ -439,44 +407,40 @@ TEST_CASE(
 {
 	const auto matcher = matches::ge(42);
 
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Equals(">= 42"));
+
 	SECTION("When target is greater or equal.")
 	{
 		const int target = GENERATE(42, 43, std::numeric_limits<int>::max());
 		REQUIRE(matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(format::format("{} >= 42", target)));
 	}
 
 	SECTION("When target is less.")
 	{
 		const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 41);
 		REQUIRE(!matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(format::format("{} >= 42", target)));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto invertedMatcher = !matches::ge(42);
 
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals("< 42"));
+
 		SECTION("When target is greater or equal.")
 		{
 			const int target = GENERATE(42, 43, std::numeric_limits<int>::max());
 			REQUIRE(!invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("not ({} >= 42)", target)));
 		}
 
 		SECTION("When target is less.")
 		{
 			const int target = GENERATE(std::numeric_limits<int>::min(), -1, 0, 1, 41);
 			REQUIRE(invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals(format::format("not ({} >= 42)", target)));
 		}
 	}
 }
@@ -499,36 +463,42 @@ TEST_CASE(
 	const auto matcher = matches::predicate(std::ref(predicate));
 	REQUIRE(expectedResult == matcher.matches(target));
 	REQUIRE_THAT(
-		matcher.describe(target),
-		Catch::Matchers::Equals(format::format("{} satisfies predicate", target)));
+		matcher.describe(),
+		Catch::Matchers::Equals("passes predicate"));
 
 	SECTION("When matcher is inverted.")
 	{
 		const auto invertedMatcher = !matches::predicate(std::ref(predicate));
+
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals("fails predicate"));
 
 		REQUIRE_CALL(predicate, Invoke(_))
 			.LR_WITH(&_1 == &target)
 			.RETURN(expectedResult);
 
 		REQUIRE(expectedResult == !invertedMatcher.matches(target));
-		REQUIRE_THAT(
-			invertedMatcher.describe(target),
-			Catch::Matchers::Equals(format::format("not ({} satisfies predicate)", target)));
 	}
 
 	SECTION("Custom descriptions are supported.")
 	{
 		const auto customMatcher = matches::predicate(
 			std::ref(predicate),
-			"custom predicate is satisfied");
+			"custom predicate is passed",
+			"custom predicate is failed");
 
 		REQUIRE_CALL(predicate, Invoke(_))
 			.LR_WITH(&_1 == &target)
 			.RETURN(expectedResult);
 		REQUIRE(expectedResult == customMatcher.matches(target));
 		REQUIRE_THAT(
-			customMatcher.describe(target),
-			Catch::Matchers::Equals("custom predicate is satisfied"));
+			customMatcher.describe(),
+			Catch::Matchers::Equals("custom predicate is passed"));
+
+		REQUIRE_THAT(
+			(!customMatcher).describe(),
+			Catch::Matchers::Equals("custom predicate is failed"));
 	}
 }
 
@@ -540,15 +510,15 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	const auto matcher = matches::str::eq("Hello, World!");
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Equals("is equal to \"Hello, World!\""));
 
 	SECTION("When target is equal, they match.")
 	{
 		const std::string target{"Hello, World!"};
 
 		REQUIRE(matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("string \"Hello, World!\" is equal to \"Hello, World!\""));
 	}
 
 	SECTION("When target is not equal, they do not match.")
@@ -556,23 +526,21 @@ TEST_CASE(
 		const std::string target{"Hello, WOrld!"};
 
 		REQUIRE(!matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("string \"Hello, WOrld!\" is equal to \"Hello, World!\""));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto invertedMatcher = !matches::str::eq("Hello, World!");
 
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals("is not equal to \"Hello, World!\""));
+
 		SECTION("When target is equal, they do not match.")
 		{
 			const std::string target{"Hello, World!"};
 
 			REQUIRE(!invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals("not (string \"Hello, World!\" is equal to \"Hello, World!\")"));
 		}
 
 		SECTION("When target is not equal, they do match.")
@@ -580,9 +548,6 @@ TEST_CASE(
 			const std::string target{"Hello, WOrld!"};
 
 			REQUIRE(invertedMatcher.matches(target));
-			REQUIRE_THAT(
-				invertedMatcher.describe(target),
-				Catch::Matchers::Equals("not (string \"Hello, WOrld!\" is equal to \"Hello, World!\")"));
 		}
 	}
 }
@@ -598,14 +563,15 @@ TEST_CASE(
 	{
 		const auto matcher = matches::range::eq(std::vector<int>{});
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("elements are {  }"));
+
 		SECTION("When target is also empty, they match.")
 		{
 			const std::vector<int> target{};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range {  } is equal to {  }"));
 		}
 
 		SECTION("When target is not empty, they do not match.")
@@ -613,9 +579,6 @@ TEST_CASE(
 			const std::vector target{42};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 42 } is equal to {  }"));
 		}
 	}
 
@@ -623,14 +586,15 @@ TEST_CASE(
 	{
 		const auto matcher = matches::range::eq(std::vector{1337, 42});
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("elements are { 1337, 42 }"));
+
 		SECTION("When target is equal, they match.")
 		{
 			const std::vector target{1337, 42};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 1337, 42 } is equal to { 1337, 42 }"));
 		}
 
 		SECTION("When target has same elements, but in different order, they do not match.")
@@ -638,9 +602,6 @@ TEST_CASE(
 			const std::vector target{42, 1337};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 42, 1337 } is equal to { 1337, 42 }"));
 		}
 
 		SECTION("When target is not equal, they do not match.")
@@ -648,9 +609,6 @@ TEST_CASE(
 			const std::vector target{42};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 42 } is equal to { 1337, 42 }"));
 		}
 	}
 
@@ -658,14 +616,15 @@ TEST_CASE(
 	{
 		const auto matcher = !matches::range::eq(std::vector{1337, 42});
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("elements are not { 1337, 42 }"));
+
 		SECTION("When target is equal, they do not match.")
 		{
 			const std::vector target{1337, 42};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 1337, 42 } is equal to { 1337, 42 })"));
 		}
 
 		SECTION("When target has same elements, but in different order, they do match.")
@@ -673,9 +632,6 @@ TEST_CASE(
 			const std::vector target{42, 1337};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 42, 1337 } is equal to { 1337, 42 })"));
 		}
 
 		SECTION("When target is not equal, they do match.")
@@ -683,9 +639,6 @@ TEST_CASE(
 			const std::vector target{42};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 42 } is equal to { 1337, 42 })"));
 		}
 	}
 
@@ -706,8 +659,8 @@ TEST_CASE(
 
 		REQUIRE(matcher.matches(target));
 		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("range { 1337, 42 } is equal to { 1337, 42 }"));
+			matcher.describe(),
+			Catch::Matchers::Equals("elements are { 1337, 42 }"));
 	}
 }
 
@@ -722,14 +675,15 @@ TEST_CASE(
 	{
 		const auto matcher = matches::range::unordered_eq(std::vector<int>{});
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("is a permutation of {  }"));
+
 		SECTION("When target is also empty, they match.")
 		{
 			const std::vector<int> target{};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range {  } is permutation of {  }"));
 		}
 
 		SECTION("When target is not empty, they do not match.")
@@ -737,9 +691,6 @@ TEST_CASE(
 			const std::vector target{42};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 42 } is permutation of {  }"));
 		}
 	}
 
@@ -747,14 +698,15 @@ TEST_CASE(
 	{
 		const auto matcher = matches::range::unordered_eq(std::vector{1337, 42});
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("is a permutation of { 1337, 42 }"));
+
 		SECTION("When target is equal, they match.")
 		{
 			const std::vector target{1337, 42};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 1337, 42 } is permutation of { 1337, 42 }"));
 		}
 
 		SECTION("When target has same elements, but in different order, they do match.")
@@ -762,9 +714,6 @@ TEST_CASE(
 			const std::vector target{42, 1337};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 42, 1337 } is permutation of { 1337, 42 }"));
 		}
 
 		SECTION("When target is not equal, they do not match.")
@@ -772,9 +721,6 @@ TEST_CASE(
 			const std::vector target{42};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 42 } is permutation of { 1337, 42 }"));
 		}
 	}
 
@@ -782,14 +728,15 @@ TEST_CASE(
 	{
 		const auto matcher = !matches::range::unordered_eq(std::vector{1337, 42});
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("is not a permutation of { 1337, 42 }"));
+
 		SECTION("When target is equal, they do not match.")
 		{
 			const std::vector target{1337, 42};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 1337, 42 } is permutation of { 1337, 42 })"));
 		}
 
 		SECTION("When target has same elements, but in different order, they do not match.")
@@ -797,9 +744,6 @@ TEST_CASE(
 			const std::vector target{42, 1337};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 42, 1337 } is permutation of { 1337, 42 })"));
 		}
 
 		SECTION("When target is not equal, they do match.")
@@ -807,9 +751,6 @@ TEST_CASE(
 			const std::vector target{42};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 42 } is permutation of { 1337, 42 })"));
 		}
 	}
 
@@ -821,6 +762,10 @@ TEST_CASE(
 			std::vector{1337, 42},
 			std::ref(comparator));
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("is a permutation of { 1337, 42 }"));
+
 		const std::vector target{1337, 42};
 
 		REQUIRE_CALL(comparator, Invoke(1337, 1337))
@@ -829,9 +774,6 @@ TEST_CASE(
 			.RETURN(true);
 
 		REQUIRE(matcher.matches(target));
-		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("range { 1337, 42 } is permutation of { 1337, 42 }"));
 	}
 }
 
@@ -850,22 +792,23 @@ TEST_CASE(
 
 		REQUIRE(matcher.matches(target));
 		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("range {  } is sorted"));
+			matcher.describe(),
+			Catch::Matchers::Equals("is a sorted range"));
 	}
 
 	SECTION("When a non-empty range is stored.")
 	{
 		const auto matcher = matches::range::is_sorted();
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("is a sorted range"));
+
 		SECTION("When target is sorted, it's a match.")
 		{
 			const std::vector target{42, 1337};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 42, 1337 } is sorted"));
 		}
 
 		SECTION("When target is not sorted, it's no match.")
@@ -873,9 +816,6 @@ TEST_CASE(
 			const std::vector target{1337, 42};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("range { 1337, 42 } is sorted"));
 		}
 	}
 
@@ -883,14 +823,15 @@ TEST_CASE(
 	{
 		const auto matcher = !matches::range::is_sorted();
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("is an unsorted range"));
+
 		SECTION("When target is sorted, it's no match.")
 		{
 			const std::vector target{42, 1337};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 42, 1337 } is sorted)"));
 		}
 
 		SECTION("When target is not sorted, it's a match.")
@@ -898,9 +839,6 @@ TEST_CASE(
 			const std::vector target{1337, 42};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 1337, 42 } is sorted)"));
 		}
 	}
 
@@ -918,8 +856,8 @@ TEST_CASE(
 
 		REQUIRE(matcher.matches(target));
 		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("range { 1337, 42 } is sorted"));
+			matcher.describe(),
+			Catch::Matchers::Equals("is a sorted range"));
 	}
 }
 
@@ -938,8 +876,8 @@ TEST_CASE(
 
 		REQUIRE(matcher.matches(target));
 		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("range {  } is empty"));
+			matcher.describe(),
+			Catch::Matchers::Equals("is an empty range"));
 	}
 
 	SECTION("When a non-empty range is stored, it's no match.")
@@ -950,22 +888,23 @@ TEST_CASE(
 
 		REQUIRE(!matcher.matches(target));
 		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("range { 42 } is empty"));
+			matcher.describe(),
+			Catch::Matchers::Equals("is an empty range"));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto matcher = !matches::range::is_empty();
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("is not an empty range"));
+
 		SECTION("When target is empty, it's no match.")
 		{
 			const std::vector<int> target{};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range {  } is empty)"));
 		}
 
 		SECTION("When a non-empty range is stored, it's a match.")
@@ -973,9 +912,6 @@ TEST_CASE(
 			const std::vector target{42};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 42 } is empty)"));
 		}
 	}
 }
@@ -994,8 +930,8 @@ TEST_CASE(
 
 		REQUIRE(matcher.matches(target));
 		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals("range { 42, 1337 } has size 2"));
+			matcher.describe(),
+			Catch::Matchers::Equals("has size of 2"));
 	}
 
 	SECTION("When target has different size, it's no match.")
@@ -1007,25 +943,23 @@ TEST_CASE(
 
 		REQUIRE(!matcher.matches(target));
 		REQUIRE_THAT(
-			matcher.describe(target),
-			Catch::Matchers::Equals(
-				format::format(
-					"range {} has size 1",
-					mimicpp::print(target))));
+			matcher.describe(),
+			Catch::Matchers::Equals("has size of 1"));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
 		const auto matcher = !matches::range::has_size(2);
 
+		REQUIRE_THAT(
+			matcher.describe(),
+			Catch::Matchers::Equals("has different size than 2"));
+
 		SECTION("When target has the expected size, it's no match.")
 		{
 			const std::vector target{42, 1337};
 
 			REQUIRE(!matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 42, 1337 } has size 2)"));
 		}
 
 		SECTION("When target has different size, it's a match.")
@@ -1033,9 +967,6 @@ TEST_CASE(
 			const std::vector target{42};
 
 			REQUIRE(matcher.matches(target));
-			REQUIRE_THAT(
-				matcher.describe(target),
-				Catch::Matchers::Equals("not (range { 42 } has size 2)"));
 		}
 	}
 }
