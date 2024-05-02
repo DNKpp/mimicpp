@@ -1,5 +1,12 @@
-#include "mimic++/ExpectationBuilder.hpp"
+// //          Copyright Dominic (DNKpp) Koepke 2024 - 2024.
+// // Distributed under the Boost Software License, Version 1.0.
+// //    (See accompanying file LICENSE_1_0.txt or copy at
+// //          https://www.boost.org/LICENSE_1_0.txt)
+
 #include "TestReporter.hpp"
+
+#include "mimic++/ExpectationBuilder.hpp"
+
 #include "TestTypes.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
@@ -277,16 +284,16 @@ TEST_CASE(
 		const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 
 		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
-									collection,
-									TimesFake{.isSatisfied = true},
-									expectation_policies::InitFinalize{},
-									std::tuple{}};
+			collection,
+			TimesFake{.isSatisfied = true},
+			expectation_policies::InitFinalize{},
+			std::tuple{}};
 
 		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
-									collection,
-									TimesFake{.isSatisfied = true},
-									expectation_policies::InitFinalize{},
-									std::tuple{}};
+			collection,
+			TimesFake{.isSatisfied = true},
+			expectation_policies::InitFinalize{},
+			std::tuple{}};
 	}
 
 	REQUIRE_THAT(

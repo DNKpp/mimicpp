@@ -3,6 +3,8 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "TestReporter.hpp"
+
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Expectation.hpp"
 
@@ -12,8 +14,6 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-
-#include "TestReporter.hpp"
 
 using namespace mimicpp;
 
@@ -318,7 +318,7 @@ TEST_CASE(
 			REQUIRE(policy2.is_satisfied());
 			REQUIRE(!policy2.is_applicable());
 		}
-		
+
 		SECTION("When an expectation waits for multiple sequences.")
 		{
 			PolicyT policy1 = expect::in_sequences({sequence1});
