@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "mimic++/Printer.hpp"
 #include "mimic++/Reporter.hpp"
 #include "mimic++/Utility.hpp"
 

@@ -26,7 +26,6 @@ class PolicyFake
 {
 public:
 	using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
-	using SubMatchT = mimicpp::call::SubMatchResult;
 
 	bool isSatisfied{};
 
@@ -36,12 +35,20 @@ public:
 		return isSatisfied;
 	}
 
-	SubMatchT matchResult{};
+	bool matchResult{};
 
 	[[nodiscard]]
-	constexpr SubMatchT matches(const CallInfoT& call) const noexcept
+	constexpr bool matches(const CallInfoT& call) const noexcept
 	{
 		return matchResult;
+	}
+
+	mimicpp::StringT description{};
+
+	[[nodiscard]]
+	mimicpp::StringT describe() const
+	{
+		return description;
 	}
 
 	static constexpr void consume(const CallInfoT& call) noexcept
@@ -81,10 +88,17 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr SubMatchT matches(const CallT& call) const noexcept
+	constexpr bool matches(const CallT& call) const noexcept
 	{
 		return std::invoke(projection, policy)
 			.matches(call);
+	}
+
+	[[nodiscard]]
+	mimicpp::StringT describe() const
+	{
+		return std::invoke(projection, policy)
+			.describe();
 	}
 
 	constexpr void consume(const CallT& call) noexcept
@@ -116,12 +130,12 @@ class PolicyMock
 {
 public:
 	using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
-	using SubMatchT = mimicpp::call::SubMatchResult;
 
 	static constexpr bool trompeloeil_movable_mock = true;
 
 	MAKE_CONST_MOCK0(is_satisfied, bool (), noexcept);
-	MAKE_CONST_MOCK1(matches, SubMatchT (const CallInfoT&), noexcept);
+	MAKE_CONST_MOCK1(matches, bool(const CallInfoT&), noexcept);
+	MAKE_CONST_MOCK0(describe, mimicpp::StringT());
 	MAKE_MOCK1(consume, void (const CallInfoT&), noexcept);
 };
 

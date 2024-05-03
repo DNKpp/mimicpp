@@ -115,7 +115,6 @@ namespace mimicpp::call
 	{
 	public:
 		bool matched{};
-		std::optional<std::string> msg{};
 
 		[[nodiscard]]
 		friend bool operator ==(const SubMatchResult&, const SubMatchResult&) = default;
@@ -136,26 +135,23 @@ namespace mimicpp::call
 namespace mimicpp::call::detail
 {
 	[[nodiscard]]
-	inline MatchResultT evaluate_sub_match_results(const bool isApplicable, std::vector<SubMatchResult> subResults) noexcept
+	inline MatchResultT evaluate_sub_match_results(const bool isApplicable, const std::vector<bool>& subResults) noexcept
 	{
 		static_assert(3 == std::variant_size_v<MatchResultT>, "Unexpected MatchResult alternative count.");
 
-		if (!std::ranges::all_of(subResults, &SubMatchResult::matched))
+		if (!std::ranges::all_of(subResults, std::bind_front(std::equal_to{}, true)))
 		{
 			return MatchResult_NoT{
-				.subMatchResults = std::move(subResults)
 			};
 		}
 
 		if (!isApplicable)
 		{
 			return MatchResult_NotApplicableT{
-				.subMatchResults = std::move(subResults)
 			};
 		}
 
 		return MatchResult_OkT{
-			.subMatchResults = std::move(subResults)
 		};
 	}
 }

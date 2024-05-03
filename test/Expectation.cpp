@@ -463,7 +463,7 @@ TEST_CASE(
 				.RETURN(isApplicable);
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(mimicpp::call::SubMatchResult{false});
+				.RETURN(false);
 			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
 		}
 
@@ -475,7 +475,7 @@ TEST_CASE(
 					.RETURN(true);
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
-					.RETURN(mimicpp::call::SubMatchResult{true});
+					.RETURN(true);
 				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
 			}
 
@@ -485,7 +485,7 @@ TEST_CASE(
 					.RETURN(false);
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
-					.RETURN(mimicpp::call::SubMatchResult{true});
+					.RETURN(true);
 				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NotApplicableT>(std::as_const(expectation).matches(call)));
 			}
 		}
@@ -549,7 +549,7 @@ TEMPLATE_TEST_CASE(
 		{
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(mimicpp::call::SubMatchResult{true});
+				.RETURN(true);
 			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
 		}
 
@@ -557,7 +557,7 @@ TEMPLATE_TEST_CASE(
 		{
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(mimicpp::call::SubMatchResult{false});
+				.RETURN(false);
 			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
 		}
 
@@ -602,10 +602,10 @@ TEMPLATE_TEST_CASE(
 		{
 			REQUIRE_CALL(policy1, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(mimicpp::call::SubMatchResult{true});
+				.RETURN(true);
 			REQUIRE_CALL(policy2, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(mimicpp::call::SubMatchResult{true});
+				.RETURN(true);
 
 			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
 		}
@@ -621,10 +621,10 @@ TEMPLATE_TEST_CASE(
 
 			REQUIRE_CALL(policy1, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(mimicpp::call::SubMatchResult{match1});
+				.RETURN(match1);
 			REQUIRE_CALL(policy2, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(mimicpp::call::SubMatchResult{match2});
+				.RETURN(match2);
 
 			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
 		}

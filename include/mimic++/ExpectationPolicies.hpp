@@ -107,26 +107,23 @@ namespace mimicpp::expectation_policies
 		}
 
 		template <typename Return, typename... Args>
-		static call::SubMatchResult matches(const call::Info<Return, Args...>& info)
+		static constexpr bool matches(const call::Info<Return, Args...>& info) noexcept
 		{
-			if (mimicpp::is_matching(info.fromCategory, expected))
-			{
-				return {
-					.matched = true,
-					.msg = format::format(" matches Category {}", expected)
-				};
-			}
-
-			return {
-				.matched = false,
-				.msg = format::format(" does not match Category {}", expected)
-			};
+			return mimicpp::is_matching(info.fromCategory, expected);
 		}
 
 		template <typename Return, typename... Args>
 		static constexpr void consume(const call::Info<Return, Args...>& info) noexcept
 		{
 			assert(mimicpp::is_matching(info.fromCategory, expected) && "Call does not match.");
+		}
+
+		[[nodiscard]]
+		static StringT describe()
+		{
+			return format::format(
+				"expect: from {} category overload",
+				expected);
 		}
 	};
 
@@ -140,26 +137,23 @@ namespace mimicpp::expectation_policies
 		}
 
 		template <typename Return, typename... Args>
-		static constexpr call::SubMatchResult matches(const call::Info<Return, Args...>& info) noexcept
+		static constexpr bool matches(const call::Info<Return, Args...>& info) noexcept
 		{
-			if (mimicpp::is_matching(info.fromConstness, constness))
-			{
-				return {
-					.matched = true,
-					.msg = format::format(" matches Constness {}", constness)
-				};
-			}
-
-			return {
-				.matched = false,
-				.msg = format::format(" does not match Constness {}", constness)
-			};
+			return mimicpp::is_matching(info.fromConstness, constness);
 		}
 
 		template <typename Return, typename... Args>
 		static constexpr void consume(const call::Info<Return, Args...>& info) noexcept
 		{
 			assert(mimicpp::is_matching(info.fromConstness, constness) && "Call does not match.");
+		}
+
+		[[nodiscard]]
+		static StringT describe()
+		{
+			return format::format(
+				"expect: from {} qualified overload",
+				constness);
 		}
 	};
 
@@ -255,37 +249,27 @@ namespace mimicpp::expectation_policies
 
 		template <typename Return, typename... Args>
 			requires std::invocable<const Projection&, const call::Info<Return, Args...>&>
-					&& requires(std::invoke_result_t<const Projection&, const call::Info<Return, Args...>&> target)
-					{
-						requires matcher_for<
-							Matcher,
-							decltype(target)>;
-						requires std::convertible_to<
-							std::invoke_result_t<
-								const Describer&,
-								decltype(target),
-								StringT,
-								bool>,
-							std::optional<StringT>>;
-					}
+					&& matcher_for<
+						Matcher,
+						std::invoke_result_t<const Projection&, const call::Info<Return, Args...>&>>
 		[[nodiscard]]
-		constexpr call::SubMatchResult matches(const call::Info<Return, Args...>& info) const
+		constexpr bool matches(const call::Info<Return, Args...>& info) const
 		{
-			auto& target = std::invoke(m_Projection, info);
-			const bool matchResult = m_Matcher.matches(target);
-			return {
-				.matched = matchResult,
-				.msg = std::invoke(
-					m_Describer,
-					target,
-					m_Matcher.describe(),
-					matchResult)
-			};
+			return m_Matcher.matches(
+				std::invoke(m_Projection, info));
 		}
 
 		template <typename Return, typename... Args>
 		static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
 		{
+		}
+
+		[[nodiscard]]
+		StringT describe() const
+		{
+			return std::invoke(
+					m_Describer,
+					m_Matcher.describe());
 		}
 
 	private:
@@ -322,9 +306,15 @@ namespace mimicpp::expectation_policies
 
 		template <typename Return, typename... Args>
 		[[nodiscard]]
-		static constexpr call::SubMatchResult matches(const call::Info<Return, Args...>&) noexcept
+		static constexpr bool matches(const call::Info<Return, Args...>&) noexcept
 		{
-			return {true};
+			return true;
+		}
+
+		[[nodiscard]]
+		static std::nullopt_t describe() noexcept
+		{
+			return std::nullopt;
 		}
 
 		template <typename Return, typename... Args>
@@ -514,15 +504,12 @@ namespace mimicpp::expect
 		{
 			[[nodiscard]]
 			constexpr StringT operator ()(
-				[[maybe_unused]] auto&& target,
-				const StringViewT matcherDescription,
-				const bool result
+				const StringViewT matcherDescription
 			) const
 			{
 				return format::format(
-					"arg[{}] {} requirement: {}",
+					"expect: arg[{}] {}",
 					index,
-					result ? "passed" : "failed",
 					matcherDescription);
 			}
 		};

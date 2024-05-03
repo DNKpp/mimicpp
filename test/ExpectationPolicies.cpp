@@ -190,6 +190,13 @@ TEMPLATE_TEST_CASE_SIG(
 		REQUIRE(policy.is_satisfied());
 	}
 
+	SECTION("Policy description.")
+	{
+		REQUIRE_THAT(
+			policy.describe(),
+			Catch::Matchers::Equals(format::format("expect: from {} category overload", category)));
+	}
+
 	const CallInfoT call{
 		.args = {},
 		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
@@ -200,12 +207,7 @@ TEMPLATE_TEST_CASE_SIG(
 	{
 		SECTION("When call and policy category matches, success is returned.")
 		{
-			const auto result = policy.matches(call);
-
-			REQUIRE(result.matched);
-			REQUIRE_THAT(
-				result.msg.value(),
-				Catch::Matchers::Equals(format::format(" matches Category {}", category)));
+			REQUIRE(policy.matches(call));
 		}
 
 		SECTION("Policy doesn't consume, but asserts on wrong category.")
@@ -217,12 +219,7 @@ TEMPLATE_TEST_CASE_SIG(
 	{
 		SECTION("When call and policy category mismatch, failure is returned.")
 		{
-			const auto result = policy.matches(call);
-
-			REQUIRE(!result.matched);
-			REQUIRE_THAT(
-				result.msg.value(),
-				Catch::Matchers::Equals(format::format(" does not match Category {}", category)));
+			REQUIRE(!policy.matches(call));
 		}
 	}
 }
@@ -247,6 +244,13 @@ TEMPLATE_TEST_CASE_SIG(
 		REQUIRE(policy.is_satisfied());
 	}
 
+	SECTION("Policy description.")
+	{
+		REQUIRE_THAT(
+			policy.describe(),
+			Catch::Matchers::Equals(format::format("expect: from {} qualified overload", constness)));
+	}
+
 	const CallInfoT call{
 		.args = {},
 		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
@@ -257,12 +261,7 @@ TEMPLATE_TEST_CASE_SIG(
 	{
 		SECTION("When call and policy constness matches, success is returned.")
 		{
-			const auto result = policy.matches(call);
-
-			REQUIRE(result.matched);
-			REQUIRE_THAT(
-				result.msg.value(),
-				Catch::Matchers::Equals(format::format(" matches Constness {}", constness)));
+			REQUIRE(policy.matches(call));
 		}
 
 		SECTION("Policy doesn't consume, but asserts on wrong constness.")
@@ -274,12 +273,7 @@ TEMPLATE_TEST_CASE_SIG(
 	{
 		SECTION("When call and policy constness mismatch, failure is returned.")
 		{
-			const auto result = policy.matches(call);
-
-			REQUIRE(!result.matched);
-			REQUIRE_THAT(
-				result.msg.value(),
-				Catch::Matchers::Equals(format::format(" does not match Constness {}", constness)));
+			REQUIRE(!policy.matches(call));
 		}
 	}
 }
@@ -380,7 +374,7 @@ TEST_CASE(
 	};
 
 	using ProjectionT = InvocableMock<int&, const CallInfoT&>;
-	using DescriberT = InvocableMock<StringT, int&, StringViewT, bool>;
+	using DescriberT = InvocableMock<StringT, StringViewT>;
 	using MatcherT = MatcherMock<int&>;
 	STATIC_CHECK(matcher_for<MatcherT, int&>);
 
@@ -403,6 +397,18 @@ TEST_CASE(
 	REQUIRE(std::as_const(policy).is_satisfied());
 	REQUIRE_NOTHROW(policy.consume(info));
 
+	SECTION("Policy description.")
+	{
+		REQUIRE_CALL(matcher, describe())
+			.RETURN("matcher description");
+		REQUIRE_CALL(describer, Invoke("matcher description"))
+			.RETURN("expect that: matcher description");
+
+		REQUIRE_THAT(
+			policy.describe(),
+			Catch::Matchers::Equals("expect that: matcher description"));
+	}
+
 	SECTION("When matched.")
 	{
 		REQUIRE_CALL(projection, Invoke(_))
@@ -411,18 +417,8 @@ TEST_CASE(
 		REQUIRE_CALL(matcher, matches(_))
 			.LR_WITH(&_1 == &arg0)
 			.RETURN(true);
-		REQUIRE_CALL(matcher, describe())
-			.RETURN("success");
-		REQUIRE_CALL(describer, Invoke(_, "success", true))
-			.LR_WITH(&_1 == &arg0)
-			.RETURN("succeeded!");
 
-		const call::SubMatchResult result = std::as_const(policy).matches(info);
-		REQUIRE(result.matched);
-		REQUIRE(result.msg);
-		REQUIRE_THAT(
-			*result.msg,
-			Matches::Equals("succeeded!"));
+		REQUIRE(std::as_const(policy).matches(info));
 	}
 
 	SECTION("When not matched.")
@@ -433,18 +429,8 @@ TEST_CASE(
 		REQUIRE_CALL(matcher, matches(_))
 			.LR_WITH(&_1 == &arg0)
 			.RETURN(false);
-		REQUIRE_CALL(matcher, describe())
-			.RETURN("failed");
-		REQUIRE_CALL(describer, Invoke(_, "failed", false))
-			.LR_WITH(&_1 == &arg0)
-			.RETURN("failure!");
 
-		const call::SubMatchResult result = std::as_const(policy).matches(info);
-		REQUIRE(!result.matched);
-		REQUIRE(result.msg);
-		REQUIRE_THAT(
-			*result.msg,
-			Matches::Equals("failure!"));
+		REQUIRE(!std::as_const(policy).matches(info));
 	}
 }
 
@@ -481,7 +467,8 @@ TEST_CASE(
 	expectation_policies::SideEffectAction policy{std::ref(action)};
 	STATIC_REQUIRE(expectation_policy_for<decltype(policy), void()>);
 	REQUIRE(std::as_const(policy).is_satisfied());
-	REQUIRE(call::SubMatchResult{true} == std::as_const(policy).matches(info));
+	REQUIRE(std::as_const(policy).matches(info));
+	REQUIRE(std::optional<StringT>{} == std::as_const(policy).describe());
 
 	REQUIRE_CALL(action, Invoke(_))
 		.LR_WITH(&info == &_1);
@@ -1087,36 +1074,24 @@ TEST_CASE(
 	REQUIRE(std::as_const(policy).is_satisfied());
 	REQUIRE_NOTHROW(policy.consume(info));
 
-	SECTION("When matched.")
+	SECTION("Policy description.")
 	{
-		REQUIRE_CALL(matcher, matches(_))
-			.LR_WITH(&_1 == &arg0)
-			.RETURN(true);
 		REQUIRE_CALL(matcher, describe())
-			.RETURN("custom requirement");
+			.RETURN("matcher description");
 
-		const call::SubMatchResult result = std::as_const(policy).matches(info);
-		REQUIRE(result.matched);
-		REQUIRE(result.msg);
 		REQUIRE_THAT(
-			*result.msg,
-			Matches::Equals("arg[0] passed requirement: custom requirement"));
+			policy.describe(),
+			Catch::Matchers::Equals("expect: arg[0] matcher description"));
 	}
 
-	SECTION("When not matched.")
+	SECTION("Policy matches().")
 	{
+		const bool match = GENERATE(true, false);
 		REQUIRE_CALL(matcher, matches(_))
 			.LR_WITH(&_1 == &arg0)
-			.RETURN(false);
-		REQUIRE_CALL(matcher, describe())
-			.RETURN("custom requirement");
+			.RETURN(match);
 
-		const call::SubMatchResult result = std::as_const(policy).matches(info);
-		REQUIRE(!result.matched);
-		REQUIRE(result.msg);
-		REQUIRE_THAT(
-			*result.msg,
-			Matches::Equals("arg[0] failed requirement: custom requirement"));
+		REQUIRE(match == std::as_const(policy).matches(info));
 	}
 }
 
