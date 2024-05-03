@@ -267,16 +267,22 @@ namespace mimicpp
 		[[nodiscard]]
 		call::MatchResultT matches(const CallInfoT& call) const override
 		{
-			return call::detail::evaluate_sub_match_results(
-				m_Times.is_applicable(),
-				std::apply(
-					[&](const auto&... policies)
-					{
-						return std::vector<bool>{
-							policies.matches(call)...
-						};
-					},
-					m_Policies));
+			if (!std::apply(
+				[&](const auto&... policies)
+				{
+					return (... && policies.matches(call));
+				},
+				m_Policies))
+			{
+				return call::MatchResult_NoT{};
+			}
+
+			if (!m_Times.is_applicable())
+			{
+				return call::MatchResult_NotApplicableT{};
+			}
+
+			return call::MatchResult_OkT{};
 		}
 
 		constexpr void consume(const CallInfoT& call) override

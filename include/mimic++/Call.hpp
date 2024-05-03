@@ -132,29 +132,6 @@ namespace mimicpp::call
 	};
 }
 
-namespace mimicpp::call::detail
-{
-	[[nodiscard]]
-	inline MatchResultT evaluate_sub_match_results(const bool isApplicable, const std::vector<bool>& subResults) noexcept
-	{
-		static_assert(3 == std::variant_size_v<MatchResultT>, "Unexpected MatchResult alternative count.");
-
-		if (!std::ranges::all_of(subResults, std::bind_front(std::equal_to{}, true)))
-		{
-			return MatchResult_NoT{
-			};
-		}
-
-		if (!isApplicable)
-		{
-			return MatchResult_NotApplicableT{
-			};
-		}
-
-		return MatchResult_OkT{
-		};
-	}
-}
 
 namespace mimicpp::detail
 {

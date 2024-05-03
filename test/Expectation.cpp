@@ -409,14 +409,14 @@ TEST_CASE(
 			REQUIRE(isSatisfied == std::as_const(expectation).is_satisfied());
 		}
 
-		SECTION("When times is not saturated, call is matched.")
+		SECTION("When times is applicable, call is matched.")
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(true);
 			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
 		}
 
-		SECTION("When times is saturated, match exhausted.")
+		SECTION("When times is not applicable => unapplicable match.")
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(false);
@@ -458,9 +458,6 @@ TEST_CASE(
 
 		SECTION("When policy is not matched, then the result is always no match.")
 		{
-			const bool isApplicable = GENERATE(false, true);
-			REQUIRE_CALL(times, is_applicable())
-				.RETURN(isApplicable);
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(false);
@@ -479,7 +476,7 @@ TEST_CASE(
 				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
 			}
 
-			SECTION("And when times is saturated => exhausted")
+			SECTION("And when times not applicable => unapplicable")
 			{
 				REQUIRE_CALL(times, is_applicable())
 					.RETURN(false);
@@ -612,21 +609,26 @@ TEMPLATE_TEST_CASE(
 
 		SECTION("When at least one not matches => no match")
 		{
-			const auto [match1, match2] = GENERATE(
-				(table<bool, bool>)({
-					{false, false},
-					{false, true},
-					{true, false},
-					}));
-
-			REQUIRE_CALL(policy1, matches(_))
+			SECTION("When first does not match, no other policy is checked.")
+			{
+				REQUIRE_CALL(policy1, matches(_))
 				.LR_WITH(&_1 == &call)
-				.RETURN(match1);
-			REQUIRE_CALL(policy2, matches(_))
-				.LR_WITH(&_1 == &call)
-				.RETURN(match2);
+					.RETURN(false);
 
-			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
+				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
+			}
+
+			SECTION("When first matches, but second not.")
+			{
+				REQUIRE_CALL(policy1, matches(_))
+					.LR_WITH(&_1 == &call)
+					.RETURN(true);
+				REQUIRE_CALL(policy2, matches(_))
+					.LR_WITH(&_1 == &call)
+					.RETURN(false);
+
+				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
+			}
 		}
 
 		SECTION("When calling consume()")
