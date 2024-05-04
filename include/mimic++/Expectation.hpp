@@ -16,6 +16,7 @@
 #include <concepts>
 #include <memory>
 #include <mutex>
+#include <ranges>
 #include <stdexcept>
 #include <tuple>
 #include <utility>

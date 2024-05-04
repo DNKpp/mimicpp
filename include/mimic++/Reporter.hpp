@@ -12,8 +12,10 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Printer.hpp"
 
+#include <algorithm>
 #include <exception>
 #include <memory>
+#include <optional>
 #include <typeindex>
 #include <vector>
 
