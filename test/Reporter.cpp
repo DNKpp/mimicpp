@@ -11,19 +11,19 @@
 using namespace mimicpp;
 
 TEST_CASE(
-	"call_report::arg is equality comparable.",
+	"CallReport::Arg is equality comparable.",
 	"[reporting]"
 )
 {
-	using arg_t = call_report::arg;
+	using ArgT = CallReport::Arg;
 
-	const arg_t first{
+	const ArgT first{
 		.typeIndex = typeid(int),
 		.stateString = "42"
 	};
 
 	const auto [expectedEquality, second] = GENERATE(
-		(table<bool, arg_t>({
+		(table<bool, ArgT>({
 			{false, {typeid(int), "1337"}},
 			{false, {typeid(short), "42"}},
 			{true, {typeid(int), "42"}}
@@ -36,11 +36,11 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"call_report is equality comparable.",
+	"CallReport is equality comparable.",
 	"[reporting]"
 )
 {
-	const call_report first{
+	const CallReport first{
 		.returnTypeIndex = typeid(std::string),
 		.argDetails = {
 			{
@@ -55,7 +55,7 @@ TEST_CASE(
 
 	SECTION("When both sides are equal, they compare equal.")
 	{
-		const call_report second{first};
+		const CallReport second{first};
 
 		REQUIRE(first == second);
 		REQUIRE(second == first);
@@ -65,7 +65,7 @@ TEST_CASE(
 
 	SECTION("When return type differs, they compare not equal.")
 	{
-		call_report second{first};
+		CallReport second{first};
 
 		second.returnTypeIndex = GENERATE(as<std::type_index>{}, typeid(void), typeid(std::string_view));
 
@@ -77,7 +77,7 @@ TEST_CASE(
 
 	SECTION("When category differs, they compare not equal.")
 	{
-		call_report second{first};
+		CallReport second{first};
 
 		second.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue);
 
@@ -89,7 +89,7 @@ TEST_CASE(
 
 	SECTION("When constness differs, they compare not equal.")
 	{
-		call_report second{first};
+		CallReport second{first};
 
 		second.fromConstness = GENERATE(Constness::as_const, Constness::non_const);
 
@@ -101,7 +101,7 @@ TEST_CASE(
 
 	SECTION("When source location differs, they compare not equal.")
 	{
-		call_report second{first};
+		CallReport second{first};
 
 		second.fromLoc = std::source_location::current();
 
@@ -113,17 +113,17 @@ TEST_CASE(
 
 	SECTION("When source location differs, they compare not equal.")
 	{
-		call_report second{first};
+		CallReport second{first};
 
-		using arg_t = call_report::arg;
+		using ArgT = CallReport::Arg;
 		second.argDetails = GENERATE(
-			std::vector<arg_t>{},
+			std::vector<ArgT>{},
 			std::vector{
-			(arg_t{.typeIndex = typeid(int), .stateString = "1337"})
+			(ArgT{.typeIndex = typeid(int), .stateString = "1337"})
 			},
 			std::vector{
-			(arg_t{.typeIndex = typeid(int), .stateString = "42"}),
-			(arg_t{.typeIndex = typeid(int), .stateString = "1337"})
+			(ArgT{.typeIndex = typeid(int), .stateString = "42"}),
+			(ArgT{.typeIndex = typeid(int), .stateString = "1337"})
 			});
 
 		REQUIRE(first != second);
@@ -147,11 +147,11 @@ TEST_CASE(
 			.fromSourceLocation = std::source_location::current()
 		};
 
-		const call_report report = make_call_report(info);
+		const CallReport report = make_call_report(info);
 
 		REQUIRE(
 			report ==
-			call_report{
+			CallReport{
 			.returnTypeIndex = typeid(void),
 			.argDetails = {},
 			.fromLoc = info.fromSourceLocation,
@@ -169,11 +169,11 @@ TEST_CASE(
 			.fromSourceLocation = std::source_location::current()
 		};
 
-		const call_report report = make_call_report(info);
+		const CallReport report = make_call_report(info);
 
 		REQUIRE(
 			report ==
-			call_report{
+			CallReport{
 			.returnTypeIndex = typeid(int),
 			.argDetails = {},
 			.fromLoc = info.fromSourceLocation,
@@ -194,17 +194,17 @@ TEST_CASE(
 			.fromSourceLocation = std::source_location::current()
 		};
 
-		const call_report report = make_call_report(info);
+		const CallReport report = make_call_report(info);
 
-		using arg_t = call_report::arg;
+		using ArgT = CallReport::Arg;
 		REQUIRE(
 			report ==
-			call_report{
+			CallReport{
 			.returnTypeIndex = typeid(void),
 			.argDetails = {
-				(arg_t{typeid(const int&), "1337"}),
-				(arg_t{typeid(double), "4.2"}),
-				(arg_t{typeid(std::string), "\"Hello, World!\""})
+				(ArgT{typeid(const int&), "1337"}),
+				(ArgT{typeid(double), "4.2"}),
+				(ArgT{typeid(std::string), "\"Hello, World!\""})
 			},
 			.fromLoc = info.fromSourceLocation,
 			.fromCategory = info.fromCategory,
@@ -214,16 +214,16 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"expectation_report is equality comparable.",
+	"ExpectationReport is equality comparable.",
 	"[reporting]"
 )
 {
-	const expectation_report first{
+	const ExpectationReport first{
 		.description = "Hello, World!"
 	};
 
 	const auto [expectedEquality, second] = GENERATE(
-		(table<bool, expectation_report>({
+		(table<bool, ExpectationReport>({
 			{false, {"not equal"}},
 			{true, {"Hello, World!"}}
 			})));

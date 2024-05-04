@@ -20,9 +20,8 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
-#include <catch2/matchers/catch_matchers_string.hpp>
-#include <catch2/matchers/catch_matchers_templated.hpp>
 #include <catch2/matchers/catch_matchers_range_equals.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace
 {
@@ -33,7 +32,7 @@ namespace
 		using CallInfoT = mimicpp::call::info_for_signature_t<void()>;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
-		MAKE_CONST_MOCK1(matches, mimicpp::match_report(const CallInfoT&), override);
+		MAKE_CONST_MOCK1(matches, mimicpp::MatchReport(const CallInfoT&), override);
 		MAKE_MOCK1(consume, void(const CallInfoT&), override);
 		MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
 	};
@@ -76,7 +75,7 @@ TEST_CASE(
 
 namespace
 {
-	inline const mimicpp::match_report commonNoMatchReport{
+	inline const mimicpp::MatchReport commonNoMatchReport{
 		.timesReport = {
 			.isApplicable = true
 		},
@@ -87,14 +86,14 @@ namespace
 		}
 	};
 
-	inline const mimicpp::match_report commonFullMatchReport{
+	inline const mimicpp::MatchReport commonFullMatchReport{
 		.timesReport = {
 			.isApplicable = true
 		},
 		.expectationReports = {}
 	};
 
-	inline const mimicpp::match_report commonInapplicableMatchReport{
+	inline const mimicpp::MatchReport commonInapplicableMatchReport{
 		.timesReport = {
 			.isApplicable = false
 		},
@@ -164,7 +163,7 @@ TEST_CASE(
 
 	SECTION("If at least one matches but is inapplicable.")
 	{
-		using match_report_t = mimicpp::match_report;
+		using match_report_t = mimicpp::MatchReport;
 		const auto [count, result0, result1, result2, result3] = GENERATE(
 			(table<std::size_t, match_report_t, match_report_t, match_report_t, match_report_t>)(
 				{
@@ -369,7 +368,7 @@ TEST_CASE(
 	using PolicyRefT = PolicyFacade<SignatureT, std::reference_wrapper<PolicyMock<SignatureT>>, UnwrapReferenceWrapper>;
 	using TimesPolicyT = TimesFacade<std::reference_wrapper<TimesMock>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
-	using TimesReportT = mimicpp::match_report::times;
+	using TimesReportT = mimicpp::MatchReport::Times;
 
 	const CallInfoT call{
 		.args = {},
@@ -398,7 +397,7 @@ TEST_CASE(
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(true);
-			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 			REQUIRE(matchReport.timesReport == TimesReportT{true});
 			REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
 		}
@@ -407,7 +406,7 @@ TEST_CASE(
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(false);
-			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 			REQUIRE(matchReport.timesReport == TimesReportT{false});
 			REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(matchReport));
 		}
@@ -507,8 +506,8 @@ TEMPLATE_TEST_CASE(
 	using PolicyMockT = PolicyMock<TestType>;
 	using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<TestType>;
-	using ExpectationReportT = mimicpp::match_report::expectation;
-	using TimesReportT = mimicpp::match_report::times;
+	using ExpectationReportT = mimicpp::MatchReport::Expectation;
+	using TimesReportT = mimicpp::MatchReport::Times;
 
 	const CallInfoT call{
 		.args = {},
@@ -524,7 +523,7 @@ TEMPLATE_TEST_CASE(
 		};
 
 		REQUIRE(std::as_const(expectation).is_satisfied());
-		const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+		const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 		REQUIRE(matchReport.timesReport == TimesReportT{true});
 		REQUIRE_THAT(
 			matchReport.expectationReports,
@@ -554,7 +553,7 @@ TEMPLATE_TEST_CASE(
 				.RETURN(true);
 			REQUIRE_CALL(policy, describe())
 				.RETURN("policy description");
-			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 			REQUIRE(matchReport.timesReport == TimesReportT{true});
 			REQUIRE_THAT(
 				matchReport.expectationReports,
@@ -569,7 +568,7 @@ TEMPLATE_TEST_CASE(
 				.RETURN(false);
 			REQUIRE_CALL(policy, describe())
 				.RETURN("policy description");
-			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 			REQUIRE(matchReport.timesReport == TimesReportT{true});
 			REQUIRE_THAT(
 				matchReport.expectationReports,
@@ -627,7 +626,7 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy2, describe())
 				.RETURN("policy2 description");
 
-			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 			REQUIRE(matchReport.timesReport == TimesReportT{true});
 			REQUIRE_THAT(
 				matchReport.expectationReports,
@@ -659,7 +658,7 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy2, describe())
 				.RETURN("policy2 description");
 
-			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 			REQUIRE(matchReport.timesReport == TimesReportT{true});
 			REQUIRE_THAT(
 				matchReport.expectationReports,

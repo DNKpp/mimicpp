@@ -24,7 +24,7 @@
 namespace mimicpp::detail
 {
 	template <typename Return, typename... Params, typename Signature>
-	std::optional<match_report> make_match_report(
+	std::optional<MatchReport> make_match_report(
 		const call::Info<Return, Params...>& call,
 		const std::shared_ptr<Expectation<Signature>>& expectation
 	) noexcept
@@ -68,7 +68,7 @@ namespace mimicpp
 		virtual bool is_satisfied() const noexcept = 0;
 
 		[[nodiscard]]
-		virtual match_report matches(const CallInfoT& call) const = 0;
+		virtual MatchReport matches(const CallInfoT& call) const = 0;
 		virtual void consume(const CallInfoT& call) = 0;
 
 		[[nodiscard]]
@@ -124,8 +124,8 @@ namespace mimicpp
 		[[nodiscard]]
 		ReturnT handle_call(const CallInfoT& call)
 		{
-			std::vector<match_report> noMatches{};
-			std::vector<match_report> inapplicableMatches{};
+			std::vector<MatchReport> noMatches{};
+			std::vector<MatchReport> inapplicableMatches{};
 
 			for (const std::scoped_lock lock{m_ExpectationsMx};
 				auto& exp : m_Expectations | std::views::reverse)
@@ -249,19 +249,19 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		match_report matches(const CallInfoT& call) const override
+		MatchReport matches(const CallInfoT& call) const override
 		{
-			return match_report{
+			return MatchReport{
 				.finalizeReport = std::nullopt,
-				.timesReport = match_report::times{
+				.timesReport = MatchReport::Times{
 					.isApplicable = m_Times.is_applicable(),
 					.description = std::nullopt
 				},
 				.expectationReports = std::apply(
 					[&](const auto&... policies)
 					{
-						return std::vector<match_report::expectation>{
-							match_report::expectation{
+						return std::vector<MatchReport::Expectation>{
+							MatchReport::Expectation{
 								.matched = policies.matches(call),
 								.description = policies.describe()
 							}...

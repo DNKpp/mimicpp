@@ -19,25 +19,27 @@
 
 namespace mimicpp
 {
-	struct call_report
+	class CallReport
 	{
-		struct arg
+	public:
+		class Arg
 		{
+		public:
 			std::type_index typeIndex;
 			StringT stateString;
 
 			[[nodiscard]]
-			friend bool operator ==(const arg&, const arg&) = default;
+			friend bool operator ==(const Arg&, const Arg&) = default;
 		};
 
 		std::type_index returnTypeIndex;
-		std::vector<arg> argDetails{};
+		std::vector<Arg> argDetails{};
 		std::source_location fromLoc{};
 		ValueCategory fromCategory{};
 		Constness fromConstness{};
 
 		[[nodiscard]]
-		friend bool operator ==(const call_report& lhs, const call_report& rhs)
+		friend bool operator ==(const CallReport& lhs, const CallReport& rhs)
 		{
 			return lhs.returnTypeIndex == rhs.returnTypeIndex
 					&& lhs.argDetails == rhs.argDetails
@@ -49,15 +51,15 @@ namespace mimicpp
 
 	template <typename Return, typename... Params>
 	[[nodiscard]]
-	call_report make_call_report(const call::Info<Return, Params...>& callInfo)
+	CallReport make_call_report(const call::Info<Return, Params...>& callInfo)
 	{
-		return call_report{
+		return CallReport{
 			.returnTypeIndex = typeid(Return),
 			.argDetails = std::apply(
 				[](auto&... args)
 				{
-					return std::vector<call_report::arg>{
-						call_report::arg{
+					return std::vector<CallReport::Arg>{
+						CallReport::Arg{
 							.typeIndex = typeid(Params),
 							.stateString = mimicpp::print(args.get())
 						}...
@@ -70,61 +72,66 @@ namespace mimicpp
 		};
 	}
 
-	struct expectation_report
+	class ExpectationReport
 	{
+	public:
 		StringT description{};
 
 		[[nodiscard]]
-		friend bool operator==(const expectation_report&, const expectation_report&) = default;
+		friend bool operator==(const ExpectationReport&, const ExpectationReport&) = default;
 	};
 
 	template <typename Signature>
 	[[nodiscard]]
-	expectation_report make_expectation_report(const Expectation<Signature>& expectation)
+	ExpectationReport make_expectation_report(const Expectation<Signature>& expectation)
 	{
-		return expectation_report{};
+		return ExpectationReport{};
 	}
 
-	struct match_report
+	class MatchReport
 	{
-		struct finalize
+	public:
+		class Finalize
 		{
+		public:
 			std::optional<StringT> description{};
 
 			[[nodiscard]]
-			friend bool operator ==(const finalize&, const finalize&) = default;
+			friend bool operator ==(const Finalize&, const Finalize&) = default;
 		};
 
-		struct times
+		class Times
 		{
+		public:
 			bool isApplicable{};
 			std::optional<StringT> description{};
 
 			[[nodiscard]]
-			friend bool operator ==(const times&, const times&) = default;
+			friend bool operator ==(const Times&, const Times&) = default;
 		};
 
-		struct expectation
+		class Expectation
 		{
+		public:
 			bool matched{};
 			std::optional<StringT> description{};
 
 			[[nodiscard]]
-			friend bool operator ==(const expectation&, const expectation&) = default;
+			friend bool operator ==(const Expectation&, const Expectation&) = default;
 		};
 
-		finalize finalizeReport{};
-		times timesReport{};
-		std::vector<expectation> expectationReports{};
+		Finalize finalizeReport{};
+		Times timesReport{};
+		std::vector<Expectation> expectationReports{};
 
 		[[nodiscard]]
-		friend bool operator ==(const match_report&, const match_report&) = default;
+		friend bool operator ==(const MatchReport&, const MatchReport&) = default;
 	};
 
 	[[nodiscard]]
-	inline MatchResult evaluate_match_report(const match_report& report)
+	inline MatchResult evaluate_match_report(const MatchReport& report)
 	{
-		if (!std::ranges::all_of(report.expectationReports, &match_report::expectation::matched))
+		if (!std::ranges::all_of(report.expectationReports, &MatchReport::Expectation::matched))
 		{
 			return MatchResult::none;
 		}
@@ -144,29 +151,29 @@ namespace mimicpp
 
 		[[noreturn]]
 		virtual void report_no_matches(
-			call_report call,
-			std::vector<match_report> matchReports
+			CallReport call,
+			std::vector<MatchReport> matchReports
 		) = 0;
 
 		[[noreturn]]
 		virtual void report_inapplicable_matches(
-			call_report call,
-			std::vector<match_report> matchReports
+			CallReport call,
+			std::vector<MatchReport> matchReports
 		) = 0;
 
 		virtual void report_full_match(
-			call_report call,
-			match_report matchReport
+			CallReport call,
+			MatchReport matchReport
 		) noexcept = 0;
 
 		virtual void report_unfulfilled_expectation(
-			expectation_report expectationReport
+			ExpectationReport expectationReport
 		) = 0;
 
 		virtual void report_error(StringT message) = 0;
 		virtual void report_unhandled_exception(
-			call_report call,
-			expectation_report expectationReport,
+			CallReport call,
+			ExpectationReport expectationReport,
 			std::exception_ptr exception
 		) = 0;
 
@@ -186,8 +193,8 @@ namespace mimicpp
 	public:
 		[[noreturn]]
 		void report_no_matches(
-			call_report call,
-			std::vector<match_report> matchReports
+			CallReport call,
+			std::vector<MatchReport> matchReports
 		) override
 		{
 			std::terminate();
@@ -195,22 +202,22 @@ namespace mimicpp
 
 		[[noreturn]]
 		void report_inapplicable_matches(
-			call_report call,
-			std::vector<match_report> matchReports
+			CallReport call,
+			std::vector<MatchReport> matchReports
 		) override
 		{
 			std::terminate();
 		}
 
 		void report_full_match(
-			call_report call,
-			match_report matchReport
+			CallReport call,
+			MatchReport matchReport
 		) noexcept override
 		{
 		}
 
 		void report_unfulfilled_expectation(
-			expectation_report expectationReport
+			ExpectationReport expectationReport
 		) override
 		{
 			if (0 != std::uncaught_exceptions())
@@ -228,8 +235,8 @@ namespace mimicpp
 		}
 
 		void report_unhandled_exception(
-			call_report call,
-			expectation_report expectationReport,
+			CallReport call,
+			ExpectationReport expectationReport,
 			std::exception_ptr exception
 		) override
 		{
@@ -252,7 +259,7 @@ namespace mimicpp::detail
 	[[noreturn]]
 	void report_no_matches(
 		const call::Info<Return, Params...>& callInfo,
-		std::vector<match_report> matchReports
+		std::vector<MatchReport> matchReports
 	)
 	{
 		get_reporter()
@@ -265,7 +272,7 @@ namespace mimicpp::detail
 	[[noreturn]]
 	void report_inapplicable_matches(
 		const call::Info<Return, Params...>& callInfo,
-		std::vector<match_report> matchReports
+		std::vector<MatchReport> matchReports
 	)
 	{
 		get_reporter()
@@ -277,7 +284,7 @@ namespace mimicpp::detail
 	template <typename Return, typename... Params>
 	void report_full_match(
 		const call::Info<Return, Params...>& callInfo,
-		match_report matchReport
+		MatchReport matchReport
 	) noexcept
 	{
 		get_reporter()

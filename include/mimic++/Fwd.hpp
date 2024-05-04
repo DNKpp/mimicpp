@@ -28,7 +28,9 @@ namespace mimicpp
 		full
 	};
 
-	struct match_report;
+	class CallReport;
+	class MatchReport;
+	class ExpectationReport;
 
 	using CharT = char;
 	using CharTraitsT = std::char_traits<CharT>;

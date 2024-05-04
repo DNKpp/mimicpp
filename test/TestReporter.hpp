@@ -25,16 +25,16 @@ class TestReporter final
 	: public mimicpp::IReporter
 {
 public:
-	using call_report_t = mimicpp::call_report;
-	using expectation_report_t = mimicpp::expectation_report;
-	using match_report_t = mimicpp::match_report;
+	using call_report_t = mimicpp::CallReport;
+	using expectation_report_t = mimicpp::ExpectationReport;
+	using match_report_t = mimicpp::MatchReport;
 
 	std::vector<std::tuple<call_report_t, match_report_t>> noMatchResults{};
 
 	[[noreturn]]
 	void report_no_matches(
 		call_report_t call,
-		std::vector<mimicpp::match_report> matchReports
+		std::vector<mimicpp::MatchReport> matchReports
 	) override
 	{
 		for (auto& exp : matchReports)
@@ -52,7 +52,7 @@ public:
 	[[noreturn]]
 	void report_inapplicable_matches(
 		call_report_t call,
-		std::vector<mimicpp::match_report> matchReports
+		std::vector<mimicpp::MatchReport> matchReports
 	) override
 	{
 		for (auto& exp : matchReports)
@@ -69,7 +69,7 @@ public:
 
 	void report_full_match(
 		call_report_t call,
-		mimicpp::match_report matchReport
+		mimicpp::MatchReport matchReport
 	) noexcept override
 	{
 		fullMatchResults.emplace_back(
