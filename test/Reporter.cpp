@@ -6,6 +6,7 @@
 #include "mimic++/Reporter.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/trompeloeil.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
 using namespace mimicpp;
@@ -376,5 +377,124 @@ TEST_CASE(
 		REQUIRE(second != first);
 		REQUIRE(!(first == second));
 		REQUIRE(!(second == first));
+	}
+}
+
+namespace
+{
+	class ReporterMock
+		: public IReporter
+	{
+	public:
+		MAKE_MOCK2(report_no_matches, void(CallReport, std::vector<MatchReport>), override);
+		MAKE_MOCK2(report_inapplicable_matches, void(CallReport, std::vector<MatchReport>), override);
+		MAKE_MOCK2(report_full_match, void(CallReport, MatchReport), noexcept override);
+		MAKE_MOCK1(report_unfulfilled_expectation, void(ExpectationReport), override);
+		MAKE_MOCK1(report_error, void(StringT), override);
+		MAKE_MOCK3(report_unhandled_exception, void(CallReport, ExpectationReport, std::exception_ptr), override);
+	};
+}
+
+TEST_CASE(
+	"install_reporter removes the previous reporter and installs a new one.",
+	"[reporting]"
+)
+{
+	install_reporter<trompeloeil::deathwatched<ReporterMock>>();
+
+	{
+		auto& prevReporter = dynamic_cast<trompeloeil::deathwatched<ReporterMock>&>(*detail::get_reporter());
+		REQUIRE_DESTRUCTION(prevReporter);
+		install_reporter<ReporterMock>();
+	}
+}
+
+namespace
+{
+	class TestException
+	{
+	};
+}
+
+TEST_CASE(
+	"free report functions forward to the currently installed reporter.",
+	"[reporting]"
+)
+{
+	install_reporter<ReporterMock>();
+	auto& reporter = dynamic_cast<ReporterMock&>(*detail::get_reporter());
+
+	const CallReport callReport{
+		.returnTypeIndex = typeid(void),
+		.fromLoc = std::source_location::current()
+	};
+
+	const std::vector<MatchReport> matchReports{
+		{.finalizeReport = {"match1"}},
+		{.finalizeReport = {"match2"}}
+	};
+
+	const ExpectationReport expectationReport{
+		.description = "ExpectationReport"
+	};
+
+	SECTION("When report_no_matches() is called.")
+	{
+		REQUIRE_CALL(reporter, report_no_matches(callReport, matchReports))
+			.THROW(TestException{});
+
+		REQUIRE_THROWS_AS(
+			detail::report_no_matches(
+				callReport,
+				matchReports),
+			TestException);
+	}
+
+	SECTION("When report_inapplicable_matches() is called.")
+	{
+		REQUIRE_CALL(reporter, report_inapplicable_matches(callReport, matchReports))
+			.THROW(TestException{});
+
+		REQUIRE_THROWS_AS(
+			detail::report_inapplicable_matches(
+				callReport,
+				matchReports),
+			TestException);
+	}
+
+	SECTION("When report_full_match() is called.")
+	{
+		REQUIRE_CALL(reporter, report_full_match(callReport, matchReports.front()));
+
+		detail::report_full_match(
+			callReport,
+			matchReports.front());
+	}
+
+	SECTION("When report_unfulfilled_expectation() is called.")
+	{
+		REQUIRE_CALL(reporter, report_unfulfilled_expectation(expectationReport));
+
+		detail::report_unfulfilled_expectation(
+			expectationReport);
+	}
+
+	SECTION("When report_error() is called.")
+	{
+		const StringT error{"Error!"};
+		REQUIRE_CALL(reporter, report_error(error));
+
+		detail::report_error(error);
+	}
+
+	SECTION("When report_unhandled_exception() is called.")
+	{
+		const std::exception_ptr exception = std::make_exception_ptr(TestException{});
+		REQUIRE_CALL(reporter, report_unhandled_exception(callReport, expectationReport, exception));
+
+		detail::report_unhandled_exception(
+			callReport,
+			expectationReport,
+			exception);
 	}
 }
