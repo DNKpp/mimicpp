@@ -149,7 +149,7 @@ TEST_CASE(
 
 	BaseBuilderT builder{
 		collection,
-		TimesFake{},
+		TimesFake{.isSatisfied = true},
 		expectation_policies::InitFinalize{},
 		std::tuple{}};
 
@@ -205,7 +205,11 @@ TEST_CASE(
 		std::reference_wrapper<FinalizerMock<SignatureT>>,
 		UnwrapReferenceWrapper>;
 	FinalizerT finalizer{};
-	ScopedExpectationT expectation = BaseBuilderT{collection, TimesFake{}, expectation_policies::InitFinalize{}, std::tuple{}}
+	ScopedExpectationT expectation = BaseBuilderT{
+										collection,
+										TimesFake{.isSatisfied = true},
+										expectation_policies::InitFinalize{},
+										std::tuple{}}
 									| FinalizerPolicyT{std::ref(finalizer)};
 
 	REQUIRE_CALL(finalizer, finalize_call(_))
