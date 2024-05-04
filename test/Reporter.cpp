@@ -545,3 +545,120 @@ TEST_CASE(
 		REQUIRE(MatchResult::full == evaluate_match_report(report));
 	}
 }
+
+TEST_CASE(
+	"DefaultReporter throws exceptions on expectation violations.",
+	"[reporting]"
+)
+{
+	DefaultReporter reporter{};
+
+	const CallReport callReport{
+		.returnTypeIndex = typeid(void),
+		.fromLoc = std::source_location::current()
+	};
+
+	SECTION("When none matches are reported, UnmatchedCallT is thrown.")
+	{
+		REQUIRE_THROWS_AS(
+			reporter.report_no_matches(
+				callReport,
+				{
+				MatchReport{.timesReport = {true}, .expectationReports = {{false}}
+				}
+				}),
+			UnmatchedCallT);
+	}
+
+	SECTION("When inapplicable matches are reported, UnmatchedCallT is thrown.")
+	{
+		REQUIRE_THROWS_AS(
+			reporter.report_inapplicable_matches(
+				callReport,
+				{MatchReport{.timesReport = {false}}}),
+			UnmatchedCallT);
+	}
+
+	SECTION("When match is reported, nothing is done.")
+	{
+		REQUIRE_NOTHROW(
+			reporter.report_full_match(
+				callReport,
+				MatchReport{.timesReport = {true}}));
+	}
+
+	SECTION("When unfulfilled expectation is reported.")
+	{
+		SECTION("And when there exists no uncaught exception, UnfulfilledExpectationT is thrown.")
+		{
+			REQUIRE_THROWS_AS(
+			   reporter.report_unfulfilled_expectation({}),
+			   UnfulfilledExpectationT);
+		}
+
+		SECTION("And when there exists an uncaught exception, nothing is done.")
+		{
+			struct helper
+			{
+				~helper()
+				{
+					rep.report_unfulfilled_expectation({});
+				}
+
+				DefaultReporter& rep;
+			};
+
+			const auto runTest = [&]
+			{
+				helper h{reporter};
+				throw 42;
+			};
+
+			REQUIRE_THROWS_AS(
+				runTest(),
+				int);
+		}
+	}
+
+	SECTION("When error is reported")
+	{
+		SECTION("And when there exists no uncaught exception, Error is thrown.")
+		{
+			REQUIRE_THROWS_AS(
+			   reporter.report_error({"Test"}),
+			   Error<>);
+		}
+
+		SECTION("And when there exists an uncaught exception, nothing is done.")
+		{
+			struct helper
+			{
+				~helper()
+				{
+					rep.report_error({"Test"});
+				}
+
+				DefaultReporter& rep;
+			};
+
+			const auto runTest = [&]
+			{
+				helper h{reporter};
+				throw 42;
+			};
+
+			REQUIRE_THROWS_AS(
+				runTest(),
+				int);
+		}
+	}
+
+	SECTION("When unhandled exception is reported, nothing is done.")
+	{
+		REQUIRE_NOTHROW(
+			reporter.report_unhandled_exception(
+				callReport,
+				{},
+				std::make_exception_ptr(std::runtime_error{"Test"})));
+	}
+}

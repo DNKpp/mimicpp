@@ -13,7 +13,9 @@
 #include "mimic++/Printer.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <exception>
+#include <functional>
 #include <memory>
 #include <optional>
 #include <typeindex>
@@ -189,6 +191,43 @@ namespace mimicpp
 		IReporter& operator =(IReporter&&) = default;
 	};
 
+	template <typename Data = std::nullptr_t>
+	class Error final
+		: public std::runtime_error
+	{
+	public:
+		[[nodiscard]]
+		explicit Error(
+			const std::string& what,
+			Data&& data = Data{},
+			const std::source_location& loc = std::source_location::current()
+		)
+			: std::runtime_error{what},
+			m_Data{std::move(data)},
+			m_Loc{loc}
+		{
+		}
+
+		[[nodiscard]]
+		const Data& data() const noexcept
+		{
+			return m_Data;
+		}
+
+		[[nodiscard]]
+		const std::source_location& where() const noexcept
+		{
+			return m_Loc;
+		}
+
+	private:
+		Data m_Data;
+		std::source_location m_Loc;
+	};
+
+	using UnmatchedCallT = Error<std::tuple<CallReport, std::vector<MatchReport>>>;
+	using UnfulfilledExpectationT = Error<ExpectationReport>;
+
 	class DefaultReporter final
 		: public IReporter
 	{
@@ -199,7 +238,17 @@ namespace mimicpp
 			std::vector<MatchReport> matchReports
 		) override
 		{
-			std::terminate();
+			assert(std::ranges::all_of(
+				matchReports,
+				std::bind_front(std::equal_to{}, MatchResult::none),
+				&evaluate_match_report));
+
+			const std::source_location loc{call.fromLoc};
+			throw UnmatchedCallT{
+				"No match found.",
+				{std::move(call), std::move(matchReports)},
+				loc
+			};
 		}
 
 		[[noreturn]]
@@ -208,7 +257,17 @@ namespace mimicpp
 			std::vector<MatchReport> matchReports
 		) override
 		{
-			std::terminate();
+			assert(std::ranges::all_of(
+				matchReports,
+				std::bind_front(std::equal_to{}, MatchResult::inapplicable),
+				&evaluate_match_report));
+
+			const std::source_location loc{call.fromLoc};
+			throw UnmatchedCallT{
+				"No applicable match found.",
+				{std::move(call), std::move(matchReports)},
+				loc
+			};
 		}
 
 		void report_full_match(
@@ -216,23 +275,27 @@ namespace mimicpp
 			MatchReport matchReport
 		) noexcept override
 		{
+			assert(MatchResult::full == evaluate_match_report(matchReport));
 		}
 
 		void report_unfulfilled_expectation(
 			ExpectationReport expectationReport
 		) override
 		{
-			if (0 != std::uncaught_exceptions())
+			if (0 == std::uncaught_exceptions())
 			{
-				std::terminate();
+				throw UnfulfilledExpectationT{
+					"Expectation is unfulfilled.",
+					std::move(expectationReport)
+				};
 			}
 		}
 
 		void report_error(StringT message) override
 		{
-			if (0 != std::uncaught_exceptions())
+			if (0 == std::uncaught_exceptions())
 			{
-				std::terminate();
+				throw Error{message};
 			}
 		}
 
