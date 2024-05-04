@@ -14,17 +14,61 @@
 
 #include <exception>
 #include <memory>
+#include <typeindex>
 #include <vector>
 
 namespace mimicpp
 {
-	template <typename Signature>
-	class Expectation;
-
-	class DefaultReporter
+	struct call_report
 	{
-	public:
+		struct arg
+		{
+			std::type_index typeIndex;
+			StringT stateString;
+
+			[[nodiscard]]
+			friend bool operator ==(const arg&, const arg&) = default;
+		};
+
+		std::type_index returnTypeIndex;
+		std::vector<arg> argDetails{};
+		std::source_location fromLoc{};
+		ValueCategory fromCategory{};
+		Constness fromConstness{};
+
+		[[nodiscard]]
+		friend bool operator ==(const call_report& lhs, const call_report& rhs)
+	{
+			return lhs.returnTypeIndex == rhs.returnTypeIndex
+					&& lhs.argDetails == rhs.argDetails
+					&& is_same_source_location(lhs.fromLoc, rhs.fromLoc)
+					&& lhs.fromCategory == rhs.fromCategory
+					&& lhs.fromConstness == rhs.fromConstness;
+		}
+	};
+
 		template <typename Return, typename... Params>
+	[[nodiscard]]
+	call_report make_call_report(const call::Info<Return, Params...>& callInfo)
+	{
+		return call_report{
+			.returnTypeIndex = typeid(Return),
+			.argDetails = std::apply(
+				[](auto&... args)
+				{
+					return std::vector<call_report::arg>{
+						call_report::arg{
+							.typeIndex = typeid(Params),
+							.stateString = mimicpp::print(args.get())
+						}...
+					};
+				},
+				callInfo.args),
+			.fromLoc = callInfo.fromSourceLocation,
+			.fromCategory = callInfo.fromCategory,
+			.fromConstness = callInfo.fromConstness
+		};
+	}
 		[[noreturn]]
 		static void report_fail(
 			const call::Info<Return, Params...>& callInfo,
