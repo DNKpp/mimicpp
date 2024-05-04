@@ -80,17 +80,4 @@ namespace mimicpp::call
 	};
 }
 
-namespace mimicpp::detail
-{
-	template <typename Derived, typename Base>
-	[[nodiscard]]
-	constexpr const Derived& derived_cast(const Base& self) noexcept
-	{
-		static_assert(
-			std::derived_from<Derived, Derived>,
-			"Derived must inherit from Base.");
-		return static_cast<const Derived&>(self);
-	}
-}
-
 #endif
