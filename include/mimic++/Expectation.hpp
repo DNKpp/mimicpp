@@ -148,8 +148,11 @@ namespace mimicpp
 							*std::move(matchReport));
 						exp->consume(call);
 						return exp->finalize_call(call);
+
+						// GCOVR_EXCL_START
 					default:
 						unreachable();
+						// GCOVR_EXCL_STOP
 					}
 				}
 			}
