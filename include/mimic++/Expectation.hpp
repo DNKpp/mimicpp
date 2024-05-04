@@ -27,18 +27,18 @@ namespace mimicpp::detail
 	template <typename Return, typename... Params, typename Signature>
 	std::optional<MatchReport> make_match_report(
 		const call::Info<Return, Params...>& call,
-		const std::shared_ptr<Expectation<Signature>>& expectation
+		const Expectation<Signature>& expectation
 	) noexcept
 	{
 		try
 		{
-			return expectation->matches(call);
+			return expectation.matches(call);
 		}
 		catch (...)
 		{
 			report_unhandled_exception(
-				call,
-				expectation,
+				make_call_report(call),
+				make_expectation_report(expectation),
 				std::current_exception());
 		}
 
@@ -118,7 +118,7 @@ namespace mimicpp
 			if (!expectation->is_satisfied())
 			{
 				detail::report_unfulfilled_expectation(
-					std::move(expectation));
+					make_expectation_report(*expectation));
 			}
 		}
 
@@ -131,7 +131,7 @@ namespace mimicpp
 			for (const std::scoped_lock lock{m_ExpectationsMx};
 				auto& exp : m_Expectations | std::views::reverse)
 			{
-				if (std::optional matchReport = detail::make_match_report(call, exp))
+				if (std::optional matchReport = detail::make_match_report(call, *exp))
 				{
 					switch (evaluate_match_report(*matchReport))
 					{
@@ -144,7 +144,7 @@ namespace mimicpp
 						break;
 					case full:
 						detail::report_full_match(
-							call,
+							make_call_report(call),
 							*std::move(matchReport));
 						exp->consume(call);
 						return exp->finalize_call(call);
@@ -157,12 +157,12 @@ namespace mimicpp
 			if (!std::ranges::empty(inapplicableMatches))
 			{
 				detail::report_inapplicable_matches(
-					call,
+					make_call_report(call),
 					std::move(inapplicableMatches));
 			}
 
 			detail::report_no_matches(
-				call,
+				make_call_report(call),
 				std::move(noMatches));
 		}
 

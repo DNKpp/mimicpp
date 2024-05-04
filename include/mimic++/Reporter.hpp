@@ -257,58 +257,53 @@ namespace mimicpp::detail
 		return reporter;
 	}
 
-	template <typename Return, typename... Params>
 	[[noreturn]]
-	void report_no_matches(
-		const call::Info<Return, Params...>& callInfo,
+	inline void report_no_matches(
+		CallReport callReport,
 		std::vector<MatchReport> matchReports
 	)
 	{
 		get_reporter()
 			->report_no_matches(
-				make_call_report(callInfo),
+				std::move(callReport),
 				std::move(matchReports));
 
 		// ReSharper disable once CppUnreachableCode
 		unreachable();
 	}
 
-	template <typename Return, typename... Params>
 	[[noreturn]]
-	void report_inapplicable_matches(
-		const call::Info<Return, Params...>& callInfo,
+	inline void report_inapplicable_matches(
+		CallReport callReport,
 		std::vector<MatchReport> matchReports
 	)
 	{
 		get_reporter()
 			->report_inapplicable_matches(
-				make_call_report(callInfo),
+				std::move(callReport),
 				std::move(matchReports));
 
 		// ReSharper disable once CppUnreachableCode
 		unreachable();
 	}
 
-	template <typename Return, typename... Params>
-	void report_full_match(
-		const call::Info<Return, Params...>& callInfo,
+	inline void report_full_match(
+		CallReport callReport,
 		MatchReport matchReport
 	) noexcept
 	{
 		get_reporter()
 			->report_full_match(
-				make_call_report(callInfo),
+				std::move(callReport),
 				std::move(matchReport));
 	}
 
-	template <typename Signature>
-	void report_unfulfilled_expectation(
-		std::shared_ptr<Expectation<Signature>> expectation
+	inline void report_unfulfilled_expectation(
+		ExpectationReport expectationReport
 	)
 	{
 		get_reporter()
-			->report_unfulfilled_expectation(
-				make_expectation_report(*expectation));
+			->report_unfulfilled_expectation(std::move(expectationReport));
 	}
 
 	inline void report_error(StringT message)
@@ -317,18 +312,17 @@ namespace mimicpp::detail
 			->report_error(std::move(message));
 	}
 
-	template <typename Return, typename... Params, typename Signature>
-	void report_unhandled_exception(
-		const call::Info<Return, Params...>& callInfo,
-		std::shared_ptr<Expectation<Signature>> expectation,
-		std::exception_ptr exception
+	inline void report_unhandled_exception(
+		CallReport callReport,
+		ExpectationReport expectationReport,
+		const std::exception_ptr& exception
 	)
 	{
 		get_reporter()
 			->report_unhandled_exception(
-				make_call_report(callInfo),
-				make_expectation_report(*expectation),
-				std::move(exception));
+				std::move(callReport),
+				std::move(expectationReport),
+				exception);
 	}
 }
 
