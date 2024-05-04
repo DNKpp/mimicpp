@@ -498,3 +498,50 @@ TEST_CASE(
 			exception);
 	}
 }
+
+TEST_CASE(
+	"evaluate_match_report determines the outcome of a match report.",
+	"[reporting]"
+)
+{
+	using ExpectationReportT = MatchReport::Expectation;
+
+	SECTION("When any policy doesn't match => MatchResult::none is returned.")
+	{
+		const MatchReport report{
+			.timesReport = {GENERATE(true, false)},
+			.expectationReports = GENERATE(
+				(std::vector<ExpectationReportT>{{false}}),
+				(std::vector<ExpectationReportT>{{true}, {false}}),
+				(std::vector<ExpectationReportT>{{false}, {true}}))
+		};
+
+		REQUIRE(MatchResult::none == evaluate_match_report(report));
+	}
+
+	SECTION("When all policy match but times is inapplicable => MatchResult::inapplicable is returned.")
+	{
+		const MatchReport report{
+			.timesReport = {false},
+			.expectationReports = GENERATE(
+				(std::vector<ExpectationReportT>{}),
+				(std::vector<ExpectationReportT>{{true}}),
+				(std::vector<ExpectationReportT>{{true}, {true}}))
+		};
+
+		REQUIRE(MatchResult::inapplicable == evaluate_match_report(report));
+	}
+
+	SECTION("When all policy match and times is applicable => MatchResult::full is returned.")
+	{
+		const MatchReport report{
+			.timesReport = {true},
+			.expectationReports = GENERATE(
+				(std::vector<ExpectationReportT>{}),
+				(std::vector<ExpectationReportT>{{true}}),
+				(std::vector<ExpectationReportT>{{true}, {true}}))
+		};
+
+		REQUIRE(MatchResult::full == evaluate_match_report(report));
+	}
+}
