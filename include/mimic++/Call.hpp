@@ -132,7 +132,6 @@ namespace mimicpp::call
 	};
 }
 
-
 namespace mimicpp::detail
 {
 	template <typename Derived, typename Base>

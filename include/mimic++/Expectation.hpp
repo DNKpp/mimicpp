@@ -23,30 +23,8 @@
 
 namespace mimicpp::detail
 {
-	template <typename Return, typename... Params>
-	[[noreturn]]
-	void handle_call_match_fail(
-		call::Info<Return, Params...> call,
-		std::vector<call::MatchResult_NoT> noMatches,
-		std::vector<call::MatchResult_NotApplicableT> partialMatches
-	)
-	{
-		if (!std::ranges::empty(partialMatches))
-		{
-			report_fail(
-				std::move(call),
-				std::move(partialMatches));
-		}
-		else
-		{
-			report_fail(
-				std::move(call),
-				std::move(noMatches));
-		}
-	}
-
 	template <typename Return, typename... Params, typename Signature>
-	std::optional<call::MatchResultT> make_match_result(
+	std::optional<call::MatchResult> make_match_result(
 		const call::Info<Return, Params...>& call,
 		const std::shared_ptr<Expectation<Signature>>& expectation
 	) noexcept
@@ -90,7 +68,7 @@ namespace mimicpp
 		virtual bool is_satisfied() const noexcept = 0;
 
 		[[nodiscard]]
-		virtual call::MatchResultT matches(const CallInfoT& call) const = 0;
+		virtual call::MatchResult matches(const CallInfoT& call) const = 0;
 		virtual void consume(const CallInfoT& call) = 0;
 
 		[[nodiscard]]
@@ -138,47 +116,53 @@ namespace mimicpp
 
 			if (!expectation->is_satisfied())
 			{
-				report_unsatisfied_expectation(std::move(expectation));
+				detail::report_unfulfilled_expectation(
+					std::move(expectation));
 			}
 		}
 
 		[[nodiscard]]
 		ReturnT handle_call(const CallInfoT& call)
 		{
-			static_assert(3 == std::variant_size_v<call::MatchResultT>, "Unexpected MatchResult alternative count.");
-
-			std::vector<call::MatchResult_NoT> noMatches{};
-			std::vector<call::MatchResult_NotApplicableT> exhaustedMatches{};
+			std::vector<std::shared_ptr<ExpectationT>> noMatches{};
+			std::vector<std::shared_ptr<ExpectationT>> inapplicableMatches{};
 
 			for (const std::scoped_lock lock{m_ExpectationsMx};
 				auto& exp : m_Expectations | std::views::reverse)
 			{
 				if (std::optional matchResult = detail::make_match_result(call, exp))
 				{
-					if (auto* match = std::get_if<call::MatchResult_OkT>(&*matchResult))
+					switch (*matchResult)
 					{
-						report_ok(
+						using enum call::MatchResult;
+					case none:
+						noMatches.emplace_back(exp);
+						break;
+					case inapplicable:
+						inapplicableMatches.emplace_back(exp);
+						break;
+					case full:
+						detail::report_full_match(
 							call,
-							std::move(*match));
+							exp);
 						exp->consume(call);
 						return exp->finalize_call(call);
-					}
-
-					if (auto* match = std::get_if<call::MatchResult_NoT>(&*matchResult))
-					{
-						noMatches.emplace_back(std::move(*match));
-					}
-					else
-					{
-						exhaustedMatches.emplace_back(std::get<call::MatchResult_NotApplicableT>(*std::move(matchResult)));
+					default:
+						unreachable();
 					}
 				}
 			}
 
-			detail::handle_call_match_fail(
+			if (!std::ranges::empty(inapplicableMatches))
+			{
+				detail::report_inapplicable_matches(
+					call,
+					std::move(inapplicableMatches));
+			}
+
+			detail::report_no_matches(
 				call,
-				std::move(noMatches),
-				std::move(exhaustedMatches));
+				std::move(noMatches));
 		}
 
 	private:
@@ -265,7 +249,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		call::MatchResultT matches(const CallInfoT& call) const override
+		call::MatchResult matches(const CallInfoT& call) const override
 		{
 			if (!std::apply(
 				[&](const auto&... policies)
@@ -274,15 +258,15 @@ namespace mimicpp
 				},
 				m_Policies))
 			{
-				return call::MatchResult_NoT{};
+				return call::MatchResult::none;
 			}
 
 			if (!m_Times.is_applicable())
 			{
-				return call::MatchResult_NotApplicableT{};
+				return call::MatchResult::inapplicable;
 			}
 
-			return call::MatchResult_OkT{};
+			return call::MatchResult::full;
 		}
 
 		constexpr void consume(const CallInfoT& call) override

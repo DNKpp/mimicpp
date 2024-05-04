@@ -13,6 +13,13 @@
 
 namespace mimicpp::call
 {
+	enum class MatchResult
+	{
+		none,
+		inapplicable,
+		full
+	};
+
 	enum class MatchCategory
 	{
 		no,

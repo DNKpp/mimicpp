@@ -29,10 +29,9 @@ namespace
 	{
 	public:
 		using CallInfoT = mimicpp::call::info_for_signature_t<void()>;
-		using MatchResultT = mimicpp::call::MatchResultT;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
-		MAKE_CONST_MOCK1(matches, MatchResultT(const CallInfoT&), override);
+		MAKE_CONST_MOCK1(matches, mimicpp::call::MatchResult(const CallInfoT&), override);
 		MAKE_MOCK1(consume, void(const CallInfoT&), override);
 		MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
 	};
@@ -106,15 +105,15 @@ TEST_CASE(
 		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_NoT{});
+			.RETURN(MatchResult::none);
 		REQUIRE_CALL(*expectations[2], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_NoT{});
+			.RETURN(MatchResult::none);
 		REQUIRE_CALL(*expectations[1], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_OkT{});
+			.RETURN(MatchResult::full);
 		// expectations[3] is never queried
 		REQUIRE_CALL(*expectations[1], consume(_))
 			.LR_WITH(&_1 == &call)
@@ -135,20 +134,21 @@ TEST_CASE(
 			Catch::Matchers::SizeIs(1));
 	}
 
-	SECTION("If at least one matches but is exhausted.")
+	SECTION("If at least one matches but is inapplicable.")
 	{
+		using enum MatchResult;
 		const auto [count, result0, result1, result2, result3] = GENERATE(
-			(table<std::size_t, MatchResultT, MatchResultT, MatchResultT, MatchResultT>)(
+			(table<std::size_t, MatchResult, MatchResult, MatchResult, MatchResult>)(
 				{
-				{1u, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NoT{}},
-				{1u, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NoT{}},
-				{1u, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NoT{}},
-				{1u, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}},
+				{1u, inapplicable, none, none, none},
+				{1u, none, inapplicable, none, none},
+				{1u, none, none, inapplicable, none},
+				{1u, none, none, none, inapplicable},
 
-				{2u, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NoT{}},
-				{2u, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}},
-				{3u, MatchResult_NotApplicableT{}, MatchResult_NoT{}, MatchResult_NotApplicableT{}, MatchResult_NotApplicableT{}},
-				{4u, MatchResult_NotApplicableT{}, MatchResult_NotApplicableT{}, MatchResult_NotApplicableT{}, MatchResult_NotApplicableT{}}
+				{2u, inapplicable, none, inapplicable, none},
+				{2u, none, inapplicable, none, inapplicable},
+				{3u, inapplicable, none, inapplicable, inapplicable},
+				{4u, inapplicable, inapplicable, inapplicable, inapplicable}
 				}));
 
 		trompeloeil::sequence sequence{};
@@ -183,25 +183,25 @@ TEST_CASE(
 			Catch::Matchers::IsEmpty());
 	}
 
-	SECTION("If all do not match.")
+	SECTION("If none matches.")
 	{
 		trompeloeil::sequence sequence{};
 		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_NoT{});
+			.RETURN(MatchResult::none);
 		REQUIRE_CALL(*expectations[2], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_NoT{});
+			.RETURN(MatchResult::none);
 		REQUIRE_CALL(*expectations[1], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_NoT{});
+			.RETURN(MatchResult::none);
 		REQUIRE_CALL(*expectations[0], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult_NoT{});
+			.RETURN(MatchResult::none);
 
 		REQUIRE_THROWS_AS(
 			storage.handle_call(call),
@@ -269,7 +269,7 @@ TEST_CASE(
 		REQUIRE_CALL(*throwingExpectation, matches(_))
 			.THROW(Exception{});
 		REQUIRE_CALL(*otherExpectation, matches(_))
-			.RETURN(MatchResult_OkT{});
+			.RETURN(MatchResult::full);
 		REQUIRE_CALL(*otherExpectation, consume(_));
 		REQUIRE_CALL(*otherExpectation, finalize_call(_));
 		REQUIRE_NOTHROW(storage.handle_call(call));
@@ -413,14 +413,14 @@ TEST_CASE(
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(true);
-			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
+			REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
 		}
 
-		SECTION("When times is not applicable => unapplicable match.")
+		SECTION("When times is not applicable => inapplicable.")
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(false);
-			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NotApplicableT>(std::as_const(expectation).matches(call)));
+			REQUIRE(mimicpp::call::MatchResult::inapplicable == std::as_const(expectation).matches(call));
 		}
 
 		SECTION("Consume calls times.consume().")
@@ -461,7 +461,7 @@ TEST_CASE(
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(false);
-			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
+			REQUIRE(mimicpp::call::MatchResult::none == std::as_const(expectation).matches(call));
 		}
 
 		SECTION("When policy is matched.")
@@ -473,17 +473,17 @@ TEST_CASE(
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
 					.RETURN(true);
-				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
+				REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
 			}
 
-			SECTION("And when times not applicable => unapplicable")
+			SECTION("And when times not applicable => inapplicable")
 			{
 				REQUIRE_CALL(times, is_applicable())
 					.RETURN(false);
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
 					.RETURN(true);
-				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NotApplicableT>(std::as_const(expectation).matches(call)));
+				REQUIRE(mimicpp::call::MatchResult::inapplicable == std::as_const(expectation).matches(call));
 			}
 		}
 
@@ -524,7 +524,7 @@ TEMPLATE_TEST_CASE(
 		};
 
 		REQUIRE(std::as_const(expectation).is_satisfied());
-		REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
+		REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
 		REQUIRE_NOTHROW(expectation.consume(call));
 	}
 
@@ -547,7 +547,7 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(true);
-			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
+			REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
 		}
 
 		SECTION("When not matched => no match")
@@ -555,7 +555,7 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(false);
-			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
+			REQUIRE(mimicpp::call::MatchResult::none == std::as_const(expectation).matches(call));
 		}
 
 		REQUIRE_CALL(policy, consume(_))
@@ -604,7 +604,7 @@ TEMPLATE_TEST_CASE(
 				.LR_WITH(&_1 == &call)
 				.RETURN(true);
 
-			REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_OkT>(std::as_const(expectation).matches(call)));
+			REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
 		}
 
 		SECTION("When at least one not matches => no match")
@@ -615,7 +615,7 @@ TEMPLATE_TEST_CASE(
 				.LR_WITH(&_1 == &call)
 					.RETURN(false);
 
-				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
+				REQUIRE(mimicpp::call::MatchResult::none == std::as_const(expectation).matches(call));
 			}
 
 			SECTION("When first matches, but second not.")
@@ -627,7 +627,7 @@ TEMPLATE_TEST_CASE(
 					.LR_WITH(&_1 == &call)
 					.RETURN(false);
 
-				REQUIRE(std::holds_alternative<mimicpp::call::MatchResult_NoT>(std::as_const(expectation).matches(call)));
+				REQUIRE(mimicpp::call::MatchResult::none == std::as_const(expectation).matches(call));
 			}
 		}
 

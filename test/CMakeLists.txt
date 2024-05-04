@@ -12,6 +12,7 @@ add_executable(
 	"Matcher.cpp"
 	"Mock.cpp"
 	"Printer.cpp"
+	"Reporter.cpp"
 	"Sequence.cpp"
 	"TypeTraits.cpp"
 	"Utility.cpp"
