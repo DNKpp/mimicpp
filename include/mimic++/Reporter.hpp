@@ -238,10 +238,11 @@ namespace mimicpp
 			std::vector<MatchReport> matchReports
 		) override
 		{
-			assert(std::ranges::all_of(
-				matchReports,
-				std::bind_front(std::equal_to{}, MatchResult::none),
-				&evaluate_match_report));
+			assert(
+				std::ranges::all_of(
+					matchReports,
+					std::bind_front(std::equal_to{}, MatchResult::none),
+					&evaluate_match_report));
 
 			const std::source_location loc{call.fromLoc};
 			throw UnmatchedCallT{
@@ -257,10 +258,11 @@ namespace mimicpp
 			std::vector<MatchReport> matchReports
 		) override
 		{
-			assert(std::ranges::all_of(
-				matchReports,
-				std::bind_front(std::equal_to{}, MatchResult::inapplicable),
-				&evaluate_match_report));
+			assert(
+				std::ranges::all_of(
+					matchReports,
+					std::bind_front(std::equal_to{}, MatchResult::inapplicable),
+					&evaluate_match_report));
 
 			const std::source_location loc{call.fromLoc};
 			throw UnmatchedCallT{

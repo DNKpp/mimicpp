@@ -592,8 +592,8 @@ TEST_CASE(
 		SECTION("And when there exists no uncaught exception, UnfulfilledExpectationT is thrown.")
 		{
 			REQUIRE_THROWS_AS(
-			   reporter.report_unfulfilled_expectation({}),
-			   UnfulfilledExpectationT);
+				reporter.report_unfulfilled_expectation({}),
+				UnfulfilledExpectationT);
 		}
 
 		SECTION("And when there exists an uncaught exception, nothing is done.")
@@ -625,8 +625,8 @@ TEST_CASE(
 		SECTION("And when there exists no uncaught exception, Error is thrown.")
 		{
 			REQUIRE_THROWS_AS(
-			   reporter.report_error({"Test"}),
-			   Error<>);
+				reporter.report_error({"Test"}),
+				Error<>);
 		}
 
 		SECTION("And when there exists an uncaught exception, nothing is done.")
