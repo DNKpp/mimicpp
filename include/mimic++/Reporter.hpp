@@ -115,7 +115,7 @@ namespace mimicpp
 		class Expectation
 		{
 		public:
-			bool matched{};
+			bool isMatching{};
 			std::optional<StringT> description{};
 
 			[[nodiscard]]
@@ -133,7 +133,7 @@ namespace mimicpp
 	[[nodiscard]]
 	inline MatchResult evaluate_match_report(const MatchReport& report)
 	{
-		if (!std::ranges::all_of(report.expectationReports, &MatchReport::Expectation::matched))
+		if (!std::ranges::all_of(report.expectationReports, &MatchReport::Expectation::isMatching))
 		{
 			return MatchResult::none;
 		}

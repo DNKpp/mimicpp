@@ -263,7 +263,7 @@ namespace mimicpp
 					{
 						return std::vector<MatchReport::Expectation>{
 							MatchReport::Expectation{
-								.matched = policies.matches(call),
+								.isMatching = policies.matches(call),
 								.description = policies.describe()
 							}...
 						};

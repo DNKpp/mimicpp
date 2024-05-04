@@ -81,7 +81,7 @@ namespace
 		},
 		.expectationReports = {
 			{
-				.matched = false
+				.isMatching = false
 			}
 		}
 	};

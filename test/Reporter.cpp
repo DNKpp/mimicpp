@@ -202,9 +202,9 @@ TEST_CASE(
 			CallReport{
 			.returnTypeIndex = typeid(void),
 			.argDetails = {
-				(ArgT{typeid(const int&), "1337"}),
-				(ArgT{typeid(double), "4.2"}),
-				(ArgT{typeid(std::string), "\"Hello, World!\""})
+			(ArgT{typeid(const int&), "1337"}),
+			(ArgT{typeid(double), "4.2"}),
+			(ArgT{typeid(std::string), "\"Hello, World!\""})
 			},
 			.fromLoc = info.fromSourceLocation,
 			.fromCategory = info.fromCategory,
@@ -232,4 +232,149 @@ TEST_CASE(
 	REQUIRE(expectedEquality == (second == first));
 	REQUIRE(expectedEquality == !(first != second));
 	REQUIRE(expectedEquality == !(second!= first));
+}
+
+TEST_CASE(
+	"MatchReport::Finalize is equality comparable."
+	"[reporting]"
+)
+{
+	using ReportT = MatchReport::Finalize;
+
+	const ReportT first{
+		.description = "Hello, World!"
+	};
+
+	const auto [expectedEquality, second] = GENERATE(
+		(table<bool, ReportT>({
+			{false, {"not equal"}},
+			{false, {std::nullopt}},
+			{true, {"Hello, World!"}}
+			})));
+
+	REQUIRE(expectedEquality == (first == second));
+	REQUIRE(expectedEquality == (second == first));
+	REQUIRE(expectedEquality == !(first != second));
+	REQUIRE(expectedEquality == !(second!= first));
+}
+
+TEST_CASE(
+	"MatchReport::Times is equality comparable."
+	"[reporting]"
+)
+{
+	using ReportT = MatchReport::Times;
+
+	const ReportT first{
+		.isApplicable = true,
+		.description = "Hello, World!"
+	};
+
+	const auto [expectedEquality, second] = GENERATE(
+		(table<bool, ReportT>({
+			{false, {true, "not equal"}},
+			{false, {true, std::nullopt}},
+			{false, {false, "Hello, World!"}},
+			{true, {true, "Hello, World!"}}
+			})));
+
+	REQUIRE(expectedEquality == (first == second));
+	REQUIRE(expectedEquality == (second == first));
+	REQUIRE(expectedEquality == !(first != second));
+	REQUIRE(expectedEquality == !(second!= first));
+}
+
+TEST_CASE(
+	"MatchReport::Expectation is equality comparable."
+	"[reporting]"
+)
+{
+	using ReportT = MatchReport::Expectation;
+
+	const ReportT first{
+		.isMatching = true,
+		.description = "Hello, World!"
+	};
+
+	const auto [expectedEquality, second] = GENERATE(
+		(table<bool, ReportT>({
+			{false, {true, "not equal"}},
+			{false, {true, std::nullopt}},
+			{false, {false, "Hello, World!"}},
+			{true, {true, "Hello, World!"}}
+			})));
+
+	REQUIRE(expectedEquality == (first == second));
+	REQUIRE(expectedEquality == (second == first));
+	REQUIRE(expectedEquality == !(first != second));
+	REQUIRE(expectedEquality == !(second!= first));
+}
+
+TEST_CASE(
+	"MatchReport is equality comparable.",
+	"[reporting]"
+)
+{
+	const MatchReport first{
+		.finalizeReport = {"finalize description"},
+		.timesReport = {true, "times description"},
+		.expectationReports = {
+			{true, "expectation description"}
+		}
+	};
+
+	SECTION("When both sides are equal, they compare equal.")
+	{
+		const MatchReport second{first};
+
+		REQUIRE(first == second);
+		REQUIRE(second == first);
+		REQUIRE(!(first != second));
+		REQUIRE(!(second != first));
+	}
+
+	SECTION("When finalize report differs, they do not compare equal.")
+	{
+		MatchReport second{first};
+
+		second.finalizeReport = {"other finalize description"};
+
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+		REQUIRE(!(first == second));
+		REQUIRE(!(second == first));
+	}
+
+	SECTION("When times report differs, they do not compare equal.")
+	{
+		MatchReport second{first};
+
+		second.timesReport = {true, "other times description"};
+
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+		REQUIRE(!(first == second));
+		REQUIRE(!(second == first));
+	}
+
+	SECTION("When expectation reports differ, they do not compare equal.")
+	{
+		MatchReport second{first};
+
+		using ExpectationT = MatchReport::Expectation;
+		second.expectationReports = GENERATE(
+			std::vector<ExpectationT>{},
+			std::vector{
+			(ExpectationT{true, "other expectation description"})
+			},
+			std::vector{
+			(ExpectationT{true, "expectation description"}),
+			(ExpectationT{false, "other expectation description"})
+			});
+
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+		REQUIRE(!(first == second));
+		REQUIRE(!(second == first));
+	}
 }
