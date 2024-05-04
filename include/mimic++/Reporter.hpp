@@ -319,7 +319,7 @@ namespace mimicpp::detail
 
 namespace mimicpp
 {
-	template <typename T, typename... Args>
+	template <std::derived_from<IReporter> T, typename... Args>
 		requires std::constructible_from<T, Args...>
 	void install_reporter(Args&&... args)
 	{
