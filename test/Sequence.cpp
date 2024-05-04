@@ -225,6 +225,10 @@ TEST_CASE(
 
 	Sequence sequence{};
 
+	const StringT applicableText = "applicable: Sequence element expects further matches.";
+	const StringT saturatedText = "inapplicable: Sequence element is already saturated.";
+	const StringT inapplicableText = "inapplicable: Sequence element is not the current element.";
+
 	SECTION("When sequence contains just a single expectation.")
 	{
 		const auto count = GENERATE(range(1, 5));
@@ -234,11 +238,17 @@ TEST_CASE(
 		{
 			REQUIRE(!policy.is_satisfied());
 			REQUIRE(policy.is_applicable());
+			REQUIRE_THAT(
+				policy.describe_state(),
+				Matches::Equals(applicableText));
 			REQUIRE_NOTHROW(policy.consume());
 		}
 
 		REQUIRE(policy.is_satisfied());
 		REQUIRE(!policy.is_applicable());
+		REQUIRE_THAT(
+			policy.describe_state(),
+			Matches::Equals(saturatedText));
 	}
 
 	SECTION("When sequence has multiple expectations, the order matters.")
@@ -251,9 +261,15 @@ TEST_CASE(
 		{
 			REQUIRE(!policy1.is_satisfied());
 			REQUIRE(policy1.is_applicable());
+			REQUIRE_THAT(
+				policy1.describe_state(),
+				Matches::Equals(applicableText));
 
 			REQUIRE(!policy2.is_satisfied());
 			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				policy2.describe_state(),
+				Matches::Equals(inapplicableText));
 
 			REQUIRE_NOTHROW(policy1.consume());
 
@@ -261,18 +277,30 @@ TEST_CASE(
 			{
 				REQUIRE(policy1.is_satisfied());
 				REQUIRE(!policy1.is_applicable());
+				REQUIRE_THAT(
+					policy1.describe_state(),
+					Matches::Equals(saturatedText));
 
 				REQUIRE(!policy2.is_satisfied());
 				REQUIRE(policy2.is_applicable());
+				REQUIRE_THAT(
+					policy2.describe_state(),
+					Matches::Equals(applicableText));
 
 				REQUIRE_NOTHROW(policy2.consume());
 			}
 
 			REQUIRE(policy1.is_satisfied());
 			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				policy1.describe_state(),
+				Matches::Equals(saturatedText));
 
 			REQUIRE(policy2.is_satisfied());
 			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				policy2.describe_state(),
+				Matches::Equals(saturatedText));
 		}
 	}
 }

@@ -234,6 +234,22 @@ namespace mimicpp::expectation_policies
 				[](const entry& info){ return info.sequence->is_consumable(info.id); });
 		}
 
+		[[nodiscard]]
+		StringT describe_state() const
+		{
+			if (is_applicable())
+			{
+				return "applicable: Sequence element expects further matches.";
+			}
+
+			if (is_satisfied())
+			{
+				return "inapplicable: Sequence element is already saturated.";
+			}
+
+			return "inapplicable: Sequence element is not the current element.";
+		}
+
 		// ReSharper disable once CppMemberFunctionMayBeConst
 		constexpr void consume() noexcept
 		{
