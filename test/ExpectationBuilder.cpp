@@ -95,6 +95,8 @@ TEST_CASE(
 			{
 				REQUIRE_CALL(times, is_applicable())
 					.RETURN(true);
+				REQUIRE_CALL(times, describe_state())
+					.RETURN(std::nullopt);
 				REQUIRE_CALL(times, consume());
 				REQUIRE_NOTHROW(collection->handle_call(call));
 			}
@@ -103,6 +105,8 @@ TEST_CASE(
 			{
 				REQUIRE_CALL(times, is_applicable())
 					.RETURN(false);
+				REQUIRE_CALL(times, describe_state())
+					.RETURN(std::nullopt);
 				REQUIRE_THROWS_AS(
 					collection->handle_call(call),
 					NonApplicableMatchError);

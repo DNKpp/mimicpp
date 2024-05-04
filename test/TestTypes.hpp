@@ -179,6 +179,14 @@ public:
 		return isApplicable;
 	}
 
+	std::optional<mimicpp::StringT> stateDescription{};
+
+	[[nodiscard]]
+	std::optional<mimicpp::StringT> describe_state() const
+	{
+		return stateDescription;
+	}
+
 	static constexpr void consume() noexcept
 	{
 	}
@@ -187,8 +195,9 @@ public:
 class TimesMock
 {
 public:
-	MAKE_CONST_MOCK0(is_satisfied, bool (), noexcept);
-	MAKE_CONST_MOCK0(is_applicable, bool (), noexcept);
+	MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
+	MAKE_CONST_MOCK0(is_applicable, bool(), noexcept);
+	MAKE_CONST_MOCK0(describe_state, std::optional<mimicpp::StringT>());
 	MAKE_MOCK0(consume, void ());
 };
 
@@ -211,6 +220,13 @@ public:
 	{
 		return std::invoke(projection, policy)
 			.is_applicable();
+	}
+
+	[[nodiscard]]
+	std::optional<mimicpp::StringT> describe_state() const
+	{
+		return std::invoke(projection, policy)
+			.describe_state();
 	}
 
 	constexpr void consume() noexcept

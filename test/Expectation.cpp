@@ -397,8 +397,10 @@ TEST_CASE(
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(true);
+			REQUIRE_CALL(times, describe_state())
+				.RETURN("times state applicable");
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-			REQUIRE(matchReport.timesReport == TimesReportT{true});
+			REQUIRE(matchReport.timesReport == TimesReportT{true, "times state applicable"});
 			REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
 		}
 
@@ -406,8 +408,10 @@ TEST_CASE(
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(false);
+			REQUIRE_CALL(times, describe_state())
+				.RETURN("times state inapplicable");
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-			REQUIRE(matchReport.timesReport == TimesReportT{false});
+			REQUIRE(matchReport.timesReport == TimesReportT{false, "times state inapplicable"});
 			REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(matchReport));
 		}
 
@@ -454,6 +458,8 @@ TEST_CASE(
 			const bool isApplicable = GENERATE(false, true);
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(isApplicable);
+			REQUIRE_CALL(times, describe_state())
+				.RETURN(std::nullopt);
 			REQUIRE(mimicpp::MatchResult::none == evaluate_match_report(std::as_const(expectation).matches(call)));
 		}
 
@@ -468,6 +474,8 @@ TEST_CASE(
 					.RETURN(true);
 				REQUIRE_CALL(policy, describe())
 					.RETURN(mimicpp::StringT{});
+				REQUIRE_CALL(times, describe_state())
+					.RETURN(std::nullopt);
 				REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(std::as_const(expectation).matches(call)));
 			}
 
@@ -480,6 +488,8 @@ TEST_CASE(
 					.RETURN(true);
 				REQUIRE_CALL(policy, describe())
 					.RETURN(mimicpp::StringT{});
+				REQUIRE_CALL(times, describe_state())
+					.RETURN(std::nullopt);
 				REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(std::as_const(expectation).matches(call)));
 			}
 		}

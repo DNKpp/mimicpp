@@ -200,6 +200,7 @@ namespace mimicpp
 							{
 								{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
 								{ std::as_const(policy).is_applicable() } noexcept -> std::convertible_to<bool>;
+								{ std::as_const(policy).describe_state() } -> std::convertible_to<std::optional<StringT>>;
 								policy.consume();
 							};
 
@@ -256,7 +257,7 @@ namespace mimicpp
 				.finalizeReport = std::nullopt,
 				.timesReport = MatchReport::Times{
 					.isApplicable = m_Times.is_applicable(),
-					.description = std::nullopt
+					.description = m_Times.describe_state()
 				},
 				.expectationReports = std::apply(
 					[&](const auto&... policies)
