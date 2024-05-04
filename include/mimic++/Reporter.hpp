@@ -268,6 +268,9 @@ namespace mimicpp::detail
 			->report_no_matches(
 				make_call_report(callInfo),
 				std::move(matchReports));
+
+		// ReSharper disable once CppUnreachableCode
+		unreachable();
 	}
 
 	template <typename Return, typename... Params>
@@ -281,6 +284,9 @@ namespace mimicpp::detail
 			->report_inapplicable_matches(
 				make_call_report(callInfo),
 				std::move(matchReports));
+
+		// ReSharper disable once CppUnreachableCode
+		unreachable();
 	}
 
 	template <typename Return, typename... Params>
@@ -330,7 +336,7 @@ namespace mimicpp
 {
 	template <std::derived_from<IReporter> T, typename... Args>
 		requires std::constructible_from<T, Args...>
-	void install_reporter(Args&&... args)
+	void install_reporter(Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
 	{
 		detail::get_reporter() = std::make_unique<T>(
 			std::forward<Args>(args)...);
