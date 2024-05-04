@@ -268,8 +268,10 @@ namespace mimicpp::detail
 				std::move(callReport),
 				std::move(matchReports));
 
+		// GCOVR_EXCL_START
 		// ReSharper disable once CppUnreachableCode
 		unreachable();
+		// GCOVR_EXCL_STOP
 	}
 
 	[[noreturn]]
@@ -283,8 +285,10 @@ namespace mimicpp::detail
 				std::move(callReport),
 				std::move(matchReports));
 
+		// GCOVR_EXCL_START
 		// ReSharper disable once CppUnreachableCode
 		unreachable();
+		// GCOVR_EXCL_STOP
 	}
 
 	inline void report_full_match(
