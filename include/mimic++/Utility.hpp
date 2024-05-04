@@ -144,6 +144,8 @@ namespace mimicpp
 		return static_cast<std::underlying_type_t<T>>(value);
 	}
 
+	// GCOVR_EXCL_START
+
 #ifdef __cpp_lib_unreachable
 	using std::unreachable;
 #else
@@ -166,6 +168,8 @@ namespace mimicpp
 	#endif
 	}
 #endif
+
+	// GCOVR_EXCL_STOP
 }
 
 #endif
