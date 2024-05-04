@@ -170,6 +170,71 @@ TEST_CASE(
 		std::runtime_error);
 }
 
+TEST_CASE(
+	"both, expectation_policies::Times and expectation_policies::RuntimeTimes use detail::describe_times_state for their description.",
+	"[expectation][expectation::builder]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When current == max.")
+	{
+		const auto [min, max] = GENERATE(
+			(table<std::size_t, std::size_t>)({
+				{0, 1},
+				{0, 2},
+				{3, 42},
+				}));
+
+		const auto description = expectation_policies::detail::describe_times_state(
+			max,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::StartsWith("inapplicable: already saturated (matched "));
+	}
+
+	SECTION("When min <= current < max.")
+	{
+		const auto [current, min, max] = GENERATE(
+			(table<std::size_t, std::size_t, std::size_t>)({
+				{0, 0, 1},
+				{1, 0, 2},
+				{21, 3, 42},
+				}));
+
+		const auto description = expectation_policies::detail::describe_times_state(
+			current,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::Matches("applicable: accepts further matches \\(matched \\d+ out of \\d+ times\\)"));
+	}
+
+	SECTION("When current < min.")
+	{
+		const auto [current, min, max] = GENERATE(
+			(table<std::size_t, std::size_t, std::size_t>)({
+				{0, 1, 2},
+				{1, 2, 5},
+				{2, 3, 42},
+				}));
+
+		const auto description = expectation_policies::detail::describe_times_state(
+			current,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::StartsWith("unsatisfied: matched "));
+	}
+}
+
 TEMPLATE_TEST_CASE_SIG(
 	"expectation_policies::Category checks whether the given call::Info matches.",
 	"[expectation][expectation::policy]",

@@ -16,6 +16,81 @@
 #include <cassert>
 #include <functional>
 
+namespace mimicpp::expectation_policies::detail
+{
+	[[nodiscard]]
+	inline StringT describe_times_state(const std::size_t current, const std::size_t min, const std::size_t max)
+	{
+		const StringT currentDescription = std::invoke(
+			[&]() -> StringT
+			{
+				switch (current)
+				{
+				case 0:
+					return "never";
+				case 1:
+					return "once";
+				case 2:
+					return "twice";
+				default:
+					return format::format("{} times", current);
+				}
+			});
+
+		if (current == max)
+		{
+			return format::format(
+				"inapplicable: already saturated (matched {})",
+				currentDescription);
+		}
+
+		if (min <= current)
+		{
+			return format::format(
+				"applicable: accepts further matches (matched {} out of {} times)",
+				current,
+				max);
+		}
+
+		const StringT intervalDescription = std::invoke(
+			[&]() -> StringT
+			{
+				if (min < max)
+				{
+					return format::format(
+						"between {} and {} times",
+						min,
+						max);
+				}
+
+				return format::format(
+					"exactly {}",
+					currentDescription);
+			});
+
+		if (current == 0)
+		{
+			return format::format(
+				"unsatisfied: matched never - {} is expected",
+				current,
+				intervalDescription);
+		}
+
+		if (current == 1)
+		{
+			return format::format(
+				"unsatisfied: matched just once - {} is expected",
+				current,
+				intervalDescription);
+		}
+
+		return format::format(
+			"unsatisfied: matched just {} times - {} is expected",
+			current,
+			intervalDescription);
+	}
+}
+
 namespace mimicpp::expectation_policies
 {
 	class InitFinalize
@@ -43,6 +118,15 @@ namespace mimicpp::expectation_policies
 		constexpr bool is_applicable() const noexcept
 		{
 			return m_Count < max;
+		}
+
+		[[nodiscard]]
+		StringT describe_state() const
+		{
+			return detail::describe_times_state(
+				m_Count,
+				min,
+				max);
 		}
 
 		constexpr void consume() noexcept
@@ -84,6 +168,15 @@ namespace mimicpp::expectation_policies
 		constexpr bool is_applicable() const noexcept
 		{
 			return m_Count < m_Max;
+		}
+
+		[[nodiscard]]
+		StringT describe_state() const
+		{
+			return detail::describe_times_state(
+				m_Count,
+				m_Min,
+				m_Max);
 		}
 
 		constexpr void consume() noexcept
