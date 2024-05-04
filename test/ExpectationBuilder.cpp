@@ -44,6 +44,8 @@ TEST_CASE(
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
+	ScopedReporter reporter{};
+
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 	constexpr CallInfoT call{
 		.args = {},
@@ -97,7 +99,7 @@ TEST_CASE(
 				REQUIRE_NOTHROW(collection->handle_call(call));
 			}
 
-			SECTION("And when times is saturated.")
+			SECTION("And when times is inapplicable.")
 			{
 				REQUIRE_CALL(times, is_applicable())
 					.RETURN(false);
@@ -297,6 +299,6 @@ TEST_CASE(
 	}
 
 	REQUIRE_THAT(
-		reporter.unsatisfied_expectations(),
+		reporter.unfulfilled_expectations(),
 		Catch::Matchers::IsEmpty());
 }

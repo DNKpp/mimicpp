@@ -212,3 +212,24 @@ TEST_CASE(
 			});
 	}
 }
+
+TEST_CASE(
+	"expectation_report is equality comparable.",
+	"[reporting]"
+)
+{
+	const expectation_report first{
+		.description = "Hello, World!"
+	};
+
+	const auto [expectedEquality, second] = GENERATE(
+		(table<bool, expectation_report>({
+			{false, {"not equal"}},
+			{true, {"Hello, World!"}}
+			})));
+
+	REQUIRE(expectedEquality == (first == second));
+	REQUIRE(expectedEquality == (second == first));
+	REQUIRE(expectedEquality == !(first != second));
+	REQUIRE(expectedEquality == !(second!= first));
+}

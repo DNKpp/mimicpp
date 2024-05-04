@@ -24,7 +24,7 @@
 namespace mimicpp::detail
 {
 	template <typename Return, typename... Params, typename Signature>
-	std::optional<call::MatchResult> make_match_result(
+	std::optional<match_report> make_match_report(
 		const call::Info<Return, Params...>& call,
 		const std::shared_ptr<Expectation<Signature>>& expectation
 	) noexcept
@@ -68,7 +68,7 @@ namespace mimicpp
 		virtual bool is_satisfied() const noexcept = 0;
 
 		[[nodiscard]]
-		virtual call::MatchResult matches(const CallInfoT& call) const = 0;
+		virtual match_report matches(const CallInfoT& call) const = 0;
 		virtual void consume(const CallInfoT& call) = 0;
 
 		[[nodiscard]]
@@ -124,27 +124,27 @@ namespace mimicpp
 		[[nodiscard]]
 		ReturnT handle_call(const CallInfoT& call)
 		{
-			std::vector<std::shared_ptr<ExpectationT>> noMatches{};
-			std::vector<std::shared_ptr<ExpectationT>> inapplicableMatches{};
+			std::vector<match_report> noMatches{};
+			std::vector<match_report> inapplicableMatches{};
 
 			for (const std::scoped_lock lock{m_ExpectationsMx};
 				auto& exp : m_Expectations | std::views::reverse)
 			{
-				if (std::optional matchResult = detail::make_match_result(call, exp))
+				if (std::optional matchReport = detail::make_match_report(call, exp))
 				{
-					switch (*matchResult)
+					switch (evaluate_match_report(*matchReport))
 					{
-						using enum call::MatchResult;
+						using enum MatchResult;
 					case none:
-						noMatches.emplace_back(exp);
+						noMatches.emplace_back(*std::move(matchReport));
 						break;
 					case inapplicable:
-						inapplicableMatches.emplace_back(exp);
+						inapplicableMatches.emplace_back(*std::move(matchReport));
 						break;
 					case full:
 						detail::report_full_match(
 							call,
-							exp);
+							*std::move(matchReport));
 						exp->consume(call);
 						return exp->finalize_call(call);
 					default:
@@ -249,24 +249,26 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		call::MatchResult matches(const CallInfoT& call) const override
+		match_report matches(const CallInfoT& call) const override
 		{
-			if (!std::apply(
-				[&](const auto&... policies)
-				{
-					return (... && policies.matches(call));
+			return match_report{
+				.finalizeReport = std::nullopt,
+				.timesReport = match_report::times{
+					.isApplicable = m_Times.is_applicable(),
+					.description = std::nullopt
 				},
-				m_Policies))
-			{
-				return call::MatchResult::none;
-			}
-
-			if (!m_Times.is_applicable())
-			{
-				return call::MatchResult::inapplicable;
-			}
-
-			return call::MatchResult::full;
+				.expectationReports = std::apply(
+					[&](const auto&... policies)
+					{
+						return std::vector<match_report::expectation>{
+							match_report::expectation{
+								.matched = policies.matches(call),
+								.description = policies.describe()
+							}...
+						};
+					},
+					m_Policies)
+			};
 		}
 
 		constexpr void consume(const CallInfoT& call) override

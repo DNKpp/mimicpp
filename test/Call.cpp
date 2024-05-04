@@ -54,32 +54,3 @@ TEST_CASE(
 	REQUIRE(expected == !(info != other));
 	REQUIRE(expected == !(other != info));
 }
-
-TEST_CASE(
-	"call::MatchCategory is formattable.",
-	"[call]"
-)
-{
-	namespace Matches = Catch::Matchers;
-
-	SECTION("When valid category is given.")
-	{
-		const auto [expected, category] = GENERATE(
-			(table<StringT, call::MatchCategory>)({
-				{"no match", call::MatchCategory::no},
-				{"non applicable match", call::MatchCategory::non_applicable},
-				{"full match", call::MatchCategory::ok},
-			}));
-
-		REQUIRE_THAT(
-			format::format("{}", category),
-			Matches::Equals(expected));
-	}
-
-	SECTION("When an invalid category is given, std::invalid_argument is thrown.")
-	{
-		REQUIRE_THROWS_AS(
-			format::format("{}", call::MatchCategory{42}),
-			std::invalid_argument);
-	}
-}

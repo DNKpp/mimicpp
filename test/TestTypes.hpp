@@ -75,7 +75,6 @@ class PolicyFacade
 {
 public:
 	using CallT = mimicpp::call::info_for_signature_t<Signature>;
-	using SubMatchT = mimicpp::call::SubMatchResult;
 
 	Policy policy;
 	Projection projection;

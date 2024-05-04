@@ -20,7 +20,9 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 #include <catch2/matchers/catch_matchers_templated.hpp>
+#include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 namespace
 {
@@ -31,14 +33,14 @@ namespace
 		using CallInfoT = mimicpp::call::info_for_signature_t<void()>;
 
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
-		MAKE_CONST_MOCK1(matches, mimicpp::call::MatchResult(const CallInfoT&), override);
+		MAKE_CONST_MOCK1(matches, mimicpp::match_report(const CallInfoT&), override);
 		MAKE_MOCK1(consume, void(const CallInfoT&), override);
 		MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
 	};
 }
 
 TEST_CASE(
-	"mimicpp::ExpectationCollection collects expectations and reports when they are removed but unsatisfied.",
+	"mimicpp::ExpectationCollection collects expectations and reports when they are removed but unfulfilled.",
 	"[expectation]"
 )
 {
@@ -49,33 +51,59 @@ TEST_CASE(
 
 	REQUIRE_NOTHROW(storage.push(expectation));
 
-	mimicpp::ScopedReporter reporter{};
+	ScopedReporter reporter{};
 	SECTION("When expectation is satisfied, nothing is reported.")
 	{
 		REQUIRE_CALL(*expectation, is_satisfied())
 			.RETURN(true);
 		REQUIRE_NOTHROW(storage.remove(expectation));
 		REQUIRE_THAT(
-			reporter.unsatisfied_expectations(),
+			reporter.unfulfilled_expectations(),
 			Catch::Matchers::IsEmpty());
 	}
 
-	SECTION("When expectation is unsatisfied, get's reported.")
+	SECTION("When expectation is unfulfilled, get's reported.")
 	{
 		REQUIRE_CALL(*expectation, is_satisfied())
 			.RETURN(false);
 		REQUIRE_NOTHROW(storage.remove(expectation));
 		REQUIRE_THAT(
-			reporter.unsatisfied_expectations(),
+			reporter.unfulfilled_expectations(),
 			Catch::Matchers::SizeIs(1));
-		auto reportedExpectation = std::any_cast<std::shared_ptr<mimicpp::Expectation<void()>>>(
-			reporter.unsatisfied_expectations().at(0));
-		REQUIRE(expectation == reportedExpectation);
+		REQUIRE(make_expectation_report(*expectation) == reporter.unfulfilled_expectations().at(0));
 	}
 }
 
+namespace
+{
+	inline const mimicpp::match_report commonNoMatchReport{
+		.timesReport = {
+			.isApplicable = true
+		},
+		.expectationReports = {
+			{
+				.matched = false
+			}
+		}
+	};
+
+	inline const mimicpp::match_report commonFullMatchReport{
+		.timesReport = {
+			.isApplicable = true
+		},
+		.expectationReports = {}
+	};
+
+	inline const mimicpp::match_report commonInapplicableMatchReport{
+		.timesReport = {
+			.isApplicable = false
+		},
+		.expectationReports = {}
+	};
+}
+
 TEST_CASE(
-	"mimicpp::ExpectationCollection queries expectation, whether they match the call, in reverse order of construction.",
+	"mimicpp::ExpectationCollection queries its expectations, whether they match the call, in reverse order of construction.",
 	"[expectation]"
 )
 {
@@ -84,7 +112,7 @@ TEST_CASE(
 	using CallInfoT = Info<void>;
 	using trompeloeil::_;
 
-	mimicpp::ScopedReporter reporter{};
+	ScopedReporter reporter{};
 	StorageT storage{};
 	std::vector<std::shared_ptr<ExpectationMock>> expectations(4);
 	for (auto& exp : expectations)
@@ -105,15 +133,15 @@ TEST_CASE(
 		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult::none);
+			.RETURN(commonNoMatchReport);
 		REQUIRE_CALL(*expectations[2], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult::none);
+			.RETURN(commonNoMatchReport);
 		REQUIRE_CALL(*expectations[1], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult::full);
+			.RETURN(commonFullMatchReport);
 		// expectations[3] is never queried
 		REQUIRE_CALL(*expectations[1], consume(_))
 			.LR_WITH(&_1 == &call)
@@ -127,28 +155,29 @@ TEST_CASE(
 			reporter.no_match_reports(),
 			Catch::Matchers::IsEmpty());
 		REQUIRE_THAT(
-			reporter.non_applicable_match_reports(),
+			reporter.inapplicable_match_reports(),
 			Catch::Matchers::IsEmpty());
 		REQUIRE_THAT(
-			reporter.ok_match_reports(),
+			reporter.full_match_reports(),
 			Catch::Matchers::SizeIs(1));
 	}
 
 	SECTION("If at least one matches but is inapplicable.")
 	{
-		using enum MatchResult;
+		using match_report_t = mimicpp::match_report;
 		const auto [count, result0, result1, result2, result3] = GENERATE(
-			(table<std::size_t, MatchResult, MatchResult, MatchResult, MatchResult>)(
+			(table<std::size_t, match_report_t, match_report_t, match_report_t, match_report_t>)(
 				{
-				{1u, inapplicable, none, none, none},
-				{1u, none, inapplicable, none, none},
-				{1u, none, none, inapplicable, none},
-				{1u, none, none, none, inapplicable},
+				{1u, commonInapplicableMatchReport, commonNoMatchReport, commonNoMatchReport, commonNoMatchReport},
+				{1u, commonNoMatchReport, commonInapplicableMatchReport, commonNoMatchReport, commonNoMatchReport},
+				{1u, commonNoMatchReport, commonNoMatchReport, commonInapplicableMatchReport, commonNoMatchReport},
+				{1u, commonNoMatchReport, commonNoMatchReport, commonNoMatchReport, commonInapplicableMatchReport},
 
-				{2u, inapplicable, none, inapplicable, none},
-				{2u, none, inapplicable, none, inapplicable},
-				{3u, inapplicable, none, inapplicable, inapplicable},
-				{4u, inapplicable, inapplicable, inapplicable, inapplicable}
+				{2u, commonInapplicableMatchReport, commonNoMatchReport, commonInapplicableMatchReport, commonNoMatchReport},
+				{2u, commonNoMatchReport, commonInapplicableMatchReport, commonNoMatchReport, commonInapplicableMatchReport},
+				{3u, commonInapplicableMatchReport, commonNoMatchReport, commonInapplicableMatchReport, commonInapplicableMatchReport},
+				{4u, commonInapplicableMatchReport, commonInapplicableMatchReport, commonInapplicableMatchReport,
+				commonInapplicableMatchReport}
 				}));
 
 		trompeloeil::sequence sequence{};
@@ -176,10 +205,10 @@ TEST_CASE(
 			reporter.no_match_reports(),
 			Catch::Matchers::IsEmpty());
 		REQUIRE_THAT(
-			reporter.non_applicable_match_reports(),
+			reporter.inapplicable_match_reports(),
 			Catch::Matchers::SizeIs(count));
 		REQUIRE_THAT(
-			reporter.ok_match_reports(),
+			reporter.full_match_reports(),
 			Catch::Matchers::IsEmpty());
 	}
 
@@ -189,19 +218,19 @@ TEST_CASE(
 		REQUIRE_CALL(*expectations[3], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult::none);
+			.RETURN(commonNoMatchReport);
 		REQUIRE_CALL(*expectations[2], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult::none);
+			.RETURN(commonNoMatchReport);
 		REQUIRE_CALL(*expectations[1], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult::none);
+			.RETURN(commonNoMatchReport);
 		REQUIRE_CALL(*expectations[0], matches(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
-			.RETURN(MatchResult::none);
+			.RETURN(commonNoMatchReport);
 
 		REQUIRE_THROWS_AS(
 			storage.handle_call(call),
@@ -210,10 +239,10 @@ TEST_CASE(
 			reporter.no_match_reports(),
 			Catch::Matchers::SizeIs(4));
 		REQUIRE_THAT(
-			reporter.non_applicable_match_reports(),
+			reporter.inapplicable_match_reports(),
 			Catch::Matchers::IsEmpty());
 		REQUIRE_THAT(
-			reporter.ok_match_reports(),
+			reporter.full_match_reports(),
 			Catch::Matchers::IsEmpty());
 	}
 }
@@ -230,7 +259,7 @@ TEST_CASE(
 	using CallInfoT = Info<void>;
 	using trompeloeil::_;
 
-	mimicpp::ScopedReporter reporter{};
+	ScopedReporter reporter{};
 	StorageT storage{};
 	auto throwingExpectation = std::make_shared<ExpectationMock>();
 	auto otherExpectation = std::make_shared<ExpectationMock>();
@@ -247,7 +276,7 @@ TEST_CASE(
 	{
 	};
 
-	const auto matches = [&](const unhandled_exception_info& info)
+	const auto matches = [&](const auto& info)
 	{
 		try
 		{
@@ -255,8 +284,8 @@ TEST_CASE(
 		}
 		catch (const Exception&)
 		{
-			return call == std::any_cast<CallInfoT>(info.call)
-				&& throwingExpectation == std::any_cast<std::shared_ptr<mimicpp::Expectation<void()>>>(info.expectation);
+			return info.call == mimicpp::make_call_report(call)
+				&& info.expectation == make_expectation_report(*throwingExpectation);
 		}
 		catch (...)
 		{
@@ -264,24 +293,24 @@ TEST_CASE(
 		}
 	};
 
-	SECTION("When thrown during matches.")
+	SECTION("When an exception is thrown during matches.")
 	{
 		REQUIRE_CALL(*throwingExpectation, matches(_))
 			.THROW(Exception{});
 		REQUIRE_CALL(*otherExpectation, matches(_))
-			.RETURN(MatchResult::full);
+			.RETURN(commonFullMatchReport);
 		REQUIRE_CALL(*otherExpectation, consume(_));
 		REQUIRE_CALL(*otherExpectation, finalize_call(_));
 		REQUIRE_NOTHROW(storage.handle_call(call));
 
 		CHECK_THAT(
-			reporter.ok_match_reports(),
+			reporter.full_match_reports(),
 			Matches::SizeIs(1));
 		CHECK_THAT(
 			reporter.no_match_reports(),
 			Matches::IsEmpty());
 		CHECK_THAT(
-			reporter.non_applicable_match_reports(),
+			reporter.inapplicable_match_reports(),
 			Matches::IsEmpty());
 
 		REQUIRE_THAT(
@@ -328,53 +357,8 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::times_policy<Policy>);
 }
 
-namespace
-{
-	const std::array allSubMatchResultAlternatives = std::to_array<mimicpp::call::SubMatchResult>(
-		{
-			{.matched = false},
-			{.matched = true}
-		});
-
-	class CallMatchCategoryMatcher final
-		: public Catch::Matchers::MatcherGenericBase
-	{
-	public:
-		using CategoryT = mimicpp::call::MatchCategory;
-
-		[[nodiscard]]
-		explicit CallMatchCategoryMatcher(const CategoryT category) noexcept
-			: m_Category{category}
-		{
-		}
-
-		[[maybe_unused]] bool match(const auto& result) const
-		{
-			return m_Category == std::visit(
-						[](const auto& inner) { return inner.value; },
-						result);
-		}
-
-		std::string describe() const override
-		{
-			return mimicpp::format::format(
-				"matches category: {}",
-				m_Category);
-		}
-
-	private:
-		CategoryT m_Category;
-	};
-
-	[[nodiscard]]
-	CallMatchCategoryMatcher matches_category(const mimicpp::call::MatchCategory category) noexcept
-	{
-		return CallMatchCategoryMatcher{category};
-	}
-}
-
 TEST_CASE(
-	"Times policy of mimicpp::BasicExpectation controls, how often an expectations an expectation must be matched.",
+	"Times policy of mimicpp::BasicExpectation controls, how often its expectations must be matched.",
 	"[expectation]"
 )
 {
@@ -385,6 +369,7 @@ TEST_CASE(
 	using PolicyRefT = PolicyFacade<SignatureT, std::reference_wrapper<PolicyMock<SignatureT>>, UnwrapReferenceWrapper>;
 	using TimesPolicyT = TimesFacade<std::reference_wrapper<TimesMock>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
+	using TimesReportT = mimicpp::match_report::times;
 
 	const CallInfoT call{
 		.args = {},
@@ -413,14 +398,18 @@ TEST_CASE(
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(true);
-			REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
+			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			REQUIRE(matchReport.timesReport == TimesReportT{true});
+			REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
 		}
 
 		SECTION("When times is not applicable => inapplicable.")
 		{
 			REQUIRE_CALL(times, is_applicable())
 				.RETURN(false);
-			REQUIRE(mimicpp::call::MatchResult::inapplicable == std::as_const(expectation).matches(call));
+			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			REQUIRE(matchReport.timesReport == TimesReportT{false});
+			REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(matchReport));
 		}
 
 		SECTION("Consume calls times.consume().")
@@ -461,7 +450,12 @@ TEST_CASE(
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(false);
-			REQUIRE(mimicpp::call::MatchResult::none == std::as_const(expectation).matches(call));
+			REQUIRE_CALL(policy, describe())
+				.RETURN(mimicpp::StringT{});
+			const bool isApplicable = GENERATE(false, true);
+			REQUIRE_CALL(times, is_applicable())
+				.RETURN(isApplicable);
+			REQUIRE(mimicpp::MatchResult::none == evaluate_match_report(std::as_const(expectation).matches(call)));
 		}
 
 		SECTION("When policy is matched.")
@@ -473,7 +467,9 @@ TEST_CASE(
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
 					.RETURN(true);
-				REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
+				REQUIRE_CALL(policy, describe())
+					.RETURN(mimicpp::StringT{});
+				REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(std::as_const(expectation).matches(call)));
 			}
 
 			SECTION("And when times not applicable => inapplicable")
@@ -483,7 +479,9 @@ TEST_CASE(
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
 					.RETURN(true);
-				REQUIRE(mimicpp::call::MatchResult::inapplicable == std::as_const(expectation).matches(call));
+				REQUIRE_CALL(policy, describe())
+					.RETURN(mimicpp::StringT{});
+				REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(std::as_const(expectation).matches(call)));
 			}
 		}
 
@@ -509,6 +507,8 @@ TEMPLATE_TEST_CASE(
 	using PolicyMockT = PolicyMock<TestType>;
 	using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<TestType>;
+	using ExpectationReportT = mimicpp::match_report::expectation;
+	using TimesReportT = mimicpp::match_report::times;
 
 	const CallInfoT call{
 		.args = {},
@@ -524,7 +524,12 @@ TEMPLATE_TEST_CASE(
 		};
 
 		REQUIRE(std::as_const(expectation).is_satisfied());
-		REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
+		const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+		REQUIRE(matchReport.timesReport == TimesReportT{true});
+		REQUIRE_THAT(
+			matchReport.expectationReports,
+			Catch::Matchers::IsEmpty());
+		REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
 		REQUIRE_NOTHROW(expectation.consume(call));
 	}
 
@@ -547,7 +552,14 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(true);
-			REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
+			REQUIRE_CALL(policy, describe())
+				.RETURN("policy description");
+			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			REQUIRE(matchReport.timesReport == TimesReportT{true});
+			REQUIRE_THAT(
+				matchReport.expectationReports,
+				Catch::Matchers::RangeEquals(std::vector<ExpectationReportT>{{true, "policy description"}}));
+			REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
 		}
 
 		SECTION("When not matched => no match")
@@ -555,7 +567,14 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(false);
-			REQUIRE(mimicpp::call::MatchResult::none == std::as_const(expectation).matches(call));
+			REQUIRE_CALL(policy, describe())
+				.RETURN("policy description");
+			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			REQUIRE(matchReport.timesReport == TimesReportT{true});
+			REQUIRE_THAT(
+				matchReport.expectationReports,
+				Catch::Matchers::RangeEquals(std::vector<ExpectationReportT>{{false, "policy description"}}));
+			REQUIRE(mimicpp::MatchResult::none == evaluate_match_report(matchReport));
 		}
 
 		REQUIRE_CALL(policy, consume(_))
@@ -600,35 +619,56 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy1, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(true);
+			REQUIRE_CALL(policy1, describe())
+				.RETURN("policy1 description");
 			REQUIRE_CALL(policy2, matches(_))
 				.LR_WITH(&_1 == &call)
 				.RETURN(true);
+			REQUIRE_CALL(policy2, describe())
+				.RETURN("policy2 description");
 
-			REQUIRE(mimicpp::call::MatchResult::full == std::as_const(expectation).matches(call));
+			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			REQUIRE(matchReport.timesReport == TimesReportT{true});
+			REQUIRE_THAT(
+				matchReport.expectationReports,
+				Catch::Matchers::UnorderedRangeEquals(
+					std::vector<ExpectationReportT>{
+					{true, "policy1 description"},
+					{true, "policy2 description"}
+					}));
+			REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
 		}
 
 		SECTION("When at least one not matches => no match")
 		{
-			SECTION("When first does not match, no other policy is checked.")
-			{
-				REQUIRE_CALL(policy1, matches(_))
+			const auto [isMatching1, isMatching2] = GENERATE(
+				(table<bool, bool>)({
+					{false, true},
+					{true, false},
+					{false, false}
+				}));
+
+			REQUIRE_CALL(policy1, matches(_))
 				.LR_WITH(&_1 == &call)
-					.RETURN(false);
+				.RETURN(isMatching1);
+			REQUIRE_CALL(policy1, describe())
+				.RETURN("policy1 description");
+			REQUIRE_CALL(policy2, matches(_))
+				.LR_WITH(&_1 == &call)
+				.RETURN(isMatching2);
+			REQUIRE_CALL(policy2, describe())
+				.RETURN("policy2 description");
 
-				REQUIRE(mimicpp::call::MatchResult::none == std::as_const(expectation).matches(call));
-			}
-
-			SECTION("When first matches, but second not.")
-			{
-				REQUIRE_CALL(policy1, matches(_))
-					.LR_WITH(&_1 == &call)
-					.RETURN(true);
-				REQUIRE_CALL(policy2, matches(_))
-					.LR_WITH(&_1 == &call)
-					.RETURN(false);
-
-				REQUIRE(mimicpp::call::MatchResult::none == std::as_const(expectation).matches(call));
-			}
+			const mimicpp::match_report matchReport = std::as_const(expectation).matches(call);
+			REQUIRE(matchReport.timesReport == TimesReportT{true});
+			REQUIRE_THAT(
+				matchReport.expectationReports,
+				Catch::Matchers::UnorderedRangeEquals(
+					std::vector<ExpectationReportT>{
+					{isMatching1, "policy1 description"},
+					{isMatching2, "policy2 description"}
+					}));
+			REQUIRE(mimicpp::MatchResult::none == evaluate_match_report(matchReport));
 		}
 
 		SECTION("When calling consume()")

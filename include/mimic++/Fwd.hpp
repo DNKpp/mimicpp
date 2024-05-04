@@ -9,37 +9,9 @@
 #pragma once
 
 #include <string>
-#include <variant>
 
 namespace mimicpp::call
 {
-	enum class MatchResult
-	{
-		none,
-		inapplicable,
-		full
-	};
-
-	enum class MatchCategory
-	{
-		no,
-		non_applicable,
-		ok
-	};
-
-	template <MatchCategory category>
-	class GenericMatchResult;
-
-	using MatchResult_NoT = GenericMatchResult<MatchCategory::no>;
-	using MatchResult_NotApplicableT = GenericMatchResult<MatchCategory::non_applicable>;
-	using MatchResult_OkT = GenericMatchResult<MatchCategory::ok>;
-
-	using MatchResultT = std::variant<
-		MatchResult_NoT,
-		MatchResult_NotApplicableT,
-		MatchResult_OkT
-	>;
-
 	template <typename Return, typename... Args>
 	class Info;
 }
@@ -48,6 +20,15 @@ namespace mimicpp
 {
 	template <typename Signature>
 	class Expectation;
+
+	enum class MatchResult
+	{
+		none,
+		inapplicable,
+		full
+	};
+
+	struct match_report;
 
 	using CharT = char;
 	using CharTraitsT = std::char_traits<CharT>;

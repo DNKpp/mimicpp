@@ -80,58 +80,6 @@ namespace mimicpp::call
 	};
 }
 
-template <typename Char>
-struct std::formatter<mimicpp::call::MatchCategory, Char>
-	: public std::formatter<std::basic_string_view<Char>, Char>
-{
-	using MatchCategoryT = mimicpp::call::MatchCategory;
-
-	auto format(
-		const MatchCategoryT category,
-		auto& ctx
-	) const
-	{
-		constexpr auto toString = [](const MatchCategoryT cat)
-		{
-			switch (cat)
-			{
-			case MatchCategoryT::no: return "no match";
-			case MatchCategoryT::non_applicable: return "non applicable match";
-			case MatchCategoryT::ok: return "full match";
-			}
-
-			throw std::invalid_argument{"Unknown category value."};
-		};
-
-		return std::formatter<std::basic_string_view<Char>, Char>::format(
-			toString(category),
-			ctx);
-	}
-};
-
-namespace mimicpp::call
-{
-	class SubMatchResult
-	{
-	public:
-		bool matched{};
-
-		[[nodiscard]]
-		friend bool operator ==(const SubMatchResult&, const SubMatchResult&) = default;
-	};
-
-	template <MatchCategory category>
-	class GenericMatchResult
-		: public std::integral_constant<MatchCategory, category>
-	{
-	public:
-		std::vector<SubMatchResult> subMatchResults{};
-
-		[[nodiscard]]
-		friend bool operator ==(const GenericMatchResult&, const GenericMatchResult&) = default;
-	};
-}
-
 namespace mimicpp::detail
 {
 	template <typename Derived, typename Base>
