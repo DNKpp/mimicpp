@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
+
 #include <format>
 #include <source_location>
 #include <utility>
@@ -17,8 +19,8 @@ namespace mimicpp
 	enum class Constness
 	{
 		non_const = 0b01,
-		as_const = 0b10,
-		any = non_const | as_const
+		as_const  = 0b10,
+		any       = non_const | as_const
 	};
 
 	[[nodiscard]]
@@ -44,8 +46,8 @@ namespace mimicpp
 }
 
 template <>
-struct std::formatter<mimicpp::ValueCategory, char>
-	: public std::formatter<std::string_view, char>
+struct std::formatter<mimicpp::ValueCategory, mimicpp::CharT>
+	: public std::formatter<std::string_view, mimicpp::CharT>
 {
 	using ValueCategoryT = mimicpp::ValueCategory;
 
@@ -63,18 +65,18 @@ struct std::formatter<mimicpp::ValueCategory, char>
 			case ValueCategoryT::any: return "any";
 			}
 
-			throw std::runtime_error{"Unknown category value."};
+			throw std::invalid_argument{"Unknown category value."};
 		};
 
-		return std::formatter<std::string_view, char>::format(
+		return std::formatter<std::string_view, mimicpp::CharT>::format(
 			toString(category),
 			ctx);
 	}
 };
 
 template <>
-struct std::formatter<mimicpp::Constness, char>
-	: public std::formatter<std::string_view, char>
+struct std::formatter<mimicpp::Constness, mimicpp::CharT>
+	: public std::formatter<std::string_view, mimicpp::CharT>
 {
 	using ConstnessT = mimicpp::Constness;
 
@@ -92,10 +94,10 @@ struct std::formatter<mimicpp::Constness, char>
 			case ConstnessT::any: return "any";
 			}
 
-			throw std::runtime_error{"Unknown constness value."};
+			throw std::invalid_argument{"Unknown constness value."};
 		};
 
-		return std::formatter<std::string_view, char>::format(
+		return std::formatter<std::string_view, mimicpp::CharT>::format(
 			toString(category),
 			ctx);
 	}
@@ -103,7 +105,7 @@ struct std::formatter<mimicpp::Constness, char>
 
 namespace mimicpp
 {
-	template <typename ...>
+	template <typename...>
 	struct always_false
 		: public std::bool_constant<false>
 	{
@@ -158,14 +160,14 @@ namespace mimicpp
 	[[noreturn]]
 	inline void unreachable()
 	{
-	    // Uses compiler specific extensions if possible.
-	    // Even if no extension is used, undefined behavior is still raised by
-	    // an empty function body and the noreturn attribute.
+		// Uses compiler specific extensions if possible.
+		// Even if no extension is used, undefined behavior is still raised by
+		// an empty function body and the noreturn attribute.
 #if defined(_MSC_VER) && !defined(__clang__) // MSVC
 		__assume(false);
 #else // GCC, Clang
 	    __builtin_unreachable();
-	#endif
+#endif
 	}
 #endif
 
