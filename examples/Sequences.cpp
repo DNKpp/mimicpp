@@ -6,8 +6,6 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/Sequence.hpp"
 
-#include "../test/TestReporter.hpp"
-
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE(

@@ -42,7 +42,7 @@ jobs:
             - name: Run tests
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/test -C Debug -j4
+              run: ctest --test-dir build/test/unit-tests -C Debug -j4
 
             - name: Run examples
               env:
@@ -53,7 +53,7 @@ jobs:
               run: |
                 # circumvnet "fatal: detected dubious ownership in repository" error
                 git config --global --add safe.directory /__w/mimicpp/mimicpp
-                gcovr --root build/test --filter "include/mimic++" --keep -j4 -v \
+                gcovr --root build/test/unit-tests --filter "include/mimic++" --keep -j4 -v \
                     --exclude-lines-by-pattern "\s*assert\(" \
                     --exclude-unreachable-branches \
                     --exclude-noncode-lines \
@@ -68,7 +68,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: gcov-files
-                path: "build/test/*.gcov"
+                path: "build/test/unit-tests/*.gcov"
 
             - name: Upload generated report artifacts
               uses: actions/upload-artifact@v4

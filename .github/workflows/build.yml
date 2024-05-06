@@ -186,7 +186,7 @@ jobs:
               shell: bash
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/test -C ${{ matrix.build_mode }} -j4
+              run: ctest --test-dir build/test/unit-tests -C ${{ matrix.build_mode }} -j4
 
             - name: Run examples
               shell: bash
