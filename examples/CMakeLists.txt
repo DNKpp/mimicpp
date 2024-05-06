@@ -1,4 +1,4 @@
-CPMAddPackage("gh:catchorg/Catch2@3.5.4")
+find_package(Catch2 REQUIRED)
 include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
