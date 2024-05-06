@@ -174,6 +174,52 @@ namespace mimicpp
 	};
 
 	/**
+	 * \brief Converts the given report to text.
+	 * \param report The report.
+	 * \return The report text.
+	 * \relatesalso ExpectationReport
+	 */
+	[[nodiscard]]
+	inline StringT stringify_expectation_report(const ExpectationReport& report)
+	{
+		StringStreamT out{};
+
+		out << "Expectation report:\n";
+
+		if (report.timesDescription)
+		{
+			format_to(
+				std::ostreambuf_iterator{out},
+				"times: {}\n",
+				*report.timesDescription);
+		}
+
+		if (std::ranges::any_of(report.expectationDescriptions, &std::optional<StringT>::has_value))
+		{
+			out << "expects:\n";
+			for (const auto& desc
+				: report.expectationDescriptions
+				| std::views::filter(&std::optional<StringT>::has_value))
+			{
+				format_to(
+					std::ostreambuf_iterator{out},
+					"\t{},\n",
+					*desc);
+			}
+		}
+
+		if (report.finalizerDescription)
+		{
+			format_to(
+				std::ostreambuf_iterator{out},
+				"finally: {}\n",
+				*report.finalizerDescription);
+		}
+
+		return std::move(out).str();
+	}
+
+	/**
 	 * \brief Contains the detailed information for match outcomes.
 	 * \details This type is meant to be used to communicate with independent domains via the reporter interface and thus contains
 	 * the generic information as plain ``std`` types.

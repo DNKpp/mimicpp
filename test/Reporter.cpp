@@ -884,3 +884,96 @@ TEST_CASE(
 				"\t\\},\n"));
 	}
 }
+
+TEST_CASE(
+	"stringify_expectation_report converts the match report to text representation.",
+	"[report]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	ExpectationReport report{
+		.finalizerDescription = "finalizer description",
+		.timesDescription = "times description",
+		.expectationDescriptions = {
+			"expectation1 description"
+		}
+	};
+
+	SECTION("When full report is given.")
+	{
+		REQUIRE_THAT(
+			stringify_expectation_report(std::as_const(report)),
+			Matches::Equals(
+				"Expectation report:\n"
+				"times: times description\n"
+				"expects:\n"
+				"\texpectation1 description,\n"
+				"finally: finalizer description\n"));
+	}
+
+	SECTION("When times description is missing.")
+	{
+		report.timesDescription.reset();
+
+		REQUIRE_THAT(
+			stringify_expectation_report(std::as_const(report)),
+			Matches::Equals(
+				"Expectation report:\n"
+				"expects:\n"
+				"\texpectation1 description,\n"
+				"finally: finalizer description\n"));
+	}
+
+	SECTION("When finalizer description is missing.")
+	{
+		report.finalizerDescription.reset();
+
+		REQUIRE_THAT(
+			stringify_expectation_report(std::as_const(report)),
+			Matches::Equals(
+				"Expectation report:\n"
+				"times: times description\n"
+				"expects:\n"
+
+				"\texpectation1 description,\n"));
+	}
+
+	SECTION("When expectation contains only empty descriptions.")
+	{
+		report.expectationDescriptions[0].reset();
+
+		REQUIRE_THAT(
+			stringify_expectation_report(std::as_const(report)),
+			Matches::Equals(
+				"Expectation report:\n"
+				"times: times description\n"
+				"finally: finalizer description\n"));
+	}
+
+	SECTION("When expectation contains no descriptions.")
+	{
+		report.expectationDescriptions.clear();
+
+		REQUIRE_THAT(
+			stringify_expectation_report(std::as_const(report)),
+			Matches::Equals(
+				"Expectation report:\n"
+				"times: times description\n"
+				"finally: finalizer description\n"));
+	}
+
+	SECTION("When expectation contains mixed descriptions.")
+	{
+		report.expectationDescriptions.emplace_back(std::nullopt);
+
+		REQUIRE_THAT(
+			stringify_expectation_report(std::as_const(report)),
+			Matches::Equals(
+				"Expectation report:\n"
+				"times: times description\n"
+				"expects:\n"
+				"\texpectation1 description,\n"
+				"finally: finalizer description\n"));
+	}
+}
