@@ -19,10 +19,4 @@ target_link_libraries(
 	Catch2::Catch2WithMain
 )
 
-target_compile_features(
-	mimicpp
-	INTERFACE
-	cxx_std_${CMAKE_CXX_STANDARD}
-)
-
 catch_discover_tests(mimicpp-examples)

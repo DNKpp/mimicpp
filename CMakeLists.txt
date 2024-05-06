@@ -29,20 +29,20 @@ target_include_directories(
 )
 
 set(CMAKE_CXX_STANDARD 20)
+if (MIMICPP_FORCED_CXX_STANDARD)
+	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
+endif()
+
 target_compile_features(
 	mimicpp
 	INTERFACE
-	cxx_std_20
+	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
 if (CMAKE_SOURCE_DIR STREQUAL mimicpp_SOURCE_DIR)
 	set(IS_TOP_LEVEL_PROJECT ON)
 else()
 	set(IS_TOP_LEVEL_PROJECT OFF)
-endif()
-
-if (MIMICPP_FORCED_CXX_STANDARD)
-	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
 endif()
 
 OPTION(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})
