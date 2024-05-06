@@ -814,7 +814,7 @@ TEST_CASE(
 				"call from .+\\[\\d+:\\d+\\], .+\n"
 				"constness: any\n"
 				"value category: any\n"
-				"return type: void\n"));
+				"return type: (v|void)\n"));
 	}
 
 	SECTION("When report with arguments is given.")
@@ -833,10 +833,10 @@ TEST_CASE(
 				"call from .+\\[\\d+:\\d+\\], .+\n"
 				"constness: const\n"
 				"value category: lvalue\n"
-				"return type: int\n"
+				"return type: (i|int)\n"
 				"args:\n"
 				"\targ\\[0\\]: \\{\n"
-				"\t\ttype: double,\n"
+				"\t\ttype: (d|double),\n"
 				"\t\tvalue: 4.2\n"
 				"\t\\},\n"));
 	}
