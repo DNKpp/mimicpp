@@ -165,18 +165,13 @@ namespace mimicpp
 	class ExpectationReport
 	{
 	public:
-		StringT description{};
+		std::optional<StringT> finalizerDescription{};
+		std::optional<StringT> timesDescription{};
+		std::vector<std::optional<StringT>> expectationDescriptions{};
 
 		[[nodiscard]]
 		friend bool operator==(const ExpectationReport&, const ExpectationReport&) = default;
 	};
-
-	template <typename Signature>
-	[[nodiscard]]
-	ExpectationReport make_expectation_report(const Expectation<Signature>& expectation)
-	{
-		return ExpectationReport{};
-	}
 
 	/**
 	 * \brief Contains the detailed information for match outcomes.

@@ -31,6 +31,7 @@ namespace
 	public:
 		using CallInfoT = mimicpp::call::info_for_signature_t<void()>;
 
+		MAKE_CONST_MOCK0(report, mimicpp::ExpectationReport(), override);
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
 		MAKE_CONST_MOCK1(matches, mimicpp::MatchReport(const CallInfoT&), override);
 		MAKE_MOCK1(consume, void(const CallInfoT&), override);
@@ -63,13 +64,19 @@ TEST_CASE(
 
 	SECTION("When expectation is unfulfilled, get's reported.")
 	{
+		const mimicpp::ExpectationReport expReport{
+			.timesDescription = "times description"
+		};
+
 		REQUIRE_CALL(*expectation, is_satisfied())
 			.RETURN(false);
+		REQUIRE_CALL(*expectation, report())
+			.RETURN(expReport);
 		REQUIRE_NOTHROW(storage.remove(expectation));
 		REQUIRE_THAT(
 			reporter.unfulfilled_expectations(),
 			Catch::Matchers::SizeIs(1));
-		REQUIRE(make_expectation_report(*expectation) == reporter.unfulfilled_expectations().at(0));
+		REQUIRE(expReport == reporter.unfulfilled_expectations().at(0));
 	}
 }
 
@@ -275,6 +282,10 @@ TEST_CASE(
 	{
 	};
 
+	const mimicpp::ExpectationReport throwingReport{
+		.timesDescription = "times description"
+	};
+
 	const auto matches = [&](const auto& info)
 	{
 		try
@@ -284,7 +295,7 @@ TEST_CASE(
 		catch (const Exception&)
 		{
 			return info.call == mimicpp::make_call_report(call)
-				&& info.expectation == make_expectation_report(*throwingExpectation);
+				&& info.expectation ==throwingReport;
 		}
 		catch (...)
 		{
@@ -296,6 +307,8 @@ TEST_CASE(
 	{
 		REQUIRE_CALL(*throwingExpectation, matches(_))
 			.THROW(Exception{});
+		REQUIRE_CALL(*throwingExpectation, report())
+			.RETURN(throwingReport);
 		REQUIRE_CALL(*otherExpectation, matches(_))
 			.RETURN(commonFullMatchReport);
 		REQUIRE_CALL(*otherExpectation, consume(_));

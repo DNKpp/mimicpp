@@ -38,7 +38,7 @@ namespace mimicpp::detail
 		{
 			report_unhandled_exception(
 				make_call_report(call),
-				make_expectation_report(expectation),
+				expectation.report(),
 				std::current_exception());
 		}
 
@@ -64,6 +64,9 @@ namespace mimicpp
 		Expectation& operator =(const Expectation&) = delete;
 		Expectation(Expectation&&) = delete;
 		Expectation& operator =(Expectation&&) = delete;
+
+		[[nodiscard]]
+		virtual ExpectationReport report() const = 0;
 
 		[[nodiscard]]
 		virtual bool is_satisfied() const noexcept = 0;
@@ -118,7 +121,7 @@ namespace mimicpp
 			if (!expectation->is_satisfied())
 			{
 				detail::report_unfulfilled_expectation(
-					make_expectation_report(*expectation));
+					expectation->report());
 			}
 		}
 
@@ -239,6 +242,23 @@ namespace mimicpp
 			m_Finalizer{std::forward<FinalizerArg>(finalizerArg)},
 			m_Policies{std::forward<PolicyArgs>(args)...}
 		{
+		}
+
+		[[nodiscard]]
+		ExpectationReport report() const override
+		{
+			return ExpectationReport{
+				.finalizerDescription = std::nullopt,
+				.timesDescription = m_Times.describe_state(),
+				.expectationDescriptions = std::apply(
+					[&](const auto&... policies)
+					{
+						return std::vector<std::optional<StringT>>{
+								policies.describe()...
+						};
+					},
+					m_Policies)
+			};
 		}
 
 		[[nodiscard]]

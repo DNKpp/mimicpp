@@ -221,19 +221,64 @@ TEST_CASE(
 )
 {
 	const ExpectationReport first{
-		.description = "Hello, World!"
+		.finalizerDescription = "finalizer description",
+		.timesDescription = "times description",
+		.expectationDescriptions = {
+			"first expectation description"
+		}
 	};
 
-	const auto [expectedEquality, second] = GENERATE(
-		(table<bool, ExpectationReport>({
-			{false, {"not equal"}},
-			{true, {"Hello, World!"}}
-			})));
+	SECTION("When all members are equal, reports compare equal.")
+	{
+		const ExpectationReport second{first};
 
-	REQUIRE(expectedEquality == (first == second));
-	REQUIRE(expectedEquality == (second == first));
-	REQUIRE(expectedEquality == !(first != second));
-	REQUIRE(expectedEquality == !(second!= first));
+		REQUIRE(first == second);
+		REQUIRE(second == first);
+		REQUIRE(!(first != second));
+		REQUIRE(!(second!= first));
+	}
+
+	SECTION("When finalizer description differs, reports do not compare equal.")
+	{
+		ExpectationReport second{first};
+		second.finalizerDescription = GENERATE(
+			as<std::optional<StringT>>{},
+			std::nullopt,
+			"other finalizer description");
+
+		REQUIRE(!(first == second));
+		REQUIRE(!(second == first));
+		REQUIRE(first != second);
+		REQUIRE(second!= first);
+	}
+
+	SECTION("When times description differs, reports do not compare equal.")
+	{
+		ExpectationReport second{first};
+		second.timesDescription = GENERATE(
+			as<std::optional<StringT>>{},
+			std::nullopt,
+			"other times description");
+
+		REQUIRE(!(first == second));
+		REQUIRE(!(second == first));
+		REQUIRE(first != second);
+		REQUIRE(second!= first);
+	}
+
+	SECTION("When expectation descriptions differ, reports do not compare equal.")
+	{
+		ExpectationReport second{first};
+		second.expectationDescriptions = GENERATE(
+			(std::vector<std::optional<StringT>>{}),
+			(std::vector<std::optional<StringT>>{"other expectation description"}),
+			(std::vector<std::optional<StringT>>{"expectation description", "other expectation description"}));
+
+		REQUIRE(!(first == second));
+		REQUIRE(!(second == first));
+		REQUIRE(first != second);
+		REQUIRE(second!= first);
+	}
 }
 
 TEST_CASE(
@@ -435,9 +480,7 @@ TEST_CASE(
 		{.finalizeReport = {"match2"}}
 	};
 
-	const ExpectationReport expectationReport{
-		.description = "ExpectationReport"
-	};
+	const ExpectationReport expectationReport{};
 
 	SECTION("When report_no_matches() is called.")
 	{
