@@ -110,7 +110,7 @@ namespace mimicpp
 			m_Expectations.emplace_back(std::move(expectation));
 		}
 
-		void remove(std::shared_ptr<ExpectationT> expectation) noexcept
+		void remove(std::shared_ptr<ExpectationT> expectation)
 		{
 			const std::scoped_lock lock{m_ExpectationsMx};
 
@@ -326,7 +326,7 @@ namespace mimicpp
 		using StorageT = ExpectationCollection<Signature>;
 		using ExpectationT = Expectation<Signature>;
 
-		~ScopedExpectation()
+		~ScopedExpectation() noexcept(false)
 		{
 			if (m_Storage
 				&& m_Expectation)
