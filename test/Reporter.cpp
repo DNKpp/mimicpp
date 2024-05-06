@@ -564,8 +564,7 @@ TEST_CASE(
 			reporter.report_no_matches(
 				callReport,
 				{
-				MatchReport{.timesReport = {true}, .expectationReports = {{false}}
-				}
+				MatchReport{.timesReport = {true}, .expectationReports = {{false}}}
 				}),
 			UnmatchedCallT);
 	}
