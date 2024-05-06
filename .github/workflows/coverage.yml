@@ -33,7 +33,8 @@ jobs:
                 cmake -S . \
                     -B build \
                     -D CMAKE_CXX_FLAGS="-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions" \
-                    -D CMAKE_BUILD_TYPE="Debug"
+                    -D CMAKE_BUILD_TYPE="Debug" \
+                    -D MIMICPP_ENABLE_ADAPTER_TESTS=YES
 
             - name: Build
               run: |
@@ -43,6 +44,11 @@ jobs:
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
               run: ctest --test-dir build/test/unit-tests -C Debug -j4
+
+            - name: Run adapter tests
+              env:
+                CTEST_OUTPUT_ON_FAILURE: 1
+              run: ctest --test-dir build/test/adapter-tests -C Debug -j4
 
             - name: Run examples
               env:

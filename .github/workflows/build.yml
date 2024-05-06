@@ -173,6 +173,7 @@ jobs:
                     -D CMAKE_CXX_FLAGS:STRING="${{ env.CXX_FLAGS }}" \
                     -D CMAKE_EXE_LINKER_FLAGS:STRING="${{ env.LINK_FLAGS }}" \
                     -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+                    -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
                     ${{ env.CMAKE_CONFIG_EXTRA }}
 
             - name: Build
@@ -187,6 +188,12 @@ jobs:
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
               run: ctest --test-dir build/test/unit-tests -C ${{ matrix.build_mode }} -j4
+
+            - name: Run adapter tests
+              shell: bash
+              env:
+                CTEST_OUTPUT_ON_FAILURE: 1
+              run: ctest --test-dir build/test/adapter-tests -C ${{ matrix.build_mode }} -j4
 
             - name: Run examples
               shell: bash
