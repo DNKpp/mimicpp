@@ -21,27 +21,26 @@ namespace mimicpp::expectation_policies::detail
 	[[nodiscard]]
 	inline StringT describe_times_state(const std::size_t current, const std::size_t min, const std::size_t max)
 	{
-		const StringT currentDescription = std::invoke(
-			[&]() -> StringT
+		const auto verbalize = [](const std::size_t value)-> StringT
+		{
+			switch (value)
 			{
-				switch (current)
-				{
-				case 0:
-					return "never";
-				case 1:
-					return "once";
-				case 2:
-					return "twice";
-				default:
-					return format::format("{} times", current);
-				}
-			});
+			case 0:
+				return "never";
+			case 1:
+				return "once";
+			case 2:
+				return "twice";
+			default:
+				return format::format("{} times", value);
+			}
+		};
 
 		if (current == max)
 		{
 			return format::format(
 				"inapplicable: already saturated (matched {})",
-				currentDescription);
+				verbalize(current));
 		}
 
 		if (min <= current)
@@ -65,14 +64,13 @@ namespace mimicpp::expectation_policies::detail
 
 				return format::format(
 					"exactly {}",
-					currentDescription);
+					verbalize(max));
 			});
 
 		if (current == 0)
 		{
 			return format::format(
 				"unsatisfied: matched never - {} is expected",
-				current,
 				intervalDescription);
 		}
 
@@ -80,7 +78,6 @@ namespace mimicpp::expectation_policies::detail
 		{
 			return format::format(
 				"unsatisfied: matched just once - {} is expected",
-				current,
 				intervalDescription);
 		}
 
