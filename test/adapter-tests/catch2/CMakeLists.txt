@@ -6,6 +6,9 @@ add_executable(
 	"main.cpp"
 )
 
+include(SetupTestTarget)
+setup_test_target(mimicpp-adapter-tests-catch2)
+
 target_link_libraries(
 	mimicpp-adapter-tests-catch2
 	PRIVATE
