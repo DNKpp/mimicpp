@@ -358,11 +358,16 @@ namespace mimicpp::expectation_policies
 		}
 
 		[[nodiscard]]
-		StringT describe() const
+		std::optional<StringT> describe() const
 		{
-			return std::invoke(
+			if (const std::optional<StringT> description = m_Matcher.describe())
+			{
+				return std::invoke(
 					m_Describer,
-					m_Matcher.describe());
+					*description);
+			}
+
+			return std::nullopt;
 		}
 
 	private:

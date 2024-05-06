@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <concepts>
 #include <functional>
+#include <optional>
 #include <ranges>
 #include <tuple>
 #include <type_traits>
@@ -27,7 +28,7 @@ namespace mimicpp
 						&& requires(const T& matcher, Target& target)
 						{
 							{ matcher.matches(target) } -> std::convertible_to<bool>;
-							{ matcher.describe() } -> std::convertible_to<StringT>;
+							{ matcher.describe() } -> std::convertible_to<std::optional<StringT>>;
 						};
 
 	/**
