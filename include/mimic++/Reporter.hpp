@@ -723,6 +723,21 @@ namespace mimicpp
 		detail::get_reporter() = std::make_unique<T>(
 			std::forward<Args>(args)...);
 	}
+
+	namespace detail
+	{
+		template <typename T>
+		class ReporterInstaller
+		{
+		public:
+			template <typename... Args>
+			explicit ReporterInstaller(Args&&... args)
+			{
+				install_reporter<T>(
+					std::forward<Args>(args)...);
+			}
+		};
+	}
 }
 
 #endif
