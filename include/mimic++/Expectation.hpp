@@ -277,7 +277,7 @@ namespace mimicpp
 		MatchReport matches(const CallInfoT& call) const override
 		{
 			return MatchReport{
-				.finalizeReport = std::nullopt,
+				.finalizeReport = {std::nullopt},
 				.timesReport = MatchReport::Times{
 					.isApplicable = m_Times.is_applicable(),
 					.description = m_Times.describe_state()

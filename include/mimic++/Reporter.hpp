@@ -194,12 +194,14 @@ namespace mimicpp
 				*report.timesDescription);
 		}
 
-		if (std::ranges::any_of(report.expectationDescriptions, &std::optional<StringT>::has_value))
+		if (std::ranges::any_of(
+			report.expectationDescriptions, 
+			[](const auto& desc) { return desc.has_value(); }))
 		{
 			out << "expects:\n";
 			for (const auto& desc
 				: report.expectationDescriptions
-				| std::views::filter(&std::optional<StringT>::has_value))
+				| std::views::filter([](const auto& desc) { return desc.has_value(); }))
 			{
 				format_to(
 					std::ostreambuf_iterator{out},
