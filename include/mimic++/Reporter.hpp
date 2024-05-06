@@ -463,7 +463,9 @@ namespace mimicpp::detail
 	)
 	{
 		get_reporter()
+			// GCOVR_EXCL_START
 			->report_no_matches(
+				// GCOVR_EXCL_STOP
 				std::move(callReport),
 				std::move(matchReports));
 
@@ -480,7 +482,9 @@ namespace mimicpp::detail
 	)
 	{
 		get_reporter()
+			// GCOVR_EXCL_START
 			->report_inapplicable_matches(
+				// GCOVR_EXCL_STOP
 				std::move(callReport),
 				std::move(matchReports));
 
