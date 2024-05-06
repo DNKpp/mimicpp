@@ -10,6 +10,8 @@
 #include <catch2/reporters/catch_reporter_event_listener.hpp>
 #include <catch2/reporters/catch_reporter_registrars.hpp>
 
+#include <atomic>
+
 namespace
 {
 	inline std::atomic_int g_SuccessCounter{0};
