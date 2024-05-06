@@ -154,9 +154,9 @@ namespace mimicpp
 			return true;
 		}
 
-		static constexpr StringT describe()
+		static constexpr std::nullopt_t describe() noexcept
 		{
-			return "has no constraints";
+			return std::nullopt;
 		}
 	};
 }

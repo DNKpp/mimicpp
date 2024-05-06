@@ -171,9 +171,7 @@ TEST_CASE(
 
 	constexpr int value{42};
 	REQUIRE(matches::_.matches(value));
-	REQUIRE_THAT(
-		matches::_.describe(),
-		Catch::Matchers::Equals("has no constraints"));
+	REQUIRE(std::optional<StringT>{} == matches::_.describe());
 }
 
 TEST_CASE(
