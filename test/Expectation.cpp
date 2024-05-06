@@ -737,6 +737,7 @@ TEST_CASE(
 			.RETURN("times description");
 
 		const mimicpp::ExpectationReport report = expectation.report();
+		REQUIRE(report.timesDescription);
 		REQUIRE_THAT(
 			*report.timesDescription,
 			Matches::Equals("times description"));
@@ -768,6 +769,7 @@ TEST_CASE(
 		REQUIRE_THAT(
 			report.expectationDescriptions,
 			Matches::SizeIs(1));
+		REQUIRE(report.expectationDescriptions[0]);
 		REQUIRE_THAT(
 			*report.expectationDescriptions[0],
 			Matches::Equals("expectation description"));
