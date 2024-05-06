@@ -194,7 +194,7 @@ namespace mimicpp
 	 * \return The actual result.
 	 */
 	[[nodiscard]]
-	inline MatchResult evaluate_match_report(const MatchReport& report)
+	inline MatchResult evaluate_match_report(const MatchReport& report) noexcept
 	{
 		if (!std::ranges::all_of(report.expectationReports, &MatchReport::Expectation::isMatching))
 		{
