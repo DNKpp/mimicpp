@@ -210,6 +210,85 @@ namespace mimicpp
 	}
 
 	/**
+	 * \brief Converts the given report to text.
+	 * \param report The report.
+	 * \return The report text.
+	 */
+	[[nodiscard]]
+	inline StringT stringify_match_report(const MatchReport& report)
+	{
+		std::vector<StringT> matchedExpectationDescriptions{};
+		std::vector<StringT> unmatchedExpectationDescriptions{};
+
+		for (const auto& [isMatching, description] : report.expectationReports)
+		{
+			if (description)
+			{
+				if (isMatching)
+				{
+					matchedExpectationDescriptions.emplace_back(*description);
+				}
+				else
+				{
+					unmatchedExpectationDescriptions.emplace_back(*description);
+				}
+			}
+		}
+
+		StringStreamT out{};
+
+		switch (evaluate_match_report(report))
+		{
+		case MatchResult::full:
+			out << "Matched expectation:\n";
+			break;
+
+		case MatchResult::inapplicable:
+			format_to(
+				std::ostreambuf_iterator{out},
+				"Inapplicable, but otherwise matched expectation:\n"
+				"reason: {}\n",
+				report.timesReport.description.value_or("No reason provided."));
+			break;
+
+		case MatchResult::none:
+			out << "Unmatched expectation:\n";
+			break;
+
+		// GCOVR_EXCL_START
+		default:  // NOLINT(clang-diagnostic-covered-switch-default)
+			unreachable();
+		// GCOVR_EXCL_STOP
+		}
+
+		if (!std::ranges::empty(unmatchedExpectationDescriptions))
+		{
+			out << "failed:\n";
+			for (const auto& desc : unmatchedExpectationDescriptions)
+			{
+				format_to(
+					std::ostreambuf_iterator{out},
+					"\t{},\n",
+					desc);
+			}
+		}
+
+		if (!std::ranges::empty(matchedExpectationDescriptions))
+		{
+			out << "passed:\n";
+			for (const auto& desc : matchedExpectationDescriptions)
+			{
+				format_to(
+					std::ostreambuf_iterator{out},
+					"\t{},\n",
+					desc);
+			}
+		}
+
+		return std::move(out).str();
+	}
+
+	/**
 	 * \brief The reporter interface.
 	 * \details This is the central interface to be used, when creating reporters for external domains.
 	 */

@@ -8,6 +8,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/trompeloeil.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 using namespace mimicpp;
 
@@ -659,5 +660,133 @@ TEST_CASE(
 				callReport,
 				{},
 				std::make_exception_ptr(std::runtime_error{"Test"})));
+	}
+}
+
+TEST_CASE(
+	"stringify_match_report converts the match report to text representation.",
+	"[report]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When report denotes a full match.")
+	{
+		SECTION("Without any requirements.")
+		{
+			const MatchReport report{
+				.finalizeReport = {},
+				.timesReport = {true, "finalize description"},
+				.expectationReports = {}
+			};
+
+			REQUIRE_THAT(
+				stringify_match_report(report),
+				Matches::Equals(
+					"Matched expectation:\n"));
+		}
+
+		SECTION("When contains requirements.")
+		{
+			const MatchReport report{
+				.finalizeReport = {},
+				.timesReport = {true, "finalize description"},
+				.expectationReports = {
+					{true, "Requirement1 description"},
+					{true, "Requirement2 description"}
+				}
+			};
+
+			REQUIRE_THAT(
+				stringify_match_report(report),
+				Matches::Equals(
+					"Matched expectation:\n"
+					"passed:\n"
+					"\tRequirement1 description,\n"
+					"\tRequirement2 description,\n"));
+		}
+	}
+
+	SECTION("When report denotes an inapplicable match.")
+	{
+		SECTION("Without any requirements.")
+		{
+			const MatchReport report{
+				.finalizeReport = {},
+				.timesReport = {false, "finalize description"},
+				.expectationReports = {}
+			};
+
+			REQUIRE_THAT(
+				stringify_match_report(report),
+				Matches::Equals(
+					"Inapplicable, but otherwise matched expectation:\n"
+					"reason: finalize description\n"));
+		}
+
+		SECTION("When contains requirements.")
+		{
+			const MatchReport report{
+				.finalizeReport = {},
+				.timesReport = {false, "finalize description"},
+				.expectationReports = {
+					{true, "Requirement1 description"},
+					{true, "Requirement2 description"}
+				}
+			};
+
+			REQUIRE_THAT(
+				stringify_match_report(report),
+				Matches::Equals(
+					"Inapplicable, but otherwise matched expectation:\n"
+					"reason: finalize description\n"
+					"passed:\n"
+					"\tRequirement1 description,\n"
+					"\tRequirement2 description,\n"));
+		}
+	}
+
+	SECTION("When report denotes an unmatched report.")
+	{
+		SECTION("When contains only failed requirements.")
+		{
+			const MatchReport report{
+				.finalizeReport = {},
+				.timesReport = {true, "finalize description"},
+				.expectationReports = {
+					{false, "Requirement1 description"},
+					{false, "Requirement2 description"}
+				}
+			};
+
+			REQUIRE_THAT(
+				stringify_match_report(report),
+				Matches::Equals(
+					"Unmatched expectation:\n"
+					"failed:\n"
+					"\tRequirement1 description,\n"
+					"\tRequirement2 description,\n"));
+		}
+
+		SECTION("When contains only mixed requirements.")
+		{
+			const MatchReport report{
+				.finalizeReport = {},
+				.timesReport = {true, "finalize description"},
+				.expectationReports = {
+					{true, "Requirement1 description"},
+					{false, "Requirement2 description"}
+				}
+			};
+
+			REQUIRE_THAT(
+				stringify_match_report(report),
+				Matches::Equals(
+					"Unmatched expectation:\n"
+					"failed:\n"
+					"\tRequirement2 description,\n"
+					"passed:\n"
+					"\tRequirement1 description,\n"));
+		}
 	}
 }
