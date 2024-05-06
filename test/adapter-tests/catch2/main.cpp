@@ -98,7 +98,7 @@ namespace
 		}
 
 		[[maybe_unused]]
-		static constexpr bool matches([[maybe_unused]] const auto& info)
+		static bool matches([[maybe_unused]] const auto& info)
 		{
 			throw TestException{};
 		}
