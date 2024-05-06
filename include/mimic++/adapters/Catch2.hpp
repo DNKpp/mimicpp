@@ -38,7 +38,7 @@ namespace mimicpp::detail
 	
 	inline void send_catch_warn(const StringViewT msg)
 	{
-#ifdef CATCH_CONFIG_PREFIX_ALL
+#ifdef CATCH_CONFIG_PREFIX_MESSAGES
 		CATCH_WARN(msg);
 #else
 		WARN(msg);
