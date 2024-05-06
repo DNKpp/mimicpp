@@ -704,6 +704,76 @@ TEMPLATE_TEST_CASE(
 	}
 }
 
+TEST_CASE(
+	"mimicpp::BasicExpectation::report gathers information about its used policies.",
+	"[expectation]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	using FinalizerPolicyT = FinalizerFake<void()>;
+	using TimesPolicyT = TimesFake;
+
+	SECTION("Finalizer policy has no description.")
+	{
+		// Todo:
+	}
+
+	SECTION("Times policy is queried.")
+	{
+		using TimesT = TimesFacade<std::reference_wrapper<TimesMock>, UnwrapReferenceWrapper>;
+
+		TimesMock times{};
+		mimicpp::BasicExpectation<
+				void(),
+				TimesT,
+				FinalizerPolicyT>
+			expectation{
+				TimesT{std::ref(times)},
+				FinalizerPolicyT{}
+			};
+
+		REQUIRE_CALL(times, describe_state())
+			.RETURN("times description");
+
+		const mimicpp::ExpectationReport report = expectation.report();
+		REQUIRE_THAT(
+			*report.timesDescription,
+			Matches::Equals("times description"));
+	}
+
+	SECTION("Expectation policies are queried.")
+	{
+		using PolicyT = PolicyFacade<
+			void(),
+			std::reference_wrapper<PolicyMock<void()>>,
+			UnwrapReferenceWrapper>;
+
+		PolicyMock<void()> policy{};
+		mimicpp::BasicExpectation<
+				void(),
+				TimesPolicyT,
+				FinalizerPolicyT,
+				PolicyT>
+			expectation{
+				TimesPolicyT{},
+				FinalizerPolicyT{},
+				PolicyT{std::ref(policy)}
+			};
+
+		REQUIRE_CALL(policy, describe())
+			.RETURN("expectation description");
+
+		const mimicpp::ExpectationReport report = expectation.report();
+		REQUIRE_THAT(
+			report.expectationDescriptions,
+			Matches::SizeIs(1));
+		REQUIRE_THAT(
+			*report.expectationDescriptions[0],
+			Matches::Equals("expectation description"));
+	}
+}
+
 TEMPLATE_TEST_CASE(
 	"mimicpp::BasicExpectation finalizer can be exchanged.",
 	"[expectation]",
