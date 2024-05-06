@@ -726,7 +726,8 @@ TEST_CASE(
 			REQUIRE_THAT(
 				stringify_match_report(report),
 				Matches::Equals(
-					"Matched expectation:\n"));
+					"Matched expectation: {\n"
+					"}\n"));
 		}
 
 		SECTION("When contains requirements.")
@@ -743,10 +744,11 @@ TEST_CASE(
 			REQUIRE_THAT(
 				stringify_match_report(report),
 				Matches::Equals(
-					"Matched expectation:\n"
+					"Matched expectation: {\n"
 					"passed:\n"
 					"\tRequirement1 description,\n"
-					"\tRequirement2 description,\n"));
+					"\tRequirement2 description,\n"
+					"}\n"));
 		}
 	}
 
@@ -763,8 +765,9 @@ TEST_CASE(
 			REQUIRE_THAT(
 				stringify_match_report(report),
 				Matches::Equals(
-					"Inapplicable, but otherwise matched expectation:\n"
-					"reason: finalize description\n"));
+					"Inapplicable, but otherwise matched expectation: {\n"
+					"reason: finalize description\n"
+					"}\n"));
 		}
 
 		SECTION("When contains requirements.")
@@ -781,11 +784,12 @@ TEST_CASE(
 			REQUIRE_THAT(
 				stringify_match_report(report),
 				Matches::Equals(
-					"Inapplicable, but otherwise matched expectation:\n"
+					"Inapplicable, but otherwise matched expectation: {\n"
 					"reason: finalize description\n"
 					"passed:\n"
 					"\tRequirement1 description,\n"
-					"\tRequirement2 description,\n"));
+					"\tRequirement2 description,\n"
+					"}\n"));
 		}
 	}
 
@@ -805,10 +809,11 @@ TEST_CASE(
 			REQUIRE_THAT(
 				stringify_match_report(report),
 				Matches::Equals(
-					"Unmatched expectation:\n"
+					"Unmatched expectation: {\n"
 					"failed:\n"
 					"\tRequirement1 description,\n"
-					"\tRequirement2 description,\n"));
+					"\tRequirement2 description,\n"
+					"}\n"));
 		}
 
 		SECTION("When contains only mixed requirements.")
@@ -825,11 +830,12 @@ TEST_CASE(
 			REQUIRE_THAT(
 				stringify_match_report(report),
 				Matches::Equals(
-					"Unmatched expectation:\n"
+					"Unmatched expectation: {\n"
 					"failed:\n"
 					"\tRequirement2 description,\n"
 					"passed:\n"
-					"\tRequirement1 description,\n"));
+					"\tRequirement1 description,\n"
+					"}\n"));
 		}
 	}
 }

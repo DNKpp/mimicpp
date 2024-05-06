@@ -332,19 +332,19 @@ namespace mimicpp
 		switch (evaluate_match_report(report))
 		{
 		case MatchResult::full:
-			out << "Matched expectation:\n";
+			out << "Matched expectation: {\n";
 			break;
 
 		case MatchResult::inapplicable:
 			format_to(
 				std::ostreambuf_iterator{out},
-				"Inapplicable, but otherwise matched expectation:\n"
+				"Inapplicable, but otherwise matched expectation: {{\n"
 				"reason: {}\n",
 				report.timesReport.description.value_or("No reason provided."));
 			break;
 
 		case MatchResult::none:
-			out << "Unmatched expectation:\n";
+			out << "Unmatched expectation: {\n";
 			break;
 
 		// GCOVR_EXCL_START
@@ -376,6 +376,8 @@ namespace mimicpp
 					desc);
 			}
 		}
+
+		out << "}\n";
 
 		return std::move(out).str();
 	}
