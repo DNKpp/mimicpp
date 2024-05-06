@@ -18,6 +18,7 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <ranges>
 #include <typeindex>
 #include <vector>
 
@@ -107,6 +108,53 @@ namespace mimicpp
 			.fromCategory = callInfo.fromCategory,
 			.fromConstness = callInfo.fromConstness
 		};
+	}
+
+	/**
+	 * \brief Converts the given report to text.
+	 * \param report The report.
+	 * \return The report text.
+	 * \relatesalso CallReport
+	 */
+	[[nodiscard]]
+	inline StringT stringify_call_report(const CallReport& report)
+	{
+		StringStreamT out{};
+		format_to(
+			std::ostreambuf_iterator{out},
+			"call from {}[{}:{}], {}\n",
+			report.fromLoc.file_name(),
+			report.fromLoc.line(),
+			report.fromLoc.column(),
+			report.fromLoc.function_name());
+
+		format_to(
+			std::ostreambuf_iterator{out},
+			"constness: {}\n"
+			"value category: {}\n"
+			"return type: {}\n",
+			report.fromConstness,
+			report.fromCategory,
+			report.returnTypeIndex.name());
+
+		if (!std::ranges::empty(report.argDetails))
+		{
+			out << "args:\n";
+			for (const std::size_t i : std::views::iota(0u, std::ranges::size(report.argDetails)))
+			{
+				format_to(
+					std::ostreambuf_iterator{out},
+					"\targ[{}]: {{\n"
+					"\t\ttype: {},\n"
+					"\t\tvalue: {}\n"
+					"\t}},\n",
+					i,
+					report.argDetails[i].typeIndex.name(),
+					report.argDetails[i].stateString);
+			}
+		}
+
+		return std::move(out).str();
 	}
 
 	/**
@@ -213,6 +261,7 @@ namespace mimicpp
 	 * \brief Converts the given report to text.
 	 * \param report The report.
 	 * \return The report text.
+	 * \relatesalso MatchReport
 	 */
 	[[nodiscard]]
 	inline StringT stringify_match_report(const MatchReport& report)

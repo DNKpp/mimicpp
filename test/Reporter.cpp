@@ -790,3 +790,54 @@ TEST_CASE(
 		}
 	}
 }
+
+TEST_CASE(
+	"stringify_call_report converts the call report to text representation.",
+	"[report]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When report without arguments is given.")
+	{
+		const CallReport report{
+			.returnTypeIndex = typeid(void),
+			.argDetails = {},
+			.fromLoc = std::source_location::current(),
+			.fromCategory = ValueCategory::any,
+			.fromConstness = Constness::any
+		};
+
+		REQUIRE_THAT(
+			stringify_call_report(report),
+			Matches::Matches(
+				"call from .+\\[\\d+:\\d+\\], .+\n"
+				"constness: any\n"
+				"value category: any\n"
+				"return type: void\n"));
+	}
+
+	SECTION("When report with arguments is given.")
+	{
+		const CallReport report{
+			.returnTypeIndex = typeid(int),
+			.argDetails = {{.typeIndex = typeid(double), .stateString = "4.2"}},
+			.fromLoc = std::source_location::current(),
+			.fromCategory = ValueCategory::lvalue,
+			.fromConstness = Constness::as_const
+		};
+
+		REQUIRE_THAT(
+			stringify_call_report(report),
+			Matches::Matches(
+				"call from .+\\[\\d+:\\d+\\], .+\n"
+				"constness: const\n"
+				"value category: lvalue\n"
+				"return type: int\n"
+				"args:\n"
+				"\targ\\[0\\]: \\{\n"
+				"\t\ttype: double,\n"
+				"\t\tvalue: 4.2\n"
+				"\t\\},\n"));
+	}
+}
