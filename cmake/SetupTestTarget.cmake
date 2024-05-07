@@ -6,17 +6,6 @@
 
 function(setup_test_target TARGET_NAME)
 
-	if (MSVC)
-
-		# When using github ci, exceptions seems to be disabled by default.
-		target_compile_options(
-			${TARGET_NAME}
-			PRIVATE
-			/EHsc
-		)
-
-	endif()
-
 	if (SANITIZE_ADDRESS)
 
 		# workaround linker errors on msvc
