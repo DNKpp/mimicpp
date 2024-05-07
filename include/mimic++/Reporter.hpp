@@ -25,21 +25,14 @@
 namespace mimicpp
 {
 	/**
-	 * \defgroup REPORTING reporting
-	 * \brief Contains reporting related symbols
-	 * \details Reports are simplified object representations of ``mimicpp`` types. In fact, reports are used to communicate with
+	 * \defgroup REPORTING_REPORTS reports
+	 * \ingroup REPORTING
+	 * \brief Contains reports of ``mimic++`` types.
+	 * \details Reports are simplified object representations of ``mimic++`` types. In fact, reports are used to communicate with
 	 * independent domains (e.g. unit-test frameworks) over the ``IReporter`` interface and are thus designed to provide as much
 	 * transparent information as possible, without requiring them to be a generic type.
 	 *
-	 * At any time there exists exactly one global reporter, which may be directly or indirectly exchanged by users.
-	 * Reports are sent to the currently installed reporter via the ``report_xyz`` free-functions. Most of those functions require, that
-	 * reports are handled in a specific manner (e.g. ``report_no_matches`` is expected to never return) and custom reporters **must**
-	 * follow that specification, otherwise this will lead to undefined behavior. For further details, have a look at the specific
-	 * function documentation.
-	 *
-	 * \note In general users shall not directly interact with the installed reporter, except when they want to replace it. 
-	 *
-	 *\{
+	 * \{
 	 */
 
 	/**
@@ -413,6 +406,33 @@ namespace mimicpp
 
 		return std::move(out).str();
 	}
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup REPORTING reporting
+	 * \brief Contains reporting related symbols
+	 * \details Reporting is executed, when something notably has been detected by ``mimic++``; often it is expected, that the reporter
+	 * reacts to such a report in a specific manner (e.g. aborting the test case). For example the ``DefaultReporter`` simply throws
+	 * exceptions on error reports, while other more specialized reporters handle such cases slightly different (but still abort the
+	 * current test).
+	 * These specialized Reporters are used to send reports to a specific destination (e.g. the utilized unit-test framework),
+	 * which often provide more advanced mechanics for printing failed tests to the users.
+	 *
+	 * Users may provide their own reporter implementation; e.g. if there is no reporter for the desired unit-test framework.
+	 *
+	 * At any time there exists exactly one global reporter, which may be directly or indirectly exchanged by users.
+	 * Reports are sent to the currently installed reporter via the ``report_xyz`` free-functions. Most of those functions require, that
+	 * reports are handled in a specific manner (e.g. ``report_no_matches`` is expected to never return) and custom reporters **must**
+	 * follow that specification, otherwise this will lead to undefined behavior. For further details, have a look at the specific
+	 * function documentation.
+	 *
+	 * \note In general users shall not directly interact with the installed reporter, except when they want to replace it.
+	 *
+	 * \{
+	 */
 
 	/**
 	 * \brief The reporter interface.
