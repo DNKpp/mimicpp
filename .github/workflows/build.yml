@@ -134,7 +134,7 @@ jobs:
               shell: bash
               run: |
                 echo "CXXFLAGS=$(echo $CXXFLAGS -stdlib=libc++)" >> $GITHUB_ENV
-                echo "LDFLAGS=$(echo LDFLAGS -lc++abi)" >> $GITHUB_ENV
+                echo "LDFLAGS=$(echo $LDFLAGS -lc++abi)" >> $GITHUB_ENV
 
             - name: Setup linux
               if: ${{ matrix.config.prefix  == 'Linux' }}
