@@ -61,7 +61,9 @@ jobs:
                 git config --global --add safe.directory /__w/mimicpp/mimicpp
                 gcovr --root build/test/unit-tests --filter "include/mimic++" --keep -j4 -v \
                     --exclude-lines-by-pattern "\s*assert\(" \
+                    --exclude-lines-by-pattern "\s*unreachable\(\);" \
                     --exclude-unreachable-branches \
+                    --exclude-function-lines \
                     --exclude-noncode-lines \
                     --exclude-throw-branches \
                     --decisions \
