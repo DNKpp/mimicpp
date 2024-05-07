@@ -133,8 +133,8 @@ jobs:
               if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
               shell: bash
               run: |
-                echo "CXX_FLAGS=$(echo $CXX_FLAGS -stdlib=libc++)" >> $GITHUB_ENV
-                echo "LINK_FLAGS=$(echo $LINK_FLAGS -lc++abi)" >> $GITHUB_ENV
+                echo "CXXFLAGS=$(echo $CXXFLAGS -stdlib=libc++)" >> $GITHUB_ENV
+                echo "LDFLAGS=$(echo LDFLAGS -lc++abi)" >> $GITHUB_ENV
 
             - name: Setup linux
               if: ${{ matrix.config.prefix  == 'Linux' }}
@@ -170,8 +170,6 @@ jobs:
                     -S . \
                     -B build \
                     -D CMAKE_VERBOSE_MAKEFILE=yes \
-                    -D CMAKE_CXX_FLAGS:STRING="${{ env.CXX_FLAGS }}" \
-                    -D CMAKE_EXE_LINKER_FLAGS:STRING="${{ env.LINK_FLAGS }}" \
                     -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
                     -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
                     ${{ env.CMAKE_CONFIG_EXTRA }}

@@ -29,10 +29,10 @@ jobs:
             - name: Configure
               env:
                 LDFLAGS: "-fprofile-arcs"
+                CXXFLAGS: "-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions"
               run: |
                 cmake -S . \
                     -B build \
-                    -D CMAKE_CXX_FLAGS="-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions" \
                     -D CMAKE_BUILD_TYPE="Debug" \
                     -D MIMICPP_ENABLE_ADAPTER_TESTS=YES
 
