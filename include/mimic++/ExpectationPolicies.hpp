@@ -21,7 +21,7 @@ namespace mimicpp::expectation_policies::detail
 	[[nodiscard]]
 	inline StringT describe_times_state(const std::size_t current, const std::size_t min, const std::size_t max)
 	{
-		const auto verbalize = [](const std::size_t value)-> StringT
+		const auto verbalizeValue = [](const std::size_t value)-> StringT
 		{
 			switch (value)
 			{
@@ -40,7 +40,7 @@ namespace mimicpp::expectation_policies::detail
 		{
 			return format::format(
 				"inapplicable: already saturated (matched {})",
-				verbalize(current));
+				verbalizeValue(current));
 		}
 
 		if (min <= current)
@@ -51,40 +51,25 @@ namespace mimicpp::expectation_policies::detail
 				max);
 		}
 
-		const StringT intervalDescription = std::invoke(
-			[&]() -> StringT
+		const auto verbalizeInterval = [verbalizeValue](const std::size_t start, const std::size_t end)
+		{
+			if (start < end)
 			{
-				if (min < max)
-				{
-					return format::format(
-						"between {} and {} times",
-						min,
-						max);
-				}
-
 				return format::format(
-					"exactly {}",
-					verbalize(max));
-			});
+					"between {} and {} times",
+					start,
+					end);
+			}
 
-		if (current == 0)
-		{
 			return format::format(
-				"unsatisfied: matched never - {} is expected",
-				intervalDescription);
-		}
-
-		if (current == 1)
-		{
-			return format::format(
-				"unsatisfied: matched just once - {} is expected",
-				intervalDescription);
-		}
+				"exactly {}",
+				verbalizeValue(end));
+		};
 
 		return format::format(
-			"unsatisfied: matched just {} times - {} is expected",
-			current,
-			intervalDescription);
+			"unsatisfied: matched {} - {} is expected",
+			verbalizeValue(current),
+			verbalizeInterval(min, max));
 	}
 }
 
