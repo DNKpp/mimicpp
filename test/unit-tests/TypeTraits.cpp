@@ -27,6 +27,76 @@ namespace
 		using sig = Return(Args..., ...);
 		using sig_noexcept = Return(Args..., ...) noexcept;
 	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args...) const>
+	{
+		using sig = Return(Args...) const;
+		using sig_noexcept = Return(Args...) const noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args..., ...) const>
+	{
+		using sig = Return(Args..., ...) const;
+		using sig_noexcept = Return(Args..., ...) const noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args...) &>
+	{
+		using sig = Return(Args...) &;
+		using sig_noexcept = Return(Args...) & noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args..., ...) &>
+	{
+		using sig = Return(Args..., ...) &;
+		using sig_noexcept = Return(Args..., ...) & noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args...) const &>
+	{
+		using sig = Return(Args...) const &;
+		using sig_noexcept = Return(Args...) const & noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args..., ...) const &>
+	{
+		using sig = Return(Args..., ...) const &;
+		using sig_noexcept = Return(Args..., ...) const & noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args...) &&>
+	{
+		using sig = Return(Args...) &&;
+		using sig_noexcept = Return(Args...) && noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args..., ...) &&>
+	{
+		using sig = Return(Args..., ...) &&;
+		using sig_noexcept = Return(Args..., ...) && noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args...) const &&>
+	{
+		using sig = Return(Args...) const &&;
+		using sig_noexcept = Return(Args...) const && noexcept;
+	};
+
+	template <typename Return, typename... Args>
+	struct signature_helper<Return(Args..., ...) const &&>
+	{
+		using sig = Return(Args..., ...) const &&;
+		using sig_noexcept = Return(Args..., ...) const && noexcept;
+	};
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -65,7 +135,62 @@ TEMPLATE_TEST_CASE(
 	double(int),
 	double(...),
 	double(float, int),
-	double(float, ...)
+	double(float, ...),
+
+	void() const,
+	void(int) const,
+	void(...) const,
+	void(float, int) const,
+	void(float, ...) const,
+	double() const,
+	double(int) const,
+	double(...) const,
+	double(float, int) const,
+	double(float, ...) const,
+
+	void() &,
+	void(int) &,
+	void(...) &,
+	void(float, int) &,
+	void(float, ...) &,
+	double() &,
+	double(int) &,
+	double(...) &,
+	double(float, int) &,
+	double(float, ...) &,
+
+	void() const &,
+	void(int) const &,
+	void(...) const &,
+	void(float, int) const &,
+	void(float, ...) const &,
+	double() const &,
+	double(int) const &,
+	double(...) const &,
+	double(float, int) const &,
+	double(float, ...) const &,
+
+	void() &&,
+	void(int) &&,
+	void(...) &&,
+	void(float, int) &&,
+	void(float, ...) &&,
+	double() &&,
+	double(int) &&,
+	double(...) &&,
+	double(float, int) &&,
+	double(float, ...) &&,
+
+	void() const &&,
+	void(int) const &&,
+	void(...) const &&,
+	void(float, int) const &&,
+	void(float, ...) const &&,
+	double() const &&,
+	double(int) const &&,
+	double(...) const &&,
+	double(float, int) const &&,
+	double(float, ...) const &&
 )
 {
 	using SignatureT = TestType;

@@ -72,6 +72,126 @@ namespace mimicpp
 		using type = Return(Params..., ...);
 	};
 
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) const>
+	{
+		using type = Return(Params...) const;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) const>
+	{
+		using type = Return(Params..., ...) const;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) const noexcept>
+	{
+		using type = Return(Params...) const;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) const noexcept>
+	{
+		using type = Return(Params..., ...) const;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) &>
+	{
+		using type = Return(Params...) &;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) &>
+	{
+		using type = Return(Params..., ...) &;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) & noexcept>
+	{
+		using type = Return(Params...) &;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) & noexcept>
+	{
+		using type = Return(Params..., ...) &;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) const &>
+	{
+		using type = Return(Params...) const &;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) const &>
+	{
+		using type = Return(Params..., ...) const &;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) const & noexcept>
+	{
+		using type = Return(Params...) const &;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) const & noexcept>
+	{
+		using type = Return(Params..., ...) const &;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) &&>
+	{
+		using type = Return(Params...) &&;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) &&>
+	{
+		using type = Return(Params..., ...) &&;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) && noexcept>
+	{
+		using type = Return(Params...) &&;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) && noexcept>
+	{
+		using type = Return(Params..., ...) &&;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) const &&>
+	{
+		using type = Return(Params...) const &&;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) const &&>
+	{
+		using type = Return(Params..., ...) const &&;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params...) const && noexcept>
+	{
+		using type = Return(Params...) const &&;
+	};
+
+	template <typename Return, typename... Params>
+	struct signature_remove_noexcept<Return(Params..., ...) const && noexcept>
+	{
+		using type = Return(Params..., ...) const &&;
+	};
+
 	template <typename Signature>
 	struct signature_decay;
 
