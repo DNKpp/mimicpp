@@ -84,7 +84,6 @@ namespace mimicpp
 	 * \tparam Params The function parameter types.
 	 * \param callInfo The call info.
 	 * \return The call report.
-	 * \relatesalso CallReport
 	 * \relatesalso call::Info
 	 */
 	template <typename Return, typename... Params>
@@ -738,6 +737,21 @@ namespace mimicpp
 			}
 		};
 	}
+
+	/**
+	 * \defgroup REPORTING_ADAPTERS test framework adapters
+	 * \ingroup REPORTING
+	 * \brief Reporter integrations for various third-party frameworks.
+	 * \details These reporters are specialized implementations, which provide seamless integrations of ``mimic++`` into the desired
+	 * unit-test framework. Integrations are enabled by simply including the specific header into any source file. The include order
+	 * doesn't matter.
+	 *
+	 * \note Including multiple headers of the ``adapters`` subdirectory into one executable is possible, but with caveats. It's unspecified
+	 * which reporter will be active at the program start. So, if you need multiple reporters in one executable, you should explicitly
+	 * install the desired reporter on a per test case basis. 
+	 *
+	 *\{
+	 */
 }
 
 #endif

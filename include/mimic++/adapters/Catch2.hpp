@@ -48,6 +48,14 @@ namespace mimicpp::detail
 
 namespace mimicpp
 {
+	/**
+	 * \brief Reporter for the integration into Catch2.
+	 * \ingroup REPORTING_ADAPTERS
+	 * \details This reporter enables the integration of ``mimic++`` into ``Catch2`` and prefixes the headers
+	 * of ``Catch2`` with ``catch2/``.
+	 *
+	 * This reporter installs itself by simply including this header file into any source file of the test executable.
+	 */
 	class Catch2Reporter final
 		: public IReporter
 	{
