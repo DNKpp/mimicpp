@@ -221,6 +221,7 @@ TEST_CASE(
 )
 {
 	const ExpectationReport first{
+		.sourceLocation = std::source_location::current(),
 		.finalizerDescription = "finalizer description",
 		.timesDescription = "times description",
 		.expectationDescriptions = {
@@ -236,6 +237,20 @@ TEST_CASE(
 		REQUIRE(second == first);
 		REQUIRE(!(first != second));
 		REQUIRE(!(second!= first));
+	}
+
+	SECTION("When source-location differs, reports do not compare equal.")
+	{
+		ExpectationReport second{first};
+		second.sourceLocation = GENERATE(
+			as<std::optional<std::source_location>>{},
+			std::nullopt,
+			std::source_location::current());
+
+		REQUIRE(!(first == second));
+		REQUIRE(!(second == first));
+		REQUIRE(first != second);
+		REQUIRE(second!= first);
 	}
 
 	SECTION("When finalizer description differs, reports do not compare equal.")
@@ -363,6 +378,7 @@ TEST_CASE(
 )
 {
 	const MatchReport first{
+		.sourceLocation = std::source_location::current(),
 		.finalizeReport = {"finalize description"},
 		.timesReport = {true, "times description"},
 		.expectationReports = {
@@ -378,6 +394,20 @@ TEST_CASE(
 		REQUIRE(second == first);
 		REQUIRE(!(first != second));
 		REQUIRE(!(second != first));
+	}
+
+	SECTION("When source-location differs, reports do not compare equal.")
+	{
+		MatchReport second{first};
+		second.sourceLocation = GENERATE(
+			as<std::optional<std::source_location>>{},
+			std::nullopt,
+			std::source_location::current());
+
+		REQUIRE(!(first == second));
+		REQUIRE(!(second == first));
+		REQUIRE(first != second);
+		REQUIRE(second!= first);
 	}
 
 	SECTION("When finalize report differs, they do not compare equal.")
@@ -718,6 +748,7 @@ TEST_CASE(
 		SECTION("Without any requirements.")
 		{
 			const MatchReport report{
+				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
 				.timesReport = {true, "finalize description"},
 				.expectationReports = {}
@@ -725,14 +756,16 @@ TEST_CASE(
 
 			REQUIRE_THAT(
 				stringify_match_report(report),
-				Matches::Equals(
-					"Matched expectation: {\n"
-					"}\n"));
+				Matches::Matches(
+					"Matched expectation: \\{\n"
+					"from: .+\\[\\d+:\\d+\\], .+\n"
+					"\\}\n"));
 		}
 
 		SECTION("When contains requirements.")
 		{
 			const MatchReport report{
+				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
 				.timesReport = {true, "finalize description"},
 				.expectationReports = {
@@ -743,12 +776,13 @@ TEST_CASE(
 
 			REQUIRE_THAT(
 				stringify_match_report(report),
-				Matches::Equals(
-					"Matched expectation: {\n"
+				Matches::Matches(
+					"Matched expectation: \\{\n"
+					"from: .+\\[\\d+:\\d+\\], .+\n"
 					"passed:\n"
 					"\tRequirement1 description,\n"
 					"\tRequirement2 description,\n"
-					"}\n"));
+					"\\}\n"));
 		}
 	}
 
@@ -757,6 +791,7 @@ TEST_CASE(
 		SECTION("Without any requirements.")
 		{
 			const MatchReport report{
+				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
 				.timesReport = {false, "finalize description"},
 				.expectationReports = {}
@@ -764,15 +799,17 @@ TEST_CASE(
 
 			REQUIRE_THAT(
 				stringify_match_report(report),
-				Matches::Equals(
-					"Inapplicable, but otherwise matched expectation: {\n"
+				Matches::Matches(
+					"Inapplicable, but otherwise matched expectation: \\{\n"
 					"reason: finalize description\n"
-					"}\n"));
+					"from: .+\\[\\d+:\\d+\\], .+\n"
+					"\\}\n"));
 		}
 
 		SECTION("When contains requirements.")
 		{
 			const MatchReport report{
+				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
 				.timesReport = {false, "finalize description"},
 				.expectationReports = {
@@ -783,13 +820,14 @@ TEST_CASE(
 
 			REQUIRE_THAT(
 				stringify_match_report(report),
-				Matches::Equals(
-					"Inapplicable, but otherwise matched expectation: {\n"
+				Matches::Matches(
+					"Inapplicable, but otherwise matched expectation: \\{\n"
 					"reason: finalize description\n"
+					"from: .+\\[\\d+:\\d+\\], .+\n"
 					"passed:\n"
 					"\tRequirement1 description,\n"
 					"\tRequirement2 description,\n"
-					"}\n"));
+					"\\}\n"));
 		}
 	}
 
@@ -798,6 +836,7 @@ TEST_CASE(
 		SECTION("When contains only failed requirements.")
 		{
 			const MatchReport report{
+				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
 				.timesReport = {true, "finalize description"},
 				.expectationReports = {
@@ -808,17 +847,19 @@ TEST_CASE(
 
 			REQUIRE_THAT(
 				stringify_match_report(report),
-				Matches::Equals(
-					"Unmatched expectation: {\n"
+				Matches::Matches(
+					"Unmatched expectation: \\{\n"
+					"from: .+\\[\\d+:\\d+\\], .+\n"
 					"failed:\n"
 					"\tRequirement1 description,\n"
 					"\tRequirement2 description,\n"
-					"}\n"));
+					"\\}\n"));
 		}
 
 		SECTION("When contains only mixed requirements.")
 		{
 			const MatchReport report{
+				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
 				.timesReport = {true, "finalize description"},
 				.expectationReports = {
@@ -829,14 +870,31 @@ TEST_CASE(
 
 			REQUIRE_THAT(
 				stringify_match_report(report),
-				Matches::Equals(
-					"Unmatched expectation: {\n"
+				Matches::Matches(
+					"Unmatched expectation: \\{\n"
+					"from: .+\\[\\d+:\\d+\\], .+\n"
 					"failed:\n"
 					"\tRequirement2 description,\n"
 					"passed:\n"
 					"\tRequirement1 description,\n"
-					"}\n"));
+					"\\}\n"));
 		}
+	}
+
+	SECTION("When source location is empty, that information is omitted.")
+	{
+		const MatchReport report{
+			.sourceLocation = std::nullopt,
+			.finalizeReport = {},
+			.timesReport = {true, "finalize description"},
+			.expectationReports = {}
+		};
+
+		REQUIRE_THAT(
+			stringify_match_report(report),
+			Matches::Matches(
+				"Matched expectation: \\{\n"
+				"\\}\n"));
 	}
 }
 
@@ -899,6 +957,7 @@ TEST_CASE(
 	namespace Matches = Catch::Matchers;
 
 	ExpectationReport report{
+		.sourceLocation = std::source_location::current(),
 		.finalizerDescription = "finalizer description",
 		.timesDescription = "times description",
 		.expectationDescriptions = {
@@ -910,8 +969,9 @@ TEST_CASE(
 	{
 		REQUIRE_THAT(
 			stringify_expectation_report(std::as_const(report)),
-			Matches::Equals(
+			Matches::Matches(
 				"Expectation report:\n"
+				"from: .+\\[\\d+:\\d+\\], .+\n"
 				"times: times description\n"
 				"expects:\n"
 				"\texpectation1 description,\n"
@@ -924,8 +984,9 @@ TEST_CASE(
 
 		REQUIRE_THAT(
 			stringify_expectation_report(std::as_const(report)),
-			Matches::Equals(
+			Matches::Matches(
 				"Expectation report:\n"
+				"from: .+\\[\\d+:\\d+\\], .+\n"
 				"expects:\n"
 				"\texpectation1 description,\n"
 				"finally: finalizer description\n"));
@@ -937,8 +998,9 @@ TEST_CASE(
 
 		REQUIRE_THAT(
 			stringify_expectation_report(std::as_const(report)),
-			Matches::Equals(
+			Matches::Matches(
 				"Expectation report:\n"
+				"from: .+\\[\\d+:\\d+\\], .+\n"
 				"times: times description\n"
 				"expects:\n"
 
@@ -951,8 +1013,9 @@ TEST_CASE(
 
 		REQUIRE_THAT(
 			stringify_expectation_report(std::as_const(report)),
-			Matches::Equals(
+			Matches::Matches(
 				"Expectation report:\n"
+				"from: .+\\[\\d+:\\d+\\], .+\n"
 				"times: times description\n"
 				"finally: finalizer description\n"));
 	}
@@ -963,8 +1026,9 @@ TEST_CASE(
 
 		REQUIRE_THAT(
 			stringify_expectation_report(std::as_const(report)),
-			Matches::Equals(
+			Matches::Matches(
 				"Expectation report:\n"
+				"from: .+\\[\\d+:\\d+\\], .+\n"
 				"times: times description\n"
 				"finally: finalizer description\n"));
 	}
@@ -972,6 +1036,21 @@ TEST_CASE(
 	SECTION("When expectation contains mixed descriptions.")
 	{
 		report.expectationDescriptions.emplace_back(std::nullopt);
+
+		REQUIRE_THAT(
+			stringify_expectation_report(std::as_const(report)),
+			Matches::Matches(
+				"Expectation report:\n"
+				"from: .+\\[\\d+:\\d+\\], .+\n"
+				"times: times description\n"
+				"expects:\n"
+				"\texpectation1 description,\n"
+				"finally: finalizer description\n"));
+	}
+
+	SECTION("When expectatin contains no source-location.")
+	{
+		report.sourceLocation.reset();
 
 		REQUIRE_THAT(
 			stringify_expectation_report(std::as_const(report)),

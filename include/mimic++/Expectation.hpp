@@ -250,6 +250,7 @@ namespace mimicpp
 		ExpectationReport report() const override
 		{
 			return ExpectationReport{
+				.sourceLocation = m_SourceLocation,
 				.finalizerDescription = std::nullopt,
 				.timesDescription = m_Times.describe_state(),
 				.expectationDescriptions = std::apply(
@@ -279,6 +280,7 @@ namespace mimicpp
 		MatchReport matches(const CallInfoT& call) const override
 		{
 			return MatchReport{
+				.sourceLocation = m_SourceLocation,
 				.finalizeReport = {std::nullopt},
 				.timesReport = MatchReport::Times{
 					.isApplicable = m_Times.is_applicable(),

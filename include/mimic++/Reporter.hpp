@@ -121,11 +121,8 @@ namespace mimicpp
 		StringStreamT out{};
 		format_to(
 			std::ostreambuf_iterator{out},
-			"call from {}[{}:{}], {}\n",
-			report.fromLoc.file_name(),
-			report.fromLoc.line(),
-			report.fromLoc.column(),
-			report.fromLoc.function_name());
+			"call from {}\n",
+			mimicpp::print(report.fromLoc));
 
 		format_to(
 			std::ostreambuf_iterator{out},
@@ -164,12 +161,21 @@ namespace mimicpp
 	class ExpectationReport
 	{
 	public:
+		std::optional<std::source_location> sourceLocation{};
 		std::optional<StringT> finalizerDescription{};
 		std::optional<StringT> timesDescription{};
 		std::vector<std::optional<StringT>> expectationDescriptions{};
 
 		[[nodiscard]]
-		friend bool operator==(const ExpectationReport&, const ExpectationReport&) = default;
+		friend bool operator ==(const ExpectationReport& lhs, const ExpectationReport& rhs)
+		{
+			return lhs.finalizerDescription == rhs.finalizerDescription
+					&& lhs.timesDescription == rhs.timesDescription
+					&& lhs.expectationDescriptions == rhs.expectationDescriptions
+					&& lhs.sourceLocation.has_value() == rhs.sourceLocation.has_value()
+					&& (!lhs.sourceLocation.has_value()
+						|| is_same_source_location(*lhs.sourceLocation, *rhs.sourceLocation));
+		}
 	};
 
 	/**
@@ -184,6 +190,15 @@ namespace mimicpp
 		StringStreamT out{};
 
 		out << "Expectation report:\n";
+
+		if (report.sourceLocation)
+		{
+			out << "from: ";
+			mimicpp::print(
+				std::ostreambuf_iterator{out},
+				*report.sourceLocation);
+			out << "\n";
+		}
 
 		if (report.timesDescription)
 		{
@@ -270,12 +285,21 @@ namespace mimicpp
 			friend bool operator ==(const Expectation&, const Expectation&) = default;
 		};
 
+		std::optional<std::source_location> sourceLocation{};
 		Finalize finalizeReport{};
 		Times timesReport{};
 		std::vector<Expectation> expectationReports{};
 
 		[[nodiscard]]
-		friend bool operator ==(const MatchReport&, const MatchReport&) = default;
+		friend bool operator ==(const MatchReport& lhs, const MatchReport& rhs)
+		{
+			return lhs.finalizeReport == rhs.finalizeReport
+					&& lhs.timesReport == rhs.timesReport
+					&& lhs.expectationReports == rhs.expectationReports
+					&& lhs.sourceLocation.has_value() == rhs.sourceLocation.has_value()
+					&& (!lhs.sourceLocation.has_value()
+						|| is_same_source_location(*lhs.sourceLocation, *rhs.sourceLocation));
+		}
 	};
 
 	/**
@@ -350,6 +374,15 @@ namespace mimicpp
 		default:  // NOLINT(clang-diagnostic-covered-switch-default)
 			unreachable();
 		// GCOVR_EXCL_STOP
+		}
+
+		if (report.sourceLocation)
+		{
+			out << "from: ";
+			mimicpp::print(
+				std::ostreambuf_iterator{out},
+				*report.sourceLocation);
+			out << "\n";
 		}
 
 		if (!std::ranges::empty(unmatchedExpectationDescriptions))
