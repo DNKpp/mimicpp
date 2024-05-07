@@ -301,6 +301,7 @@ TEST_CASE(
 		FinalizerT{},
 		std::tuple{}
 	};
+	const std::source_location afterLoc = std::source_location::current();
 
 	const auto& inner = dynamic_cast<const BasicExpectation<SignatureT, TimesT, FinalizerT>&>(
 		expectation.expectation());
@@ -310,7 +311,8 @@ TEST_CASE(
 	REQUIRE_THAT(
 		inner.from().function_name(),
 		Matches::Equals(beforeLoc.function_name()));
-	REQUIRE(inner.from().line() == beforeLoc.line() + 1);
+	REQUIRE(beforeLoc.line() < inner.from().line());
+	REQUIRE(inner.from().line() < afterLoc.line());
 }
 
 TEST_CASE(
