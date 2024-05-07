@@ -99,32 +99,87 @@ namespace
 	};
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_TEST_CASE(
 	"signature_add_noexcept adds noexcept qualifier if not already present.",
 	"[type_traits]",
-	((bool dummy, typename Expected, typename Signature), dummy, Expected, Signature),
-	(true, void() noexcept, void()),
-	(true, void(int) noexcept, void(int)),
-	(true, void(...) noexcept, void(...)),
-	(true, void(float, int) noexcept, void(float, int)),
-	(true, void(float, ...) noexcept, void(float, ...)),
-	(true, double() noexcept, double()),
-	(true, double(int) noexcept, double(int)),
-	(true, double(...) noexcept, double(...)),
-	(true, double(float, int) noexcept, double(float, int)),
-	(true, double(float, ...) noexcept, double(float, ...))
+	void(),
+	void(int),
+	void(...),
+	void(float, int),
+	void(float, ...),
+	double(),
+	double(int),
+	double(...),
+	double(float, int),
+	double(float, ...),
+
+	void() const,
+	void(int) const,
+	void(...) const,
+	void(float, int) const,
+	void(float, ...) const,
+	double() const,
+	double(int) const,
+	double(...) const,
+	double(float, int) const,
+	double(float, ...) const,
+
+	void() &,
+	void(int) &,
+	void(...) &,
+	void(float, int) &,
+	void(float, ...) &,
+	double() &,
+	double(int) &,
+	double(...) &,
+	double(float, int) &,
+	double(float, ...) &,
+
+	void() const &,
+	void(int) const &,
+	void(...) const &,
+	void(float, int) const &,
+	void(float, ...) const &,
+	double() const &,
+	double(int) const &,
+	double(...) const &,
+	double(float, int) const &,
+	double(float, ...) const &,
+
+	void() &&,
+	void(int) &&,
+	void(...) &&,
+	void(float, int) &&,
+	void(float, ...) &&,
+	double() &&,
+	double(int) &&,
+	double(...) &&,
+	double(float, int) &&,
+	double(float, ...) &&,
+
+	void() const &&,
+	void(int) const &&,
+	void(...) const &&,
+	void(float, int) const &&,
+	void(float, ...) const &&,
+	double() const &&,
+	double(int) const &&,
+	double(...) const &&,
+	double(float, int) const &&,
+	double(float, ...) const &&
 )
 {
-	STATIC_REQUIRE(std::same_as<Expected, typename mimicpp::signature_add_noexcept<Signature>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, mimicpp::signature_add_noexcept_t<Signature>>);
+	using ExpectedT = typename signature_helper<TestType>::sig_noexcept;
 
-	using SignatureNoexceptT = typename signature_helper<Signature>::sig_noexcept;
-	STATIC_REQUIRE(std::same_as<Expected, typename mimicpp::signature_add_noexcept<SignatureNoexceptT>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, mimicpp::signature_add_noexcept_t<SignatureNoexceptT>>);
+	STATIC_REQUIRE(std::same_as<ExpectedT, typename mimicpp::signature_add_noexcept<TestType>::type>);
+	STATIC_REQUIRE(std::same_as<ExpectedT, mimicpp::signature_add_noexcept_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<ExpectedT, typename mimicpp::signature_add_noexcept<ExpectedT>::type>);
+	STATIC_REQUIRE(std::same_as<ExpectedT, mimicpp::signature_add_noexcept_t<ExpectedT>>);
 }
 
 TEMPLATE_TEST_CASE(
-	"signature_remove_noexcept removes noexcept qualifier present.",
+	"signature_remove_noexcept removes noexcept qualifier if present.",
 	"[type_traits]",
 	void(),
 	void(int),
