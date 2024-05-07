@@ -242,6 +242,15 @@ TEST_CASE(
 		}
 	}
 
+	SECTION("std::source_location has specialized printer.")
+	{
+		const std::source_location loc = std::source_location::current();
+
+		REQUIRE_THAT(
+			mimicpp::print(loc),
+			Catch::Matchers::Matches(".+\\[\\d+:\\d+\\], .+"));
+	}
+
 	SECTION("When nothing matches, a default token is inserted.")
 	{
 		constexpr NonPrintable value{};

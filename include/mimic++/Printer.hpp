@@ -12,6 +12,7 @@
 
 #include <format>
 #include <iterator>
+#include <source_location>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -89,7 +90,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
-		const priority_tag<4>
+		const priority_tag<5>
 	)
 		requires requires
 		{
@@ -103,7 +104,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		String&& str,
-		priority_tag<3>
+		priority_tag<4>
 	)
 	{
 		return format::format_to(
@@ -116,7 +117,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		Range&& range,
-		priority_tag<2>
+		priority_tag<3>
 	);
 
 
@@ -168,10 +169,26 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T& value,
-		const priority_tag<1>
+		const priority_tag<2>
 	)
 	{
 		return format::format_to(out, "{}", value);
+	}
+
+	template <typename OutIter>
+	OutIter print(
+		OutIter out,
+		const std::source_location& loc,
+		const priority_tag<1>
+	)
+	{
+		return format::format_to(
+			out,
+			"{}[{}:{}], {}",
+			loc.file_name(),
+			loc.line(),
+			loc.column(),
+			loc.function_name());
 	}
 
 	template <typename OutIter>
@@ -194,7 +211,7 @@ namespace mimicpp::detail
 		) const
 		{
 			static_assert(
-				requires(const priority_tag<4> tag)
+				requires(const priority_tag<5> tag)
 				{
 					{ print(out, std::forward<T>(value), tag) } -> std::convertible_to<OutIter>;
 				},
@@ -203,7 +220,7 @@ namespace mimicpp::detail
 			return print(
 				out,
 				std::forward<T>(value),
-				priority_tag<4>{});
+				priority_tag<5>{});
 		}
 
 		template <typename T>
@@ -221,7 +238,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		Range&& range,
-		const priority_tag<2>
+		const priority_tag<3>
 	)
 	{
 		out = format::format_to(out, "{{ ");
