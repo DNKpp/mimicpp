@@ -231,6 +231,7 @@ namespace mimicpp
 					&& std::constructible_from<FinalizerT, FinalizerArg>
 					&& std::constructible_from<PolicyListT, PolicyArgs...>
 		constexpr explicit BasicExpectation(
+			const std::source_location& sourceLocation,
 			TimesArg&& timesArg,
 			FinalizerArg&& finalizerArg,
 			PolicyArgs&&... args
@@ -238,9 +239,10 @@ namespace mimicpp
 			std::is_nothrow_constructible_v<TimesT, TimesArg>
 			&& std::is_nothrow_constructible_v<FinalizerT, FinalizerArg>
 			&& (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
-			: m_Times{std::forward<TimesArg>(timesArg)},
-			m_Finalizer{std::forward<FinalizerArg>(finalizerArg)},
-			m_Policies{std::forward<PolicyArgs>(args)...}
+			: m_SourceLocation{sourceLocation},
+			m_Policies{std::forward<PolicyArgs>(args)...},
+			m_Times{std::forward<TimesArg>(timesArg)},
+			m_Finalizer{std::forward<FinalizerArg>(finalizerArg)}
 		{
 		}
 
@@ -313,10 +315,17 @@ namespace mimicpp
 			return m_Finalizer.finalize_call(call);
 		}
 
+		[[nodiscard]]
+		constexpr const std::source_location& from() const noexcept
+		{
+			return m_SourceLocation;
+		}
+
 	private:
+		std::source_location m_SourceLocation;
+		PolicyListT m_Policies;
 		[[no_unique_address]] TimesT m_Times{};
 		[[no_unique_address]] FinalizerT m_Finalizer{};
-		PolicyListT m_Policies;
 	};
 
 	template <typename Signature>
@@ -350,13 +359,13 @@ namespace mimicpp
 		}
 
 		template <typename T>
-			requires requires
+			requires requires(const std::source_location& loc)
 			{
-				{ std::declval<T&&>().finalize() } -> std::convertible_to<ScopedExpectation>;
+				{ std::declval<T&&>().finalize(loc) } -> std::convertible_to<ScopedExpectation>;
 			}
 		[[nodiscard]]
-		explicit(false) constexpr ScopedExpectation(T&& object)
-			: ScopedExpectation{std::forward<T>(object).finalize()}
+		explicit(false) constexpr ScopedExpectation(T&& object, const std::source_location& loc = std::source_location::current())
+			: ScopedExpectation{std::forward<T>(object).finalize(loc)}
 		{
 		}
 
@@ -375,6 +384,12 @@ namespace mimicpp
 				return m_Expectation->is_satisfied();
 			}
 			throw std::runtime_error{"Expired expectation."};
+		}
+
+		[[nodiscard]]
+		const ExpectationT& expectation() const noexcept
+		{
+			return *m_Expectation;
 		}
 
 	private:

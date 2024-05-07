@@ -15,7 +15,7 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
-#include <catch2/matchers/catch_matchers_templated.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 using namespace mimicpp;
 
@@ -278,6 +278,39 @@ TEST_CASE(
 			.RETURN(true);
 		REQUIRE(expectation.is_satisfied());
 	}
+}
+
+TEST_CASE(
+	"ScopedExpectation forwards source_location to finalize.",
+	"[expectation][expectation::builder]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	using SignatureT = void();
+	using TimesT = TimesFake;
+	using FinalizerT = FinalizerFake<SignatureT>;
+	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesT, FinalizerT>;
+
+	const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
+
+	const std::source_location beforeLoc = std::source_location::current();
+	ScopedExpectation expectation = BaseBuilderT{
+		collection,
+		TimesT{.isSatisfied = true},
+		FinalizerT{},
+		std::tuple{}
+	};
+
+	const auto& inner = dynamic_cast<const BasicExpectation<SignatureT, TimesT, FinalizerT>&>(
+		expectation.expectation());
+	REQUIRE_THAT(
+		inner.from().file_name(),
+		Matches::Equals(beforeLoc.file_name()));
+	REQUIRE_THAT(
+		inner.from().function_name(),
+		Matches::Equals(beforeLoc.function_name()));
+	REQUIRE(inner.from().line() == beforeLoc.line() + 1);
 }
 
 TEST_CASE(

@@ -370,6 +370,25 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEST_CASE(
+	"mimicpp::BasicExpectation stores std::source_location.",
+	"[expectation]"
+)
+{
+	using TimesT = TimesFake;
+	using FinalizerT = FinalizerFake<void()>;
+
+	constexpr auto loc = std::source_location::current();
+
+	mimicpp::BasicExpectation<void(), TimesT, FinalizerT> expectation{
+		loc,
+		TimesT{},
+		FinalizerT{}
+	};
+
+	REQUIRE(mimicpp::is_same_source_location(loc, expectation.from()));
+}
+
+TEST_CASE(
 	"Times policy of mimicpp::BasicExpectation controls, how often its expectations must be matched.",
 	"[expectation]"
 )
@@ -394,6 +413,7 @@ TEST_CASE(
 	SECTION("With no other expectation policies.")
 	{
 		mimicpp::BasicExpectation<SignatureT, TimesPolicyT, FinalizerT> expectation{
+			std::source_location::current(),
 			std::ref(times),
 			FinalizerT{}
 		};
@@ -439,6 +459,7 @@ TEST_CASE(
 	{
 		PolicyMockT policy{};
 		mimicpp::BasicExpectation<SignatureT, TimesPolicyT, FinalizerT, PolicyRefT> expectation{
+			std::source_location::current(),
 			std::ref(times),
 			FinalizerT{},
 			std::ref(policy)
@@ -541,6 +562,7 @@ TEMPLATE_TEST_CASE(
 	SECTION("With no policies at all.")
 	{
 		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT> expectation{
+			std::source_location::current(),
 			TimesFake{.isSatisfied = true},
 			FinalizerT{}
 		};
@@ -559,6 +581,7 @@ TEMPLATE_TEST_CASE(
 	{
 		PolicyMockT policy{};
 		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT, PolicyRefT> expectation{
+			std::source_location::current(),
 			TimesFake{.isSatisfied = true},
 			FinalizerT{},
 			PolicyRefT{std::ref(policy)}
@@ -609,6 +632,7 @@ TEMPLATE_TEST_CASE(
 		PolicyMockT policy1{};
 		PolicyMockT policy2{};
 		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
+			std::source_location::current(),
 			TimesFake{.isSatisfied = true},
 			FinalizerT{},
 			PolicyRefT{std::ref(policy1)},
@@ -705,7 +729,7 @@ TEMPLATE_TEST_CASE(
 }
 
 TEST_CASE(
-	"mimicpp::BasicExpectation::report gathers information about its used policies.",
+	"mimicpp::BasicExpectation::report gathers information about the expectation.",
 	"[expectation]"
 )
 {
@@ -729,6 +753,7 @@ TEST_CASE(
 				TimesT,
 				FinalizerPolicyT>
 			expectation{
+				std::source_location::current(),
 				TimesT{std::ref(times)},
 				FinalizerPolicyT{}
 			};
@@ -757,6 +782,7 @@ TEST_CASE(
 				FinalizerPolicyT,
 				PolicyT>
 			expectation{
+				std::source_location::current(),
 				TimesPolicyT{},
 				FinalizerPolicyT{},
 				PolicyT{std::ref(policy)}
@@ -797,6 +823,7 @@ TEMPLATE_TEST_CASE(
 
 	FinalizerT finalizer{};
 	mimicpp::BasicExpectation<SignatureT, TimesFake, FinalizerRefT> expectation{
+		std::source_location::current(),
 		TimesFake{},
 		std::ref(finalizer)
 	};

@@ -124,7 +124,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr ScopedExpectationT finalize() &&
+		constexpr ScopedExpectationT finalize(const std::source_location& sourceLocation) &&
 		{
 			static_assert(
 				finalize_policy_for<FinalizePolicy, Signature>,
@@ -138,6 +138,7 @@ namespace mimicpp
 					[&](auto&... policies)
 					{
 						return std::make_unique<ExpectationT>(
+							sourceLocation,
 							std::move(m_TimesPolicy),
 							std::move(m_FinalizePolicy),
 							std::move(policies)...);
