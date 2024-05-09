@@ -463,7 +463,11 @@ namespace mimicpp
 	};
 
 	template <typename Signature>
-	struct signature_return_type
+	struct signature_return_type;
+
+	template <typename Signature>
+		requires std::is_function_v<Signature>
+	struct signature_return_type<Signature>
 		: public signature_return_type<signature_decay_t<Signature>>
 	{
 	};
