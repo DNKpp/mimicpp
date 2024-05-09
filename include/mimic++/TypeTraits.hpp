@@ -491,6 +491,15 @@ namespace mimicpp
 	struct signature_param_type;
 
 	template <std::size_t index, typename Signature>
+		requires std::is_function_v<Signature>
+	struct signature_param_type<index, Signature>
+		: public signature_param_type<
+			index,
+			signature_decay_t<Signature>>
+	{
+	};
+
+	template <std::size_t index, typename Signature>
 	using signature_param_type_t = typename signature_param_type<index, Signature>::type;
 
 	template <std::size_t index, typename Return, typename... Params>
