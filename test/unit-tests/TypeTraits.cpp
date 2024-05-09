@@ -574,3 +574,24 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<signature_add_noexcept_t<Second>, signature_add_noexcept_t<First>>::value);
 	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<signature_add_noexcept_t<Second>, signature_add_noexcept_t<First>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"is_overloadable_set determines, whether given signatures are valid overloads of each other.",
+	"[type_traits]",
+	((bool expected, typename First, typename... Others), expected, First, Others...),
+	(false, void(), int()),
+	(false, void(), void() const &),
+	(false, void() &, void() const &, int () &, void() &&, void() const &&),
+
+	(true, void()),
+	(true, void(), void() const),
+	(true, void() &, void() const &, void() &&, void() const &&),
+	(true, short (int), void() &, void() const &, void() &&, void() const &&)
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::is_overload_set<First, Others...>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overload_set_v<First, Others...>);
+
+	STATIC_REQUIRE(expected == mimicpp::is_overload_set<Others..., First>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overload_set_v<Others..., First>);
+}

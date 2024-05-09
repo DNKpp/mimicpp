@@ -602,6 +602,27 @@ namespace mimicpp
 
 	template <typename First, typename Second>
 	inline constexpr bool is_overloadable_with_v = is_overloadable_with<First, Second>::value;
+
+	template <typename First, typename... Others>
+	struct is_overload_set;
+
+	template <typename First>
+	struct is_overload_set<First>
+		: public std::true_type
+	{
+	};
+
+	template <typename First, typename Second, typename... Others>
+	struct is_overload_set<First, Second, Others...>
+		: public std::conjunction<
+			is_overloadable_with<First, Second>,
+			is_overload_set<First, Others...>,
+			is_overload_set<Second, Others...>>
+	{
+	};
+
+	template <typename First, typename... Others>
+	inline constexpr bool is_overload_set_v = is_overload_set<First, Others...>::value;
 }
 
 #endif
