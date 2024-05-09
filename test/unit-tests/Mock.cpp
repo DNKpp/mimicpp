@@ -432,3 +432,57 @@ TEST_CASE(
 		REQUIRE(expectation.is_satisfied());
 	}
 }
+
+TEST_CASE(
+	"Mock supports overloading with similar signature.",
+	"[mock]"
+)
+{
+	ScopedReporter reporter{};
+
+	SECTION("With void() signature.")
+	{
+		Mock<
+			void(),
+			void() const
+		> mock{};
+
+		const ScopedExpectation expectation = mock.expect_call();
+		const ScopedExpectation constExpectation = std::as_const(mock).expect_call();
+		CHECK(!expectation.is_satisfied());
+		CHECK(!constExpectation.is_satisfied());
+
+		mock();
+
+		REQUIRE(expectation.is_satisfied());
+		REQUIRE(!constExpectation.is_satisfied());
+
+		std::as_const(mock)();
+
+		REQUIRE(expectation.is_satisfied());
+		REQUIRE(constExpectation.is_satisfied());
+	}
+
+	SECTION("With int() signature.")
+	{
+		Mock<
+			int(),
+			int() const
+		> mock{};
+
+		const ScopedExpectation expectation = mock.expect_call()
+											| finally::returns(42);
+		const ScopedExpectation constExpectation = std::as_const(mock).expect_call()
+													| finally::returns(1337);
+		CHECK(!expectation.is_satisfied());
+		CHECK(!constExpectation.is_satisfied());
+
+		REQUIRE(42 == mock());
+		REQUIRE(expectation.is_satisfied());
+		REQUIRE(!constExpectation.is_satisfied());
+
+		REQUIRE(1337 == std::as_const(mock)());
+		REQUIRE(expectation.is_satisfied());
+		REQUIRE(constExpectation.is_satisfied());
+	}
+}
