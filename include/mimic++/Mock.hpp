@@ -25,7 +25,9 @@ namespace mimicpp::detail
 		using ExpectationCollectionT = ExpectationCollection<Return(Params...)>;
 
 		[[nodiscard]]
-		explicit BasicMockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
+		explicit BasicMockFrontend(
+			std::shared_ptr<ExpectationCollectionT> collection = std::make_shared<ExpectationCollectionT>()
+		) noexcept
 			: m_Expectations{std::move(collection)}
 		{
 		}
@@ -97,15 +99,6 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
-		}
 	};
 
 	template <typename Return, typename... Params>
@@ -139,15 +132,6 @@ namespace mimicpp::detail
 		{
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
-		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
 		}
 	};
 
@@ -183,15 +167,6 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
-		}
 	};
 
 	template <typename Return, typename... Params>
@@ -225,15 +200,6 @@ namespace mimicpp::detail
 		{
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
-		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
 		}
 	};
 
@@ -269,15 +235,6 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
-		}
 	};
 
 	template <typename Return, typename... Params>
@@ -312,15 +269,6 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
-		}
 	};
 
 	template <typename Return, typename... Params>
@@ -354,15 +302,6 @@ namespace mimicpp::detail
 		{
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
-		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
 		}
 	};
 
@@ -401,15 +340,6 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
-		}
 	};
 
 	template <typename Return, typename... Params>
@@ -443,15 +373,6 @@ namespace mimicpp::detail
 		{
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
-		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
 		}
 	};
 
@@ -490,15 +411,6 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
-		}
 	};
 
 	template <typename Return, typename... Params>
@@ -532,15 +444,6 @@ namespace mimicpp::detail
 		{
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
-		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
 		}
 	};
 
@@ -579,48 +482,6 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
-
-	protected:
-		using ExpectationCollectionT = typename SuperT::ExpectationCollectionT;
-
-		[[nodiscard]]
-		explicit MockFrontend(std::shared_ptr<ExpectationCollectionT> collection) noexcept
-			: SuperT{std::move(collection)}
-		{
-		}
-	};
-
-	template <typename FirstFrontend, typename... OtherFrontends>
-	class BasicMock
-		: public FirstFrontend,
-		public OtherFrontends...
-	{
-	public:
-		using ExpectationCollectionT = ExpectationCollection<signature_decay_t<typename FirstFrontend::SignatureT>>;
-
-		~BasicMock() = default;
-
-		[[nodiscard]]
-		explicit BasicMock(
-			std::shared_ptr<ExpectationCollectionT> collection = std::make_shared<ExpectationCollectionT>()
-		) noexcept
-			: FirstFrontend{collection},
-			OtherFrontends{collection}...
-		{
-		}
-
-		BasicMock(const BasicMock&) = delete;
-		BasicMock& operator =(const BasicMock&) = delete;
-
-		using FirstFrontend::expect_call;
-		using FirstFrontend::operator ();
-		using OtherFrontends::expect_call...;
-		using OtherFrontends::operator ()...;
-
-	protected:
-		[[nodiscard]]
-		BasicMock(BasicMock&&) = default;
-		BasicMock& operator =(BasicMock&&) = default;
 	};
 }
 
@@ -629,22 +490,26 @@ namespace mimicpp
 	template <typename FirstSignature, typename... OtherSignatures>
 		requires is_overload_set_v<FirstSignature, OtherSignatures...>
 	class Mock
-		: public detail::BasicMock<
-			detail::MockFrontend<FirstSignature>,
-			detail::MockFrontend<OtherSignatures>...>
+		: public detail::MockFrontend<FirstSignature>,
+			public detail::MockFrontend<OtherSignatures>...
 	{
-		static_assert(
-			(... && std::same_as<signature_decay_t<FirstSignature>, signature_decay_t<OtherSignatures>>),
-			"Overloading is currently only supported on similar signatures (e.g. void() and void() const, but not void() and void(int).");
-
 	public:
 		using detail::MockFrontend<FirstSignature>::operator();
 		using detail::MockFrontend<FirstSignature>::expect_call;
 		using detail::MockFrontend<OtherSignatures>::operator()...;
 		using detail::MockFrontend<OtherSignatures>::expect_call...;
 
+		~Mock() = default;
+
 		[[nodiscard]]
 		Mock() = default;
+
+		Mock(const Mock&) = delete;
+		Mock& operator =(const Mock&) = delete;
+
+		[[nodiscard]]
+		Mock(Mock&&) = default;
+		Mock& operator =(Mock&&) = default;
 	};
 }
 
