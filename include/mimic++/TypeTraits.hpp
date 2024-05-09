@@ -527,8 +527,81 @@ namespace mimicpp
 	{
 		using type = std::tuple<Params...>;
 	};
+
+	namespace detail
+	{
+		template <typename First, typename Second, bool reversed = false>
+		struct is_overloadable_with
+			: public std::conditional_t<
+				reversed,
+				std::false_type,
+				is_overloadable_with<Second, First, true>>
+		{
+		};
+
+		template <typename First, typename Second>
+			requires (
+				!std::same_as<
+					signature_param_list_t<signature_decay_t<First>>,
+					signature_param_list_t<signature_decay_t<Second>>>)
+		struct is_overloadable_with<First, Second, false>
+			: public std::true_type
+		{
+		};
+
+		template <typename Return, typename... Params, bool reversed>
+		struct is_overloadable_with<Return(Params...), Return(Params...) const, reversed>
+			: public std::true_type
+		{
+		};
+
+		template <typename Return, typename... Params, bool reversed>
+		struct is_overloadable_with<Return(Params...) &, Return(Params...) const &, reversed>
+			: public std::true_type
+		{
+		};
+
+		template <typename Return, typename... Params, bool reversed>
+		struct is_overloadable_with<Return(Params...) &, Return(Params...) &&, reversed>
+			: public std::true_type
+		{
+		};
+
+		template <typename Return, typename... Params, bool reversed>
+		struct is_overloadable_with<Return(Params...) &, Return(Params...) const &&, reversed>
+			: public std::true_type
+		{
+		};
+
+		template <typename Return, typename... Params, bool reversed>
+		struct is_overloadable_with<Return(Params...) const &, Return(Params...) &&, reversed>
+			: public std::true_type
+		{
+		};
+
+		template <typename Return, typename... Params, bool reversed>
+		struct is_overloadable_with<Return(Params...) const &, Return(Params...) const &&, reversed>
+			: public std::true_type
+		{
+		};
+
+		template <typename Return, typename... Params, bool reversed>
+		struct is_overloadable_with<Return(Params...) &&, Return(Params...) const &&, reversed>
+			: public std::true_type
+		{
+		};
+	}
+
+	template <typename First, typename Second>
+	struct is_overloadable_with
+		: public detail::is_overloadable_with<
+			signature_remove_noexcept_t<First>,
+			signature_remove_noexcept_t<Second>>
 	{
 	};
+
+	template <typename First, typename Second>
+	inline constexpr bool is_overloadable_with_v = is_overloadable_with<First, Second>::value;
 }
 
 #endif

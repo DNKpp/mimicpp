@@ -504,3 +504,73 @@ TEMPLATE_TEST_CASE_SIG(
 		Expected,
 		mimicpp::signature_param_type_t<index, mimicpp::signature_add_noexcept_t<Signature>>>));
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"is_overloadable_with determines, whether the first signature is overloadable with the second one.",
+	"[type_traits]",
+	((bool expected, typename First, typename Second), expected, First, Second),
+	(false, void(), void()),
+	(false, void() const, void() const),
+	(false, void() &, void() &),
+	(false, void() const &, void() const &),
+	(false, void() &&, void() &&),
+	(false, void() const &&, void() const &&),
+
+	(false, int(), void()),
+	(false, int() const, void() const),
+	(false, int() &, void() &),
+	(false, int() const &, void() const &),
+	(false, int() &&, void() &&),
+	(false, int() const &&, void() const &&),
+
+	(false, void(), void() &),
+	(false, void(), void() const &),
+	(false, void(), void() &&),
+	(false, void(), void() const &&),
+
+	(false, void() const, void() &),
+	(false, void() const, void() const &),
+	(false, void() const, void() &&),
+	(false, void() const, void() const &&),
+
+	(true, void(), void() const),
+	(true, void() &, void() const &),
+	(true, void() &, void() &&),
+	(true, void() &, void() const &&),
+	(true, void() const &, void() &),
+	(true, void() const &, void() &&),
+	(true, void() const &, void() const &&),
+	(true, void() &&, void() &),
+	(true, void() &&, void() const &),
+	(true, void() &&, void() const &&),
+	(true, void() const &&, void() &),
+	(true, void() const &&, void() const &),
+	(true, void() const &&, void() &&),
+
+	(true, void(), void(int)),
+	(true, int(), void(int)),
+	(true, void(int), void(short))
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<First, Second>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<First, Second>);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<Second, First>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<Second, First>);
+
+	using mimicpp::signature_add_noexcept_t;
+
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<signature_add_noexcept_t<First>, Second>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<signature_add_noexcept_t<First>, Second>);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<Second, signature_add_noexcept_t<First>>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<Second, signature_add_noexcept_t<First>>);
+
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<First, signature_add_noexcept_t<Second>>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<First, signature_add_noexcept_t<Second>>);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<signature_add_noexcept_t<Second>, First>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<signature_add_noexcept_t<Second>, First>);
+
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<signature_add_noexcept_t<First>, signature_add_noexcept_t<Second>>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<signature_add_noexcept_t<First>, signature_add_noexcept_t<Second>>);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with<signature_add_noexcept_t<Second>, signature_add_noexcept_t<First>>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_overloadable_with_v<signature_add_noexcept_t<Second>, signature_add_noexcept_t<First>>);
+}
