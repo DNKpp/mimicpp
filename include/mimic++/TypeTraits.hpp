@@ -549,44 +549,44 @@ namespace mimicpp
 		{
 		};
 
-		template <typename Return, typename... Params, bool reversed>
-		struct is_overloadable_with<Return(Params...), Return(Params...) const, reversed>
+		template <typename Return1, typename Return2, typename... Params, bool reversed>
+		struct is_overloadable_with<Return1(Params...), Return2(Params...) const, reversed>
 			: public std::true_type
 		{
 		};
 
-		template <typename Return, typename... Params, bool reversed>
-		struct is_overloadable_with<Return(Params...) &, Return(Params...) const &, reversed>
+		template <typename Return1, typename Return2, typename... Params, bool reversed>
+		struct is_overloadable_with<Return1(Params...) &, Return2(Params...) const &, reversed>
 			: public std::true_type
 		{
 		};
 
-		template <typename Return, typename... Params, bool reversed>
-		struct is_overloadable_with<Return(Params...) &, Return(Params...) &&, reversed>
+		template <typename Return1, typename Return2, typename... Params, bool reversed>
+		struct is_overloadable_with<Return1(Params...) &, Return2(Params...) &&, reversed>
 			: public std::true_type
 		{
 		};
 
-		template <typename Return, typename... Params, bool reversed>
-		struct is_overloadable_with<Return(Params...) &, Return(Params...) const &&, reversed>
+		template <typename Return1, typename Return2, typename... Params, bool reversed>
+		struct is_overloadable_with<Return1(Params...) &, Return2(Params...) const &&, reversed>
 			: public std::true_type
 		{
 		};
 
-		template <typename Return, typename... Params, bool reversed>
-		struct is_overloadable_with<Return(Params...) const &, Return(Params...) &&, reversed>
+		template <typename Return1, typename Return2, typename... Params, bool reversed>
+		struct is_overloadable_with<Return1(Params...) const &, Return2(Params...) &&, reversed>
 			: public std::true_type
 		{
 		};
 
-		template <typename Return, typename... Params, bool reversed>
-		struct is_overloadable_with<Return(Params...) const &, Return(Params...) const &&, reversed>
+		template <typename Return1, typename Return2, typename... Params, bool reversed>
+		struct is_overloadable_with<Return1(Params...) const &, Return2(Params...) const &&, reversed>
 			: public std::true_type
 		{
 		};
 
-		template <typename Return, typename... Params, bool reversed>
-		struct is_overloadable_with<Return(Params...) &&, Return(Params...) const &&, reversed>
+		template <typename Return1, typename Return2, typename... Params, bool reversed>
+		struct is_overloadable_with<Return1(Params...) &&, Return2(Params...) const &&, reversed>
 			: public std::true_type
 		{
 		};
