@@ -3,6 +3,7 @@ include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
 	mimicpp-examples
+	"Mock.cpp"
 	"Finalizers.cpp"
 	"Requirements.cpp"
 	"Sequences.cpp"
