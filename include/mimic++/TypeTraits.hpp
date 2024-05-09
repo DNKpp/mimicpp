@@ -508,9 +508,25 @@ namespace mimicpp
 	{
 	};
 
-	template <std::size_t index, typename Return, typename... Params>
-	struct signature_param_type<index, Return(Params...) noexcept>
-		: public std::tuple_element<index, std::tuple<Params...>>
+	template <typename Signature>
+	struct signature_param_list;
+
+	template <typename Signature>
+		requires std::is_function_v<Signature>
+	struct signature_param_list<Signature>
+		: public signature_param_list<
+			signature_decay_t<Signature>>
+	{
+	};
+
+	template <typename Signature>
+	using signature_param_list_t = typename signature_param_list<Signature>::type;
+
+	template <typename Return, typename... Params>
+	struct signature_param_list<Return(Params...)>
+	{
+		using type = std::tuple<Params...>;
+	};
 	{
 	};
 }
