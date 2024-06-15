@@ -576,7 +576,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"is_overloadable_set determines, whether given signatures are valid overloads of each other.",
+	"is_overload_set determines, whether given signatures are valid overloads of each other.",
 	"[type_traits]",
 	((bool expected, typename First, typename... Others), expected, First, Others...),
 	(false, void(), int()),
