@@ -11,5 +11,5 @@ var classmimicpp_1_1_expectation_collection =
     [ "operator=", "d5/d86/classmimicpp_1_1_expectation_collection.html#a31f1627a80140183edc7c39b87e3054e", null ],
     [ "operator=", "d5/d86/classmimicpp_1_1_expectation_collection.html#addac3b52fbacc023b71132174ef993b0", null ],
     [ "push", "d5/d86/classmimicpp_1_1_expectation_collection.html#a78ffe18283eb86c491ff77fbbd787969", null ],
-    [ "remove", "d5/d86/classmimicpp_1_1_expectation_collection.html#a0da9aa9c00ed309092d02ffc458c2740", null ]
+    [ "remove", "d5/d86/classmimicpp_1_1_expectation_collection.html#addb9c1c2d2e899344cc2194fc906e9ff", null ]
 ];

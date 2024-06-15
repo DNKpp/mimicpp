@@ -25,6 +25,7 @@
 var NAVTREE =
 [
   [ "mimic++", "index.html", [
+    [ "mimic++, a modern and (mostly) macro free mocking library", "index.html", "index" ],
     [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -62,9 +63,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d3/d4c/_complex_mock_8hpp_source.html",
-"d8/d32/_type_traits_8hpp.html#a87147d9464358037f54907bf773c81d7",
-"dd/dd3/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_08_01_6_01_4.html"
+"d4/d44/classmimicpp_1_1call_1_1_info.html#a549782f77ea9101698425400d0ebb76d",
+"d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html",
+"dc/d44/_call_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

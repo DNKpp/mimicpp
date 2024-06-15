@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['matchcategory_0',['MatchCategory',['../dc/d2e/namespacemimicpp_1_1call.html#ac826f29e99e4f7b919bc9737fba9609a',1,'mimicpp::call']]]
+  ['matchresult_0',['MatchResult',['../d1/d11/namespacemimicpp.html#a0e5bd3ba3ed7ebefe6d2016ce35bbe5b',1,'mimicpp']]]
 ];

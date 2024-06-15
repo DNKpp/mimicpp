@@ -9,7 +9,8 @@ var classmimicpp_1_1_expectation =
     [ "consume", "d3/d1c/classmimicpp_1_1_expectation.html#ade6f50ff0588c785589b185e9d186c40", null ],
     [ "finalize_call", "d3/d1c/classmimicpp_1_1_expectation.html#ad37db14b76d614af34a80397ccc6ffc1", null ],
     [ "is_satisfied", "d3/d1c/classmimicpp_1_1_expectation.html#a6418e14292b666c6d0fd10f8af3e5260", null ],
-    [ "matches", "d3/d1c/classmimicpp_1_1_expectation.html#aa3b2ec3be54eaec93f805a369ae076cb", null ],
+    [ "matches", "d3/d1c/classmimicpp_1_1_expectation.html#ab030189070f8b4ad118a49f6a82ebff7", null ],
     [ "operator=", "d3/d1c/classmimicpp_1_1_expectation.html#adacaa7d3f88409da0e5af3c1986bdb27", null ],
-    [ "operator=", "d3/d1c/classmimicpp_1_1_expectation.html#adf55e1fbc545c9bdddba57f77387f3bd", null ]
+    [ "operator=", "d3/d1c/classmimicpp_1_1_expectation.html#adf55e1fbc545c9bdddba57f77387f3bd", null ],
+    [ "report", "d3/d1c/classmimicpp_1_1_expectation.html#a73093b259b40576b1c0b00eeff5a2f0b", null ]
 ];

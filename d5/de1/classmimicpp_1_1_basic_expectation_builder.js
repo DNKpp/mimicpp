@@ -8,7 +8,7 @@ var classmimicpp_1_1_basic_expectation_builder =
     [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a9f4d686e1beae0bae6ec940582a3df41", null ],
     [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a9f5e181f8f4aa78a67f858bfa1c155e7", null ],
     [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a42720226a9b9c2c0f40c7bcf03a6034b", null ],
-    [ "finalize", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a12d851454b669e69daf7e9a214ebe926", null ],
+    [ "finalize", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#acf95825347eeab236e58b71eb5113cf7", null ],
     [ "operator=", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a7556e171a3b5c7aa980a1f6471298ca1", null ],
     [ "operator=", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a141468b8ede25d3bf71056cfc8fc7ab6", null ],
     [ "operator|", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#ab8bd552a71bfd703035517f4a8dcc737", null ],
