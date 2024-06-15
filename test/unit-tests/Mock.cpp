@@ -486,3 +486,31 @@ TEST_CASE(
 		REQUIRE(constExpectation.is_satisfied());
 	}
 }
+
+TEST_CASE(
+	"Mock supports arbitrary overload sets.",
+	"[mock]"
+)
+{
+	ScopedReporter reporter{};
+
+	Mock<
+		void(),
+		double(int) const
+	> mock{};
+
+	const ScopedExpectation firstExpectation = mock.expect_call();
+	const ScopedExpectation secondExpectation = mock.expect_call(1337)
+												| finally::returns(4.2);
+
+	CHECK(!firstExpectation.is_satisfied());
+	CHECK(!secondExpectation.is_satisfied());
+
+	mock();
+	REQUIRE(firstExpectation.is_satisfied());
+	REQUIRE(!secondExpectation.is_satisfied());
+
+	REQUIRE(4.2 == mock(1337));
+	REQUIRE(firstExpectation.is_satisfied());
+	REQUIRE(secondExpectation.is_satisfied());
+}
