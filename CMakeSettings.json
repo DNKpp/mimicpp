@@ -8,7 +8,29 @@
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "buildCommandArgs": "",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "MIMICPP_ENABLE_GENERATE_DOCS",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "MIMICPP_CONFIGURE_DOXYGEN",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "MIMICPP_ENABLE_ADAPTER_TESTS",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "MIMICPP_TEST_CATCH2_ADAPTER_WITH_VERSION",
+          "value": "3.6.0",
+          "type": "STRING"
+        }
+      ]
     },
     {
       "name": "Linux-Clang-Debug",
@@ -16,7 +38,7 @@
       "configurationType": "Debug",
       "cmakeExecutable": "cmake",
       "remoteCopySourcesExclusionList": [ ".vs", ".git", "out" ],
-      "cmakeCommandArgs": "-DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES",
+      "cmakeCommandArgs": "-DSANITIZE_UNDEFINED=YES -DMIMICPP_ENABLE_ADAPTER_TESTS=YES",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "inheritEnvironments": [ "linux_clang_x64" ],
