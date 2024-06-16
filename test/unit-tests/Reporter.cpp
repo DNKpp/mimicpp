@@ -1066,18 +1066,32 @@ TEST_CASE(
 
 namespace 
 {
-	inline std::atomic_int g_SuccessCounter{0};
-
-	void send_success(const StringT& msg)
+	struct saturated
 	{
-		++g_SuccessCounter;
+	};
+
+	inline std::optional<StringT> g_SuccessMessage{};
+
+	void send_success(const StringViewT msg)
+	{
+		if (g_SuccessMessage.has_value())
+		{
+			throw saturated{};
+		}
+
+		g_SuccessMessage.emplace(msg);
 	}
 
-	inline std::atomic_int g_WarningCounter{0};
+	inline std::optional<StringT> g_WarningMessage{};
 
-	void send_warning(const StringT& msg)
+	void send_warning(const StringViewT msg)
 	{
-		++g_WarningCounter;
+		if (g_WarningMessage.has_value())
+		{
+			throw saturated{};
+		}
+
+		g_WarningMessage.emplace(msg);
 	}
 
 	inline std::atomic_int g_FailCounter{0};
@@ -1106,6 +1120,17 @@ namespace
 		}
 	};
 
+	class StdException
+		: public std::runtime_error
+	{
+	public:
+		StdException()
+			: std::runtime_error{"An std::exception type."}
+		{
+		}
+	};
+
+	template <typename Exception>
 	class ThrowOnMatches
 	{
 	public:
@@ -1118,7 +1143,7 @@ namespace
 		[[maybe_unused]]
 		static bool matches([[maybe_unused]] const auto& info)
 		{
-			throw TestException{};
+			throw Exception{};
 		}
 
 		[[maybe_unused]]
@@ -1139,9 +1164,11 @@ TEST_CASE(
 	"[report]"
 )
 {
+	namespace matches = Catch::Matchers;
+
 	const ScopedReporter reporter{};
-	g_SuccessCounter = 0;
-	g_WarningCounter = 0;
+	g_SuccessMessage.reset();
+	g_WarningMessage.reset();
 	g_FailCounter = 0;
 
 	SECTION("When success is reported.")
@@ -1151,7 +1178,9 @@ TEST_CASE(
 		SCOPED_EXP mock.expect_call(42);
 
 		mock(42);
-		REQUIRE(g_SuccessCounter == 1);
+		REQUIRE_THAT(
+			g_SuccessMessage.value(),
+			matches::StartsWith("Found match for"));
 	}
 
 	SECTION("Sends fail, when no match can be found.")
@@ -1249,14 +1278,30 @@ TEST_CASE(
 	SECTION("Sends warning, when unhandled exception is reported.")
 	{
 		Mock<void()> mock{};
+		SCOPED_EXP mock.expect_call(); // this will actually consume the call
 
-		SCOPED_EXP mock.expect_call();
-
-		SCOPED_EXP mock.expect_call()
+		SECTION("When a std::exception is thrown.")
+		{
+			SCOPED_EXP mock.expect_call()
 					| mimicpp::expect::times<0, 1>()
-					| ThrowOnMatches{};
+					| ThrowOnMatches<StdException>{};
 
-		REQUIRE_NOTHROW(mock());
-		REQUIRE(g_WarningCounter == 1);
+			REQUIRE_NOTHROW(mock());
+			REQUIRE_THAT(
+				g_WarningMessage.value(),
+				matches::StartsWith("Unhandled exception: what: An std::exception type."));
+		}
+
+		SECTION("When an unknown exception is thrown.")
+		{
+			SCOPED_EXP mock.expect_call()
+					| mimicpp::expect::times<0, 1>()
+					| ThrowOnMatches<TestException>{};
+
+			REQUIRE_NOTHROW(mock());
+			REQUIRE_THAT(
+				g_WarningMessage.value(),
+				matches::StartsWith("Unhandled exception: Unknown exception type."));
+		}
 	}
 }
