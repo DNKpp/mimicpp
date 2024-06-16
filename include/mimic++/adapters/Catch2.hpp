@@ -13,15 +13,15 @@
 #include <iterator>
 
 #if __has_include(<catch2/catch_test_macros.hpp>)
-	#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_test_macros.hpp>
 #else
 	#error "Unable to find catch2 includes."
 #endif
 
-namespace mimicpp::detail
+namespace mimicpp::detail::catch2
 {
 	[[noreturn]]
-	inline void send_catch_fail(const StringViewT msg)
+	inline void send_fail(const StringViewT msg)
 	{
 #ifdef CATCH_CONFIG_PREFIX_ALL
 		CATCH_FAIL(msg);
@@ -32,7 +32,7 @@ namespace mimicpp::detail
 		unreachable();
 	}
 
-	inline void send_catch_succeed(const StringViewT msg)
+	inline void send_success(const StringViewT msg)
 	{
 #ifdef CATCH_CONFIG_PREFIX_ALL
 		CATCH_SUCCEED(msg);
@@ -40,8 +40,8 @@ namespace mimicpp::detail
 		SUCCEED(msg);
 #endif
 	}
-	
-	inline void send_catch_warn(const StringViewT msg)
+
+	inline void send_warning(const StringViewT msg)
 	{
 #ifdef CATCH_CONFIG_PREFIX_MESSAGES
 		CATCH_WARN(msg);
@@ -61,134 +61,16 @@ namespace mimicpp
 	 *
 	 * This reporter installs itself by simply including this header file into any source file of the test executable.
 	 */
-	class Catch2Reporter final
-		: public IReporter
-	{
-	public:
-		[[noreturn]]
-		void report_no_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
-		{
-			StringStreamT ss{};
-			format_to(
-				std::ostreambuf_iterator{ss},
-				"No match for {}\n",
-				stringify_call_report(call));
-
-			if (std::ranges::empty(matchReports))
-			{
-				ss << "No expectations available.\n";
-			}
-			else
-			{
-				format_to(
-					std::ostreambuf_iterator{ss},
-					"{} available expectations:\n",
-					std::ranges::size(matchReports));
-
-				for (const auto& report : matchReports)
-				{
-					ss << stringify_match_report(report) << "\n";
-				}
-			}
-
-			detail::send_catch_fail(ss.view());
-		}
-
-		[[noreturn]]
-		void report_inapplicable_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
-		{
-			StringStreamT ss{};
-			format_to(
-				std::ostreambuf_iterator{ss},
-				"No applicable match for {}\n",
-				stringify_call_report(call));
-
-			ss << "Tested expectations:\n";
-			for (const auto& report : matchReports)
-			{
-				ss << stringify_match_report(report) << "\n";
-			}
-
-			detail::send_catch_fail(ss.view());
-		}
-
-		void report_full_match(const CallReport call, const MatchReport matchReport) noexcept override
-		{
-			StringStreamT ss{};
-			format_to(
-				std::ostreambuf_iterator{ss},
-				"Found match for {}\n",
-				stringify_call_report(call));
-
-			ss << stringify_match_report(matchReport) << "\n";
-
-			detail::send_catch_succeed(ss.view());
-		}
-
-		void report_unfulfilled_expectation(const ExpectationReport expectationReport) override
-		{
-			if (0 == std::uncaught_exceptions())
-			{
-				StringStreamT ss{};
-				ss << "Unfulfilled expectation:\n"
-					<< stringify_expectation_report(expectationReport) << "\n";
-
-				detail::send_catch_fail(ss.view());
-			}
-		}
-
-		void report_error(const StringT message) override
-		{
-			if (0 == std::uncaught_exceptions())
-			{
-				detail::send_catch_fail(message);
-			}
-		}
-
-		void report_unhandled_exception(
-			const CallReport call,
-			const ExpectationReport expectationReport,
-			const std::exception_ptr exception
-		) override
-		{
-			StringStreamT ss{};
-			ss << "Unhandled exception: ";
-
-			try
-			{
-				std::rethrow_exception(exception);
-			}
-			catch (const std::exception& e)
-			{
-				format_to(
-					std::ostreambuf_iterator{ss},
-					"what: {}\n",
-					e.what());
-			}
-			catch (...)
-			{
-				ss << "Unknown exception type.\n";
-			}
-
-			format_to(
-				std::ostreambuf_iterator{ss},
-				"while checking expectation:\n"
-				"{}\n",
-				stringify_expectation_report(expectationReport));
-
-			format_to(
-				std::ostreambuf_iterator{ss},
-				"For {}\n",
-				stringify_call_report(call));
-
-			detail::send_catch_warn(ss.view());
-		}
-	};
+	using Catch2ReporterT = BasicReporter<
+		&detail::catch2::send_success,
+		&detail::catch2::send_warning,
+		&detail::catch2::send_fail
+	>;
 }
 
-namespace mimicpp::detail
+namespace mimicpp::detail::catch2
 {
-	inline const ReporterInstaller<Catch2Reporter> installer{};
+	inline const ReporterInstaller<Catch2ReporterT> installer{};
 }
 
 #endif
