@@ -35,9 +35,45 @@ As I'm mainly working on template or functional-style code, I wanted something s
 So, ``mimicpp::Mock`` objects can directly be used as functional objects, but they can also be used as member objects and thus serve as actual member functions.
 If you are curious, have a look at the documentation or directly into the examples.
 
+### Design Philosophy
+The framework is designed with two core concepts in mind: Mocks and Expectations.
+Mocks can be used to define behaviour on a per test-case basis, without the necessity of creating dozens of types. The go-to example is,
+if you have a custom type, which somehow makes a connection to a concrete database, you do not want to setup an actual database connection during
+your test runs. You then simply install a database mock, which then yields the exact replies as it were defined for that particular case:
+the so called "Expectations".
+
+So, Mocks and Expectations are playing together hand in hand.
+
+### Basic Examples
+Mocks themselves are very easy to create:
+```cpp
+mimicpp::Mock<void()> myMock{};
+```
+This already is a fully functional Mock, which enables a member ``void operator()`` for which Expectations can be created.
+
+```cpp
+mimicpp::ScopedExpectation myExpectation = myMock.expect_call();
+```
+The ``expect_call()`` member function initiates an expectation. Expectations are usually required to be fulfilled within the current (or deeper) scope.
+The ``ScopedExpectation`` then takes over the responsibility to check the Expectation, when that scope is left. Usually users do not need direct
+access to the expectations but still an unique name is required. To overcome that language limitation, an optional macro can be used:
+```cpp
+SCOPED_EXP myMock.expect_call();
+```
+This effectively does the same job as before, but the macro takes over the burden creating an unique name for that expectation.
+
+Given the previously created expectation, it is expected, that the call operator of ``myMock`` is called exactly once:
+```cpp
+myMock();
+```
+
+Expectations can contain several requirements, e.g. ``times`` which indicates, how often an Expectation must be met.
+For more examples, have a look into the documentation or directly into the ``examples`` directory.
+
+
 ### Special Acknowledgement
 This framework is highly inspired by the well known [trompeloeil](https://github.com/rollbear/trompeloeil), which I have used myself for several years now.
-It's definitly not bad, but sometimwes feels a little bit dated and some macros do not play very well with formatting tools and the like.
+It's definitly not bad, but sometimes feels a little bit dated and some macros do not play very well with formatting tools and the like.
 If you need a pre-c++20 mocking-framework, you should definitly give it a try.
 
 Fun fact: ``mimic++`` uses ``trompeloeil`` for it's own test suite :D
