@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 
+#include <cassert>
 #include <format>
 #include <source_location>
 #include <utility>
@@ -168,6 +169,9 @@ namespace mimicpp
 #else // GCC, Clang
 	    __builtin_unreachable();
 #endif
+
+		// ReSharper disable once CppUnreachableCode
+		assert(false);
 	}
 #endif
 
