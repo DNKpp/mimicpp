@@ -609,7 +609,7 @@ namespace mimicpp
 			{
 				format_to(
 					std::ostreambuf_iterator{ss},
-					"{} available expectations:\n",
+					"{} available expectation(s):\n",
 					std::ranges::size(matchReports));
 
 				for (const auto& report : matchReports)

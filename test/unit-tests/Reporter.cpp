@@ -1094,11 +1094,17 @@ namespace
 		g_WarningMessage.emplace(msg);
 	}
 
-	inline std::atomic_int g_FailCounter{0};
+	inline std::optional<StringT> g_FailMessage{};
 
-	void send_fail(const StringT& msg)
+	[[noreturn]]
+	void send_fail(const StringViewT msg)
 	{
-		++g_FailCounter;
+		if (g_FailMessage.has_value())
+		{
+			throw saturated{};
+		}
+
+		g_FailMessage.emplace(msg);
 		throw TestException{};
 	}
 
@@ -1169,7 +1175,7 @@ TEST_CASE(
 	const ScopedReporter reporter{};
 	g_SuccessMessage.reset();
 	g_WarningMessage.reset();
-	g_FailCounter = 0;
+	g_FailMessage.reset();
 
 	SECTION("When success is reported.")
 	{
@@ -1185,17 +1191,34 @@ TEST_CASE(
 
 	SECTION("Sends fail, when no match can be found.")
 	{
-		constexpr auto action = []
+		Mock<void(int)> mock{};
+
+		SECTION("When no expectation exists.")
 		{
-			Mock<void(int)> mock{};
-			mock(1337);
-		};
+			REQUIRE_THROWS_AS(
+				mock(1337),
+				TestException);
 
-		REQUIRE_THROWS_AS(
-			action(),
-			TestException);
+			REQUIRE_THAT(
+				g_FailMessage.value(),
+				matches::StartsWith("No match for")
+				&& matches::ContainsSubstring("No expectations available."));
+		}
 
-		REQUIRE(g_FailCounter == 1);
+		SECTION("When non matching expectation exists.")
+		{
+			SCOPED_EXP mock.expect_call(42)
+						| expect::times<0, 1>();	// prevent unfulfilled reporting
+
+			REQUIRE_THROWS_AS(
+				mock(1337),
+				TestException);
+
+			REQUIRE_THAT(
+				g_FailMessage.value(),
+				matches::StartsWith("No match for")
+				&& matches::ContainsSubstring("1 available expectation(s):"));
+		}
 	}
 
 	SECTION("Sends fail, when no applicable match can be found.")
@@ -1209,7 +1232,10 @@ TEST_CASE(
 			mock(42),
 			TestException);
 
-		REQUIRE(g_FailCounter == 1);
+		REQUIRE_THAT(
+			g_FailMessage.value(),
+			matches::StartsWith("No applicable match for")
+			&& matches::ContainsSubstring("Tested expectations:"));
 	}
 
 	SECTION("Sends fail, when unfulfilled expectation is reported.")
@@ -1224,7 +1250,9 @@ TEST_CASE(
 			action(),
 			TestException);
 
-		REQUIRE(g_FailCounter == 1);
+		REQUIRE_THAT(
+			g_FailMessage.value(),
+			matches::StartsWith("Unfulfilled expectation:"));
 	}
 
 	SECTION("Does not send fail, when unfulfilled expectation is reported, but an other exception already exists.")
@@ -1240,7 +1268,7 @@ TEST_CASE(
 			action(),
 			int);
 
-		REQUIRE(g_FailCounter == 0);
+		REQUIRE(!g_FailMessage);
 	}
 
 	SECTION("Sends fail, when generic error is reported.")
@@ -1249,7 +1277,9 @@ TEST_CASE(
 			mimicpp::detail::report_error("Hello, World!"),
 			TestException);
 
-		REQUIRE(g_FailCounter == 1);
+		REQUIRE_THAT(
+			g_FailMessage.value(),
+			matches::Equals("Hello, World!"));
 	}
 
 	SECTION("Does not send fail, when generic error is reported, but an other exception already exists.")
@@ -1272,7 +1302,7 @@ TEST_CASE(
 			action(),
 			int);
 
-		REQUIRE(g_FailCounter == 0);
+		REQUIRE(!g_FailMessage);
 	}
 
 	SECTION("Sends warning, when unhandled exception is reported.")
@@ -1283,8 +1313,8 @@ TEST_CASE(
 		SECTION("When a std::exception is thrown.")
 		{
 			SCOPED_EXP mock.expect_call()
-					| mimicpp::expect::times<0, 1>()
-					| ThrowOnMatches<StdException>{};
+						| mimicpp::expect::times<0, 1>()
+						| ThrowOnMatches<StdException>{};
 
 			REQUIRE_NOTHROW(mock());
 			REQUIRE_THAT(
@@ -1295,8 +1325,8 @@ TEST_CASE(
 		SECTION("When an unknown exception is thrown.")
 		{
 			SCOPED_EXP mock.expect_call()
-					| mimicpp::expect::times<0, 1>()
-					| ThrowOnMatches<TestException>{};
+						| mimicpp::expect::times<0, 1>()
+						| ThrowOnMatches<TestException>{};
 
 			REQUIRE_NOTHROW(mock());
 			REQUIRE_THAT(
