@@ -726,7 +726,10 @@ namespace mimicpp
 		void send_fail(const StringT& msg)
 		{
 			std::invoke(failReporter, msg);
+
+			// GCOVR_EXCL_START
 			unreachable();
+			// GCOVR_EXCL_STOP
 		}
 	};
 
