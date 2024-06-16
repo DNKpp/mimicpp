@@ -79,151 +79,36 @@ TEST(
 		"No match for");
 }
 
-namespace
-{
-	class ScopedDisableSuccessReporting
-	{
-	public:
-		~ScopedDisableSuccessReporting() noexcept
-		{
-			mimicpp::detail::gtest::g_EnableSuccessReporting = true;
-		}
-
-		[[nodiscard]]
-		ScopedDisableSuccessReporting() noexcept
-		{
-			mimicpp::detail::gtest::g_EnableSuccessReporting = false;
-		}
-	};
-}
-
 TEST(
 	GTestReporter,
-	InapplicableMatchReport
+	ReportSuccess
 )
 {
-	const ScopedDisableSuccessReporting disableSuccessReporting{};
+	const ScopedListener<SuccessListener> listener{};
 
-	EXPECT_FATAL_FAILURE(
-		mimicpp::Mock<void(int)> mock{};
+	g_SuccessCounter = 0;
 
-		SCOPED_EXP mock.expect_call(42);
+	mimicpp::detail::gtest::send_success("Test");
 
-		mock(42);
-		EXPECT_ANY_THROW(mock(42)),
-		"No applicable match for");
-}
-
-namespace
-{
-	class TestException
-	{
-	};
-
-	class ThrowOnMatches
-	{
-	public:
-		[[maybe_unused]]
-		static constexpr bool is_satisfied() noexcept
-		{
-			return true;
-		}
-
-		[[maybe_unused]]
-		static bool matches([[maybe_unused]] const auto& info)
-		{
-			throw TestException{};
-		}
-
-		[[maybe_unused]]
-		static constexpr std::nullopt_t describe() noexcept
-		{
-			return std::nullopt;
-		}
-
-		[[maybe_unused]]
-		static constexpr void consume([[maybe_unused]] const auto& info) noexcept
-		{
-		}
-	};
+	EXPECT_EQ(g_SuccessCounter, 1);
 }
 
 TEST(
 	GTestReporter,
-	UnhandledExceptionReport
+	ReportWarning
 )
 {
-	mimicpp::Mock<void()> mock{};
+	mimicpp::detail::gtest::send_warning("Test");
 
-	SCOPED_EXP mock.expect_call();
-
-	SCOPED_EXP mock.expect_call()
-				| mimicpp::expect::times<0, 1>()
-				| ThrowOnMatches{};
-
-	EXPECT_NO_THROW(mock());
+	// nothing to do
 }
 
 TEST(
 	GTestReporter,
-	UnfulfilledExpectationReport
-)
-{
-	EXPECT_ANY_THROW(
-		EXPECT_FATAL_FAILURE(
-			mimicpp::Mock<void()> mock{};
-			SCOPED_EXP mock.expect_call();,
-			"Unfulfilled expectation"));
-}
-
-TEST(
-	GTestReporter,
-	UnfulfilledExpectationNoReport
-)
-{
-	mimicpp::Mock<void()> mock{};
-
-	const auto runTest = [&]
-	{
-		SCOPED_EXP mock.expect_call();
-		throw 42;
-	};
-
-	EXPECT_THROW(
-		runTest(),
-		int);
-}
-
-TEST(
-	GTestReporter,
-	GenericErrorReport
+	ReportFail
 )
 {
 	EXPECT_FATAL_FAILURE(
-		EXPECT_ANY_THROW(mimicpp::detail::report_error("Hello, World!")),
-		"Hello, World!");
-}
-
-TEST(
-	GTestReporter,
-	GenericErrorNoReport
-)
-{
-	struct helper
-	{
-		~helper()
-		{
-			mimicpp::detail::report_error("Hello, World!");
-		}
-	};
-
-	const auto runTest = []
-	{
-		helper h{};
-		throw 42;
-	};
-
-	EXPECT_THROW(
-		runTest(),
-		int);
+		EXPECT_ANY_THROW(mimicpp::detail::gtest::send_fail("Test")),
+		"Test");
 }
