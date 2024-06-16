@@ -50,6 +50,39 @@ The documentation for the ``main`` branch is always available on the github page
 but unfortunatly not directly viewable on the browser.
 Every release has the generated documentation attached.
 
+## Installation
+This framework is header-only and fully power by cmake, thus the integration into a cmake project is straight-forward.
+```cmake
+target_link_libraries(
+	<your_target_name>
+	PUBLIC
+	mimicpp::mimicpp
+)
+```
+
+Users can either pick a commit in the ``main`` branch or a version tag and utilize the cmake ``FetchContent`` module:
+```cmake
+include(FetchContent)
+
+FetchContent_Declare(
+	mimicpp
+	GIT_REPOSITORY	https://github.com/DNKpp/mimicpp
+	GIT_TAG		<any_commit_hash_or_tag>
+)
+
+FetchContent_MakeAvailable(mimicpp)
+# do not forget linking via target_link_libraries as shown above
+```
+
+As an alternative, I recommend the usage of [CPM](https://github.com/cpm-cmake/CPM.cmake), which is a featureful wrapper around the ``FetchContent``
+functionality:
+```cmake
+include(CPM.cmake) # or include(get_cpm.cmake)
+
+CPMAddPackage("gh:DNKpp/mimicpp#<any_commit_hash_or_tag>")
+# do not forget linking via target_link_libraries as shown above
+```
+
 ## Testing
 ``mimic++`` utilizes a strict testing policy, thus each official feature is well tested. The effect of those test-cases are always tracked by the extensive ci,
 which checks the compilation success, test cases outcomes and coverage on dozens of different os, compiler and build configurations.
