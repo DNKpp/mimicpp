@@ -4,6 +4,7 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Reporter.hpp"
+#include "mimic++/Mock.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/trompeloeil.hpp>
@@ -1060,5 +1061,202 @@ TEST_CASE(
 				"expects:\n"
 				"\texpectation1 description,\n"
 				"finally: finalizer description\n"));
+	}
+}
+
+namespace 
+{
+	inline std::atomic_int g_SuccessCounter{0};
+
+	void send_success(const StringT& msg)
+	{
+		++g_SuccessCounter;
+	}
+
+	inline std::atomic_int g_WarningCounter{0};
+
+	void send_warning(const StringT& msg)
+	{
+		++g_WarningCounter;
+	}
+
+	inline std::atomic_int g_FailCounter{0};
+
+	void send_fail(const StringT& msg)
+	{
+		++g_FailCounter;
+		throw TestException{};
+	}
+
+	class ScopedReporter
+	{
+	public:
+		~ScopedReporter() noexcept
+		{
+			install_reporter<DefaultReporter>();
+		}
+
+		ScopedReporter() noexcept
+		{
+			install_reporter<
+				BasicReporter<
+					&send_success,
+					&send_warning,
+					&send_fail>>();
+		}
+	};
+
+	class ThrowOnMatches
+	{
+	public:
+		[[maybe_unused]]
+		static constexpr bool is_satisfied() noexcept
+		{
+			return true;
+		}
+
+		[[maybe_unused]]
+		static bool matches([[maybe_unused]] const auto& info)
+		{
+			throw TestException{};
+		}
+
+		[[maybe_unused]]
+		static constexpr std::nullopt_t describe() noexcept
+		{
+			return std::nullopt;
+		}
+
+		[[maybe_unused]]
+		static constexpr void consume([[maybe_unused]] const auto& info) noexcept
+		{
+		}
+	};
+}
+
+TEST_CASE(
+	"BasicReporter forwards messages to the installed callbacks.",
+	"[report]"
+)
+{
+	const ScopedReporter reporter{};
+	g_SuccessCounter = 0;
+	g_WarningCounter = 0;
+	g_FailCounter = 0;
+
+	SECTION("When success is reported.")
+	{
+		Mock<void(int)> mock{};
+
+		SCOPED_EXP mock.expect_call(42);
+
+		mock(42);
+		REQUIRE(g_SuccessCounter == 1);
+	}
+
+	SECTION("Sends fail, when no match can be found.")
+	{
+		constexpr auto action = []
+		{
+			Mock<void(int)> mock{};
+			mock(1337);
+		};
+
+		REQUIRE_THROWS_AS(
+			action(),
+			TestException);
+
+		REQUIRE(g_FailCounter == 1);
+	}
+
+	SECTION("Sends fail, when no applicable match can be found.")
+	{
+		Mock<void(int)> mock{};
+
+		SCOPED_EXP mock.expect_call(42);
+
+		mock(42);
+		REQUIRE_THROWS_AS(
+			mock(42),
+			TestException);
+
+		REQUIRE(g_FailCounter == 1);
+	}
+
+	SECTION("Sends fail, when unfulfilled expectation is reported.")
+	{
+		constexpr auto action = []
+		{
+			Mock<void()> mock{};
+			SCOPED_EXP mock.expect_call();
+		};
+
+		REQUIRE_THROWS_AS(
+			action(),
+			TestException);
+
+		REQUIRE(g_FailCounter == 1);
+	}
+
+	SECTION("Does not send fail, when unfulfilled expectation is reported, but an other exception already exists.")
+	{
+		constexpr auto action = []
+		{
+			Mock<void()> mock{};
+			SCOPED_EXP mock.expect_call();
+			throw 42;
+		};
+
+		REQUIRE_THROWS_AS(
+			action(),
+			int);
+
+		REQUIRE(g_FailCounter == 0);
+	}
+
+	SECTION("Sends fail, when generic error is reported.")
+	{
+		REQUIRE_THROWS_AS(
+			mimicpp::detail::report_error("Hello, World!"),
+			TestException);
+
+		REQUIRE(g_FailCounter == 1);
+	}
+
+	SECTION("Does not send fail, when generic error is reported, but an other exception already exists.")
+	{
+		struct helper
+		{
+			~helper()
+			{
+				detail::report_error("Hello, World!");
+			}
+		};
+
+		const auto action = []
+		{
+			helper h{};
+			throw 42;
+		};
+
+		REQUIRE_THROWS_AS(
+			action(),
+			int);
+
+		REQUIRE(g_FailCounter == 0);
+	}
+
+	SECTION("Sends warning, when unhandled exception is reported.")
+	{
+		Mock<void()> mock{};
+
+		SCOPED_EXP mock.expect_call();
+
+		SCOPED_EXP mock.expect_call()
+					| mimicpp::expect::times<0, 1>()
+					| ThrowOnMatches{};
+
+		REQUIRE_NOTHROW(mock());
+		REQUIRE(g_WarningCounter == 1);
 	}
 }
