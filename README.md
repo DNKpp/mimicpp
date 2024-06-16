@@ -87,7 +87,7 @@ but unfortunatly not directly viewable on the browser.
 Every release has the generated documentation attached.
 
 ## Installation
-This framework is header-only and fully power by cmake, thus the integration into a cmake project is straight-forward.
+This framework is header-only and completely powered by cmake, thus the integration into a cmake project is straight-forward.
 ```cmake
 target_link_libraries(
 	<your_target_name>
