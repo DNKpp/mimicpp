@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['free_20mocking_20library_0',['mimic++, a modern and (mostly) macro free mocking library',['../index.html',1,'']]]
+  ['framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
+  ['free_20mocking_20framework_1',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]]
 ];

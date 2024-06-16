@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>mimic++: mimic++, a modern and (mostly) macro free mocking library</title>
+<title>mimic++: mimic++, a modern and (mostly) macro free mocking framework</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -97,29 +97,81 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">mimic++, a modern and (mostly) macro free mocking library </div></div>
+  <div class="headertitle"><div class="title">mimic++, a modern and (mostly) macro free mocking framework </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md__2github_2workspace_2_r_e_a_d_m_e"></a> <a href="https://codecov.io/gh/DNKpp/mimicpp"><img src="https://codecov.io/gh/DNKpp/mimicpp/graph/badge.svg?token=T9EpgyuyUi" alt="codecov" style="pointer-events: none;" class="inline"/></a> <a href="https://coveralls.io/github/DNKpp/mimicpp"><img src="https://coveralls.io/repos/github/DNKpp/mimicpp/badge.svg" alt="Coverage Status" style="pointer-events: none;" class="inline"/></a> <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&amp;utm_medium=referral&amp;utm_content=&amp;utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/b852271c6e8742fe8a1667e679dc422b" alt="Codacy Badge" class="inline"/></a> <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&amp;utm_medium=referral&amp;utm_content=&amp;utm_campaign=Badge_coverage"><img src="https://app.codacy.com/project/badge/Coverage/b852271c6e8742fe8a1667e679dc422b" alt="Codacy Badge" class="inline"/></a></p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<div class="textblock"><p><a class="anchor" id="md__2github_2workspace_2_r_e_a_d_m_e"></a> <a href="https://codecov.io/gh/DNKpp/mimicpp"><img src="https://codecov.io/gh/DNKpp/mimicpp/graph/badge.svg?token=T9EpgyuyUi" alt="codecov" style="pointer-events: none;" class="inline"/></a> <a href="https://coveralls.io/github/DNKpp/mimicpp"><img src="https://coveralls.io/repos/github/DNKpp/mimicpp/badge.svg" alt="Coverage Status" style="pointer-events: none;" class="inline"/></a> <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&amp;utm_medium=referral&amp;utm_content=&amp;utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/b852271c6e8742fe8a1667e679dc422b" alt="Codacy Badge" class="inline"/></a> <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&amp;utm_medium=referral&amp;utm_content=&amp;utm_campaign=Badge_coverage"><img src="https://app.codacy.com/project/badge/Coverage/b852271c6e8742fe8a1667e679dc422b" alt="Codacy Badge" class="inline"/></a> <a href="https://dnkpp.github.io/mimicpp/"><img src="https://img.shields.io/badge/docs-doxygen-blue" alt="Documentation" class="inline"/></a></p>
+<hr  />
+<h1><a class="anchor" id="autotoc_md7"></a>
 Author</h1>
 <p>Dominic Koepke <br  />
  Mail: <a href="#" onclick="location.href='mai'+'lto:'+'dnk'+'pp'+'201'+'1@'+'gma'+'il'+'.co'+'m'; return false;">DNKpp2011@gmail.com</a></p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 License</h1>
 <p><a href="LICENSE_1_0.txt">BSL-1.0</a> (free, open source)</p>
-<div class="fragment"><div class="line">         Copyright Dominic Koepke 2019 - 2023.</div>
+<div class="fragment"><div class="line">         Copyright Dominic &quot;DNKpp&quot; Koepke 2024 - 2024</div>
 <div class="line">Distributed under the Boost Software License, Version 1.0.</div>
 <div class="line">   (See accompanying file LICENSE_1_0.txt or copy at</div>
 <div class="line">         https://www.boost.org/LICENSE_1_0.txt)</div>
-</div><!-- fragment --> </div></div><!-- PageDoc -->
+</div><!-- fragment --><hr  />
+<h1><a class="anchor" id="autotoc_md10"></a>
+Introduction</h1>
+<p><code>mimic++</code> is a c++20 mocking framework, which aims to offer a very natural end expressive syntax, without constantly resorting to macros. To be honest, macros cannot be completely avoided, but they can at least be reduced to a very minimum.</p>
+<p>The one thing, that this framework does different than all other (or at least all I am aware of) mocking framework is, that mock objects explicitly are function objects, thus directly callable. It's simple and straight forward.</p>
+<p>As I'm mainly working on template or functional-style code, I wanted something simpler than always creating explicit mock types for the simplest of use cases. So, <code><a class="el" href="d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a></code> objects can directly be used as functional objects, but they can also be used as member objects and thus serve as actual member functions. If you are curious, have a look at the documentation or directly into the examples.</p>
+<h2><a class="anchor" id="autotoc_md11"></a>
+Special Acknowledgement</h2>
+<p>This framework is highly inspired by the well known <a href="https://github.com/rollbear/trompeloeil">trompeloeil</a>, which I have used myself for several years now. It's definitly not bad, but sometimwes feels a little bit dated and some macros do not play very well with formatting tools and the like. If you need a pre-c++20 mocking-framework, you should definitly give it a try.</p>
+<p>Fun fact: <code>mimic++</code> uses <code>trompeloeil</code> for it's own test suite :D</p>
+<h1><a class="anchor" id="autotoc_md12"></a>
+Documentation</h1>
+<p>The documenation is generated via <code>doxygen</code>. Users can do this locally by enabling both, the <code>MIMICPP_CONFIGURE_DOXYGEN</code> and <code>MIMICPP_CONFIGURE_DOXYGEN</code>, cmake options and building the target <code>mimicpp-generate-docs</code> manually.</p>
+<p>The documentation for the <code>main</code> branch is always available on the github pages; for the <code>development</code> branch it is also available on the <code>dev-gh-pages</code> branch, but unfortunatly not directly viewable on the browser. Every release has the generated documentation attached.</p>
+<h1><a class="anchor" id="autotoc_md13"></a>
+Testing</h1>
+<p><code>mimic++</code> utilizes a strict testing policy, thus each official feature is well tested. The effect of those test-cases are always tracked by the extensive ci, which checks the compilation success, test cases outcomes and coverage on dozens of different os, compiler and build configurations.</p>
+<p>The coverage is generated via <code>gcov</code> and evaluated by <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard">codacy</a>, <a href="https://app.codecov.io/gh/DNKpp/mimicpp">codecov</a> and <a href="https://coveralls.io/github/DNKpp/mimicpp">coveralls</a>.</p>
+<h2><a class="anchor" id="autotoc_md14"></a>
+Windows</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">OS   </th><th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Windows 2022   </td><td class="markdownTableBodyNone">msvc   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Windows 2022   </td><td class="markdownTableBodyNone">clangCl   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md15"></a>
+Linux</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">libstdc++   </th><th class="markdownTableHeadCenter">libc++   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">clang-17   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">clang-18   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">gcc-13   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">-   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">gcc-14   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">-   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
+</table>
+<h2><a class="anchor" id="autotoc_md16"></a>
+MacOs</h2>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">libstdc++   </th><th class="markdownTableHeadCenter">libc++   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">AppleClang-17.0.6   </td><td class="markdownTableBodyCenter">-   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
+</table>
+<p>As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported. </p>
+</div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"/>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Jun 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+    <li class="footer">Generated on Sun Jun 16 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
   </ul>
 </div>
 </body>

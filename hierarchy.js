@@ -39,7 +39,7 @@ var hierarchy =
     [ "mimicpp::call::info_for_signature< Return(Args...)>", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html", null ],
     [ "mimicpp::expectation_policies::InitFinalize", "d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html", null ],
     [ "mimicpp::IReporter", "dd/df0/classmimicpp_1_1_i_reporter.html", [
-      [ "mimicpp::Catch2Reporter", "d6/d82/classmimicpp_1_1_catch2_reporter.html", null ],
+      [ "mimicpp::BasicReporter< successReporter, warningReporter, failReporter >", "d4/d56/classmimicpp_1_1_basic_reporter.html", null ],
       [ "mimicpp::DefaultReporter", "d3/d32/classmimicpp_1_1_default_reporter.html", null ]
     ] ],
     [ "mimicpp::is_overload_set< First, Others >", "dd/df5/structmimicpp_1_1is__overload__set.html", null ],

@@ -112,7 +112,7 @@ $(function(){initNavTree('dd/df0/classmimicpp_1_1_i_reporter.html','../../'); in
 <div class="dynheader">
 Inheritance diagram for mimicpp::IReporter:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d2/d23/classmimicpp_1_1_i_reporter__inherit__graph.svg" width="368" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d2/d23/classmimicpp_1_1_i_reporter__inherit__graph.svg" width="424" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -343,7 +343,7 @@ Protected Member Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>In general, it is expected that this function does not return, but throws an exception instead. But, as this function may be called due to any reason, implementations shall check whether an uncaught exception already exists (e.g. via <code>std::uncaught_exceptions</code>) before throwing by themselves. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a88bedfb2796b50bbc2ae87619a1da78e" title="Expects rather unspecific errors.">DefaultReporter::report_error</a></code> for an example. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#a6ec216c191a126880c8e46e87538cdaf">mimicpp::Catch2Reporter</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a88bedfb2796b50bbc2ae87619a1da78e">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a267bcc67f5b470b69cc8e6a1c3ad13f9">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a88bedfb2796b50bbc2ae87619a1da78e">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -384,7 +384,7 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <p>This function is called, when a match has been found. There are no other expectations on the behavior of this function; except the <code>noexcept</code> guarantee. Implementations shall simply return to the caller. </p>
 
-<p>Implemented in <a class="el" href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#ae487b63b6af63272eadbb68e2b4b2e4c">mimicpp::Catch2Reporter</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#aa3deac0dcae94228fa4d2e0783704e99">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a47014f2aa98737fa525ea86f2a51a697">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#aa3deac0dcae94228fa4d2e0783704e99">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -426,7 +426,7 @@ Protected Member Functions</h2></td></tr>
 <p>This function is called, when no applicable match has been found, but actually the call expectations are fulfilled. This in fact happens, when the <code>times</code> policy is already saturated (e.g. it was once expected and already matched once) or otherwise not applicable (e.g. a sequence element is not the current element).</p>
 <dl class="section attention"><dt>Attention</dt><dd>Derived reporter implementations must never return and shall instead leave the function via a thrown exception or a terminating mechanism (e.g. <code>std::terminate</code>). Otherwise, this will result in undefined behavior. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#a3915896df24b16ea24248750839491fc">mimicpp::Catch2Reporter</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#ae2852c4de013b287c48cdacc11059c21">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a9eaf88c58daa356a3bed0e5e24e8dd6e">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#ae2852c4de013b287c48cdacc11059c21">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -468,7 +468,7 @@ Protected Member Functions</h2></td></tr>
 <p>This function is called, when no match has been found and there are no other expectations, which are matching but inapplicable. In fact, this is the fallback reporting mechanism, for unmatched calls. </p><dl class="section note"><dt>Note</dt><dd><code>matchReports</code> may be empty.</dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>Derived reporter implementations must never return and shall instead leave the function via a thrown exception or a terminating mechanism (e.g. <code>std::terminate</code>). Otherwise, this will result in undefined behavior. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#a33d512b76f21fbeda297c954072701ff">mimicpp::Catch2Reporter</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a4cf5585d694574f981fc28ff32b681bb">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a9c4228afd89a1615ba0af92d588f6efa">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a4cf5585d694574f981fc28ff32b681bb">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -506,7 +506,7 @@ Protected Member Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>In general, it is expected that this function does not return, but throws an exception instead. But, as this function is always called when an unfulfilled expectation goes out of scope, implementations shall check whether an uncaught exception already exists (e.g. via <code>std::uncaught_exceptions</code>) before throwing by themselves. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><code><a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a963da36bfc5ae093c1a7e0235a9c20e0" title="Expects the report of an unfulfilled expectation.">DefaultReporter::report_unfulfilled_expectation</a></code> for an example. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#a6a81450489eb6a1c0e17abea37429b16">mimicpp::Catch2Reporter</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a963da36bfc5ae093c1a7e0235a9c20e0">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a83c685a6e6b4a02bea07270d4d47f042">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a963da36bfc5ae093c1a7e0235a9c20e0">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -553,7 +553,7 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <p>This function is called, when an expectation throws during a <code>matches</code> call. There are no expectations on the behavior of this function. As this function is called inside a <code>catch</code> block, throwing exceptions will result in a terminate call. </p>
 
-<p>Implemented in <a class="el" href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#a82d80536410e5b5b1615a4fb7a8c9df0">mimicpp::Catch2Reporter</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a4b806ba57d5927f105fb21012d1a8efd">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a6ebc62f6798303bcd2f24cb92c496ffe">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a4b806ba57d5927f105fb21012d1a8efd">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -566,7 +566,7 @@ Protected Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../dd/df0/classmimicpp_1_1_i_reporter.html">IReporter</a></li>
-    <li class="footer">Generated on Sat Jun 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+    <li class="footer">Generated on Sun Jun 16 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
   </ul>
 </div>
 </body>

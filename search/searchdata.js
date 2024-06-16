@@ -3,16 +3,16 @@ var indexSectionsWithContent =
   0: "_abcdefghilmnoprstuvw~",
   1: "abcdefimprstw",
   2: "m",
-  3: "cefmprstu",
+  3: "cefgmprstu",
   4: "abcdefghilmnoprstuw~",
   5: "_adefilprst",
-  6: "acefiprstuv",
+  6: "acefgiprstuv",
   7: "cmsv",
   8: "afilnr",
   9: "eo",
   10: "ms",
   11: "aefmrst",
-  12: "aflm",
+  12: "afm",
   13: "m"
 };
 

@@ -98,7 +98,7 @@ $(function(){initNavTree('d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.htm
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">test framework adapters<div class="ingroups"><a class="el" href="../../dd/d4f/group___r_e_p_o_r_t_i_n_g.html">reporting</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -111,22 +111,72 @@ Collaboration diagram for test framework adapters:</div>
 <div class="center"><iframe scrolling="no" frameborder="0" src="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.svg" width="291" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html">mimicpp::Catch2Reporter</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reporter for the integration into Catch2.  <a href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga02aa72d6aaace0343113c757d4235aa8" id="r_ga02aa72d6aaace0343113c757d4235aa8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga02aa72d6aaace0343113c757d4235aa8">mimicpp::Catch2ReporterT</a></td></tr>
+<tr class="memdesc:ga02aa72d6aaace0343113c757d4235aa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reporter for the integration into Catch2.  <br /></td></tr>
+<tr class="separator:ga02aa72d6aaace0343113c757d4235aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga54e2a65c7837029b0c0c8e8a11cb8466" id="r_ga54e2a65c7837029b0c0c8e8a11cb8466"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga54e2a65c7837029b0c0c8e8a11cb8466">mimicpp::GTestReporterT</a></td></tr>
+<tr class="memdesc:ga54e2a65c7837029b0c0c8e8a11cb8466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reporter for the integration into gtest.  <br /></td></tr>
+<tr class="separator:ga54e2a65c7837029b0c0c8e8a11cb8466"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Reporter integrations for various third-party frameworks. </p>
 <p>These reporters are specialized implementations, which provide seamless integrations of <code>mimic++</code> into the desired unit-test framework. Integrations are enabled by simply including the specific header into any source file. The include order doesn't matter.</p>
 <dl class="section note"><dt>Note</dt><dd>Including multiple headers of the <code>adapters</code> subdirectory into one executable is possible, but with caveats. It's unspecified which reporter will be active at the program start. So, if you need multiple reporters in one executable, you should explicitly install the desired reporter on a per test case basis. </dd></dl>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="ga02aa72d6aaace0343113c757d4235aa8" name="ga02aa72d6aaace0343113c757d4235aa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga02aa72d6aaace0343113c757d4235aa8">&#9670;&#160;</a></span>Catch2ReporterT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ga02aa72d6aaace0343113c757d4235aa8">mimicpp::Catch2ReporterT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> BasicReporter&lt;</div>
+<div class="line">        &amp;detail::catch2::send_success,</div>
+<div class="line">        &amp;detail::catch2::send_warning,</div>
+<div class="line">        &amp;detail::catch2::send_fail</div>
+<div class="line">    &gt;</div>
+</div><!-- fragment -->
+<p>Reporter for the integration into Catch2. </p>
+<p>This reporter enables the integration of <code>mimic++</code> into <code>Catch2</code> and prefixes the headers of <code>Catch2</code> with <code>catch2/</code>.</p>
+<p>This reporter installs itself by simply including this header file into any source file of the test executable. </p>
+
+</div>
+</div>
+<a id="ga54e2a65c7837029b0c0c8e8a11cb8466" name="ga54e2a65c7837029b0c0c8e8a11cb8466"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga54e2a65c7837029b0c0c8e8a11cb8466">&#9670;&#160;</a></span>GTestReporterT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ga54e2a65c7837029b0c0c8e8a11cb8466">mimicpp::GTestReporterT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> BasicReporter&lt;</div>
+<div class="line">        &amp;detail::gtest::send_success,</div>
+<div class="line">        &amp;detail::gtest::send_warning,</div>
+<div class="line">        &amp;detail::gtest::send_fail</div>
+<div class="line">    &gt;</div>
+</div><!-- fragment -->
+<p>Reporter for the integration into gtest. </p>
+<p>This reporter enables the integration of <code>mimic++</code> into <code>gtest</code> and prefixes the headers of <code>gtest</code> with <code>gtest/</code>.</p>
+<p>This reporter installs itself by simply including this header file into any source file of the test executable. </p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Jun 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+    <li class="footer">Generated on Sun Jun 16 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
   </ul>
 </div>
 </body>

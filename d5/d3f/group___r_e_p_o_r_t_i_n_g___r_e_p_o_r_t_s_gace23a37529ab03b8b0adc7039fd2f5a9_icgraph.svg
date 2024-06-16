@@ -31,9 +31,9 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#ae487b63b6af63272eadbb68e2b4b2e4c" target="_top" xlink:title="Expects the report about a full matching expectation.">
-<polygon fill="white" stroke="#666666" points="133,-187.5 8.25,-187.5 8.25,-157 133,-157 133,-187.5"/>
-<text text-anchor="start" x="16.25" y="-174" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::Catch2Reporter</text>
+<g id="a_Node000002"><a xlink:href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a47014f2aa98737fa525ea86f2a51a697" target="_top" xlink:title="Expects the report about a full matching expectation.">
+<polygon fill="white" stroke="#666666" points="130,-187.5 11.25,-187.5 11.25,-157 130,-157 130,-187.5"/>
+<text text-anchor="start" x="19.25" y="-174" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::BasicReporter</text>
 <text text-anchor="middle" x="70.62" y="-162.75" font-family="Helvetica,sans-Serif" font-size="10.00">::report_full_match</text>
 </a>
 </g>
@@ -50,10 +50,10 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#a3915896df24b16ea24248750839491fc" target="_top" xlink:title="Expects reports about all inapplicable matching expectations. This is only called,...">
-<polygon fill="white" stroke="#666666" points="133,-139.12 8.25,-139.12 8.25,-97.38 133,-97.38 133,-139.12"/>
-<text text-anchor="start" x="16.25" y="-125.62" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::Catch2Reporter</text>
-<text text-anchor="start" x="16.25" y="-114.38" font-family="Helvetica,sans-Serif" font-size="10.00">::report_inapplicable</text>
+<g id="a_Node000003"><a xlink:href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a9eaf88c58daa356a3bed0e5e24e8dd6e" target="_top" xlink:title="Expects reports about all inapplicable matching expectations. This is only called,...">
+<polygon fill="white" stroke="#666666" points="130,-139.12 11.25,-139.12 11.25,-97.38 130,-97.38 130,-139.12"/>
+<text text-anchor="start" x="19.25" y="-125.62" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::BasicReporter</text>
+<text text-anchor="start" x="19.25" y="-114.38" font-family="Helvetica,sans-Serif" font-size="10.00">::report_inapplicable</text>
 <text text-anchor="middle" x="70.62" y="-103.12" font-family="Helvetica,sans-Serif" font-size="10.00">_matches</text>
 </a>
 </g>
@@ -62,7 +62,7 @@
 <g id="edge2_Node000001_Node000003" class="edge">
 <title>Node1&#45;&gt;Node3</title>
 <g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M165.86,-101.3C155.25,-103.21 144.09,-105.22 133.32,-107.15"/>
+<path fill="none" stroke="#63b8ff" d="M165.79,-101.31C154.2,-103.4 141.96,-105.6 130.28,-107.7"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="166.4,-104.76 175.62,-99.55 165.16,-97.87 166.4,-104.76"/>
 </a>
 </g>
@@ -70,9 +70,9 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#a33d512b76f21fbeda297c954072701ff" target="_top" xlink:title="Expects reports about all none matching expectations. This is only called, if there are no better opt...">
-<polygon fill="white" stroke="#666666" points="133,-79.5 8.25,-79.5 8.25,-49 133,-49 133,-79.5"/>
-<text text-anchor="start" x="16.25" y="-66" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::Catch2Reporter</text>
+<g id="a_Node000004"><a xlink:href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a9c4228afd89a1615ba0af92d588f6efa" target="_top" xlink:title="Expects reports about all none matching expectations. This is only called, if there are no better opt...">
+<polygon fill="white" stroke="#666666" points="130,-79.5 11.25,-79.5 11.25,-49 130,-49 130,-79.5"/>
+<text text-anchor="start" x="19.25" y="-66" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::BasicReporter</text>
 <text text-anchor="middle" x="70.62" y="-54.75" font-family="Helvetica,sans-Serif" font-size="10.00">::report_no_matches</text>
 </a>
 </g>
@@ -81,7 +81,7 @@
 <g id="edge3_Node000001_Node000004" class="edge">
 <title>Node1&#45;&gt;Node4</title>
 <g id="a_edge3_Node000001_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M165.86,-81.2C155.25,-79.29 144.09,-77.28 133.32,-75.35"/>
+<path fill="none" stroke="#63b8ff" d="M165.79,-81.19C154.2,-79.1 141.96,-76.9 130.28,-74.8"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="165.16,-84.63 175.62,-82.95 166.4,-77.74 165.16,-84.63"/>
 </a>
 </g>
@@ -89,9 +89,9 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="../../d6/d82/classmimicpp_1_1_catch2_reporter.html#a82d80536410e5b5b1615a4fb7a8c9df0" target="_top" xlink:title="Expects reports about unhandled exceptions, during handle_call.">
+<g id="a_Node000005"><a xlink:href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a6ebc62f6798303bcd2f24cb92c496ffe" target="_top" xlink:title="Expects reports about unhandled exceptions, during handle_call.">
 <polygon fill="white" stroke="#666666" points="141.25,-30.5 0,-30.5 0,0 141.25,0 141.25,-30.5"/>
-<text text-anchor="start" x="8" y="-17" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::Catch2Reporter</text>
+<text text-anchor="start" x="8" y="-17" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::BasicReporter</text>
 <text text-anchor="middle" x="70.62" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">::report_unhandled_exception</text>
 </a>
 </g>
