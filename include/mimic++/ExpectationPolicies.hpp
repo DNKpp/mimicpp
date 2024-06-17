@@ -94,7 +94,7 @@ namespace mimicpp::expectation_policies
 		{
 			if (m_Max < m_Min)
 			{
-				throw std::runtime_error{"min must be less or equal to max."};
+				throw std::invalid_argument{"min must be less or equal to max."};
 			}
 		}
 

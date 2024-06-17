@@ -125,12 +125,12 @@ TEST_CASE(
 	"[expectation][expectation::builder]"
 )
 {
-	const std::size_t max = GENERATE(0u, 1u, 2u, 3u, 4u);
-	const std::size_t min = max + GENERATE(1u, 2u, 3u, 4u);
+	const std::size_t max = GENERATE(range(0u, 5u));
+	const std::size_t min = max + GENERATE(range(1u, 5u));
 
 	REQUIRE_THROWS_AS(
 		(expectation_policies::Times{min, max}),
-		std::runtime_error);
+		std::invalid_argument);
 }
 
 TEST_CASE(
@@ -1329,6 +1329,19 @@ TEST_CASE(
 			REQUIRE(times.is_applicable());
 		}
 	}
+}
+
+TEST_CASE(
+	"mimicpp::expect::times throws, when invalid limits are provided.",
+	"[expectation][expectation::factories]"
+)
+{
+	const std::size_t max = GENERATE(range(0u, 5u));
+	const std::size_t min = max + GENERATE(range(1u, 5u));
+
+	REQUIRE_THROWS_AS(
+		expect::times(min, max),
+		std::invalid_argument);
 }
 
 TEST_CASE(
