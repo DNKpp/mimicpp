@@ -65,3 +65,10 @@ if (MIMICPP_CONFIGURE_DOXYGEN)
 	add_subdirectory("docs")
 
 endif()
+
+OPTION(MIMICPP_ENABLE_AMAGAMATE_HEADERS "Enables the amalgamation target." OFF)
+if (MIMICPP_ENABLE_AMAGAMATE_HEADERS)
+
+	add_subdirectory("tools/amalgamate-headers")
+
+endif()
