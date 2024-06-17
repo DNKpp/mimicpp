@@ -61,7 +61,7 @@ jobs:
         publish_branch: dev-gh-pages
 
     - name: Attach as release asset
-      uses: alexellis/upload-assets@0.4
+      uses: alexellis/upload-assets@0.4.0
       if: ${{ github.event_name == 'release' }}
       env:
         GITHUB_TOKEN: ${{ github.token }}
