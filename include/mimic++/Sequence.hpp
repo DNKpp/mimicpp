@@ -275,7 +275,7 @@ namespace mimicpp::expect
 {
 	/**
 	 * \brief Attaches the expectation onto a sequence.
-	 * \ingroup EXPECTATION_REQUIREMENT_TIMES
+	 * \ingroup EXPECTATION_TIMES
 	 * \ingroup EXPECTATION_SEQUENCE
 	 * \param sequence The sequence to be attached to.
 	 * \param times The expected times.
@@ -294,7 +294,7 @@ namespace mimicpp::expect
 
 	/**
 	 * \brief Attaches the expectation onto the listed sequences.
-	 * \ingroup EXPECTATION_REQUIREMENT_TIMES
+	 * \ingroup EXPECTATION_TIMES
 	 * \ingroup EXPECTATION_SEQUENCE
 	 * \param sequences The sequences to be attached to.
 	 * \param times The expected times.
