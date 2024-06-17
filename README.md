@@ -9,10 +9,12 @@
 ---
 
 ## Author
+
 Dominic Koepke  
 Mail: [DNKpp2011@gmail.com](mailto:dnkpp2011@gmail.com)
 
 ## License
+
 [BSL-1.0](LICENSE_1_0.txt) (free, open source)
 
 ```text
@@ -25,6 +27,7 @@ Mail: [DNKpp2011@gmail.com](mailto:dnkpp2011@gmail.com)
 ---
 
 ## Introduction
+
 ``mimic++`` is a c++20 mocking framework, which aims to offer a very natural end expressive syntax, without constantly resorting to macros.
 To be honest, macros cannot be completely avoided, but they can at least be reduced to a very minimum.
 
@@ -36,6 +39,7 @@ So, ``mimicpp::Mock`` objects can directly be used as functional objects, but th
 If you are curious, have a look at the documentation or directly into the examples.
 
 ### Design Philosophy
+
 The framework is designed with two core concepts in mind: Mocks and Expectations.
 Mocks can be used to define behaviour on a per test-case basis, without the necessity of creating dozens of types. The go-to example is,
 if you have a custom type, which somehow makes a connection to a concrete database, you do not want to setup an actual database connection during
@@ -47,6 +51,7 @@ So, Mocks and Expectations are playing together hand in hand.
 Additionally, users are able to create their own expectations easily and integrate them seamless into the rest of the framework. Be creative!
 
 ### Basic Examples
+
 Mocks themselves are very easy to create:
 ```cpp
 mimicpp::Mock<void()> myMock{};
@@ -74,6 +79,7 @@ For more examples, have a look into the documentation or directly into the ``exa
 
 
 ### Special Acknowledgement
+
 This framework is highly inspired by the well known [trompeloeil](https://github.com/rollbear/trompeloeil), which I have used myself for several years now.
 It's definitly not bad, but sometimes feels a little bit dated and some macros do not play very well with formatting tools and the like.
 If you need a pre-c++20 mocking-framework, you should definitly give it a try.
@@ -81,6 +87,7 @@ If you need a pre-c++20 mocking-framework, you should definitly give it a try.
 Fun fact: ``mimic++`` uses ``trompeloeil`` for it's own test suite :D
 
 ## Documentation
+
 The documenation is generated via ``doxygen``. Users can do this locally by enabling both, the ``MIMICPP_CONFIGURE_DOXYGEN`` and ``MIMICPP_CONFIGURE_DOXYGEN``,
 cmake options and building the target ``mimicpp-generate-docs`` manually.
 
@@ -89,12 +96,13 @@ but unfortunatly not directly viewable on the browser.
 Every release has the generated documentation attached.
 
 ## Installation
+
 This framework is header-only and completely powered by cmake, thus the integration into a cmake project is straight-forward.
 ```cmake
 target_link_libraries(
-	<your_target_name>
-	PUBLIC
-	mimicpp::mimicpp
+    <your_target_name>
+    PUBLIC
+    mimicpp::mimicpp
 )
 ```
 
@@ -103,9 +111,9 @@ Users can either pick a commit in the ``main`` branch or a version tag and utili
 include(FetchContent)
 
 FetchContent_Declare(
-	mimicpp
-	GIT_REPOSITORY	https://github.com/DNKpp/mimicpp
-	GIT_TAG		<any_commit_hash_or_tag>
+    mimicpp
+    GIT_REPOSITORY https://github.com/DNKpp/mimicpp
+    GIT_TAG        <any_commit_hash_or_tag>
 )
 
 FetchContent_MakeAvailable(mimicpp)
@@ -122,6 +130,7 @@ CPMAddPackage("gh:DNKpp/mimicpp#<any_commit_hash_or_tag>")
 ```
 
 ## Testing
+
 ``mimic++`` utilizes a strict testing policy, thus each official feature is well tested. The effect of those test-cases are always tracked by the extensive ci,
 which checks the compilation success, test cases outcomes and coverage on dozens of different os, compiler and build configurations.
 
@@ -131,12 +140,14 @@ The coverage is generated via ``gcov`` and evaluated by
 [coveralls](https://coveralls.io/github/DNKpp/mimicpp).
 
 ### Windows
+
 | OS           | Compiler | c++-20 | c++-23 |
 |--------------|----------|:------:|:------:|
 | Windows 2022 | msvc     |    x   |    x   |
 | Windows 2022 | clangCl  |    x   |    x   |
 
 ### Linux
+
 | Compiler | libstdc++ | libc++ | c++-20 | c++-23 |
 |----------|:---------:|:------:|:------:|:------:|
 | clang-17 |     x     |    x   |    x   |    x   |
@@ -145,6 +156,7 @@ The coverage is generated via ``gcov`` and evaluated by
 | gcc-14   |     x     |    -   |    x   |    x   |
 
 ### MacOs
+
 | Compiler          | libstdc++ | libc++ | c++-20 | c++-23 |
 |-------------------|:---------:|:------:|:------:|:------:|
 | AppleClang-17.0.6 |     -     |    x   |    x   |    x   |
