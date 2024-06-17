@@ -59,3 +59,13 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: build/docs/html
         publish_branch: dev-gh-pages
+
+    - name: Attach as release asset
+      uses: alexellis/upload-assets@0.4
+      if: ${{ github.event_name == 'release' }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        asset_paths: '["./build/docs/html"]'
+            
+        
