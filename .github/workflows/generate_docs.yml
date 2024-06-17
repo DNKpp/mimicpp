@@ -80,7 +80,7 @@ jobs:
       with:
         type: 'zip'
         filename: "documentation.zip"
-        directory: ./documentation
+        path: ./documentation
 
     - name: attach release assets
       uses: ncipollo/release-action@v1
