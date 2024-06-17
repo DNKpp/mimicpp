@@ -77,7 +77,6 @@ myMock();
 Expectations can contain several requirements, e.g. ``times`` which indicates, how often an Expectation must be met.
 For more examples, have a look into the documentation or directly into the ``examples`` directory.
 
-
 ### Special Acknowledgement
 
 This framework is highly inspired by the well known [trompeloeil](https://github.com/rollbear/trompeloeil), which I have used myself for several years now.
