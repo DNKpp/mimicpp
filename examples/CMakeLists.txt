@@ -8,6 +8,7 @@ add_executable(
 	"Requirements.cpp"
 	"Sequences.cpp"
 	"SideEffects.cpp"
+	"Times.cpp"
 )
 
 include(SetupTestTarget)
