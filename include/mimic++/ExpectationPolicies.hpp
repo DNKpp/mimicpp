@@ -84,47 +84,6 @@ namespace mimicpp::expectation_policies
 		}
 	};
 
-	template <std::size_t min, std::size_t max>
-		requires (min <= max)
-	class Times
-	{
-	public:
-		[[nodiscard]]
-		constexpr bool is_satisfied() const noexcept
-		{
-			return min <= m_Count
-					&& m_Count <= max;
-		}
-
-		[[nodiscard]]
-		constexpr bool is_applicable() const noexcept
-		{
-			return m_Count < max;
-		}
-
-		[[nodiscard]]
-		StringT describe_state() const
-		{
-			return detail::describe_times_state(
-				m_Count,
-				min,
-				max);
-		}
-
-		constexpr void consume() noexcept
-		{
-			++m_Count;
-		}
-
-	private:
-		std::size_t m_Count{};
-	};
-
-	class InitTimes
-		: public Times<1u, 1u>
-	{
-	};
-
 	class RuntimeTimes
 	{
 	public:
@@ -170,6 +129,17 @@ namespace mimicpp::expectation_policies
 		std::size_t m_Min;
 		std::size_t m_Max;
 		std::size_t m_Count{};
+	};
+
+	class InitTimes
+		: public RuntimeTimes
+	{
+	public:
+		[[nodiscard]]
+		consteval InitTimes() noexcept
+			: RuntimeTimes{1u, 1u}
+		{
+		}
 	};
 
 	template <ValueCategory expected>
@@ -521,36 +491,52 @@ namespace mimicpp::expectation_policies::detail
 namespace mimicpp::expect
 {
 	template <std::size_t min, std::size_t max = min>
+		requires (min <= max)
 	[[nodiscard]]
-	consteval expectation_policies::Times<min, max> times() noexcept
+	consteval auto times() noexcept
 	{
-		return {};
+		return expectation_policies::RuntimeTimes{
+			min,
+			max
+		};
 	}
 
 	template <std::size_t min>
 	[[nodiscard]]
-	consteval expectation_policies::Times<min, std::numeric_limits<std::size_t>::max()> at_least() noexcept
+	consteval auto at_least() noexcept
 	{
-		return {};
+		return expectation_policies::RuntimeTimes{
+			min,
+			std::numeric_limits<std::size_t>::max()
+		};
 	}
 
 	template <std::size_t max>
 	[[nodiscard]]
-	consteval expectation_policies::Times<0u, max> at_most() noexcept
+	consteval auto at_most() noexcept
 	{
-		return {};
+		return expectation_policies::RuntimeTimes{
+			0u,
+			max
+		};
 	}
 
 	[[nodiscard]]
-	consteval expectation_policies::Times<1u, 1u> once() noexcept
+	consteval auto once() noexcept
 	{
-		return {};
+		return expectation_policies::RuntimeTimes{
+			1u,
+			1u
+		};
 	}
 
 	[[nodiscard]]
-	consteval expectation_policies::Times<2u, 2u> twice() noexcept
+	consteval auto twice() noexcept
 	{
-		return {};
+		return expectation_policies::RuntimeTimes{
+			2u,
+			2u
+		};
 	}
 
 	[[nodiscard]]

@@ -22,8 +22,6 @@ using namespace mimicpp;
 TEMPLATE_TEST_CASE(
 	"Given types satisfy mimicpp::times_policy concept.",
 	"[expectation][expectation::builder]",
-	(expectation_policies::Times<0, 1>),
-	(expectation_policies::Times<1, 1>),
 	expectation_policies::RuntimeTimes,
 	expectation_policies::InitTimes
 )
@@ -85,41 +83,6 @@ TEST_CASE(
 	REQUIRE(policy.is_applicable());
 
 	REQUIRE_NOTHROW(policy.consume());
-
-	REQUIRE(policy.is_satisfied());
-	REQUIRE(!policy.is_applicable());
-}
-
-TEMPLATE_TEST_CASE_SIG(
-	"expectation_policies::Times is configurable at compile-time.",
-	"[expectation][expectation::builder]",
-	((std::size_t min, std::size_t max), min, max),
-	(0, 0),
-	(0, 1),
-	(0, 2),
-	(1, 2),
-	(2, 2)
-)
-{
-	expectation_policies::Times<min, max> policy{};
-
-	for ([[maybe_unused]] auto i : std::views::iota(0u, min))
-	{
-		REQUIRE(!policy.is_satisfied());
-		REQUIRE(policy.is_applicable());
-
-		REQUIRE_NOTHROW(policy.consume());
-	}
-
-	REQUIRE(policy.is_satisfied());
-
-	for ([[maybe_unused]] auto i : std::views::iota(min, max))
-	{
-		REQUIRE(policy.is_satisfied());
-		REQUIRE(policy.is_applicable());
-
-		REQUIRE_NOTHROW(policy.consume());
-	}
 
 	REQUIRE(policy.is_satisfied());
 	REQUIRE(!policy.is_applicable());
@@ -1170,7 +1133,7 @@ TEST_CASE(
 {
 	SECTION("times with binary limits.")
 	{
-		expectation_policies::Times times = expect::times<2, 5>();
+		expectation_policies::RuntimeTimes times = expect::times<2, 5>();
 		REQUIRE(!times.is_satisfied());
 		REQUIRE(times.is_applicable());
 
@@ -1190,7 +1153,7 @@ TEST_CASE(
 
 	SECTION("times with unary limits.")
 	{
-		expectation_policies::Times times = expect::times<3>();
+		expectation_policies::RuntimeTimes times = expect::times<3>();
 		REQUIRE(!times.is_satisfied());
 		REQUIRE(times.is_applicable());
 
@@ -1208,7 +1171,7 @@ TEST_CASE(
 
 	SECTION("at_most")
 	{
-		expectation_policies::Times times = expect::at_most<3>();
+		expectation_policies::RuntimeTimes times = expect::at_most<3>();
 		REQUIRE(times.is_satisfied());
 		REQUIRE(times.is_applicable());
 
@@ -1226,7 +1189,7 @@ TEST_CASE(
 
 	SECTION("at_least")
 	{
-		expectation_policies::Times times = expect::at_least<3>();
+		expectation_policies::RuntimeTimes times = expect::at_least<3>();
 		REQUIRE(!times.is_satisfied());
 		REQUIRE(times.is_applicable());
 
@@ -1252,7 +1215,7 @@ TEST_CASE(
 
 	SECTION("once")
 	{
-		expectation_policies::Times times = expect::once();
+		expectation_policies::RuntimeTimes times = expect::once();
 		REQUIRE(!times.is_satisfied());
 		REQUIRE(times.is_applicable());
 
@@ -1264,7 +1227,7 @@ TEST_CASE(
 
 	SECTION("twice")
 	{
-		expectation_policies::Times times = expect::twice();
+		expectation_policies::RuntimeTimes times = expect::twice();
 		REQUIRE(!times.is_satisfied());
 		REQUIRE(times.is_applicable());
 
