@@ -84,11 +84,11 @@ namespace mimicpp::expectation_policies
 		}
 	};
 
-	class RuntimeTimes
+	class Times
 	{
 	public:
 		[[nodiscard]]
-		constexpr explicit RuntimeTimes(const std::size_t min, const std::size_t max)
+		constexpr explicit Times(const std::size_t min, const std::size_t max)
 			: m_Min{min},
 			m_Max{max}
 		{
@@ -132,12 +132,12 @@ namespace mimicpp::expectation_policies
 	};
 
 	class InitTimes
-		: public RuntimeTimes
+		: public Times
 	{
 	public:
 		[[nodiscard]]
 		consteval InitTimes() noexcept
-			: RuntimeTimes{1u, 1u}
+			: Times{1u, 1u}
 		{
 		}
 	};
@@ -495,7 +495,7 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	consteval auto times() noexcept
 	{
-		return expectation_policies::RuntimeTimes{
+		return expectation_policies::Times{
 			min,
 			max
 		};
@@ -505,7 +505,7 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	consteval auto at_least() noexcept
 	{
-		return expectation_policies::RuntimeTimes{
+		return expectation_policies::Times{
 			min,
 			std::numeric_limits<std::size_t>::max()
 		};
@@ -515,7 +515,7 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	consteval auto at_most() noexcept
 	{
-		return expectation_policies::RuntimeTimes{
+		return expectation_policies::Times{
 			0u,
 			max
 		};
@@ -524,7 +524,7 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	consteval auto once() noexcept
 	{
-		return expectation_policies::RuntimeTimes{
+		return expectation_policies::Times{
 			1u,
 			1u
 		};
@@ -533,34 +533,34 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	consteval auto twice() noexcept
 	{
-		return expectation_policies::RuntimeTimes{
+		return expectation_policies::Times{
 			2u,
 			2u
 		};
 	}
 
 	[[nodiscard]]
-	constexpr expectation_policies::RuntimeTimes times(const std::size_t min, const std::size_t max)
+	constexpr expectation_policies::Times times(const std::size_t min, const std::size_t max)
 	{
-		return expectation_policies::RuntimeTimes{min, max};
+		return expectation_policies::Times{min, max};
 	}
 
 	[[nodiscard]]
-	constexpr expectation_policies::RuntimeTimes times(const std::size_t exactly) noexcept
+	constexpr expectation_policies::Times times(const std::size_t exactly) noexcept
 	{
 		return times(exactly, exactly);
 	}
 
 	[[nodiscard]]
-	constexpr expectation_policies::RuntimeTimes at_least(const std::size_t min) noexcept
+	constexpr expectation_policies::Times at_least(const std::size_t min) noexcept
 	{
-		return expectation_policies::RuntimeTimes{min, std::numeric_limits<std::size_t>::max()};
+		return expectation_policies::Times{min, std::numeric_limits<std::size_t>::max()};
 	}
 
 	[[nodiscard]]
-	constexpr expectation_policies::RuntimeTimes at_most(const std::size_t max) noexcept
+	constexpr expectation_policies::Times at_most(const std::size_t max) noexcept
 	{
-		return expectation_policies::RuntimeTimes{0u, max};
+		return expectation_policies::Times{0u, max};
 	}
 
 	namespace detail
