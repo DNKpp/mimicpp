@@ -44,6 +44,8 @@ the so called "Expectations".
 
 So, Mocks and Expectations are playing together hand in hand.
 
+Additionally, users are able to create their own expectations easily and integrate them seamless into the rest of the framework. Be creative!
+
 ### Basic Examples
 Mocks themselves are very easy to create:
 ```cpp
