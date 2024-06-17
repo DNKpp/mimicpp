@@ -65,16 +65,20 @@ jobs:
     needs: create-documentation
     if: ${{ github.event_name == 'release' }}
     steps:
-    - uses: actions/checkout@v4
-
     - uses: actions/download-artifact@v4
-      id: step1
       with:
         name: HTML-Documentation
+        path: ./documentation
 
-    - name: Attach as release asset
-      uses: alexellis/upload-assets@0.4.0
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+    - name: zip documentation
+      uses: thedoctor0/zip-release@0.7.6
       with:
-        asset_paths: '["${{ steps.step1.outputs.download-path }}"]'
+        type: 'zip'
+        filename: "documentation.zip"
+        path: ./documentation
+
+    - name: attach release assets
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "documentation.zip"
+        token: ${{ secrets.GITHUB_TOKEN }}
