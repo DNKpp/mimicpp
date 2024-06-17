@@ -66,8 +66,8 @@ if (MIMICPP_CONFIGURE_DOXYGEN)
 
 endif()
 
-OPTION(MIMICPP_ENABLE_AMAGAMATE_HEADERS "Enables the amalgamation target." OFF)
-if (MIMICPP_ENABLE_AMAGAMATE_HEADERS)
+OPTION(MIMICPP_ENABLE_AMALGAMATE_HEADERS "Enables the amalgamation target." OFF)
+if (MIMICPP_ENABLE_AMALGAMATE_HEADERS)
 
 	add_subdirectory("tools/amalgamate-headers")
 

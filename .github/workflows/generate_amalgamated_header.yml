@@ -23,7 +23,7 @@ jobs:
             -S . \
             -B build \
             --log-level=VERBOSE \
-            -MIMICPP_ENABLE_AMAGAMATE_HEADERS=ON \
+            -DMIMICPP_ENABLE_AMALGAMATE_HEADERS=ON \
             -DMIMICPP_BUILD_TESTS=OFF \
             -DMIMICPP_BUILD_EXAMPLES=OFF
 
