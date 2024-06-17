@@ -87,4 +87,5 @@ jobs:
       with:
         artifacts: "documentation.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
+        allowUpdates: true
         artifactErrorsFailBuild: true
