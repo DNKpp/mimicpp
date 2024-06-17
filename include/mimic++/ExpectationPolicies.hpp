@@ -490,6 +490,28 @@ namespace mimicpp::expectation_policies::detail
 
 namespace mimicpp::expect
 {
+	/**
+	 * \defgroup EXPECTATION_TIMES times
+	 * \ingroup EXPECTATION
+	 * \brief Times indicates, how often an expectation must be matched.
+	 * \details During each expectation building users can specify a times policy once. If not specified, that policy defaults to ``once``.
+	 * If users attempt to specify a times policy more than once for a single expectation, a compile-error will occur.
+	 *
+	 * Times in general have both, a lower and an upper limit. Both limits are treated as inclusive.
+	 *
+	 *\{
+	 */
+
+	/**
+	 * \brief Specifies arbitrary limits with compile time arguments.
+	 * \tparam min The lower limit.
+	 * \tparam max The upper limit.
+	 * \return The newly created policy.
+	 *
+	 * \snippet Times.cpp times compile-time
+	 * \note If the ``max`` is omitted, it is set to ``min``.
+	 * \snippet Times.cpp times single compile-time
+	 */
 	template <std::size_t min, std::size_t max = min>
 		requires (min <= max)
 	[[nodiscard]]
@@ -501,6 +523,40 @@ namespace mimicpp::expect
 		};
 	}
 
+	/**
+	 * \brief Specifies a times policy with a limit range.
+	 * \param min The lower limit.
+	 * \param max The upper limit.
+	 * \return The newly created policy.
+	 *
+	 * \snippet Times.cpp times rt
+	 */
+	[[nodiscard]]
+	constexpr auto times(const std::size_t min, const std::size_t max)
+	{
+		return expectation_policies::Times{min, max};
+	}
+
+	/**
+	 * \brief Specifies a times policy with an explicit limit.
+	 * \param exactly The limit.
+	 * \return The newly created policy.
+	 * \details This requires the expectation to be matched exactly the specified times.
+	 * \snippet Times.cpp times single rt
+	 */
+	[[nodiscard]]
+	constexpr auto times(const std::size_t exactly) noexcept
+	{
+		return times(exactly, exactly);
+	}
+
+	/**
+	 * \brief Specifies a times policy with just a lower limit.
+	 * \tparam min The lower limit.
+	 * \return The newly created policy.
+	 * \details This requires the expectation to be matched at least ``min`` times or more.
+	 * \snippet Times.cpp at_least rt
+	 */
 	template <std::size_t min>
 	[[nodiscard]]
 	consteval auto at_least() noexcept
@@ -511,6 +567,25 @@ namespace mimicpp::expect
 		};
 	}
 
+	/**
+	 * \brief Specifies a times policy with just a lower limit.
+	 * \tparam min The lower limit.
+	 * \return The newly created policy.
+	 * \details This requires the expectation to be matched at least ``min`` times or more.
+	 * \snippet Times.cpp at_least compile-time
+	 */
+	[[nodiscard]]
+	constexpr auto at_least(const std::size_t min) noexcept
+	{
+		return expectation_policies::Times{min, std::numeric_limits<std::size_t>::max()};
+	}
+
+	/**
+	 * \brief Specifies a times policy with just an upper limit.
+	 * \tparam max The upper limit.
+	 * \return The newly created policy.
+	 * \details This requires the expectation to be matched up to ``max`` times.
+	 */
 	template <std::size_t max>
 	[[nodiscard]]
 	consteval auto at_most() noexcept
@@ -521,6 +596,24 @@ namespace mimicpp::expect
 		};
 	}
 
+	/**
+	 * \brief Specifies a times policy with just an upper limit.
+	 * \param max The upper limit.
+	 * \return The newly created policy.
+	 * \details This requires the expectation to be matched up to ``max`` times.
+	 */
+	[[nodiscard]]
+	constexpr auto at_most(const std::size_t max) noexcept
+	{
+		return expectation_policies::Times{0u, max};
+	}
+
+	/**
+	 * \brief Specifies a times policy with both limits set to 1.
+	 * \return The newly created policy.
+	 * \details This requires the expectation to be matched exactly once.
+	 * \snippet Times.cpp once
+	 */
 	[[nodiscard]]
 	consteval auto once() noexcept
 	{
@@ -530,6 +623,12 @@ namespace mimicpp::expect
 		};
 	}
 
+	/**
+	 * \brief Specifies a times policy with both limits set to 2.
+	 * \return The newly created policy.
+	 * \details This requires the expectation to be matched exactly twice.
+	 * \snippet Times.cpp twice
+	 */
 	[[nodiscard]]
 	consteval auto twice() noexcept
 	{
@@ -539,29 +638,9 @@ namespace mimicpp::expect
 		};
 	}
 
-	[[nodiscard]]
-	constexpr expectation_policies::Times times(const std::size_t min, const std::size_t max)
-	{
-		return expectation_policies::Times{min, max};
-	}
-
-	[[nodiscard]]
-	constexpr expectation_policies::Times times(const std::size_t exactly) noexcept
-	{
-		return times(exactly, exactly);
-	}
-
-	[[nodiscard]]
-	constexpr expectation_policies::Times at_least(const std::size_t min) noexcept
-	{
-		return expectation_policies::Times{min, std::numeric_limits<std::size_t>::max()};
-	}
-
-	[[nodiscard]]
-	constexpr expectation_policies::Times at_most(const std::size_t max) noexcept
-	{
-		return expectation_policies::Times{0u, max};
-	}
+	/**
+	 * \}
+	 */
 
 	namespace detail
 	{
