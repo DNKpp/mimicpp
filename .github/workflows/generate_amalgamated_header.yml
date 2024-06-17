@@ -38,7 +38,7 @@ jobs:
 
   release-amalgamated-header:
     runs-on: ubuntu-latest
-    needs: create-documentation
+    needs: amalgamate-header
     if: ${{ github.event_name == 'release' }}
 
     # this is required for the asset attachment
