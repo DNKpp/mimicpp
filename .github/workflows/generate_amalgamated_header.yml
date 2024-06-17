@@ -1,0 +1,38 @@
+name: generate amalgamated header
+
+on:
+    push:
+        branches: [main, development]
+    pull_request:
+        branches: [main, development]
+    release:
+        types: [released]
+
+jobs:
+  amalgamate-header:
+    runs-on: ubuntu-latest
+    container:
+        image: ghcr.io/dnkpp/gcc:14
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Configure
+      run: |
+        cmake \
+            -S . \
+            -B build \
+            --log-level=VERBOSE \
+            -MIMICPP_ENABLE_AMAGAMATE_HEADERS=ON \
+            -DMIMICPP_BUILD_TESTS=OFF \
+            -DMIMICPP_BUILD_EXAMPLES=OFF
+
+    - name: Generate Doxygen Documentation
+      run: |
+        cmake --build build --target mimicpp-amalgamate-headers
+
+    - name: Upload header
+      uses: actions/upload-artifact@v4
+      with:
+        name: mimic++-amalgamated.hpp
+        path: build/tools/amalgamate-headers/mimic++-amalgamated.hpp
