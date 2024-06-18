@@ -74,6 +74,11 @@ into the utilized test framework. ``mimic++`` provides some concrete reporter im
 any test framework or simply use the default reporter.
 For more details have a look into the ``reporting`` section in the documentation.
 
+Official adapters exist for the following frameworks:
+
+* [Catch2](https://github.com/catchorg)
+* [GTest](https://github.com/google/googletest)
+
 #### Always Stay Within The Language Definition
 
 There are a lot of mocking frameworks, which utilize clever tricks and apply some compiler specific instructions to make the work more enjoyable.
