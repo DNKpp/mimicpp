@@ -9,6 +9,7 @@ add_executable(
 	"Sequences.cpp"
 	"SideEffects.cpp"
 	"Times.cpp"
+	"CustomPrinter.cpp"
 )
 
 include(SetupTestTarget)
