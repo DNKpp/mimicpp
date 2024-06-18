@@ -134,6 +134,8 @@ Every release has the generated documentation attached.
 
 ## Installation
 
+### CMake
+
 This framework is header-only and completely powered by cmake, thus the integration into a cmake project is straight-forward.
 ```cmake
 target_link_libraries(
@@ -165,6 +167,12 @@ include(CPM.cmake) # or include(get_cpm.cmake)
 CPMAddPackage("gh:DNKpp/mimicpp#<any_commit_hash_or_tag>")
 # do not forget linking via target_link_libraries as shown above
 ```
+
+### Single-Header
+
+Each release has a header file named ``mimic++-amalgamated.hpp`` attached, which contains all definitions (except for the specific test-framework adapters)
+and can be simply dropped into any c++20 project.
+After that, users may also just pick the appropriate adapter header for their used test-framework and put that into their project aswell.
 
 ## Testing
 
