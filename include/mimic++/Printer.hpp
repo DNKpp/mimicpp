@@ -69,6 +69,10 @@ namespace mimicpp::format
 
 namespace mimicpp::custom
 {
+	/**
+	 * \brief User may add specializations, which will then be used during ``print`` calls.
+	 * \ingroup STRINGIFICATION
+	 */
 	template <typename>
 	class Printer;
 }
@@ -263,7 +267,43 @@ namespace mimicpp::detail
 
 namespace mimicpp
 {
+	/**
+	 * \defgroup STRINGIFICATION stringification
+	 * \brief Stringification describes the process of converting an object state into its textual representation.
+	 * \details ``mimic++`` often wants to present users a textual representation of their tested objects,
+	 * because they might have failed a test case. It utilizes the ``print`` function for that purpose.
+	 *
+	 * That function internally checks for the first available option (in that order):
+	 * - ``mimicpp::custom::Printer`` specialization
+	 * - convertible to ``std::string_view``
+	 * - satisfies ``std::ranges::forward_range``
+	 * - is ``std::source_location``
+	 *
+	 * If no valid alternative has been found, the default is chosen.
+	 *
+	 * As ``mimic++`` can not know how to convert any custom type out there, a simple but effective mechanism is used.
+	 * Users can add a specialization of ``mimicpp::custom::Printer`` for their own or third-party types.
+	 * ``mimic++`` will always prefer such a specialization over any other internal alternative, even if ``mimic++`` already
+	 * has special treatment that particular type (e.g. ``std::source_location``).
+	 *
+	 * Given the following type.
+	 * \snippet CustomPrinter.cpp my_type
+	 * Users can then create a specialization as follows:
+	 * \snippet CustomPrinter.cpp my_type printer
+	 *
+	 * When an object of ``my_type`` is then passed to ``print``, that specification will be used:
+	 * \snippet CustomPrinter.cpp my_type print
+	 *\{
+	 */
+
+	/**
+	 * \brief Functional object, converting the given object to its textual representation.
+	 */
 	inline constexpr detail::PrintFn print{};
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
