@@ -101,12 +101,17 @@ $(function(){initNavTree('d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">sequence</div></div>
+  <div class="headertitle"><div class="title">sequence<div class="ingroups"><a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html">times</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Sequences enable deterministic ordering between multiple expectations.  
 <a href="#details">More...</a></p>
+<div class="dynheader">
+Collaboration diagram for sequence:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.svg" width="190" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -122,11 +127,11 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga86172142a200384577c82c2051c388a7" id="r_ga86172142a200384577c82c2051c388a7"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga86172142a200384577c82c2051c388a7">mimicpp::expect::in_sequence</a> (<a class="el" href="../../d5/d54/classmimicpp_1_1_sequence.html">Sequence</a> &amp;sequence, const std::size_t <a class="el" href="../../d3/d18/namespacemimicpp_1_1expect.html#a9b497738d4a9362ce2d7c227f5fd4c3f">times</a>=1u)</td></tr>
+<tr class="memitem:ga86172142a200384577c82c2051c388a7" id="r_ga86172142a200384577c82c2051c388a7"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga86172142a200384577c82c2051c388a7">mimicpp::expect::in_sequence</a> (<a class="el" href="../../d5/d54/classmimicpp_1_1_sequence.html">Sequence</a> &amp;sequence, const std::size_t <a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gabf2bf323b7c8972272e4e4c51d246b9f">times</a>=1u)</td></tr>
 <tr class="memdesc:ga86172142a200384577c82c2051c388a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches the expectation onto a sequence.  <br /></td></tr>
 <tr class="separator:ga86172142a200384577c82c2051c388a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaff97698bf9ff2924055f59a948483f56" id="r_gaff97698bf9ff2924055f59a948483f56"><td class="memTemplParams" colspan="2">template&lt;std::size_t size&gt; </td></tr>
-<tr class="memitem:gaff97698bf9ff2924055f59a948483f56"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaff97698bf9ff2924055f59a948483f56">mimicpp::expect::in_sequences</a> (const std::reference_wrapper&lt; <a class="el" href="../../d5/d54/classmimicpp_1_1_sequence.html">Sequence</a> &gt;(&amp;sequences)[size], const std::size_t <a class="el" href="../../d3/d18/namespacemimicpp_1_1expect.html#a9b497738d4a9362ce2d7c227f5fd4c3f">times</a>=1u)</td></tr>
+<tr class="memitem:gaff97698bf9ff2924055f59a948483f56"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaff97698bf9ff2924055f59a948483f56">mimicpp::expect::in_sequences</a> (const std::reference_wrapper&lt; <a class="el" href="../../d5/d54/classmimicpp_1_1_sequence.html">Sequence</a> &gt;(&amp;sequences)[size], const std::size_t <a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gabf2bf323b7c8972272e4e4c51d246b9f">times</a>=1u)</td></tr>
 <tr class="memdesc:gaff97698bf9ff2924055f59a948483f56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches the expectation onto the listed sequences.  <br /></td></tr>
 <tr class="separator:gaff97698bf9ff2924055f59a948483f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -193,7 +198,7 @@ Thread-Safety</h1>
 <p>Sequences are not thread-safe and are never intended to be. If one attempts to enforce a strong ordering between multiple threads without any explicit synchronisation, that attempt is doomed to fail.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Afterthoughts</h1>
-<p><a class="el" href="../../d5/d54/classmimicpp_1_1_sequence.html" title="The user level sequence object.">Sequence</a> policies are treated as <code><a class="el" href="../../d1/d26/conceptmimicpp_1_1times__policy.html">times_policy</a></code> and therefore can not be mixed with e.g. <code>Times</code>. At a first glance this seems rather unintuitive, as a sequence does not actually mind how often an expectation is matched, but rather if one expectation has been matched before another. This being true, there is still a huge intersection between those cases, because a sequence still must know how often an expectation is expected to match. This would lead to higher coupling between two rather unrelated domains, but isn't the actual deal-breaker. The actual reason is, that both, <code>Times</code> and <code>RuntimeTimes</code> are rather permissive designed and thus allow for a wide range of valid configurations. Especially the cases, where a range of possible calls is configured (like <code>at_least</code>), makes it very hard for a sequence to reliably determine, whether an expectation shall match or not. When users define expectations not precise enough, this quickly leads to ambiguities between multiple expectations which may and will result in surprising outcomes. </p>
+<p><a class="el" href="../../d5/d54/classmimicpp_1_1_sequence.html" title="The user level sequence object.">Sequence</a> policies are treated as <code><a class="el" href="../../d1/d26/conceptmimicpp_1_1times__policy.html">times_policy</a></code> and therefore can not be mixed with e.g. <code>Times</code>. At a first glance this seems rather unintuitive, as a sequence does not actually mind how often an expectation is matched, but rather if one expectation has been matched before another. This being true, there is still a huge intersection between those cases, because a sequence still must know how often an expectation is expected to match. This would lead to higher coupling between two rather unrelated domains, but isn't the actual deal-breaker. The actual reason is, that <code>Times</code> is rather permissive designed and thus allow for a wide range of valid configurations. Especially the cases, where a range of possible calls is configured (like <code>at_least</code>), makes it very hard for a sequence to reliably determine, whether an expectation shall match or not. When users define expectations not precise enough, this quickly leads to ambiguities between multiple expectations which may and will result in surprising outcomes. </p>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="gabe345f064a02510e07321d78c59959e7" name="gabe345f064a02510e07321d78c59959e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gabe345f064a02510e07321d78c59959e7">&#9670;&#160;</a></span>SequenceId</h2>
@@ -369,7 +374,7 @@ Here is the call graph for this function:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Jun 16 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
+    <li class="footer">Generated on Tue Jun 18 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
   </ul>
 </div>
 </body>

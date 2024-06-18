@@ -54,7 +54,6 @@ var hierarchy =
     [ "mimicpp::custom::Printer< typename >", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],
     [ "mimicpp::expectation_policies::Requirement< Matcher, Projection, Describer >", "d1/dde/classmimicpp_1_1expectation__policies_1_1_requirement.html", null ],
     [ "mimicpp::expectation_policies::ReturnsResultOf< Action >", "dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html", null ],
-    [ "mimicpp::expectation_policies::RuntimeTimes", "d9/dc4/classmimicpp_1_1expectation__policies_1_1_runtime_times.html", null ],
     [ "mimicpp::ScopedExpectation< Signature >", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", null ],
     [ "mimicpp::expectation_policies::Sequence", "db/d5e/classmimicpp_1_1expectation__policies_1_1_sequence.html", null ],
     [ "mimicpp::Sequence", "d5/d54/classmimicpp_1_1_sequence.html", null ],
@@ -150,11 +149,10 @@ var hierarchy =
       [ "mimicpp::signature_return_type< Signature >", "d9/d65/structmimicpp_1_1signature__return__type_3_01_signature_01_4.html", null ]
     ] ],
     [ "mimicpp::expectation_policies::Throws< Exception >", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html", null ],
-    [ "mimicpp::expectation_policies::Times< min, max >", "d6/d30/classmimicpp_1_1expectation__policies_1_1_times.html", null ],
-    [ "mimicpp::MatchReport::Times", "d5/db1/classmimicpp_1_1_match_report_1_1_times.html", null ],
-    [ "mimicpp::expectation_policies::Times< 1u, 1u >", "d6/d30/classmimicpp_1_1expectation__policies_1_1_times.html", [
+    [ "mimicpp::expectation_policies::Times", "d6/d30/classmimicpp_1_1expectation__policies_1_1_times.html", [
       [ "mimicpp::expectation_policies::InitTimes", "d4/d6b/classmimicpp_1_1expectation__policies_1_1_init_times.html", null ]
     ] ],
+    [ "mimicpp::MatchReport::Times", "d5/db1/classmimicpp_1_1_match_report_1_1_times.html", null ],
     [ "std::true_type", null, [
       [ "mimicpp::is_overload_set< First >", "d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html", null ]
     ] ],

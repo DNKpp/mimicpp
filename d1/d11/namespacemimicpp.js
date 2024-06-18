@@ -4,17 +4,17 @@ var namespacemimicpp =
     [ "custom", "d4/d84/namespacemimicpp_1_1custom.html", "d4/d84/namespacemimicpp_1_1custom" ],
     [ "expect", "d3/d18/namespacemimicpp_1_1expect.html", [
       [ "arg", "d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga1abed045e8a61c27f72eb595b2dd5c61", null ],
-      [ "at_least", "d3/d18/namespacemimicpp_1_1expect.html#a1a41b722fac661a416dc15e86dd411ce", null ],
-      [ "at_least", "d3/d18/namespacemimicpp_1_1expect.html#a9964d3a164d9e71593f0a46fcf6bda55", null ],
-      [ "at_most", "d3/d18/namespacemimicpp_1_1expect.html#aef2fccfe1081363057ad642cd2810456", null ],
-      [ "at_most", "d3/d18/namespacemimicpp_1_1expect.html#a374cd9c727009695c2979c8e448fc864", null ],
+      [ "at_least", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga890642ac7e590f7e350f6c8c5df3bfb8", null ],
+      [ "at_least", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gac023544ffb8e75ae23b4fd54fd5a01c8", null ],
+      [ "at_most", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gae004d28a5bd8c756892ffb57c0914dee", null ],
+      [ "at_most", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga5f202020f49051ba84c64dcb728a179d", null ],
       [ "in_sequence", "d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga86172142a200384577c82c2051c388a7", null ],
       [ "in_sequences", "d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaff97698bf9ff2924055f59a948483f56", null ],
-      [ "once", "d3/d18/namespacemimicpp_1_1expect.html#accf309c40ba8f24547c93ea3f17bb513", null ],
-      [ "times", "d3/d18/namespacemimicpp_1_1expect.html#a9b497738d4a9362ce2d7c227f5fd4c3f", null ],
-      [ "times", "d3/d18/namespacemimicpp_1_1expect.html#ae939c9fb932b3c1167385437e2df5c4a", null ],
-      [ "times", "d3/d18/namespacemimicpp_1_1expect.html#a528392ef5626e22d4989bb7774caab17", null ],
-      [ "twice", "d3/d18/namespacemimicpp_1_1expect.html#a5a98b2ce08b55aa9ab1fbb965ca5dc87", null ]
+      [ "once", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf", null ],
+      [ "times", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gabf2bf323b7c8972272e4e4c51d246b9f", null ],
+      [ "times", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga580c943eab85a760c5acfb74480b039a", null ],
+      [ "times", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga2a9043cc6caceda86782d0d0551aad4b", null ],
+      [ "twice", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695", null ]
     ] ],
     [ "expectation_policies", "d0/d91/namespacemimicpp_1_1expectation__policies.html", "d0/d91/namespacemimicpp_1_1expectation__policies" ],
     [ "finally", "d2/d8d/namespacemimicpp_1_1finally.html", [
