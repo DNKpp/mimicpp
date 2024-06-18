@@ -172,8 +172,8 @@ CPMAddPackage("gh:DNKpp/mimicpp#<any_commit_hash_or_tag>")
 which checks the compilation success, test cases outcomes and coverage on dozens of different os, compiler and build configurations.
 
 The coverage is generated via ``gcov`` and evaluated by
-[codacy](https://app.codacy.com/gh/DNKpp/mimicpp/dashboard),
-[codecov](https://app.codecov.io/gh/DNKpp/mimicpp) and
+[codacy](https://app.codacy.com/gh/DNKpp/mimicpp),
+[codecov](https://codecov.io/gh/DNKpp/mimicpp) and
 [coveralls](https://coveralls.io/github/DNKpp/mimicpp).
 
 ### Windows
