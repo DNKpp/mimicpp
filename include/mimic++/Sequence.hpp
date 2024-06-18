@@ -64,9 +64,9 @@ namespace mimicpp
 	 * is matched, but rather if one expectation has been matched before another. This being true, there is still a
 	 * huge intersection between those cases, because a sequence still must know how often an expectation is expected
 	 * to match. This would lead to higher coupling between two rather unrelated domains, but isn't the actual deal-breaker.
-	 * The actual reason is, that both, ``Times`` and ``RuntimeTimes`` are rather permissive designed and thus allow for
-	 * a wide range of valid configurations. Especially the cases, where a range of possible calls is configured (like
-	 * ``at_least``), makes it very hard for a sequence to reliably determine, whether an expectation shall match or not.
+	 * The actual reason is, that ``Times`` is rather permissive designed and thus allow for a wide range of valid configurations.
+	 * Especially the cases, where a range of possible calls is configured (like ``at_least``), makes it very hard for a sequence
+	 * to reliably determine, whether an expectation shall match or not.
 	 * When users define expectations not precise enough, this quickly leads to ambiguities between multiple expectations
 	 * which may and will result in surprising outcomes.
 	 *\{
