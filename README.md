@@ -70,8 +70,9 @@ Custom specializations will always be prefered over any pre-existing printing me
 
 Mocking frameworks usually do not exist for their own, as they are in fact just an advanced technice for creating tests. Instead, they should work
 together with any existing test framework out there. ``mimic++`` provides the ``IReporter`` interface, which in fact serves as a bridge from ``mimic++``
-into the utilized test framework. ``mimic++`` provides some concrete reporter implementations for well known test frameworks, but users may use. For 
-more details have a look into the ``reporting`` section in the documentation.
+into the utilized test framework. ``mimic++`` provides some concrete reporter implementations for well known test frameworks, but users may create custom adapters for
+any test framework or simply use the default reporter.
+For more details have a look into the ``reporting`` section in the documentation.
 
 #### Always Stay Within The Language Definition
 
