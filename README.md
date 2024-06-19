@@ -76,6 +76,7 @@ For more details have a look into the ``reporting`` section in the documentation
 
 Official adapters exist for the following frameworks:
 
+* [Boost.Test](https://github.com/boostorg/test)
 * [Catch2](https://github.com/catchorg)
 * [GTest](https://github.com/google/googletest)
 
