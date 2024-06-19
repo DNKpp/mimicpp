@@ -6,9 +6,15 @@ add_executable(
 include(SetupTestTarget)
 setup_test_target(mimicpp-adapter-tests-boost-test)
 
+if (WIN32)
+	set(BOOST_ARCHIVE_URL "https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0-cmake.zip")
+else()
+	set(BOOST_ARCHIVE_URL "https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0-cmake.tar.gz")
+endif()
+
 CPMAddPackage(
 	NAME Boost
-	URL	"https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0-cmake.zip"
+	URL	${BOOST_ARCHIVE_URL}
 	VERSION 1.85.0
 	SYSTEM YES
 )
