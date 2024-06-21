@@ -76,7 +76,7 @@ namespace mimicpp
 	 * \brief Strong type for internally used sequence ids.
 	 */
 	enum class SequenceId
-		: std::size_t
+		: int
 	{
 	};
 
@@ -86,6 +86,147 @@ namespace mimicpp
 
 	namespace detail
 	{
+		template <typename Id, auto priorityStrategy>
+			requires std::is_enum_v<Id>
+					&& std::signed_integral<std::underlying_type_t<Id>>
+					&& std::convertible_to<
+						std::invoke_result_t<decltype(priorityStrategy), Id, int>,
+						int>
+		class BasicSequence
+		{
+		public:
+			using IdT = Id;
+
+			~BasicSequence() noexcept(false)
+			{
+				const auto iter = std::ranges::find_if_not(
+					m_Entries.cbegin() + m_Cursor,
+					m_Entries.cend(),
+					[](const State s) noexcept
+					{
+						return s == State::satisfied
+							|| s == State::saturated;
+					});
+
+				if (iter != m_Entries.cend())
+				{
+					detail::report_error(
+						format::format(
+							"Unfulfilled sequence. {} out of {} expectation(s) are satisfied.",
+							std::ranges::distance(m_Entries.cbegin(), iter),
+							m_Entries.size()));
+				}
+			}
+
+			[[nodiscard]]
+			BasicSequence() = default;
+
+			BasicSequence(const BasicSequence&) = delete;
+			BasicSequence& operator =(const BasicSequence&) = delete;
+			BasicSequence(BasicSequence&&) = delete;
+			BasicSequence& operator =(BasicSequence&&) = delete;
+
+			[[nodiscard]]
+			constexpr std::optional<int> priority_of(const IdT id) const noexcept
+			{
+				assert(is_valid(id));
+
+				if (is_consumable(id))
+				{
+					return std::invoke(
+						priorityStrategy,
+						id,
+						m_Cursor);
+				}
+
+				return std::nullopt;
+			}
+
+			constexpr void set_satisfied(const IdT id) noexcept
+			{
+				assert(is_valid(id));
+				const auto index = to_underlying(id);
+				assert(m_Cursor <= index);
+
+				auto& element = m_Entries[to_underlying(id)];
+				assert(element == State::unsatisfied);
+				element = State::satisfied;
+			}
+
+			constexpr void set_saturated(const IdT id) noexcept
+			{
+				assert(is_valid(id));
+				const auto index = to_underlying(id);
+				assert(m_Cursor <= index);
+
+				auto& element = m_Entries[index];
+				assert(
+					element == State::unsatisfied
+					|| element == State::satisfied);
+				element = State::saturated;
+			}
+
+			[[nodiscard]]
+			constexpr bool is_consumable(const IdT id) const noexcept
+			{
+				assert(is_valid(id));
+
+				const int index = to_underlying(id);
+				const auto state = m_Entries[index];
+				return m_Cursor <= index
+						&& std::ranges::all_of(
+							m_Entries.begin() + m_Cursor,
+							m_Entries.begin() + index,
+							[](const State s) noexcept
+							{
+								return s == State::satisfied
+										|| s == State::saturated;
+							})
+						&& (state == State::unsatisfied
+							|| state == State::satisfied);
+			}
+
+			constexpr void consume(const IdT id) noexcept
+			{
+				assert(is_consumable(id));
+
+				m_Cursor = to_underlying(id);
+			}
+
+			[[nodiscard]]
+			constexpr IdT add()
+			{
+				if (!std::in_range< std::underlying_type_t<IdT>>(m_Entries.size()))
+				[[unlikely]]
+				{
+					throw std::runtime_error{
+						"Sequence already holds maximum amount of elements."
+					};
+				}
+
+				m_Entries.emplace_back(State::unsatisfied);
+				return static_cast<IdT>(m_Entries.size() - 1);
+			}
+
+		private:
+			enum class State
+			{
+				unsatisfied,
+				satisfied,
+				saturated
+			};
+
+			std::vector<State> m_Entries{};
+			int m_Cursor{};
+
+			[[nodiscard]]
+			constexpr bool is_valid(const IdT id) const noexcept
+			{
+				return 0 <= to_underlying(id)
+						&& std::cmp_less(to_underlying(id), m_Entries.size());
+			}
+		};
+
 		class Sequence
 		{
 		public:
@@ -145,8 +286,10 @@ namespace mimicpp
 					throw std::invalid_argument{"Count must be greater than 0."};
 				}
 
-				m_Entries.emplace_back(count, 0);
-				return SequenceId{m_Entries.size() - 1};
+				return {};
+
+				//m_Entries.emplace_back(count, 0);
+				//return SequenceId{m_Entries.size() - 1};
 			}
 
 		private:

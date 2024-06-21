@@ -17,17 +17,32 @@
 
 using namespace mimicpp;
 
+namespace 
+{
+	class FakeStrategy
+	{
+	public:
+		[[nodiscard, maybe_unused]]
+		constexpr int operator ()(const auto id, [[maybe_unused]] const int cursor) const noexcept
+		{
+			return static_cast<int>(id);
+		}
+	};
+}
+
 TEST_CASE(
-	"detail::Sequence is default constructible, but immobile.",
+	"detail::BasicSequence is default constructible, but immobile.",
 	"[sequence]"
 )
 {
-	STATIC_REQUIRE(std::is_default_constructible_v<detail::Sequence>);
+	using SequenceT = detail::BasicSequence<SequenceId, FakeStrategy{}>;
 
-	STATIC_REQUIRE(!std::is_copy_constructible_v<detail::Sequence>);
-	STATIC_REQUIRE(!std::is_copy_assignable_v<detail::Sequence>);
-	STATIC_REQUIRE(!std::is_move_constructible_v<detail::Sequence>);
-	STATIC_REQUIRE(!std::is_move_assignable_v<detail::Sequence>);
+	STATIC_REQUIRE(std::is_default_constructible_v<SequenceT>);
+
+	STATIC_REQUIRE(!std::is_copy_constructible_v<SequenceT>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<SequenceT>);
+	STATIC_REQUIRE(!std::is_move_constructible_v<SequenceT>);
+	STATIC_REQUIRE(!std::is_move_assignable_v<SequenceT>);
 }
 
 TEST_CASE(
@@ -44,64 +59,89 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"expectation_policies::Sequence is non-copyable but movable.",
+	"detail::BasicSequence::add throws, when all Ids are in use.",
 	"[sequence]"
 )
 {
-	STATIC_REQUIRE(!std::is_copy_constructible_v<expectation_policies::Sequence>);
-	STATIC_REQUIRE(!std::is_copy_assignable_v<expectation_policies::Sequence>);
+	enum class ShortSequenceId
+		: std::int8_t
+	{
+	};
 
-	STATIC_REQUIRE(std::is_move_constructible_v<expectation_policies::Sequence>);
-	STATIC_REQUIRE(std::is_move_assignable_v<expectation_policies::Sequence>);
+	detail::BasicSequence<
+		ShortSequenceId,
+		FakeStrategy{}> seq{};
+
+	for ([[maybe_unused]] const auto i : std::views::iota(
+			0,
+			int{std::numeric_limits<std::int8_t>::max()} + 1))
+	{
+		seq.set_satisfied(seq.add());
+	}
+
+	REQUIRE_THROWS_AS(
+		seq.add(),
+		std::runtime_error);
 }
 
 TEST_CASE(
-	"detail::Sequence supports an arbitrary id amount.",
+	"detail::BasicSequence supports an arbitrary id amount.",
 	"[sequence]"
 )
 {
 	namespace Matches = Catch::Matchers;
 
-	ScopedReporter reporter{};
-	std::optional<detail::Sequence> sequence{std::in_place};
+	using SequenceT = detail::BasicSequence<SequenceId, FakeStrategy{}>;
 
-	SECTION("When attempted to add a new id with zero or negative count, an std::invalid_argument is thrown.")
+	ScopedReporter reporter{};
+	std::optional<SequenceT> sequence{std::in_place};
+
+	SECTION("When Sequence contains zero elements.")
 	{
-		REQUIRE_THROWS_AS(
-			sequence->add(0),
-			std::invalid_argument);
+		REQUIRE_NOTHROW(sequence.reset());
 	}
 
-	SECTION("When sequence contains one id, that id must be fully consumed.")
-	{
-		const std::size_t count = GENERATE(1u, 2u, 3u);
-		const SequenceId id = sequence->add(count);
-
-		for ([[maybe_unused]] const auto i : std::views::iota(0u, count - 1u))
+	static constexpr std::array consumeStateActions = std::to_array(
 		{
-			REQUIRE(sequence->is_consumable(id));
-			REQUIRE(!sequence->is_saturated(id));
-			REQUIRE_NOTHROW(sequence->consume(id));
-		}
-		REQUIRE(sequence->is_consumable(id));
-		REQUIRE(!sequence->is_saturated(id));
+			+[](SequenceT&, const SequenceId) { assert(true); },
+			+[](SequenceT& seq, const SequenceId v) { seq.consume(v); }
+		});
 
-		SECTION("When id is not fully consumed, an error is reported.")
+	SECTION("When sequence contains one id, that id must be satisfied.")
+	{
+		const SequenceId id = sequence->add();
+		REQUIRE(sequence->is_consumable(id));
+
+		std::invoke(
+			GENERATE(from_range(consumeStateActions)),
+			*sequence,
+			id);
+
+		SECTION("Reports error, when id is unsatisfied.")
 		{
 			sequence.reset();
 			REQUIRE_THAT(
-				reporter.errors(),
-				Matches::SizeIs(1));
-			REQUIRE_THAT(
 				reporter.errors().front(),
-				Matches::Equals("Unfulfilled sequence. 0 out of 1 expectation(s) where fully consumed."));
+				Matches::Equals("Unfulfilled sequence. 0 out of 1 expectation(s) are satisfied."));
 		}
 
-		SECTION("When id is fully consumed, nothing is reported.")
+		SECTION("Reports nothing, when id is satisfied.")
 		{
-			REQUIRE_NOTHROW(sequence->consume(id));
+			sequence->set_satisfied(id);
+
+			REQUIRE(sequence->is_consumable(id));
+
+			sequence.reset();
+			REQUIRE_THAT(
+				reporter.errors(),
+				Matches::IsEmpty());
+		}
+
+		SECTION("Reports nothing, when id is saturated.")
+		{
+			sequence->set_saturated(id);
+
 			REQUIRE(!sequence->is_consumable(id));
-			REQUIRE(sequence->is_saturated(id));
 
 			sequence.reset();
 			REQUIRE_THAT(
@@ -112,102 +152,124 @@ TEST_CASE(
 
 	SECTION("When sequence contains multiple ids.")
 	{
+		static constexpr std::array alterStateActions = std::to_array(
+			{
+				+[](SequenceT&, const SequenceId) { assert(true); },
+				+[](SequenceT& seq, const SequenceId v) { seq.set_satisfied(v); },
+				+[](SequenceT& seq, const SequenceId v) { seq.set_saturated(v); }
+			});
+
 		const std::vector ids{
-			sequence->add(3u),
-			sequence->add(2u),
-			sequence->add(1u)
+			sequence->add(),
+			sequence->add(),
+			sequence->add()
 		};
 
-		SECTION("Sequence can consume first id.")
+		SECTION("In initial state, only the first one is consumable.")
 		{
-			for ([[maybe_unused]] const auto i : std::views::iota(0u, 3u))
+			REQUIRE(sequence->is_consumable(ids[0]));
+			REQUIRE(sequence->priority_of(ids[0]));
+
+			std::invoke(
+				GENERATE(from_range(alterStateActions)),
+				*sequence,
+				ids[1]);
+			REQUIRE(!sequence->is_consumable(ids[1]));
+			REQUIRE(!sequence->priority_of(ids[1]));
+
+			std::invoke(
+				GENERATE(from_range(alterStateActions)),
+				*sequence,
+				ids[2]);
+			REQUIRE(!sequence->is_consumable(ids[2]));
+			REQUIRE(!sequence->priority_of(ids[2]));
+
+			REQUIRE_NOTHROW(sequence->consume(ids[0]));
+
+			sequence.reset();
+			REQUIRE_THAT(
+				reporter.errors().front(),
+				Matches::Equals("Unfulfilled sequence. 0 out of 3 expectation(s) are satisfied."));
+		}
+
+		SECTION("If first is either satisfied or saturated, the second one becomes consumable.")
+		{
+			std::invoke(
+				GENERATE(from_range(consumeStateActions)),
+				*sequence,
+				ids[0]);
+
+			const auto secondStateAction = GENERATE(from_range(alterStateActions));
+
+			SECTION("When first is satisfied.")
 			{
+				sequence->set_satisfied(ids[0]);
+
 				REQUIRE(sequence->is_consumable(ids[0]));
-				REQUIRE(!sequence->is_saturated(ids[0]));
-
-				REQUIRE(!sequence->is_consumable(ids[1]));
-				REQUIRE(!sequence->is_saturated(ids[1]));
-
-				REQUIRE(!sequence->is_consumable(ids[2]));
-				REQUIRE(!sequence->is_saturated(ids[2]));
-
-				REQUIRE_NOTHROW(sequence->consume(ids[0]));
+				REQUIRE(sequence->priority_of(ids[0]));
 			}
 
-			SECTION("When sequence is destroyed, an error is reported.")
+			SECTION("When first is saturated.")
+			{
+				sequence->set_saturated(ids[0]);
+
+				REQUIRE(!sequence->is_consumable(ids[0]));
+				REQUIRE(!sequence->priority_of(ids[0]));
+			}
+
+			REQUIRE(sequence->is_consumable(ids[1]));
+			REQUIRE(sequence->priority_of(ids[1]));
+
+			std::invoke(
+				secondStateAction,
+				*sequence,
+				ids[2]);
+			REQUIRE(!sequence->is_consumable(ids[2]));
+			REQUIRE(!sequence->priority_of(ids[2]));
+
+			sequence.reset();
+			REQUIRE_THAT(
+				reporter.errors().front(),
+				Matches::Equals("Unfulfilled sequence. 1 out of 3 expectation(s) are satisfied."));
+		}
+
+		SECTION("If first and second are either satisfied or saturated, the last one becomes consumable.")
+		{
+			std::invoke(
+				GENERATE(from_range(alterStateActions | std::views::drop(1))),
+				*sequence,
+				ids[0]);
+
+			std::invoke(
+				GENERATE(from_range(alterStateActions | std::views::drop(1))),
+				*sequence,
+				ids[1]);
+
+			REQUIRE(sequence->is_consumable(ids[2]));
+			REQUIRE(sequence->priority_of(ids[2]));
+
+			// jumps directly from 0 to 2
+			sequence->consume(ids[2]);
+
+			SECTION("Reports error, when last is unfulfilled.")
 			{
 				sequence.reset();
-
-				REQUIRE_THAT(
-					reporter.errors(),
-					Matches::SizeIs(1));
 				REQUIRE_THAT(
 					reporter.errors().front(),
-					Matches::Equals("Unfulfilled sequence. 1 out of 3 expectation(s) where fully consumed."));
+					Matches::Equals("Unfulfilled sequence. 2 out of 3 expectation(s) are satisfied."));
 			}
 
-			SECTION("And then the next id is consumable.")
+			SECTION("Succeeds, when last is either satisfied or saturated.")
 			{
-				for ([[maybe_unused]] const auto i : std::views::iota(0u, 2u))
-				{
-					REQUIRE(!sequence->is_consumable(ids[0]));
-					REQUIRE(sequence->is_saturated(ids[0]));
+				std::invoke(
+					GENERATE(from_range(alterStateActions | std::views::drop(1))),
+					*sequence,
+					ids[2]);
 
-					REQUIRE(sequence->is_consumable(ids[1]));
-					REQUIRE(!sequence->is_saturated(ids[1]));
-
-					REQUIRE(!sequence->is_consumable(ids[2]));
-					REQUIRE(!sequence->is_saturated(ids[2]));
-
-					REQUIRE_NOTHROW(sequence->consume(ids[1]));
-				}
-
-				SECTION("When sequence is destroyed, an error is reported.")
-				{
-					sequence.reset();
-
-					REQUIRE_THAT(
-						reporter.errors(),
-						Matches::SizeIs(1));
-					REQUIRE_THAT(
-						reporter.errors().front(),
-						Matches::Equals("Unfulfilled sequence. 2 out of 3 expectation(s) where fully consumed."));
-				}
-
-				SECTION("And then last id is consumable.")
-				{
-					REQUIRE(!sequence->is_consumable(ids[0]));
-					REQUIRE(sequence->is_saturated(ids[0]));
-
-					REQUIRE(!sequence->is_consumable(ids[1]));
-					REQUIRE(sequence->is_saturated(ids[1]));
-
-					REQUIRE(sequence->is_consumable(ids[2]));
-					REQUIRE(!sequence->is_saturated(ids[2]));
-
-					REQUIRE_NOTHROW(sequence->consume(ids[2]));
-
-					SECTION("When sequence is destroyed, no error is reported.")
-					{
-						sequence.reset();
-
-						REQUIRE_THAT(
-							reporter.errors(),
-							Matches::IsEmpty());
-					}
-
-					SECTION("And then, nothing is consumable.")
-					{
-						REQUIRE(!sequence->is_consumable(ids[0]));
-						REQUIRE(sequence->is_saturated(ids[0]));
-
-						REQUIRE(!sequence->is_consumable(ids[1]));
-						REQUIRE(sequence->is_saturated(ids[1]));
-
-						REQUIRE(!sequence->is_consumable(ids[2]));
-						REQUIRE(sequence->is_saturated(ids[2]));
-					}
-				}
+				sequence.reset();
+				REQUIRE_THAT(
+					reporter.errors(),
+					Matches::IsEmpty());
 			}
 		}
 	}
