@@ -76,7 +76,7 @@ namespace mimicpp
 		enum SequenceTag
 			: std::ptrdiff_t
 		{
-	};
+		};
 
 		template <typename Id, auto priorityStrategy>
 			requires std::is_enum_v<Id>
@@ -254,80 +254,27 @@ namespace mimicpp
 			}
 		};
 
-		class Sequence
+		template <typename Id, auto priorityStrategy>
+		class BasicSequenceInterface
 		{
 		public:
-			~Sequence() noexcept(false)
-			{
-				if (m_Current != m_Entries.size())
-				{
-					report_error(
-						format::format(
-							"Unfulfilled sequence. {} out of {} expectation(s) where fully consumed.",
-							m_Current,
-							m_Entries.size()));
-				}
-			}
+			using SequenceT = BasicSequence<Id, priorityStrategy>;
+
+			~BasicSequenceInterface() = default;
 
 			[[nodiscard]]
-			Sequence() = default;
+			BasicSequenceInterface() = default;
 
-			Sequence(const Sequence&) = delete;
-			Sequence& operator =(const Sequence&) = delete;
-			Sequence(Sequence&&) = delete;
-			Sequence& operator =(Sequence&&) = delete;
-
-			[[nodiscard]]
-			constexpr bool is_consumable(const SequenceId id) const noexcept
-			{
-				assert(to_underlying(id) < m_Entries.size());
-
-				return m_Current == to_underlying(id);
-			}
-
-			[[nodiscard]]
-			constexpr bool is_saturated(const SequenceId id) const noexcept
-			{
-				assert(to_underlying(id) < m_Entries.size());
-
-				const auto [amount, counter] = m_Entries[to_underlying(id)];
-				return amount == counter;
-			}
-
-			constexpr void consume(const SequenceId id) noexcept
-			{
-				assert(is_consumable(id));
-
-				if (auto& [amount, counter] = m_Entries[m_Current];
-					amount == ++counter)
-				{
-					++m_Current;
-				}
-			}
-
-			[[nodiscard]]
-			constexpr SequenceId add(const std::size_t count)
-			{
-				if (count == 0)
-				{
-					throw std::invalid_argument{"Count must be greater than 0."};
-				}
-
-				return {};
-
-				//m_Entries.emplace_back(count, 0);
-				//return SequenceId{m_Entries.size() - 1};
-			}
+			BasicSequenceInterface(const BasicSequenceInterface&) = delete;
+			BasicSequenceInterface& operator =(const BasicSequenceInterface&) = delete;
+			BasicSequenceInterface(BasicSequenceInterface&&) = delete;
+			BasicSequenceInterface& operator =(BasicSequenceInterface&&) = delete;
 
 		private:
-			struct entry
-			{
-				std::size_t amount{};
-				std::size_t counter{};
+			std::shared_ptr<SequenceT> m_Sequence{
+				std::make_shared<SequenceT>()
 			};
-
-			std::vector<entry> m_Entries{};
-			std::size_t m_Current{};
+			
 		};
 
 		enum class SequenceId
@@ -343,154 +290,159 @@ namespace mimicpp
 	 * have something they can attach expectations to. In fact, objects of this type may even go out of scope before
 	 * the attached expectations are destroyed.
 	 */
-	class Sequence
+	class LazySequence
+		: public detail::BasicSequenceInterface<
+			detail::SequenceId,
+			detail::LazyStrategy{}>
 	{
-		friend class expectation_policies::Sequence;
+	};
 
-	public:
-		~Sequence() = default;
+	class GreedySequence
+		: public detail::BasicSequenceInterface<
+			detail::SequenceId,
+			detail::GreedyStrategy{}>
+	{
+	};
 
-		[[nodiscard]]
-		Sequence() = default;
+	using SequenceT = LazySequence;
+}
 
-		Sequence(const Sequence&) = delete;
-		Sequence& operator =(const Sequence&) = delete;
-		Sequence(Sequence&&) = delete;
-		Sequence& operator =(Sequence&&) = delete;
+namespace mimicpp::detail
+{
 
-	private:
-		std::shared_ptr<detail::Sequence> m_Sequence{
-			std::make_shared<detail::Sequence>()
-		};
+
+	struct sequence_priority_result
+	{
+		
 	};
 }
 
-namespace mimicpp::expectation_policies
-{
-	class Sequence
-	{
-	public:
-		~Sequence() = default;
-
-		// ReSharper disable once CppParameterMayBeConstPtrOrRef
-		explicit Sequence(
-			const std::span<const std::reference_wrapper<mimicpp::Sequence>> sequences,
-			const std::size_t times
-		)
-		{
-			m_SequenceInfos.reserve(sequences.size());
-			// ReSharper disable once CppRangeBasedForIncompatibleReference
-			for (mimicpp::Sequence& sequence : sequences)
-			{
-				m_SequenceInfos.emplace_back(
-					sequence.m_Sequence,
-					sequence.m_Sequence->add(times));
-			}
-		}
-
-		Sequence(const Sequence&) = delete;
-		Sequence& operator =(const Sequence&) = delete;
-		Sequence(Sequence&&) = default;
-		Sequence& operator =(Sequence&&) = default;
-
-		[[nodiscard]]
-		constexpr bool is_satisfied() const noexcept
-		{
-			return std::ranges::all_of(
-				m_SequenceInfos,
-				[](const entry& info){ return info.sequence->is_saturated(info.id); });
-		}
-
-		[[nodiscard]]
-		constexpr bool is_applicable() const noexcept
-		{
-			return std::ranges::all_of(
-				m_SequenceInfos,
-				[](const entry& info){ return info.sequence->is_consumable(info.id); });
-		}
-
-		[[nodiscard]]
-		StringT describe_state() const
-		{
-			if (is_applicable())
-			{
-				return "applicable: Sequence element expects further matches.";
-			}
-
-			if (is_satisfied())
-			{
-				return "inapplicable: Sequence element is already saturated.";
-			}
-
-			return "inapplicable: Sequence element is not the current element.";
-		}
-
-		// ReSharper disable once CppMemberFunctionMayBeConst
-		constexpr void consume() noexcept
-		{
-			assert(is_applicable());
-
-			for (auto& [sequence, id] : m_SequenceInfos)
-			{
-				sequence->consume(id);
-			}
-		}
-
-	private:
-		struct entry
-		{
-			std::shared_ptr<mimicpp::detail::Sequence> sequence;
-			SequenceId id;
-		};
-		std::vector<entry> m_SequenceInfos;
-	};
-}
-
-namespace mimicpp::expect
-{
-	/**
-	 * \brief Attaches the expectation onto a sequence.
-	 * \ingroup EXPECTATION_TIMES
-	 * \ingroup EXPECTATION_SEQUENCE
-	 * \param sequence The sequence to be attached to.
-	 * \param times The expected times.
-	 * \snippet Sequences.cpp sequence
-	 * \snippet Sequences.cpp sequence mixed
-	 */
-	[[nodiscard]]
-	inline auto in_sequence(Sequence& sequence, const std::size_t times = 1u)
-	{
-		const std::array collection{std::ref(sequence)};
-		return expectation_policies::Sequence{
-			collection,
-			times
-		};
-	}
-
-	/**
-	 * \brief Attaches the expectation onto the listed sequences.
-	 * \ingroup EXPECTATION_TIMES
-	 * \ingroup EXPECTATION_SEQUENCE
-	 * \param sequences The sequences to be attached to.
-	 * \param times The expected times.
-	 * \snippet Sequences.cpp sequence multiple sequences
-	 */
-	template <std::size_t size>
-	[[nodiscard]]
-	auto in_sequences(
-		const std::reference_wrapper<Sequence> (&sequences)[size],
-		const std::size_t times = 1u
-	)
-	{
-		static_assert(
-			0u < size,
-			"Zero sequences are not allowed. Use times instead.");
-
-		return expectation_policies::Sequence{
-			sequences,
-			times
-		};
-	}
-}
+//namespace mimicpp::expectation_policies
+//{
+//	class Sequence
+//	{
+//	public:
+//		~Sequence() = default;
+//
+//		// ReSharper disable once CppParameterMayBeConstPtrOrRef
+//		explicit Sequence(
+//			const std::span<const std::reference_wrapper<mimicpp::Sequence>> sequences,
+//			const std::size_t times
+//		)
+//		{
+//			m_SequenceInfos.reserve(sequences.size());
+//			// ReSharper disable once CppRangeBasedForIncompatibleReference
+//			for (mimicpp::Sequence& sequence : sequences)
+//			{
+//				m_SequenceInfos.emplace_back(
+//					sequence.m_Sequence,
+//					sequence.m_Sequence->add(times));
+//			}
+//		}
+//
+//		Sequence(const Sequence&) = delete;
+//		Sequence& operator =(const Sequence&) = delete;
+//		Sequence(Sequence&&) = default;
+//		Sequence& operator =(Sequence&&) = default;
+//
+//		[[nodiscard]]
+//		constexpr bool is_satisfied() const noexcept
+//		{
+//			return std::ranges::all_of(
+//				m_SequenceInfos,
+//				[](const entry& info){ return info.sequence->is_saturated(info.id); });
+//		}
+//
+//		[[nodiscard]]
+//		constexpr bool is_applicable() const noexcept
+//		{
+//			return std::ranges::all_of(
+//				m_SequenceInfos,
+//				[](const entry& info){ return info.sequence->is_consumable(info.id); });
+//		}
+//
+//		[[nodiscard]]
+//		StringT describe_state() const
+//		{
+//			if (is_applicable())
+//			{
+//				return "applicable: Sequence element expects further matches.";
+//			}
+//
+//			if (is_satisfied())
+//			{
+//				return "inapplicable: Sequence element is already saturated.";
+//			}
+//
+//			return "inapplicable: Sequence element is not the current element.";
+//		}
+//
+//		// ReSharper disable once CppMemberFunctionMayBeConst
+//		constexpr void consume() noexcept
+//		{
+//			assert(is_applicable());
+//
+//			for (auto& [sequence, id] : m_SequenceInfos)
+//			{
+//				sequence->consume(id);
+//			}
+//		}
+//
+//	private:
+//		struct entry
+//		{
+//			std::shared_ptr<mimicpp::detail::Sequence> sequence;
+//			SequenceId id;
+//		};
+//		std::vector<entry> m_SequenceInfos;
+//	};
+//}
+//
+//namespace mimicpp::expect
+//{
+//	/**
+//	 * \brief Attaches the expectation onto a sequence.
+//	 * \ingroup EXPECTATION_TIMES
+//	 * \ingroup EXPECTATION_SEQUENCE
+//	 * \param sequence The sequence to be attached to.
+//	 * \param times The expected times.
+//	 * \snippet Sequences.cpp sequence
+//	 * \snippet Sequences.cpp sequence mixed
+//	 */
+//	[[nodiscard]]
+//	inline auto in_sequence(Sequence& sequence, const std::size_t times = 1u)
+//	{
+//		const std::array collection{std::ref(sequence)};
+//		return expectation_policies::Sequence{
+//			collection,
+//			times
+//		};
+//	}
+//
+//	/**
+//	 * \brief Attaches the expectation onto the listed sequences.
+//	 * \ingroup EXPECTATION_TIMES
+//	 * \ingroup EXPECTATION_SEQUENCE
+//	 * \param sequences The sequences to be attached to.
+//	 * \param times The expected times.
+//	 * \snippet Sequences.cpp sequence multiple sequences
+//	 */
+//	template <std::size_t size>
+//	[[nodiscard]]
+//	auto in_sequences(
+//		const std::reference_wrapper<Sequence> (&sequences)[size],
+//		const std::size_t times = 1u
+//	)
+//	{
+//		static_assert(
+//			0u < size,
+//			"Zero sequences are not allowed. Use times instead.");
+//
+//		return expectation_policies::Sequence{
+//			sequences,
+//			times
+//		};
+//	}
+//}
 
 #endif
