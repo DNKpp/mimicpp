@@ -69,23 +69,15 @@ namespace mimicpp
 	 * to reliably determine, whether an expectation shall match or not.
 	 * When users define expectations not precise enough, this quickly leads to ambiguities between multiple expectations
 	 * which may and will result in surprising outcomes.
-	 *\{
-	 */
-
-	/**
-	 * \brief Strong type for internally used sequence ids.
-	 */
-	enum class SequenceId
-		: int
-	{
-	};
-
-	/**
-	 * \}
 	 */
 
 	namespace detail
 	{
+		enum SequenceTag
+			: std::ptrdiff_t
+		{
+	};
+
 		template <typename Id, auto priorityStrategy>
 			requires std::is_enum_v<Id>
 					&& std::signed_integral<std::underlying_type_t<Id>>
@@ -208,6 +200,14 @@ namespace mimicpp
 				return static_cast<IdT>(m_Entries.size() - 1);
 			}
 
+			[[nodiscard]]
+			constexpr SequenceTag tag() const noexcept
+			{
+				return SequenceTag{
+					reinterpret_cast<std::ptrdiff_t>(this)
+				};
+			}
+
 		private:
 			enum class State
 			{
@@ -328,6 +328,11 @@ namespace mimicpp
 
 			std::vector<entry> m_Entries{};
 			std::size_t m_Current{};
+		};
+
+		enum class SequenceId
+			: int
+		{
 		};
 	}
 

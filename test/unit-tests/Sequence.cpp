@@ -276,6 +276,17 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"detail::BasicSequence::tag returns its opaque address.",
+	"sequence"
+)
+{
+	const detail::BasicSequence<SequenceId, FakeStrategy{}> sequence{};
+	const detail::SequenceTag tag = sequence.tag();
+
+	REQUIRE(to_underlying(tag) == reinterpret_cast<std::ptrdiff_t>(std::addressof(sequence)));
+}
+
+TEST_CASE(
 	"detail::LazyStrategy prefers elements near cursor.",
 	"[sequence]"
 )
