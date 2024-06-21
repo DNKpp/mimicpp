@@ -8,14 +8,15 @@
 
 #pragma once
 
+#include "mimic++/ControlPolicy.hpp"
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationPolicies.hpp"
 
 namespace mimicpp
 {
 	template <
+		bool timesConfigured,
 		typename Signature,
-		times_policy TimesPolicy,
 		typename FinalizePolicy,
 		expectation_policy_for<Signature>... Policies>
 	class BasicExpectationBuilder
@@ -28,19 +29,18 @@ namespace mimicpp
 
 		~BasicExpectationBuilder() = default;
 
-		template <typename TimesPolicyArg, typename FinalizePolicyArg, typename PolicyListArg>
-			requires std::constructible_from<TimesPolicy, TimesPolicyArg>
-					&& std::constructible_from<FinalizePolicy, FinalizePolicyArg>
+		template <typename FinalizePolicyArg, typename PolicyListArg>
+			requires std::constructible_from<FinalizePolicy, FinalizePolicyArg>
 					&& std::constructible_from<PolicyListT, PolicyListArg>
 		[[nodiscard]]
 		explicit constexpr BasicExpectationBuilder(
 			std::shared_ptr<StorageT> storage,
-			TimesPolicyArg&& timesPolicyArg,
+			ControlPolicyConfig controlConfig,
 			FinalizePolicyArg&& finalizePolicyArg,
 			PolicyListArg&& policyListArg
 		) noexcept
 			: m_Storage{std::move(storage)},
-			m_TimesPolicy{std::forward<TimesPolicyArg>(timesPolicyArg)},
+			m_ControlConfig{std::move(controlConfig)},
 			m_FinalizePolicy{std::forward<FinalizePolicyArg>(finalizePolicyArg)},
 			m_ExpectationPolicies{std::forward<PolicyListArg>(policyListArg)}
 		{
@@ -55,27 +55,6 @@ namespace mimicpp
 		BasicExpectationBuilder& operator =(BasicExpectationBuilder&&) = default;
 
 		template <typename Policy>
-			requires std::same_as<expectation_policies::InitTimes, TimesPolicy>
-					&& (!std::same_as<expectation_policies::InitTimes, std::remove_cvref_t<Policy>>)
-					&& times_policy<std::remove_cvref_t<Policy>>
-		[[nodiscard]]
-		constexpr auto operator |(Policy&& policy) &&
-		{
-			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
-				Signature,
-				std::remove_cvref_t<Policy>,
-				FinalizePolicy,
-				Policies...>;
-
-			return ExtendedExpectationBuilderT{
-				std::move(m_Storage),
-				std::forward<Policy>(policy),
-				std::move(m_FinalizePolicy),
-				std::move(m_ExpectationPolicies)
-			};
-		}
-
-		template <typename Policy>
 			requires std::same_as<expectation_policies::InitFinalize, FinalizePolicy>
 					&& (!std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>)
 					&& finalize_policy_for<std::remove_cvref_t<Policy>, Signature>
@@ -83,14 +62,14 @@ namespace mimicpp
 		constexpr auto operator |(Policy&& policy) &&
 		{
 			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
+				timesConfigured,
 				Signature,
-				TimesPolicy,
 				std::remove_cvref_t<Policy>,
 				Policies...>;
 
 			return ExtendedExpectationBuilderT{
 				std::move(m_Storage),
-				std::move(m_TimesPolicy),
+				std::move(m_ControlConfig),
 				std::forward<Policy>(policy),
 				std::move(m_ExpectationPolicies)
 			};
@@ -102,15 +81,15 @@ namespace mimicpp
 		constexpr auto operator |(Policy&& policy) &&
 		{
 			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
+				timesConfigured,
 				Signature,
-				TimesPolicy,
 				FinalizePolicy,
 				Policies...,
 				std::remove_cvref_t<Policy>>;
 
 			return ExtendedExpectationBuilderT{
 				std::move(m_Storage),
-				std::move(m_TimesPolicy),
+				std::move(m_ControlConfig),
 				std::move(m_FinalizePolicy),
 				std::apply(
 					[&](auto&... policies) noexcept
@@ -124,13 +103,34 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
+		constexpr auto operator |(const ControlPolicyConfig config) &&
+			requires (!timesConfigured)
+		{
+			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
+				true,
+				Signature,
+				FinalizePolicy,
+				Policies...>;
+
+			m_ControlConfig.set_limits(
+				config.min(),
+				config.max());
+			return ExtendedExpectationBuilderT{
+				std::move(m_Storage),
+				std::move(m_ControlConfig),
+				std::move(m_FinalizePolicy),
+				std::move(m_ExpectationPolicies)
+			};
+		}
+
+		[[nodiscard]]
 		constexpr ScopedExpectationT finalize(const std::source_location& sourceLocation) &&
 		{
 			static_assert(
 				finalize_policy_for<FinalizePolicy, Signature>,
 				"For non-void return types, a finalize policy must be set.");
 
-			using ExpectationT = BasicExpectation<Signature, TimesPolicy, FinalizePolicy, Policies...>;
+			using ExpectationT = BasicExpectation<Signature, ControlPolicy, FinalizePolicy, Policies...>;
 
 			return ScopedExpectationT{
 				std::move(m_Storage),
@@ -139,7 +139,7 @@ namespace mimicpp
 					{
 						return std::make_unique<ExpectationT>(
 							sourceLocation,
-							std::move(m_TimesPolicy),
+							m_ControlConfig,
 							std::move(m_FinalizePolicy),
 							std::move(policies)...);
 					},
@@ -149,13 +149,13 @@ namespace mimicpp
 
 	private:
 		std::shared_ptr<StorageT> m_Storage;
-		TimesPolicy m_TimesPolicy{};
+		ControlPolicyConfig m_ControlConfig{};
 		FinalizePolicy m_FinalizePolicy{};
 		PolicyListT m_ExpectationPolicies{};
 	};
 
-	template <typename Signature, typename... Policies>
-	ScopedExpectation(BasicExpectationBuilder<Signature, Policies...>&&) -> ScopedExpectation<Signature>;
+	template <bool timesConfigured, typename Signature, typename... Policies>
+	ScopedExpectation(BasicExpectationBuilder<timesConfigured, Signature, Policies...>&&) -> ScopedExpectation<Signature>;
 }
 
 namespace mimicpp::detail
@@ -209,15 +209,15 @@ namespace mimicpp::detail
 	)
 	{
 		using BaseBuilderT = BasicExpectationBuilder<
+			false,
 			Signature,
-			expectation_policies::InitTimes,
 			expectation_policies::InitFinalize
 		>;
 
 		return detail::extend_builder_with_arg_policies<Signature>(
 			BaseBuilderT{
 				std::move(expectations),
-				expectation_policies::InitTimes{},
+				ControlPolicyConfig{},
 				expectation_policies::InitFinalize{},
 				std::tuple{}
 			},

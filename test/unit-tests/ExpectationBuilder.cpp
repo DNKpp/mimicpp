@@ -19,28 +19,41 @@
 
 using namespace mimicpp;
 
+namespace
+{
+	constexpr auto zeroTimesConfig = std::invoke(
+		[]
+		{
+			ControlPolicyConfig config{};
+			config.set_limits(0, 0);
+			return config;
+		});
+}
+
 TEMPLATE_TEST_CASE_SIG(
-	"Times policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
+	"Times limites of mimicpp::BasicExpectationBuilder can be exchanged only once.",
 	"[expectation][expectation::builder]",
 	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
-	(true, BasicExpectationBuilder<void(), expectation_policies::InitTimes, FinalizerFake<void()>>, TimesFake),
-	(true, BasicExpectationBuilder<int(), expectation_policies::InitTimes, FinalizerFake<int()>>, TimesFake),
-	(false, BasicExpectationBuilder<void(), TimesFake, FinalizerFake<void()>>, TimesFake),
-	(false,BasicExpectationBuilder<int(), TimesFake, FinalizerFake<int()>>, TimesFake)
+	(false, mimicpp::BasicExpectationBuilder<true, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<true, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
+	(true, mimicpp::BasicExpectationBuilder<false, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<false, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
+	(false, mimicpp::BasicExpectationBuilder<true, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<true, int(), FinalizerFake<int()>>, FinalizerFake<int()>),
+	(true, mimicpp::BasicExpectationBuilder<false, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<false, int(), FinalizerFake<int()>>, FinalizerFake<int()>)
 )
 {
-	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | std::declval<Policy&&>(); });
+	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | ControlPolicyConfig{}; });
 }
 
 TEST_CASE(
-	"Times policy of mimicpp::BasicExpectationBuilder may be exchanged.",
+	"BasicExpectationBuilder times-limits can be configured.",
 	"[expectation][expectation::builder]"
 )
 {
-	using trompeloeil::_;
-
 	using SignatureT = void();
-	using BaseBuilderT = BasicExpectationBuilder<SignatureT, expectation_policies::InitTimes, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
@@ -55,7 +68,7 @@ TEST_CASE(
 
 	BaseBuilderT builder{
 		collection,
-		expectation_policies::InitTimes{},
+		ControlPolicyConfig{},
 		expectation_policies::InitFinalize{},
 		std::tuple{}};
 
@@ -70,48 +83,10 @@ TEST_CASE(
 
 	SECTION("Or exchange it once.")
 	{
-		using TimesPolicyT = TimesFacade<
-			std::reference_wrapper<TimesMock>,
-			UnwrapReferenceWrapper>;
-		TimesMock times{};
-
-		// during destruction
-		REQUIRE_CALL(times, is_satisfied())
-			.RETURN(true);
 		ScopedExpectationT expectation = std::move(builder)
-										| TimesPolicyT{std::ref(times)};
+										| zeroTimesConfig;
 
-		SECTION("When is_satisfied() is called.")
-		{
-			const bool isSatisfied = GENERATE(false, true);
-			REQUIRE_CALL(times, is_satisfied())
-				.RETURN(isSatisfied);
-			REQUIRE(isSatisfied == expectation.is_satisfied());
-		}
-
-		SECTION("When handle_call() is called.")
-		{
-			SECTION("And when times is applicable.")
-			{
-				REQUIRE_CALL(times, is_applicable())
-					.RETURN(true);
-				REQUIRE_CALL(times, describe_state())
-					.RETURN(std::nullopt);
-				REQUIRE_CALL(times, consume());
-				REQUIRE_NOTHROW(collection->handle_call(call));
-			}
-
-			SECTION("And when times is inapplicable.")
-			{
-				REQUIRE_CALL(times, is_applicable())
-					.RETURN(false);
-				REQUIRE_CALL(times, describe_state())
-					.RETURN(std::nullopt);
-				REQUIRE_THROWS_AS(
-					collection->handle_call(call),
-					NonApplicableMatchError);
-			}
-		}
+		REQUIRE(expectation.is_satisfied());
 	}
 }
 
@@ -119,10 +94,14 @@ TEMPLATE_TEST_CASE_SIG(
 	"Finalize policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
 	"[expectation][expectation::builder]",
 	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
-	(true, mimicpp::BasicExpectationBuilder<void(), TimesFake, expectation_policies::InitFinalize>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<int(), TimesFake, expectation_policies::InitFinalize>, FinalizerFake<int()>),
-	(false, mimicpp::BasicExpectationBuilder<void(), TimesFake, FinalizerFake<void()>>, FinalizerFake<void()>),
-	(false, mimicpp::BasicExpectationBuilder<int(), TimesFake, FinalizerFake<int()>>, FinalizerFake<int()>)
+	(true, mimicpp::BasicExpectationBuilder<true, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<true, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
+	(true, mimicpp::BasicExpectationBuilder<false, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<false, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
+	(false, mimicpp::BasicExpectationBuilder<true, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<true, int(), FinalizerFake<int()>>, FinalizerFake<int()>),
+	(false, mimicpp::BasicExpectationBuilder<false, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<false, int(), FinalizerFake<int()>>, FinalizerFake<int()>)
 )
 {
 	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | std::declval<Policy&&>(); });
@@ -136,7 +115,7 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	using SignatureT = void();
-	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
@@ -149,7 +128,7 @@ TEST_CASE(
 
 	BaseBuilderT builder{
 		collection,
-		TimesFake{.isSatisfied = true},
+		ControlPolicyConfig{},
 		expectation_policies::InitFinalize{},
 		std::tuple{}};
 
@@ -188,7 +167,7 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	using SignatureT = int();
-	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
@@ -207,9 +186,10 @@ TEST_CASE(
 	FinalizerT finalizer{};
 	ScopedExpectationT expectation = BaseBuilderT{
 										collection,
-										TimesFake{.isSatisfied = true},
+										ControlPolicyConfig{},
 										expectation_policies::InitFinalize{},
-										std::tuple{}}
+										std::tuple{}
+									}
 									| FinalizerPolicyT{std::ref(finalizer)};
 
 	REQUIRE_CALL(finalizer, finalize_call(_))
@@ -226,7 +206,7 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using ExpectationPolicyT = PolicyMock<SignatureT>;
 	using PolicyT = PolicyFacade<SignatureT, std::reference_wrapper<ExpectationPolicyT>, UnwrapReferenceWrapper>;
@@ -243,7 +223,7 @@ TEST_CASE(
 
 		ScopedExpectationT expectation = BaseBuilderT{
 											collection,
-											TimesFake{.isSatisfied = true},
+											zeroTimesConfig,
 											expectation_policies::InitFinalize{},
 											std::tuple{}}
 										| PolicyT{std::ref(policy)};
@@ -266,9 +246,10 @@ TEST_CASE(
 
 		ScopedExpectationT expectation = BaseBuilderT{
 											collection,
-											TimesFake{.isSatisfied = true},
+											zeroTimesConfig,
 											expectation_policies::InitFinalize{},
-											std::tuple{}}
+											std::tuple{}
+										}
 										| PolicyT{std::ref(policy1)}
 										| PolicyT{std::ref(policy2)};
 
@@ -288,22 +269,21 @@ TEST_CASE(
 	namespace Matches = Catch::Matchers;
 
 	using SignatureT = void();
-	using TimesT = TimesFake;
 	using FinalizerT = FinalizerFake<SignatureT>;
-	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesT, FinalizerT>;
+	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, FinalizerT>;
 
 	const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 
 	const std::source_location beforeLoc = std::source_location::current();
 	ScopedExpectation expectation = BaseBuilderT{
 		collection,
-		TimesT{.isSatisfied = true},
+		zeroTimesConfig,
 		FinalizerT{},
 		std::tuple{}
 	};
 	const std::source_location afterLoc = std::source_location::current();
 
-	const auto& inner = dynamic_cast<const BasicExpectation<SignatureT, TimesT, FinalizerT>&>(
+	const auto& inner = dynamic_cast<const BasicExpectation<SignatureT, ControlPolicy, FinalizerT>&>(
 		expectation.expectation());
 	REQUIRE_THAT(
 		inner.from().file_name(),
@@ -321,7 +301,7 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using BaseBuilderT = BasicExpectationBuilder<SignatureT, TimesFake, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
 
 	ScopedReporter reporter{};
 
@@ -330,13 +310,13 @@ TEST_CASE(
 
 		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
 			collection,
-			TimesFake{.isSatisfied = true},
+			zeroTimesConfig,
 			expectation_policies::InitFinalize{},
 			std::tuple{}};
 
 		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
 			collection,
-			TimesFake{.isSatisfied = true},
+			zeroTimesConfig,
 			expectation_policies::InitFinalize{},
 			std::tuple{}};
 	}
