@@ -227,6 +227,20 @@ namespace mimicpp
 			}
 		};
 
+		class LazyStrategy
+		{
+		public:
+			[[nodiscard]]
+			constexpr int operator ()(const auto id, const int cursor) const noexcept
+			{
+				const auto index = to_underlying(id);
+				assert(std::cmp_less_equal(cursor, index));
+
+				return std::numeric_limits<int>::max()
+						- (static_cast<int>(index) - cursor);
+			}
+		};
+
 		class Sequence
 		{
 		public:

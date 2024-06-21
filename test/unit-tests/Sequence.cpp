@@ -276,6 +276,23 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"detail::LazyStrategy prefers elements near cursor.",
+	"[sequence]"
+)
+{
+	const auto [expected, id, cursor] = GENERATE(
+		(table<int, SequenceId, int>({
+			{std::numeric_limits<int>::max(), SequenceId{0}, 0},
+			{std::numeric_limits<int>::max(), SequenceId{1}, 1},
+			{std::numeric_limits<int>::max() - 1, SequenceId{1}, 0},
+			{std::numeric_limits<int>::max() - 2, SequenceId{2}, 0},
+			{std::numeric_limits<int>::max() - 1, SequenceId{2}, 1}
+		})));
+
+	REQUIRE(expected == std::invoke(detail::LazyStrategy{}, id, cursor));
+}
+
+TEST_CASE(
 	"expectation_policies::Sequence checks whether the given call::Info occurs in sequence.",
 	"[expectation][expectation::policy][expectation::factories][sequence]"
 )
