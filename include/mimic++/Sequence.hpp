@@ -241,6 +241,19 @@ namespace mimicpp
 			}
 		};
 
+		class GreedyStrategy
+		{
+		public:
+			[[nodiscard]]
+			constexpr int operator ()(const auto id, const int cursor) const noexcept
+			{
+				const auto index = to_underlying(id);
+				assert(std::cmp_less_equal(cursor, index));
+
+				return static_cast<int>(index) - cursor;
+			}
+		};
+
 		class Sequence
 		{
 		public:

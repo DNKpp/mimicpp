@@ -293,6 +293,23 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"detail::GreedyStrategy prefers elements far from cursor.",
+	"[sequence]"
+)
+{
+	const auto [expected, id, cursor] = GENERATE(
+		(table<int, SequenceId, int>({
+			{0, SequenceId{0}, 0},
+			{0, SequenceId{1}, 1},
+			{1, SequenceId{1}, 0},
+			{2, SequenceId{2}, 0},
+			{1, SequenceId{2}, 1}
+		})));
+
+	REQUIRE(expected == std::invoke(detail::GreedyStrategy{}, id, cursor));
+}
+
+TEST_CASE(
 	"expectation_policies::Sequence checks whether the given call::Info occurs in sequence.",
 	"[expectation][expectation::policy][expectation::factories][sequence]"
 )
