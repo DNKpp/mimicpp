@@ -325,6 +325,121 @@ TEST_CASE(
 	REQUIRE(expected == std::invoke(detail::GreedyStrategy{}, id, cursor));
 }
 
+TEST_CASE(
+	"detail::has_better_rating determines, whether lhs shall be preferred over rhs.",
+	"[sequence]"
+)
+{
+	using detail::SequenceTag;
+	using detail::sequence_rating;
+	using detail::has_better_rating;
+	constexpr std::array sequence_tags = std::to_array<>({
+		SequenceTag{1},
+		SequenceTag{2},
+		SequenceTag{3},
+	});
+
+	SECTION("Lhs with zero ratings is always preferred.")
+	{
+		const std::vector<sequence_rating> lhs{};
+
+		std::vector<sequence_rating> rhs{};
+		REQUIRE(has_better_rating(lhs, rhs));
+
+		rhs.emplace_back(std::numeric_limits<int>::max(), sequence_tags[0]);
+		REQUIRE(has_better_rating(lhs, rhs));
+
+		rhs.emplace_back(0, sequence_tags[1]);
+		REQUIRE(has_better_rating(lhs, rhs));
+	}
+
+	SECTION("When lhs has single rating.")
+	{
+		const std::vector<sequence_rating> lhs{
+			{42, sequence_tags[1]}
+		};
+
+		std::vector<sequence_rating> rhs{};
+		REQUIRE(has_better_rating(lhs, rhs));
+
+		rhs = lhs;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.front().priority = 41;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(!has_better_rating(rhs, lhs));
+
+		rhs.front().priority = 43;
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.emplace(rhs.begin(), std::numeric_limits<int>::max(), sequence_tags[0]);
+		REQUIRE(!has_better_rating(lhs, rhs));
+	}
+
+	SECTION("When lhs has two ratings.")
+	{
+		const std::vector<sequence_rating> lhs{
+			{42, sequence_tags[1]},
+			{1337, sequence_tags[0]}
+		};
+
+		std::vector rhs = lhs;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.front().priority += 1;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs = lhs;
+		rhs.back().priority += 1;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.front().priority += 1;
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.emplace(rhs.begin() + 1, 0, sequence_tags[2]);
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+	}
+
+	SECTION("When lhs has three ratings.")
+	{
+		const std::vector<sequence_rating> lhs{
+			{42, sequence_tags[1]},
+			{25, sequence_tags[2]},
+			{1337, sequence_tags[0]}
+		};
+
+		std::vector<sequence_rating> rhs{};
+		REQUIRE(has_better_rating(lhs, rhs));
+
+		rhs.emplace_back(1338, sequence_tags[0]);
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.emplace_back(43, sequence_tags[1]);
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.emplace_back(26, sequence_tags[2]);
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.front().priority -= 2;
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.back().priority -= 2;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(!has_better_rating(rhs, lhs));
+	}
+}
+
 //TEST_CASE(
 //	"expectation_policies::Sequence checks whether the given call::Info occurs in sequence.",
 //	"[expectation][expectation::policy][expectation::factories][sequence]"

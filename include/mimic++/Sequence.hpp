@@ -309,12 +309,36 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
-
-
-	struct sequence_priority_result
+	struct sequence_rating
 	{
-		
+		int priority{};
+		SequenceTag tag{};
 	};
+
+	[[nodiscard]]
+	constexpr bool has_better_rating(
+		const std::span<const sequence_rating> lhs,
+		const std::span<const sequence_rating> rhs
+	) noexcept
+	{
+		int rating{};
+		for (const auto& [lhsPriority, lhsTag] : lhs)
+		{
+			if (const auto iter = std::ranges::find(rhs, lhsTag, &sequence_rating::tag);
+				iter != std::ranges::end(rhs))
+			{
+				rating += lhsPriority < iter->priority
+							? -1
+							: 1;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		return 0 <= rating;
+	}
 }
 
 //namespace mimicpp::expectation_policies
