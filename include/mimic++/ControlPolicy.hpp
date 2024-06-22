@@ -18,7 +18,7 @@
 
 namespace mimicpp
 {
-	class ControlPolicyConfig
+	class TimesConfig
 	{
 	public:
 		constexpr void set_limits(const int min, const int max)
@@ -60,6 +60,8 @@ namespace mimicpp
 		explicit constexpr ControlPolicy(const ControlPolicyConfig& config) noexcept
 			: m_Min{config.min()},
 			m_Max{config.max()}
+			: m_Min{timesConfig.min()},
+			m_Max{timesConfig.max()}
 		{
 		}
 
@@ -90,8 +92,8 @@ namespace mimicpp
 		}
 
 	private:
-		int m_Min{};
-		int m_Max{};
+		int m_Min;
+		int m_Max;
 		int m_Count{};
 	};
 }
@@ -121,7 +123,7 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	constexpr auto times(const int min, const int max)
 	{
-		ControlPolicyConfig config{};
+		TimesConfig config{};
 		config.set_limits(min, max);
 		return config;
 	}

@@ -35,12 +35,12 @@ namespace mimicpp
 		[[nodiscard]]
 		explicit constexpr BasicExpectationBuilder(
 			std::shared_ptr<StorageT> storage,
-			ControlPolicyConfig controlConfig,
+			TimesConfig controlConfig,
 			FinalizePolicyArg&& finalizePolicyArg,
 			PolicyListArg&& policyListArg
 		) noexcept
 			: m_Storage{std::move(storage)},
-			m_ControlConfig{std::move(controlConfig)},
+			m_TimesConfig{std::move(controlConfig)},
 			m_FinalizePolicy{std::forward<FinalizePolicyArg>(finalizePolicyArg)},
 			m_ExpectationPolicies{std::forward<PolicyListArg>(policyListArg)}
 		{
@@ -69,7 +69,7 @@ namespace mimicpp
 
 			return ExtendedExpectationBuilderT{
 				std::move(m_Storage),
-				std::move(m_ControlConfig),
+				std::move(m_TimesConfig),
 				std::forward<Policy>(policy),
 				std::move(m_ExpectationPolicies)
 			};
@@ -78,7 +78,7 @@ namespace mimicpp
 		template <typename Policy>
 			requires expectation_policy_for<std::remove_cvref_t<Policy>, Signature>
 		[[nodiscard]]
-		constexpr auto operator |(Policy&& policy) &&
+		constexpr auto operator |(Policy&& policy) &&  // NOLINT(cppcoreguidelines-missing-std-forward)
 		{
 			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
 				timesConfigured,
@@ -89,7 +89,7 @@ namespace mimicpp
 
 			return ExtendedExpectationBuilderT{
 				std::move(m_Storage),
-				std::move(m_ControlConfig),
+				std::move(m_TimesConfig),
 				std::move(m_FinalizePolicy),
 				std::apply(
 					[&](auto&... policies) noexcept
@@ -103,7 +103,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr auto operator |(const ControlPolicyConfig config) &&
+		constexpr auto operator |(const TimesConfig config) &&
 			requires (!timesConfigured)
 		{
 			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
@@ -112,12 +112,12 @@ namespace mimicpp
 				FinalizePolicy,
 				Policies...>;
 
-			m_ControlConfig.set_limits(
+			m_TimesConfig.set_limits(
 				config.min(),
 				config.max());
 			return ExtendedExpectationBuilderT{
 				std::move(m_Storage),
-				std::move(m_ControlConfig),
+				std::move(m_TimesConfig),
 				std::move(m_FinalizePolicy),
 				std::move(m_ExpectationPolicies)
 			};
@@ -149,7 +149,7 @@ namespace mimicpp
 
 	private:
 		std::shared_ptr<StorageT> m_Storage;
-		ControlPolicyConfig m_ControlConfig{};
+		TimesConfig m_TimesConfig{};
 		FinalizePolicy m_FinalizePolicy{};
 		PolicyListT m_ExpectationPolicies{};
 	};
@@ -217,7 +217,7 @@ namespace mimicpp::detail
 		return detail::extend_builder_with_arg_policies<Signature>(
 			BaseBuilderT{
 				std::move(expectations),
-				ControlPolicyConfig{},
+				TimesConfig{},
 				expectation_policies::InitFinalize{},
 				std::tuple{}
 			},
