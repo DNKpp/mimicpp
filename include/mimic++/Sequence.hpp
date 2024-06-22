@@ -530,10 +530,10 @@ namespace mimicpp::expect
 	 */
 	template <typename Id, auto priorityStrategy>
 	[[nodiscard]]
-	constexpr auto in_sequence(detail::BasicSequenceInterface<Id, priorityStrategy>& sequence) noexcept
+	constexpr auto in_sequence(::mimicpp::detail::BasicSequenceInterface<Id, priorityStrategy>& sequence) noexcept
 	{
-		using ConfigT = detail::SequenceConfig<
-			detail::BasicSequence<Id, priorityStrategy>>;
+		using ConfigT = ::mimicpp::detail::SequenceConfig<
+			::mimicpp::detail::BasicSequence<Id, priorityStrategy>>;
 
 		return ConfigT{
 			sequence
@@ -559,15 +559,15 @@ namespace mimicpp::expect
 	>
 	[[nodiscard]]
 	constexpr auto in_sequences(
-		detail::BasicSequenceInterface<FirstId, firstPriorityStrategy>& firstSequence,
-		detail::BasicSequenceInterface<SecondId, secondPriorityStrategy>& secondSequence,
-		detail::BasicSequenceInterface<OtherIds, otherPriorityStrategies>&... otherSequences
+		::mimicpp::detail::BasicSequenceInterface<FirstId, firstPriorityStrategy>& firstSequence,
+		::mimicpp::detail::BasicSequenceInterface<SecondId, secondPriorityStrategy>& secondSequence,
+		::mimicpp::detail::BasicSequenceInterface<OtherIds, otherPriorityStrategies>&... otherSequences
 	)
 	{
-		using ConfigT = detail::SequenceConfig<
-			detail::BasicSequence<FirstId, firstPriorityStrategy>,
-			detail::BasicSequence<SecondId, secondPriorityStrategy>,
-			detail::BasicSequence<OtherIds, otherPriorityStrategies>...>;
+		using ConfigT = ::mimicpp::detail::SequenceConfig<
+			::mimicpp::detail::BasicSequence<FirstId, firstPriorityStrategy>,
+			::mimicpp::detail::BasicSequence<SecondId, secondPriorityStrategy>,
+			::mimicpp::detail::BasicSequence<OtherIds, otherPriorityStrategies>...>;
 
 		return ConfigT{
 			firstSequence,

@@ -10,8 +10,10 @@
 
 #include "mimic++/Printer.hpp"
 #include "mimic++/Reporter.hpp"
+#include "mimic++/Sequence.hpp"
 #include "mimic++/Utility.hpp"
 
+#include <array>
 #include <cassert>
 #include <limits>
 #include <stdexcept>
@@ -53,16 +55,31 @@ namespace mimicpp
 		int m_Max{1};
 	};
 
+	template <typename... Sequences>
 	class ControlPolicy
 	{
 	public:
+		static constexpr std::size_t sequenceCount{sizeof...(Sequences)};
+
 		[[nodiscard]]
-		explicit constexpr ControlPolicy(const ControlPolicyConfig& config) noexcept
-			: m_Min{config.min()},
-			m_Max{config.max()}
+		explicit constexpr ControlPolicy(
+			const TimesConfig& timesConfig,
+			const detail::SequenceConfig<Sequences...> sequenceConfig
+		) noexcept
 			: m_Min{timesConfig.min()},
-			m_Max{timesConfig.max()}
+			m_Max{timesConfig.max()},
+			m_Sequences{
+				std::apply(
+				[](auto... sequences) noexcept
+				{
+					return std::tuple{
+						std::tuple{sequences, sequences->add()}...
+					};
+				},
+				sequenceConfig.sequences())
+			}
 		{
+			update_sequence_states();
 		}
 
 		[[nodiscard]]
@@ -75,14 +92,56 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr bool is_applicable() const noexcept
 		{
-			return m_Count < m_Max;
+			return m_Count < m_Max
+					&& std::apply(
+						[](const auto&... entries) noexcept
+						{
+							return (... && std::get<0>(entries)->is_consumable(std::get<1>(entries)));
+						},
+						m_Sequences);
 		}
 
 		constexpr void consume() noexcept
 		{
 			assert(m_Count < m_Max);
 
+			std::apply(
+				[](auto&... entries) noexcept
+				{
+					(..., std::get<0>(entries)->consume(std::get<1>(entries)));
+				},
+				m_Sequences);
+
 			++m_Count;
+
+			update_sequence_states();
+		}
+
+		[[nodiscard]]
+		constexpr std::array<detail::sequence_rating, sequenceCount> priorities() const noexcept
+		{
+			assert(is_applicable());
+
+			constexpr auto makePriority = [](const auto& entry) noexcept
+			{
+				const auto& [seq, id] = entry;
+				const std::optional priority = seq->priority_of(id);
+				assert(priority);
+
+				return detail::sequence_rating{
+					.priority = *priority,
+					.tag = seq->tag()
+				};
+			};
+
+			return std::apply(
+				[](const auto&... entries) noexcept
+				{
+					return std::array<detail::sequence_rating, sequenceCount>{
+						makePriority(entries)...
+					};
+				},
+				m_Sequences);
 		}
 
 		[[nodiscard]]
@@ -95,6 +154,30 @@ namespace mimicpp
 		int m_Min;
 		int m_Max;
 		int m_Count{};
+		std::tuple<
+			std::tuple<std::shared_ptr<Sequences>, detail::SequenceId>...> m_Sequences{};
+
+		constexpr void update_sequence_states() noexcept
+		{
+			if (m_Count == m_Min)
+			{
+				std::apply(
+					[](auto&... entries) noexcept
+					{
+						(..., std::get<0>(entries)->set_satisfied(std::get<1>(entries)));
+					},
+					m_Sequences);
+			}
+			else if (m_Count == m_Max)
+			{
+				std::apply(
+					[](auto&... entries) noexcept
+					{
+						(..., std::get<0>(entries)->set_saturated(std::get<1>(entries)));
+					},
+					m_Sequences);
+			}
+		}
 	};
 }
 
