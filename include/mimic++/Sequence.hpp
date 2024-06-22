@@ -16,11 +16,8 @@
 #include <array>
 #include <cassert>
 #include <functional>
-
-namespace mimicpp::expectation_policies
-{
-	class Sequence;
-}
+#include <span>
+#include <tuple>
 
 namespace mimicpp
 {
@@ -71,13 +68,13 @@ namespace mimicpp
 	 * which may and will result in surprising outcomes.
 	 */
 
+	enum SequenceTag
+		: std::ptrdiff_t
+	{
+	};
+
 	namespace detail
 	{
-		enum SequenceTag
-			: std::ptrdiff_t
-		{
-		};
-
 		template <typename Id, auto priorityStrategy>
 			requires std::is_enum_v<Id>
 					&& std::signed_integral<std::underlying_type_t<Id>>
@@ -257,6 +254,9 @@ namespace mimicpp
 		template <typename Id, auto priorityStrategy>
 		class BasicSequenceInterface
 		{
+			template <typename... Sequences>
+			friend class SequenceConfig;
+
 		public:
 			using SequenceT = BasicSequence<Id, priorityStrategy>;
 
@@ -270,15 +270,100 @@ namespace mimicpp
 			BasicSequenceInterface(BasicSequenceInterface&&) = delete;
 			BasicSequenceInterface& operator =(BasicSequenceInterface&&) = delete;
 
+			[[nodiscard]]
+			constexpr SequenceTag tag() const noexcept
+			{
+				return m_Sequence->tag();
+			}
+
 		private:
 			std::shared_ptr<SequenceT> m_Sequence{
 				std::make_shared<SequenceT>()
 			};
-			
+		};
+
+		template <typename... Sequences>
+		class SequenceConfig
+		{
+			template <typename... Ts>
+			friend class SequenceConfig;
+
+		public:
+			static constexpr std::size_t sequenceCount = sizeof...(Sequences);
+
+			[[nodiscard]]
+			SequenceConfig()
+				requires (0 == sizeof...(Sequences))
+			= default;
+
+			template <typename... Interfaces>
+				requires (sizeof...(Interfaces) == sequenceCount)
+			[[nodiscard]]
+			explicit constexpr SequenceConfig(Interfaces&... interfaces) noexcept(1 == sequenceCount)
+				: SequenceConfig{
+					interfaces.m_Sequence...
+				}
+			{
+			}
+
+			[[nodiscard]]
+			constexpr auto& sequences() const noexcept
+			{
+				return m_Sequences;
+			}
+
+			template <typename... OtherSequences>
+			[[nodiscard]]
+			constexpr SequenceConfig<Sequences..., OtherSequences...> concat(
+				const SequenceConfig<OtherSequences...>& other
+			) const
+			{
+				return std::apply(
+					[](auto... sequences)
+					{
+						return SequenceConfig<Sequences..., OtherSequences...>{
+							std::move(sequences)...
+						};
+					},
+					std::tuple_cat(m_Sequences, other.sequences()));
+			}
+
+		private:
+			std::tuple<std::shared_ptr<Sequences>...> m_Sequences;
+
+			[[nodiscard]]
+			explicit constexpr SequenceConfig(std::shared_ptr<Sequences>... sequences) noexcept(1 == sequenceCount)
+				requires (0 < sequenceCount)
+			{
+				if constexpr (1 < sequenceCount)
+				{
+					std::array tags{
+						sequences->tag()...
+					};
+
+					std::ranges::sort(tags);
+					if (!std::ranges::empty(std::ranges::unique(tags)))
+					{
+						throw std::invalid_argument{
+							"Expectations can not be assigned to the same sequence multiple times."
+						};
+					}
+				}
+
+				m_Sequences = std::tuple{
+					std::move(sequences)...
+				};
+			}
 		};
 
 		enum class SequenceId
 			: int
+		{
+		};
+
+		template <typename>
+		struct is_sequence_interface
+			: public std::false_type
 		{
 		};
 	}
@@ -309,6 +394,18 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
+	template <>
+	struct is_sequence_interface<LazySequence>
+		: public std::true_type
+	{
+	};
+
+	template <>
+	struct is_sequence_interface<GreedySequence>
+		: public std::true_type
+	{
+	};
+
 	struct sequence_rating
 	{
 		int priority{};
@@ -422,51 +519,62 @@ namespace mimicpp::detail
 //	};
 //}
 //
-//namespace mimicpp::expect
-//{
-//	/**
-//	 * \brief Attaches the expectation onto a sequence.
-//	 * \ingroup EXPECTATION_TIMES
-//	 * \ingroup EXPECTATION_SEQUENCE
-//	 * \param sequence The sequence to be attached to.
-//	 * \param times The expected times.
-//	 * \snippet Sequences.cpp sequence
-//	 * \snippet Sequences.cpp sequence mixed
-//	 */
-//	[[nodiscard]]
-//	inline auto in_sequence(Sequence& sequence, const std::size_t times = 1u)
-//	{
-//		const std::array collection{std::ref(sequence)};
-//		return expectation_policies::Sequence{
-//			collection,
-//			times
-//		};
-//	}
-//
-//	/**
-//	 * \brief Attaches the expectation onto the listed sequences.
-//	 * \ingroup EXPECTATION_TIMES
-//	 * \ingroup EXPECTATION_SEQUENCE
-//	 * \param sequences The sequences to be attached to.
-//	 * \param times The expected times.
-//	 * \snippet Sequences.cpp sequence multiple sequences
-//	 */
-//	template <std::size_t size>
-//	[[nodiscard]]
-//	auto in_sequences(
-//		const std::reference_wrapper<Sequence> (&sequences)[size],
-//		const std::size_t times = 1u
-//	)
-//	{
-//		static_assert(
-//			0u < size,
-//			"Zero sequences are not allowed. Use times instead.");
-//
-//		return expectation_policies::Sequence{
-//			sequences,
-//			times
-//		};
-//	}
-//}
+namespace mimicpp::expect
+{
+	/**
+	 * \brief Attaches the expectation onto a sequence.
+	 * \ingroup EXPECTATION_SEQUENCE
+	 * \param sequence The sequence to be attached to.
+	 * \snippet Sequences.cpp sequence
+	 * \snippet Sequences.cpp sequence mixed
+	 */
+	template <typename Id, auto priorityStrategy>
+	[[nodiscard]]
+	constexpr auto in_sequence(detail::BasicSequenceInterface<Id, priorityStrategy>& sequence) noexcept
+	{
+		using ConfigT = detail::SequenceConfig<
+			detail::BasicSequence<Id, priorityStrategy>>;
+
+		return ConfigT{
+			sequence
+		};
+	}
+
+	/**
+	 * \brief Attaches the expectation onto the listed sequences.
+	 * \ingroup EXPECTATION_TIMES
+	 * \ingroup EXPECTATION_SEQUENCE
+	 * \param firstSequence The first sequence to be attached to.
+	 * \param secondSequence The second sequence to be attached to.
+	 * \param otherSequences Other sequences to be attached to.
+	 * \snippet Sequences.cpp sequence multiple sequences
+	 */
+	template <
+		typename FirstId,
+		auto firstPriorityStrategy,
+		typename SecondId,
+		auto secondPriorityStrategy,
+		typename... OtherIds,
+		auto... otherPriorityStrategies
+	>
+	[[nodiscard]]
+	constexpr auto in_sequences(
+		detail::BasicSequenceInterface<FirstId, firstPriorityStrategy>& firstSequence,
+		detail::BasicSequenceInterface<SecondId, secondPriorityStrategy>& secondSequence,
+		detail::BasicSequenceInterface<OtherIds, otherPriorityStrategies>&... otherSequences
+	)
+	{
+		using ConfigT = detail::SequenceConfig<
+			detail::BasicSequence<FirstId, firstPriorityStrategy>,
+			detail::BasicSequence<SecondId, secondPriorityStrategy>,
+			detail::BasicSequence<OtherIds, otherPriorityStrategies>...>;
+
+		return ConfigT{
+			firstSequence,
+			secondSequence,
+			otherSequences...
+		};
+	}
+}
 
 #endif

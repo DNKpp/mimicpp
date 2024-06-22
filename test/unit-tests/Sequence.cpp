@@ -286,7 +286,7 @@ TEST_CASE(
 )
 {
 	const detail::BasicSequence<SequenceId, FakeStrategy{}> sequence{};
-	const detail::SequenceTag tag = sequence.tag();
+	const SequenceTag tag = sequence.tag();
 
 	REQUIRE(to_underlying(tag) == reinterpret_cast<std::ptrdiff_t>(std::addressof(sequence)));
 }
@@ -330,7 +330,6 @@ TEST_CASE(
 	"[sequence]"
 )
 {
-	using detail::SequenceTag;
 	using detail::sequence_rating;
 	using detail::has_better_rating;
 	constexpr std::array sequence_tags = std::to_array<>({
@@ -437,6 +436,115 @@ TEST_CASE(
 		rhs.back().priority -= 2;
 		REQUIRE(has_better_rating(lhs, rhs));
 		REQUIRE(!has_better_rating(rhs, lhs));
+	}
+}
+
+TEST_CASE(
+	"expect::in_sequence creates detail::SequenceConfig.",
+	"[expectation::factories][sequence]"
+)
+{
+	SequenceT sequence{};
+
+	const detail::SequenceConfig config = expect::in_sequence(sequence);
+
+	REQUIRE(std::get<0>(config.sequences())->tag() == sequence.tag());
+}
+
+TEST_CASE(
+	"expect::in_sequences creates detail::SequenceConfig.",
+	"[expectation::factories][sequence]"
+)
+{
+	LazySequence firstSequence{};
+	GreedySequence secondSequence{};
+	SequenceT thirdSequence{};
+
+	SECTION("Throwsn, when duplicates are given.")
+	{
+		REQUIRE_THROWS_AS(
+			expect::in_sequences(
+				firstSequence,
+				firstSequence),
+			std::invalid_argument);
+
+		REQUIRE_THROWS_AS(
+			expect::in_sequences(
+				firstSequence,
+				secondSequence,
+				firstSequence),
+			std::invalid_argument);
+	}
+
+	SECTION("When two sequences are given.")
+	{
+		const detail::SequenceConfig config = expect::in_sequences(
+			firstSequence,
+			secondSequence);
+
+		REQUIRE(std::get<0>(config.sequences())->tag() == firstSequence.tag());
+		REQUIRE(std::get<1>(config.sequences())->tag() == secondSequence.tag());
+	}
+
+	SECTION("When three sequences are given.")
+	{
+		const detail::SequenceConfig config = expect::in_sequences(
+			firstSequence,
+			thirdSequence,
+			secondSequence);
+
+		REQUIRE(std::get<0>(config.sequences())->tag() == firstSequence.tag());
+		REQUIRE(std::get<1>(config.sequences())->tag() == thirdSequence.tag());
+		REQUIRE(std::get<2>(config.sequences())->tag() == secondSequence.tag());
+	}
+}
+
+TEST_CASE(
+	"detail::SequenceConfig::concat combines two config.",
+	"[sequence]")
+{
+	const detail::SequenceConfig<> firstConfig{};
+
+	SECTION("Concat two empty sequences is pointlesss but possible.")
+	{
+		[[maybe_unused]] const detail::SequenceConfig<> result = firstConfig.concat(detail::SequenceConfig<>{});
+	}
+
+	SECTION("Concat appends the right side.")
+	{
+		SequenceT firstSequence{};
+		const detail::SequenceConfig firstResult = firstConfig.concat(
+			expect::in_sequence(firstSequence));
+
+		REQUIRE(std::get<0>(firstResult.sequences())->tag() == firstSequence.tag());
+
+		SequenceT secondSequence{};
+		detail::SequenceConfig secondResult = firstResult.concat(
+			expect::in_sequence(secondSequence));
+		REQUIRE(std::get<0>(secondResult.sequences())->tag() == firstSequence.tag());
+		REQUIRE(std::get<1>(secondResult.sequences())->tag() == secondSequence.tag());
+
+		SECTION("Throws, when contains duplicates.")
+		{
+			REQUIRE_THROWS_AS(
+				secondResult.concat(
+					expect::in_sequence(firstSequence)),
+				std::invalid_argument);
+			REQUIRE_THROWS_AS(
+				secondResult.concat(
+					expect::in_sequence(secondSequence)),
+				std::invalid_argument);
+		}
+
+		SECTION("Can be arbitrarily continued.")
+		{
+			SequenceT thirdSequence{};
+			detail::SequenceConfig thirdResult = secondResult.concat(
+				expect::in_sequence(thirdSequence));
+			REQUIRE(std::get<0>(thirdResult.sequences())->tag() == firstSequence.tag());
+			REQUIRE(std::get<1>(thirdResult.sequences())->tag() == secondSequence.tag());
+			REQUIRE(std::get<2>(thirdResult.sequences())->tag() == thirdSequence.tag());
+		}
 	}
 }
 
