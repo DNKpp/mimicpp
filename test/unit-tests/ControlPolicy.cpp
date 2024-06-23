@@ -31,12 +31,10 @@ TEST_CASE(
 	"[expectation][expectation::control]"
 )
 {
-	TimesConfig config{};
-
 	const int min = GENERATE(range(0, 5));
 	const int max = min + GENERATE(range(0, 5));
 
-	config.set_limits(min, max);
+	const TimesConfig config{min, max};
 
 	REQUIRE(min == std::as_const(config).min());
 	REQUIRE(max == std::as_const(config).max());
@@ -47,15 +45,13 @@ TEST_CASE(
 	"[expectation][expectation::control]"
 )
 {
-	TimesConfig config{};
-
 	SECTION("When max > min.")
 	{
 		const int max = GENERATE(range(0, 5));
 		const int min = max + GENERATE(range(1, 5));
 
 		REQUIRE_THROWS_AS(
-			config.set_limits(min, max),
+			(TimesConfig{min, max}),
 			std::invalid_argument);
 	}
 
@@ -65,7 +61,7 @@ TEST_CASE(
 		const int max = min + GENERATE(range(0, 5));
 
 		REQUIRE_THROWS_AS(
-			config.set_limits(min, max),
+			(TimesConfig{min, max}),
 			std::invalid_argument);
 	}
 }
@@ -79,13 +75,7 @@ TEST_CASE(
 	const int max = min + GENERATE(range(0, 5));
 
 	ControlPolicy<> policy{
-		std::invoke(
-			[=]
-			{
-				TimesConfig config{};
-				config.set_limits(min, max);
-				return config;
-			}),
+		TimesConfig{min, max},
 		sequence::detail::Config<>{}
 	};
 

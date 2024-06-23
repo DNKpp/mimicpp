@@ -103,7 +103,11 @@ namespace mimicpp
 	class TimesConfig
 	{
 	public:
-		constexpr void set_limits(const int min, const int max)
+		[[nodiscard]]
+		TimesConfig() = default;
+
+		[[nodiscard]]
+		constexpr TimesConfig(const int min, const int max)
 		{
 			if (min < 0
 				|| max < 0
@@ -302,9 +306,7 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	constexpr auto times(const int min, const int max)
 	{
-		TimesConfig config{};
-		config.set_limits(min, max);
-		return config;
+		return TimesConfig{min, max};
 	}
 
 	/**

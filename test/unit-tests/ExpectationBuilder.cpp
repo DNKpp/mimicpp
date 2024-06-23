@@ -21,13 +21,7 @@ using namespace mimicpp;
 
 namespace
 {
-	constexpr auto zeroTimesConfig = std::invoke(
-		[]
-		{
-			TimesConfig config{};
-			config.set_limits(0, 0);
-			return config;
-		});
+	constexpr TimesConfig zeroTimesConfig{0, 0};
 
 	using InitSeqConfigT = sequence::detail::Config<>;
 }
