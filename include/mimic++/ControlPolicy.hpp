@@ -18,6 +18,63 @@
 #include <limits>
 #include <stdexcept>
 
+namespace mimicpp::detail
+{
+	[[nodiscard]]
+	inline StringT describe_times_state(const std::size_t current, const std::size_t min, const std::size_t max)
+	{
+		const auto verbalizeValue = [](const std::size_t value)-> StringT
+		{
+			switch (value)
+			{
+			case 0:
+				return "never";
+			case 1:
+				return "once";
+			case 2:
+				return "twice";
+			default:
+				return format::format("{} times", value);
+			}
+		};
+
+		if (current == max)
+		{
+			return format::format(
+				"inapplicable: already saturated (matched {})",
+				verbalizeValue(current));
+		}
+
+		if (min <= current)
+		{
+			return format::format(
+				"applicable: accepts further matches (matched {} out of {} times)",
+				current,
+				max);
+		}
+
+		const auto verbalizeInterval = [verbalizeValue](const std::size_t start, const std::size_t end)
+		{
+			if (start < end)
+			{
+				return format::format(
+					"between {} and {} times",
+					start,
+					end);
+			}
+
+			return format::format(
+				"exactly {}",
+				verbalizeValue(end));
+		};
+
+		return format::format(
+			"unsatisfied: matched {} - {} is expected",
+			verbalizeValue(current),
+			verbalizeInterval(min, max));
+	}
+}
+
 namespace mimicpp
 {
 	class TimesConfig
@@ -147,7 +204,30 @@ namespace mimicpp
 		[[nodiscard]]
 		StringT describe_state() const
 		{
-			return {};
+			StringT description = detail::describe_times_state(
+				m_Count,
+				m_Min,
+				m_Max);
+			if (m_Count < m_Max
+				&& 0 < sequenceCount)
+			{
+				const int consumableCount =
+					std::apply(
+						[](auto&... entries) noexcept
+						{
+							return (0 + ... + int{std::get<0>(entries)->is_consumable(std::get<1>(entries))});
+						},
+						m_Sequences);
+
+				// ReSharper disable once CppRedundantQualifier
+				format::format_to(
+					std::back_inserter(description),
+					"\n\tIs head from {} out of {} sequences.",
+					consumableCount,
+					sequenceCount);
+			}
+
+			return description;
 		}
 
 	private:

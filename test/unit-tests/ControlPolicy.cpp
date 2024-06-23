@@ -9,6 +9,7 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include "TestReporter.hpp"
 
@@ -205,7 +206,7 @@ TEST_CASE(
 				secondSequence.reset();
 				expectedErrorCount = 2;
 			}
-			
+
 			policy.reset();
 			REQUIRE_THAT(
 				reporter.errors(),
@@ -273,6 +274,281 @@ TEST_CASE(
 	REQUIRE_THAT(
 		reporter.errors(),
 		Matches::IsEmpty());
+}
+
+TEST_CASE(
+	"both, expectation_policies::Times and expectation_policies::Times use detail::describe_times_state for their description.",
+	"[expectation][detail]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When current == max.")
+	{
+		const auto [min, max] = GENERATE(
+			(table<std::size_t, std::size_t>)({
+				{0, 1},
+				{0, 2},
+				{3, 42},
+				}));
+
+		const auto description = detail::describe_times_state(
+			max,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::StartsWith("inapplicable: already saturated (matched "));
+	}
+
+	SECTION("When min <= current < max.")
+	{
+		const auto [current, min, max] = GENERATE(
+			(table<std::size_t, std::size_t, std::size_t>)({
+				{0, 0, 1},
+				{1, 0, 2},
+				{21, 3, 42},
+				}));
+
+		const auto description = detail::describe_times_state(
+			current,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::Matches("applicable: accepts further matches \\(matched \\d+ out of \\d+ times\\)"));
+	}
+
+	SECTION("When current < min.")
+	{
+		const auto [current, min, max] = GENERATE(
+			(table<std::size_t, std::size_t, std::size_t>)({
+				{0, 1, 2},
+				{1, 2, 5},
+				{2, 3, 42},
+				}));
+
+		const auto description = detail::describe_times_state(
+			current,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::StartsWith("unsatisfied: matched "));
+	}
+}
+
+TEST_CASE(
+	"ControlPolicy checks whether the given call occurs in sequence.",
+	"[expectation][expectation::control][sequence]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SequenceT sequence{};
+
+	const StringT applicableText = "applicable: Sequence element expects further matches.";
+	const StringT saturatedText = "inapplicable: Sequence element is already saturated.";
+	const StringT inapplicableText = "inapplicable: Sequence element is not the current element.";
+
+	SECTION("When sequence contains just a single expectation.")
+	{
+		const auto count = GENERATE(range(1, 5));
+		ControlPolicy policy{
+			expect::times(count),
+			expect::in_sequence(sequence)
+		};
+
+		for ([[maybe_unused]] const int i : std::views::iota(0, count))
+		{
+			REQUIRE(!policy.is_satisfied());
+			REQUIRE(policy.is_applicable());
+			REQUIRE_THAT(
+				policy.describe_state(),
+				Matches::Matches("unsatisfied: matched .+ - .+ is expected\n\t.*")
+				&& Matches::EndsWith("\n\tIs head from 1 out of 1 sequences."));
+			REQUIRE_NOTHROW(policy.consume());
+		}
+
+		REQUIRE(policy.is_satisfied());
+		REQUIRE(!policy.is_applicable());
+		REQUIRE_THAT(
+			policy.describe_state(),
+			Matches::StartsWith("inapplicable: already saturated (matched ")
+			&& Matches::EndsWith(")"));
+	}
+
+	SECTION("When sequence has multiple expectations, the order matters.")
+	{
+		ControlPolicy policy1{
+			expect::once(),
+			expect::in_sequence(sequence)
+		};
+
+		const auto count2 = GENERATE(range(1, 5));
+		ControlPolicy policy2{
+			expect::times(count2),
+			expect::in_sequence(sequence)
+		};
+
+		SECTION("When first expection is satisfied, then the second one becomes applicable.")
+		{
+			REQUIRE(!policy1.is_satisfied());
+			REQUIRE(policy1.is_applicable());
+			REQUIRE_THAT(
+				policy1.describe_state(),
+				Matches::Equals("unsatisfied: matched never - exactly once is expected\n\tIs head from 1 out of 1 sequences."));
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				policy2.describe_state(),
+				Matches::Matches("unsatisfied: matched never - .+ is expected\n\t.*")
+				&& Matches::EndsWith("\n\tIs head from 0 out of 1 sequences."));
+
+			REQUIRE_NOTHROW(policy1.consume());
+
+			for ([[maybe_unused]] const int i : std::views::iota(0, count2))
+			{
+				REQUIRE(policy1.is_satisfied());
+				REQUIRE(!policy1.is_applicable());
+				REQUIRE_THAT(
+					policy1.describe_state(),
+					Matches::Equals("inapplicable: already saturated (matched once)"));
+
+				REQUIRE(!policy2.is_satisfied());
+				REQUIRE(policy2.is_applicable());
+				REQUIRE_THAT(
+					policy2.describe_state(),
+					Matches::Matches("unsatisfied: matched .+ - .+ is expected\n\t.*")
+					&& Matches::EndsWith("\n\tIs head from 1 out of 1 sequences."));
+
+				REQUIRE_NOTHROW(policy2.consume());
+			}
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				policy1.describe_state(),
+				Matches::Equals("inapplicable: already saturated (matched once)"));
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				policy2.describe_state(),
+				Matches::StartsWith("inapplicable: already saturated (matched")
+				&& Matches::EndsWith(")"));
+		}
+	}
+}
+
+TEST_CASE(
+	"An expectation can be part of multiple sequences.",
+	"[expectation][expectation::control][sequence]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When multiple sequences are given.")
+	{
+		SequenceT sequence1{};
+		SequenceT sequence2{};
+
+		SECTION("When the first expectation is the prefix of multiple sequences.")
+		{
+			ControlPolicy policy1{
+				expect::once(),
+				expect::in_sequences(sequence1, sequence2)
+			};
+			ControlPolicy policy2{
+				expect::once(),
+				expect::in_sequence(sequence2)
+			};
+
+			REQUIRE(!policy1.is_satisfied());
+			REQUIRE(policy1.is_applicable());
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+
+			policy1.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(policy2.is_applicable());
+
+			policy2.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+		}
+
+		SECTION("When an expectation waits for multiple sequences.")
+		{
+			ControlPolicy policy1{
+				expect::once(),
+				expect::in_sequence(sequence1)
+			};
+			ControlPolicy policy2{
+				expect::once(),
+				expect::in_sequence(sequence2)
+			};
+			ControlPolicy policy3{
+				expect::once(),
+				expect::in_sequences(sequence1, sequence2)
+			};
+
+			REQUIRE(!policy1.is_satisfied());
+			REQUIRE(policy1.is_applicable());
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(policy2.is_applicable());
+
+			REQUIRE(!policy3.is_satisfied());
+			REQUIRE(!policy3.is_applicable());
+
+			policy1.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(!policy2.is_satisfied());
+			REQUIRE(policy2.is_applicable());
+
+			REQUIRE(!policy3.is_satisfied());
+			REQUIRE(!policy3.is_applicable());
+
+			policy2.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+
+			REQUIRE(!policy3.is_satisfied());
+			REQUIRE(policy3.is_applicable());
+
+			policy3.consume();
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+
+			REQUIRE(policy3.is_satisfied());
+			REQUIRE(!policy3.is_applicable());
+		}
+	}
 }
 
 TEST_CASE(
