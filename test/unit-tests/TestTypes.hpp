@@ -160,7 +160,7 @@ public:
 	}
 };
 
-class TimesFake
+class ControlPolicyFake
 {
 public:
 	bool isSatisfied{};
@@ -192,7 +192,7 @@ public:
 	}
 };
 
-class TimesMock
+class ControlPolicyMock
 {
 public:
 	MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
@@ -202,7 +202,7 @@ public:
 };
 
 template <typename Policy, typename Projection>
-class TimesFacade
+class ControlPolicyFacade
 {
 public:
 	Policy policy{};

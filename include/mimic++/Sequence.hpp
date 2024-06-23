@@ -56,7 +56,7 @@ namespace mimicpp
 	 * multiple threads without any explicit synchronisation, that attempt is doomed to fail.
 	 *
 	 * # Afterthoughts
-	 * Sequence policies are treated as ``times_policy`` and therefore can not be mixed with e.g. ``Times``.
+	 * Sequence policies are treated as ``control_policy`` and therefore can not be mixed with e.g. ``Times``.
 	 * At a first glance this seems rather unintuitive, as a sequence does not actually mind how often an expectation
 	 * is matched, but rather if one expectation has been matched before another. This being true, there is still a
 	 * huge intersection between those cases, because a sequence still must know how often an expectation is expected

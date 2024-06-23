@@ -359,14 +359,14 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"mimicpp::times_policy determines, whether the type satisfies the requirements.",
+	"mimicpp::control_policy determines, whether the type satisfies the requirements.",
 	"[expectation]",
 	((bool expected, typename Policy), expected, Policy),
-	(true, TimesFake),
-	(true, TimesFacade<std::reference_wrapper<TimesFake>, UnwrapReferenceWrapper>)
+	(true, ControlPolicyFake),
+	(true, ControlPolicyFacade<std::reference_wrapper<ControlPolicyFake>, UnwrapReferenceWrapper>)
 )
 {
-	STATIC_REQUIRE(expected == mimicpp::times_policy<Policy>);
+	STATIC_REQUIRE(expected == mimicpp::control_policy<Policy>);
 }
 
 TEST_CASE(
@@ -374,7 +374,7 @@ TEST_CASE(
 	"[expectation]"
 )
 {
-	using TimesT = TimesFake;
+	using TimesT = ControlPolicyFake;
 	using FinalizerT = FinalizerFake<void()>;
 
 	constexpr auto loc = std::source_location::current();
@@ -398,7 +398,7 @@ TEST_CASE(
 	using FinalizerT = FinalizerFake<SignatureT>;
 	using PolicyMockT = PolicyMock<SignatureT>;
 	using PolicyRefT = PolicyFacade<SignatureT, std::reference_wrapper<PolicyMock<SignatureT>>, UnwrapReferenceWrapper>;
-	using TimesPolicyT = TimesFacade<std::reference_wrapper<TimesMock>, UnwrapReferenceWrapper>;
+	using TimesPolicyT = ControlPolicyFacade<std::reference_wrapper<ControlPolicyMock>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
 	using TimesReportT = mimicpp::MatchReport::Times;
 
@@ -408,7 +408,7 @@ TEST_CASE(
 		.fromConstness = mimicpp::Constness::any
 	};
 
-	TimesMock times{};
+	ControlPolicyMock times{};
 
 	SECTION("With no other expectation policies.")
 	{
@@ -561,9 +561,9 @@ TEMPLATE_TEST_CASE(
 
 	SECTION("With no policies at all.")
 	{
-		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT> expectation{
+		mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
 			std::source_location::current(),
-			TimesFake{.isSatisfied = true},
+			ControlPolicyFake{.isSatisfied = true},
 			FinalizerT{}
 		};
 
@@ -580,9 +580,9 @@ TEMPLATE_TEST_CASE(
 	SECTION("With one policy.")
 	{
 		PolicyMockT policy{};
-		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT, PolicyRefT> expectation{
+		mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
 			std::source_location::current(),
-			TimesFake{.isSatisfied = true},
+			ControlPolicyFake{.isSatisfied = true},
 			FinalizerT{},
 			PolicyRefT{std::ref(policy)}
 		};
@@ -631,9 +631,9 @@ TEMPLATE_TEST_CASE(
 	{
 		PolicyMockT policy1{};
 		PolicyMockT policy2{};
-		mimicpp::BasicExpectation<TestType, TimesFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
+		mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
 			std::source_location::current(),
-			TimesFake{.isSatisfied = true},
+			ControlPolicyFake{.isSatisfied = true},
 			FinalizerT{},
 			PolicyRefT{std::ref(policy1)},
 			PolicyRefT{std::ref(policy2)}
@@ -736,7 +736,7 @@ TEST_CASE(
 	namespace Matches = Catch::Matchers;
 
 	using FinalizerPolicyT = FinalizerFake<void()>;
-	using TimesPolicyT = TimesFake;
+	using TimesPolicyT = ControlPolicyFake;
 
 	SECTION("Finalizer policy has no description.")
 	{
@@ -745,9 +745,9 @@ TEST_CASE(
 
 	SECTION("Times policy is queried.")
 	{
-		using TimesT = TimesFacade<std::reference_wrapper<TimesMock>, UnwrapReferenceWrapper>;
+		using TimesT = ControlPolicyFacade<std::reference_wrapper<ControlPolicyMock>, UnwrapReferenceWrapper>;
 
-		TimesMock times{};
+		ControlPolicyMock times{};
 		mimicpp::BasicExpectation<
 				void(),
 				TimesT,
@@ -822,9 +822,9 @@ TEMPLATE_TEST_CASE(
 	};
 
 	FinalizerT finalizer{};
-	mimicpp::BasicExpectation<SignatureT, TimesFake, FinalizerRefT> expectation{
+	mimicpp::BasicExpectation<SignatureT, ControlPolicyFake, FinalizerRefT> expectation{
 		std::source_location::current(),
-		TimesFake{},
+		ControlPolicyFake{},
 		std::ref(finalizer)
 	};
 

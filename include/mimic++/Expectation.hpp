@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include "Call.hpp"
-#include "Reporter.hpp"
-#include "TypeTraits.hpp"
+#include "mimic++/Call.hpp"
+#include "mimic++/ControlPolicy.hpp"
+#include "mimic++/Reporter.hpp"
+#include "mimic++/TypeTraits.hpp"
 
 #include <cassert>
 #include <concepts>
@@ -199,7 +200,7 @@ namespace mimicpp
 								};
 
 	template <typename T>
-	concept times_policy = std::is_move_constructible_v<T>
+	concept control_policy = std::is_move_constructible_v<T>
 							&& std::is_destructible_v<T>
 							&& std::same_as<T, std::remove_cvref_t<T>>
 							&& requires(T& policy)
@@ -212,7 +213,7 @@ namespace mimicpp
 
 	template <
 		typename Signature,
-		times_policy TimesPolicy,
+		control_policy ControlPolicy,
 		finalize_policy_for<Signature> FinalizePolicy,
 		expectation_policy_for<Signature>... Policies
 	>
@@ -220,28 +221,28 @@ namespace mimicpp
 		: public Expectation<Signature>
 	{
 	public:
-		using TimesT = TimesPolicy;
+		using ControlPolicyT = ControlPolicy;
 		using FinalizerT = FinalizePolicy;
 		using PolicyListT = std::tuple<Policies...>;
 		using CallInfoT = call::info_for_signature_t<Signature>;
 		using ReturnT = typename Expectation<Signature>::ReturnT;
 
-		template <typename TimesArg, typename FinalizerArg, typename... PolicyArgs>
-			requires std::constructible_from<TimesT, TimesArg>
+		template <typename ControlPolicyArg, typename FinalizerArg, typename... PolicyArgs>
+			requires std::constructible_from<ControlPolicyT, ControlPolicyArg>
 					&& std::constructible_from<FinalizerT, FinalizerArg>
 					&& std::constructible_from<PolicyListT, PolicyArgs...>
 		constexpr explicit BasicExpectation(
 			const std::source_location& sourceLocation,
-			TimesArg&& timesArg,
+			ControlPolicyArg&& controlArg,
 			FinalizerArg&& finalizerArg,
 			PolicyArgs&&... args
 		) noexcept(
-			std::is_nothrow_constructible_v<TimesT, TimesArg>
+			std::is_nothrow_constructible_v<ControlPolicyT, ControlPolicyArg>
 			&& std::is_nothrow_constructible_v<FinalizerT, FinalizerArg>
 			&& (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
 			: m_SourceLocation{sourceLocation},
+			m_ControlPolicy{std::forward<ControlPolicyArg>(controlArg)},
 			m_Policies{std::forward<PolicyArgs>(args)...},
-			m_Times{std::forward<TimesArg>(timesArg)},
 			m_Finalizer{std::forward<FinalizerArg>(finalizerArg)}
 		{
 		}
@@ -252,7 +253,7 @@ namespace mimicpp
 			return ExpectationReport{
 				.sourceLocation = m_SourceLocation,
 				.finalizerDescription = std::nullopt,
-				.timesDescription = m_Times.describe_state(),
+				//.timesDescription = m_Times.describe_state(),
 				.expectationDescriptions = std::apply(
 					[&](const auto&... policies)
 					{
@@ -267,7 +268,7 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr bool is_satisfied() const noexcept override
 		{
-			return m_Times.is_satisfied()
+			return m_ControlPolicy.is_satisfied()
 					&& std::apply(
 						[](const auto&... policies) noexcept
 						{
@@ -283,8 +284,8 @@ namespace mimicpp
 				.sourceLocation = m_SourceLocation,
 				.finalizeReport = {std::nullopt},
 				.timesReport = MatchReport::Times{
-					.isApplicable = m_Times.is_applicable(),
-					.description = m_Times.describe_state()
+					.isApplicable = m_ControlPolicy.is_applicable(),
+					//.description = m_Times.describe_state()
 				},
 				.expectationReports = std::apply(
 					[&](const auto&... policies)
@@ -302,7 +303,7 @@ namespace mimicpp
 
 		constexpr void consume(const CallInfoT& call) override
 		{
-			m_Times.consume();
+			m_ControlPolicy.consume();
 			std::apply(
 				[&](auto&... policies) noexcept
 				{
@@ -325,8 +326,8 @@ namespace mimicpp
 
 	private:
 		std::source_location m_SourceLocation;
+		ControlPolicyT m_ControlPolicy;
 		PolicyListT m_Policies;
-		[[no_unique_address]] TimesT m_Times{};
 		[[no_unique_address]] FinalizerT m_Finalizer{};
 	};
 
