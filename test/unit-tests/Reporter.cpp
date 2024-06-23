@@ -328,17 +328,22 @@ TEST_CASE(
 {
 	using ReportT = MatchReport::Times;
 
+	static const std::vector<sequence::detail::sequence_rating> firstPriorities{
+		{42, sequence::Tag{1337}}
+	};
+
 	const ReportT first{
 		.isApplicable = true,
+		.ratings = firstPriorities,
 		.description = "Hello, World!"
 	};
 
 	const auto [expectedEquality, second] = GENERATE(
 		(table<bool, ReportT>({
-			{false, {true, "not equal"}},
-			{false, {true, std::nullopt}},
-			{false, {false, "Hello, World!"}},
-			{true, {true, "Hello, World!"}}
+			{false, {true, firstPriorities, "not equal"}},
+			{false, {true, firstPriorities, std::nullopt}},
+			{false, {false, std::nullopt, "Hello, World!"}},
+			{true, {true, firstPriorities, "Hello, World!"}}
 			})));
 
 	REQUIRE(expectedEquality == (first == second));
@@ -381,7 +386,7 @@ TEST_CASE(
 	const MatchReport first{
 		.sourceLocation = std::source_location::current(),
 		.finalizeReport = {"finalize description"},
-		.timesReport = {true, "times description"},
+		.timesReport = {true, {}, "times description"},
 		.expectationReports = {
 			{true, "expectation description"}
 		}
@@ -427,7 +432,7 @@ TEST_CASE(
 	{
 		MatchReport second{first};
 
-		second.timesReport = {true, "other times description"};
+		second.timesReport = {true, {}, "other times description"};
 
 		REQUIRE(first != second);
 		REQUIRE(second != first);
@@ -751,7 +756,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {true, "finalize description"},
+				.timesReport = {true, {}, "finalize description"},
 				.expectationReports = {}
 			};
 
@@ -768,7 +773,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {true, "finalize description"},
+				.timesReport = {true, {}, "finalize description"},
 				.expectationReports = {
 					{true, "Requirement1 description"},
 					{true, "Requirement2 description"}
@@ -794,7 +799,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {false, "finalize description"},
+				.timesReport = {false, {}, "finalize description"},
 				.expectationReports = {}
 			};
 
@@ -812,7 +817,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {false, "finalize description"},
+				.timesReport = {false, {}, "finalize description"},
 				.expectationReports = {
 					{true, "Requirement1 description"},
 					{true, "Requirement2 description"}
@@ -839,7 +844,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {true, "finalize description"},
+				.timesReport = {true, {}, "finalize description"},
 				.expectationReports = {
 					{false, "Requirement1 description"},
 					{false, "Requirement2 description"}
@@ -862,7 +867,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {true, "finalize description"},
+				.timesReport = {true, {}, "finalize description"},
 				.expectationReports = {
 					{true, "Requirement1 description"},
 					{false, "Requirement2 description"}
@@ -887,7 +892,7 @@ TEST_CASE(
 		const MatchReport report{
 			.sourceLocation = std::nullopt,
 			.finalizeReport = {},
-			.timesReport = {true, "finalize description"},
+			.timesReport = {true, {}, "finalize description"},
 			.expectationReports = {}
 		};
 

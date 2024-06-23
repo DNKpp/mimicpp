@@ -258,6 +258,7 @@ namespace mimicpp
 		{
 		public:
 			bool isApplicable{};
+			std::optional<std::vector<sequence::detail::sequence_rating>> ratings{};
 			std::optional<StringT> description{};
 
 			[[nodiscard]]

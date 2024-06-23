@@ -281,13 +281,20 @@ namespace mimicpp
 		[[nodiscard]]
 		MatchReport matches(const CallInfoT& call) const override
 		{
+			MatchReport::Times controlReport{
+				.isApplicable = m_ControlPolicy.is_applicable(),
+				.description = m_ControlPolicy.describe_state()
+			};
+
+			if (controlReport.isApplicable)
+			{
+				controlReport.ratings = m_ControlPolicy.priorities();
+			}
+
 			return MatchReport{
 				.sourceLocation = m_SourceLocation,
 				.finalizeReport = {std::nullopt},
-				.timesReport = MatchReport::Times{
-					.isApplicable = m_ControlPolicy.is_applicable(),
-					.description = m_ControlPolicy.describe_state()
-				},
+				.timesReport = std::move(controlReport),
 				.expectationReports = std::apply(
 					[&](const auto&... policies)
 					{
