@@ -19,7 +19,7 @@ TEST_CASE(
 
 	mimicpp::Mock<void(int)> mock{};
 
-	mimicpp::Sequence sequence{};
+	mimicpp::SequenceT sequence{};
 	SCOPED_EXP mock.expect_call(matches::ne(0))
 				| expect::in_sequence(sequence);
 	SCOPED_EXP mock.expect_call(matches::le(42))
@@ -45,7 +45,7 @@ TEST_CASE(
 	mimicpp::Mock<void(int)> mock1{};
 	mimicpp::Mock<void(int)> mock2{};
 
-	mimicpp::Sequence sequence{};
+	mimicpp::SequenceT sequence{};
 	SCOPED_EXP mock2.expect_call(_)	// mock2 must go first
 				| expect::in_sequence(sequence);
 	SCOPED_EXP mock1.expect_call(_)	// mock1 must go second
@@ -71,7 +71,7 @@ TEST_CASE(
 
 	SCOPED_EXP mock.expect_call(1337); // (2)
 
-	mimicpp::Sequence sequence{};
+	mimicpp::SequenceT sequence{};
 	SCOPED_EXP mock.expect_call(1337)  // (3)
 				| expect::in_sequence(sequence);
 
@@ -99,12 +99,12 @@ TEST_CASE(
 
 	mimicpp::Mock<void()> mock{};
 
-	mimicpp::Sequence sequence1{};
-	mimicpp::Sequence sequence2{};
+	mimicpp::SequenceT sequence1{};
+	mimicpp::SequenceT sequence2{};
 	SCOPED_EXP mock.expect_call() // (1)
 				| expect::in_sequence(sequence1);
 	SCOPED_EXP mock.expect_call() // (2)
-				| expect::in_sequences({sequence1, sequence2});
+				| expect::in_sequences(sequence1, sequence2);
 	SCOPED_EXP mock.expect_call() // (3)
 				| expect::in_sequence(sequence2);
 
