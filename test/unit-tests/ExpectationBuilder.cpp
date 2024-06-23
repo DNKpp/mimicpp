@@ -24,27 +24,29 @@ namespace
 	constexpr auto zeroTimesConfig = std::invoke(
 		[]
 		{
-			ControlPolicyConfig config{};
+			TimesConfig config{};
 			config.set_limits(0, 0);
 			return config;
 		});
+
+	using InitSeqConfigT = detail::SequenceConfig<>;
 }
 
 TEMPLATE_TEST_CASE_SIG(
 	"Times limites of mimicpp::BasicExpectationBuilder can be exchanged only once.",
 	"[expectation][expectation::builder]",
 	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
-	(false, mimicpp::BasicExpectationBuilder<true, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
-	(false, mimicpp::BasicExpectationBuilder<true, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
-	(true, mimicpp::BasicExpectationBuilder<false, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<false, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
-	(false, mimicpp::BasicExpectationBuilder<true, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
-	(false, mimicpp::BasicExpectationBuilder<true, int(), FinalizerFake<int()>>, FinalizerFake<int()>),
-	(true, mimicpp::BasicExpectationBuilder<false, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<false, int(), FinalizerFake<int()>>, FinalizerFake<int()>)
+	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
+	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
+	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, int(), FinalizerFake<int()>>, FinalizerFake<int()>),
+	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, int(), FinalizerFake<int()>>, FinalizerFake<int()>)
 )
 {
-	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | ControlPolicyConfig{}; });
+	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | TimesConfig{}; });
 }
 
 TEST_CASE(
@@ -53,7 +55,7 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, InitSeqConfigT, SignatureT, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
@@ -68,7 +70,8 @@ TEST_CASE(
 
 	BaseBuilderT builder{
 		collection,
-		ControlPolicyConfig{},
+		TimesConfig{},
+		InitSeqConfigT{},
 		expectation_policies::InitFinalize{},
 		std::tuple{}};
 
@@ -90,18 +93,82 @@ TEST_CASE(
 	}
 }
 
+TEST_CASE(
+	"BasicExpectationBuilder sequences can be configured.",
+	"[expectation][expectation::builder]"
+)
+{
+	using SignatureT = void();
+	using BaseBuilderT = BasicExpectationBuilder<false, InitSeqConfigT, SignatureT, expectation_policies::InitFinalize>;
+	using ScopedExpectationT = ScopedExpectation<SignatureT>;
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
+
+	ScopedReporter reporter{};
+
+	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
+	constexpr CallInfoT call{
+		.args = {},
+		.fromCategory = ValueCategory::any,
+		.fromConstness = Constness::any
+	};
+
+	BaseBuilderT builder{
+		collection,
+		TimesConfig{},
+		InitSeqConfigT{},
+		expectation_policies::InitFinalize{},
+		std::tuple{}};
+
+	SequenceT sequence{};
+
+	SECTION("Can be specified once.")
+	{
+		ScopedExpectationT expectation = std::move(builder)
+										| expect::in_sequence(sequence);
+
+		REQUIRE(!expectation.is_satisfied());
+		REQUIRE_NOTHROW(collection->handle_call(call));
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("Can be specified with times.")
+	{
+		ScopedExpectationT expectation = std::move(builder)
+										| expect::twice()
+										| expect::in_sequence(sequence);
+
+		REQUIRE(!expectation.is_satisfied());
+		REQUIRE_NOTHROW(collection->handle_call(call));
+		REQUIRE(!expectation.is_satisfied());
+		REQUIRE_NOTHROW(collection->handle_call(call));
+		REQUIRE(expectation.is_satisfied());
+	}
+
+	SECTION("Can be specified multiple times.")
+	{
+		SequenceT secondSequence{};
+		ScopedExpectationT expectation = std::move(builder)
+										| expect::in_sequence(sequence)
+										| expect::in_sequence(secondSequence);
+
+		REQUIRE(!expectation.is_satisfied());
+		REQUIRE_NOTHROW(collection->handle_call(call));
+		REQUIRE(expectation.is_satisfied());
+	}
+}
+
 TEMPLATE_TEST_CASE_SIG(
 	"Finalize policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
 	"[expectation][expectation::builder]",
 	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
-	(true, mimicpp::BasicExpectationBuilder<true, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<true, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
-	(true, mimicpp::BasicExpectationBuilder<false, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<false, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
-	(false, mimicpp::BasicExpectationBuilder<true, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
-	(false, mimicpp::BasicExpectationBuilder<true, int(), FinalizerFake<int()>>, FinalizerFake<int()>),
-	(false, mimicpp::BasicExpectationBuilder<false, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
-	(false, mimicpp::BasicExpectationBuilder<false, int(), FinalizerFake<int()>>, FinalizerFake<int()>)
+	(true, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
+	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
+	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
+	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, int(), FinalizerFake<int()>>, FinalizerFake<int()>),
+	(false, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
+	(false, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, int(), FinalizerFake<int()>>, FinalizerFake<int()>)
 )
 {
 	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | std::declval<Policy&&>(); });
@@ -115,7 +182,7 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	using SignatureT = void();
-	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, InitSeqConfigT, SignatureT, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
@@ -128,7 +195,8 @@ TEST_CASE(
 
 	BaseBuilderT builder{
 		collection,
-		ControlPolicyConfig{},
+		TimesConfig{},
+		InitSeqConfigT{},
 		expectation_policies::InitFinalize{},
 		std::tuple{}};
 
@@ -167,7 +235,7 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	using SignatureT = int();
-	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, InitSeqConfigT, SignatureT, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
@@ -186,7 +254,8 @@ TEST_CASE(
 	FinalizerT finalizer{};
 	ScopedExpectationT expectation = BaseBuilderT{
 										collection,
-										ControlPolicyConfig{},
+										TimesConfig{},
+										InitSeqConfigT{},
 										expectation_policies::InitFinalize{},
 										std::tuple{}
 									}
@@ -206,7 +275,7 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, InitSeqConfigT, SignatureT, expectation_policies::InitFinalize>;
 	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using ExpectationPolicyT = PolicyMock<SignatureT>;
 	using PolicyT = PolicyFacade<SignatureT, std::reference_wrapper<ExpectationPolicyT>, UnwrapReferenceWrapper>;
@@ -224,6 +293,7 @@ TEST_CASE(
 		ScopedExpectationT expectation = BaseBuilderT{
 											collection,
 											zeroTimesConfig,
+											InitSeqConfigT{},
 											expectation_policies::InitFinalize{},
 											std::tuple{}}
 										| PolicyT{std::ref(policy)};
@@ -247,6 +317,7 @@ TEST_CASE(
 		ScopedExpectationT expectation = BaseBuilderT{
 											collection,
 											zeroTimesConfig,
+											InitSeqConfigT{},
 											expectation_policies::InitFinalize{},
 											std::tuple{}
 										}
@@ -270,7 +341,7 @@ TEST_CASE(
 
 	using SignatureT = void();
 	using FinalizerT = FinalizerFake<SignatureT>;
-	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, FinalizerT>;
+	using BaseBuilderT = BasicExpectationBuilder<false, InitSeqConfigT, SignatureT, FinalizerT>;
 
 	const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 
@@ -278,12 +349,13 @@ TEST_CASE(
 	ScopedExpectation expectation = BaseBuilderT{
 		collection,
 		zeroTimesConfig,
+		InitSeqConfigT{},
 		FinalizerT{},
 		std::tuple{}
 	};
 	const std::source_location afterLoc = std::source_location::current();
 
-	const auto& inner = dynamic_cast<const BasicExpectation<SignatureT, ControlPolicy, FinalizerT>&>(
+	const auto& inner = dynamic_cast<const BasicExpectation<SignatureT, ControlPolicy<>, FinalizerT>&>(
 		expectation.expectation());
 	REQUIRE_THAT(
 		inner.from().file_name(),
@@ -301,7 +373,7 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using BaseBuilderT = BasicExpectationBuilder<false, SignatureT, expectation_policies::InitFinalize>;
+	using BaseBuilderT = BasicExpectationBuilder<false, InitSeqConfigT, SignatureT, expectation_policies::InitFinalize>;
 
 	ScopedReporter reporter{};
 
@@ -311,12 +383,14 @@ TEST_CASE(
 		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
 			collection,
 			zeroTimesConfig,
+			InitSeqConfigT{},
 			expectation_policies::InitFinalize{},
 			std::tuple{}};
 
 		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
 			collection,
 			zeroTimesConfig,
+			InitSeqConfigT{},
 			expectation_policies::InitFinalize{},
 			std::tuple{}};
 	}
