@@ -96,10 +96,7 @@ namespace mimicpp::detail
 			std::index_sequence_for<Sequences...>{});
 		return result;
 	}
-}
 
-namespace mimicpp
-{
 	class TimesConfig
 	{
 	public:
@@ -138,7 +135,10 @@ namespace mimicpp
 		int m_Min{1};
 		int m_Max{1};
 	};
+}
 
+namespace mimicpp
+{
 	template <typename... Sequences>
 	class ControlPolicy
 	{
@@ -147,7 +147,7 @@ namespace mimicpp
 
 		[[nodiscard]]
 		explicit constexpr ControlPolicy(
-			const TimesConfig& timesConfig,
+			const detail::TimesConfig& timesConfig,
 			const sequence::detail::Config<Sequences...>& sequenceConfig
 		) noexcept
 			: m_Min{timesConfig.min()},
@@ -306,7 +306,7 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	constexpr auto times(const int min, const int max)
 	{
-		return TimesConfig{min, max};
+		return detail::TimesConfig{min, max};
 	}
 
 	/**

@@ -37,7 +37,7 @@ namespace mimicpp
 		[[nodiscard]]
 		explicit constexpr BasicExpectationBuilder(
 			std::shared_ptr<StorageT> storage,
-			TimesConfig timesConfig,
+			detail::TimesConfig timesConfig,
 			SequenceConfig sequenceConfig,
 			FinalizePolicyArg&& finalizePolicyArg,
 			PolicyListArg&& policyListArg
@@ -111,7 +111,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr BasicExpectationBuilder&& operator |(TimesConfig config) &&
+		constexpr BasicExpectationBuilder&& operator |(detail::TimesConfig&& config) &&
 			requires (!timesConfigured)
 		{
 			m_TimesConfig = std::move(config);
@@ -175,7 +175,7 @@ namespace mimicpp
 
 	private:
 		std::shared_ptr<StorageT> m_Storage;
-		TimesConfig m_TimesConfig{};
+		detail::TimesConfig m_TimesConfig{};
 		SequenceConfig m_SequenceConfig{};
 		FinalizePolicy m_FinalizePolicy{};
 		PolicyListT m_ExpectationPolicies{};

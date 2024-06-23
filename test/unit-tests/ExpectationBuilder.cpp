@@ -21,8 +21,6 @@ using namespace mimicpp;
 
 namespace
 {
-	constexpr TimesConfig zeroTimesConfig{0, 0};
-
 	using InitSeqConfigT = sequence::detail::Config<>;
 }
 
@@ -40,7 +38,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, int(), FinalizerFake<int()>>, FinalizerFake<int()>)
 )
 {
-	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | TimesConfig{}; });
+	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | detail::TimesConfig{}; });
 }
 
 TEST_CASE(
@@ -64,7 +62,7 @@ TEST_CASE(
 
 	BaseBuilderT builder{
 		collection,
-		TimesConfig{},
+		detail::TimesConfig{},
 		InitSeqConfigT{},
 		expectation_policies::InitFinalize{},
 		std::tuple{}};
@@ -81,7 +79,7 @@ TEST_CASE(
 	SECTION("Or exchange it once.")
 	{
 		ScopedExpectationT expectation = std::move(builder)
-										| zeroTimesConfig;
+										| detail::TimesConfig{0, 0};
 
 		REQUIRE(expectation.is_satisfied());
 	}
@@ -108,7 +106,7 @@ TEST_CASE(
 
 	BaseBuilderT builder{
 		collection,
-		TimesConfig{},
+		detail::TimesConfig{},
 		InitSeqConfigT{},
 		expectation_policies::InitFinalize{},
 		std::tuple{}};
@@ -189,7 +187,7 @@ TEST_CASE(
 
 	BaseBuilderT builder{
 		collection,
-		TimesConfig{},
+		detail::TimesConfig{},
 		InitSeqConfigT{},
 		expectation_policies::InitFinalize{},
 		std::tuple{}};
@@ -248,7 +246,7 @@ TEST_CASE(
 	FinalizerT finalizer{};
 	ScopedExpectationT expectation = BaseBuilderT{
 										collection,
-										TimesConfig{},
+										detail::TimesConfig{},
 										InitSeqConfigT{},
 										expectation_policies::InitFinalize{},
 										std::tuple{}
@@ -286,7 +284,7 @@ TEST_CASE(
 
 		ScopedExpectationT expectation = BaseBuilderT{
 											collection,
-											zeroTimesConfig,
+											detail::TimesConfig{0, 0},
 											InitSeqConfigT{},
 											expectation_policies::InitFinalize{},
 											std::tuple{}}
@@ -310,7 +308,7 @@ TEST_CASE(
 
 		ScopedExpectationT expectation = BaseBuilderT{
 											collection,
-											zeroTimesConfig,
+											detail::TimesConfig{0, 0},
 											InitSeqConfigT{},
 											expectation_policies::InitFinalize{},
 											std::tuple{}
@@ -342,7 +340,7 @@ TEST_CASE(
 	const std::source_location beforeLoc = std::source_location::current();
 	ScopedExpectation expectation = BaseBuilderT{
 		collection,
-		zeroTimesConfig,
+		detail::TimesConfig{0, 0},
 		InitSeqConfigT{},
 		FinalizerT{},
 		std::tuple{}
@@ -376,14 +374,14 @@ TEST_CASE(
 
 		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
 			collection,
-			zeroTimesConfig,
+			detail::TimesConfig{0, 0},
 			InitSeqConfigT{},
 			expectation_policies::InitFinalize{},
 			std::tuple{}};
 
 		MIMICPP_SCOPED_EXPECTATION BaseBuilderT{
 			collection,
-			zeroTimesConfig,
+			detail::TimesConfig{0, 0},
 			InitSeqConfigT{},
 			expectation_policies::InitFinalize{},
 			std::tuple{}};

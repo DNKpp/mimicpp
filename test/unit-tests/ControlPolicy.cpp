@@ -17,10 +17,10 @@ using namespace mimicpp;
 
 TEST_CASE(
 	"TimesConfig has exactly 1 as limit by default.",
-	"[expectation][expectation::control]"
+	"[detail][expectation][expectation::control]"
 )
 {
-	constexpr TimesConfig config{};
+	constexpr detail::TimesConfig config{};
 
 	REQUIRE(1 == config.min());
 	REQUIRE(1 == config.max());
@@ -28,13 +28,13 @@ TEST_CASE(
 
 TEST_CASE(
 	"The limits of TimesConfig can be modified.",
-	"[expectation][expectation::control]"
+	"[detail][expectation][expectation::control]"
 )
 {
 	const int min = GENERATE(range(0, 5));
 	const int max = min + GENERATE(range(0, 5));
 
-	const TimesConfig config{min, max};
+	const detail::TimesConfig config{min, max};
 
 	REQUIRE(min == std::as_const(config).min());
 	REQUIRE(max == std::as_const(config).max());
@@ -42,7 +42,7 @@ TEST_CASE(
 
 TEST_CASE(
 	"TimesConfig when invalid limits are given.",
-	"[expectation][expectation::control]"
+	"[detail][expectation][expectation::control]"
 )
 {
 	SECTION("When max > min.")
@@ -51,7 +51,7 @@ TEST_CASE(
 		const int min = max + GENERATE(range(1, 5));
 
 		REQUIRE_THROWS_AS(
-			(TimesConfig{min, max}),
+			(detail::TimesConfig{min, max}),
 			std::invalid_argument);
 	}
 
@@ -61,7 +61,7 @@ TEST_CASE(
 		const int max = min + GENERATE(range(0, 5));
 
 		REQUIRE_THROWS_AS(
-			(TimesConfig{min, max}),
+			(detail::TimesConfig{min, max}),
 			std::invalid_argument);
 	}
 }
@@ -75,7 +75,7 @@ TEST_CASE(
 	const int max = min + GENERATE(range(0, 5));
 
 	ControlPolicy<> policy{
-		TimesConfig{min, max},
+		detail::TimesConfig{min, max},
 		sequence::detail::Config<>{}
 	};
 
@@ -117,7 +117,7 @@ TEST_CASE(
 		std::optional<SequenceT> sequence{std::in_place};
 		std::optional policy{
 			ControlPolicy{
-				TimesConfig{},
+				detail::TimesConfig{},
 				expect::in_sequence(*sequence)
 			}
 		};
@@ -153,7 +153,7 @@ TEST_CASE(
 		std::optional<SequenceT> secondSequence{std::in_place};
 		std::optional policy{
 			ControlPolicy{
-				TimesConfig{},
+				detail::TimesConfig{},
 				expect::in_sequences(
 					*firstSequence,
 					*secondSequence)
@@ -551,7 +551,7 @@ TEST_CASE(
 		const int min = GENERATE(range(0, 5));
 		const int max = min + GENERATE(range(0, 5));
 
-		const TimesConfig config = expect::times(min, max);
+		const detail::TimesConfig config = expect::times(min, max);
 
 		REQUIRE(min == config.min());
 		REQUIRE(max == config.max());
@@ -561,7 +561,7 @@ TEST_CASE(
 	{
 		const int exactly = GENERATE(range(0, 5));
 
-		const TimesConfig config = expect::times(exactly);
+		const detail::TimesConfig config = expect::times(exactly);
 
 		REQUIRE(exactly == config.min());
 		REQUIRE(exactly == config.max());
@@ -571,7 +571,7 @@ TEST_CASE(
 	{
 		const int limit = GENERATE(range(0, 5));
 
-		const TimesConfig config = expect::at_most(limit);
+		const detail::TimesConfig config = expect::at_most(limit);
 
 		REQUIRE(0 == config.min());
 		REQUIRE(limit == config.max());
@@ -581,7 +581,7 @@ TEST_CASE(
 	{
 		const int limit = GENERATE(range(0, 5));
 
-		const TimesConfig config = expect::at_least(limit);
+		const detail::TimesConfig config = expect::at_least(limit);
 
 		REQUIRE(limit == config.min());
 		REQUIRE(std::numeric_limits<int>::max() == config.max());
@@ -589,7 +589,7 @@ TEST_CASE(
 
 	SECTION("once")
 	{
-		constexpr TimesConfig config = expect::once();
+		constexpr detail::TimesConfig config = expect::once();
 
 		REQUIRE(1 == config.min());
 		REQUIRE(1 == config.max());
@@ -597,7 +597,7 @@ TEST_CASE(
 
 	SECTION("twice")
 	{
-		constexpr TimesConfig config = expect::twice();
+		constexpr detail::TimesConfig config = expect::twice();
 
 		REQUIRE(2 == config.min());
 		REQUIRE(2 == config.max());
