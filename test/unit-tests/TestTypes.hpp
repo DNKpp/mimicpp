@@ -190,6 +190,14 @@ public:
 	static constexpr void consume() noexcept
 	{
 	}
+
+	std::vector<mimicpp::sequence::detail::sequence_rating> prioritiesState{};
+
+	[[nodiscard]]
+	constexpr std::vector<mimicpp::sequence::detail::sequence_rating> priorities() const
+	{
+		return prioritiesState;
+	}
 };
 
 class ControlPolicyMock
@@ -198,7 +206,8 @@ public:
 	MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
 	MAKE_CONST_MOCK0(is_applicable, bool(), noexcept);
 	MAKE_CONST_MOCK0(describe_state, std::optional<mimicpp::StringT>());
-	MAKE_MOCK0(consume, void ());
+	MAKE_MOCK0(consume, void());
+	MAKE_CONST_MOCK0(priorities, std::vector<mimicpp::sequence::detail::sequence_rating>());
 };
 
 template <typename Policy, typename Projection>
@@ -233,6 +242,13 @@ public:
 	{
 		return std::invoke(projection, policy)
 			.consume();
+	}
+
+	[[nodiscard]]
+	constexpr std::vector<mimicpp::sequence::detail::sequence_rating> priorities() const
+	{
+		return std::invoke(projection, policy)
+			.priorities();
 	}
 };
 

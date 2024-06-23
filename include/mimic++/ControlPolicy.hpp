@@ -13,10 +13,11 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Utility.hpp"
 
-#include <array>
 #include <cassert>
 #include <limits>
 #include <stdexcept>
+#include <tuple>
+#include <vector>
 
 namespace mimicpp::detail
 {
@@ -195,7 +196,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr std::array<sequence::detail::sequence_rating, sequenceCount> priorities() const noexcept
+		constexpr std::vector<sequence::detail::sequence_rating> priorities() const noexcept
 		{
 			assert(is_applicable());
 
@@ -214,7 +215,7 @@ namespace mimicpp
 						};
 					};
 
-					return std::array<sequence::detail::sequence_rating, sequenceCount>{
+					return std::vector<sequence::detail::sequence_rating>{
 						makePriority(entries)...
 					};
 				},
