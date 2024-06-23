@@ -605,14 +605,65 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"mimicpp::expect::times throws, when invalid limits are provided.",
+	"expect::times throws, when invalid limits are provided.",
 	"[expectation][expectation::factories]"
 )
 {
-	const std::size_t max = GENERATE(range(0u, 5u));
-	const std::size_t min = max + GENERATE(range(1u, 5u));
+	SECTION("For binary overload.")
+	{
+		SECTION("Min < 0")
+		{
+			const int min = GENERATE(std::numeric_limits<int>::min(), -1);
+			REQUIRE_THROWS_AS(
+				expect::times(min, 42),
+				std::invalid_argument);
+		}
 
+		SECTION("Max < 0")
+		{
+			const int max = GENERATE(std::numeric_limits<int>::min(), -1);
+			REQUIRE_THROWS_AS(
+				expect::times(42, max),
+				std::invalid_argument);
+		}
+
+		SECTION("Max < Min")
+		{
+			const int max = GENERATE(range(0, 5));
+			const int min = max + GENERATE(range(1, 5));
+			REQUIRE_THROWS_AS(
+				expect::times(min, max),
+				std::invalid_argument);
+		}
+	}
+
+	SECTION("For unary overload.")
+	{
+		const int exactly = GENERATE(std::numeric_limits<int>::min(), -1);
+		REQUIRE_THROWS_AS(
+			expect::times(exactly),
+			std::invalid_argument);
+	}
+}
+
+TEST_CASE(
+	"expect::at_least throws, when invalit limit is given.",
+	"[expectation][expectation::factories]"
+)
+{
+	const int limit = GENERATE(std::numeric_limits<int>::min(), -1);
 	REQUIRE_THROWS_AS(
-		expect::times(min, max),
+		expect::times(limit),
+		std::invalid_argument);
+}
+
+TEST_CASE(
+	"expect::at_most throws, when invalit limit is given.",
+	"[expectation][expectation::factories]"
+)
+{
+	const int limit = GENERATE(std::numeric_limits<int>::min(), -1);
+	REQUIRE_THROWS_AS(
+		expect::times(limit),
 		std::invalid_argument);
 }

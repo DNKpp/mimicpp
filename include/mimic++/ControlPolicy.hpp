@@ -317,7 +317,7 @@ namespace mimicpp::expect
 	 * \snippet Times.cpp times single rt
 	 */
 	[[nodiscard]]
-	constexpr auto times(const int exactly) noexcept
+	constexpr auto times(const int exactly)
 	{
 		return times(exactly, exactly);
 	}
@@ -330,7 +330,7 @@ namespace mimicpp::expect
 	 * \snippet Times.cpp at_least compile-time
 	 */
 	[[nodiscard]]
-	constexpr auto at_least(const int min) noexcept
+	constexpr auto at_least(const int min)
 	{
 		return times(
 			min,
@@ -344,7 +344,7 @@ namespace mimicpp::expect
 	 * \details This requires the expectation to be matched up to ``max`` times.
 	 */
 	[[nodiscard]]
-	constexpr auto at_most(const int max) noexcept
+	constexpr auto at_most(const int max)
 	{
 		return times(
 			0,
