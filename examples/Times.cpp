@@ -46,35 +46,17 @@ TEST_CASE(
 	"[example][example::times]"
 )
 {
-	SECTION("With runtime arguments.")
-	{
-		//! [at_least rt]
-		namespace expect = mimicpp::expect;
+	//! [at_least]
+	namespace expect = mimicpp::expect;
 
-		mimicpp::Mock<void()> mock{};
-		SCOPED_EXP mock.expect_call()
-					| expect::at_least(2u);
+	mimicpp::Mock<void()> mock{};
+	SCOPED_EXP mock.expect_call()
+				| expect::at_least(2u);
 
-		mock();	// not enough
-		mock();	// fine
-		mock();	// also fine!
-		//! [at_least rt]
-	}
-
-	SECTION("With compile-time arguments.")
-	{
-		//! [at_least compile-time]
-		namespace expect = mimicpp::expect;
-
-		mimicpp::Mock<void()> mock{};
-		SCOPED_EXP mock.expect_call()
-					| expect::at_least<2u>();
-
-		mock();	// not enough
-		mock();	// fine
-		mock();	// also fine!
-		//! [at_least compile-time]
-	}
+	mock();	// not enough
+	mock();	// fine
+	mock();	// also fine!
+	//! [at_least]
 }
 
 TEST_CASE(
@@ -82,33 +64,16 @@ TEST_CASE(
 	"[example][example::times]"
 )
 {
-	SECTION("With runtime arguments.")
-	{
-		//! [at_most rt]
-		namespace expect = mimicpp::expect;
+	//! [at_most]
+	namespace expect = mimicpp::expect;
 
-		mimicpp::Mock<void()> mock{};
-		SCOPED_EXP mock.expect_call()
-					| expect::at_most(2u);
+	mimicpp::Mock<void()> mock{};
+	SCOPED_EXP mock.expect_call()
+				| expect::at_most(2u);
 
-		mock();	// fine
-		mock();	// fine but exhausted!
-		//! [at_most rt]
-	}
-
-	SECTION("With compile-time arguments.")
-	{
-		//! [at_most compile-time]
-		namespace expect = mimicpp::expect;
-
-		mimicpp::Mock<void()> mock{};
-		SCOPED_EXP mock.expect_call()
-					| expect::at_most<2u>();
-
-		mock();	// fine
-		mock();	// fine but exhausted!
-		//! [at_most compile-time]
-	}
+	mock();	// fine
+	mock();	// fine but exhausted!
+	//! [at_most]
 }
 
 TEST_CASE(
@@ -116,33 +81,16 @@ TEST_CASE(
 	"[example][example::times]"
 )
 {
-	SECTION("With runtime arguments.")
-	{
-		//! [times single rt]
-		namespace expect = mimicpp::expect;
+	//! [times single]
+	namespace expect = mimicpp::expect;
 
-		mimicpp::Mock<void()> mock{};
-		SCOPED_EXP mock.expect_call()
-					| expect::times(2u);	// equivalent to twice()
+	mimicpp::Mock<void()> mock{};
+	SCOPED_EXP mock.expect_call()
+				| expect::times(2u);	// equivalent to twice()
 
-		mock();	// not enough
-		mock();	//fine
-		//! [times single rt]
-	}
-
-	SECTION("With compile-time arguments.")
-	{
-		//! [times single compile-time]
-		namespace expect = mimicpp::expect;
-
-		mimicpp::Mock<void()> mock{};
-		SCOPED_EXP mock.expect_call()
-					| expect::times<2u>();	// equivalent to twice()
-
-		mock();	// not enough
-		mock();	//fine
-		//! [times single compile-time]
-	}
+	mock();	// not enough
+	mock();	//fine
+	//! [times single]
 }
 
 TEST_CASE(
@@ -150,33 +98,15 @@ TEST_CASE(
 	"[example][example::times]"
 )
 {
-	SECTION("With runtime arguments.")
-	{
-		//! [times rt]
-		namespace expect = mimicpp::expect;
+	//! [times]
+	namespace expect = mimicpp::expect;
 
-		mimicpp::Mock<void()> mock{};
-		SCOPED_EXP mock.expect_call()
-					| expect::times(1u, 3u);	// between 1 and 3 matches 
+	mimicpp::Mock<void()> mock{};
+	SCOPED_EXP mock.expect_call()
+				| expect::times(1u, 3u);	// between 1 and 3 matches 
 
-		mock();	// fine
-		mock();	// fine
-		mock();	// fine (exhausted)
-		//! [times rt]
-	}
-
-	SECTION("With compile-time arguments.")
-	{
-		//! [times compile-time]
-		namespace expect = mimicpp::expect;
-
-		mimicpp::Mock<void()> mock{};
-		SCOPED_EXP mock.expect_call()
-					| expect::times<1u, 3u>();	// between 1 and 3 matches 
-
-		mock();	// fine
-		mock();	// fine
-		mock();	// fine (exhausted)
-		//! [times compile-time]
-	}
+	mock();	// fine
+	mock();	// fine
+	mock();	// fine (exhausted)
+	//! [times]
 }
