@@ -73,6 +73,29 @@ namespace mimicpp::detail
 			verbalizeValue(current),
 			verbalizeInterval(min, max));
 	}
+
+	template <typename... Sequences>
+	[[nodiscard]]
+	constexpr std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> make_sequence_entries(
+		const std::tuple<std::shared_ptr<Sequences>...>& sequences
+	) noexcept
+	{
+		// This is a workaround due to some issues with clang-17 with c++23 and libstdc++
+		// That configuration prevents the direct initialization, thus we have to default construct first and
+		// setup afterwards. Compilers will probably detect that and optimize accordingly.
+		std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> result{};
+		std::invoke(
+			[&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) noexcept
+			{
+				((std::get<indices>(result) =
+				std::tuple{
+					std::get<indices>(sequences),
+					std::get<indices>(sequences)->add(),
+				}), ...);
+			},
+			std::index_sequence_for<Sequences...>{});
+		return result;
+	}
 }
 
 namespace mimicpp
@@ -121,19 +144,12 @@ namespace mimicpp
 		[[nodiscard]]
 		explicit constexpr ControlPolicy(
 			const TimesConfig& timesConfig,
-			const sequence::detail::Config<Sequences...> sequenceConfig
+			const sequence::detail::Config<Sequences...>& sequenceConfig
 		) noexcept
 			: m_Min{timesConfig.min()},
 			m_Max{timesConfig.max()},
 			m_Sequences{
-				std::apply(
-				[](auto... sequences) noexcept
-				{
-					return std::tuple{
-						std::tuple{sequences, sequences->add()}...
-					};
-				},
-				sequenceConfig.sequences())
+				detail::make_sequence_entries(sequenceConfig.sequences())
 			}
 		{
 			update_sequence_states();
