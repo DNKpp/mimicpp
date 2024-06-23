@@ -179,21 +179,21 @@ namespace mimicpp
 		{
 			assert(is_applicable());
 
-			constexpr auto makePriority = [](const auto& entry) noexcept
-			{
-				const auto& [seq, id] = entry;
-				const std::optional priority = seq->priority_of(id);
-				assert(priority);
-
-				return detail::sequence_rating{
-					.priority = *priority,
-					.tag = seq->tag()
-				};
-			};
-
 			return std::apply(
 				[](const auto&... entries) noexcept
 				{
+					constexpr auto makePriority = [](const auto& entry) noexcept
+					{
+						const auto& [seq, id] = entry;
+						const std::optional priority = seq->priority_of(id);
+						assert(priority);
+
+						return detail::sequence_rating{
+							.priority = *priority,
+							.tag = seq->tag()
+						};
+					};
+
 					return std::array<detail::sequence_rating, sequenceCount>{
 						makePriority(entries)...
 					};
