@@ -253,7 +253,7 @@ namespace mimicpp
 			return ExpectationReport{
 				.sourceLocation = m_SourceLocation,
 				.finalizerDescription = std::nullopt,
-				//.timesDescription = m_Times.describe_state(),
+				.timesDescription = m_ControlPolicy.describe_state(),
 				.expectationDescriptions = std::apply(
 					[&](const auto&... policies)
 					{
@@ -285,7 +285,7 @@ namespace mimicpp
 				.finalizeReport = {std::nullopt},
 				.timesReport = MatchReport::Times{
 					.isApplicable = m_ControlPolicy.is_applicable(),
-					//.description = m_Times.describe_state()
+					.description = m_ControlPolicy.describe_state()
 				},
 				.expectationReports = std::apply(
 					[&](const auto&... policies)

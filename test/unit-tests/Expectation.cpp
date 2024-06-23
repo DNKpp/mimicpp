@@ -389,7 +389,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"Times policy of mimicpp::BasicExpectation controls, how often its expectations must be matched.",
+	"Control policy of mimicpp::BasicExpectation controls, how often its expectations must be matched.",
 	"[expectation]"
 )
 {
@@ -398,7 +398,7 @@ TEST_CASE(
 	using FinalizerT = FinalizerFake<SignatureT>;
 	using PolicyMockT = PolicyMock<SignatureT>;
 	using PolicyRefT = PolicyFacade<SignatureT, std::reference_wrapper<PolicyMock<SignatureT>>, UnwrapReferenceWrapper>;
-	using TimesPolicyT = ControlPolicyFacade<std::reference_wrapper<ControlPolicyMock>, UnwrapReferenceWrapper>;
+	using ControlPolicyT = ControlPolicyFacade<std::reference_wrapper<ControlPolicyMock>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
 	using TimesReportT = mimicpp::MatchReport::Times;
 
@@ -412,7 +412,7 @@ TEST_CASE(
 
 	SECTION("With no other expectation policies.")
 	{
-		mimicpp::BasicExpectation<SignatureT, TimesPolicyT, FinalizerT> expectation{
+		mimicpp::BasicExpectation<SignatureT, ControlPolicyT, FinalizerT> expectation{
 			std::source_location::current(),
 			std::ref(times),
 			FinalizerT{}
@@ -458,7 +458,7 @@ TEST_CASE(
 	SECTION("With other expectation policies.")
 	{
 		PolicyMockT policy{};
-		mimicpp::BasicExpectation<SignatureT, TimesPolicyT, FinalizerT, PolicyRefT> expectation{
+		mimicpp::BasicExpectation<SignatureT, ControlPolicyT, FinalizerT, PolicyRefT> expectation{
 			std::source_location::current(),
 			std::ref(times),
 			FinalizerT{},
