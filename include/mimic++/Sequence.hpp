@@ -257,7 +257,7 @@ namespace mimicpp
 			class BasicSequenceInterface
 			{
 				template <typename... Sequences>
-				friend class SequenceConfig;
+				friend class Config;
 
 			public:
 				using SequenceT = BasicSequence<Id, priorityStrategy>;
@@ -285,24 +285,24 @@ namespace mimicpp
 			};
 
 			template <typename... Sequences>
-			class SequenceConfig
+			class Config
 			{
 				template <typename... Ts>
-				friend class SequenceConfig;
+				friend class Config;
 
 			public:
 				static constexpr std::size_t sequenceCount = sizeof...(Sequences);
 
 				[[nodiscard]]
-				SequenceConfig()
+				Config()
 					requires (0 == sizeof...(Sequences))
 				= default;
 
 				template <typename... Interfaces>
 					requires (sizeof...(Interfaces) == sequenceCount)
 				[[nodiscard]]
-				explicit constexpr SequenceConfig(Interfaces&... interfaces) noexcept(1 == sequenceCount)
-					: SequenceConfig{
+				explicit constexpr Config(Interfaces&... interfaces) noexcept(1 == sequenceCount)
+					: Config{
 						interfaces.m_Sequence...
 					}
 				{
@@ -316,14 +316,14 @@ namespace mimicpp
 
 				template <typename... OtherSequences>
 				[[nodiscard]]
-				constexpr SequenceConfig<Sequences..., OtherSequences...> concat(
-					const SequenceConfig<OtherSequences...>& other
+				constexpr Config<Sequences..., OtherSequences...> concat(
+					const Config<OtherSequences...>& other
 				) const
 				{
 					return std::apply(
 						[](auto... sequences)
 						{
-							return SequenceConfig<Sequences..., OtherSequences...>{
+							return Config<Sequences..., OtherSequences...>{
 								std::move(sequences)...
 							};
 						},
@@ -334,7 +334,7 @@ namespace mimicpp
 				std::tuple<std::shared_ptr<Sequences>...> m_Sequences;
 
 				[[nodiscard]]
-				explicit constexpr SequenceConfig(std::shared_ptr<Sequences>... sequences) noexcept(1 == sequenceCount)
+				explicit constexpr Config(std::shared_ptr<Sequences>... sequences) noexcept(1 == sequenceCount)
 					requires (0 < sequenceCount)
 				{
 					if constexpr (1 < sequenceCount)
@@ -523,7 +523,7 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	constexpr auto in_sequence(sequence::detail::BasicSequenceInterface<Id, priorityStrategy>& sequence) noexcept
 	{
-		using ConfigT = sequence::detail::SequenceConfig<
+		using ConfigT = sequence::detail::Config<
 			sequence::detail::BasicSequence<Id, priorityStrategy>>;
 
 		return ConfigT{
@@ -555,7 +555,7 @@ namespace mimicpp::expect
 		sequence::detail::BasicSequenceInterface<OtherIds, otherPriorityStrategies>&... otherSequences
 	)
 	{
-		using ConfigT = sequence::detail::SequenceConfig<
+		using ConfigT = sequence::detail::Config<
 			sequence::detail::BasicSequence<FirstId, firstPriorityStrategy>,
 			sequence::detail::BasicSequence<SecondId, secondPriorityStrategy>,
 			sequence::detail::BasicSequence<OtherIds, otherPriorityStrategies>...>;

@@ -64,7 +64,7 @@ namespace mimicpp
 		[[nodiscard]]
 		explicit constexpr ControlPolicy(
 			const TimesConfig& timesConfig,
-			const sequence::detail::SequenceConfig<Sequences...> sequenceConfig
+			const sequence::detail::Config<Sequences...> sequenceConfig
 		) noexcept
 			: m_Min{timesConfig.min()},
 			m_Max{timesConfig.max()},

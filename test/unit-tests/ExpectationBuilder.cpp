@@ -29,7 +29,7 @@ namespace
 			return config;
 		});
 
-	using InitSeqConfigT = sequence::detail::SequenceConfig<>;
+	using InitSeqConfigT = sequence::detail::Config<>;
 }
 
 TEMPLATE_TEST_CASE_SIG(

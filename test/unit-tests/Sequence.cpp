@@ -446,7 +446,7 @@ TEST_CASE(
 {
 	SequenceT sequence{};
 
-	const sequence::detail::SequenceConfig config = expect::in_sequence(sequence);
+	const sequence::detail::Config config = expect::in_sequence(sequence);
 
 	REQUIRE(std::get<0>(config.sequences())->tag() == sequence.tag());
 }
@@ -478,7 +478,7 @@ TEST_CASE(
 
 	SECTION("When two sequences are given.")
 	{
-		const sequence::detail::SequenceConfig config = expect::in_sequences(
+		const sequence::detail::Config config = expect::in_sequences(
 			firstSequence,
 			secondSequence);
 
@@ -488,7 +488,7 @@ TEST_CASE(
 
 	SECTION("When three sequences are given.")
 	{
-		const sequence::detail::SequenceConfig config = expect::in_sequences(
+		const sequence::detail::Config config = expect::in_sequences(
 			firstSequence,
 			thirdSequence,
 			secondSequence);
@@ -503,24 +503,24 @@ TEST_CASE(
 	"detail::SequenceConfig::concat combines two config.",
 	"[sequence]")
 {
-	const sequence::detail::SequenceConfig<> firstConfig{};
+	const sequence::detail::Config<> firstConfig{};
 
 	SECTION("Concat two empty sequences is pointlesss but possible.")
 	{
-		[[maybe_unused]] const sequence::detail::SequenceConfig<> result = firstConfig.concat(
-			sequence::detail::SequenceConfig<>{});
+		[[maybe_unused]] const sequence::detail::Config<> result = firstConfig.concat(
+			sequence::detail::Config<>{});
 	}
 
 	SECTION("Concat appends the right side.")
 	{
 		SequenceT firstSequence{};
-		const sequence::detail::SequenceConfig firstResult = firstConfig.concat(
+		const sequence::detail::Config firstResult = firstConfig.concat(
 			expect::in_sequence(firstSequence));
 
 		REQUIRE(std::get<0>(firstResult.sequences())->tag() == firstSequence.tag());
 
 		SequenceT secondSequence{};
-		sequence::detail::SequenceConfig secondResult = firstResult.concat(
+		sequence::detail::Config secondResult = firstResult.concat(
 			expect::in_sequence(secondSequence));
 		REQUIRE(std::get<0>(secondResult.sequences())->tag() == firstSequence.tag());
 		REQUIRE(std::get<1>(secondResult.sequences())->tag() == secondSequence.tag());
@@ -540,7 +540,7 @@ TEST_CASE(
 		SECTION("Can be arbitrarily continued.")
 		{
 			SequenceT thirdSequence{};
-			sequence::detail::SequenceConfig thirdResult = secondResult.concat(
+			sequence::detail::Config thirdResult = secondResult.concat(
 				expect::in_sequence(thirdSequence));
 			REQUIRE(std::get<0>(thirdResult.sequences())->tag() == firstSequence.tag());
 			REQUIRE(std::get<1>(thirdResult.sequences())->tag() == secondSequence.tag());
