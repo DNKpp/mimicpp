@@ -68,304 +68,307 @@ namespace mimicpp
 	 * which may and will result in surprising outcomes.
 	 */
 
-	enum SequenceTag
-		: std::ptrdiff_t
+	namespace sequence
 	{
-	};
-
-	namespace detail
-	{
-		template <typename Id, auto priorityStrategy>
-			requires std::is_enum_v<Id>
-					&& std::signed_integral<std::underlying_type_t<Id>>
-					&& std::convertible_to<
-						std::invoke_result_t<decltype(priorityStrategy), Id, int>,
-						int>
-		class BasicSequence
+		enum SequenceTag
+			: std::ptrdiff_t
 		{
-		public:
-			using IdT = Id;
+		};
 
-			~BasicSequence() noexcept(false)
+		namespace detail
+		{
+			template <typename Id, auto priorityStrategy>
+				requires std::is_enum_v<Id>
+						&& std::signed_integral<std::underlying_type_t<Id>>
+						&& std::convertible_to<
+							std::invoke_result_t<decltype(priorityStrategy), Id, int>,
+							int>
+			class BasicSequence
 			{
-				const auto iter = std::ranges::find_if_not(
-					m_Entries.cbegin() + m_Cursor,
-					m_Entries.cend(),
-					[](const State s) noexcept
+			public:
+				using IdT = Id;
+
+				~BasicSequence() noexcept(false)
+				{
+					const auto iter = std::ranges::find_if_not(
+						m_Entries.cbegin() + m_Cursor,
+						m_Entries.cend(),
+						[](const State s) noexcept
+						{
+							return s == State::satisfied
+								|| s == State::saturated;
+						});
+
+					if (iter != m_Entries.cend())
 					{
-						return s == State::satisfied
-							|| s == State::saturated;
-					});
-
-				if (iter != m_Entries.cend())
-				{
-					detail::report_error(
-						format::format(
-							"Unfulfilled sequence. {} out of {} expectation(s) are satisfied.",
-							std::ranges::distance(m_Entries.cbegin(), iter),
-							m_Entries.size()));
-				}
-			}
-
-			[[nodiscard]]
-			BasicSequence() = default;
-
-			BasicSequence(const BasicSequence&) = delete;
-			BasicSequence& operator =(const BasicSequence&) = delete;
-			BasicSequence(BasicSequence&&) = delete;
-			BasicSequence& operator =(BasicSequence&&) = delete;
-
-			[[nodiscard]]
-			constexpr std::optional<int> priority_of(const IdT id) const noexcept
-			{
-				assert(is_valid(id));
-
-				if (is_consumable(id))
-				{
-					return std::invoke(
-						priorityStrategy,
-						id,
-						m_Cursor);
-				}
-
-				return std::nullopt;
-			}
-
-			constexpr void set_satisfied(const IdT id) noexcept
-			{
-				assert(is_valid(id));
-				const auto index = to_underlying(id);
-				assert(m_Cursor <= index);
-
-				auto& element = m_Entries[to_underlying(id)];
-				assert(element == State::unsatisfied);
-				element = State::satisfied;
-			}
-
-			constexpr void set_saturated(const IdT id) noexcept
-			{
-				assert(is_valid(id));
-				const auto index = to_underlying(id);
-				assert(m_Cursor <= index);
-
-				auto& element = m_Entries[index];
-				assert(
-					element == State::unsatisfied
-					|| element == State::satisfied);
-				element = State::saturated;
-			}
-
-			[[nodiscard]]
-			constexpr bool is_consumable(const IdT id) const noexcept
-			{
-				assert(is_valid(id));
-
-				const int index = to_underlying(id);
-				const auto state = m_Entries[index];
-				return m_Cursor <= index
-						&& std::ranges::all_of(
-							m_Entries.begin() + m_Cursor,
-							m_Entries.begin() + index,
-							[](const State s) noexcept
-							{
-								return s == State::satisfied
-										|| s == State::saturated;
-							})
-						&& (state == State::unsatisfied
-							|| state == State::satisfied);
-			}
-
-			constexpr void consume(const IdT id) noexcept
-			{
-				assert(is_consumable(id));
-
-				m_Cursor = to_underlying(id);
-			}
-
-			[[nodiscard]]
-			constexpr IdT add()
-			{
-				if (!std::in_range< std::underlying_type_t<IdT>>(m_Entries.size()))
-				[[unlikely]]
-				{
-					throw std::runtime_error{
-						"Sequence already holds maximum amount of elements."
-					};
-				}
-
-				m_Entries.emplace_back(State::unsatisfied);
-				return static_cast<IdT>(m_Entries.size() - 1);
-			}
-
-			[[nodiscard]]
-			constexpr SequenceTag tag() const noexcept
-			{
-				return SequenceTag{
-					reinterpret_cast<std::ptrdiff_t>(this)
-				};
-			}
-
-		private:
-			enum class State
-			{
-				unsatisfied,
-				satisfied,
-				saturated
-			};
-
-			std::vector<State> m_Entries{};
-			int m_Cursor{};
-
-			[[nodiscard]]
-			constexpr bool is_valid(const IdT id) const noexcept
-			{
-				return 0 <= to_underlying(id)
-						&& std::cmp_less(to_underlying(id), m_Entries.size());
-			}
-		};
-
-		class LazyStrategy
-		{
-		public:
-			[[nodiscard]]
-			constexpr int operator ()(const auto id, const int cursor) const noexcept
-			{
-				const auto index = to_underlying(id);
-				assert(std::cmp_less_equal(cursor, index));
-
-				return std::numeric_limits<int>::max()
-						- (static_cast<int>(index) - cursor);
-			}
-		};
-
-		class GreedyStrategy
-		{
-		public:
-			[[nodiscard]]
-			constexpr int operator ()(const auto id, const int cursor) const noexcept
-			{
-				const auto index = to_underlying(id);
-				assert(std::cmp_less_equal(cursor, index));
-
-				return static_cast<int>(index) - cursor;
-			}
-		};
-
-		template <typename Id, auto priorityStrategy>
-		class BasicSequenceInterface
-		{
-			template <typename... Sequences>
-			friend class SequenceConfig;
-
-		public:
-			using SequenceT = BasicSequence<Id, priorityStrategy>;
-
-			~BasicSequenceInterface() = default;
-
-			[[nodiscard]]
-			BasicSequenceInterface() = default;
-
-			BasicSequenceInterface(const BasicSequenceInterface&) = delete;
-			BasicSequenceInterface& operator =(const BasicSequenceInterface&) = delete;
-			BasicSequenceInterface(BasicSequenceInterface&&) = delete;
-			BasicSequenceInterface& operator =(BasicSequenceInterface&&) = delete;
-
-			[[nodiscard]]
-			constexpr SequenceTag tag() const noexcept
-			{
-				return m_Sequence->tag();
-			}
-
-		private:
-			std::shared_ptr<SequenceT> m_Sequence{
-				std::make_shared<SequenceT>()
-			};
-		};
-
-		template <typename... Sequences>
-		class SequenceConfig
-		{
-			template <typename... Ts>
-			friend class SequenceConfig;
-
-		public:
-			static constexpr std::size_t sequenceCount = sizeof...(Sequences);
-
-			[[nodiscard]]
-			SequenceConfig()
-				requires (0 == sizeof...(Sequences))
-			= default;
-
-			template <typename... Interfaces>
-				requires (sizeof...(Interfaces) == sequenceCount)
-			[[nodiscard]]
-			explicit constexpr SequenceConfig(Interfaces&... interfaces) noexcept(1 == sequenceCount)
-				: SequenceConfig{
-					interfaces.m_Sequence...
-				}
-			{
-			}
-
-			[[nodiscard]]
-			constexpr auto& sequences() const noexcept
-			{
-				return m_Sequences;
-			}
-
-			template <typename... OtherSequences>
-			[[nodiscard]]
-			constexpr SequenceConfig<Sequences..., OtherSequences...> concat(
-				const SequenceConfig<OtherSequences...>& other
-			) const
-			{
-				return std::apply(
-					[](auto... sequences)
-					{
-						return SequenceConfig<Sequences..., OtherSequences...>{
-							std::move(sequences)...
-						};
-					},
-					std::tuple_cat(m_Sequences, other.sequences()));
-			}
-
-		private:
-			std::tuple<std::shared_ptr<Sequences>...> m_Sequences;
-
-			[[nodiscard]]
-			explicit constexpr SequenceConfig(std::shared_ptr<Sequences>... sequences) noexcept(1 == sequenceCount)
-				requires (0 < sequenceCount)
-			{
-				if constexpr (1 < sequenceCount)
-				{
-					std::array tags{
-						sequences->tag()...
-					};
-
-					std::ranges::sort(tags);
-					if (!std::ranges::empty(std::ranges::unique(tags)))
-					{
-						throw std::invalid_argument{
-							"Expectations can not be assigned to the same sequence multiple times."
-						};
+						mimicpp::detail::report_error(
+							format::format(
+								"Unfulfilled sequence. {} out of {} expectation(s) are satisfied.",
+								std::ranges::distance(m_Entries.cbegin(), iter),
+								m_Entries.size()));
 					}
 				}
 
-				m_Sequences = std::tuple{
-					std::move(sequences)...
+				[[nodiscard]]
+				BasicSequence() = default;
+
+				BasicSequence(const BasicSequence&) = delete;
+				BasicSequence& operator =(const BasicSequence&) = delete;
+				BasicSequence(BasicSequence&&) = delete;
+				BasicSequence& operator =(BasicSequence&&) = delete;
+
+				[[nodiscard]]
+				constexpr std::optional<int> priority_of(const IdT id) const noexcept
+				{
+					assert(is_valid(id));
+
+					if (is_consumable(id))
+					{
+						return std::invoke(
+							priorityStrategy,
+							id,
+							m_Cursor);
+					}
+
+					return std::nullopt;
+				}
+
+				constexpr void set_satisfied(const IdT id) noexcept
+				{
+					assert(is_valid(id));
+					const auto index = to_underlying(id);
+					assert(m_Cursor <= index);
+
+					auto& element = m_Entries[to_underlying(id)];
+					assert(element == State::unsatisfied);
+					element = State::satisfied;
+				}
+
+				constexpr void set_saturated(const IdT id) noexcept
+				{
+					assert(is_valid(id));
+					const auto index = to_underlying(id);
+					assert(m_Cursor <= index);
+
+					auto& element = m_Entries[index];
+					assert(
+						element == State::unsatisfied
+						|| element == State::satisfied);
+					element = State::saturated;
+				}
+
+				[[nodiscard]]
+				constexpr bool is_consumable(const IdT id) const noexcept
+				{
+					assert(is_valid(id));
+
+					const int index = to_underlying(id);
+					const auto state = m_Entries[index];
+					return m_Cursor <= index
+							&& std::ranges::all_of(
+								m_Entries.begin() + m_Cursor,
+								m_Entries.begin() + index,
+								[](const State s) noexcept
+								{
+									return s == State::satisfied
+											|| s == State::saturated;
+								})
+							&& (state == State::unsatisfied
+								|| state == State::satisfied);
+				}
+
+				constexpr void consume(const IdT id) noexcept
+				{
+					assert(is_consumable(id));
+
+					m_Cursor = to_underlying(id);
+				}
+
+				[[nodiscard]]
+				constexpr IdT add()
+				{
+					if (!std::in_range< std::underlying_type_t<IdT>>(m_Entries.size()))
+						[[unlikely]]
+						{
+							throw std::runtime_error{
+								"Sequence already holds maximum amount of elements."
+							};
+						}
+
+					m_Entries.emplace_back(State::unsatisfied);
+					return static_cast<IdT>(m_Entries.size() - 1);
+				}
+
+				[[nodiscard]]
+				constexpr SequenceTag tag() const noexcept
+				{
+					return SequenceTag{
+						reinterpret_cast<std::ptrdiff_t>(this)
+					};
+				}
+
+			private:
+				enum class State
+				{
+					unsatisfied,
+					satisfied,
+					saturated
 				};
-			}
-		};
 
-		enum class SequenceId
-			: int
-		{
-		};
+				std::vector<State> m_Entries{};
+				int m_Cursor{};
 
-		template <typename>
-		struct is_sequence_interface
-			: public std::false_type
-		{
-		};
+				[[nodiscard]]
+				constexpr bool is_valid(const IdT id) const noexcept
+				{
+					return 0 <= to_underlying(id)
+							&& std::cmp_less(to_underlying(id), m_Entries.size());
+				}
+			};
+
+			class LazyStrategy
+			{
+			public:
+				[[nodiscard]]
+				constexpr int operator ()(const auto id, const int cursor) const noexcept
+				{
+					const auto index = to_underlying(id);
+					assert(std::cmp_less_equal(cursor, index));
+
+					return std::numeric_limits<int>::max()
+							- (static_cast<int>(index) - cursor);
+				}
+			};
+
+			class GreedyStrategy
+			{
+			public:
+				[[nodiscard]]
+				constexpr int operator ()(const auto id, const int cursor) const noexcept
+				{
+					const auto index = to_underlying(id);
+					assert(std::cmp_less_equal(cursor, index));
+
+					return static_cast<int>(index) - cursor;
+				}
+			};
+
+			template <typename Id, auto priorityStrategy>
+			class BasicSequenceInterface
+			{
+				template <typename... Sequences>
+				friend class SequenceConfig;
+
+			public:
+				using SequenceT = BasicSequence<Id, priorityStrategy>;
+
+				~BasicSequenceInterface() = default;
+
+				[[nodiscard]]
+				BasicSequenceInterface() = default;
+
+				BasicSequenceInterface(const BasicSequenceInterface&) = delete;
+				BasicSequenceInterface& operator =(const BasicSequenceInterface&) = delete;
+				BasicSequenceInterface(BasicSequenceInterface&&) = delete;
+				BasicSequenceInterface& operator =(BasicSequenceInterface&&) = delete;
+
+				[[nodiscard]]
+				constexpr SequenceTag tag() const noexcept
+				{
+					return m_Sequence->tag();
+				}
+
+			private:
+				std::shared_ptr<SequenceT> m_Sequence{
+					std::make_shared<SequenceT>()
+				};
+			};
+
+			template <typename... Sequences>
+			class SequenceConfig
+			{
+				template <typename... Ts>
+				friend class SequenceConfig;
+
+			public:
+				static constexpr std::size_t sequenceCount = sizeof...(Sequences);
+
+				[[nodiscard]]
+				SequenceConfig()
+					requires (0 == sizeof...(Sequences))
+				= default;
+
+				template <typename... Interfaces>
+					requires (sizeof...(Interfaces) == sequenceCount)
+				[[nodiscard]]
+				explicit constexpr SequenceConfig(Interfaces&... interfaces) noexcept(1 == sequenceCount)
+					: SequenceConfig{
+						interfaces.m_Sequence...
+					}
+				{
+				}
+
+				[[nodiscard]]
+				constexpr auto& sequences() const noexcept
+				{
+					return m_Sequences;
+				}
+
+				template <typename... OtherSequences>
+				[[nodiscard]]
+				constexpr SequenceConfig<Sequences..., OtherSequences...> concat(
+					const SequenceConfig<OtherSequences...>& other
+				) const
+				{
+					return std::apply(
+						[](auto... sequences)
+						{
+							return SequenceConfig<Sequences..., OtherSequences...>{
+								std::move(sequences)...
+							};
+						},
+						std::tuple_cat(m_Sequences, other.sequences()));
+				}
+
+			private:
+				std::tuple<std::shared_ptr<Sequences>...> m_Sequences;
+
+				[[nodiscard]]
+				explicit constexpr SequenceConfig(std::shared_ptr<Sequences>... sequences) noexcept(1 == sequenceCount)
+					requires (0 < sequenceCount)
+				{
+					if constexpr (1 < sequenceCount)
+					{
+						std::array tags{
+							sequences->tag()...
+						};
+
+						std::ranges::sort(tags);
+						if (!std::ranges::empty(std::ranges::unique(tags)))
+						{
+							throw std::invalid_argument{
+								"Expectations can not be assigned to the same sequence multiple times."
+							};
+						}
+					}
+
+					m_Sequences = std::tuple{
+						std::move(sequences)...
+					};
+				}
+			};
+
+			enum class SequenceId
+				: int
+			{
+			};
+
+			template <typename>
+			struct is_sequence_interface
+				: public std::false_type
+			{
+			};
+		}
 	}
 
 	/**
@@ -376,16 +379,16 @@ namespace mimicpp
 	 * the attached expectations are destroyed.
 	 */
 	class LazySequence
-		: public detail::BasicSequenceInterface<
-			detail::SequenceId,
-			detail::LazyStrategy{}>
+		: public sequence::detail::BasicSequenceInterface<
+			sequence::detail::SequenceId,
+			sequence::detail::LazyStrategy{}>
 	{
 	};
 
 	class GreedySequence
-		: public detail::BasicSequenceInterface<
-			detail::SequenceId,
-			detail::GreedyStrategy{}>
+		: public sequence::detail::BasicSequenceInterface<
+			sequence::detail::SequenceId,
+			sequence::detail::GreedyStrategy{}>
 	{
 	};
 
@@ -394,22 +397,10 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
-	template <>
-	struct is_sequence_interface<LazySequence>
-		: public std::true_type
-	{
-	};
-
-	template <>
-	struct is_sequence_interface<GreedySequence>
-		: public std::true_type
-	{
-	};
-
 	struct sequence_rating
 	{
 		int priority{};
-		SequenceTag tag{};
+		sequence::SequenceTag tag{};
 	};
 
 	[[nodiscard]]
@@ -530,10 +521,10 @@ namespace mimicpp::expect
 	 */
 	template <typename Id, auto priorityStrategy>
 	[[nodiscard]]
-	constexpr auto in_sequence(::mimicpp::detail::BasicSequenceInterface<Id, priorityStrategy>& sequence) noexcept
+	constexpr auto in_sequence(sequence::detail::BasicSequenceInterface<Id, priorityStrategy>& sequence) noexcept
 	{
-		using ConfigT = ::mimicpp::detail::SequenceConfig<
-			::mimicpp::detail::BasicSequence<Id, priorityStrategy>>;
+		using ConfigT = sequence::detail::SequenceConfig<
+			sequence::detail::BasicSequence<Id, priorityStrategy>>;
 
 		return ConfigT{
 			sequence
@@ -559,15 +550,15 @@ namespace mimicpp::expect
 	>
 	[[nodiscard]]
 	constexpr auto in_sequences(
-		::mimicpp::detail::BasicSequenceInterface<FirstId, firstPriorityStrategy>& firstSequence,
-		::mimicpp::detail::BasicSequenceInterface<SecondId, secondPriorityStrategy>& secondSequence,
-		::mimicpp::detail::BasicSequenceInterface<OtherIds, otherPriorityStrategies>&... otherSequences
+		sequence::detail::BasicSequenceInterface<FirstId, firstPriorityStrategy>& firstSequence,
+		sequence::detail::BasicSequenceInterface<SecondId, secondPriorityStrategy>& secondSequence,
+		sequence::detail::BasicSequenceInterface<OtherIds, otherPriorityStrategies>&... otherSequences
 	)
 	{
-		using ConfigT = ::mimicpp::detail::SequenceConfig<
-			::mimicpp::detail::BasicSequence<FirstId, firstPriorityStrategy>,
-			::mimicpp::detail::BasicSequence<SecondId, secondPriorityStrategy>,
-			::mimicpp::detail::BasicSequence<OtherIds, otherPriorityStrategies>...>;
+		using ConfigT = sequence::detail::SequenceConfig<
+			sequence::detail::BasicSequence<FirstId, firstPriorityStrategy>,
+			sequence::detail::BasicSequence<SecondId, secondPriorityStrategy>,
+			sequence::detail::BasicSequence<OtherIds, otherPriorityStrategies>...>;
 
 		return ConfigT{
 			firstSequence,

@@ -85,7 +85,7 @@ TEST_CASE(
 				config.set_limits(min, max);
 				return config;
 			}),
-		detail::SequenceConfig<>{}
+		sequence::detail::SequenceConfig<>{}
 	};
 
 	for ([[maybe_unused]] auto i : std::views::iota(0, min))

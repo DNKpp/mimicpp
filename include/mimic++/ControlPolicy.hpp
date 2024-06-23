@@ -64,7 +64,7 @@ namespace mimicpp
 		[[nodiscard]]
 		explicit constexpr ControlPolicy(
 			const TimesConfig& timesConfig,
-			const detail::SequenceConfig<Sequences...> sequenceConfig
+			const sequence::detail::SequenceConfig<Sequences...> sequenceConfig
 		) noexcept
 			: m_Min{timesConfig.min()},
 			m_Max{timesConfig.max()},
@@ -155,7 +155,7 @@ namespace mimicpp
 		int m_Max;
 		int m_Count{};
 		std::tuple<
-			std::tuple<std::shared_ptr<Sequences>, detail::SequenceId>...> m_Sequences{};
+			std::tuple<std::shared_ptr<Sequences>, sequence::detail::SequenceId>...> m_Sequences{};
 
 		constexpr void update_sequence_states() noexcept
 		{

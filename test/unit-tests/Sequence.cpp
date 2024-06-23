@@ -29,7 +29,7 @@ namespace
 		}
 	};
 
-	using detail::SequenceId;
+	using sequence::detail::SequenceId;
 }
 
 TEST_CASE(
@@ -37,7 +37,7 @@ TEST_CASE(
 	"[sequence]"
 )
 {
-	using SequenceT = detail::BasicSequence<SequenceId, FakeStrategy{}>;
+	using SequenceT = sequence::detail::BasicSequence<SequenceId, FakeStrategy{}>;
 
 	STATIC_REQUIRE(std::is_default_constructible_v<SequenceT>);
 
@@ -73,7 +73,7 @@ TEST_CASE(
 	{
 	};
 
-	detail::BasicSequence<
+	sequence::detail::BasicSequence<
 		ShortSequenceId,
 		FakeStrategy{}> seq{};
 
@@ -96,7 +96,7 @@ TEST_CASE(
 {
 	namespace Matches = Catch::Matchers;
 
-	using SequenceT = detail::BasicSequence<SequenceId, FakeStrategy{}>;
+	using SequenceT = sequence::detail::BasicSequence<SequenceId, FakeStrategy{}>;
 
 	ScopedReporter reporter{};
 	std::optional<SequenceT> sequence{std::in_place};
@@ -285,8 +285,8 @@ TEST_CASE(
 	"sequence"
 )
 {
-	const detail::BasicSequence<SequenceId, FakeStrategy{}> sequence{};
-	const SequenceTag tag = sequence.tag();
+	const sequence::detail::BasicSequence<SequenceId, FakeStrategy{}> sequence{};
+	const sequence::SequenceTag tag = sequence.tag();
 
 	REQUIRE(to_underlying(tag) == reinterpret_cast<std::ptrdiff_t>(std::addressof(sequence)));
 }
@@ -305,7 +305,7 @@ TEST_CASE(
 			{std::numeric_limits<int>::max() - 1, SequenceId{2}, 1}
 		})));
 
-	REQUIRE(expected == std::invoke(detail::LazyStrategy{}, id, cursor));
+	REQUIRE(expected == std::invoke(sequence::detail::LazyStrategy{}, id, cursor));
 }
 
 TEST_CASE(
@@ -322,7 +322,7 @@ TEST_CASE(
 			{1, SequenceId{2}, 1}
 		})));
 
-	REQUIRE(expected == std::invoke(detail::GreedyStrategy{}, id, cursor));
+	REQUIRE(expected == std::invoke(sequence::detail::GreedyStrategy{}, id, cursor));
 }
 
 TEST_CASE(
@@ -333,9 +333,9 @@ TEST_CASE(
 	using detail::sequence_rating;
 	using detail::has_better_rating;
 	constexpr std::array sequence_tags = std::to_array<>({
-		SequenceTag{1},
-		SequenceTag{2},
-		SequenceTag{3},
+		sequence::SequenceTag{1},
+		sequence::SequenceTag{2},
+		sequence::SequenceTag{3},
 	});
 
 	SECTION("Lhs with zero ratings is always preferred.")
@@ -446,7 +446,7 @@ TEST_CASE(
 {
 	SequenceT sequence{};
 
-	const detail::SequenceConfig config = expect::in_sequence(sequence);
+	const sequence::detail::SequenceConfig config = expect::in_sequence(sequence);
 
 	REQUIRE(std::get<0>(config.sequences())->tag() == sequence.tag());
 }
@@ -478,7 +478,7 @@ TEST_CASE(
 
 	SECTION("When two sequences are given.")
 	{
-		const detail::SequenceConfig config = expect::in_sequences(
+		const sequence::detail::SequenceConfig config = expect::in_sequences(
 			firstSequence,
 			secondSequence);
 
@@ -488,7 +488,7 @@ TEST_CASE(
 
 	SECTION("When three sequences are given.")
 	{
-		const detail::SequenceConfig config = expect::in_sequences(
+		const sequence::detail::SequenceConfig config = expect::in_sequences(
 			firstSequence,
 			thirdSequence,
 			secondSequence);
@@ -503,23 +503,24 @@ TEST_CASE(
 	"detail::SequenceConfig::concat combines two config.",
 	"[sequence]")
 {
-	const detail::SequenceConfig<> firstConfig{};
+	const sequence::detail::SequenceConfig<> firstConfig{};
 
 	SECTION("Concat two empty sequences is pointlesss but possible.")
 	{
-		[[maybe_unused]] const detail::SequenceConfig<> result = firstConfig.concat(detail::SequenceConfig<>{});
+		[[maybe_unused]] const sequence::detail::SequenceConfig<> result = firstConfig.concat(
+			sequence::detail::SequenceConfig<>{});
 	}
 
 	SECTION("Concat appends the right side.")
 	{
 		SequenceT firstSequence{};
-		const detail::SequenceConfig firstResult = firstConfig.concat(
+		const sequence::detail::SequenceConfig firstResult = firstConfig.concat(
 			expect::in_sequence(firstSequence));
 
 		REQUIRE(std::get<0>(firstResult.sequences())->tag() == firstSequence.tag());
 
 		SequenceT secondSequence{};
-		detail::SequenceConfig secondResult = firstResult.concat(
+		sequence::detail::SequenceConfig secondResult = firstResult.concat(
 			expect::in_sequence(secondSequence));
 		REQUIRE(std::get<0>(secondResult.sequences())->tag() == firstSequence.tag());
 		REQUIRE(std::get<1>(secondResult.sequences())->tag() == secondSequence.tag());
@@ -539,7 +540,7 @@ TEST_CASE(
 		SECTION("Can be arbitrarily continued.")
 		{
 			SequenceT thirdSequence{};
-			detail::SequenceConfig thirdResult = secondResult.concat(
+			sequence::detail::SequenceConfig thirdResult = secondResult.concat(
 				expect::in_sequence(thirdSequence));
 			REQUIRE(std::get<0>(thirdResult.sequences())->tag() == firstSequence.tag());
 			REQUIRE(std::get<1>(thirdResult.sequences())->tag() == secondSequence.tag());
@@ -547,7 +548,7 @@ TEST_CASE(
 		}
 	}
 }
-
+//
 //TEST_CASE(
 //	"expectation_policies::Sequence checks whether the given call::Info occurs in sequence.",
 //	"[expectation][expectation::policy][expectation::factories][sequence]"
@@ -556,7 +557,7 @@ TEST_CASE(
 //	namespace Matches = Catch::Matchers;
 //
 //	using PolicyT = expectation_policies::Sequence;
-//	STATIC_REQUIRE(times_policy<PolicyT>);
+//	STATIC_REQUIRE(control_policy<PolicyT>);
 //
 //	Sequence sequence{};
 //
@@ -639,7 +640,7 @@ TEST_CASE(
 //		}
 //	}
 //}
-//
+
 //TEST_CASE(
 //	"An expectation can be part of multiple sequences.",
 //	"[expectation][expectation::policy][expectation::factories][sequence]"

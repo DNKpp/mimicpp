@@ -135,9 +135,9 @@ namespace mimicpp
 
 		template <typename... Sequences>
 		[[nodiscard]]
-		constexpr auto operator |(detail::SequenceConfig<Sequences...>&& config) &&
+		constexpr auto operator |(sequence::detail::SequenceConfig<Sequences...>&& config) &&
 		{
-			detail::SequenceConfig newConfig = m_SequenceConfig.concat(std::move(config));
+			sequence::detail::SequenceConfig newConfig = m_SequenceConfig.concat(std::move(config));
 
 			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
 				true,
@@ -252,7 +252,7 @@ namespace mimicpp::detail
 	{
 		using BaseBuilderT = BasicExpectationBuilder<
 			false,
-			SequenceConfig<>,
+			sequence::detail::SequenceConfig<>,
 			Signature,
 			expectation_policies::InitFinalize
 		>;
@@ -261,7 +261,7 @@ namespace mimicpp::detail
 			BaseBuilderT{
 				std::move(expectations),
 				TimesConfig{},
-				SequenceConfig<>{},
+				sequence::detail::SequenceConfig<>{},
 				expectation_policies::InitFinalize{},
 				std::tuple{}
 			},
