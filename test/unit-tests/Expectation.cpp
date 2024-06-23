@@ -6,9 +6,11 @@
 #include "TestReporter.hpp"
 
 #include "mimic++/Expectation.hpp"
+#include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Printer.hpp"
 
 #include "TestTypes.hpp"
+#include "TestReporter.hpp"
 
 #include <functional>
 #include <optional>
@@ -148,7 +150,10 @@ TEST_CASE(
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence)
 			.RETURN(commonFullMatchReport);
-		// expectations[3] is never queried
+		REQUIRE_CALL(*expectations[0], matches(_))
+			.LR_WITH(&_1 == &call)
+			.IN_SEQUENCE(sequence)
+			.RETURN(commonNoMatchReport);
 		REQUIRE_CALL(*expectations[1], consume(_))
 			.LR_WITH(&_1 == &call)
 			.IN_SEQUENCE(sequence);
@@ -374,14 +379,14 @@ TEST_CASE(
 	"[expectation]"
 )
 {
-	using TimesT = ControlPolicyFake;
+	using ControlPolicyT = ControlPolicyFake;
 	using FinalizerT = FinalizerFake<void()>;
 
 	constexpr auto loc = std::source_location::current();
 
-	mimicpp::BasicExpectation<void(), TimesT, FinalizerT> expectation{
+	mimicpp::BasicExpectation<void(), ControlPolicyT, FinalizerT> expectation{
 		loc,
-		TimesT{},
+		ControlPolicyT{},
 		FinalizerT{}
 	};
 
@@ -936,4 +941,61 @@ TEST_CASE(
 	REQUIRE_CALL(*innerExpectation, is_satisfied())
 		.RETURN(true);
 	expectation.reset();
+}
+
+TEST_CASE(
+	"ExpectationCollection disambigues multiple possible matches in a deterministic manner.",
+	"[expectation]"
+)
+{
+	namespace expect = mimicpp::expect;
+	namespace finally = mimicpp::finally;
+	using SignatureT = int();
+	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
+	using CollectionT = mimicpp::ExpectationCollection<SignatureT>;
+	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
+
+	auto collection = std::make_shared<CollectionT>();
+
+	ScopedReporter reporter{};
+
+	const CallInfoT call{
+		.args = {},
+		.fromCategory = mimicpp::ValueCategory::any,
+		.fromConstness = mimicpp::Constness::any
+	};
+
+	SECTION("GreedySequence prefers younger expectations.")
+	{
+		mimicpp::GreedySequence sequence{};
+
+		ScopedExpectationT exp1 = mimicpp::detail::make_expectation_builder(collection)
+								| expect::times(0, 1)
+								| expect::in_sequence(sequence)
+								| finally::returns(42);
+
+		ScopedExpectationT exp2 = mimicpp::detail::make_expectation_builder(collection)
+								| expect::times(0, 1)
+								| expect::in_sequence(sequence)
+								| finally::returns(1337);
+
+		REQUIRE(1337 == collection->handle_call(call));
+	}
+
+	SECTION("LazySequence prefers older expectations.")
+	{
+		mimicpp::LazySequence sequence{};
+
+		ScopedExpectationT exp1 = mimicpp::detail::make_expectation_builder(collection)
+								| expect::times(0, 1)
+								| expect::in_sequence(sequence)
+								| finally::returns(42);
+
+		ScopedExpectationT exp2 = mimicpp::detail::make_expectation_builder(collection)
+								| expect::times(0, 1)
+								| expect::in_sequence(sequence)
+								| finally::returns(1337);
+
+		REQUIRE(42 == collection->handle_call(call));
+	}
 }

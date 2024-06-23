@@ -45,6 +45,25 @@ namespace mimicpp::detail
 
 		return std::nullopt;
 	}
+
+	template <typename Signature>
+	constexpr auto pick_best_match(std::vector<std::tuple<Expectation<Signature>&, MatchReport>>& matches)
+	{
+		auto best = std::ranges::begin(matches);
+		for (auto iter = best + 1;
+			iter != std::ranges::end(matches);
+			++iter)
+		{
+			if (!sequence::detail::has_better_rating(
+				*std::get<MatchReport>(*best).timesReport.ratings,
+				*std::get<MatchReport>(*iter).timesReport.ratings))
+			{
+				best = iter;
+			}
+		}
+
+		return best;
+	}
 }
 
 namespace mimicpp
@@ -129,6 +148,7 @@ namespace mimicpp
 		[[nodiscard]]
 		ReturnT handle_call(const CallInfoT& call)
 		{
+			std::vector<std::tuple<ExpectationT&, MatchReport>> matches{};
 			std::vector<MatchReport> noMatches{};
 			std::vector<MatchReport> inapplicableMatches{};
 
@@ -147,18 +167,24 @@ namespace mimicpp
 						inapplicableMatches.emplace_back(*std::move(matchReport));
 						break;
 					case full:
-						detail::report_full_match(
-							make_call_report(call),
-							*std::move(matchReport));
-						exp->consume(call);
-						return exp->finalize_call(call);
-
+						matches.emplace_back(*exp, *std::move(matchReport));
+						break;
 						// GCOVR_EXCL_START
 					default:
 						unreachable();
 						// GCOVR_EXCL_STOP
 					}
 				}
+			}
+
+			if (!std::ranges::empty(matches))
+			{
+				auto&& [exp, report] = *detail::pick_best_match(matches);
+				detail::report_full_match(
+					make_call_report(call),
+					std::move(report));
+				exp.consume(call);
+				return exp.finalize_call(call);
 			}
 
 			if (!std::ranges::empty(inapplicableMatches))
