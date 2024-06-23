@@ -461,7 +461,7 @@ TEST_CASE(
 	GreedySequence secondSequence{};
 	SequenceT thirdSequence{};
 
-	SECTION("Throwsn, when duplicates are given.")
+	SECTION("Throws, when duplicates are given.")
 	{
 		REQUIRE_THROWS_AS(
 			expect::in_sequences(
