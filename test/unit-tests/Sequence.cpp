@@ -29,7 +29,7 @@ namespace
 		}
 	};
 
-	using sequence::detail::SequenceId;
+	using sequence::Id;
 }
 
 TEST_CASE(
@@ -37,7 +37,7 @@ TEST_CASE(
 	"[sequence]"
 )
 {
-	using SequenceT = sequence::detail::BasicSequence<SequenceId, FakeStrategy{}>;
+	using SequenceT = sequence::detail::BasicSequence<Id, FakeStrategy{}>;
 
 	STATIC_REQUIRE(std::is_default_constructible_v<SequenceT>);
 
@@ -96,7 +96,7 @@ TEST_CASE(
 {
 	namespace Matches = Catch::Matchers;
 
-	using SequenceT = sequence::detail::BasicSequence<SequenceId, FakeStrategy{}>;
+	using SequenceT = sequence::detail::BasicSequence<Id, FakeStrategy{}>;
 
 	ScopedReporter reporter{};
 	std::optional<SequenceT> sequence{std::in_place};
@@ -108,13 +108,13 @@ TEST_CASE(
 
 	static constexpr std::array consumeStateActions = std::to_array(
 		{
-			+[](SequenceT&, const SequenceId) { assert(true); },
-			+[](SequenceT& seq, const SequenceId v) { seq.consume(v); }
+			+[](SequenceT&, const Id) { assert(true); },
+			+[](SequenceT& seq, const Id v) { seq.consume(v); }
 		});
 
 	SECTION("When sequence contains one id, that id must be satisfied.")
 	{
-		const SequenceId id = sequence->add();
+		const Id id = sequence->add();
 		REQUIRE(sequence->is_consumable(id));
 
 		std::invoke(
@@ -159,9 +159,9 @@ TEST_CASE(
 	{
 		static constexpr std::array alterStateActions = std::to_array(
 			{
-				+[](SequenceT&, const SequenceId) { assert(true); },
-				+[](SequenceT& seq, const SequenceId v) { seq.set_satisfied(v); },
-				+[](SequenceT& seq, const SequenceId v) { seq.set_saturated(v); }
+				+[](SequenceT&, const Id) { assert(true); },
+				+[](SequenceT& seq, const Id v) { seq.set_satisfied(v); },
+				+[](SequenceT& seq, const Id v) { seq.set_saturated(v); }
 			});
 
 		const std::vector ids{
@@ -285,7 +285,7 @@ TEST_CASE(
 	"sequence"
 )
 {
-	const sequence::detail::BasicSequence<SequenceId, FakeStrategy{}> sequence{};
+	const sequence::detail::BasicSequence<Id, FakeStrategy{}> sequence{};
 	const sequence::Tag tag = sequence.tag();
 
 	REQUIRE(to_underlying(tag) == reinterpret_cast<std::ptrdiff_t>(std::addressof(sequence)));
@@ -297,12 +297,12 @@ TEST_CASE(
 )
 {
 	const auto [expected, id, cursor] = GENERATE(
-		(table<int, SequenceId, int>({
-			{std::numeric_limits<int>::max(), SequenceId{0}, 0},
-			{std::numeric_limits<int>::max(), SequenceId{1}, 1},
-			{std::numeric_limits<int>::max() - 1, SequenceId{1}, 0},
-			{std::numeric_limits<int>::max() - 2, SequenceId{2}, 0},
-			{std::numeric_limits<int>::max() - 1, SequenceId{2}, 1}
+		(table<int, Id, int>({
+			{std::numeric_limits<int>::max(), Id{0}, 0},
+			{std::numeric_limits<int>::max(), Id{1}, 1},
+			{std::numeric_limits<int>::max() - 1, Id{1}, 0},
+			{std::numeric_limits<int>::max() - 2, Id{2}, 0},
+			{std::numeric_limits<int>::max() - 1, Id{2}, 1}
 		})));
 
 	REQUIRE(expected == std::invoke(sequence::detail::LazyStrategy{}, id, cursor));
@@ -314,12 +314,12 @@ TEST_CASE(
 )
 {
 	const auto [expected, id, cursor] = GENERATE(
-		(table<int, SequenceId, int>({
-			{0, SequenceId{0}, 0},
-			{0, SequenceId{1}, 1},
-			{1, SequenceId{1}, 0},
-			{2, SequenceId{2}, 0},
-			{1, SequenceId{2}, 1}
+		(table<int, Id, int>({
+			{0, Id{0}, 0},
+			{0, Id{1}, 1},
+			{1, Id{1}, 0},
+			{2, Id{2}, 0},
+			{1, Id{2}, 1}
 		})));
 
 	REQUIRE(expected == std::invoke(sequence::detail::GreedyStrategy{}, id, cursor));

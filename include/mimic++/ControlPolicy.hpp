@@ -155,7 +155,7 @@ namespace mimicpp
 		int m_Max;
 		int m_Count{};
 		std::tuple<
-			std::tuple<std::shared_ptr<Sequences>, sequence::detail::SequenceId>...> m_Sequences{};
+			std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> m_Sequences{};
 
 		constexpr void update_sequence_states() noexcept
 		{

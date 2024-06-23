@@ -75,6 +75,11 @@ namespace mimicpp
 		{
 		};
 
+		enum class Id
+			: int
+		{
+		};
+
 		namespace detail
 		{
 			template <typename Id, auto priorityStrategy>
@@ -358,11 +363,6 @@ namespace mimicpp
 				}
 			};
 
-			enum class SequenceId
-				: int
-			{
-			};
-
 			template <typename>
 			struct is_sequence_interface
 				: public std::false_type
@@ -380,14 +380,14 @@ namespace mimicpp
 	 */
 	class LazySequence
 		: public sequence::detail::BasicSequenceInterface<
-			sequence::detail::SequenceId,
+			sequence::Id,
 			sequence::detail::LazyStrategy{}>
 	{
 	};
 
 	class GreedySequence
 		: public sequence::detail::BasicSequenceInterface<
-			sequence::detail::SequenceId,
+			sequence::Id,
 			sequence::detail::GreedyStrategy{}>
 	{
 	};
@@ -504,7 +504,7 @@ namespace mimicpp::detail
 //		struct entry
 //		{
 //			std::shared_ptr<mimicpp::detail::Sequence> sequence;
-//			SequenceId id;
+//			Id id;
 //		};
 //		std::vector<entry> m_SequenceInfos;
 //	};
