@@ -286,7 +286,7 @@ TEST_CASE(
 )
 {
 	const sequence::detail::BasicSequence<SequenceId, FakeStrategy{}> sequence{};
-	const sequence::SequenceTag tag = sequence.tag();
+	const sequence::Tag tag = sequence.tag();
 
 	REQUIRE(to_underlying(tag) == reinterpret_cast<std::ptrdiff_t>(std::addressof(sequence)));
 }
@@ -333,9 +333,9 @@ TEST_CASE(
 	using detail::sequence_rating;
 	using detail::has_better_rating;
 	constexpr std::array sequence_tags = std::to_array<>({
-		sequence::SequenceTag{1},
-		sequence::SequenceTag{2},
-		sequence::SequenceTag{3},
+		sequence::Tag{1},
+		sequence::Tag{2},
+		sequence::Tag{3},
 	});
 
 	SECTION("Lhs with zero ratings is always preferred.")

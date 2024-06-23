@@ -70,7 +70,7 @@ namespace mimicpp
 
 	namespace sequence
 	{
-		enum SequenceTag
+		enum Tag
 			: std::ptrdiff_t
 		{
 		};
@@ -200,9 +200,9 @@ namespace mimicpp
 				}
 
 				[[nodiscard]]
-				constexpr SequenceTag tag() const noexcept
+				constexpr Tag tag() const noexcept
 				{
-					return SequenceTag{
+					return Tag{
 						reinterpret_cast<std::ptrdiff_t>(this)
 					};
 				}
@@ -273,7 +273,7 @@ namespace mimicpp
 				BasicSequenceInterface& operator =(BasicSequenceInterface&&) = delete;
 
 				[[nodiscard]]
-				constexpr SequenceTag tag() const noexcept
+				constexpr Tag tag() const noexcept
 				{
 					return m_Sequence->tag();
 				}
@@ -400,7 +400,7 @@ namespace mimicpp::detail
 	struct sequence_rating
 	{
 		int priority{};
-		sequence::SequenceTag tag{};
+		sequence::Tag tag{};
 	};
 
 	[[nodiscard]]
