@@ -18,6 +18,7 @@
 
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Matcher.hpp"
+#include "mimic++/ControlPolicy.hpp"
 #include "mimic++/ExpectationPolicies.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 
