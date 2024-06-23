@@ -5,6 +5,7 @@ include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 add_executable(
 	mimicpp-tests
 	"Call.cpp"
+	"ControlPolicy.cpp"
 	"Expectation.cpp"
 	"ExpectationBuilder.cpp"
 	"ExpectationPolicies.cpp"
