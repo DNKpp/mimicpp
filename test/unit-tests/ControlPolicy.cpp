@@ -542,6 +542,134 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"ControlPolicy supports arbitrary times limits combined with arbitrary sequences.",
+	"[expectation][expectation::control][sequence]"
+)
+{
+	SECTION("LazySequence supports skipable expectations.")
+	{
+		LazySequence sequence{};
+		ControlPolicy policy1{
+			expect::at_most(1),
+			expect::in_sequence(sequence)
+		};
+		CHECK(policy1.is_satisfied());
+		CHECK(policy1.is_applicable());
+
+		ControlPolicy policy2{
+			expect::at_most(1),
+			expect::in_sequence(sequence)
+		};
+		CHECK(policy2.is_satisfied());
+		CHECK(policy2.is_applicable());
+
+		REQUIRE(
+			detail::has_better_rating(
+				policy1.priorities(),
+				policy2.priorities()));
+
+		SECTION("Succeeds, even when nothing got consumed.")
+		{
+		}
+
+		SECTION("Succeeds, when only first one got consumed.")
+		{
+			REQUIRE_NOTHROW(policy1.consume());
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(policy2.is_applicable());
+		}
+
+		SECTION("Succeeds, when only second one got consumed.")
+		{
+			REQUIRE_NOTHROW(policy2.consume());
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+		}
+
+		SECTION("Succeeds, when both got consumed.")
+		{
+			REQUIRE_NOTHROW(policy1.consume());
+			REQUIRE_NOTHROW(policy2.consume());
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+		}
+	}
+
+	SECTION("GreedySequence supports skipable expectations.")
+	{
+		GreedySequence sequence{};
+		ControlPolicy policy1{
+			expect::at_most(1),
+			expect::in_sequence(sequence)
+		};
+		CHECK(policy1.is_satisfied());
+		CHECK(policy1.is_applicable());
+
+		ControlPolicy policy2{
+			expect::at_most(1),
+			expect::in_sequence(sequence)
+		};
+		CHECK(policy2.is_satisfied());
+		CHECK(policy2.is_applicable());
+
+		REQUIRE(
+			detail::has_better_rating(
+				policy2.priorities(),
+				policy1.priorities()));
+
+		SECTION("Succeeds, even when nothing got consumed.")
+		{
+		}
+
+		SECTION("Succeeds, when only first one got consumed.")
+		{
+			REQUIRE_NOTHROW(policy1.consume());
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(policy2.is_applicable());
+		}
+
+		SECTION("Succeeds, when only second one got consumed.")
+		{
+			REQUIRE_NOTHROW(policy2.consume());
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+		}
+
+		SECTION("Succeeds, when both got consumed.")
+		{
+			REQUIRE_NOTHROW(policy1.consume());
+			REQUIRE_NOTHROW(policy2.consume());
+
+			REQUIRE(policy1.is_satisfied());
+			REQUIRE(!policy1.is_applicable());
+
+			REQUIRE(policy2.is_satisfied());
+			REQUIRE(!policy2.is_applicable());
+		}
+	}
+}
+
+TEST_CASE(
 	"expect::times and similar factories with limits create TimesConfig.",
 	"[expectation][expectation::factories]"
 )
