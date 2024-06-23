@@ -362,12 +362,6 @@ namespace mimicpp
 					};
 				}
 			};
-
-			template <typename>
-			struct is_sequence_interface
-				: public std::false_type
-			{
-			};
 		}
 	}
 
@@ -429,87 +423,6 @@ namespace mimicpp::detail
 	}
 }
 
-//namespace mimicpp::expectation_policies
-//{
-//	class Sequence
-//	{
-//	public:
-//		~Sequence() = default;
-//
-//		// ReSharper disable once CppParameterMayBeConstPtrOrRef
-//		explicit Sequence(
-//			const std::span<const std::reference_wrapper<mimicpp::Sequence>> sequences,
-//			const std::size_t times
-//		)
-//		{
-//			m_SequenceInfos.reserve(sequences.size());
-//			// ReSharper disable once CppRangeBasedForIncompatibleReference
-//			for (mimicpp::Sequence& sequence : sequences)
-//			{
-//				m_SequenceInfos.emplace_back(
-//					sequence.m_Sequence,
-//					sequence.m_Sequence->add(times));
-//			}
-//		}
-//
-//		Sequence(const Sequence&) = delete;
-//		Sequence& operator =(const Sequence&) = delete;
-//		Sequence(Sequence&&) = default;
-//		Sequence& operator =(Sequence&&) = default;
-//
-//		[[nodiscard]]
-//		constexpr bool is_satisfied() const noexcept
-//		{
-//			return std::ranges::all_of(
-//				m_SequenceInfos,
-//				[](const entry& info){ return info.sequence->is_saturated(info.id); });
-//		}
-//
-//		[[nodiscard]]
-//		constexpr bool is_applicable() const noexcept
-//		{
-//			return std::ranges::all_of(
-//				m_SequenceInfos,
-//				[](const entry& info){ return info.sequence->is_consumable(info.id); });
-//		}
-//
-//		[[nodiscard]]
-//		StringT describe_state() const
-//		{
-//			if (is_applicable())
-//			{
-//				return "applicable: Sequence element expects further matches.";
-//			}
-//
-//			if (is_satisfied())
-//			{
-//				return "inapplicable: Sequence element is already saturated.";
-//			}
-//
-//			return "inapplicable: Sequence element is not the current element.";
-//		}
-//
-//		// ReSharper disable once CppMemberFunctionMayBeConst
-//		constexpr void consume() noexcept
-//		{
-//			assert(is_applicable());
-//
-//			for (auto& [sequence, id] : m_SequenceInfos)
-//			{
-//				sequence->consume(id);
-//			}
-//		}
-//
-//	private:
-//		struct entry
-//		{
-//			std::shared_ptr<mimicpp::detail::Sequence> sequence;
-//			Id id;
-//		};
-//		std::vector<entry> m_SequenceInfos;
-//	};
-//}
-//
 namespace mimicpp::expect
 {
 	/**
