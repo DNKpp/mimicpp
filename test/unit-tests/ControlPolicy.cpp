@@ -564,7 +564,7 @@ TEST_CASE(
 		CHECK(policy2.is_applicable());
 
 		REQUIRE(
-			detail::has_better_rating(
+			sequence::detail::has_better_rating(
 				policy1.priorities(),
 				policy2.priorities()));
 
@@ -625,7 +625,7 @@ TEST_CASE(
 		CHECK(policy2.is_applicable());
 
 		REQUIRE(
-			detail::has_better_rating(
+			sequence::detail::has_better_rating(
 				policy2.priorities(),
 				policy1.priorities()));
 

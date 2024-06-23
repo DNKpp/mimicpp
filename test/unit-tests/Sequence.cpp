@@ -330,8 +330,8 @@ TEST_CASE(
 	"[sequence]"
 )
 {
-	using detail::sequence_rating;
-	using detail::has_better_rating;
+	using sequence::detail::sequence_rating;
+	using sequence::detail::has_better_rating;
 	constexpr std::array sequence_tags = std::to_array<>(
 		{
 			sequence::Tag{1},

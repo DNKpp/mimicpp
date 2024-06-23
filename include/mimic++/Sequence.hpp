@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Printer.hpp"
 #include "mimic++/Reporter.hpp"
 #include "mimic++/Utility.hpp"
@@ -70,16 +71,6 @@ namespace mimicpp
 
 	namespace sequence
 	{
-		enum Tag
-			: std::ptrdiff_t
-		{
-		};
-
-		enum class Id
-			: int
-		{
-		};
-
 		namespace detail
 		{
 			template <typename Id, auto priorityStrategy>
@@ -389,14 +380,8 @@ namespace mimicpp
 	using SequenceT = LazySequence;
 }
 
-namespace mimicpp::detail
+namespace mimicpp::sequence::detail
 {
-	struct sequence_rating
-	{
-		int priority{};
-		sequence::Tag tag{};
-	};
-
 	[[nodiscard]]
 	constexpr bool has_better_rating(
 		const std::span<const sequence_rating> lhs,
