@@ -320,6 +320,7 @@ namespace mimicpp
 		std::optional<std::source_location> sourceLocation{};
 		Finalize finalizeReport{};
 		Times timesReport{};
+		control_state_t controlReport{};
 		std::vector<Expectation> expectationReports{};
 
 		[[nodiscard]]
@@ -327,6 +328,7 @@ namespace mimicpp
 		{
 			return lhs.finalizeReport == rhs.finalizeReport
 					&& lhs.timesReport == rhs.timesReport
+					&& lhs.controlReport == rhs.controlReport
 					&& lhs.expectationReports == rhs.expectationReports
 					&& lhs.sourceLocation.has_value() == rhs.sourceLocation.has_value()
 					&& (!lhs.sourceLocation.has_value()

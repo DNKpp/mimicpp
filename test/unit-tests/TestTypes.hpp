@@ -7,6 +7,7 @@
 
 #include "mimic++/Call.hpp"
 #include "mimic++/Printer.hpp"
+#include "mimic++/Reports.hpp"
 
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/trompeloeil.hpp"
@@ -201,6 +202,14 @@ public:
 	{
 		return prioritiesState;
 	}
+
+	mimicpp::control_state_t stateData{};
+
+	[[nodiscard]]
+	constexpr mimicpp::control_state_t state() const
+	{
+		return stateData;
+	}
 };
 
 class ControlPolicyMock
@@ -211,6 +220,7 @@ public:
 	MAKE_CONST_MOCK0(describe_state, std::optional<mimicpp::StringT>());
 	MAKE_MOCK0(consume, void());
 	MAKE_CONST_MOCK0(priorities, std::vector<mimicpp::sequence::rating>());
+	MAKE_CONST_MOCK0(state, mimicpp::control_state_t());
 };
 
 template <typename Policy, typename Projection>
@@ -252,6 +262,13 @@ public:
 	{
 		return std::invoke(projection, policy)
 			.priorities();
+	}
+
+	[[nodiscard]]
+	constexpr mimicpp::control_state_t state() const
+	{
+		return std::invoke(projection, policy)
+			.state();
 	}
 };
 

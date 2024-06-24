@@ -235,6 +235,7 @@ namespace mimicpp
 								{ std::as_const(policy).is_applicable() } noexcept -> std::convertible_to<bool>;
 								{ std::as_const(policy).describe_state() } -> std::convertible_to<std::optional<StringT>>;
 								{ std::as_const(policy).priorities() } -> std::convertible_to<std::vector<sequence::rating>>;
+								{ std::as_const(policy).state() } -> std::convertible_to<control_state_t>;
 								policy.consume();
 							};
 
@@ -307,20 +308,10 @@ namespace mimicpp
 		[[nodiscard]]
 		MatchReport matches(const CallInfoT& call) const override
 		{
-			MatchReport::Times controlReport{
-				.isApplicable = m_ControlPolicy.is_applicable(),
-				.description = m_ControlPolicy.describe_state()
-			};
-
-			if (controlReport.isApplicable)
-			{
-				controlReport.ratings = m_ControlPolicy.priorities();
-			}
-
 			return MatchReport{
 				.sourceLocation = m_SourceLocation,
 				.finalizeReport = {std::nullopt},
-				.timesReport = std::move(controlReport),
+				.controlReport = m_ControlPolicy.state(),
 				.expectationReports = std::apply(
 					[&](const auto&... policies)
 					{
