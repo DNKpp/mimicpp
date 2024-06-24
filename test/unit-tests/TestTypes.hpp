@@ -190,7 +190,7 @@ public:
 	mimicpp::control_state_t stateData{};
 
 	[[nodiscard]]
-	constexpr mimicpp::control_state_t state() const
+	mimicpp::control_state_t state() const
 	{
 		return stateData;
 	}
@@ -233,7 +233,7 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr mimicpp::control_state_t state() const
+	mimicpp::control_state_t state() const
 	{
 		return std::invoke(projection, policy)
 			.state();
