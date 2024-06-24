@@ -49,14 +49,20 @@ namespace mimicpp::detail
 	template <typename Signature>
 	constexpr auto pick_best_match(std::vector<std::tuple<Expectation<Signature>&, MatchReport>>& matches)
 	{
+		constexpr auto ratings = [](const auto& el) noexcept -> const auto& {
+			return std::get<state_applicable>(
+					std::get<MatchReport>(el).controlReport)
+				.sequenceRatings;
+		};
+
 		auto best = std::ranges::begin(matches);
 		for (auto iter = best + 1;
 			iter != std::ranges::end(matches);
 			++iter)
 		{
 			if (!sequence::detail::has_better_rating(
-				*std::get<MatchReport>(*best).timesReport.ratings,
-				*std::get<MatchReport>(*iter).timesReport.ratings))
+				ratings(*best),
+				ratings(*iter)))
 			{
 				best = iter;
 			}
@@ -232,9 +238,7 @@ namespace mimicpp
 							&& requires(T& policy)
 							{
 								{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-								{ std::as_const(policy).is_applicable() } noexcept -> std::convertible_to<bool>;
 								{ std::as_const(policy).describe_state() } -> std::convertible_to<std::optional<StringT>>;
-								{ std::as_const(policy).priorities() } -> std::convertible_to<std::vector<sequence::rating>>;
 								{ std::as_const(policy).state() } -> std::convertible_to<control_state_t>;
 								policy.consume();
 							};

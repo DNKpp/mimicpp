@@ -912,11 +912,6 @@ TEST_CASE(
 				}
 				}));
 
-		REQUIRE(
-			sequence::detail::has_better_rating(
-				policy1.priorities(),
-				policy2.priorities()));
-
 		SECTION("Succeeds, even when nothing got consumed.")
 		{
 		}
@@ -1044,11 +1039,6 @@ TEST_CASE(
 				sequence::rating{1, sequence.tag()}
 				}
 				}));
-
-		REQUIRE(
-			sequence::detail::has_better_rating(
-				policy2.priorities(),
-				policy1.priorities()));
 
 		SECTION("Succeeds, even when nothing got consumed.")
 		{

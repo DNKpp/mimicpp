@@ -85,8 +85,10 @@ TEST_CASE(
 namespace
 {
 	inline const mimicpp::MatchReport commonNoMatchReport{
-		.timesReport = {
-			.isApplicable = true
+		.controlReport = mimicpp::state_applicable{
+			.min = 0,
+			.max = 1337,
+			.count = 0
 		},
 		.expectationReports = {
 			{
@@ -96,15 +98,20 @@ namespace
 	};
 
 	inline const mimicpp::MatchReport commonFullMatchReport{
-		.timesReport = {
-			.isApplicable = true
+		.controlReport = mimicpp::state_applicable{
+			.min = 0,
+			.max = 1337,
+			.count = 0
 		},
 		.expectationReports = {}
 	};
 
 	inline const mimicpp::MatchReport commonInapplicableMatchReport{
-		.timesReport = {
-			.isApplicable = false
+		.controlReport = mimicpp::state_inapplicable{
+			.min = 0,
+			.max = 1337,
+			.count = 0,
+			.inapplicableSequences = {mimicpp::sequence::Tag{42}}
 		},
 		.expectationReports = {}
 	};
@@ -438,25 +445,32 @@ TEST_CASE(
 
 		SECTION("When times is applicable, call is matched.")
 		{
-			REQUIRE_CALL(times, is_applicable())
-				.RETURN(true);
-			REQUIRE_CALL(times, priorities())
-				.RETURN(PrioritiesResultT{});
-			REQUIRE_CALL(times, describe_state())
-				.RETURN("times state applicable");
+			const mimicpp::control_state_t controlState{
+				mimicpp::state_applicable{0, 1, 0}
+			};
+			REQUIRE_CALL(times, state())
+				.RETURN(controlState);
+			// Todo:
+			//REQUIRE_CALL(times, describe_state())
+			//	.RETURN("times state applicable");
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-			REQUIRE(matchReport.timesReport == TimesReportT{true, PrioritiesResultT{}, "times state applicable"});
+			REQUIRE(matchReport.controlReport == controlState);
 			REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
 		}
 
 		SECTION("When times is not applicable => inapplicable.")
 		{
-			REQUIRE_CALL(times, is_applicable())
-				.RETURN(false);
-			REQUIRE_CALL(times, describe_state())
-				.RETURN("times state inapplicable");
+			const auto controlState = GENERATE(
+				as<mimicpp::control_state_t>{},
+				(mimicpp::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
+				(mimicpp::state_saturated{0, 1, 1}));
+			REQUIRE_CALL(times, state())
+				.LR_RETURN(controlState);
+			// Todo:
+			//REQUIRE_CALL(times, describe_state())
+			//	.RETURN("times state inapplicable");
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-			REQUIRE(matchReport.timesReport == TimesReportT{false, std::nullopt, "times state inapplicable"});
+			REQUIRE(matchReport.controlReport == controlState);
 			REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(matchReport));
 		}
 
@@ -501,14 +515,16 @@ TEST_CASE(
 				.RETURN(false);
 			REQUIRE_CALL(policy, describe())
 				.RETURN(mimicpp::StringT{});
-			const bool isApplicable = GENERATE(false, true);
-			REQUIRE_CALL(times, is_applicable())
-				.RETURN(isApplicable);
-			REQUIRE_CALL(times, describe_state())
-				.RETURN(std::nullopt);
-			// when isApplicable is true
-			ALLOW_CALL(times, priorities())
-				.RETURN(PrioritiesResultT{});
+			const auto controlState = GENERATE(
+					as<mimicpp::control_state_t>{},
+					(mimicpp::state_applicable{0, 1, 0}),
+					(mimicpp::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
+					(mimicpp::state_saturated{0, 1, 1}));
+			REQUIRE_CALL(times, state())
+				.RETURN(controlState);
+			// Todo:
+			/*REQUIRE_CALL(times, describe_state())
+				.RETURN(std::nullopt);*/
 			REQUIRE(mimicpp::MatchResult::none == evaluate_match_report(std::as_const(expectation).matches(call)));
 		}
 
@@ -516,31 +532,35 @@ TEST_CASE(
 		{
 			SECTION("And when times is applicable => ok")
 			{
-				REQUIRE_CALL(times, is_applicable())
-					.RETURN(true);
+				REQUIRE_CALL(times, state())
+				.RETURN(mimicpp::state_applicable{0, 1, 0});
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
 					.RETURN(true);
 				REQUIRE_CALL(policy, describe())
 					.RETURN(mimicpp::StringT{});
-				REQUIRE_CALL(times, describe_state())
-					.RETURN(std::nullopt);
-				REQUIRE_CALL(times, priorities())
-					.RETURN(PrioritiesResultT{});
+				// Todo:
+				/*REQUIRE_CALL(times, describe_state())
+					.RETURN(std::nullopt);*/
 				REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(std::as_const(expectation).matches(call)));
 			}
 
 			SECTION("And when times not applicable => inapplicable")
 			{
-				REQUIRE_CALL(times, is_applicable())
-					.RETURN(false);
+				const auto controlState = GENERATE(
+					as<mimicpp::control_state_t>{},
+					(mimicpp::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
+					(mimicpp::state_saturated{0, 1, 1}));
+				REQUIRE_CALL(times, state())
+					.LR_RETURN(controlState);
 				REQUIRE_CALL(policy, matches(_))
 					.LR_WITH(&_1 == &call)
 					.RETURN(true);
 				REQUIRE_CALL(policy, describe())
 					.RETURN(mimicpp::StringT{});
-				REQUIRE_CALL(times, describe_state())
-					.RETURN(std::nullopt);
+				// Todo:
+				//REQUIRE_CALL(times, describe_state())
+				//	.RETURN(std::nullopt);
 				REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(std::as_const(expectation).matches(call)));
 			}
 		}
@@ -580,13 +600,15 @@ TEMPLATE_TEST_CASE(
 	{
 		mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
 			std::source_location::current(),
-			ControlPolicyFake{.isSatisfied = true},
+			ControlPolicyFake{
+				.isSatisfied = true,
+				.stateData = commonFullMatchReport.controlReport
+			},
 			FinalizerT{}
 		};
 
 		REQUIRE(std::as_const(expectation).is_satisfied());
 		const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-		REQUIRE(matchReport.timesReport == TimesReportT{true, PrioritiesResultT{}});
 		REQUIRE_THAT(
 			matchReport.expectationReports,
 			Catch::Matchers::IsEmpty());
@@ -599,7 +621,10 @@ TEMPLATE_TEST_CASE(
 		PolicyMockT policy{};
 		mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
 			std::source_location::current(),
-			ControlPolicyFake{.isSatisfied = true},
+			ControlPolicyFake{
+				.isSatisfied = true,
+				.stateData = commonFullMatchReport.controlReport
+			},
 			FinalizerT{},
 			PolicyRefT{std::ref(policy)}
 		};
@@ -617,7 +642,6 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy, describe())
 				.RETURN("policy description");
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-			REQUIRE(matchReport.timesReport == TimesReportT{true, PrioritiesResultT{}});
 			REQUIRE_THAT(
 				matchReport.expectationReports,
 				Catch::Matchers::RangeEquals(std::vector<ExpectationReportT>{{true, "policy description"}}));
@@ -632,7 +656,6 @@ TEMPLATE_TEST_CASE(
 			REQUIRE_CALL(policy, describe())
 				.RETURN("policy description");
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-			REQUIRE(matchReport.timesReport == TimesReportT{true, PrioritiesResultT{}});
 			REQUIRE_THAT(
 				matchReport.expectationReports,
 				Catch::Matchers::RangeEquals(std::vector<ExpectationReportT>{{false, "policy description"}}));
@@ -650,7 +673,10 @@ TEMPLATE_TEST_CASE(
 		PolicyMockT policy2{};
 		mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
 			std::source_location::current(),
-			ControlPolicyFake{.isSatisfied = true},
+			ControlPolicyFake{
+				.isSatisfied = true,
+				.stateData = commonFullMatchReport.controlReport
+			},
 			FinalizerT{},
 			PolicyRefT{std::ref(policy1)},
 			PolicyRefT{std::ref(policy2)}
@@ -691,7 +717,6 @@ TEMPLATE_TEST_CASE(
 				.RETURN("policy2 description");
 
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-			REQUIRE(matchReport.timesReport == TimesReportT{true, PrioritiesResultT{}});
 			REQUIRE_THAT(
 				matchReport.expectationReports,
 				Catch::Matchers::UnorderedRangeEquals(
@@ -723,7 +748,6 @@ TEMPLATE_TEST_CASE(
 				.RETURN("policy2 description");
 
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
-			REQUIRE(matchReport.timesReport == TimesReportT{true, PrioritiesResultT{}});
 			REQUIRE_THAT(
 				matchReport.expectationReports,
 				Catch::Matchers::UnorderedRangeEquals(

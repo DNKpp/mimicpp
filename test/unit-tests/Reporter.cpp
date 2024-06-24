@@ -148,7 +148,10 @@ TEST_CASE(
 			reporter.report_no_matches(
 				callReport,
 				{
-				MatchReport{.timesReport = {true}, .expectationReports = {{false}}}
+				(MatchReport{
+					.controlReport = mimicpp::state_applicable{1, 1, 0},
+					.expectationReports = {{false}}
+					})
 				}),
 			UnmatchedCallT);
 	}
@@ -158,7 +161,7 @@ TEST_CASE(
 		REQUIRE_THROWS_AS(
 			reporter.report_inapplicable_matches(
 				callReport,
-				{MatchReport{.timesReport = {false}}}),
+				{MatchReport{.controlReport = mimicpp::state_inapplicable{1, 1, 1}}}),
 			UnmatchedCallT);
 	}
 
@@ -167,7 +170,7 @@ TEST_CASE(
 		REQUIRE_NOTHROW(
 			reporter.report_full_match(
 				callReport,
-				MatchReport{.timesReport = {true}}));
+				MatchReport{.controlReport = mimicpp::state_applicable{1, 1, 0}}));
 	}
 
 	SECTION("When unfulfilled expectation is reported.")

@@ -276,33 +276,6 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr std::vector<sequence::rating> priorities() const noexcept
-		{
-			assert(is_applicable());
-
-			return std::apply(
-				[](const auto&... entries) noexcept
-				{
-					constexpr auto makePriority = [](const auto& entry) noexcept
-					{
-						const auto& [seq, id] = entry;
-						const std::optional priority = seq->priority_of(id);
-						assert(priority);
-
-						return sequence::rating{
-							.priority = *priority,
-							.tag = seq->tag()
-						};
-					};
-
-					return std::vector<sequence::rating>{
-						makePriority(entries)...
-					};
-				},
-				m_Sequences);
-		}
-
-		[[nodiscard]]
 		StringT describe_state() const
 		{
 			StringT description = detail::describe_times_state(

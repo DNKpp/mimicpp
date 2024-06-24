@@ -349,7 +349,7 @@ namespace mimicpp
 			return MatchResult::none;
 		}
 
-		if (!report.timesReport.isApplicable)
+		if (!std::holds_alternative<state_applicable>(report.controlReport))
 		{
 			return MatchResult::inapplicable;
 		}

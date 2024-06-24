@@ -175,14 +175,6 @@ public:
 		return isSatisfied;
 	}
 
-	bool isApplicable{true};
-
-	[[nodiscard]]
-	constexpr bool is_applicable() const noexcept
-	{
-		return isApplicable;
-	}
-
 	std::optional<mimicpp::StringT> stateDescription{};
 
 	[[nodiscard]]
@@ -193,14 +185,6 @@ public:
 
 	static constexpr void consume() noexcept
 	{
-	}
-
-	std::vector<mimicpp::sequence::rating> prioritiesState{};
-
-	[[nodiscard]]
-	constexpr std::vector<mimicpp::sequence::rating> priorities() const
-	{
-		return prioritiesState;
 	}
 
 	mimicpp::control_state_t stateData{};
@@ -216,11 +200,9 @@ class ControlPolicyMock
 {
 public:
 	MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
-	MAKE_CONST_MOCK0(is_applicable, bool(), noexcept);
 	MAKE_CONST_MOCK0(describe_state, std::optional<mimicpp::StringT>());
-	MAKE_MOCK0(consume, void());
-	MAKE_CONST_MOCK0(priorities, std::vector<mimicpp::sequence::rating>());
 	MAKE_CONST_MOCK0(state, mimicpp::control_state_t());
+	MAKE_MOCK0(consume, void());
 };
 
 template <typename Policy, typename Projection>
@@ -238,13 +220,6 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr bool is_applicable() const noexcept
-	{
-		return std::invoke(projection, policy)
-			.is_applicable();
-	}
-
-	[[nodiscard]]
 	std::optional<mimicpp::StringT> describe_state() const
 	{
 		return std::invoke(projection, policy)
@@ -255,13 +230,6 @@ public:
 	{
 		return std::invoke(projection, policy)
 			.consume();
-	}
-
-	[[nodiscard]]
-	constexpr std::vector<mimicpp::sequence::rating> priorities() const
-	{
-		return std::invoke(projection, policy)
-			.priorities();
 	}
 
 	[[nodiscard]]
