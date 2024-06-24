@@ -417,7 +417,6 @@ TEST_CASE(
 	using PolicyRefT = PolicyFacade<SignatureT, std::reference_wrapper<PolicyMock<SignatureT>>, UnwrapReferenceWrapper>;
 	using ControlPolicyT = ControlPolicyFacade<std::reference_wrapper<ControlPolicyMock>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
-	using TimesReportT = mimicpp::MatchReport::Times;
 
 	const CallInfoT call{
 		.args = {},
@@ -588,7 +587,6 @@ TEMPLATE_TEST_CASE(
 	using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<TestType>;
 	using ExpectationReportT = mimicpp::MatchReport::Expectation;
-	using TimesReportT = mimicpp::MatchReport::Times;
 
 	const CallInfoT call{
 		.args = {},

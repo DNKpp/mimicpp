@@ -73,6 +73,87 @@ namespace mimicpp
 		state_applicable,
 		state_saturated>;
 
+	namespace detail
+	{
+		[[nodiscard]]
+		inline StringT stringify_times_state(const std::size_t current, const std::size_t min, const std::size_t max)
+		{
+			const auto verbalizeValue = [](const std::size_t value)-> StringT
+			{
+				switch (value)
+				{
+				case 0:
+					return "never";
+				case 1:
+					return "once";
+				case 2:
+					return "twice";
+				default:
+					return format::format("{} times", value);
+				}
+			};
+
+			if (current == max)
+			{
+				return format::format(
+					"already saturated (matched {})",
+					verbalizeValue(current));
+			}
+
+			if (min <= current)
+			{
+				return format::format(
+					"accepts further matches (matched {} out of {} times)",
+					current,
+					max);
+			}
+
+			const auto verbalizeInterval = [verbalizeValue](const std::size_t start, const std::size_t end)
+			{
+				if (start < end)
+				{
+					return format::format(
+						"between {} and {} times",
+						start,
+						end);
+				}
+
+				return format::format(
+					"exactly {}",
+					verbalizeValue(end));
+			};
+
+			return format::format(
+				"matched {} - {} is expected",
+				verbalizeValue(current),
+				verbalizeInterval(min, max));
+		}
+
+		[[nodiscard]]
+		inline StringT stringify_control_state(const state_inapplicable& state)
+		{
+			const auto totalSequences = std::ranges::ssize(state.sequenceRatings)
+										+ std::ranges::ssize(state.inapplicableSequences);
+			return format::format(
+				"{},\n\tbut is not the current element of {} sequence(s) ({} total).",
+				stringify_times_state(
+					state.count,
+					state.min,
+					state.max),
+				std::ranges::ssize(state.inapplicableSequences),
+				totalSequences);
+		}
+
+		[[nodiscard]]
+		inline StringT stringify_control_state(const state_saturated& state)
+		{
+			return stringify_times_state(
+				state.count,
+				state.min,
+				state.max);
+		}
+	}
+
 	/**
 	 * \brief Contains the extracted info from a typed ``call::Info``.
 	 * \details This type is meant to be used to communicate with independent domains via the reporter interface and thus contains
@@ -287,23 +368,6 @@ namespace mimicpp
 		};
 
 		/**
-		 * \brief Information about the current times state.
-		 * \details This type contains a description about the current state of the ``times`` policy. This description is gather
-		 * in parallel to the ``matches`` (before the ``consume`` step) and thus contains more detailed information about the
-		 * outcome.
-		 */
-		class Times
-		{
-		public:
-			bool isApplicable{};
-			std::optional<std::vector<sequence::rating>> ratings{};
-			std::optional<StringT> description{};
-
-			[[nodiscard]]
-			friend bool operator ==(const Times&, const Times&) = default;
-		};
-
-		/**
 		 * \brief Information a used expectation policy.
 		 * \details This type contains a description about a given expectation policy.
 		 */
@@ -319,7 +383,6 @@ namespace mimicpp
 
 		std::optional<std::source_location> sourceLocation{};
 		Finalize finalizeReport{};
-		Times timesReport{};
 		control_state_t controlReport{};
 		std::vector<Expectation> expectationReports{};
 
@@ -327,7 +390,6 @@ namespace mimicpp
 		friend bool operator ==(const MatchReport& lhs, const MatchReport& rhs)
 		{
 			return lhs.finalizeReport == rhs.finalizeReport
-					&& lhs.timesReport == rhs.timesReport
 					&& lhs.controlReport == rhs.controlReport
 					&& lhs.expectationReports == rhs.expectationReports
 					&& lhs.sourceLocation.has_value() == rhs.sourceLocation.has_value()
@@ -393,11 +455,18 @@ namespace mimicpp
 			break;
 
 		case MatchResult::inapplicable:
-			format_to(
+			format::format_to(
 				std::ostreambuf_iterator{out},
 				"Inapplicable, but otherwise matched expectation: {{\n"
 				"reason: {}\n",
-				report.timesReport.description.value_or("No reason provided."));
+				[&]
+				{
+					if (const auto* inner = std::get_if<state_inapplicable>(&report.controlReport))
+					{
+						return detail::stringify_control_state(*inner);
+					}
+					return detail::stringify_control_state(std::get<state_saturated>(report.controlReport));
+				}());
 			break;
 
 		case MatchResult::none:

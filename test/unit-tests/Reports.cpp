@@ -567,38 +567,6 @@ TEST_CASE(
 	REQUIRE(expectedEquality == !(second!= first));
 }
 
-
-TEST_CASE(
-	"MatchReport::Times is equality comparable."
-	"[reporting]"
-)
-{
-	using ReportT = MatchReport::Times;
-
-	static const std::vector<sequence::rating> firstPriorities{
-		{42, sequence::Tag{1337}}
-	};
-
-	const ReportT first{
-		.isApplicable = true,
-		.ratings = firstPriorities,
-		.description = "Hello, World!"
-	};
-
-	const auto [expectedEquality, second] = GENERATE(
-		(table<bool, ReportT>({
-			{false, {true, firstPriorities, "not equal"}},
-			{false, {true, firstPriorities, std::nullopt}},
-			{false, {false, std::nullopt, "Hello, World!"}},
-			{true, {true, firstPriorities, "Hello, World!"}}
-			})));
-
-	REQUIRE(expectedEquality == (first == second));
-	REQUIRE(expectedEquality == (second == first));
-	REQUIRE(expectedEquality == !(first != second));
-	REQUIRE(expectedEquality == !(second!= first));
-}
-
 TEST_CASE(
 	"MatchReport::Expectation is equality comparable."
 	"[reporting]"
@@ -633,7 +601,7 @@ TEST_CASE(
 	const MatchReport first{
 		.sourceLocation = std::source_location::current(),
 		.finalizeReport = {"finalize description"},
-		.timesReport = {true, {}, "times description"},
+		.controlReport = state_applicable{1, 1, 0},
 		.expectationReports = {
 			{true, "expectation description"}
 		}
@@ -657,8 +625,8 @@ TEST_CASE(
 			std::nullopt,
 			std::source_location::current());
 
-		REQUIRE(!(first == second));
-		REQUIRE(!(second == first));
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
 		REQUIRE(first != second);
 		REQUIRE(second!= first);
 	}
@@ -671,20 +639,20 @@ TEST_CASE(
 
 		REQUIRE(first != second);
 		REQUIRE(second != first);
-		REQUIRE(!(first == second));
-		REQUIRE(!(second == first));
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
 	}
 
 	SECTION("When times report differs, they do not compare equal.")
 	{
 		MatchReport second{first};
 
-		second.timesReport = {true, {}, "other times description"};
+		second.controlReport = state_inapplicable{0, 1, 0};
 
 		REQUIRE(first != second);
 		REQUIRE(second != first);
-		REQUIRE(!(first == second));
-		REQUIRE(!(second == first));
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
 	}
 
 	SECTION("When expectation reports differ, they do not compare equal.")
@@ -704,8 +672,8 @@ TEST_CASE(
 
 		REQUIRE(first != second);
 		REQUIRE(second != first);
-		REQUIRE(!(first == second));
-		REQUIRE(!(second == first));
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
 	}
 }
 
@@ -719,7 +687,11 @@ TEST_CASE(
 	SECTION("When any policy doesn't match => MatchResult::none is returned.")
 	{
 		const MatchReport report{
-			.timesReport = {GENERATE(true, false)},
+			.controlReport = GENERATE(
+				as<control_state_t>{},
+				(state_applicable{0, 1, 0}),
+				(state_inapplicable{0, 1, 0, {}, {sequence::Tag{1337}}}),
+				(state_saturated{0, 1, 1})),
 			.expectationReports = GENERATE(
 				(std::vector<ExpectationReportT>{{false}}),
 				(std::vector<ExpectationReportT>{{true}, {false}}),
@@ -732,7 +704,10 @@ TEST_CASE(
 	SECTION("When all policy match but times is inapplicable => MatchResult::inapplicable is returned.")
 	{
 		const MatchReport report{
-			.timesReport = {false},
+			.controlReport = GENERATE(
+				as<control_state_t>{},
+				(state_inapplicable{0, 1, 0, {}, {sequence::Tag{1337}}}),
+				(state_saturated{0, 1, 1})),
 			.expectationReports = GENERATE(
 				(std::vector<ExpectationReportT>{}),
 				(std::vector<ExpectationReportT>{{true}}),
@@ -745,7 +720,7 @@ TEST_CASE(
 	SECTION("When all policy match and times is applicable => MatchResult::full is returned.")
 	{
 		const MatchReport report{
-			.timesReport = {true},
+			.controlReport = state_applicable{0, 1, 0},
 			.expectationReports = GENERATE(
 				(std::vector<ExpectationReportT>{}),
 				(std::vector<ExpectationReportT>{{true}}),
@@ -770,7 +745,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {true, {}, "finalize description"},
+				.controlReport = state_applicable{0, 1, 0},
 				.expectationReports = {}
 			};
 
@@ -787,7 +762,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {true, {}, "finalize description"},
+				.controlReport = state_applicable{0, 1, 0},
 				.expectationReports = {
 					{true, "Requirement1 description"},
 					{true, "Requirement2 description"}
@@ -810,20 +785,53 @@ TEST_CASE(
 	{
 		SECTION("Without any requirements.")
 		{
-			const MatchReport report{
-				.sourceLocation = std::source_location::current(),
-				.finalizeReport = {},
-				.timesReport = {false, {}, "finalize description"},
-				.expectationReports = {}
-			};
+			SECTION("Is saturated.")
+			{
+				const MatchReport report{
+					.sourceLocation = std::source_location::current(),
+					.finalizeReport = {},
+					.controlReport = state_saturated{0, 42, 42},
+					.expectationReports = {}
+				};
 
-			REQUIRE_THAT(
-				stringify_match_report(report),
-				Matches::Matches(
-					"Inapplicable, but otherwise matched expectation: \\{\n"
-					"reason: finalize description\n"
-					"from: .+\\[\\d+:\\d+\\], .+\n"
-					"\\}\n"));
+				REQUIRE_THAT(
+					stringify_match_report(report),
+					Matches::Matches(
+						"Inapplicable, but otherwise matched expectation: \\{\n"
+						"reason: already saturated \\(matched 42 times\\)\n"
+						"from: .+\\[\\d+:\\d+\\], .+\n"
+						"\\}\n"));
+			}
+
+			SECTION("Is inapplicable.")
+			{
+				const MatchReport report{
+					.sourceLocation = std::source_location::current(),
+					.finalizeReport = {},
+					.controlReport = state_inapplicable{
+						.min = 0,
+						.max = 42,
+						.count = 5,
+						.sequenceRatings = {
+							sequence::rating{0, sequence::Tag{123}}
+						},
+						.inapplicableSequences = {
+							sequence::Tag{1337},
+							sequence::Tag{1338}
+						}
+					},
+					.expectationReports = {}
+				};
+
+				REQUIRE_THAT(
+					stringify_match_report(report),
+					Matches::Matches(
+						"Inapplicable, but otherwise matched expectation: \\{\n"
+						"reason: accepts further matches \\(matched 5 out of 42 times\\),\n"
+						"\tbut is not the current element of 2 sequence\\(s\\) \\(3 total\\).\n"
+						"from: .+\\[\\d+:\\d+\\], .+\n"
+						"\\}\n"));
+			}
 		}
 
 		SECTION("When contains requirements.")
@@ -831,7 +839,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {false, {}, "finalize description"},
+				.controlReport = state_saturated{0, 42, 42},
 				.expectationReports = {
 					{true, "Requirement1 description"},
 					{true, "Requirement2 description"}
@@ -842,7 +850,7 @@ TEST_CASE(
 				stringify_match_report(report),
 				Matches::Matches(
 					"Inapplicable, but otherwise matched expectation: \\{\n"
-					"reason: finalize description\n"
+					"reason: already saturated \\(matched 42 times\\)\n"
 					"from: .+\\[\\d+:\\d+\\], .+\n"
 					"passed:\n"
 					"\tRequirement1 description,\n"
@@ -858,7 +866,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {true, {}, "finalize description"},
+				.controlReport = state_applicable{0, 1, 0},
 				.expectationReports = {
 					{false, "Requirement1 description"},
 					{false, "Requirement2 description"}
@@ -881,7 +889,7 @@ TEST_CASE(
 			const MatchReport report{
 				.sourceLocation = std::source_location::current(),
 				.finalizeReport = {},
-				.timesReport = {true, {}, "finalize description"},
+				.controlReport = state_applicable{0, 1, 0},
 				.expectationReports = {
 					{true, "Requirement1 description"},
 					{false, "Requirement2 description"}
@@ -906,7 +914,7 @@ TEST_CASE(
 		const MatchReport report{
 			.sourceLocation = std::nullopt,
 			.finalizeReport = {},
-			.timesReport = {true, {}, "finalize description"},
+			.controlReport = state_applicable{0, 1, 0},
 			.expectationReports = {}
 		};
 
