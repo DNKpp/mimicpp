@@ -9,7 +9,7 @@
 #pragma once
 
 #include "mimic++/Printer.hpp"
-#include "mimic++/Reporter.hpp"
+#include "mimic++/Reports.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Utility.hpp"
 
@@ -141,101 +141,52 @@ namespace mimicpp::detail
 
 namespace mimicpp
 {
-	struct state_inapplicable
-	{
-		int min{};
-		int max{};
-		int count{};
-		std::vector<sequence::rating> sequenceRatings{};
-		std::vector<sequence::Tag> inapplicableSequences{};
-
-		[[nodiscard]]
-		friend bool operator ==(const state_inapplicable&, const state_inapplicable&) = default;
-	};
-
-	struct state_applicable
-	{
-		int min{};
-		int max{};
-		int count{};
-		std::vector<sequence::rating> sequenceRatings{};
-
-		[[nodiscard]]
-		friend bool operator ==(const state_applicable&, const state_applicable&) = default;
-	};
-
-	struct state_saturated
-	{
-		int min{};
-		int max{};
-		int count{};
-		std::vector<sequence::Tag> sequences{};
-
-		[[nodiscard]]
-		friend bool operator ==(const state_saturated&, const state_saturated&) = default;
-	};
-
-	using control_state_t = std::variant<
-		state_inapplicable,
-		state_applicable,
-		state_saturated>;
-
 	namespace detail
 	{
 		[[nodiscard]]
-		constexpr state_saturated make_saturated_state(
+		constexpr control_state_t make_control_state(
 			const int min,
 			const int max,
 			const int count,
 			const auto& sequenceEntries
 		)
 		{
-			return state_saturated{
-				.min = min,
-				.max = max,
-				.count = count,
-				.sequences = std::apply(
-					[](const auto&... entries)
-					{
-						return std::vector<sequence::Tag>{
-							std::get<0>(entries)->tag()...
-						};
-					},
-					sequenceEntries)
-			};
-		}
-
-		[[nodiscard]]
-		constexpr state_inapplicable make_inapplicable_state(
-			const int min,
-			const int max,
-			const int count,
-			const auto& sequenceEntries
-		)
-		{
-			state_inapplicable state{
-				.min = min,
-				.max = max,
-				.count = count
-			};
-
-			const auto distribute = [&](auto& seq, const sequence::Id id)
+			if (count == max)
 			{
-				if (const std::optional priority = seq->priority_of(id))
-				{
-					state.sequenceRatings.emplace_back(
-						*priority,
-						seq->tag());
-				}
-				else
-				{
-					state.inapplicableSequences.emplace_back(seq->tag());
-				}
-			};
+				return state_saturated{
+					.min = min,
+					.max = max,
+					.count = count,
+					.sequences = std::apply(
+						[](const auto&... entries)
+						{
+							return std::vector<sequence::Tag>{
+								std::get<0>(entries)->tag()...
+							};
+						},
+						sequenceEntries)
+				};
+			}
 
+			std::vector<sequence::Tag> inapplicable{};
+			std::vector<sequence::rating> ratings{};
 			std::apply(
 				[&](const auto&... entries)
 				{
+					const auto distribute = [&](auto& seq, const sequence::Id id)
+					{
+						if (const std::optional priority = seq->priority_of(id))
+						{
+							ratings.emplace_back(
+								*priority,
+								seq->tag());
+						}
+						else
+						{
+							inapplicable.emplace_back(seq->tag());
+						}
+					};
+
 					(...,
 						distribute(
 							std::get<0>(entries),
@@ -243,34 +194,24 @@ namespace mimicpp
 				},
 				sequenceEntries);
 
-			return state;
-		}
+			if (!std::ranges::empty(inapplicable))
+			{
+				return state_inapplicable{
+					.min = min,
+					.max = max,
+					.count = count,
+					.sequenceRatings = std::move(ratings),
+					.inapplicableSequences = std::move(inapplicable)
+				};
+			}
 
-		[[nodiscard]]
-		constexpr state_applicable make_applicable_state(
-			const int min,
-			const int max,
-			const int count,
-			const auto& sequenceEntries
-		)
-		{
 			return state_applicable{
 				.min = min,
 				.max = max,
 				.count = count,
-				.sequenceRatings = std::apply(
-					[](const auto&... entries)
-					{
-						return std::vector<sequence::rating>{
-							sequence::rating{
-								.priority = *std::get<0>(entries)->priority_of(std::get<1>(entries)),
-								.tag = std::get<0>(entries)->tag()
-							}...
-						};
-					},
-					sequenceEntries)
+				.sequenceRatings = std::move(ratings),
 			};
-		};
+		}
 	}
 
 	template <typename... Sequences>
@@ -393,25 +334,7 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr control_state_t state() const
 		{
-			if (is_saturated())
-			{
-				return detail::make_saturated_state(
-					m_Min,
-					m_Max,
-					m_Count,
-					m_Sequences);
-			}
-
-			if (is_applicable())
-			{
-				return detail::make_applicable_state(
-					m_Min,
-					m_Max,
-					m_Count,
-					m_Sequences);
-			}
-
-			return detail::make_inapplicable_state(
+			return detail::make_control_state(
 				m_Min,
 				m_Max,
 				m_Count,

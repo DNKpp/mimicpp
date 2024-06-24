@@ -18,6 +18,7 @@
 #include <optional>
 #include <ranges>
 #include <typeindex>
+#include <variant>
 #include <vector>
 
 namespace mimicpp
@@ -32,6 +33,45 @@ namespace mimicpp
 	 *
 	 * \{
 	 */
+
+	struct state_inapplicable
+	{
+		int min{};
+		int max{};
+		int count{};
+		std::vector<sequence::rating> sequenceRatings{};
+		std::vector<sequence::Tag> inapplicableSequences{};
+
+		[[nodiscard]]
+		friend bool operator ==(const state_inapplicable&, const state_inapplicable&) = default;
+	};
+
+	struct state_applicable
+	{
+		int min{};
+		int max{};
+		int count{};
+		std::vector<sequence::rating> sequenceRatings{};
+
+		[[nodiscard]]
+		friend bool operator ==(const state_applicable&, const state_applicable&) = default;
+	};
+
+	struct state_saturated
+	{
+		int min{};
+		int max{};
+		int count{};
+		std::vector<sequence::Tag> sequences{};
+
+		[[nodiscard]]
+		friend bool operator ==(const state_saturated&, const state_saturated&) = default;
+	};
+
+	using control_state_t = std::variant<
+		state_inapplicable,
+		state_applicable,
+		state_saturated>;
 
 	/**
 	 * \brief Contains the extracted info from a typed ``call::Info``.
