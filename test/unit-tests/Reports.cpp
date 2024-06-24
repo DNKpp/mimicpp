@@ -12,6 +12,254 @@
 using namespace mimicpp;
 
 TEST_CASE(
+	"state_inapplicable is equality comparable.",
+	"[reporting]"
+)
+{
+	const state_inapplicable first{
+		.min = 43,
+		.max = 44,
+		.count = 42,
+		.sequenceRatings = {
+			sequence::rating{1337, sequence::Tag{1338}},
+			sequence::rating{1339, sequence::Tag{1340}}
+		},
+		.inapplicableSequences = {
+			sequence::Tag{1341},
+			sequence::Tag{1342}
+		}
+	};
+
+	state_inapplicable second{first};
+
+	SECTION("Compare equal, when all members are equal.")
+	{
+		REQUIRE(first == second);
+		REQUIRE(second == first);
+		REQUIRE_FALSE(first != second);
+		REQUIRE_FALSE(second != first);
+	}
+
+	SECTION("Compare not equal, when min differs.")
+	{
+		second.min = GENERATE(std::numeric_limits<int>::min(), 0, 42, 44, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when max differs.")
+	{
+		second.max = GENERATE(std::numeric_limits<int>::min(), 0, 43, 45, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when count differs.")
+	{
+		second.count = GENERATE(std::numeric_limits<int>::min(), 0, 41, 43, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when sequenceRatings differs.")
+	{
+		second.sequenceRatings = GENERATE(
+			std::vector<sequence::rating>{},
+			(std::vector{
+				sequence::rating{1337, sequence::Tag{1338}}
+				}),
+			(std::vector{
+				sequence::rating{1339, sequence::Tag{1340}}
+				}),
+			(std::vector{
+				sequence::rating{1339, sequence::Tag{1340}},
+				sequence::rating{1337, sequence::Tag{1338}}
+				}));
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when inapplicableSequences differs.")
+	{
+		second.inapplicableSequences = GENERATE(
+			std::vector<sequence::Tag>{},
+			std::vector{sequence::Tag{1342}},
+			std::vector{sequence::Tag{1341}},
+			(std::vector{
+				sequence::Tag{1342},
+				sequence::Tag{1341}
+				}));
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+}
+
+TEST_CASE(
+	"state_applicable is equality comparable.",
+	"[reporting]"
+)
+{
+	const state_applicable first{
+		.min = 43,
+		.max = 44,
+		.count = 42,
+		.sequenceRatings = {
+			sequence::rating{1337, sequence::Tag{1338}},
+			sequence::rating{1339, sequence::Tag{1340}}
+		}
+	};
+
+	state_applicable second{first};
+
+	SECTION("Compare equal, when all members are equal.")
+	{
+		REQUIRE(first == second);
+		REQUIRE(second == first);
+		REQUIRE_FALSE(first != second);
+		REQUIRE_FALSE(second != first);
+	}
+
+	SECTION("Compare not equal, when min differs.")
+	{
+		second.min = GENERATE(std::numeric_limits<int>::min(), 0, 42, 44, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when max differs.")
+	{
+		second.max = GENERATE(std::numeric_limits<int>::min(), 0, 43, 45, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when count differs.")
+	{
+		second.count = GENERATE(std::numeric_limits<int>::min(), 0, 41, 43, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when sequenceRatings differs.")
+	{
+		second.sequenceRatings = GENERATE(
+			std::vector<sequence::rating>{},
+			(std::vector{
+				sequence::rating{1337, sequence::Tag{1338}}
+				}),
+			(std::vector{
+				sequence::rating{1339, sequence::Tag{1340}}
+				}),
+			(std::vector{
+				sequence::rating{1339, sequence::Tag{1340}},
+				sequence::rating{1337, sequence::Tag{1338}}
+				}));
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+}
+
+TEST_CASE(
+	"state_saturated is equality comparable.",
+	"[reporting]"
+)
+{
+	const state_saturated first{
+		.min = 43,
+		.max = 44,
+		.count = 42,
+		.sequences = {
+			sequence::Tag{1337},
+			sequence::Tag{1338}
+		}
+	};
+
+	state_saturated second{first};
+
+	SECTION("Compare equal, when all members are equal.")
+	{
+		REQUIRE(first == second);
+		REQUIRE(second == first);
+		REQUIRE_FALSE(first != second);
+		REQUIRE_FALSE(second != first);
+	}
+
+	SECTION("Compare not equal, when min differs.")
+	{
+		second.min = GENERATE(std::numeric_limits<int>::min(), 0, 42, 44, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when max differs.")
+	{
+		second.max = GENERATE(std::numeric_limits<int>::min(), 0, 43, 45, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when count differs.")
+	{
+		second.count = GENERATE(std::numeric_limits<int>::min(), 0, 41, 43, std::numeric_limits<int>::max());
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+
+	SECTION("Compare not equal, when inapplicableSequences differs.")
+	{
+		second.sequences = GENERATE(
+			std::vector<sequence::Tag>{},
+			std::vector{sequence::Tag{1337}},
+			std::vector{sequence::Tag{1338}},
+			(std::vector{
+				sequence::Tag{1338},
+				sequence::Tag{1337}
+				}));
+
+		REQUIRE_FALSE(first == second);
+		REQUIRE_FALSE(second == first);
+		REQUIRE(first != second);
+		REQUIRE(second != first);
+	}
+}
+
+TEST_CASE(
 	"CallReport::Arg is equality comparable.",
 	"[reporting]"
 )
