@@ -17,6 +17,7 @@
 #include <limits>
 #include <stdexcept>
 #include <tuple>
+#include <variant>
 #include <vector>
 
 namespace mimicpp::detail
@@ -140,6 +141,138 @@ namespace mimicpp::detail
 
 namespace mimicpp
 {
+	struct state_inapplicable
+	{
+		int min{};
+		int max{};
+		int count{};
+		std::vector<sequence::rating> sequenceRatings{};
+		std::vector<sequence::Tag> inapplicableSequences{};
+
+		[[nodiscard]]
+		friend bool operator ==(const state_inapplicable&, const state_inapplicable&) = default;
+	};
+
+	struct state_applicable
+	{
+		int min{};
+		int max{};
+		int count{};
+		std::vector<sequence::rating> sequenceRatings{};
+
+		[[nodiscard]]
+		friend bool operator ==(const state_applicable&, const state_applicable&) = default;
+	};
+
+	struct state_saturated
+	{
+		int min{};
+		int max{};
+		int count{};
+		std::vector<sequence::Tag> sequences{};
+
+		[[nodiscard]]
+		friend bool operator ==(const state_saturated&, const state_saturated&) = default;
+	};
+
+	using control_state_t = std::variant<
+		state_inapplicable,
+		state_applicable,
+		state_saturated>;
+
+	namespace detail
+	{
+		[[nodiscard]]
+		constexpr state_saturated make_saturated_state(
+			const int min,
+			const int max,
+			const int count,
+			const auto& sequenceEntries
+		)
+		{
+			return state_saturated{
+				.min = min,
+				.max = max,
+				.count = count,
+				.sequences = std::apply(
+					[](const auto&... entries)
+					{
+						return std::vector<sequence::Tag>{
+							std::get<0>(entries)->tag()...
+						};
+					},
+					sequenceEntries)
+			};
+		}
+
+		[[nodiscard]]
+		constexpr state_inapplicable make_inapplicable_state(
+			const int min,
+			const int max,
+			const int count,
+			const auto& sequenceEntries
+		)
+		{
+			state_inapplicable state{
+				.min = min,
+				.max = max,
+				.count = count
+			};
+
+			const auto distribute = [&](auto& seq, const sequence::Id id)
+			{
+				if (const std::optional priority = seq->priority_of(id))
+				{
+					state.sequenceRatings.emplace_back(
+						*priority,
+						seq->tag());
+				}
+				else
+				{
+					state.inapplicableSequences.emplace_back(seq->tag());
+				}
+			};
+
+			std::apply(
+				[&](const auto&... entries)
+				{
+					(...,
+						distribute(
+							std::get<0>(entries),
+							std::get<1>(entries)));
+				},
+				sequenceEntries);
+
+			return state;
+		}
+
+		[[nodiscard]]
+		constexpr state_applicable make_applicable_state(
+			const int min,
+			const int max,
+			const int count,
+			const auto& sequenceEntries
+		)
+		{
+			return state_applicable{
+				.min = min,
+				.max = max,
+				.count = count,
+				.sequenceRatings = std::apply(
+					[](const auto&... entries)
+					{
+						return std::vector<sequence::rating>{
+							sequence::rating{
+								.priority = *std::get<0>(entries)->priority_of(std::get<1>(entries)),
+								.tag = std::get<0>(entries)->tag()
+							}...
+						};
+					},
+					sequenceEntries)
+			};
+		};
+	}
+
 	template <typename... Sequences>
 	class ControlPolicy
 	{
@@ -168,6 +301,12 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
+		constexpr bool is_saturated() const noexcept
+		{
+			return m_Count == m_Max;
+		}
+
+		[[nodiscard]]
 		constexpr bool is_applicable() const noexcept
 		{
 			return m_Count < m_Max
@@ -181,7 +320,7 @@ namespace mimicpp
 
 		constexpr void consume() noexcept
 		{
-			assert(m_Count < m_Max);
+			assert(is_applicable());
 
 			std::apply(
 				[](auto&... entries) noexcept
@@ -249,6 +388,34 @@ namespace mimicpp
 			}
 
 			return description;
+		}
+
+		[[nodiscard]]
+		constexpr control_state_t state() const
+		{
+			if (is_saturated())
+			{
+				return detail::make_saturated_state(
+					m_Min,
+					m_Max,
+					m_Count,
+					m_Sequences);
+			}
+
+			if (is_applicable())
+			{
+				return detail::make_applicable_state(
+					m_Min,
+					m_Max,
+					m_Count,
+					m_Sequences);
+			}
+
+			return detail::make_inapplicable_state(
+				m_Min,
+				m_Max,
+				m_Count,
+				m_Sequences);
 		}
 
 	private:
