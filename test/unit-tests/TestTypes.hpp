@@ -10,6 +10,9 @@
 
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/trompeloeil.hpp"
+#include "catch2/matchers/catch_matchers_templated.hpp"
+
+#include <variant>
 
 class UnwrapReferenceWrapper
 {
@@ -457,3 +460,41 @@ public:
 		return Invoke(std::forward<Params>(params)...);
 	}
 };
+
+template <std::equality_comparable Value>
+class VariantEqualsMatcher final
+	: public Catch::Matchers::MatcherGenericBase
+{
+public:
+	[[nodiscard]]
+	explicit constexpr VariantEqualsMatcher(Value value)
+		: m_Value{std::move(value)}
+	{
+	}
+
+	template <typename... Alternatives>
+	[[nodiscard]]
+	constexpr bool match(const std::variant<Alternatives...>& other) const
+		requires requires { { std::holds_alternative<Value>(other) } -> std::convertible_to<bool>; }
+	{
+		return std::holds_alternative<Value>(other)
+				&& m_Value == std::get<Value>(other);
+	}
+
+	std::string describe() const override
+	{
+		return "Variant state equals: " + Catch::Detail::stringify(m_Value);
+	}
+
+private:
+	Value m_Value;
+};
+
+template <typename Value>
+[[nodiscard]]
+constexpr auto variant_equals(Value&& value)
+{
+	return VariantEqualsMatcher<std::remove_cvref_t<Value>>{
+		std::forward<Value>(value)
+	};
+}
