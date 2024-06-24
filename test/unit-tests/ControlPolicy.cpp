@@ -12,6 +12,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include "TestReporter.hpp"
+#include "TestTypes.hpp"
 
 using namespace mimicpp;
 
@@ -82,8 +83,14 @@ TEST_CASE(
 	for ([[maybe_unused]] auto i : std::views::iota(0, min))
 	{
 		REQUIRE(!std::as_const(policy).is_satisfied());
-		REQUIRE(std::as_const(policy).is_applicable());
-		REQUIRE(std::ranges::empty(policy.priorities()));
+		REQUIRE_THAT(
+			std::as_const(policy).state(),
+			variant_equals(
+				state_applicable{
+				.min = min,
+				.max = max,
+				.count = i,
+				}));
 
 		REQUIRE_NOTHROW(policy.consume());
 	}
@@ -93,14 +100,44 @@ TEST_CASE(
 	for ([[maybe_unused]] auto i : std::views::iota(min, max))
 	{
 		REQUIRE(std::as_const(policy).is_satisfied());
-		REQUIRE(std::as_const(policy).is_applicable());
-		REQUIRE(std::ranges::empty(policy.priorities()));
+		REQUIRE_THAT(
+			std::as_const(policy).state(),
+			variant_equals(
+				state_applicable{
+				.min = min,
+				.max = max,
+				.count = i,
+				}));
 
 		REQUIRE_NOTHROW(policy.consume());
 	}
 
 	REQUIRE(std::as_const(policy).is_satisfied());
-	REQUIRE(!std::as_const(policy).is_applicable());
+	REQUIRE_THAT(
+		std::as_const(policy).state(),
+		variant_equals(
+			state_saturated{
+			.min = min,
+			.max = max,
+			.count = max,
+			}));
+}
+
+namespace
+{
+	class FakeStrategy
+	{
+	public:
+		[[nodiscard, maybe_unused]]
+		constexpr int operator ()(const auto id, [[maybe_unused]] const int cursor) const noexcept
+		{
+			return static_cast<int>(id);
+		}
+	};
+
+	using TestSequenceT = sequence::detail::BasicSequenceInterface<
+		sequence::Id,
+		FakeStrategy{}>;
 }
 
 TEST_CASE(
@@ -114,7 +151,7 @@ TEST_CASE(
 
 	SECTION("When single sequence is provided.")
 	{
-		std::optional<SequenceT> sequence{std::in_place};
+		std::optional<TestSequenceT> sequence{std::in_place};
 		std::optional policy{
 			ControlPolicy{
 				detail::TimesConfig{},
@@ -122,19 +159,33 @@ TEST_CASE(
 			}
 		};
 
-		REQUIRE(1 == std::ranges::ssize(std::as_const(*policy).priorities()));
-		REQUIRE(std::as_const(*policy).priorities()[0].tag == sequence->tag());
-		REQUIRE(std::as_const(*policy).priorities()[0].priority);
-
 		REQUIRE(!std::as_const(*policy).is_satisfied());
-		REQUIRE(std::as_const(*policy).is_applicable());
+		REQUIRE_THAT(
+			std::as_const(*policy).state(),
+			variant_equals(
+				state_applicable{
+				.min = 1,
+				.max = 1,
+				.count = 0,
+				.sequenceRatings = {
+				sequence::rating{0, sequence->tag()}
+				}
+				}));
 
 		SECTION("Is satisfied, when consumed once.")
 		{
 			REQUIRE_NOTHROW(policy->consume());
 
 			REQUIRE(std::as_const(*policy).is_satisfied());
-			REQUIRE(!std::as_const(*policy).is_applicable());
+			REQUIRE_THAT(
+				std::as_const(*policy).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence->tag()}
+					}));
 		}
 
 		SECTION("Reports error, when unconsumed.")
@@ -149,8 +200,8 @@ TEST_CASE(
 
 	SECTION("When multiples sequences are provided.")
 	{
-		std::optional<SequenceT> firstSequence{std::in_place};
-		std::optional<SequenceT> secondSequence{std::in_place};
+		std::optional<TestSequenceT> firstSequence{std::in_place};
+		std::optional<TestSequenceT> secondSequence{std::in_place};
 		std::optional policy{
 			ControlPolicy{
 				detail::TimesConfig{},
@@ -160,21 +211,37 @@ TEST_CASE(
 			}
 		};
 
-		REQUIRE(2 == std::ranges::ssize(std::as_const(*policy).priorities()));
-		REQUIRE(std::as_const(*policy).priorities()[0].tag == firstSequence->tag());
-		REQUIRE(std::as_const(*policy).priorities()[0].priority);
-		REQUIRE(std::as_const(*policy).priorities()[1].tag == secondSequence->tag());
-		REQUIRE(std::as_const(*policy).priorities()[1].priority);
-
 		REQUIRE(!std::as_const(*policy).is_satisfied());
-		REQUIRE(std::as_const(*policy).is_applicable());
+		REQUIRE_THAT(
+			std::as_const(*policy).state(),
+			variant_equals(
+				state_applicable{
+				.min = 1,
+				.max = 1,
+				.count = 0,
+				.sequenceRatings = {
+				sequence::rating{0, firstSequence->tag()},
+				sequence::rating{0, secondSequence->tag()}
+				}
+				}));
 
 		SECTION("Is satisfied, when consumed once.")
 		{
 			REQUIRE_NOTHROW(policy->consume());
 
 			REQUIRE(std::as_const(*policy).is_satisfied());
-			REQUIRE(!std::as_const(*policy).is_applicable());
+			REQUIRE_THAT(
+				std::as_const(*policy).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {
+					firstSequence->tag(),
+					secondSequence->tag()
+					}
+					}));
 		}
 
 		SECTION("Reports error, when unconsumed.")
@@ -218,7 +285,7 @@ TEST_CASE(
 		const int min = GENERATE(range(0, 5));
 		const int max = min + GENERATE(range(0, 5));
 
-		SequenceT sequence{};
+		TestSequenceT sequence{};
 		ControlPolicy policy{
 			expect::times(min, max),
 			expect::in_sequence(sequence)
@@ -227,11 +294,17 @@ TEST_CASE(
 		for ([[maybe_unused]] auto i : std::views::iota(0, min))
 		{
 			REQUIRE(!std::as_const(policy).is_satisfied());
-			REQUIRE(std::as_const(policy).is_applicable());
-
-			REQUIRE(1 == std::ranges::ssize(std::as_const(policy).priorities()));
-			REQUIRE(std::as_const(policy).priorities()[0].tag == sequence.tag());
-			REQUIRE(std::as_const(policy).priorities()[0].priority);
+			REQUIRE_THAT(
+				std::as_const(policy).state(),
+				variant_equals(
+					state_applicable{
+					.min = min,
+					.max = max,
+					.count = i,
+					.sequenceRatings = {
+					sequence::rating{0, sequence.tag()}
+					}
+					}));
 
 			REQUIRE_NOTHROW(policy.consume());
 		}
@@ -247,17 +320,31 @@ TEST_CASE(
 			for ([[maybe_unused]] auto i : std::views::iota(min, max))
 			{
 				REQUIRE(std::as_const(policy).is_satisfied());
-				REQUIRE(std::as_const(policy).is_applicable());
-
-				REQUIRE(1 == std::ranges::ssize(std::as_const(policy).priorities()));
-				REQUIRE(std::as_const(policy).priorities()[0].tag == sequence.tag());
-				REQUIRE(std::as_const(policy).priorities()[0].priority);
+				REQUIRE_THAT(
+					std::as_const(policy).state(),
+					variant_equals(
+						state_applicable{
+						.min = min,
+						.max = max,
+						.count = i,
+						.sequenceRatings = {
+						sequence::rating{0, sequence.tag()}
+						}
+						}));
 
 				REQUIRE_NOTHROW(policy.consume());
 			}
 
 			REQUIRE(std::as_const(policy).is_satisfied());
-			REQUIRE(!std::as_const(policy).is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy).state(),
+				variant_equals(
+					state_saturated{
+					.min = min,
+					.max = max,
+					.count = max,
+					.sequences = {sequence.tag()}
+					}));
 		}
 	}
 
@@ -338,11 +425,7 @@ TEST_CASE(
 {
 	namespace Matches = Catch::Matchers;
 
-	SequenceT sequence{};
-
-	const StringT applicableText = "applicable: Sequence element expects further matches.";
-	const StringT saturatedText = "inapplicable: Sequence element is already saturated.";
-	const StringT inapplicableText = "inapplicable: Sequence element is not the current element.";
+	TestSequenceT sequence{};
 
 	SECTION("When sequence contains just a single expectation.")
 	{
@@ -354,17 +437,36 @@ TEST_CASE(
 
 		for ([[maybe_unused]] const int i : std::views::iota(0, count))
 		{
-			REQUIRE(!policy.is_satisfied());
-			REQUIRE(policy.is_applicable());
+			REQUIRE(!std::as_const(policy).is_satisfied());
+			REQUIRE_THAT(
+				std::as_const(policy).state(),
+				variant_equals(
+					state_applicable{
+					.min = count,
+					.max = count,
+					.count = i,
+					.sequenceRatings = {
+					sequence::rating{0, sequence.tag()}
+					}
+					}));
 			REQUIRE_THAT(
 				policy.describe_state(),
 				Matches::Matches("unsatisfied: matched .+ - .+ is expected\n\t.*")
 				&& Matches::EndsWith("\n\tIs head from 1 out of 1 sequences."));
+
 			REQUIRE_NOTHROW(policy.consume());
 		}
 
-		REQUIRE(policy.is_satisfied());
-		REQUIRE(!policy.is_applicable());
+		REQUIRE(std::as_const(policy).is_satisfied());
+		REQUIRE_THAT(
+			std::as_const(policy).state(),
+			variant_equals(
+				state_saturated{
+				.min = count,
+				.max = count,
+				.count = count,
+				.sequences = {sequence.tag()}
+				}));
 		REQUIRE_THAT(
 			policy.describe_state(),
 			Matches::StartsWith("inapplicable: already saturated (matched ")
@@ -386,14 +488,32 @@ TEST_CASE(
 
 		SECTION("When first expection is satisfied, then the second one becomes applicable.")
 		{
-			REQUIRE(!policy1.is_satisfied());
-			REQUIRE(policy1.is_applicable());
+			REQUIRE(!std::as_const(policy1).is_satisfied());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_applicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					sequence::rating{0, sequence.tag()}
+					}
+					}));
 			REQUIRE_THAT(
 				policy1.describe_state(),
 				Matches::Equals("unsatisfied: matched never - exactly once is expected\n\tIs head from 1 out of 1 sequences."));
 
-			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE(!std::as_const(policy2).is_satisfied());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_inapplicable{
+					.min = count2,
+					.max = count2,
+					.count = 0,
+					.inapplicableSequences = {sequence.tag()}
+					}));
 			REQUIRE_THAT(
 				policy2.describe_state(),
 				Matches::Matches("unsatisfied: matched never - .+ is expected\n\t.*")
@@ -404,13 +524,31 @@ TEST_CASE(
 			for ([[maybe_unused]] const int i : std::views::iota(0, count2))
 			{
 				REQUIRE(policy1.is_satisfied());
-				REQUIRE(!policy1.is_applicable());
+				REQUIRE_THAT(
+					std::as_const(policy1).state(),
+					variant_equals(
+						state_saturated{
+						.min = 1,
+						.max = 1,
+						.count = 1,
+						.sequences = {sequence.tag()}
+						}));
 				REQUIRE_THAT(
 					policy1.describe_state(),
 					Matches::Equals("inapplicable: already saturated (matched once)"));
 
-				REQUIRE(!policy2.is_satisfied());
-				REQUIRE(policy2.is_applicable());
+				REQUIRE(!std::as_const(policy2).is_satisfied());
+				REQUIRE_THAT(
+					std::as_const(policy2).state(),
+					variant_equals(
+						state_applicable{
+						.min = count2,
+						.max = count2,
+						.count = i,
+						.sequenceRatings = {
+						sequence::rating{1, sequence.tag()}
+						}
+						}));
 				REQUIRE_THAT(
 					policy2.describe_state(),
 					Matches::Matches("unsatisfied: matched .+ - .+ is expected\n\t.*")
@@ -420,13 +558,29 @@ TEST_CASE(
 			}
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 			REQUIRE_THAT(
 				policy1.describe_state(),
 				Matches::Equals("inapplicable: already saturated (matched once)"));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_saturated{
+					.min = count2,
+					.max = count2,
+					.count = count2,
+					.sequences = {sequence.tag()}
+					}));
 			REQUIRE_THAT(
 				policy2.describe_state(),
 				Matches::StartsWith("inapplicable: already saturated (matched")
@@ -444,8 +598,8 @@ TEST_CASE(
 
 	SECTION("When multiple sequences are given.")
 	{
-		SequenceT sequence1{};
-		SequenceT sequence2{};
+		TestSequenceT sequence1{};
+		TestSequenceT sequence2{};
 
 		SECTION("When the first expectation is the prefix of multiple sequences.")
 		{
@@ -459,26 +613,85 @@ TEST_CASE(
 			};
 
 			REQUIRE(!policy1.is_satisfied());
-			REQUIRE(policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_applicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					sequence::rating{0, sequence1.tag()},
+					sequence::rating{0, sequence2.tag()},
+					}
+					}));
 
 			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_inapplicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.inapplicableSequences = {sequence2.tag()}
+					}));
 
 			policy1.consume();
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {
+					sequence1.tag(),
+					sequence2.tag()
+					}
+					}));
 
 			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_applicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					sequence::rating{1, sequence2.tag()},
+					}
+					}));
 
 			policy2.consume();
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {
+					sequence1.tag(),
+					sequence2.tag()
+					}
+					}));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence2.tag()}
+					}));
 		}
 
 		SECTION("When an expectation waits for multiple sequences.")
@@ -497,46 +710,162 @@ TEST_CASE(
 			};
 
 			REQUIRE(!policy1.is_satisfied());
-			REQUIRE(policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_applicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					sequence::rating{0, sequence1.tag()}
+					}
+					}));
 
 			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_applicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					sequence::rating{0, sequence2.tag()}
+					}
+					}));
 
 			REQUIRE(!policy3.is_satisfied());
-			REQUIRE(!policy3.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy3).state(),
+				variant_equals(
+					state_inapplicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.inapplicableSequences = {
+					sequence1.tag(),
+					sequence2.tag()
+					}
+					}));
 
 			policy1.consume();
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence1.tag()}
+					}));
 
 			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_applicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					sequence::rating{0, sequence2.tag()}
+					}
+					}));
 
 			REQUIRE(!policy3.is_satisfied());
-			REQUIRE(!policy3.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy3).state(),
+				variant_equals(
+					state_inapplicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					sequence::rating{1, sequence1.tag()}
+					},
+					.inapplicableSequences = {
+					sequence2.tag()
+					}
+					}));
 
 			policy2.consume();
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence1.tag()}
+					}));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence2.tag()}
+					}));
 
 			REQUIRE(!policy3.is_satisfied());
-			REQUIRE(policy3.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy3).state(),
+				variant_equals(
+					state_applicable{
+					.min = 1,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					sequence::rating{1, sequence1.tag()},
+					sequence::rating{1, sequence2.tag()}
+					}
+					}));
 
 			policy3.consume();
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence1.tag()}
+					}));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence2.tag()}
+					}));
 
 			REQUIRE(policy3.is_satisfied());
-			REQUIRE(!policy3.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy3).state(),
+				variant_equals(
+					state_saturated{
+					.min = 1,
+					.max = 1,
+					.count = 1,
+					.sequences = {
+					sequence1.tag(),
+					sequence2.tag()
+					}
+					}));
 		}
 	}
 }
@@ -554,14 +883,34 @@ TEST_CASE(
 			expect::in_sequence(sequence)
 		};
 		CHECK(policy1.is_satisfied());
-		CHECK(policy1.is_applicable());
+		CHECK_THAT(
+			std::as_const(policy1).state(),
+			variant_equals(
+				state_applicable{
+				.min = 0,
+				.max = 1,
+				.count = 0,
+				.sequenceRatings = {
+				sequence::rating{std::numeric_limits<int>::max(), sequence.tag()}
+				}
+				}));
 
 		ControlPolicy policy2{
 			expect::at_most(1),
 			expect::in_sequence(sequence)
 		};
 		CHECK(policy2.is_satisfied());
-		CHECK(policy2.is_applicable());
+		CHECK_THAT(
+			std::as_const(policy2).state(),
+			variant_equals(
+				state_applicable{
+				.min = 0,
+				.max = 1,
+				.count = 0,
+				.sequenceRatings = {
+				sequence::rating{std::numeric_limits<int>::max() - 1, sequence.tag()}
+				}
+				}));
 
 		REQUIRE(
 			sequence::detail::has_better_rating(
@@ -577,10 +926,29 @@ TEST_CASE(
 			REQUIRE_NOTHROW(policy1.consume());
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 0,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_applicable{
+					.min = 0,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					// priority may change
+					sequence::rating{std::numeric_limits<int>::max() - 1, sequence.tag()}
+					}
+					}));
 		}
 
 		SECTION("Succeeds, when only second one got consumed.")
@@ -588,10 +956,26 @@ TEST_CASE(
 			REQUIRE_NOTHROW(policy2.consume());
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_inapplicable{
+					.min = 0,
+					.max = 1,
+					.count = 0,
+					.inapplicableSequences = {sequence.tag()}
+					}));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_saturated{
+					.min = 0,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 		}
 
 		SECTION("Succeeds, when both got consumed.")
@@ -600,10 +984,27 @@ TEST_CASE(
 			REQUIRE_NOTHROW(policy2.consume());
 
 			REQUIRE(policy1.is_satisfied());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 0,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 			REQUIRE(!policy1.is_applicable());
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_saturated{
+					.min = 0,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 		}
 	}
 
@@ -615,14 +1016,34 @@ TEST_CASE(
 			expect::in_sequence(sequence)
 		};
 		CHECK(policy1.is_satisfied());
-		CHECK(policy1.is_applicable());
+		CHECK_THAT(
+			std::as_const(policy1).state(),
+			variant_equals(
+				state_applicable{
+				.min = 0,
+				.max = 1,
+				.count = 0,
+				.sequenceRatings = {
+				sequence::rating{0, sequence.tag()}
+				}
+				}));
 
 		ControlPolicy policy2{
 			expect::at_most(1),
 			expect::in_sequence(sequence)
 		};
 		CHECK(policy2.is_satisfied());
-		CHECK(policy2.is_applicable());
+		CHECK_THAT(
+			std::as_const(policy2).state(),
+			variant_equals(
+				state_applicable{
+				.min = 0,
+				.max = 1,
+				.count = 0,
+				.sequenceRatings = {
+				sequence::rating{1, sequence.tag()}
+				}
+				}));
 
 		REQUIRE(
 			sequence::detail::has_better_rating(
@@ -638,10 +1059,29 @@ TEST_CASE(
 			REQUIRE_NOTHROW(policy1.consume());
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 0,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_applicable{
+					.min = 0,
+					.max = 1,
+					.count = 0,
+					.sequenceRatings = {
+					// priority may change
+					sequence::rating{1, sequence.tag()}
+					}
+					}));
 		}
 
 		SECTION("Succeeds, when only second one got consumed.")
@@ -649,10 +1089,26 @@ TEST_CASE(
 			REQUIRE_NOTHROW(policy2.consume());
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_inapplicable{
+					.min = 0,
+					.max = 1,
+					.count = 0,
+					.inapplicableSequences = {sequence.tag()}
+					}));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_saturated{
+					.min = 0,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 		}
 
 		SECTION("Succeeds, when both got consumed.")
@@ -661,10 +1117,26 @@ TEST_CASE(
 			REQUIRE_NOTHROW(policy2.consume());
 
 			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy1).state(),
+				variant_equals(
+					state_saturated{
+					.min = 0,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 
 			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THAT(
+				std::as_const(policy2).state(),
+				variant_equals(
+					state_saturated{
+					.min = 0,
+					.max = 1,
+					.count = 1,
+					.sequences = {sequence.tag()}
+					}));
 		}
 	}
 }
