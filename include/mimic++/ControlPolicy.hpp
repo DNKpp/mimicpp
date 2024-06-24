@@ -144,7 +144,7 @@ namespace mimicpp
 	namespace detail
 	{
 		[[nodiscard]]
-		constexpr control_state_t make_control_state(
+		control_state_t make_control_state(
 			const int min,
 			const int max,
 			const int count,
