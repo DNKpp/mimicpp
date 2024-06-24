@@ -234,7 +234,7 @@ namespace mimicpp
 								{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
 								{ std::as_const(policy).is_applicable() } noexcept -> std::convertible_to<bool>;
 								{ std::as_const(policy).describe_state() } -> std::convertible_to<std::optional<StringT>>;
-								{ std::as_const(policy).priorities() } -> std::convertible_to<std::vector<sequence::detail::sequence_rating>>;
+								{ std::as_const(policy).priorities() } -> std::convertible_to<std::vector<sequence::rating>>;
 								policy.consume();
 							};
 

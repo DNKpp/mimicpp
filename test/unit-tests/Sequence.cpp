@@ -327,10 +327,10 @@ TEST_CASE(
 
 TEST_CASE(
 	"detail::has_better_rating determines, whether lhs shall be preferred over rhs.",
-	"[sequence]"
+	"[detail][sequence]"
 )
 {
-	using sequence::detail::sequence_rating;
+	using sequence::rating;
 	using sequence::detail::has_better_rating;
 	constexpr std::array sequence_tags = std::to_array<>(
 		{
@@ -341,9 +341,9 @@ TEST_CASE(
 
 	SECTION("Lhs with zero ratings is always preferred.")
 	{
-		const std::vector<sequence_rating> lhs{};
+		const std::vector<rating> lhs{};
 
-		std::vector<sequence_rating> rhs{};
+		std::vector<rating> rhs{};
 		REQUIRE(has_better_rating(lhs, rhs));
 
 		rhs.emplace_back(std::numeric_limits<int>::max(), sequence_tags[0]);
@@ -355,11 +355,11 @@ TEST_CASE(
 
 	SECTION("When lhs has single rating.")
 	{
-		const std::vector<sequence_rating> lhs{
+		const std::vector<rating> lhs{
 			{42, sequence_tags[1]}
 		};
 
-		std::vector<sequence_rating> rhs{};
+		std::vector<rating> rhs{};
 		REQUIRE(has_better_rating(lhs, rhs));
 
 		rhs = lhs;
@@ -380,7 +380,7 @@ TEST_CASE(
 
 	SECTION("When lhs has two ratings.")
 	{
-		const std::vector<sequence_rating> lhs{
+		const std::vector<rating> lhs{
 			{42, sequence_tags[1]},
 			{1337, sequence_tags[0]}
 		};
@@ -409,13 +409,13 @@ TEST_CASE(
 
 	SECTION("When lhs has three ratings.")
 	{
-		const std::vector<sequence_rating> lhs{
+		const std::vector<rating> lhs{
 			{42, sequence_tags[1]},
 			{25, sequence_tags[2]},
 			{1337, sequence_tags[0]}
 		};
 
-		std::vector<sequence_rating> rhs{};
+		std::vector<rating> rhs{};
 		REQUIRE(has_better_rating(lhs, rhs));
 
 		rhs.emplace_back(1338, sequence_tags[0]);

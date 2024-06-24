@@ -191,10 +191,10 @@ public:
 	{
 	}
 
-	std::vector<mimicpp::sequence::detail::sequence_rating> prioritiesState{};
+	std::vector<mimicpp::sequence::rating> prioritiesState{};
 
 	[[nodiscard]]
-	constexpr std::vector<mimicpp::sequence::detail::sequence_rating> priorities() const
+	constexpr std::vector<mimicpp::sequence::rating> priorities() const
 	{
 		return prioritiesState;
 	}
@@ -207,7 +207,7 @@ public:
 	MAKE_CONST_MOCK0(is_applicable, bool(), noexcept);
 	MAKE_CONST_MOCK0(describe_state, std::optional<mimicpp::StringT>());
 	MAKE_MOCK0(consume, void());
-	MAKE_CONST_MOCK0(priorities, std::vector<mimicpp::sequence::detail::sequence_rating>());
+	MAKE_CONST_MOCK0(priorities, std::vector<mimicpp::sequence::rating>());
 };
 
 template <typename Policy, typename Projection>
@@ -245,7 +245,7 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr std::vector<mimicpp::sequence::detail::sequence_rating> priorities() const
+	constexpr std::vector<mimicpp::sequence::rating> priorities() const
 	{
 		return std::invoke(projection, policy)
 			.priorities();

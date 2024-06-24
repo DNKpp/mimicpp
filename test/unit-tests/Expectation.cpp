@@ -395,7 +395,7 @@ TEST_CASE(
 
 namespace
 {
-	using PrioritiesResultT = std::vector<mimicpp::sequence::detail::sequence_rating>;
+	using PrioritiesResultT = std::vector<mimicpp::sequence::rating>;
 }
 
 TEST_CASE(

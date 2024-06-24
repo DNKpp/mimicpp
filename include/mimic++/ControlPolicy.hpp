@@ -196,7 +196,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr std::vector<sequence::detail::sequence_rating> priorities() const noexcept
+		constexpr std::vector<sequence::rating> priorities() const noexcept
 		{
 			assert(is_applicable());
 
@@ -209,13 +209,13 @@ namespace mimicpp
 						const std::optional priority = seq->priority_of(id);
 						assert(priority);
 
-						return sequence::detail::sequence_rating{
+						return sequence::rating{
 							.priority = *priority,
 							.tag = seq->tag()
 						};
 					};
 
-					return std::vector<sequence::detail::sequence_rating>{
+					return std::vector<sequence::rating>{
 						makePriority(entries)...
 					};
 				},

@@ -384,14 +384,14 @@ namespace mimicpp::sequence::detail
 {
 	[[nodiscard]]
 	constexpr bool has_better_rating(
-		const std::span<const sequence_rating> lhs,
-		const std::span<const sequence_rating> rhs
+		const std::span<const rating> lhs,
+		const std::span<const rating> rhs
 	) noexcept
 	{
 		int rating{};
 		for (const auto& [lhsPriority, lhsTag] : lhs)
 		{
-			if (const auto iter = std::ranges::find(rhs, lhsTag, &sequence_rating::tag);
+			if (const auto iter = std::ranges::find(rhs, lhsTag, &rating::tag);
 				iter != std::ranges::end(rhs))
 			{
 				rating += lhsPriority < iter->priority

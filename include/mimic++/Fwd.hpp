@@ -48,17 +48,14 @@ namespace mimicpp::sequence
 		: int
 	{
 	};
-}
 
-namespace mimicpp::sequence::detail
-{
-	struct sequence_rating
+	struct rating
 	{
 		int priority{};
 		Tag tag{};
 
 		[[nodiscard]]
-		friend bool operator==(const sequence_rating&, const sequence_rating&) = default;
+		friend bool operator==(const rating&, const rating&) = default;
 	};
 }
 

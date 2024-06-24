@@ -328,7 +328,7 @@ TEST_CASE(
 {
 	using ReportT = MatchReport::Times;
 
-	static const std::vector<sequence::detail::sequence_rating> firstPriorities{
+	static const std::vector<sequence::rating> firstPriorities{
 		{42, sequence::Tag{1337}}
 	};
 
