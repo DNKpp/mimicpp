@@ -305,7 +305,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr control_state_t state() const
+		control_state_t state() const
 		{
 			return detail::make_control_state(
 				m_Min,
