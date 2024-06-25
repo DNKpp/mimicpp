@@ -14,6 +14,7 @@
 #include "mimic++/TypeTraits.hpp"
 
 #include "mimic++/Printer.hpp"
+#include "mimic++/Reports.hpp"
 #include "mimic++/Reporter.hpp"
 
 #include "mimic++/Sequence.hpp"
