@@ -24,21 +24,16 @@ namespace
 	using InitSeqConfigT = sequence::detail::Config<>;
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_TEST_CASE(
 	"Times limites of mimicpp::BasicExpectationBuilder can be exchanged only once.",
 	"[expectation][expectation::builder]",
-	((bool expected, typename Builder, typename Policy), expected, Builder, Policy),
-	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
-	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
-	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, void(), expectation_policies::InitFinalize>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, int(), expectation_policies::InitFinalize>, FinalizerFake<int()>),
-	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
-	(false, mimicpp::BasicExpectationBuilder<true, InitSeqConfigT, int(), FinalizerFake<int()>>, FinalizerFake<int()>),
-	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, void(), FinalizerFake<void()>>, FinalizerFake<void()>),
-	(true, mimicpp::BasicExpectationBuilder<false, InitSeqConfigT, int(), FinalizerFake<int()>>, FinalizerFake<int()>)
+	(BasicExpectationBuilder<false, InitSeqConfigT, void(), expectation_policies::InitFinalize>)
 )
 {
-	STATIC_REQUIRE(expected == requires{ std::declval<Builder&&>() | detail::TimesConfig{}; });
+	using BuilderT = TestType;
+
+	STATIC_REQUIRE(requires{ std::declval<BuilderT&&>() | detail::TimesConfig{}; });
+	STATIC_REQUIRE(!requires{ std::declval<BuilderT&&>() | detail::TimesConfig{} | detail::TimesConfig{}; });
 }
 
 TEST_CASE(

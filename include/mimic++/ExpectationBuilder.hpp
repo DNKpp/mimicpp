@@ -111,11 +111,23 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr BasicExpectationBuilder&& operator |(detail::TimesConfig&& config) &&
+		constexpr auto operator |(detail::TimesConfig&& config) &&
 			requires (!timesConfigured)
 		{
-			m_TimesConfig = std::move(config);
-			return std::move(*this);
+			using NewBuilderT = BasicExpectationBuilder<
+				true,
+				SequenceConfig,
+				Signature,
+				FinalizePolicy,
+				Policies...>;
+
+			return NewBuilderT{
+				std::move(m_Storage),
+				std::move(config),
+				std::move(m_SequenceConfig),
+				std::move(m_FinalizePolicy),
+				std::move(m_ExpectationPolicies)
+			};
 		}
 
 		template <typename... Sequences>
@@ -125,7 +137,7 @@ namespace mimicpp
 			sequence::detail::Config newConfig = m_SequenceConfig.concat(std::move(config));
 
 			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
-				true,
+				timesConfigured,
 				decltype(newConfig),
 				Signature,
 				FinalizePolicy,
