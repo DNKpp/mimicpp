@@ -80,6 +80,8 @@ TEST_CASE(
 		sequence::detail::Config<>{}
 	};
 
+	REQUIRE(0u == policy.sequenceCount);
+
 	for ([[maybe_unused]] auto i : std::views::iota(0, min))
 	{
 		REQUIRE(!std::as_const(policy).is_satisfied());
@@ -149,6 +151,8 @@ TEST_CASE(
 			}
 		};
 
+		REQUIRE(1u == policy->sequenceCount);
+
 		REQUIRE(!std::as_const(*policy).is_satisfied());
 		REQUIRE_THAT(
 			std::as_const(*policy).state(),
@@ -200,6 +204,8 @@ TEST_CASE(
 					*secondSequence)
 			}
 		};
+
+		REQUIRE(2u == policy->sequenceCount);
 
 		REQUIRE(!std::as_const(*policy).is_satisfied());
 		REQUIRE_THAT(
@@ -281,6 +287,8 @@ TEST_CASE(
 			expect::in_sequence(sequence)
 		};
 
+		REQUIRE(1u == policy.sequenceCount);
+
 		for ([[maybe_unused]] auto i : std::views::iota(0, min))
 		{
 			REQUIRE(!std::as_const(policy).is_satisfied());
@@ -360,6 +368,8 @@ TEST_CASE(
 			expect::in_sequence(sequence)
 		};
 
+		REQUIRE(1u == policy.sequenceCount);
+
 		for ([[maybe_unused]] const int i : std::views::iota(0, count))
 		{
 			REQUIRE(!std::as_const(policy).is_satisfied());
@@ -397,11 +407,15 @@ TEST_CASE(
 			expect::in_sequence(sequence)
 		};
 
+		REQUIRE(1u == policy1.sequenceCount);
+
 		const auto count2 = GENERATE(range(1, 5));
 		ControlPolicy policy2{
 			expect::times(count2),
 			expect::in_sequence(sequence)
 		};
+
+		REQUIRE(1u == policy2.sequenceCount);
 
 		SECTION("When first expection is satisfied, then the second one becomes applicable.")
 		{
@@ -503,10 +517,13 @@ TEST_CASE(
 				expect::once(),
 				expect::in_sequences(sequence1, sequence2)
 			};
+			REQUIRE(2u == policy1.sequenceCount);
+
 			ControlPolicy policy2{
 				expect::once(),
 				expect::in_sequence(sequence2)
 			};
+			REQUIRE(1u == policy2.sequenceCount);
 
 			REQUIRE(!policy1.is_satisfied());
 			REQUIRE_THAT(
@@ -596,14 +613,19 @@ TEST_CASE(
 				expect::once(),
 				expect::in_sequence(sequence1)
 			};
+			REQUIRE(1u == policy1.sequenceCount);
+
 			ControlPolicy policy2{
 				expect::once(),
 				expect::in_sequence(sequence2)
 			};
+			REQUIRE(1u == policy2.sequenceCount);
+
 			ControlPolicy policy3{
 				expect::once(),
 				expect::in_sequences(sequence1, sequence2)
 			};
+			REQUIRE(2u == policy3.sequenceCount);
 
 			REQUIRE(!policy1.is_satisfied());
 			REQUIRE_THAT(
@@ -778,6 +800,7 @@ TEST_CASE(
 			expect::at_most(1),
 			expect::in_sequence(sequence)
 		};
+		CHECK(1u == policy1.sequenceCount);
 		CHECK(policy1.is_satisfied());
 		CHECK_THAT(
 			std::as_const(policy1).state(),
@@ -795,6 +818,7 @@ TEST_CASE(
 			expect::at_most(1),
 			expect::in_sequence(sequence)
 		};
+		CHECK(1u == policy2.sequenceCount);
 		CHECK(policy2.is_satisfied());
 		CHECK_THAT(
 			std::as_const(policy2).state(),
@@ -906,6 +930,7 @@ TEST_CASE(
 			expect::at_most(1),
 			expect::in_sequence(sequence)
 		};
+		CHECK(1u == policy1.sequenceCount);
 		CHECK(policy1.is_satisfied());
 		CHECK_THAT(
 			std::as_const(policy1).state(),
@@ -923,6 +948,7 @@ TEST_CASE(
 			expect::at_most(1),
 			expect::in_sequence(sequence)
 		};
+		CHECK(1u == policy2.sequenceCount);
 		CHECK(policy2.is_satisfied());
 		CHECK_THAT(
 			std::as_const(policy2).state(),
