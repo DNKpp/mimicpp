@@ -483,3 +483,13 @@ constexpr auto variant_equals(Value&& value)
 		std::forward<Value>(value)
 	};
 }
+
+class FakeSequenceStrategy
+{
+public:
+	[[nodiscard, maybe_unused]]
+	constexpr int operator ()(const auto id, [[maybe_unused]] const int cursor) const noexcept
+	{
+		return static_cast<int>(id);
+	}
+};

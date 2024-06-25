@@ -4,6 +4,7 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "TestReporter.hpp"
+#include "TestTypes.hpp"
 
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Expectation.hpp"
@@ -19,16 +20,6 @@ using namespace mimicpp;
 
 namespace
 {
-	class FakeStrategy
-	{
-	public:
-		[[nodiscard, maybe_unused]]
-		constexpr int operator ()(const auto id, [[maybe_unused]] const int cursor) const noexcept
-		{
-			return static_cast<int>(id);
-		}
-	};
-
 	using sequence::Id;
 }
 
@@ -37,7 +28,7 @@ TEST_CASE(
 	"[sequence]"
 )
 {
-	using SequenceT = sequence::detail::BasicSequence<Id, FakeStrategy{}>;
+	using SequenceT = sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}>;
 
 	STATIC_REQUIRE(std::is_default_constructible_v<SequenceT>);
 
@@ -75,7 +66,7 @@ TEST_CASE(
 
 	sequence::detail::BasicSequence<
 		ShortSequenceId,
-		FakeStrategy{}> seq{};
+		FakeSequenceStrategy{}> seq{};
 
 	for ([[maybe_unused]] const auto i : std::views::iota(
 			0,
@@ -96,7 +87,7 @@ TEST_CASE(
 {
 	namespace Matches = Catch::Matchers;
 
-	using SequenceT = sequence::detail::BasicSequence<Id, FakeStrategy{}>;
+	using SequenceT = sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}>;
 
 	ScopedReporter reporter{};
 	std::optional<SequenceT> sequence{std::in_place};
@@ -285,7 +276,7 @@ TEST_CASE(
 	"sequence"
 )
 {
-	const sequence::detail::BasicSequence<Id, FakeStrategy{}> sequence{};
+	const sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}> sequence{};
 	const sequence::Tag tag = sequence.tag();
 
 	REQUIRE(to_underlying(tag) == reinterpret_cast<std::ptrdiff_t>(std::addressof(sequence)));

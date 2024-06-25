@@ -125,19 +125,9 @@ TEST_CASE(
 
 namespace
 {
-	class FakeStrategy
-	{
-	public:
-		[[nodiscard, maybe_unused]]
-		constexpr int operator ()(const auto id, [[maybe_unused]] const int cursor) const noexcept
-		{
-			return static_cast<int>(id);
-		}
-	};
-
 	using TestSequenceT = sequence::detail::BasicSequenceInterface<
 		sequence::Id,
-		FakeStrategy{}>;
+		FakeSequenceStrategy{}>;
 }
 
 TEST_CASE(
