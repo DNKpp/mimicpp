@@ -356,10 +356,12 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	consteval auto once() noexcept
 	{
-		return detail::TimesConfig{
+		constexpr detail::TimesConfig config{
 			1,
 			1
 		};
+
+		return config;
 	}
 
 	/**
@@ -372,10 +374,12 @@ namespace mimicpp::expect
 	[[nodiscard]]
 	consteval auto twice() noexcept
 	{
-		return detail::TimesConfig{
+		constexpr detail::TimesConfig config{
 			2,
 			2
 		};
+
+		return config;
 	}
 
 	/**
