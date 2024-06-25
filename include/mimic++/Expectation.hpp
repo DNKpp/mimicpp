@@ -238,7 +238,6 @@ namespace mimicpp
 							&& requires(T& policy)
 							{
 								{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-								{ std::as_const(policy).describe_state() } -> std::convertible_to<std::optional<StringT>>;
 								{ std::as_const(policy).state() } -> std::convertible_to<control_state_t>;
 								policy.consume();
 							};
@@ -285,12 +284,14 @@ namespace mimicpp
 			return ExpectationReport{
 				.sourceLocation = m_SourceLocation,
 				.finalizerDescription = std::nullopt,
-				.timesDescription = m_ControlPolicy.describe_state(),
+				.timesDescription = std::visit(
+					detail::control_state_printer{},
+					m_ControlPolicy.state()),
 				.expectationDescriptions = std::apply(
 					[&](const auto&... policies)
 					{
 						return std::vector<std::optional<StringT>>{
-								policies.describe()...
+							policies.describe()...
 						};
 					},
 					m_Policies)

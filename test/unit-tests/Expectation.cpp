@@ -400,11 +400,6 @@ TEST_CASE(
 	REQUIRE(mimicpp::is_same_source_location(loc, expectation.from()));
 }
 
-namespace
-{
-	using PrioritiesResultT = std::vector<mimicpp::sequence::rating>;
-}
-
 TEST_CASE(
 	"Control policy of mimicpp::BasicExpectation controls, how often its expectations must be matched.",
 	"[expectation]"
@@ -449,9 +444,6 @@ TEST_CASE(
 			};
 			REQUIRE_CALL(times, state())
 				.RETURN(controlState);
-			// Todo:
-			//REQUIRE_CALL(times, describe_state())
-			//	.RETURN("times state applicable");
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 			REQUIRE(matchReport.controlReport == controlState);
 			REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
@@ -465,9 +457,6 @@ TEST_CASE(
 				(mimicpp::state_saturated{0, 1, 1}));
 			REQUIRE_CALL(times, state())
 				.LR_RETURN(controlState);
-			// Todo:
-			//REQUIRE_CALL(times, describe_state())
-			//	.RETURN("times state inapplicable");
 			const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
 			REQUIRE(matchReport.controlReport == controlState);
 			REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(matchReport));
@@ -521,9 +510,6 @@ TEST_CASE(
 					(mimicpp::state_saturated{0, 1, 1}));
 			REQUIRE_CALL(times, state())
 				.RETURN(controlState);
-			// Todo:
-			/*REQUIRE_CALL(times, describe_state())
-				.RETURN(std::nullopt);*/
 			REQUIRE(mimicpp::MatchResult::none == evaluate_match_report(std::as_const(expectation).matches(call)));
 		}
 
@@ -538,9 +524,6 @@ TEST_CASE(
 					.RETURN(true);
 				REQUIRE_CALL(policy, describe())
 					.RETURN(mimicpp::StringT{});
-				// Todo:
-				/*REQUIRE_CALL(times, describe_state())
-					.RETURN(std::nullopt);*/
 				REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(std::as_const(expectation).matches(call)));
 			}
 
@@ -557,9 +540,6 @@ TEST_CASE(
 					.RETURN(true);
 				REQUIRE_CALL(policy, describe())
 					.RETURN(mimicpp::StringT{});
-				// Todo:
-				//REQUIRE_CALL(times, describe_state())
-				//	.RETURN(std::nullopt);
 				REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(std::as_const(expectation).matches(call)));
 			}
 		}
@@ -775,7 +755,6 @@ TEST_CASE(
 	namespace Matches = Catch::Matchers;
 
 	using FinalizerPolicyT = FinalizerFake<void()>;
-	using TimesPolicyT = ControlPolicyFake;
 
 	SECTION("Finalizer policy has no description.")
 	{
@@ -784,27 +763,27 @@ TEST_CASE(
 
 	SECTION("Times policy is queried.")
 	{
-		using TimesT = ControlPolicyFacade<std::reference_wrapper<ControlPolicyMock>, UnwrapReferenceWrapper>;
+		using ControlT = ControlPolicyFacade<std::reference_wrapper<ControlPolicyMock>, UnwrapReferenceWrapper>;
 
-		ControlPolicyMock times{};
+		ControlPolicyMock controlPolicy{};
 		mimicpp::BasicExpectation<
 				void(),
-				TimesT,
+				ControlT,
 				FinalizerPolicyT>
 			expectation{
 				std::source_location::current(),
-				TimesT{std::ref(times)},
+				ControlT{std::ref(controlPolicy)},
 				FinalizerPolicyT{}
 			};
 
-		REQUIRE_CALL(times, describe_state())
-			.RETURN("times description");
+		REQUIRE_CALL(controlPolicy, state())
+			.RETURN(mimicpp::state_applicable{0, 1, 0});
 
 		const mimicpp::ExpectationReport report = expectation.report();
 		REQUIRE(report.timesDescription);
 		REQUIRE_THAT(
 			*report.timesDescription,
-			Matches::Equals("times description"));
+			!Matches::IsEmpty());
 	}
 
 	SECTION("Expectation policies are queried.")
@@ -817,12 +796,12 @@ TEST_CASE(
 		PolicyMock<void()> policy{};
 		mimicpp::BasicExpectation<
 				void(),
-				TimesPolicyT,
+				ControlPolicyFake,
 				FinalizerPolicyT,
 				PolicyT>
 			expectation{
 				std::source_location::current(),
-				TimesPolicyT{},
+				ControlPolicyFake{},
 				FinalizerPolicyT{},
 				PolicyT{std::ref(policy)}
 			};

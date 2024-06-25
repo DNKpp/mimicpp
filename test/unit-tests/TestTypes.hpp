@@ -175,24 +175,16 @@ public:
 		return isSatisfied;
 	}
 
-	std::optional<mimicpp::StringT> stateDescription{};
-
-	[[nodiscard]]
-	std::optional<mimicpp::StringT> describe_state() const
-	{
-		return stateDescription;
-	}
-
-	static constexpr void consume() noexcept
-	{
-	}
-
 	mimicpp::control_state_t stateData{};
 
 	[[nodiscard]]
 	mimicpp::control_state_t state() const
 	{
 		return stateData;
+	}
+
+	static constexpr void consume() noexcept
+	{
 	}
 };
 
@@ -220,23 +212,16 @@ public:
 	}
 
 	[[nodiscard]]
-	std::optional<mimicpp::StringT> describe_state() const
+	mimicpp::control_state_t state() const
 	{
 		return std::invoke(projection, policy)
-			.describe_state();
+			.state();
 	}
 
 	constexpr void consume() noexcept
 	{
 		return std::invoke(projection, policy)
 			.consume();
-	}
-
-	[[nodiscard]]
-	mimicpp::control_state_t state() const
-	{
-		return std::invoke(projection, policy)
-			.state();
 	}
 };
 

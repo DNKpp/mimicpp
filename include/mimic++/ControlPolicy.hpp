@@ -222,35 +222,6 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		StringT describe_state() const
-		{
-			StringT description = detail::stringify_times_state(
-				m_Count,
-				m_Min,
-				m_Max);
-			if (m_Count < m_Max
-				&& 0 < sequenceCount)
-			{
-				const int consumableCount =
-					std::apply(
-						[](auto&... entries) noexcept
-						{
-							return (0 + ... + int{std::get<0>(entries)->is_consumable(std::get<1>(entries))});
-						},
-						m_Sequences);
-
-				// ReSharper disable once CppRedundantQualifier
-				format::format_to(
-					std::back_inserter(description),
-					"\n\tIs head from {} out of {} sequences.",
-					consumableCount,
-					sequenceCount);
-			}
-
-			return description;
-		}
-
-		[[nodiscard]]
 		control_state_t state() const
 		{
 			return detail::make_control_state(
