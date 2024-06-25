@@ -8,16 +8,17 @@
 
 #pragma once
 
-#include "mimic++/Printer.hpp"
 #include "mimic++/Reports.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Utility.hpp"
 
 #include <cassert>
 #include <limits>
+#include <memory>
+#include <optional>
 #include <stdexcept>
 #include <tuple>
-#include <variant>
+#include <utility>
 #include <vector>
 
 namespace mimicpp::detail
