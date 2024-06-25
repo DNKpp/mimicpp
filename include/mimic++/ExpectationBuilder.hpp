@@ -165,9 +165,9 @@ namespace mimicpp
 					[&](auto&... policies)
 					{
 						ControlPolicy controlPolicy{
-								std::move(m_TimesConfig),
-								std::move(m_SequenceConfig)
-							};
+							std::move(m_TimesConfig),
+							std::move(m_SequenceConfig)
+						};
 
 						using ExpectationT = BasicExpectation<
 							Signature,
@@ -194,7 +194,9 @@ namespace mimicpp
 	};
 
 	template <bool timesConfigured, typename SequenceConfig, typename Signature, typename... Policies>
-	ScopedExpectation(BasicExpectationBuilder<timesConfigured, SequenceConfig, Signature, Policies...>&&) -> ScopedExpectation<Signature>;
+	ScopedExpectation(
+		BasicExpectationBuilder<timesConfigured, SequenceConfig, Signature, Policies...>&&
+	) -> ScopedExpectation<Signature>;
 }
 
 namespace mimicpp::detail
@@ -218,7 +220,11 @@ namespace mimicpp::detail
 	}
 
 	template <typename Signature, std::size_t index, typename Arg>
-	constexpr void make_arg_policy([[maybe_unused]] Arg&& arg, [[maybe_unused]] const priority_tag<0>) noexcept  // NOLINT(cppcoreguidelines-missing-std-forward)
+	constexpr void
+	make_arg_policy(
+		[[maybe_unused]] Arg&& arg,
+		[[maybe_unused]] const priority_tag<0>
+	) noexcept  // NOLINT(cppcoreguidelines-missing-std-forward)
 	{
 		static_assert(
 			always_false<Arg>{},
@@ -237,8 +243,8 @@ namespace mimicpp::detail
 			std::forward<Builder>(builder)
 			| ...
 			| detail::make_arg_policy<Signature, indices>(
-					std::forward<Args>(args),
-					priority_tag<2>{}));
+				std::forward<Args>(args),
+				priority_tag<2>{}));
 	}
 
 	template <typename Signature, typename... Args>
@@ -270,7 +276,7 @@ namespace mimicpp::detail
 #define MIMICPP_UNIQUE_NAME(prefix, counter) prefix##counter
 #define MIMICPP_SCOPED_EXPECTATION_IMPL(counter)													\
 	[[maybe_unused]]																				\
-	const ::mimicpp::ScopedExpectation MIMICPP_UNIQUE_NAME(_mimicpp_expectation_, counter) = 
+	const ::mimicpp::ScopedExpectation MIMICPP_UNIQUE_NAME(_mimicpp_expectation_, counter) =
 
 #define MIMICPP_SCOPED_EXPECTATION MIMICPP_SCOPED_EXPECTATION_IMPL(__COUNTER__)
 #define SCOPED_EXP MIMICPP_SCOPED_EXPECTATION
