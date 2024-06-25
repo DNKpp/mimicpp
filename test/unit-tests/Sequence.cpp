@@ -273,7 +273,7 @@ TEST_CASE(
 
 TEST_CASE(
 	"detail::BasicSequence::tag returns its opaque address.",
-	"sequence"
+	"[sequence]"
 )
 {
 	const sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}> sequence{};
