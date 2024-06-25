@@ -202,7 +202,7 @@ namespace mimicpp::sequence
 			constexpr Tag tag() const noexcept
 			{
 				return Tag{
-					reinterpret_cast<std::ptrdiff_t>(this)
+					std::bit_cast<std::ptrdiff_t>(this)
 				};
 			}
 
