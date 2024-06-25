@@ -22,60 +22,6 @@
 
 namespace mimicpp::detail
 {
-	[[nodiscard]]
-	inline StringT describe_times_state(const std::size_t current, const std::size_t min, const std::size_t max)
-	{
-		const auto verbalizeValue = [](const std::size_t value)-> StringT
-		{
-			switch (value)
-			{
-			case 0:
-				return "never";
-			case 1:
-				return "once";
-			case 2:
-				return "twice";
-			default:
-				return format::format("{} times", value);
-			}
-		};
-
-		if (current == max)
-		{
-			return format::format(
-				"inapplicable: already saturated (matched {})",
-				verbalizeValue(current));
-		}
-
-		if (min <= current)
-		{
-			return format::format(
-				"applicable: accepts further matches (matched {} out of {} times)",
-				current,
-				max);
-		}
-
-		const auto verbalizeInterval = [verbalizeValue](const std::size_t start, const std::size_t end)
-		{
-			if (start < end)
-			{
-				return format::format(
-					"between {} and {} times",
-					start,
-					end);
-			}
-
-			return format::format(
-				"exactly {}",
-				verbalizeValue(end));
-		};
-
-		return format::format(
-			"unsatisfied: matched {} - {} is expected",
-			verbalizeValue(current),
-			verbalizeInterval(min, max));
-	}
-
 	template <typename... Sequences>
 	[[nodiscard]]
 	constexpr std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> make_sequence_entries(
@@ -278,7 +224,7 @@ namespace mimicpp
 		[[nodiscard]]
 		StringT describe_state() const
 		{
-			StringT description = detail::describe_times_state(
+			StringT description = detail::stringify_times_state(
 				m_Count,
 				m_Min,
 				m_Max);
