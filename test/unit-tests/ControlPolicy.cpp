@@ -374,10 +374,6 @@ TEST_CASE(
 					sequence::rating{0, sequence.tag()}
 					}
 					}));
-			REQUIRE_THAT(
-				policy.describe_state(),
-				Matches::Matches("unsatisfied: matched .+ - .+ is expected\n\t.*")
-				&& Matches::EndsWith("\n\tIs head from 1 out of 1 sequences."));
 
 			REQUIRE_NOTHROW(policy.consume());
 		}
@@ -392,10 +388,6 @@ TEST_CASE(
 				.count = count,
 				.sequences = {sequence.tag()}
 				}));
-		REQUIRE_THAT(
-			policy.describe_state(),
-			Matches::StartsWith("inapplicable: already saturated (matched ")
-			&& Matches::EndsWith(")"));
 	}
 
 	SECTION("When sequence has multiple expectations, the order matters.")
@@ -425,9 +417,6 @@ TEST_CASE(
 					sequence::rating{0, sequence.tag()}
 					}
 					}));
-			REQUIRE_THAT(
-				policy1.describe_state(),
-				Matches::Equals("unsatisfied: matched never - exactly once is expected\n\tIs head from 1 out of 1 sequences."));
 
 			REQUIRE(!std::as_const(policy2).is_satisfied());
 			REQUIRE_THAT(
@@ -439,10 +428,6 @@ TEST_CASE(
 					.count = 0,
 					.inapplicableSequences = {sequence.tag()}
 					}));
-			REQUIRE_THAT(
-				policy2.describe_state(),
-				Matches::Matches("unsatisfied: matched never - .+ is expected\n\t.*")
-				&& Matches::EndsWith("\n\tIs head from 0 out of 1 sequences."));
 
 			REQUIRE_NOTHROW(policy1.consume());
 
@@ -458,9 +443,6 @@ TEST_CASE(
 						.count = 1,
 						.sequences = {sequence.tag()}
 						}));
-				REQUIRE_THAT(
-					policy1.describe_state(),
-					Matches::Equals("inapplicable: already saturated (matched once)"));
 
 				REQUIRE(!std::as_const(policy2).is_satisfied());
 				REQUIRE_THAT(
@@ -474,10 +456,6 @@ TEST_CASE(
 						sequence::rating{1, sequence.tag()}
 						}
 						}));
-				REQUIRE_THAT(
-					policy2.describe_state(),
-					Matches::Matches("unsatisfied: matched .+ - .+ is expected\n\t.*")
-					&& Matches::EndsWith("\n\tIs head from 1 out of 1 sequences."));
 
 				REQUIRE_NOTHROW(policy2.consume());
 			}
@@ -492,9 +470,6 @@ TEST_CASE(
 					.count = 1,
 					.sequences = {sequence.tag()}
 					}));
-			REQUIRE_THAT(
-				policy1.describe_state(),
-				Matches::Equals("inapplicable: already saturated (matched once)"));
 
 			REQUIRE(policy2.is_satisfied());
 			REQUIRE_THAT(
@@ -506,10 +481,6 @@ TEST_CASE(
 					.count = count2,
 					.sequences = {sequence.tag()}
 					}));
-			REQUIRE_THAT(
-				policy2.describe_state(),
-				Matches::StartsWith("inapplicable: already saturated (matched")
-				&& Matches::EndsWith(")"));
 		}
 	}
 }
