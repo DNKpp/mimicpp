@@ -113,3 +113,49 @@ TEST_CASE(
 	mock(); // now (3) is used
 	//! [sequence multiple sequences]
 }
+
+TEST_CASE(
+	"LazySequence prefers to skip the least possible elements.",
+	"[example][example::sequence]"
+)
+{
+	//! [lazy]
+	using mimicpp::matches::_;
+	namespace expect = mimicpp::expect;
+
+	mimicpp::Mock<void()> mock{};
+
+	mimicpp::LazySequence sequence{};
+	SCOPED_EXP mock.expect_call() // (1)
+				| expect::in_sequence(sequence)
+				| expect::at_most(1);
+	SCOPED_EXP mock.expect_call() // (2)
+				| expect::in_sequence(sequence);
+
+	mock(); // matches (1)
+	mock(); // matches (2)
+	//! [lazy]
+}
+
+TEST_CASE(
+	"GreedySequence prefers to skip the maximal possible elements.",
+	"[example][example::sequence]"
+)
+{
+	//! [greedy]
+	using mimicpp::matches::_;
+	namespace expect = mimicpp::expect;
+
+	mimicpp::Mock<void()> mock{};
+
+	mimicpp::GreedySequence sequence{};
+	SCOPED_EXP mock.expect_call() // (1)
+				| expect::in_sequence(sequence)
+				| expect::at_most(1);
+	SCOPED_EXP mock.expect_call() // (2)
+				| expect::in_sequence(sequence);
+
+	mock(); // matches (2)
+	// no further call possible, because that would be out of sequence and will lead to an inapplicable match report!
+	//! [greedy]
+}
