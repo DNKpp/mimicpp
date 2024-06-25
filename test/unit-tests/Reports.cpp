@@ -260,6 +260,169 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"detail::stringify_times_state converts the times state to text.",
+	"[reporting][detail]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When current == max.")
+	{
+		const auto [min, max] = GENERATE(
+			(table<std::size_t, std::size_t>)({
+				{0, 1},
+				{0, 2},
+				{3, 42},
+				}));
+
+		const auto description = detail::stringify_times_state(
+			max,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::StartsWith("already saturated (matched "));
+	}
+
+	SECTION("When min <= current < max.")
+	{
+		const auto [current, min, max] = GENERATE(
+			(table<std::size_t, std::size_t, std::size_t>)({
+				{0, 0, 1},
+				{1, 0, 2},
+				{21, 3, 42},
+				}));
+
+		const auto description = detail::stringify_times_state(
+			current,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::Matches("accepts further matches \\(matched \\d+ out of \\d+ times\\)"));
+	}
+
+	SECTION("When current < min.")
+	{
+		const auto [current, min, max] = GENERATE(
+			(table<std::size_t, std::size_t, std::size_t>)({
+				{0, 1, 2},
+				{1, 2, 5},
+				{2, 3, 42},
+				}));
+
+		const auto description = detail::stringify_times_state(
+			current,
+			min,
+			max);
+
+		REQUIRE_THAT(
+			description,
+			Matches::StartsWith("matched "));
+	}
+}
+
+TEST_CASE(
+	"detail::control_state_printer converts control states to text.",
+	"[reporting][detail]")
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When state_applicable is given.")
+	{
+		SECTION("Sequence text is omitted, when not attached to a sequence.")
+		{
+			const state_applicable state{
+				.min = 42,
+				.max = 1337,
+				.count = 256,
+				.sequenceRatings = {}
+			};
+
+			REQUIRE_THAT(
+				detail::control_state_printer{}(state),
+				Matches::Equals("accepts further matches (matched 256 out of 1337 times)"));
+		}
+
+		SECTION("Otherwise sequence text is added.")
+		{
+			const state_applicable state{
+				.min = 42,
+				.max = 1337,
+				.count = 256,
+				.sequenceRatings = {
+					sequence::rating{0, sequence::Tag{1337}}
+				}
+			};
+
+			REQUIRE_THAT(
+				detail::control_state_printer{}(state),
+				Matches::Equals(
+					"accepts further matches (matched 256 out of 1337 times),\n"
+					"\tand is the current element of 1 sequence(s)."));
+		}
+	}
+
+	SECTION("When state_inapplicable is given.")
+	{
+		const state_inapplicable state{
+			.min = 42,
+			.max = 1337,
+			.count = 256,
+			.sequenceRatings = {
+				sequence::rating{0, sequence::Tag{1337}}
+			},
+			.inapplicableSequences = {
+				sequence::Tag{1338},
+				sequence::Tag{1339}
+			}
+		};
+
+		REQUIRE_THAT(
+			detail::control_state_printer{}(state),
+			Matches::Equals(
+				"accepts further matches (matched 256 out of 1337 times),\n"
+				"\tbut is not the current element of 2 sequence(s) (3 total)."));
+	}
+
+	SECTION("When state_saturated is given.")
+	{
+		SECTION("Sequence text is omitted, when not attached to a sequence.")
+		{
+			const state_saturated state{
+				.min = 42,
+				.max = 1337,
+				.count = 1337
+			};
+
+			REQUIRE_THAT(
+				detail::control_state_printer{}(state),
+				Matches::Equals("already saturated (matched 1337 times)"));
+		}
+
+		SECTION("Otherwise sequence text is added.")
+		{
+			const state_saturated state{
+				.min = 42,
+				.max = 1337,
+				.count = 1337,
+				.sequences = {
+					sequence::Tag{1337}
+				}
+			};
+
+			REQUIRE_THAT(
+				detail::control_state_printer{}(state),
+				Matches::Equals(
+					"already saturated (matched 1337 times),\n"
+					"\tand is part of 1 sequence(s)."));
+		}
+	}
+}
+
+TEST_CASE(
 	"CallReport::Arg is equality comparable.",
 	"[reporting]"
 )

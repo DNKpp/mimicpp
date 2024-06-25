@@ -129,29 +129,66 @@ namespace mimicpp
 				verbalizeInterval(min, max));
 		}
 
-		[[nodiscard]]
-		inline StringT stringify_control_state(const state_inapplicable& state)
+		struct control_state_printer
 		{
-			const auto totalSequences = std::ranges::ssize(state.sequenceRatings)
-										+ std::ranges::ssize(state.inapplicableSequences);
-			return format::format(
-				"{},\n\tbut is not the current element of {} sequence(s) ({} total).",
-				stringify_times_state(
+			[[nodiscard]]
+			StringT operator ()(const state_applicable& state) const
+			{
+				auto timesText = stringify_times_state(
 					state.count,
 					state.min,
-					state.max),
-				std::ranges::ssize(state.inapplicableSequences),
-				totalSequences);
-		}
+					state.max);
 
-		[[nodiscard]]
-		inline StringT stringify_control_state(const state_saturated& state)
-		{
-			return stringify_times_state(
-				state.count,
-				state.min,
-				state.max);
-		}
+				if (const auto sequenceCount = std::ranges::ssize(state.sequenceRatings);
+					0 < sequenceCount)
+				{
+					return format::format(
+						"{},\n\tand is the current element of {} sequence(s).",
+						stringify_times_state(
+							state.count,
+							state.min,
+							state.max),
+						sequenceCount);
+				}
+
+				return timesText;
+			}
+
+			[[nodiscard]]
+			StringT operator ()(const state_inapplicable& state) const
+			{
+				const auto totalSequences = std::ranges::ssize(state.sequenceRatings)
+											+ std::ranges::ssize(state.inapplicableSequences);
+				return format::format(
+					"{},\n\tbut is not the current element of {} sequence(s) ({} total).",
+					stringify_times_state(
+						state.count,
+						state.min,
+						state.max),
+					std::ranges::ssize(state.inapplicableSequences),
+					totalSequences);
+			}
+
+			[[nodiscard]]
+			StringT operator ()(const state_saturated& state) const
+			{
+				auto timesText = stringify_times_state(
+					state.count,
+					state.min,
+					state.max);
+
+				if (const auto sequenceCount = std::ranges::ssize(state.sequences);
+					0 < sequenceCount)
+				{
+					return format::format(
+						"{},\n\tand is part of {} sequence(s).",
+						timesText,
+						sequenceCount);
+				}
+
+				return timesText;
+			}
+		};
 	}
 
 	/**
@@ -459,14 +496,9 @@ namespace mimicpp
 				std::ostreambuf_iterator{out},
 				"Inapplicable, but otherwise matched expectation: {{\n"
 				"reason: {}\n",
-				[&]
-				{
-					if (const auto* inner = std::get_if<state_inapplicable>(&report.controlReport))
-					{
-						return detail::stringify_control_state(*inner);
-					}
-					return detail::stringify_control_state(std::get<state_saturated>(report.controlReport));
-				}());
+				std::visit(
+					detail::control_state_printer{},
+					report.controlReport));
 			break;
 
 		case MatchResult::none:
