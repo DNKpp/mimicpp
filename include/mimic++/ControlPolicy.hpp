@@ -282,8 +282,12 @@ namespace mimicpp::expect
 	 * \param min The lower limit.
 	 * \param max The upper limit.
 	 * \return The newly created policy.
+	 * \throws std::invalid_argument if
+	 * - ``min < 0``,
+	 * - ``max < 0`` or
+	 * - ``max < min``.
 	 *
-	 * \snippet Times.cpp times rt
+	 * \snippet Times.cpp times
 	 */
 	[[nodiscard]]
 	constexpr auto times(const int min, const int max)
@@ -296,12 +300,14 @@ namespace mimicpp::expect
 	 * \param exactly The limit.
 	 * \return The newly created policy.
 	 * \details This requires the expectation to be matched exactly the specified times.
-	 * \snippet Times.cpp times single rt
+	 * \throws std::invalid_argument if ``exactly < 0``.
+	 *
+	 * \snippet Times.cpp times single
 	 */
 	[[nodiscard]]
 	constexpr auto times(const int exactly)
 	{
-		return times(exactly, exactly);
+		return detail::TimesConfig(exactly, exactly);
 	}
 
 	/**
@@ -309,14 +315,17 @@ namespace mimicpp::expect
 	 * \tparam min The lower limit.
 	 * \return The newly created policy.
 	 * \details This requires the expectation to be matched at least ``min`` times or more.
-	 * \snippet Times.cpp at_least compile-time
+	 * \throws std::invalid_argument if ``min < 0``.
+	 *
+	 * \snippet Times.cpp at_least
 	 */
 	[[nodiscard]]
 	constexpr auto at_least(const int min)
 	{
-		return times(
+		return detail::TimesConfig{
 			min,
-			std::numeric_limits<int>::max());
+			std::numeric_limits<int>::max()
+		};
 	}
 
 	/**
@@ -324,37 +333,49 @@ namespace mimicpp::expect
 	 * \param max The upper limit.
 	 * \return The newly created policy.
 	 * \details This requires the expectation to be matched up to ``max`` times.
+	 * \throws std::invalid_argument if ``max < 0``.
+	 *
+	 * \snippet Times.cpp at_most
 	 */
 	[[nodiscard]]
 	constexpr auto at_most(const int max)
 	{
-		return times(
+		return detail::TimesConfig{
 			0,
-			max);
+			max
+		};
 	}
 
 	/**
 	 * \brief Specifies a times policy with both limits set to 1.
 	 * \return The newly created policy.
 	 * \details This requires the expectation to be matched exactly once.
+	 *
 	 * \snippet Times.cpp once
 	 */
 	[[nodiscard]]
 	consteval auto once() noexcept
 	{
-		return times(1);
+		return detail::TimesConfig{
+			1,
+			1
+		};
 	}
 
 	/**
 	 * \brief Specifies a times policy with both limits set to 2.
 	 * \return The newly created policy.
 	 * \details This requires the expectation to be matched exactly twice.
+	 *
 	 * \snippet Times.cpp twice
 	 */
 	[[nodiscard]]
 	consteval auto twice() noexcept
 	{
-		return times(2);
+		return detail::TimesConfig{
+			2,
+			2
+		};
 	}
 
 	/**
