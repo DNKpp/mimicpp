@@ -8,9 +8,10 @@
 
 #pragma once
 
-#include "Call.hpp"
-#include "Reporter.hpp"
-#include "TypeTraits.hpp"
+#include "mimic++/Call.hpp"
+#include "mimic++/ControlPolicy.hpp"
+#include "mimic++/Reporter.hpp"
+#include "mimic++/TypeTraits.hpp"
 
 #include <cassert>
 #include <concepts>
@@ -43,6 +44,31 @@ namespace mimicpp::detail
 		}
 
 		return std::nullopt;
+	}
+
+	template <typename Signature>
+	constexpr auto pick_best_match(std::vector<std::tuple<Expectation<Signature>&, MatchReport>>& matches)
+	{
+		constexpr auto ratings = [](const auto& el) noexcept -> const auto& {
+			return std::get<state_applicable>(
+					std::get<MatchReport>(el).controlReport)
+				.sequenceRatings;
+		};
+
+		auto best = std::ranges::begin(matches);
+		for (auto iter = best + 1;
+			iter != std::ranges::end(matches);
+			++iter)
+		{
+			if (!sequence::detail::has_better_rating(
+				ratings(*best),
+				ratings(*iter)))
+			{
+				best = iter;
+			}
+		}
+
+		return best;
 	}
 }
 
@@ -128,6 +154,7 @@ namespace mimicpp
 		[[nodiscard]]
 		ReturnT handle_call(const CallInfoT& call)
 		{
+			std::vector<std::tuple<ExpectationT&, MatchReport>> matches{};
 			std::vector<MatchReport> noMatches{};
 			std::vector<MatchReport> inapplicableMatches{};
 
@@ -146,18 +173,24 @@ namespace mimicpp
 						inapplicableMatches.emplace_back(*std::move(matchReport));
 						break;
 					case full:
-						detail::report_full_match(
-							make_call_report(call),
-							*std::move(matchReport));
-						exp->consume(call);
-						return exp->finalize_call(call);
-
+						matches.emplace_back(*exp, *std::move(matchReport));
+						break;
 						// GCOVR_EXCL_START
 					default:
 						unreachable();
 						// GCOVR_EXCL_STOP
 					}
 				}
+			}
+
+			if (!std::ranges::empty(matches))
+			{
+				auto&& [exp, report] = *detail::pick_best_match(matches);
+				detail::report_full_match(
+					make_call_report(call),
+					std::move(report));
+				exp.consume(call);
+				return exp.finalize_call(call);
 			}
 
 			if (!std::ranges::empty(inapplicableMatches))
@@ -199,20 +232,19 @@ namespace mimicpp
 								};
 
 	template <typename T>
-	concept times_policy = std::is_move_constructible_v<T>
+	concept control_policy = std::is_move_constructible_v<T>
 							&& std::is_destructible_v<T>
 							&& std::same_as<T, std::remove_cvref_t<T>>
 							&& requires(T& policy)
 							{
 								{ std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-								{ std::as_const(policy).is_applicable() } noexcept -> std::convertible_to<bool>;
-								{ std::as_const(policy).describe_state() } -> std::convertible_to<std::optional<StringT>>;
+								{ std::as_const(policy).state() } -> std::convertible_to<control_state_t>;
 								policy.consume();
 							};
 
 	template <
 		typename Signature,
-		times_policy TimesPolicy,
+		control_policy ControlPolicy,
 		finalize_policy_for<Signature> FinalizePolicy,
 		expectation_policy_for<Signature>... Policies
 	>
@@ -220,28 +252,28 @@ namespace mimicpp
 		: public Expectation<Signature>
 	{
 	public:
-		using TimesT = TimesPolicy;
+		using ControlPolicyT = ControlPolicy;
 		using FinalizerT = FinalizePolicy;
 		using PolicyListT = std::tuple<Policies...>;
 		using CallInfoT = call::info_for_signature_t<Signature>;
 		using ReturnT = typename Expectation<Signature>::ReturnT;
 
-		template <typename TimesArg, typename FinalizerArg, typename... PolicyArgs>
-			requires std::constructible_from<TimesT, TimesArg>
+		template <typename ControlPolicyArg, typename FinalizerArg, typename... PolicyArgs>
+			requires std::constructible_from<ControlPolicyT, ControlPolicyArg>
 					&& std::constructible_from<FinalizerT, FinalizerArg>
 					&& std::constructible_from<PolicyListT, PolicyArgs...>
 		constexpr explicit BasicExpectation(
 			const std::source_location& sourceLocation,
-			TimesArg&& timesArg,
+			ControlPolicyArg&& controlArg,
 			FinalizerArg&& finalizerArg,
 			PolicyArgs&&... args
 		) noexcept(
-			std::is_nothrow_constructible_v<TimesT, TimesArg>
+			std::is_nothrow_constructible_v<ControlPolicyT, ControlPolicyArg>
 			&& std::is_nothrow_constructible_v<FinalizerT, FinalizerArg>
 			&& (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
 			: m_SourceLocation{sourceLocation},
+			m_ControlPolicy{std::forward<ControlPolicyArg>(controlArg)},
 			m_Policies{std::forward<PolicyArgs>(args)...},
-			m_Times{std::forward<TimesArg>(timesArg)},
 			m_Finalizer{std::forward<FinalizerArg>(finalizerArg)}
 		{
 		}
@@ -252,12 +284,14 @@ namespace mimicpp
 			return ExpectationReport{
 				.sourceLocation = m_SourceLocation,
 				.finalizerDescription = std::nullopt,
-				.timesDescription = m_Times.describe_state(),
+				.timesDescription = std::visit(
+					detail::control_state_printer{},
+					m_ControlPolicy.state()),
 				.expectationDescriptions = std::apply(
 					[&](const auto&... policies)
 					{
 						return std::vector<std::optional<StringT>>{
-								policies.describe()...
+							policies.describe()...
 						};
 					},
 					m_Policies)
@@ -267,7 +301,7 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr bool is_satisfied() const noexcept override
 		{
-			return m_Times.is_satisfied()
+			return m_ControlPolicy.is_satisfied()
 					&& std::apply(
 						[](const auto&... policies) noexcept
 						{
@@ -282,10 +316,7 @@ namespace mimicpp
 			return MatchReport{
 				.sourceLocation = m_SourceLocation,
 				.finalizeReport = {std::nullopt},
-				.timesReport = MatchReport::Times{
-					.isApplicable = m_Times.is_applicable(),
-					.description = m_Times.describe_state()
-				},
+				.controlReport = m_ControlPolicy.state(),
 				.expectationReports = std::apply(
 					[&](const auto&... policies)
 					{
@@ -302,7 +333,7 @@ namespace mimicpp
 
 		constexpr void consume(const CallInfoT& call) override
 		{
-			m_Times.consume();
+			m_ControlPolicy.consume();
 			std::apply(
 				[&](auto&... policies) noexcept
 				{
@@ -325,8 +356,8 @@ namespace mimicpp
 
 	private:
 		std::source_location m_SourceLocation;
+		ControlPolicyT m_ControlPolicy;
 		PolicyListT m_Policies;
-		[[no_unique_address]] TimesT m_Times{};
 		[[no_unique_address]] FinalizerT m_Finalizer{};
 	};
 

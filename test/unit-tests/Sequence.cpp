@@ -4,11 +4,12 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "TestReporter.hpp"
+#include "TestTypes.hpp"
 
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Expectation.hpp"
 
-#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
@@ -17,91 +18,126 @@
 
 using namespace mimicpp;
 
-TEST_CASE(
-	"detail::Sequence is default constructible, but immobile.",
-	"[sequence]"
-)
+namespace
 {
-	STATIC_REQUIRE(std::is_default_constructible_v<detail::Sequence>);
-
-	STATIC_REQUIRE(!std::is_copy_constructible_v<detail::Sequence>);
-	STATIC_REQUIRE(!std::is_copy_assignable_v<detail::Sequence>);
-	STATIC_REQUIRE(!std::is_move_constructible_v<detail::Sequence>);
-	STATIC_REQUIRE(!std::is_move_assignable_v<detail::Sequence>);
+	using sequence::Id;
 }
 
 TEST_CASE(
-	"Sequence is default constructible, but immobile.",
+	"detail::BasicSequence is default constructible, but immobile.",
 	"[sequence]"
 )
 {
-	STATIC_REQUIRE(std::is_default_constructible_v<Sequence>);
+	using SequenceT = sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}>;
 
-	STATIC_REQUIRE(!std::is_copy_constructible_v<Sequence>);
-	STATIC_REQUIRE(!std::is_copy_assignable_v<Sequence>);
-	STATIC_REQUIRE(!std::is_move_constructible_v<Sequence>);
-	STATIC_REQUIRE(!std::is_move_assignable_v<Sequence>);
+	STATIC_REQUIRE(std::is_default_constructible_v<SequenceT>);
+
+	STATIC_REQUIRE(!std::is_copy_constructible_v<SequenceT>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<SequenceT>);
+	STATIC_REQUIRE(!std::is_move_constructible_v<SequenceT>);
+	STATIC_REQUIRE(!std::is_move_assignable_v<SequenceT>);
+}
+
+TEMPLATE_TEST_CASE(
+	"Sequence interfaces are default constructible, but immobile.",
+	"[sequence]",
+	LazySequence,
+	GreedySequence,
+	SequenceT
+)
+{
+	STATIC_REQUIRE(std::is_default_constructible_v<TestType>);
+
+	STATIC_REQUIRE(!std::is_copy_constructible_v<TestType>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<TestType>);
+	STATIC_REQUIRE(!std::is_move_constructible_v<TestType>);
+	STATIC_REQUIRE(!std::is_move_assignable_v<TestType>);
 }
 
 TEST_CASE(
-	"expectation_policies::Sequence is non-copyable but movable.",
+	"detail::BasicSequence::add throws, when all Ids are in use.",
 	"[sequence]"
 )
 {
-	STATIC_REQUIRE(!std::is_copy_constructible_v<expectation_policies::Sequence>);
-	STATIC_REQUIRE(!std::is_copy_assignable_v<expectation_policies::Sequence>);
+	enum class ShortSequenceId
+		: std::int8_t
+	{
+	};
 
-	STATIC_REQUIRE(std::is_move_constructible_v<expectation_policies::Sequence>);
-	STATIC_REQUIRE(std::is_move_assignable_v<expectation_policies::Sequence>);
+	sequence::detail::BasicSequence<
+		ShortSequenceId,
+		FakeSequenceStrategy{}> seq{};
+
+	for ([[maybe_unused]] const auto i : std::views::iota(
+			0,
+			int{std::numeric_limits<std::int8_t>::max()} + 1))
+	{
+		seq.set_satisfied(seq.add());
+	}
+
+	REQUIRE_THROWS_AS(
+		seq.add(),
+		std::runtime_error);
 }
 
 TEST_CASE(
-	"detail::Sequence supports an arbitrary id amount.",
+	"detail::BasicSequence supports an arbitrary id amount.",
 	"[sequence]"
 )
 {
 	namespace Matches = Catch::Matchers;
 
-	ScopedReporter reporter{};
-	std::optional<detail::Sequence> sequence{std::in_place};
+	using SequenceT = sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}>;
 
-	SECTION("When attempted to add a new id with zero or negative count, an std::invalid_argument is thrown.")
+	ScopedReporter reporter{};
+	std::optional<SequenceT> sequence{std::in_place};
+
+	SECTION("When Sequence contains zero elements.")
 	{
-		REQUIRE_THROWS_AS(
-			sequence->add(0),
-			std::invalid_argument);
+		REQUIRE_NOTHROW(sequence.reset());
 	}
 
-	SECTION("When sequence contains one id, that id must be fully consumed.")
-	{
-		const std::size_t count = GENERATE(1u, 2u, 3u);
-		const SequenceId id = sequence->add(count);
-
-		for ([[maybe_unused]] const auto i : std::views::iota(0u, count - 1u))
+	static constexpr std::array consumeStateActions = std::to_array(
 		{
-			REQUIRE(sequence->is_consumable(id));
-			REQUIRE(!sequence->is_saturated(id));
-			REQUIRE_NOTHROW(sequence->consume(id));
-		}
-		REQUIRE(sequence->is_consumable(id));
-		REQUIRE(!sequence->is_saturated(id));
+			+[](SequenceT&, const Id) { assert(true); },
+			+[](SequenceT& seq, const Id v) { seq.consume(v); }
+		});
 
-		SECTION("When id is not fully consumed, an error is reported.")
+	SECTION("When sequence contains one id, that id must be satisfied.")
+	{
+		const Id id = sequence->add();
+		REQUIRE(sequence->is_consumable(id));
+
+		std::invoke(
+			GENERATE(from_range(consumeStateActions)),
+			*sequence,
+			id);
+
+		SECTION("Reports error, when id is unsatisfied.")
 		{
 			sequence.reset();
 			REQUIRE_THAT(
-				reporter.errors(),
-				Matches::SizeIs(1));
-			REQUIRE_THAT(
 				reporter.errors().front(),
-				Matches::Equals("Unfulfilled sequence. 0 out of 1 expectation(s) where fully consumed."));
+				Matches::Equals("Unfulfilled sequence. 0 out of 1 expectation(s) are satisfied."));
 		}
 
-		SECTION("When id is fully consumed, nothing is reported.")
+		SECTION("Reports nothing, when id is satisfied.")
 		{
-			REQUIRE_NOTHROW(sequence->consume(id));
+			sequence->set_satisfied(id);
+
+			REQUIRE(sequence->is_consumable(id));
+
+			sequence.reset();
+			REQUIRE_THAT(
+				reporter.errors(),
+				Matches::IsEmpty());
+		}
+
+		SECTION("Reports nothing, when id is saturated.")
+		{
+			sequence->set_saturated(id);
+
 			REQUIRE(!sequence->is_consumable(id));
-			REQUIRE(sequence->is_saturated(id));
 
 			sequence.reset();
 			REQUIRE_THAT(
@@ -112,288 +148,395 @@ TEST_CASE(
 
 	SECTION("When sequence contains multiple ids.")
 	{
+		static constexpr std::array alterStateActions = std::to_array(
+			{
+				+[](SequenceT&, const Id) { assert(true); },
+				+[](SequenceT& seq, const Id v) { seq.set_satisfied(v); },
+				+[](SequenceT& seq, const Id v) { seq.set_saturated(v); }
+			});
+
 		const std::vector ids{
-			sequence->add(3u),
-			sequence->add(2u),
-			sequence->add(1u)
+			sequence->add(),
+			sequence->add(),
+			sequence->add()
 		};
 
-		SECTION("Sequence can consume first id.")
+		SECTION("In initial state, only the first one is consumable.")
 		{
-			for ([[maybe_unused]] const auto i : std::views::iota(0u, 3u))
+			REQUIRE(sequence->is_consumable(ids[0]));
+			REQUIRE(sequence->priority_of(ids[0]));
+
+			std::invoke(
+				GENERATE(from_range(alterStateActions)),
+				*sequence,
+				ids[1]);
+			REQUIRE(!sequence->is_consumable(ids[1]));
+			REQUIRE(!sequence->priority_of(ids[1]));
+
+			std::invoke(
+				GENERATE(from_range(alterStateActions)),
+				*sequence,
+				ids[2]);
+			REQUIRE(!sequence->is_consumable(ids[2]));
+			REQUIRE(!sequence->priority_of(ids[2]));
+
+			REQUIRE_NOTHROW(sequence->consume(ids[0]));
+
+			sequence.reset();
+			REQUIRE_THAT(
+				reporter.errors().front(),
+				Matches::Equals("Unfulfilled sequence. 0 out of 3 expectation(s) are satisfied."));
+		}
+
+		SECTION("If first is either satisfied or saturated, the second one becomes consumable.")
+		{
+			std::invoke(
+				GENERATE(from_range(consumeStateActions)),
+				*sequence,
+				ids[0]);
+
+			const auto secondStateAction = GENERATE(from_range(alterStateActions));
+
+			SECTION("When first is satisfied.")
 			{
+				sequence->set_satisfied(ids[0]);
+
 				REQUIRE(sequence->is_consumable(ids[0]));
-				REQUIRE(!sequence->is_saturated(ids[0]));
-
-				REQUIRE(!sequence->is_consumable(ids[1]));
-				REQUIRE(!sequence->is_saturated(ids[1]));
-
-				REQUIRE(!sequence->is_consumable(ids[2]));
-				REQUIRE(!sequence->is_saturated(ids[2]));
-
-				REQUIRE_NOTHROW(sequence->consume(ids[0]));
+				REQUIRE(sequence->priority_of(ids[0]));
 			}
 
-			SECTION("When sequence is destroyed, an error is reported.")
+			SECTION("When first is saturated.")
+			{
+				sequence->set_saturated(ids[0]);
+
+				REQUIRE(!sequence->is_consumable(ids[0]));
+				REQUIRE(!sequence->priority_of(ids[0]));
+			}
+
+			REQUIRE(sequence->is_consumable(ids[1]));
+			REQUIRE(sequence->priority_of(ids[1]));
+
+			std::invoke(
+				secondStateAction,
+				*sequence,
+				ids[2]);
+			REQUIRE(!sequence->is_consumable(ids[2]));
+			REQUIRE(!sequence->priority_of(ids[2]));
+
+			sequence.reset();
+			REQUIRE_THAT(
+				reporter.errors().front(),
+				Matches::Equals("Unfulfilled sequence. 1 out of 3 expectation(s) are satisfied."));
+		}
+
+		SECTION("If first and second are either satisfied or saturated, the last one becomes consumable.")
+		{
+			std::invoke(
+				GENERATE(from_range(alterStateActions | std::views::drop(1))),
+				*sequence,
+				ids[0]);
+
+			std::invoke(
+				GENERATE(from_range(alterStateActions | std::views::drop(1))),
+				*sequence,
+				ids[1]);
+
+			REQUIRE(sequence->is_consumable(ids[2]));
+			REQUIRE(sequence->priority_of(ids[2]));
+
+			// jumps directly from 0 to 2
+			sequence->consume(ids[2]);
+
+			SECTION("Reports error, when last is unfulfilled.")
 			{
 				sequence.reset();
-
-				REQUIRE_THAT(
-					reporter.errors(),
-					Matches::SizeIs(1));
 				REQUIRE_THAT(
 					reporter.errors().front(),
-					Matches::Equals("Unfulfilled sequence. 1 out of 3 expectation(s) where fully consumed."));
+					Matches::Equals("Unfulfilled sequence. 2 out of 3 expectation(s) are satisfied."));
 			}
 
-			SECTION("And then the next id is consumable.")
+			SECTION("Succeeds, when last is either satisfied or saturated.")
 			{
-				for ([[maybe_unused]] const auto i : std::views::iota(0u, 2u))
-				{
-					REQUIRE(!sequence->is_consumable(ids[0]));
-					REQUIRE(sequence->is_saturated(ids[0]));
+				std::invoke(
+					GENERATE(from_range(alterStateActions | std::views::drop(1))),
+					*sequence,
+					ids[2]);
 
-					REQUIRE(sequence->is_consumable(ids[1]));
-					REQUIRE(!sequence->is_saturated(ids[1]));
-
-					REQUIRE(!sequence->is_consumable(ids[2]));
-					REQUIRE(!sequence->is_saturated(ids[2]));
-
-					REQUIRE_NOTHROW(sequence->consume(ids[1]));
-				}
-
-				SECTION("When sequence is destroyed, an error is reported.")
-				{
-					sequence.reset();
-
-					REQUIRE_THAT(
-						reporter.errors(),
-						Matches::SizeIs(1));
-					REQUIRE_THAT(
-						reporter.errors().front(),
-						Matches::Equals("Unfulfilled sequence. 2 out of 3 expectation(s) where fully consumed."));
-				}
-
-				SECTION("And then last id is consumable.")
-				{
-					REQUIRE(!sequence->is_consumable(ids[0]));
-					REQUIRE(sequence->is_saturated(ids[0]));
-
-					REQUIRE(!sequence->is_consumable(ids[1]));
-					REQUIRE(sequence->is_saturated(ids[1]));
-
-					REQUIRE(sequence->is_consumable(ids[2]));
-					REQUIRE(!sequence->is_saturated(ids[2]));
-
-					REQUIRE_NOTHROW(sequence->consume(ids[2]));
-
-					SECTION("When sequence is destroyed, no error is reported.")
-					{
-						sequence.reset();
-
-						REQUIRE_THAT(
-							reporter.errors(),
-							Matches::IsEmpty());
-					}
-
-					SECTION("And then, nothing is consumable.")
-					{
-						REQUIRE(!sequence->is_consumable(ids[0]));
-						REQUIRE(sequence->is_saturated(ids[0]));
-
-						REQUIRE(!sequence->is_consumable(ids[1]));
-						REQUIRE(sequence->is_saturated(ids[1]));
-
-						REQUIRE(!sequence->is_consumable(ids[2]));
-						REQUIRE(sequence->is_saturated(ids[2]));
-					}
-				}
+				sequence.reset();
+				REQUIRE_THAT(
+					reporter.errors(),
+					Matches::IsEmpty());
 			}
 		}
 	}
 }
 
 TEST_CASE(
-	"expectation_policies::Sequence checks whether the given call::Info occurs in sequence.",
-	"[expectation][expectation::policy][expectation::factories][sequence]"
+	"detail::BasicSequence::tag returns its opaque address.",
+	"[sequence]"
 )
 {
-	namespace Matches = Catch::Matchers;
+	const sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}> sequence{};
+	const sequence::Tag tag = sequence.tag();
 
-	using PolicyT = expectation_policies::Sequence;
-	STATIC_REQUIRE(times_policy<PolicyT>);
+	REQUIRE(to_underlying(tag) == std::bit_cast<std::ptrdiff_t>(std::addressof(sequence)));
+}
 
-	Sequence sequence{};
+TEST_CASE(
+	"detail::LazyStrategy prefers elements near cursor.",
+	"[sequence]"
+)
+{
+	const auto [expected, id, cursor] = GENERATE(
+		(table<int, Id, int>({
+			{std::numeric_limits<int>::max(), Id{0}, 0},
+			{std::numeric_limits<int>::max(), Id{1}, 1},
+			{std::numeric_limits<int>::max() - 1, Id{1}, 0},
+			{std::numeric_limits<int>::max() - 2, Id{2}, 0},
+			{std::numeric_limits<int>::max() - 1, Id{2}, 1}
+			})));
 
-	const StringT applicableText = "applicable: Sequence element expects further matches.";
-	const StringT saturatedText = "inapplicable: Sequence element is already saturated.";
-	const StringT inapplicableText = "inapplicable: Sequence element is not the current element.";
+	REQUIRE(expected == std::invoke(sequence::detail::LazyStrategy{}, id, cursor));
+}
 
-	SECTION("When sequence contains just a single expectation.")
-	{
-		const auto count = GENERATE(range(1, 5));
-		PolicyT policy = expect::in_sequence(sequence, count);
+TEST_CASE(
+	"detail::GreedyStrategy prefers elements far from cursor.",
+	"[sequence]"
+)
+{
+	const auto [expected, id, cursor] = GENERATE(
+		(table<int, Id, int>({
+			{0, Id{0}, 0},
+			{0, Id{1}, 1},
+			{1, Id{1}, 0},
+			{2, Id{2}, 0},
+			{1, Id{2}, 1}
+			})));
 
-		for ([[maybe_unused]] const int i : std::views::iota(0, count))
+	REQUIRE(expected == std::invoke(sequence::detail::GreedyStrategy{}, id, cursor));
+}
+
+TEST_CASE(
+	"detail::has_better_rating determines, whether lhs shall be preferred over rhs.",
+	"[detail][sequence]"
+)
+{
+	using sequence::rating;
+	using sequence::detail::has_better_rating;
+	constexpr std::array sequence_tags = std::to_array<>(
 		{
-			REQUIRE(!policy.is_satisfied());
-			REQUIRE(policy.is_applicable());
-			REQUIRE_THAT(
-				policy.describe_state(),
-				Matches::Equals(applicableText));
-			REQUIRE_NOTHROW(policy.consume());
-		}
+			sequence::Tag{1},
+			sequence::Tag{2},
+			sequence::Tag{3},
+		});
 
-		REQUIRE(policy.is_satisfied());
-		REQUIRE(!policy.is_applicable());
-		REQUIRE_THAT(
-			policy.describe_state(),
-			Matches::Equals(saturatedText));
+	SECTION("Lhs with zero ratings is always preferred.")
+	{
+		const std::vector<rating> lhs{};
+
+		std::vector<rating> rhs{};
+		REQUIRE(has_better_rating(lhs, rhs));
+
+		rhs.emplace_back(std::numeric_limits<int>::max(), sequence_tags[0]);
+		REQUIRE(has_better_rating(lhs, rhs));
+
+		rhs.emplace_back(0, sequence_tags[1]);
+		REQUIRE(has_better_rating(lhs, rhs));
 	}
 
-	SECTION("When sequence has multiple expectations, the order matters.")
+	SECTION("When lhs has single rating.")
 	{
-		PolicyT policy1 = expect::in_sequence(sequence);
-		const auto count2 = GENERATE(range(1, 5));
-		PolicyT policy2 = expect::in_sequence(sequence, count2);
+		const std::vector<rating> lhs{
+			{42, sequence_tags[1]}
+		};
 
-		SECTION("When first expection is satisfied, then the second one becomes applicable.")
-		{
-			REQUIRE(!policy1.is_satisfied());
-			REQUIRE(policy1.is_applicable());
-			REQUIRE_THAT(
-				policy1.describe_state(),
-				Matches::Equals(applicableText));
+		std::vector<rating> rhs{};
+		REQUIRE(has_better_rating(lhs, rhs));
 
-			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
-			REQUIRE_THAT(
-				policy2.describe_state(),
-				Matches::Equals(inapplicableText));
+		rhs = lhs;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
 
-			REQUIRE_NOTHROW(policy1.consume());
+		rhs.front().priority = 41;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(!has_better_rating(rhs, lhs));
 
-			for ([[maybe_unused]] const int i : std::views::iota(0, count2))
-			{
-				REQUIRE(policy1.is_satisfied());
-				REQUIRE(!policy1.is_applicable());
-				REQUIRE_THAT(
-					policy1.describe_state(),
-					Matches::Equals(saturatedText));
+		rhs.front().priority = 43;
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
 
-				REQUIRE(!policy2.is_satisfied());
-				REQUIRE(policy2.is_applicable());
-				REQUIRE_THAT(
-					policy2.describe_state(),
-					Matches::Equals(applicableText));
+		rhs.emplace(rhs.begin(), std::numeric_limits<int>::max(), sequence_tags[0]);
+		REQUIRE(!has_better_rating(lhs, rhs));
+	}
 
-				REQUIRE_NOTHROW(policy2.consume());
-			}
+	SECTION("When lhs has two ratings.")
+	{
+		const std::vector<rating> lhs{
+			{42, sequence_tags[1]},
+			{1337, sequence_tags[0]}
+		};
 
-			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
-			REQUIRE_THAT(
-				policy1.describe_state(),
-				Matches::Equals(saturatedText));
+		std::vector rhs = lhs;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
 
-			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
-			REQUIRE_THAT(
-				policy2.describe_state(),
-				Matches::Equals(saturatedText));
-		}
+		rhs.front().priority += 1;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs = lhs;
+		rhs.back().priority += 1;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.front().priority += 1;
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.emplace(rhs.begin() + 1, 0, sequence_tags[2]);
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+	}
+
+	SECTION("When lhs has three ratings.")
+	{
+		const std::vector<rating> lhs{
+			{42, sequence_tags[1]},
+			{25, sequence_tags[2]},
+			{1337, sequence_tags[0]}
+		};
+
+		std::vector<rating> rhs{};
+		REQUIRE(has_better_rating(lhs, rhs));
+
+		rhs.emplace_back(1338, sequence_tags[0]);
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.emplace_back(43, sequence_tags[1]);
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.emplace_back(26, sequence_tags[2]);
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.front().priority -= 2;
+		REQUIRE(!has_better_rating(lhs, rhs));
+		REQUIRE(has_better_rating(rhs, lhs));
+
+		rhs.back().priority -= 2;
+		REQUIRE(has_better_rating(lhs, rhs));
+		REQUIRE(!has_better_rating(rhs, lhs));
 	}
 }
 
 TEST_CASE(
-	"An expectation can be part of multiple sequences.",
-	"[expectation][expectation::policy][expectation::factories][sequence]"
+	"expect::in_sequence creates detail::SequenceConfig.",
+	"[expectation::factories][sequence]"
 )
 {
-	namespace Matches = Catch::Matchers;
+	SequenceT sequence{};
 
-	using PolicyT = expectation_policies::Sequence;
+	const sequence::detail::Config config = expect::in_sequence(sequence);
 
-	SECTION("When multiple sequences are given.")
+	REQUIRE(std::get<0>(config.sequences())->tag() == sequence.tag());
+}
+
+TEST_CASE(
+	"expect::in_sequences creates detail::SequenceConfig.",
+	"[expectation::factories][sequence]"
+)
+{
+	LazySequence firstSequence{};
+	GreedySequence secondSequence{};
+	SequenceT thirdSequence{};
+
+	SECTION("Throws, when duplicates are given.")
 	{
-		Sequence sequence1{};
-		Sequence sequence2{};
+		REQUIRE_THROWS_AS(
+			expect::in_sequences(
+				firstSequence,
+				firstSequence),
+			std::invalid_argument);
 
-		SECTION("When the first expectation is the prefix of multiple sequences.")
+		REQUIRE_THROWS_AS(
+			expect::in_sequences(
+				firstSequence,
+				secondSequence,
+				firstSequence),
+			std::invalid_argument);
+	}
+
+	SECTION("When two sequences are given.")
+	{
+		const sequence::detail::Config config = expect::in_sequences(
+			firstSequence,
+			secondSequence);
+
+		REQUIRE(std::get<0>(config.sequences())->tag() == firstSequence.tag());
+		REQUIRE(std::get<1>(config.sequences())->tag() == secondSequence.tag());
+	}
+
+	SECTION("When three sequences are given.")
+	{
+		const sequence::detail::Config config = expect::in_sequences(
+			firstSequence,
+			thirdSequence,
+			secondSequence);
+
+		REQUIRE(std::get<0>(config.sequences())->tag() == firstSequence.tag());
+		REQUIRE(std::get<1>(config.sequences())->tag() == thirdSequence.tag());
+		REQUIRE(std::get<2>(config.sequences())->tag() == secondSequence.tag());
+	}
+}
+
+TEST_CASE(
+	"detail::SequenceConfig::concat combines two config.",
+	"[sequence]")
+{
+	const sequence::detail::Config<> firstConfig{};
+
+	SECTION("Concat two empty sequences is pointlesss but possible.")
+	{
+		[[maybe_unused]] const sequence::detail::Config<> result = firstConfig.concat(
+			sequence::detail::Config<>{});
+	}
+
+	SECTION("Concat appends the right side.")
+	{
+		SequenceT firstSequence{};
+		const sequence::detail::Config firstResult = firstConfig.concat(
+			expect::in_sequence(firstSequence));
+
+		REQUIRE(std::get<0>(firstResult.sequences())->tag() == firstSequence.tag());
+
+		SequenceT secondSequence{};
+		sequence::detail::Config secondResult = firstResult.concat(
+			expect::in_sequence(secondSequence));
+		REQUIRE(std::get<0>(secondResult.sequences())->tag() == firstSequence.tag());
+		REQUIRE(std::get<1>(secondResult.sequences())->tag() == secondSequence.tag());
+
+		SECTION("Throws, when contains duplicates.")
 		{
-			PolicyT policy1 = expect::in_sequences({sequence1, sequence2});
-			PolicyT policy2 = expect::in_sequences({sequence2});
-
-			REQUIRE(!policy1.is_satisfied());
-			REQUIRE(policy1.is_applicable());
-
-			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
-
-			policy1.consume();
-
-			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
-
-			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(policy2.is_applicable());
-
-			policy2.consume();
-
-			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
-
-			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
+			REQUIRE_THROWS_AS(
+				secondResult.concat(
+					expect::in_sequence(firstSequence)),
+				std::invalid_argument);
+			REQUIRE_THROWS_AS(
+				secondResult.concat(
+					expect::in_sequence(secondSequence)),
+				std::invalid_argument);
 		}
 
-		SECTION("When an expectation waits for multiple sequences.")
+		SECTION("Can be arbitrarily continued.")
 		{
-			PolicyT policy1 = expect::in_sequences({sequence1});
-			PolicyT policy2 = expect::in_sequences({sequence2});
-			PolicyT policy3 = expect::in_sequences({sequence1, sequence2});
-
-			REQUIRE(!policy1.is_satisfied());
-			REQUIRE(policy1.is_applicable());
-
-			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(policy2.is_applicable());
-
-			REQUIRE(!policy3.is_satisfied());
-			REQUIRE(!policy3.is_applicable());
-
-			policy1.consume();
-
-			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
-
-			REQUIRE(!policy2.is_satisfied());
-			REQUIRE(policy2.is_applicable());
-
-			REQUIRE(!policy3.is_satisfied());
-			REQUIRE(!policy3.is_applicable());
-
-			policy2.consume();
-
-			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
-
-			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
-
-			REQUIRE(!policy3.is_satisfied());
-			REQUIRE(policy3.is_applicable());
-
-			policy3.consume();
-
-			REQUIRE(policy1.is_satisfied());
-			REQUIRE(!policy1.is_applicable());
-
-			REQUIRE(policy2.is_satisfied());
-			REQUIRE(!policy2.is_applicable());
-
-			REQUIRE(policy3.is_satisfied());
-			REQUIRE(!policy3.is_applicable());
+			SequenceT thirdSequence{};
+			sequence::detail::Config thirdResult = secondResult.concat(
+				expect::in_sequence(thirdSequence));
+			REQUIRE(std::get<0>(thirdResult.sequences())->tag() == firstSequence.tag());
+			REQUIRE(std::get<1>(thirdResult.sequences())->tag() == secondSequence.tag());
+			REQUIRE(std::get<2>(thirdResult.sequences())->tag() == thirdSequence.tag());
 		}
 	}
 }

@@ -60,8 +60,7 @@ jobs:
                 # circumvnet "fatal: detected dubious ownership in repository" error
                 git config --global --add safe.directory /__w/mimicpp/mimicpp
                 gcovr --root build/test/unit-tests --filter "include/mimic++" --keep -j4 -v \
-                    --exclude-lines-by-pattern "\s*assert\(" \
-                    --exclude-lines-by-pattern "\s*unreachable\(\);" \
+                    --exclude-lines-by-pattern "\s*assert\(|\s*unreachable\(\);" \
                     --exclude-unreachable-branches \
                     --exclude-function-lines \
                     --exclude-noncode-lines \

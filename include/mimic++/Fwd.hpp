@@ -37,4 +37,26 @@ namespace mimicpp
 	using StringT = std::basic_string<CharT, CharTraitsT>;
 }
 
+namespace mimicpp::sequence
+{
+	enum Tag
+		: std::ptrdiff_t
+	{
+	};
+
+	enum class Id
+		: int
+	{
+	};
+
+	struct rating
+	{
+		int priority{};
+		Tag tag{};
+
+		[[nodiscard]]
+		friend bool operator==(const rating&, const rating&) = default;
+	};
+}
+
 #endif

@@ -7,9 +7,13 @@
 
 #include "mimic++/Call.hpp"
 #include "mimic++/Printer.hpp"
+#include "mimic++/Reports.hpp"
 
 #include "catch2/catch_test_macros.hpp"
 #include "catch2/trompeloeil.hpp"
+#include "catch2/matchers/catch_matchers_templated.hpp"
+
+#include <variant>
 
 class UnwrapReferenceWrapper
 {
@@ -160,7 +164,7 @@ public:
 	}
 };
 
-class TimesFake
+class ControlPolicyFake
 {
 public:
 	bool isSatisfied{};
@@ -171,20 +175,12 @@ public:
 		return isSatisfied;
 	}
 
-	bool isApplicable{true};
+	mimicpp::control_state_t stateData{};
 
 	[[nodiscard]]
-	constexpr bool is_applicable() const noexcept
+	mimicpp::control_state_t state() const
 	{
-		return isApplicable;
-	}
-
-	std::optional<mimicpp::StringT> stateDescription{};
-
-	[[nodiscard]]
-	std::optional<mimicpp::StringT> describe_state() const
-	{
-		return stateDescription;
+		return stateData;
 	}
 
 	static constexpr void consume() noexcept
@@ -192,17 +188,17 @@ public:
 	}
 };
 
-class TimesMock
+class ControlPolicyMock
 {
 public:
 	MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
-	MAKE_CONST_MOCK0(is_applicable, bool(), noexcept);
 	MAKE_CONST_MOCK0(describe_state, std::optional<mimicpp::StringT>());
-	MAKE_MOCK0(consume, void ());
+	MAKE_CONST_MOCK0(state, mimicpp::control_state_t());
+	MAKE_MOCK0(consume, void());
 };
 
 template <typename Policy, typename Projection>
-class TimesFacade
+class ControlPolicyFacade
 {
 public:
 	Policy policy{};
@@ -216,17 +212,10 @@ public:
 	}
 
 	[[nodiscard]]
-	constexpr bool is_applicable() const noexcept
+	mimicpp::control_state_t state() const
 	{
 		return std::invoke(projection, policy)
-			.is_applicable();
-	}
-
-	[[nodiscard]]
-	std::optional<mimicpp::StringT> describe_state() const
-	{
-		return std::invoke(projection, policy)
-			.describe_state();
+			.state();
 	}
 
 	constexpr void consume() noexcept
@@ -439,5 +428,53 @@ public:
 	constexpr ReturnT operator ()(Params... params) const
 	{
 		return Invoke(std::forward<Params>(params)...);
+	}
+};
+
+template <std::equality_comparable Value>
+class VariantEqualsMatcher final
+	: public Catch::Matchers::MatcherGenericBase
+{
+public:
+	[[nodiscard]]
+	explicit constexpr VariantEqualsMatcher(Value value)
+		: m_Value{std::move(value)}
+	{
+	}
+
+	template <typename... Alternatives>
+	[[nodiscard]]
+	constexpr bool match(const std::variant<Alternatives...>& other) const
+		requires requires { { std::holds_alternative<Value>(other) } -> std::convertible_to<bool>; }
+	{
+		return std::holds_alternative<Value>(other)
+				&& m_Value == std::get<Value>(other);
+	}
+
+	std::string describe() const override
+	{
+		return "Variant state equals: " + Catch::Detail::stringify(m_Value);
+	}
+
+private:
+	Value m_Value;
+};
+
+template <typename Value>
+[[nodiscard]]
+constexpr auto variant_equals(Value&& value)
+{
+	return VariantEqualsMatcher<std::remove_cvref_t<Value>>{
+		std::forward<Value>(value)
+	};
+}
+
+class FakeSequenceStrategy
+{
+public:
+	[[nodiscard, maybe_unused]]
+	constexpr int operator ()(const auto id, [[maybe_unused]] const int cursor) const noexcept
+	{
+		return static_cast<int>(id);
 	}
 };
