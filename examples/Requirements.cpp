@@ -63,7 +63,7 @@ TEST_CASE(
 	mimicpp::Mock<void(int)> mock{};
 
 	SCOPED_EXP mock.expect_call(_)
-				| expect::arg<0>(matches::gt(42));
+				and expect::arg<0>(matches::gt(42));
 	mock(1337);
 	//! [expect::arg]
 }
@@ -80,7 +80,7 @@ TEST_CASE(
 	mimicpp::Mock<void(int)> mock{};
 
 	SCOPED_EXP mock.expect_call(le(1337))
-				| expect::arg<0>(matches::gt(42));
+				and expect::arg<0>(matches::gt(42));
 	mock(1337);
 }
 
@@ -97,7 +97,7 @@ TEST_CASE(
 	mimicpp::Mock<void(int)> mock{};
 
 	SCOPED_EXP mock.expect_call(_)	// in fact, the _ is the only built-in matcher, which isn't invertible
-				| expect::arg<0>(!matches::le(42));	// note the !, as this makes it an actual > test 
+				and expect::arg<0>(!matches::le(42));	// note the !, as this makes it an actual > test 
 	mock(1337);
 	//! [matcher inverted]
 }
@@ -117,7 +117,7 @@ TEST_CASE(
 	constexpr auto isOdd = [](int val) { return 0 != val % 2; };
 
 	SCOPED_EXP mock.expect_call(_)
-				| expect::arg<0>(matches::predicate(isOdd));
+				and expect::arg<0>(matches::predicate(isOdd));
 	mock(1337);
 	//! [matcher predicate]
 }
@@ -135,7 +135,7 @@ TEST_CASE(
 	mimicpp::Mock<void(std::span<int>)> mock{};
 
 	SCOPED_EXP mock.expect_call(_)
-				| expect::arg<0>(matches::range::is_sorted());
+				and expect::arg<0>(matches::range::is_sorted());
 
 	std::vector collection{42, 1337};
 	mock(collection);
@@ -169,7 +169,7 @@ TEST_CASE(
 	mimicpp::Mock<void(std::span<int>)> mock{};
 
 	SCOPED_EXP mock.expect_call(_)
-				| expect::arg<0>(containsMatcher);
+				and expect::arg<0>(containsMatcher);
 
 	std::vector collection{42, 1337};
 	mock(collection);

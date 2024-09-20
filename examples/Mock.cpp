@@ -118,8 +118,8 @@ TEST_CASE(
 		SECTION("Throws, when inner container is empty.")
 		{
 			SCOPED_EXP innerContainer.empty.expect_call()
-						| expect::times(2)	// we test both, the const and non-const top() overload
-						| finally::returns(true);
+						and expect::times(2)	// we test both, the const and non-const top() overload
+						and finally::returns(true);
 
 			MyStack<int, ContainerMock> stack{std::move(innerContainer)};
 
@@ -130,12 +130,12 @@ TEST_CASE(
 		SECTION("Returns a reference to the top element otherwise.")
 		{
 			SCOPED_EXP innerContainer.empty.expect_call()
-						| finally::returns(false);
+						and finally::returns(false);
 
 			SECTION("A const-ref, when accessed via const.")
 			{
 				SCOPED_EXP std::as_const(innerContainer).back.expect_call()
-							| finally::returns(42);
+							and finally::returns(42);
 
 				MyStack<int, ContainerMock> stack{std::move(innerContainer)};
 
@@ -145,7 +145,7 @@ TEST_CASE(
 			SECTION("A mutable ref, when accessed via non-const.")
 			{
 				SCOPED_EXP innerContainer.back.expect_call()
-							| finally::returns(42);
+							and finally::returns(42);
 
 				MyStack<int, ContainerMock> stack{std::move(innerContainer)};
 
@@ -162,7 +162,7 @@ TEST_CASE(
 		{
 			ContainerMock innerContainer{};
 			SCOPED_EXP innerContainer.empty.expect_call()
-						| finally::returns(true);
+						and finally::returns(true);
 
 			MyStack<int, ContainerMock> stack{std::move(innerContainer)};
 			REQUIRE_THROWS_AS(stack.pop(), std::runtime_error);
@@ -172,7 +172,7 @@ TEST_CASE(
 		{
 			ContainerMock innerContainer{};
 			SCOPED_EXP innerContainer.empty.expect_call()
-						| finally::returns(false);
+						and finally::returns(false);
 			SCOPED_EXP innerContainer.pop_back.expect_call();
 
 			MyStack<int, ContainerMock> container{std::move(innerContainer)};

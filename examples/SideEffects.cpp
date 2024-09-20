@@ -18,7 +18,7 @@ TEST_CASE(
 
 	std::string outText{};
 	SCOPED_EXP mock.expect_call(42)
-				| then::invoke([&] { outText = "Hello, mimic++!"; });
+				and then::invoke([&] { outText = "Hello, mimic++!"; });
 
 	mock(42);
 
@@ -36,7 +36,7 @@ TEST_CASE(
 
 	int value{42};
 	SCOPED_EXP mock.expect_call(42)
-				| then::apply_arg<0>([](auto& v) { v = 1337; });
+				and then::apply_arg<0>([](auto& v) { v = 1337; });
 
 	mock(value);
 
@@ -54,8 +54,8 @@ TEST_CASE(
 
 	int value{42};
 	SCOPED_EXP mock.expect_call(42)
-				| then::apply_arg<0>([](auto& v) { v = 1337; })
-				| then::apply_arg<0>([](auto& v) { v = (v == 1337 ? -1337 : -42); });
+				and then::apply_arg<0>([](auto& v) { v = 1337; })
+				and then::apply_arg<0>([](auto& v) { v = (v == 1337 ? -1337 : -42); });
 
 	mock(value);
 
@@ -73,9 +73,9 @@ TEST_CASE(
 
 	int outResult{};
 	SCOPED_EXP mock.expect_call(0, 1, 2)
-				| then::apply_args<1, 2, 0>(	// note the index order:
-				// outResult is invoked as left-most param, but applied as right-most
-				[](int lhs, int rhs, int& out) { out = lhs + rhs; });
+				and then::apply_args<1, 2, 0>(	// note the index order:
+					// outResult is invoked as left-most param, but applied as right-most
+					[](int lhs, int rhs, int& out) { out = lhs + rhs; });
 
 	mock(outResult, 1, 2);
 
@@ -93,8 +93,8 @@ TEST_CASE(
 
 	int outResult{};
 	SCOPED_EXP mock.expect_call(0, 42)
-				| then::apply_args<1, 1, 0>(	// note the indices: second param is applied twice
-				[](int lhs, int rhs, int& out) { out = lhs + rhs; });
+				and then::apply_args<1, 1, 0>(	// note the indices: second param is applied twice
+					[](int lhs, int rhs, int& out) { out = lhs + rhs; });
 
 	mock(outResult, 42);
 

@@ -20,7 +20,7 @@ TEST_CASE(
 	mimicpp::Mock<int()> mock{};
 
 	SCOPED_EXP mock.expect_call()
-				| finally::returns(42);
+				and finally::returns(42);
 
 	REQUIRE(42 == mock());
 	//! [finally::returns]
@@ -38,7 +38,7 @@ TEST_CASE(
 
 	int myReturn{42};
 	SCOPED_EXP mock.expect_call()
-				| finally::returns(std::ref(myReturn));
+				and finally::returns(std::ref(myReturn));
 
 	REQUIRE(&myReturn == &mock());
 	//! [finally::returns std::ref]
@@ -56,8 +56,8 @@ TEST_CASE(
 	mimicpp::Mock<int&()> mock{};
 
 	SCOPED_EXP mock.expect_call()
-				| expect::twice()	// we call the mock two times
-				| finally::returns(42);
+				and expect::twice()	// we call the mock two times
+				and finally::returns(42);
 
 	int& result = mock();
 	REQUIRE(42 == result);	// fine
@@ -78,7 +78,7 @@ TEST_CASE(
 	mimicpp::Mock<int()> mock{};
 
 	SCOPED_EXP mock.expect_call()
-				| finally::throws(std::runtime_error{"Something happened."});
+				and finally::throws(std::runtime_error{"Something happened."});
 
 	REQUIRE_THROWS_AS(
 		mock(),
@@ -97,7 +97,7 @@ TEST_CASE(
 	mimicpp::Mock<std::string()> mock{};
 
 	SCOPED_EXP mock.expect_call()
-				| finally::returns_result_of([] { return "Hello, World!"; });
+				and finally::returns_result_of([] { return "Hello, World!"; });
 
 	REQUIRE("Hello, World!" == mock());
 	//! [finally::returns_result_of]
@@ -114,7 +114,7 @@ TEST_CASE(
 	mimicpp::Mock<int(int, int)> mock{};
 
 	SCOPED_EXP mock.expect_call(1337, 42)
-				| finally::returns_arg<1>();
+				and finally::returns_arg<1>();
 
 	REQUIRE(42 == mock(1337, 42));
 	//! [finally::returns_param]
@@ -131,7 +131,7 @@ TEST_CASE(
 	mimicpp::Mock<int(int, int)> mock{};
 
 	SCOPED_EXP mock.expect_call(1337, 42)
-				| finally::returns_apply_result_of<0, 1>(std::plus{});
+				and finally::returns_apply_result_of<0, 1>(std::plus{});
 
 	REQUIRE(1379 == mock(1337, 42));
 	//! [finally::returns_apply_result_of]
@@ -148,7 +148,7 @@ TEST_CASE(
 	mimicpp::Mock<int(int, int)> mock{};
 
 	SCOPED_EXP mock.expect_call(1337, 42)
-				| finally::returns_apply_all_result_of(std::plus{});
+				and finally::returns_apply_all_result_of(std::plus{});
 
 	REQUIRE(1379 == mock(1337, 42));
 	//! [finally::returns_apply_all_result_of]
@@ -172,7 +172,7 @@ TEST_CASE(
 	mimicpp::Mock<int()> mock{};
 
 	SCOPED_EXP mock.expect_call()
-				| MyFinalizer{};
+				and MyFinalizer{};
 
 	REQUIRE(1337 == mock());
 	//! [custom finalizer]

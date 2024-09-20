@@ -18,7 +18,7 @@ TEST_CASE(
 
 	mimicpp::Mock<void()> mock{};
 	SCOPED_EXP mock.expect_call()
-		| expect::once();
+				and expect::once();
 
 	mock();
 	//! [once]
@@ -34,7 +34,7 @@ TEST_CASE(
 
 	mimicpp::Mock<void()> mock{};
 	SCOPED_EXP mock.expect_call()
-		| expect::twice();
+				and expect::twice();
 
 	mock();	// not enough
 	mock();	// fine!
@@ -51,7 +51,7 @@ TEST_CASE(
 
 	mimicpp::Mock<void()> mock{};
 	SCOPED_EXP mock.expect_call()
-				| expect::at_least(2u);
+				and expect::at_least(2u);
 
 	mock();	// not enough
 	mock();	// fine
@@ -69,7 +69,7 @@ TEST_CASE(
 
 	mimicpp::Mock<void()> mock{};
 	SCOPED_EXP mock.expect_call()
-				| expect::at_most(2u);
+				and expect::at_most(2u);
 
 	mock();	// fine
 	mock();	// fine but exhausted!
@@ -86,7 +86,7 @@ TEST_CASE(
 
 	mimicpp::Mock<void()> mock{};
 	SCOPED_EXP mock.expect_call()
-				| expect::times(2u);	// equivalent to twice()
+				and expect::times(2u);	// equivalent to twice()
 
 	mock();	// not enough
 	mock();	//fine
@@ -103,7 +103,7 @@ TEST_CASE(
 
 	mimicpp::Mock<void()> mock{};
 	SCOPED_EXP mock.expect_call()
-				| expect::times(1u, 3u);	// between 1 and 3 matches 
+				and expect::times(1u, 3u);	// between 1 and 3 matches 
 
 	mock();	// fine
 	mock();	// fine
