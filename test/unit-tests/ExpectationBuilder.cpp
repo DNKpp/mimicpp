@@ -60,7 +60,6 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 	ScopedReporter reporter{};
@@ -74,7 +73,7 @@ TEST_CASE(
 
 	SECTION("It is allowed to omit the times policy.")
 	{
-		ScopedExpectationT expectation = make_builder(collection);
+		const ScopedExpectation expectation = make_builder(collection);
 
 		REQUIRE(!expectation.is_satisfied());
 		REQUIRE_NOTHROW(collection->handle_call(call));
@@ -83,8 +82,8 @@ TEST_CASE(
 
 	SECTION("Or exchange it once.")
 	{
-		ScopedExpectationT expectation = make_builder(collection)
-										&& detail::TimesConfig{0, 0};
+		const ScopedExpectation expectation = make_builder(collection)
+											&& detail::TimesConfig{0, 0};
 
 		REQUIRE(expectation.is_satisfied());
 	}
@@ -96,7 +95,6 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 	ScopedReporter reporter{};
@@ -112,8 +110,8 @@ TEST_CASE(
 
 	SECTION("Can be specified once.")
 	{
-		ScopedExpectationT expectation = make_builder(collection)
-										&& expect::in_sequence(sequence);
+		const ScopedExpectation expectation = make_builder(collection)
+											&& expect::in_sequence(sequence);
 
 		REQUIRE(!expectation.is_satisfied());
 		REQUIRE_NOTHROW(collection->handle_call(call));
@@ -122,9 +120,9 @@ TEST_CASE(
 
 	SECTION("Can be specified with times.")
 	{
-		ScopedExpectationT expectation = make_builder(collection)
-										&& expect::twice()
-										&& expect::in_sequence(sequence);
+		const ScopedExpectation expectation = make_builder(collection)
+											&& expect::twice()
+											&& expect::in_sequence(sequence);
 
 		REQUIRE(!expectation.is_satisfied());
 		REQUIRE_NOTHROW(collection->handle_call(call));
@@ -136,9 +134,9 @@ TEST_CASE(
 	SECTION("Can be specified multiple times.")
 	{
 		SequenceT secondSequence{};
-		ScopedExpectationT expectation = make_builder(collection)
-										&& expect::in_sequence(sequence)
-										&& expect::in_sequence(secondSequence);
+		const ScopedExpectation expectation = make_builder(collection)
+											&& expect::in_sequence(sequence)
+											&& expect::in_sequence(secondSequence);
 
 		REQUIRE(!expectation.is_satisfied());
 		REQUIRE_NOTHROW(collection->handle_call(call));
@@ -167,7 +165,6 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	using SignatureT = void();
-	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
@@ -179,7 +176,7 @@ TEST_CASE(
 
 	SECTION("It is allowed to omit the finalize policy.")
 	{
-		ScopedExpectationT expectation = make_builder(collection);
+		ScopedExpectation expectation = make_builder(collection);
 
 		REQUIRE_NOTHROW(expectation.is_satisfied());
 		REQUIRE_NOTHROW(collection->handle_call(call));
@@ -193,8 +190,8 @@ TEST_CASE(
 			std::reference_wrapper<FinalizerMock<SignatureT>>,
 			UnwrapReferenceWrapper>;
 		FinalizerT finalizer{};
-		ScopedExpectationT expectation = make_builder(collection)
-										&& FinalizerPolicyT{std::ref(finalizer)};
+		const ScopedExpectation expectation = make_builder(collection)
+											&& FinalizerPolicyT{std::ref(finalizer)};
 
 		REQUIRE_CALL(finalizer, finalize_call(_))
 			.LR_WITH(&_1 == &call);
@@ -212,7 +209,6 @@ TEST_CASE(
 	using trompeloeil::_;
 
 	using SignatureT = int();
-	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using CallInfoT = call::info_for_signature_t<SignatureT>;
 
 	auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
@@ -228,8 +224,8 @@ TEST_CASE(
 		std::reference_wrapper<FinalizerMock<SignatureT>>,
 		UnwrapReferenceWrapper>;
 	FinalizerT finalizer{};
-	ScopedExpectationT expectation = make_builder(collection)
-									&& FinalizerPolicyT{std::ref(finalizer)};
+	const ScopedExpectation expectation = make_builder(collection)
+										&& FinalizerPolicyT{std::ref(finalizer)};
 
 	REQUIRE_CALL(finalizer, finalize_call(_))
 		.LR_WITH(&_1 == &call)
@@ -245,7 +241,6 @@ TEST_CASE(
 )
 {
 	using SignatureT = void();
-	using ScopedExpectationT = ScopedExpectation<SignatureT>;
 	using ExpectationPolicyT = PolicyMock<SignatureT>;
 	using PolicyT = PolicyFacade<SignatureT, std::reference_wrapper<ExpectationPolicyT>, UnwrapReferenceWrapper>;
 
@@ -259,9 +254,9 @@ TEST_CASE(
 		REQUIRE_CALL(policy, is_satisfied())
 			.RETURN(true);
 
-		ScopedExpectationT expectation = make_builder(collection)
-										&& detail::TimesConfig{0, 0}
-										&& PolicyT{std::ref(policy)};
+		const ScopedExpectation expectation = make_builder(collection)
+											&& detail::TimesConfig{0, 0}
+											&& PolicyT{std::ref(policy)};
 
 		REQUIRE_CALL(policy, is_satisfied())
 			.RETURN(true);
@@ -279,10 +274,10 @@ TEST_CASE(
 		REQUIRE_CALL(policy2, is_satisfied())
 			.RETURN(true);
 
-		ScopedExpectationT expectation = make_builder(collection)
-										&& detail::TimesConfig{0, 0}
-										&& PolicyT{std::ref(policy1)}
-										&& PolicyT{std::ref(policy2)};
+		const ScopedExpectation expectation = make_builder(collection)
+											&& detail::TimesConfig{0, 0}
+											&& PolicyT{std::ref(policy1)}
+											&& PolicyT{std::ref(policy2)};
 
 		REQUIRE_CALL(policy1, is_satisfied())
 			.RETURN(true);
@@ -304,20 +299,18 @@ TEST_CASE(
 	const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 
 	const std::source_location beforeLoc = std::source_location::current();
-	ScopedExpectation expectation = make_builder(collection)
-									&& detail::TimesConfig{0, 0};
+	const ScopedExpectation expectation = make_builder(collection)
+										&& detail::TimesConfig{0, 0};
 	const std::source_location afterLoc = std::source_location::current();
 
-	const auto& inner = dynamic_cast<const BasicExpectation<SignatureT, ControlPolicy<>, expectation_policies::InitFinalize>&>(
-		expectation.expectation());
 	REQUIRE_THAT(
-		inner.from().file_name(),
+		expectation.from().file_name(),
 		Matches::Equals(beforeLoc.file_name()));
 	REQUIRE_THAT(
-		inner.from().function_name(),
+		expectation.from().function_name(),
 		Matches::Equals(beforeLoc.function_name()));
-	REQUIRE(beforeLoc.line() < inner.from().line());
-	REQUIRE(inner.from().line() < afterLoc.line());
+	REQUIRE(beforeLoc.line() < expectation.from().line());
+	REQUIRE(expectation.from().line() < afterLoc.line());
 }
 
 TEST_CASE(

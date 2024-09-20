@@ -15,6 +15,7 @@
 #include <functional>
 #include <optional>
 #include <ranges>
+#include <source_location>
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -35,6 +36,7 @@ namespace
 
 		MAKE_CONST_MOCK0(report, mimicpp::ExpectationReport(), override);
 		MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
+		MAKE_CONST_MOCK0(from, const std::source_location&(), noexcept override);
 		MAKE_CONST_MOCK1(matches, mimicpp::MatchReport(const CallInfoT&), override);
 		MAKE_MOCK1(consume, void(const CallInfoT&), override);
 		MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
@@ -898,7 +900,6 @@ TEST_CASE(
 			REQUIRE_CALL(*innerExpectation, is_satisfied())
 				.RETURN(isSatisfied);
 			REQUIRE(isSatisfied == std::as_const(otherExpectation).is_satisfied());
-			REQUIRE_THROWS_AS(std::as_const(expectation)->is_satisfied(), std::runtime_error);
 		}
 
 		SECTION("And then move assigned.")
@@ -911,7 +912,6 @@ TEST_CASE(
 				REQUIRE_CALL(*innerExpectation, is_satisfied())
 					.RETURN(isSatisfied);
 				REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
-				REQUIRE_THROWS_AS(std::as_const(otherExpectation).is_satisfied(), std::runtime_error);
 			}
 
 			// just move back, so we can unify the cleanup process
