@@ -361,34 +361,80 @@ namespace mimicpp
 		[[no_unique_address]] FinalizerT m_Finalizer{};
 	};
 
-	template <typename Signature>
 	class ScopedExpectation
 	{
-	public:
-		using StorageT = ExpectationCollection<Signature>;
-		using ExpectationT = Expectation<Signature>;
-
-		~ScopedExpectation() noexcept(false)
+	private:
+		class Concept
 		{
-			if (m_Storage
-				&& m_Expectation)
-			{
-				m_Storage->remove(m_Expectation);
-			}
-		}
+		public:
+			virtual ~Concept() noexcept(false) = default;
+			Concept(const Concept&) = delete;
+			Concept& operator =(const Concept&) = delete;
+			Concept(Concept&&) = delete;
+			Concept& operator =(Concept&&) = delete;
 
+			[[nodiscard]]
+			virtual bool is_satisfied() const = 0;
+
+		protected:
+			Concept() = default;
+		};
+
+		template <typename Signature>
+		class Model final
+			: public Concept
+		{
+		public:
+			using StorageT = ExpectationCollection<Signature>;
+			using ExpectationT = Expectation<Signature>;
+
+			~Model() noexcept(false) override
+			{
+				if (m_Storage
+					&& m_Expectation)
+				{
+					m_Storage->remove(m_Expectation);
+				}
+			}
+
+			[[nodiscard]]
+			explicit Model(
+				std::shared_ptr<StorageT>&& storage,
+				std::shared_ptr<ExpectationT>&& expectation
+			) noexcept
+				: m_Storage{std::move(storage)},
+				m_Expectation{std::move(expectation)}
+			{
+				assert(m_Storage && "Storage is nullptr.");
+				assert(m_Expectation && "Expectation is nullptr.");
+
+				m_Storage->push(m_Expectation);
+			}
+
+			[[nodiscard]]
+			bool is_satisfied() const override
+			{
+				return m_Expectation->is_satisfied();
+			}
+
+		private:
+			std::shared_ptr<StorageT> m_Storage;
+			std::shared_ptr<ExpectationT> m_Expectation;
+		};
+
+	public:
+		template <typename Signature>
 		[[nodiscard]]
 		explicit ScopedExpectation(
-			std::shared_ptr<StorageT> storage,
-			std::shared_ptr<ExpectationT> expectation
+			std::shared_ptr<ExpectationCollection<Signature>> storage,
+			std::shared_ptr<typename ExpectationCollection<Signature>::ExpectationT> expectation
 		) noexcept
-			: m_Storage{std::move(storage)},
-			m_Expectation{std::move(expectation)}
+			: m_Inner{
+				std::make_unique<Model<Signature>>(
+					std::move(storage),
+					std::move(expectation))
+			}
 		{
-			assert(m_Storage && "Storage is nullptr.");
-			assert(m_Expectation && "Expectation is nullptr.");
-
-			m_Storage->push(m_Expectation);
 		}
 
 		template <typename T>
@@ -412,22 +458,11 @@ namespace mimicpp
 		[[nodiscard]]
 		bool is_satisfied() const
 		{
-			if (m_Expectation)
-			{
-				return m_Expectation->is_satisfied();
-			}
-			throw std::runtime_error{"Expired expectation."};
-		}
-
-		[[nodiscard]]
-		const ExpectationT& expectation() const noexcept
-		{
-			return *m_Expectation;
+			return m_Inner->is_satisfied();
 		}
 
 	private:
-		std::shared_ptr<StorageT> m_Storage{};
-		std::shared_ptr<ExpectationT> m_Expectation{};
+		std::unique_ptr<Concept> m_Inner;
 	};
 }
 

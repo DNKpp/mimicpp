@@ -857,12 +857,10 @@ TEMPLATE_TEST_CASE(
 
 TEST_CASE("ScopedExpectation is a non-copyable, but movable type.")
 {
-	using ScopedExpectationT = mimicpp::ScopedExpectation<void()>;
-
-	STATIC_REQUIRE(!std::is_copy_constructible_v<ScopedExpectationT>);
-	STATIC_REQUIRE(!std::is_copy_assignable_v<ScopedExpectationT>);
-	STATIC_REQUIRE(std::is_move_constructible_v<ScopedExpectationT>);
-	STATIC_REQUIRE(std::is_move_assignable_v<ScopedExpectationT>);
+	STATIC_REQUIRE(!std::is_copy_constructible_v<mimicpp::ScopedExpectation>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<mimicpp::ScopedExpectation>);
+	STATIC_REQUIRE(std::is_move_constructible_v<mimicpp::ScopedExpectation>);
+	STATIC_REQUIRE(std::is_move_assignable_v<mimicpp::ScopedExpectation>);
 }
 
 TEST_CASE(
@@ -872,12 +870,11 @@ TEST_CASE(
 	using trompeloeil::_;
 	using SignatureT = void();
 	using ExpectationT = ExpectationMock;
-	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
 	using CollectionT = mimicpp::ExpectationCollection<SignatureT>;
 
 	auto collection = std::make_shared<CollectionT>();
 	auto innerExpectation = std::make_shared<ExpectationT>();
-	std::optional<ScopedExpectationT> expectation{
+	std::optional<mimicpp::ScopedExpectation> expectation{
 		std::in_place,
 		collection,
 		innerExpectation
@@ -893,7 +890,7 @@ TEST_CASE(
 
 	SECTION("When ScopedExpectation is moved.")
 	{
-		ScopedExpectationT otherExpectation = *std::move(expectation);
+		mimicpp::ScopedExpectation otherExpectation = *std::move(expectation);
 
 		SECTION("When calling is_satisfied()")
 		{
@@ -952,7 +949,6 @@ TEST_CASE(
 	namespace expect = mimicpp::expect;
 	namespace finally = mimicpp::finally;
 	using SignatureT = int();
-	using ScopedExpectationT = mimicpp::ScopedExpectation<SignatureT>;
 	using CollectionT = mimicpp::ExpectationCollection<SignatureT>;
 	using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
 
@@ -970,15 +966,15 @@ TEST_CASE(
 	{
 		mimicpp::GreedySequence sequence{};
 
-		ScopedExpectationT exp1 = mimicpp::detail::make_expectation_builder(collection)
-								&& expect::times(0, 1)
-								&& expect::in_sequence(sequence)
-								&& finally::returns(42);
+		mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection)
+										&& expect::times(0, 1)
+										&& expect::in_sequence(sequence)
+										&& finally::returns(42);
 
-		ScopedExpectationT exp2 = mimicpp::detail::make_expectation_builder(collection)
-								&& expect::times(0, 1)
-								&& expect::in_sequence(sequence)
-								&& finally::returns(1337);
+		mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection)
+										&& expect::times(0, 1)
+										&& expect::in_sequence(sequence)
+										&& finally::returns(1337);
 
 		REQUIRE(1337 == collection->handle_call(call));
 	}
@@ -987,12 +983,12 @@ TEST_CASE(
 	{
 		mimicpp::LazySequence sequence{};
 
-		ScopedExpectationT exp1 = mimicpp::detail::make_expectation_builder(collection)
+		mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection)
 								&& expect::times(0, 1)
 								&& expect::in_sequence(sequence)
 								&& finally::returns(42);
 
-		ScopedExpectationT exp2 = mimicpp::detail::make_expectation_builder(collection)
+		mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection)
 								&& expect::times(0, 1)
 								&& expect::in_sequence(sequence)
 								&& finally::returns(1337);

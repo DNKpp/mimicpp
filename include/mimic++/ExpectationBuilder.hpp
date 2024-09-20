@@ -25,7 +25,6 @@ namespace mimicpp
 	{
 	public:
 		using StorageT = ExpectationCollection<Signature>;
-		using ScopedExpectationT = ScopedExpectation<Signature>;
 		using PolicyListT = std::tuple<Policies...>;
 		using ReturnT = typename Expectation<Signature>::ReturnT;
 
@@ -153,13 +152,13 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr ScopedExpectationT finalize(const std::source_location& sourceLocation) &&
+		constexpr ScopedExpectation finalize(const std::source_location& sourceLocation) &&
 		{
 			static_assert(
 				finalize_policy_for<FinalizePolicy, Signature>,
 				"For non-void return types, a finalize policy must be set.");
 
-			return ScopedExpectationT{
+			return ScopedExpectation{
 				std::move(m_Storage),
 				std::apply(
 					[&](auto&... policies)
@@ -192,11 +191,6 @@ namespace mimicpp
 		FinalizePolicy m_FinalizePolicy{};
 		PolicyListT m_ExpectationPolicies{};
 	};
-
-	template <bool timesConfigured, typename SequenceConfig, typename Signature, typename... Policies>
-	ScopedExpectation(
-		BasicExpectationBuilder<timesConfigured, SequenceConfig, Signature, Policies...>&&
-	) -> ScopedExpectation<Signature>;
 }
 
 namespace mimicpp::detail
