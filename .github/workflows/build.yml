@@ -146,7 +146,7 @@ jobs:
                    }}"
               shell: bash
               run: |
-                echo "CXXFLAGS=$(echo $CXXFLAGS -L\"$(brew --prefix llvm)/lib/c++\" -L\"$(brew --prefix llvm)/lib" -lunwind)\" >> $GITHUB_ENV
+                echo "CXXFLAGS=$(echo $CXXFLAGS -L\"$(brew --prefix llvm)/lib/c++\" -L\"$(brew --prefix llvm)/lib\" -lunwind)" >> $GITHUB_ENV
 
             - name: Clang libc++ setup
               if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
