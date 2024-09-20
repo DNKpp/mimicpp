@@ -393,7 +393,7 @@ TEST_CASE(
 		SECTION("When non matching expectation exists.")
 		{
 			SCOPED_EXP mock.expect_call(42)
-						| expect::at_most(1);	// prevent unfulfilled reporting
+						&& expect::at_most(1);	// prevent unfulfilled reporting
 
 			REQUIRE_THROWS_AS(
 				mock(1337),
@@ -498,8 +498,8 @@ TEST_CASE(
 		SECTION("When a std::exception is thrown.")
 		{
 			SCOPED_EXP mock.expect_call()
-						| expect::at_most(1)
-						| ThrowOnMatches<StdException>{};
+						&& expect::at_most(1)
+						&& ThrowOnMatches<StdException>{};
 
 			REQUIRE_NOTHROW(mock());
 			REQUIRE_THAT(
@@ -510,8 +510,8 @@ TEST_CASE(
 		SECTION("When an unknown exception is thrown.")
 		{
 			SCOPED_EXP mock.expect_call()
-						| expect::at_most(1)
-						| ThrowOnMatches<TestException>{};
+						&& expect::at_most(1)
+						&& ThrowOnMatches<TestException>{};
 
 			REQUIRE_NOTHROW(mock());
 			REQUIRE_THAT(

@@ -971,14 +971,14 @@ TEST_CASE(
 		mimicpp::GreedySequence sequence{};
 
 		ScopedExpectationT exp1 = mimicpp::detail::make_expectation_builder(collection)
-								| expect::times(0, 1)
-								| expect::in_sequence(sequence)
-								| finally::returns(42);
+								&& expect::times(0, 1)
+								&& expect::in_sequence(sequence)
+								&& finally::returns(42);
 
 		ScopedExpectationT exp2 = mimicpp::detail::make_expectation_builder(collection)
-								| expect::times(0, 1)
-								| expect::in_sequence(sequence)
-								| finally::returns(1337);
+								&& expect::times(0, 1)
+								&& expect::in_sequence(sequence)
+								&& finally::returns(1337);
 
 		REQUIRE(1337 == collection->handle_call(call));
 	}
@@ -988,14 +988,14 @@ TEST_CASE(
 		mimicpp::LazySequence sequence{};
 
 		ScopedExpectationT exp1 = mimicpp::detail::make_expectation_builder(collection)
-								| expect::times(0, 1)
-								| expect::in_sequence(sequence)
-								| finally::returns(42);
+								&& expect::times(0, 1)
+								&& expect::in_sequence(sequence)
+								&& finally::returns(42);
 
 		ScopedExpectationT exp2 = mimicpp::detail::make_expectation_builder(collection)
-								| expect::times(0, 1)
-								| expect::in_sequence(sequence)
-								| finally::returns(1337);
+								&& expect::times(0, 1)
+								&& expect::in_sequence(sequence)
+								&& finally::returns(1337);
 
 		REQUIRE(42 == collection->handle_call(call));
 	}
