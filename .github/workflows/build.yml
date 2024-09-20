@@ -111,6 +111,15 @@ jobs:
                         package_name: "clang+llvm-17.0.6-arm64-apple-darwin22.0",
                         asan: true
                     }
+                    - {
+                        prefix: "macOS",
+                        os: macos-latest,
+                        compiler_name: "AppleClang",
+                        compiler_version: "18.1.8",
+                        compiler_url: "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-arm64-apple-macos11.tar.xz",
+                        package_name: "clang+llvm-18.1.8-arm64-apple-macos11",
+                        asan: true
+                    }
 
         steps:
             - uses: actions/checkout@v4
@@ -128,6 +137,17 @@ jobs:
                 echo "CC=$(echo $CLANG_PATH/clang)" >> $GITHUB_ENV
                 echo "CXX=$(echo $CLANG_PATH/clang++)" >> $GITHUB_ENV
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+
+                # see: https://github.com/Homebrew/homebrew-core/issues/178435#issuecomment-2250615995
+            - name: Workaround AppleClang 18 linker error on macOS
+              if: "${{ \
+                    startsWith(matrix.config.os, 'macos') \
+                    && startsWith(matrix.config.compiler_version, '18.1.8') \
+                   }}"
+              shell: bash
+              run: |
+                env brew install llvm
+                echo "LDFLAGS=$(echo $LDFLAGS -L\"$(brew --prefix llvm)/lib/c++\" -L\"$(brew --prefix llvm)/lib\" -lunwind)" >> $GITHUB_ENV
 
             - name: Clang libc++ setup
               if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}

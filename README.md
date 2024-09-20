@@ -206,5 +206,6 @@ The coverage is generated via ``gcov`` and evaluated by
 | Compiler          | libstdc++ | libc++ | c++-20 | c++-23 |
 |-------------------|:---------:|:------:|:------:|:------:|
 | AppleClang-17.0.6 |     -     |    x   |    x   |    x   |
+| AppleClang-18.1.6 |     -     |    x   |    x   |    x   |
 
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
