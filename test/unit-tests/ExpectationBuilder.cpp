@@ -43,15 +43,15 @@ namespace
 }
 
 TEMPLATE_TEST_CASE(
-	"Times limites of mimicpp::BasicExpectationBuilder can be exchanged only once.",
+	"Times of mimicpp::BasicExpectationBuilder can be exchanged only once.",
 	"[expectation][expectation::builder]",
 	BaseBuilderT<void()>
 )
 {
 	using BuilderT = TestType;
 
-	STATIC_REQUIRE(requires{ std::declval<BuilderT&&>() | detail::TimesConfig{}; });
-	STATIC_REQUIRE(!requires{ std::declval<BuilderT&&>() | detail::TimesConfig{} | detail::TimesConfig{}; });
+	STATIC_REQUIRE(requires{ std::declval<BuilderT&&>() && detail::TimesConfig{}; });
+	STATIC_REQUIRE(!requires{ std::declval<BuilderT&&>() && detail::TimesConfig{} && detail::TimesConfig{}; });
 }
 
 TEST_CASE(
@@ -84,7 +84,7 @@ TEST_CASE(
 	SECTION("Or exchange it once.")
 	{
 		ScopedExpectationT expectation = make_builder(collection)
-										| detail::TimesConfig{0, 0};
+										&& detail::TimesConfig{0, 0};
 
 		REQUIRE(expectation.is_satisfied());
 	}
@@ -113,7 +113,7 @@ TEST_CASE(
 	SECTION("Can be specified once.")
 	{
 		ScopedExpectationT expectation = make_builder(collection)
-										| expect::in_sequence(sequence);
+										&& expect::in_sequence(sequence);
 
 		REQUIRE(!expectation.is_satisfied());
 		REQUIRE_NOTHROW(collection->handle_call(call));
@@ -123,8 +123,8 @@ TEST_CASE(
 	SECTION("Can be specified with times.")
 	{
 		ScopedExpectationT expectation = make_builder(collection)
-										| expect::twice()
-										| expect::in_sequence(sequence);
+										&& expect::twice()
+										&& expect::in_sequence(sequence);
 
 		REQUIRE(!expectation.is_satisfied());
 		REQUIRE_NOTHROW(collection->handle_call(call));
@@ -137,8 +137,8 @@ TEST_CASE(
 	{
 		SequenceT secondSequence{};
 		ScopedExpectationT expectation = make_builder(collection)
-										| expect::in_sequence(sequence)
-										| expect::in_sequence(secondSequence);
+										&& expect::in_sequence(sequence)
+										&& expect::in_sequence(secondSequence);
 
 		REQUIRE(!expectation.is_satisfied());
 		REQUIRE_NOTHROW(collection->handle_call(call));
@@ -155,8 +155,8 @@ TEMPLATE_TEST_CASE(
 	using BuilderT = TestType;
 	using FinalizerT = FinalizerFake<void()>;
 
-	STATIC_REQUIRE(requires{ std::declval<BuilderT&&>() | FinalizerT{}; });
-	STATIC_REQUIRE(!requires{ std::declval<BuilderT&&>() | FinalizerT{} | FinalizerT{}; });
+	STATIC_REQUIRE(requires{ std::declval<BuilderT&&>() && FinalizerT{}; });
+	STATIC_REQUIRE(!requires{ std::declval<BuilderT&&>() && FinalizerT{} && FinalizerT{}; });
 }
 
 TEST_CASE(
@@ -194,7 +194,7 @@ TEST_CASE(
 			UnwrapReferenceWrapper>;
 		FinalizerT finalizer{};
 		ScopedExpectationT expectation = make_builder(collection)
-										| FinalizerPolicyT{std::ref(finalizer)};
+										&& FinalizerPolicyT{std::ref(finalizer)};
 
 		REQUIRE_CALL(finalizer, finalize_call(_))
 			.LR_WITH(&_1 == &call);
@@ -229,7 +229,7 @@ TEST_CASE(
 		UnwrapReferenceWrapper>;
 	FinalizerT finalizer{};
 	ScopedExpectationT expectation = make_builder(collection)
-									| FinalizerPolicyT{std::ref(finalizer)};
+									&& FinalizerPolicyT{std::ref(finalizer)};
 
 	REQUIRE_CALL(finalizer, finalize_call(_))
 		.LR_WITH(&_1 == &call)
@@ -260,8 +260,8 @@ TEST_CASE(
 			.RETURN(true);
 
 		ScopedExpectationT expectation = make_builder(collection)
-										| detail::TimesConfig{0, 0}
-										| PolicyT{std::ref(policy)};
+										&& detail::TimesConfig{0, 0}
+										&& PolicyT{std::ref(policy)};
 
 		REQUIRE_CALL(policy, is_satisfied())
 			.RETURN(true);
@@ -280,9 +280,9 @@ TEST_CASE(
 			.RETURN(true);
 
 		ScopedExpectationT expectation = make_builder(collection)
-										| detail::TimesConfig{0, 0}
-										| PolicyT{std::ref(policy1)}
-										| PolicyT{std::ref(policy2)};
+										&& detail::TimesConfig{0, 0}
+										&& PolicyT{std::ref(policy1)}
+										&& PolicyT{std::ref(policy2)};
 
 		REQUIRE_CALL(policy1, is_satisfied())
 			.RETURN(true);
@@ -305,7 +305,7 @@ TEST_CASE(
 
 	const std::source_location beforeLoc = std::source_location::current();
 	ScopedExpectation expectation = make_builder(collection)
-									| detail::TimesConfig{0, 0};
+									&& detail::TimesConfig{0, 0};
 	const std::source_location afterLoc = std::source_location::current();
 
 	const auto& inner = dynamic_cast<const BasicExpectation<SignatureT, ControlPolicy<>, expectation_policies::InitFinalize>&>(
@@ -333,10 +333,10 @@ TEST_CASE(
 		const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 
 		MIMICPP_SCOPED_EXPECTATION make_builder(collection)
-									| detail::TimesConfig{0, 0};
+									&& detail::TimesConfig{0, 0};
 
 		MIMICPP_SCOPED_EXPECTATION make_builder(collection)
-									| detail::TimesConfig{0, 0};
+									&& detail::TimesConfig{0, 0};
 	}
 
 	REQUIRE_THAT(

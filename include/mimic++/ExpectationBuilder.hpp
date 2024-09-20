@@ -63,7 +63,7 @@ namespace mimicpp
 					&& (!std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>)
 					&& finalize_policy_for<std::remove_cvref_t<Policy>, Signature>
 		[[nodiscard]]
-		constexpr auto operator |(Policy&& policy) &&
+		constexpr auto operator &&(Policy&& policy) &&
 		{
 			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
 				timesConfigured,
@@ -84,7 +84,7 @@ namespace mimicpp
 		template <typename Policy>
 			requires expectation_policy_for<std::remove_cvref_t<Policy>, Signature>
 		[[nodiscard]]
-		constexpr auto operator |(Policy&& policy) &&  // NOLINT(cppcoreguidelines-missing-std-forward)
+		constexpr auto operator &&(Policy&& policy) &&  // NOLINT(cppcoreguidelines-missing-std-forward)
 		{
 			using ExtendedExpectationBuilderT = BasicExpectationBuilder<
 				timesConfigured,
@@ -111,7 +111,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr auto operator |(detail::TimesConfig&& config) &&
+		constexpr auto operator &&(detail::TimesConfig&& config) &&
 			requires (!timesConfigured)
 		{
 			using NewBuilderT = BasicExpectationBuilder<
@@ -132,7 +132,7 @@ namespace mimicpp
 
 		template <typename... Sequences>
 		[[nodiscard]]
-		constexpr auto operator |(sequence::detail::Config<Sequences...>&& config) &&
+		constexpr auto operator &&(sequence::detail::Config<Sequences...>&& config) &&
 		{
 			sequence::detail::Config newConfig = m_SequenceConfig.concat(std::move(config));
 
@@ -241,8 +241,8 @@ namespace mimicpp::detail
 	{
 		return (
 			std::forward<Builder>(builder)
-			| ...
-			| detail::make_arg_policy<Signature, indices>(
+			&& ...
+			&& detail::make_arg_policy<Signature, indices>(
 				std::forward<Args>(args),
 				priority_tag<2>{}));
 	}
