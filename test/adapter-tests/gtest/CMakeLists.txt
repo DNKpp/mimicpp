@@ -9,7 +9,7 @@ setup_test_target(mimicpp-adapter-tests-gtest)
 CPMAddPackage(
 	NAME GTest
 	GITHUB_REPOSITORY	"google/googletest"
-	GIT_TAG				"1d17ea141d2c11b8917d2c7d029f1c4e2b9769b2"
+	GIT_TAG				"v1.15.2"
 	OPTIONS
 						"gtest_force_shared_crt ON"
 )
