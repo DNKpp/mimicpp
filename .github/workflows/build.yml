@@ -146,6 +146,7 @@ jobs:
                    }}"
               shell: bash
               run: |
+                env brew install llvm
                 echo "CXXFLAGS=$(echo $CXXFLAGS -L\"$(brew --prefix llvm)/lib/c++\" -L\"$(brew --prefix llvm)/lib\" -lunwind)" >> $GITHUB_ENV
 
             - name: Clang libc++ setup
