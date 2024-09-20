@@ -18,7 +18,6 @@
 #include <memory>
 #include <mutex>
 #include <ranges>
-#include <stdexcept>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -370,7 +369,10 @@ namespace mimicpp
 		class Concept
 		{
 		public:
-			virtual ~Concept() noexcept(false) = default;
+			virtual ~Concept() noexcept(false)
+			{
+			}
+
 			Concept(const Concept&) = delete;
 			Concept& operator =(const Concept&) = delete;
 			Concept(Concept&&) = delete;
@@ -435,6 +437,15 @@ namespace mimicpp
 		};
 
 	public:
+		~ScopedExpectation() noexcept(false)
+		{
+			// we must call the dtor manually here, because std::unique_ptr's dtor mustn't throw.
+			if (auto* inner = m_Inner.release())
+			{
+				inner->~Concept();
+			}
+		}
+
 		template <typename Signature>
 		[[nodiscard]]
 		explicit ScopedExpectation(
