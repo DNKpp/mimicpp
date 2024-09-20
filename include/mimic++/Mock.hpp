@@ -56,8 +56,8 @@ namespace mimicpp::detail
 			return detail::make_expectation_builder(
 						m_Expectations,
 						std::forward<Args>(args)...)
-					| expectation_policies::Category<category>{}
-					| expectation_policies::Constness<constness>{};
+					&& expectation_policies::Category<category>{}
+					&& expectation_policies::Constness<constness>{};
 		}
 
 	private:
