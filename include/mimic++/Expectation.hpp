@@ -103,6 +103,9 @@ namespace mimicpp
 
 		[[nodiscard]]
 		virtual constexpr ReturnT finalize_call(const CallInfoT& call) = 0;
+
+		[[nodiscard]]
+		virtual constexpr const std::source_location& from() const noexcept = 0;
 	};
 
 	template <typename Signature>
@@ -349,7 +352,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr const std::source_location& from() const noexcept
+		constexpr const std::source_location& from() const noexcept override
 		{
 			return m_SourceLocation;
 		}
@@ -375,6 +378,9 @@ namespace mimicpp
 
 			[[nodiscard]]
 			virtual bool is_satisfied() const = 0;
+
+			[[nodiscard]]
+			virtual const std::source_location& from() const noexcept = 0;
 
 		protected:
 			Concept() = default;
@@ -415,6 +421,12 @@ namespace mimicpp
 			bool is_satisfied() const override
 			{
 				return m_Expectation->is_satisfied();
+			}
+
+			[[nodiscard]]
+			const std::source_location& from() const noexcept override
+			{
+				return m_Expectation->from();
 			}
 
 		private:
@@ -459,6 +471,12 @@ namespace mimicpp
 		bool is_satisfied() const
 		{
 			return m_Inner->is_satisfied();
+		}
+
+		[[nodiscard]]
+		const std::source_location& from() const noexcept
+		{
+			return m_Inner->from();
 		}
 
 	private:
