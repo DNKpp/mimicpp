@@ -1,5 +1,5 @@
 CPMAddPackage("gh:catchorg/Catch2@3.7.1")
-CPMAddPackage("gh:rollbear/trompeloeil@47")
+CPMAddPackage("gh:rollbear/trompeloeil@48")
 include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
