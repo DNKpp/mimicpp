@@ -21,6 +21,8 @@ namespace mimicpp
 	template <typename Signature>
 	class Expectation;
 
+	class ScopedExpectation;
+
 	enum class MatchResult
 	{
 		none,
