@@ -152,7 +152,7 @@ namespace mimicpp
 		}
 
 		[[nodiscard]]
-		constexpr ScopedExpectation finalize(const std::source_location& sourceLocation) &&
+		ScopedExpectation finalize(const std::source_location& sourceLocation) &&
 		{
 			static_assert(
 				finalize_policy_for<FinalizePolicy, Signature>,
