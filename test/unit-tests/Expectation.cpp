@@ -3,15 +3,13 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "TestReporter.hpp"
-
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
-#include "TestTypes.hpp"
 #include "TestReporter.hpp"
+#include "TestTypes.hpp"
 
 #include <functional>
 #include <optional>
