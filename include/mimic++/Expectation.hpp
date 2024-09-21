@@ -398,11 +398,7 @@ namespace mimicpp
 
 			~Model() noexcept(false) override
 			{
-				if (m_Storage
-					&& m_Expectation)
-				{
-					m_Storage->remove(m_Expectation);
-				}
+				m_Storage->remove(m_Expectation);
 			}
 
 			[[nodiscard]]
