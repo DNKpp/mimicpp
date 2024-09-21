@@ -8,6 +8,7 @@
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Printer.hpp"
+#include "mimic++/Utility.hpp"
 
 #include "TestTypes.hpp"
 #include "TestReporter.hpp"
@@ -888,6 +889,17 @@ TEST_CASE(
 		REQUIRE_CALL(*innerExpectation, is_satisfied())
 			.RETURN(isSatisfied);
 		REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
+	}
+
+	SECTION("When calling from()")
+	{
+		const auto loc = std::source_location::current();
+		REQUIRE_CALL(*innerExpectation, from())
+			.RETURN(loc);
+		REQUIRE(
+			mimicpp::is_same_source_location(
+				loc,
+				std::as_const(expectation)->from()));
 	}
 
 	SECTION("When ScopedExpectation is moved.")
