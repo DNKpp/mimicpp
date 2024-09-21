@@ -146,7 +146,7 @@ TEST_CASE(
 			Catch::Matchers::Equals("StdFormatPrintable"));
 	}
 
-	SECTION("custom::Printer specialization is prefered.")
+	SECTION("custom::Printer specialization is preferred.")
 	{
 		using PrinterT = custom::Printer<StdFormatAndCustomPrintable>;
 		PrinterT::printCallCounter = 0;

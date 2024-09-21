@@ -417,7 +417,7 @@ TEST_CASE(
 
 		REQUIRE(1u == policy2.sequenceCount);
 
-		SECTION("When first expection is satisfied, then the second one becomes applicable.")
+		SECTION("When first expectation is satisfied, then the second one becomes applicable.")
 		{
 			REQUIRE(!std::as_const(policy1).is_satisfied());
 			REQUIRE_THAT(
@@ -793,7 +793,7 @@ TEST_CASE(
 	"[expectation][expectation::control][sequence]"
 )
 {
-	SECTION("LazySequence supports skipable expectations.")
+	SECTION("LazySequence supports skippable expectations.")
 	{
 		LazySequence sequence{};
 		ControlPolicy policy1{
@@ -923,7 +923,7 @@ TEST_CASE(
 		}
 	}
 
-	SECTION("GreedySequence supports skipable expectations.")
+	SECTION("GreedySequence supports skippable expectations.")
 	{
 		GreedySequence sequence{};
 		ControlPolicy policy1{
@@ -1159,7 +1159,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"expect::at_least throws, when invalit limit is given.",
+	"expect::at_least throws, when invalid limit is given.",
 	"[expectation][expectation::factories]"
 )
 {
@@ -1170,7 +1170,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"expect::at_most throws, when invalit limit is given.",
+	"expect::at_most throws, when invalid limit is given.",
 	"[expectation][expectation::factories]"
 )
 {

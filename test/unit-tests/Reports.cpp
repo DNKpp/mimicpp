@@ -1239,7 +1239,7 @@ TEST_CASE(
 				"finally: finalizer description\n"));
 	}
 
-	SECTION("When expectatin contains no source-location.")
+	SECTION("When expectation contains no source-location.")
 	{
 		report.sourceLocation.reset();
 

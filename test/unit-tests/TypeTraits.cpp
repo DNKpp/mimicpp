@@ -382,7 +382,7 @@ TEMPLATE_TEST_CASE_SIG(
 		STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) const && noexcept>>);
 	}
 
-	SECTION("Function with c-elipsis.")
+	SECTION("Function with c-ellipsis.")
 	{
 		using SignatureT = Return(Args..., ...);
 

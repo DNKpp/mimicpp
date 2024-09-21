@@ -497,7 +497,7 @@ TEST_CASE(
 {
 	const sequence::detail::Config<> firstConfig{};
 
-	SECTION("Concat two empty sequences is pointlesss but possible.")
+	SECTION("Concat two empty sequences is pointless but possible.")
 	{
 		[[maybe_unused]] const sequence::detail::Config<> result = firstConfig.concat(
 			sequence::detail::Config<>{});

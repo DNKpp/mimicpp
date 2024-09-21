@@ -9,7 +9,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE(
-	"once() requires the expectation to be matched excatly once.",
+	"once() requires the expectation to be matched exactly once.",
 	"[example][example::times]"
 )
 {
@@ -25,7 +25,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"twice() requires the expectation to be matched excatly twice.",
+	"twice() requires the expectation to be matched exactly twice.",
 	"[example][example::times]"
 )
 {

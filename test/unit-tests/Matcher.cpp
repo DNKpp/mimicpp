@@ -663,7 +663,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"matches::range::unordered_eq matches when target range is a permuation of the stored one.",
+	"matches::range::unordered_eq matches when target range is a permutation of the stored one.",
 	"[matcher]"
 )
 {

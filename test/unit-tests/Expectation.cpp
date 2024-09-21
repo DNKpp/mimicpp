@@ -65,7 +65,7 @@ TEST_CASE(
 			Catch::Matchers::IsEmpty());
 	}
 
-	SECTION("When expectation is unfulfilled, get's reported.")
+	SECTION("When expectation is unfulfilled, it is reported.")
 	{
 		const mimicpp::ExpectationReport expReport{
 			.timesDescription = "times description"
@@ -952,7 +952,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"ExpectationCollection disambigues multiple possible matches in a deterministic manner.",
+	"ExpectationCollection disambiguates multiple possible matches in a deterministic manner.",
 	"[expectation]"
 )
 {
