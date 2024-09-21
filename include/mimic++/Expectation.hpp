@@ -437,13 +437,10 @@ namespace mimicpp
 		};
 
 	public:
-		~ScopedExpectation() noexcept(false)
+		~ScopedExpectation() noexcept(false)  // NOLINT(modernize-use-equals-default)
 		{
 			// we must call the dtor manually here, because std::unique_ptr's dtor mustn't throw.
-			if (auto* inner = m_Inner.release())
-			{
-				inner->~Concept();
-			}
+			::delete m_Inner.release();
 		}
 
 		template <typename Signature>
