@@ -895,8 +895,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"stringify_match_report converts the match report to text representation.",
-	"[report][detail]"
+	"MatchReport can be printed.",
+	"[report][print]"
 )
 {
 	namespace Matches = Catch::Matchers;
@@ -1090,8 +1090,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"stringify_call_report converts the call report to text representation.",
-	"[report][detail]"
+	"CallReport can be printed.",
+	"[report][print]"
 )
 {
 	namespace Matches = Catch::Matchers;
