@@ -106,7 +106,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
-		[[maybe_unused]] const priority_tag<6>
+		[[maybe_unused]] const priority_tag<5>
 	)
 	{
 		return Printer::print(
@@ -124,7 +124,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
-		[[maybe_unused]] const priority_tag<5>
+		[[maybe_unused]] const priority_tag<4>
 	)
 	{
 		return Printer::print(
@@ -136,22 +136,21 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		String&& str,
-		[[maybe_unused]] const priority_tag<4>
+		[[maybe_unused]] const priority_tag<3>
 	)
 	{
 		return format::format_to(
 			out,
 			"\"{}\"",
-			static_cast<StringViewT>(str));
+			static_cast<StringViewT>(std::forward<String>(str)));
 	}
 
 	template <typename OutIter, std::ranges::forward_range Range>
 	OutIter print(
 		OutIter out,
 		Range&& range,
-		priority_tag<3>
+		priority_tag<2>
 	);
-
 
 	template <typename Char>
 	struct format_context;
@@ -201,26 +200,10 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T& value,
-		[[maybe_unused]] const priority_tag<2>
-	)
-	{
-		return format::format_to(out, "{}", value);
-	}
-
-	template <typename OutIter>
-	OutIter print(
-		OutIter out,
-		const std::source_location& loc,
 		[[maybe_unused]] const priority_tag<1>
 	)
 	{
-		return format::format_to(
-			out,
-			"{}[{}:{}], {}",
-			loc.file_name(),
-			loc.line(),
-			loc.column(),
-			loc.function_name());
+		return format::format_to(out, "{}", value);
 	}
 
 	template <typename OutIter>
@@ -269,8 +252,8 @@ namespace mimicpp::detail
 	template <typename OutIter, std::ranges::forward_range Range>
 	OutIter print(
 		OutIter out,
-		Range&& range,
-		const priority_tag<3>
+		Range&& range,  // NOLINT(cppcoreguidelines-missing-std-forward)
+		const priority_tag<2>
 	)
 	{
 		out = format::format_to(out, "{{ ");
@@ -291,6 +274,23 @@ namespace mimicpp::detail
 
 		return format::format_to(out, " }}");
 	}
+
+	template <>
+	class Printer<std::source_location>
+	{
+	public:
+		template <typename OutIter>
+		static OutIter print(OutIter out, const std::source_location& loc)
+		{
+			return format::format_to(
+				out,
+				"{}[{}:{}], {}",
+				loc.file_name(),
+				loc.line(),
+				loc.column(),
+				loc.function_name());
+		}
+	};
 }
 
 namespace mimicpp
