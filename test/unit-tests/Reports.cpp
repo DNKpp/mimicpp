@@ -913,7 +913,7 @@ TEST_CASE(
 			};
 
 			REQUIRE_THAT(
-				stringify_match_report(report),
+				print(report),
 				Matches::Matches(
 					"Matched expectation: \\{\n"
 					"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -933,7 +933,7 @@ TEST_CASE(
 			};
 
 			REQUIRE_THAT(
-				stringify_match_report(report),
+				print(report),
 				Matches::Matches(
 					"Matched expectation: \\{\n"
 					"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -958,7 +958,7 @@ TEST_CASE(
 				};
 
 				REQUIRE_THAT(
-					stringify_match_report(report),
+					print(report),
 					Matches::Matches(
 						"Inapplicable, but otherwise matched expectation: \\{\n"
 						"reason: already saturated \\(matched 42 times\\)\n"
@@ -987,7 +987,7 @@ TEST_CASE(
 				};
 
 				REQUIRE_THAT(
-					stringify_match_report(report),
+					print(report),
 					Matches::Matches(
 						"Inapplicable, but otherwise matched expectation: \\{\n"
 						"reason: accepts further matches \\(matched 5 out of 42 times\\),\n"
@@ -1010,7 +1010,7 @@ TEST_CASE(
 			};
 
 			REQUIRE_THAT(
-				stringify_match_report(report),
+				print(report),
 				Matches::Matches(
 					"Inapplicable, but otherwise matched expectation: \\{\n"
 					"reason: already saturated \\(matched 42 times\\)\n"
@@ -1037,7 +1037,7 @@ TEST_CASE(
 			};
 
 			REQUIRE_THAT(
-				stringify_match_report(report),
+				print(report),
 				Matches::Matches(
 					"Unmatched expectation: \\{\n"
 					"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1060,7 +1060,7 @@ TEST_CASE(
 			};
 
 			REQUIRE_THAT(
-				stringify_match_report(report),
+				print(report),
 				Matches::Matches(
 					"Unmatched expectation: \\{\n"
 					"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1082,7 +1082,7 @@ TEST_CASE(
 		};
 
 		REQUIRE_THAT(
-			stringify_match_report(report),
+			print(report),
 			Matches::Matches(
 				"Matched expectation: \\{\n"
 				"\\}\n"));

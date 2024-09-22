@@ -466,98 +466,109 @@ namespace mimicpp
 		return MatchResult::full;
 	}
 
-	/**
-	 * \brief Converts the given report to text.
-	 * \param report The report.
-	 * \return The report text.
-	 * \relatesalso MatchReport
-	 */
-	[[nodiscard]]
-	inline StringT stringify_match_report(const MatchReport& report)
+	template <>
+	class detail::Printer<MatchReport>
 	{
-		std::vector<StringT> matchedExpectationDescriptions{};
-		std::vector<StringT> unmatchedExpectationDescriptions{};
-
-		for (const auto& [isMatching, description] : report.expectationReports)
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, const MatchReport& report)
 		{
-			if (description)
+			std::vector<StringT> matchedExpectationDescriptions{};
+			std::vector<StringT> unmatchedExpectationDescriptions{};
+
+			for (const auto& [isMatching, description] : report.expectationReports)
 			{
-				if (isMatching)
+				if (description)
 				{
-					matchedExpectationDescriptions.emplace_back(*description);
+					if (isMatching)
+					{
+						matchedExpectationDescriptions.emplace_back(*description);
+					}
+					else
+					{
+						unmatchedExpectationDescriptions.emplace_back(*description);
+					}
 				}
-				else
+			}
+
+			switch (evaluate_match_report(report))
+			{
+			case MatchResult::full:
+				out = format::format_to(
+					out,
+					"Matched expectation: {{\n");
+				break;
+
+			case MatchResult::inapplicable:
+				out = format::format_to(
+					out,
+					"Inapplicable, but otherwise matched expectation: {{\n"
+					"reason: {}\n",
+					std::visit(
+						control_state_printer{},
+						report.controlReport));
+				break;
+
+			case MatchResult::none:
+				out = format::format_to(
+					out,
+					"Unmatched expectation: {{\n");
+				break;
+
+			// GCOVR_EXCL_START
+			default:  // NOLINT(clang-diagnostic-covered-switch-default)
+				unreachable();
+			// GCOVR_EXCL_STOP
+			}
+
+			if (report.sourceLocation)
+			{
+				out = format::format_to(
+					out,
+					"from: ");
+				out = mimicpp::print(
+					out,
+					*report.sourceLocation);
+				out = format::format_to(
+					out,
+					"\n");
+			}
+
+			if (!std::ranges::empty(unmatchedExpectationDescriptions))
+			{
+				out = format::format_to(
+					out,
+					"failed:\n");
+				for (const auto& desc : unmatchedExpectationDescriptions)
 				{
-					unmatchedExpectationDescriptions.emplace_back(*description);
+					out = format::format_to(
+						out,
+						"\t{},\n",
+						desc);
 				}
 			}
-		}
 
-		StringStreamT out{};
-
-		switch (evaluate_match_report(report))
-		{
-		case MatchResult::full:
-			out << "Matched expectation: {\n";
-			break;
-
-		case MatchResult::inapplicable:
-			format::format_to(
-				std::ostreambuf_iterator{out},
-				"Inapplicable, but otherwise matched expectation: {{\n"
-				"reason: {}\n",
-				std::visit(
-					detail::control_state_printer{},
-					report.controlReport));
-			break;
-
-		case MatchResult::none:
-			out << "Unmatched expectation: {\n";
-			break;
-
-		// GCOVR_EXCL_START
-		default:  // NOLINT(clang-diagnostic-covered-switch-default)
-			unreachable();
-		// GCOVR_EXCL_STOP
-		}
-
-		if (report.sourceLocation)
-		{
-			out << "from: ";
-			mimicpp::print(
-				std::ostreambuf_iterator{out},
-				*report.sourceLocation);
-			out << "\n";
-		}
-
-		if (!std::ranges::empty(unmatchedExpectationDescriptions))
-		{
-			out << "failed:\n";
-			for (const auto& desc : unmatchedExpectationDescriptions)
+			if (!std::ranges::empty(matchedExpectationDescriptions))
 			{
-				format_to(
-					std::ostreambuf_iterator{out},
-					"\t{},\n",
-					desc);
+				out = format::format_to(
+					out,
+					"passed:\n");
+				for (const auto& desc : matchedExpectationDescriptions)
+				{
+					out = format::format_to(
+						out,
+						"\t{},\n",
+						desc);
+				}
 			}
+
+			out = format::format_to(
+					out,
+					"}}\n");
+
+			return out;
 		}
-
-		if (!std::ranges::empty(matchedExpectationDescriptions))
-		{
-			out << "passed:\n";
-			for (const auto& desc : matchedExpectationDescriptions)
-			{
-				format_to(
-					std::ostreambuf_iterator{out},
-					"\t{},\n",
-					desc);
-			}
-		}
-
-		out << "}\n";
-
-		return std::move(out).str();
-	}
+	};
 
 	/**
 	 * \}

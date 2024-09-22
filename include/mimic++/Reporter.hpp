@@ -228,11 +228,14 @@ namespace mimicpp
 
 				for (const auto& report : matchReports)
 				{
-					ss << stringify_match_report(report) << "\n";
+					print(
+						std::ostreambuf_iterator{ss},
+						report);
+					ss << "\n";
 				}
 			}
 
-			send_fail(ss.str());
+			send_fail(std::move(ss).str());
 		}
 
 		[[noreturn]]
@@ -248,10 +251,13 @@ namespace mimicpp
 			ss << "Tested expectations:\n";
 			for (const auto& report : matchReports)
 			{
-				ss << stringify_match_report(report) << "\n";
+				print(
+					std::ostreambuf_iterator{ss},
+					report);
+				ss << "\n";
 			}
 
-			send_fail(ss.str());
+			send_fail(std::move(ss).str());
 		}
 
 		void report_full_match(const CallReport call, const MatchReport matchReport) noexcept override
@@ -263,9 +269,12 @@ namespace mimicpp
 				call);
 			ss << "\n";
 
-			ss << stringify_match_report(matchReport) << "\n";
+			print(
+				std::ostreambuf_iterator{ss},
+				matchReport);
+			ss << "\n";
 
-			send_success(ss.str());
+			send_success(std::move(ss).str());
 		}
 
 		void report_unfulfilled_expectation(const ExpectationReport expectationReport) override
