@@ -1141,8 +1141,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"stringify_expectation_report converts the match report to text representation.",
-	"[report][detail]"
+	"ExpectationReport can be printed.",
+	"[report][print]"
 )
 {
 	namespace Matches = Catch::Matchers;
@@ -1159,7 +1159,7 @@ TEST_CASE(
 	SECTION("When full report is given.")
 	{
 		REQUIRE_THAT(
-			stringify_expectation_report(std::as_const(report)),
+			print(std::as_const(report)),
 			Matches::Matches(
 				"Expectation report:\n"
 				"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1174,7 +1174,7 @@ TEST_CASE(
 		report.timesDescription.reset();
 
 		REQUIRE_THAT(
-			stringify_expectation_report(std::as_const(report)),
+			print(std::as_const(report)),
 			Matches::Matches(
 				"Expectation report:\n"
 				"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1188,7 +1188,7 @@ TEST_CASE(
 		report.finalizerDescription.reset();
 
 		REQUIRE_THAT(
-			stringify_expectation_report(std::as_const(report)),
+			print(std::as_const(report)),
 			Matches::Matches(
 				"Expectation report:\n"
 				"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1203,7 +1203,7 @@ TEST_CASE(
 		report.expectationDescriptions[0].reset();
 
 		REQUIRE_THAT(
-			stringify_expectation_report(std::as_const(report)),
+			print(std::as_const(report)),
 			Matches::Matches(
 				"Expectation report:\n"
 				"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1216,7 +1216,7 @@ TEST_CASE(
 		report.expectationDescriptions.clear();
 
 		REQUIRE_THAT(
-			stringify_expectation_report(std::as_const(report)),
+			print(std::as_const(report)),
 			Matches::Matches(
 				"Expectation report:\n"
 				"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1229,7 +1229,7 @@ TEST_CASE(
 		report.expectationDescriptions.emplace_back(std::nullopt);
 
 		REQUIRE_THAT(
-			stringify_expectation_report(std::as_const(report)),
+			print(std::as_const(report)),
 			Matches::Matches(
 				"Expectation report:\n"
 				"from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1244,7 +1244,7 @@ TEST_CASE(
 		report.sourceLocation.reset();
 
 		REQUIRE_THAT(
-			stringify_expectation_report(std::as_const(report)),
+			print(std::as_const(report)),
 			Matches::Equals(
 				"Expectation report:\n"
 				"times: times description\n"

@@ -327,62 +327,67 @@ namespace mimicpp
 		}
 	};
 
-	/**
-	 * \brief Converts the given report to text.
-	 * \param report The report.
-	 * \return The report text.
-	 * \relatesalso ExpectationReport
-	 */
-	[[nodiscard]]
-	inline StringT stringify_expectation_report(const ExpectationReport& report)
+	template <>
+	class detail::Printer<ExpectationReport>
 	{
-		StringStreamT out{};
-
-		out << "Expectation report:\n";
-
-		if (report.sourceLocation)
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, const ExpectationReport& report)
 		{
-			out << "from: ";
-			mimicpp::print(
-				std::ostreambuf_iterator{out},
-				*report.sourceLocation);
-			out << "\n";
-		}
+			out = format::format_to(
+				out,
+				"Expectation report:\n");
 
-		if (report.timesDescription)
-		{
-			format_to(
-				std::ostreambuf_iterator{out},
-				"times: {}\n",
-				*report.timesDescription);
-		}
-
-		if (std::ranges::any_of(
-			report.expectationDescriptions,
-			[](const auto& desc) { return desc.has_value(); }))
-		{
-			out << "expects:\n";
-			for (const auto& desc
-				: report.expectationDescriptions
-				| std::views::filter([](const auto& desc) { return desc.has_value(); }))
+			if (report.sourceLocation)
 			{
-				format_to(
-					std::ostreambuf_iterator{out},
-					"\t{},\n",
-					*desc);
+				out = format::format_to(
+					out,
+					"from: ");
+				out = mimicpp::print(
+					out,
+					*report.sourceLocation);
+				out = format::format_to(
+					out,
+					"\n");
 			}
-		}
 
-		if (report.finalizerDescription)
-		{
-			format_to(
-				std::ostreambuf_iterator{out},
-				"finally: {}\n",
-				*report.finalizerDescription);
-		}
+			if (report.timesDescription)
+			{
+				out = format::format_to(
+					out,
+					"times: {}\n",
+					*report.timesDescription);
+			}
 
-		return std::move(out).str();
-	}
+			if (std::ranges::any_of(
+				report.expectationDescriptions,
+				[](const auto& desc) { return desc.has_value(); }))
+			{
+				out = format::format_to(
+					out,
+					"expects:\n");
+				for (const auto& desc
+					: report.expectationDescriptions
+					| std::views::filter([](const auto& desc) { return desc.has_value(); }))
+				{
+					out = format::format_to(
+						out,
+						"\t{},\n",
+						*desc);
+				}
+			}
+
+			if (report.finalizerDescription)
+			{
+				out = format::format_to(
+					out,
+					"finally: {}\n",
+					*report.finalizerDescription);
+			}
+
+			return out;
+		}
+	};
 
 	/**
 	 * \brief Contains the detailed information for match outcomes.

@@ -270,10 +270,13 @@ namespace mimicpp
 			if (0 == std::uncaught_exceptions())
 			{
 				StringStreamT ss{};
-				ss << "Unfulfilled expectation:\n"
-					<< stringify_expectation_report(expectationReport) << "\n";
+				ss << "Unfulfilled expectation:\n";
+				print(
+					std::ostreambuf_iterator{ss},
+					expectationReport);
+				ss << "\n";
 
-				send_fail(ss.str());
+				send_fail(std::move(ss).str());
 			}
 		}
 
@@ -300,28 +303,27 @@ namespace mimicpp
 			}
 			catch (const std::exception& e)
 			{
-				format_to(
-					std::ostreambuf_iterator{ss},
-					"what: {}\n",
-					e.what());
+				ss << "what: "
+					<< e.what()
+					<< "\n";
 			}
 			catch (...)
 			{
 				ss << "Unknown exception type.\n";
 			}
 
-			format_to(
+			ss << "while checking expectation:\n";
+			print(
 				std::ostreambuf_iterator{ss},
-				"while checking expectation:\n"
-				"{}\n",
-				stringify_expectation_report(expectationReport));
+				expectationReport);
+			ss << "\n";
 
 			format_to(
 				std::ostreambuf_iterator{ss},
 				"For {}\n",
 				stringify_call_report(call));
 
-			send_warning(ss.str());
+			send_warning(std::move(ss).str());
 		}
 
 	private:
