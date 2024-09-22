@@ -75,8 +75,8 @@ namespace mimicpp
 
 	namespace detail
 	{
-		[[nodiscard]]
-		inline StringT stringify_times_state(const std::size_t current, const std::size_t min, const std::size_t max)
+		template <print_iterator OutIter>
+		OutIter print_times_state(OutIter out, const std::size_t current, const std::size_t min, const std::size_t max)
 		{
 			const auto verbalizeValue = [](const std::size_t value)-> StringT
 			{
@@ -95,14 +95,16 @@ namespace mimicpp
 
 			if (current == max)
 			{
-				return format::format(
+				return format::format_to(
+					out,
 					"already saturated (matched {})",
 					verbalizeValue(current));
 			}
 
 			if (min <= current)
 			{
-				return format::format(
+				return format::format_to(
+					out,
 					"accepts further matches (matched {} out of {} times)",
 					current,
 					max);
@@ -123,7 +125,8 @@ namespace mimicpp
 					verbalizeValue(end));
 			};
 
-			return format::format(
+			return format::format_to(
+				out,
 				"matched {} - {} is expected",
 				verbalizeValue(current),
 				verbalizeInterval(min, max));
@@ -131,10 +134,11 @@ namespace mimicpp
 
 		struct control_state_printer
 		{
-			[[nodiscard]]
-			StringT operator ()(const state_applicable& state) const
+			template <print_iterator OutIter>
+			OutIter operator ()(OutIter out, const state_applicable& state) const
 			{
-				auto timesText = stringify_times_state(
+				out = print_times_state(
+					out,
 					state.count,
 					state.min,
 					state.max);
@@ -142,37 +146,38 @@ namespace mimicpp
 				if (const auto sequenceCount = std::ranges::ssize(state.sequenceRatings);
 					0 < sequenceCount)
 				{
-					return format::format(
-						"{},\n\tand is the current element of {} sequence(s).",
-						stringify_times_state(
-							state.count,
-							state.min,
-							state.max),
+					out = format::format_to(
+						out,
+						",\n\tand is the current element of {} sequence(s).",
 						sequenceCount);
 				}
 
-				return timesText;
+				return out;
 			}
 
-			[[nodiscard]]
-			StringT operator ()(const state_inapplicable& state) const
+			template <print_iterator OutIter>
+			OutIter operator ()(OutIter out, const state_inapplicable& state) const
 			{
+				out = print_times_state(
+					out,
+					state.count,
+					state.min,
+					state.max);
+
 				const auto totalSequences = std::ranges::ssize(state.sequenceRatings)
 											+ std::ranges::ssize(state.inapplicableSequences);
-				return format::format(
-					"{},\n\tbut is not the current element of {} sequence(s) ({} total).",
-					stringify_times_state(
-						state.count,
-						state.min,
-						state.max),
+				return format::format_to(
+					out,
+					",\n\tbut is not the current element of {} sequence(s) ({} total).",
 					std::ranges::ssize(state.inapplicableSequences),
 					totalSequences);
 			}
 
-			[[nodiscard]]
-			StringT operator ()(const state_saturated& state) const
+			template <print_iterator OutIter>
+			OutIter operator ()(OutIter out, const state_saturated& state) const
 			{
-				auto timesText = stringify_times_state(
+				out = print_times_state(
+					out,
 					state.count,
 					state.min,
 					state.max);
@@ -180,13 +185,13 @@ namespace mimicpp
 				if (const auto sequenceCount = std::ranges::ssize(state.sequences);
 					0 < sequenceCount)
 				{
-					return format::format(
-						"{},\n\tand is part of {} sequence(s).",
-						timesText,
+					out = format::format_to(
+						out,
+						",\n\tand is part of {} sequence(s).",
 						sequenceCount);
 				}
 
-				return timesText;
+				return out;
 			}
 		};
 	}
@@ -503,10 +508,11 @@ namespace mimicpp
 				out = format::format_to(
 					out,
 					"Inapplicable, but otherwise matched expectation: {{\n"
-					"reason: {}\n",
-					std::visit(
-						control_state_printer{},
-						report.controlReport));
+					"reason: ");
+				out = std::visit(
+					std::bind_front(control_state_printer{}, out),
+					report.controlReport);
+				out = format::format_to(out, "\n");
 				break;
 
 			case MatchResult::none:

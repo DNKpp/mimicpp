@@ -260,7 +260,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"detail::stringify_times_state converts the times state to text.",
+	"detail::print_times_state converts the times state to text.",
 	"[reporting][detail]"
 )
 {
@@ -275,13 +275,15 @@ TEST_CASE(
 				{3, 42},
 				}));
 
-		const auto description = detail::stringify_times_state(
+		StringStreamT ss{};
+		detail::print_times_state(
+			std::ostreambuf_iterator{ss},
 			max,
 			min,
 			max);
 
 		REQUIRE_THAT(
-			description,
+			ss.str(),
 			Matches::StartsWith("already saturated (matched "));
 	}
 
@@ -294,13 +296,15 @@ TEST_CASE(
 				{21, 3, 42},
 				}));
 
-		const auto description = detail::stringify_times_state(
+		StringStreamT ss{};
+		detail::print_times_state(
+			std::ostreambuf_iterator{ss},
 			current,
 			min,
 			max);
 
 		REQUIRE_THAT(
-			description,
+			ss.str(),
 			Matches::Matches("accepts further matches \\(matched \\d+ out of \\d+ times\\)"));
 	}
 
@@ -313,13 +317,15 @@ TEST_CASE(
 				{2, 3, 42},
 				}));
 
-		const auto description = detail::stringify_times_state(
+		StringStreamT ss{};
+		detail::print_times_state(
+			std::ostreambuf_iterator{ss},
 			current,
 			min,
 			max);
 
 		REQUIRE_THAT(
-			description,
+			ss.str(),
 			Matches::StartsWith("matched "));
 	}
 }
@@ -341,8 +347,14 @@ TEST_CASE(
 				.sequenceRatings = {}
 			};
 
+			StringStreamT ss{};
+			std::invoke(
+				detail::control_state_printer{},
+				std::ostreambuf_iterator{ss},
+				state);
+
 			REQUIRE_THAT(
-				detail::control_state_printer{}(state),
+				ss.str(),
 				Matches::Equals("accepts further matches (matched 256 out of 1337 times)"));
 		}
 
@@ -357,8 +369,14 @@ TEST_CASE(
 				}
 			};
 
+			StringStreamT ss{};
+			std::invoke(
+				detail::control_state_printer{},
+				std::ostreambuf_iterator{ss},
+				state);
+
 			REQUIRE_THAT(
-				detail::control_state_printer{}(state),
+				ss.str(),
 				Matches::Equals(
 					"accepts further matches (matched 256 out of 1337 times),\n"
 					"\tand is the current element of 1 sequence(s)."));
@@ -380,8 +398,14 @@ TEST_CASE(
 			}
 		};
 
+		StringStreamT ss{};
+		std::invoke(
+			detail::control_state_printer{},
+			std::ostreambuf_iterator{ss},
+			state);
+
 		REQUIRE_THAT(
-			detail::control_state_printer{}(state),
+			ss.str(),
 			Matches::Equals(
 				"accepts further matches (matched 256 out of 1337 times),\n"
 				"\tbut is not the current element of 2 sequence(s) (3 total)."));
@@ -397,8 +421,14 @@ TEST_CASE(
 				.count = 1337
 			};
 
+			StringStreamT ss{};
+			std::invoke(
+				detail::control_state_printer{},
+				std::ostreambuf_iterator{ss},
+				state);
+
 			REQUIRE_THAT(
-				detail::control_state_printer{}(state),
+				ss.str(),
 				Matches::Equals("already saturated (matched 1337 times)"));
 		}
 
@@ -413,8 +443,14 @@ TEST_CASE(
 				}
 			};
 
+			StringStreamT ss{};
+			std::invoke(
+				detail::control_state_printer{},
+				std::ostreambuf_iterator{ss},
+				state);
+
 			REQUIRE_THAT(
-				detail::control_state_printer{}(state),
+				ss.str(),
 				Matches::Equals(
 					"already saturated (matched 1337 times),\n"
 					"\tand is part of 1 sequence(s)."));

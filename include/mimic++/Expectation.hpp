@@ -286,9 +286,17 @@ namespace mimicpp
 			return ExpectationReport{
 				.sourceLocation = m_SourceLocation,
 				.finalizerDescription = std::nullopt,
-				.timesDescription = std::visit(
-					detail::control_state_printer{},
-					m_ControlPolicy.state()),
+				.timesDescription = std::invoke(
+					[this]
+					{
+						StringStreamT ss{};
+						std::visit(
+							std::bind_front(
+								detail::control_state_printer{},
+								std::ostreambuf_iterator{ss}),
+							m_ControlPolicy.state());
+						return std::move(ss).str();
+					}),
 				.expectationDescriptions = std::apply(
 					[&](const auto&... policies)
 					{
