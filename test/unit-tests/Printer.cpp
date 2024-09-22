@@ -45,7 +45,7 @@ namespace
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"printer_for determines whether the given type satisfies the printer_for concept.",
+	"printer_for determines whether the given type satisfies the requirements.",
 	"[print]",
 	((bool expected, typename Printer, typename OutIter, typename T), expected, Printer, OutIter, T),
 	(false, NonPrinter, StringPrintIteratorT, int&),
