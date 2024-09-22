@@ -106,6 +106,24 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
+		[[maybe_unused]] const priority_tag<6>
+	)
+	{
+		return Printer::print(
+			out,
+			std::forward<T>(value));
+	}
+
+	template <typename>
+	class Printer;
+
+	template <
+		print_iterator OutIter,
+		typename T,
+		printer_for<OutIter, T> Printer = Printer<std::remove_cvref_t<T>>>
+	OutIter print(
+		OutIter out,
+		T&& value,
 		[[maybe_unused]] const priority_tag<5>
 	)
 	{
@@ -225,7 +243,7 @@ namespace mimicpp::detail
 		) const
 		{
 			static_assert(
-				requires(const priority_tag<5> tag)
+				requires(const priority_tag<6> tag)
 				{
 					{ print(out, std::forward<T>(value), tag) } -> std::convertible_to<OutIter>;
 				},
@@ -234,7 +252,7 @@ namespace mimicpp::detail
 			return print(
 				out,
 				std::forward<T>(value),
-				priority_tag<5>{});
+				priority_tag<6>{});
 		}
 
 		template <typename T>

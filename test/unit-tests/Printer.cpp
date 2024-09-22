@@ -105,6 +105,14 @@ namespace
 	{
 	};
 
+	class InternalPrintable
+	{
+	};
+
+	class CustomAndInternalPrintable
+	{
+	};
+
 	class StdFormatPrintable
 	{
 	};
@@ -126,6 +134,46 @@ public:
 		return format::format_to(out, "CustomPrintable");
 	}
 };
+
+template <>
+class detail::Printer<InternalPrintable>
+{
+public:
+	inline static int printCallCounter{0};
+
+	static auto print(print_iterator auto out, const InternalPrintable&)
+	{
+		++printCallCounter;
+		return format::format_to(out, "InternalPrintable");
+	}
+};
+
+template <>
+class custom::Printer<CustomAndInternalPrintable>
+{
+public:
+	inline static int printCallCounter{0};
+
+	static auto print(print_iterator auto out, const CustomAndInternalPrintable&)
+	{
+		++printCallCounter;
+		return format::format_to(out, "CustomAndInternalPrintable - custom::Printer");
+	}
+};
+
+template <>
+class detail::Printer<CustomAndInternalPrintable>
+{
+public:
+	inline static int printCallCounter{0};
+
+	static auto print(print_iterator auto out, const CustomAndInternalPrintable&)
+	{
+		++printCallCounter;
+		return format::format_to(out, "CustomAndInternalPrintable - detail::Printer");
+	}
+};
+
 
 template <typename Char>
 struct std::formatter<StdFormatPrintable, Char>
@@ -194,6 +242,39 @@ TEST_CASE(
 		REQUIRE_THAT(
 			std::move(stream).str(),
 			Catch::Matchers::Equals("CustomPrintable"));
+	}
+
+	SECTION("detail::Printer specialization is supported.")
+	{
+		using PrinterT = detail::Printer<InternalPrintable>;
+		PrinterT::printCallCounter = 0;
+
+		constexpr InternalPrintable value{};
+
+		print(std::ostreambuf_iterator{stream}, value);
+		REQUIRE(PrinterT::printCallCounter == 1);
+
+		REQUIRE_THAT(
+			std::move(stream).str(),
+			Catch::Matchers::Equals("InternalPrintable"));
+	}
+
+	SECTION("custom::Printer is preferred, if both printers have valid specializations.")
+	{
+		using CustomPrinterT = custom::Printer<CustomAndInternalPrintable>;
+		using DetailPrinterT = detail::Printer<CustomAndInternalPrintable>;
+		CustomPrinterT::printCallCounter = 0;
+		DetailPrinterT::printCallCounter = 0;
+
+		constexpr CustomAndInternalPrintable value{};
+
+		print(std::ostreambuf_iterator{stream}, value);
+		REQUIRE(CustomPrinterT::printCallCounter == 1);
+		REQUIRE(DetailPrinterT::printCallCounter == 0);
+
+		REQUIRE_THAT(
+			stream.str(),
+			Catch::Matchers::Equals("CustomAndInternalPrintable - custom::Printer"));
 	}
 
 	SECTION("std::formatter specialization is supported.")
