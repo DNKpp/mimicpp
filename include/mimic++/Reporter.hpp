@@ -209,10 +209,11 @@ namespace mimicpp
 		void report_no_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
 		{
 			StringStreamT ss{};
-			format_to(
+			ss << "No match for ";
+			print(
 				std::ostreambuf_iterator{ss},
-				"No match for {}\n",
-				stringify_call_report(call));
+				call);
+			ss << "\n";
 
 			if (std::ranges::empty(matchReports))
 			{
@@ -238,10 +239,11 @@ namespace mimicpp
 		void report_inapplicable_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
 		{
 			StringStreamT ss{};
-			format_to(
+			ss << "No applicable match for ";
+			print(
 				std::ostreambuf_iterator{ss},
-				"No applicable match for {}\n",
-				stringify_call_report(call));
+				call);
+			ss << "\n";
 
 			ss << "Tested expectations:\n";
 			for (const auto& report : matchReports)
@@ -255,10 +257,11 @@ namespace mimicpp
 		void report_full_match(const CallReport call, const MatchReport matchReport) noexcept override
 		{
 			StringStreamT ss{};
-			format_to(
+			ss << "Found match for ";
+			print(
 				std::ostreambuf_iterator{ss},
-				"Found match for {}\n",
-				stringify_call_report(call));
+				call);
+			ss << "\n";
 
 			ss << stringify_match_report(matchReport) << "\n";
 
@@ -318,10 +321,11 @@ namespace mimicpp
 				expectationReport);
 			ss << "\n";
 
-			format_to(
+			ss << "For ";
+			print(
 				std::ostreambuf_iterator{ss},
-				"For {}\n",
-				stringify_call_report(call));
+				call);
+			ss << "\n";
 
 			send_warning(std::move(ss).str());
 		}

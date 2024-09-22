@@ -258,49 +258,54 @@ namespace mimicpp
 		};
 	}
 
-	/**
-	 * \brief Converts the given report to text.
-	 * \param report The report.
-	 * \return The report text.
-	 * \relatesalso CallReport
-	 */
-	[[nodiscard]]
-	inline StringT stringify_call_report(const CallReport& report)
+	template <>
+	class detail::Printer<CallReport>
 	{
-		StringStreamT out{};
-		format_to(
-			std::ostreambuf_iterator{out},
-			"call from {}\n",
-			mimicpp::print(report.fromLoc));
-
-		format_to(
-			std::ostreambuf_iterator{out},
-			"constness: {}\n"
-			"value category: {}\n"
-			"return type: {}\n",
-			report.fromConstness,
-			report.fromCategory,
-			report.returnTypeIndex.name());
-
-		if (!std::ranges::empty(report.argDetails))
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, const CallReport& report)
 		{
-			out << "args:\n";
-			for (const std::size_t i : std::views::iota(0u, std::ranges::size(report.argDetails)))
-			{
-				format_to(
-					std::ostreambuf_iterator{out},
-					"\targ[{}]: {{\n"
-					"\t\ttype: {},\n"
-					"\t\tvalue: {}\n"
-					"\t}},\n",
-					i,
-					report.argDetails[i].typeIndex.name(),
-					report.argDetails[i].stateString);
-			}
-		}
+			out = format::format_to(
+				out,
+				"call from ");
+			out = mimicpp::print(
+				out,
+				report.fromLoc);
+			out = format::format_to(
+				out,
+				"\n");
 
-		return std::move(out).str();
-	}
+			out = format::format_to(
+				out,
+				"constness: {}\n"
+				"value category: {}\n"
+				"return type: {}\n",
+				report.fromConstness,
+				report.fromCategory,
+				report.returnTypeIndex.name());
+
+			if (!std::ranges::empty(report.argDetails))
+			{
+				out = format::format_to(
+					out,
+					"args:\n");
+				for (const std::size_t i : std::views::iota(0u, std::ranges::size(report.argDetails)))
+				{
+					out = format::format_to(
+						out,
+						"\targ[{}]: {{\n"
+						"\t\ttype: {},\n"
+						"\t\tvalue: {}\n"
+						"\t}},\n",
+						i,
+						report.argDetails[i].typeIndex.name(),
+						report.argDetails[i].stateString);
+				}
+			}
+
+			return out;
+		}
+	};
 
 	/**
 	 * \brief Contains the extracted info from a typed expectation.

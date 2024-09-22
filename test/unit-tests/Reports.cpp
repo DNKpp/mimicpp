@@ -1107,7 +1107,7 @@ TEST_CASE(
 		};
 
 		REQUIRE_THAT(
-			stringify_call_report(report),
+			print(report),
 			Matches::Matches(
 				"call from .+\\[\\d+:\\d+\\], .+\n"
 				"constness: any\n"
@@ -1126,7 +1126,7 @@ TEST_CASE(
 		};
 
 		REQUIRE_THAT(
-			stringify_call_report(report),
+			print(report),
 			Matches::Matches(
 				"call from .+\\[\\d+:\\d+\\], .+\n"
 				"constness: const\n"
