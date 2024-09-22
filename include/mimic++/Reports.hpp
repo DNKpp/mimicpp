@@ -31,6 +31,8 @@ namespace mimicpp
 	 * independent domains (e.g. unit-test frameworks) over the ``IReporter`` interface and are thus designed to provide as much
 	 * transparent information as possible, without requiring them to be a generic type.
 	 *
+	 * Each report type can be printed via ``mimicpp::print`` function, but users may customize that by adding a specialization for
+	 * ``mimicpp::custom::Printer``.
 	 * \{
 	 */
 
