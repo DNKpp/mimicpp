@@ -24,7 +24,16 @@ namespace mimicpp
 	using StringStreamT = std::basic_ostringstream<CharT, CharTraitsT>;
 
 	template <typename T>
-	concept print_iterator = std::output_iterator<T, CharT>;
+	concept print_iterator = std::output_iterator<T, const CharT&>;
+
+	template <typename Printer, typename OutIter, typename T>
+	concept printer_for = print_iterator<OutIter>
+						&& requires(OutIter out)
+						{
+							{
+								Printer::print(out, std::declval<T&&>())
+							} -> std::convertible_to<OutIter>;
+						};
 }
 
 namespace mimicpp::format
@@ -90,25 +99,26 @@ namespace mimicpp::detail
 	{
 	};
 
-	template <print_iterator OutIter, typename T, typename Printer = custom::Printer<std::remove_cvref_t<T>>>
+	template <
+		print_iterator OutIter,
+		typename T,
+		printer_for<OutIter, T> Printer = custom::Printer<std::remove_cvref_t<T>>>
 	OutIter print(
 		OutIter out,
 		T&& value,
-		const priority_tag<5>
+		[[maybe_unused]] const priority_tag<5>
 	)
-		requires requires
-		{
-			{ Printer::print(out, std::forward<T>(value)) } -> std::convertible_to<OutIter>;
-		}
 	{
-		return Printer::print(out, std::forward<T>(value));
+		return Printer::print(
+			out,
+			std::forward<T>(value));
 	}
 
 	template <typename OutIter, std::convertible_to<StringViewT> String>
 	OutIter print(
 		OutIter out,
 		String&& str,
-		priority_tag<4>
+		[[maybe_unused]] const priority_tag<4>
 	)
 	{
 		return format::format_to(
@@ -173,7 +183,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T& value,
-		const priority_tag<2>
+		[[maybe_unused]] const priority_tag<2>
 	)
 	{
 		return format::format_to(out, "{}", value);
@@ -183,7 +193,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		const std::source_location& loc,
-		const priority_tag<1>
+		[[maybe_unused]] const priority_tag<1>
 	)
 	{
 		return format::format_to(
@@ -199,7 +209,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		auto&,
-		const priority_tag<0>
+		[[maybe_unused]] const priority_tag<0>
 	)
 	{
 		return format::format_to(out, "{{?}}");

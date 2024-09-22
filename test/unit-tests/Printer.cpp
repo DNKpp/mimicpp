@@ -15,6 +15,70 @@ using namespace mimicpp;
 
 namespace
 {
+	using StringPrintIteratorT = std::string::iterator;
+	using WStringPrintIteratorT = std::wstring::iterator;
+
+	class NonPrinter
+	{
+		
+	};
+
+	class CustomIntPrinter
+	{
+	public:
+		template <typename OutIter>
+		static OutIter print(OutIter out, [[maybe_unused]] int& value)
+		{
+			return out;
+		}
+	};
+
+	class CustomConstIntPrinter
+	{
+	public:
+		template <typename OutIter>
+		static OutIter print(OutIter out, [[maybe_unused]] const int& value)
+		{
+			return out;
+		}
+	};
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"printer_for determines whether the given type satisfies the printer_for concept.",
+	"[print]",
+	((bool expected, typename Printer, typename OutIter, typename T), expected, Printer, OutIter, T),
+	(false, NonPrinter, StringPrintIteratorT, int&),
+	(false, NonPrinter, WStringPrintIteratorT, int&),
+
+	(false, CustomIntPrinter, StringPrintIteratorT, const float&),
+	(false, CustomIntPrinter, WStringPrintIteratorT, const float&),
+	(true, CustomIntPrinter, StringPrintIteratorT, int&),
+	(true, CustomIntPrinter, WStringPrintIteratorT, int&),
+	(false, CustomIntPrinter, StringPrintIteratorT, const int&),
+	(false, CustomIntPrinter, WStringPrintIteratorT, const int&),
+	(false, CustomIntPrinter, StringPrintIteratorT, int&&),
+	(false, CustomIntPrinter, WStringPrintIteratorT, int&&),
+	(false, CustomIntPrinter, StringPrintIteratorT, const int&&),
+	(false, CustomIntPrinter, WStringPrintIteratorT, const int&&),
+
+	(false, CustomConstIntPrinter, StringPrintIteratorT, const std::string&),
+	(false, CustomConstIntPrinter, WStringPrintIteratorT, const std::wstring&),
+	(true, CustomConstIntPrinter, StringPrintIteratorT, int&),
+	(true, CustomConstIntPrinter, WStringPrintIteratorT, int&),
+	(true, CustomConstIntPrinter, StringPrintIteratorT, const int&),
+	(true, CustomConstIntPrinter, WStringPrintIteratorT, const int&),
+	(true, CustomConstIntPrinter, StringPrintIteratorT, int&&),
+	(true, CustomConstIntPrinter, WStringPrintIteratorT, int&&),
+	(true, CustomConstIntPrinter, StringPrintIteratorT, const int&&),
+	(true, CustomConstIntPrinter, WStringPrintIteratorT, const int&&)
+)
+{
+	STATIC_REQUIRE(expected == printer_for<Printer, OutIter, T>);
+}
+
+namespace
+{
 	class NonPrintable
 	{
 	};
