@@ -132,7 +132,7 @@ namespace mimicpp::detail
 			std::forward<T>(value));
 	}
 
-	template <typename OutIter, std::convertible_to<StringViewT> String>
+	template <print_iterator OutIter, std::convertible_to<StringViewT> String>
 	OutIter print(
 		OutIter out,
 		String&& str,
@@ -145,7 +145,7 @@ namespace mimicpp::detail
 			static_cast<StringViewT>(std::forward<String>(str)));
 	}
 
-	template <typename OutIter, std::ranges::forward_range Range>
+	template <print_iterator OutIter, std::ranges::forward_range Range>
 	OutIter print(
 		OutIter out,
 		Range&& range,
@@ -196,7 +196,7 @@ namespace mimicpp::detail
 			} -> std::same_as<typename std::remove_reference_t<decltype(formatContext)>::iterator>;
 		};
 
-	template <typename OutIter, formattable<CharT> T>
+	template <print_iterator OutIter, formattable<CharT> T>
 	OutIter print(
 		OutIter out,
 		T& value,
@@ -206,7 +206,7 @@ namespace mimicpp::detail
 		return format::format_to(out, "{}", value);
 	}
 
-	template <typename OutIter>
+	template <print_iterator OutIter>
 	OutIter print(
 		OutIter out,
 		auto&,
@@ -249,7 +249,7 @@ namespace mimicpp::detail
 		}
 	};
 
-	template <typename OutIter, std::ranges::forward_range Range>
+	template <print_iterator OutIter, std::ranges::forward_range Range>
 	OutIter print(
 		OutIter out,
 		Range&& range,  // NOLINT(cppcoreguidelines-missing-std-forward)
@@ -279,7 +279,7 @@ namespace mimicpp::detail
 	class Printer<std::source_location>
 	{
 	public:
-		template <typename OutIter>
+		template <print_iterator OutIter>
 		static OutIter print(OutIter out, const std::source_location& loc)
 		{
 			return format::format_to(
