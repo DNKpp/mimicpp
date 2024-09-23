@@ -8,7 +8,6 @@ add_executable(
 	"Expectation.cpp"
 	"ExpectationBuilder.cpp"
 	"ExpectationPolicies.cpp"
-	"InterfaceMock.cpp"
 	"Matcher.cpp"
 	"Mock.cpp"
 	"Printer.cpp"
