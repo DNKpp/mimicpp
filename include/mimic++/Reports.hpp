@@ -80,58 +80,55 @@ namespace mimicpp
 		template <print_iterator OutIter>
 		OutIter print_times_state(OutIter out, const std::size_t current, const std::size_t min, const std::size_t max)
 		{
-			const auto verbalizeValue = [](const std::size_t value)-> StringT
+			const auto verbalizeValue = [](OutIter o, const std::size_t value)
 			{
 				switch (value)
 				{
-				case 0:
-					return "never";
-				case 1:
-					return "once";
-				case 2:
-					return "twice";
-				default:
-					return format::format("{} times", value);
+				case 0: return format::format_to(std::move(o), "never");
+				case 1: return format::format_to(std::move(o), "once");
+				case 2: return format::format_to(std::move(o), "twice");
+				default: return format::format_to(std::move(o), "{} times", value);
 				}
 			};
 
 			if (current == max)
 			{
-				return format::format_to(
-					out,
-					"already saturated (matched {})",
-					verbalizeValue(current));
+				out = format::format_to(
+					std::move(out),
+					"already saturated (matched ");
+				out = verbalizeValue(std::move(out), current);
+				return format::format_to(std::move(out),")");
 			}
 
 			if (min <= current)
 			{
 				return format::format_to(
-					out,
+					std::move(out),
 					"accepts further matches (matched {} out of {} times)",
 					current,
 					max);
 			}
 
-			const auto verbalizeInterval = [verbalizeValue](const std::size_t start, const std::size_t end)
+			const auto verbalizeInterval = [verbalizeValue](OutIter o, const std::size_t start, const std::size_t end)
 			{
 				if (start < end)
 				{
-					return format::format(
+					return format::format_to(
+						std::move(o),
 						"between {} and {} times",
 						start,
 						end);
 				}
 
-				return format::format(
-					"exactly {}",
-					verbalizeValue(end));
+				o = format::format_to(std::move(o), "exactly ");
+				return verbalizeValue(std::move(o), end);
 			};
 
-			return format::format_to(
-				out,
-				"matched {} - {} is expected",
-				verbalizeValue(current),
-				verbalizeInterval(min, max));
+			out = format::format_to(std::move(out), "matched ");
+			out = verbalizeValue(std::move(out), current);
+			out = format::format_to(std::move(out), " - ");
+			out = verbalizeInterval(std::move(out), min, max);
+			return format::format_to(std::move(out), " is expected");
 		}
 
 		struct control_state_printer
