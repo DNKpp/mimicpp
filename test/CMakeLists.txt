@@ -1,3 +1,5 @@
+find_package(sanitizers-cmake REQUIRED)
+
 add_subdirectory("unit-tests")
 
 option(MIMICPP_ENABLE_ADAPTER_TESTS "Determines, whether the adapter tests shall be built." OFF)

@@ -1,6 +1,5 @@
-CPMAddPackage("gh:catchorg/Catch2@3.7.1")
+find_package(Catch2 REQUIRED)
 CPMAddPackage("gh:rollbear/trompeloeil@48")
-include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
 	mimicpp-tests
@@ -9,6 +8,7 @@ add_executable(
 	"Expectation.cpp"
 	"ExpectationBuilder.cpp"
 	"ExpectationPolicies.cpp"
+	"InterfaceMock.cpp"
 	"Matcher.cpp"
 	"Mock.cpp"
 	"Printer.cpp"

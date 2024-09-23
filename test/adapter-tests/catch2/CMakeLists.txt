@@ -1,5 +1,4 @@
 find_package(Catch2 REQUIRED)
-include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
 	mimicpp-adapter-tests-catch2

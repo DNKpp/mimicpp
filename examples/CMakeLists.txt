@@ -1,5 +1,6 @@
 find_package(Catch2 REQUIRED)
-include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
+
+find_package(sanitizers-cmake REQUIRED)
 
 add_executable(
 	mimicpp-examples
