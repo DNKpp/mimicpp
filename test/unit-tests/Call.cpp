@@ -16,8 +16,6 @@
 
 using namespace mimicpp;
 
-// Todo: test call::detail::evaluate_sub_match_results
-
 TEST_CASE(
 	"call::Info is equality comparable.",
 	"[call]"
