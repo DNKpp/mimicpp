@@ -11,6 +11,7 @@
 #include "Fwd.hpp"
 
 #include <format>
+#include <functional>
 #include <iterator>
 #include <source_location>
 #include <sstream>
