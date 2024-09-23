@@ -68,7 +68,7 @@ namespace mimicpp::format
 	OutputIt format_to(const OutputIt out, const StringViewT fmt, Args&&... args)  // NOLINT(cppcoreguidelines-missing-std-forward)
 	{
 		return format::vformat_to(
-			out,
+			std::move(out),
 			fmt,
 			std::make_format_args(args...));
 	}
@@ -110,7 +110,7 @@ namespace mimicpp::detail
 	)
 	{
 		return Printer::print(
-			out,
+			std::move(out),
 			std::forward<T>(value));
 	}
 
@@ -128,7 +128,7 @@ namespace mimicpp::detail
 	)
 	{
 		return Printer::print(
-			out,
+			std::move(out),
 			std::forward<T>(value));
 	}
 
@@ -140,7 +140,7 @@ namespace mimicpp::detail
 	)
 	{
 		return format::format_to(
-			out,
+			std::move(out),
 			"\"{}\"",
 			static_cast<StringViewT>(std::forward<String>(str)));
 	}
@@ -203,7 +203,10 @@ namespace mimicpp::detail
 		[[maybe_unused]] const priority_tag<1>
 	)
 	{
-		return format::format_to(out, "{}", value);
+		return format::format_to(
+			std::move(out),
+			"{}",
+			value);
 	}
 
 	template <print_iterator OutIter>
@@ -213,7 +216,9 @@ namespace mimicpp::detail
 		[[maybe_unused]] const priority_tag<0>
 	)
 	{
-		return format::format_to(out, "{{?}}");
+		return format::format_to(
+			std::move(out), 
+			"{{?}}");
 	}
 
 	class PrintFn
@@ -233,7 +238,7 @@ namespace mimicpp::detail
 				"The given type is not printable. ");
 
 			return print(
-				out,
+				std::move(out),
 				std::forward<T>(value),
 				priority_tag<6>{});
 		}
@@ -242,7 +247,8 @@ namespace mimicpp::detail
 		StringT operator ()(T&& value) const
 		{
 			StringStreamT stream{};
-			operator()(
+			std::invoke(
+				*this,
 				std::ostreambuf_iterator{stream},
 				std::forward<T>(value));
 			return std::move(stream).str();
@@ -256,23 +262,27 @@ namespace mimicpp::detail
 		const priority_tag<2>
 	)
 	{
-		out = format::format_to(out, "{{ ");
+		out = format::format_to(
+			std::move(out),
+			"{{ ");
 		auto iter = std::ranges::begin(range);
 		if (const auto end = std::ranges::end(range);
 			iter != end)
 		{
 			constexpr PrintFn print{};
-			out = print(out, *iter++);
+			out = print(std::move(out), *iter++);
 
 			for (; iter != end; ++iter)
 			{
 				out = print(
-					format::format_to(out, ", "),
+					format::format_to(std::move(out), ", "),
 					*iter);
 			}
 		}
 
-		return format::format_to(out, " }}");
+		return format::format_to(
+			std::move(out),
+			" }}");
 	}
 
 	template <>
@@ -283,7 +293,7 @@ namespace mimicpp::detail
 		static OutIter print(OutIter out, const std::source_location& loc)
 		{
 			return format::format_to(
-				out,
+				std::move(out),
 				"{}[{}:{}], {}",
 				loc.file_name(),
 				loc.line(),

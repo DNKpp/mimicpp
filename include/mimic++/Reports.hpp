@@ -137,7 +137,7 @@ namespace mimicpp
 			OutIter operator ()(OutIter out, const state_applicable& state) const
 			{
 				out = print_times_state(
-					out,
+					std::move(out),
 					state.count,
 					state.min,
 					state.max);
@@ -146,7 +146,7 @@ namespace mimicpp
 					0 < sequenceCount)
 				{
 					out = format::format_to(
-						out,
+						std::move(out),
 						",\n\tand is the current element of {} sequence(s).",
 						sequenceCount);
 				}
@@ -158,7 +158,7 @@ namespace mimicpp
 			OutIter operator ()(OutIter out, const state_inapplicable& state) const
 			{
 				out = print_times_state(
-					out,
+					std::move(out),
 					state.count,
 					state.min,
 					state.max);
@@ -166,7 +166,7 @@ namespace mimicpp
 				const auto totalSequences = std::ranges::ssize(state.sequenceRatings)
 											+ std::ranges::ssize(state.inapplicableSequences);
 				return format::format_to(
-					out,
+					std::move(out),
 					",\n\tbut is not the current element of {} sequence(s) ({} total).",
 					std::ranges::ssize(state.inapplicableSequences),
 					totalSequences);
@@ -176,7 +176,7 @@ namespace mimicpp
 			OutIter operator ()(OutIter out, const state_saturated& state) const
 			{
 				out = print_times_state(
-					out,
+					std::move(out),
 					state.count,
 					state.min,
 					state.max);
@@ -185,7 +185,7 @@ namespace mimicpp
 					0 < sequenceCount)
 				{
 					out = format::format_to(
-						out,
+						std::move(out),
 						",\n\tand is part of {} sequence(s).",
 						sequenceCount);
 				}
@@ -270,17 +270,17 @@ namespace mimicpp
 		static OutIter print(OutIter out, const CallReport& report)
 		{
 			out = format::format_to(
-				out,
+				std::move(out),
 				"call from ");
 			out = mimicpp::print(
-				out,
+				std::move(out),
 				report.fromLoc);
 			out = format::format_to(
-				out,
+				std::move(out),
 				"\n");
 
 			out = format::format_to(
-				out,
+				std::move(out),
 				"constness: {}\n"
 				"value category: {}\n"
 				"return type: {}\n",
@@ -291,12 +291,12 @@ namespace mimicpp
 			if (!std::ranges::empty(report.argDetails))
 			{
 				out = format::format_to(
-					out,
+					std::move(out),
 					"args:\n");
 				for (const std::size_t i : std::views::iota(0u, std::ranges::size(report.argDetails)))
 				{
 					out = format::format_to(
-						out,
+						std::move(out),
 						"\targ[{}]: {{\n"
 						"\t\ttype: {},\n"
 						"\t\tvalue: {}\n"
@@ -344,19 +344,19 @@ namespace mimicpp
 		static OutIter print(OutIter out, const ExpectationReport& report)
 		{
 			out = format::format_to(
-				out,
+				std::move(out),
 				"Expectation report:\n");
 
 			if (report.sourceLocation)
 			{
 				out = format::format_to(
-					out,
+					std::move(out),
 					"from: ");
 				out = mimicpp::print(
-					out,
+					std::move(out),
 					*report.sourceLocation);
 				out = format::format_to(
-					out,
+					std::move(out),
 					"\n");
 			}
 
@@ -373,14 +373,14 @@ namespace mimicpp
 				[](const auto& desc) { return desc.has_value(); }))
 			{
 				out = format::format_to(
-					out,
+					std::move(out),
 					"expects:\n");
 				for (const auto& desc
 					: report.expectationDescriptions
 					| std::views::filter([](const auto& desc) { return desc.has_value(); }))
 				{
 					out = format::format_to(
-						out,
+						std::move(out),
 						"\t{},\n",
 						*desc);
 				}
@@ -389,7 +389,7 @@ namespace mimicpp
 			if (report.finalizerDescription)
 			{
 				out = format::format_to(
-					out,
+					std::move(out),
 					"finally: {}\n",
 					*report.finalizerDescription);
 			}
@@ -499,24 +499,24 @@ namespace mimicpp
 			{
 			case MatchResult::full:
 				out = format::format_to(
-					out,
+					std::move(out),
 					"Matched expectation: {{\n");
 				break;
 
 			case MatchResult::inapplicable:
 				out = format::format_to(
-					out,
+					std::move(out),
 					"Inapplicable, but otherwise matched expectation: {{\n"
 					"reason: ");
 				out = std::visit(
-					std::bind_front(control_state_printer{}, out),
+					std::bind_front(control_state_printer{}, std::move(out)),
 					report.controlReport);
-				out = format::format_to(out, "\n");
+				out = format::format_to(std::move(out), "\n");
 				break;
 
 			case MatchResult::none:
 				out = format::format_to(
-					out,
+					std::move(out),
 					"Unmatched expectation: {{\n");
 				break;
 
@@ -529,25 +529,25 @@ namespace mimicpp
 			if (report.sourceLocation)
 			{
 				out = format::format_to(
-					out,
+					std::move(out),
 					"from: ");
 				out = mimicpp::print(
-					out,
+					std::move(out),
 					*report.sourceLocation);
 				out = format::format_to(
-					out,
+					std::move(out),
 					"\n");
 			}
 
 			if (!std::ranges::empty(unmatchedExpectationDescriptions))
 			{
 				out = format::format_to(
-					out,
+					std::move(out),
 					"failed:\n");
 				for (const auto& desc : unmatchedExpectationDescriptions)
 				{
 					out = format::format_to(
-						out,
+						std::move(out),
 						"\t{},\n",
 						desc);
 				}
@@ -556,22 +556,20 @@ namespace mimicpp
 			if (!std::ranges::empty(matchedExpectationDescriptions))
 			{
 				out = format::format_to(
-					out,
+					std::move(out),
 					"passed:\n");
 				for (const auto& desc : matchedExpectationDescriptions)
 				{
 					out = format::format_to(
-						out,
+						std::move(out),
 						"\t{},\n",
 						desc);
 				}
 			}
 
-			out = format::format_to(
-					out,
+			return format::format_to(
+					std::move(out),
 					"}}\n");
-
-			return out;
 		}
 	};
 
