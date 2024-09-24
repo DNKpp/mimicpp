@@ -11,6 +11,9 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Mock.hpp"
 
+#include <type_traits>
+#include <utility>
+
 #endif
 
 namespace mimicpp
@@ -168,6 +171,42 @@ namespace mimicpp
 		MIMICPP_DETAIL_COMMA_DELIMITER,		\
 		MIMICPP_DETAIL_IDENTITY,			\
 		,									\
+		__VA_ARGS__)
+
+namespace mimicpp
+{
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup MOCK_INTERFACES_DETAIL_FORWARD_ARGS forward_args
+	 * \ingroup MOCK_INTERFACES_DETAIL
+	 * \brief Creates ``std::forward`` calls for each given argument (not enclosed by parentheses).
+	 * \{
+	 */
+}
+
+/**
+ * \brief Creates a ``std::forward`` call for the given argument.
+ * \param sequence A unique sequence, which will be appended to the parameter name (as suffix).
+ * \param bound_data Unused.
+ * \param type The type of the parameter. Enclosing parentheses will be stripped.
+ */
+#define MIMICPP_DETAIL_FORWARD_ARG(sequence, bound_data, type) \
+	::std::forward<::std::add_rvalue_reference_t<MIMICPP_DETAIL_STRIP_PARENS(type)>>(arg_##sequence)
+
+/**
+ * \brief Creates ``std::forward`` calls for each given argument (not enclosed by parentheses).
+ */
+#define MIMICPP_DETAIL_FORWARD_ARGS(...) \
+	__VA_OPT__(,)\
+	MIMICPP_DETAIL_FOR_EACH_EXT(		\
+		MIMICPP_DETAIL_FORWARD_ARG,		\
+		i,								\
+		MIMICPP_DETAIL_COMMA_DELIMITER,	\
+		MIMICPP_DETAIL_IDENTITY,		\
+		,								\
 		__VA_ARGS__)
 
 namespace mimicpp

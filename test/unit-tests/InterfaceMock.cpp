@@ -133,3 +133,34 @@ TEST_CASE(
 		TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST((std::tuple<int, float>))),
 		Matches::Equals("std::tuple<int, float> arg_i"));
 }
+
+TEST_CASE(
+	"MIMICPP_DETAIL_FORWARD_ARGS a list of forwarded arguments.",
+	"[mock][mock::interface]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS()),
+		Matches::Equals(""));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(int)),
+		Matches::Equals(", ::std::forward<::std::add_rvalue_reference_t< int>>(arg_i)"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(const int&, int&&)),
+		Matches::Equals(
+			", ::std::forward<::std::add_rvalue_reference_t< const int&>>(arg_i),"
+			" ::std::forward<::std::add_rvalue_reference_t< int&&>>(arg_ii)"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(int, int)),
+		Matches::Equals(", ::std::forward<::std::add_rvalue_reference_t< int>>(arg_i),"
+			" ::std::forward<::std::add_rvalue_reference_t< int>>(arg_ii)"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS((std::tuple<int, float>))),
+		Matches::Equals(", ::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>(arg_i)"));
+}
