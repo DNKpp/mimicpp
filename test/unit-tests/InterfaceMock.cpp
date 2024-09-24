@@ -80,3 +80,28 @@ TEST_CASE(
 			(const int&, (float&&), const noexcept),
 			(void, (), )) >>);
 }
+
+TEST_CASE(
+	"MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK creates a mock from a list of signatures.",
+	"[mock][mock::interface]"
+)
+{
+	SECTION("Just void()")
+	{
+		MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(
+			mock,
+			( void() ));
+
+		REQUIRE(std::invocable<decltype(mock)>);
+	}
+
+	SECTION("Just float&(int&&)")
+	{
+		MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(
+			mock,
+			( float&(int&&) ));
+
+		REQUIRE(std::invocable<decltype(mock), int&&>);
+		REQUIRE(std::same_as<float&, std::invoke_result_t<decltype(mock), int&&>>);
+	}
+}

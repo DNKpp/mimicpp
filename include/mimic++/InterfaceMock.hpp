@@ -121,3 +121,11 @@ namespace mimicpp
 	 * \}
 	 */
 }
+
+/**
+ * \brief Creates a mimicpp::Mock object for the given signatures.
+ * \param mock_name The mock name.
+ * \param signatures The given signatures. Enclosing parentheses will be stripped.
+ */
+#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)	\
+	::mimicpp::Mock< MIMICPP_DETAIL_STRIP_PARENS(signatures) > mock_name{}
