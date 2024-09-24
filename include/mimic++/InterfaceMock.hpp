@@ -199,14 +199,14 @@ namespace mimicpp
 /**
  * \brief Creates ``std::forward`` calls for each given argument (not enclosed by parentheses).
  */
-#define MIMICPP_DETAIL_FORWARD_ARGS(...) \
-	__VA_OPT__(,)\
-	MIMICPP_DETAIL_FOR_EACH_EXT(		\
-		MIMICPP_DETAIL_FORWARD_ARG,		\
-		i,								\
-		MIMICPP_DETAIL_COMMA_DELIMITER,	\
-		MIMICPP_DETAIL_IDENTITY,		\
-		,								\
+#define MIMICPP_DETAIL_FORWARD_ARGS(...)	\
+	__VA_OPT__(,)							\
+	MIMICPP_DETAIL_FOR_EACH_EXT(			\
+		MIMICPP_DETAIL_FORWARD_ARG,			\
+		i,									\
+		MIMICPP_DETAIL_COMMA_DELIMITER,		\
+		MIMICPP_DETAIL_IDENTITY,			\
+		,									\
 		__VA_ARGS__)
 
 namespace mimicpp
@@ -214,4 +214,41 @@ namespace mimicpp
 	/**
 	 * \}
 	 */
+
+	/**
+	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS make_overload_infos
+	 * \ingroup MOCK_INTERFACES_DETAIL
+	 * \brief Related functions for MIMICPP_ADD_OVERLOAD.
+	 * \{
+	 */
 }
+
+#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs, ...) \
+	(ret, param_type_list, specs, \
+		(MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))), \
+		(MIMICPP_DETAIL_FORWARD_ARGS(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))
+
+#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC(ret, param_type_list, ...) \
+	MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, )
+
+#define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, N, ...) N
+
+namespace mimicpp
+{
+	/**
+	 * \}
+	 */
+}
+
+/**
+ * \brief Adds an overload to an interface mock. 
+ * \ingroup MOCK_INTERFACES
+ * \param ret The return type.
+ * \param param_type_list The parameter types.
+ * \param Specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
+ */
+#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...)								\
+	MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(										\
+		__VA_ARGS__,																\
+		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,									\
+		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__)

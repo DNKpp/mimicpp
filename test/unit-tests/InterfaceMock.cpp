@@ -164,3 +164,34 @@ TEST_CASE(
 		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS((std::tuple<int, float>))),
 		Matches::Equals(", ::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>(arg_i)"));
 }
+
+TEST_CASE(
+	"MIMICPP_ADD_OVERLOAD prepares the necessary overload infos.",
+	"[mock][mock::interface]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_ADD_OVERLOAD(void, ())),
+		Matches::Equals("(void, (),, (), ())"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_ADD_OVERLOAD(const int&&, (const std::string&, int&&), const noexcept)),
+		Matches::Equals(
+			"(const int&&, (const std::string&, int&&), const noexcept, "
+			"(const std::string& arg_i, int&& arg_ii), "
+			"(, ::std::forward<::std::add_rvalue_reference_t< const std::string&>>(arg_i), "
+			"::std::forward<::std::add_rvalue_reference_t< int&&>>(arg_ii)))"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_ADD_OVERLOAD((std::tuple<int, float>), ())),
+		Matches::Equals("((std::tuple<int, float>), (),, (), ())"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_ADD_OVERLOAD(void, ((std::tuple<int, float>)))),
+		Matches::Equals(
+			"(void, ((std::tuple<int, float>)),, "
+			"(std::tuple<int, float> arg_i), "
+			"(, ::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>(arg_i)))"));
+}
