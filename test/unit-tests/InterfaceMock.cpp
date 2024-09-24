@@ -195,3 +195,83 @@ TEST_CASE(
 			"\\(std::tuple<int, float> arg_i\\), "
 			"\\(, ::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>\\(arg_i\\)\\)\\)"));
 }
+
+TEST_CASE(
+	"MIMICPP_MOCK_OVERLOADED_METHOD creates mock and overloaded functions.",
+	"[mock][mock::interface]"
+)
+{
+	SECTION("Just void()")
+	{
+		struct interface
+		{
+			virtual ~interface() = default;
+			virtual void foo() = 0;
+		};
+
+		struct derived
+			: public interface
+		{
+			MIMICPP_MOCK_OVERLOADED_METHOD(
+				foo,
+				MIMICPP_ADD_OVERLOAD(void, ()));
+		};
+
+		derived mock{};
+		ScopedExpectation expectation = mock.foo_.expect_call();
+		mock.foo();
+	}
+
+	SECTION("Just int(float&&) const noexcept")
+	{
+		struct interface
+		{
+			virtual ~interface() = default;
+			virtual int foo(float&&) const noexcept = 0;
+		};
+
+		struct derived
+			: public interface
+		{
+			MIMICPP_MOCK_OVERLOADED_METHOD(
+				foo,
+				MIMICPP_ADD_OVERLOAD(int, (float&&), const noexcept));
+		};
+
+		derived mock{};
+		ScopedExpectation expectation = mock.foo_.expect_call(4.2f)
+										and finally::returns(42);
+		REQUIRE(42 == mock.foo(4.2f));
+	}
+
+	SECTION("int(float&&) const noexcept and void()")
+	{
+		struct interface
+		{
+			virtual ~interface() = default;
+			virtual int foo(float&&) const noexcept = 0;
+			virtual void foo() = 0;
+		};
+
+		struct derived
+			: public interface
+		{
+			MIMICPP_MOCK_OVERLOADED_METHOD(
+				foo,
+				MIMICPP_ADD_OVERLOAD(void, ()),
+				MIMICPP_ADD_OVERLOAD(int, (float&&), const noexcept));
+		};
+
+		derived mock{};
+		{
+			ScopedExpectation expectation = mock.foo_.expect_call();
+			mock.foo();
+		}
+
+		{
+			ScopedExpectation expectation = mock.foo_.expect_call(4.2f)
+											and finally::returns(42);
+			REQUIRE(42 == mock.foo(4.2f));
+		}
+	}
+}

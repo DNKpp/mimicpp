@@ -252,3 +252,54 @@ namespace mimicpp
 		__VA_ARGS__,																\
 		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,									\
 		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__)
+
+namespace mimicpp
+{
+	/**
+	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES make_method_overrides
+	 * \ingroup MOCK_INTERFACES_DETAIL
+	 * \brief Creates all required override overloads.
+	 * \{
+	 */
+}
+
+#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, param_type_list, specs, param_list, forward_list, ...)	\
+	inline MIMICPP_DETAIL_STRIP_PARENS(ret) fn_name param_list MIMICPP_DETAIL_STRIP_PARENS(specs) override 							\
+	{																																\
+		return ::std::invoke(																										\
+			mock_name																												\
+			MIMICPP_DETAIL_STRIP_PARENS(forward_list));																				\
+	}
+
+/**
+ * \brief Creates all overloads for a specific function as overrides.
+ * \param mock_name The mock name.
+ * \param fn_name The function name to be overloaded.
+ */
+#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(mock_name, fn_name, ...)	\
+	MIMICPP_DETAIL_FOR_EACH_EXT(										\
+		MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,							\
+		,																\
+		MIMICPP_DETAIL_NO_DELIMITER,									\
+		MIMICPP_DETAIL_STRIP_PARENS,									\
+		(mock_name, fn_name),											\
+		__VA_ARGS__)
+
+namespace mimicpp
+{
+	/**
+	 * \}
+	 */
+}
+
+/**
+ * \brief Starting point for mocking overloaded interface methods.
+ * \ingroup MOCK_INTERFACES
+ * \param fn_name The overload-set name.
+ * \param Others Overloads must be added via MIMICPP_ADD_OVERLOAD macro.
+ */
+#define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...)						\
+	MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(fn_name##_, fn_name, __VA_ARGS__)	\
+	MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(									\
+		fn_name##_,															\
+		(MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
