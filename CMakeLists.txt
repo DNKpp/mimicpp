@@ -17,6 +17,13 @@ target_include_directories(
 	"include"
 )
 
+target_compile_options(
+	mimicpp
+	INTERFACE
+	# this option is required to make __VA_OPT__ work on msvc
+	"$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>"
+)
+
 set(CMAKE_CXX_STANDARD 20)
 if (MIMICPP_FORCED_CXX_STANDARD)
 	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
