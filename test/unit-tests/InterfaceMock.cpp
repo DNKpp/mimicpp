@@ -123,11 +123,11 @@ TEST_CASE(
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST(const int&, int&&)),
-		Matches::Equals("const int& arg_i, int&& arg_ii"));
+		Matches::Matches("const int& arg_i\\s*, int&& arg_ii"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST(int, int)),
-		Matches::Equals("int arg_i, int arg_ii"));
+		Matches::Matches("int arg_i\\s*, int arg_ii"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST((std::tuple<int, float>))),
@@ -151,14 +151,14 @@ TEST_CASE(
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(const int&, int&&)),
-		Matches::Equals(
-			", ::std::forward<::std::add_rvalue_reference_t< const int&>>(arg_i),"
-			" ::std::forward<::std::add_rvalue_reference_t< int&&>>(arg_ii)"));
+		Matches::Matches(
+			", ::std::forward<::std::add_rvalue_reference_t< const int&>>\\(arg_i\\)\\s*,"
+			" ::std::forward<::std::add_rvalue_reference_t< int&&>>\\(arg_ii\\)"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(int, int)),
-		Matches::Equals(", ::std::forward<::std::add_rvalue_reference_t< int>>(arg_i),"
-			" ::std::forward<::std::add_rvalue_reference_t< int>>(arg_ii)"));
+		Matches::Matches(", ::std::forward<::std::add_rvalue_reference_t< int>>\\(arg_i\\)\\s*,"
+			" ::std::forward<::std::add_rvalue_reference_t< int>>\\(arg_ii\\)"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS((std::tuple<int, float>))),
@@ -174,24 +174,24 @@ TEST_CASE(
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_ADD_OVERLOAD(void, ())),
-		Matches::Equals("(void, (),, (), ())"));
+		Matches::Matches("\\(void,\\s*\\(\\s*\\),\\s*,\\s*\\(\\s*\\),\\s*\\(\\s*\\)\\)"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_ADD_OVERLOAD(const int&&, (const std::string&, int&&), const noexcept)),
-		Matches::Equals(
-			"(const int&&, (const std::string&, int&&), const noexcept, "
-			"(const std::string& arg_i, int&& arg_ii), "
-			"(, ::std::forward<::std::add_rvalue_reference_t< const std::string&>>(arg_i), "
-			"::std::forward<::std::add_rvalue_reference_t< int&&>>(arg_ii)))"));
+		Matches::Matches(
+			"\\(const int&&, \\(const std::string&\\s*, int&&\\), const noexcept, "
+			"\\(const std::string& arg_i\\s*, int&& arg_ii\\), "
+			"\\(, ::std::forward<::std::add_rvalue_reference_t< const std::string&>>\\(arg_i\\)\\s*, "
+			"::std::forward<::std::add_rvalue_reference_t< int&&>>\\(arg_ii\\)\\)\\)"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_ADD_OVERLOAD((std::tuple<int, float>), ())),
-		Matches::Equals("((std::tuple<int, float>), (),, (), ())"));
+		Matches::Matches("\\(\\(std::tuple<int, float>\\),\\s*\\(\\s*\\),\\s*,\\s*\\(\\s*\\),\\s*\\(\\s*\\)\\)"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_ADD_OVERLOAD(void, ((std::tuple<int, float>)))),
-		Matches::Equals(
-			"(void, ((std::tuple<int, float>)),, "
-			"(std::tuple<int, float> arg_i), "
-			"(, ::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>(arg_i)))"));
+		Matches::Matches(
+			"\\(void, \\(\\(std::tuple<int, float>\\)\\),\\s*, "
+			"\\(std::tuple<int, float> arg_i\\), "
+			"\\(, ::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>\\(arg_i\\)\\)\\)"));
 }
