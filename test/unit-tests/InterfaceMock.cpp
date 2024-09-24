@@ -1,7 +1,7 @@
- //          Copyright Dominic (DNKpp) Koepke 2024 - 2024.
- // Distributed under the Boost Software License, Version 1.0.
- //    (See accompanying file LICENSE_1_0.txt or copy at
- //          https://www.boost.org/LICENSE_1_0.txt)
+// //          Copyright Dominic (DNKpp) Koepke 2024 - 2024.
+// // Distributed under the Boost Software License, Version 1.0.
+// //    (See accompanying file LICENSE_1_0.txt or copy at
+// //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
@@ -16,4 +16,43 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
+using namespace mimicpp;
 
+#define TO_STRING_IMPL(...) #__VA_ARGS__
+#define TO_STRING(...) TO_STRING_IMPL(__VA_ARGS__)
+
+TEST_CASE(
+	"MIMICPP_DETAIL_STRIP_PARENS removes outer parens, if present.",
+	"[mock][mock::interface]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_STRIP_PARENS()),
+		Matches::Equals(""));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(())),
+		Matches::Equals(""));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_STRIP_PARENS((()))),
+		Matches::Equals("()"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(Test())),
+		Matches::Equals("Test()"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_STRIP_PARENS((Test()))),
+		Matches::Equals("Test()"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(((Test())))),
+		Matches::Equals("(Test())"));
+
+	REQUIRE_THAT(
+		TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(((,Test(),)))),
+		Matches::Equals("(,Test(),)"));
+}
