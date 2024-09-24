@@ -275,3 +275,47 @@ TEST_CASE(
 		}
 	}
 }
+
+TEST_CASE(
+	"MIMICPP_MOCK_METHOD creates mock and overrides function.",
+	"[mock][mock::interface]")
+{
+	SECTION("Just void()")
+	{
+		struct interface
+		{
+			virtual ~interface() = default;
+			virtual void foo() = 0;
+		};
+
+		struct derived
+			: public interface
+		{
+			MIMICPP_MOCK_METHOD(foo, void, ());
+		};
+
+		derived mock{};
+		ScopedExpectation expectation = mock.foo_.expect_call();
+		mock.foo();
+	}
+
+	SECTION("Just int(float&&) const noexcept")
+	{
+		struct interface
+		{
+			virtual ~interface() = default;
+			virtual int foo(float&&) const noexcept = 0;
+		};
+
+		struct derived
+			: public interface
+		{
+			MIMICPP_MOCK_METHOD(foo, int, (float&&), const noexcept);
+		};
+
+		derived mock{};
+		ScopedExpectation expectation = mock.foo_.expect_call(4.2f)
+										and finally::returns(42);
+		REQUIRE(42 == mock.foo(4.2f));
+	}
+}

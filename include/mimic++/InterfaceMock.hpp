@@ -14,8 +14,6 @@
 #include <type_traits>
 #include <utility>
 
-#endif
-
 namespace mimicpp
 {
 	/**
@@ -303,3 +301,17 @@ namespace mimicpp
 	MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(									\
 		fn_name##_,															\
 		(MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
+
+/**
+ * \brief Starting point for mocking a single interface method.
+ * \ingroup MOCK_INTERFACES
+ * \param fn_name The overload-set name.
+ * \param param_type_list The parameter types.
+ * \param Specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
+ */
+#define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...)					\
+	MIMICPP_MOCK_OVERLOADED_METHOD(												\
+		fn_name,																\
+		MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(,) __VA_ARGS__ ))
+
+#endif
