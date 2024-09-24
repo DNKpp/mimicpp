@@ -56,3 +56,27 @@ TEST_CASE(
 		TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(((,Test(),)))),
 		Matches::Equals("(,Test(),)"));
 }
+
+TEST_CASE(
+	"MIMICPP_DETAIL_MAKE_SIGNATURE_LIST creates a list of signatures from the given arguments.",
+	"[mock][mock::interface]"
+)
+{
+	STATIC_REQUIRE(
+		std::same_as<
+		std::tuple<>,
+		std::tuple< MIMICPP_DETAIL_MAKE_SIGNATURE_LIST() >>);
+
+	STATIC_REQUIRE(
+		std::same_as<
+		std::tuple<void()>,
+		std::tuple< MIMICPP_DETAIL_MAKE_SIGNATURE_LIST((void, (), )) >>);
+
+	STATIC_REQUIRE(
+		std::same_as<
+		std::tuple<const int&(float&&) const noexcept,
+		void()>,
+		std::tuple< MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(
+			(const int&, (float&&), const noexcept),
+			(void, (), )) >>);
+}

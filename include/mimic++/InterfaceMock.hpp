@@ -25,8 +25,6 @@ namespace mimicpp
 	 * \defgroup MOCK_INTERFACES_DETAIL detail
 	 * \ingroup MOCK_INTERFACES
 	 */
-
-	
 }
 
 /**
@@ -46,7 +44,7 @@ namespace mimicpp
 	/**
 	 * \defgroup MOCK_INTERFACES_DETAIL_FOR_EACH for_each
 	 * \ingroup MOCK_INTERFACES_DETAIL
-	 * \brief This is a implementation of a for-loop for the preprocessor.
+	 * \brief This is an implementation of a for-loop for the preprocessor.
 	 * \detail This solution is highly inspired by the blog-article of David Mazieres.
 	 * He does a very good job in explaining the dark corners of the macro language, but even now, I do not
 	 * fully understand how this works. Either way, thank you very much!
@@ -79,15 +77,43 @@ namespace mimicpp
  * That was the reason, why I've added the ``token`` argument. The first element will simply be called with the ``token`` content, but the second
  * with twice the token content and so on. It's ok, to provide an empty argument.
  */
-#define MIMICPP_DETAIL_FOR_EACH_EXT(macro, token, delimiter, projection_macro, bound, ...)                                    \
+#define MIMICPP_DETAIL_FOR_EACH_EXT(macro, token, delimiter, projection_macro, bound, ...) \
   __VA_OPT__(MIMICPP_DETAIL_EXPAND(MIMICPP_DETAIL_FOR_EACH_EXT_HELPER(macro, token, token, delimiter, projection_macro, bound, __VA_ARGS__)))
-#define MIMICPP_DETAIL_FOR_EACH_EXT_HELPER(macro, token, sequence, delimiter, projection_macro, bound, a1, ...)                         \
-  MIMICPP_DETAIL_FOR_EACH_EXT_INDIRECT(macro, sequence, MIMICPP_DETAIL_STRIP_PARENS(bound), projection_macro(a1))                                                     \
+#define MIMICPP_DETAIL_FOR_EACH_EXT_HELPER(macro, token, sequence, delimiter, projection_macro, bound, a1, ...)												\
+  MIMICPP_DETAIL_FOR_EACH_EXT_INDIRECT(macro, sequence, MIMICPP_DETAIL_STRIP_PARENS(bound), projection_macro(a1))											\
   __VA_OPT__(delimiter() MIMICPP_FOR_EACH_EXT_AGAIN MIMICPP_DETAIL_PARENS (macro, token, sequence##token, delimiter, projection_macro, bound, __VA_ARGS__))
 #define MIMICPP_FOR_EACH_EXT_AGAIN() MIMICPP_DETAIL_FOR_EACH_EXT_HELPER
 
 #define MIMICPP_DETAIL_COMMA_DELIMITER() ,
 #define MIMICPP_DETAIL_NO_DELIMITER()
+
+namespace mimicpp
+{
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE make_signature
+	 * \ingroup MOCK_INTERFACES_DETAIL
+	 * \brief Converts all given arguments to a signature.
+	 * \{
+	 */
+}
+
+#define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, param_type_list, specs, ...) ret param_type_list specs
+
+/**
+ * \brief Converts all given arguments to a signature list (not enclosed by parentheses).
+ */
+#define MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(...) \
+	MIMICPP_DETAIL_FOR_EACH_EXT(				\
+		MIMICPP_DETAIL_MAKE_SIGNATURE,			\
+		,										\
+		MIMICPP_DETAIL_COMMA_DELIMITER,			\
+		MIMICPP_DETAIL_STRIP_PARENS,			\
+		,										\
+		__VA_ARGS__)
 
 namespace mimicpp
 {
