@@ -87,6 +87,8 @@ namespace mimicpp
 #define MIMICPP_DETAIL_COMMA_DELIMITER() ,
 #define MIMICPP_DETAIL_NO_DELIMITER()
 
+#define MIMICPP_DETAIL_IDENTITY(...) __VA_ARGS__
+
 namespace mimicpp
 {
 	/**
@@ -94,13 +96,21 @@ namespace mimicpp
 	 */
 
 	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE make_signature
+	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE_LIST make_signature_list
 	 * \ingroup MOCK_INTERFACES_DETAIL
 	 * \brief Converts all given arguments to a signature.
 	 * \{
 	 */
 }
 
+/**
+ * \brief Converts the given information to a single signature.
+ * \param sequence Unused.
+ * \param bound_data Unused.
+ * \param ret The return type.
+ * \param param_type_list The parameter types.
+ * \param specs Additional specs (e.g. ``const``, ``noexcept``).
+ */
 #define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, param_type_list, specs, ...) ret param_type_list specs
 
 /**
@@ -129,3 +139,40 @@ namespace mimicpp
  */
 #define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)	\
 	::mimicpp::Mock< MIMICPP_DETAIL_STRIP_PARENS(signatures) > mock_name{}
+
+namespace mimicpp
+{
+	/**
+	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_PARAM_LIST make_param_list
+	 * \ingroup MOCK_INTERFACES_DETAIL
+	 * \brief Converts all given arguments to a parameter-list.
+	 * \{
+	 */
+}
+
+/**
+ * \brief Converts the given information to a single parameter.
+ * \param sequence A unique sequence, which will be appended to the parameter name (as suffix).
+ * \param bound_data Unused.
+ * \param type The type of the parameter. Enclosing parentheses will be stripped.
+ */
+#define MIMICPP_DETAIL_MAKE_PARAM(sequence, bound_data, type) MIMICPP_DETAIL_STRIP_PARENS(type) arg_##sequence
+
+/**
+ * \brief Converts all given arguments to a parameter-list (not enclosed by parentheses).
+ */
+#define MIMICPP_DETAIL_MAKE_PARAM_LIST(...) \
+	MIMICPP_DETAIL_FOR_EACH_EXT(			\
+		MIMICPP_DETAIL_MAKE_PARAM,			\
+		i,									\
+		MIMICPP_DETAIL_COMMA_DELIMITER,		\
+		MIMICPP_DETAIL_IDENTITY,			\
+		,									\
+		__VA_ARGS__)
+
+namespace mimicpp
+{
+	/**
+	 * \}
+	 */
+}
