@@ -146,22 +146,22 @@ TEST_CASE(
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(int)),
-		Matches::Equals(", ::std::forward<::std::add_rvalue_reference_t< int>>(arg_i)"));
+		Matches::Equals("::std::forward<::std::add_rvalue_reference_t< int>>(arg_i)"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(const int&, int&&)),
 		Matches::Matches(
-			", ::std::forward<::std::add_rvalue_reference_t< const int&>>\\(arg_i\\)\\s*,"
+			"::std::forward<::std::add_rvalue_reference_t< const int&>>\\(arg_i\\)\\s*,"
 			" ::std::forward<::std::add_rvalue_reference_t< int&&>>\\(arg_ii\\)"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(int, int)),
-		Matches::Matches(", ::std::forward<::std::add_rvalue_reference_t< int>>\\(arg_i\\)\\s*,"
+		Matches::Matches("::std::forward<::std::add_rvalue_reference_t< int>>\\(arg_i\\)\\s*,"
 			" ::std::forward<::std::add_rvalue_reference_t< int>>\\(arg_ii\\)"));
 
 	REQUIRE_THAT(
 		TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS((std::tuple<int, float>))),
-		Matches::Equals(", ::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>(arg_i)"));
+		Matches::Equals("::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>(arg_i)"));
 }
 
 TEST_CASE(
@@ -180,7 +180,7 @@ TEST_CASE(
 		Matches::Matches(
 			"\\(const int&&, \\(const std::string&\\s*, int&&\\), const noexcept, "
 			"\\(const std::string& arg_i\\s*, int&& arg_ii\\), "
-			"\\(, ::std::forward<::std::add_rvalue_reference_t< const std::string&>>\\(arg_i\\)\\s*, "
+			"\\(::std::forward<::std::add_rvalue_reference_t< const std::string&>>\\(arg_i\\)\\s*, "
 			"::std::forward<::std::add_rvalue_reference_t< int&&>>\\(arg_ii\\)\\)\\)"));
 
 	REQUIRE_THAT(
@@ -192,7 +192,7 @@ TEST_CASE(
 		Matches::Matches(
 			"\\(void, \\(\\(std::tuple<int, float>\\)\\),\\s*, "
 			"\\(std::tuple<int, float> arg_i\\), "
-			"\\(, ::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>\\(arg_i\\)\\)\\)"));
+			"\\(::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>\\(arg_i\\)\\)\\)"));
 }
 
 TEST_CASE(

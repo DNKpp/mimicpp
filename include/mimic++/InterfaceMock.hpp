@@ -266,7 +266,6 @@ namespace mimicpp
  * \ingroup MOCK_INTERFACES_DETAIL_FORWARD_ARGS
  */
 #define MIMICPP_DETAIL_FORWARD_ARGS(...)	\
-	__VA_OPT__(,)							\
 	MIMICPP_DETAIL_FOR_EACH_EXT(			\
 		MIMICPP_DETAIL_FORWARD_ARG,			\
 		i,									\
@@ -349,9 +348,7 @@ namespace mimicpp
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, param_type_list, specs, param_list, forward_list, ...)	\
 	inline MIMICPP_DETAIL_STRIP_PARENS(ret) fn_name param_list MIMICPP_DETAIL_STRIP_PARENS(specs) override 							\
 	{																																\
-		return ::std::invoke(																										\
-			mock_name																												\
-			MIMICPP_DETAIL_STRIP_PARENS(forward_list));																				\
+		return mock_name (MIMICPP_DETAIL_STRIP_PARENS(forward_list));																\
 	}
 
 /**
