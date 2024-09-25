@@ -92,7 +92,7 @@ TEST_CASE(
 			mock,
 			( void() ));
 
-		REQUIRE(std::invocable<decltype(mock)>);
+		STATIC_REQUIRE(std::is_invocable_r_v<void, decltype(mock)>);
 	}
 
 	SECTION("Just float&(int&&)")
@@ -101,8 +101,7 @@ TEST_CASE(
 			mock,
 			( float&(int&&) ));
 
-		REQUIRE(std::invocable<decltype(mock), int&&>);
-		REQUIRE(std::same_as<float&, std::invoke_result_t<decltype(mock), int&&>>);
+		STATIC_REQUIRE(std::is_invocable_r_v<float&, decltype(mock), int&&>);
 	}
 }
 
