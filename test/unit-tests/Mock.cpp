@@ -49,6 +49,203 @@ TEMPLATE_TEST_CASE(
 	STATIC_REQUIRE(std::is_nothrow_move_assignable_v<MockT>);
 }
 
+TEMPLATE_TEST_CASE_SIG(
+	"Mutable Mock specialization is an invocable type.",
+	"[mock]",
+	((bool dummy, typename Sig, typename... Args), dummy, Sig, Args...),
+	(true, void()),
+	(true, int()),
+	(true, void(int&), int&),
+	(true, float&&(int&), int&),
+	(true, float&&(std::tuple<int&>&&), std::tuple<int&>&&),
+	(true, float&&(std::tuple<int&>&&, const std::tuple<double&&>&), std::tuple<int&>&&, const std::tuple<double&&>&)
+)
+{
+	using ReturnT = signature_return_type_t<Sig>;
+	using MockT = Mock<Sig>;
+	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"Mutable Mock specialization is an invocable type.",
+	"[mock]",
+	((bool dummy, typename Sig, typename... Args), dummy, Sig, Args...),
+	(true, void() const),
+	(true, int() const),
+	(true, void(int&) const, int&),
+	(true, float&&(int&) const, int&),
+	(true, float&&(std::tuple<int&>&&) const, std::tuple<int&>&&),
+	(true, float&&(std::tuple<int&>&&, const std::tuple<double&&>&) const, std::tuple<int&>&&, const std::tuple<double&&>&)
+)
+{
+	using ReturnT = signature_return_type_t<Sig>;
+	using MockT = Mock<Sig>;
+	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<const MockT&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"Lvalue Mock specialization is an invocable type.",
+	"[mock]",
+	((bool dummy, typename Sig, typename... Args), dummy, Sig, Args...),
+	(true, void() &),
+	(true, int() &),
+	(true, void(int&) &, int&),
+	(true, float&&(int&) &, int&),
+	(true, float&&(std::tuple<int&>&&) &, std::tuple<int&>&&),
+	(true, float&&(std::tuple<int&>&&, const std::tuple<double&&>&) &, std::tuple<int&>&&, const std::tuple<double&&>&)
+)
+{
+	using ReturnT = signature_return_type_t<Sig>;
+	using MockT = Mock<Sig>;
+	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"Const lvalue Mock specialization is an invocable type.",
+	"[mock]",
+	((bool dummy, typename Sig, typename... Args), dummy, Sig, Args...),
+	(true, void() const &),
+	(true, int() const &),
+	(true, void(int&) const &, int&),
+	(true, float&&(int&) const &, int&),
+	(true, float&&(std::tuple<int&>&&) const &, std::tuple<int&>&&),
+	(true, float&&(std::tuple<int&>&&, const std::tuple<double&&>&) const &, std::tuple<int&>&&, const std::tuple<double&&>&)
+)
+{
+	using ReturnT = signature_return_type_t<Sig>;
+	using MockT = Mock<Sig>;
+	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<const MockT&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"Rvalue Mock specialization is an invocable type.",
+	"[mock]",
+	((bool dummy, typename Sig, typename... Args), dummy, Sig, Args...),
+	(true, void() &&),
+	(true, int() &&),
+	(true, void(int&) &&, int&),
+	(true, float&&(int&) &&, int&),
+	(true, float&&(std::tuple<int&>&&) &&, std::tuple<int&>&&),
+	(true, float&&(std::tuple<int&>&&, const std::tuple<double&&>&) &&, std::tuple<int&>&&, const std::tuple<double&&>&)
+)
+{
+	using ReturnT = signature_return_type_t<Sig>;
+	using MockT = Mock<Sig>;
+	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"Const rvalue Mock specialization is an invocable type.",
+	"[mock]",
+	((bool dummy, typename Sig, typename... Args), dummy, Sig, Args...),
+	(true, void() const &&),
+	(true, int() const &&),
+	(true, void(int&) const &&, int&),
+	(true, float&&(int&) const &&, int&),
+	(true, float&&(std::tuple<int&>&&) const &&, std::tuple<int&>&&),
+	(true, float&&(std::tuple<int&>&&, const std::tuple<double&&>&) const &&, std::tuple<int&>&&, const std::tuple<double&&>&)
+)
+{
+	using ReturnT = signature_return_type_t<Sig>;
+	using MockT = Mock<Sig>;
+	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+}
+
 TEST_CASE(
 	"Mutable Mock specialization supports expectations.",
 	"[mock]"
