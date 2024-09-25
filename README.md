@@ -209,3 +209,7 @@ The coverage is generated via ``gcov`` and evaluated by
 | AppleClang-18.1.6 |     -     |    x   |    x   |    x   |
 
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
+
+## Known Issues
+
+* Clang-18.1 introduced a regression regarding the ``std::invocable`` concept and a default parameter of type ``std::source_location``. On this version, all invocable checks will fail. Clang-17 and Clang-19 do not suffer from this issue.

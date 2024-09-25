@@ -19,6 +19,20 @@
 
 using namespace mimicpp;
 
+// This disables the std::invocable checks for Mocks, due to an issue on clang 18.1
+// see: https://github.com/llvm/llvm-project/issues/106428
+#if defined(__clang_major__) \
+	&& __clang_major__ == 18 \
+	&& __clang_minor__ == 1
+
+	#define CLANG_18_STD_INVOCABLE_REGRESSION
+
+	// Should fail, when the regression has been resolved.
+	// If so, enable the tests and remove the issue from the ``Known Issues`` section in the readme.
+	static_assert(!std::invocable<Mock<void()>>);
+
+#endif
+
 TEMPLATE_TEST_CASE(
 	"Mock is a non-copyable, but movable and default-constructible type.",
 	"[mock]",
@@ -66,23 +80,52 @@ TEMPLATE_TEST_CASE_SIG(
 	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+
+	// negative checks
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+
+#ifndef CLANG_18_STD_INVOCABLE_REGRESSION
+
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
 	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+
+	// negative checks
+
+	STATIC_REQUIRE(!std::invocable<const MockT, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<const MockT&, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<const MockT&&, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT&&, Args...>);
+
+#endif
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"Mutable Mock specialization is an invocable type.",
+	"Const Mock specialization is an invocable type.",
 	"[mock]",
 	((bool dummy, typename Sig, typename... Args), dummy, Sig, Args...),
 	(true, void() const),
@@ -98,29 +141,44 @@ TEMPLATE_TEST_CASE_SIG(
 	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<const MockT&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<const NothrowMockT&, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+
+#ifndef CLANG_18_STD_INVOCABLE_REGRESSION
+
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
 	STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+
+#endif
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -140,9 +198,48 @@ TEMPLATE_TEST_CASE_SIG(
 	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+
+	// negative checks
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, MockT, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+
+#ifndef CLANG_18_STD_INVOCABLE_REGRESSION
+
+	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
 	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+
+	// negative checks
+
+	STATIC_REQUIRE(!std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(!std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<const MockT, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<const MockT&, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(!std::invocable<NothrowMockT&&, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<const MockT&&, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT&&, Args...>);
+
+#endif
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -162,29 +259,44 @@ TEMPLATE_TEST_CASE_SIG(
 	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<const MockT&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
-	STATIC_REQUIRE(std::invocable<const NothrowMockT&, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+
+#ifndef CLANG_18_STD_INVOCABLE_REGRESSION
+
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT&, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
 	STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+
+#endif
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -204,14 +316,48 @@ TEMPLATE_TEST_CASE_SIG(
 	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+
+	// negative checks
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+
+#ifndef CLANG_18_STD_INVOCABLE_REGRESSION
+
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
 	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+
+	// negative checks
+
+	STATIC_REQUIRE(!std::invocable<const MockT, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(!std::invocable<NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<const MockT&, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<const MockT&&, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT&&, Args...>);
+
+#endif
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -231,19 +377,48 @@ TEMPLATE_TEST_CASE_SIG(
 	using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT, Args...>);
+	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
 
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
 	STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+
+	// negative checks
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
+	STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+
+#ifndef CLANG_18_STD_INVOCABLE_REGRESSION
+
+	STATIC_REQUIRE(std::invocable<MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT, Args...>);
+	STATIC_REQUIRE(std::invocable<const NothrowMockT, Args...>);
+
+	STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
+	STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+
+	STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
 	STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+
+	// negative checks
+
+	STATIC_REQUIRE(!std::invocable<MockT&, Args...>);
+	STATIC_REQUIRE(!std::invocable<NothrowMockT&, Args...>);
+
+	STATIC_REQUIRE(!std::invocable<const MockT&, Args...>);
+	STATIC_REQUIRE(!std::invocable<const NothrowMockT&, Args...>);
+
+#endif
 }
 
 TEST_CASE(
