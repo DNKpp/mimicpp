@@ -212,4 +212,11 @@ As new compilers become available, they will be added to the workflow, but older
 
 ## Known Issues
 
-* Clang-18.1 introduced a regression regarding the ``std::invocable`` concept and a default parameter of type ``std::source_location``. On this version, all invocable checks will fail. Clang-17 and Clang-19 do not suffer from this issue.
+### Clang-18.1 + libc++
+Date: 25.09.2024
+
+This combination introduced a regression regarding the ``std::invocable`` concept and a default parameter of type ``std::source_location``.
+On this version, all invocable checks will fail, but the ``std::is_invocable`` trait still works as expected. Unfortunatly this can not solved easily by this lib, sorry for that.
+
+Clang-17 and Clang-19 do not suffer from this issue.
+For more information have a look at: https://github.com/llvm/llvm-project/issues/106428
