@@ -322,7 +322,7 @@ namespace mimicpp
 	MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(										\
 		__VA_ARGS__,																\
 		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,									\
-		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__)
+		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__,) // clangCl doesn't compile without that extra ,
 
 namespace mimicpp
 {
