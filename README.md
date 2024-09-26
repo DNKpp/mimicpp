@@ -60,6 +60,10 @@ So, Mocks and Expectations are going together hand in hand.
 
 ### Examples
 
+#### Mocks as function objects
+
+As already said, ``mimicpp::mock``s are already function objects.
+
 ```cpp
 #include <mimic++/mimic++.hpp>
 
@@ -110,6 +114,81 @@ TEST_CASE("Mocks can be overloaded.")
     std::as_const(mock)();                                      // explicitly call from a const object
 }
 ```
+
+#### Mocks as member functions
+
+``mimicpp::mock``s can also be used as member functions.
+
+```cpp
+#include <mimic++/mimic++.hpp>
+
+namespace finally = mimicpp::finally;
+
+// let's build a functions, which actually expects an object, which has a .get() member function,
+// which returns something printable
+inline void foo(const auto& obj)
+{
+    std::cout << obj.get();
+}
+
+TEST_CASE("Mocks can be used as member functions.")
+{
+    struct Mock
+    {
+        mimicpp::Mock<int() const> get{}; // that serves as the .get() member function
+    };
+
+    Mock mock{};
+    SCOPED_EXP mock.get.expect_call()
+                and finally::returns(42);
+
+    foo(mock);      // fine, foo calls the get() member-function
+}
+```
+
+#### Mocking interfaces
+
+``mimicpp`` also provides helpers for interface mocking.
+
+```cpp
+#include <mimic++/mimic++.hpp>
+
+namespace finally = mimicpp::finally;
+
+// let's say, we have the following interface
+class Interface
+{
+public:
+    virtual ~Interface() = default;
+    virtual int get() const = 0;
+};
+
+// and a functions, which this time actually requires an interface.
+inline void foo(const Interface& obj)
+{
+    std::cout << obj.get();
+}
+
+TEST_CASE("Interface can be mocked.")
+{
+    class Derived
+        : public Interface
+    {
+    public:
+        ~Derived() override = default;
+
+        // this generates the override method and a mock object named foo_
+        MOCK_METHOD(get, int, (), const);
+    };
+
+    Derived mock{};
+    SCOPED_EXP mock.get_.expect_call()      // note the _ suffix. That's the name of the mock object.
+                and finally::returns(42);
+
+    foo(mock);        // fine, foo calls the get() member-function, which forwards the call to the foo_ member.
+}
+```
+
 
 ### Other Choices
 
