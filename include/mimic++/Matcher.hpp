@@ -212,7 +212,7 @@ namespace mimicpp::matches
 	constexpr auto eq(T&& value)
 	{
 		return PredicateMatcher{
-			std::ranges::equal_to{},
+			std::equal_to{},
 			"== {}",
 			"!= {}",
 			std::tuple{std::forward<T>(value)}
@@ -229,7 +229,7 @@ namespace mimicpp::matches
 	constexpr auto ne(T&& value)
 	{
 		return PredicateMatcher{
-			std::ranges::not_equal_to{},
+			std::not_equal_to{},
 			"!= {}",
 			"== {}",
 			std::tuple{std::forward<T>(value)}
@@ -246,7 +246,7 @@ namespace mimicpp::matches
 	constexpr auto lt(T&& value)
 	{
 		return PredicateMatcher{
-			std::ranges::less{},
+			std::less{},
 			"< {}",
 			">= {}",
 			std::tuple{std::forward<T>(value)}
@@ -263,7 +263,7 @@ namespace mimicpp::matches
 	constexpr auto le(T&& value)
 	{
 		return PredicateMatcher{
-			std::ranges::less_equal{},
+			std::less_equal{},
 			"<= {}",
 			"> {}",
 			std::tuple{std::forward<T>(value)}
@@ -280,7 +280,7 @@ namespace mimicpp::matches
 	constexpr auto gt(T&& value)
 	{
 		return PredicateMatcher{
-			std::ranges::greater{},
+			std::greater{},
 			"> {}",
 			"<= {}",
 			std::tuple{std::forward<T>(value)}
@@ -297,7 +297,7 @@ namespace mimicpp::matches
 	constexpr auto ge(T&& value)
 	{
 		return PredicateMatcher{
-			std::ranges::greater_equal{},
+			std::greater_equal{},
 			">= {}",
 			"< {}",
 			std::tuple{std::forward<T>(value)}

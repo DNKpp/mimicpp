@@ -444,6 +444,78 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"Ordering matches support different, but comparable types, on both sides.",
+	"[matcher]"
+)
+{
+	SECTION("matches::eq")
+	{
+		const auto matcher = matches::eq(std::nullopt);
+
+		std::optional<int> opt{};
+		REQUIRE(matcher.matches(opt));
+
+		opt = 42;
+		REQUIRE_FALSE(matcher.matches(opt));
+	}
+
+	SECTION("matches::ne")
+	{
+		const auto matcher = matches::ne(std::nullopt);
+
+		std::optional opt{42};
+		REQUIRE(matcher.matches(opt));
+
+		opt.reset();
+		REQUIRE_FALSE(matcher.matches(opt));
+	}
+
+	SECTION("matches::lt")
+	{
+		const auto matcher = matches::lt(std::nullopt);
+
+		std::optional opt{42};
+		REQUIRE_FALSE(matcher.matches(opt));
+
+		opt.reset();
+		REQUIRE_FALSE(matcher.matches(opt));
+	}
+
+	SECTION("matches::le")
+	{
+		const auto matcher = matches::le(std::nullopt);
+
+		std::optional opt{42};
+		REQUIRE_FALSE(matcher.matches(opt));
+
+		opt.reset();
+		REQUIRE(matcher.matches(opt));
+	}
+
+	SECTION("matches::gt")
+	{
+		const auto matcher = matches::gt(std::nullopt);
+
+		std::optional opt{42};
+		REQUIRE(matcher.matches(opt));
+
+		opt.reset();
+		REQUIRE_FALSE(matcher.matches(opt));
+	}
+
+	SECTION("matches::ge")
+	{
+		const auto matcher = matches::ge(std::nullopt);
+
+		std::optional opt{42};
+		REQUIRE(matcher.matches(opt));
+
+		opt.reset();
+		REQUIRE(matcher.matches(opt));
+	}
+}
+
+TEST_CASE(
 	"matches::predicate matches when the given predicate is satisfied.",
 	"[matcher]"
 )
