@@ -177,7 +177,7 @@ TEST_CASE("Interface can be mocked.")
     public:
         ~Derived() override = default;
 
-        // this generates the override method and a mock object named foo_
+        // this generates the override method and a mock object named get_
         MOCK_METHOD(get, int, (), const);
     };
 
@@ -185,10 +185,9 @@ TEST_CASE("Interface can be mocked.")
     SCOPED_EXP mock.get_.expect_call()      // note the _ suffix. That's the name of the mock object.
                 and finally::returns(42);
 
-    foo(mock);        // fine, foo calls the get() member-function, which forwards the call to the foo_ member.
+    foo(mock);        // fine, foo calls the get() member-function, which forwards the call to the mock object get_.
 }
 ```
-
 
 ### Other Choices
 
