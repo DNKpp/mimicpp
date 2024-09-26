@@ -390,4 +390,26 @@ namespace mimicpp
 		fn_name,																\
 		MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(,) __VA_ARGS__ ))
 
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+
+/**
+ * \brief Shorthand variant of \ref MIMICPP_MOCK_METHOD.
+ * \ingroup MOCK_INTERFACES
+ */
+#define MOCK_METHOD					MIMICPP_MOCK_METHOD
+
+/**
+ * \brief Shorthand variant of \ref MIMICPP_MOCK_OVERLOADED_METHOD.
+ * \ingroup MOCK_INTERFACES
+ */
+#define MOCK_OVERLOADED_METHOD		MIMICPP_MOCK_OVERLOADED_METHOD
+
+/**
+ * \brief Shorthand variant of \ref MIMICPP_ADD_OVERLOAD.
+ * \ingroup MOCK_INTERFACES
+ */
+#define ADD_OVERLOAD				MIMICPP_ADD_OVERLOAD
+
+#endif
+
 #endif

@@ -4,6 +4,7 @@ CPMAddPackage("gh:rollbear/trompeloeil@48")
 add_executable(
 	mimicpp-tests
 	"Call.cpp"
+	"Config.cpp"
 	"ControlPolicy.cpp"
 	"Expectation.cpp"
 	"ExpectationBuilder.cpp"

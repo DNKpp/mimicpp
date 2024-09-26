@@ -35,6 +35,15 @@ target_compile_features(
 	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
+OPTION(MIMICPP_CONFIG_ONLY_PREFIXED_MACROS "When enabled, all macros will be prefixed with MIMICPP_." OFF)
+if (MIMICPP_CONFIG_ONLY_PREFIXED_MACROS)
+	target_compile_definitions(
+		mimicpp
+		INTERFACE
+		MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+	)
+endif()
+
 if (CMAKE_SOURCE_DIR STREQUAL mimicpp_SOURCE_DIR)
 	set(IS_TOP_LEVEL_PROJECT ON)
 else()
