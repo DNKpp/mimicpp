@@ -4,13 +4,14 @@ find_package(sanitizers-cmake REQUIRED)
 
 add_executable(
 	mimicpp-examples
-	"Mock.cpp"
+	"CustomPrinter.cpp"
 	"Finalizers.cpp"
+	"InterfaceMock.cpp"
+	"Mock.cpp"
 	"Requirements.cpp"
 	"Sequences.cpp"
 	"SideEffects.cpp"
 	"Times.cpp"
-	"CustomPrinter.cpp"
 )
 
 include(SetupTestTarget)
