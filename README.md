@@ -63,10 +63,13 @@ So, Mocks and Expectations are going together hand in hand.
 ```cpp
 #include <mimic++/mimic++.hpp>
 
-namespace matches = mimicpp::matches;
-using matches::_;
+// it's recommended to pull these sub-namespaces out, because then the expectation setup becomes much more readable
 namespace expect = mimicpp::expect;
+namespace matches = mimicpp::matches;
 namespace finally = mimicpp::finally;
+namespace then = mimicpp::then;
+
+using matches::_;   // That's the wildcard matcher, which matches everything
 
 TEST_CASE("Mocks are function objects.")
 {
@@ -75,11 +78,13 @@ TEST_CASE("Mocks are function objects.")
                 and expect::at_least(1)                             // controls, how often the whole expectation must be matched
                 and expect::arg<0>(!matches::range::is_empty())     // addtionally requires the first argument to be not empty (note the preceeding !)
                 and expect::arg<1>(matches::ne(std::nullopt))       // requires the second argument to compare unequal to "std::nullopt"
-                and expect::arg<1>(matches::lt(1337))               // and to be less than 1337
+                and expect::arg<1>(matches::lt(1337))               // and eventually to be less than 1337
+                and then::apply_arg<0>(                             // That's a side-effect, which get's executed, when a match has been made.
+                    [](std::string_view str) { std::cout << str; }) //  This one writes the content of the first argument to std::cout.
                 and finally::returns(42);                           // And, when matches, returns 42
 
     int result = mock("Hello, World", 1336);                        // matches
-    REQUIRES(42 == result);
+    REQUIRE(42 == result);
 }
 
 TEST_CASE("Mocks can be overloaded.")
@@ -139,6 +144,19 @@ stringification just for testing purposes.
 Users can therefore add their specializations of the ``mimicpp::custom::Printer`` type and thus tell ``mimic++`` how a given type shall be printed.
 
 Custom specializations will always be prefered over any pre-existing printing methods, thus users may even override the stringification of the internal report types.
+
+### Matchers
+
+Matchers are used to check, whether arguements satisfy some requirements. There are already many existing matchers available, but users often have special needs.
+``mimic++`` provides a very generic ``mimicpp::PredicateMatcher``, which is often already sufficient. But, if one needs full control, just start with a fresh type (without any
+inheritance) and start building your own. They just have to match the ``mimicpp::matcher_for`` concept. For more information, head to the documentation.
+
+### Policies
+
+There are multiple types of policie, depending on the task they shall fulfill.
+The expectation policy has full control, whether a match can be made or shall be rejected, while the finalize policy determines, what a mock shall do, when it actually matched
+(like returning a value or throwing an exception). They can implement arbitrary logic, so feel free to experiment. There is no base type requirement,
+they simply have to satisfy either the ``mimicpp::expectation_policy_for``, ``mimicpp::control_policy`` or ``mimicpp::finalize_policy_for_``.
 
 ### Documentation
 
@@ -229,19 +247,19 @@ The coverage is generated via ``gcov`` and evaluated by
 
 ### Linux
 
-| Compiler | libstdc++ | libc++ | c++-20 | c++-23 |
-|----------|:---------:|:------:|:------:|:------:|
-| clang-17 |     x     |    x   |    x   |    x   |
-| clang-18 |     x     |    x   |    x   |    x   |
-| gcc-13   |     x     |    -   |    x   |    x   |
-| gcc-14   |     x     |    -   |    x   |    x   |
+| Compiler | libstdc++ | libc++           | c++-20 | c++-23 |
+|----------|:---------:|:----------------:|:------:|:------:|
+| clang-17 |     x     |    x             |    x   |    x   |
+| clang-18 |     x     | x (with caveats) |    x   |    x   |
+| gcc-13   |     x     | not tested       |    x   |    x   |
+| gcc-14   |     x     | not tested       |    x   |    x   |
 
 ### macOS
 
-| Compiler          | libstdc++ | libc++ | c++-20 | c++-23 |
-|-------------------|:---------:|:------:|:------:|:------:|
-| AppleClang-17.0.6 |     -     |    x   |    x   |    x   |
-| AppleClang-18.1.6 |     -     |    x   |    x   |    x   |
+| Compiler          | libstdc++  | libc++ | c++-20 | c++-23 |
+|-------------------|:----------:|:------:|:------:|:------:|
+| AppleClang-17.0.6 | not tested |    x   |    x   |    x   |
+| AppleClang-18.1.6 | not tested |    x   |    x   |    x   |
 
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
 
