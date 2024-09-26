@@ -72,11 +72,11 @@ TEST_CASE("Mocks are function objects.")
 {
     mimicpp::Mock<int(std::string, std::optional<int>)> mock{};     // actually enables just `int operator ()(std::string, std::optional<int>)`
     SCOPED_EXP mock.expect_call("Hello, World", _)                  // requires the first argument to match the string "Hello, World"; the second has no restrictions
-				and expect::at_least(1)                             // controls, how often the whole expectation must be matched
-				and expect::arg<0>(!matches::range::is_empty())     // addtionally requires the first argument to be not empty (note the preceeding !)
-				and expect::arg<1>(matches::ne(std::nullopt))       // requires the second argument to compare unequal to "std::nullopt"
-				and expect::arg<1>(matches::lt(1337))               // and to be less than 1337
-				and finally::returns(42);                           // And, when matches, returns 42
+                and expect::at_least(1)                             // controls, how often the whole expectation must be matched
+                and expect::arg<0>(!matches::range::is_empty())     // addtionally requires the first argument to be not empty (note the preceeding !)
+                and expect::arg<1>(matches::ne(std::nullopt))       // requires the second argument to compare unequal to "std::nullopt"
+                and expect::arg<1>(matches::lt(1337))               // and to be less than 1337
+                and finally::returns(42);                           // And, when matches, returns 42
 
     int result = mock("Hello, World", 1336);                        // matches
     REQUIRES(42 == result);
@@ -99,10 +99,10 @@ TEST_CASE("Mocks can be overloaded.")
                 and expect::once()                                      // once() is the default, but you can state that explicitly
                 and finally::throws(std::runtime_error{"some error"});  // when matches, throws an exception
 
-    REQUIRE_THROWS(mock("Test", 42));						// ok, matched
+    REQUIRE_THROWS(mock("Test", 42));                           // ok, matched
 
-	// still a pending expectation for void() overload
-	std::as_const(mock)();                                          // explicitly call from a const object
+    // still a pending expectation for void() overload
+    std::as_const(mock)();                                      // explicitly call from a const object
 }
 ```
 
@@ -261,10 +261,11 @@ As new compilers become available, they will be added to the workflow, but older
 ## Known Issues
 
 ### Clang-18.1 + libc++
+
 Date: 25.09.2024
 
 This combination introduced a regression regarding the ``std::invocable`` concept and a default parameter of type ``std::source_location``.
 On this version, all invocable checks will fail, but the ``std::is_invocable`` trait still works as expected. Unfortunatly this can not solved easily by this lib, sorry for that.
 
 Clang-17 and Clang-19 do not suffer from this issue.
-For more information have a look at: https://github.com/llvm/llvm-project/issues/106428
+For more information have a look [here](https://github.com/llvm/llvm-project/issues/106428).
