@@ -26,5 +26,6 @@
 #include "mimic++/Call.hpp"
 #include "mimic++/Expectation.hpp"
 #include "mimic++/Mock.hpp"
+#include "mimic++/InterfaceMock.hpp"
 
 #endif
