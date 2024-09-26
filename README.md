@@ -73,7 +73,7 @@ namespace finally = mimicpp::finally;
 
 TEST_CASE("Mocks are function objects.")
 {
-    mimicpp::Mock<int(std::string, std::optional<int>)> mock{};     // actually enables just `int operator ()(std::string, float)`
+    mimicpp::Mock<int(std::string, std::optional<int>)> mock{};     // actually enables just `int operator ()(std::string, std::optional<int>)`
     SCOPED_EXP mock.expect_call("Hello, World", _)                  // requires the first argument to match the string "Hello, World"; the second has no restrictions
 				and expect::at_least(1)                             // controls, how often the whole expectation must be matched
 				and expect::arg<0>(!matches::range::is_empty())     // addtionally requires the first argument to be not empty (note the preceeding !)
