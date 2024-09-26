@@ -20,11 +20,26 @@ namespace mimicpp
 	 * \defgroup MOCK_INTERFACES interfaces
 	 * \ingroup MOCK
 	 * \brief Contains utility to simplify interface mocking.
+	 * \details While this library tries avoiding macros when possible, sometimes we must not be too stubborn.
+	 * Making interface mocking more enjoyable is such a situation. While this can be of course be done without macros,
+	 * this quickly becomes annoying, due to the necessary boilerplate code.
+	 * \snippet InterfaceMock.cpp interface mock manual
+	 * ``mimic++`` therefore introduces some macros, which helps to reduce the effort to a minimum.
+	 * With them, the boilerplate can be reduced to this macro invocation, which effectively does the same as before:
+	 * ```cpp
+	 * MOCK_METHOD(foo, void, ());
+	 * ```
+	 *
+	 * The good news is, that these macros are just a thin layer around the macro free core and can thus be easily avoided.
+	 * Nevertheless, ``mimic++`` still aims to become macro-less as possible. As soon as reflection becomes available, an
+	 * attempt will be made to solve this feature completely in c++ language (hopefully with c++26, but only time will tell).
 	 */
 
 	/**
 	 * \defgroup MOCK_INTERFACES_DETAIL detail
 	 * \ingroup MOCK_INTERFACES
+	 * \brief Contains several macros, used for interface mock implementation.
+	 * \attention These macros should never be used directly by users.
 	 */
 
 	/**
@@ -370,7 +385,11 @@ namespace mimicpp
  * \brief Starting point for mocking overloaded interface methods.
  * \ingroup MOCK_INTERFACES
  * \param fn_name The overload-set name.
- * \param Others Overloads must be added via MIMICPP_ADD_OVERLOAD macro.
+ * \param Others Overloads must be added via \ref MIMICPP_ADD_OVERLOAD macro.
+ * \details This macro creates a single mock object, which supports an arbitrary amount of overloads.
+ * Those overloads will also be implemented as override methods, which all forward their calls to the
+ * single mock object.
+ * \snippet InterfaceMock.cpp interface mock overloaded
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...)						\
 	MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(fn_name##_, fn_name, __VA_ARGS__)	\
@@ -384,6 +403,9 @@ namespace mimicpp
  * \param fn_name The overload-set name.
  * \param param_type_list The parameter types.
  * \param Specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
+ * \details This macro creates a single mock object with a single signature and creates a corresponding override method,
+ * which forwards its calls to the mock object.
+ * \snippet InterfaceMock.cpp interface mock simple
  */
 #define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...)					\
 	MIMICPP_MOCK_OVERLOADED_METHOD(												\
