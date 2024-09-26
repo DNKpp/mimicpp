@@ -13,31 +13,28 @@
 Dominic Koepke  
 Mail: [DNKpp2011@gmail.com](mailto:dnkpp2011@gmail.com)
 
-# Table of Contents
+## Table of Contents
 
 * [Introduction](#introduction)
-    * [Core Design](#core-design)
-    * [Examples](#examples)
-    * [Other Choices](#other-choices)
-    * [Special Acknowledgement](#special-acknowledgement)
+  * [Core Design](#core-design)
+  * [Examples](#examples)
+  * [Other Choices](#other-choices)
+  * [Special Acknowledgement](#special-acknowledgement)
 * [Customizability](#customizability)
-    * [Stringification](#stringification)
+  * [Stringification](#stringification)
 * [Integration](#integration)
-    * [Installation](#installation)
-        * [CMake](#cmake)
-        * [Single-Header](#single-header)
-    * [Test Framework](#test-framework)
+  * [Installation](#installation)
+    * [CMake](#cmake)
+    * [Single-Header](#single-header)
+  * [Test Framework](#test-framework)
 * [Documentation](#documentation)
 * [Testing](#testing)
-    * [Windows](#windows)
-    * [Linux](#linux)
-    * [macOS](#macos)
 * [License](#license)
 * [Known Issues](#known-issues)
 
 ---
 
-# Introduction
+## Introduction
 
 ``mimic++`` is a c++20 mocking framework, which aims to offer a natural end expressive syntax, without constantly resorting to macros.
 To be honest, macros cannot be completely avoided, but they can at least be reduced to a very minimum.
@@ -51,7 +48,7 @@ So, ``mimicpp::Mock`` objects can directly be used as functional objects, but th
 If you are curious, have a look at the [documentation](https://dnkpp.github.io/mimicpp/), investigate the examples folder or play around online at
 [godbolt.org](https://godbolt.org/z/dTWEhK15W).
 
-## Core Design
+### Core Design
 
 The framework is designed with two core concepts in mind: Mocks and Expectations.
 Mocks can be used to define behaviour on a per test-case basis, without the necessity of creating dozens of types. The go-to example is,
@@ -61,7 +58,7 @@ the so called "Expectations".
 
 So, Mocks and Expectations are going together hand in hand.
 
-## Examples
+### Examples
 
 ```cpp
 #include <mimic++/mimic++.hpp>
@@ -109,9 +106,9 @@ TEST_CASE("Mocks can be overloaded.")
 }
 ```
 
-## Other Choices
+### Other Choices
 
-### Always Stay Within The Language Definition
+#### Always Stay Within The Language Definition
 
 There are a lot of mocking frameworks, which utilize clever tricks and apply some compiler specific instructions to make the work more enjoyable.
 ``mimic++`` does not!
@@ -120,7 +117,7 @@ want to support and maintain over a set of compilers or configurations.
 Unfortunatle this often leads to a less elegant syntax for users. If you need that, than this framework is probably not the right for you.
 Pick your poison :)
 
-## Special Acknowledgement
+### Special Acknowledgement
 
 This framework is highly inspired by the well known [trompeloeil](https://github.com/rollbear/trompeloeil), which I have used myself for several years now.
 It's definitly not bad, but sometimes feels a little bit dated and some macros do not play very well with formatting tools and the like.
@@ -128,13 +125,13 @@ If you need a pre-c++20 mocking-framework, you should definitly give it a try.
 
 Fun fact: ``mimic++`` uses ``trompeloeil`` for it's own test suite :D
 
-# Customizability
+## Customizability
 
 A framework should be a useful tool that can be used in a variety of ways. However, it should not be a foundation that limits the house to be built on it.
 For this reason ``mimic++`` offers various ways for customization: E.g. users may create their own expectation policies and integrate them seamlessly, without
 changing any line of the ``mimic++`` code-base.
 
-## Stringification
+### Stringification
 
 ``mimic++`` can not provide stringification for any type out there, but it's often very useful to see a proper textual reprensentation of an object, when a test fails.
 ``mimic++`` will use ``std::format`` for ``formattable`` types, but sometimes that is not, what we want, as users for example want to have an alternative
@@ -143,7 +140,7 @@ Users can therefore add their specializations of the ``mimicpp::custom::Printer`
 
 Custom specializations will always be prefered over any pre-existing printing methods, thus users may even override the stringification of the internal report types.
 
-## Documentation
+### Documentation
 
 The documenation is generated via ``doxygen``. Users can do this locally by enabling both, the ``MIMICPP_CONFIGURE_DOXYGEN`` and ``MIMICPP_ENABLE_GENERATE_DOCS``,
 cmake options and building the target ``mimicpp-generate-docs`` manually.
@@ -152,14 +149,14 @@ The documentation for the ``main`` branch is always available on the [github-pag
 but unfortunatly not directly viewable on the browser.
 Every release has the generated documentation attached.
 
-# Integration
+## Integration
 
 ``mimic++`` is a head-only library. Users can easily enjoy all features by simply including the ``mimic++/mimic++.hpp`` header. Of course one can be more granular
 and include just what's necessary. The choice is yours.
 
-## Installation
+### Installation
 
-### CMake
+#### CMake
 
 This framework is header-only and completely powered by cmake, thus the integration into a cmake project is straight-forward.
 ```cmake
@@ -193,13 +190,13 @@ CPMAddPackage("gh:DNKpp/mimicpp#<any_commit_hash_or_tag>")
 # do not forget linking via target_link_libraries as shown above
 ```
 
-### Single-Header
+#### Single-Header
 
 As an alternative each release has a header file named ``mimic++-amalgamated.hpp`` attached, which contains all
 definitions (except for the specific test-framework adapters) and can be simply dropped into any c++20 project (or used on [godbolt.org](https://godbolt.org).
 After that, users may also just pick the appropriate adapter header for their desired test-framework and put that into their project aswell.
 
-## Test Framework
+### Test Framework
 
 Mocking frameworks usually do not exist for their own, as they are in fact just an advanced technice for creating tests. Instead, they should work
 together with any existing test framework out there. ``mimic++`` provides the ``IReporter`` interface, which in fact serves as a bridge from ``mimic++``
@@ -213,7 +210,7 @@ Official adapters exist for the following frameworks:
 * [Catch2](https://github.com/catchorg)
 * [GTest](https://github.com/google/googletest)
 
-# Testing
+## Testing
 
 ``mimic++`` utilizes a strict testing policy, thus each official feature is well tested. The effect of those test-cases are always tracked by the extensive ci,
 which checks the compilation success, test cases outcomes and coverage on dozens of different os, compiler and build configurations.
@@ -223,14 +220,14 @@ The coverage is generated via ``gcov`` and evaluated by
 [codecov](https://codecov.io/gh/DNKpp/mimicpp) and
 [coveralls](https://coveralls.io/github/DNKpp/mimicpp).
 
-## Windows
+### Windows
 
 | OS           | Compiler | c++-20 | c++-23 |
 |--------------|----------|:------:|:------:|
 | Windows 2022 | msvc     |    x   |    x   |
 | Windows 2022 | clangCl  |    x   |    x   |
 
-## Linux
+### Linux
 
 | Compiler | libstdc++ | libc++ | c++-20 | c++-23 |
 |----------|:---------:|:------:|:------:|:------:|
@@ -239,7 +236,7 @@ The coverage is generated via ``gcov`` and evaluated by
 | gcc-13   |     x     |    -   |    x   |    x   |
 | gcc-14   |     x     |    -   |    x   |    x   |
 
-## macOS
+### macOS
 
 | Compiler          | libstdc++ | libc++ | c++-20 | c++-23 |
 |-------------------|:---------:|:------:|:------:|:------:|
@@ -248,7 +245,7 @@ The coverage is generated via ``gcov`` and evaluated by
 
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
 
-# License
+## License
 
 [BSL-1.0](LICENSE_1_0.txt) (free, open source)
 
@@ -261,7 +258,7 @@ As new compilers become available, they will be added to the workflow, but older
 
 ---
 
-# Known Issues
+## Known Issues
 
 ### Clang-18.1 + libc++
 Date: 25.09.2024
