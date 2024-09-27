@@ -117,15 +117,15 @@ TEST_CASE("Mocks can be overloaded.")
 
 #### Mocks as member functions
 
-``mimicpp::mock``s can also be used as member functions.
+``mimicpp::mock``s can also serve as member functions. Sure, there are some limitations, but for the most cases it works well.
 
 ```cpp
 #include <mimic++/mimic++.hpp>
 
 namespace finally = mimicpp::finally;
 
-// let's build a functions, which actually expects an object, which has a .get() member function,
-// which returns something printable
+// let's build a function, which actually expects an object and requires .get() member function,
+// This member function then should return something printable
 inline void foo(const auto& obj)
 {
     std::cout << obj.get();
@@ -148,7 +148,7 @@ TEST_CASE("Mocks can be used as member functions.")
 
 #### Mocking interfaces
 
-``mimicpp`` also provides helpers for interface mocking.
+``mimic++`` also provides helpers for interface mocking.
 
 ```cpp
 #include <mimic++/mimic++.hpp>
@@ -163,7 +163,7 @@ public:
     virtual int get() const = 0;
 };
 
-// and a functions, which this time actually requires an interface.
+// and a function, which this time actually requires an interface.
 inline void foo(const Interface& obj)
 {
     std::cout << obj.get();
@@ -208,6 +208,8 @@ If you need a pre-c++20 mocking-framework, you should definitly give it a try.
 
 Fun fact: ``mimic++`` uses ``trompeloeil`` for it's own test suite :D
 
+---
+
 ## Customizability
 
 A framework should be a useful tool that can be used in a variety of ways. However, it should not be a foundation that limits the house to be built on it.
@@ -236,7 +238,9 @@ The expectation policy has full control, whether a match can be made or shall be
 (like returning a value or throwing an exception). They can implement arbitrary logic, so feel free to experiment. There is no base type requirement,
 they simply have to satisfy either the ``mimicpp::expectation_policy_for``, ``mimicpp::control_policy`` or ``mimicpp::finalize_policy_for_``.
 
-### Documentation
+---
+
+## Documentation
 
 The documenation is generated via ``doxygen``. Users can do this locally by enabling both, the ``MIMICPP_CONFIGURE_DOXYGEN`` and ``MIMICPP_ENABLE_GENERATE_DOCS``,
 cmake options and building the target ``mimicpp-generate-docs`` manually.
@@ -244,6 +248,8 @@ cmake options and building the target ``mimicpp-generate-docs`` manually.
 The documentation for the ``main`` branch is always available on the [github-pages](https://dnkpp.github.io/mimicpp/); for the ``development`` branch it is also available on the ``dev-gh-pages`` branch,
 but unfortunatly not directly viewable on the browser.
 Every release has the generated documentation attached.
+
+---
 
 ## Integration
 
@@ -306,6 +312,8 @@ Official adapters exist for the following frameworks:
 * [Catch2](https://github.com/catchorg)
 * [GTest](https://github.com/google/googletest)
 
+---
+
 ## Testing
 
 ``mimic++`` utilizes a strict testing policy, thus each official feature is well tested. The effect of those test-cases are always tracked by the extensive ci,
@@ -315,6 +323,9 @@ The coverage is generated via ``gcov`` and evaluated by
 [codacy](https://app.codacy.com/gh/DNKpp/mimicpp),
 [codecov](https://codecov.io/gh/DNKpp/mimicpp) and
 [coveralls](https://coveralls.io/github/DNKpp/mimicpp).
+
+Nevertheless, even with very high effort, the 100% code-coverage is without reach. I do my best to cover each branch, but even now the coverage percentage varies between the individual tools.
+The goal is to be close to 100% as possible.
 
 ### Windows
 
@@ -340,6 +351,8 @@ The coverage is generated via ``gcov`` and evaluated by
 | AppleClang-18.1.6 | not tested |    x   |    x   |    x   |
 
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
+
+---
 
 ## License
 
