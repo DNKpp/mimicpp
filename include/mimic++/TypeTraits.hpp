@@ -8,16 +8,12 @@
 
 #pragma once
 
+#include "Fwd.hpp"
+
 #include <tuple>
 
 namespace mimicpp
 {
-	template <typename Signature>
-	struct signature_add_noexcept;
-
-	template <typename Signature>
-	using signature_add_noexcept_t = typename signature_add_noexcept<Signature>::type;
-
 	template <typename Return, typename... Params>
 	struct signature_add_noexcept<Return(Params...)>
 	{
@@ -162,12 +158,6 @@ namespace mimicpp
 		using type = Return(Params..., ...) const && noexcept;
 	};
 
-	template <typename Signature>
-	struct signature_remove_noexcept;
-
-	template <typename Signature>
-	using signature_remove_noexcept_t = typename signature_remove_noexcept<Signature>::type;
-
 	template <typename Return, typename... Params>
 	struct signature_remove_noexcept<Return(Params...)>
 	{
@@ -311,12 +301,6 @@ namespace mimicpp
 	{
 		using type = Return(Params..., ...) const &&;
 	};
-
-	template <typename Signature>
-	struct signature_decay;
-
-	template <typename Signature>
-	using signature_decay_t = typename signature_decay<Signature>::type;
 
 	template <typename Return, typename... Params>
 	struct signature_decay<Return(Params...)>
@@ -463,17 +447,11 @@ namespace mimicpp
 	};
 
 	template <typename Signature>
-	struct signature_return_type;
-
-	template <typename Signature>
 		requires std::is_function_v<Signature>
 	struct signature_return_type<Signature>
 		: public signature_return_type<signature_decay_t<Signature>>
 	{
 	};
-
-	template <typename Signature>
-	using signature_return_type_t = typename signature_return_type<Signature>::type;
 
 	template <typename Return, typename... Params>
 	struct signature_return_type<Return(Params...)>
@@ -488,9 +466,6 @@ namespace mimicpp
 	};
 
 	template <std::size_t index, typename Signature>
-	struct signature_param_type;
-
-	template <std::size_t index, typename Signature>
 		requires std::is_function_v<Signature>
 	struct signature_param_type<index, Signature>
 		: public signature_param_type<
@@ -499,17 +474,11 @@ namespace mimicpp
 	{
 	};
 
-	template <std::size_t index, typename Signature>
-	using signature_param_type_t = typename signature_param_type<index, Signature>::type;
-
 	template <std::size_t index, typename Return, typename... Params>
 	struct signature_param_type<index, Return(Params...)>
 		: public std::tuple_element<index, std::tuple<Params...>>
 	{
 	};
-
-	template <typename Signature>
-	struct signature_param_list;
 
 	template <typename Signature>
 		requires std::is_function_v<Signature>
@@ -518,9 +487,6 @@ namespace mimicpp
 			signature_decay_t<Signature>>
 	{
 	};
-
-	template <typename Signature>
-	using signature_param_list_t = typename signature_param_list<Signature>::type;
 
 	template <typename Return, typename... Params>
 	struct signature_param_list<Return(Params...)>
@@ -600,12 +566,6 @@ namespace mimicpp
 	{
 	};
 
-	template <typename First, typename Second>
-	inline constexpr bool is_overloadable_with_v = is_overloadable_with<First, Second>::value;
-
-	template <typename First, typename... Others>
-	struct is_overload_set;
-
 	template <typename First>
 	struct is_overload_set<First>
 		: public std::true_type
@@ -620,9 +580,6 @@ namespace mimicpp
 			is_overload_set<Second, Others...>>
 	{
 	};
-
-	template <typename First, typename... Others>
-	inline constexpr bool is_overload_set_v = is_overload_set<First, Others...>::value;
 }
 
 #endif
