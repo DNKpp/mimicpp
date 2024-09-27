@@ -267,16 +267,16 @@ namespace mimicpp::detail
 	}
 }
 
-#define MIMICPP_UNIQUE_NAME(prefix, counter) prefix##counter
-#define MIMICPP_SCOPED_EXPECTATION_IMPL(counter)													\
-	[[maybe_unused]]																				\
-	const ::mimicpp::ScopedExpectation MIMICPP_UNIQUE_NAME(_mimicpp_expectation_, counter) =
+#define MIMICPP_DETAIL_UNIQUE_NAME(prefix, counter) prefix##counter
+#define MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(counter)													\
+	[[maybe_unused]]																					\
+	const ::mimicpp::ScopedExpectation MIMICPP_DETAIL_UNIQUE_NAME(_mimicpp_expectation_, counter) =
 
 /**
  * \brief Convenience macro, which creates a ScopedExpectation with a unique name.
  * \ingroup MOCK
  */
-#define MIMICPP_SCOPED_EXPECTATION		MIMICPP_SCOPED_EXPECTATION_IMPL(__COUNTER__)
+#define MIMICPP_SCOPED_EXPECTATION		MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(__COUNTER__)
 
 #ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
 
