@@ -109,6 +109,7 @@ namespace mimicpp
 	};
 
 	template <typename Signature>
+		requires std::same_as<Signature, signature_decay_t<Signature>>
 	class ExpectationCollection
 	{
 	public:
