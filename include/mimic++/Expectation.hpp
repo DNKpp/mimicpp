@@ -73,6 +73,33 @@ namespace mimicpp::detail
 
 namespace mimicpp
 {
+	/**
+	 * \defgroup EXPECTATION expectation
+	 * \brief Contains everything related to managing expectations.
+	 * \details Expectations are one of the two core aspects of ``mimic++``. They define how a ``Mock`` is expected to be called.
+	 * It is expected, that users store expectations in the ``ScopedExpectation`` RAII-object, which checks whether the expectation
+	 * is satisfied. If not, an error is forwarded to the installed reporter.
+	 *
+	 * Once an expectation has been fully exhausted, it becomes inactive and can't be matched any further.
+	 * If at any time multiple active expectations would be valid matches for an incoming call, ``mimic++`` has to make a choice.
+	 * In such cases, when no ``Sequence`` has been applied, the latest created expectation will be selected. This may seem rather unintuitive at first,
+	 * but as expectations are bound to their scope, usually expectations within the current scope should be preferred over the expectations from the
+	 * outer scope.
+	 *
+	 * This is the technical explanation for the behavior, but users should not rely too much on that, because ``mimic++`` may change that anytime.
+	 * In general one should think about all active expectations as equally applicable and treat such ambiguities as undeterministic outcomes.
+	 *
+	 * Nevertheless, ``mimic++`` provides a tool for such cases, which is designed to work in a deterministic manner:
+	 * \ref EXPECTATION_SEQUENCE "Sequences".
+	 *
+	 * Expectations can be created anywhere in the program, you just need an appropriate ``Mock``. 
+	 * \{
+	 */
+
+	/**
+	 * \brief The base interface for expectations.
+	 * \tparam Signature The decayed signature.
+	 */
 	template <typename Signature>
 		requires std::same_as<Signature, signature_decay_t<Signature>>
 	class Expectation
@@ -373,6 +400,11 @@ namespace mimicpp
 		[[no_unique_address]] FinalizerT m_Finalizer{};
 	};
 
+	/**
+	 * \brief Takes the ownership of an expectation and check whether it's satisfied during destruction.
+	 * \details The owned Expectation is type-erased. This comes in handy, when users want to store ScopedExpectations
+	 * in a single container.
+	 */
 	class ScopedExpectation
 	{
 	private:
@@ -443,26 +475,42 @@ namespace mimicpp
 		};
 
 	public:
+		/**
+		 * \brief Removes the owned expectation from the ExpectationCollection and checks, whether it's satisfied.
+		 * \throws In cases of an unsatisfied expectation, the destructor is expected to throw of terminate otherwise.
+		 */
 		~ScopedExpectation() noexcept(false)  // NOLINT(modernize-use-equals-default)
 		{
 			// we must call the dtor manually here, because std::unique_ptr's dtor mustn't throw.
 			delete m_Inner.release();
 		}
 
+		/**
+		 * \brief Constructor, which generates the type-erase storage.
+		 * \tparam Signature The signature.
+		 * \param collection The expectation collection, the expectation will be attached to.
+		 * \param expectation The expectation.
+		 */
 		template <typename Signature>
 		[[nodiscard]]
 		explicit ScopedExpectation(
-			std::shared_ptr<ExpectationCollection<Signature>> storage,
+			std::shared_ptr<ExpectationCollection<Signature>> collection,
 			std::shared_ptr<typename ExpectationCollection<Signature>::ExpectationT> expectation
 		) noexcept
 			: m_Inner{
 				std::make_unique<Model<Signature>>(
-					std::move(storage),
+					std::move(collection),
 					std::move(expectation))
 			}
 		{
 		}
 
+		/**
+		 * \brief A constructor, which accepts objects, which can be finalized (e.g. ExpectationBuilder).
+		 * \tparam T The object type.
+		 * \param object The object to be finalized.
+		 * \param loc The source-location.
+		 */
 		template <typename T>
 			requires requires(const std::source_location& loc)
 			{
@@ -474,19 +522,41 @@ namespace mimicpp
 		{
 		}
 
+		/**
+		 * \brief Deleted copy-constructor.
+		 */
 		ScopedExpectation(const ScopedExpectation&) = delete;
+
+		/**
+		 * \brief Deleted copy-assignment-operator.
+		 */
 		ScopedExpectation& operator =(const ScopedExpectation&) = delete;
 
+		/**
+		 * \brief Defaulted move-constructor.
+		 */
 		[[nodiscard]]
 		ScopedExpectation(ScopedExpectation&&) = default;
+
+		/**
+		 * \brief Defaulted move-assignment-operator.
+		 */
 		ScopedExpectation& operator =(ScopedExpectation&&) = default;
 
+		/**
+		 * \brief Queries the stored expectation, whether it's satisfied.
+		 * \return True, if satisfied.
+		 */
 		[[nodiscard]]
 		bool is_satisfied() const
 		{
 			return m_Inner->is_satisfied();
 		}
 
+		/**
+		 * \brief Queries the stored expectation for it's stored source-location.
+		 * \return The stored source-location.
+		 */
 		[[nodiscard]]
 		const std::source_location& from() const noexcept
 		{
@@ -496,6 +566,10 @@ namespace mimicpp
 	private:
 		std::unique_ptr<Concept> m_Inner;
 	};
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
