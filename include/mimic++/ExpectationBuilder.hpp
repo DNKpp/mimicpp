@@ -273,6 +273,15 @@ namespace mimicpp::detail
 	const ::mimicpp::ScopedExpectation MIMICPP_UNIQUE_NAME(_mimicpp_expectation_, counter) =
 
 #define MIMICPP_SCOPED_EXPECTATION MIMICPP_SCOPED_EXPECTATION_IMPL(__COUNTER__)
-#define SCOPED_EXP MIMICPP_SCOPED_EXPECTATION
+
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+
+	/**
+	 * \brief Shorthand variant of \ref MIMICPP_SCOPED_EXPECTATION.
+	 * \ingroup MOCK
+	 */
+	#define SCOPED_EXP					MIMICPP_SCOPED_EXPECTATION
+
+#endif
 
 #endif
