@@ -77,8 +77,9 @@ namespace mimicpp
 	 * \defgroup EXPECTATION expectation
 	 * \brief Contains everything related to managing expectations.
 	 * \details Expectations are one of the two core aspects of ``mimic++``. They define how a ``Mock`` is expected to be called.
-	 * It is expected, that users store expectations in the ``ScopedExpectation`` RAII-object, which checks whether the expectation
-	 * is satisfied. If not, an error is forwarded to the installed reporter.
+	 * Users should always store expectations in the ``ScopedExpectation`` RAII-object, which checks whether the expectation is satisfied
+	 * during destruction. If not, an error is forwarded to the installed reporter.
+	 * To simplify that process, the macro \ref MIMICPP_SCOPED_EXPECTATION (and the shorthand \ref SCOPED_EXP) are provided.
 	 *
 	 * Once an expectation has been fully exhausted, it becomes inactive and can't be matched any further.
 	 * If at any time multiple active expectations would be valid matches for an incoming call, ``mimic++`` has to make a choice.
@@ -86,9 +87,9 @@ namespace mimicpp
 	 * but as expectations are bound to their scope, usually expectations within the current scope should be preferred over the expectations from the
 	 * outer scope.
 	 *
-	 * This is the technical explanation for the behavior, but users should not rely too much on that, because ``mimic++`` may change that anytime.
-	 * In general one should think about all active expectations as equally applicable and treat such ambiguities as undeterministic outcomes.
-	 *
+	 * This is the technical explanation for the behavior, but users should not rely too much on that.
+	 * In fact, ``mimic++`` just makes the guarantee, that expectations from most inside scope will be preferred over expectations from further outside.
+	 * Users should think about expectations within the same scope as equally applicable and treat such ambiguities as undeterministic outcomes.
 	 * Nevertheless, ``mimic++`` provides a tool for such cases, which is designed to work in a deterministic manner:
 	 * \ref EXPECTATION_SEQUENCE "Sequences".
 	 *
