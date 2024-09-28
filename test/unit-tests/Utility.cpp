@@ -121,3 +121,19 @@ TEST_CASE(
 			std::invalid_argument);
 	}
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"same_as_any determines, whether T is the same as any other given type.",
+	"[utility]",
+	((bool expected, typename T, typename... Others), expected, T, Others...),
+	(false, int),
+	(false, int, int&),
+	(false, int, int&, int&),
+	(false, int, int&, double, float),
+	(true, int, int),
+	(true, int, int&, int),
+	(true, int, double, int, int&)
+)
+{
+	STATIC_REQUIRE(expected == same_as_any<T, Others...>);
+}

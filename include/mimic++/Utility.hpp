@@ -139,6 +139,9 @@ namespace mimicpp
 			{ static_cast<To>(std::declval<From>()) } noexcept;
 		};
 
+	template <typename T, typename... Others>
+	concept same_as_any = (... || std::same_as<T, Others>);
+
 	template <typename T>
 		requires std::is_enum_v<T>
 	[[nodiscard]]
