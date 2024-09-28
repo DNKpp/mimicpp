@@ -106,57 +106,155 @@ namespace mimicpp
 	class Expectation
 	{
 	public:
+		/**
+		 * \brief The expected call type.
+		 */
 		using CallInfoT = call::info_for_signature_t<Signature>;
+
+		/**
+		 * \brief The return type.
+		 */
 		using ReturnT = signature_return_type_t<Signature>;
 
+		/**
+		 * \brief Defaulted virtual destructor.
+		 */
 		virtual ~Expectation() = default;
 
+		/**
+		 * \brief Defaulted default constructor.
+		 */
 		[[nodiscard]]
 		Expectation() = default;
 
+		/**
+		 * \brief Deleted copy-constructor.
+		 */
 		Expectation(const Expectation&) = delete;
+
+		/**
+		 * \brief Deleted copy-assignment-operator.
+		 */
 		Expectation& operator =(const Expectation&) = delete;
+
+		/**
+		 * \brief Deleted move-constructor.
+		 */
 		Expectation(Expectation&&) = delete;
+
+		/**
+		 * \brief Deleted move-assignment-operator.
+		 */
 		Expectation& operator =(Expectation&&) = delete;
 
+		/**
+		 * \brief Creates a report of the internal state.
+		 * \return A newly generated report.
+		 */
 		[[nodiscard]]
 		virtual ExpectationReport report() const = 0;
 
+		/**
+		 * \brief Queries all policies, whether they are satisfied.
+		 * \return Returns true, if all policies are satisfied.
+		 */
 		[[nodiscard]]
 		virtual bool is_satisfied() const noexcept = 0;
 
+		/**
+		 * \brief Queries all policies, whether they accept the given call.
+		 * \param call The call to be matched.
+		 * \return Returns true, if all policies accept the call.
+		 */
 		[[nodiscard]]
 		virtual MatchReport matches(const CallInfoT& call) const = 0;
+
+		/**
+		 * \brief Informs all policies, that the given call has been accepted.
+		 * \param call The call to be consumed.
+		 * \details This function is called, when a match has been made.
+		 */
 		virtual void consume(const CallInfoT& call) = 0;
 
+		/**
+		 * \brief Requests the given call to be finalized.
+		 * \param call The call to be finalized.
+		 * \return Returns the call result.
+		 * \details This function is called, when a match has been made and ``consume`` has been called.
+		 */
 		[[nodiscard]]
 		virtual constexpr ReturnT finalize_call(const CallInfoT& call) = 0;
 
+		/**
+		 * \brief Returns the source-location, where this expectation has been created.
+		 * \return Immutable reference to the source-location.
+		 */
 		[[nodiscard]]
 		virtual constexpr const std::source_location& from() const noexcept = 0;
 	};
 
+	/**
+	 * \brief Collects all expectations for a specific (decayed) signature.
+	 * \tparam Signature The decayed signature.
+	 */
 	template <typename Signature>
 		requires std::same_as<Signature, signature_decay_t<Signature>>
 	class ExpectationCollection
 	{
 	public:
+		/**
+		 * \brief The expected call type.
+		 */
 		using CallInfoT = call::info_for_signature_t<Signature>;
+
+		/**
+		 * \brief The interface type of the stored expectations.
+		 */
 		using ExpectationT = Expectation<Signature>;
+
+		/**
+		 * \brief The return type.
+		 */
 		using ReturnT = signature_return_type_t<Signature>;
 
+		/**
+		 * \brief Defaulted destructor.
+		 */
 		~ExpectationCollection() = default;
 
+		/**
+		 * \brief Defaulted default constructor.
+		 */
 		[[nodiscard]]
 		ExpectationCollection() = default;
 
+		/**
+		 * \brief Deleted copy-constructor.
+		 */
 		ExpectationCollection(const ExpectationCollection&) = delete;
+
+		/**
+		 * \brief Deleted copy-assignment-operator.
+		 */
 		ExpectationCollection& operator =(const ExpectationCollection&) = delete;
 
+		/**
+		 * \brief Defaulted move-constructor.
+		 */
 		[[nodiscard]]
 		ExpectationCollection(ExpectationCollection&&) = default;
+
+		/**
+		 * \brief Defaulted move-assignment-operator.
+		 */
 		ExpectationCollection& operator =(ExpectationCollection&&) = default;
 
+		/**
+		 * \brief Inserts the given expectation into the internal storage.
+		 * \param expectation The expectation to be inserted.
+		 * \attention Inserting an expectation, which is already element of any ExpectationCollection (including the current one),
+		 * is undefined behavior.
+		 */
 		void push(std::shared_ptr<ExpectationT> expectation)
 		{
 			const std::scoped_lock lock{m_ExpectationsMx};
@@ -168,6 +266,13 @@ namespace mimicpp
 			m_Expectations.emplace_back(std::move(expectation));
 		}
 
+		/**
+		 * \brief Removes the given expectation from the internal storage.
+		 * \param expectation The expectation to be removed.
+		 * \details This function also checks, whether the removed expectation is satisfied. If not, an
+		 * "unfulfilled expectation"- report is emitted.
+		 * \attention Removing an expectation, which is not element of the current ExpectationCollection, is undefined behavior.
+		 */
 		void remove(std::shared_ptr<ExpectationT> expectation)
 		{
 			const std::scoped_lock lock{m_ExpectationsMx};
@@ -183,6 +288,15 @@ namespace mimicpp
 			}
 		}
 
+		/**
+		 * \brief Handles the incoming call.
+		 * \param call The call to be handled.
+		 * \return Returns an appropriate result from the matched expectation.
+		 * \details This function queries all stored expectations, whether they accept the call.
+		 * If multiple matches are possible, the best match is selected and a "matched"-report is emitted.
+		 * If no matches are found, "no matched"-report is emitted and the call is aborted (e.g. by throwing an exception or terminating).
+		 * If matches are possible, but all expectations are saturated, an "inapplicable match"-report is emitted.
+		 */
 		[[nodiscard]]
 		ReturnT handle_call(const CallInfoT& call)
 		{
@@ -207,10 +321,10 @@ namespace mimicpp
 					case full:
 						matches.emplace_back(*exp, *std::move(matchReport));
 						break;
-						// GCOVR_EXCL_START
+					// GCOVR_EXCL_START
 					default:
 						unreachable();
-						// GCOVR_EXCL_STOP
+					// GCOVR_EXCL_STOP
 					}
 				}
 			}
@@ -242,6 +356,9 @@ namespace mimicpp
 		std::mutex m_ExpectationsMx{};
 	};
 
+	/**
+	 * \brief Determines, whether the given type satisfies the requirements of an expectation-policy for the given signature.
+	 */
 	template <typename T, typename Signature>
 	concept expectation_policy_for = std::is_move_constructible_v<T>
 									&& std::is_destructible_v<T>
@@ -254,6 +371,9 @@ namespace mimicpp
 										{ policy.consume(info) };
 									};
 
+	/**
+	 * \brief Determines, whether the given type satisfies the requirements of a finalize-policy for the given signature.
+	 */
 	template <typename T, typename Signature>
 	concept finalize_policy_for = std::is_move_constructible_v<T>
 								&& std::is_destructible_v<T>
@@ -263,6 +383,9 @@ namespace mimicpp
 									{ policy.finalize_call(info) } -> std::convertible_to<signature_return_type_t<Signature>>;
 								};
 
+	/**
+	 * \brief Determines, whether the given type satisfies the requirements of a control-policy.
+	 */
 	template <typename T>
 	concept control_policy = std::is_move_constructible_v<T>
 							&& std::is_destructible_v<T>
@@ -274,6 +397,13 @@ namespace mimicpp
 								policy.consume();
 							};
 
+	/**
+	 * \brief The actual expectation template.
+	 * \tparam Signature The decayed signature.
+	 * \tparam ControlPolicy The applied control-policy.
+	 * \tparam FinalizePolicy The applied finalize-policy.
+	 * \tparam Policies All applied expectation-policies.
+	 */
 	template <
 		typename Signature,
 		control_policy ControlPolicy,
@@ -290,6 +420,16 @@ namespace mimicpp
 		using CallInfoT = call::info_for_signature_t<Signature>;
 		using ReturnT = typename Expectation<Signature>::ReturnT;
 
+		/**
+		 * \brief Constructs the expectation with the given arguments.
+		 * \tparam ControlPolicyArg The control-policy constructor argument types.
+		 * \tparam FinalizerArg The finalize-policy constructor argument types.
+		 * \tparam PolicyArgs The expectation-policies constructor argument types.
+		 * \param sourceLocation The source-location, where the construction has been requested from.
+		 * \param controlArg The control-policy constructor argument.
+		 * \param finalizerArg The finalize-policy constructor argument.
+		 * \param args The expectation-policies constructor arguments.
+		 */
 		template <typename ControlPolicyArg, typename FinalizerArg, typename... PolicyArgs>
 			requires std::constructible_from<ControlPolicyT, ControlPolicyArg>
 					&& std::constructible_from<FinalizerT, FinalizerArg>
@@ -310,6 +450,9 @@ namespace mimicpp
 		{
 		}
 
+		/**
+		 * \copydoc Expectation::report
+		 */
 		[[nodiscard]]
 		ExpectationReport report() const override
 		{
@@ -338,6 +481,9 @@ namespace mimicpp
 			};
 		}
 
+		/**
+		 * \copydoc Expectation::is_satisfied
+		 */
 		[[nodiscard]]
 		constexpr bool is_satisfied() const noexcept override
 		{
@@ -350,6 +496,9 @@ namespace mimicpp
 						m_Policies);
 		}
 
+		/**
+		 * \copydoc Expectation::matches
+		 */
 		[[nodiscard]]
 		MatchReport matches(const CallInfoT& call) const override
 		{
@@ -371,6 +520,9 @@ namespace mimicpp
 			};
 		}
 
+		/**
+		 * \copydoc Expectation::consume
+		 */
 		constexpr void consume(const CallInfoT& call) override
 		{
 			m_ControlPolicy.consume();
@@ -382,12 +534,18 @@ namespace mimicpp
 				m_Policies);
 		}
 
+		/**
+		 * \copydoc Expectation::finalize_call
+		 */
 		[[nodiscard]]
 		constexpr ReturnT finalize_call(const CallInfoT& call) override
 		{
 			return m_Finalizer.finalize_call(call);
 		}
 
+		/**
+		 * \copydoc Expectation::from
+		 */
 		[[nodiscard]]
 		constexpr const std::source_location& from() const noexcept override
 		{
