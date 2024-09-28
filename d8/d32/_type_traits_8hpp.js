@@ -81,13 +81,5 @@ var _type_traits_8hpp =
     [ "mimicpp::signature_param_list< Return(Params...)>", "d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html", "d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4" ],
     [ "mimicpp::is_overloadable_with< First, Second >", "d4/dd6/structmimicpp_1_1is__overloadable__with.html", null ],
     [ "mimicpp::is_overload_set< First >", "d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html", null ],
-    [ "mimicpp::is_overload_set< First, Second, Others... >", "d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html", null ],
-    [ "signature_add_noexcept_t", "d8/d32/_type_traits_8hpp.html#a8e3ea8f62502eac4396439c2010b9cb9", null ],
-    [ "signature_decay_t", "d8/d32/_type_traits_8hpp.html#ae85f02e3becd1c96735ae9bbcade1212", null ],
-    [ "signature_param_list_t", "d8/d32/_type_traits_8hpp.html#aaf6745d6b76342d272c0b53912757fcf", null ],
-    [ "signature_param_type_t", "d8/d32/_type_traits_8hpp.html#a87147d9464358037f54907bf773c81d7", null ],
-    [ "signature_remove_noexcept_t", "d8/d32/_type_traits_8hpp.html#a1944b7b7ba7e20b04cfe5849d6a73df9", null ],
-    [ "signature_return_type_t", "d8/d32/_type_traits_8hpp.html#ab7dbe7ae4fb93753e7e24603b98f9c5c", null ],
-    [ "is_overload_set_v", "d8/d32/_type_traits_8hpp.html#a39bc4106334393c907fb7c716490135c", null ],
-    [ "is_overloadable_with_v", "d8/d32/_type_traits_8hpp.html#a444a530890b564007a9d8f9b5d035785", null ]
+    [ "mimicpp::is_overload_set< First, Second, Others... >", "d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html", null ]
 ];

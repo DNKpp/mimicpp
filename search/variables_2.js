@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['description_0',['description',['../d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html#a5af31dceb9d8e2f4402cbe08c588f533',1,'mimicpp::MatchReport::Finalize::description'],['../d5/db1/classmimicpp_1_1_match_report_1_1_times.html#ad65fb5cb55c4db95724411b60b2b7af9',1,'mimicpp::MatchReport::Times::description'],['../da/d15/classmimicpp_1_1_match_report_1_1_expectation.html#a5b458853bab8c0864ac327997ee7c021',1,'mimicpp::MatchReport::Expectation::description']]]
+  ['controlreport_0',['controlReport',['../db/d11/classmimicpp_1_1_match_report.html#ad9c88790ba56c6ef4e4339cb1212f9bd',1,'mimicpp::MatchReport']]],
+  ['count_1',['count',['../d7/dd2/structmimicpp_1_1state__inapplicable.html#a4842914d211afe5f1e18df79947026fe',1,'mimicpp::state_inapplicable::count'],['../d0/d12/structmimicpp_1_1state__applicable.html#a2d29022d757fe0d91c340cfcb5eade6b',1,'mimicpp::state_applicable::count'],['../de/d68/structmimicpp_1_1state__saturated.html#a728e616eb8bfe48a3f9dfeeeadbc05c3',1,'mimicpp::state_saturated::count']]]
 ];

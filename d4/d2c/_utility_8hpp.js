@@ -5,6 +5,7 @@ var _utility_8hpp =
     [ "mimicpp::always_false<... >", "d5/d8e/structmimicpp_1_1always__false.html", null ],
     [ "mimicpp::explicitly_convertible_to", "d0/d3a/conceptmimicpp_1_1explicitly__convertible__to.html", null ],
     [ "mimicpp::nothrow_explicitly_convertible_to", "d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html", null ],
+    [ "mimicpp::same_as_any", "d6/d1f/conceptmimicpp_1_1same__as__any.html", null ],
     [ "Constness", "d4/d2c/_utility_8hpp.html#a96efa41dafaf424bc936fc152467feb1", [
       [ "non_const", "d4/d2c/_utility_8hpp.html#a96efa41dafaf424bc936fc152467feb1af831ec98a5b99889012f4b32fbeb1929", null ],
       [ "as_const", "d4/d2c/_utility_8hpp.html#a96efa41dafaf424bc936fc152467feb1a7d8fbf6968b41f059fd98dfa87dc47c2", null ],

@@ -1,8 +1,6 @@
 var _expectation_policies_8hpp =
 [
     [ "mimicpp::expectation_policies::InitFinalize", "d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html", "d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize" ],
-    [ "mimicpp::expectation_policies::Times", "d6/d30/classmimicpp_1_1expectation__policies_1_1_times.html", "d6/d30/classmimicpp_1_1expectation__policies_1_1_times" ],
-    [ "mimicpp::expectation_policies::InitTimes", "d4/d6b/classmimicpp_1_1expectation__policies_1_1_init_times.html", "d4/d6b/classmimicpp_1_1expectation__policies_1_1_init_times" ],
     [ "mimicpp::expectation_policies::Category< expected >", "d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html", "d4/d44/classmimicpp_1_1expectation__policies_1_1_category" ],
     [ "mimicpp::expectation_policies::Constness< constness >", "db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html", "db/dbc/classmimicpp_1_1expectation__policies_1_1_constness" ],
     [ "mimicpp::expectation_policies::ReturnsResultOf< Action >", "dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html", "dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of" ],
@@ -15,20 +13,11 @@ var _expectation_policies_8hpp =
     [ "apply_arg", "d8/de5/_expectation_policies_8hpp.html#ga51b593416fa39d20f134216c56ab518f", null ],
     [ "apply_args", "d8/de5/_expectation_policies_8hpp.html#gaf865f7ad50812d38fdd5ee5420591127", null ],
     [ "arg", "d8/de5/_expectation_policies_8hpp.html#ga1abed045e8a61c27f72eb595b2dd5c61", null ],
-    [ "at_least", "d8/de5/_expectation_policies_8hpp.html#ga890642ac7e590f7e350f6c8c5df3bfb8", null ],
-    [ "at_least", "d8/de5/_expectation_policies_8hpp.html#gac023544ffb8e75ae23b4fd54fd5a01c8", null ],
-    [ "at_most", "d8/de5/_expectation_policies_8hpp.html#gae004d28a5bd8c756892ffb57c0914dee", null ],
-    [ "at_most", "d8/de5/_expectation_policies_8hpp.html#ga5f202020f49051ba84c64dcb728a179d", null ],
     [ "invoke", "d8/de5/_expectation_policies_8hpp.html#ga96fbf72e7ef44a73904c3503a383cda4", null ],
-    [ "once", "d8/de5/_expectation_policies_8hpp.html#ga967e8516732b1a6630b2042e64d14cbf", null ],
     [ "returns", "d8/de5/_expectation_policies_8hpp.html#gaaaa49d2747058448b5cc760ec9342400", null ],
     [ "returns_apply_all_result_of", "d8/de5/_expectation_policies_8hpp.html#ga1d9822641f9c22aae3eccc2a16136718", null ],
     [ "returns_apply_result_of", "d8/de5/_expectation_policies_8hpp.html#gaa520783da83f713847e7bd3f85ca4334", null ],
     [ "returns_arg", "d8/de5/_expectation_policies_8hpp.html#gad79b00cd8116424b32a5590ad9187422", null ],
     [ "returns_result_of", "d8/de5/_expectation_policies_8hpp.html#gafe0fc1d77a4122b05f60d49183ce0106", null ],
-    [ "throws", "d8/de5/_expectation_policies_8hpp.html#gab4f67d2c48ef5ebaf25e31e2ac59c5c1", null ],
-    [ "times", "d8/de5/_expectation_policies_8hpp.html#gabf2bf323b7c8972272e4e4c51d246b9f", null ],
-    [ "times", "d8/de5/_expectation_policies_8hpp.html#ga580c943eab85a760c5acfb74480b039a", null ],
-    [ "times", "d8/de5/_expectation_policies_8hpp.html#ga2a9043cc6caceda86782d0d0551aad4b", null ],
-    [ "twice", "d8/de5/_expectation_policies_8hpp.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695", null ]
+    [ "throws", "d8/de5/_expectation_policies_8hpp.html#gab4f67d2c48ef5ebaf25e31e2ac59c5c1", null ]
 ];

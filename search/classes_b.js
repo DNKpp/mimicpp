@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['throws_0',['Throws',['../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html',1,'mimicpp::expectation_policies']]],
-  ['times_1',['Times',['../d6/d30/classmimicpp_1_1expectation__policies_1_1_times.html',1,'mimicpp::expectation_policies::Times'],['../d5/db1/classmimicpp_1_1_match_report_1_1_times.html',1,'mimicpp::MatchReport::Times']]]
+  ['rating_0',['rating',['../de/d81/structmimicpp_1_1sequence_1_1rating.html',1,'mimicpp::sequence']]],
+  ['requirement_1',['Requirement',['../d1/dde/classmimicpp_1_1expectation__policies_1_1_requirement.html',1,'mimicpp::expectation_policies']]],
+  ['returnsresultof_2',['ReturnsResultOf',['../dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html',1,'mimicpp::expectation_policies']]]
 ];

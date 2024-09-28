@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['handle_5fcall_0',['handle_call',['../d5/d86/classmimicpp_1_1_expectation_collection.html#a3dda946c02d40fa2917c16a1b8433f1e',1,'mimicpp::ExpectationCollection']]],
-  ['has_5fsize_1',['has_size',['../db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#gabe07e4394f348806148d665d73dc246f',1,'mimicpp::matches::range']]]
+  ['ge_0',['ge',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#gac2b140b5f668cbac26e13144adce8114',1,'mimicpp::matches']]],
+  ['greedysequence_1',['GreedySequence',['../db/d43/classmimicpp_1_1_greedy_sequence.html',1,'mimicpp']]],
+  ['gt_2',['gt',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#gaafc5970f07ac2c69f82167ae2189596e',1,'mimicpp::matches']]],
+  ['gtest_2ehpp_3',['gtest.hpp',['../d5/db1/gtest_8hpp.html',1,'']]],
+  ['gtestreportert_4',['GTestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga54e2a65c7837029b0c0c8e8a11cb8466',1,'mimicpp']]]
 ];

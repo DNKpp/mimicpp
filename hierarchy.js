@@ -3,7 +3,13 @@ var hierarchy =
     [ "mimicpp::expectation_policies::ApplyAllArgsAction< Action, Projection >", "de/d9e/classmimicpp_1_1expectation__policies_1_1_apply_all_args_action.html", null ],
     [ "mimicpp::expectation_policies::ApplyArgsAction< Action, Projection, indices >", "de/da9/classmimicpp_1_1expectation__policies_1_1_apply_args_action.html", null ],
     [ "mimicpp::CallReport::Arg", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html", null ],
-    [ "mimicpp::BasicExpectationBuilder< Signature, TimesPolicy, FinalizePolicy, Policies >", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html", null ],
+    [ "mimicpp::BasicExpectationBuilder< timesConfigured, SequenceConfig, Signature, FinalizePolicy, Policies >", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html", null ],
+    [ "mimicpp::sequence::detail::BasicSequenceInterface< sequence::Id, sequence::detail::GreedyStrategy{}>", null, [
+      [ "mimicpp::GreedySequence", "db/d43/classmimicpp_1_1_greedy_sequence.html", null ]
+    ] ],
+    [ "mimicpp::sequence::detail::BasicSequenceInterface< sequence::Id, sequence::detail::LazyStrategy{}>", null, [
+      [ "mimicpp::LazySequence", "db/d46/classmimicpp_1_1_lazy_sequence.html", null ]
+    ] ],
     [ "std::bool_constant", null, [
       [ "mimicpp::always_false<... >", "d5/d8e/structmimicpp_1_1always__false.html", null ]
     ] ],
@@ -18,13 +24,14 @@ var hierarchy =
       [ "mimicpp::is_overload_set< First, Second, Others... >", "d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html", null ]
     ] ],
     [ "mimicpp::expectation_policies::Constness< constness >", "db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html", null ],
+    [ "mimicpp::ControlPolicy< Sequences >", "dc/db2/classmimicpp_1_1_control_policy.html", null ],
     [ "std::exception", null, [
       [ "std::runtime_error", null, [
         [ "mimicpp::Error< Data >", "db/d10/classmimicpp_1_1_error.html", null ]
       ] ]
     ] ],
     [ "mimicpp::Expectation< Signature >", "d3/d1c/classmimicpp_1_1_expectation.html", [
-      [ "mimicpp::BasicExpectation< Signature, TimesPolicy, FinalizePolicy, Policies >", "d3/d4a/classmimicpp_1_1_basic_expectation.html", null ]
+      [ "mimicpp::BasicExpectation< Signature, ControlPolicy, FinalizePolicy, Policies >", "d3/d4a/classmimicpp_1_1_basic_expectation.html", null ]
     ] ],
     [ "mimicpp::MatchReport::Expectation", "da/d15/classmimicpp_1_1_match_report_1_1_expectation.html", null ],
     [ "mimicpp::ExpectationCollection< Signature >", "d5/d86/classmimicpp_1_1_expectation_collection.html", null ],
@@ -52,11 +59,10 @@ var hierarchy =
     ] ],
     [ "mimicpp::PredicateMatcher< Predicate, AdditionalArgs >", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", null ],
     [ "mimicpp::custom::Printer< typename >", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],
+    [ "mimicpp::sequence::rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", null ],
     [ "mimicpp::expectation_policies::Requirement< Matcher, Projection, Describer >", "d1/dde/classmimicpp_1_1expectation__policies_1_1_requirement.html", null ],
     [ "mimicpp::expectation_policies::ReturnsResultOf< Action >", "dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html", null ],
-    [ "mimicpp::ScopedExpectation< Signature >", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", null ],
-    [ "mimicpp::expectation_policies::Sequence", "db/d5e/classmimicpp_1_1expectation__policies_1_1_sequence.html", null ],
-    [ "mimicpp::Sequence", "d5/d54/classmimicpp_1_1_sequence.html", null ],
+    [ "mimicpp::ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", null ],
     [ "mimicpp::expectation_policies::SideEffectAction< Action >", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html", null ],
     [ "mimicpp::signature_add_noexcept< Signature >", "dd/db4/structmimicpp_1_1signature__add__noexcept.html", null ],
     [ "mimicpp::signature_add_noexcept< Return(Params...) & >", "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4.html", null ],
@@ -148,11 +154,10 @@ var hierarchy =
     [ "mimicpp::signature_return_type< signature_decay_t< Signature > >", "d4/d96/structmimicpp_1_1signature__return__type.html", [
       [ "mimicpp::signature_return_type< Signature >", "d9/d65/structmimicpp_1_1signature__return__type_3_01_signature_01_4.html", null ]
     ] ],
+    [ "mimicpp::state_applicable", "d0/d12/structmimicpp_1_1state__applicable.html", null ],
+    [ "mimicpp::state_inapplicable", "d7/dd2/structmimicpp_1_1state__inapplicable.html", null ],
+    [ "mimicpp::state_saturated", "de/d68/structmimicpp_1_1state__saturated.html", null ],
     [ "mimicpp::expectation_policies::Throws< Exception >", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html", null ],
-    [ "mimicpp::expectation_policies::Times", "d6/d30/classmimicpp_1_1expectation__policies_1_1_times.html", [
-      [ "mimicpp::expectation_policies::InitTimes", "d4/d6b/classmimicpp_1_1expectation__policies_1_1_init_times.html", null ]
-    ] ],
-    [ "mimicpp::MatchReport::Times", "d5/db1/classmimicpp_1_1_match_report_1_1_times.html", null ],
     [ "std::true_type", null, [
       [ "mimicpp::is_overload_set< First >", "d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html", null ]
     ] ],
