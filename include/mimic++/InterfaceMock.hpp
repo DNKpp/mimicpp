@@ -148,7 +148,7 @@ namespace mimicpp
  * \ingroup MOCK_INTERFACES_DETAIL_FOR_EACH
  * \param macro Macro to be called.
  * \param sequence First argument.
- * \param Others Accepts arbitrary arguments and forwards them.
+ * \param ... Accepts arbitrary arguments and forwards them.
  */
 #define MIMICPP_DETAIL_FOR_EACH_EXT_INDIRECT(macro, sequence, ...) macro(sequence, __VA_ARGS__)
 
@@ -161,7 +161,7 @@ namespace mimicpp
  * \param projection_macro The projection for the current element.
  * \param bound Addition data, which will be added to the call arguments.
  *
- * \detail This is a very versatile implementation for the for-loop.
+ * \details This is a very versatile implementation for the for-loop.
  *
  * During the development, it was necessary to generate unique names for function parameters, which I could also directly refer to.
  * That was the reason, why I've added the ``token`` argument. The first element will simply be called with the ``token`` content, but the second
@@ -331,7 +331,7 @@ namespace mimicpp
  * \ingroup MOCK_INTERFACES
  * \param ret The return type.
  * \param param_type_list The parameter types.
- * \param Specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
+ * \param ... An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
  */
 #define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...)								\
 	MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(										\
@@ -385,7 +385,7 @@ namespace mimicpp
  * \brief Starting point for mocking overloaded interface methods.
  * \ingroup MOCK_INTERFACES
  * \param fn_name The overload-set name.
- * \param Others Overloads must be added via \ref MIMICPP_ADD_OVERLOAD macro.
+ * \param ... Overloads must be added via \ref MIMICPP_ADD_OVERLOAD macro.
  * \details This macro creates a single mock object, which supports an arbitrary amount of overloads.
  * Those overloads will also be implemented as override methods, which all forward their calls to the
  * single mock object.
@@ -402,7 +402,7 @@ namespace mimicpp
  * \ingroup MOCK_INTERFACES
  * \param fn_name The overload-set name.
  * \param param_type_list The parameter types.
- * \param Specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
+ * \param ... An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
  * \details This macro creates a single mock object with a single signature and creates a corresponding override method,
  * which forwards its calls to the mock object.
  * \snippet InterfaceMock.cpp interface mock simple
