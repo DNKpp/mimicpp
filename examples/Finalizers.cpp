@@ -163,7 +163,7 @@ TEST_CASE(
 	class MyFinalizer
 	{
 	public:
-		int finalize_call(const mimicpp::call::Info<int>& callInfo)
+		int finalize_call([[maybe_unused]] const mimicpp::call::Info<int>& callInfo)
 		{
 			return 1337;
 		}

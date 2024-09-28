@@ -149,7 +149,7 @@ namespace mimicpp
 	class WildcardMatcher
 	{
 	public:
-		static constexpr bool matches(auto&& target) noexcept
+		static constexpr bool matches([[maybe_unused]] auto&& target) noexcept
 		{
 			return true;
 		}

@@ -411,8 +411,8 @@ namespace mimicpp
 		}
 
 		void report_full_match(
-			CallReport call,
-			MatchReport matchReport
+			[[maybe_unused]] CallReport call,
+			[[maybe_unused]] MatchReport matchReport
 		) noexcept override
 		{
 			assert(MatchResult::full == evaluate_match_report(matchReport));
@@ -440,9 +440,9 @@ namespace mimicpp
 		}
 
 		void report_unhandled_exception(
-			CallReport call,
-			ExpectationReport expectationReport,
-			std::exception_ptr exception
+			[[maybe_unused]] CallReport call,
+			[[maybe_unused]] ExpectationReport expectationReport,
+			[[maybe_unused]] std::exception_ptr exception
 		) override
 		{
 		}

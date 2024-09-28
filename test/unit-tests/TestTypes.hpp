@@ -42,7 +42,7 @@ public:
 	bool matchResult{};
 
 	[[nodiscard]]
-	constexpr bool matches(const CallInfoT& call) const noexcept
+	constexpr bool matches([[maybe_unused]] const CallInfoT& call) const noexcept
 	{
 		return matchResult;
 	}
@@ -55,7 +55,7 @@ public:
 		return description;
 	}
 
-	static constexpr void consume(const CallInfoT& call) noexcept
+	static constexpr void consume([[maybe_unused]] const CallInfoT& call) noexcept
 	{
 	}
 };
@@ -81,7 +81,7 @@ public:
 	using CallT = mimicpp::call::info_for_signature_t<Signature>;
 
 	Policy policy;
-	Projection projection;
+	Projection projection{};
 
 	[[nodiscard]]
 	constexpr bool is_satisfied() const noexcept
@@ -122,7 +122,7 @@ public:
 	{
 	};
 
-	static ReturnT finalize_call(const CallInfoT& call)
+	static ReturnT finalize_call([[maybe_unused]] const CallInfoT& call)
 	{
 		throw Exception{};
 	}
