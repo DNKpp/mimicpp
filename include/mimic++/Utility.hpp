@@ -181,4 +181,35 @@ namespace mimicpp
 	// GCOVR_EXCL_STOP
 }
 
+namespace mimicpp::detail
+{
+	template <typename Parsed, typename... Rest>
+	struct unique;
+
+	template <typename... Uniques, typename First, typename... Others>
+	struct unique<
+			std::tuple<Uniques...>,
+			First,
+			Others...>
+	{
+		using current_t = std::conditional_t<
+			same_as_any<First, Uniques...>,
+			std::tuple<Uniques...>,
+			std::tuple<Uniques..., First>>;
+
+		using type_t = typename unique<
+			current_t,
+			Others...>::type_t;
+	};
+
+	template <typename... Uniques>
+	struct unique<std::tuple<Uniques...>>
+	{
+		using type_t = std::tuple<Uniques...>;
+	};
+
+	template <typename... Types>
+	using unique_list_t = typename unique<std::tuple<>, Types...>::type_t;
+}
+
 #endif

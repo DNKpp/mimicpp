@@ -137,3 +137,19 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == same_as_any<T, Others...>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"unique_list_t is an alias to a tuple with just unique types.",
+	"[utility]",
+	((bool dummy, typename Expected, typename... Types), dummy, Expected, Types...),
+	(true, std::tuple<>),
+	(true, std::tuple<int, int&>, int, int&),
+	(true, std::tuple<int, int&>, int, int&, int&),
+	(true, std::tuple<int, int&, double, float>, int, int&, double, float),
+	(true, std::tuple<int>, int, int),
+	(true, std::tuple<int, int&>, int, int&, int),
+	(true, std::tuple<int, double, int&>, int, double, int, int&)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, detail::unique_list_t<Types...>>);
+}
