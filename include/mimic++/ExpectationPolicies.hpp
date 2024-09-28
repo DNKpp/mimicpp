@@ -401,10 +401,6 @@ namespace mimicpp::expect
 	 * requirements fail, there is no match.
 	 * \note An expectation without requirements matches any call.
 	 *
-	 * \details Requirements are checked during the ``matches`` step. If all requirements match, an additional ``is_applicable`` check is
-	 * performed on the times requirements. If this returns ``false``, the expectation is treated as ``inapplicable`` and will be skipped
-	 * (but reported if no other match can be found). Otherwise, the call is matched.
-	 *
 	 *\{
 	 */
 
