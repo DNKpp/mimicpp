@@ -451,7 +451,6 @@ namespace mimicpp::expect
 
 	/**
 	 * \brief Attaches the expectation onto the listed sequences.
-	 * \ingroup EXPECTATION_TIMES
 	 * \ingroup EXPECTATION_SEQUENCE
 	 * \param firstSequence The first sequence to be attached to.
 	 * \param secondSequence The second sequence to be attached to.
