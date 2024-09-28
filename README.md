@@ -22,6 +22,8 @@ Mail: [DNKpp2011@gmail.com](mailto:dnkpp2011@gmail.com)
   * [Special Acknowledgement](#special-acknowledgement)
 * [Customizability](#customizability)
   * [Stringification](#stringification)
+  * [Matchers](#matchers)
+  * [Policies](#policies)
 * [Integration](#integration)
   * [Installation](#installation)
     * [CMake](#cmake)
@@ -62,7 +64,7 @@ So, Mocks and Expectations are going together hand in hand.
 
 #### Mocks as function objects
 
-As already said, ``mimicpp::mock``s are already function objects.
+As already said, ``mimicpp::Mock``s are already function objects.
 
 ```cpp
 #include <mimic++/mimic++.hpp>
@@ -84,7 +86,7 @@ TEST_CASE("Mocks are function objects.")
                 and expect::arg<1>(matches::ne(std::nullopt))       // requires the second argument to compare unequal to "std::nullopt"
                 and expect::arg<1>(matches::lt(1337))               // and eventually to be less than 1337
                 and then::apply_arg<0>(                             // That's a side-effect, which get's executed, when a match has been made.
-                    [](std::string_view str) { std::cout << str; }) //  This one writes the content of the first argument to std::cout.
+                    [](std::string_view str) { std::cout << str; }) //     This one writes the content of the first argument to std::cout.
                 and finally::returns(42);                           // And, when matches, returns 42
 
     int result = mock("Hello, World", 1336);                        // matches
@@ -117,7 +119,7 @@ TEST_CASE("Mocks can be overloaded.")
 
 #### Mocks as member functions
 
-``mimicpp::mock``s can also serve as member functions. Sure, there are some limitations, but for the most cases it works well.
+``mimicpp::Mock``s can also serve as member functions. Sure, there are some limitations, but for the most cases it works well.
 
 ```cpp
 #include <mimic++/mimic++.hpp>
@@ -169,7 +171,7 @@ inline void foo(const Interface& obj)
     std::cout << obj.get();
 }
 
-TEST_CASE("Interface can be mocked.")
+TEST_CASE("Interfaces can be mocked.")
 {
     class Derived
         : public Interface
@@ -186,6 +188,50 @@ TEST_CASE("Interface can be mocked.")
                 and finally::returns(42);
 
     foo(mock);        // fine, foo calls the get() member-function, which forwards the call to the mock object get_.
+}
+```
+
+Sometimes, an interface method may also have several overloads. ``mimic++`` directly supports overriding overload-sets.
+```cpp
+#include <mimic++/mimic++.hpp>
+
+namespace finally = mimicpp::finally;
+
+// let's say, we have the following interface, with an overload-set
+class Interface
+{
+public:
+    virtual ~Interface() = default;
+    virtual int& get() = 0;
+    virtual const int& get() const = 0;
+};
+
+// and a function, using the const overload of that interface
+inline void foo(const Interface& obj)
+{
+    std::cout << obj.get();
+}
+
+TEST_CASE("Interface overload-sets are directly supported.")
+{
+    class Derived
+        : public Interface
+    {
+    public:
+        ~Derived() override = default;
+
+        // this generates two overloads of get and a single mock object named get_
+        MOCK_OVERLOADED_METHOD(
+            get,                                    // the name of the overload-set
+            ADD_OVERLOAD(int&, ()),                 // enables "int& operator ()()" on the mock
+            ADD_OVERLOAD(const int&, (), const));   // enables "const int& operator ()() const" on the mock
+    };
+
+    Derived mock{};
+    SCOPED_EXP std::as_const(mock).get_.expect_call()   // As we expect the const overload to be used, we must explicitly select that overload.
+                and finally::returns(42);               // The returned reference is valid, as long as the expectation is alive.
+
+    foo(mock);        // fine, foo calls the get() const member-function, which forwards the call to the mock object get_ as before.
 }
 ```
 
@@ -326,6 +372,9 @@ The coverage is generated via ``gcov`` and evaluated by
 
 Nevertheless, even with very high effort, the 100% code-coverage is without reach. I do my best to cover each branch, but even now the coverage percentage varies between the individual tools.
 The goal is to be close to 100% as possible.
+
+On the other hand-side, there is a whole range of code which doesn't even get investigated by these tools: templates (and macros).
+``mimic++`` has **a lot** of templating code at the very heart, which is at least of equal effort to get right (and tested). So, treat the coverage percentage with a grain of salt.
 
 ### Windows
 
