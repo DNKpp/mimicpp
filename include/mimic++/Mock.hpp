@@ -11,6 +11,7 @@
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/ExpectationPolicies.hpp"
+#include "mimic++/Utility.hpp"
 
 namespace mimicpp::detail
 {
@@ -26,12 +27,13 @@ namespace mimicpp::detail
 
 		[[nodiscard]]
 		explicit BasicMockFrontend(
-			std::shared_ptr<ExpectationCollectionT> collection = std::make_shared<ExpectationCollectionT>()
+			std::shared_ptr<ExpectationCollectionT> collection
 		) noexcept
 			: m_Expectations{std::move(collection)}
 		{
 		}
 
+		[[nodiscard]]
 		constexpr Return handle_call(
 			std::tuple<std::reference_wrapper<std::remove_reference_t<Params>>...> params,
 			const std::source_location& from
@@ -69,7 +71,7 @@ namespace mimicpp::detail
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...)>
-		: private BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::any,
 			Constness::non_const,
 			Return,
@@ -99,11 +101,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) const>
-		: public BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::any,
 			Constness::as_const,
 			Return,
@@ -133,11 +138,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) &>
-		: private BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::lvalue,
 			Constness::non_const,
 			Return,
@@ -167,11 +175,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) const &>
-		: public BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::lvalue,
 			Constness::as_const,
 			Return,
@@ -201,11 +212,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) &&>
-		: private BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::rvalue,
 			Constness::non_const,
 			Return,
@@ -235,11 +249,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) const &&>
-		: public BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::rvalue,
 			Constness::as_const,
 			Return,
@@ -269,11 +286,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) noexcept>
-		: private BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::any,
 			Constness::non_const,
 			Return,
@@ -303,11 +323,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) const noexcept>
-		: public BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::any,
 			Constness::as_const,
 			Return,
@@ -340,11 +363,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) & noexcept>
-		: private BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::lvalue,
 			Constness::non_const,
 			Return,
@@ -374,11 +400,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) const & noexcept>
-		: public BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::lvalue,
 			Constness::as_const,
 			Return,
@@ -411,11 +440,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) && noexcept>
-		: private BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::rvalue,
 			Constness::non_const,
 			Return,
@@ -445,11 +477,14 @@ namespace mimicpp::detail
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
 		}
+
+	protected:
+		using SuperT::SuperT;
 	};
 
 	template <typename Return, typename... Params>
 	class MockFrontend<Return(Params...) const && noexcept>
-		: public BasicMockFrontend<
+		: protected BasicMockFrontend<
 			ValueCategory::rvalue,
 			Constness::as_const,
 			Return,
@@ -481,6 +516,24 @@ namespace mimicpp::detail
 		{
 			return SuperT::make_expectation_builder(
 				std::forward<Args>(args)...);
+		}
+
+	protected:
+		using SuperT::SuperT;
+	};
+
+	template <typename List>
+	struct expectation_collection_factory;
+
+	template <typename... UniqueSignatures>
+	struct expectation_collection_factory<std::tuple<UniqueSignatures...>>
+	{
+		[[nodiscard]]
+		static auto make()
+		{
+			return std::tuple{
+				std::make_shared<ExpectationCollection<UniqueSignatures>>()...
+			};
 		}
 	};
 }
@@ -547,7 +600,7 @@ namespace mimicpp
 		requires is_overload_set_v<FirstSignature, OtherSignatures...>
 	class Mock
 		: public detail::MockFrontend<FirstSignature>,
-			public detail::MockFrontend<OtherSignatures>...
+		public detail::MockFrontend<OtherSignatures>...
 	{
 	public:
 		using detail::MockFrontend<FirstSignature>::operator();
@@ -561,10 +614,18 @@ namespace mimicpp
 		~Mock() = default;
 
 		/**
-		 * \brief Defaulted default constructor.
+		 * \brief Default constructor.
 		 */
 		[[nodiscard]]
-		Mock() = default;
+		Mock()
+			: Mock{
+				detail::expectation_collection_factory<
+					detail::unique_list_t<
+						signature_decay_t<FirstSignature>,
+						signature_decay_t<OtherSignatures>...>>::make()
+			}
+		{
+		}
 
 		/**
 		 * \brief Deleted copy constructor.
@@ -586,6 +647,18 @@ namespace mimicpp
 		 * \brief Defaulted move assignment operator.
 		 */
 		Mock& operator =(Mock&&) = default;
+
+	private:
+		template <typename... Collections>
+		explicit Mock(std::tuple<Collections...> collections)
+			: detail::MockFrontend<FirstSignature>{
+				std::get<std::shared_ptr<ExpectationCollection<signature_decay_t<FirstSignature>>>>(collections)
+			},
+			detail::MockFrontend<OtherSignatures>{
+				std::get<std::shared_ptr<ExpectationCollection<signature_decay_t<OtherSignatures>>>>(collections)
+			}...
+		{
+		}
 	};
 
 	/**
