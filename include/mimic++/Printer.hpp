@@ -91,7 +91,9 @@ namespace mimicpp::detail
 {
 	template <std::size_t priority>
 	struct priority_tag
+		/** \cond Help doxygen with recursion.*/
 		: public priority_tag<priority - 1>
+		/** \endcond */
 	{
 	};
 

@@ -60,7 +60,9 @@ namespace mimicpp::call
 
 	template <typename Signature>
 	struct info_for_signature
+		/** \cond Help doxygen with recursion.*/
 		: public info_for_signature<signature_decay_t<Signature>>
+		/** \endcond */
 	{
 	};
 
