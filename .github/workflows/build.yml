@@ -61,8 +61,8 @@ jobs:
                 LLVM_NAME=llvm@${{ matrix.config.compiler_version }}
                 env brew install ninja $LLVM_NAME
                 LLVM_PATH="$(brew --prefix $LLVM_NAME)"
-                echo "CC=$(echo $LLVM_PATH/clang)" >> $GITHUB_ENV
-                echo "CXX=$(echo $LLVM_PATH/clang++)" >> $GITHUB_ENV
+                echo "CC=$(echo $LLVM_PATH/bin/clang)" >> $GITHUB_ENV
+                echo "CXX=$(echo $LLVM_PATH/bin/clang++)" >> $GITHUB_ENV
                 echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
 
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
