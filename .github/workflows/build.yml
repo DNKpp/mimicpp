@@ -62,6 +62,26 @@ jobs:
                         libcxx: false,
                         asan: true
                     }
+                    #clang-16
+                    - {
+                        prefix: "Linux",
+                        suffix: "/libc++",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:16" },
+                        compiler_name: "clang",
+                        compiler_version: 16,
+                        libcxx: true,
+                        asan: true
+                    }
+                    - {
+                        prefix: "Linux",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:16" },
+                        compiler_name: "clang",
+                        compiler_version: 16,
+                        libcxx: false,
+                        asan: true
+                    }
                     #gcc-14
                     - {
                         prefix: "Linux",
