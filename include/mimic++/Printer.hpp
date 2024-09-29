@@ -21,7 +21,13 @@
 #ifndef MIMICPP_CONFIG_USE_FMT
 	#include <format>
 #else
+
+#if __has_include(<fmt/format.h>)
 	#include <fmt/format.h>
+#else
+		#error "The fmt formatting backend is explicitly enabled, but the include <fmt/format.h> can not be found."
+#endif
+
 #endif
 
 namespace mimicpp
