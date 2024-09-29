@@ -7,7 +7,7 @@ message(TRACE "Begin generating docs")
 CPMAddPackage("gh:jothepro/doxygen-awesome-css@2.3.2")
 
 set(DOXY_PROJECT_VERSION ${PROJECT_VERSION})
-set(DOXY_INPUT_DIR "include")
+set(DOXY_INPUT_DIR "include docs")
 set(DOXY_EXAMPLE_DIR "examples")
 set(DOXY_README_PATH "README.md")
 cmake_path(
