@@ -155,6 +155,10 @@ jobs:
                 exclude:
                     - format_backend: std
                       config:
+                        compiler_name: "clang"
+                        compiler_version: 16
+                    - format_backend: std
+                      config:
                         compiler_name: "gcc"
                         compiler_version: 12
 
