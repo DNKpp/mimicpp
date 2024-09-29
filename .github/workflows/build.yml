@@ -133,9 +133,10 @@ jobs:
                     }
 
                 exclude:
-                    - config.compiler_name: "gcc"
-                      config.compiler_version: 12
-                      format_backend: std
+                    - format_backend: std
+                      config:
+                        compiler_name: "gcc"
+                        compiler_version: 12
 
         steps:
             - uses: actions/checkout@v4
