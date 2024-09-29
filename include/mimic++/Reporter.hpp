@@ -221,7 +221,7 @@ namespace mimicpp
 			}
 			else
 			{
-				format_to(
+				format::format_to(
 					std::ostreambuf_iterator{ss},
 					"{} available expectation(s):\n",
 					std::ranges::size(matchReports));
