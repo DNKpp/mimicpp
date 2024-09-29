@@ -400,6 +400,7 @@ As new compilers become available, they will be added to the workflow, but older
 |----------|:---------:|:------:|:------:|:------:|:----------:|:---:|
 | clang-17 |     x     |    x   |    x   |    x   |      x     |  x  |
 | clang-18 |     x     |    *   |    x   |    x   |      x     |  x  |
+| gcc-12   |     x     |    ?   |    x   |    x   |      -     |  x  |
 | gcc-13   |     x     |    ?   |    x   |    x   |      x     |  x  |
 | gcc-14   |     x     |    ?   |    x   |    x   |      x     |  x  |
 
