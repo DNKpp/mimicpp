@@ -376,30 +376,39 @@ The goal is to be close to 100% as possible.
 On the other hand-side, there is a whole range of code which doesn't even get investigated by these tools: templates (and macros).
 ``mimic++`` has **a lot** of templating code at the very heart, which is at least of equal effort to get right (and tested). So, treat the coverage percentage with a grain of salt.
 
-### Windows
+### CI Tests
+The listed configurations are explicitly tested, but other do probably work, too.
+As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
+
+| Symbol |     Description    |
+|:------:|:------------------:|
+|    x   |        works       |
+|    *   | works with caveats |
+|    -   |    does not work   |
+|    ?   |     not tested     |
+
+#### Windows
 
 | OS           | Compiler | c++-20 | c++-23 | std-format | fmt |
 |--------------|:--------:|:------:|:------:|:----------:|:---:|
 | Windows 2022 |   msvc   |    x   |    x   |      x     |  x  |
 | Windows 2022 |  clangCl |    x   |    x   |      x     |  x  |
 
-### Linux
+#### Linux
 
-| Compiler | libstdc++ |      libc++      | c++-20 | c++-23 | std-format | fmt |
-|----------|:---------:|:----------------:|:------:|:------:|:----------:|:---:|
-| clang-17 |     x     |         x        |    x   |    x   |      x     |  x  |
-| clang-18 |     x     | x (with caveats) |    x   |    x   |      x     |  x  |
-| gcc-13   |     x     |    not tested    |    x   |    x   |      x     |  x  |
-| gcc-14   |     x     |    not tested    |    x   |    x   |      x     |  x  |
+| Compiler | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
+|----------|:---------:|:------:|:------:|:------:|:----------:|:---:|
+| clang-17 |     x     |    x   |    x   |    x   |      x     |  x  |
+| clang-18 |     x     |    *   |    x   |    x   |      x     |  x  |
+| gcc-13   |     x     |    ?   |    x   |    x   |      x     |  x  |
+| gcc-14   |     x     |    ?   |    x   |    x   |      x     |  x  |
 
-### macOS
+#### macOS
 
-| Compiler          |  libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
-|-------------------|:----------:|:------:|:------:|:------:|:----------:|:---:|
-| AppleClang-17.0.6 | not tested |    x   |    x   |    x   |      x     |  x  |
-| AppleClang-18.1.6 | not tested |    x   |    x   |    x   |      x     |  x  |
-
-As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
+| Compiler          | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
+|-------------------|:---------:|:------:|:------:|:------:|:----------:|:---:|
+| AppleClang-17.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
+| AppleClang-18.1.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 
 ---
 
