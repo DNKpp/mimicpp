@@ -96,7 +96,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, NonPrintable, char)
 )
 {
-	STATIC_REQUIRE(expected == detail::formattable<T, Char>);
+	STATIC_REQUIRE(expected == format::detail::formattable<T, Char>);
 }
 
 namespace
@@ -113,11 +113,11 @@ namespace
 	{
 	};
 
-	class StdFormatPrintable
+	class FormatPrintable
 	{
 	};
 
-	class StdFormatAndCustomPrintable
+	class FormatAndCustomPrintable
 	{
 	};
 }
@@ -175,7 +175,7 @@ public:
 };
 
 template <typename Char>
-struct std::formatter<StdFormatPrintable, Char>
+struct format::formatter<FormatPrintable, Char>
 {
 	inline static int printCallCounter{0};
 
@@ -184,28 +184,28 @@ struct std::formatter<StdFormatPrintable, Char>
 		return ctx.begin();
 	}
 
-	static auto format(const StdFormatPrintable&, auto& ctx)
+	static auto format(const FormatPrintable&, auto& ctx)
 	{
 		++printCallCounter;
-		return format::format_to(ctx.out(), "StdFormatPrintable");
+		return format::format_to(ctx.out(), "FormatPrintable");
 	}
 };
 
 template <>
-class custom::Printer<StdFormatAndCustomPrintable>
+class custom::Printer<FormatAndCustomPrintable>
 {
 public:
 	inline static int printCallCounter{0};
 
-	static auto print(print_iterator auto out, const StdFormatAndCustomPrintable&)
+	static auto print(print_iterator auto out, const FormatAndCustomPrintable&)
 	{
 		++printCallCounter;
-		return format::format_to(out, "StdFormatAndCustomPrintable");
+		return format::format_to(out, "FormatAndCustomPrintable");
 	}
 };
 
 template <typename Char>
-struct std::formatter<StdFormatAndCustomPrintable, Char>
+struct format::formatter<FormatAndCustomPrintable, Char>
 {
 	inline static int printCallCounter{0};
 
@@ -214,10 +214,10 @@ struct std::formatter<StdFormatAndCustomPrintable, Char>
 		return ctx.begin();
 	}
 
-	static auto format(const StdFormatAndCustomPrintable&, auto& ctx)
+	static auto format(const FormatAndCustomPrintable&, auto& ctx)
 	{
 		++printCallCounter;
-		return format::format_to(ctx.out(), "StdFormatAndCustomPrintable");
+		return format::format_to(ctx.out(), "FormatAndCustomPrintable");
 	}
 };
 
@@ -278,30 +278,30 @@ TEST_CASE(
 
 	SECTION("std::formatter specialization is supported.")
 	{
-		using PrinterT = std::formatter<StdFormatPrintable, CharT>;
+		using PrinterT = format::formatter<FormatPrintable, CharT>;
 		PrinterT::printCallCounter = 0;
 
-		constexpr StdFormatPrintable value{};
+		constexpr FormatPrintable value{};
 
 		print(std::ostreambuf_iterator{stream}, value);
 		REQUIRE(PrinterT::printCallCounter == 1);
 		REQUIRE_THAT(
 			std::move(stream).str(),
-			Catch::Matchers::Equals("StdFormatPrintable"));
+			Catch::Matchers::Equals("FormatPrintable"));
 	}
 
 	SECTION("custom::Printer specialization is preferred.")
 	{
-		using PrinterT = custom::Printer<StdFormatAndCustomPrintable>;
+		using PrinterT = custom::Printer<FormatAndCustomPrintable>;
 		PrinterT::printCallCounter = 0;
 
-		constexpr StdFormatAndCustomPrintable value{};
+		constexpr FormatAndCustomPrintable value{};
 
 		print(std::ostreambuf_iterator{stream}, value);
 		REQUIRE(PrinterT::printCallCounter == 1);
 		REQUIRE_THAT(
 			std::move(stream).str(),
-			Catch::Matchers::Equals("StdFormatAndCustomPrintable"));
+			Catch::Matchers::Equals("FormatAndCustomPrintable"));
 	}
 
 	SECTION("Strings have special treatment.")
