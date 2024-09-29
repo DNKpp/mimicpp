@@ -6,6 +6,7 @@
 #include "mimic++/Printer.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
@@ -20,7 +21,6 @@ namespace
 
 	class NonPrinter
 	{
-		
 	};
 
 	class CustomIntPrinter
@@ -173,7 +173,6 @@ public:
 		return format::format_to(out, "CustomAndInternalPrintable - detail::Printer");
 	}
 };
-
 
 template <typename Char>
 struct std::formatter<StdFormatPrintable, Char>
@@ -403,5 +402,63 @@ TEST_CASE(
 		REQUIRE_THAT(
 			std::move(stream).str(),
 			Catch::Matchers::Equals("{?}"));
+	}
+}
+
+TEST_CASE(
+	"ValueCategory is formattable.",
+	"[print]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When valid ValueCategory is given.")
+	{
+		const auto [expected, category] = GENERATE(
+			(table<StringT, ValueCategory>)({
+				{"any", ValueCategory::any},
+				{"rvalue",ValueCategory::rvalue},
+				{"lvalue", ValueCategory::lvalue},
+				}));
+
+		REQUIRE_THAT(
+			format::format("{}", category),
+			Matches::Equals(expected));
+	}
+
+	SECTION("When an invalid ValueCategory is given, std::invalid_argument is thrown.")
+	{
+		REQUIRE_THROWS_AS(
+			format::format("{}", ValueCategory{42}),
+			std::invalid_argument);
+	}
+}
+
+TEST_CASE(
+	"Constness is formattable.",
+	"[print]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("When valid Constness is given.")
+	{
+		const auto [expected, category] = GENERATE(
+			(table<StringT, Constness>)({
+				{"any", Constness::any},
+				{"const",Constness::as_const},
+				{"mutable", Constness::non_const},
+				}));
+
+		REQUIRE_THAT(
+			format::format("{}", category),
+			Matches::Equals(expected));
+	}
+
+	SECTION("When an invalid Constness is given, std::invalid_argument is thrown.")
+	{
+		REQUIRE_THROWS_AS(
+			format::format("{}", Constness{42}),
+			std::invalid_argument);
 	}
 }

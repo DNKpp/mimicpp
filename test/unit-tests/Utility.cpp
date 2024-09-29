@@ -8,7 +8,6 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
-#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <cstdint>
 
@@ -61,64 +60,6 @@ TEMPLATE_TEST_CASE(
 
 		STATIC_REQUIRE(std::same_as<UnderlyingT, decltype(to_underlying(Test{value}))>);
 		REQUIRE(value == to_underlying(Test{value}));
-	}
-}
-
-TEST_CASE(
-	"ValueCategory is formattable.",
-	"[utility]"
-)
-{
-	namespace Matches = Catch::Matchers;
-
-	SECTION("When valid ValueCategory is given.")
-	{
-		const auto [expected, category] = GENERATE(
-			(table<StringT, ValueCategory>)({
-				{"any", ValueCategory::any},
-				{"rvalue",ValueCategory::rvalue},
-				{"lvalue", ValueCategory::lvalue},
-				}));
-
-		REQUIRE_THAT(
-			format::format("{}", category),
-			Matches::Equals(expected));
-	}
-
-	SECTION("When an invalid ValueCategory is given, std::invalid_argument is thrown.")
-	{
-		REQUIRE_THROWS_AS(
-			format::format("{}", ValueCategory{42}),
-			std::invalid_argument);
-	}
-}
-
-TEST_CASE(
-	"Constness is formattable.",
-	"[utility]"
-)
-{
-	namespace Matches = Catch::Matchers;
-
-	SECTION("When valid Constness is given.")
-	{
-		const auto [expected, category] = GENERATE(
-			(table<StringT, Constness>)({
-				{"any", Constness::any},
-				{"const",Constness::as_const},
-				{"mutable", Constness::non_const},
-				}));
-
-		REQUIRE_THAT(
-			format::format("{}", category),
-			Matches::Equals(expected));
-	}
-
-	SECTION("When an invalid Constness is given, std::invalid_argument is thrown.")
-	{
-		REQUIRE_THROWS_AS(
-			format::format("{}", Constness{42}),
-			std::invalid_argument);
 	}
 }
 

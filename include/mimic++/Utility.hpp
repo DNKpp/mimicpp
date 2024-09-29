@@ -34,64 +34,6 @@ namespace mimicpp
 	}
 }
 
-template <>
-struct std::formatter<mimicpp::ValueCategory, mimicpp::CharT>
-	: public std::formatter<std::string_view, mimicpp::CharT>
-{
-	using ValueCategoryT = mimicpp::ValueCategory;
-
-	auto format(
-		const ValueCategoryT category,
-		auto& ctx
-	) const
-	{
-		constexpr auto toString = [](const ValueCategoryT cat)
-		{
-			switch (cat)
-			{
-			case ValueCategoryT::lvalue: return "lvalue";
-			case ValueCategoryT::rvalue: return "rvalue";
-			case ValueCategoryT::any: return "any";
-			}
-
-			throw std::invalid_argument{"Unknown category value."};
-		};
-
-		return std::formatter<std::string_view, mimicpp::CharT>::format(
-			toString(category),
-			ctx);
-	}
-};
-
-template <>
-struct std::formatter<mimicpp::Constness, mimicpp::CharT>
-	: public std::formatter<std::string_view, mimicpp::CharT>
-{
-	using ConstnessT = mimicpp::Constness;
-
-	auto format(
-		const ConstnessT category,
-		auto& ctx
-	) const
-	{
-		constexpr auto toString = [](const ConstnessT value)
-		{
-			switch (value)
-			{
-			case ConstnessT::non_const: return "mutable";
-			case ConstnessT::as_const: return "const";
-			case ConstnessT::any: return "any";
-			}
-
-			throw std::invalid_argument{"Unknown constness value."};
-		};
-
-		return std::formatter<std::string_view, mimicpp::CharT>::format(
-			toString(category),
-			ctx);
-	}
-};
-
 namespace mimicpp
 {
 	template <typename...>
