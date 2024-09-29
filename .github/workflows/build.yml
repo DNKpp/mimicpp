@@ -132,6 +132,11 @@ jobs:
                         asan: true
                     }
 
+                exclude:
+                    - config.compiler_name: "gcc"
+                      config.compiler_version: 12
+                      format_backend: std
+
         steps:
             - uses: actions/checkout@v4
   
