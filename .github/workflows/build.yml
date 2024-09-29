@@ -82,6 +82,16 @@ jobs:
                         libcxx: false,
                         asan: true
                     }
+                    #gcc-12
+                    - {
+                        prefix: "Linux",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/gcc:12" },
+                        compiler_name: "gcc",
+                        compiler_version: 12,
+                        libcxx: false,
+                        asan: true
+                    }
                     # msvc v143
                     - {
                         prefix: "Windows 2022",
