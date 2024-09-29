@@ -25,7 +25,7 @@ class mimicpp::custom::Printer<my_type>
 public:
 	static auto print(auto outIter, const my_type& object)
 	{
-		return std::format_to(
+		return format::format_to(
 			outIter,
 			"Object of my_type has value: {}",
 			object.data);
