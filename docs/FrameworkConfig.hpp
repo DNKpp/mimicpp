@@ -11,6 +11,7 @@
  * If ``mimic++`` is integrated as cmake-target, it also offers appropriate cmake-options with the same name,
  * which can be set during cmake configuration. If an option is enabled, ``mimic++`` defines the relevant macro by itself.
  * 
+ * ---
  * \anchor MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
  * ## Disable unprefixed macros
  * Name: ``MIMICPP_CONFIG_ONLY_PREFIXED_MACROS``
@@ -19,6 +20,7 @@
  * \ref MIMICPP_SCOPED_EXPECTATION). Even if very unlikely, this may lead to name clashes with other dependencies. Because of that, the option
  * \ref MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is offered, which then disables all shorthand macros.
  * 
+ * ---
  * \anchor MIMICPP_CONFIG_USE_FMT
  * ## Use ``fmt`` as formatting backend
  * Name: ``MIMICPP_CONFIG_USE_FMT``
@@ -29,4 +31,6 @@
  * 
  * Whatever the reason to use ``fmt`` might be, chances are good, that the library is already present. ``mimic++`` tries to detect that when linked
  * as cmake-target, before pulling it from github. If you want to reuse an existing ``fmt`` package, make sure, that it can be found via ``find_package(fmt)``.
+ * 
+ * ---
  */
