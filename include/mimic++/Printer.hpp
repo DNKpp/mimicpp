@@ -86,6 +86,53 @@ namespace mimicpp::format
 
 #endif
 
+	namespace detail
+	{
+		template <typename Char>
+		struct format_context;
+
+		template <typename Char>
+		using format_context_t = typename format_context<Char>::type;
+
+		template <>
+		struct format_context<char>
+		{
+			using type = std::format_context;
+		};
+
+		template <>
+		struct format_context<wchar_t>
+		{
+			using type = std::wformat_context;
+		};
+
+		/**
+		* \brief Determines, whether a complete specialization of ``std::formatter`` for the given (possibly cv-ref qualified) type exists.
+		* \tparam T Type to check.
+		* \tparam Char Used character type.
+		* \details This is an adapted implementation of the ``std::formattable`` concept, which is added c++23.
+		* \note This implementation takes a simple but reasonable shortcut in assuming, that ```Char`` is either ``char`` or ``wchar_t``,
+		* which must not necessarily true.
+		* \see Adapted from here: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2286r8.html#concept-formattable
+		* \see https://en.cppreference.com/w/cpp/utility/format/formattable
+		*/
+		template <class T, class Char>
+		concept formattable =
+			std::semiregular<std::formatter<std::remove_cvref_t<T>, Char>>
+			&& requires(
+			std::formatter<std::remove_cvref_t<T>, Char> formatter,
+			T t,
+			format_context_t<Char> formatContext,
+			std::basic_format_parse_context<Char> parseContext
+		)
+			{
+				{ formatter.parse(parseContext) } -> std::same_as<typename std::basic_format_parse_context<Char>::iterator>;
+				{
+					std::as_const(formatter).format(t, formatContext)
+				} -> std::same_as<typename std::remove_reference_t<decltype(formatContext)>::iterator>;
+			};
+	}
+
 	// use fmt format
 #else
 
