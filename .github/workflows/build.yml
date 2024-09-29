@@ -137,18 +137,14 @@ jobs:
                         prefix: "macOS",
                         os: macos-latest,
                         compiler_name: "AppleClang",
-                        compiler_version: "17.0.6",
-                        compiler_url: "https://github.com/llvm/llvm-project/releases/download/llvmorg-17.0.6/clang+llvm-17.0.6-arm64-apple-darwin22.0.tar.xz",
-                        package_name: "clang+llvm-17.0.6-arm64-apple-darwin22.0",
+                        compiler_version: 17,
                         asan: true
                     }
                     - {
                         prefix: "macOS",
                         os: macos-latest,
                         compiler_name: "AppleClang",
-                        compiler_version: "18.1.8",
-                        compiler_url: "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-arm64-apple-macos11.tar.xz",
-                        package_name: "clang+llvm-18.1.8-arm64-apple-macos11",
+                        compiler_version: 18,
                         asan: true
                     }
 
@@ -167,29 +163,11 @@ jobs:
             - uses: actions/checkout@v4
   
             - name: Setup macOS
-              if: startsWith(matrix.config.os, 'macos')
+              if: startsWith(matrix.config.os, 'macOS')
               shell: bash
               run: |
-                env brew install ninja
-                # download into current directory and follow http redirects (-L)
-                curl -sS -L -o clang.tar.xz ${{ matrix.config.compiler_url }}
-                # extract into subdirectory
-                tar -xf clang.tar.xz -C ..
-                CLANG_PATH=$PWD/../${{ matrix.config.package_name }}/bin
-                echo "CC=$(echo $CLANG_PATH/clang)" >> $GITHUB_ENV
-                echo "CXX=$(echo $CLANG_PATH/clang++)" >> $GITHUB_ENV
+                env brew install ninja llvm@${{ matrix.config.compiler_version }}
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
-
-                # see: https://github.com/Homebrew/homebrew-core/issues/178435#issuecomment-2250615995
-            - name: Workaround AppleClang 18 linker error on macOS
-              if: "${{ \
-                    startsWith(matrix.config.os, 'macos') \
-                    && startsWith(matrix.config.compiler_version, '18.1.8') \
-                   }}"
-              shell: bash
-              run: |
-                env brew install llvm
-                echo "LDFLAGS=$(echo $LDFLAGS -L\"$(brew --prefix llvm)/lib/c++\" -L\"$(brew --prefix llvm)/lib\" -lunwind)" >> $GITHUB_ENV
 
             - name: Clang libc++ setup
               if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
