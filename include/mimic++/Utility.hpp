@@ -11,7 +11,6 @@
 #include "mimic++/Fwd.hpp"
 
 #include <cassert>
-#include <format>
 #include <source_location>
 #include <utility>
 
