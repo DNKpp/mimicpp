@@ -17,25 +17,6 @@
 
 namespace mimicpp
 {
-
-	[[nodiscard]]
-	constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
-	{
-		using UnderlyingT = std::underlying_type_t<Constness>;
-		return UnderlyingT{0} != (static_cast<UnderlyingT>(lhs) & static_cast<UnderlyingT>(rhs));
-	}
-
-
-	[[nodiscard]]
-	constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept
-	{
-		using UnderlyingT = std::underlying_type_t<ValueCategory>;
-		return UnderlyingT{0} != (static_cast<UnderlyingT>(lhs) & static_cast<UnderlyingT>(rhs));
-	}
-}
-
-namespace mimicpp
-{
 	template <typename...>
 	struct always_false
 		: public std::bool_constant<false>
@@ -109,6 +90,18 @@ namespace mimicpp
 #endif
 
 	// GCOVR_EXCL_STOP
+
+	[[nodiscard]]
+	constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
+	{
+		return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
+	}
+
+	[[nodiscard]]
+	constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept
+	{
+		return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
+	}
 }
 
 namespace mimicpp::detail
