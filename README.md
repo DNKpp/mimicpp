@@ -398,6 +398,7 @@ As new compilers become available, they will be added to the workflow, but older
 
 | Compiler | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
 |----------|:---------:|:------:|:------:|:------:|:----------:|:---:|
+| clang-16 |     x     |    x   |    x   |    x   |      -     |  x  |
 | clang-17 |     x     |    x   |    x   |    x   |      x     |  x  |
 | clang-18 |     x     |    *   |    x   |    x   |      x     |  x  |
 | gcc-12   |     x     |    ?   |    x   |    x   |      -     |  x  |
