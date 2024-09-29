@@ -153,6 +153,7 @@ jobs:
                     }
 
                 exclude:
+                    # both compilers do not support std's format header
                     - format_backend: std
                       config:
                         compiler_name: "clang"
