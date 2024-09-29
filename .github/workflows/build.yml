@@ -20,6 +20,7 @@ jobs:
             matrix:
                 build_mode: [Debug, Release]
                 cxx_standard: [20, 23]
+                format_backend: [std, fmt]
                 config:
                     #clang-18
                     - {
@@ -174,6 +175,12 @@ jobs:
               shell: bash
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
+
+            - name: Set fmt as formatting backend
+              if: startsWith(matrix.format_backend, 'fmt')
+              shell: bash
+              run: |
+                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_USE_FMT=YES)" >> $GITHUB_ENV
 
             # ASan has some serious trouble with libc++ exception mechanism
             # see: https://github.com/llvm/llvm-project/issues/59432
