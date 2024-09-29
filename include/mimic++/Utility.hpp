@@ -17,12 +17,6 @@
 
 namespace mimicpp
 {
-	enum class Constness
-	{
-		non_const = 0b01,
-		as_const  = 0b10,
-		any       = non_const | as_const
-	};
 
 	[[nodiscard]]
 	constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
@@ -31,12 +25,6 @@ namespace mimicpp
 		return UnderlyingT{0} != (static_cast<UnderlyingT>(lhs) & static_cast<UnderlyingT>(rhs));
 	}
 
-	enum class ValueCategory
-	{
-		lvalue = 0b01,
-		rvalue = 0b10,
-		any    = lvalue | rvalue
-	};
 
 	[[nodiscard]]
 	constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept

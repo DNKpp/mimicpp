@@ -65,10 +65,7 @@ namespace mimicpp
 
 	template <typename First, typename... Others>
 	inline constexpr bool is_overload_set_v = is_overload_set<First, Others...>::value;
-}
 
-namespace mimicpp
-{
 	template <typename Signature>
 		requires std::same_as<Signature, signature_decay_t<Signature>>
 	class Expectation;
@@ -84,6 +81,20 @@ namespace mimicpp
 		none,
 		inapplicable,
 		full
+	};
+
+	enum class Constness
+	{
+		non_const = 0b01,
+		as_const  = 0b10,
+		any       = non_const | as_const
+	};
+
+	enum class ValueCategory
+	{
+		lvalue = 0b01,
+		rvalue = 0b10,
+		any    = lvalue | rvalue
 	};
 
 	class CallReport;
