@@ -276,7 +276,7 @@ TEST_CASE(
 			Catch::Matchers::Equals("CustomAndInternalPrintable - custom::Printer"));
 	}
 
-	SECTION("std::formatter specialization is supported.")
+	SECTION("format::formatter specialization is supported.")
 	{
 		using PrinterT = format::formatter<FormatPrintable, CharT>;
 		PrinterT::printCallCounter = 0;
