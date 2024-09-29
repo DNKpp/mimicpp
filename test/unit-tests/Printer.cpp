@@ -85,7 +85,7 @@ namespace
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"detail::formattable determines whether the given type has a std::formatter specialization.",
+	"detail::formattable determines whether the given type has a format::formatter specialization.",
 	"[print]",
 	((bool expected, typename T, typename Char), expected, T, Char),
 	(true, int, char),
