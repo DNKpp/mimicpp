@@ -378,26 +378,26 @@ On the other hand-side, there is a whole range of code which doesn't even get in
 
 ### Windows
 
-| OS           | Compiler | c++-20 | c++-23 |
-|--------------|----------|:------:|:------:|
-| Windows 2022 | msvc     |    x   |    x   |
-| Windows 2022 | clangCl  |    x   |    x   |
+| OS           | Compiler | c++-20 | c++-23 | std-format | fmt |
+|--------------|:--------:|:------:|:------:|:----------:|:---:|
+| Windows 2022 |   msvc   |    x   |    x   |      x     |  x  |
+| Windows 2022 |  clangCl |    x   |    x   |      x     |  x  |
 
 ### Linux
 
-| Compiler | libstdc++ | libc++           | c++-20 | c++-23 |
-|----------|:---------:|:----------------:|:------:|:------:|
-| clang-17 |     x     |    x             |    x   |    x   |
-| clang-18 |     x     | x (with caveats) |    x   |    x   |
-| gcc-13   |     x     | not tested       |    x   |    x   |
-| gcc-14   |     x     | not tested       |    x   |    x   |
+| Compiler | libstdc++ |      libc++      | c++-20 | c++-23 | std-format | fmt |
+|----------|:---------:|:----------------:|:------:|:------:|:----------:|:---:|
+| clang-17 |     x     |         x        |    x   |    x   |      x     |  x  |
+| clang-18 |     x     | x (with caveats) |    x   |    x   |      x     |  x  |
+| gcc-13   |     x     |    not tested    |    x   |    x   |      x     |  x  |
+| gcc-14   |     x     |    not tested    |    x   |    x   |      x     |  x  |
 
 ### macOS
 
-| Compiler          | libstdc++  | libc++ | c++-20 | c++-23 |
-|-------------------|:----------:|:------:|:------:|:------:|
-| AppleClang-17.0.6 | not tested |    x   |    x   |    x   |
-| AppleClang-18.1.6 | not tested |    x   |    x   |    x   |
+| Compiler          |  libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
+|-------------------|:----------:|:------:|:------:|:------:|:----------:|:---:|
+| AppleClang-17.0.6 | not tested |    x   |    x   |    x   |      x     |  x  |
+| AppleClang-18.1.6 | not tested |    x   |    x   |    x   |      x     |  x  |
 
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
 
