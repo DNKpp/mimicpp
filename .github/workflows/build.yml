@@ -11,7 +11,7 @@ jobs:
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
             ${{ matrix.config.suffix }} 
-            (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }})
+            (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }}, ${{ matrix.format_backend }})
         runs-on: ${{ matrix.config.os }}
         container: ${{ matrix.config.container }}
 
