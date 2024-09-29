@@ -128,3 +128,74 @@ TEST_CASE(
 	my_function(mock);
 	//! [interface mock overloaded]
 }
+
+TEST_CASE(
+	"Multiple-inheritance is supported.",
+	"[example][example::mock][example::mock::interface]"
+)
+{
+	//! [interface mock multiple inheritance]
+	namespace expect = mimicpp::expect;
+	namespace finally = mimicpp::finally;
+
+	class InterfaceA
+	{
+	public:
+		virtual ~InterfaceA() = default;
+		virtual void foo() = 0;
+
+		virtual void bar() = 0;
+	};
+
+	class InterfaceB
+	{
+	public:
+		virtual ~InterfaceB() = default;
+		virtual void foo() = 0;
+
+		virtual int bar() const noexcept = 0;
+	};
+
+	class Derived
+		: public InterfaceA,
+		public InterfaceB
+	{
+	public:
+		~Derived() override = default;
+
+		// Both interfaces have a foo() method with the same signature, so we do not need to overload.
+		MOCK_METHOD(foo, void, ()); // mocks both foo() methods from InterfaceA and InterfaceB
+
+		// Both interfaces have a bar() method, but with different signature. So, let's work on that overload-set.
+		MOCK_OVERLOADED_METHOD(
+			bar,
+			ADD_OVERLOAD(void, ()),					// from InterfaceA
+			ADD_OVERLOAD(int, (), const noexcept));	// from InterfaceB
+	};
+
+	// let's build a function, which requires the InterfaceA
+	constexpr auto use_interfaceA = [](InterfaceA& obj)
+	{
+		obj.foo();
+		obj.bar();
+	};
+
+	// and another, which requires the InterfaceB
+	constexpr auto use_interfaceB = [](InterfaceB& obj)
+	{
+		obj.foo();
+		std::ignore = obj.bar();	// InterfaceB::bar returns an int, just explicitly ignore it here
+	};
+
+	// setting up the expectations isn't any different from the previous examples
+	Derived mock{};
+	SCOPED_EXP mock.foo_.expect_call()
+				and expect::twice();
+	SCOPED_EXP mock.bar_.expect_call();	// selects the non-const overload of bar()
+	SCOPED_EXP std::as_const(mock).bar_.expect_call()	// selects the const overload of bar()
+				and finally::returns(42);
+
+	use_interfaceA(mock); // calls foo() and the non-const bar()
+	use_interfaceB(mock); // calls foo() and the const bar()
+	//! [interface mock multiple inheritance]
+}
