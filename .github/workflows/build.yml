@@ -27,6 +27,13 @@ jobs:
                         prefix: "macOS",
                         os: macos-latest,
                         compiler_name: "AppleClang",
+                        compiler_version: 16,
+                        asan: true
+                    }
+                    - {
+                        prefix: "macOS",
+                        os: macos-latest,
+                        compiler_name: "AppleClang",
                         compiler_version: 17,
                         ldflags_workaround: -L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++,
                         asan: true
