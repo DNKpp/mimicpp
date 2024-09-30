@@ -28,14 +28,6 @@ jobs:
                         prefix: "macOS",
                         os: macos-latest,
                         compiler_name: "AppleClang",
-                        compiler_version: 16,
-                        ldflags_workaround: -L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++,
-                        asan: true
-                    }
-                    - {
-                        prefix: "macOS",
-                        os: macos-latest,
-                        compiler_name: "AppleClang",
                         compiler_version: 17,
                         ldflags_workaround: -L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++,
                         asan: true
@@ -46,6 +38,13 @@ jobs:
                         compiler_name: "AppleClang",
                         compiler_version: 18,
                         ldflags_workaround: -L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib -lunwind,
+                        asan: true
+                    }
+                    - {
+                        prefix: "macOS",
+                        os: macos-latest,
+                        compiler_name: "AppleClang",
+                        compiler_version: 19,
                         asan: true
                     }
 
@@ -124,6 +123,7 @@ jobs:
                     -B build \
                     -D CMAKE_VERBOSE_MAKEFILE=yes \
                     -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+                    -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
                     ${{ env.CMAKE_CONFIG_EXTRA }}
 
             - name: Build
