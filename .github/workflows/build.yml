@@ -22,16 +22,119 @@ jobs:
                 cxx_standard: [20, 23]
                 format_backend: [std, fmt]
                 config:
-                    # AppleClang
-                    # The ldflags_workaround are taken from the suggestions, when installing via brew
+                    #clang-18
                     - {
-                        prefix: "macOS",
-                        os: macos-latest,
-                        compiler_name: "AppleClang",
-                        compiler_version: 17,
-                        ldflags_workaround: -L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++,
+                        prefix: "Linux",
+                        suffix: "/libc++",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:18" },
+                        compiler_name: "clang",
+                        compiler_version: 18,
+                        libcxx: true,
                         asan: true
                     }
+                    - {
+                        prefix: "Linux",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:18" },
+                        compiler_name: "clang",
+                        compiler_version: 18,
+                        libcxx: false,
+                        asan: true
+                    }
+                    #clang-17
+                    - {
+                        prefix: "Linux",
+                        suffix: "/libc++",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:17" },
+                        compiler_name: "clang",
+                        compiler_version: 17,
+                        libcxx: true,
+                        asan: true
+                    }
+                    - {
+                        prefix: "Linux",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:17" },
+                        compiler_name: "clang",
+                        compiler_version: 17,
+                        libcxx: false,
+                        asan: true
+                    }
+                    #clang-16
+                    - {
+                        prefix: "Linux",
+                        suffix: "/libc++",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:16" },
+                        compiler_name: "clang",
+                        compiler_version: 16,
+                        libcxx: true,
+                        asan: true
+                    }
+                    - {
+                        prefix: "Linux",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/clang:16" },
+                        compiler_name: "clang",
+                        compiler_version: 16,
+                        libcxx: false,
+                        asan: true
+                    }
+                    #gcc-14
+                    - {
+                        prefix: "Linux",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/gcc:14" },
+                        compiler_name: "gcc",
+                        compiler_version: 14,
+                        libcxx: false,
+                        asan: true
+                    }
+                    #gcc-13
+                    - {
+                        prefix: "Linux",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/gcc:13" },
+                        compiler_name: "gcc",
+                        compiler_version: 13,
+                        libcxx: false,
+                        asan: true
+                    }
+                    #gcc-12
+                    - {
+                        prefix: "Linux",
+                        os: ubuntu-latest,
+                        container: { image: "ghcr.io/dnkpp/gcc:12" },
+                        compiler_name: "gcc",
+                        compiler_version: 12,
+                        libcxx: false,
+                        asan: true
+                    }
+                    # msvc v143
+                    - {
+                        prefix: "Windows 2022",
+                        os: windows-2022,
+                        compiler_name: "msvc",
+                        compiler_version: v143,
+                        cmake_generator: Visual Studio 17 2022,
+                        libcxx: false,
+                        asan: false
+                    }
+                    # msvc ClangCl
+                    - {
+                        prefix: "Windows 2022",
+                        os: windows-2022,
+                        compiler_name: "msvc",
+                        compiler_version: ClangCl,
+                        cmake_generator: Visual Studio 17 2022,
+                        libcxx: false,
+                        asan: false
+                    }
+
+                    # AppleClang
+                    # The ldflags_workaround are taken from the suggestions, when installing via brew
                     - {
                         prefix: "macOS",
                         os: macos-latest,
@@ -44,9 +147,18 @@ jobs:
                         prefix: "macOS",
                         os: macos-latest,
                         compiler_name: "AppleClang",
-                        compiler_version: 19,
+                        compiler_version: 17,
+                        ldflags_workaround: -L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++,
                         asan: true
                     }
+                    - {
+                        prefix: "macOS",
+                        os: macos-latest,
+                        compiler_name: "AppleClang",
+                        compiler_version: 16,
+                        ldflags_workaround: -L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++,
+                        asan: true
+                    }                    
 
                 exclude:
                     # both compilers do not support std's format header
@@ -58,6 +170,13 @@ jobs:
                       config:
                         compiler_name: "gcc"
                         compiler_version: 12
+
+                    # This compiler does work, but fails compiling something from boost::filesystem, which is indirectly required
+                    # by the BoostAdapter-Test.
+                    # Maybe, we can find a workaround for this in the future.
+                    - config:
+                        compiler_name: "AppleClang"
+                        compiler_version: 16
 
         steps:
             - uses: actions/checkout@v4
