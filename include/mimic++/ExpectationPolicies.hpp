@@ -195,7 +195,7 @@ namespace mimicpp::expectation_policies
 		}
 
 		[[nodiscard]]
-		std::optional<StringT> describe() const
+		StringT describe() const
 		{
 			return std::invoke(
 				m_Describer,

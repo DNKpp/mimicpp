@@ -297,10 +297,8 @@ TEST_CASE(
 		REQUIRE_CALL(describer, Invoke("matcher description"))
 			.RETURN("expect that: matcher description");
 
-		const auto description = policy.describe();
-		REQUIRE(description);
 		REQUIRE_THAT(
-			*description,
+			policy.describe(),
 			Catch::Matchers::Equals("expect that: matcher description"));
 	}
 
@@ -974,9 +972,8 @@ TEST_CASE(
 		REQUIRE_CALL(matcher, describe())
 			.RETURN("matcher description");
 
-		const auto description = policy.describe();
 		REQUIRE_THAT(
-			*description,
+			policy.describe(),
 			Catch::Matchers::Equals("expect: arg[0] matcher description"));
 	}
 
