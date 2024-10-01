@@ -356,7 +356,7 @@ namespace mimicpp::expectation_policies
 		}
 
 	private:
-		Action m_Action;
+		[[no_unique_address]] Action m_Action;
 	};
 }
 
