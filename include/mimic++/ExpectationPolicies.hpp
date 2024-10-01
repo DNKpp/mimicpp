@@ -160,8 +160,8 @@ namespace mimicpp::expectation_policies
 		[[nodiscard]]
 		explicit constexpr Requirement(
 			Matcher matcher,
-			Projection projection = Projection{},
-			Describer describer = Describer{}
+			Projection projection = {},
+			Describer describer = {}
 		) noexcept(
 			std::is_nothrow_move_constructible_v<Matcher>
 			&& std::is_nothrow_move_constructible_v<Projection>
@@ -272,7 +272,7 @@ namespace mimicpp::expectation_policies
 	public:
 		[[nodiscard]]
 		explicit constexpr ApplyAllArgsAction(
-			Action action = Action{}
+			Action action = {}
 		) noexcept(std::is_nothrow_move_constructible_v<Action>)
 			: m_Action{std::move(action)}
 		{
@@ -318,7 +318,7 @@ namespace mimicpp::expectation_policies
 	public:
 		[[nodiscard]]
 		explicit constexpr ApplyArgsAction(
-			Action action = Action{}
+			Action action = {}
 		) noexcept(std::is_nothrow_move_constructible_v<Action>)
 			: m_Action{std::move(action)}
 		{
@@ -409,17 +409,19 @@ namespace mimicpp::expect
 		Matcher&& matcher,
 		Projection projection = {}
 	) noexcept(
-		std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher&&>
+		std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>
 		&& std::is_nothrow_move_constructible_v<Projection>)
 	{
 		using ProjectionT = expectation_policies::ApplyArgsAction<
 			Projection,
 			std::add_lvalue_reference_t,
 			index>;
-		return expectation_policies::Requirement<
+		using PolicyT = expectation_policies::Requirement<
 			std::remove_cvref_t<Matcher>,
 			ProjectionT,
-			detail::arg_requirement_describer<index>>{
+			detail::arg_requirement_describer<index>>;
+
+		return PolicyT{
 			std::forward<Matcher>(matcher),
 			ProjectionT{std::move(projection)}
 		};
@@ -530,14 +532,14 @@ namespace mimicpp::finally
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
+		using ActionT = expectation_policies::ApplyArgsAction<
+			std::remove_cvref_t<Action>,
+			std::add_lvalue_reference_t,
+			index,
+			otherIndices...>;
+
 		return expectation_policies::ReturnsResultOf{
-			expectation_policies::ApplyArgsAction<
-				std::remove_cvref_t<Action>,
-				std::add_lvalue_reference_t,
-				index,
-				otherIndices...>{
-				std::forward<Action>(action)
-			}
+			ActionT{std::forward<Action>(action)}
 		};
 	}
 
@@ -557,12 +559,12 @@ namespace mimicpp::finally
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
+		using ActionT = expectation_policies::ApplyAllArgsAction<
+			std::remove_cvref_t<Action>,
+			std::add_lvalue_reference_t>;
+
 		return expectation_policies::ReturnsResultOf{
-			expectation_policies::ApplyAllArgsAction<
-				std::remove_cvref_t<Action>,
-				std::add_lvalue_reference_t>{
-				std::forward<Action>(action)
-			}
+			ActionT{std::forward<Action>(action)}
 		};
 	}
 
@@ -577,13 +579,13 @@ namespace mimicpp::finally
 	[[nodiscard]]
 	constexpr auto returns_arg() noexcept
 	{
+		using ActionT = expectation_policies::ApplyArgsAction<
+			std::identity,
+			std::add_rvalue_reference_t,
+			index>;
+
 		return expectation_policies::ReturnsResultOf{
-			expectation_policies::ApplyArgsAction<
-				std::identity,
-				std::add_rvalue_reference_t,
-				index>{
-				std::identity{}
-			}
+			ActionT{}
 		};
 	}
 
@@ -651,13 +653,13 @@ namespace mimicpp::then
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
+		using ActionT = expectation_policies::ApplyArgsAction<
+			std::remove_cvref_t<Action>,
+			std::add_lvalue_reference_t,
+			index>;
+
 		return expectation_policies::SideEffectAction{
-			expectation_policies::ApplyArgsAction<
-				std::remove_cvref_t<Action>,
-				std::add_lvalue_reference_t,
-				index>{
-				std::forward<Action>(action)
-			}
+			ActionT{std::forward<Action>(action)}
 		};
 	}
 
@@ -677,14 +679,14 @@ namespace mimicpp::then
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
+		using ActionT = expectation_policies::ApplyArgsAction<
+			std::remove_cvref_t<Action>,
+			std::add_lvalue_reference_t,
+			index,
+			additionalIndices...>;
+
 		return expectation_policies::SideEffectAction{
-			expectation_policies::ApplyArgsAction<
-				std::remove_cvref_t<Action>,
-				std::add_lvalue_reference_t,
-				index,
-				additionalIndices...>{
-				std::forward<Action>(action)
-			}
+			ActionT{std::forward<Action>(action)}
 		};
 	}
 
@@ -700,12 +702,12 @@ namespace mimicpp::then
 		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
+		using ActionT = expectation_policies::ApplyAllArgsAction<
+			std::remove_cvref_t<Action>,
+			std::add_lvalue_reference_t>;
+
 		return expectation_policies::SideEffectAction{
-			expectation_policies::ApplyAllArgsAction<
-				std::remove_cvref_t<Action>,
-				std::add_lvalue_reference_t>{
-				std::forward<Action>(action)
-			}
+			ActionT{std::forward<Action>(action)}
 		};
 	}
 
