@@ -939,7 +939,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	":expect::arg creates a expectation_policies::Requirement policy.",
+	"expect::arg creates an expectation_policies::Requirement policy.",
 	"[expectation][expectation::factories]"
 )
 {
