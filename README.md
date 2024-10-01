@@ -377,6 +377,7 @@ On the other hand-side, there is a whole range of code which doesn't even get in
 ``mimic++`` has **a lot** of templating code at the very heart, which is at least of equal effort to get right (and tested). So, treat the coverage percentage with a grain of salt.
 
 ### CI Tests
+
 The listed configurations are explicitly tested, but other do probably work, too.
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
 
