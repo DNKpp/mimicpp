@@ -992,6 +992,50 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"expect::arg supports an optional projection.",
+	"[expectation][expectation::factories]"
+)
+{
+	using trompeloeil::_;
+	namespace Matches = Catch::Matchers;
+
+	using SignatureT = void(int);
+	using CallInfoT = call::info_for_signature_t<SignatureT>;
+	int arg0{42};
+	const CallInfoT info{
+		.args = {arg0},
+		.fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
+		.fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+	};
+
+	using MatcherT = MatcherMock<const std::string&>;
+	STATIC_CHECK(matcher_for<MatcherT,std::string>);
+	MatcherT matcher{};
+	using ProjectionT = InvocableMock<std::string, int&>;
+
+	ProjectionT projection{};
+
+	expectation_policies::Requirement policy = expect::arg<0>(
+		MatcherFacade{
+			std::ref(matcher),
+			UnwrapReferenceWrapper{}
+		},
+		std::ref(projection));
+	STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+
+	REQUIRE_CALL(projection, Invoke(_))
+		.LR_WITH(&_1 == &arg0)
+		.RETURN("42");
+
+	const bool match = GENERATE(true, false);
+	REQUIRE_CALL(matcher, matches(_))
+		.LR_WITH(_1 == "42")
+		.RETURN(match);
+
+	REQUIRE(match == std::as_const(policy).matches(info));
+}
+
+TEST_CASE(
 	"mimicpp::expect::returns_result_of creates expectation_policies::ReturnsResultOf.",
 	"[expectation][expectation::factories]"
 )

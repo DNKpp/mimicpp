@@ -395,6 +395,7 @@ namespace mimicpp::expect
 	 * \brief Checks, whether the selected argument matches the given matcher.
 	 * \tparam Matcher The matcher type.
 	 * \param matcher The matcher.
+	 * \param projection Projection to apply to the argument.
 	 *
 	 * \details This requirement checks, whether the selected argument matches the given matcher. One argument can be checked multiple times
 	 * in different requirements and all results will be combined as conjunction.
@@ -402,20 +403,25 @@ namespace mimicpp::expect
 	 * For a list of built-in matchers, see \ref EXPECTATION_MATCHER "matcher" section.
 	 * \snippet Requirements.cpp expect::arg
 	 */
-	template <std::size_t index, typename Matcher>
+	template <std::size_t index, typename Matcher, typename Projection = std::identity>
 	[[nodiscard]]
 	constexpr auto arg(
-		Matcher&& matcher
-	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher&&>)
+		Matcher&& matcher,
+		Projection projection = {}
+	) noexcept(
+		std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher&&>
+		&& std::is_nothrow_move_constructible_v<Projection>)
 	{
+		using ProjectionT = expectation_policies::ApplyArgsAction<
+			Projection,
+			std::add_lvalue_reference_t,
+			index>;
 		return expectation_policies::Requirement<
 			std::remove_cvref_t<Matcher>,
-			expectation_policies::ApplyArgsAction<
-				std::identity,
-				std::add_lvalue_reference_t,
-				index>,
+			ProjectionT,
 			detail::arg_requirement_describer<index>>{
 			std::forward<Matcher>(matcher),
+			ProjectionT{std::move(projection)}
 		};
 	}
 
