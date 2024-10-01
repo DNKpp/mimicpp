@@ -28,7 +28,7 @@ namespace mimicpp
 						&& requires(const T& matcher, Target& target)
 						{
 							{ matcher.matches(target) } -> std::convertible_to<bool>;
-							{ matcher.describe() } -> std::convertible_to<std::optional<StringT>>;
+							{ matcher.describe() } -> std::convertible_to<StringViewT>;
 						};
 
 	/**
