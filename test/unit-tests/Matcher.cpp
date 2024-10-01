@@ -165,13 +165,17 @@ TEST_CASE(
 	"[matcher]"
 )
 {
+	namespace Matches = Catch::Matchers;
+
 	using AnyT = std::remove_cvref_t<decltype(matches::_)>;
 	STATIC_REQUIRE(matcher_for<AnyT, int>);
 	STATIC_REQUIRE(matcher_for<AnyT, const std::string&>);
 
 	constexpr int value{42};
 	REQUIRE(matches::_.matches(value));
-	REQUIRE(std::optional<StringT>{} == matches::_.describe());
+	REQUIRE_THAT(
+		StringT{matches::_.describe()},
+		Matches::Equals("has no constraints"));
 }
 
 TEST_CASE(
