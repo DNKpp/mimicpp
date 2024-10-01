@@ -360,19 +360,6 @@ namespace mimicpp::expectation_policies
 	};
 }
 
-namespace mimicpp::expectation_policies::detail
-{
-	struct forward_fn
-	{
-		template <typename T>
-		[[nodiscard]]
-		constexpr T&& operator ()(T&& obj) const noexcept
-		{
-			return std::forward<T>(obj);
-		}
-	};
-}
-
 namespace mimicpp::expect
 {
 	namespace detail
@@ -424,7 +411,7 @@ namespace mimicpp::expect
 		return expectation_policies::Requirement<
 			std::remove_cvref_t<Matcher>,
 			expectation_policies::ApplyArgsAction<
-				expectation_policies::detail::forward_fn,
+				std::identity,
 				std::add_lvalue_reference_t,
 				index>,
 			detail::arg_requirement_describer<index>>{
@@ -586,10 +573,10 @@ namespace mimicpp::finally
 	{
 		return expectation_policies::ReturnsResultOf{
 			expectation_policies::ApplyArgsAction<
-				expectation_policies::detail::forward_fn,
+				std::identity,
 				std::add_rvalue_reference_t,
 				index>{
-				expectation_policies::detail::forward_fn{}
+				std::identity{}
 			}
 		};
 	}
