@@ -185,8 +185,10 @@ namespace mimicpp::expectation_policies
 		[[nodiscard]]
 		constexpr bool matches(const call::Info<Return, Args...>& info) const
 		{
-			return m_Matcher.matches(
-				std::invoke(m_Projection, info));
+			decltype(auto) projected = std::invoke(m_Projection, info);
+			return detail::matches_hook::matches(
+				m_Matcher,
+				projected);
 		}
 
 		template <typename Return, typename... Args>
@@ -199,7 +201,7 @@ namespace mimicpp::expectation_policies
 		{
 			return std::invoke(
 				m_Describer,
-				m_Matcher.describe());
+				detail::describe_hook::describe(m_Matcher));
 		}
 
 	private:
