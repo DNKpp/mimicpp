@@ -176,7 +176,9 @@ TEST_CASE(
 
 	mimicpp::Mock<void(std::vector<int>)> mock{};
 
-	SCOPED_EXP mock.expect_call(EqualsRange(std::array{42, 1337}));
+	// the matcher values must outlive their matcher
+	constexpr std::array testContainer{42, 1337};
+	SCOPED_EXP mock.expect_call(EqualsRange(testContainer));
 	mock({42, 1337});
 
 	// Don't do this. The inner matcher dangles.
