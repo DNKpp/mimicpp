@@ -14,6 +14,7 @@
 
 #if __has_include(<catch2/catch_test_macros.hpp>)
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_templated.hpp>
 #else
 	#error "Unable to find catch2 includes."
 #endif
@@ -72,5 +73,18 @@ namespace mimicpp::detail::catch2
 {
 	inline const ReporterInstaller<Catch2ReporterT> installer{};
 }
+
+template <typename Matcher>
+	requires std::derived_from<Matcher, Catch::Matchers::MatcherGenericBase>   // new style
+			|| std::derived_from<Matcher, Catch::Matchers::MatcherUntypedBase> // old style
+struct mimicpp::custom::matcher_traits<Matcher>
+{
+	template <typename T>
+	[[nodiscard]]
+	static constexpr bool matches(const Matcher& matcher, T& value)
+	{
+		return matcher.match(value);
+	}
+};
 
 #endif
