@@ -12,6 +12,7 @@
 #include <catch2/reporters/catch_reporter_registrars.hpp>
 
 #include <atomic>
+#include <list>
 
 namespace
 {
