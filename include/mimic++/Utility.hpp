@@ -11,6 +11,7 @@
 #include "mimic++/Fwd.hpp"
 
 #include <cassert>
+#include <cstddef>
 #include <source_location>
 #include <utility>
 
@@ -19,6 +20,19 @@ namespace mimicpp
 	template <typename...>
 	struct always_false
 		: public std::bool_constant<false>
+	{
+	};
+
+	template <std::size_t priority>
+	struct priority_tag
+		/** \cond Help doxygen with recursion.*/
+		: public priority_tag<priority - 1>
+		/** \endcond */
+	{
+	};
+
+	template <>
+	struct priority_tag<0>
 	{
 	};
 

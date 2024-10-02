@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Fwd.hpp"
+#include "Utility.hpp"
 
 #include <functional>
 #include <iterator>
@@ -228,19 +229,6 @@ namespace mimicpp::custom
 
 namespace mimicpp::detail
 {
-	template <std::size_t priority>
-	struct priority_tag
-		/** \cond Help doxygen with recursion.*/
-		: public priority_tag<priority - 1>
-		/** \endcond */
-	{
-	};
-
-	template <>
-	struct priority_tag<0>
-	{
-	};
-
 	template <
 		print_iterator OutIter,
 		typename T,
