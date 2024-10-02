@@ -82,6 +82,7 @@ struct mimicpp::custom::matcher_traits<Matcher>
 	template <typename T>
 	[[nodiscard]]
 	static constexpr bool matches(const Matcher& matcher, T& value)
+		requires requires { { matcher.match(value) } -> std::convertible_to<bool>; }
 	{
 		return matcher.match(value);
 	}
