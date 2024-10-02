@@ -18,12 +18,196 @@
 
 using namespace mimicpp;
 
+namespace
+{
+	class CommonMatcher
+	{
+		MAKE_CONST_MOCK1(matches, bool(const int&));
+		MAKE_CONST_MOCK0(describe, StringViewT());
+	};
+
+	class CustomMatcher
+	{
+		MAKE_CONST_MOCK1(my_matches, bool(const int&));
+		MAKE_CONST_MOCK0(my_describe, StringViewT());
+	};
+
+	class Mixed1Matcher
+	{
+		MAKE_CONST_MOCK1(matches, bool(const int&));
+		MAKE_CONST_MOCK0(my_describe, StringViewT());
+	};
+
+	class Mixed2Matcher
+	{
+		MAKE_CONST_MOCK1(my_matches, bool(const int&));
+		MAKE_CONST_MOCK0(describe, StringViewT());
+	};
+}
+
+template <>
+struct custom::matcher_traits<CustomMatcher>
+{
+	[[nodiscard]]
+	static bool matches(const CustomMatcher& matcher, const int& value)
+	{
+		return matcher.my_matches(value);
+	}
+
+	[[nodiscard]]
+	static StringViewT describe(const CustomMatcher& matcher)
+	{
+		return matcher.my_describe();
+	}
+};
+
+template <>
+struct custom::matcher_traits<Mixed1Matcher>
+{
+	[[nodiscard]]
+	static StringViewT describe(const Mixed1Matcher& matcher)
+	{
+		return matcher.my_describe();
+	}
+};
+
+template <>
+struct custom::matcher_traits<Mixed2Matcher>
+{
+	[[nodiscard]]
+	static bool matches(const Mixed2Matcher& matcher, const int& value)
+	{
+		return matcher.my_matches(value);
+	}
+};
+
+TEST_CASE(
+	"detail::matches_hook::matches chooses correct implementation.",
+	"[matcher][matcher::detail]"
+)
+{
+	using trompeloeil::_;
+
+	const bool result = GENERATE(true, false);
+	int value = 42;
+
+	SECTION("For member matches.")
+	{
+		SECTION("For pure common matchers.")
+		{
+			CommonMatcher matcher{};
+			REQUIRE_CALL(matcher, matches(_))
+				.LR_WITH(&_1 == &value)
+				.RETURN(result);
+
+			REQUIRE(result == detail::matches_hook::matches(matcher, value));
+		}
+
+		SECTION("For mixed matchers.")
+		{
+			Mixed1Matcher matcher{};
+			REQUIRE_CALL(matcher, matches(_))
+				.LR_WITH(&_1 == &value)
+				.RETURN(result);
+
+			REQUIRE(result == detail::matches_hook::matches(matcher, value));
+		}
+	}
+
+	SECTION("For custom matches.")
+	{
+		SECTION("For pure custom matchers.")
+		{
+			CustomMatcher matcher{};
+			REQUIRE_CALL(matcher, my_matches(_))
+				.LR_WITH(&_1 == &value)
+				.RETURN(result);
+
+			REQUIRE(result == detail::matches_hook::matches(matcher, value));
+		}
+
+		SECTION("For mixed matchers.")
+		{
+			Mixed2Matcher matcher{};
+			REQUIRE_CALL(matcher, my_matches(_))
+				.LR_WITH(&_1 == &value)
+				.RETURN(result);
+
+			REQUIRE(result == detail::matches_hook::matches(matcher, value));
+		}
+	}
+}
+
+TEST_CASE(
+	"detail::describe_hook::describe chooses correct implementation.",
+	"[matcher][matcher::detail]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	const StringViewT result = GENERATE("Hello, World!", " Hello, 2, World! ");
+
+	SECTION("For member describe.")
+	{
+		SECTION("For pure common matchers.")
+		{
+			CommonMatcher matcher{};
+			REQUIRE_CALL(matcher, describe())
+				.RETURN(result);
+
+			REQUIRE_THAT(
+				StringT{detail::describe_hook::describe(matcher)},
+				Matches::Equals(StringT{result}));
+		}
+
+		SECTION("For mixed matchers.")
+		{
+			Mixed2Matcher matcher{};
+			REQUIRE_CALL(matcher, describe())
+				.RETURN(result);
+
+			REQUIRE_THAT(
+				StringT{detail::describe_hook::describe(matcher)},
+				Matches::Equals(StringT{result}));
+		}
+	}
+
+	SECTION("For custom describe.")
+	{
+		SECTION("For pure custom matchers.")
+		{
+			CustomMatcher matcher{};
+			REQUIRE_CALL(matcher, my_describe())
+				.RETURN(result);
+
+			REQUIRE_THAT(
+				StringT{detail::describe_hook::describe(matcher)},
+				Matches::Equals(StringT{result}));
+		}
+
+		SECTION("For mixed matchers.")
+		{
+			Mixed1Matcher matcher{};
+			REQUIRE_CALL(matcher, my_describe())
+				.RETURN(result);
+
+			REQUIRE_THAT(
+				StringT{detail::describe_hook::describe(matcher)},
+				Matches::Equals(StringT{result}));
+		}
+	}
+}
+
 TEMPLATE_TEST_CASE(
 	"Given types satisfy mimicpp::matcher_for concept.",
 	"[matcher]",
 	std::remove_const_t<decltype(matches::_)>,
 	std::remove_const_t<decltype(matches::eq(42))>,
-	std::remove_const_t<decltype(!matches::eq(42))>
+	std::remove_const_t<decltype(!matches::eq(42))>,
+	CommonMatcher,
+	CustomMatcher,
+	Mixed1Matcher,
+	Mixed2Matcher
 )
 {
 	STATIC_REQUIRE(matcher_for<TestType, int>);

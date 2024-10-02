@@ -19,6 +19,94 @@
 #include <tuple>
 #include <type_traits>
 
+namespace mimicpp::custom
+{
+	template <typename Matcher>
+	struct matcher_traits;
+}
+
+namespace mimicpp::detail::matches_hook
+{
+	template <typename Matcher, typename T>
+	[[nodiscard]]
+	constexpr bool matches_impl(
+		const Matcher& matcher,
+		T& target,
+		[[maybe_unused]] const priority_tag<1>
+	)
+		requires requires
+		{
+			{
+				custom::matcher_traits<Matcher>{}.matches(matcher, target)
+			} -> std::convertible_to<bool>;
+		}
+	{
+		return custom::matcher_traits<Matcher>{}.matches(matcher, target);
+	}
+
+	template <typename Matcher, typename T>
+	[[nodiscard]]
+	constexpr bool matches_impl(
+		const Matcher& matcher,
+		T& target,
+		[[maybe_unused]] const priority_tag<0>
+	)
+		requires requires { { matcher.matches(target) } -> std::convertible_to<bool>; }
+	{
+		return matcher.matches(target);
+	}
+
+	constexpr priority_tag<1> maxTag;
+
+	template <typename Matcher, typename T>
+	[[nodiscard]]
+	constexpr bool matches(const Matcher& matcher, T& target)
+		requires requires { { matches_impl(matcher, target, maxTag) } -> std::convertible_to<bool>; }
+	{
+		return matches_impl(matcher, target, maxTag);
+	}
+}
+
+namespace mimicpp::detail::describe_hook
+{
+	template <typename Matcher>
+	[[nodiscard]]
+	constexpr decltype(auto) describe_impl(
+		const Matcher& matcher,
+		[[maybe_unused]] const priority_tag<1>
+	)
+		requires requires
+		{
+			{
+				custom::matcher_traits<Matcher>{}.describe(matcher)
+			} -> std::convertible_to<StringViewT>;
+		}
+	{
+		return custom::matcher_traits<Matcher>{}.describe(matcher);
+	}
+
+	template <typename Matcher>
+	[[nodiscard]]
+	constexpr decltype(auto) describe_impl(
+		const Matcher& matcher,
+		[[maybe_unused]] const priority_tag<0>
+	)
+		requires requires { { matcher.describe() } -> std::convertible_to<StringViewT>; }
+	{
+		return matcher.describe();
+	}
+
+	constexpr priority_tag<1> maxTag;
+
+	template <typename Matcher>
+	[[nodiscard]]
+	constexpr decltype(auto) describe(const Matcher& matcher)
+		requires requires { { describe_impl(matcher, maxTag) } -> std::convertible_to<StringViewT>; }
+	{
+		return describe_impl(matcher, maxTag);
+	}
+}
+
 namespace mimicpp
 {
 	template <typename T, typename Target>
@@ -27,8 +115,8 @@ namespace mimicpp
 						&& std::destructible<T>
 						&& requires(const T& matcher, Target& target)
 						{
-							{ matcher.matches(target) } -> std::convertible_to<bool>;
-							{ matcher.describe() } -> std::convertible_to<StringViewT>;
+							{ detail::matches_hook::matches(matcher, target) } -> std::convertible_to<bool>;
+							{ detail::describe_hook::describe(matcher) } -> std::convertible_to<StringViewT>;
 						};
 
 	/**
