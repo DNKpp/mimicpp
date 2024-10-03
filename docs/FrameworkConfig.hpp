@@ -41,12 +41,11 @@
  * This is an experimental feature, and may be removed during any release.
  * 
  * ### Why is it an experimental feature?
- * Unfortunatly ``catch2`` matchers are desgined to be used in-place. Almost everything you do, like negation via ``operator !`` or ``operator &&``,
- * just takes a const-reference to the source-matcher. Also, all string and other container matchers take their arguments (the pattern object)
- * by const-reference, which is a pitty. Due to this, users must always keep the pattern object alive, as long as the expectation is alive, which
- * is not always obvious; especially as the compiler has no chance to warn you about that.
+ * Unfortunatly ``catch2`` matchers are desgined to be used in-place. Every combination you do, like negation via ``operator !`` or ``operator &&``,
+ * just takes a const-reference to the source-matcher.
+ * \see https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#combining-operators-and-lifetimes
  * 
- * ``mimic++`` needs to store the matcher (and their pattern objects) inside the expectation. These requirements are not playing well together.
+ * ``mimic++`` needs to store the matcher inside the expectation. These requirements are not playing well together.
  * Nevertheless ``catch2`` offers some nice matcher definitions, which could be very helpfull for testing. But as already said, they are dangerous,
  * thus I decided to make them opt-in as experimental features.
  */

@@ -12,7 +12,6 @@
 #include <catch2/reporters/catch_reporter_registrars.hpp>
 
 #include <atomic>
-#include <list>
 
 namespace
 {
@@ -73,6 +72,8 @@ TEST_CASE(
 	mimicpp::detail::catch2::send_fail("Test");
 }
 
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
+
 namespace
 {
 	// directly taken from the old-style example
@@ -110,8 +111,6 @@ namespace
 	}
 }
 
-#ifdef MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
-
 TEST_CASE(
 	"catch2 old-style matchers are fully supported.",
 	"[adapter][adapter::catch2]"
@@ -132,61 +131,31 @@ TEST_CASE(
 	//}
 }
 
-namespace
-{
-	// directly taken from the new-style example
-	// see: https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#writing-custom-matchers-new-style
-	template <typename Range>
-	struct EqualsRangeMatcher: Catch::Matchers::MatcherGenericBase
-	{
-		EqualsRangeMatcher(const Range& range)
-			: range{range}
-		{
-		}
-
-		template <typename OtherRange>
-		bool match(const OtherRange& other) const
-		{
-			using std::begin;
-			using std::end;
-
-			return std::equal(begin(range), end(range), begin(other), end(other));
-		}
-
-		std::string describe() const override
-		{
-			return "Equals: " + Catch::rangeToString(range);
-		}
-
-	private:
-		const Range& range;
-	};
-
-	template <typename Range>
-	auto EqualsRange(const Range& range) -> EqualsRangeMatcher<Range>
-	{
-		return EqualsRangeMatcher<Range>{range};
-	}
-}
+#include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 TEST_CASE(
 	"catch2 new-style matchers are fully supported.",
 	"[adapter][adapter::catch2]"
 )
 {
-	STATIC_REQUIRE(mimicpp::matcher_for<EqualsRangeMatcher<std::vector<int>>, const std::list<int>&>);
+	STATIC_CHECK(
+		std::derived_from<decltype(Catch::Matchers::RangeEquals(std::array{42, 1337})),
+		Catch::Matchers::MatcherGenericBase>);
+
+	STATIC_REQUIRE(
+		mimicpp::matcher_for<
+		decltype(Catch::Matchers::RangeEquals(std::array{42, 1337})),
+		const std::vector<int>&>);
 
 	mimicpp::Mock<void(std::vector<int>)> mock{};
 
-	// the matcher values must outlive their matcher
-	constexpr std::array testContainer{42, 1337};
-	SCOPED_EXP mock.expect_call(EqualsRange(testContainer));
+	SCOPED_EXP mock.expect_call(Catch::Matchers::RangeEquals(std::array{42, 1337}));
 	mock({42, 1337});
 
 	// Don't do this. The inner matcher dangles.
 	// see: https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#combining-operators-and-lifetimes
 	//{
-	//	SCOPED_EXP mock.expect_call(!EqualsRange(std::array{42, 1337}));
+	//	SCOPED_EXP mock.expect_call(!Catch::Matchers::RangeEquals(std::array{42, 1337}));
 	//	mock({1337});
 	//}
 }
