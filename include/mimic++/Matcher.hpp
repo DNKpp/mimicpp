@@ -8,7 +8,9 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Printer.hpp"
+#include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 
 #include <algorithm>
@@ -433,38 +435,27 @@ namespace mimicpp::matches::str
 
 	/**
 	 * \brief Tests, whether the target string compares equal to the expected string.
-	 * \tparam Char The character type.
-	 * \tparam Traits The character traits type.
-	 * \tparam Allocator The allocator type.
-	 * \param expected The expected string.
+	 * \tparam String The string type.
+	 * \param pattern The pattern object.
 	 */
-	template <typename Char, typename Traits, typename Allocator>
+	template <string String>
 	[[nodiscard]]
-	constexpr auto eq(std::basic_string<Char, Traits, Allocator> expected)
+	constexpr auto eq(String&& pattern)
 	{
-		using ViewT = std::basic_string_view<Char>;
+		using traits_t = string_traits<std::remove_cvref_t<String>>;
+		using string_t = typename traits_t::string_t;
+
 		return PredicateMatcher{
-			[](const ViewT target, const ViewT exp)
+			[]<std::equality_comparable_with<const string_t&> T>(const string_t& target, T&& exp)
 			{
 				return target == exp;
 			},
 			"is equal to {}",
 			"is not equal to {}",
-			std::tuple{std::move(expected)}
+			std::tuple{
+				string_t{std::forward<String>(pattern)}
+			}
 		};
-	}
-
-	/**
-	 * \brief Tests, whether the target string compares equal to the expected string.
-	 * \tparam Char The character type.
-	 * \param expected The expected string.
-	 */
-	template <typename Char>
-	[[nodiscard]]
-	constexpr auto eq(const Char* expected)
-	{
-		return eq(
-			std::basic_string<Char>{expected});
 	}
 
 	/**
