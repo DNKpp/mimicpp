@@ -77,6 +77,9 @@ namespace mimicpp
 	template <typename T>
 	inline constexpr bool is_character_v{is_character<T>::value};
 
+	template <typename T>
+	struct string_traits;
+
 	template <typename Signature>
 		requires std::same_as<Signature, signature_decay_t<Signature>>
 	class Expectation;

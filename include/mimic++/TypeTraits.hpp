@@ -665,6 +665,81 @@ namespace mimicpp
 	/**
 	 * \}
 	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_STRING_TRAITS string_traits
+	 * \brief Type-trait, which contains properties for the provided string type.
+	 *
+	 * \{
+	 */
+
+	template <typename T>
+		requires std::is_pointer_v<T>
+				&& is_character_v<std::remove_const_t<std::remove_pointer_t<T>>>
+	struct string_traits<T>
+	{
+		using char_t = std::remove_const_t<std::remove_pointer_t<T>>;
+		using string_t = std::basic_string<char_t>;
+		using view_t = std::basic_string_view<char_t>;
+
+		[[nodiscard]]
+		static constexpr string_t to_string(T str)
+		{
+			return string_t{str};
+		}
+
+		[[nodiscard]]
+		static constexpr view_t to_view(T str) noexcept
+		{
+			return view_t{str};
+		}
+	};
+
+	template <typename Char, typename Traits, typename Allocator>
+	struct string_traits<std::basic_string<Char, Traits, Allocator>>
+	{
+		using char_t = Char;
+		using string_t = std::basic_string<Char, Traits, Allocator>;
+		using view_t = std::basic_string_view<Char, Traits>;
+
+		[[nodiscard]]
+		static constexpr string_t to_string(string_t str) noexcept
+		{
+			return std::move(str);
+		}
+
+		[[nodiscard]]
+		static constexpr view_t to_view(const string_t& str) noexcept
+		{
+			return view_t{str};
+		}
+
+		void to_view(const string_t&& str) = delete;
+	};
+
+	template <typename Char, typename Traits>
+	struct string_traits<std::basic_string_view<Char, Traits>>
+	{
+		using char_t = Char;
+		using string_t = std::basic_string<Char, Traits>;
+		using view_t = std::basic_string_view<Char, Traits>;
+
+		[[nodiscard]]
+		static constexpr string_t to_string(view_t str)
+		{
+			return string_t{str};
+		}
+
+		[[nodiscard]]
+		static constexpr view_t to_view(view_t str) noexcept
+		{
+			return std::move(str);
+		}
+	};
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
