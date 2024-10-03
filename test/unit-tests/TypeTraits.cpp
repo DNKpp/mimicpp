@@ -677,3 +677,42 @@ TEMPLATE_TEST_CASE(
 
 	STATIC_REQUIRE(!requires{ traits_t{}; });
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"string concept determines, whether the given type can be used as a string-type.",
+	"[type_traits]",
+	((bool expected, typename T), expected, T),
+	(false, char),
+
+	(true, char*),
+	(true, const char*),
+	(true, wchar_t*),
+	(true, const wchar_t*),
+	(true, char8_t*),
+	(true, const char8_t*),
+	(true, char16_t*),
+	(true, const char16_t*),
+	(true, char32_t*),
+	(true, const char32_t*),
+
+	(true, std::string),
+	(true, const std::string),
+	(true, std::string&),
+	(true, const std::string&),
+	(true, std::string&&),
+	(true, const std::string&&),
+
+	(true, std::wstring),
+	(true, std::u8string),
+	(true, std::u16string),
+	(true, std::u32string),
+
+	(true, std::string_view),
+	(true, std::wstring_view),
+	(true, std::u8string_view),
+	(true, std::u16string_view),
+	(true, std::u32string_view)
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::string<T>);
+}
