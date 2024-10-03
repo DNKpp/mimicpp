@@ -9,9 +9,12 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/TypeTraits.hpp"
 
 #include <cassert>
 #include <cstddef>
+#include <functional>
+#include <ranges>
 #include <source_location>
 #include <utility>
 
@@ -148,4 +151,19 @@ namespace mimicpp::detail
 	using unique_list_t = typename unique<std::tuple<>, Types...>::type_t;
 }
 
+namespace mimicpp
+{
+	/**
+	 * \brief Determines, whether the given type can be used as a string-type.
+	 */
+	template <typename T>
+	concept string = requires
+					{
+						typename string_traits<std::remove_cvref_t<T>>::char_t;
+						typename string_traits<std::remove_cvref_t<T>>::string_t;
+					}
+					&& std::equality_comparable<typename string_traits<std::remove_cvref_t<T>>::string_t>
+					&& std::ranges::forward_range<typename string_traits<std::remove_cvref_t<T>>::string_t>;
+}
+}
 #endif

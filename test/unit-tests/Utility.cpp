@@ -94,3 +94,51 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(std::same_as<Expected, detail::unique_list_t<Types...>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"string concept determines, whether the given type can be used as a string-type.",
+	"[utility]",
+	((bool expected, typename T), expected, T),
+	(false, char),
+
+	(true, char*),
+	(true, const char*),
+	(true, wchar_t*),
+	(true, const wchar_t*),
+	(true, char8_t*),
+	(true, const char8_t*),
+	(true, char16_t*),
+	(true, const char16_t*),
+	(true, char32_t*),
+	(true, const char32_t*),
+
+	(true, char[]),
+	(true, const char[]),
+	(true, char(&)[]),
+	(true, const char(&)[]),
+	(true, char[42]),
+	(true, const char[42]),
+	(true, char(&)[42]),
+	(true, const char(&)[42]),
+
+	(true, std::string),
+	(true, const std::string),
+	(true, std::string&),
+	(true, const std::string&),
+	(true, std::string&&),
+	(true, const std::string&&),
+
+	(true, std::wstring),
+	(true, std::u8string),
+	(true, std::u16string),
+	(true, std::u32string),
+
+	(true, std::string_view),
+	(true, std::wstring_view),
+	(true, std::u8string_view),
+	(true, std::u16string_view),
+	(true, std::u32string_view)
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::string<T>);
+}

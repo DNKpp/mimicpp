@@ -726,18 +726,6 @@ namespace mimicpp
 	/**
 	 * \}
 	 */
-
-	/**
-	 * \brief Determines, whether the given type can be used as a string-type.
-	 */
-	template <typename T>
-	concept string = requires
-					{
-						typename string_traits<std::remove_cvref_t<T>>::char_t;
-						typename string_traits<std::remove_cvref_t<T>>::string_t;
-					}
-					&& std::equality_comparable<typename string_traits<std::remove_cvref_t<T>>::string_t>
-					&& std::ranges::forward_range<typename string_traits<std::remove_cvref_t<T>>::string_t>;
 }
 
 #endif
