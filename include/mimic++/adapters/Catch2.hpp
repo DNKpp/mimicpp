@@ -14,7 +14,6 @@
 
 #if __has_include(<catch2/catch_test_macros.hpp>)
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_templated.hpp>
 #else
 	#error "Unable to find catch2 includes."
 #endif
@@ -61,6 +60,12 @@ namespace mimicpp
 	 * of ``Catch2`` with ``catch2/``.
 	 *
 	 * This reporter installs itself by simply including this header file into any source file of the test executable.
+	 *
+	 * ## Experimental Matcher integration
+	 *
+	 * ``mimic++`` has an opt-in config, which lets users directly use ``catch2``-matchers everywhere, where a ``mimic++``-matcher
+	 * would be suitable.
+	 * \see \ref MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
 	 */
 	using Catch2ReporterT = BasicReporter<
 		&detail::catch2::send_success,
@@ -73,6 +78,10 @@ namespace mimicpp::detail::catch2
 {
 	inline const ReporterInstaller<Catch2ReporterT> installer{};
 }
+
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
+
+#include <catch2/matchers/catch_matchers_templated.hpp>
 
 template <typename Matcher>
 	requires std::derived_from<Matcher, Catch::Matchers::MatcherGenericBase>   // new style
@@ -87,5 +96,7 @@ struct mimicpp::custom::matcher_traits<Matcher>
 		return matcher.match(value);
 	}
 };
+
+#endif
 
 #endif

@@ -35,40 +35,7 @@ target_compile_features(
 	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
-OPTION(MIMICPP_CONFIG_ONLY_PREFIXED_MACROS "When enabled, all macros will be prefixed with MIMICPP_." OFF)
-if (MIMICPP_CONFIG_ONLY_PREFIXED_MACROS)
-	target_compile_definitions(
-		mimicpp
-		INTERFACE
-		MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
-	)
-endif()
-
-# Config option, to utilize fmt instead of std formatting.
-# Checks, whether fmt is already available. Fetches it instead.
-# Eventually defines the macro MIMICPP_CONFIG_USE_FMT. 
-OPTION(MIMICPP_CONFIG_USE_FMT "When enabled, uses fmt instead of std formatting." OFF)
-if (MIMICPP_CONFIG_USE_FMT)
-
-	find_package(fmt QUIET)
-	if (NOT fmt_FOUND)
-		CPMAddPackage("gh:fmtlib/fmt#11.0.2")
-	endif()
-
-	find_package(fmt REQUIRED)
-	target_link_libraries(
-		mimicpp
-		INTERFACE
-		fmt::fmt
-	)
-
-	target_compile_definitions(
-		mimicpp
-		INTERFACE
-		MIMICPP_CONFIG_USE_FMT
-	)
-
-endif()
+include(mimic++-configuration-options)
 
 if (CMAKE_SOURCE_DIR STREQUAL mimicpp_SOURCE_DIR)
 	set(IS_TOP_LEVEL_PROJECT ON)

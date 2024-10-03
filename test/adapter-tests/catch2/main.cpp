@@ -110,6 +110,8 @@ namespace
 	}
 }
 
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
+
 TEST_CASE(
 	"catch2 old-style matchers are fully supported.",
 	"[adapter][adapter::catch2]"
@@ -188,3 +190,5 @@ TEST_CASE(
 	//	mock({1337});
 	//}
 }
+
+#endif

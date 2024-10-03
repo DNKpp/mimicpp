@@ -33,4 +33,20 @@
  * as cmake-target, before pulling it from github. If you want to reuse an existing ``fmt`` package, make sure, that it can be found via ``find_package(fmt)``.
  * 
  * ---
+ * \anchor MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
+ * ## Enable experimental catch2-matcher integration
+ * Name: ``MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION``
+ * 
+ * If enabled, all matchers from the ``Catch::Matcher`` namespaces can be directly used everywhere, where ``mimic++``-matchers are suitable.
+ * This is an experimental feature, and may be removed during any release.
+ * 
+ * ### Why is it an experimental feature?
+ * Unfortunatly ``catch2`` matchers are desgined to be used in-place. Almost everything you do, like negation via ``operator !`` or ``operator &&``,
+ * just takes a const-reference to the source-matcher. Also, all string and other container matchers take their arguments (the pattern object)
+ * by const-reference, which is a pitty. Due to this, users must always keep the pattern object alive, as long as the expectation is alive, which
+ * is not always obvious; especially as the compiler has no chance to warn you about that.
+ * 
+ * ``mimic++`` needs to store the matcher (and their pattern objects) inside the expectation. These requirements are not playing well together.
+ * Nevertheless ``catch2`` offers some nice matcher definitions, which could be very helpfull for testing. But as already said, they are dangerous,
+ * thus I decided to make them opt-in as experimental features.
  */
