@@ -12,6 +12,7 @@
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 
+#include <cstdint>
 #include <functional>
 #include <iterator>
 #include <ranges>
