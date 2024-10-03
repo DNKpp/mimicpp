@@ -710,16 +710,8 @@ namespace mimicpp
 					{
 						typename string_traits<std::remove_cvref_t<T>>::char_t;
 						typename string_traits<std::remove_cvref_t<T>>::string_t;
-						typename string_traits<std::remove_cvref_t<T>>::view_t;
 					}
-					&& std::equality_comparable_with<
-						typename string_traits<std::remove_cvref_t<T>>::string_t,
-						typename string_traits<std::remove_cvref_t<T>>::view_t>
-					&& requires(const T& str, const string_traits<std::remove_cvref_t<T>> trait)
-					{
-						{ trait.to_string(str) } -> std::convertible_to<typename string_traits<std::remove_cvref_t<T>>::string_t>;
-						{ trait.to_view(str) } -> std::convertible_to<typename string_traits<std::remove_cvref_t<T>>::view_t>;
-					};
+					&& std::equality_comparable<typename string_traits<std::remove_cvref_t<T>>::string_t>;
 }
 
 #endif
