@@ -500,3 +500,100 @@ TEST_CASE(
 			std::invalid_argument);
 	}
 }
+
+TEMPLATE_TEST_CASE(
+	"wchar_t strings will be formatted as value range.",
+	"[print]",
+	const wchar_t*,
+	std::wstring,
+	const std::wstring,
+	std::wstring_view,
+	const std::wstring_view
+)
+{
+	const auto [expected, source] = GENERATE(
+		(table<std::string, const wchar_t*>)({
+			{"L\"\"", L""},
+			{"L\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"", L"He, llo"},
+			{"L\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", L" He, llo "}
+			}));
+
+	StringStreamT out{};
+	print(std::ostreambuf_iterator{out}, static_cast<TestType>(source));
+	REQUIRE_THAT(
+		std::move(out).str(),
+		Catch::Matchers::Equals(expected));
+}
+
+TEMPLATE_TEST_CASE(
+	"char8_t strings will be formatted as value range.",
+	"[print]",
+	const char8_t*,
+	std::u8string,
+	const std::u8string,
+	std::u8string_view,
+	const std::u8string_view
+)
+{
+	const auto [expected, source] = GENERATE(
+		(table<std::string, const char8_t*>)({
+			{"u8\"\"", u8""},
+			{"u8\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"", u8"He, llo"},
+			{"u8\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u8" He, llo "}
+			}));
+
+	StringStreamT out{};
+	print(std::ostreambuf_iterator{out}, static_cast<TestType>(source));
+	REQUIRE_THAT(
+		std::move(out).str(),
+		Catch::Matchers::Equals(expected));
+}
+
+TEMPLATE_TEST_CASE(
+	"char16_t strings will be formatted as value range.",
+	"[print]",
+	const char16_t*,
+	std::u16string,
+	const std::u16string,
+	std::u16string_view,
+	const std::u16string_view
+)
+{
+	const auto [expected, source] = GENERATE(
+		(table<std::string, const char16_t*>)({
+			{"u\"\"", u""},
+			{"u\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"", u"He, llo"},
+			{"u\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u" He, llo "},
+			{"u\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u" Hello, World!"}
+			}));
+
+	StringStreamT out{};
+	print(std::ostreambuf_iterator{out}, static_cast<TestType>(source));
+	REQUIRE_THAT(
+		std::move(out).str(),
+		Catch::Matchers::Equals(expected));
+}
+
+TEMPLATE_TEST_CASE(
+	"char32_t strings will be formatted as value range.",
+	"[print]",
+	const char32_t*,
+	std::u32string,
+	const std::u32string,
+	std::u32string_view,
+	const std::u32string_view
+)
+{
+	const auto [expected, source] = GENERATE(
+		(table<std::string, const char32_t*>)({
+			{"U\"\"", U""},
+			{"U\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"", U"He, llo"},
+			{"U\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", U" He, llo "}
+			}));
+
+	StringStreamT out{};
+	print(std::ostreambuf_iterator{out}, static_cast<TestType>(source));
+	REQUIRE_THAT(
+		std::move(out).str(),
+		Catch::Matchers::Equals(expected));
+}

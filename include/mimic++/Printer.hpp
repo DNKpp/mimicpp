@@ -8,11 +8,13 @@
 
 #pragma once
 
-#include "Fwd.hpp"
-#include "Utility.hpp"
+#include "mimic++/Fwd.hpp"
+#include "mimic++/TypeTraits.hpp"
+#include "mimic++/Utility.hpp"
 
 #include <functional>
 #include <iterator>
+#include <ranges>
 #include <source_location>
 #include <sstream>
 #include <string>
@@ -24,7 +26,7 @@
 #else
 
 #if __has_include(<fmt/format.h>)
-	#include <fmt/format.h>
+#include <fmt/format.h>
 #else
 		#error "The fmt formatting backend is explicitly enabled, but the include <fmt/format.h> can not be found."
 #endif
@@ -303,7 +305,7 @@ namespace mimicpp::detail
 	)
 	{
 		return format::format_to(
-			std::move(out), 
+			std::move(out),
 			"{{?}}");
 	}
 
@@ -387,6 +389,99 @@ namespace mimicpp::detail
 				loc.function_name());
 		}
 	};
+
+	template <typename Char>
+		requires is_character_v<Char>
+	struct character_literal_printer;
+
+	template <>
+	struct character_literal_printer<char>
+	{
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out) noexcept
+		{
+			// no special character-literal
+			return out;
+		}
+	};
+
+	template <>
+	struct character_literal_printer<wchar_t>
+	{
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out)
+		{
+			return format::format_to(std::move(out), "L");
+		}
+	};
+
+	template <>
+	struct character_literal_printer<char8_t>
+	{
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out)
+		{
+			return format::format_to(std::move(out), "u8");
+		}
+	};
+
+	template <>
+	struct character_literal_printer<char16_t>
+	{
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out)
+		{
+			return format::format_to(std::move(out), "u");
+		}
+	};
+
+	template <>
+	struct character_literal_printer<char32_t>
+	{
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out)
+		{
+			return format::format_to(std::move(out), "U");
+		}
+	};
+
+	template <string String>
+		requires (!std::same_as<CharT, typename string_traits<String>::char_t>)
+	class Printer<String>
+	{
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, const typename string_traits<String>::string_t& str)
+		{
+			using char_t = typename string_traits<String>::char_t;
+
+			using intermediate_t = std::uint32_t;
+			static_assert(sizeof(char_t) <= sizeof(intermediate_t));
+
+			out = character_literal_printer<char_t>::print(std::move(out));
+			out = format::format_to(std::move(out), "\"");
+
+			auto iter = std::ranges::begin(str);
+			if (const auto end = std::ranges::end(str);
+				iter != end)
+			{
+				out = format::format_to(
+					std::move(out),
+					"{:#x}",
+					static_cast<intermediate_t>(*iter++));
+
+				for (; iter != end; ++iter)
+				{
+					out = format::format_to(
+						std::move(out),
+						", {:#x}",
+						static_cast<intermediate_t>(*iter));
+				}
+			}
+
+			return format::format_to(std::move(out), "\"");
+		}
+	};
 }
 
 namespace mimicpp
@@ -399,11 +494,14 @@ namespace mimicpp
 	 *
 	 * That function internally checks for the first available option (in that order):
 	 * - ``mimicpp::custom::Printer`` specialization
+	 * - internal printer specializations
 	 * - convertible to ``std::string_view``
 	 * - satisfies ``std::ranges::forward_range``
-	 * - is ``std::source_location``
+	 * - formattable type (in terms of the installed format-backend)
 	 *
-	 * If no valid alternative has been found, the default is chosen.
+	 * If no valid alternative has been found, the default is chosen (which just prints "{?}").
+	 *
+	 * ## Override existing printings or print custom types
 	 *
 	 * As ``mimic++`` can not know how to convert any custom type out there, a simple but effective mechanism is used.
 	 * Users can add a specialization of ``mimicpp::custom::Printer`` for their own or third-party types.
@@ -417,6 +515,18 @@ namespace mimicpp
 	 *
 	 * When an object of ``my_type`` is then passed to ``print``, that specification will be used:
 	 * \snippet CustomPrinter.cpp my_type print
+	 *
+	 * ## String printing
+	 *
+	 * All char-strings (like ``const char*`` or ``std::string``) will be printed as they are.
+	 * Other character-types (e.g. ``wchar_t`` or ``char8_t``) must be treated with care. Making ``mimic++`` 100% compatible with any
+	 * existing character-type is either a major work-load or has to be outsourced to a dependency.
+	 * Currently, ``mimic++`` chooses another option: If a string of a non-printable character-type (in terms of the type-trait ``is_character``)
+	 * is detected, it prints the string-literal and all elements are converted to their value-representation and printed as comma separated hex-values.
+	 *
+	 * For example, the string ``u8"Hello, World!"`` will then be printed as
+	 * ``u"0x20, 0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21"``.
+	 *
 	 *\{
 	 */
 
