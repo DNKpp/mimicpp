@@ -675,15 +675,34 @@ namespace mimicpp
 	 * \{
 	 */
 
+	/**
+	 * \brief Specialization for character pointer types.
+	 * \tparam T Type to check.
+	 */
 	template <typename T>
 		requires std::is_pointer_v<T>
-				&& is_character_v<std::remove_const_t<std::remove_pointer_t<T>>>
+				&& is_character_v<std::remove_cv_t<std::remove_pointer_t<T>>>
 	struct string_traits<T>
 	{
 		using char_t = std::remove_const_t<std::remove_pointer_t<T>>;
 		using string_t = std::basic_string_view<char_t>;
 	};
 
+	/**
+	 * \brief Specialization for character array types.
+	 * \tparam T Type to check.
+	 */
+	template <typename T>
+		requires std::is_array_v<T>
+	struct string_traits<T>
+		: public string_traits<std::remove_extent_t<T>*>
+	{
+	};
+
+	/**
+	 * \brief Specialization for ``std::basic_string`` types.
+	 * \tparam T Type to check.
+	 */
 	template <typename Char, typename Traits, typename Allocator>
 	struct string_traits<std::basic_string<Char, Traits, Allocator>>
 	{
@@ -691,6 +710,10 @@ namespace mimicpp
 		using string_t = std::basic_string<Char, Traits, Allocator>;
 	};
 
+	/**
+	 * \brief Specialization for ``std::basic_string_view`` types.
+	 * \tparam T Type to check.
+	 */
 	template <typename Char, typename Traits>
 	struct string_traits<std::basic_string_view<Char, Traits>>
 	{

@@ -636,6 +636,11 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, char32_t*, char32_t, std::u32string_view),
 	(true, const char32_t*, char32_t, std::u32string_view),
 
+	(true, char[], char, std::string_view),
+	(true, const char[], char, std::string_view),
+	(true, char[42], char, std::string_view),
+	(true, const char[42], char, std::string_view),
+
 	(true, std::string, char, std::string),
 	(true, std::wstring, wchar_t, std::wstring),
 	(true, std::u8string, char8_t, std::u8string),
