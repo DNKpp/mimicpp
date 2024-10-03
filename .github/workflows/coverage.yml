@@ -34,7 +34,8 @@ jobs:
                 cmake -S . \
                     -B build \
                     -D CMAKE_BUILD_TYPE="Debug" \
-                    -D MIMICPP_ENABLE_ADAPTER_TESTS=YES
+                    -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
+                    -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES
 
             - name: Build
               run: |

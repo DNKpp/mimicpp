@@ -243,6 +243,7 @@ jobs:
                     -D CMAKE_VERBOSE_MAKEFILE=yes \
                     -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
                     -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
+                    -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
                     ${{ env.CMAKE_CONFIG_EXTRA }}
 
             - name: Build
