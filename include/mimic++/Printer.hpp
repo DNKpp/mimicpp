@@ -285,20 +285,20 @@ namespace mimicpp::detail
 	template <print_iterator OutIter, format::detail::formattable<CharT> T>
 	OutIter print(
 		OutIter out,
-		T& value,
+		T&& value,
 		[[maybe_unused]] const priority_tag<1>
 	)
 	{
 		return format::format_to(
 			std::move(out),
 			"{}",
-			value);
+			std::forward<T>(value));
 	}
 
 	template <print_iterator OutIter>
 	OutIter print(
 		OutIter out,
-		auto&,
+		auto&&,
 		[[maybe_unused]] const priority_tag<0>
 	)
 	{

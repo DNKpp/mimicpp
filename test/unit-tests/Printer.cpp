@@ -10,6 +10,7 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <ranges>
 #include <sstream>
 
 using namespace mimicpp;
@@ -384,6 +385,19 @@ TEST_CASE(
 				std::move(stream).str(),
 				Catch::Matchers::Equals("{ {?}, {?}, {?} }"));
 		}
+
+		SECTION("Views are supported.")
+		{
+			const std::vector vec{42, 1337};
+
+			print(
+				std::ostreambuf_iterator{stream},
+				vec
+				| std::views::transform([](const auto v) { return 2 * v; }));
+			REQUIRE_THAT(
+				std::move(stream).str(),
+				Catch::Matchers::Equals("{ 84, 2674 }"));
+		}
 	}
 
 	SECTION("std::source_location has specialized printer.")
@@ -399,6 +413,30 @@ TEST_CASE(
 	{
 		constexpr NonPrintable value{};
 		print(std::ostreambuf_iterator{stream}, value);
+		REQUIRE_THAT(
+			std::move(stream).str(),
+			Catch::Matchers::Equals("{?}"));
+	}
+}
+
+TEST_CASE(
+	"print supports printing of temporaries.",
+	"[print]"
+)
+{
+	SECTION("Something printable.")
+	{
+		StringStreamT stream{};
+		print(std::ostreambuf_iterator{stream}, 42);
+		REQUIRE_THAT(
+			std::move(stream).str(),
+			Catch::Matchers::Equals("42"));
+	}
+
+	SECTION("Something non-printable.")
+	{
+		StringStreamT stream{};
+		print(std::ostreambuf_iterator{stream}, NonPrintable{});
 		REQUIRE_THAT(
 			std::move(stream).str(),
 			Catch::Matchers::Equals("{?}"));
