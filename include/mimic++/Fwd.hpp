@@ -66,6 +66,17 @@ namespace mimicpp
 	template <typename First, typename... Others>
 	inline constexpr bool is_overload_set_v = is_overload_set<First, Others...>::value;
 
+	template <typename T>
+	struct is_character;
+
+	/**
+	 * \brief Convenience boolean-constant to the result of ``is_character`` trait.
+	 * \tparam T The type to check.
+	 * \ingroup TYPE_TRAITS_IS_CHARACTER
+	 */
+	template <typename T>
+	inline constexpr bool is_character_v{is_character<T>::value};
+
 	template <typename Signature>
 		requires std::same_as<Signature, signature_decay_t<Signature>>
 	class Expectation;

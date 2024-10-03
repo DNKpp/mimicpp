@@ -580,6 +580,91 @@ namespace mimicpp
 			is_overload_set<Second, Others...>>
 	{
 	};
+
+	/**
+	 * \defgroup TYPE_TRAITS_IS_CHARACTER is_character
+	 * \brief Type-trait, which determines, whether the given type is a character-type.
+	 * \attention User are not allowed to add specializations to the trait by themselves.
+	 *
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, which always yields ``false``.
+	 * \tparam T Type to check.
+	 */
+	template <typename T>
+	struct is_character
+		: public std::false_type
+	{
+	};
+
+	/**
+	 * \brief Specialization for ``char``.
+	 */
+	template <>
+	struct is_character<char>
+		: public std::true_type
+	{
+	};
+
+	/**
+	 * \brief Specialization for ``unsigned char``.
+	 */
+	template <>
+	struct is_character<signed char>
+		: public std::true_type
+	{
+	};
+
+	/**
+	 * \brief Specialization for ``signed char``.
+	 */
+	template <>
+	struct is_character<unsigned char>
+		: public std::true_type
+	{
+	};
+
+	/**
+	 * \brief Specialization for ``wchar_t``.
+	 */
+	template <>
+	struct is_character<wchar_t>
+		: public std::true_type
+	{
+	};
+
+	/**
+	 * \brief Specialization for ``char8_t``.
+	 */
+	template <>
+	struct is_character<char8_t>
+		: public std::true_type
+	{
+	};
+
+	/**
+	 * \brief Specialization for ``char16_t``.
+	 */
+	template <>
+	struct is_character<char16_t>
+		: public std::true_type
+	{
+	};
+
+	/**
+	 * \brief Specialization for ``char32_t``.
+	 */
+	template <>
+	struct is_character<char32_t>
+		: public std::true_type
+	{
+	};
+
+	/**
+	 * \}
+	 */
 }
 
 #endif

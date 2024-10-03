@@ -595,3 +595,28 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::is_overload_set<Others..., First>::value);
 	STATIC_REQUIRE(expected == mimicpp::is_overload_set_v<Others..., First>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"is_character(_v) determines, whether the given type is a character type.",
+	"[type_traits]",
+	((bool expected, typename T), expected, T),
+	(false, int),
+	(false, bool),
+	(false, std::string),
+	(false, const char),
+	(false, char&),
+	(false, char&&),
+	(false, char*),
+
+	(true, char),
+	(true, unsigned char),
+	(true, signed char),
+	(true, wchar_t),
+	(true, char8_t),
+	(true, char16_t),
+	(true, char32_t)
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::is_character<T>::value);
+	STATIC_REQUIRE(expected == mimicpp::is_character_v<T>);
+}
