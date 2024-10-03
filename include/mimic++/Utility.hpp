@@ -234,7 +234,7 @@ namespace mimicpp::detail::to_lower_hook
 
 	template <string String>
 		requires std::same_as<char, typename string_traits<String>::char_t>
-	struct to_lower_hook::to_lower_converter<String>
+	struct to_lower_converter<String>
 	{
 		[[nodiscard]]
 		std::string operator ()(const typename string_traits<String>::string_t& str) const
