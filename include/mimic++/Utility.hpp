@@ -200,7 +200,7 @@ namespace mimicpp::detail::to_lower_hook
 		return std::invoke(
 			Converter{},
 			std::forward<String>(str));
-}
+	}
 
 	template <string String>
 	struct to_lower_converter;
@@ -258,13 +258,13 @@ namespace mimicpp::detail::to_lower_hook
 namespace mimicpp
 {
 	template <typename String>
-	concept to_lower_convertible = string<String>
-									&& requires
+	concept lower_convertible = string<String>
+								&& requires
+								{
 									{
-										{
-											detail::to_lower_hook::to_lower(std::declval<String>())
-										} -> string;
-									};
+										detail::to_lower_hook::to_lower(std::declval<String>())
+									} -> string;
+								};
 }
 
 #endif

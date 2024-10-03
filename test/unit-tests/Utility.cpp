@@ -207,3 +207,50 @@ TEMPLATE_TEST_CASE(
 		result,
 		Matches::Equals(expected));
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"string lower_convertible determines, whether the given string supports lower-case conversions.",
+	"[utility]",
+	((bool expected, typename T), expected, T),
+	(false, char),
+
+	(true, char*),
+	(true, const char*),
+	(true, char[]),
+	(true, const char[]),
+	(true, char(&)[]),
+	(true, const char(&)[]),
+	(true, char[42]),
+	(true, const char[42]),
+	(true, char(&)[42]),
+	(true, const char(&)[42]),
+	(true, std::string),
+	(true, const std::string),
+	(true, std::string&),
+	(true, const std::string&),
+	(true, std::string&&),
+	(true, const std::string&&),
+	(true, std::string_view),
+
+	// all below are just temporarily not supported. Would be nice to do so!
+	(false, wchar_t*),
+	(false, const wchar_t*),
+	(false, char8_t*),
+	(false, const char8_t*),
+	(false, char16_t*),
+	(false, const char16_t*),
+	(false, char32_t*),
+	(false, const char32_t*),
+
+	(false, std::wstring),
+	(false, std::u8string),
+	(false, std::u16string),
+	(false, std::u32string),
+	(false, std::wstring_view),
+	(false, std::u8string_view),
+	(false, std::u16string_view),
+	(false, std::u32string_view)
+)
+{
+	STATIC_REQUIRE(expected == mimicpp::lower_convertible<T>);
+}
