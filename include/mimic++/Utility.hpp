@@ -11,7 +11,9 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
 
+#include <algorithm>
 #include <cassert>
+#include <cctype>
 #include <cstddef>
 #include <functional>
 #include <ranges>
@@ -164,6 +166,105 @@ namespace mimicpp
 					}
 					&& std::equality_comparable<typename string_traits<std::remove_cvref_t<T>>::string_t>
 					&& std::ranges::forward_range<typename string_traits<std::remove_cvref_t<T>>::string_t>;
+
+	template <typename Converted, typename String>
+	concept string_converter_for = string<String>
+									&& requires
+									{
+										{ std::invoke(Converted{}, std::declval<String&&>()) } -> string;
+									};
 }
+
+namespace mimicpp::custom
+{
+	/**
+	 * \brief User may add specializations, which will then be used for to_lower conversions.
+	 * \ingroup UTILITY
+	 */
+	template <string String>
+	struct to_lower_converter;
 }
+
+namespace mimicpp::detail::to_lower_hook
+{
+	template <string String, typename Converter = custom::to_lower_converter<std::remove_cvref_t<String>>>
+		requires string_converter_for<
+			Converter,
+			String>
+	[[nodiscard]]
+	constexpr decltype(auto) to_lower_impl(
+		String&& str,
+		[[maybe_unused]] const priority_tag<1>
+	)
+	{
+		return std::invoke(
+			Converter{},
+			std::forward<String>(str));
+}
+
+	template <string String>
+	struct to_lower_converter;
+
+	template <string String, typename Converter = to_lower_converter<std::remove_cvref_t<String>>>
+		requires string_converter_for<
+			Converter,
+			String>
+	[[nodiscard]]
+	constexpr decltype(auto) to_lower_impl(
+		String&& str,
+		[[maybe_unused]] const priority_tag<0>
+	)
+	{
+		return std::invoke(
+			Converter{},
+			std::forward<String>(str));
+	}
+
+	constexpr priority_tag<1> maxTag;
+
+	template <string String>
+	[[nodiscard]]
+	constexpr decltype(auto) to_lower(String&& str)
+		requires requires { { to_lower_hook::to_lower_impl(str, maxTag) } -> string; }
+	{
+		return to_lower_hook::to_lower_impl(
+			std::forward<String>(str),
+			maxTag);
+	}
+
+	template <string String>
+		requires std::same_as<char, typename string_traits<String>::char_t>
+	struct to_lower_hook::to_lower_converter<String>
+	{
+		[[nodiscard]]
+		std::string operator ()(const typename string_traits<String>::string_t& str) const
+		{
+			std::string result(std::ranges::size(str), '\0');
+			std::ranges::transform(
+				str,
+				std::ranges::begin(result),
+				[](const char c) noexcept
+				{
+					// see notes of https://en.cppreference.com/w/cpp/string/byte/tolower
+					return static_cast<char>(
+						static_cast<unsigned char>(std::tolower(c)));
+				});
+
+			return result;
+		}
+	};
+}
+
+namespace mimicpp
+{
+	template <typename String>
+	concept to_lower_convertible = string<String>
+									&& requires
+									{
+										{
+											detail::to_lower_hook::to_lower(std::declval<String>())
+										} -> string;
+									};
+}
+
 #endif

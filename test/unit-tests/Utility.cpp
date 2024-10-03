@@ -8,6 +8,7 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <cstdint>
 
@@ -141,4 +142,68 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == mimicpp::string<T>);
+}
+
+// let's just specialize for std::string. Other char-strings must choose the internal converter.
+template <>
+struct custom::to_lower_converter<std::string>
+{
+	[[nodiscard]]
+	std::string operator()([[maybe_unused]] const std::string& str) const
+	{
+		return "custom::to_lower_converter<std::string>";
+	}
+};
+
+TEST_CASE(
+	"detail::to_lower_hook::to_lower selects the correct converter.",
+	"[utility][detail]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	SECTION("custom::to_lower_converter specializations are preferred.")
+	{
+		const std::string result = detail::to_lower_hook::to_lower(
+			std::string{"Hello, World!"});
+
+		REQUIRE_THAT(
+			result,
+			Matches::Equals("custom::to_lower_converter<std::string>"));
+	}
+
+	SECTION("Otherwise, to_lower_hook::to_lower_converter is chosen.")
+	{
+		const std::string result = detail::to_lower_hook::to_lower(
+			std::string_view{"Hello, World!"});
+
+		REQUIRE_THAT(
+			result,
+			Matches::Equals("hello, world!"));
+	}
+}
+
+TEMPLATE_TEST_CASE(
+	"detail::to_lower_hook::to_lower converts the given string to its lower-case representation.",
+	"[utility][detail]",
+	const char*,
+	//std::string, We can not test it here, as we specialized the custom hook for testing purposes
+	std::string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	const auto [expected, source] = GENERATE(
+		(table<std::string, const char*>)({
+			{"", ""},
+			{" !1337\t", " !1337\t"},
+			{"hello, world!", "HeLlO, WoRlD!"},
+			}));
+
+	const std::string result = detail::to_lower_hook::to_lower(
+			static_cast<TestType>(source));
+
+	REQUIRE_THAT(
+		result,
+		Matches::Equals(expected));
 }
