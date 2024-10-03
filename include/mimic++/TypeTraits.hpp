@@ -10,7 +10,9 @@
 
 #include "Fwd.hpp"
 
+#include <concepts>
 #include <tuple>
+#include <type_traits>
 
 namespace mimicpp
 {
@@ -609,7 +611,7 @@ namespace mimicpp
 	};
 
 	/**
-	 * \brief Specialization for ``unsigned char``.
+	 * \brief Specialization for ``signed char``.
 	 */
 	template <>
 	struct is_character<signed char>
@@ -618,7 +620,7 @@ namespace mimicpp
 	};
 
 	/**
-	 * \brief Specialization for ``signed char``.
+	 * \brief Specialization for ``unsigned char``.
 	 */
 	template <>
 	struct is_character<unsigned char>
@@ -679,20 +681,7 @@ namespace mimicpp
 	struct string_traits<T>
 	{
 		using char_t = std::remove_const_t<std::remove_pointer_t<T>>;
-		using string_t = std::basic_string<char_t>;
-		using view_t = std::basic_string_view<char_t>;
-
-		[[nodiscard]]
-		static constexpr string_t to_string(T str)
-		{
-			return string_t{str};
-		}
-
-		[[nodiscard]]
-		static constexpr view_t to_view(T str) noexcept
-		{
-			return view_t{str};
-		}
+		using string_t = std::basic_string_view<char_t>;
 	};
 
 	template <typename Char, typename Traits, typename Allocator>
@@ -700,41 +689,13 @@ namespace mimicpp
 	{
 		using char_t = Char;
 		using string_t = std::basic_string<Char, Traits, Allocator>;
-		using view_t = std::basic_string_view<Char, Traits>;
-
-		[[nodiscard]]
-		static constexpr string_t to_string(string_t str) noexcept
-		{
-			return std::move(str);
-		}
-
-		[[nodiscard]]
-		static constexpr view_t to_view(const string_t& str) noexcept
-		{
-			return view_t{str};
-		}
-
-		void to_view(const string_t&& str) = delete;
 	};
 
 	template <typename Char, typename Traits>
 	struct string_traits<std::basic_string_view<Char, Traits>>
 	{
 		using char_t = Char;
-		using string_t = std::basic_string<Char, Traits>;
-		using view_t = std::basic_string_view<Char, Traits>;
-
-		[[nodiscard]]
-		static constexpr string_t to_string(view_t str)
-		{
-			return string_t{str};
-		}
-
-		[[nodiscard]]
-		static constexpr view_t to_view(view_t str) noexcept
-		{
-			return std::move(str);
-		}
+		using string_t = std::basic_string_view<Char, Traits>;
 	};
 
 	/**
