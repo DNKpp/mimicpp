@@ -761,56 +761,6 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"matches::str::eq matches when target string compares equal to the stored one.",
-	"[matcher]"
-)
-{
-	using trompeloeil::_;
-
-	const auto matcher = matches::str::eq("Hello, World!");
-	REQUIRE_THAT(
-		matcher.describe(),
-		Catch::Matchers::Equals("is equal to \"Hello, World!\""));
-
-	SECTION("When target is equal, they match.")
-	{
-		const std::string target{"Hello, World!"};
-
-		REQUIRE(matcher.matches(target));
-	}
-
-	SECTION("When target is not equal, they do not match.")
-	{
-		const std::string target{"Hello, WOrld!"};
-
-		REQUIRE(!matcher.matches(target));
-	}
-
-	SECTION("Matcher can be inverted.")
-	{
-		const auto invertedMatcher = !matches::str::eq("Hello, World!");
-
-		REQUIRE_THAT(
-			invertedMatcher.describe(),
-			Catch::Matchers::Equals("is not equal to \"Hello, World!\""));
-
-		SECTION("When target is equal, they do not match.")
-		{
-			const std::string target{"Hello, World!"};
-
-			REQUIRE(!invertedMatcher.matches(target));
-		}
-
-		SECTION("When target is not equal, they do match.")
-		{
-			const std::string target{"Hello, WOrld!"};
-
-			REQUIRE(invertedMatcher.matches(target));
-		}
-	}
-}
-
-TEST_CASE(
 	"matches::range::eq matches when target range compares element-wise equal to the stored one.",
 	"[matcher]"
 )
