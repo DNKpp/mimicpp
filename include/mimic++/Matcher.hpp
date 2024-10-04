@@ -436,14 +436,21 @@ namespace mimicpp
 
 namespace mimicpp::matches::detail
 {
+	template <string String>
+	[[nodiscard]]
+	constexpr auto make_view(String&& str)
+	{
+		using traits_t = string_traits<std::remove_cvref_t<String>>;
+		return traits_t::view(std::forward<String>(str));
+	}
+
 	template <case_foldable_string String>
 	[[nodiscard]]
 	constexpr auto make_case_folded_string(String&& str)
 	{
-		using traits_t = string_traits<std::remove_cvref_t<String>>;
 		return std::invoke(
 			string_case_fold_converter<string_char_t<String>>{},
-			traits_t::view(std::forward<String>(str)));
+			detail::make_view(std::forward<String>(str)));
 	}
 }
 
@@ -511,8 +518,8 @@ namespace mimicpp::matches::str
 					string_char_t<Pattern>>
 			{
 				return std::ranges::equal(
-					string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(target)),
-					string_traits<std::remove_cvref_t<Stored>>::view(std::forward<Stored>(stored)));
+					detail::make_view(std::forward<T>(target)),
+					detail::make_view(std::forward<Stored>(stored)));
 			},
 			"is equal to {}",
 			"is not equal to {}",
@@ -529,25 +536,15 @@ namespace mimicpp::matches::str
 	[[nodiscard]]
 	constexpr auto eq(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
 	{
-		using pattern_traits_t = string_traits<std::remove_cvref_t<Pattern>>;
-		using pattern_normalizer_t = string_case_fold_converter<string_char_t<Pattern>>;
-
 		return PredicateMatcher{
 			[]<case_foldable_string T, typename Stored>(T&& target, Stored&& stored)
 				requires std::same_as<
 					string_char_t<T>,
 					string_char_t<Pattern>>
 			{
-				using target_traits_t = string_traits<std::remove_cvref_t<T>>;
-				using target_normalizer_t = string_case_fold_converter<string_char_t<T>>;
-
 				return std::ranges::equal(
-					std::invoke(
-						target_normalizer_t{},
-						target_traits_t::view(std::forward<T>(target))),
-					std::invoke(
-						pattern_normalizer_t{},
-						pattern_traits_t::view(std::forward<Stored>(stored))));
+					detail::make_case_folded_string(std::forward<T>(target)),
+					detail::make_case_folded_string(std::forward<Stored>(stored)));
 			},
 			"is case-insensitively equal to {}",
 			"is case-insensitively not equal to {}",
@@ -570,9 +567,9 @@ namespace mimicpp::matches::str
 					string_char_t<T>,
 					string_char_t<Pattern>>
 			{
-				auto patternView = string_traits<std::remove_cvref_t<Stored>>::view(std::forward<Stored>(stored));
+				auto patternView = detail::make_view(std::forward<Stored>(stored));
 				const auto [_, patternIter] = std::ranges::mismatch(
-					string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(target)),
+					detail::make_view(std::forward<T>(target)),
 					patternView);
 
 				return patternIter == std::ranges::end(patternView);
@@ -626,10 +623,10 @@ namespace mimicpp::matches::str
 					string_char_t<T>,
 					string_char_t<Pattern>>
 			{
-				auto patternView = string_traits<std::remove_cvref_t<Stored>>::view(std::forward<Stored>(stored))
+				auto patternView = detail::make_view(std::forward<Stored>(stored))
 									| std::views::reverse;
 				const auto [_, patternIter] = std::ranges::mismatch(
-					string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(target)) | std::views::reverse,
+					detail::make_view(std::forward<T>(target)) | std::views::reverse,
 					patternView);
 
 				return patternIter == std::ranges::end(patternView);
