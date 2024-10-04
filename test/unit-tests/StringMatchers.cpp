@@ -20,12 +20,135 @@ TEST_CASE(
 	"[matcher][matcher::str]"
 )
 {
-	const auto matcher = matches::str::eq("");
-	REQUIRE_THAT(
-		matcher.describe(),
-		Matches::Equals("is equal to \"\""));
-	REQUIRE(matcher.matches(""));
-	REQUIRE(!matcher.matches(" "));
+	SECTION("For char-strings.")
+	{
+		constexpr auto* patter = "";
+		constexpr auto* mismatch = " ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is equal to \"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is not equal to \"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+	SECTION("For wchar_t-strings.")
+	{
+		constexpr auto* patter = L"";
+		constexpr auto* mismatch = L" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is equal to L\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is not equal to L\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+	SECTION("For char8_t-strings.")
+	{
+		constexpr auto* patter = u8"";
+		constexpr auto* mismatch = u8" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is equal to u8\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is not equal to u8\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+	SECTION("For char16_t-strings.")
+	{
+		constexpr auto* patter = u"";
+		constexpr auto* mismatch = u" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is equal to u\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is not equal to u\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+	SECTION("For char32_t-strings.")
+	{
+		constexpr auto* patter = U"";
+		constexpr auto* mismatch = U" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is equal to U\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is not equal to U\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
 }
 
 namespace
@@ -158,6 +281,146 @@ TEMPLATE_TEST_CASE(
 		"U\"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21\"",
 		std::u32string{U"Hello, World!"},
 		std::u32string{U"Hello, WOrld!"});
+}
+
+TEST_CASE(
+	"matches::str::eq case-insensitive overload supports empty strings.",
+	"[matcher][matcher::str]"
+)
+{
+	SECTION("For char-strings.")
+	{
+		constexpr auto* patter = "";
+		constexpr auto* mismatch = " ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively equal to \"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively not equal to \"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+
+	SECTION("For wchar_t-strings.")
+	{
+		constexpr auto* patter = L"";
+		constexpr auto* mismatch = L" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively equal to L\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively not equal to L\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+	SECTION("For char8_t-strings.")
+	{
+		constexpr auto* patter = u8"";
+		constexpr auto* mismatch = u8" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively equal to u8\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively not equal to u8\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+	SECTION("For char16_t-strings.")
+	{
+		constexpr auto* patter = u"";
+		constexpr auto* mismatch = u" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively equal to u\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively not equal to u\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+	SECTION("For char32_t-strings.")
+	{
+		constexpr auto* patter = U"";
+		constexpr auto* mismatch = U" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is equal to U\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(!matcher.matches(mismatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::eq(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is not equal to U\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(matcher.matches(mismatch));
+		}
+	}
+
+#endif
 }
 
 namespace
@@ -377,6 +640,142 @@ TEMPLATE_TEST_CASE(
 
 #endif
 
+TEST_CASE(
+	"matches::str::starts_with supports empty strings.",
+	"[matcher][matcher::str]"
+)
+{
+	SECTION("For char-strings.")
+	{
+		constexpr auto* patter = "";
+		constexpr auto* alternativeMatch = " ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts with \"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts not with \"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For wchar_t-strings.")
+	{
+		constexpr auto* patter = L"";
+		constexpr auto* alternativeMatch = L" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts with L\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts not with L\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char8_t-strings.")
+	{
+		constexpr auto* patter = u8"";
+		constexpr auto* alternativeMatch = u8" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts with u8\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts not with u8\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char16_t-strings.")
+	{
+		constexpr auto* patter = u"";
+		constexpr auto* alternativeMatch = u" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts with u\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts not with u\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char32_t-strings.")
+	{
+		constexpr auto* patter = U"";
+		constexpr auto* alternativeMatch = U" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts with U\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("starts not with U\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+}
+
 namespace
 {
 	void generic_str_starts_with_test(
@@ -583,6 +982,146 @@ TEMPLATE_TEST_CASE(
 		"U\"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20\"",
 		matches,
 		mismatches);
+}
+
+TEST_CASE(
+	"matches::str::starts_with case-insensitively overload supports empty strings.",
+	"[matcher][matcher::str]"
+)
+{
+	SECTION("For char-strings.")
+	{
+		constexpr auto* patter = "";
+		constexpr auto* alternativeMatch = " ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts with \"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts not with \"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+
+	SECTION("For wchar_t-strings.")
+	{
+		constexpr auto* patter = L"";
+		constexpr auto* alternativeMatch = L" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts with L\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts not with L\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char8_t-strings.")
+	{
+		constexpr auto* patter = u8"";
+		constexpr auto* alternativeMatch = u8" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts with u8\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts not with u8\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char16_t-strings.")
+	{
+		constexpr auto* patter = u"";
+		constexpr auto* alternativeMatch = u" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts with u\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts not with u\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char32_t-strings.")
+	{
+		constexpr auto* patter = U"";
+		constexpr auto* alternativeMatch = U" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts with U\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::starts_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively starts not with U\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+#endif
 }
 
 namespace
@@ -802,6 +1341,142 @@ TEMPLATE_TEST_CASE(
 
 #endif
 
+TEST_CASE(
+	"matches::str::ends_with supports empty strings.",
+	"[matcher][matcher::str]"
+)
+{
+	SECTION("For char-strings.")
+	{
+		constexpr auto* patter = "";
+		constexpr auto* alternativeMatch = " ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends with \"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends not with \"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For wchar_t-strings.")
+	{
+		constexpr auto* patter = L"";
+		constexpr auto* alternativeMatch = L" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends with L\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends not with L\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char8_t-strings.")
+	{
+		constexpr auto* patter = u8"";
+		constexpr auto* alternativeMatch = u8" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends with u8\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends not with u8\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char16_t-strings.")
+	{
+		constexpr auto* patter = u"";
+		constexpr auto* alternativeMatch = u" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends with u\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends not with u\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char32_t-strings.")
+	{
+		constexpr auto* patter = U"";
+		constexpr auto* alternativeMatch = U" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends with U\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("ends not with U\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+}
+
 namespace
 {
 	void generic_str_ends_with_test(
@@ -1008,6 +1683,146 @@ TEMPLATE_TEST_CASE(
 		"U\"0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21\"",
 		matches,
 		mismatches);
+}
+
+TEST_CASE(
+	"matches::str::ends_with case-insensitively overload supports empty strings.",
+	"[matcher][matcher::str]"
+)
+{
+	SECTION("For char-strings.")
+	{
+		constexpr auto* patter = "";
+		constexpr auto* alternativeMatch = " ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends with \"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends not with \"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+
+	SECTION("For wchar_t-strings.")
+	{
+		constexpr auto* patter = L"";
+		constexpr auto* alternativeMatch = L" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends with L\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends not with L\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char8_t-strings.")
+	{
+		constexpr auto* patter = u8"";
+		constexpr auto* alternativeMatch = u8" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends with u8\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends not with u8\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char16_t-strings.")
+	{
+		constexpr auto* patter = u"";
+		constexpr auto* alternativeMatch = u" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends with u\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends not with u\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+	SECTION("For char32_t-strings.")
+	{
+		constexpr auto* patter = U"";
+		constexpr auto* alternativeMatch = U" ";
+
+		SECTION("For plain matchers.")
+		{
+			const auto matcher = matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends with U\"\""));
+			REQUIRE(matcher.matches(patter));
+			REQUIRE(matcher.matches(alternativeMatch));
+		}
+
+		SECTION("For inverted matchers.")
+		{
+			const auto matcher = !matches::str::ends_with(patter, mimicpp::case_insensitive);
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("case-insensitively ends not with U\"\""));
+			REQUIRE(!matcher.matches(patter));
+			REQUIRE(!matcher.matches(alternativeMatch));
+		}
+	}
+
+#endif
 }
 
 namespace
