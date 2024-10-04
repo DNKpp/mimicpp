@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
-#include "mimic++/String.hpp"
 
 #include <cstdint>
 #include <functional>
@@ -448,23 +448,22 @@ namespace mimicpp::detail
 	};
 
 	template <string String>
-		requires (!std::same_as<CharT, typename string_traits<String>::char_t>)
+		requires (!std::same_as<CharT, string_char_t<String>>)
 	class Printer<String>
 	{
 	public:
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out, const typename string_traits<String>::string_t& str)
+		template <std::common_reference_with<String> T, print_iterator OutIter>
+		static OutIter print(OutIter out, T&& str)
 		{
-			using char_t = typename string_traits<String>::char_t;
-
 			using intermediate_t = std::uint32_t;
-			static_assert(sizeof(char_t) <= sizeof(intermediate_t));
+			static_assert(sizeof(string_char_t<String>) <= sizeof(intermediate_t));
 
-			out = character_literal_printer<char_t>::print(std::move(out));
+			out = character_literal_printer<string_char_t<String>>::print(std::move(out));
 			out = format::format_to(std::move(out), "\"");
 
-			auto iter = std::ranges::begin(str);
-			if (const auto end = std::ranges::end(str);
+			auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
+			auto iter = std::ranges::begin(view);
+			if (const auto end = std::ranges::end(view);
 				iter != end)
 			{
 				out = format::format_to(
