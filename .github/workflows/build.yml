@@ -268,7 +268,7 @@ jobs:
               if: startsWith(matrix.str_matcher, 'unicode')
               shell: bash
               run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES)" >> $GITHUB_ENV
+                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES)" >> $GITHUB_ENV
 
             # ASan has some serious trouble with libc++ exception mechanism
             # see: https://github.com/llvm/llvm-project/issues/59432
