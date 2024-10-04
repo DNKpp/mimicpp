@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Printer.hpp"
+#include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 
@@ -433,6 +434,19 @@ namespace mimicpp
 	} constexpr case_insensitive{};
 }
 
+namespace mimicpp::matches::detail
+{
+	template <case_foldable_string String>
+	[[nodiscard]]
+	constexpr auto make_case_folded_string(String&& str)
+	{
+		using traits_t = string_traits<std::remove_cvref_t<String>>;
+		return std::invoke(
+			string_case_fold_converter<string_char_t<String>>{},
+			traits_t::view(std::forward<String>(str)));
+	}
+}
+
 namespace mimicpp::matches::str
 {
 	/**
@@ -537,6 +551,62 @@ namespace mimicpp::matches::str
 			},
 			"is case-insensitively equal to {}",
 			"is case-insensitively not equal to {}",
+			std::tuple{std::forward<Pattern>(pattern)}
+		};
+	}
+
+	/**
+	 * \brief Tests, whether the target string starts with the pattern string.
+	 * \tparam Pattern The string type.
+	 * \param pattern The pattern string.
+	 */
+	template <string Pattern>
+	[[nodiscard]]
+	constexpr auto starts_with(Pattern&& pattern)
+	{
+		return PredicateMatcher{
+			[]<string T, typename Stored>(T&& target, Stored&& stored)
+				requires std::same_as<
+					string_char_t<T>,
+					string_char_t<Pattern>>
+			{
+				auto patternView = string_traits<std::remove_cvref_t<Stored>>::view(std::forward<Stored>(stored));
+				const auto [_, patternIter] = std::ranges::mismatch(
+					string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(target)),
+					patternView);
+
+				return patternIter == std::ranges::end(patternView);
+			},
+			"starts with {}",
+			"starts not with {}",
+			std::tuple{std::forward<Pattern>(pattern)}
+		};
+	}
+
+	/**
+	 * \brief Tests, whether the target string starts case-insensitively with the pattern string.
+	 * \tparam Pattern The string type.
+	 * \param pattern The pattern string.
+	 */
+	template <string Pattern>
+	[[nodiscard]]
+	constexpr auto starts_with(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
+	{
+		return PredicateMatcher{
+			[]<string T, typename Stored>(T&& target, Stored&& stored)
+				requires std::same_as<
+					string_char_t<T>,
+					string_char_t<Pattern>>
+			{
+				auto caseFoldedPattern = detail::make_case_folded_string(std::forward<Stored>(stored));
+				const auto [_, patternIter] = std::ranges::mismatch(
+					detail::make_case_folded_string(std::forward<T>(target)),
+					caseFoldedPattern);
+
+				return patternIter == std::ranges::end(caseFoldedPattern);
+			},
+			"case-insensitively starts with {}",
+			"case-insensitively starts not with {}",
 			std::tuple{std::forward<Pattern>(pattern)}
 		};
 	}
