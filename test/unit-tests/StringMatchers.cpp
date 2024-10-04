@@ -179,9 +179,7 @@ TEST_CASE(
 			"hello,world!"
 		});
 
-	const auto matcher = matches::str::eq(
-		"Hello, World!",
-		mimicpp::case_insensitive);
+	const auto matcher = matches::str::eq("Hello, World!", mimicpp::case_insensitive);
 	REQUIRE_THAT(
 		matcher.describe(),
 		Catch::Matchers::Equals("is case-insensitively equal to \"hello, world!\""));
@@ -189,6 +187,7 @@ TEST_CASE(
 	SECTION("When target is equal, they match.")
 	{
 		const std::string target = GENERATE(from_range(matches));
+		INFO(target);
 
 		REQUIRE(matcher.matches(target));
 	}
@@ -196,13 +195,14 @@ TEST_CASE(
 	SECTION("When target is not equal, they do not match.")
 	{
 		const std::string target = GENERATE(from_range(mismatches));
+		INFO(target);
 
 		REQUIRE(!matcher.matches(target));
 	}
 
 	SECTION("Matcher can be inverted.")
 	{
-		const auto invertedMatcher = !matches::str::eq("Hello, World!");
+		const auto invertedMatcher = !matches::str::eq("Hello, World!", mimicpp::case_insensitive);
 
 		REQUIRE_THAT(
 			invertedMatcher.describe(),
@@ -211,6 +211,7 @@ TEST_CASE(
 		SECTION("When target is equal, they do not match.")
 		{
 			const std::string target = GENERATE(from_range(matches));
+			INFO(target);
 
 			REQUIRE(!invertedMatcher.matches(target));
 		}
@@ -218,6 +219,7 @@ TEST_CASE(
 		SECTION("When target is not equal, they do match.")
 		{
 			const std::string target = GENERATE(from_range(mismatches));
+			INFO(target);
 
 			REQUIRE(invertedMatcher.matches(target));
 		}

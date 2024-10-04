@@ -457,9 +457,9 @@ namespace mimicpp::matches::str
 		using string_t = typename traits_t::string_t;
 
 		return PredicateMatcher{
-			[]<std::equality_comparable_with<const string_t&> T>(const string_t& target, T&& exp)
+			[]<std::equality_comparable_with<const string_t&> T>(T&& target, const string_t& exp)
 			{
-				return target == exp;
+				return std::forward<T>(target) == exp;
 			},
 			"is equal to {}",
 			"is not equal to {}",
@@ -480,10 +480,13 @@ namespace mimicpp::matches::str
 	{
 		using pattern_t = std::invoke_result_t<decltype(to_lower), String>;
 		return PredicateMatcher{
-			[]<lower_convertible T>(const pattern_t& target, T&& exp)
-				requires std::equality_comparable_with<pattern_t, std::invoke_result_t<decltype(to_lower), T>>
+			[]<lower_convertible T>(T&& target, const pattern_t& exp)
+				requires std::equality_comparable_with<
+					const pattern_t&,
+					std::invoke_result_t<decltype(to_lower), T>>
 			{
-				return target == mimicpp::to_lower(std::forward<T>(exp));
+				return mimicpp::to_lower(std::forward<T>(target))
+						== exp;
 			},
 			"is case-insensitively equal to {}",
 			"is case-insensitively not equal to {}",
