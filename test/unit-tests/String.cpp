@@ -331,3 +331,46 @@ TEMPLATE_TEST_CASE(
 			string_traits<TestType>::view(converted)),
 		Matches::RangeEquals(expected));
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"normalizable_string determines, whether the given string supports normalize conversions.",
+	"[string]",
+	((bool expected, typename T), expected, T),
+	(false, char),
+
+	(true, char*),
+	(true, const char*),
+	(true, char[]),
+	(true, const char[]),
+	(true, char[42]),
+	(true, const char[42]),
+	(true, std::string),
+	(true, std::string_view),
+
+	// all below are just temporarily not supported. Would be nice to do so!
+	(false, wchar_t*),
+	(false, const wchar_t*),
+	(false, char8_t*),
+	(false, const char8_t*),
+	(false, char16_t*),
+	(false, const char16_t*),
+	(false, char32_t*),
+	(false, const char32_t*),
+
+	(false, std::wstring),
+	(false, std::u8string),
+	(false, std::u16string),
+	(false, std::u32string),
+	(false, std::wstring_view),
+	(false, std::u8string_view),
+	(false, std::u16string_view),
+	(false, std::u32string_view)
+)
+{
+	STATIC_REQUIRE(expected == normalizable_string<T>);
+	STATIC_REQUIRE(expected == normalizable_string<const T>);
+	STATIC_REQUIRE(expected == normalizable_string<T&>);
+	STATIC_REQUIRE(expected == normalizable_string<const T&>);
+	STATIC_REQUIRE(expected == normalizable_string<T&&>);
+	STATIC_REQUIRE(expected == normalizable_string<const T&&>);
+}

@@ -12,6 +12,7 @@
 #include "mimic++/Utility.hpp"
 
 #include <concepts>
+#include <functional>
 #include <ranges>
 #include <string>
 #include <string_view>
@@ -232,7 +233,7 @@ namespace mimicpp
 						char>
 					&& std::ranges::forward_range<String>
 		[[nodiscard]]
-		constexpr auto operator ()(String&& str)
+		constexpr auto operator ()(String&& str) const
 		{
 			return std::views::all(std::forward<String>(str))
 					| std::views::transform(
@@ -244,6 +245,25 @@ namespace mimicpp
 						});
 		}
 	};
+
+	/**
+	 * \brief Determines, whether the given type supports string normalization.
+	 * \ingroup STRING
+	 * \ingroup CONCEPTS
+	 */
+	template <typename String>
+	concept normalizable_string =
+		string<String>
+		&& requires(const string_normalize_converter<string_char_t<String>> converter, string_view_t<String> view)
+		{
+			{ std::invoke(converter, std::move(view)) } -> std::ranges::forward_range;
+		}
+		&& requires(std::invoke_result_t<string_normalize_converter<string_char_t<String>>, string_view_t<String>> normalized)
+		{
+			requires std::convertible_to<
+				std::ranges::range_reference_t<decltype(normalized)>,
+				string_char_t<String>>;
+		};
 }
 
 #endif
