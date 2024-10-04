@@ -119,7 +119,7 @@ namespace
 }
 
 template <>
-struct string_traits<CustomString>
+struct mimicpp::string_traits<CustomString>
 {
 	using char_t = char;
 	using string_t = std::string_view;
