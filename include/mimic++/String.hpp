@@ -257,7 +257,7 @@ namespace mimicpp
 	 * \ingroup CONCEPTS
 	 */
 	template <typename String>
-	concept normalizable_string =
+	concept case_foldable_string =
 		string<String>
 		&& requires(const string_case_fold_converter<string_char_t<String>> converter, string_view_t<String> view)
 		{

@@ -511,7 +511,7 @@ namespace mimicpp::matches::str
 	 * \tparam Pattern The string type.
 	 * \param pattern The pattern object.
 	 */
-	template <normalizable_string Pattern>
+	template <case_foldable_string Pattern>
 	[[nodiscard]]
 	constexpr auto eq(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
 	{
@@ -519,7 +519,7 @@ namespace mimicpp::matches::str
 		using pattern_normalizer_t = string_case_fold_converter<string_char_t<Pattern>>;
 
 		return PredicateMatcher{
-			[]<normalizable_string T, typename Stored>(T&& target, Stored&& stored)
+			[]<case_foldable_string T, typename Stored>(T&& target, Stored&& stored)
 				requires std::same_as<
 					string_char_t<T>,
 					string_char_t<Pattern>>

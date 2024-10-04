@@ -341,7 +341,7 @@ TEMPLATE_TEST_CASE(
 #ifndef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
 
 TEMPLATE_TEST_CASE_SIG(
-	"normalizable_string determines, whether the given string supports normalize conversions.",
+	"case_foldable_string determines, whether the given string supports normalize conversions.",
 	"[string]",
 	((bool expected, typename T), expected, T),
 	(false, char),
@@ -392,12 +392,12 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, std::u32string_view)
 )
 {
-	STATIC_REQUIRE(expected == normalizable_string<T>);
-	STATIC_REQUIRE(expected == normalizable_string<const T>);
-	STATIC_REQUIRE(expected == normalizable_string<T&>);
-	STATIC_REQUIRE(expected == normalizable_string<const T&>);
-	STATIC_REQUIRE(expected == normalizable_string<T&&>);
-	STATIC_REQUIRE(expected == normalizable_string<const T&&>);
+	STATIC_REQUIRE(expected == case_foldable_string<T>);
+	STATIC_REQUIRE(expected == case_foldable_string<const T>);
+	STATIC_REQUIRE(expected == case_foldable_string<T&>);
+	STATIC_REQUIRE(expected == case_foldable_string<const T&>);
+	STATIC_REQUIRE(expected == case_foldable_string<T&&>);
+	STATIC_REQUIRE(expected == case_foldable_string<const T&&>);
 }
 
 #else
@@ -547,7 +547,7 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"normalizable_string determines, whether the given string supports normalize conversions.",
+	"case_foldable_string determines, whether the given string supports normalize conversions.",
 	"[string]",
 	((bool expected, typename T), expected, T),
 	(false, char),
@@ -598,12 +598,12 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::u32string_view)
 )
 {
-	STATIC_REQUIRE(expected == normalizable_string<T>);
-	STATIC_REQUIRE(expected == normalizable_string<const T>);
-	STATIC_REQUIRE(expected == normalizable_string<T&>);
-	STATIC_REQUIRE(expected == normalizable_string<const T&>);
-	STATIC_REQUIRE(expected == normalizable_string<T&&>);
-	STATIC_REQUIRE(expected == normalizable_string<const T&&>);
+	STATIC_REQUIRE(expected == case_foldable_string<T>);
+	STATIC_REQUIRE(expected == case_foldable_string<const T>);
+	STATIC_REQUIRE(expected == case_foldable_string<T&>);
+	STATIC_REQUIRE(expected == case_foldable_string<const T&>);
+	STATIC_REQUIRE(expected == case_foldable_string<T&&>);
+	STATIC_REQUIRE(expected == case_foldable_string<const T&&>);
 }
 
 #endif
