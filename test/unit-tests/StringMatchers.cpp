@@ -13,16 +13,17 @@
 #include <array>
 
 namespace matches = mimicpp::matches;
+namespace Matches = Catch::Matchers;
 
 TEST_CASE(
-	"matches::str::eq does support empty strings.",
+	"matches::str::eq supports empty strings.",
 	"[matcher][matcher::str]"
 )
 {
 	const auto matcher = matches::str::eq("");
 	REQUIRE_THAT(
 		matcher.describe(),
-		Catch::Matchers::Equals("is equal to \"\""));
+		Matches::Equals("is equal to \"\""));
 	REQUIRE(matcher.matches(""));
 	REQUIRE(!matcher.matches(" "));
 }
@@ -41,7 +42,7 @@ namespace
 
 		REQUIRE_THAT(
 			matcher.describe(),
-			Catch::Matchers::Equals("is equal to " + descriptionPartExpectation));
+			Matches::Equals("is equal to " + descriptionPartExpectation));
 
 		SECTION("When target is equal, they match.")
 		{
@@ -59,7 +60,7 @@ namespace
 
 			REQUIRE_THAT(
 				invertedMatcher.describe(),
-				Catch::Matchers::Equals("is not equal to " + descriptionPartExpectation));
+				Matches::Equals("is not equal to " + descriptionPartExpectation));
 
 			SECTION("When target is equal, they do not match.")
 			{
@@ -182,7 +183,7 @@ TEST_CASE(
 	const auto matcher = matches::str::eq("Hello, World!", mimicpp::case_insensitive);
 	REQUIRE_THAT(
 		matcher.describe(),
-		Catch::Matchers::Equals("is case-insensitively equal to \"HELLO, WORLD!\""));
+		Matches::Equals("is case-insensitively equal to \"Hello, World!\""));
 
 	SECTION("When target is equal, they match.")
 	{
@@ -206,7 +207,7 @@ TEST_CASE(
 
 		REQUIRE_THAT(
 			invertedMatcher.describe(),
-			Catch::Matchers::Equals("is case-insensitively not equal to \"HELLO, WORLD!\""));
+			Matches::Equals("is case-insensitively not equal to \"Hello, World!\""));
 
 		SECTION("When target is equal, they do not match.")
 		{

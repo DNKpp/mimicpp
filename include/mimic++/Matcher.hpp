@@ -440,59 +440,101 @@ namespace mimicpp::matches::str
 	 * \ingroup EXPECTATION_REQUIREMENT
 	 * \ingroup EXPECTATION_MATCHER
 	 * \brief String specific matchers.
+	 * \details These matchers are designed to work with any string- and character-type.
+	 * This comes with some caveats and restrictions, e.g. comparisons between strings of different character-types are not supported.
+	 *
+	 * In the following these terms are used:
+	 * - ``code-point`` is a logical string-element. In byte-strings these are the single characters, but in Unicode this may span multiple physical-elements.
+	 * - ``code-unit`` is the single physical-element of the string. Multiple ``code-units`` may build a single ``code-point``.
+	 * 
+	 * All comparisons are done via iterators and, to make that consistent, ``mimic++`` requires the iterator values to be ``code-units``.
+	 * As this should be fine for equality-comparisons, this will quickly lead to issues when performing case-insensitive comparisons.
+	 * To make that simpler, ``mimic++`` converts all participating strings to their *normalized* representation.
+	 *
+	 * ## Normalization
+	 *
+	 * Normalization here means the process of making a string independent of its case (e.g. ``a`` and ``A`` would compare equal).
+	 * This can be achieved in various ways, often with pros and cons. The general guide-line seems to be, converting the strings to their upper-case representation.
+	 * \see https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1308
+	 *
+	 * Instead of building on top of a ``code-unit``-wise normalization-strategy, ``mimic++`` utilizes a ``code-point``-wise strategy and
+	 * thus requires the ``normalize_string`` function to operate on a whole string.
+	 * Unfortunately, this requires a lot of work and know-how, to make that work for all existing character-types.
+	 * Due to this, currently only byte-strings are supported for case-insensitive comparisons.
+	 *
+	 * ### Byte-String
+	 *
+	 * Byte-Strings are normalized element-wise via ``std::toupper`` function.
+	 *
+	 * ### Other String Types
+	 *
+	 * Even if ``mimic++`` does not support normalization for other string types out of the box, it offers the ``string_normalization`` hook, which
+	 * users can use to make other character-types work with string-matchers. Users can specialize the ``custom::normalize_string_converter`` type
+	 * for their own or third-party types and implement the desired logic.
+	 *
+	 * \attention If strings for a particular character-type utilize two or more competing normalization-strategies (e.g. some use ``to-upper``
+	 * while the rest uses ``to-lower``), the behavior is undefined.
 	 *
 	 *\{
 	 */
 
 	/**
 	 * \brief Tests, whether the target string compares equal to the expected string.
-	 * \tparam String The string type.
+	 * \tparam Pattern The string type.
 	 * \param pattern The pattern object.
 	 */
-	template <string String>
+	template <string Pattern>
 	[[nodiscard]]
-	constexpr auto eq(String&& pattern)
+	constexpr auto eq(Pattern&& pattern)
 	{
-		using traits_t = string_traits<std::remove_cvref_t<String>>;
-		using string_t = typename traits_t::string_t;
-
 		return PredicateMatcher{
-			[]<std::equality_comparable_with<const string_t&> T>(T&& target, const string_t& exp)
+			[]<string T, typename Stored>(T&& target, Stored&& stored)
+				requires std::same_as<
+					string_char_t<T>,
+					string_char_t<Pattern>>
 			{
-				return std::forward<T>(target) == exp;
+				return std::ranges::equal(
+					string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(target)),
+					string_traits<std::remove_cvref_t<Stored>>::view(std::forward<Stored>(stored)));
 			},
 			"is equal to {}",
 			"is not equal to {}",
-			std::tuple{
-				string_t{std::forward<String>(pattern)}
-			}
+			std::tuple{std::forward<Pattern>(pattern)}
 		};
 	}
 
 	/**
 	 * \brief Tests, whether the target string compares case-insensitively equal to the expected string.
-	 * \tparam String The string type.
+	 * \tparam Pattern The string type.
 	 * \param pattern The pattern object.
 	 */
-	template <normalizable_string String>
+	template <normalizable_string Pattern>
 	[[nodiscard]]
-	constexpr auto eq(String&& pattern, [[maybe_unused]] const case_insensitive_t)
+	constexpr auto eq(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
 	{
-		using pattern_t = std::invoke_result_t<decltype(normalize_string), String>;
+		using pattern_traits_t = string_traits<std::remove_cvref_t<Pattern>>;
+		using pattern_normalizer_t = string_normalize_converter<string_char_t<Pattern>>;
+
 		return PredicateMatcher{
-			[]<normalizable_string T>(T&& target, const pattern_t& exp)
-				requires std::equality_comparable_with<
-					const pattern_t&,
-					std::invoke_result_t<decltype(normalize_string), T>>
+			[]<normalizable_string T, typename Stored>(T&& target, Stored&& stored)
+				requires std::same_as<
+					string_char_t<T>,
+					string_char_t<Pattern>>
 			{
-				return mimicpp::normalize_string(std::forward<T>(target))
-						== exp;
+				using target_traits_t = string_traits<std::remove_cvref_t<T>>;
+				using target_normalizer_t = string_normalize_converter<string_char_t<T>>;
+
+				return std::ranges::equal(
+					std::invoke(
+						target_normalizer_t{},
+						target_traits_t::view(std::forward<T>(target))),
+					std::invoke(
+						pattern_normalizer_t{},
+						pattern_traits_t::view(std::forward<Stored>(stored))));
 			},
 			"is case-insensitively equal to {}",
 			"is case-insensitively not equal to {}",
-			std::tuple{
-				mimicpp::normalize_string(std::forward<String>(pattern))
-			}
+			std::tuple{std::forward<Pattern>(pattern)}
 		};
 	}
 
