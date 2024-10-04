@@ -79,6 +79,9 @@ namespace mimicpp
 		return static_cast<std::underlying_type_t<T>>(value);
 	}
 
+	template <typename T, template <typename> typename Trait>
+	concept satisfies = Trait<T>::value;
+
 	// GCOVR_EXCL_START
 
 #ifdef __cpp_lib_unreachable

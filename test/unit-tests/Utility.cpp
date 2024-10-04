@@ -65,6 +65,18 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"satisfies determines, whether T satisfies the given trait.",
+	"[utility]",
+	((bool expected, typename T, template <typename> typename Trait), expected, T, Trait),
+	(false, int, std::is_floating_point),
+	(false, int&, std::is_integral),
+	(true, int, std::is_integral)
+)
+{
+	STATIC_REQUIRE(expected == satisfies<T, Trait>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"same_as_any determines, whether T is the same as any other given type.",
 	"[utility]",
 	((bool expected, typename T, typename... Others), expected, T, Others...),
