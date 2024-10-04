@@ -17,10 +17,11 @@ add_executable(
 	"Reporter.cpp"
 	"Sequence.cpp"
 	"String.cpp"
-	"StringMatchers.cpp"
 	"TypeTraits.cpp"
 	"Utility.cpp"
 )
+
+add_subdirectory(matchers)
 
 include(SetupTestTarget)
 setup_test_target(mimicpp-tests)
