@@ -96,11 +96,42 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, detail::unique_list_t<Types...>>);
 }
 
+namespace
+{
+	class CustomString
+	{
+	public:
+		[[nodiscard]]
+		CustomString(std::string str) noexcept
+			: m_Internal{std::move(str)}
+		{
+		}
+
+		[[nodiscard]]
+		explicit(false) operator std::string_view() const
+		{
+			return std::string_view{m_Internal};
+		}
+
+	private:
+		std::string m_Internal;
+	};
+}
+
+template <>
+struct string_traits<CustomString>
+{
+	using char_t = char;
+	using string_t = std::string_view;
+};
+
 TEMPLATE_TEST_CASE_SIG(
 	"string concept determines, whether the given type can be used as a string-type.",
 	"[utility]",
 	((bool expected, typename T), expected, T),
 	(false, char),
+
+	(true, CustomString),
 
 	(true, char*),
 	(true, const char*),
@@ -144,14 +175,13 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::string<T>);
 }
 
-// let's just specialize for std::string. Other char-strings must choose the internal converter.
 template <>
-struct custom::to_lower_converter<std::string>
+struct custom::to_lower_converter<CustomString>
 {
 	[[nodiscard]]
-	std::string operator()([[maybe_unused]] const std::string& str) const
+	std::string operator()([[maybe_unused]] const CustomString& str) const
 	{
-		return "custom::to_lower_converter<std::string>";
+		return "custom::to_lower_converter<CustomString>";
 	}
 };
 
@@ -165,17 +195,16 @@ TEST_CASE(
 	SECTION("custom::to_lower_converter specializations are preferred.")
 	{
 		const std::string result = detail::to_lower_hook::to_lower(
-			std::string{"Hello, World!"});
+			CustomString{"Hello, World!"});
 
 		REQUIRE_THAT(
 			result,
-			Matches::Equals("custom::to_lower_converter<std::string>"));
+			Matches::Equals("custom::to_lower_converter<CustomString>"));
 	}
 
 	SECTION("Otherwise, to_lower_hook::to_lower_converter is chosen.")
 	{
-		const std::string result = detail::to_lower_hook::to_lower(
-			std::string_view{"Hello, World!"});
+		const std::string result = detail::to_lower_hook::to_lower("Hello, World!");
 
 		REQUIRE_THAT(
 			result,
@@ -187,7 +216,7 @@ TEMPLATE_TEST_CASE(
 	"detail::to_lower_hook::to_lower converts the given string to its lower-case representation.",
 	"[utility][detail]",
 	const char*,
-	//std::string, We can not test it here, as we specialized the custom hook for testing purposes
+	std::string,
 	std::string_view
 )
 {
@@ -201,7 +230,7 @@ TEMPLATE_TEST_CASE(
 			}));
 
 	const std::string result = detail::to_lower_hook::to_lower(
-			static_cast<TestType>(source));
+		static_cast<TestType>(source));
 
 	REQUIRE_THAT(
 		result,
