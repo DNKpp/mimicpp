@@ -12,6 +12,7 @@
 
 #include "mimic++/Utility.hpp"
 #include "mimic++/TypeTraits.hpp"
+#include "mimic++/String.hpp"
 
 #include "mimic++/Printer.hpp"
 #include "mimic++/Reports.hpp"
