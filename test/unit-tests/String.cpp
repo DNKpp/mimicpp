@@ -6,6 +6,7 @@
 #include "mimic++/String.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 using namespace mimicpp;
 
@@ -36,7 +37,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEMPLATE_TEST_CASE_SIG(
 	"string_traits contains properties for the provided string type.",
-	"[type_traits]",
+	"[string][string::traits]",
 	((bool dummy, typename T, typename Char, typename ViewType), dummy, T, Char, ViewType),
 	(true, char*, char, std::string_view),
 	(true, const char*, char, std::string_view),
@@ -77,7 +78,6 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<T&&>>);
 	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<const T&&>>);
 
-
 	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<T>>, Char>);
 	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<const T>>, Char>);
 	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<T&>>, Char>);
@@ -88,7 +88,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEMPLATE_TEST_CASE(
 	"string_traits does not work for actual non-string-types.",
-	"[type_traits]",
+	"[string][string::traits]",
 	char,
 	const char,
 	int,
@@ -99,4 +99,119 @@ TEMPLATE_TEST_CASE(
 	using traits_t = string_traits<TestType>;
 
 	STATIC_REQUIRE(!requires{ traits_t{}; });
+}
+
+TEMPLATE_TEST_CASE(
+	"Common char-strings support string_traits::view.",
+	"[string][string::traits]",
+	char*,
+	const char*,
+	char(&)[14],
+	const char(&)[14],
+	std::string,
+	const std::string,
+	std::string_view,
+	const std::string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+	using traits_t = string_traits<std::remove_cvref_t<TestType>>;
+
+	char str[] = "Hello, World!";
+
+	REQUIRE_THAT(
+		traits_t::view(static_cast<TestType>(str)),
+		Matches::RangeEquals(std::string_view{str}));
+}
+
+TEMPLATE_TEST_CASE(
+	"Common wchar_t-strings support string_traits::view.",
+	"[string][string::traits]",
+	wchar_t*,
+	const wchar_t*,
+	wchar_t(&)[14],
+	const wchar_t(&)[14],
+	std::wstring,
+	const std::wstring,
+	std::wstring_view,
+	const std::wstring_view
+)
+{
+	namespace Matches = Catch::Matchers;
+	using traits_t = string_traits<std::remove_cvref_t<TestType>>;
+
+	wchar_t str[] = L"Hello, World!";
+
+	REQUIRE_THAT(
+		traits_t::view(static_cast<TestType>(str)),
+		Matches::RangeEquals(std::wstring_view{str}));
+}
+
+TEMPLATE_TEST_CASE(
+	"Common char8_t-strings support string_traits::view.",
+	"[string][string::traits]",
+	char8_t*,
+	const char8_t*,
+	char8_t(&)[14],
+	const char8_t(&)[14],
+	std::u8string,
+	const std::u8string,
+	std::u8string_view,
+	const std::u8string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+	using traits_t = string_traits<std::remove_cvref_t<TestType>>;
+
+	char8_t str[] = u8"Hello, World!";
+
+	REQUIRE_THAT(
+		traits_t::view(static_cast<TestType>(str)),
+		Matches::RangeEquals(std::u8string_view{str}));
+}
+
+TEMPLATE_TEST_CASE(
+	"Common char16_t-strings support string_traits::view.",
+	"[string][string::traits]",
+	char16_t*,
+	const char16_t*,
+	char16_t(&)[14],
+	const char16_t(&)[14],
+	std::u16string,
+	const std::u16string,
+	std::u16string_view,
+	const std::u16string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+	using traits_t = string_traits<std::remove_cvref_t<TestType>>;
+
+	char16_t str[] = u"Hello, World!";
+
+	REQUIRE_THAT(
+		traits_t::view(static_cast<TestType>(str)),
+		Matches::RangeEquals(std::u16string_view{str}));
+}
+
+TEMPLATE_TEST_CASE(
+	"Common char32_t-strings support string_traits::view.",
+	"[string][string::traits]",
+	char32_t*,
+	const char32_t*,
+	char32_t(&)[14],
+	const char32_t(&)[14],
+	std::u32string,
+	const std::u32string,
+	std::u32string_view,
+	const std::u32string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+	using traits_t = string_traits<std::remove_cvref_t<TestType>>;
+
+	char32_t str[] = U"Hello, World!";
+
+	REQUIRE_THAT(
+		traits_t::view(static_cast<TestType>(str)),
+		Matches::RangeEquals(std::u32string_view{str}));
 }

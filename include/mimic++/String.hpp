@@ -141,11 +141,12 @@ namespace mimicpp
 	struct string_traits<T>
 	{
 		using char_t = std::remove_const_t<std::remove_pointer_t<T>>;
+		using view_t = std::basic_string_view<char_t>;
 
 		[[nodiscard]]
-		static constexpr std::string_view view(const std::remove_pointer_t<T>* str) noexcept
+		static constexpr view_t view(const std::remove_pointer_t<T>* str) noexcept
 		{
-			return std::string_view{str};
+			return view_t{str};
 		}
 	};
 
@@ -169,11 +170,12 @@ namespace mimicpp
 	{
 		using char_t = Char;
 		using string_t = std::basic_string<Char, Traits, Allocator>;
+		using view_t = std::basic_string_view<Char, Traits>;
 
 		[[nodiscard]]
-		static constexpr std::string_view view(const string_t& str) noexcept
+		static constexpr view_t view(const string_t& str) noexcept
 		{
-			return std::string_view{str};
+			return view_t{str};
 		}
 	};
 
@@ -185,10 +187,10 @@ namespace mimicpp
 	struct string_traits<std::basic_string_view<Char, Traits>>
 	{
 		using char_t = Char;
-		using string_t = std::basic_string_view<Char, Traits>;
+		using view_t = std::basic_string_view<Char, Traits>;
 
 		[[nodiscard]]
-		static constexpr std::string_view view(string_t str) noexcept
+		static constexpr view_t view(view_t str) noexcept
 		{
 			return str;
 		}
