@@ -308,6 +308,9 @@ struct mimicpp::string_case_fold_converter<char>
 
 #else
 
+// is missing from the unicodelib headers
+#include <cstdint>
+
 #include <unicodelib.h>
 #include <unicodelib_encodings.h>
 
