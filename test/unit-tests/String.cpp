@@ -94,6 +94,11 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(std::same_as<Char, typename string_traits<T>::char_t>);
 	STATIC_REQUIRE(std::same_as<Char, string_char_t<T>>);
+	STATIC_REQUIRE(std::same_as<Char, string_char_t<const T>>);
+	STATIC_REQUIRE(std::same_as<Char, string_char_t<T&>>);
+	STATIC_REQUIRE(std::same_as<Char, string_char_t<const T&>>);
+	STATIC_REQUIRE(std::same_as<Char, string_char_t<T&&>>);
+	STATIC_REQUIRE(std::same_as<Char, string_char_t<const T&&>>);
 
 	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<T>>);
 	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<const T>>);
