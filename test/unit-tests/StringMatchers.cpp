@@ -160,9 +160,68 @@ TEMPLATE_TEST_CASE(
 		std::u32string{U"Hello, WOrld!"});
 }
 
-TEST_CASE(
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+
+namespace
+{
+	void generic_str_eq_no_case_test(
+		auto&& pattern,
+		std::string descriptionPartExpectation,
+		auto&& matches,
+		auto&& mismatches
+	)
+	{
+		SECTION("Plain matcher.")
+		{
+			const auto matcher = matches::str::eq(pattern, mimicpp::case_insensitive);
+
+			REQUIRE_THAT(
+				matcher.describe(),
+				Matches::Equals("is case-insensitively equal to " + descriptionPartExpectation));
+
+			SECTION("When target is equal, they match.")
+			{
+				auto&& match = GENERATE_REF(from_range(matches));
+				REQUIRE(matcher.matches(match));
+			}
+
+			SECTION("When target is not equal, they do not match.")
+			{
+				auto&& mismatch = GENERATE_REF(from_range(mismatches));
+				REQUIRE(!matcher.matches(mismatch));
+			}
+		}
+
+		SECTION("Matcher can be inverted.")
+		{
+			const auto invertedMatcher = !matches::str::eq(pattern, mimicpp::case_insensitive);
+
+			REQUIRE_THAT(
+				invertedMatcher.describe(),
+				Matches::Equals("is case-insensitively not equal to " + descriptionPartExpectation));
+
+			SECTION("When target is equal, they do not match.")
+			{
+				auto&& match = GENERATE_REF(from_range(matches));
+				REQUIRE(!invertedMatcher.matches(match));
+			}
+
+			SECTION("When target is not equal, they do match.")
+			{
+				auto&& mismatch = GENERATE_REF(from_range(mismatches));
+				REQUIRE(invertedMatcher.matches(mismatch));
+			}
+		}
+	}
+}
+
+TEMPLATE_TEST_CASE(
 	"matches::str::eq supports case-insensitive comparison for char-strings.",
-	"[matcher][matcher::str]"
+	"[matcher][matcher::str]",
+	const char*,
+	const char(&)[14],
+	std::string,
+	std::string_view
 )
 {
 	static constexpr std::array matches = std::to_array<const char*>(
@@ -180,49 +239,140 @@ TEST_CASE(
 			"hello,world!"
 		});
 
-	const auto matcher = matches::str::eq("Hello, World!", mimicpp::case_insensitive);
-	REQUIRE_THAT(
-		matcher.describe(),
-		Matches::Equals("is case-insensitively equal to \"Hello, World!\""));
-
-	SECTION("When target is equal, they match.")
-	{
-		const std::string target = GENERATE(from_range(matches));
-		INFO(target);
-
-		REQUIRE(matcher.matches(target));
-	}
-
-	SECTION("When target is not equal, they do not match.")
-	{
-		const std::string target = GENERATE(from_range(mismatches));
-		INFO(target);
-
-		REQUIRE(!matcher.matches(target));
-	}
-
-	SECTION("Matcher can be inverted.")
-	{
-		const auto invertedMatcher = !matches::str::eq("Hello, World!", mimicpp::case_insensitive);
-
-		REQUIRE_THAT(
-			invertedMatcher.describe(),
-			Matches::Equals("is case-insensitively not equal to \"Hello, World!\""));
-
-		SECTION("When target is equal, they do not match.")
-		{
-			const std::string target = GENERATE(from_range(matches));
-			INFO(target);
-
-			REQUIRE(!invertedMatcher.matches(target));
-		}
-
-		SECTION("When target is not equal, they do match.")
-		{
-			const std::string target = GENERATE(from_range(mismatches));
-			INFO(target);
-
-			REQUIRE(invertedMatcher.matches(target));
-		}
-	}
+	constexpr char pattern[] = "Hello, World!";
+	generic_str_eq_no_case_test(
+		static_cast<TestType>(pattern),
+		"\"Hello, World!\"",
+		matches,
+		mismatches);
 }
+
+TEMPLATE_TEST_CASE(
+	"matches::str::eq supports case-insensitive comparison for wchar_t-strings.",
+	"[matcher][matcher::str]",
+	const wchar_t*,
+	const wchar_t(&)[14],
+	std::wstring,
+	std::wstring_view
+)
+{
+	static constexpr std::array matches = std::to_array<const wchar_t*>(
+		{
+			L"Hello, World!",
+			L"hello, World!",
+			L"Hello, world!",
+			L"HelLo, world!"
+		});
+
+	static constexpr std::array mismatches = std::to_array<const wchar_t*>(
+		{
+			L" hello, world!",
+			L"hello, world! ",
+			L"hello,world!"
+		});
+
+	constexpr wchar_t pattern[] = L"Hello, World!";
+	generic_str_eq_no_case_test(
+		static_cast<TestType>(pattern),
+		"L\"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21\"",
+		matches,
+		mismatches);
+}
+
+TEMPLATE_TEST_CASE(
+	"matches::str::eq supports case-insensitive comparison for char8_t-strings.",
+	"[matcher][matcher::str]",
+	const char8_t*,
+	const char8_t(&)[14],
+	std::u8string,
+	std::u8string_view
+)
+{
+	static constexpr std::array matches = std::to_array<const char8_t*>(
+		{
+			u8"Hello, World!",
+			u8"hello, World!",
+			u8"Hello, world!",
+			u8"HelLo, world!"
+		});
+
+	static constexpr std::array mismatches = std::to_array<const char8_t*>(
+		{
+			u8" hello, world!",
+			u8"hello, world! ",
+			u8"hello,world!"
+		});
+
+	constexpr char8_t pattern[] = u8"Hello, World!";
+	generic_str_eq_no_case_test(
+		static_cast<TestType>(pattern),
+		"u8\"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21\"",
+		matches,
+		mismatches);
+}
+
+TEMPLATE_TEST_CASE(
+	"matches::str::eq supports case-insensitive comparison for char16_t-strings.",
+	"[matcher][matcher::str]",
+	const char16_t*,
+	const char16_t(&)[14],
+	std::u16string,
+	std::u16string_view
+)
+{
+	static constexpr std::array matches = std::to_array<const char16_t*>(
+		{
+			u"Hello, World!",
+			u"hello, World!",
+			u"Hello, world!",
+			u"HelLo, world!"
+		});
+
+	static constexpr std::array mismatches = std::to_array<const char16_t*>(
+		{
+			u" hello, world!",
+			u"hello, world! ",
+			u"hello,world!"
+		});
+
+	constexpr char16_t pattern[] = u"Hello, World!";
+	generic_str_eq_no_case_test(
+		static_cast<TestType>(pattern),
+		"u\"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21\"",
+		matches,
+		mismatches);
+}
+
+TEMPLATE_TEST_CASE(
+	"matches::str::eq supports case-insensitive comparison for char32_t-strings.",
+	"[matcher][matcher::str]",
+	const char32_t*,
+	const char32_t(&)[14],
+	std::u32string,
+	std::u32string_view
+)
+{
+	static constexpr std::array matches = std::to_array<const char32_t*>(
+		{
+			U"Hello, World!",
+			U"hello, World!",
+			U"Hello, world!",
+			U"HelLo, world!"
+		});
+
+	static constexpr std::array mismatches = std::to_array<const char32_t*>(
+		{
+			U" hello, world!",
+			U"hello, world! ",
+			U"hello,world!"
+		});
+
+	constexpr char32_t pattern[] = U"Hello, World!";
+	generic_str_eq_no_case_test(
+		static_cast<TestType>(pattern),
+		"U\"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21\"",
+		matches,
+		mismatches);
+}
+
+#endif
