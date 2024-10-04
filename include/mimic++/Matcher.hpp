@@ -445,35 +445,36 @@ namespace mimicpp::matches::str
 	 *
 	 * In the following these terms are used:
 	 * - ``code-point`` is a logical string-element. In byte-strings these are the single characters, but in Unicode this may span multiple physical-elements.
-	 * - ``code-unit`` is the single physical-element of the string. Multiple ``code-units`` may build a single ``code-point``.
+	 * - ``code-unit`` is the single physical-element of the string (i.e. the underlying character-type). Multiple ``code-units`` may build a single ``code-point``.
 	 * 
 	 * All comparisons are done via iterators and, to make that consistent, ``mimic++`` requires the iterator values to be ``code-units``.
 	 * As this should be fine for equality-comparisons, this will quickly lead to issues when performing case-insensitive comparisons.
-	 * To make that simpler, ``mimic++`` converts all participating strings to their *normalized* representation.
+	 * ``mimic++`` therefore converts all participating strings to their *normalized* representation during comparisons.
 	 *
 	 * ## Normalization
 	 *
 	 * Normalization here means the process of making a string independent of its case (e.g. ``a`` and ``A`` would compare equal).
+	 * The normalization process is centralized to the ``string_normalize_converter`` template, which must be specialized for the appropriate character-type.
+	 * The converter receives the whole string and is required to perform a consistent normalization, without ambiguities.
 	 * This can be achieved in various ways, often with pros and cons. The general guide-line seems to be, converting the strings to their upper-case representation.
 	 * \see https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1308
 	 *
-	 * Instead of building on top of a ``code-unit``-wise normalization-strategy, ``mimic++`` utilizes a ``code-point``-wise strategy and
-	 * thus requires the ``normalize_string`` function to operate on a whole string.
-	 * Unfortunately, this requires a lot of work and know-how, to make that work for all existing character-types.
+	 * Unfortunately, this requires a lot of work and know-how, to make that work (correctly) for all existing character-types.
 	 * Due to this, currently only byte-strings are supported for case-insensitive comparisons.
 	 *
 	 * ### Byte-String
 	 *
-	 * Byte-Strings are normalized element-wise via ``std::toupper`` function.
+	 * Byte-Strings are normalized lazily element-wise via ``std::toupper`` function.
 	 *
-	 * ### Other String Types
+	 * ### Strings with other character-types
 	 *
-	 * Even if ``mimic++`` does not support normalization for other string types out of the box, it offers the ``string_normalization`` hook, which
-	 * users can use to make other character-types work with string-matchers. Users can specialize the ``custom::normalize_string_converter`` type
-	 * for their own or third-party types and implement the desired logic.
+	 * Even if ``mimic++`` does not support normalization for other string types out of the box, users can specialize the ``string_normalize_converter``
+	 * for the missing character-types and thus inject the necessary support.
 	 *
-	 * \attention If strings for a particular character-type utilize two or more competing normalization-strategies (e.g. some use ``to-upper``
-	 * while the rest uses ``to-lower``), the behavior is undefined.
+	 * ## Custom String-Types
+	 *
+	 * ``mimic++`` internally utilizes the type-trait ``string_traits``, which users can specialize for their needs. It can then be checked via the
+	 * ``string`` concept, whether the desired type can actually be used as a string-type.
 	 *
 	 *\{
 	 */
