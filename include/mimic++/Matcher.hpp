@@ -638,6 +638,35 @@ namespace mimicpp::matches::str
 	}
 
 	/**
+	 * \brief Tests, whether the target string ends case-insensitively with the pattern string.
+	 * \tparam Pattern The string type.
+	 * \param pattern The pattern string.
+	 */
+	template <string Pattern>
+	[[nodiscard]]
+	constexpr auto ends_with(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
+	{
+		return PredicateMatcher{
+			[]<string T, typename Stored>(T&& target, Stored&& stored)
+				requires std::same_as<
+					string_char_t<T>,
+					string_char_t<Pattern>>
+			{
+				auto caseFoldedPattern = detail::make_case_folded_string(std::forward<Stored>(stored))
+										| std::views::reverse;
+				const auto [_, patternIter] = std::ranges::mismatch(
+					detail::make_case_folded_string(std::forward<T>(target)) | std::views::reverse,
+					caseFoldedPattern);
+
+				return patternIter == std::ranges::end(caseFoldedPattern);
+			},
+			"case-insensitively ends with {}",
+			"case-insensitively ends not with {}",
+			std::tuple{std::forward<Pattern>(pattern)}
+		};
+	}
+
+	/**
 	 * \}
 	 */
 }
