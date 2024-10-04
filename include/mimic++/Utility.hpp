@@ -223,15 +223,19 @@ namespace mimicpp::detail::to_lower_hook
 
 	constexpr priority_tag<1> maxTag;
 
-	template <string String>
-	[[nodiscard]]
-	constexpr decltype(auto) to_lower(String&& str)
-		requires requires { { to_lower_hook::to_lower_impl(str, maxTag) } -> string; }
+	class ToLowerFn
 	{
-		return to_lower_hook::to_lower_impl(
-			std::forward<String>(str),
-			maxTag);
-	}
+	public:
+		template <string String>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()(String&& str) const
+			requires requires { { to_lower_hook::to_lower_impl(str, maxTag) } -> string; }
+		{
+			return to_lower_hook::to_lower_impl(
+				std::forward<String>(str),
+				maxTag);
+		}
+	};
 
 	template <string String>
 		requires std::same_as<char, typename string_traits<String>::char_t>
@@ -258,12 +262,14 @@ namespace mimicpp::detail::to_lower_hook
 
 namespace mimicpp
 {
+	constexpr detail::to_lower_hook::ToLowerFn to_lower{};
+
 	template <typename String>
 	concept lower_convertible = string<String>
 								&& requires
 								{
 									{
-										detail::to_lower_hook::to_lower(std::declval<String>())
+										mimicpp::to_lower(std::declval<String>())
 									} -> string;
 								};
 }

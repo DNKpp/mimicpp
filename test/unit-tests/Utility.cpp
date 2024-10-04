@@ -186,16 +186,15 @@ struct custom::to_lower_converter<CustomString>
 };
 
 TEST_CASE(
-	"detail::to_lower_hook::to_lower selects the correct converter.",
-	"[utility][detail]"
+	"to_lower selects the correct converter.",
+	"[utility]"
 )
 {
 	namespace Matches = Catch::Matchers;
 
 	SECTION("custom::to_lower_converter specializations are preferred.")
 	{
-		const std::string result = detail::to_lower_hook::to_lower(
-			CustomString{"Hello, World!"});
+		const std::string result = to_lower(CustomString{"Hello, World!"});
 
 		REQUIRE_THAT(
 			result,
@@ -204,7 +203,7 @@ TEST_CASE(
 
 	SECTION("Otherwise, to_lower_hook::to_lower_converter is chosen.")
 	{
-		const std::string result = detail::to_lower_hook::to_lower("Hello, World!");
+		const std::string result = to_lower("Hello, World!");
 
 		REQUIRE_THAT(
 			result,
@@ -213,8 +212,8 @@ TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE(
-	"detail::to_lower_hook::to_lower converts the given string to its lower-case representation.",
-	"[utility][detail]",
+	"to_lower converts the given string to its lower-case representation.",
+	"[utility]",
 	const char*,
 	std::string,
 	std::string_view
@@ -229,8 +228,7 @@ TEMPLATE_TEST_CASE(
 			{"hello, world!", "HeLlO, WoRlD!"},
 			}));
 
-	const std::string result = detail::to_lower_hook::to_lower(
-		static_cast<TestType>(source));
+	const std::string result = to_lower(static_cast<TestType>(source));
 
 	REQUIRE_THAT(
 		result,
