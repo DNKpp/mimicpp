@@ -160,8 +160,6 @@ TEMPLATE_TEST_CASE(
 		std::u32string{U"Hello, WOrld!"});
 }
 
-#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
-
 namespace
 {
 	void generic_str_eq_no_case_test(
@@ -246,6 +244,8 @@ TEMPLATE_TEST_CASE(
 		matches,
 		mismatches);
 }
+
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
 
 TEMPLATE_TEST_CASE(
 	"matches::str::eq supports case-insensitive comparison for wchar_t-strings.",
@@ -670,6 +670,8 @@ TEMPLATE_TEST_CASE(
 		mismatches);
 }
 
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+
 TEMPLATE_TEST_CASE(
 	"matches::str::starts_with matches when given wchar_t-string pattern is case-insensitively prefix of target.",
 	"[matcher][matcher::str]",
@@ -797,6 +799,8 @@ TEMPLATE_TEST_CASE(
 		matches,
 		mismatches);
 }
+
+#endif
 
 namespace
 {
