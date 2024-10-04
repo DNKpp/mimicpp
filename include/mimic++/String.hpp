@@ -22,6 +22,11 @@
 namespace mimicpp
 {
 	/**
+	 * \defgroup STRING string
+	 * \brief Contains symbols for generic string processing.
+	 */
+
+	/**
 	 * \defgroup TYPE_TRAITS_IS_CHARACTER is_character
 	 * \ingroup STRING
 	 * \ingroup TYPE_TRAITS
@@ -224,6 +229,25 @@ namespace mimicpp
 			std::ranges::range_value_t<string_view_t<T>>>;
 	};
 
+	/**
+	 * \defgroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER string_case_fold_converter
+	 * \ingroup STRING
+	 * \brief Type-trait, which contains properties for the provided string type.
+	 * \details This implements the case-folding algorithm for the various character-types.
+	 * Users should not make any assumptions on what any converter will return, as this is highly
+	 * implementation specific. No guarantees are made whether the result will be in upper- or lower-case (or something completely
+	 * different). The only guarantee is, that two inputs, which are required to compare equal after the case-folding process,
+	 * yield the same result.
+	 *
+	 * \see https://unicode-org.github.io/icu/userguide/transforms/casemappings.html#case-folding
+	 * \see https://www.unicode.org/Public/UNIDATA/CaseFolding.txt
+	 */
+
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \tparam Char The character type.
+	 * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
+	 */
 	template <satisfies<is_character> Char>
 	struct string_case_fold_converter;
 
@@ -259,6 +283,10 @@ namespace mimicpp::detail
 
 #ifndef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
 
+/**
+ * \brief Specialized template for the ``char`` type.
+ * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
+ */
 template <>
 struct mimicpp::string_case_fold_converter<char>
 {
@@ -283,6 +311,10 @@ struct mimicpp::string_case_fold_converter<char>
 #include <unicodelib.h>
 #include <unicodelib_encodings.h>
 
+/**
+ * \brief Specialized template for the ``char`` type (with unicodelib backend).
+ * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
+ */
 template <>
 struct mimicpp::string_case_fold_converter<char>
 {
@@ -300,6 +332,10 @@ struct mimicpp::string_case_fold_converter<char>
 	}
 };
 
+/**
+ * \brief Specialized template for the ``wchar_t`` type (with unicodelib backend).
+ * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
+ */
 template <>
 struct mimicpp::string_case_fold_converter<wchar_t>
 {
@@ -317,6 +353,10 @@ struct mimicpp::string_case_fold_converter<wchar_t>
 	}
 };
 
+/**
+ * \brief Specialized template for the ``char8_t`` type (with unicodelib backend).
+ * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
+ */
 template <>
 struct mimicpp::string_case_fold_converter<char8_t>
 {
@@ -338,6 +378,10 @@ struct mimicpp::string_case_fold_converter<char8_t>
 	}
 };
 
+/**
+ * \brief Specialized template for the ``char16_t`` type (with unicodelib backend).
+ * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
+ */
 template <>
 struct mimicpp::string_case_fold_converter<char16_t>
 {
@@ -355,6 +399,10 @@ struct mimicpp::string_case_fold_converter<char16_t>
 	}
 };
 
+/**
+ * \brief Specialized template for the ``char32_t`` type (with unicodelib backend).
+ * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
+ */
 template <>
 struct mimicpp::string_case_fold_converter<char32_t>
 {
