@@ -199,6 +199,21 @@ namespace mimicpp
 	/**
 	 * \}
 	 */
+
+	/**
+	 * \brief Determines, whether the given type can be used as a string-type.
+	 * \ingroup STRING
+	 * \ingroup CONCEPTS
+	 */
+	template <typename T>
+	concept string = requires
+	{
+		requires is_character_v<string_char_t<T>>;
+		requires std::ranges::forward_range<string_view_t<T>>;
+		requires std::convertible_to<
+			std::ranges::range_reference_t<string_view_t<T>>,
+			string_char_t<T>>;
+	};
 }
 
 #endif
