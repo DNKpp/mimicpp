@@ -19,10 +19,6 @@
 #include <string_view>
 #include <type_traits>
 
-#include <unicodelib.h>
-#include <unicodelib_encodings.h>
-
-
 namespace mimicpp
 {
 	/**
@@ -261,6 +257,8 @@ namespace mimicpp::detail
 										&& std::same_as<Char, std::ranges::range_value_t<View>>;
 }
 
+#ifndef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+
 template <>
 struct mimicpp::string_normalize_converter<char>
 {
@@ -279,5 +277,99 @@ struct mimicpp::string_normalize_converter<char>
 					});
 	}
 };
+
+#else
+
+#include <unicodelib.h>
+#include <unicodelib_encodings.h>
+
+template <>
+struct mimicpp::string_normalize_converter<char>
+{
+	template <detail::compatible_string_view_with<char> String>
+	[[nodiscard]]
+	constexpr auto operator ()(String&& str) const
+	{
+		return unicode::utf8::encode(
+			unicode::to_case_fold(
+				unicode::utf8::decode(
+					std::string_view{
+						std::ranges::data(str),
+						std::ranges::size(str)
+					})));
+	}
+};
+
+template <>
+struct mimicpp::string_normalize_converter<wchar_t>
+{
+	template <detail::compatible_string_view_with<wchar_t> String>
+	[[nodiscard]]
+	constexpr auto operator ()(String&& str) const
+	{
+		return unicode::to_wstring(
+			unicode::to_case_fold(
+				unicode::to_utf32(
+					std::wstring_view{
+						std::ranges::data(str),
+						std::ranges::size(str)
+					})));
+	}
+};
+
+template <>
+struct mimicpp::string_normalize_converter<char8_t>
+{
+	template <detail::compatible_string_view_with<char8_t> String>
+	[[nodiscard]]
+	constexpr auto operator ()(String&& str) const
+	{
+		const std::string caseFolded = std::invoke(
+			mimicpp::string_normalize_converter<char>{},
+			std::string_view{
+				std::bit_cast<const char*>(std::ranges::data(str)),
+				std::ranges::size(str)
+			});
+
+		return std::u8string{
+			caseFolded.cbegin(),
+			caseFolded.cend()
+		};
+	}
+};
+
+template <>
+struct mimicpp::string_normalize_converter<char16_t>
+{
+	template <detail::compatible_string_view_with<char16_t> String>
+	[[nodiscard]]
+	constexpr auto operator ()(String&& str) const
+	{
+		return unicode::utf16::encode(
+			unicode::to_case_fold(
+				unicode::utf16::decode(
+					std::u16string_view{
+						std::ranges::data(str),
+						std::ranges::size(str)
+					})));
+	}
+};
+
+template <>
+struct mimicpp::string_normalize_converter<char32_t>
+{
+	template <detail::compatible_string_view_with<char32_t> String>
+	[[nodiscard]]
+	constexpr auto operator ()(String&& str) const
+	{
+		return unicode::to_case_fold(
+			std::u32string_view{
+				std::ranges::data(str),
+				std::ranges::size(str)
+			});
+	}
+};
+
+#endif
 
 #endif

@@ -316,20 +316,234 @@ TEMPLATE_TEST_CASE(
 {
 	namespace Matches = Catch::Matchers;
 
-	const auto [expected, source] = GENERATE(
+	const auto [lhs, rhs] = GENERATE(
 		(table<std::string, const char*>)({
 			{"", ""},
 			{" !1337\t", " !1337\t"},
-			{"HELLO, WORLD!", "HeLlO, WoRlD!"},
+			{"hElLo, wOrLd!", "HeLlO, WoRlD!"},
 			}));
 
-	auto converted = static_cast<TestType>(source);
+	auto convertedRhs = static_cast<TestType>(rhs);
+	constexpr string_normalize_converter<char> caseFolder{};
+
+	auto caseFoldedRhs = std::invoke(
+		caseFolder,
+		string_traits<TestType>::view(convertedRhs));
+	auto caseFoldedLhs = std::invoke(
+		caseFolder,
+		std::string_view{lhs});
 
 	REQUIRE_THAT(
-		std::invoke(
-			string_normalize_converter<char>{},
-			string_traits<TestType>::view(converted)),
-		Matches::RangeEquals(expected));
+		caseFoldedLhs,
+		Matches::RangeEquals(caseFoldedRhs));
+}
+
+#ifndef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+
+TEMPLATE_TEST_CASE_SIG(
+	"normalizable_string determines, whether the given string supports normalize conversions.",
+	"[string]",
+	((bool expected, typename T), expected, T),
+	(false, char),
+
+	(true, char*),
+	(true, const char*),
+	(true, char[]),
+	(true, const char[]),
+	(true, char[42]),
+	(true, const char[42]),
+	(true, std::string),
+	(true, std::string_view),
+
+	(false, wchar_t*),
+	(false, const wchar_t*),
+	(false, wchar_t[]),
+	(false, const wchar_t[]),
+	(false, wchar_t[42]),
+	(false, const wchar_t[42]),
+	(false, std::wstring),
+	(false, std::wstring_view),
+
+	(false, char8_t*),
+	(false, const char8_t*),
+	(false, char8_t[]),
+	(false, const char8_t[]),
+	(false, char8_t[42]),
+	(false, const char8_t[42]),
+	(false, std::u8string),
+	(false, std::u8string_view),
+
+	(false, char16_t*),
+	(false, const char16_t*),
+	(false, char16_t[]),
+	(false, const char16_t[]),
+	(false, char16_t[42]),
+	(false, const char16_t[42]),
+	(false, std::u16string),
+	(false, std::u16string_view),
+
+	(false, char32_t*),
+	(false, const char32_t*),
+	(false, char32_t[]),
+	(false, const char32_t[]),
+	(false, char32_t[42]),
+	(false, const char32_t[42]),
+	(false, std::u32string),
+	(false, std::u32string_view)
+)
+{
+	STATIC_REQUIRE(expected == normalizable_string<T>);
+	STATIC_REQUIRE(expected == normalizable_string<const T>);
+	STATIC_REQUIRE(expected == normalizable_string<T&>);
+	STATIC_REQUIRE(expected == normalizable_string<const T&>);
+	STATIC_REQUIRE(expected == normalizable_string<T&&>);
+	STATIC_REQUIRE(expected == normalizable_string<const T&&>);
+}
+
+#else
+
+TEMPLATE_TEST_CASE(
+	"string_normalize_converter<wchar_t> can be used with all utf16-strings.",
+	"[string]",
+	const wchar_t*,
+	std::wstring,
+	std::wstring_view
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	const auto [lhs, rhs] = GENERATE(
+		(table<std::wstring, const wchar_t*>)({
+			{L"", L""},
+			{L" !1337\t", L" !1337\t"},
+			{L"hElLo, wOrLd!", L"HeLlO, WoRlD!"},
+			{L"ss", L"\u00DF"}, // german "sharp s"
+			{L"SS", L"\u00DF"}, // german "sharp s"
+			{L"\u01CB", L"\u01CA"},
+			{L"\u01CC", L"\u01CC"}
+			}));
+
+	auto convertedRhs = static_cast<TestType>(rhs);
+	constexpr string_normalize_converter<wchar_t> caseFolder{};
+
+	auto caseFoldedRhs = std::invoke(
+		caseFolder,
+		string_traits<TestType>::view(convertedRhs));
+	auto caseFoldedLhs = std::invoke(
+		caseFolder,
+		std::wstring_view{lhs});
+
+	REQUIRE_THAT(
+		caseFoldedLhs,
+		Matches::RangeEquals(caseFoldedRhs));
+}
+
+TEMPLATE_TEST_CASE(
+	"string_normalize_converter<char8_t> can be used with all utf8-strings.",
+	"[string]",
+	const char8_t*,
+	std::u8string,
+	std::u8string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	const auto [lhs, rhs] = GENERATE(
+		(table<std::u8string, const char8_t*>)({
+			{u8"", u8""},
+			{u8" !1337\t", u8" !1337\t"},
+			{u8"hElLo, wOrLd!", u8"HeLlO, WoRlD!"},
+			{u8"ss", u8"\u00DF"}, // german "sharp s"
+			{u8"SS", u8"\u00DF"}, // german "sharp s"
+			{u8"\u01CB", u8"\u01CA"},
+			{u8"\u01CC", u8"\u01CC"}
+			}));
+
+	auto convertedRhs = static_cast<TestType>(rhs);
+	constexpr string_normalize_converter<char8_t> caseFolder{};
+
+	auto caseFoldedRhs = std::invoke(
+		caseFolder,
+		string_traits<TestType>::view(convertedRhs));
+	auto caseFoldedLhs = std::invoke(
+		caseFolder,
+		std::u8string_view{lhs});
+
+	REQUIRE_THAT(
+		caseFoldedLhs,
+		Matches::RangeEquals(caseFoldedRhs));
+}
+
+TEMPLATE_TEST_CASE(
+	"string_normalize_converter<char16_t> can be used with all utf16-strings.",
+	"[string]",
+	const char16_t*,
+	std::u16string,
+	std::u16string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	const auto [lhs, rhs] = GENERATE(
+		(table<std::u16string, const char16_t*>)({
+			{u"", u""},
+			{u" !1337\t", u" !1337\t"},
+			{u"hElLo, wOrLd!", u"HeLlO, WoRlD!"},
+			{u"ss", u"\u00DF"}, // german "sharp s"
+			{u"SS", u"\u00DF"}, // german "sharp s"
+			{u"\u01CB", u"\u01CA"},
+			{u"\u01CC", u"\u01CC"}
+			}));
+
+	auto convertedRhs = static_cast<TestType>(rhs);
+	constexpr string_normalize_converter<char16_t> caseFolder{};
+
+	auto caseFoldedRhs = std::invoke(
+		caseFolder,
+		string_traits<TestType>::view(convertedRhs));
+	auto caseFoldedLhs = std::invoke(
+		caseFolder,
+		std::u16string_view{lhs});
+
+	REQUIRE_THAT(
+		caseFoldedLhs,
+		Matches::RangeEquals(caseFoldedRhs));
+}
+
+TEMPLATE_TEST_CASE(
+	"string_normalize_converter<char32_t> can be used with all utf32-strings.",
+	"[string]",
+	const char32_t*,
+	std::u32string,
+	std::u32string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	const auto [lhs, rhs] = GENERATE(
+		(table<std::u32string, const char32_t*>)({
+			{U"", U""},
+			{U" !1337\t", U" !1337\t"},
+			{U"hElLo, wOrLd!", U"HeLlO, WoRlD!"},
+			{U"ss", U"\u00DF"}, // german "sharp s"
+			{U"SS", U"\u00DF"}, // german "sharp s"
+			{U"\u01CB", U"\u01CA"},
+			{U"\u01CC", U"\u01CC"}
+			}));
+
+	auto convertedRhs = static_cast<TestType>(rhs);
+	constexpr string_normalize_converter<char32_t> caseFolder{};
+
+	auto caseFoldedRhs = std::invoke(
+		caseFolder,
+		string_traits<TestType>::view(convertedRhs));
+	auto caseFoldedLhs = std::invoke(
+		caseFolder,
+		std::u32string_view{lhs});
+
+	REQUIRE_THAT(
+		caseFoldedLhs,
+		Matches::RangeEquals(caseFoldedRhs));
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -347,24 +561,41 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::string),
 	(true, std::string_view),
 
-	// all below are just temporarily not supported. Would be nice to do so!
-	(false, wchar_t*),
-	(false, const wchar_t*),
-	(false, char8_t*),
-	(false, const char8_t*),
-	(false, char16_t*),
-	(false, const char16_t*),
-	(false, char32_t*),
-	(false, const char32_t*),
+	(true, wchar_t*),
+	(true, const wchar_t*),
+	(true, wchar_t[]),
+	(true, const wchar_t[]),
+	(true, wchar_t[42]),
+	(true, const wchar_t[42]),
+	(true, std::wstring),
+	(true, std::wstring_view),
 
-	(false, std::wstring),
-	(false, std::u8string),
-	(false, std::u16string),
-	(false, std::u32string),
-	(false, std::wstring_view),
-	(false, std::u8string_view),
-	(false, std::u16string_view),
-	(false, std::u32string_view)
+	(true, char8_t*),
+	(true, const char8_t*),
+	(true, char8_t[]),
+	(true, const char8_t[]),
+	(true, char8_t[42]),
+	(true, const char8_t[42]),
+	(true, std::u8string),
+	(true, std::u8string_view),
+
+	(true, char16_t*),
+	(true, const char16_t*),
+	(true, char16_t[]),
+	(true, const char16_t[]),
+	(true, char16_t[42]),
+	(true, const char16_t[42]),
+	(true, std::u16string),
+	(true, std::u16string_view),
+
+	(true, char32_t*),
+	(true, const char32_t*),
+	(true, char32_t[]),
+	(true, const char32_t[]),
+	(true, char32_t[42]),
+	(true, const char32_t[42]),
+	(true, std::u32string),
+	(true, std::u32string_view)
 )
 {
 	STATIC_REQUIRE(expected == normalizable_string<T>);
@@ -374,3 +605,5 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == normalizable_string<T&&>);
 	STATIC_REQUIRE(expected == normalizable_string<const T&&>);
 }
+
+#endif

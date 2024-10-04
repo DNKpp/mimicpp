@@ -449,17 +449,19 @@ namespace mimicpp::matches::str
 	 * 
 	 * All comparisons are done via iterators and, to make that consistent, ``mimic++`` requires the iterator values to be ``code-units``.
 	 * As this should be fine for equality-comparisons, this will quickly lead to issues when performing case-insensitive comparisons.
-	 * ``mimic++`` therefore converts all participating strings to their *normalized* representation during comparisons.
+	 * ``mimic++`` therefore converts all participating strings to their *case-folded* representation during comparisons.
 	 *
-	 * ## Normalization
+	 * ## Case-Folding
 	 *
-	 * Normalization here means the process of making a string independent of its case (e.g. ``a`` and ``A`` would compare equal).
-	 * The normalization process is centralized to the ``string_normalize_converter`` template, which must be specialized for the appropriate character-type.
-	 * The converter receives the whole string and is required to perform a consistent normalization, without ambiguities.
-	 * This can be achieved in various ways, often with pros and cons. The general guide-line seems to be, converting the strings to their upper-case representation.
-	 * \see https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1308
+	 * Case-Folding means the process of making a string independent of its case (e.g. ``a`` and ``A`` would compare equal).
+	 * This process is centralized to the ``string_case_fold_converter`` template, which must be specialized for the appropriate character-type.
+	 * The converter receives the whole string and is required to perform a consistent case-folding. Unicode defines the necessary steps here:
+	 * https://unicode-org.github.io/icu/userguide/transforms/casemappings.html#case-folding
 	 *
-	 * Unfortunately, this requires a lot of work and know-how, to make that work (correctly) for all existing character-types.
+	 * For a list of ``code-point`` mappings have a look here:
+	 * https://www.unicode.org/Public/UNIDATA/CaseFolding.txt
+	 *
+	 * Unfortunately, this requires a lot of work to make that work (correctly) for all existing character-types.
 	 * Due to this, currently only byte-strings are supported for case-insensitive comparisons.
 	 *
 	 * ### Byte-String
@@ -468,7 +470,7 @@ namespace mimicpp::matches::str
 	 *
 	 * ### Strings with other character-types
 	 *
-	 * Even if ``mimic++`` does not support normalization for other string types out of the box, users can specialize the ``string_normalize_converter``
+	 * Even if ``mimic++`` does not support normalization for other string types out of the box, users can specialize the ``string_case_fold_converter``
 	 * for the missing character-types and thus inject the necessary support.
 	 *
 	 * ## Custom String-Types
