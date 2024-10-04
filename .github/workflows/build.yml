@@ -188,7 +188,7 @@ jobs:
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
             ${{ matrix.config.suffix }} 
-            (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }}, ${{ matrix.format_backend }})
+            (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }}, ${{ matrix.format_backend }}, ${{ matrix.str_matcher }})
         runs-on: ${{ matrix.config.os }}
         container: ${{ matrix.config.container }}
 
@@ -198,6 +198,7 @@ jobs:
                 build_mode: [Debug, Release]
                 cxx_standard: [20, 23]
                 format_backend: [std, fmt]
+                str_matcher: [char, unicode]
                 config: ${{ fromJSON(needs.define-config.outputs.config) }}
 
                 exclude:
@@ -262,6 +263,12 @@ jobs:
               shell: bash
               run: |
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_USE_FMT=YES)" >> $GITHUB_ENV
+
+            - name: Enable unicode support for string matchers
+              if: startsWith(matrix.str_matcher, 'unicode')
+              shell: bash
+              run: |
+                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES)" >> $GITHUB_ENV
 
             # ASan has some serious trouble with libc++ exception mechanism
             # see: https://github.com/llvm/llvm-project/issues/59432
