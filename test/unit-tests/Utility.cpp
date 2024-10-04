@@ -176,43 +176,43 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 template <>
-struct custom::to_lower_converter<CustomString>
+struct custom::normalize_string_converter<CustomString>
 {
 	[[nodiscard]]
 	std::string operator()([[maybe_unused]] const CustomString& str) const
 	{
-		return "custom::to_lower_converter<CustomString>";
+		return "custom::normalize_string_converter<CustomString>";
 	}
 };
 
 TEST_CASE(
-	"to_lower selects the correct converter.",
+	"normalize_string selects the correct converter.",
 	"[utility]"
 )
 {
 	namespace Matches = Catch::Matchers;
 
-	SECTION("custom::to_lower_converter specializations are preferred.")
+	SECTION("custom::normalize_string_converter specializations are preferred.")
 	{
-		const std::string result = to_lower(CustomString{"Hello, World!"});
+		const std::string result = normalize_string(CustomString{"Hello, World!"});
 
 		REQUIRE_THAT(
 			result,
-			Matches::Equals("custom::to_lower_converter<CustomString>"));
+			Matches::Equals("custom::normalize_string_converter<CustomString>"));
 	}
 
-	SECTION("Otherwise, to_lower_hook::to_lower_converter is chosen.")
+	SECTION("Otherwise, normalize_string_hook::normalize_string_converter is chosen.")
 	{
-		const std::string result = to_lower("Hello, World!");
+		const std::string result = normalize_string("Hello, World!");
 
 		REQUIRE_THAT(
 			result,
-			Matches::Equals("hello, world!"));
+			Matches::Equals("HELLO, WORLD!"));
 	}
 }
 
 TEMPLATE_TEST_CASE(
-	"to_lower converts the given string to its lower-case representation.",
+	"normalize_string converts the given string to its normalized representation.",
 	"[utility]",
 	const char*,
 	std::string,
@@ -225,10 +225,10 @@ TEMPLATE_TEST_CASE(
 		(table<std::string, const char*>)({
 			{"", ""},
 			{" !1337\t", " !1337\t"},
-			{"hello, world!", "HeLlO, WoRlD!"},
+			{"HELLO, WORLD!", "HeLlO, WoRlD!"},
 			}));
 
-	const std::string result = to_lower(static_cast<TestType>(source));
+	const std::string result = normalize_string(static_cast<TestType>(source));
 
 	REQUIRE_THAT(
 		result,
@@ -236,7 +236,7 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"string lower_convertible determines, whether the given string supports lower-case conversions.",
+	"normalizable_string determines, whether the given string supports normalize conversions.",
 	"[utility]",
 	((bool expected, typename T), expected, T),
 	(false, char),
@@ -279,5 +279,5 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, std::u32string_view)
 )
 {
-	STATIC_REQUIRE(expected == mimicpp::lower_convertible<T>);
+	STATIC_REQUIRE(expected == mimicpp::normalizable_string<T>);
 }

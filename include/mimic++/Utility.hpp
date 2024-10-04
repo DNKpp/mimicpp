@@ -167,7 +167,20 @@ namespace mimicpp
 					&& std::convertible_to<T, typename string_traits<std::remove_cvref_t<T>>::string_t>
 					&& std::equality_comparable<typename string_traits<std::remove_cvref_t<T>>::string_t>
 					&& std::ranges::forward_range<typename string_traits<std::remove_cvref_t<T>>::string_t>;
+}
 
+namespace mimicpp::custom
+{
+	/**
+	 * \brief User may add specializations, which will then be used for normalize_string conversions.
+	 * \ingroup UTILITY
+	 */
+	template <string String>
+	struct normalize_string_converter;
+}
+
+namespace mimicpp::detail
+{
 	template <typename Converted, typename String>
 	concept string_converter_for = string<String>
 									&& requires
@@ -176,24 +189,14 @@ namespace mimicpp
 									};
 }
 
-namespace mimicpp::custom
+namespace mimicpp::detail::normalize_string_hook
 {
-	/**
-	 * \brief User may add specializations, which will then be used for to_lower conversions.
-	 * \ingroup UTILITY
-	 */
-	template <string String>
-	struct to_lower_converter;
-}
-
-namespace mimicpp::detail::to_lower_hook
-{
-	template <string String, typename Converter = custom::to_lower_converter<std::remove_cvref_t<String>>>
+	template <string String, typename Converter = custom::normalize_string_converter<std::remove_cvref_t<String>>>
 		requires string_converter_for<
 			Converter,
 			String>
 	[[nodiscard]]
-	constexpr decltype(auto) to_lower_impl(
+	constexpr decltype(auto) normalize_string_impl(
 		String&& str,
 		[[maybe_unused]] const priority_tag<1>
 	)
@@ -204,14 +207,14 @@ namespace mimicpp::detail::to_lower_hook
 	}
 
 	template <string String>
-	struct to_lower_converter;
+	struct normalize_string_converter;
 
-	template <string String, typename Converter = to_lower_converter<std::remove_cvref_t<String>>>
+	template <string String, typename Converter = normalize_string_converter<std::remove_cvref_t<String>>>
 		requires string_converter_for<
 			Converter,
 			String>
 	[[nodiscard]]
-	constexpr decltype(auto) to_lower_impl(
+	constexpr decltype(auto) normalize_string_impl(
 		String&& str,
 		[[maybe_unused]] const priority_tag<0>
 	)
@@ -223,15 +226,15 @@ namespace mimicpp::detail::to_lower_hook
 
 	constexpr priority_tag<1> maxTag;
 
-	class ToLowerFn
+	class NormalizeStringFn
 	{
 	public:
 		template <string String>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()(String&& str) const
-			requires requires { { to_lower_hook::to_lower_impl(str, maxTag) } -> string; }
+			requires requires { { normalize_string_hook::normalize_string_impl(str, maxTag) } -> string; }
 		{
-			return to_lower_hook::to_lower_impl(
+			return normalize_string_hook::normalize_string_impl(
 				std::forward<String>(str),
 				maxTag);
 		}
@@ -239,7 +242,7 @@ namespace mimicpp::detail::to_lower_hook
 
 	template <string String>
 		requires std::same_as<char, typename string_traits<String>::char_t>
-	struct to_lower_converter<String>
+	struct normalize_string_converter<String>
 	{
 		[[nodiscard]]
 		std::string operator ()(const typename string_traits<String>::string_t& str) const
@@ -250,9 +253,9 @@ namespace mimicpp::detail::to_lower_hook
 				std::ranges::begin(result),
 				[](const char c) noexcept
 				{
-					// see notes of https://en.cppreference.com/w/cpp/string/byte/tolower
+					// see notes of https://en.cppreference.com/w/cpp/string/byte/toupper
 					return static_cast<char>(
-						static_cast<unsigned char>(std::tolower(c)));
+						static_cast<unsigned char>(std::toupper(c)));
 				});
 
 			return result;
@@ -262,16 +265,16 @@ namespace mimicpp::detail::to_lower_hook
 
 namespace mimicpp
 {
-	constexpr detail::to_lower_hook::ToLowerFn to_lower{};
+	constexpr detail::normalize_string_hook::NormalizeStringFn normalize_string{};
 
 	template <typename String>
-	concept lower_convertible = string<String>
-								&& requires
+	concept normalizable_string = string<String>
+							&& requires
+							{
 								{
-									{
-										mimicpp::to_lower(std::declval<String>())
-									} -> string;
-								};
+									mimicpp::normalize_string(std::declval<String>())
+								} -> string;
+							};
 }
 
 #endif

@@ -182,7 +182,7 @@ TEST_CASE(
 	const auto matcher = matches::str::eq("Hello, World!", mimicpp::case_insensitive);
 	REQUIRE_THAT(
 		matcher.describe(),
-		Catch::Matchers::Equals("is case-insensitively equal to \"hello, world!\""));
+		Catch::Matchers::Equals("is case-insensitively equal to \"HELLO, WORLD!\""));
 
 	SECTION("When target is equal, they match.")
 	{
@@ -206,7 +206,7 @@ TEST_CASE(
 
 		REQUIRE_THAT(
 			invertedMatcher.describe(),
-			Catch::Matchers::Equals("is case-insensitively not equal to \"hello, world!\""));
+			Catch::Matchers::Equals("is case-insensitively not equal to \"HELLO, WORLD!\""));
 
 		SECTION("When target is equal, they do not match.")
 		{

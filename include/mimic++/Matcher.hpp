@@ -474,24 +474,24 @@ namespace mimicpp::matches::str
 	 * \tparam String The string type.
 	 * \param pattern The pattern object.
 	 */
-	template <typename String>
+	template <normalizable_string String>
 	[[nodiscard]]
 	constexpr auto eq(String&& pattern, [[maybe_unused]] const case_insensitive_t)
 	{
-		using pattern_t = std::invoke_result_t<decltype(to_lower), String>;
+		using pattern_t = std::invoke_result_t<decltype(normalize_string), String>;
 		return PredicateMatcher{
-			[]<lower_convertible T>(T&& target, const pattern_t& exp)
+			[]<normalizable_string T>(T&& target, const pattern_t& exp)
 				requires std::equality_comparable_with<
 					const pattern_t&,
-					std::invoke_result_t<decltype(to_lower), T>>
+					std::invoke_result_t<decltype(normalize_string), T>>
 			{
-				return mimicpp::to_lower(std::forward<T>(target))
+				return mimicpp::normalize_string(std::forward<T>(target))
 						== exp;
 			},
 			"is case-insensitively equal to {}",
 			"is case-insensitively not equal to {}",
 			std::tuple{
-				mimicpp::to_lower(std::forward<String>(pattern))
+				mimicpp::normalize_string(std::forward<String>(pattern))
 			}
 		};
 	}
