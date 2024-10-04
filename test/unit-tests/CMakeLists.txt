@@ -25,6 +25,14 @@ add_executable(
 include(SetupTestTarget)
 setup_test_target(mimicpp-tests)
 
+target_compile_options(
+	mimicpp
+	INTERFACE
+	# some test files exceed some limits
+	# see: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/fatal-error-c1128?view=msvc-170
+	"$<$<CXX_COMPILER_ID:MSVC>:/bigobj>"
+)
+
 target_link_libraries(
 	mimicpp-tests
 	PRIVATE
