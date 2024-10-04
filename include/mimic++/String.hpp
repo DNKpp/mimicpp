@@ -118,6 +118,20 @@ namespace mimicpp
 	 */
 
 	/**
+	 * \brief Computes the view type for the given string.
+	 * \tparam T Type to check.
+	 */
+	template <typename T>
+	using string_view_t = decltype(string_traits<std::remove_cvref_t<T>>::view(std::declval<T&>()));
+
+	/**
+	 * \brief Computes the character type for the given string.
+	 * \tparam T Type to check.
+	 */
+	template <typename T>
+	using string_char_t = typename string_traits<std::remove_cvref_t<T>>::char_t;
+
+	/**
 	 * \brief Specialization for character pointer types.
 	 * \tparam T Type to check.
 	 */
@@ -127,7 +141,12 @@ namespace mimicpp
 	struct string_traits<T>
 	{
 		using char_t = std::remove_const_t<std::remove_pointer_t<T>>;
-		using string_t = std::basic_string_view<char_t>;
+
+		[[nodiscard]]
+		static constexpr std::string_view view(const std::remove_pointer_t<T>* str) noexcept
+		{
+			return std::string_view{str};
+		}
 	};
 
 	/**
@@ -150,6 +169,12 @@ namespace mimicpp
 	{
 		using char_t = Char;
 		using string_t = std::basic_string<Char, Traits, Allocator>;
+
+		[[nodiscard]]
+		static constexpr std::string_view view(const string_t& str) noexcept
+		{
+			return std::string_view{str};
+		}
 	};
 
 	/**
@@ -161,6 +186,12 @@ namespace mimicpp
 	{
 		using char_t = Char;
 		using string_t = std::basic_string_view<Char, Traits>;
+
+		[[nodiscard]]
+		static constexpr std::string_view view(string_t str) noexcept
+		{
+			return str;
+		}
 	};
 
 	/**

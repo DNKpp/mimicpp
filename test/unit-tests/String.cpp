@@ -7,6 +7,8 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 
+using namespace mimicpp;
+
 TEMPLATE_TEST_CASE_SIG(
 	"is_character(_v) determines, whether the given type is a character type.",
 	"[string][string::traits]",
@@ -35,7 +37,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"string_traits contains properties for the provided string type.",
 	"[type_traits]",
-	((bool dummy, typename T, typename Char, typename String), dummy, T, Char, String),
+	((bool dummy, typename T, typename Char, typename ViewType), dummy, T, Char, ViewType),
 	(true, char*, char, std::string_view),
 	(true, const char*, char, std::string_view),
 	(true, wchar_t*, wchar_t, std::wstring_view),
@@ -65,10 +67,23 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::u32string_view, char32_t, std::u32string_view)
 )
 {
-	using traits_t = mimicpp::string_traits<T>;
+	STATIC_REQUIRE(std::same_as<Char, typename string_traits<T>::char_t>);
+	STATIC_REQUIRE(std::same_as<Char, string_char_t<T>>);
 
-	STATIC_REQUIRE(std::same_as<Char, typename traits_t::char_t>);
-	STATIC_REQUIRE(std::same_as<String, typename traits_t::string_t>);
+	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<T>>);
+	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<const T>>);
+	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<T&>>);
+	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<const T&>>);
+	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<T&&>>);
+	STATIC_REQUIRE(std::ranges::forward_range<string_view_t<const T&&>>);
+
+
+	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<T>>, Char>);
+	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<const T>>, Char>);
+	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<T&>>, Char>);
+	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<const T&>>, Char>);
+	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<T&&>>, Char>);
+	STATIC_REQUIRE(std::convertible_to<std::ranges::range_reference_t<string_view_t<const T&&>>, Char>);
 }
 
 TEMPLATE_TEST_CASE(
@@ -81,7 +96,7 @@ TEMPLATE_TEST_CASE(
 	std::string&
 )
 {
-	using traits_t = mimicpp::string_traits<TestType>;
+	using traits_t = string_traits<TestType>;
 
 	STATIC_REQUIRE(!requires{ traits_t{}; });
 }
