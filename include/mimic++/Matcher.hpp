@@ -422,6 +422,17 @@ namespace mimicpp::matches
 	 */
 }
 
+namespace mimicpp
+{
+	/**
+	 * \brief Tag type, used in string matchers.
+	 * \ingroup EXPECTATION_MATCHERS_STRING
+	 */
+	struct case_insensitive_t
+	{
+	} constexpr case_insensitive{};
+}
+
 namespace mimicpp::matches::str
 {
 	/**
@@ -454,6 +465,30 @@ namespace mimicpp::matches::str
 			"is not equal to {}",
 			std::tuple{
 				string_t{std::forward<String>(pattern)}
+			}
+		};
+	}
+
+	/**
+	 * \brief Tests, whether the target string compares case-insensitively equal to the expected string.
+	 * \tparam String The string type.
+	 * \param pattern The pattern object.
+	 */
+	template <typename String>
+	[[nodiscard]]
+	constexpr auto eq(String&& pattern, [[maybe_unused]] const case_insensitive_t)
+	{
+		using pattern_t = std::invoke_result_t<decltype(to_lower), String>;
+		return PredicateMatcher{
+			[]<lower_convertible T>(const pattern_t& target, T&& exp)
+				requires std::equality_comparable_with<pattern_t, std::invoke_result_t<decltype(to_lower), T>>
+			{
+				return target == mimicpp::to_lower(std::forward<T>(exp));
+			},
+			"is case-insensitively equal to {}",
+			"is case-insensitively not equal to {}",
+			std::tuple{
+				mimicpp::to_lower(std::forward<String>(pattern))
 			}
 		};
 	}

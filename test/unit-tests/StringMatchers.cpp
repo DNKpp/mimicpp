@@ -6,7 +6,11 @@
 #include "mimic++/Matcher.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
+#include <catch2/generators/catch_generators_range.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
+
+#include <array>
 
 namespace matches = mimicpp::matches;
 
@@ -153,4 +157,69 @@ TEMPLATE_TEST_CASE(
 		"U\"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21\"",
 		std::u32string{U"Hello, World!"},
 		std::u32string{U"Hello, WOrld!"});
+}
+
+TEST_CASE(
+	"matches::str::eq supports case-insensitive comparison for char-strings.",
+	"[matcher][matcher::str]"
+)
+{
+	static constexpr std::array matches = std::to_array<const char*>(
+		{
+			"Hello, World!",
+			"hello, World!",
+			"Hello, world!",
+			"HelLo, world!"
+		});
+
+	static constexpr std::array mismatches = std::to_array<const char*>(
+		{
+			" hello, world!",
+			"hello, world! ",
+			"hello,world!"
+		});
+
+	const auto matcher = matches::str::eq(
+		"Hello, World!",
+		mimicpp::case_insensitive);
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Equals("is case-insensitively equal to \"hello, world!\""));
+
+	SECTION("When target is equal, they match.")
+	{
+		const std::string target = GENERATE(from_range(matches));
+
+		REQUIRE(matcher.matches(target));
+	}
+
+	SECTION("When target is not equal, they do not match.")
+	{
+		const std::string target = GENERATE(from_range(mismatches));
+
+		REQUIRE(!matcher.matches(target));
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		const auto invertedMatcher = !matches::str::eq("Hello, World!");
+
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Equals("is case-insensitively not equal to \"hello, world!\""));
+
+		SECTION("When target is equal, they do not match.")
+		{
+			const std::string target = GENERATE(from_range(matches));
+
+			REQUIRE(!invertedMatcher.matches(target));
+		}
+
+		SECTION("When target is not equal, they do match.")
+		{
+			const std::string target = GENERATE(from_range(mismatches));
+
+			REQUIRE(invertedMatcher.matches(target));
+		}
+	}
 }
