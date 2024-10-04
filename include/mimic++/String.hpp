@@ -11,12 +11,17 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Utility.hpp"
 
+#include <bit>
 #include <concepts>
 #include <functional>
 #include <ranges>
 #include <string>
 #include <string_view>
 #include <type_traits>
+
+#include <unicodelib.h>
+#include <unicodelib_encodings.h>
+
 
 namespace mimicpp
 {
@@ -215,37 +220,16 @@ namespace mimicpp
 	concept string = requires
 	{
 		requires is_character_v<string_char_t<T>>;
-		requires std::ranges::forward_range<string_view_t<T>>;
+		requires std::ranges::contiguous_range<string_view_t<T>>;
+		requires std::ranges::sized_range<string_view_t<T>>;
 		requires std::ranges::borrowed_range<string_view_t<T>>;
-		requires std::convertible_to<
-			std::ranges::range_reference_t<string_view_t<T>>,
-			string_char_t<T>>;
+		requires std::same_as<
+			string_char_t<T>,
+			std::ranges::range_value_t<string_view_t<T>>>;
 	};
 
 	template <satisfies<is_character> Char>
 	struct string_normalize_converter;
-
-	template <>
-	struct string_normalize_converter<char>
-	{
-		template <std::ranges::borrowed_range String>
-			requires std::convertible_to<
-						std::ranges::range_reference_t<String>,
-						char>
-					&& std::ranges::forward_range<String>
-		[[nodiscard]]
-		constexpr auto operator ()(String&& str) const
-		{
-			return std::views::all(std::forward<String>(str))
-					| std::views::transform(
-						[](const char c) noexcept
-						{
-							// see notes of https://en.cppreference.com/w/cpp/string/byte/toupper
-							return static_cast<char>(
-								static_cast<unsigned char>(std::toupper(c)));
-						});
-		}
-	};
 
 	/**
 	 * \brief Determines, whether the given type supports string normalization.
@@ -261,10 +245,39 @@ namespace mimicpp
 		}
 		&& requires(std::invoke_result_t<string_normalize_converter<string_char_t<String>>, string_view_t<String>> normalized)
 		{
-			requires std::convertible_to<
-				std::ranges::range_reference_t<decltype(normalized)>,
-				string_char_t<String>>;
+			requires std::same_as<
+				string_char_t<String>,
+				std::ranges::range_value_t<decltype(normalized)>>;
 		};
 }
+
+namespace mimicpp::detail
+{
+	template <typename View, typename Char>
+	concept compatible_string_view_with = is_character_v<Char>
+										&& std::ranges::borrowed_range<View>
+										&& std::ranges::contiguous_range<View>
+										&& std::ranges::sized_range<View>
+										&& std::same_as<Char, std::ranges::range_value_t<View>>;
+}
+
+template <>
+struct mimicpp::string_normalize_converter<char>
+{
+	template <detail::compatible_string_view_with<char> String>
+	[[nodiscard]]
+	constexpr auto operator ()(String&& str) const
+	{
+		return std::views::all(std::forward<String>(str))
+				| std::views::transform(
+					[](const char c) noexcept
+					{
+						// see notes of https://en.cppreference.com/w/cpp/string/byte/toupper
+						// This approach will fail, str actually contains an utf8-encoded string.
+						return static_cast<char>(
+							static_cast<unsigned char>(std::toupper(c)));
+					});
+	}
+};
 
 #endif
