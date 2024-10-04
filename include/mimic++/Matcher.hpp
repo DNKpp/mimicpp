@@ -612,6 +612,35 @@ namespace mimicpp::matches::str
 	}
 
 	/**
+	 * \brief Tests, whether the target string ends with the pattern string.
+	 * \tparam Pattern The string type.
+	 * \param pattern The pattern string.
+	 */
+	template <string Pattern>
+	[[nodiscard]]
+	constexpr auto ends_with(Pattern&& pattern)
+	{
+		return PredicateMatcher{
+			[]<string T, typename Stored>(T&& target, Stored&& stored)
+				requires std::same_as<
+					string_char_t<T>,
+					string_char_t<Pattern>>
+			{
+				auto patternView = string_traits<std::remove_cvref_t<Stored>>::view(std::forward<Stored>(stored))
+									| std::views::reverse;
+				const auto [_, patternIter] = std::ranges::mismatch(
+					string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(target)) | std::views::reverse,
+					patternView);
+
+				return patternIter == std::ranges::end(patternView);
+			},
+			"ends with {}",
+			"ends not with {}",
+			std::tuple{std::forward<Pattern>(pattern)}
+		};
+	}
+
+	/**
 	 * \}
 	 */
 }
