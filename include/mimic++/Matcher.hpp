@@ -516,7 +516,7 @@ namespace mimicpp::matches::str
 	constexpr auto eq(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
 	{
 		using pattern_traits_t = string_traits<std::remove_cvref_t<Pattern>>;
-		using pattern_normalizer_t = string_normalize_converter<string_char_t<Pattern>>;
+		using pattern_normalizer_t = string_case_fold_converter<string_char_t<Pattern>>;
 
 		return PredicateMatcher{
 			[]<normalizable_string T, typename Stored>(T&& target, Stored&& stored)
@@ -525,7 +525,7 @@ namespace mimicpp::matches::str
 					string_char_t<Pattern>>
 			{
 				using target_traits_t = string_traits<std::remove_cvref_t<T>>;
-				using target_normalizer_t = string_normalize_converter<string_char_t<T>>;
+				using target_normalizer_t = string_case_fold_converter<string_char_t<T>>;
 
 				return std::ranges::equal(
 					std::invoke(

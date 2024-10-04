@@ -307,7 +307,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE(
-	"string_normalize_converter<char> can be used with all char-strings.",
+	"string_case_fold_converter<char> can be used with all char-strings.",
 	"[string]",
 	const char*,
 	std::string,
@@ -324,7 +324,7 @@ TEMPLATE_TEST_CASE(
 			}));
 
 	auto convertedRhs = static_cast<TestType>(rhs);
-	constexpr string_normalize_converter<char> caseFolder{};
+	constexpr string_case_fold_converter<char> caseFolder{};
 
 	auto caseFoldedRhs = std::invoke(
 		caseFolder,
@@ -403,7 +403,7 @@ TEMPLATE_TEST_CASE_SIG(
 #else
 
 TEMPLATE_TEST_CASE(
-	"string_normalize_converter<wchar_t> can be used with all utf16-strings.",
+	"string_case_fold_converter<wchar_t> can be used with all utf16-strings.",
 	"[string]",
 	const wchar_t*,
 	std::wstring,
@@ -424,7 +424,7 @@ TEMPLATE_TEST_CASE(
 			}));
 
 	auto convertedRhs = static_cast<TestType>(rhs);
-	constexpr string_normalize_converter<wchar_t> caseFolder{};
+	constexpr string_case_fold_converter<wchar_t> caseFolder{};
 
 	auto caseFoldedRhs = std::invoke(
 		caseFolder,
@@ -439,7 +439,7 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE(
-	"string_normalize_converter<char8_t> can be used with all utf8-strings.",
+	"string_case_fold_converter<char8_t> can be used with all utf8-strings.",
 	"[string]",
 	const char8_t*,
 	std::u8string,
@@ -460,7 +460,7 @@ TEMPLATE_TEST_CASE(
 			}));
 
 	auto convertedRhs = static_cast<TestType>(rhs);
-	constexpr string_normalize_converter<char8_t> caseFolder{};
+	constexpr string_case_fold_converter<char8_t> caseFolder{};
 
 	auto caseFoldedRhs = std::invoke(
 		caseFolder,
@@ -475,7 +475,7 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE(
-	"string_normalize_converter<char16_t> can be used with all utf16-strings.",
+	"string_case_fold_converter<char16_t> can be used with all utf16-strings.",
 	"[string]",
 	const char16_t*,
 	std::u16string,
@@ -496,7 +496,7 @@ TEMPLATE_TEST_CASE(
 			}));
 
 	auto convertedRhs = static_cast<TestType>(rhs);
-	constexpr string_normalize_converter<char16_t> caseFolder{};
+	constexpr string_case_fold_converter<char16_t> caseFolder{};
 
 	auto caseFoldedRhs = std::invoke(
 		caseFolder,
@@ -511,7 +511,7 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE(
-	"string_normalize_converter<char32_t> can be used with all utf32-strings.",
+	"string_case_fold_converter<char32_t> can be used with all utf32-strings.",
 	"[string]",
 	const char32_t*,
 	std::u32string,
@@ -532,7 +532,7 @@ TEMPLATE_TEST_CASE(
 			}));
 
 	auto convertedRhs = static_cast<TestType>(rhs);
-	constexpr string_normalize_converter<char32_t> caseFolder{};
+	constexpr string_case_fold_converter<char32_t> caseFolder{};
 
 	auto caseFoldedRhs = std::invoke(
 		caseFolder,

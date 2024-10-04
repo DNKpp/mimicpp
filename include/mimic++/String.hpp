@@ -225,7 +225,7 @@ namespace mimicpp
 	};
 
 	template <satisfies<is_character> Char>
-	struct string_normalize_converter;
+	struct string_case_fold_converter;
 
 	/**
 	 * \brief Determines, whether the given type supports string normalization.
@@ -235,11 +235,11 @@ namespace mimicpp
 	template <typename String>
 	concept normalizable_string =
 		string<String>
-		&& requires(const string_normalize_converter<string_char_t<String>> converter, string_view_t<String> view)
+		&& requires(const string_case_fold_converter<string_char_t<String>> converter, string_view_t<String> view)
 		{
 			{ std::invoke(converter, std::move(view)) } -> std::ranges::forward_range;
 		}
-		&& requires(std::invoke_result_t<string_normalize_converter<string_char_t<String>>, string_view_t<String>> normalized)
+		&& requires(std::invoke_result_t<string_case_fold_converter<string_char_t<String>>, string_view_t<String>> normalized)
 		{
 			requires std::same_as<
 				string_char_t<String>,
@@ -260,7 +260,7 @@ namespace mimicpp::detail
 #ifndef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
 
 template <>
-struct mimicpp::string_normalize_converter<char>
+struct mimicpp::string_case_fold_converter<char>
 {
 	template <detail::compatible_string_view_with<char> String>
 	[[nodiscard]]
@@ -284,7 +284,7 @@ struct mimicpp::string_normalize_converter<char>
 #include <unicodelib_encodings.h>
 
 template <>
-struct mimicpp::string_normalize_converter<char>
+struct mimicpp::string_case_fold_converter<char>
 {
 	template <detail::compatible_string_view_with<char> String>
 	[[nodiscard]]
@@ -301,7 +301,7 @@ struct mimicpp::string_normalize_converter<char>
 };
 
 template <>
-struct mimicpp::string_normalize_converter<wchar_t>
+struct mimicpp::string_case_fold_converter<wchar_t>
 {
 	template <detail::compatible_string_view_with<wchar_t> String>
 	[[nodiscard]]
@@ -318,14 +318,14 @@ struct mimicpp::string_normalize_converter<wchar_t>
 };
 
 template <>
-struct mimicpp::string_normalize_converter<char8_t>
+struct mimicpp::string_case_fold_converter<char8_t>
 {
 	template <detail::compatible_string_view_with<char8_t> String>
 	[[nodiscard]]
 	constexpr auto operator ()(String&& str) const
 	{
 		const std::string caseFolded = std::invoke(
-			mimicpp::string_normalize_converter<char>{},
+			mimicpp::string_case_fold_converter<char>{},
 			std::string_view{
 				std::bit_cast<const char*>(std::ranges::data(str)),
 				std::ranges::size(str)
@@ -339,7 +339,7 @@ struct mimicpp::string_normalize_converter<char8_t>
 };
 
 template <>
-struct mimicpp::string_normalize_converter<char16_t>
+struct mimicpp::string_case_fold_converter<char16_t>
 {
 	template <detail::compatible_string_view_with<char16_t> String>
 	[[nodiscard]]
@@ -356,7 +356,7 @@ struct mimicpp::string_normalize_converter<char16_t>
 };
 
 template <>
-struct mimicpp::string_normalize_converter<char32_t>
+struct mimicpp::string_case_fold_converter<char32_t>
 {
 	template <detail::compatible_string_view_with<char32_t> String>
 	[[nodiscard]]
