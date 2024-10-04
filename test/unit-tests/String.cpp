@@ -35,6 +35,27 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::is_character_v<T>);
 }
 
+namespace
+{
+	class CustomString
+	{
+	public:
+		std::string inner{};
+	};
+}
+
+template <>
+struct mimicpp::string_traits<CustomString>
+{
+	using char_t = char;
+
+	[[nodiscard]]
+	static constexpr std::string_view view(const CustomString& str) noexcept
+	{
+		return std::string_view{str.inner};
+	}
+};
+
 TEMPLATE_TEST_CASE_SIG(
 	"string_traits contains properties for the provided string type.",
 	"[string][string::traits]",
@@ -65,7 +86,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::wstring_view, wchar_t, std::wstring_view),
 	(true, std::u8string_view, char8_t, std::u8string_view),
 	(true, std::u16string_view, char16_t, std::u16string_view),
-	(true, std::u32string_view, char32_t, std::u32string_view)
+	(true, std::u32string_view, char32_t, std::u32string_view),
+
+	(true, CustomString, char, std::string_view)
 )
 {
 	STATIC_REQUIRE(std::same_as<Char, typename string_traits<T>::char_t>);
@@ -221,6 +244,8 @@ TEMPLATE_TEST_CASE_SIG(
 	"[string]",
 	((bool expected, typename T), expected, T),
 	(false, char),
+
+	(true, CustomString),
 
 	(true, char*),
 	(true, const char*),
