@@ -6,6 +6,7 @@
 #include "mimic++/String.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 using namespace mimicpp;
@@ -298,4 +299,30 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::string<const T&>);
 	STATIC_REQUIRE(expected == mimicpp::string<T&&>);
 	STATIC_REQUIRE(expected == mimicpp::string<const T&&>);
+}
+
+TEMPLATE_TEST_CASE(
+	"string_normalize_converter<char> can be used with all char-strings.",
+	"[string]",
+	const char*,
+	std::string,
+	std::string_view
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	const auto [expected, source] = GENERATE(
+		(table<std::string, const char*>)({
+			{"", ""},
+			{" !1337\t", " !1337\t"},
+			{"HELLO, WORLD!", "HeLlO, WoRlD!"},
+			}));
+
+	auto converted = static_cast<TestType>(source);
+
+	REQUIRE_THAT(
+		std::invoke(
+			string_normalize_converter<char>{},
+			string_traits<TestType>::view(converted)),
+		Matches::RangeEquals(expected));
 }

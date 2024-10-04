@@ -9,7 +9,12 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/Utility.hpp"
 
+#include <concepts>
+#include <ranges>
+#include <string>
+#include <string_view>
 #include <type_traits>
 
 namespace mimicpp
@@ -213,6 +218,31 @@ namespace mimicpp
 		requires std::convertible_to<
 			std::ranges::range_reference_t<string_view_t<T>>,
 			string_char_t<T>>;
+	};
+
+	template <satisfies<is_character> Char>
+	struct string_normalize_converter;
+
+	template <>
+	struct string_normalize_converter<char>
+	{
+		template <std::ranges::borrowed_range String>
+			requires std::convertible_to<
+						std::ranges::range_reference_t<String>,
+						char>
+					&& std::ranges::forward_range<String>
+		[[nodiscard]]
+		constexpr auto operator ()(String&& str)
+		{
+			return std::views::all(std::forward<String>(str))
+					| std::views::transform(
+						[](const char c) noexcept
+						{
+							// see notes of https://en.cppreference.com/w/cpp/string/byte/toupper
+							return static_cast<char>(
+								static_cast<unsigned char>(std::toupper(c)));
+						});
+		}
 	};
 }
 
