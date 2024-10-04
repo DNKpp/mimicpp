@@ -16,6 +16,7 @@ add_executable(
 	"Reports.cpp"
 	"Reporter.cpp"
 	"Sequence.cpp"
+	"String.cpp"
 	"StringMatchers.cpp"
 	"TypeTraits.cpp"
 	"Utility.cpp"

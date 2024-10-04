@@ -11,6 +11,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/String.hpp"
 
 #include <cstdint>
 #include <functional>
