@@ -3,6 +3,7 @@ on:
     workflow_run:
         workflows: ["Generate Build-Matrix"]
         types: [completed]
+        branches: [main, development]
 
 jobs:
     download-build-matrix:
