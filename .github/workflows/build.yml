@@ -34,7 +34,18 @@ env:
         ]
 
 jobs:
+    define-matrix:
+        runs-on: ubuntu-latest
+        outputs:
+            config: ${{ steps.configure-matrix.outputs.matrix }}
+        steps:
+            - name: Set Matrix
+              id: configure-matrix
+              run: |
+                echo "${{ env.config }}" >> $GITHUB_OUTPUT
+
     build:
+        needs: define-matrix
         name: |
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
@@ -49,7 +60,7 @@ jobs:
                 build_mode: [Debug, Release]
                 cxx_standard: [20, 23]
                 format_backend: [std, fmt]
-                config: ${{ fromJSON(vars.config) }}
+                config: ${{ fromJson(needs.define-matrix.outputs.config) }}
 
         steps:
             - uses: actions/checkout@v4
