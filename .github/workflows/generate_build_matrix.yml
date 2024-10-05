@@ -1,0 +1,44 @@
+name: Generate Build-Matrix
+on:
+    push:
+        branches: [main, development]
+    pull_request:
+        branches: [main, development]
+
+env:
+    config: |
+        #clang-18
+        - {
+            prefix: "Linux",
+            suffix: "/libc++",
+            os: ubuntu-latest,
+            container: { image: "ghcr.io/dnkpp/clang:18" },
+            compiler_name: "clang",
+            compiler_version: 18,
+            libcxx: true,
+            asan: true
+        }
+        - {
+            prefix: "Linux",
+            os: ubuntu-latest,
+            container: { image: "ghcr.io/dnkpp/clang:18" },
+            compiler_name: "clang",
+            compiler_version: 18,
+            libcxx: false,
+            asan: true
+        }
+
+jobs:
+    generate-matrix-artifact:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Write env.config to file
+              run: |
+                echo "${{ env.config }}" > env.config
+
+            - name: Upload env.config as artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: env-config
+                  path: env.config

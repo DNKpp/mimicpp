@@ -1,12 +1,26 @@
 name: build & test
 on:
-    push:
-        branches: [main, development]
-    pull_request:
-        branches: [main, development]
+    workflow_run:
+        workflows: ["Generate Build-Matrix"]
+        types:
+            - completed
 
 jobs:
+    download-build-matrix:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Download env.config artifact
+              uses: actions/download-artifact@v4
+              with:
+                name: env-config
+
+            - name: Load env.config
+              id: load-config
+              run: |
+                echo "CONFIG_CONTENT=$(cat env.config)" >> $GITHUB_ENV
+
     build:
+        needs: download-build-matrix
         name: |
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
@@ -21,162 +35,7 @@ jobs:
                 build_mode: [Debug, Release]
                 cxx_standard: [20, 23]
                 format_backend: [std, fmt]
-                config:
-                    #clang-18
-                    - {
-                        prefix: "Linux",
-                        suffix: "/libc++",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/clang:18" },
-                        compiler_name: "clang",
-                        compiler_version: 18,
-                        libcxx: true,
-                        asan: true
-                    }
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/clang:18" },
-                        compiler_name: "clang",
-                        compiler_version: 18,
-                        libcxx: false,
-                        asan: true
-                    }
-                    #clang-17
-                    - {
-                        prefix: "Linux",
-                        suffix: "/libc++",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/clang:17" },
-                        compiler_name: "clang",
-                        compiler_version: 17,
-                        libcxx: true,
-                        asan: true
-                    }
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/clang:17" },
-                        compiler_name: "clang",
-                        compiler_version: 17,
-                        libcxx: false,
-                        asan: true
-                    }
-                    #clang-16
-                    - {
-                        prefix: "Linux",
-                        suffix: "/libc++",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/clang:16" },
-                        compiler_name: "clang",
-                        compiler_version: 16,
-                        libcxx: true,
-                        asan: true
-                    }
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/clang:16" },
-                        compiler_name: "clang",
-                        compiler_version: 16,
-                        libcxx: false,
-                        asan: true
-                    }
-                    #gcc-14
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/gcc:14" },
-                        compiler_name: "gcc",
-                        compiler_version: 14,
-                        libcxx: false,
-                        asan: true
-                    }
-                    #gcc-13
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/gcc:13" },
-                        compiler_name: "gcc",
-                        compiler_version: 13,
-                        libcxx: false,
-                        asan: true
-                    }
-                    #gcc-12
-                    - {
-                        prefix: "Linux",
-                        os: ubuntu-latest,
-                        container: { image: "ghcr.io/dnkpp/gcc:12" },
-                        compiler_name: "gcc",
-                        compiler_version: 12,
-                        libcxx: false,
-                        asan: true
-                    }
-                    # msvc v143
-                    - {
-                        prefix: "Windows 2022",
-                        os: windows-2022,
-                        compiler_name: "msvc",
-                        compiler_version: v143,
-                        cmake_generator: Visual Studio 17 2022,
-                        libcxx: false,
-                        asan: false
-                    }
-                    # msvc ClangCl
-                    - {
-                        prefix: "Windows 2022",
-                        os: windows-2022,
-                        compiler_name: "msvc",
-                        compiler_version: ClangCl,
-                        cmake_generator: Visual Studio 17 2022,
-                        libcxx: false,
-                        asan: false
-                    }
-
-                    # AppleClang
-                    # The ldflags_workaround are taken from the suggestions, when installing via brew
-                    - {
-                        prefix: "macOS",
-                        os: macos-latest,
-                        compiler_name: "AppleClang",
-                        compiler_version: 18,
-                        ldflags_workaround: -L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib -lunwind,
-                        asan: true
-                    }
-                    - {
-                        prefix: "macOS",
-                        os: macos-latest,
-                        compiler_name: "AppleClang",
-                        compiler_version: 17,
-                        ldflags_workaround: -L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++,
-                        asan: true
-                    }
-                    - {
-                        prefix: "macOS",
-                        os: macos-latest,
-                        compiler_name: "AppleClang",
-                        compiler_version: 16,
-                        ldflags_workaround: -L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++,
-                        asan: true
-                    }                    
-
-                exclude:
-                    # both compilers do not support std's format header
-                    - format_backend: std
-                      config:
-                        compiler_name: "clang"
-                        compiler_version: 16
-                    - format_backend: std
-                      config:
-                        compiler_name: "gcc"
-                        compiler_version: 12
-
-                    # This compiler does work, but fails compiling something from boost::filesystem, which is indirectly required
-                    # by the BoostAdapter-Test.
-                    # Maybe, we can find a workaround for this in the future.
-                    - config:
-                        compiler_name: "AppleClang"
-                        compiler_version: 16
+                config: ${{ fromYaml(env.CONFIG_CONTENT) }}
 
         steps:
             - uses: actions/checkout@v4
