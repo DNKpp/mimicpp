@@ -282,7 +282,7 @@ inheritance) and start building your own. They just have to match the ``mimicpp:
 There are multiple types of policie, depending on the task they shall fulfill.
 The expectation policy has full control, whether a match can be made or shall be rejected, while the finalize policy determines, what a mock shall do, when it actually matched
 (like returning a value or throwing an exception). They can implement arbitrary logic, so feel free to experiment. There is no base type requirement,
-they simply have to satisfy either the ``mimicpp::expectation_policy_for``, ``mimicpp::control_policy`` or ``mimicpp::finalize_policy_for_``.
+they simply have to satisfy either the ``mimicpp::expectation_policy_for``, ``mimicpp::control_policy`` or ``mimicpp::finalize_policy_for``.
 
 ---
 
@@ -410,8 +410,11 @@ As new compilers become available, they will be added to the workflow, but older
 
 | Compiler          | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
 |-------------------|:---------:|:------:|:------:|:------:|:----------:|:---:|
+| AppleClang-16.0.6<sup>1</sup> |     ?     |    x   |    x   |    x   |      x     |  x  |
 | AppleClang-17.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 | AppleClang-18.1.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
+
+<sup>1</sup> There is an issue with AppleClang-16 and ``boost::filesystem`` on the current ``macos-latest``, but this is just for the boost-test-adapter. Everything else works fine.
 
 ---
 
