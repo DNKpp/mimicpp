@@ -487,12 +487,14 @@ namespace mimicpp::matches::str
 	 *
 	 * ### Byte-String
 	 *
-	 * Byte-Strings are normalized lazily element-wise via ``std::toupper`` function.
+	 * Byte-Strings are element-wise lazily case-folded via ``std::toupper`` function.
 	 *
 	 * ### Strings with other character-types
 	 *
-	 * Even if ``mimic++`` does not support normalization for other string types out of the box, users can specialize the ``string_case_fold_converter``
+	 * Even if ``mimic++`` does not support case-folding for other string types out of the box, users can specialize the ``string_case_fold_converter``
 	 * for the missing character-types and thus inject the necessary support.
+	 *
+	 * Another, but experimental, possibility is to enable the \ref MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER option.
 	 *
 	 * ## Custom String-Types
 	 *

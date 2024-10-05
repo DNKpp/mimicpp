@@ -48,4 +48,21 @@
  * ``mimic++`` needs to store the matcher inside the expectation. These requirements are not playing well together.
  * Nevertheless ``catch2`` offers some nice matcher definitions, which could be very helpfull for testing. But as already said, they are dangerous,
  * thus I decided to make them opt-in as experimental features.
+ * 
+ * ---
+ * \anchor MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+ * ## Enable experimental string-matcher unicode support
+ * Name: ``MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER``
+ * 
+ * If enabled, all string-matchers get full unicode support. This is relevant, when comparing case-insensitively. It's not required for the base-version
+ * of string-matchers.
+ * This is an experimental feature, and may be removed during any release.
+ * 
+ * ### Why is it an experimental feature?
+ * 
+ * This will pull the rather light-weight library ``cpp-unicodelib`` from github. ``mimic++`` won't check whether it can already find the library,
+ * because it has very poor cmake support. This library is currently chosen, because it's very easy to integrate and offers the necessary
+ * algorithm (``to_case_fold``), but it's in no way an optimal solution. It comes also with a quite heavy runtime-cost, as we have to do many
+ * conversions back and forth, to get that working. If there is a better -- but similar light-weight -- option available, please tell me.
+ * \see https://github.com/yhirose/cpp-unicodelib
  */
