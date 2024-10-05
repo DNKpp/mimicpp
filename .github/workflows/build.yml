@@ -43,8 +43,8 @@ jobs:
               id: configure-matrix
               shell: bash
               run: |
-                echo "config<<EOF" >> "$GITHUB_OUTPUT
-                echo "$(echo ${{ env.config }})" >> "$GITHUB_OUTPUT
+                echo "config<<EOF" >> "$GITHUB_OUTPUT"
+                echo "${{ env.config }}" >> "$GITHUB_OUTPUT"
                 echo "EOF" >> "$GITHUB_OUTPUT"
 
     test:
