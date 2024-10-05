@@ -41,6 +41,7 @@ jobs:
         steps:
             - name: Output configs
               id: configure-matrix
+              shell: bash
               run: |
                 OUTPUT="${{ env.config }}"
                 OUTPUT="${OUTPUT//'%'/'%25'}"
@@ -49,7 +50,7 @@ jobs:
 
                 echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
 
-                echo $$GITHUB_OUTPUT
+                echo $GITHUB_OUTPUT
 
     build:
         needs: define-matrix
