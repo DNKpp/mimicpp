@@ -8,25 +8,29 @@ on:
 env:
     config: |
         [
-          {
-              prefix: "Linux",
-              suffix: "/libc++",
-              os: ubuntu-latest,
-              container: { image: "ghcr.io/dnkpp/clang:18" },
-              compiler_name: "clang",
-              compiler_version: 18,
-              libcxx: true,
-              asan: true
-          },
-          {
-              prefix: "Linux",
-              os: ubuntu-latest,
-              container: { image: "ghcr.io/dnkpp/clang:18" },
-              compiler_name: "clang",
-              compiler_version: 18,
-              libcxx: false,
-              asan: true
-          }
+            {
+                "prefix": "Linux",
+                "suffix": "/libc++",
+                "os": "ubuntu-latest",
+                "container": {
+                    "image": "ghcr.io/dnkpp/clang:18"
+                },
+                "compiler_name": "clang",
+                "compiler_version": 18,
+                "libcxx": true,
+                "asan": true
+            },
+            {
+                "prefix": "Linux",
+                "os": "ubuntu-latest",
+                "container": {
+                    "image": "ghcr.io/dnkpp/clang:18"
+                },
+                "compiler_name": "clang",
+                "compiler_version": 18,
+                "libcxx": false,
+                "asan": true
+            }
         ]
 
 jobs:
