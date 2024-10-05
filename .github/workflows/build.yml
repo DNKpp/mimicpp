@@ -45,7 +45,9 @@ jobs:
               id: configure-matrix
               shell: bash
               run: |
-                echo "config=$(echo ${{ env.config }})" >> "$GITHUB_OUTPUT"
+                  # Convert multiline to single line
+                  single_line_config=$(echo "${{ env.config }}" | jq -c .)
+                  echo "config=${single_line_config}" >> "$GITHUB_OUTPUT"
 
     test:
         runs-on: ubuntu-latest
