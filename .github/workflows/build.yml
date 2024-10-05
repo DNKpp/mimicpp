@@ -57,7 +57,7 @@ jobs:
               id: configure-matrix
               shell: bash
               run: |
-                echo "${{ needs.define-matrix.outputs.config }}"
+                echo '${{ needs.define-matrix.outputs.config }}'
 
     build:
         needs: test
