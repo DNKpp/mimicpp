@@ -452,6 +452,16 @@ namespace mimicpp::matches::detail
 			string_case_fold_converter<string_char_t<String>>{},
 			detail::make_view(std::forward<String>(str)));
 	}
+
+	template <string Target, string Pattern>
+	constexpr void check_string_compatibility() noexcept
+	{
+		static_assert(
+			std::same_as<
+				string_char_t<Target>,
+				string_char_t<Pattern>>,
+			"Pattern and target string must have the same character-type.");
+	}
 }
 
 namespace mimicpp::matches::str
@@ -515,10 +525,9 @@ namespace mimicpp::matches::str
 	{
 		return PredicateMatcher{
 			[]<string T, typename Stored>(T&& target, Stored&& stored)
-				requires std::same_as<
-					string_char_t<T>,
-					string_char_t<Pattern>>
 			{
+				detail::check_string_compatibility<T, Pattern>();
+
 				return std::ranges::equal(
 					detail::make_view(std::forward<T>(target)),
 					detail::make_view(std::forward<Stored>(stored)));
@@ -540,10 +549,9 @@ namespace mimicpp::matches::str
 	{
 		return PredicateMatcher{
 			[]<case_foldable_string T, typename Stored>(T&& target, Stored&& stored)
-				requires std::same_as<
-					string_char_t<T>,
-					string_char_t<Pattern>>
 			{
+				detail::check_string_compatibility<T, Pattern>();
+
 				return std::ranges::equal(
 					detail::make_case_folded_string(std::forward<T>(target)),
 					detail::make_case_folded_string(std::forward<Stored>(stored)));
@@ -565,10 +573,9 @@ namespace mimicpp::matches::str
 	{
 		return PredicateMatcher{
 			[]<string T, typename Stored>(T&& target, Stored&& stored)
-				requires std::same_as<
-					string_char_t<T>,
-					string_char_t<Pattern>>
 			{
+				detail::check_string_compatibility<T, Pattern>();
+
 				auto patternView = detail::make_view(std::forward<Stored>(stored));
 				const auto [_, patternIter] = std::ranges::mismatch(
 					detail::make_view(std::forward<T>(target)),
@@ -593,10 +600,9 @@ namespace mimicpp::matches::str
 	{
 		return PredicateMatcher{
 			[]<string T, typename Stored>(T&& target, Stored&& stored)
-				requires std::same_as<
-					string_char_t<T>,
-					string_char_t<Pattern>>
 			{
+				detail::check_string_compatibility<T, Pattern>();
+
 				auto caseFoldedPattern = detail::make_case_folded_string(std::forward<Stored>(stored));
 				const auto [_, patternIter] = std::ranges::mismatch(
 					detail::make_case_folded_string(std::forward<T>(target)),
@@ -621,10 +627,9 @@ namespace mimicpp::matches::str
 	{
 		return PredicateMatcher{
 			[]<string T, typename Stored>(T&& target, Stored&& stored)
-				requires std::same_as<
-					string_char_t<T>,
-					string_char_t<Pattern>>
 			{
+				detail::check_string_compatibility<T, Pattern>();
+
 				auto patternView = detail::make_view(std::forward<Stored>(stored))
 									| std::views::reverse;
 				const auto [_, patternIter] = std::ranges::mismatch(
@@ -650,10 +655,9 @@ namespace mimicpp::matches::str
 	{
 		return PredicateMatcher{
 			[]<string T, typename Stored>(T&& target, Stored&& stored)
-				requires std::same_as<
-					string_char_t<T>,
-					string_char_t<Pattern>>
 			{
+				detail::check_string_compatibility<T, Pattern>();
+
 				auto caseFoldedPattern = detail::make_case_folded_string(std::forward<Stored>(stored))
 										| std::views::reverse;
 				const auto [_, patternIter] = std::ranges::mismatch(
@@ -679,10 +683,9 @@ namespace mimicpp::matches::str
 	{
 		return PredicateMatcher{
 			[]<string T, typename Stored>(T&& target, Stored&& stored)
-				requires std::same_as<
-					string_char_t<T>,
-					string_char_t<Pattern>>
 			{
+				detail::check_string_compatibility<T, Pattern>();
+
 				auto patternView = detail::make_view(std::forward<Stored>(stored));
 				return std::ranges::empty(patternView)
 						|| !std::ranges::empty(
@@ -707,10 +710,9 @@ namespace mimicpp::matches::str
 	{
 		return PredicateMatcher{
 			[]<string T, typename Stored>(T&& target, Stored&& stored)
-				requires std::same_as<
-					string_char_t<T>,
-					string_char_t<Pattern>>
 			{
+				detail::check_string_compatibility<T, Pattern>();
+
 				auto patternView = detail::make_case_folded_string(std::forward<Stored>(stored));
 				auto targetView = detail::make_case_folded_string(std::forward<T>(target));
 				return std::ranges::empty(patternView)
