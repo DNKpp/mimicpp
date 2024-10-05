@@ -473,6 +473,13 @@ namespace mimicpp::matches::str
 	 * \brief String specific matchers.
 	 * \details These matchers are designed to work with any string- and character-type.
 	 * This comes with some caveats and restrictions, e.g. comparisons between strings of different character-types are not supported.
+	 * Any string, which satisfies the ``string`` concept is directly supported, thus it's possible to integrate your own types seamlessly.
+	 *
+	 * ## Example
+	 *
+	 * \snippet Requirements.cpp matcher str matcher
+	 *
+	 * ## Case-Insensitive Matchers
 	 *
 	 * In the following these terms are used:
 	 * - ``code-point`` is a logical string-element. In byte-strings these are the single characters, but in Unicode this may span multiple physical-elements.
@@ -482,7 +489,7 @@ namespace mimicpp::matches::str
 	 * As this should be fine for equality-comparisons, this will quickly lead to issues when performing case-insensitive comparisons.
 	 * ``mimic++`` therefore converts all participating strings to their *case-folded* representation during comparisons.
 	 *
-	 * ## Case-Folding
+	 * ### Case-Folding
 	 *
 	 * Case-Folding means the process of making a string independent of its case (e.g. ``a`` and ``A`` would compare equal).
 	 * This process is centralized to the ``string_case_fold_converter`` template, which must be specialized for the appropriate character-type.
@@ -495,21 +502,16 @@ namespace mimicpp::matches::str
 	 * Unfortunately, this requires a lot of work to make that work (correctly) for all existing character-types.
 	 * Due to this, currently only byte-strings are supported for case-insensitive comparisons.
 	 *
-	 * ### Byte-String
+	 * #### Byte-String
 	 *
 	 * Byte-Strings are element-wise lazily case-folded via ``std::toupper`` function.
 	 *
-	 * ### Strings with other character-types
+	 * #### Strings with other character-types
 	 *
 	 * Even if ``mimic++`` does not support case-folding for other string types out of the box, users can specialize the ``string_case_fold_converter``
 	 * for the missing character-types and thus inject the necessary support.
 	 *
-	 * Another, but experimental, possibility is to enable the \ref MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER option.
-	 *
-	 * ## Custom String-Types
-	 *
-	 * ``mimic++`` internally utilizes the type-trait ``string_traits``, which users can specialize for their needs. It can then be checked via the
-	 * ``string`` concept, whether the desired type can actually be used as a string-type.
+	 * Another, but yet experimental, possibility is to enable the \ref MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER option.
 	 *
 	 *\{
 	 */
