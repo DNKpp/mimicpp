@@ -669,6 +669,60 @@ namespace mimicpp::matches::str
 	}
 
 	/**
+	 * \brief Tests, whether the pattern string is part of the target string.
+	 * \tparam Pattern The string type.
+	 * \param pattern The pattern string.
+	 */
+	template <string Pattern>
+	[[nodiscard]]
+	constexpr auto contains(Pattern&& pattern)
+	{
+		return PredicateMatcher{
+			[]<string T, typename Stored>(T&& target, Stored&& stored)
+				requires std::same_as<
+					string_char_t<T>,
+					string_char_t<Pattern>>
+			{
+				auto patternView = detail::make_view(std::forward<Stored>(stored));
+				return std::ranges::empty(patternView)
+						|| !std::ranges::empty(
+							std::ranges::search(
+								detail::make_view(std::forward<T>(target)),
+								std::move(patternView)));
+			},
+			"contains {}",
+			"contains not {}",
+			std::tuple{std::forward<Pattern>(pattern)}
+		};
+	}
+
+	/**
+	 * \brief Tests, whether the pattern string is case-insensitively part of the target string.
+	 * \tparam Pattern The string type.
+	 * \param pattern The pattern string.
+	 */
+	template <string Pattern>
+	[[nodiscard]]
+	constexpr auto contains(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
+	{
+		return PredicateMatcher{
+			[]<string T, typename Stored>(T&& target, Stored&& stored)
+				requires std::same_as<
+					string_char_t<T>,
+					string_char_t<Pattern>>
+			{
+				auto patternView = detail::make_case_folded_string(std::forward<Stored>(stored));
+				auto targetView = detail::make_case_folded_string(std::forward<T>(target));
+				return std::ranges::empty(patternView)
+						|| !std::ranges::empty(std::ranges::search(targetView, patternView));
+			},
+			"case-insensitively contains {}",
+			"case-insensitively contains not {}",
+			std::tuple{std::forward<Pattern>(pattern)}
+		};
+	}
+
+	/**
 	 * \}
 	 */
 }
