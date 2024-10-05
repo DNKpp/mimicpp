@@ -42,7 +42,7 @@ jobs:
             - name: Output configs
               id: configure-matrix
               run: |
-                OUTPUT=${{ env.config }}
+                OUTPUT="${{ env.config }}"
                 OUTPUT="${OUTPUT//'%'/'%25'}"
                 OUTPUT="${OUTPUT//$'\n'/'%0A'}"
                 OUTPUT="${OUTPUT//$'\r'/'%0D'}"
