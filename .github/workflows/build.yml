@@ -7,30 +7,30 @@ on:
 
 env:
     config: |
-        #clang-18
-        - {
-            prefix: "Linux",
-            suffix: "/libc++",
-            os: ubuntu-latest,
-            container: { image: "ghcr.io/dnkpp/clang:18" },
-            compiler_name: "clang",
-            compiler_version: 18,
-            libcxx: true,
-            asan: true
-        }
-        - {
-            prefix: "Linux",
-            os: ubuntu-latest,
-            container: { image: "ghcr.io/dnkpp/clang:18" },
-            compiler_name: "clang",
-            compiler_version: 18,
-            libcxx: false,
-            asan: true
-        }
+        [
+          {
+              prefix: "Linux",
+              suffix: "/libc++",
+              os: ubuntu-latest,
+              container: { image: "ghcr.io/dnkpp/clang:18" },
+              compiler_name: "clang",
+              compiler_version: 18,
+              libcxx: true,
+              asan: true
+          },
+          {
+              prefix: "Linux",
+              os: ubuntu-latest,
+              container: { image: "ghcr.io/dnkpp/clang:18" },
+              compiler_name: "clang",
+              compiler_version: 18,
+              libcxx: false,
+              asan: true
+          }
+        ]
 
 jobs:
     build:
-        needs: download-build-matrix
         name: |
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
@@ -45,7 +45,7 @@ jobs:
                 build_mode: [Debug, Release]
                 cxx_standard: [20, 23]
                 format_backend: [std, fmt]
-                config: ${{ env.config }}
+                config: ${{ fromJSON(vars.config) }}
 
         steps:
             - uses: actions/checkout@v4
