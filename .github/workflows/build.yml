@@ -42,7 +42,7 @@ jobs:
             - name: Set Matrix
               id: configure-matrix
               run: |
-                echo "config=$(echo ${{ env.config }})" >> "$GITHUB_OUTPUT"
+                echo "config=$(echo '${{ toJson(env.config) }}')" >> "$GITHUB_OUTPUT"
 
     build:
         needs: define-matrix
