@@ -45,7 +45,7 @@ jobs:
                 build_mode: [Debug, Release]
                 cxx_standard: [20, 23]
                 format_backend: [std, fmt]
-                config: ${{ fromYaml(${{env.config}}) }}
+                config: ${{ env.config }}
 
         steps:
             - uses: actions/checkout@v4
