@@ -45,9 +45,8 @@ jobs:
               id: configure-matrix
               shell: bash
               run: |
-                  # Use 'jq' to parse and convert multiline JSON to single line
-                  echo "${{ env.config }}" | jq -c . > config.json
-                  echo "config=$(cat config.json)" >> "$GITHUB_OUTPUT"
+                  OUTPUT="${{ env.config }}"
+                  echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
 
     test:
         runs-on: ubuntu-latest
