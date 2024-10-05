@@ -1,9 +1,7 @@
 name: build & test
 on:
-    workflow_run:
-        workflows: ["Generate Build-Matrix"]
-        types: [completed]
-        branches: [main, development]
+    repository_dispatch:
+        types: [trigger-build]
 
 jobs:
     download-build-matrix:

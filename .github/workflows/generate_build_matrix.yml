@@ -42,3 +42,8 @@ jobs:
               with:
                   name: env-config
                   path: env.config
+
+            - name: Repository Dispatch
+              uses: peter-evans/repository-dispatch@v3
+              with:
+                  event-type: trigger-build
