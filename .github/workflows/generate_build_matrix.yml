@@ -1,4 +1,4 @@
-name: Generate Build-Matrix
+name: "Generate Build-Matrix"
 on:
     push:
         branches: [main, development]

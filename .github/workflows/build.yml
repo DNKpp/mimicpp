@@ -2,8 +2,7 @@ name: build & test
 on:
     workflow_run:
         workflows: ["Generate Build-Matrix"]
-        types:
-            - completed
+        types: [completed]
 
 jobs:
     download-build-matrix:
