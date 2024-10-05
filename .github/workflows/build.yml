@@ -60,7 +60,10 @@ jobs:
                 echo '${{ needs.define-matrix.outputs.config }}'
 
     build:
-        needs: test
+        needs:
+            - define-matrix
+            - test
+
         name: |
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
