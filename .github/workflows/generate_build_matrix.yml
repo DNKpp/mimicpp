@@ -31,6 +31,9 @@ env:
 jobs:
     generate-matrix-artifact:
         runs-on: ubuntu-latest
+        # this is required the repository dispatch
+        permissions:
+            contents: write
 
         steps:
             - name: Write env.config to file
@@ -45,5 +48,6 @@ jobs:
 
             - name: Repository Dispatch
               uses: peter-evans/repository-dispatch@v3
+              
               with:
                   event-type: trigger-build
