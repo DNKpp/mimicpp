@@ -12,40 +12,40 @@ jobs:
             config: ${{ steps.configure-matrix.outputs.config }}
         env:
             config: |
-                [
-                    {
-                        "prefix": "Linux",
-                        "suffix": "/libc++",
-                        "os": "ubuntu-latest",
-                        "container": {
-                            "image": "ghcr.io/dnkpp/clang:18"
+                {
+                    "include": [
+                        {
+                            "prefix": "Linux",
+                            "suffix": "/libc++",
+                            "os": "ubuntu-latest",
+                            "container": {
+                                "image": "ghcr.io/dnkpp/clang:18"
+                            },
+                            "compiler_name": "clang",
+                            "compiler_version": 18,
+                            "libcxx": true,
+                            "asan": true
                         },
-                        "compiler_name": "clang",
-                        "compiler_version": 18,
-                        "libcxx": true,
-                        "asan": true
-                    },
-                    {
-                        "prefix": "Linux",
-                        "os": "ubuntu-latest",
-                        "container": {
-                            "image": "ghcr.io/dnkpp/clang:18"
-                        },
-                        "compiler_name": "clang",
-                        "compiler_version": 18,
-                        "libcxx": false,
-                        "asan": true
-                    }
-                ]
+                        {
+                            "prefix": "Linux",
+                            "os": "ubuntu-latest",
+                            "container": {
+                                "image": "ghcr.io/dnkpp/clang:18"
+                            },
+                            "compiler_name": "clang",
+                            "compiler_version": 18,
+                            "libcxx": false,
+                            "asan": true
+                        }
+                    ]
+                }
 
         steps:
             - name: Output configs
               id: configure-matrix
               shell: bash
               run: |
-                echo "config<<EOF" >> "$GITHUB_OUTPUT"
-                echo "${{ env.config }}" >> "$GITHUB_OUTPUT"
-                echo "EOF" >> "$GITHUB_OUTPUT"
+                echo "config=$(echo ${{ env.config }})" >> "$GITHUB_OUTPUT"
 
     test:
         runs-on: ubuntu-latest
