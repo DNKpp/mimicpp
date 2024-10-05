@@ -43,17 +43,22 @@ jobs:
               id: configure-matrix
               shell: bash
               run: |
-                OUTPUT="${{ env.config }}"
-                OUTPUT="${OUTPUT//'%'/'%25'}"
-                OUTPUT="${OUTPUT//$'\n'/'%0A'}"
-                OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+                echo "config<<EOF" >> "$GITHUB_OUTPUT
+                echo "$(echo ${{ env.config }})" >> "$GITHUB_OUTPUT
+                echo "EOF" >> "$GITHUB_OUTPUT"
 
-                echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
-
-                echo $GITHUB_OUTPUT
+    test:
+        runs-on: ubuntu-latest
+        needs: define-matrix
+        steps:
+            - name: Output configs
+              id: configure-matrix
+              shell: bash
+              run: |
+                echo "${{ needs.define-matrix.outputs.config }}"
 
     build:
-        needs: define-matrix
+        needs: test
         name: |
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
