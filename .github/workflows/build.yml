@@ -49,6 +49,8 @@ jobs:
 
                 echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
 
+                echo $$GITHUB_OUTPUT
+
     build:
         needs: define-matrix
         name: |
