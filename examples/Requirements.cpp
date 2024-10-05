@@ -7,6 +7,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <string>
+
 TEST_CASE(
 	"Requirements can be specified for each argument.",
 	"[example][example::requirements]"
@@ -174,4 +176,23 @@ TEST_CASE(
 	std::vector collection{42, 1337};
 	mock(collection);
 	//! [matcher predicate matcher]
+}
+
+TEST_CASE(
+	"Various string matchers are supported.",
+	"[example][example::requirements]"
+)
+{
+	//! [matcher str matcher]
+	namespace matches = mimicpp::matches;
+	namespace expect = mimicpp::expect;
+
+	mimicpp::Mock<void(std::string)> mock{};
+
+	SCOPED_EXP mock.expect_call(matches::str::starts_with("Hell"))
+				and expect::arg<0>(matches::str::ends_with("d!"))
+				and expect::arg<0>(matches::str::contains(", Wo"));
+
+	mock("Hello, World!");
+	//! [matcher str matcher]
 }
