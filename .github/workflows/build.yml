@@ -39,10 +39,10 @@ jobs:
                 ]
 
         steps:
-            - name: Set Matrix
+            - name: Output configs
               id: configure-matrix
               run: |
-                echo "config=$(echo '${{ toJson(env.config) }}')" >> "$GITHUB_OUTPUT"
+                echo "config=$(echo '${{ env.config }}')" >> "$GITHUB_OUTPUT"
 
     build:
         needs: define-matrix
@@ -60,7 +60,7 @@ jobs:
                 build_mode: [Debug, Release]
                 cxx_standard: [20, 23]
                 format_backend: [std, fmt]
-                config: ${{ fromJson(needs.define-matrix.outputs.config) }}
+                config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
 
         steps:
             - uses: actions/checkout@v4
