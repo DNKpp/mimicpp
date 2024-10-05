@@ -184,6 +184,7 @@ jobs:
     run-unit-tests:
         needs: define-config
         name: |
+            [UT]
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
             ${{ matrix.config.suffix }} 
@@ -200,7 +201,7 @@ jobs:
                 config: ${{ fromJSON(needs.define-config.outputs.config) }}
 
                 exclude:
-                    # both compilers do not support std's format header
+                    # all listed compilers do not support std's format header
                     - format_backend: "std"
                       config:
                         compiler_name: "clang"
@@ -209,6 +210,10 @@ jobs:
                       config:
                         compiler_name: "gcc"
                         compiler_version: 12
+                    - format_backend: "std"
+                      config:
+                        compiler_name: "AppleClang"
+                        compiler_version: 16
 
         steps:
             - uses: actions/checkout@v4
@@ -280,19 +285,26 @@ jobs:
               shell: bash
               run: |
                 cmake --build build \
+                    -j5 \
                     ${{ env.CMAKE_BUILD_EXTRA }}
 
             - name: Run tests
               shell: bash
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/test/unit-tests -C ${{ matrix.build_mode }}
+              run: |
+                ctest --test-dir build/test/unit-tests \
+                    -C ${{ matrix.build_mode }} \
+                    -j5
 
             - name: Run examples
               shell: bash
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/examples -C ${{ matrix.build_mode }}
+              run: |
+                ctest --test-dir build/examples \
+                    -C ${{ matrix.build_mode }} \
+                    -j5
 
 
     ############
@@ -303,6 +315,7 @@ jobs:
     run-adapter-tests:
         needs: define-config
         name: |
+            [AT]
             ${{ matrix.config.prefix }} 
             ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
             ${{ matrix.config.suffix }} 
@@ -383,10 +396,14 @@ jobs:
               shell: bash
               run: |
                 cmake --build build \
+                    -j5 \
                     ${{ env.CMAKE_BUILD_EXTRA }}
 
             - name: Run adapter tests
               shell: bash
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/test/adapter-tests -C ${{ matrix.build_mode }} -j4
+              run:  |
+                ctest --test-dir build/test/adapter-tests \
+                    -C ${{ matrix.build_mode }} \
+                    -j5
