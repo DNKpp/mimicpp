@@ -6,7 +6,7 @@ include(get_cpm)
 project(
 	mimicpp
 	LANGUAGES CXX
-	VERSION 1
+	VERSION 2
 )
 
 add_library(mimicpp INTERFACE)
