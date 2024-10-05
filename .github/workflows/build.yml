@@ -45,7 +45,8 @@ jobs:
               id: configure-matrix
               shell: bash
               run: |
-                  OUTPUT="${{ env.config }}"
+                  # seems to convert that to a single-line json and thus please the output step
+                  OUTPUT='${{ env.config }}'
                   echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
 
     test:
