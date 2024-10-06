@@ -11,10 +11,8 @@ jobs:
     # Defines the compiler configurations for the other jobs.
     #
     #####
-    define-config:
+    define-matrix:
         runs-on: ubuntu-latest
-        outputs:
-            config: ${{ steps.output-config.outputs.config }}
         env:
             config: |
                 [
@@ -159,15 +157,42 @@ jobs:
                     }
                 ]
 
+        outputs:
+            config: ${{ steps.output-config.outputs.config }}
+            build_modes: ${{ steps.output-options.outputs.build_modes }}
+            cxx_versions: ${{ steps.output-options.outputs.cxx_versions }}
+
         steps:
             - name: Output configs
               id: output-config
               shell: bash
               run: |
-                  # seems to convert that to a single-line json and thus please the output step
-                  # wrap in single '!
-                  OUTPUT='${{ env.config }}'
-                  echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
+                # seems to convert that to a single-line json and thus please the output step
+                # wrap in single '!
+                OUTPUT='${{ env.config }}'
+                echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
+
+            # enables debug-mode and c++20 for all cases
+            - name: Enable debug-mode
+              shell: bash
+              run: |
+                echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
+                echo "CXX_VERSIONS=20" >> $GITHUB_ENV
+
+             # if main is the target branch, add release-mode and c++23
+            - name: Enable release-mode
+              if: ${{ github.ref == 'refs/heads/main' }}
+              shell: bash
+              run: |
+                echo "BUILD_MODES=$(echo $BUILD_MODES, \"Release\")" >> $GITHUB_ENV
+                echo "CXX_VERSIONS=$(echo $CXX_VERSIONS, 23)" >> $GITHUB_ENV
+
+            - name: Output build-modes and c++-versions
+              id: output-options
+              shell: bash
+              run: |
+                 echo "build_modes=$(echo [ $BUILD_MODES ])" >> "$GITHUB_OUTPUT"
+                 echo "cxx_versions=$(echo [ $CXX_VERSIONS ])" >> "$GITHUB_OUTPUT"
 
     ############
     #
@@ -182,7 +207,7 @@ jobs:
     #
     #####
     run-unit-tests:
-        needs: define-config
+        needs: define-matrix
         name: |
             [UT]
             ${{ matrix.config.prefix }} 
@@ -195,11 +220,11 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                build_mode: [Debug, Release]
-                cxx_standard: [20, 23]
                 format_backend: [std, fmt]
                 str_matcher: [char, unicode]
-                config: ${{ fromJSON(needs.define-config.outputs.config) }}
+                build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
+                cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
+                config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
 
                 exclude:
                     # all listed compilers do not support std's format header
@@ -320,7 +345,7 @@ jobs:
     #
     #####
     run-adapter-tests:
-        needs: define-config
+        needs: define-matrix
         name: |
             [AT]
             ${{ matrix.config.prefix }} 
@@ -333,9 +358,9 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                build_mode: [Debug, Release]
-                cxx_standard: [20, 23]
-                config: ${{ fromJSON(needs.define-config.outputs.config) }}
+                build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
+                cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
+                config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
 
                 exclude:
                     # This compiler does work, but fails compiling something from boost::filesystem, which is indirectly required
