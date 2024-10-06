@@ -428,6 +428,19 @@ TEST_CASE(
 			Catch::Matchers::Equals("{ value: {?} }"));
 	}
 
+	SECTION("Tuple-likes have special treatment")
+	{
+		REQUIRE_THAT(
+			mimicpp::print(std::tuple{}),
+			Catch::Matchers::Equals("{  }"));
+		REQUIRE_THAT(
+			mimicpp::print(std::tuple{1337}),
+			Catch::Matchers::Equals("{ 1337 }"));
+		REQUIRE_THAT(
+			mimicpp::print(std::tuple{NonPrintable{}, 1337}),
+			Catch::Matchers::Equals("{ {?}, 1337 }"));
+	}
+
 	SECTION("When nothing matches, a default token is inserted.")
 	{
 		constexpr NonPrintable value{};

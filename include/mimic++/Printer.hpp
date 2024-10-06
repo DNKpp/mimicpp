@@ -425,6 +425,47 @@ namespace mimicpp::detail
 		}
 	};
 
+	template <std::size_t index, print_iterator OutIter, typename Tuple>
+	OutIter tuple_element_print(OutIter out, Tuple&& tuple)
+	{
+		if constexpr (0u != index)
+		{
+			out = format::format_to(std::move(out), ", ");
+		}
+
+		constexpr PrintFn printer{};
+		return printer(
+			std::move(out), 
+			std::get<index>(std::forward<Tuple>(tuple)));
+	}
+
+	template <typename T>
+		requires requires
+		{
+			typename std::tuple_size<T>::type;
+			requires std::convertible_to<typename std::tuple_size<T>::type, std::size_t>;
+			requires 0u <= std::tuple_size_v<T>;
+		}
+	class Printer<T>
+	{
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, const T& tuple)
+		{
+			out = format::format_to(std::move(out), "{{ ");
+
+			std::invoke(
+				[&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
+				{
+					(...,
+						(out = tuple_element_print<indices>(std::move(out), tuple)));
+				},
+				std::make_index_sequence<std::tuple_size_v<T>>{});
+
+			return format::format_to(std::move(out), " }}");
+		}
+	};
+
 	template <typename Char>
 		requires is_character_v<Char>
 	struct character_literal_printer;
