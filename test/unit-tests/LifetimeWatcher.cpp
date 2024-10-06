@@ -90,4 +90,37 @@ TEST_CASE(
 			reporter.unfulfilled_expectations(),
 			Matches::IsEmpty());
 	}
+
+	SECTION("An exception is thrown, if a destruction expectation is set more than once.")
+	{
+		auto expectation = std::invoke(
+			[]() -> ScopedExpectation
+			{
+				LifetimeWatcher watcher{};
+				ScopedExpectation exp1 = watcher.expect_destruct();
+
+				REQUIRE_THROWS_AS(
+					watcher.expect_destruct(),
+					std::logic_error);
+
+				REQUIRE_THROWS_AS(
+					watcher.expect_destruct(),
+					std::logic_error);
+
+				return exp1;
+			});
+
+		REQUIRE_THAT(
+			reporter.full_match_reports(),
+			Matches::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.inapplicable_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unfulfilled_expectations(),
+			Matches::IsEmpty());
+	}
 }

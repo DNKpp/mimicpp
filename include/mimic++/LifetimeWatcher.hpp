@@ -10,6 +10,9 @@
 
 #include "mimic++/Mock.hpp"
 
+#include <stdexcept>
+#include <utility>
+
 namespace mimicpp
 {
 	class LifetimeWatcher
@@ -23,11 +26,19 @@ namespace mimicpp
 		[[nodiscard]]
 		auto expect_destruct()
 		{
+			if (std::exchange(m_HasDestructExpectation, true))
+			{
+				throw std::logic_error{
+					"LifetimeWatcher: A destruct expectation can not be created more than once for a single instance."
+				};
+			}
+
 			return m_DestructionMock.expect_call()
 					and expect::once();	// prevent further times specifications
 		}
 
 	private:
+		bool m_HasDestructExpectation{};
 		Mock<void()> m_DestructionMock{};
 	};
 }
