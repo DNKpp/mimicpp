@@ -200,9 +200,21 @@ namespace mimicpp::detail
 			std::remove_cvref_t<Arg>,
 			signature_param_type_t<index, Signature>>
 	[[nodiscard]]
-	constexpr auto make_arg_policy(Arg&& arg, [[maybe_unused]] const priority_tag<2>)
+	constexpr auto make_arg_policy(Arg&& arg, [[maybe_unused]] const priority_tag<3>)
 	{
 		return expect::arg<index>(std::forward<Arg>(arg));
+	}
+
+	template <
+		typename Signature,
+		std::size_t index,
+		string Arg>
+		requires string<signature_param_type_t<index, Signature>>
+	[[nodiscard]]
+	constexpr auto make_arg_policy(Arg&& arg, [[maybe_unused]] const priority_tag<2>)
+	{
+		return expect::arg<index>(
+			matches::str::eq(std::forward<Arg>(arg)));
 	}
 
 	template <typename Signature, std::size_t index, std::equality_comparable_with<signature_param_type_t<index, Signature>> Arg>
@@ -238,7 +250,7 @@ namespace mimicpp::detail
 			&& ...
 			&& detail::make_arg_policy<Signature, indices>(
 				std::forward<Args>(args),
-				priority_tag<2>{}));
+				priority_tag<3>{}));
 	}
 
 	template <typename Signature, typename... Args>

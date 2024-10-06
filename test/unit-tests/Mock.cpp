@@ -887,3 +887,27 @@ TEST_CASE(
 	REQUIRE(firstExpectation.is_satisfied());
 	REQUIRE(secondExpectation.is_satisfied());
 }
+
+TEST_CASE("Mocks support direct argument matchers.")
+{
+	SECTION("For arguments, which support operator ==")
+	{
+		Mock<void(int)> mock{};
+		SCOPED_EXP mock.expect_call(1337);
+		mock(1337);
+	}
+
+	SECTION("For strings.")
+	{
+		Mock<void(const char*)> mock{};
+		SCOPED_EXP mock.expect_call("Hello, World!");
+		mock("Hello, World!");
+	}
+
+	SECTION("With explicit matchers.")
+	{
+		Mock<void(int)> mock{};
+		SCOPED_EXP mock.expect_call(matches::ne(42));
+		mock(1337);
+	}
+}
