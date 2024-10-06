@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['effects_0',['side effects',['../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html',1,'']]],
-  ['expectation_1',['expectation',['../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html',1,'']]]
+  ['detail_0',['detail',['../d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html',1,'']]]
 ];

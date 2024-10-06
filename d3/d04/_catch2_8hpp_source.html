@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -155,31 +155,52 @@ $(function(){initNavTree('d3/d04/_catch2_8hpp_source.html','../../'); initResiza
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga02aa72d6aaace0343113c757d4235aa8">   64</a></span>    <span class="keyword">using </span><a class="code hl_class" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">Catch2ReporterT</a> = <a class="code hl_class" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">BasicReporter</a>&lt;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        &amp;detail::catch2::send_success,</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        &amp;detail::catch2::send_warning,</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        &amp;detail::catch2::send_fail</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    &gt;;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>}</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">namespace </span>mimicpp::detail::catch2</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>{</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">inline</span> <span class="keyword">const</span> ReporterInstaller&lt;Catch2ReporterT&gt; installer{};</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>}</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga02aa72d6aaace0343113c757d4235aa8">   70</a></span>    <span class="keyword">using </span><a class="code hl_class" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">Catch2ReporterT</a> = <a class="code hl_class" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">BasicReporter</a>&lt;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        &amp;detail::catch2::send_success,</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>        &amp;detail::catch2::send_warning,</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>        &amp;detail::catch2::send_fail</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    &gt;;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">namespace </span>mimicpp::detail::catch2</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>{</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">inline</span> <span class="keyword">const</span> ReporterInstaller&lt;Catch2ReporterT&gt; installer{};</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>}</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="preprocessor">#ifdef MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="preprocessor">#include &lt;catch2/matchers/catch_matchers_templated.hpp&gt;</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Matcher&gt;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">requires</span> std::derived_from&lt;Matcher, Catch::Matchers::MatcherGenericBase&gt;   <span class="comment">// new style</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            || std::derived_from&lt;Matcher, Catch::Matchers::MatcherUntypedBase&gt; <span class="comment">// old style</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="keyword">struct </span><a class="code hl_struct" href="../../d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html">mimicpp::custom::matcher_traits</a>&lt;Matcher&gt;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>{</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> matches(<span class="keyword">const</span> Matcher&amp; matcher, T&amp; value)</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keyword">requires</span> <span class="keyword">requires</span> { { matcher.match(value) } -&gt; std::convertible_to&lt;bool&gt;; }</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        <span class="keywordflow">return</span> matcher.match(value);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    }</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>};</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_reporter_8hpp_html"><div class="ttname"><a href="../../da/dd9/_reporter_8hpp.html">Reporter.hpp</a></div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_reporter_html"><div class="ttname"><a href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">mimicpp::BasicReporter</a></div><div class="ttdoc">A reporter, which creates text messages and reports them via the provided callbacks.</div><div class="ttdef"><b>Definition</b> Reporter.hpp:206</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:20</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a4020ddef344a068c5d7beea28cd4e5df"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a4020ddef344a068c5d7beea28cd4e5df">mimicpp::unreachable</a></div><div class="ttdeci">void unreachable()</div><div class="ttdoc">Invokes undefined behavior.</div><div class="ttdef"><b>Definition</b> Utility.hpp:165</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Printer.hpp:24</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a4020ddef344a068c5d7beea28cd4e5df"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a4020ddef344a068c5d7beea28cd4e5df">mimicpp::unreachable</a></div><div class="ttdeci">void unreachable()</div><div class="ttdoc">Invokes undefined behavior.</div><div class="ttdef"><b>Definition</b> Utility.hpp:93</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Printer.hpp:40</div></div>
+<div class="ttc" id="astructmimicpp_1_1custom_1_1matcher__traits_html"><div class="ttname"><a href="../../d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html">mimicpp::custom::matcher_traits</a></div><div class="ttdef"><b>Definition</b> Matcher.hpp:28</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_607a8dc80affae740d596a5a905f4489.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_577549b8d6a2ee9114aaf83a129b8107.html">adapters</a></li><li class="navelem"><a class="el" href="../../d3/d04/_catch2_8hpp.html">Catch2.hpp</a></li>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_fea71f381ece93f367616978be34972a.html">adapters</a></li><li class="navelem"><a class="el" href="../../d3/d04/_catch2_8hpp.html">Catch2.hpp</a></li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

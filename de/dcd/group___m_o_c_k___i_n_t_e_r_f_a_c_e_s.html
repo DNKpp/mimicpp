@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -141,7 +141,7 @@ Macros</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Contains utility to simplify interface mocking. </p>
-<p>While this library tries avoiding macros when possible, sometimes we must not be too stubborn. Making interface mocking more enjoyable is such a situation. While this can be of course be done without macros, this quickly becomes annoying, due to the necessary boilerplate code. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>Interface</div>
+<p>While this library tries avoiding macros when possible, sometimes we must not be too stubborn. Making interface mocking more enjoyable is such a situation. While this can of course be done without macros, this quickly becomes annoying, due to the necessary boilerplate code. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>Interface</div>
 <div class="line">    {</div>
 <div class="line">    <span class="keyword">public</span>:</div>
 <div class="line">        <span class="keyword">virtual</span> ~Interface() = <span class="keywordflow">default</span>;</div>
@@ -179,9 +179,73 @@ Macros</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    my_function(mock);</div>
 </div><!-- fragment --><p> <code>mimic++</code> therefore introduces some macros, which helps to reduce the effort to a minimum. With them, the boilerplate can be reduced to this macro invocation, which effectively does the same as before: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a>(foo, <span class="keywordtype">void</span>, ());</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga6d5cb660367ff702eb85c0257b8d474b"><div class="ttname"><a href="#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a></div><div class="ttdeci">#define MOCK_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:421</div></div>
-</div><!-- fragment --><p>The good news is, that these macros are just a thin layer around the macro free core and can thus be easily avoided. Nevertheless, <code>mimic++</code> still aims to become macro-less as possible. As soon as reflection becomes available, an attempt will be made to solve this feature completely in c++ language (hopefully with c++26, but only time will tell). </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga6d5cb660367ff702eb85c0257b8d474b"><div class="ttname"><a href="#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a></div><div class="ttdeci">#define MOCK_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:425</div></div>
+</div><!-- fragment --><p>The good news is, that these macros are just a thin layer around the macro free core and can thus be easily avoided. Nevertheless, <code>mimic++</code> still aims to become macro-less as possible. As soon as reflection becomes available, an attempt will be made to solve this feature completely in c++ language (hopefully with c++26, but only time will tell).</p>
+<h2><a class="anchor" id="autotoc_md9"></a>
+Multiple inheritance</h2>
+<p>Multiple inheritance is fully supported, without any special tricks. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line">    <span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">class </span>InterfaceA</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">virtual</span> ~InterfaceA() = <span class="keywordflow">default</span>;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() = 0;</div>
+<div class="line"> </div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> bar() = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">class </span>InterfaceB</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">virtual</span> ~InterfaceB() = <span class="keywordflow">default</span>;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() = 0;</div>
+<div class="line"> </div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">int</span> bar() const noexcept = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    class Derived</div>
+<div class="line">        : public InterfaceA,</div>
+<div class="line">        public InterfaceB</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Both interfaces have a foo() method with the same signature, so we do not need to overload.</span></div>
+<div class="line">        <a class="code hl_define" href="#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a>(foo, <span class="keywordtype">void</span>, ()); <span class="comment">// mocks both foo() methods from InterfaceA and InterfaceB</span></div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// Both interfaces have a bar() method, but with different signature. So, let&#39;s work on that overload-set.</span></div>
+<div class="line">        <a class="code hl_define" href="#gafd903cfdd4f9496f29642c9b9e3859c0">MOCK_OVERLOADED_METHOD</a>(</div>
+<div class="line">            bar,</div>
+<div class="line">            <a class="code hl_define" href="#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keywordtype">void</span>, ()),                 <span class="comment">// from InterfaceA</span></div>
+<div class="line">            <a class="code hl_define" href="#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keywordtype">int</span>, (), <span class="keyword">const</span> <span class="keyword">noexcept</span>)); <span class="comment">// from InterfaceB</span></div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// let&#39;s build a function, which requires the InterfaceA</span></div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> use_interfaceA = [](InterfaceA&amp; obj)</div>
+<div class="line">    {</div>
+<div class="line">        obj.foo();</div>
+<div class="line">        obj.bar();</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// and another, which requires the InterfaceB</span></div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> use_interfaceB = [](InterfaceB&amp; obj)</div>
+<div class="line">    {</div>
+<div class="line">        obj.foo();</div>
+<div class="line">        std::ignore = obj.bar();    <span class="comment">// InterfaceB::bar returns an int, just explicitly ignore it here</span></div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// setting up the expectations isn&#39;t any different from the previous examples</span></div>
+<div class="line">    Derived mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.foo_.expect_call()</div>
+<div class="line">                and expect::twice();</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.bar_.expect_call(); <span class="comment">// selects the non-const overload of bar()</span></div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> std::as_const(mock).bar_.expect_call()   <span class="comment">// selects the const overload of bar()</span></div>
+<div class="line">                and finally::returns(42);</div>
+<div class="line"> </div>
+<div class="line">    use_interfaceA(mock); <span class="comment">// calls foo() and the non-const bar()</span></div>
+<div class="line">    use_interfaceB(mock); <span class="comment">// calls foo() and the const bar()</span></div>
+</div><!-- fragment --> <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="gaf7eca902448118eaf4359c12be4ed098" name="gaf7eca902448118eaf4359c12be4ed098"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaf7eca902448118eaf4359c12be4ed098">&#9670;&#160;</a></span>ADD_OVERLOAD</h2>
 
@@ -225,9 +289,9 @@ Macros</h2></td></tr>
 <div class="line">        __VA_ARGS__,                                                                \</div>
 <div class="line">        <a class="code hl_define" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gac0c4c04b439893ddc57f388acd4439cf">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS</a>,                                   \</div>
 <div class="line">        <a class="code hl_define" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga10423936a3e62b352191532a93fbfb5f">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC</a>)(ret, param_type_list, __VA_ARGS__,)</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s_html_ga10423936a3e62b352191532a93fbfb5f"><div class="ttname"><a href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga10423936a3e62b352191532a93fbfb5f">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC(ret, param_type_list,...)</div><div class="ttdoc">Simple overload, extending the overload info (enclosed by parentheses).</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:319</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s_html_ga5d9ba507f286e55b7ca9b82f94b644e6"><div class="ttname"><a href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga5d9ba507f286e55b7ca9b82f94b644e6">MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS</a></div><div class="ttdeci">#define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, N,...)</div><div class="ttdoc">Selects the correct overload, depending on the number of arguments.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:327</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s_html_gac0c4c04b439893ddc57f388acd4439cf"><div class="ttname"><a href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gac0c4c04b439893ddc57f388acd4439cf">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs,...)</div><div class="ttdoc">Base overload, extending the overload info (enclosed by parentheses).</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:308</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s_html_ga10423936a3e62b352191532a93fbfb5f"><div class="ttname"><a href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga10423936a3e62b352191532a93fbfb5f">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC(ret, param_type_list,...)</div><div class="ttdoc">Simple overload, extending the overload info (enclosed by parentheses).</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:323</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s_html_ga5d9ba507f286e55b7ca9b82f94b644e6"><div class="ttname"><a href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga5d9ba507f286e55b7ca9b82f94b644e6">MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS</a></div><div class="ttdeci">#define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, N,...)</div><div class="ttdoc">Selects the correct overload, depending on the number of arguments.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:331</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s_html_gac0c4c04b439893ddc57f388acd4439cf"><div class="ttname"><a href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gac0c4c04b439893ddc57f388acd4439cf">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs,...)</div><div class="ttdoc">Base overload, extending the overload info (enclosed by parentheses).</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:312</div></div>
 </div><!-- fragment -->
 <p>Adds an overload to an interface mock. Used only in combination with <a class="el" href="#ga00ebfcf9ed01548d2001f2fca9ea8616">MIMICPP_MOCK_OVERLOADED_METHOD</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -272,8 +336,8 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="#ga00ebfcf9ed01548d2001f2fca9ea8616">MIMICPP_MOCK_OVERLOADED_METHOD</a>(                                             \</div>
 <div class="line">        fn_name,                                                                \</div>
 <div class="line">        <a class="code hl_define" href="#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a>(ret, param_type_list __VA_OPT__(,) __VA_ARGS__ ))</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga00ebfcf9ed01548d2001f2fca9ea8616"><div class="ttname"><a href="#ga00ebfcf9ed01548d2001f2fca9ea8616">MIMICPP_MOCK_OVERLOADED_METHOD</a></div><div class="ttdeci">#define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name,...)</div><div class="ttdoc">Starting point for mocking overloaded interface methods.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:394</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga3612f52419579eedc315817fdf991365"><div class="ttname"><a href="#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a></div><div class="ttdeci">#define MIMICPP_ADD_OVERLOAD(ret, param_type_list,...)</div><div class="ttdoc">Adds an overload to an interface mock. Used only in combination with MIMICPP_MOCK_OVERLOADED_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:336</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga00ebfcf9ed01548d2001f2fca9ea8616"><div class="ttname"><a href="#ga00ebfcf9ed01548d2001f2fca9ea8616">MIMICPP_MOCK_OVERLOADED_METHOD</a></div><div class="ttdeci">#define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name,...)</div><div class="ttdoc">Starting point for mocking overloaded interface methods.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:398</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga3612f52419579eedc315817fdf991365"><div class="ttname"><a href="#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a></div><div class="ttdeci">#define MIMICPP_ADD_OVERLOAD(ret, param_type_list,...)</div><div class="ttdoc">Adds an overload to an interface mock. Used only in combination with MIMICPP_MOCK_OVERLOADED_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:340</div></div>
 </div><!-- fragment -->
 <p>Starting point for mocking a single interface method. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -336,8 +400,8 @@ Macros</h2></td></tr>
 <div class="line">    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                    \</div>
 <div class="line">        fn_name##_,                                                         \</div>
 <div class="line">        (<a class="code hl_define" href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga83e61ccca0425cb57539494651fde46a">MIMICPP_DETAIL_MAKE_SIGNATURE_LIST</a>(__VA_ARGS__)))</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s_html_ga56fd0f555d337f6b01ba2dcfd607f73d"><div class="ttname"><a href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#ga56fd0f555d337f6b01ba2dcfd607f73d">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(mock_name, fn_name,...)</div><div class="ttdoc">Creates all overloads for a specific function as overrides.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:375</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t_html_ga83e61ccca0425cb57539494651fde46a"><div class="ttname"><a href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga83e61ccca0425cb57539494651fde46a">MIMICPP_DETAIL_MAKE_SIGNATURE_LIST</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(...)</div><div class="ttdoc">Converts all given arguments to a signature list (not enclosed by parentheses).</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:211</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s_html_ga56fd0f555d337f6b01ba2dcfd607f73d"><div class="ttname"><a href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#ga56fd0f555d337f6b01ba2dcfd607f73d">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(mock_name, fn_name,...)</div><div class="ttdoc">Creates all overloads for a specific function as overrides.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:379</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t_html_ga83e61ccca0425cb57539494651fde46a"><div class="ttname"><a href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga83e61ccca0425cb57539494651fde46a">MIMICPP_DETAIL_MAKE_SIGNATURE_LIST</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(...)</div><div class="ttdoc">Converts all given arguments to a signature list (not enclosed by parentheses).</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:215</div></div>
 </div><!-- fragment -->
 <p>Starting point for mocking overloaded interface methods. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -418,7 +482,7 @@ Macros</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

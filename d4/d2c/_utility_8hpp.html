@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -101,20 +101,20 @@ $(function(){initNavTree('d4/d2c/_utility_8hpp.html','../../'); initResizable(tr
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#concepts">Concepts</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Utility.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
 <code>#include &lt;cassert&gt;</code><br />
-<code>#include &lt;format&gt;</code><br />
 <code>#include &lt;source_location&gt;</code><br />
+<code>#include &lt;string_view&gt;</code><br />
+<code>#include &lt;tuple&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Utility.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../df/d28/_utility_8hpp__incl.svg" width="518" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../df/d28/_utility_8hpp__incl.svg" width="620" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -126,11 +126,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/df8/structstd_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html">std::formatter&lt; mimicpp::ValueCategory, mimicpp::CharT &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de7/structstd_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html">std::formatter&lt; mimicpp::Constness, mimicpp::CharT &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d8e/structmimicpp_1_1always__false.html">mimicpp::always_false&lt;... &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d9f/structmimicpp_1_1priority__tag.html">mimicpp::priority_tag&lt; priority &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html">mimicpp::priority_tag&lt; 0 &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -146,26 +146,11 @@ Concepts</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d1f/conceptmimicpp_1_1same__as__any.html">mimicpp::same_as_any</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a96efa41dafaf424bc936fc152467feb1" id="r_a96efa41dafaf424bc936fc152467feb1"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">mimicpp::Constness</a> { <a class="el" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1af831ec98a5b99889012f4b32fbeb1929">mimicpp::non_const</a> = 0b01
-, <a class="el" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a7d8fbf6968b41f059fd98dfa87dc47c2">mimicpp::as_const</a> = 0b10
-, <a class="el" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a100b8cad7cf2a56f6df78f171f97a1ec">mimicpp::any</a> = non_const | as_const
- }</td></tr>
-<tr class="separator:a96efa41dafaf424bc936fc152467feb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6076e747dc4e61ff337a809d19f4824a" id="r_a6076e747dc4e61ff337a809d19f4824a"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">mimicpp::ValueCategory</a> { <a class="el" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa44f6155f13a820089c09cb5e9d7ccdef">mimicpp::lvalue</a> = 0b01
-, <a class="el" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aab5528fe69322e9e7de4c701519197fcd">mimicpp::rvalue</a> = 0b10
-, <a class="el" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec">mimicpp::any</a> = lvalue | rvalue
- }</td></tr>
-<tr class="separator:a6076e747dc4e61ff337a809d19f4824a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d12/conceptmimicpp_1_1satisfies.html">mimicpp::satisfies</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a68c1d279c259f2aef30a89cd5e0d7485" id="r_a68c1d279c259f2aef30a89cd5e0d7485"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a68c1d279c259f2aef30a89cd5e0d7485">mimicpp::is_matching</a> (const <a class="el" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">Constness</a> lhs, const <a class="el" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">Constness</a> rhs) noexcept</td></tr>
-<tr class="separator:a68c1d279c259f2aef30a89cd5e0d7485"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e2c65ccd4076c4ed7adac3dc1161b06" id="r_a4e2c65ccd4076c4ed7adac3dc1161b06"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a4e2c65ccd4076c4ed7adac3dc1161b06">mimicpp::is_matching</a> (const <a class="el" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a> lhs, const <a class="el" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a> rhs) noexcept</td></tr>
-<tr class="separator:a4e2c65ccd4076c4ed7adac3dc1161b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a572acd40fe6bf7c5ea72c9494c8caf56" id="r_a572acd40fe6bf7c5ea72c9494c8caf56"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a572acd40fe6bf7c5ea72c9494c8caf56">mimicpp::is_same_source_location</a> (const std::source_location &amp;lhs, const std::source_location &amp;rhs) noexcept</td></tr>
 <tr class="separator:a572acd40fe6bf7c5ea72c9494c8caf56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add9703907de32b233525df612144e00f" id="r_add9703907de32b233525df612144e00f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; <br />
@@ -175,14 +160,18 @@ requires std::is_enum_v&lt;T&gt;</td></tr>
 <tr class="memitem:a4020ddef344a068c5d7beea28cd4e5df" id="r_a4020ddef344a068c5d7beea28cd4e5df"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a4020ddef344a068c5d7beea28cd4e5df">mimicpp::unreachable</a> ()</td></tr>
 <tr class="memdesc:a4020ddef344a068c5d7beea28cd4e5df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invokes undefined behavior.  <br /></td></tr>
 <tr class="separator:a4020ddef344a068c5d7beea28cd4e5df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68c1d279c259f2aef30a89cd5e0d7485" id="r_a68c1d279c259f2aef30a89cd5e0d7485"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a68c1d279c259f2aef30a89cd5e0d7485">mimicpp::is_matching</a> (const <a class="el" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">Constness</a> lhs, const <a class="el" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">Constness</a> rhs) noexcept</td></tr>
+<tr class="separator:a68c1d279c259f2aef30a89cd5e0d7485"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e2c65ccd4076c4ed7adac3dc1161b06" id="r_a4e2c65ccd4076c4ed7adac3dc1161b06"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a4e2c65ccd4076c4ed7adac3dc1161b06">mimicpp::is_matching</a> (const <a class="el" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a> lhs, const <a class="el" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a> rhs) noexcept</td></tr>
+<tr class="separator:a4e2c65ccd4076c4ed7adac3dc1161b06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_607a8dc80affae740d596a5a905f4489.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d4/d2c/_utility_8hpp.html">Utility.hpp</a></li>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d4/d2c/_utility_8hpp.html">Utility.hpp</a></li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

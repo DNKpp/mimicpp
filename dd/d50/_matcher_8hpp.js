@@ -1,10 +1,14 @@
 var _matcher_8hpp =
 [
     [ "mimicpp::matcher_for", "df/d23/conceptmimicpp_1_1matcher__for.html", null ],
+    [ "contains", "dd/d50/_matcher_8hpp.html#gaa099618b7bf70ca7bcce3ebf1589f2d5", null ],
+    [ "contains", "dd/d50/_matcher_8hpp.html#ga1c4d7692b3fcce4102c2bca496f4f54e", null ],
+    [ "ends_with", "dd/d50/_matcher_8hpp.html#ga903d775e76fad77ad0e363619be9f2e9", null ],
+    [ "ends_with", "dd/d50/_matcher_8hpp.html#gab39a4b8ffc34ffa744c619e3465b5db4", null ],
     [ "eq", "dd/d50/_matcher_8hpp.html#gaae47b82f14695a5e774ad398df069825", null ],
     [ "eq", "dd/d50/_matcher_8hpp.html#ga2d8c4b5a400645611fb8b4374fc6a564", null ],
-    [ "eq", "dd/d50/_matcher_8hpp.html#gabe7caf9cb92d62cf98f11ceed12aa458", null ],
-    [ "eq", "dd/d50/_matcher_8hpp.html#gab59d3a0e61c7fb2c762571f3be67a8f0", null ],
+    [ "eq", "dd/d50/_matcher_8hpp.html#ga82a6a5d0b7997fa42507a98d703f1ce4", null ],
+    [ "eq", "dd/d50/_matcher_8hpp.html#ga1d729d4fffe54b35f7658f4f8c81c2df", null ],
     [ "ge", "dd/d50/_matcher_8hpp.html#gac2b140b5f668cbac26e13144adce8114", null ],
     [ "gt", "dd/d50/_matcher_8hpp.html#gaafc5970f07ac2c69f82167ae2189596e", null ],
     [ "has_size", "dd/d50/_matcher_8hpp.html#gabe07e4394f348806148d665d73dc246f", null ],
@@ -14,6 +18,9 @@ var _matcher_8hpp =
     [ "lt", "dd/d50/_matcher_8hpp.html#ga242b5abc5a65421f91a90575acbceb66", null ],
     [ "ne", "dd/d50/_matcher_8hpp.html#gaf71aaa68ad1bea169500e80263d51db0", null ],
     [ "predicate", "dd/d50/_matcher_8hpp.html#ga6c028bd2a2289fbc01ce3aa5cf08451d", null ],
+    [ "starts_with", "dd/d50/_matcher_8hpp.html#gaa2e0f61116d7f3180daea6744a927fdd", null ],
+    [ "starts_with", "dd/d50/_matcher_8hpp.html#ga309492df10a2b9b4f2a38fdd6edabcb6", null ],
     [ "unordered_eq", "dd/d50/_matcher_8hpp.html#ga8df6332ce4e7f78809fe8c1f900e9e34", null ],
-    [ "_", "dd/d50/_matcher_8hpp.html#gaa74e274d126775d36dd9ebfd5879b61e", null ]
+    [ "_", "dd/d50/_matcher_8hpp.html#gaa74e274d126775d36dd9ebfd5879b61e", null ],
+    [ "case_insensitive", "dd/d50/_matcher_8hpp.html#ga7211982f3a8ff2ab2165d7803edc9ac8", null ]
 ];

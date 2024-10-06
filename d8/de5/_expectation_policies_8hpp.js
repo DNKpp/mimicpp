@@ -12,7 +12,7 @@ var _expectation_policies_8hpp =
     [ "apply_all", "d8/de5/_expectation_policies_8hpp.html#ga1115bba8873d79b6492ad72f1051e22d", null ],
     [ "apply_arg", "d8/de5/_expectation_policies_8hpp.html#ga51b593416fa39d20f134216c56ab518f", null ],
     [ "apply_args", "d8/de5/_expectation_policies_8hpp.html#gaf865f7ad50812d38fdd5ee5420591127", null ],
-    [ "arg", "d8/de5/_expectation_policies_8hpp.html#ga1abed045e8a61c27f72eb595b2dd5c61", null ],
+    [ "arg", "d8/de5/_expectation_policies_8hpp.html#ga7f6e3b6003e71dc72c6fc7389efa0f93", null ],
     [ "invoke", "d8/de5/_expectation_policies_8hpp.html#ga96fbf72e7ef44a73904c3503a383cda4", null ],
     [ "returns", "d8/de5/_expectation_policies_8hpp.html#gaaaa49d2747058448b5cc760ec9342400", null ],
     [ "returns_apply_all_result_of", "d8/de5/_expectation_policies_8hpp.html#ga1d9822641f9c22aae3eccc2a16136718", null ],

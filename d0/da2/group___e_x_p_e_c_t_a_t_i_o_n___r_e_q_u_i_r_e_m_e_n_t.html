@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -136,22 +136,22 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga1abed045e8a61c27f72eb595b2dd5c61" id="r_ga1abed045e8a61c27f72eb595b2dd5c61"><td class="memTemplParams" colspan="2">template&lt;std::size_t index, typename Matcher &gt; </td></tr>
-<tr class="memitem:ga1abed045e8a61c27f72eb595b2dd5c61"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga1abed045e8a61c27f72eb595b2dd5c61">mimicpp::expect::arg</a> (Matcher &amp;&amp;matcher) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &amp;&amp; &gt;)</td></tr>
-<tr class="memdesc:ga1abed045e8a61c27f72eb595b2dd5c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks, whether the selected argument matches the given matcher.  <br /></td></tr>
-<tr class="separator:ga1abed045e8a61c27f72eb595b2dd5c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7f6e3b6003e71dc72c6fc7389efa0f93" id="r_ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memTemplParams" colspan="2">template&lt;std::size_t index, typename Matcher , typename Projection  = std::identity&gt; </td></tr>
+<tr class="memitem:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga7f6e3b6003e71dc72c6fc7389efa0f93">mimicpp::expect::arg</a> (Matcher &amp;&amp;matcher, Projection projection={}) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &gt; &amp;&amp;std::is_nothrow_move_constructible_v&lt; Projection &gt;)</td></tr>
+<tr class="memdesc:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks, whether the selected argument matches the given matcher.  <br /></td></tr>
+<tr class="separator:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Requirements determine, whether an expectation matches an incoming call. </p>
 <p>Requirements are the building blocks, which determine whether a call satisfies the expectation. If any of the specified requirements fail, there is no match. </p><dl class="section note"><dt>Note</dt><dd>An expectation without requirements matches any call. </dd></dl>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga1abed045e8a61c27f72eb595b2dd5c61" name="ga1abed045e8a61c27f72eb595b2dd5c61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1abed045e8a61c27f72eb595b2dd5c61">&#9670;&#160;</a></span>arg()</h2>
+<a id="ga7f6e3b6003e71dc72c6fc7389efa0f93" name="ga7f6e3b6003e71dc72c6fc7389efa0f93"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7f6e3b6003e71dc72c6fc7389efa0f93">&#9670;&#160;</a></span>arg()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;std::size_t index, typename Matcher &gt; </div>
+template&lt;std::size_t index, typename Matcher , typename Projection  = std::identity&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -159,8 +159,12 @@ template&lt;std::size_t index, typename Matcher &gt; </div>
         <tr>
           <td class="memname">auto mimicpp::expect::arg </td>
           <td>(</td>
-          <td class="paramtype">Matcher &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>matcher</em></span></td><td>)</td>
+          <td class="paramtype">Matcher &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>matcher</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Projection</td>          <td class="paramname"><span class="paramname"><em>projection</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -179,7 +183,8 @@ template&lt;std::size_t index, typename Matcher &gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">matcher</td><td>The matcher.</td></tr>
+    <tr><td class="paramname">matcher</td><td>The matcher. </td></tr>
+    <tr><td class="paramname">projection</td><td>Projection to apply to the argument.</td></tr>
   </table>
   </dd>
 </dl>
@@ -201,7 +206,7 @@ template&lt;std::size_t index, typename Matcher &gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

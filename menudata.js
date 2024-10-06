@@ -49,6 +49,7 @@ var menudata={children:[
 {text:"v",url:"namespacemembers.html#index_v"}]},
 {text:"Functions",url:"namespacemembers_func.html",children:[
 {text:"a",url:"namespacemembers_func.html#index_a"},
+{text:"c",url:"namespacemembers_func.html#index_c"},
 {text:"e",url:"namespacemembers_func.html#index_e"},
 {text:"g",url:"namespacemembers_func.html#index_g"},
 {text:"h",url:"namespacemembers_func.html#index_h"},
@@ -59,6 +60,7 @@ var menudata={children:[
 {text:"o",url:"namespacemembers_func.html#index_o"},
 {text:"p",url:"namespacemembers_func.html#index_p"},
 {text:"r",url:"namespacemembers_func.html#index_r"},
+{text:"s",url:"namespacemembers_func.html#index_s"},
 {text:"t",url:"namespacemembers_func.html#index_t"},
 {text:"u",url:"namespacemembers_func.html#index_u"}]},
 {text:"Variables",url:"namespacemembers_vars.html"},
@@ -104,6 +106,7 @@ var menudata={children:[
 {text:"r",url:"functions_func.html#index_r"},
 {text:"s",url:"functions_func.html#index_s"},
 {text:"t",url:"functions_func.html#index_t"},
+{text:"v",url:"functions_func.html#index_v"},
 {text:"w",url:"functions_func.html#index_w"},
 {text:"~",url:"functions_func.html#index__7E"}]},
 {text:"Variables",url:"functions_vars.html",children:[
@@ -136,7 +139,9 @@ var menudata={children:[
 {text:"All",url:"globals.html",children:[
 {text:"a",url:"globals.html#index_a"},
 {text:"m",url:"globals.html#index_m"},
+{text:"o",url:"globals.html#index_o"},
 {text:"s",url:"globals.html#index_s"}]},
+{text:"Variables",url:"globals_vars.html"},
 {text:"Macros",url:"globals_defs.html",children:[
 {text:"a",url:"globals_defs.html#index_a"},
 {text:"m",url:"globals_defs.html#index_m"},

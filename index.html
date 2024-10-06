@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -103,11 +103,11 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <div class="textblock"><p><a class="anchor" id="md__2github_2workspace_2_r_e_a_d_m_e"></a></p>
 <p><a href="https://codecov.io/gh/DNKpp/mimicpp"><img src="https://codecov.io/gh/DNKpp/mimicpp/graph/badge.svg?token=T9EpgyuyUi" alt="codecov" style="pointer-events: none;" class="inline"/></a> <a href="https://coveralls.io/github/DNKpp/mimicpp"><img src="https://coveralls.io/repos/github/DNKpp/mimicpp/badge.svg" alt="Coverage Status" style="pointer-events: none;" class="inline"/></a> <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&amp;utm_medium=referral&amp;utm_content=&amp;utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/b852271c6e8742fe8a1667e679dc422b" alt="Codacy Badge" class="inline"/></a> <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&amp;utm_medium=referral&amp;utm_content=&amp;utm_campaign=Badge_coverage"><img src="https://app.codacy.com/project/badge/Coverage/b852271c6e8742fe8a1667e679dc422b" alt="Codacy Badge" class="inline"/></a> <a href="https://dnkpp.github.io/mimicpp/"><img src="https://img.shields.io/badge/docs-doxygen-blue" alt="Documentation" class="inline"/></a></p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md26"></a>
 Author</h1>
 <p>Dominic Koepke <br  />
  Mail: <a href="#" onclick="location.href='mai'+'lto:'+'dnk'+'pp'+'201'+'1@'+'gma'+'il'+'.co'+'m'; return false;">DNKpp2011@gmail.com</a></p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md27"></a>
 Table of Contents</h1>
 <ul>
 <li>Introduction<ul>
@@ -138,19 +138,19 @@ Table of Contents</h1>
 <li>Known Issues</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md29"></a>
 Introduction</h1>
 <p><code>mimic++</code> is a c++20 mocking framework, which aims to offer a natural end expressive syntax, without constantly resorting to macros. To be honest, macros cannot be completely avoided, but they can at least be reduced to a very minimum.</p>
 <p>The one thing, that this framework does different than all other (or at least all I am aware of) mocking framework is, that mock objects explicitly are function objects, thus directly callable. It's simple and straight forward.</p>
 <p>As I'm mainly working on template or functional-style code, I wanted something simpler than always creating explicit mock types for the simplest of use cases. So, <code><a class="el" href="d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a></code> objects can directly be used as functional objects, but they can also be used as member objects and thus serve as actual member functions.</p>
-<p>If you are curious, have a look at the <a href="https://dnkpp.github.io/mimicpp/">documentation</a>, investigate the examples folder or play around online at <a href="https://godbolt.org/z/71GGbeYzq">godbolt.org</a>.</p>
-<h2><a class="anchor" id="autotoc_md11"></a>
+<p>If you are curious, have a look at the <a href="https://dnkpp.github.io/mimicpp/">documentation</a>, investigate the examples folder or play around online at <a href="https://godbolt.org/z/nfhT9xa4E">godbolt.org</a>.</p>
+<h2><a class="anchor" id="autotoc_md30"></a>
 Core Design</h2>
 <p>The framework is designed with two core concepts in mind: Mocks and Expectations. Mocks can be used to define behaviour on a per test-case basis, without the necessity of creating dozens of types. The go-to example is, if you have a custom type, which somehow makes a connection to a concrete database, you do not want to setup an actual database connection during your test runs. You then simply install a database mock, which then yields the exact replies as it were defined for that particular case: the so called "Expectations".</p>
 <p>So, Mocks and Expectations are going together hand in hand.</p>
-<h2><a class="anchor" id="autotoc_md12"></a>
+<h2><a class="anchor" id="autotoc_md31"></a>
 Examples</h2>
-<h3><a class="anchor" id="autotoc_md13"></a>
+<h3><a class="anchor" id="autotoc_md32"></a>
 Mocks as function objects</h3>
 <p>As already said, <code><a class="el" href="d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a></code>s are already function objects.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="d0/db9/mimic_09_09_8hpp.html">mimic++/mimic++.hpp</a>&gt;</span></div>
@@ -205,10 +205,10 @@ Mocks as function objects</h3>
 <div class="ttc" id="agroup___m_o_c_k_html_ga7e7d68eefb8f3cba28422f62bcf2f90a"><div class="ttname"><a href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a></div><div class="ttdeci">#define SCOPED_EXP</div><div class="ttdoc">Shorthand variant of MIMICPP_SCOPED_EXPECTATION.</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:287</div></div>
 <div class="ttc" id="amimic_09_09_8hpp_html"><div class="ttname"><a href="d0/db9/mimic_09_09_8hpp.html">mimic++.hpp</a></div></div>
 <div class="ttc" id="anamespacemimicpp_1_1expect_html"><div class="ttname"><a href="d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div><div class="ttdef"><b>Definition</b> ControlPolicy.hpp:267</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1finally_html"><div class="ttname"><a href="d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:441</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1matches_html"><div class="ttname"><a href="dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a></div><div class="ttdef"><b>Definition</b> Matcher.hpp:165</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1then_html"><div class="ttname"><a href="d9/d4c/namespacemimicpp_1_1then.html">mimicpp::then</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:626</div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md14"></a>
+<div class="ttc" id="anamespacemimicpp_1_1finally_html"><div class="ttname"><a href="d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:433</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1matches_html"><div class="ttname"><a href="dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a></div><div class="ttdef"><b>Definition</b> Matcher.hpp:256</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1then_html"><div class="ttname"><a href="d9/d4c/namespacemimicpp_1_1then.html">mimicpp::then</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:618</div></div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md33"></a>
 Mocks as member functions</h3>
 <p><code><a class="el" href="d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a></code>s can also serve as member functions. Sure, there are some limitations, but for the most cases it works well.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="d0/db9/mimic_09_09_8hpp.html">mimic++/mimic++.hpp</a>&gt;</span></div>
@@ -235,7 +235,7 @@ Mocks as member functions</h3>
 <div class="line"> </div>
 <div class="line">    foo(mock);      <span class="comment">// fine, foo calls the get() member-function</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md15"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md34"></a>
 Mocking interfaces</h3>
 <p><code>mimic++</code> also provides helpers for interface mocking.</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="d0/db9/mimic_09_09_8hpp.html">mimic++/mimic++.hpp</a>&gt;</span></div>
@@ -274,7 +274,7 @@ Mocking interfaces</h3>
 <div class="line"> </div>
 <div class="line">    foo(mock);        <span class="comment">// fine, foo calls the get() member-function, which forwards the call to the mock object get_.</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga6d5cb660367ff702eb85c0257b8d474b"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a></div><div class="ttdeci">#define MOCK_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:421</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga6d5cb660367ff702eb85c0257b8d474b"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a></div><div class="ttdeci">#define MOCK_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:425</div></div>
 </div><!-- fragment --><p>Sometimes, an interface method may also have several overloads. <code>mimic++</code> directly supports overriding overload-sets. </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="d0/db9/mimic_09_09_8hpp.html">mimic++/mimic++.hpp</a>&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
@@ -315,43 +315,43 @@ Mocking interfaces</h3>
 <div class="line"> </div>
 <div class="line">    foo(mock);        <span class="comment">// fine, foo calls the get() const member-function, which forwards the call to the mock object get_ as before.</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_gaf7eca902448118eaf4359c12be4ed098"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a></div><div class="ttdeci">#define ADD_OVERLOAD</div><div class="ttdoc">Shorthand variant of MIMICPP_ADD_OVERLOAD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:433</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_gafd903cfdd4f9496f29642c9b9e3859c0"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0">MOCK_OVERLOADED_METHOD</a></div><div class="ttdeci">#define MOCK_OVERLOADED_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_OVERLOADED_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:427</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md16"></a>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_gaf7eca902448118eaf4359c12be4ed098"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a></div><div class="ttdeci">#define ADD_OVERLOAD</div><div class="ttdoc">Shorthand variant of MIMICPP_ADD_OVERLOAD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:437</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_gafd903cfdd4f9496f29642c9b9e3859c0"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0">MOCK_OVERLOADED_METHOD</a></div><div class="ttdeci">#define MOCK_OVERLOADED_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_OVERLOADED_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:431</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md35"></a>
 Other Choices</h2>
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md36"></a>
 Always Stay Within The Language Definition</h3>
 <p>There are a lot of mocking frameworks, which utilize clever tricks and apply some compiler specific instructions to make the work more enjoyable. <code>mimic++</code> does not! This framework will never touch the ground of undefined behaviour or tricks, which will only work under some circumstances, as this is nothing I want to support and maintain over a set of compilers or configurations. Unfortunatle this often leads to a less elegant syntax for users. If you need that, than this framework is probably not the right for you. Pick your poison :)</p>
-<h2><a class="anchor" id="autotoc_md18"></a>
+<h2><a class="anchor" id="autotoc_md37"></a>
 Special Acknowledgement</h2>
 <p>This framework is highly inspired by the well known <a href="https://github.com/rollbear/trompeloeil">trompeloeil</a>, which I have used myself for several years now. It's definitly not bad, but sometimes feels a little bit dated and some macros do not play very well with formatting tools and the like. If you need a pre-c++20 mocking-framework, you should definitly give it a try.</p>
 <p>Fun fact: <code>mimic++</code> uses <code>trompeloeil</code> for it's own test suite :D</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md20"></a>
+<h1><a class="anchor" id="autotoc_md39"></a>
 Customizability</h1>
 <p>A framework should be a useful tool that can be used in a variety of ways. However, it should not be a foundation that limits the house to be built on it. For this reason <code>mimic++</code> offers various ways for customization: E.g. users may create their own expectation policies and integrate them seamlessly, without changing any line of the <code>mimic++</code> code-base.</p>
-<h2><a class="anchor" id="autotoc_md21"></a>
+<h2><a class="anchor" id="autotoc_md40"></a>
 Stringification</h2>
 <p><code>mimic++</code> can not provide stringification for any type out there, but it's often very useful to see a proper textual reprensentation of an object, when a test fails. <code>mimic++</code> will use <code>std::format</code> for <code>formattable</code> types, but sometimes that is not, what we want, as users for example want to have an alternative stringification just for testing purposes. Users can therefore add their specializations of the <code><a class="el" href="da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> type and thus tell <code>mimic++</code> how a given type shall be printed.</p>
 <p>Custom specializations will always be prefered over any pre-existing printing methods, thus users may even override the stringification of the internal report types.</p>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md41"></a>
 Matchers</h2>
 <p>Matchers are used to check, whether arguements satisfy some requirements. There are already many existing matchers available, but users often have special needs. <code>mimic++</code> provides a very generic <code><a class="el" href="dc/d5e/classmimicpp_1_1_predicate_matcher.html" title="Generic matcher and the basic building block of most of the built-in matchers.">mimicpp::PredicateMatcher</a></code>, which is often already sufficient. But, if one needs full control, just start with a fresh type (without any inheritance) and start building your own. They just have to match the <code><a class="el" href="df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for</a></code> concept. For more information, head to the documentation.</p>
-<h2><a class="anchor" id="autotoc_md23"></a>
+<h2><a class="anchor" id="autotoc_md42"></a>
 Policies</h2>
-<p>There are multiple types of policie, depending on the task they shall fulfill. The expectation policy has full control, whether a match can be made or shall be rejected, while the finalize policy determines, what a mock shall do, when it actually matched (like returning a value or throwing an exception). They can implement arbitrary logic, so feel free to experiment. There is no base type requirement, they simply have to satisfy either the <code><a class="el" href="dd/d1d/conceptmimicpp_1_1expectation__policy__for.html" title="Determines, whether the given type satisfies the requirements of an expectation-policy for the given ...">mimicpp::expectation_policy_for</a></code>, <code><a class="el" href="d4/df8/conceptmimicpp_1_1control__policy.html" title="Determines, whether the given type satisfies the requirements of a control-policy.">mimicpp::control_policy</a></code> or <code>mimicpp::finalize_policy_for_</code>.</p>
+<p>There are multiple types of policie, depending on the task they shall fulfill. The expectation policy has full control, whether a match can be made or shall be rejected, while the finalize policy determines, what a mock shall do, when it actually matched (like returning a value or throwing an exception). They can implement arbitrary logic, so feel free to experiment. There is no base type requirement, they simply have to satisfy either the <code><a class="el" href="dd/d1d/conceptmimicpp_1_1expectation__policy__for.html" title="Determines, whether the given type satisfies the requirements of an expectation-policy for the given ...">mimicpp::expectation_policy_for</a></code>, <code><a class="el" href="d4/df8/conceptmimicpp_1_1control__policy.html" title="Determines, whether the given type satisfies the requirements of a control-policy.">mimicpp::control_policy</a></code> or <code><a class="el" href="d9/d64/conceptmimicpp_1_1finalize__policy__for.html" title="Determines, whether the given type satisfies the requirements of a finalize-policy for the given sign...">mimicpp::finalize_policy_for</a></code>.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md25"></a>
+<h1><a class="anchor" id="autotoc_md44"></a>
 Documentation</h1>
 <p>The documenation is generated via <code>doxygen</code>. Users can do this locally by enabling both, the <code>MIMICPP_CONFIGURE_DOXYGEN</code> and <code>MIMICPP_ENABLE_GENERATE_DOCS</code>, cmake options and building the target <code>mimicpp-generate-docs</code> manually.</p>
 <p>The documentation for the <code>main</code> branch is always available on the <a href="https://dnkpp.github.io/mimicpp/">github-pages</a>; for the <code>development</code> branch it is also available on the <code>dev-gh-pages</code> branch, but unfortunatly not directly viewable on the browser. Every release has the generated documentation attached.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md27"></a>
+<h1><a class="anchor" id="autotoc_md46"></a>
 Integration</h1>
 <p><code>mimic++</code> is a head-only library. Users can easily enjoy all features by simply including the <code>mimic++/mimic++.hpp</code> header. Of course one can be more granular and include just what's necessary. The choice is yours.</p>
-<h2><a class="anchor" id="autotoc_md28"></a>
+<h2><a class="anchor" id="autotoc_md47"></a>
 Installation</h2>
-<h3><a class="anchor" id="autotoc_md29"></a>
+<h3><a class="anchor" id="autotoc_md48"></a>
 CMake</h3>
 <p>This framework is header-only and completely powered by cmake, thus the integration into a cmake project is straight-forward. </p><div class="fragment"><div class="line">target_link_libraries(</div>
 <div class="line">    &lt;your_target_name&gt;</div>
@@ -372,10 +372,10 @@ CMake</h3>
 <div class="line"> </div>
 <div class="line">CPMAddPackage(&quot;gh:DNKpp/mimicpp#&lt;any_commit_hash_or_tag&gt;&quot;)</div>
 <div class="line"># do not forget linking via target_link_libraries as shown above</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md30"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md49"></a>
 Single-Header</h3>
 <p>As an alternative each release has a header file named <code>mimic++-amalgamated.hpp</code> attached, which contains all definitions (except for the specific test-framework adapters) and can be simply dropped into any c++20 project (or used on <a href="https://godbolt.org">godbolt.org</a>. After that, users may also just pick the appropriate adapter header for their desired test-framework and put that into their project aswell.</p>
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md50"></a>
 Test Framework</h2>
 <p>Mocking frameworks usually do not exist for their own, as they are in fact just an advanced technice for creating tests. Instead, they should work together with any existing test framework out there. <code>mimic++</code> provides the <code>IReporter</code> interface, which in fact serves as a bridge from <code>mimic++</code> into the utilized test framework. <code>mimic++</code> provides some concrete reporter implementations for well known test frameworks, but users may create custom adapters for any test framework or simply use the default reporter. For more details have a look into the <code>reporting</code> section in the documentation.</p>
 <p>Official adapters exist for the following frameworks:</p>
@@ -385,49 +385,70 @@ Test Framework</h2>
 <li><a href="https://github.com/google/googletest">GTest</a></li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md33"></a>
+<h1><a class="anchor" id="autotoc_md52"></a>
 Testing</h1>
 <p><code>mimic++</code> utilizes a strict testing policy, thus each official feature is well tested. The effect of those test-cases are always tracked by the extensive ci, which checks the compilation success, test cases outcomes and coverage on dozens of different os, compiler and build configurations.</p>
 <p>The coverage is generated via <code>gcov</code> and evaluated by <a href="https://app.codacy.com/gh/DNKpp/mimicpp">codacy</a>, <a href="https://codecov.io/gh/DNKpp/mimicpp">codecov</a> and <a href="https://coveralls.io/github/DNKpp/mimicpp">coveralls</a>.</p>
 <p>Nevertheless, even with very high effort, the 100% code-coverage is without reach. I do my best to cover each branch, but even now the coverage percentage varies between the individual tools. The goal is to be close to 100% as possible.</p>
 <p>On the other hand-side, there is a whole range of code which doesn't even get investigated by these tools: templates (and macros). <code>mimic++</code> has <b>a lot</b> of templating code at the very heart, which is at least of equal effort to get right (and tested). So, treat the coverage percentage with a grain of salt.</p>
-<h2><a class="anchor" id="autotoc_md34"></a>
-Windows</h2>
+<h2><a class="anchor" id="autotoc_md53"></a>
+CI Tests</h2>
+<p>The listed configurations are explicitly tested, but other do probably work, too. As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">OS   </th><th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23    </th></tr>
+<th class="markdownTableHeadCenter">Symbol   </th><th class="markdownTableHeadCenter">Description    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Windows 2022   </td><td class="markdownTableBodyNone">msvc   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">works    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">Windows 2022   </td><td class="markdownTableBodyNone">clangCl   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
+<td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">works with caveats    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyCenter">-   </td><td class="markdownTableBodyCenter">does not work    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">not tested   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md35"></a>
-Linux</h2>
+<h3><a class="anchor" id="autotoc_md54"></a>
+Windows</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">libstdc++   </th><th class="markdownTableHeadCenter">libc++   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23    </th></tr>
+<th class="markdownTableHeadNone">OS   </th><th class="markdownTableHeadCenter">Compiler   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23   </th><th class="markdownTableHeadCenter">std-format   </th><th class="markdownTableHeadCenter">fmt    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">clang-17   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<td class="markdownTableBodyNone">Windows 2022   </td><td class="markdownTableBodyCenter">msvc   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">clang-18   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x (with caveats)   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">gcc-13   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">not tested   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">gcc-14   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">not tested   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
+<td class="markdownTableBodyNone">Windows 2022   </td><td class="markdownTableBodyCenter">clangCl   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
 </table>
-<h2><a class="anchor" id="autotoc_md36"></a>
-macOS</h2>
+<h3><a class="anchor" id="autotoc_md55"></a>
+Linux</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">libstdc++   </th><th class="markdownTableHeadCenter">libc++   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23    </th></tr>
+<th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">libstdc++   </th><th class="markdownTableHeadCenter">libc++   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23   </th><th class="markdownTableHeadCenter">std-format   </th><th class="markdownTableHeadCenter">fmt    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">AppleClang-17.0.6   </td><td class="markdownTableBodyCenter">not tested   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<td class="markdownTableBodyNone">clang-16   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">-   </td><td class="markdownTableBodyCenter">x    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">AppleClang-18.1.6   </td><td class="markdownTableBodyCenter">not tested   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
+<td class="markdownTableBodyNone">clang-17   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">clang-18   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">gcc-12   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">-   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">gcc-13   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">gcc-14   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
 </table>
-<p>As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.</p>
+<h3><a class="anchor" id="autotoc_md56"></a>
+macOS</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">libstdc++   </th><th class="markdownTableHeadCenter">libc++   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23   </th><th class="markdownTableHeadCenter">std-format   </th><th class="markdownTableHeadCenter">fmt    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">AppleClang-16.0.6^1^   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">AppleClang-17.0.6   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">AppleClang-18.1.6   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
+</table>
+<p>^1^ There is an issue with AppleClang-16 and <code>boost::filesystem</code> on the current <code>macos-latest</code>, but this is just for the boost-test-adapter. Everything else works fine.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md38"></a>
+<h1><a class="anchor" id="autotoc_md58"></a>
 License</h1>
 <p><a href="LICENSE_1_0.txt">BSL-1.0</a> (free, open source)</p>
 <div class="fragment"><div class="line">         Copyright Dominic &quot;DNKpp&quot; Koepke 2024 - 2024</div>
@@ -435,9 +456,9 @@ License</h1>
 <div class="line">   (See accompanying file LICENSE_1_0.txt or copy at</div>
 <div class="line">         https://www.boost.org/LICENSE_1_0.txt)</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md40"></a>
+<h1><a class="anchor" id="autotoc_md60"></a>
 Known Issues</h1>
-<h2><a class="anchor" id="autotoc_md41"></a>
+<h2><a class="anchor" id="autotoc_md61"></a>
 Clang-18.1 + libc++</h2>
 <p>Date: 25.09.2024</p>
 <p>This combination introduced a regression regarding the <code>std::invocable</code> concept and a default parameter of type <code>std::source_location</code>. On this version, all invocable checks will fail, but the <code>std::is_invocable</code> trait still works as expected. Unfortunatly this can not solved easily by this lib, sorry for that.</p>
@@ -449,7 +470,7 @@ Clang-18.1 + libc++</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

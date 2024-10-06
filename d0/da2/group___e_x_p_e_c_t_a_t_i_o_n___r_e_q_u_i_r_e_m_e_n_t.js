@@ -11,8 +11,8 @@ var group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t =
       [ "operator!", "dc/d5e/classmimicpp_1_1_predicate_matcher.html#ae372d28e738cae4b05c4ae88090c0d8e", null ]
     ] ],
     [ "mimicpp::WildcardMatcher", "db/de6/classmimicpp_1_1_wildcard_matcher.html", [
-      [ "describe", "db/de6/classmimicpp_1_1_wildcard_matcher.html#a650fb20b5ba02c58f8e54b3f6b1e0b77", null ],
+      [ "describe", "db/de6/classmimicpp_1_1_wildcard_matcher.html#aa705931636d906bbec4d900e41ee7984", null ],
       [ "matches", "db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc", null ]
     ] ],
-    [ "mimicpp::expect::arg", "d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga1abed045e8a61c27f72eb595b2dd5c61", null ]
+    [ "mimicpp::expect::arg", "d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga7f6e3b6003e71dc72c6fc7389efa0f93", null ]
 ];

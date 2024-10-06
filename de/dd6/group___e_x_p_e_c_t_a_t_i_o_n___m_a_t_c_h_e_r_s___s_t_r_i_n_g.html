@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -98,7 +98,9 @@ $(function(){initNavTree('de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s
 
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">string matchers<div class="ingroups"><a class="el" href="../../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html">expectation</a> &raquo; <a class="el" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html">requirement</a> &#124; <a class="el" href="../../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html">expectation</a> &raquo; <a class="el" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html">requirement</a> &raquo; <a class="el" href="../../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html">matchers</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -111,27 +113,266 @@ Collaboration diagram for string matchers:</div>
 <div class="center"><iframe scrolling="no" frameborder="0" src="../../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.svg" width="259" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">mimicpp::case_insensitive_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tag type, used in string matchers.  <a href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gab59d3a0e61c7fb2c762571f3be67a8f0" id="r_gab59d3a0e61c7fb2c762571f3be67a8f0"><td class="memTemplParams" colspan="2">template&lt;typename Char , typename Traits , typename Allocator &gt; </td></tr>
-<tr class="memitem:gab59d3a0e61c7fb2c762571f3be67a8f0"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gab59d3a0e61c7fb2c762571f3be67a8f0">mimicpp::matches::str::eq</a> (std::basic_string&lt; Char, Traits, Allocator &gt; expected)</td></tr>
-<tr class="memdesc:gab59d3a0e61c7fb2c762571f3be67a8f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target string compares equal to the expected string.  <br /></td></tr>
-<tr class="separator:gab59d3a0e61c7fb2c762571f3be67a8f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabe7caf9cb92d62cf98f11ceed12aa458" id="r_gabe7caf9cb92d62cf98f11ceed12aa458"><td class="memTemplParams" colspan="2">template&lt;typename Char &gt; </td></tr>
-<tr class="memitem:gabe7caf9cb92d62cf98f11ceed12aa458"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gabe7caf9cb92d62cf98f11ceed12aa458">mimicpp::matches::str::eq</a> (const Char *expected)</td></tr>
-<tr class="memdesc:gabe7caf9cb92d62cf98f11ceed12aa458"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target string compares equal to the expected string.  <br /></td></tr>
-<tr class="separator:gabe7caf9cb92d62cf98f11ceed12aa458"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga82a6a5d0b7997fa42507a98d703f1ce4" id="r_ga82a6a5d0b7997fa42507a98d703f1ce4"><td class="memTemplParams" colspan="2">template&lt;string Pattern&gt; </td></tr>
+<tr class="memitem:ga82a6a5d0b7997fa42507a98d703f1ce4"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga82a6a5d0b7997fa42507a98d703f1ce4">mimicpp::matches::str::eq</a> (Pattern &amp;&amp;pattern)</td></tr>
+<tr class="memdesc:ga82a6a5d0b7997fa42507a98d703f1ce4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target string compares equal to the expected string.  <br /></td></tr>
+<tr class="separator:ga82a6a5d0b7997fa42507a98d703f1ce4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1d729d4fffe54b35f7658f4f8c81c2df" id="r_ga1d729d4fffe54b35f7658f4f8c81c2df"><td class="memTemplParams" colspan="2">template&lt;case_foldable_string Pattern&gt; </td></tr>
+<tr class="memitem:ga1d729d4fffe54b35f7658f4f8c81c2df"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga1d729d4fffe54b35f7658f4f8c81c2df">mimicpp::matches::str::eq</a> (Pattern &amp;&amp;pattern, const <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a>)</td></tr>
+<tr class="memdesc:ga1d729d4fffe54b35f7658f4f8c81c2df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target string compares case-insensitively equal to the expected string.  <br /></td></tr>
+<tr class="separator:ga1d729d4fffe54b35f7658f4f8c81c2df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa2e0f61116d7f3180daea6744a927fdd" id="r_gaa2e0f61116d7f3180daea6744a927fdd"><td class="memTemplParams" colspan="2">template&lt;string Pattern&gt; </td></tr>
+<tr class="memitem:gaa2e0f61116d7f3180daea6744a927fdd"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaa2e0f61116d7f3180daea6744a927fdd">mimicpp::matches::str::starts_with</a> (Pattern &amp;&amp;pattern)</td></tr>
+<tr class="memdesc:gaa2e0f61116d7f3180daea6744a927fdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target string starts with the pattern string.  <br /></td></tr>
+<tr class="separator:gaa2e0f61116d7f3180daea6744a927fdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga309492df10a2b9b4f2a38fdd6edabcb6" id="r_ga309492df10a2b9b4f2a38fdd6edabcb6"><td class="memTemplParams" colspan="2">template&lt;string Pattern&gt; </td></tr>
+<tr class="memitem:ga309492df10a2b9b4f2a38fdd6edabcb6"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga309492df10a2b9b4f2a38fdd6edabcb6">mimicpp::matches::str::starts_with</a> (Pattern &amp;&amp;pattern, const <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a>)</td></tr>
+<tr class="memdesc:ga309492df10a2b9b4f2a38fdd6edabcb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target string starts case-insensitively with the pattern string.  <br /></td></tr>
+<tr class="separator:ga309492df10a2b9b4f2a38fdd6edabcb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga903d775e76fad77ad0e363619be9f2e9" id="r_ga903d775e76fad77ad0e363619be9f2e9"><td class="memTemplParams" colspan="2">template&lt;string Pattern&gt; </td></tr>
+<tr class="memitem:ga903d775e76fad77ad0e363619be9f2e9"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga903d775e76fad77ad0e363619be9f2e9">mimicpp::matches::str::ends_with</a> (Pattern &amp;&amp;pattern)</td></tr>
+<tr class="memdesc:ga903d775e76fad77ad0e363619be9f2e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target string ends with the pattern string.  <br /></td></tr>
+<tr class="separator:ga903d775e76fad77ad0e363619be9f2e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab39a4b8ffc34ffa744c619e3465b5db4" id="r_gab39a4b8ffc34ffa744c619e3465b5db4"><td class="memTemplParams" colspan="2">template&lt;string Pattern&gt; </td></tr>
+<tr class="memitem:gab39a4b8ffc34ffa744c619e3465b5db4"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gab39a4b8ffc34ffa744c619e3465b5db4">mimicpp::matches::str::ends_with</a> (Pattern &amp;&amp;pattern, const <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a>)</td></tr>
+<tr class="memdesc:gab39a4b8ffc34ffa744c619e3465b5db4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target string ends case-insensitively with the pattern string.  <br /></td></tr>
+<tr class="separator:gab39a4b8ffc34ffa744c619e3465b5db4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa099618b7bf70ca7bcce3ebf1589f2d5" id="r_gaa099618b7bf70ca7bcce3ebf1589f2d5"><td class="memTemplParams" colspan="2">template&lt;string Pattern&gt; </td></tr>
+<tr class="memitem:gaa099618b7bf70ca7bcce3ebf1589f2d5"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaa099618b7bf70ca7bcce3ebf1589f2d5">mimicpp::matches::str::contains</a> (Pattern &amp;&amp;pattern)</td></tr>
+<tr class="memdesc:gaa099618b7bf70ca7bcce3ebf1589f2d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the pattern string is part of the target string.  <br /></td></tr>
+<tr class="separator:gaa099618b7bf70ca7bcce3ebf1589f2d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1c4d7692b3fcce4102c2bca496f4f54e" id="r_ga1c4d7692b3fcce4102c2bca496f4f54e"><td class="memTemplParams" colspan="2">template&lt;string Pattern&gt; </td></tr>
+<tr class="memitem:ga1c4d7692b3fcce4102c2bca496f4f54e"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga1c4d7692b3fcce4102c2bca496f4f54e">mimicpp::matches::str::contains</a> (Pattern &amp;&amp;pattern, const <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a>)</td></tr>
+<tr class="memdesc:ga1c4d7692b3fcce4102c2bca496f4f54e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the pattern string is case-insensitively part of the target string.  <br /></td></tr>
+<tr class="separator:ga1c4d7692b3fcce4102c2bca496f4f54e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga7211982f3a8ff2ab2165d7803edc9ac8" id="r_ga7211982f3a8ff2ab2165d7803edc9ac8"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">mimicpp::case_insensitive_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7211982f3a8ff2ab2165d7803edc9ac8">mimicpp::case_insensitive</a></td></tr>
+<tr class="separator:ga7211982f3a8ff2ab2165d7803edc9ac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>String specific matchers. </p>
+<p>These matchers are designed to work with any string- and character-type. This comes with some caveats and restrictions, e.g. comparisons between strings of different character-types are not supported. Any string, which satisfies the <code>string</code> concept is directly supported, thus it's possible to integrate your own types seamlessly.</p>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Example</h2>
+<div class="fragment"><div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(std::string)&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::str::starts_with(<span class="stringliteral">&quot;Hell&quot;</span>))</div>
+<div class="line">                and expect::arg&lt;0&gt;(matches::str::ends_with(<span class="stringliteral">&quot;d!&quot;</span>))</div>
+<div class="line">                and expect::arg&lt;0&gt;(matches::str::contains(&quot;, Wo&quot;));</div>
+<div class="line"> </div>
+<div class="line">    mock(&quot;Hello, World!&quot;);</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
+Case-Insensitive Matchers</h2>
+<p>In the following these terms are used:</p><ul>
+<li><code>code-point</code> is a logical string-element. In byte-strings these are the single characters, but in Unicode this may span multiple physical-elements.</li>
+<li><code>code-unit</code> is the single physical-element of the string (i.e. the underlying character-type). Multiple <code>code-units</code> may build a single <code>code-point</code>.</li>
+</ul>
+<p>All comparisons are done via iterators and, to make that consistent, <code>mimic++</code> requires the iterator values to be <code>code-units</code>. As this should be fine for equality-comparisons, this will quickly lead to issues when performing case-insensitive comparisons. <code>mimic++</code> therefore converts all participating strings to their <em>case-folded</em> representation during comparisons.</p>
+<h3><a class="anchor" id="autotoc_md6"></a>
+Case-Folding</h3>
+<p>Case-Folding means the process of making a string independent of its case (e.g. <code>a</code> and <code>A</code> would compare equal). This process is centralized to the <code><a class="el" href="../../d4/d2d/structmimicpp_1_1string__case__fold__converter.html" title="Primary template, purposely undefined.">string_case_fold_converter</a></code> template, which must be specialized for the appropriate character-type. The converter receives the whole string and is required to perform a consistent case-folding. Unicode defines the necessary steps here: <a href="https://unicode-org.github.io/icu/userguide/transforms/casemappings.html#case-folding">https://unicode-org.github.io/icu/userguide/transforms/casemappings.html#case-folding</a></p>
+<p>For a list of <code>code-point</code> mappings have a look here: <a href="https://www.unicode.org/Public/UNIDATA/CaseFolding.txt">https://www.unicode.org/Public/UNIDATA/CaseFolding.txt</a></p>
+<p>Unfortunately, this requires a lot of work to make that work (correctly) for all existing character-types. Due to this, currently only byte-strings are supported for case-insensitive comparisons.</p>
+<h4><a class="anchor" id="autotoc_md7"></a>
+Byte-String</h4>
+<p>Byte-Strings are element-wise lazily case-folded via <code>std::toupper</code> function.</p>
+<h4><a class="anchor" id="autotoc_md8"></a>
+Strings with other character-types</h4>
+<p>Even if <code>mimic++</code> does not support case-folding for other string types out of the box, users can specialize the <code><a class="el" href="../../d4/d2d/structmimicpp_1_1string__case__fold__converter.html" title="Primary template, purposely undefined.">string_case_fold_converter</a></code> for the missing character-types and thus inject the necessary support.</p>
+<p>Another, but yet experimental, possibility is to enable the <a class="el" href="../../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER">MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER</a> option. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gabe7caf9cb92d62cf98f11ceed12aa458" name="gabe7caf9cb92d62cf98f11ceed12aa458"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabe7caf9cb92d62cf98f11ceed12aa458">&#9670;&#160;</a></span>eq() <span class="overload">[1/2]</span></h2>
+<a id="gaa099618b7bf70ca7bcce3ebf1589f2d5" name="gaa099618b7bf70ca7bcce3ebf1589f2d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa099618b7bf70ca7bcce3ebf1589f2d5">&#9670;&#160;</a></span>contains() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Char &gt; </div>
+template&lt;string Pattern&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::str::contains </td>
+          <td>(</td>
+          <td class="paramtype">Pattern &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether the pattern string is part of the target string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Pattern</td><td>The string type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pattern</td><td>The pattern string. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga1c4d7692b3fcce4102c2bca496f4f54e" name="ga1c4d7692b3fcce4102c2bca496f4f54e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1c4d7692b3fcce4102c2bca496f4f54e">&#9670;&#160;</a></span>contains() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;string Pattern&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::str::contains </td>
+          <td>(</td>
+          <td class="paramtype">Pattern &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a></td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether the pattern string is case-insensitively part of the target string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Pattern</td><td>The string type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pattern</td><td>The pattern string. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga903d775e76fad77ad0e363619be9f2e9" name="ga903d775e76fad77ad0e363619be9f2e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga903d775e76fad77ad0e363619be9f2e9">&#9670;&#160;</a></span>ends_with() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;string Pattern&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::str::ends_with </td>
+          <td>(</td>
+          <td class="paramtype">Pattern &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether the target string ends with the pattern string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Pattern</td><td>The string type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pattern</td><td>The pattern string. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gab39a4b8ffc34ffa744c619e3465b5db4" name="gab39a4b8ffc34ffa744c619e3465b5db4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab39a4b8ffc34ffa744c619e3465b5db4">&#9670;&#160;</a></span>ends_with() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;string Pattern&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::str::ends_with </td>
+          <td>(</td>
+          <td class="paramtype">Pattern &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a></td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether the target string ends case-insensitively with the pattern string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Pattern</td><td>The string type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pattern</td><td>The pattern string. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga82a6a5d0b7997fa42507a98d703f1ce4" name="ga82a6a5d0b7997fa42507a98d703f1ce4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga82a6a5d0b7997fa42507a98d703f1ce4">&#9670;&#160;</a></span>eq() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;string Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -139,7 +380,7 @@ template&lt;typename Char &gt; </div>
         <tr>
           <td class="memname">auto mimicpp::matches::str::eq </td>
           <td>(</td>
-          <td class="paramtype">const Char *</td>          <td class="paramname"><span class="paramname"><em>expected</em></span></td><td>)</td>
+          <td class="paramtype">Pattern &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -153,31 +394,26 @@ template&lt;typename Char &gt; </div>
 <p>Tests, whether the target string compares equal to the expected string. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Char</td><td>The character type. </td></tr>
+    <tr><td class="paramname">Pattern</td><td>The string type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">expected</td><td>The expected string. </td></tr>
+    <tr><td class="paramname">pattern</td><td>The pattern object. </td></tr>
   </table>
   </dd>
 </dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g_gabe7caf9cb92d62cf98f11ceed12aa458_cgraph.svg" width="394" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
 
 </div>
 </div>
-<a id="gab59d3a0e61c7fb2c762571f3be67a8f0" name="gab59d3a0e61c7fb2c762571f3be67a8f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab59d3a0e61c7fb2c762571f3be67a8f0">&#9670;&#160;</a></span>eq() <span class="overload">[2/2]</span></h2>
+<a id="ga1d729d4fffe54b35f7658f4f8c81c2df" name="ga1d729d4fffe54b35f7658f4f8c81c2df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1d729d4fffe54b35f7658f4f8c81c2df">&#9670;&#160;</a></span>eq() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Char , typename Traits , typename Allocator &gt; </div>
+template&lt;case_foldable_string Pattern&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -185,7 +421,52 @@ template&lt;typename Char , typename Traits , typename Allocator &gt; </div>
         <tr>
           <td class="memname">auto mimicpp::matches::str::eq </td>
           <td>(</td>
-          <td class="paramtype">std::basic_string&lt; Char, Traits, Allocator &gt;</td>          <td class="paramname"><span class="paramname"><em>expected</em></span></td><td>)</td>
+          <td class="paramtype">Pattern &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a></td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether the target string compares case-insensitively equal to the expected string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Pattern</td><td>The string type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pattern</td><td>The pattern object. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gaa2e0f61116d7f3180daea6744a927fdd" name="gaa2e0f61116d7f3180daea6744a927fdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa2e0f61116d7f3180daea6744a927fdd">&#9670;&#160;</a></span>starts_with() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;string Pattern&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::str::starts_with </td>
+          <td>(</td>
+          <td class="paramtype">Pattern &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -196,26 +477,79 @@ template&lt;typename Char , typename Traits , typename Allocator &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Tests, whether the target string compares equal to the expected string. </p>
+<p>Tests, whether the target string starts with the pattern string. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Char</td><td>The character type. </td></tr>
-    <tr><td class="paramname">Traits</td><td>The character traits type. </td></tr>
-    <tr><td class="paramname">Allocator</td><td>The allocator type. </td></tr>
+    <tr><td class="paramname">Pattern</td><td>The string type. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">expected</td><td>The expected string. </td></tr>
+    <tr><td class="paramname">pattern</td><td>The pattern string. </td></tr>
   </table>
   </dd>
 </dl>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g_gab59d3a0e61c7fb2c762571f3be67a8f0_icgraph.svg" width="394" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+
 </div>
+</div>
+<a id="ga309492df10a2b9b4f2a38fdd6edabcb6" name="ga309492df10a2b9b4f2a38fdd6edabcb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga309492df10a2b9b4f2a38fdd6edabcb6">&#9670;&#160;</a></span>starts_with() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;string Pattern&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::str::starts_with </td>
+          <td>(</td>
+          <td class="paramtype">Pattern &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>pattern</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a></td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether the target string starts case-insensitively with the pattern string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Pattern</td><td>The string type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pattern</td><td>The pattern string. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ga7211982f3a8ff2ab2165d7803edc9ac8" name="ga7211982f3a8ff2ab2165d7803edc9ac8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7211982f3a8ff2ab2165d7803edc9ac8">&#9670;&#160;</a></span>case_insensitive</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct <a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">mimicpp::case_insensitive_t</a> mimicpp::case_insensitive</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -224,7 +558,7 @@ Here is the caller graph for this function:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

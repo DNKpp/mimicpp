@@ -92,5 +92,12 @@ var searchData=
   ['signature_5freturn_5ftype_3c_20signature_5fdecay_5ft_3c_20signature_20_3e_20_3e_89',['signature_return_type&lt; signature_decay_t&lt; Signature &gt; &gt;',['../d4/d96/structmimicpp_1_1signature__return__type.html',1,'mimicpp']]],
   ['state_5fapplicable_90',['state_applicable',['../d0/d12/structmimicpp_1_1state__applicable.html',1,'mimicpp']]],
   ['state_5finapplicable_91',['state_inapplicable',['../d7/dd2/structmimicpp_1_1state__inapplicable.html',1,'mimicpp']]],
-  ['state_5fsaturated_92',['state_saturated',['../de/d68/structmimicpp_1_1state__saturated.html',1,'mimicpp']]]
+  ['state_5fsaturated_92',['state_saturated',['../de/d68/structmimicpp_1_1state__saturated.html',1,'mimicpp']]],
+  ['string_5fcase_5ffold_5fconverter_93',['string_case_fold_converter',['../d4/d2d/structmimicpp_1_1string__case__fold__converter.html',1,'mimicpp']]],
+  ['string_5fcase_5ffold_5fconverter_3c_20char_20_3e_94',['string_case_fold_converter&lt; char &gt;',['../de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4.html',1,'mimicpp']]],
+  ['string_5ftraits_95',['string_traits',['../d1/dee/structmimicpp_1_1string__traits.html',1,'mimicpp']]],
+  ['string_5ftraits_3c_20std_3a_3abasic_5fstring_3c_20char_2c_20traits_2c_20allocator_20_3e_20_3e_96',['string_traits&lt; std::basic_string&lt; Char, Traits, Allocator &gt; &gt;',['../d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html',1,'mimicpp']]],
+  ['string_5ftraits_3c_20std_3a_3abasic_5fstring_5fview_3c_20char_2c_20traits_20_3e_20_3e_97',['string_traits&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;',['../d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html',1,'mimicpp']]],
+  ['string_5ftraits_3c_20std_3a_3aremove_5fextent_5ft_3c_20t_20_3e_20_2a_20_3e_98',['string_traits&lt; std::remove_extent_t&lt; T &gt; * &gt;',['../d1/dee/structmimicpp_1_1string__traits.html',1,'mimicpp']]],
+  ['string_5ftraits_3c_20t_20_3e_99',['string_traits&lt; T &gt;',['../d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html',1,'mimicpp']]]
 ];

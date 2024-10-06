@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -115,8 +115,8 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9254c9074afc5ae48d3cda98e4ab3a49" id="r_a9254c9074afc5ae48d3cda98e4ab3a49"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9254c9074afc5ae48d3cda98e4ab3a49">ApplyAllArgsAction</a> (Action action=Action{}) noexcept(std::is_nothrow_move_constructible_v&lt; Action &gt;)</td></tr>
-<tr class="separator:a9254c9074afc5ae48d3cda98e4ab3a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b3655fccf24ed4566482da0fdbc951a" id="r_a7b3655fccf24ed4566482da0fdbc951a"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7b3655fccf24ed4566482da0fdbc951a">ApplyAllArgsAction</a> (Action action={}) noexcept(std::is_nothrow_move_constructible_v&lt; Action &gt;)</td></tr>
+<tr class="separator:a7b3655fccf24ed4566482da0fdbc951a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7089b66f81b7728c2922e4e17e019027" id="r_a7089b66f81b7728c2922e4e17e019027"><td class="memTemplParams" colspan="2">template&lt;typename Return , typename... Args&gt; <br />
 requires std::invocable&lt; const Action&amp;, <a class="el" href="#aa7942ca20e0d075f13ad1017d617aa2c">ProjectedArgT</a>&lt;Args&gt;...&gt;</td></tr>
 <tr class="memitem:a7089b66f81b7728c2922e4e17e019027"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a7089b66f81b7728c2922e4e17e019027">operator()</a> (const <a class="el" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info</a>&lt; Return, Args... &gt; &amp;callInfo) const noexcept(std::is_nothrow_invocable_v&lt; const Action &amp;, <a class="el" href="#aa7942ca20e0d075f13ad1017d617aa2c">ProjectedArgT</a>&lt; Args &gt;... &gt;)</td></tr>
@@ -142,8 +142,8 @@ template&lt;typename Arg &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9254c9074afc5ae48d3cda98e4ab3a49" name="a9254c9074afc5ae48d3cda98e4ab3a49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9254c9074afc5ae48d3cda98e4ab3a49">&#9670;&#160;</a></span>ApplyAllArgsAction()</h2>
+<a id="a7b3655fccf24ed4566482da0fdbc951a" name="a7b3655fccf24ed4566482da0fdbc951a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b3655fccf24ed4566482da0fdbc951a">&#9670;&#160;</a></span>ApplyAllArgsAction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -156,7 +156,7 @@ template&lt;typename Action , template&lt; typename &gt; typename Projection&gt;
         <tr>
           <td class="memname"><a class="el" href="../../de/d9e/classmimicpp_1_1expectation__policies_1_1_apply_all_args_action.html">mimicpp::expectation_policies::ApplyAllArgsAction</a>&lt; Action, Projection &gt;::ApplyAllArgsAction </td>
           <td>(</td>
-          <td class="paramtype">Action</td>          <td class="paramname"><span class="paramname"><em>action</em></span><span class="paramdefsep"> = </span><span class="paramdefval">Action{}</span></td><td>)</td>
+          <td class="paramtype">Action</td>          <td class="paramname"><span class="paramname"><em>action</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -209,7 +209,7 @@ requires std::invocable&lt; const Action&amp;, <a class="el" href="#aa7942ca20e0
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d0/d91/namespacemimicpp_1_1expectation__policies.html">expectation_policies</a></li><li class="navelem"><a class="el" href="../../de/d9e/classmimicpp_1_1expectation__policies_1_1_apply_all_args_action.html">ApplyAllArgsAction</a></li>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -7,6 +7,7 @@ var annotated_dup =
         [ "info_for_signature< Return(Args...)>", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4" ]
       ] ],
       [ "custom", "d4/d84/namespacemimicpp_1_1custom.html", [
+        [ "matcher_traits", "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html", null ],
         [ "Printer", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ]
       ] ],
       [ "expectation_policies", "d0/d91/namespacemimicpp_1_1expectation__policies.html", [
@@ -20,6 +21,10 @@ var annotated_dup =
         [ "SideEffectAction", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action" ],
         [ "Throws", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws" ]
       ] ],
+      [ "format", "d3/d54/namespacemimicpp_1_1format.html", [
+        [ "formatter< mimicpp::Constness, mimicpp::CharT >", "d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html", "d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4" ],
+        [ "formatter< mimicpp::ValueCategory, mimicpp::CharT >", "db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html", "db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4" ]
+      ] ],
       [ "sequence", "d8/dce/namespacemimicpp_1_1sequence.html", [
         [ "rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", "de/d81/structmimicpp_1_1sequence_1_1rating" ]
       ] ],
@@ -28,6 +33,7 @@ var annotated_dup =
       [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html", "d5/de1/classmimicpp_1_1_basic_expectation_builder" ],
       [ "BasicReporter", "d4/d56/classmimicpp_1_1_basic_reporter.html", "d4/d56/classmimicpp_1_1_basic_reporter" ],
       [ "CallReport", "dc/dd0/classmimicpp_1_1_call_report.html", "dc/dd0/classmimicpp_1_1_call_report" ],
+      [ "case_insensitive_t", "d2/dd4/structmimicpp_1_1case__insensitive__t.html", null ],
       [ "ControlPolicy", "dc/db2/classmimicpp_1_1_control_policy.html", "dc/db2/classmimicpp_1_1_control_policy" ],
       [ "DefaultReporter", "d3/d32/classmimicpp_1_1_default_reporter.html", "d3/d32/classmimicpp_1_1_default_reporter" ],
       [ "Error", "db/d10/classmimicpp_1_1_error.html", "db/d10/classmimicpp_1_1_error" ],
@@ -36,6 +42,14 @@ var annotated_dup =
       [ "ExpectationReport", "dd/d62/classmimicpp_1_1_expectation_report.html", "dd/d62/classmimicpp_1_1_expectation_report" ],
       [ "GreedySequence", "db/d43/classmimicpp_1_1_greedy_sequence.html", null ],
       [ "IReporter", "dd/df0/classmimicpp_1_1_i_reporter.html", "dd/df0/classmimicpp_1_1_i_reporter" ],
+      [ "is_character", "d2/d73/structmimicpp_1_1is__character.html", null ],
+      [ "is_character< char >", "d2/dad/structmimicpp_1_1is__character_3_01char_01_4.html", null ],
+      [ "is_character< char16_t >", "dc/d7a/structmimicpp_1_1is__character_3_01char16__t_01_4.html", null ],
+      [ "is_character< char32_t >", "d4/df1/structmimicpp_1_1is__character_3_01char32__t_01_4.html", null ],
+      [ "is_character< char8_t >", "d6/da5/structmimicpp_1_1is__character_3_01char8__t_01_4.html", null ],
+      [ "is_character< signed char >", "de/da5/structmimicpp_1_1is__character_3_01signed_01char_01_4.html", null ],
+      [ "is_character< unsigned char >", "d8/d39/structmimicpp_1_1is__character_3_01unsigned_01char_01_4.html", null ],
+      [ "is_character< wchar_t >", "df/d35/structmimicpp_1_1is__character_3_01wchar__t_01_4.html", null ],
       [ "is_overload_set", "dd/df5/structmimicpp_1_1is__overload__set.html", null ],
       [ "is_overload_set< First >", "d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html", null ],
       [ "is_overload_set< First, Second, Others... >", "d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html", null ],
@@ -44,6 +58,8 @@ var annotated_dup =
       [ "MatchReport", "db/d11/classmimicpp_1_1_match_report.html", "db/d11/classmimicpp_1_1_match_report" ],
       [ "Mock", "d2/d48/classmimicpp_1_1_mock.html", "d2/d48/classmimicpp_1_1_mock" ],
       [ "PredicateMatcher", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", "dc/d5e/classmimicpp_1_1_predicate_matcher" ],
+      [ "priority_tag", "d1/d9f/structmimicpp_1_1priority__tag.html", null ],
+      [ "priority_tag< 0 >", "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html", null ],
       [ "ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", "d6/dc0/classmimicpp_1_1_scoped_expectation" ],
       [ "signature_add_noexcept", "dd/db4/structmimicpp_1_1signature__add__noexcept.html", null ],
       [ "signature_add_noexcept< Return(Params...) & >", "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4.html", "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4" ],
@@ -133,10 +149,12 @@ var annotated_dup =
       [ "state_applicable", "d0/d12/structmimicpp_1_1state__applicable.html", "d0/d12/structmimicpp_1_1state__applicable" ],
       [ "state_inapplicable", "d7/dd2/structmimicpp_1_1state__inapplicable.html", "d7/dd2/structmimicpp_1_1state__inapplicable" ],
       [ "state_saturated", "de/d68/structmimicpp_1_1state__saturated.html", "de/d68/structmimicpp_1_1state__saturated" ],
+      [ "string_case_fold_converter", "d4/d2d/structmimicpp_1_1string__case__fold__converter.html", null ],
+      [ "string_case_fold_converter< char >", "de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4.html", "de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4" ],
+      [ "string_traits", "d1/dee/structmimicpp_1_1string__traits.html", null ],
+      [ "string_traits< std::basic_string< Char, Traits, Allocator > >", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4" ],
+      [ "string_traits< std::basic_string_view< Char, Traits > >", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4" ],
+      [ "string_traits< T >", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4" ],
       [ "WildcardMatcher", "db/de6/classmimicpp_1_1_wildcard_matcher.html", "db/de6/classmimicpp_1_1_wildcard_matcher" ]
-    ] ],
-    [ "std", null, [
-      [ "formatter< mimicpp::Constness, mimicpp::CharT >", "d4/de7/structstd_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html", "d4/de7/structstd_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4" ],
-      [ "formatter< mimicpp::ValueCategory, mimicpp::CharT >", "d5/df8/structstd_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html", "d5/df8/structstd_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4" ]
     ] ]
 ];

@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -159,10 +159,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga1abed045e8a61c27f72eb595b2dd5c61" id="r_ga1abed045e8a61c27f72eb595b2dd5c61"><td class="memTemplParams" colspan="2">template&lt;std::size_t index, typename Matcher &gt; </td></tr>
-<tr class="memitem:ga1abed045e8a61c27f72eb595b2dd5c61"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga1abed045e8a61c27f72eb595b2dd5c61">mimicpp::expect::arg</a> (Matcher &amp;&amp;matcher) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &amp;&amp; &gt;)</td></tr>
-<tr class="memdesc:ga1abed045e8a61c27f72eb595b2dd5c61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks, whether the selected argument matches the given matcher.  <br /></td></tr>
-<tr class="separator:ga1abed045e8a61c27f72eb595b2dd5c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7f6e3b6003e71dc72c6fc7389efa0f93" id="r_ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memTemplParams" colspan="2">template&lt;std::size_t index, typename Matcher , typename Projection  = std::identity&gt; </td></tr>
+<tr class="memitem:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga7f6e3b6003e71dc72c6fc7389efa0f93">mimicpp::expect::arg</a> (Matcher &amp;&amp;matcher, Projection projection={}) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &gt; &amp;&amp;std::is_nothrow_move_constructible_v&lt; Projection &gt;)</td></tr>
+<tr class="memdesc:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks, whether the selected argument matches the given matcher.  <br /></td></tr>
+<tr class="separator:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafe0fc1d77a4122b05f60d49183ce0106" id="r_gafe0fc1d77a4122b05f60d49183ce0106"><td class="memTemplParams" colspan="2">template&lt;typename Fun &gt; <br />
 requires std::invocable&lt;std::remove_cvref_t&lt;Fun&gt;&amp;&gt; &amp;&amp; (!std::is_void_v&lt;std::invoke_result_t&lt;std::remove_cvref_t&lt;Fun&gt;&amp;&gt;&gt;)</td></tr>
 <tr class="memitem:gafe0fc1d77a4122b05f60d49183ce0106"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gafe0fc1d77a4122b05f60d49183ce0106">mimicpp::finally::returns_result_of</a> (Fun &amp;&amp;fun) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Fun &gt;, Fun &gt;)</td></tr>
@@ -212,8 +212,8 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_607a8dc80affae740d596a5a905f4489.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d8/de5/_expectation_policies_8hpp.html">ExpectationPolicies.hpp</a></li>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d8/de5/_expectation_policies_8hpp.html">ExpectationPolicies.hpp</a></li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

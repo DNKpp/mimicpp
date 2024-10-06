@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
    </div>
   </td>
  </tr>
@@ -124,11 +124,14 @@ Variables</h2></td></tr>
 <p><code>mimic++</code> often wants to present users a textual representation of their tested objects, because they might have failed a test case. It utilizes the <code>print</code> function for that purpose.</p>
 <p>That function internally checks for the first available option (in that order):</p><ul>
 <li><code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> specialization</li>
+<li>internal printer specializations</li>
 <li>convertible to <code>std::string_view</code></li>
 <li>satisfies <code>std::ranges::forward_range</code></li>
-<li>is <code>std::source_location</code></li>
+<li>formattable type (in terms of the installed format-backend)</li>
 </ul>
-<p>If no valid alternative has been found, the default is chosen.</p>
+<p>If no valid alternative has been found, the default is chosen (which just prints "{?}").</p>
+<h2><a class="anchor" id="autotoc_md10"></a>
+Override existing printings or print custom types</h2>
 <p>As <code>mimic++</code> can not know how to convert any custom type out there, a simple but effective mechanism is used. Users can add a specialization of <code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> for their own or third-party types. <code>mimic++</code> will always prefer such a specialization over any other internal alternative, even if <code>mimic++</code> already has special treatment that particular type (e.g. <code>std::source_location</code>).</p>
 <p>Given the following type. </p><div class="fragment"><div class="line">    <span class="keyword">struct </span>my_type</div>
 <div class="line">    {</div>
@@ -140,7 +143,7 @@ Variables</h2></td></tr>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="#ga67aaa7bdf2da1595ab1b25059119242c">print</a>(<span class="keyword">auto</span> outIter, <span class="keyword">const</span> my_type&amp; <span class="keywordtype">object</span>)</div>
 <div class="line">    {</div>
-<div class="line">        <span class="keywordflow">return</span> std::format_to(</div>
+<div class="line">        <span class="keywordflow">return</span> format::format_to(</div>
 <div class="line">            outIter,</div>
 <div class="line">            <span class="stringliteral">&quot;Object of my_type has value: {}&quot;</span>,</div>
 <div class="line">            <span class="keywordtype">object</span>.data);</div>
@@ -152,7 +155,11 @@ Variables</h2></td></tr>
 <div class="line">    REQUIRE_THAT(</div>
 <div class="line">        text,</div>
 <div class="line">        Catch::Matchers::Equals(<span class="stringliteral">&quot;Object of my_type has value: 42&quot;</span>));</div>
-</div><!-- fragment --> <h2 class="groupheader">Variable Documentation</h2>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md11"></a>
+String printing</h2>
+<p>All char-strings (like <code>const char*</code> or <code>std::string</code>) will be printed as they are. Other character-types (e.g. <code>wchar_t</code> or <code>char8_t</code>) must be treated with care. Making <code>mimic++</code> 100% compatible with any existing character-type is either a major work-load or has to be outsourced to a dependency. Currently, <code>mimic++</code> chooses another option: If a string of a non-printable character-type (in terms of the type-trait <code><a class="el" href="../../d2/d73/structmimicpp_1_1is__character.html" title="Primary template, which always yields false.">is_character</a></code>) is detected, it prints the string-literal and all elements are converted to their value-representation and printed as comma separated hex-values.</p>
+<p>For example, the string <code>u8"Hello, World!"</code> will then be printed as <code>u8"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21"</code>. </p>
+<h2 class="groupheader">Variable Documentation</h2>
 <a id="ga67aaa7bdf2da1595ab1b25059119242c" name="ga67aaa7bdf2da1595ab1b25059119242c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga67aaa7bdf2da1595ab1b25059119242c">&#9670;&#160;</a></span>print</h2>
 
@@ -182,7 +189,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Sep 28 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
