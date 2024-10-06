@@ -10,6 +10,7 @@ add_executable(
 	"ExpectationBuilder.cpp"
 	"ExpectationPolicies.cpp"
 	"InterfaceMock.cpp"
+	"LifetimeWatcher.cpp"
 	"Matcher.cpp"
 	"Mock.cpp"
 	"Printer.cpp"

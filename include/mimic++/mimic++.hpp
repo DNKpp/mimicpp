@@ -28,5 +28,6 @@
 #include "mimic++/Expectation.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/InterfaceMock.hpp"
+#include "mimic++/LifetimeWatcher.hpp"
 
 #endif
