@@ -38,7 +38,7 @@
  * Name: ``MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION``
  * 
  * If enabled, all matchers from the ``Catch::Matcher`` namespaces can be directly used everywhere, where ``mimic++``-matchers are suitable.
- * This is an experimental feature, and may be removed during any release.
+ * \attention This is an experimental feature, and may be removed during any release.
  * 
  * ### Why is it an experimental feature?
  * Unfortunatly ``catch2`` matchers are desgined to be used in-place. Every combination you do, like negation via ``operator !`` or ``operator &&``,
@@ -62,7 +62,7 @@
  * 
  * ``mimic++`` first tries to find the dependency via ``find_package``, but will fetch it from github if not available.
  * 
- * This is an experimental feature, and may be removed during any release.
+ * \attention This is an experimental feature, and may be removed during any release.
  * 
  * ### Why is it an experimental feature?
  * 
