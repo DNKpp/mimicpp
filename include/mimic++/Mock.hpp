@@ -15,10 +15,6 @@
 
 namespace mimicpp::detail
 {
-	template <typename T, typename Target>
-	concept requirement_for = std::equality_comparable_with<T, Target>
-							|| matcher_for<std::remove_cvref_t<T>, Target>;
-
 	template <ValueCategory category, Constness constness, typename Return, typename... Params>
 	class BasicMockFrontend
 	{
