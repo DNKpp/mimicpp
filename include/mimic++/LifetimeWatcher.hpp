@@ -20,8 +20,21 @@ namespace mimicpp
 	public:
 		~LifetimeWatcher() noexcept(false)
 		{
-			m_DestructionMock();
+			if (m_DestructionMock)
+			{
+				(*m_DestructionMock)();
+			}
 		}
+
+		[[nodiscard]]
+		LifetimeWatcher() = default;
+
+		LifetimeWatcher(const LifetimeWatcher&) = delete;
+		LifetimeWatcher& operator =(const LifetimeWatcher&) = delete;
+
+		[[nodiscard]]
+		LifetimeWatcher(LifetimeWatcher&&) = default;
+		LifetimeWatcher& operator =(LifetimeWatcher&&) = default;
 
 		[[nodiscard]]
 		auto expect_destruct()
@@ -33,13 +46,15 @@ namespace mimicpp
 				};
 			}
 
-			return m_DestructionMock.expect_call()
+			return m_DestructionMock->expect_call()
 					and expect::once();	// prevent further times specifications
 		}
 
 	private:
 		bool m_HasDestructExpectation{};
-		Mock<void()> m_DestructionMock{};
+		std::unique_ptr<Mock<void()>> m_DestructionMock{
+			std::make_unique<Mock<void()>>()
+		};
 	};
 }
 

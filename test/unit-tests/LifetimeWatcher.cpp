@@ -70,12 +70,20 @@ TEST_CASE(
 
 	SECTION("Reports a full-match, if destruction occurs with an active expectation.")
 	{
-		auto expectation = std::invoke(
-			[]() -> ScopedExpectation
-			{
-				LifetimeWatcher watcher{};
-				return watcher.expect_destruct();
-			});
+		SECTION("From an lvalue.")
+		{
+			auto expectation = std::invoke(
+				[]() -> ScopedExpectation
+				{
+					LifetimeWatcher watcher{};
+					return watcher.expect_destruct();
+				});
+		}
+
+		SECTION("From an rvalue.")
+		{
+			ScopedExpectation expectation = LifetimeWatcher{}.expect_destruct();
+		}
 
 		REQUIRE_THAT(
 			reporter.full_match_reports(),
@@ -122,5 +130,73 @@ TEST_CASE(
 		REQUIRE_THAT(
 			reporter.unfulfilled_expectations(),
 			Matches::IsEmpty());
+	}
+
+	SECTION("LifetimeWatcher can be moved.")
+	{
+		std::optional<LifetimeWatcher> source{std::in_place};
+
+		SECTION("With an already active destruct-expectation")
+		{
+			ScopedExpectation firstExpectation = source->expect_destruct();
+
+			SECTION("When move constructed.")
+			{
+				LifetimeWatcher target{*std::move(source)};
+			}
+
+			SECTION("When move assigned.")
+			{
+				auto innerExp = std::invoke(
+					[&]
+					{
+						LifetimeWatcher target{};
+						ScopedExpectation secondExpectation = target.expect_destruct();
+
+						target = *std::move(source);
+
+						// let's also swap the expectations, so the tracking becomes easier.
+						using std::swap;
+						swap(firstExpectation, secondExpectation);
+						return secondExpectation;
+					});
+			}
+
+			SECTION("When self-move assigned.")
+			{
+				*source = *std::move(source);
+
+				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+				source.reset();
+			}
+		}
+
+		SECTION("Without an active destruct-expectation.")
+		{
+			SECTION("When move constructed.")
+			{
+				auto expectation = std::invoke(
+					[&]() -> ScopedExpectation
+					{
+						LifetimeWatcher target{*std::move(source)};
+						return target.expect_destruct();
+					});
+			}
+
+			SECTION("When move assigned.")
+			{
+				auto innerExp = std::invoke(
+					[&]() -> ScopedExpectation
+					{
+						LifetimeWatcher target{};
+						// note: The target must have an active expectation, as it's considered dead after the move happened.
+						ScopedExpectation targetExp = target.expect_destruct();
+
+						target = *std::move(source);
+
+						return target.expect_destruct();
+					});
+			}
+		}
 	}
 }
