@@ -11,7 +11,6 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Utility.hpp"
 
-#include <bit>
 #include <concepts>
 #include <functional>
 #include <ranges>
@@ -308,14 +307,16 @@ struct mimicpp::string_case_fold_converter<char>
 
 #else
 
-// is missing from the unicodelib headers
-#include <cstdint>
-
-#include <unicodelib.h>
-#include <unicodelib_encodings.h>
+#if __has_include(<uni_algo/case.h>) \
+	&& __has_include(<uni_algo/conv.h>)
+#include <uni_algo/case.h>
+#include <uni_algo/conv.h>
+#else
+	#error "Unable to find uni_algo includes."
+#endif
 
 /**
- * \brief Specialized template for the ``char`` type (with unicodelib backend).
+ * \brief Specialized template for the ``char`` type (with uni_algo backend).
  * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
  */
 template <>
@@ -325,18 +326,16 @@ struct mimicpp::string_case_fold_converter<char>
 	[[nodiscard]]
 	constexpr auto operator ()(String&& str) const
 	{
-		return unicode::utf8::encode(
-			unicode::to_case_fold(
-				unicode::utf8::decode(
-					std::string_view{
-						std::ranges::data(str),
-						std::ranges::size(str)
-					})));
+		return una::cases::to_casefold_utf8(
+			std::string_view{
+				std::ranges::data(str),
+				std::ranges::size(str)
+			});
 	}
 };
 
 /**
- * \brief Specialized template for the ``wchar_t`` type (with unicodelib backend).
+ * \brief Specialized template for the ``wchar_t`` type (with uni_algo backend).
  * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
  */
 template <>
@@ -346,18 +345,16 @@ struct mimicpp::string_case_fold_converter<wchar_t>
 	[[nodiscard]]
 	constexpr auto operator ()(String&& str) const
 	{
-		return unicode::to_wstring(
-			unicode::to_case_fold(
-				unicode::to_utf32(
-					std::wstring_view{
-						std::ranges::data(str),
-						std::ranges::size(str)
-					})));
+		return una::cases::to_casefold_utf16(
+			std::wstring_view{
+				std::ranges::data(str),
+				std::ranges::size(str)
+			});
 	}
 };
 
 /**
- * \brief Specialized template for the ``char8_t`` type (with unicodelib backend).
+ * \brief Specialized template for the ``char8_t`` type (with uni_algo backend).
  * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
  */
 template <>
@@ -367,22 +364,16 @@ struct mimicpp::string_case_fold_converter<char8_t>
 	[[nodiscard]]
 	constexpr auto operator ()(String&& str) const
 	{
-		const std::string caseFolded = std::invoke(
-			mimicpp::string_case_fold_converter<char>{},
-			std::string_view{
-				std::bit_cast<const char*>(std::ranges::data(str)),
+		return una::cases::to_casefold_utf8(
+			std::u8string_view{
+				std::ranges::data(str),
 				std::ranges::size(str)
 			});
-
-		return std::u8string{
-			caseFolded.cbegin(),
-			caseFolded.cend()
-		};
 	}
 };
 
 /**
- * \brief Specialized template for the ``char16_t`` type (with unicodelib backend).
+ * \brief Specialized template for the ``char16_t`` type (with uni_algo backend).
  * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
  */
 template <>
@@ -392,18 +383,16 @@ struct mimicpp::string_case_fold_converter<char16_t>
 	[[nodiscard]]
 	constexpr auto operator ()(String&& str) const
 	{
-		return unicode::utf16::encode(
-			unicode::to_case_fold(
-				unicode::utf16::decode(
-					std::u16string_view{
-						std::ranges::data(str),
-						std::ranges::size(str)
-					})));
+		return una::cases::to_casefold_utf16(
+			std::u16string_view{
+				std::ranges::data(str),
+				std::ranges::size(str)
+			});
 	}
 };
 
 /**
- * \brief Specialized template for the ``char32_t`` type (with unicodelib backend).
+ * \brief Specialized template for the ``char32_t`` type (with uni_algo backend).
  * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
  */
 template <>
@@ -413,11 +402,13 @@ struct mimicpp::string_case_fold_converter<char32_t>
 	[[nodiscard]]
 	constexpr auto operator ()(String&& str) const
 	{
-		return unicode::to_case_fold(
-			std::u32string_view{
-				std::ranges::data(str),
-				std::ranges::size(str)
-			});
+		return una::utf8to32<char8_t, char32_t>(
+			una::cases::to_casefold_utf8(
+			una::utf32to8u(
+				std::u32string_view{
+					std::ranges::data(str),
+					std::ranges::size(str)
+				})));
 	}
 };
 

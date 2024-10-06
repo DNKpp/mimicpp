@@ -51,44 +51,30 @@ endif()
 OPTION(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-insensitive string matchers are available." OFF)
 if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
 
-	CPMAddPackage(
-		NAME				cpp-unicodelib
-		GITHUB_REPOSITORY	yhirose/cpp-unicodelib
-		GIT_TAG				797b1f0f1592ce13afabf3576f51ef26db5e884d
-		DOWNLOAD_ONLY		YES
-		SYSTEM				YES
+	find_package(uni-algo QUIET)
+	if (NOT uni-algo_FOUND)
+		CPMAddPackage(
+			NAME				uni-algo
+			GITHUB_REPOSITORY	uni-algo/uni-algo
+			GIT_TAG				v1.2.0
+			EXCLUDE_FROM_ALL	YES
+			SYSTEM				YES
+			OPTIONS
+				UNI_ALGO_INSTALL YES
+		)
+	endif()
+
+	find_package(uni-algo REQUIRED)
+	target_link_libraries(
+		mimicpp
+		INTERFACE
+		uni-algo::uni-algo
 	)
 
-	if (cpp-unicodelib_ADDED)
-
-		add_library(cpp-unicodelib INTERFACE IMPORTED)
-		add_library(cpp::unicodelib ALIAS cpp-unicodelib)
-		target_include_directories(
-			cpp-unicodelib
-			INTERFACE
-			"${cpp-unicodelib_SOURCE_DIR}"
-		)
-
-		target_link_libraries(
-			mimicpp
-			INTERFACE
-			cpp::unicodelib
-		)
-
-		target_compile_options(
-			mimicpp
-			INTERFACE
-			# cpp-unicodelib checks for this macro, but msvc doesn't define it properly
-			# see: https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
-			"$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>"
-		)
-
-		target_compile_definitions(
-			mimicpp
-			INTERFACE
-			MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
-		)
-
-	endif()
+	target_compile_definitions(
+		mimicpp
+		INTERFACE
+		MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+	)
 
 endif()

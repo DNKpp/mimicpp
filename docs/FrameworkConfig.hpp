@@ -56,13 +56,16 @@
  * 
  * If enabled, all string-matchers get full unicode support. This is relevant, when comparing case-insensitively. It's not required for the base-version
  * of string-matchers.
+ * 
+ * This will require the rather light-weight library ``uni-algo``, which can be found on github. 
+ * \see https://github.com/uni-algo/uni-algo
+ * 
+ * ``mimic++`` first tries to find the dependency via ``find_package``, but will fetch it from github if not available.
+ * 
  * This is an experimental feature, and may be removed during any release.
  * 
  * ### Why is it an experimental feature?
  * 
- * This will pull the rather light-weight library ``cpp-unicodelib`` from github. ``mimic++`` won't check whether it can already find the library,
- * because it has very poor cmake support. This library is currently chosen, because it's very easy to integrate and offers the necessary
- * algorithm (``to_case_fold``), but it's in no way an optimal solution. It comes also with a quite heavy runtime-cost, as we have to do many
- * conversions back and forth, to get that working. If there is a better -- but similar light-weight -- option available, please tell me.
- * \see https://github.com/yhirose/cpp-unicodelib
+ * I recently switched from ``cpp-unicodelib``, which I didn't like very much for several reasons. ``uni-algo`` seems more mature, but I would like
+ * to get some feedback, before I'll declare this as a stable feature.
  */
