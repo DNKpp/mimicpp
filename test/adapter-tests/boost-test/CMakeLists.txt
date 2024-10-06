@@ -13,10 +13,11 @@ else()
 endif()
 
 CPMAddPackage(
-	NAME Boost
-	URL	${BOOST_ARCHIVE_URL}
-	VERSION 1.85.0
-	SYSTEM YES
+	NAME				Boost
+	URL					${BOOST_ARCHIVE_URL}
+	VERSION				1.85.0
+	EXCLUDE_FROM_ALL	YES
+	SYSTEM				YES
 )
 
 target_link_libraries(

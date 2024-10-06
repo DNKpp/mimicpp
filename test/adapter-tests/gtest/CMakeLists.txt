@@ -10,6 +10,8 @@ CPMAddPackage(
 	NAME GTest
 	GITHUB_REPOSITORY	"google/googletest"
 	GIT_TAG				"v1.15.2"
+	EXCLUDE_FROM_ALL	YES
+	SYSTEM				YES
 	OPTIONS
 						"gtest_force_shared_crt ON"
 )

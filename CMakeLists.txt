@@ -5,16 +5,21 @@ include(get_cpm)
 
 project(
 	mimicpp
-	LANGUAGES CXX
-	VERSION 2
+	LANGUAGES		CXX
+	VERSION			2
+	DESCRIPTION		"A modern and (mostly) macro free mocking-framework"
+	HOMEPAGE_URL	"https://github.com/DNKpp/mimicpp"
 )
+
+include(GNUInstallDirs)
 
 add_library(mimicpp INTERFACE)
 add_library(mimicpp::mimicpp ALIAS mimicpp)
 target_include_directories(
 	mimicpp
 	INTERFACE
-	"include"
+	"$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
 target_compile_options(
@@ -68,5 +73,11 @@ OPTION(MIMICPP_ENABLE_AMALGAMATE_HEADERS "Enables the amalgamation target." OFF)
 if (MIMICPP_ENABLE_AMALGAMATE_HEADERS)
 
 	add_subdirectory("tools/amalgamate-headers")
+
+endif()
+
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+
+  include(InstallRules)
 
 endif()

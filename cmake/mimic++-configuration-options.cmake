@@ -52,11 +52,11 @@ OPTION(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-i
 if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
 
 	CPMAddPackage(
-		NAME cpp-unicodelib
-		GITHUB_REPOSITORY yhirose/cpp-unicodelib
-		GIT_TAG 797b1f0f1592ce13afabf3576f51ef26db5e884d
-		DOWNLOAD_ONLY YES
-		SYSTEM YES
+		NAME				cpp-unicodelib
+		GITHUB_REPOSITORY	yhirose/cpp-unicodelib
+		GIT_TAG				797b1f0f1592ce13afabf3576f51ef26db5e884d
+		DOWNLOAD_ONLY		YES
+		SYSTEM				YES
 	)
 
 	if (cpp-unicodelib_ADDED)
