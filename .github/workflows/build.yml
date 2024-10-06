@@ -241,6 +241,12 @@ jobs:
                         compiler_name: "AppleClang"
                         compiler_version: 16
 
+                    # The format_backend and str_matcher options are rather orthogonal.
+                    # To see, whether support both str_matcher variants, let's use the fmt backend,
+                    # as this is supported by all compilers.
+                    - format_backend: "std"
+                      str_matcher: "unicode"
+
         steps:
             - uses: actions/checkout@v4
   
