@@ -51,6 +51,11 @@ endif()
 OPTION(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-insensitive string matchers are available." OFF)
 if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
 
+	# on clang-builds this somehow emits an error, if not explicitly disabled
+	# Git the info, to turn this of from here:
+	# https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
+	set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
 	find_package(uni-algo QUIET)
 	if (NOT uni-algo_FOUND)
 		CPMAddPackage(
