@@ -16,6 +16,7 @@
 #include <cstdint>
 #include <functional>
 #include <iterator>
+#include <optional>
 #include <ranges>
 #include <source_location>
 #include <sstream>
@@ -389,6 +390,38 @@ namespace mimicpp::detail
 				loc.line(),
 				loc.column(),
 				loc.function_name());
+		}
+	};
+
+	template <>
+	class Printer<std::nullopt_t>
+	{
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, [[maybe_unused]] const std::nullopt_t)
+		{
+			return format::format_to(
+				std::move(out),
+				"nullopt");
+		}
+	};
+
+	template <typename T>
+	class Printer<std::optional<T>>
+	{
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, const std::optional<T>& opt)
+		{
+			constexpr PrintFn print{};
+
+			if (opt)
+			{
+				out = format::format_to(std::move(out), "{{ value: ");
+				out = print(std::move(out), *opt);
+				return format::format_to(std::move(out), " }}");
+			}
+			return print(std::move(out), std::nullopt);
 		}
 	};
 

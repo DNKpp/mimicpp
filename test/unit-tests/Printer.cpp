@@ -409,6 +409,25 @@ TEST_CASE(
 			Catch::Matchers::Matches(".+\\[\\d+:\\d+\\], .+"));
 	}
 
+	SECTION("std::optional and std::nullopt_t have special treatment")
+	{
+		REQUIRE_THAT(
+			mimicpp::print(std::nullopt),
+			Catch::Matchers::Equals("nullopt"));
+		REQUIRE_THAT(
+			mimicpp::print(std::optional<int>{}),
+			Catch::Matchers::Equals("nullopt"));
+		REQUIRE_THAT(
+			mimicpp::print(std::optional<NonPrintable>{}),
+			Catch::Matchers::Equals("nullopt"));
+		REQUIRE_THAT(
+			mimicpp::print(std::optional{1337}),
+			Catch::Matchers::Equals("{ value: 1337 }"));
+		REQUIRE_THAT(
+			mimicpp::print(std::optional{NonPrintable{}}),
+			Catch::Matchers::Equals("{ value: {?} }"));
+	}
+
 	SECTION("When nothing matches, a default token is inserted.")
 	{
 		constexpr NonPrintable value{};
