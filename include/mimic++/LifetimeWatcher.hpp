@@ -10,6 +10,7 @@
 
 #include "mimic++/Mock.hpp"
 
+#include <functional>
 #include <stdexcept>
 #include <utility>
 
