@@ -173,17 +173,17 @@ jobs:
                 echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
 
             # enables debug-mode and c++20 for all cases
-            - name: Enable debug-mode
+            - name: Enable base matrix
               shell: bash
               run: |
                 echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
                 echo "CXX_VERSIONS=20" >> $GITHUB_ENV
 
              # if its a PR from development or the main branch in general, add release-mode and c++23
-            - name: Enable release-mode
+            - name: Enable extended matrix
               if: ${{
                         github.ref == 'refs/heads/main'
-                        || github.ref == 'refs/heads/development' && github.event_name == 'pull_request'
+                        || (github.ref == 'refs/heads/development' && github.event_name == 'pull_request')
                    }}
 
               shell: bash
