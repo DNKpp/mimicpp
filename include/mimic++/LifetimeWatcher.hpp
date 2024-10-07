@@ -20,9 +20,11 @@ namespace mimicpp
 	public:
 		~LifetimeWatcher() noexcept(false)
 		{
-			if (m_DestructionMock)
+			if (const auto destruction = std::exchange(
+				m_DestructionMock,
+				nullptr))
 			{
-				(*m_DestructionMock)();
+				std::invoke(*destruction);
 			}
 		}
 
