@@ -10,7 +10,6 @@
 
 #include "mimic++/Mock.hpp"
 
-#include <functional>
 #include <stdexcept>
 #include <utility>
 
@@ -25,7 +24,7 @@ namespace mimicpp
 				m_DestructionMock,
 				nullptr))
 			{
-				std::invoke(*destruction);
+				(*destruction)();
 			}
 		}
 
