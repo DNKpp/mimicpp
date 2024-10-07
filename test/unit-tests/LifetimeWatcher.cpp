@@ -206,15 +206,21 @@ TEST_CASE(
 	"[lifetime-watcher]"
 )
 {
+	struct my_exception
+	{
+	};
+
 	const auto action = []
 	{
 		LifetimeWatcher watcher{};
 		SCOPED_EXP watcher.expect_destruct()
-				and finally::throws(42);
+					and finally::throws(my_exception{});
+
+		// it's very important, making sure, that the expectation outlives the LifetimeWatcher
 		LifetimeWatcher other{std::move(watcher)};
 	};
 
 	REQUIRE_THROWS_AS(
 		action(),
-		int);
+		my_exception);
 }
