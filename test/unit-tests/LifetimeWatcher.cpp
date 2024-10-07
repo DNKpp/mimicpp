@@ -200,3 +200,21 @@ TEST_CASE(
 		}
 	}
 }
+
+TEST_CASE(
+	"LifetimeWatcher supports finally::throws policy.",
+	"[lifetime-watcher]"
+)
+{
+	const auto action = []
+	{
+		LifetimeWatcher watcher{};
+		ScopedExpectation exp = watcher.expect_destruct()
+								and finally::throws(42);
+		return exp;
+	};
+
+	REQUIRE_THROWS_AS(
+		action(),
+		int);
+}
