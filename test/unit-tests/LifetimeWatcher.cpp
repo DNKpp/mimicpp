@@ -312,6 +312,15 @@ TEST_CASE(
 	"Watched can wrap the actual type to be watched with the utilized watcher types.",
 	"[lifetime-watcher]")
 {
+	SECTION("Detects violations.")
+	{
+		ScopedReporter reporter{};
+
+		REQUIRE_THROWS_AS(
+			(Watched<Mock<void()>, LifetimeWatcher>{}),
+			NoMatchError);
+	}
+
 	SECTION("Just plain usage.")
 	{
 		Watched<
@@ -384,5 +393,30 @@ TEST_CASE(
 	watched->foo();
 
 	// extend lifetime, to outlive its expectations
-	auto temp{std::move(watched)};
+	const std::unique_ptr<Interface> temp{std::move(watched)};
+}
+
+TEST_CASE(
+	"Violations of watched interface-implementations will be detected.",
+	"[lifetime-watcher]")
+{
+	class Interface
+	{
+	public:
+		// must not be noexcept, due to the installed reporter
+		virtual ~Interface() noexcept(false)
+		{
+		}
+	};
+
+	class Derived
+		: public Interface
+	{
+	};
+
+	ScopedReporter reporter{};
+
+	REQUIRE_THROWS_AS(
+		(Watched<Derived, LifetimeWatcher>{}),
+		NoMatchError);
 }

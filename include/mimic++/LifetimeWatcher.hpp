@@ -102,7 +102,7 @@ namespace mimicpp
 			public Watchers...
 		{
 		public:
-			~BasicWatched() noexcept(std::is_nothrow_destructible_v<Base>) override
+			~BasicWatched() noexcept(std::is_nothrow_destructible_v<Base>) override  // NOLINT(modernize-use-equals-default)
 			{
 			}
 
@@ -120,6 +120,17 @@ namespace mimicpp
 	class Watched
 		: public detail::BasicWatched<Base, Watchers...>
 	{
+		using SuperT = detail::BasicWatched<Base, Watchers...>;
+
+	public:
+		~Watched() = default;
+
+		using SuperT::SuperT;
+
+		Watched(const Watched&) = default;
+		Watched& operator =(const Watched&) = default;
+		Watched(Watched&&) = default;
+		Watched& operator =(Watched&&) = default;
 	};
 }
 
