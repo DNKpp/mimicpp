@@ -4,6 +4,7 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/LifetimeWatcher.hpp"
+#include "mimic++/InterfaceMock.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
@@ -219,7 +220,7 @@ TEST_CASE(
 
 				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
 				source.reset();
-}
+			}
 
 			SECTION("When copy-assigning.")
 			{
@@ -296,7 +297,7 @@ TEST_CASE(
 	{
 		LifetimeWatcher watcher{};
 		MIMICPP_SCOPED_EXPECTATION watcher.expect_destruct()
-					and finally::throws(my_exception{});
+									and finally::throws(my_exception{});
 
 		// it's very important, making sure, that the expectation outlives the LifetimeWatcher
 		LifetimeWatcher other{std::move(watcher)};
@@ -305,4 +306,83 @@ TEST_CASE(
 	REQUIRE_THROWS_AS(
 		action(),
 		my_exception);
+}
+
+TEST_CASE(
+	"Watched can wrap the actual type to be watched with the utilized watcher types.",
+	"[lifetime-watcher]")
+{
+	SECTION("Just plain usage.")
+	{
+		Watched<
+			Mock<void(int)>,
+			LifetimeWatcher> watched{};
+
+		MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
+		MIMICPP_SCOPED_EXPECTATION watched.expect_call(42);
+
+		watched(42);
+
+		// extend lifetime, to outlive all expectations
+		auto temp{std::move(watched)};
+	}
+
+	SECTION("With explicit sequence.")
+	{
+		Watched<
+			Mock<void(int)>,
+			LifetimeWatcher> watched{};
+
+		SequenceT sequence{};
+		{
+			Watched<
+				Mock<void()>,
+				LifetimeWatcher> other{};
+
+			MIMICPP_SCOPED_EXPECTATION other.expect_destruct()
+										and expect::in_sequence(sequence);
+
+			// extend lifetime, to outlive its expectations
+			auto temp{std::move(other)};
+		}
+
+		MIMICPP_SCOPED_EXPECTATION watched.expect_call(42)
+									and expect::in_sequence(sequence);
+		MIMICPP_SCOPED_EXPECTATION watched.expect_destruct()
+									and expect::in_sequence(sequence);
+
+		watched(42);
+
+		// extend lifetime, to outlive its expectations
+		auto temp{std::move(watched)};
+	}
+}
+
+TEST_CASE(
+	"Watched can be used on interface-mocks.",
+	"[lifetime-watcher]")
+{
+	class Interface
+	{
+	public:
+		virtual ~Interface() = default;
+		virtual void foo() = 0;
+	};
+
+	class Derived
+		: public Interface
+	{
+	public:
+		MIMICPP_MOCK_METHOD(foo, void, ());
+	};
+
+	auto watched = std::make_unique<Watched<Derived, LifetimeWatcher>>();
+
+	MIMICPP_SCOPED_EXPECTATION watched->expect_destruct();
+	MIMICPP_SCOPED_EXPECTATION watched->foo_.expect_call();
+
+	watched->foo();
+
+	// extend lifetime, to outlive its expectations
+	auto temp{std::move(watched)};
 }
