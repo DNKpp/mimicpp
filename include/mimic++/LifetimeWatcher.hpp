@@ -31,8 +31,17 @@ namespace mimicpp
 		[[nodiscard]]
 		LifetimeWatcher() = default;
 
-		LifetimeWatcher(const LifetimeWatcher&) = delete;
-		LifetimeWatcher& operator =(const LifetimeWatcher&) = delete;
+		LifetimeWatcher([[maybe_unused]] const LifetimeWatcher& other)
+			: LifetimeWatcher{}
+		{
+		}
+
+		LifetimeWatcher& operator =([[maybe_unused]] const LifetimeWatcher& other)
+		{
+			std::exchange(*this, LifetimeWatcher{});
+
+			return *this;
+		}
 
 		[[nodiscard]]
 		LifetimeWatcher(LifetimeWatcher&&) = default;

@@ -199,6 +199,88 @@ TEST_CASE(
 			}
 		}
 	}
+
+	SECTION("LifetimeWatcher can be copied.")
+	{
+		std::optional<LifetimeWatcher> source{std::in_place};
+
+		SECTION("With an already active destruct-expectation")
+		{
+			MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
+
+			SECTION("When copy-constructing.")
+			{
+				auto expectation = std::invoke(
+					[&]() -> ScopedExpectation
+					{
+						LifetimeWatcher target{*source};
+						return target.expect_destruct();
+					});
+
+				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+				source.reset();
+}
+
+			SECTION("When copy-assigning.")
+			{
+				auto expectation = std::invoke(
+					[&]() -> ScopedExpectation
+					{
+						LifetimeWatcher target{};
+						MIMICPP_SCOPED_EXPECTATION target.expect_destruct();
+
+						target = *source;
+						return target.expect_destruct();
+					});
+
+				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+				source.reset();
+			}
+
+			SECTION("When self-copy-assigning.")
+			{
+				source = *source;
+				MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
+
+				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+				source.reset();
+			}
+		}
+
+		SECTION("Without an active destruct-expectation")
+		{
+			SECTION("When copy-constructing.")
+			{
+				auto expectation = std::invoke(
+					[&]() -> ScopedExpectation
+					{
+						LifetimeWatcher target{*source};
+						return target.expect_destruct();
+					});
+
+				MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
+				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+				source.reset();
+			}
+
+			SECTION("When copy-assigning.")
+			{
+				auto expectation = std::invoke(
+					[&]() -> ScopedExpectation
+					{
+						LifetimeWatcher target{};
+						MIMICPP_SCOPED_EXPECTATION target.expect_destruct();
+
+						target = *source;
+						return target.expect_destruct();
+					});
+
+				MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
+				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+				source.reset();
+			}
+		}
+	}
 }
 
 TEST_CASE(
@@ -213,7 +295,7 @@ TEST_CASE(
 	const auto action = []
 	{
 		LifetimeWatcher watcher{};
-		SCOPED_EXP watcher.expect_destruct()
+		MIMICPP_SCOPED_EXPECTATION watcher.expect_destruct()
 					and finally::throws(my_exception{});
 
 		// it's very important, making sure, that the expectation outlives the LifetimeWatcher
