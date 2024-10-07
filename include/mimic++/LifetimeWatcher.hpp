@@ -38,7 +38,9 @@ namespace mimicpp
 
 		LifetimeWatcher& operator =([[maybe_unused]] const LifetimeWatcher& other)
 		{
-			std::exchange(*this, LifetimeWatcher{});
+			std::ignore = std::exchange(
+				*this,
+				LifetimeWatcher{});
 
 			return *this;
 		}
