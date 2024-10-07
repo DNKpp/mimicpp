@@ -206,11 +206,12 @@ TEST_CASE(
 	"[lifetime-watcher]"
 )
 {
-	const auto action = []() -> ScopedExpectation
+	const auto action = []
 	{
 		LifetimeWatcher watcher{};
-		return watcher.expect_destruct()
+		SCOPED_EXP watcher.expect_destruct()
 				and finally::throws(42);
+		LifetimeWatcher other{std::move(watcher)};
 	};
 
 	REQUIRE_THROWS_AS(
