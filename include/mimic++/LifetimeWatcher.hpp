@@ -39,9 +39,15 @@ namespace mimicpp
 
 		LifetimeWatcher& operator =([[maybe_unused]] const LifetimeWatcher& other)
 		{
-			std::ignore = std::exchange(
-				*this,
-				LifetimeWatcher{});
+			// let's make this a two-step.
+			// First destroy the previous instance, which may already report a violation.
+			// If we would already have the new instance created, this would lead also to
+			// a violation report, which actually might break everything.
+			{
+				LifetimeWatcher temp{std::move(*this)};
+			}
+
+			*this =	LifetimeWatcher{};
 
 			return *this;
 		}
