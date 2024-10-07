@@ -31,6 +31,7 @@ namespace mimicpp
 		[[nodiscard]]
 		LifetimeWatcher() = default;
 
+		[[nodiscard]]
 		LifetimeWatcher([[maybe_unused]] const LifetimeWatcher& other)
 			: LifetimeWatcher{}
 		{
