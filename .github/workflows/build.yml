@@ -181,10 +181,9 @@ jobs:
 
              # if its a PR from development or the main branch in general, add release-mode and c++23
             - name: Enable extended matrix
-              if: ${{
-                        github.ref == 'refs/heads/main'
-                        || (github.ref == 'refs/heads/development' && github.event_name == 'pull_request')
-                   }}
+              if: |
+                github.ref == 'refs/heads/main'
+                || (github.ref == 'refs/heads/development' && github.event_name == 'pull_request')
 
               shell: bash
               run: |
