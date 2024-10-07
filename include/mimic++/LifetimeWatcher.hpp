@@ -212,6 +212,11 @@ namespace mimicpp
 		};
 	}
 
+	/**
+	 * \brief CRTP-type, inheriting first from ``Base`` and then all ``Watchers``, thus effectively couple them all together.
+	 * \tparam Base The main type.
+	 * \tparam Watchers All utilized watcher types.
+	 */
 	template <typename Base, object_watcher... Watchers>
 		requires std::same_as<Base, std::remove_cvref_t<Base>>
 	class Watched
