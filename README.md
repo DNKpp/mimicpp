@@ -62,7 +62,8 @@ So, Mocks and Expectations are going together hand in hand.
 
 ### Examples
 
-#### Mocks as function objects
+<details>
+<summary>Mocks as function objects</summary>
 
 As already said, ``mimicpp::Mock``s are already function objects.
 
@@ -117,7 +118,10 @@ TEST_CASE("Mocks can be overloaded.")
 }
 ```
 
-#### Mocks as member functions
+</details>
+
+<details>
+<summary>Mocks as member functions</summary>
 
 ``mimicpp::Mock``s can also serve as member functions. Sure, there are some limitations, but for the most cases it works well.
 
@@ -148,7 +152,10 @@ TEST_CASE("Mocks can be used as member functions.")
 }
 ```
 
-#### Mocking interfaces
+</details>
+
+<details>
+<summary>Mocking interfaces</summary>
 
 ``mimic++`` also provides helpers for interface mocking.
 
@@ -234,6 +241,8 @@ TEST_CASE("Interface overload-sets are directly supported.")
     foo(mock);        // fine, foo calls the get() const member-function, which forwards the call to the mock object get_ as before.
 }
 ```
+
+</details>
 
 ### Other Choices
 
@@ -376,7 +385,8 @@ The goal is to be close to 100% as possible.
 On the other hand-side, there is a whole range of code which doesn't even get investigated by these tools: templates (and macros).
 ``mimic++`` has **a lot** of templating code at the very heart, which is at least of equal effort to get right (and tested). So, treat the coverage percentage with a grain of salt.
 
-### CI Tests
+<details>
+<summary>CI Tests</summary>
 
 The listed configurations are explicitly tested, but other do probably work, too.
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
@@ -415,6 +425,8 @@ As new compilers become available, they will be added to the workflow, but older
 | AppleClang-18.1.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 
 ^1^ There is an issue with AppleClang-16 and ``boost::filesystem`` on the current ``macos-latest``, but this is just for the boost-test-adapter. Everything else works fine.
+
+</details>
 
 ---
 
