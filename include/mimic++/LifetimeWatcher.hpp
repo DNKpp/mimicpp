@@ -78,24 +78,48 @@ namespace mimicpp
 							&& std::is_move_assignable_v<T>
 							&& std::is_destructible_v<T>;
 
+	namespace detail
+	{
+		template <typename Base, typename... Watchers>
+		class BasicWatched
+			: public Base,
+			public Watchers...
+		{
+		public:
+			~BasicWatched() = default;
+
+			using Base::Base;
+
+			BasicWatched(const BasicWatched&) = default;
+			BasicWatched& operator =(const BasicWatched&) = default;
+			BasicWatched(BasicWatched&&) = default;
+			BasicWatched& operator =(BasicWatched&&) = default;
+		};
+
+		template <satisfies<std::has_virtual_destructor> Base, typename... Watchers>
+		class BasicWatched<Base, Watchers...>
+			: public Base,
+			public Watchers...
+		{
+		public:
+			~BasicWatched() noexcept(std::is_nothrow_destructible_v<Base>) override
+			{
+			}
+
+			using Base::Base;
+
+			BasicWatched(const BasicWatched&) = default;
+			BasicWatched& operator =(const BasicWatched&) = default;
+			BasicWatched(BasicWatched&&) = default;
+			BasicWatched& operator =(BasicWatched&&) = default;
+		};
+	}
+
 	template <typename Base, object_watcher... Watchers>
 		requires std::same_as<Base, std::remove_cvref_t<Base>>
-				&& (... && std::same_as<Watchers, std::remove_cvref_t<Watchers>>)
 	class Watched
-		: public Base,
-		public Watchers...
+		: public detail::BasicWatched<Base, Watchers...>
 	{
-	public:
-		~Watched() noexcept(std::is_nothrow_destructible_v<Base>)
-		{
-		}
-
-		using Base::Base;
-
-		Watched(const Watched&) = default;
-		Watched& operator =(const Watched&) = default;
-		Watched(Watched&&) = default;
-		Watched& operator =(Watched&&) = default;
 	};
 }
 
