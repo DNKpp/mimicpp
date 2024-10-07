@@ -183,7 +183,9 @@ namespace mimicpp
 			public Watchers...
 		{
 		public:
-			~BasicWatched() = default;
+			~BasicWatched() noexcept(std::is_nothrow_destructible_v<Base>) // NOLINT(modernize-use-equals-default)
+			{
+			}
 
 			using Base::Base;
 
@@ -199,7 +201,7 @@ namespace mimicpp
 			public Watchers...
 		{
 		public:
-			~BasicWatched() noexcept(std::is_nothrow_destructible_v<Base>) override  // NOLINT(modernize-use-equals-default)
+			~BasicWatched() noexcept(std::is_nothrow_destructible_v<Base>) override // NOLINT(modernize-use-equals-default)
 			{
 			}
 
@@ -216,6 +218,37 @@ namespace mimicpp
 	 * \brief CRTP-type, inheriting first from ``Base`` and then all ``Watchers``, thus effectively couple them all together.
 	 * \tparam Base The main type.
 	 * \tparam Watchers All utilized watcher types.
+	 * \details
+	 * ## Destructors
+	 *
+	 * ``Watched`` automatically detects, whether ``Base`` has a virtual destructor and applies ``override`` if that's the case.
+	 * It also forces the same ``noexcept``-ness for the destruct: If ``Base`` is nothrow destructible, ``Watched`` is it, too.
+	 *
+	 * This is important to note, as this has implications when a ``LifetimeWatcher`` is utilized.
+	 * ``LifetimeWatcher`` may, during destruction, report violations to the currently active reporter. This reporter has to
+	 * act accordingly, by either throwing an exception or terminating the program.
+	 *
+	 * As the destructor of the ``LifetimeWatcher`` will effectively be called from ``~Watched``, this will lead to a call to
+	 * ``std::terminate``, if ``Base`` has a ``noexcept`` destructor (which is very likely, as it's a very strong default) and
+	 * the reporter propagates the violation via an exception.
+	 * \see https://en.cppreference.com/w/cpp/language/noexcept_spec
+	 * \see https://en.cppreference.com/w/cpp/error/terminate
+	 *
+	 * There is no real way around that, beside explicitly ``~Watched`` as ``noexcept(false)``. Unfortunately, this would
+	 * lead to inconsistencies with ``noexcept`` declared ``virtual`` destructors, because this requires all subclasses to match
+	 * that specification.
+	 * Besides that, there is an even stronger argument to strictly follow what ``Base`` offers:
+	 * A ``Watched`` object should be as close to the original ``Base`` type as possible.
+	 * If one wants to store a ``Watched<Base>`` inside e.g. ``std::vector`` and ``~Watched`` would have a different ``noexcept``
+	 * specification than ``Base``, that would lead to behavior changes. This should never be the case,
+	 * as mocks are expected to behave like an actual implementation-object.
+	 *
+	 * So, what does all of this mean?
+	 *
+	 * Actually, there are no implications to working tests. If they satisfy the expectations, no one will notice anything different.
+	 * When it comes to a violation, which is detected by the destructor of a ``LifetimeWatcher``, the reporter will be notified and
+	 * should print the no-match report to the console. After that, the program will than probably terminate (or halt, if a debugger
+	 * is attached), but you should at least have an idea, which test is affected.
 	 */
 	template <typename Base, object_watcher... Watchers>
 		requires std::same_as<Base, std::remove_cvref_t<Base>>

@@ -15,9 +15,17 @@ TEST_CASE(
 	//! [watched lifetime-watcher violation]
 	constexpr auto action = []
 	{
+		struct not_nothrow_destructible
+		{
+			// explicitly make the destructor throwable, this isn't necessarily required in real tests
+			~not_nothrow_destructible() noexcept(false)
+			{
+			}
+		};
+
 		const mimicpp::Watched<
-			mimicpp::Mock<void()>,
-			mimicpp::LifetimeWatcher> watched{};	// let's create a watched mock
+			not_nothrow_destructible,
+			mimicpp::LifetimeWatcher> watched{};	// let's create a watched instance
 
 		// We purposely forget to define a destruction expectation.
 		// Due to this, a no-match will be reported during destruction.
@@ -39,6 +47,10 @@ TEST_CASE(
 	{
 		struct my_copyable	// Mock isn't a copyable type, thus use a custom one for this example
 		{
+			// explicitly make the destructor throwable, this isn't necessarily required in real tests
+			~my_copyable() noexcept(false)
+			{
+			}
 		};
 
 		mimicpp::Watched<
@@ -77,6 +89,10 @@ TEST_CASE(
 		{
 			struct my_copyable	// Mock isn't a copyable type, thus use a custom one for this example
 			{
+				// explicitly make the destructor throwable, this isn't necessarily required in real tests
+				~my_copyable() noexcept(false)
+				{
+				}
 			};
 
 			mimicpp::Watched<
@@ -111,6 +127,10 @@ TEST_CASE(
 		{
 			struct my_copyable	// Mock isn't a copyable type, thus use a custom one for this example
 			{
+				// explicitly make the destructor throwable, this isn't necessarily required in real tests
+				~my_copyable() noexcept(false)
+				{
+				}
 			};
 
 			mimicpp::Watched<

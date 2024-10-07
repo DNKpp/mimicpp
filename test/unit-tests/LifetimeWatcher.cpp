@@ -312,12 +312,24 @@ TEST_CASE(
 	"Watched can wrap the actual type to be watched with the utilized watcher types.",
 	"[lifetime-watcher]")
 {
+	STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Mock<void(int)>, LifetimeWatcher>>);
+
 	SECTION("Detects violations.")
 	{
 		ScopedReporter reporter{};
 
+		struct not_nothrow_destructible
+		{
+			~not_nothrow_destructible() noexcept(false)
+			{
+			}
+		};
+
+		using WatcherT = Watched<not_nothrow_destructible, LifetimeWatcher>;
+		STATIC_REQUIRE(!std::is_nothrow_destructible_v<WatcherT>);
+
 		REQUIRE_THROWS_AS(
-			(Watched<Mock<void()>, LifetimeWatcher>{}),
+			WatcherT{},
 			NoMatchError);
 	}
 
@@ -385,6 +397,8 @@ TEST_CASE(
 		MIMICPP_MOCK_METHOD(foo, void, ());
 	};
 
+	STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Derived, LifetimeWatcher>>);
+
 	auto watched = std::make_unique<Watched<Derived, LifetimeWatcher>>();
 
 	MIMICPP_SCOPED_EXPECTATION watched->expect_destruct();
@@ -413,6 +427,8 @@ TEST_CASE(
 		: public Interface
 	{
 	};
+
+	STATIC_REQUIRE(!std::is_nothrow_destructible_v<Watched<Derived, LifetimeWatcher>>);
 
 	ScopedReporter reporter{};
 
