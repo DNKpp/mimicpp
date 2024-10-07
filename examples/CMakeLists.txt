@@ -12,6 +12,7 @@ add_executable(
 	"Sequences.cpp"
 	"SideEffects.cpp"
 	"Times.cpp"
+	"Watcher.cpp"
 )
 
 include(SetupTestTarget)
