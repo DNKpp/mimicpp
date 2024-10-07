@@ -387,8 +387,9 @@ jobs:
               if: startsWith(matrix.config.os, 'macOS')
               shell: bash
               run: |
+                env brew install ninja llvm
                 LLVM_NAME=llvm@${{ matrix.config.compiler_version }}
-                env brew install ninja $LLVM_NAME
+                env brew $LLVM_NAME
                 LLVM_PATH="$(brew --prefix $LLVM_NAME)"
                 echo "CC=$(echo $LLVM_PATH/bin/clang)" >> $GITHUB_ENV
                 echo "CXX=$(echo $LLVM_PATH/bin/clang++)" >> $GITHUB_ENV
