@@ -179,9 +179,13 @@ jobs:
                 echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
                 echo "CXX_VERSIONS=20" >> $GITHUB_ENV
 
-             # if main is the target branch, add release-mode and c++23
+             # if its a PR from development or the main branch in general, add release-mode and c++23
             - name: Enable release-mode
-              if: ${{ github.ref == 'refs/heads/main' }}
+              if: ${{
+                        github.ref == 'refs/heads/main'
+                        || github.ref == 'refs/heads/development' && github.event_name == 'pull_request'
+                   }}
+
               shell: bash
               run: |
                 echo "BUILD_MODES=$(echo $BUILD_MODES, \"Release\")" >> $GITHUB_ENV
