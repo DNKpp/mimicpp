@@ -15,9 +15,51 @@
 
 namespace mimicpp
 {
+	/**
+	 * \defgroup OBJECT_WATCHING object-watching
+	 * \brief Contains utility for explicit tracking of special object functionalities.
+	 * \details 
+	 *
+	 *\{
+	 */
+
+	/**
+	 * \brief A watcher type, which reports it's destructor calls.
+	 * \details This watcher is designed to track, whether the destructor has been called.
+	 * During its destructor call, it reports the destruction to the framework, which can be tracked
+	 * by a previously created destruction-expectation.
+	 *
+	 * \snippet Watcher.cpp watched lifetime-watcher
+	 *
+	 * ## Moving
+	 *
+	 * This watcher can be freely moved around.
+	 *
+	 * ## Copying
+	 *
+	 * This watcher is copyable, but with very special behaviour.
+	 *
+	 * As this watcher is generally designed to be part of a bigger object, it would be very limiting not supporting
+	 * copy-operations at all. The question is, how should a copy look like?
+	 *
+	 * In general a copy should be a logical duplicate of its source and the general expectation is:
+	 * if ``B`` is a copy of ``A``, then ``A == B`` should yield true.
+	 * \note This doesn't say, that if ``B`` is *not* a copy of ``A``, then ``A == B`` has to yield false!
+	 *
+	 * \details This won't be the case for ``LifetimeWatcher``s, as active destruction-expectations won't be copied over
+	 * to the target. In general, if a LifetimeWatcher is used, we want to be very precise with our object-lifetime,
+	 * thus an implicit expectation copy would be against the purpose of this helper.
+	 * Due to this, each ``LifetimeWatcher`` will be created as a fresh instance, when copy-construction is used.
+	 * The same logic also applies to copy-assignment.
+	 */
 	class LifetimeWatcher
 	{
 	public:
+		/**
+		 * \brief Destructor, which reports the call.
+		 * \note A no-match error may occur, if no destruction-expectation has been defined.
+		 * \snippet Watcher.cpp watched lifetime-watcher violation
+		 */
 		~LifetimeWatcher() noexcept(false)
 		{
 			if (const auto destruction = std::exchange(
@@ -28,15 +70,43 @@ namespace mimicpp
 			}
 		}
 
+		/**
+		 * \brief Defaulted default constructor.
+		 */
 		[[nodiscard]]
 		LifetimeWatcher() = default;
 
+		/**
+		 * \brief Copy-constructor.
+		 * \param other The other object.
+		 * \details This copy-constructor's purpose is to provide syntactically correct copy operations,
+		 * but semantically this does not copy anything.
+		 * In fact, it simply default-constructs the new instance, without even touching the ``other``.
+		 * \note It is mandatory setting up a new destruction-expectation. Otherwise, a no-match will be reported
+		 * during destruction.
+		 * \snippet Watcher.cpp watched lifetime-watcher copy-construction violation
+		 */
 		[[nodiscard]]
 		LifetimeWatcher([[maybe_unused]] const LifetimeWatcher& other)
 			: LifetimeWatcher{}
 		{
 		}
 
+		/**
+		 * \brief Copy-assignment-operator.
+		 * \param other The other object.
+		 * \details This copy-assignment-operator's purpose is to provide syntactically correct copy operations,
+		 * but semantically this does not copy anything.
+		 * In fact, it simply deletes the previous content of this instance, default-constructs a new instance
+		 * and move-assigns it to this instance, without even touching the ``other``.
+		 * \note It is mandatory setting up a new destruction-expectation. Otherwise, a no-match will be reported
+		 * during destruction.
+		 * \snippet Watcher.cpp watched lifetime-watcher copy-assignment violation
+		 *
+		 * \note As this actually destructs a ``LifetimeWatcher``, violations will be reported, if the previous
+		 * instance didn't have a valid destruction-expectation.
+		 * \snippet Watcher.cpp watched lifetime-watcher copy-assignment violation2
+		 */
 		LifetimeWatcher& operator =([[maybe_unused]] const LifetimeWatcher& other)
 		{
 			// let's make this a two-step.
@@ -52,10 +122,30 @@ namespace mimicpp
 			return *this;
 		}
 
+		/**
+		 * \brief Defaulted move-constructor.
+		 * \details This move-constructor simply transfers everything from the source to the destination object.
+		 * As source is then a "moved-from"-object, it doesn't require any destruction-expectations.
+		 */
 		[[nodiscard]]
 		LifetimeWatcher(LifetimeWatcher&&) = default;
+
+
+		/**
+		 * \brief Defaulted move-assignment-operator.
+		 * \details This move-assignment-operator simply transfers everything from the source to the destination object.
+		 * As source is then a "moved-from"-object, it doesn't require any destruction-expectations.
+		 */
 		LifetimeWatcher& operator =(LifetimeWatcher&&) = default;
 
+		/**
+		 * \brief Begins a destruction-expectation construction.
+		 * \return A newly created expectation-builder-instance.
+		 * \note This function creates a new expectation-builder-instance, which isn't an expectation yet.
+		 * User must convert this to an actual expectation, by handing it over to a new ``ScopedExpectation`` instance.
+		 * This can either be done manually or via \ref MIMICPP_SCOPED_EXPECTATION (or the shorthand version \ref SCOPED_EXP).
+		 * \throws std::logic_error if a destruction-expectation has already been created for this instance.
+		 */
 		[[nodiscard]]
 		auto expect_destruct()
 		{
@@ -139,6 +229,10 @@ namespace mimicpp
 		Watched(Watched&&) = default;
 		Watched& operator =(Watched&&) = default;
 	};
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
