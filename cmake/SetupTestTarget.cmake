@@ -21,4 +21,16 @@ function(setup_test_target TARGET_NAME)
 
 	add_sanitizers(${TARGET_NAME})
 
+	set(WARNING_FLAGS
+		$<IF:$<CXX_COMPILER_ID:MSVC>,
+			/W4 /WX,
+			-Wall -Wextra -Wpedantic -Werror>
+	)
+
+	target_compile_options(
+		${TARGET_NAME}
+		PRIVATE
+		${WARNING_FLAGS}
+	)
+
 endfunction()
