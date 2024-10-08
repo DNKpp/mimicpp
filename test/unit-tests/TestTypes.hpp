@@ -35,7 +35,7 @@
 // gcc 12 doesn't know -Wself-move option
 #if !defined(__clang__) \
 	&& defined(__GNUC__) \
-	&& 12 >= defined(__GNUC__)
+	&& 12 >= __GNUC__
 #define SUPPRESS_SELF_MOVE
 #else
 #define SUPPRESS_SELF_MOVE			_Pragma("GCC diagnostic ignored \"-Wself-move\"")
