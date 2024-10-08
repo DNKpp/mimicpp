@@ -21,14 +21,17 @@
 #define START_WARNING_SUPPRESSION	__pragma(warning(push))
 #define STOP_WARNING_SUPPRESSION	__pragma(warning(pop))
 
-// warning C4702: unreachable code
 #define SUPPRESS_UNREACHABLE_CODE	__pragma(warning(disable: 4702))
+#define SUPPRESS_SELF_MOVE			// seems not required on msvc
 
 #else
 
-#define START_WARNING_SUPPRESSION _Pragma("GCC diagnostic push")
-#define STOP_WARNING_SUPPRESSION _Pragma("GCC diagnostic pop")
-#define SUPPRESS_UNREACHABLE_CODE
+// clang accepts GCC diagnostic
+#define START_WARNING_SUPPRESSION	_Pragma("GCC diagnostic push")
+#define STOP_WARNING_SUPPRESSION	_Pragma("GCC diagnostic pop")
+
+#define SUPPRESS_UNREACHABLE_CODE	_Pragma("GCC diagnostic ignored \"-Wunreachable-code\"")
+#define SUPPRESS_SELF_MOVE			_Pragma("GCC diagnostic ignored \"-Wself-move\"")
 
 #endif
 

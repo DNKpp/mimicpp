@@ -10,6 +10,7 @@
 #include <catch2/matchers/catch_matchers_container_properties.hpp>
 
 #include "TestReporter.hpp"
+#include "TestTypes.hpp"
 
 using namespace mimicpp;
 
@@ -165,7 +166,10 @@ TEST_CASE(
 
 			SECTION("When self-move assigned.")
 			{
+				START_WARNING_SUPPRESSION
+				SUPPRESS_SELF_MOVE
 				*source = *std::move(source);
+				STOP_WARNING_SUPPRESSION
 
 				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
 				source.reset();

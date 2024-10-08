@@ -930,7 +930,10 @@ TEST_CASE(
 
 		SECTION("And then self move assigned.")
 		{
+			START_WARNING_SUPPRESSION
+			SUPPRESS_SELF_MOVE
 			otherExpectation = std::move(otherExpectation);
+			STOP_WARNING_SUPPRESSION
 
 			SECTION("When calling is_satisfied()")
 			{
