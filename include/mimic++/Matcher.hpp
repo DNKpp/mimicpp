@@ -579,7 +579,7 @@ namespace mimicpp::matches::str
 				detail::check_string_compatibility<T, Pattern>();
 
 				auto patternView = detail::make_view(std::forward<Stored>(stored));
-				const auto [_, patternIter] = std::ranges::mismatch(
+				const auto [ignore, patternIter] = std::ranges::mismatch(
 					detail::make_view(std::forward<T>(target)),
 					patternView);
 
@@ -606,7 +606,7 @@ namespace mimicpp::matches::str
 				detail::check_string_compatibility<T, Pattern>();
 
 				auto caseFoldedPattern = detail::make_case_folded_string(std::forward<Stored>(stored));
-				const auto [_, patternIter] = std::ranges::mismatch(
+				const auto [ignore, patternIter] = std::ranges::mismatch(
 					detail::make_case_folded_string(std::forward<T>(target)),
 					caseFoldedPattern);
 
@@ -634,7 +634,7 @@ namespace mimicpp::matches::str
 
 				auto patternView = detail::make_view(std::forward<Stored>(stored))
 									| std::views::reverse;
-				const auto [_, patternIter] = std::ranges::mismatch(
+				const auto [ignore, patternIter] = std::ranges::mismatch(
 					detail::make_view(std::forward<T>(target)) | std::views::reverse,
 					patternView);
 
@@ -662,7 +662,7 @@ namespace mimicpp::matches::str
 
 				auto caseFoldedPattern = detail::make_case_folded_string(std::forward<Stored>(stored))
 										| std::views::reverse;
-				const auto [_, patternIter] = std::ranges::mismatch(
+				const auto [ignore, patternIter] = std::ranges::mismatch(
 					detail::make_case_folded_string(std::forward<T>(target)) | std::views::reverse,
 					caseFoldedPattern);
 
