@@ -48,6 +48,8 @@ else()
 	set(IS_TOP_LEVEL_PROJECT OFF)
 endif()
 
+include(EnableWarnings)
+
 OPTION(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_TESTS)
 	include(CTest)

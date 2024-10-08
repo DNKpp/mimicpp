@@ -3,8 +3,14 @@ add_executable(
 	"main.cpp"
 )
 
-include(SetupTestTarget)
-setup_test_target(mimicpp-adapter-tests-boost-test)
+include(EnableSanitizers)
+enable_sanitizers(mimicpp-adapter-tests-boost-test)
+
+target_link_libraries(
+	mimicpp-adapter-tests-boost-test
+	PRIVATE
+	enable-warnings
+)
 
 if (WIN32)
 	set(BOOST_ARCHIVE_URL "https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0-cmake.zip")
