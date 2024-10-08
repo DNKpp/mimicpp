@@ -15,12 +15,13 @@ add_executable(
 	"Watcher.cpp"
 )
 
-include(SetupTestTarget)
-setup_test_target(mimicpp-examples)
+include(EnableSanitizers)
+enable_sanitizers(mimicpp-examples)
 
 target_link_libraries(
 	mimicpp-examples
 	PRIVATE
+	enable-warnings
 	mimicpp::mimicpp
 	Catch2::Catch2WithMain
 )

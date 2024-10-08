@@ -5,14 +5,15 @@ add_executable(
 	"main.cpp"
 )
 
-include(SetupTestTarget)
-setup_test_target(mimicpp-adapter-tests-catch2)
+include(EnableSanitizers)
+enable_sanitizers(mimicpp-adapter-tests-catch2)
 
 target_link_libraries(
 	mimicpp-adapter-tests-catch2
 	PRIVATE
 	mimicpp::mimicpp
 	Catch2::Catch2WithMain
+	enable-warnings
 )
 
 catch_discover_tests(mimicpp-adapter-tests-catch2)

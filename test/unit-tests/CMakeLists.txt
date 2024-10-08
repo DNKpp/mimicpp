@@ -24,8 +24,8 @@ add_executable(
 
 add_subdirectory(matchers)
 
-include(SetupTestTarget)
-setup_test_target(mimicpp-tests)
+include(EnableSanitizers)
+enable_sanitizers(mimicpp-tests)
 
 target_compile_options(
 	mimicpp
@@ -41,6 +41,7 @@ target_link_libraries(
 	mimicpp::mimicpp
 	Catch2::Catch2WithMain
 	trompeloeil::trompeloeil
+	enable-warnings
 )
 
 catch_discover_tests(mimicpp-tests)

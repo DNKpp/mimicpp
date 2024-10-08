@@ -3,8 +3,8 @@ add_executable(
 	"main.cpp"
 )
 
-include(SetupTestTarget)
-setup_test_target(mimicpp-adapter-tests-gtest)
+include(EnableSanitizers)
+enable_sanitizers(mimicpp-adapter-tests-gtest)
 
 CPMAddPackage(
 	NAME GTest
@@ -21,6 +21,7 @@ target_link_libraries(
 	PRIVATE
 	mimicpp::mimicpp
 	GTest::gtest_main
+	enable-warnings
 )
 
 include(GoogleTest)
