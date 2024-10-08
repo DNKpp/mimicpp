@@ -374,6 +374,10 @@ Official adapters exist for the following frameworks:
 ``mimic++`` utilizes a strict testing policy, thus each official feature is well tested. The effect of those test-cases are always tracked by the extensive ci,
 which checks the compilation success, test cases outcomes and coverage on dozens of different os, compiler and build configurations.
 
+For the test builds the flags ``-Wall -Wextra -Wpedantic -Werror`` (on MSVC ``/W4 /WX``) are set.
+This is done to make sure, that ``mimic++`` won't flood your build output with endless warnings (or even worse: break your builds),
+if you enable these flags in your own projects.
+
 The coverage is generated via ``gcov`` and evaluated by
 [codacy](https://app.codacy.com/gh/DNKpp/mimicpp),
 [codecov](https://codecov.io/gh/DNKpp/mimicpp) and
