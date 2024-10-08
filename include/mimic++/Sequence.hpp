@@ -135,8 +135,7 @@ namespace mimicpp::sequence
 			constexpr void set_satisfied(const IdT id) noexcept
 			{
 				assert(is_valid(id));
-				const auto index = to_underlying(id);
-				assert(m_Cursor <= index);
+				assert(m_Cursor <= to_underlying(id));
 
 				auto& element = m_Entries[to_underlying(id)];
 				assert(element == State::unsatisfied);

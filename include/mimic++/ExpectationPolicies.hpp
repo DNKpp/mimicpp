@@ -43,7 +43,7 @@ namespace mimicpp::expectation_policies
 		}
 
 		template <typename Return, typename... Args>
-		static constexpr void consume(const call::Info<Return, Args...>& info) noexcept
+		static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
 		{
 			assert(mimicpp::is_matching(info.fromCategory, expected) && "Call does not match.");
 		}
@@ -73,7 +73,7 @@ namespace mimicpp::expectation_policies
 		}
 
 		template <typename Return, typename... Args>
-		static constexpr void consume(const call::Info<Return, Args...>& info) noexcept
+		static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
 		{
 			assert(mimicpp::is_matching(info.fromConstness, constness) && "Call does not match.");
 		}
