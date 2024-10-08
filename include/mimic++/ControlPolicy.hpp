@@ -120,22 +120,21 @@ namespace mimicpp
 			std::apply(
 				[&](const auto&... entries)
 				{
-					const auto distribute = [&](auto& seq, const sequence::Id id)
-					{
-						if (const std::optional priority = seq->priority_of(id))
-						{
-							ratings.emplace_back(
-								*priority,
-								seq->tag());
-						}
-						else
-						{
-							inapplicable.emplace_back(seq->tag());
-						}
-					};
-
 					(...,
-						distribute(
+						std::invoke(
+							[&](auto& seq, const sequence::Id id)
+							{
+								if (const std::optional priority = seq->priority_of(id))
+								{
+									ratings.emplace_back(
+										*priority,
+										seq->tag());
+								}
+								else
+								{
+									inapplicable.emplace_back(seq->tag());
+								}
+							},
 							std::get<0>(entries),
 							std::get<1>(entries)));
 				},

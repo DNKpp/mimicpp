@@ -174,12 +174,14 @@ namespace mimicpp
 			return std::apply(
 				[&, this](auto&... additionalArgs)
 				{
-					// std::make_format_args requires lvalue-refs, so let's transform rvalue-refs to const lvalue-refs
-					constexpr auto makeLvalue = [](auto&& val) noexcept -> const auto& { return val; };
 					return format::vformat(
 						m_FormatString,
 						format::make_format_args(
-							makeLvalue(mimicpp::print(additionalArgs))...));
+							std::invoke(
+								// std::make_format_args requires lvalue-refs, so let's transform rvalue-refs to const lvalue-refs
+								[](auto&& val) noexcept -> const auto& { return val; },
+								mimicpp::print(additionalArgs))
+							...));
 				},
 				m_AdditionalArgs);
 		}
