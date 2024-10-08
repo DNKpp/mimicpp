@@ -92,6 +92,8 @@ namespace mimicpp
 	[[noreturn]]
 	inline void unreachable()
 	{
+		assert(false);
+
 		// Uses compiler specific extensions if possible.
 		// Even if no extension is used, undefined behavior is still raised by
 		// an empty function body and the noreturn attribute.
@@ -100,9 +102,6 @@ namespace mimicpp
 #else // GCC, Clang
 	    __builtin_unreachable();
 #endif
-
-		// ReSharper disable once CppUnreachableCode
-		assert(false);
 	}
 #endif
 
