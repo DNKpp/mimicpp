@@ -136,6 +136,7 @@ jobs:
                         "os": "macos-latest",
                         "compiler_name": "AppleClang",
                         "compiler_version": 18,
+                        "ldflags_workaround": "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib",
                         "asan": true
                     },
                     {
@@ -262,6 +263,8 @@ jobs:
                 LLVM_PATH="$(brew --prefix $LLVM_NAME)"
                 echo "CC=$(echo $LLVM_PATH/bin/clang)" >> $GITHUB_ENV
                 echo "CXX=$(echo $LLVM_PATH/bin/clang++)" >> $GITHUB_ENV
+                
+                # solves this issue: https://github.com/Homebrew/homebrew-core/issues/178435
                 echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
 
                 echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
