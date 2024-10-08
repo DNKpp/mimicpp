@@ -144,6 +144,7 @@ TEST_CASE(
 	SECTION("When single sequence is provided.")
 	{
 		std::optional<TestSequenceT> sequence{std::in_place};
+		CHECK(sequence);
 		std::optional policy{
 			ControlPolicy{
 				detail::TimesConfig{},
