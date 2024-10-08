@@ -119,7 +119,7 @@ var searchData=
   ['storaget_116',['StorageT',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e58b0aaa6d8d3389e2134dec6e8b47c',1,'mimicpp::BasicExpectationBuilder']]],
   ['string_117',['Byte-String',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md11',1,'']]],
   ['string_118',['string',['../d8/d47/group___s_t_r_i_n_g.html',1,'']]],
-  ['string_20matcher_20unicode_20support_119',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md26',1,'']]],
+  ['string_20matcher_20unicode_20support_119',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md25',1,'']]],
   ['string_20matchers_120',['string matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html',1,'']]],
   ['string_20printing_121',['String printing',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md14',1,'']]],
   ['string_2ehpp_122',['String.hpp',['../d9/dc5/_string_8hpp.html',1,'']]],
@@ -140,5 +140,5 @@ var searchData=
   ['stringt_137',['StringT',['../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1',1,'mimicpp']]],
   ['stringviewt_138',['StringViewT',['../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6',1,'mimicpp']]],
   ['strip_5fparens_139',['strip_parens',['../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html',1,'']]],
-  ['support_140',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md26',1,'']]]
+  ['support_140',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md25',1,'']]]
 ];

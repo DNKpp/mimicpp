@@ -7,7 +7,7 @@ var searchData=
   ['case_20insensitive_20matchers_4',['Case-Insensitive Matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md9',1,'']]],
   ['case_5finsensitive_5',['case_insensitive',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga7211982f3a8ff2ab2165d7803edc9ac8',1,'mimicpp']]],
   ['case_5finsensitive_5ft_6',['case_insensitive_t',['../d2/dd4/structmimicpp_1_1case__insensitive__t.html',1,'mimicpp']]],
-  ['catch2_20matcher_20integration_7',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md23',1,'']]],
+  ['catch2_20matcher_20integration_7',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md22',1,'']]],
   ['catch2_2ehpp_8',['Catch2.hpp',['../d3/d04/_catch2_8hpp.html',1,'']]],
   ['catch2reportert_9',['Catch2ReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga02aa72d6aaace0343113c757d4235aa8',1,'mimicpp']]],
   ['category_10',['Category',['../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html',1,'mimicpp::expectation_policies']]],
