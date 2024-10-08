@@ -467,15 +467,15 @@ namespace mimicpp::finally
 				&& (!std::is_void_v<std::invoke_result_t<std::remove_cvref_t<Fun>&>>)
 	[[nodiscard]]
 	constexpr auto returns_result_of(
-		Fun&& fun  // NOLINT(cppcoreguidelines-missing-std-forward)
+		Fun&& fun
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fun>, Fun>)
 	{
 		return expectation_policies::ReturnsResultOf{
 			[
-				fun = std::forward<Fun>(fun)
+				fn = std::forward<Fun>(fun)
 			]([[maybe_unused]] const auto& call) mutable noexcept(std::is_nothrow_invocable_v<decltype(fun)>) -> decltype(auto)
 			{
-				return std::invoke(fun);
+				return std::invoke(fn);
 			}
 		};
 	}
@@ -717,15 +717,15 @@ namespace mimicpp::then
 	template <std::invocable Action>
 	[[nodiscard]]
 	constexpr auto invoke(
-		Action&& action  // NOLINT(cppcoreguidelines-missing-std-forward)
+		Action&& action
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
 	{
 		return expectation_policies::SideEffectAction{
 			[
-				action = std::forward<Action>(action)
+				fn = std::forward<Action>(action)
 			]([[maybe_unused]] const auto& call) mutable noexcept(std::is_nothrow_invocable_v<Action&>)
 			{
-				std::invoke(action);
+				std::invoke(fn);
 			}
 		};
 	}
