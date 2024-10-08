@@ -174,7 +174,6 @@ namespace mimicpp
 
 	/**
 	 * \brief Specialization for ``std::basic_string`` types.
-	 * \tparam T Type to check.
 	 */
 	template <typename Char, typename Traits, typename Allocator>
 	struct string_traits<std::basic_string<Char, Traits, Allocator>>
@@ -192,7 +191,6 @@ namespace mimicpp
 
 	/**
 	 * \brief Specialization for ``std::basic_string_view`` types.
-	 * \tparam T Type to check.
 	 */
 	template <typename Char, typename Traits>
 	struct string_traits<std::basic_string_view<Char, Traits>>

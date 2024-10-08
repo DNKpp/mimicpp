@@ -311,7 +311,7 @@ namespace mimicpp::expect
 
 	/**
 	 * \brief Specifies a times policy with just a lower limit.
-	 * \tparam min The lower limit.
+	 * \param min The lower limit.
 	 * \return The newly created policy.
 	 * \details This requires the expectation to be matched at least ``min`` times or more.
 	 * \throws std::invalid_argument if ``min < 0``.
