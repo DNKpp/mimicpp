@@ -28,14 +28,14 @@ TEST_CASE(
 	"[sequence]"
 )
 {
-	using SequenceT = sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}>;
+	using TestSequenceT = sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}>;
 
-	STATIC_REQUIRE(std::is_default_constructible_v<SequenceT>);
+	STATIC_REQUIRE(std::is_default_constructible_v<TestSequenceT>);
 
-	STATIC_REQUIRE(!std::is_copy_constructible_v<SequenceT>);
-	STATIC_REQUIRE(!std::is_copy_assignable_v<SequenceT>);
-	STATIC_REQUIRE(!std::is_move_constructible_v<SequenceT>);
-	STATIC_REQUIRE(!std::is_move_assignable_v<SequenceT>);
+	STATIC_REQUIRE(!std::is_copy_constructible_v<TestSequenceT>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<TestSequenceT>);
+	STATIC_REQUIRE(!std::is_move_constructible_v<TestSequenceT>);
+	STATIC_REQUIRE(!std::is_move_assignable_v<TestSequenceT>);
 }
 
 TEMPLATE_TEST_CASE(
@@ -87,10 +87,10 @@ TEST_CASE(
 {
 	namespace Matches = Catch::Matchers;
 
-	using SequenceT = sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}>;
+	using TestSequenceT = sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}>;
 
 	ScopedReporter reporter{};
-	std::optional<SequenceT> sequence{std::in_place};
+	std::optional<TestSequenceT> sequence{std::in_place};
 
 	SECTION("When Sequence contains zero elements.")
 	{
@@ -99,8 +99,8 @@ TEST_CASE(
 
 	static constexpr std::array consumeStateActions = std::to_array(
 		{
-			+[](SequenceT&, const Id) { assert(true); },
-			+[](SequenceT& seq, const Id v) { seq.consume(v); }
+			+[](TestSequenceT&, const Id) { assert(true); },
+			+[](TestSequenceT& seq, const Id v) { seq.consume(v); }
 		});
 
 	SECTION("When sequence contains one id, that id must be satisfied.")
@@ -150,9 +150,9 @@ TEST_CASE(
 	{
 		static constexpr std::array alterStateActions = std::to_array(
 			{
-				+[](SequenceT&, const Id) { assert(true); },
-				+[](SequenceT& seq, const Id v) { seq.set_satisfied(v); },
-				+[](SequenceT& seq, const Id v) { seq.set_saturated(v); }
+				+[](TestSequenceT&, const Id) { assert(true); },
+				+[](TestSequenceT& seq, const Id v) { seq.set_satisfied(v); },
+				+[](TestSequenceT& seq, const Id v) { seq.set_saturated(v); }
 			});
 
 		const std::vector ids{
