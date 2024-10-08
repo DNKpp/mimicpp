@@ -15,6 +15,23 @@
 
 #include <variant>
 
+#if defined(_MSC_VER) \
+	&& !defined(__clang__)
+
+#define START_WARNING_SUPPRESSION	__pragma(warning(push))
+#define STOP_WARNING_SUPPRESSION	__pragma(warning(pop))
+
+// warning C4702: unreachable code
+#define SUPPRESS_UNREACHABLE_CODE	__pragma(warning(disable: 4702))
+
+#else
+
+#define START_WARNING_SUPPRESSION _Pragma("GCC diagnostic push")
+#define STOP_WARNING_SUPPRESSION _Pragma("GCC diagnostic pop")
+#define SUPPRESS_UNREACHABLE_CODE
+
+#endif
+
 class UnwrapReferenceWrapper
 {
 public:

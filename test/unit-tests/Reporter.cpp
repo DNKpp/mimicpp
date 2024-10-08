@@ -11,6 +11,8 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include "TestTypes.hpp"
+
 using namespace mimicpp;
 
 namespace
@@ -48,6 +50,10 @@ namespace
 	{
 	};
 }
+
+START_WARNING_SUPPRESSION
+// required for the REQUIRE_THROWS_AS tests
+SUPPRESS_UNREACHABLE_CODE	// on msvc, that must be set before the actual test-case
 
 TEST_CASE(
 	"free report functions forward to the currently installed reporter.",
@@ -129,6 +135,12 @@ TEST_CASE(
 			exception);
 	}
 }
+
+STOP_WARNING_SUPPRESSION
+
+START_WARNING_SUPPRESSION
+// required for the REQUIRE_THROWS_AS tests
+SUPPRESS_UNREACHABLE_CODE	// on msvc, that must be set before the actual test-case
 
 TEST_CASE(
 	"DefaultReporter throws exceptions on expectation violations.",
@@ -248,6 +260,8 @@ TEST_CASE(
 				std::make_exception_ptr(std::runtime_error{"Test"})));
 	}
 }
+
+STOP_WARNING_SUPPRESSION
 
 namespace
 {
