@@ -5,8 +5,6 @@
 
 find_package(Catch2 REQUIRED)
 
-find_package(sanitizers-cmake REQUIRED)
-
 add_executable(
 	mimicpp-examples
 	"CustomPrinter.cpp"
