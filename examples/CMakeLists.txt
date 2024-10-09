@@ -21,8 +21,8 @@ enable_sanitizers(mimicpp-examples)
 target_link_libraries(
 	mimicpp-examples
 	PRIVATE
-	enable-warnings
 	mimicpp::mimicpp
+	mimicpp::internal::warnings
 	Catch2::Catch2WithMain
 )
 

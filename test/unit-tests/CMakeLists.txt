@@ -39,9 +39,9 @@ target_link_libraries(
 	mimicpp-tests
 	PRIVATE
 	mimicpp::mimicpp
+	mimicpp::internal::warnings
 	Catch2::Catch2WithMain
 	trompeloeil::trompeloeil
-	enable-warnings
 )
 
 catch_discover_tests(mimicpp-tests)

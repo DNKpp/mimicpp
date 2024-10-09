@@ -1,4 +1,5 @@
 add_library(enable-warnings INTERFACE)
+add_library(mimicpp::internal::warnings ALIAS enable-warnings)
 
 # We need to circumvent the huge nonsense warnings from clang-cl
 # see: https://discourse.cmake.org/t/wall-with-visual-studio-clang-toolchain-results-in-way-too-many-warnings/7927

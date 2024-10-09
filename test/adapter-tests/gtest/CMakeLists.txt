@@ -20,8 +20,8 @@ target_link_libraries(
 	mimicpp-adapter-tests-gtest
 	PRIVATE
 	mimicpp::mimicpp
+	mimicpp::internal::warnings
 	GTest::gtest_main
-	enable-warnings
 )
 
 include(GoogleTest)

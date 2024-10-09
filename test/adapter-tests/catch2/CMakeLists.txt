@@ -12,8 +12,8 @@ target_link_libraries(
 	mimicpp-adapter-tests-catch2
 	PRIVATE
 	mimicpp::mimicpp
+	mimicpp::internal::warnings
 	Catch2::Catch2WithMain
-	enable-warnings
 )
 
 catch_discover_tests(mimicpp-adapter-tests-catch2)
