@@ -1,3 +1,8 @@
+#          Copyright Dominic (DNKpp) Koepke 2024 - 2024.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          https://www.boost.org/LICENSE_1_0.txt)
+
 #[[ Adds a custom target, which generates the doxygen documentation.
 	The working directory is set to the project origin, as this is an effective way to use the relative paths for the documentation.
 #]]
