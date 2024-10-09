@@ -7,7 +7,7 @@ var searchData=
   ['finalizer_4',['finalizer',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html',1,'']]],
   ['finalizerdescription_5',['finalizerDescription',['../dd/d62/classmimicpp_1_1_expectation_report.html#a4170deeff1bba26b0357f710e1378cb1',1,'mimicpp::ExpectationReport']]],
   ['finalizereport_6',['finalizeReport',['../db/d11/classmimicpp_1_1_match_report.html#a96bc13493c977acf05ecf6eb216d212a',1,'mimicpp::MatchReport']]],
-  ['finalizers_7',['Custom Finalizers',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#autotoc_md4',1,'']]],
+  ['finalizers_7',['Custom Finalizers',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#autotoc_md3',1,'']]],
   ['finalizert_8',['FinalizerT',['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a116870181a5b6c9638979f0abc69b3c2',1,'mimicpp::BasicExpectation']]],
   ['fmt_20tt_20as_20formatting_20backend_9',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md21',1,'']]],
   ['folding_10',['Case-Folding',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md10',1,'']]],
