@@ -40,7 +40,7 @@ target_compile_features(
 	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
-include(mimic++-configuration-options)
+include(EnableConfigOptions)
 
 if (CMAKE_SOURCE_DIR STREQUAL mimicpp_SOURCE_DIR)
 	set(IS_TOP_LEVEL_PROJECT ON)
