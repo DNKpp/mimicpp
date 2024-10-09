@@ -145,7 +145,7 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</td></tr>
 <p>Finalizers are the last step of a matching expectation. </p>
 <p>Finalizers are executed for calls, which have a matching expectation. They are responsible for either returning an appropriate return value or leaving the call by throwing an exception.</p>
 <p>An expectation must have exactly one finalizer applied. For mocks returning void, an appropriate finalizer is attached by default. This default finalizer can be exchanged once. If an expectation setup contains multiple finalize statements, a compile error is triggered.</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 Custom Finalizers</h1>
 <p>There are several provided finalizers, but user may create their own as desired. A valid finalizer has to satisfy the <code><a class="el" href="../../d9/d64/conceptmimicpp_1_1finalize__policy__for.html" title="Determines, whether the given type satisfies the requirements of a finalize-policy for the given sign...">finalize_policy_for</a></code> concept, which in fact requires the existence of a <code>finalize_call</code> member function. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>MyFinalizer</div>
 <div class="line">    {</div>

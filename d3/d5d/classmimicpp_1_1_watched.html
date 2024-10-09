@@ -143,7 +143,7 @@ class mimicpp::Watched&lt; Base, Watchers &gt;</div><p>CRTP-type, inheriting fir
   </table>
   </dd>
 </dl>
-<h2><a class="anchor" id="autotoc_md4"></a>
+<h2><a class="anchor" id="autotoc_md3"></a>
 Destructors</h2>
 <p><code><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from Base and then all Watchers, thus effectively couple them all togethe...">Watched</a></code> automatically detects, whether <code>Base</code> has a virtual destructor and applies <code>override</code> if that's the case. It also forces the same <code>noexcept</code>-ness for the destruct: If <code>Base</code> is nothrow destructible, <code><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from Base and then all Watchers, thus effectively couple them all togethe...">Watched</a></code> is it, too.</p>
 <p>This is important to note, as this has implications when a <code><a class="el" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html" title="A watcher type, which reports it&#39;s destructor calls.">LifetimeWatcher</a></code> is utilized. <code><a class="el" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html" title="A watcher type, which reports it&#39;s destructor calls.">LifetimeWatcher</a></code> may, during destruction, report violations to the currently active reporter. This reporter has to act accordingly, by either throwing an exception or terminating the program.</p>
