@@ -24,15 +24,16 @@ add_executable(
 
 add_subdirectory(matchers)
 
+include(EnableWarnings)
 include(EnableSanitizers)
 enable_sanitizers(mimicpp-tests)
 
 target_compile_options(
-	mimicpp
-	INTERFACE
+	mimicpp-tests
+	PRIVATE
 	# some test files exceed some limits
 	# see: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/fatal-error-c1128?view=msvc-170
-	"$<$<CXX_COMPILER_ID:MSVC>:/bigobj>"
+	$<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
 
 target_link_libraries(

@@ -5,6 +5,7 @@ add_executable(
 	"main.cpp"
 )
 
+include(EnableWarnings)
 include(EnableSanitizers)
 enable_sanitizers(mimicpp-adapter-tests-catch2)
 

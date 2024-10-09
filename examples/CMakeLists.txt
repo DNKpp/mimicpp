@@ -15,6 +15,7 @@ add_executable(
 	"Watcher.cpp"
 )
 
+include(EnableWarnings)
 include(EnableSanitizers)
 enable_sanitizers(mimicpp-examples)
 
