@@ -41,6 +41,11 @@ target_compile_features(
 )
 
 include(EnableConfigOptions)
+target_link_libraries(
+	mimicpp
+	INTERFACE
+	mimicpp::internal::config-options
+)
 
 if (CMAKE_SOURCE_DIR STREQUAL mimicpp_SOURCE_DIR)
 	set(IS_TOP_LEVEL_PROJECT ON)

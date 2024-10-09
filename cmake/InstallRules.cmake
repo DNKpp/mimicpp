@@ -21,7 +21,7 @@ configure_package_config_file(
 )
 
 install(
-	TARGETS						mimicpp
+	TARGETS						mimicpp enable-config-options
 	EXPORT						mimicpp-targets
 	PUBLIC_HEADER DESTINATION	"${MIMICPP_INCLUDE_INSTALL_DIR}"
 )
