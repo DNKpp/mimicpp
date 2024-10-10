@@ -3,8 +3,8 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_LIFETIME_WATCHER_HPP
-#define MIMICPP_LIFETIME_WATCHER_HPP
+#ifndef MIMICPP_OBJECT_WATCHER_HPP
+#define MIMICPP_OBJECT_WATCHER_HPP
 
 #pragma once
 

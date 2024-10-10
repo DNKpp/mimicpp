@@ -3,7 +3,7 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/LifetimeWatcher.hpp"
+#include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/InterfaceMock.hpp"
 
 #include <catch2/catch_test_macros.hpp>
