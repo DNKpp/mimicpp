@@ -224,69 +224,51 @@ namespace mimicpp
 	namespace detail
 	{
 		template <typename Base, typename... Watchers>
-		class BasicWatched
-			: public Base,
-			public Watchers...
+		class CombinedWatchers
+			: public Watchers...
 		{
 		public:
-			~BasicWatched() noexcept(std::is_nothrow_destructible_v<Base>) // NOLINT(modernize-use-equals-default)
-			{
-			}
+			~CombinedWatchers() noexcept(std::is_nothrow_destructible_v<Base>) = default;
+
+			CombinedWatchers() = default;
+
+			CombinedWatchers(const CombinedWatchers&) = default;
+			CombinedWatchers& operator =(const CombinedWatchers&) = default;
+
+			CombinedWatchers(CombinedWatchers&& other) noexcept(std::is_nothrow_move_constructible_v<Base>) = default;
+			CombinedWatchers& operator =(CombinedWatchers&& other) noexcept(std::is_nothrow_move_assignable_v<Base>) = default;
+		};
+
+		template <typename Base, typename... Watchers>
+		class BasicWatched
+			: public CombinedWatchers<Base, Watchers...>,
+			public Base
+		{
+		public:
+			~BasicWatched() = default;
 
 			using Base::Base;
 
 			BasicWatched(const BasicWatched&) = default;
 			BasicWatched& operator =(const BasicWatched&) = default;
-
-			BasicWatched(BasicWatched&& other) noexcept(std::is_nothrow_move_constructible_v<Base>)
-				requires std::is_move_constructible_v<Base>
-				: Watchers{static_cast<Watchers&&>(other)}...,
-				Base{static_cast<Base&&>(other)}
-			{
-			}
-
-			BasicWatched& operator =(BasicWatched&& other) noexcept(std::is_nothrow_move_assignable_v<Base>)
-				requires std::is_move_assignable_v<Base>
-			{
-				(...,
-					(static_cast<Watchers&>(*this) = static_cast<Watchers&&>(other)));
-				static_cast<Base&>(*this) = static_cast<Base&&>(other);
-
-				return *this;
-			}
+			BasicWatched(BasicWatched&&) = default;
+			BasicWatched& operator =(BasicWatched&&) = default;
 		};
 
 		template <satisfies<std::has_virtual_destructor> Base, typename... Watchers>
 		class BasicWatched<Base, Watchers...>
-			: public Base,
-			public Watchers...
+			: public CombinedWatchers<Base, Watchers...>,
+			public Base
 		{
 		public:
-			~BasicWatched() noexcept(std::is_nothrow_destructible_v<Base>) override // NOLINT(modernize-use-equals-default)
-			{
-			}
+			~BasicWatched() override = default;
 
 			using Base::Base;
 
 			BasicWatched(const BasicWatched&) = default;
 			BasicWatched& operator =(const BasicWatched&) = default;
-
-			BasicWatched(BasicWatched&& other) noexcept(std::is_nothrow_move_constructible_v<Base>)
-				requires std::is_move_constructible_v<Base>
-				: Watchers{static_cast<Watchers&&>(other)}...,
-				Base{static_cast<Base&&>(other)}
-			{
-			}
-
-			BasicWatched& operator =(BasicWatched&& other) noexcept(std::is_nothrow_move_assignable_v<Base>)
-				requires std::is_move_assignable_v<Base>
-			{
-				(...,
-					(static_cast<Watchers&>(*this) = static_cast<Watchers&&>(other)));
-				static_cast<Base&>(*this) = static_cast<Base&&>(other);
-
-				return *this;
-			}
+			BasicWatched(BasicWatched&&) = default;
+			BasicWatched& operator =(BasicWatched&&) = default;
 		};
 	}
 
