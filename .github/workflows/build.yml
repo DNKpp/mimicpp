@@ -136,7 +136,7 @@ jobs:
                         "os": "macos-latest",
                         "compiler_name": "AppleClang",
                         "compiler_version": 18,
-                        "ldflags_workaround": "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib",
+                        "ldflags_workaround": "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind",
                         "asan": true
                     },
                     {
