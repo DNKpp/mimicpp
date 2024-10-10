@@ -23,6 +23,7 @@
 
 #define SUPPRESS_UNREACHABLE_CODE	__pragma(warning(disable: 4702))
 #define SUPPRESS_SELF_MOVE			// seems not required on msvc
+#define SUPPRESS_SELF_ASSIGN		// seems not required on msvc
 
 #else
 
@@ -31,6 +32,7 @@
 #define STOP_WARNING_SUPPRESSION	_Pragma("GCC diagnostic pop")
 
 #define SUPPRESS_UNREACHABLE_CODE	_Pragma("GCC diagnostic ignored \"-Wunreachable-code\"")
+#define SUPPRESS_SELF_ASSIGN		_Pragma("GCC diagnostic ignored \"-Wself-assign-overloaded\"")
 
 // gcc 12 doesn't know -Wself-move option
 #if !defined(__clang__) \

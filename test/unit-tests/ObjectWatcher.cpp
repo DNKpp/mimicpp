@@ -479,9 +479,12 @@ TEST_CASE(
 
 		SECTION("When self assigning.")
 		{
+			START_WARNING_SUPPRESSION
+			SUPPRESS_SELF_MOVE
 			REQUIRE_THROWS_AS(
 				watcher = std::move(watcher),
 				NoMatchError);
+			STOP_WARNING_SUPPRESSION
 		}
 
 		REQUIRE_THAT(
@@ -536,7 +539,10 @@ TEST_CASE(
 
 		SECTION("When self move-assigning.")
 		{
+			START_WARNING_SUPPRESSION
+			SUPPRESS_SELF_MOVE
 			watcher = std::move(watcher);
+			STOP_WARNING_SUPPRESSION
 		}
 
 		REQUIRE_THAT(
@@ -552,4 +558,62 @@ TEST_CASE(
 			reporter.unfulfilled_expectations(),
 			Matches::IsEmpty());
 	}
+}
+
+TEST_CASE(
+	"Copying RelocationWatcher doesn't satisfy it.",
+	"[object-watcher][object-watcher::relocation]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	ScopedReporter reporter{};
+
+	RelocationWatcher watcher{};
+	std::optional<ScopedExpectation> expectation = watcher.expect_relocate();
+
+	SECTION("When copy-constructing.")
+	{
+		RelocationWatcher other{watcher};
+	}
+
+	SECTION("When copy-assigning.")
+	{
+		RelocationWatcher other{};
+
+		other = watcher;
+	}
+
+	SECTION("When self copy-assigning.")
+	{
+		START_WARNING_SUPPRESSION
+		SUPPRESS_SELF_ASSIGN
+		watcher = watcher;
+		STOP_WARNING_SUPPRESSION
+
+		SECTION("And it does not accept the expectation from the previous instance.")
+		{
+			START_WARNING_SUPPRESSION
+			SUPPRESS_SELF_MOVE
+			REQUIRE_THROWS_AS(
+				watcher = std::move(watcher),
+				NoMatchError);
+			STOP_WARNING_SUPPRESSION
+		}
+	}
+
+	expectation.reset();
+
+	REQUIRE_THAT(
+		reporter.full_match_reports(),
+		Matches::IsEmpty());
+	REQUIRE_THAT(
+		reporter.inapplicable_match_reports(),
+		Matches::IsEmpty());
+	REQUIRE_THAT(
+		reporter.no_match_reports(),
+		Matches::IsEmpty());
+	REQUIRE_THAT(
+		reporter.unfulfilled_expectations(),
+		Matches::SizeIs(1));
 }

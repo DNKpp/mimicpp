@@ -176,6 +176,21 @@ namespace mimicpp
 		RelocationWatcher() = default;
 
 		[[nodiscard]]
+		RelocationWatcher([[maybe_unused]] const RelocationWatcher& other)
+			: RelocationWatcher{}
+		{
+		}
+
+		RelocationWatcher& operator =([[maybe_unused]] const RelocationWatcher& other)
+		{
+			// explicitly circumvent default construct and assign, because that would
+			// involve the move-assignment.
+			m_RelocationMock = Mock<void()>{};
+
+			return *this;
+		}
+
+		[[nodiscard]]
 		RelocationWatcher(RelocationWatcher&& other) noexcept(false)
 		{
 			*this = std::move(other);
