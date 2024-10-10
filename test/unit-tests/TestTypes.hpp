@@ -44,7 +44,7 @@
 
 // gcc doesn't know -Wself-assign-overloaded option
 #if defined(__clang__)
-#define SUPPRESS_SELF_ASSIGN		_Pragma("GCC diagnostic ignored \"-Wself-move\"")
+#define SUPPRESS_SELF_ASSIGN		_Pragma("GCC diagnostic ignored \"-Wself-assign-overloaded\"")
 #else
 #define SUPPRESS_SELF_ASSIGN
 #endif
