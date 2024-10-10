@@ -166,20 +166,70 @@ namespace mimicpp
 		};
 	};
 
+	/**
+	 * \brief A watcher type, which reports it's move-constructor and -assignment calls.
+	 * \details This watcher is designed to track, whether a move has been performed.
+	 * During a move, it reports the relocation to the framework, which can be tracked
+	 * by a previously created relocation-expectation.
+	 *
+	 * \snippet Watcher.cpp watched relocation-watcher
+	 *
+	 * ## Moving
+	 *
+	 * This watcher can be freely moved around, but any relocation events must match with a previously created
+	 * relocation-expectation.
+	 *
+	 * ## Copying
+	 *
+	 * This watcher is copyable, but with very special behaviour.
+	 *
+	 * As this watcher is generally designed to be part of a bigger object, it would be very limiting not supporting
+	 * copy-operations at all. The question is, how should a copy look like?
+	 *
+	 * In general a copy should be a logical duplicate of its source and the general expectation is:
+	 * if ``B`` is a copy of ``A``, then ``A == B`` should yield true.
+	 * \note This doesn't say, that if ``B`` is *not* a copy of ``A``, then ``A == B`` has to yield false!
+	 *
+	 * \details This won't be the case for ``RelocationWatcher``s, as active relocation-expectations won't be copied over
+	 * to the target. In general, if a ``RelocationWatcher`` is used, we want to be very precise with our move,
+	 * thus an implicit expectation copy would be against the purpose of this helper.
+	 * Due to this, each ``RelocationWatcher`` will be created as a fresh instance, when copy-construction is used.
+	 * The same logic also applies to copy-assignment.
+	 */
 	class RelocationWatcher
 	{
 	public:
+		/**
+		 * \brief Defaulted destructor.
+		 */
 		~RelocationWatcher() = default;
 
+		/**
+		 * \brief Defaulted default constructor.
+		 */
 		[[nodiscard]]
 		RelocationWatcher() = default;
 
+		/**
+		 * \brief Copy-constructor.
+		 * \param other The other object.
+		 * \details This copy-constructor's purpose is to provide syntactically correct copy operations,
+		 * but semantically this does not copy anything.
+		 * In fact, it simply default-constructs the new instance, without even touching the ``other``.
+		 */
 		[[nodiscard]]
 		RelocationWatcher([[maybe_unused]] const RelocationWatcher& other)
 			: RelocationWatcher{}
 		{
 		}
 
+		/**
+		 * \brief Copy-assignment-operator.
+		 * \param other The other object.
+		 * \details This copy-assignment-operator's purpose is to provide syntactically correct copy operations,
+		 * but semantically this does not copy anything.
+		 * In fact, it simply overrides its internals with a fresh instance, without even touching the ``other``.
+		 */
 		RelocationWatcher& operator =([[maybe_unused]] const RelocationWatcher& other)
 		{
 			// explicitly circumvent default construct and assign, because that would
@@ -189,12 +239,22 @@ namespace mimicpp
 			return *this;
 		}
 
+		/**
+		 * \brief Move-constructor, which reports a relocation.
+		 * \note A no-match error may occur, if no relocation-expectation has been defined.
+		 * \param other The other object.
+		 */
 		[[nodiscard]]
 		RelocationWatcher(RelocationWatcher&& other) noexcept(false)
 		{
 			*this = std::move(other);
 		}
 
+		/**
+		 * \brief Move-assignment-operator, which reports a relocation.
+		 * \note A no-match error may occur, if no relocation-expectation has been defined.
+		 * \param other The other object.
+		 */
 		RelocationWatcher& operator =(RelocationWatcher&& other) noexcept(false)
 		{
 			other.m_RelocationMock();
@@ -203,6 +263,13 @@ namespace mimicpp
 			return *this;
 		}
 
+		/**
+		 * \brief Begins a relocation-expectation construction.
+		 * \return A newly created expectation-builder-instance.
+		 * \note This function creates a new expectation-builder-instance, which isn't an expectation yet.
+		 * User must convert this to an actual expectation, by handing it over to a new ``ScopedExpectation`` instance.
+		 * This can either be done manually or via \ref MIMICPP_SCOPED_EXPECTATION (or the shorthand version \ref SCOPED_EXP).
+		 */
 		[[nodiscard]]
 		auto expect_relocate()
 		{
@@ -273,11 +340,28 @@ namespace mimicpp
 	}
 
 	/**
-	 * \brief CRTP-type, inheriting first from ``Base`` and then all ``Watchers``, thus effectively couple them all together.
+	 * \brief CRTP-type, inheriting first from all ``Watchers`` and then ``Base``, thus effectively couple them all together.
 	 * \tparam Base The main type.
 	 * \tparam Watchers All utilized watcher types.
 	 * \details
-	 * ## Destructors
+	 * ## Move-constructor and -assignment-operator
+	 *
+	 * ``Watched`` automatically detects the specifications of the ``Base`` move-constructor and -assignment-operator,
+	 * regardless of the ``Watchers`` specifications. This is done, so that the ``Watched`` instance does mimic the interface
+	 * of ``Base`` as closely as possible.
+	 *
+	 * This is important to note, as this has implications when a ``RelocationWatcher`` is utilized.
+	 * ``RelocationWatcher`` may, during either move-construction or -assignment, report violations to the currently active reporter.
+	 * This reporter has to act accordingly, by either throwing an exception or terminating the program.
+	 *
+	 * So, if reporter throws due to a detected violation and the move-operation is declared ``noexcept``, this will inevitable lead
+	 * to a ``std::terminate``.
+	 * \see https://en.cppreference.com/w/cpp/error/terminate
+	 * Nevertheless, this is usually fine, as watchers are merely used under controlled circumstances and to guarantee the expected
+	 * behavior. If a violation is reported, an appropriate output will be generated, which should be enough of a hint to track
+	 * down the bug.
+	 *
+	 * ## Destructor
 	 *
 	 * ``Watched`` automatically detects, whether ``Base`` has a virtual destructor and applies ``override`` if that's the case.
 	 * It also forces the same ``noexcept``-ness for the destruct: If ``Base`` is nothrow destructible, ``Watched`` is it, too.
