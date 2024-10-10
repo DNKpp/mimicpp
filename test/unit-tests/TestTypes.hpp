@@ -32,7 +32,6 @@
 #define STOP_WARNING_SUPPRESSION	_Pragma("GCC diagnostic pop")
 
 #define SUPPRESS_UNREACHABLE_CODE	_Pragma("GCC diagnostic ignored \"-Wunreachable-code\"")
-#define SUPPRESS_SELF_ASSIGN		_Pragma("GCC diagnostic ignored \"-Wself-assign-overloaded\"")
 
 // gcc 12 doesn't know -Wself-move option
 #if !defined(__clang__) \
@@ -41,6 +40,13 @@
 #define SUPPRESS_SELF_MOVE
 #else
 #define SUPPRESS_SELF_MOVE			_Pragma("GCC diagnostic ignored \"-Wself-move\"")
+#endif
+
+// gcc doesn't know -Wself-assign-overloaded option
+#if defined(__clang__)
+#define SUPPRESS_SELF_ASSIGN		_Pragma("GCC diagnostic ignored \"-Wself-move\"")
+#else
+#define SUPPRESS_SELF_ASSIGN
 #endif
 
 #endif
