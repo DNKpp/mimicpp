@@ -16,7 +16,7 @@ using namespace mimicpp;
 
 TEST_CASE(
 	"LifetimeWatcher tracks destruction",
-	"[lifetime-watcher]"
+	"[object-watcher][object-watcher::lifetime]"
 )
 {
 	namespace Matches = Catch::Matchers;
@@ -290,7 +290,7 @@ TEST_CASE(
 
 TEST_CASE(
 	"LifetimeWatcher supports finally::throws policy.",
-	"[lifetime-watcher]"
+	"[object-watcher][object-watcher::lifetime]"
 )
 {
 	struct my_exception
@@ -314,7 +314,8 @@ TEST_CASE(
 
 TEST_CASE(
 	"Watched can wrap the actual type to be watched with the utilized watcher types.",
-	"[lifetime-watcher]")
+	"[object-watcher][object-watcher::lifetime]"
+)
 {
 	STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Mock<void(int)>, LifetimeWatcher>>);
 
@@ -385,7 +386,8 @@ TEST_CASE(
 
 TEST_CASE(
 	"Watched can be used on interface-mocks.",
-	"[lifetime-watcher]")
+	"[object-watcher][object-watcher::lifetime]"
+)
 {
 	class Interface
 	{
@@ -416,7 +418,8 @@ TEST_CASE(
 
 TEST_CASE(
 	"Violations of watched interface-implementations will be detected.",
-	"[lifetime-watcher]")
+	"[object-watcher][object-watcher::lifetime]"
+)
 {
 	class Interface
 	{
