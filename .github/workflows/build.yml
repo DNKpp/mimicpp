@@ -374,14 +374,6 @@ jobs:
                 cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
                 config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
 
-                exclude:
-                    # This compiler does work, but fails compiling something from boost::filesystem, which is indirectly required
-                    # by the BoostAdapter-Test.
-                    # Maybe, we can find a workaround for this in the future.
-                    - config:
-                        compiler_name: "AppleClang"
-                        compiler_version: 16
-
         steps:
             - uses: actions/checkout@v4
   
