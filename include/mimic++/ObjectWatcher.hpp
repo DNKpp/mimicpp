@@ -167,6 +167,38 @@ namespace mimicpp
 		};
 	};
 
+	class RelocationWatcher
+	{
+	public:
+		~RelocationWatcher() = default;
+
+		[[nodiscard]]
+		RelocationWatcher() = default;
+
+		[[nodiscard]]
+		RelocationWatcher(RelocationWatcher&& other) noexcept(false)
+		{
+			*this = std::move(other);
+		}
+
+		RelocationWatcher& operator =(RelocationWatcher&& other) noexcept(false)
+		{
+			other.m_RelocationMock();
+			m_RelocationMock = std::move(other).m_RelocationMock;
+
+			return *this;
+		}
+
+		[[nodiscard]]
+		auto expect_relocate()
+		{
+			return m_RelocationMock.expect_call();
+		}
+
+	private:
+		Mock<void()> m_RelocationMock{};
+	};
+
 	template <typename T>
 	concept object_watcher = std::is_default_constructible_v<T>
 							&& std::is_copy_constructible_v<T>

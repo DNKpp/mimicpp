@@ -443,3 +443,113 @@ TEST_CASE(
 		(Watched<Derived, LifetimeWatcher>{}),
 		NoMatchError);
 }
+
+TEST_CASE(
+	"RelocationWatcher tracks object move-constructions and -assignments.",
+	"[object-watcher][object-watcher::relocation]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	ScopedReporter reporter{};
+
+	SECTION("Reports a no-match, if move occurs without an expectation.")
+	{
+		RelocationWatcher watcher{};
+
+		SECTION("When move constructing.")
+		{
+			REQUIRE_THROWS_AS(
+				RelocationWatcher{std::move(watcher)},
+				NoMatchError);
+		}
+
+		SECTION("When move assigning.")
+		{
+			const auto action = [&]
+			{
+				RelocationWatcher target{};
+				target = std::move(watcher);
+			};
+
+			REQUIRE_THROWS_AS(
+				action(),
+				NoMatchError);
+		}
+
+		SECTION("When self assigning.")
+		{
+			REQUIRE_THROWS_AS(
+				watcher = std::move(watcher),
+				NoMatchError);
+		}
+
+		REQUIRE_THAT(
+			reporter.full_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.inapplicable_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unfulfilled_expectations(),
+			Matches::IsEmpty());
+	}
+
+	SECTION("Reports an unfulfilled expectation, if the expectation expires before relocation occurs.")
+	{
+		RelocationWatcher watcher{};
+		std::optional<ScopedExpectation> expectation = watcher.expect_relocate();
+		expectation.reset();
+
+		REQUIRE_THAT(
+			reporter.full_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.inapplicable_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unfulfilled_expectations(),
+			Matches::SizeIs(1));
+	}
+
+	SECTION("Is satisfied, if a relocation occurs with an existing expectation.")
+	{
+		RelocationWatcher watcher{};
+		SCOPED_EXP watcher.expect_relocate();
+
+		SECTION("When move-constructing.")
+		{
+			const RelocationWatcher target{std::move(watcher)};
+		}
+
+		SECTION("When move-assigning.")
+		{
+			RelocationWatcher target{};
+			target = std::move(watcher);
+		}
+
+		SECTION("When self move-assigning.")
+		{
+			watcher = std::move(watcher);
+		}
+
+		REQUIRE_THAT(
+			reporter.full_match_reports(),
+			Matches::SizeIs(1));
+		REQUIRE_THAT(
+			reporter.inapplicable_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.no_match_reports(),
+			Matches::IsEmpty());
+		REQUIRE_THAT(
+			reporter.unfulfilled_expectations(),
+			Matches::IsEmpty());
+	}
+}
