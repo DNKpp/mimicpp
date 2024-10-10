@@ -313,7 +313,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"Watched can wrap the actual type to be watched with the utilized watcher types.",
+	"LifetimeWatcher watched can wrap the actual type to be watched with the utilized watcher types.",
 	"[object-watcher][object-watcher::lifetime]"
 )
 {
@@ -385,7 +385,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"Watched can be used on interface-mocks.",
+	"LifetimeWatcher watched can be used on interface-mocks.",
 	"[object-watcher][object-watcher::lifetime]"
 )
 {
@@ -417,7 +417,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-	"Violations of watched interface-implementations will be detected.",
+	"Violations of LifetimeWatcher watched interface-implementations will be detected.",
 	"[object-watcher][object-watcher::lifetime]"
 )
 {
@@ -616,4 +616,207 @@ TEST_CASE(
 	REQUIRE_THAT(
 		reporter.unfulfilled_expectations(),
 		Matches::SizeIs(1));
+}
+
+TEST_CASE(
+	"RelocationWatcher supports finally::throws policy.",
+	"[object-watcher][object-watcher::relocation]"
+)
+{
+	namespace Matches = Catch::Matchers;
+
+	ScopedReporter reporter{};
+
+	struct my_exception
+	{
+	};
+
+	RelocationWatcher watcher{};
+	MIMICPP_SCOPED_EXPECTATION watcher.expect_relocate()
+								and finally::throws(my_exception{});
+
+	SECTION("When move-constructing.")
+	{
+		REQUIRE_THROWS_AS(
+			RelocationWatcher{std::move(watcher)},
+			my_exception);
+	}
+
+	SECTION("When move-assigning.")
+	{
+		RelocationWatcher target{};
+
+		REQUIRE_THROWS_AS(
+			target = std::move(watcher),
+			my_exception);
+	}
+
+	REQUIRE_THAT(
+		reporter.full_match_reports(),
+		Matches::SizeIs(1));
+	REQUIRE_THAT(
+		reporter.inapplicable_match_reports(),
+		Matches::IsEmpty());
+	REQUIRE_THAT(
+		reporter.no_match_reports(),
+		Matches::IsEmpty());
+	REQUIRE_THAT(
+		reporter.unfulfilled_expectations(),
+		Matches::IsEmpty());
+}
+
+TEST_CASE(
+	"RelocationWatcher watched can wrap the actual type to be watched with the utilized watcher types.",
+	"[object-watcher][object-watcher::relocation]"
+)
+{
+	STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Mock<void(int)>, LifetimeWatcher>>);
+
+	SECTION("Detects violations.")
+	{
+		ScopedReporter reporter{};
+
+		struct not_nothrow_movable
+		{
+			~not_nothrow_movable() = default;
+			not_nothrow_movable() = default;
+
+			not_nothrow_movable(const not_nothrow_movable&) = delete;
+			not_nothrow_movable& operator =(const not_nothrow_movable&) = delete;
+
+			not_nothrow_movable(not_nothrow_movable&&) noexcept(false)
+			{
+			}
+
+			not_nothrow_movable& operator =(not_nothrow_movable&&) noexcept(false)
+			{
+				return *this;
+			}
+		};
+
+		Watched<
+			not_nothrow_movable,
+			RelocationWatcher> watched{};
+		STATIC_REQUIRE(!std::is_nothrow_move_constructible_v<decltype(watched)>);
+		STATIC_REQUIRE(!std::is_nothrow_move_assignable_v<decltype(watched)>);
+
+		REQUIRE_THROWS_AS(
+			Watched{std::move(watched)},
+			NoMatchError);
+	}
+
+	SECTION("Just plain usage.")
+	{
+		Watched<
+			Mock<void(int)>,
+			RelocationWatcher> watched{};
+		STATIC_REQUIRE(std::is_nothrow_move_constructible_v<decltype(watched)>);
+		STATIC_REQUIRE(std::is_nothrow_move_assignable_v<decltype(watched)>);
+
+		MIMICPP_SCOPED_EXPECTATION watched.expect_call(1337);
+		MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
+									and expect::twice();
+		MIMICPP_SCOPED_EXPECTATION watched.expect_call(42);
+
+		watched(42);
+		Watched other{std::move(watched)};
+		other(1337);
+		watched = std::move(other);
+	}
+
+	SECTION("With explicit sequence.")
+	{
+		Watched<
+			Mock<void(int)>,
+			RelocationWatcher> watched{};
+		STATIC_REQUIRE(std::is_nothrow_move_constructible_v<decltype(watched)>);
+		STATIC_REQUIRE(std::is_nothrow_move_assignable_v<decltype(watched)>);
+
+		SequenceT sequence{};
+
+		MIMICPP_SCOPED_EXPECTATION watched.expect_call(42)
+									and expect::in_sequence(sequence);
+		MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
+									and expect::in_sequence(sequence);
+		MIMICPP_SCOPED_EXPECTATION watched.expect_call(1337)
+									and expect::in_sequence(sequence);
+		MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
+									and expect::in_sequence(sequence);
+
+		watched(42);
+		Watched other{std::move(watched)};
+		other(1337);
+		watched = std::move(other);
+	}
+}
+
+TEST_CASE(
+	"RelocationWatcher watched can be used on interface-mocks.",
+	"[object-watcher][object-watcher::relocation]"
+)
+{
+	class Interface
+	{
+	public:
+		virtual ~Interface() = default;
+		virtual void foo() = 0;
+	};
+
+	class Derived
+		: public Interface
+	{
+	public:
+		MIMICPP_MOCK_METHOD(foo, void, ());
+	};
+
+	STATIC_REQUIRE(std::is_nothrow_move_constructible_v<Watched<Derived, RelocationWatcher>>);
+	STATIC_REQUIRE(std::is_nothrow_move_assignable_v<Watched<Derived, RelocationWatcher>>);
+
+	Watched<Derived, LifetimeWatcher> watched{};
+
+	MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
+	MIMICPP_SCOPED_EXPECTATION watched.foo_.expect_call();
+
+	watched.foo();
+	Watched other{std::move(watched)};
+}
+
+TEST_CASE(
+	"Violations of RelocationWatcher watched interface-implementations will be detected.",
+	"[object-watcher][object-watcher::lifetime]"
+)
+{
+	class Interface
+	{
+	public:
+		~Interface() = default;
+		Interface() = default;
+
+		Interface(const Interface&) = delete;
+		Interface& operator =(const Interface&) = delete;
+
+		Interface(Interface&&) noexcept(false)
+		{
+		}
+
+		Interface& operator =(Interface&&) noexcept(false)
+		{
+			return *this;
+		}
+	};
+
+	class Derived
+		: public Interface
+	{
+	};
+
+	Watched<Derived, RelocationWatcher> watched{};
+	STATIC_REQUIRE(!std::is_nothrow_move_constructible_v<decltype(watched)>);
+	STATIC_REQUIRE(!std::is_nothrow_move_assignable_v<decltype(watched)>);
+
+	ScopedReporter reporter{};
+
+	REQUIRE_THROWS_AS(
+		Watched{std::move(watched)},
+		NoMatchError);
 }

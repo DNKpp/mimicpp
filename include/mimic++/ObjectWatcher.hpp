@@ -117,7 +117,7 @@ namespace mimicpp
 				LifetimeWatcher temp{std::move(*this)};
 			}
 
-			*this =	LifetimeWatcher{};
+			*this = LifetimeWatcher{};
 
 			return *this;
 		}
@@ -129,7 +129,6 @@ namespace mimicpp
 		 */
 		[[nodiscard]]
 		LifetimeWatcher(LifetimeWatcher&&) = default;
-
 
 		/**
 		 * \brief Defaulted move-assignment-operator.
@@ -238,8 +237,23 @@ namespace mimicpp
 
 			BasicWatched(const BasicWatched&) = default;
 			BasicWatched& operator =(const BasicWatched&) = default;
-			BasicWatched(BasicWatched&&) = default;
-			BasicWatched& operator =(BasicWatched&&) = default;
+
+			BasicWatched(BasicWatched&& other) noexcept(std::is_nothrow_move_constructible_v<Base>)
+				requires std::is_move_constructible_v<Base>
+				: Watchers{static_cast<Watchers&&>(other)}...,
+				Base{static_cast<Base&&>(other)}
+			{
+			}
+
+			BasicWatched& operator =(BasicWatched&& other) noexcept(std::is_nothrow_move_assignable_v<Base>)
+				requires std::is_move_assignable_v<Base>
+			{
+				(...,
+					(static_cast<Watchers&>(*this) = static_cast<Watchers&&>(other)));
+				static_cast<Base&>(*this) = static_cast<Base&&>(other);
+
+				return *this;
+			}
 		};
 
 		template <satisfies<std::has_virtual_destructor> Base, typename... Watchers>
@@ -256,8 +270,23 @@ namespace mimicpp
 
 			BasicWatched(const BasicWatched&) = default;
 			BasicWatched& operator =(const BasicWatched&) = default;
-			BasicWatched(BasicWatched&&) = default;
-			BasicWatched& operator =(BasicWatched&&) = default;
+
+			BasicWatched(BasicWatched&& other) noexcept(std::is_nothrow_move_constructible_v<Base>)
+				requires std::is_move_constructible_v<Base>
+				: Watchers{static_cast<Watchers&&>(other)}...,
+				Base{static_cast<Base&&>(other)}
+			{
+			}
+
+			BasicWatched& operator =(BasicWatched&& other) noexcept(std::is_nothrow_move_assignable_v<Base>)
+				requires std::is_move_assignable_v<Base>
+			{
+				(...,
+					(static_cast<Watchers&>(*this) = static_cast<Watchers&&>(other)));
+				static_cast<Base&>(*this) = static_cast<Base&&>(other);
+
+				return *this;
+			}
 		};
 	}
 
