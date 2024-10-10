@@ -424,11 +424,9 @@ As new compilers become available, they will be added to the workflow, but older
 
 | Compiler          | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
 |-------------------|:---------:|:------:|:------:|:------:|:----------:|:---:|
-| AppleClang-16.0.6^1^ |     ?     |    x   |    x   |    x   |      x     |  x  |
+| AppleClang-16.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 | AppleClang-17.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 | AppleClang-18.1.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
-
-^1^ There is an issue with AppleClang-16 and ``boost::filesystem`` on the current ``macos-latest``, but this is just for the boost-test-adapter. Everything else works fine.
 
 </details>
 
