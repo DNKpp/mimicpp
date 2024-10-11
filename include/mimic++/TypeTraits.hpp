@@ -17,6 +17,19 @@
 
 namespace mimicpp
 {
+	/**
+	 * \defgroup TYPE_TRAITS type-traits
+	 * \brief Contains various type-traits
+	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_SIGNATURE_ADD_NOEXCEPT signature_add_noexcept
+	 * \ingroup TYPE_TRAITS
+	 * \brief Adds the ``noexcept`` specification to a signature.
+	 *
+	 *\{
+	 */
+
 	template <typename Return, typename... Params>
 	struct signature_add_noexcept<Return(Params...)>
 	{
@@ -160,6 +173,18 @@ namespace mimicpp
 	{
 		using type = Return(Params..., ...) const && noexcept;
 	};
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT signature_remove_noexcept
+	 * \ingroup TYPE_TRAITS
+	 * \brief Removes the ``noexcept`` specification to a signature (if present).
+	 *
+	 *\{
+	 */
 
 	template <typename Return, typename... Params>
 	struct signature_remove_noexcept<Return(Params...)>
@@ -305,6 +330,18 @@ namespace mimicpp
 		using type = Return(Params..., ...) const &&;
 	};
 
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_SIGNATURE_DECAY signature_decay
+	 * \ingroup TYPE_TRAITS
+	 * \brief Removes all specifications from the given signature.
+	 *
+	 *\{
+	 */
+
 	template <typename Return, typename... Params>
 	struct signature_decay<Return(Params...)>
 	{
@@ -449,6 +486,18 @@ namespace mimicpp
 		using type = Return(Params..., ...);
 	};
 
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_SIGNATURE_RETURN_TYPE signature_return_type
+	 * \ingroup TYPE_TRAITS
+	 * \brief Extracts the return type from a given signature.
+	 *
+	 *\{
+	 */
+
 	template <typename Signature>
 		requires std::is_function_v<Signature>
 	struct signature_return_type<Signature>
@@ -468,6 +517,18 @@ namespace mimicpp
 		using type = Return;
 	};
 
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_SIGNATURE_PARAM_TYPE signature_param_type
+	 * \ingroup TYPE_TRAITS
+	 * \brief Extracts the ``i``th param type from a given signature.
+	 *
+	 *\{
+	 */
+
 	template <std::size_t index, typename Signature>
 		requires std::is_function_v<Signature>
 	struct signature_param_type<index, Signature>
@@ -483,6 +544,18 @@ namespace mimicpp
 	{
 	};
 
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_SIGNATURE_PARAM_LIST signature_param_list
+	 * \ingroup TYPE_TRAITS
+	 * \brief Extracts all param types from a given signature (packed into a ``std::tuple``).
+	 *
+	 *\{
+	 */
+
 	template <typename Signature>
 		requires std::is_function_v<Signature>
 	struct signature_param_list<Signature>
@@ -496,6 +569,10 @@ namespace mimicpp
 	{
 		using type = std::tuple<Params...>;
 	};
+
+	/**
+	 * \}
+	 */
 
 	namespace detail
 	{
@@ -561,6 +638,14 @@ namespace mimicpp
 		};
 	}
 
+	/**
+	 * \defgroup TYPE_TRAITS_IS_OVERLOADABLE_WITH is_overloadable_with
+	 * \ingroup TYPE_TRAITS
+	 * \brief Determines, whether two signatures are valid overloads.
+	 *
+	 *\{
+	 */
+
 	template <typename First, typename Second>
 	struct is_overloadable_with
 		: public detail::is_overloadable_with<
@@ -568,6 +653,18 @@ namespace mimicpp
 			signature_remove_noexcept_t<Second>>
 	{
 	};
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_IS_OVERLOAD_SET is_overload_set
+	 * \ingroup TYPE_TRAITS
+	 * \brief Determines, whether a list of signatures form a valid overloads-set.
+	 *
+	 *\{
+	 */
 
 	template <typename First>
 	struct is_overload_set<First>
@@ -583,6 +680,10 @@ namespace mimicpp
 			is_overload_set<Second, Others...>>
 	{
 	};
+
+	/**
+	 * \}
+	 */
 }
 
 #endif

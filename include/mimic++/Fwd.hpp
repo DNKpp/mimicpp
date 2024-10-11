@@ -18,51 +18,129 @@ namespace mimicpp::call
 
 namespace mimicpp
 {
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_ADD_NOEXCEPT
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	struct signature_add_noexcept;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_ADD_NOEXCEPT
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	using signature_add_noexcept_t = typename signature_add_noexcept<Signature>::type;
 
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	struct signature_remove_noexcept;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	using signature_remove_noexcept_t = typename signature_remove_noexcept<Signature>::type;
 
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_DECAY
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	struct signature_decay;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_DECAY
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	using signature_decay_t = typename signature_decay<Signature>::type;
 
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_RETURN_TYPE
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	struct signature_return_type;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_RETURN_TYPE
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	using signature_return_type_t = typename signature_return_type<Signature>::type;
 
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_PARAM_TYPE
+	 * \tparam Signature A function signature.
+	 */
 	template <std::size_t index, typename Signature>
 	struct signature_param_type;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_PARAM_TYPE
+	 * \tparam Signature A function signature.
+	 */
 	template <std::size_t index, typename Signature>
 	using signature_param_type_t = typename signature_param_type<index, Signature>::type;
 
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_PARAM_LIST
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	struct signature_param_list;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_SIGNATURE_PARAM_LIST
+	 * \tparam Signature A function signature.
+	 */
 	template <typename Signature>
 	using signature_param_list_t = typename signature_param_list<Signature>::type;
 
 	template <typename First, typename Second>
 	struct is_overloadable_with;
 
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_IS_OVERLOADABLE_WITH
+	 * \tparam First The first function signature.
+	 * \tparam Second The first function signature.
+	 */
 	template <typename First, typename Second>
 	inline constexpr bool is_overloadable_with_v = is_overloadable_with<First, Second>::value;
 
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \ingroup TYPE_TRAITS_IS_OVERLOAD_SET
+	 * \tparam First The first function signature.
+	 * \tparam Others The other function signatures.
+	 */
 	template <typename First, typename... Others>
 	struct is_overload_set;
 
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_IS_OVERLOAD_SET
+	 *  \tparam First The first function signature.
+	 * \tparam Others The other function signatures.
+	 */
 	template <typename First, typename... Others>
 	inline constexpr bool is_overload_set_v = is_overload_set<First, Others...>::value;
 
