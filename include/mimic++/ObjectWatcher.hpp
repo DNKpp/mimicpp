@@ -18,7 +18,8 @@ namespace mimicpp
 	/**
 	 * \defgroup OBJECT_WATCHING object-watching
 	 * \brief Contains utility for explicit tracking of special object functionalities.
-	 * \details 
+	 * \details
+	 * \snippet Watcher.cpp watched lifetime relocation
 	 *
 	 *\{
 	 */
@@ -172,7 +173,7 @@ namespace mimicpp
 	 * During a move, it reports the relocation to the framework, which can be tracked
 	 * by a previously created relocation-expectation.
 	 *
-	 * \snippet Watcher.cpp watched relocation-watcher
+	 * \snippet Watcher.cpp watched lifetime relocation
 	 *
 	 * ## Moving
 	 *
