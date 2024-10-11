@@ -151,10 +151,10 @@ Public Member Functions</h2></td></tr>
 <div class="line">                and expect::at_least(1);</div>
 <div class="line"> </div>
 <div class="line">    std::optional wrapped{std::move(watched)};  <span class="comment">// satisfies one relocate-expectation</span></div>
-<div class="line">    std::optional other{std::move(wrapped)};        <span class="comment">// satisfies a second relocate-expectation</span></div>
-<div class="line">    wrapped.reset();                                <span class="comment">// won&#39;t require a destruct-expectation, as moved-from objects are considered dead</span></div>
-<div class="line">    other.reset();                                  <span class="comment">// fulfills the destruct-expectation</span></div>
-<div class="line">    REQUIRE(2 == relocationCounter);                <span class="comment">// let&#39;s see, how often the instance has been relocated</span></div>
+<div class="line">    std::optional other{std::move(wrapped)};    <span class="comment">// satisfies a second relocate-expectation</span></div>
+<div class="line">    wrapped.reset();                            <span class="comment">// won&#39;t require a destruct-expectation, as moved-from objects are considered dead</span></div>
+<div class="line">    other.reset();                              <span class="comment">// fulfills the destruct-expectation</span></div>
+<div class="line">    REQUIRE(2 == relocationCounter);            <span class="comment">// let&#39;s see, how often the instance has been relocated</span></div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
 Moving</h2>
 <p>This watcher can be freely moved around, but any relocation events must match with a previously created relocation-expectation.</p>

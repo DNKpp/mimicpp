@@ -143,7 +143,7 @@ Introduction</h1>
 <p><code>mimic++</code> is a c++20 mocking framework, which aims to offer a natural end expressive syntax, without constantly resorting to macros. To be honest, macros cannot be completely avoided, but they can at least be reduced to a very minimum.</p>
 <p>The one thing, that this framework does different than all other (or at least all I am aware of) mocking framework is, that mock objects explicitly are function objects, thus directly callable. It's simple and straight forward.</p>
 <p>As I'm mainly working on template or functional-style code, I wanted something simpler than always creating explicit mock types for the simplest of use cases. So, <code><a class="el" href="d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a></code> objects can directly be used as functional objects, but they can also be used as member objects and thus serve as actual member functions.</p>
-<p>If you are curious, have a look at the <a href="https://dnkpp.github.io/mimicpp/">documentation</a>, investigate the examples folder or play around online at <a href="https://godbolt.org/z/nfhT9xa4E">godbolt.org</a>.</p>
+<p>If you are curious, have a look at the <a href="https://dnkpp.github.io/mimicpp/">documentation</a>, investigate the examples folder or play around online at <a href="https://godbolt.org/z/o3Thdcr7T">godbolt.org</a>.</p>
 <h2><a class="anchor" id="autotoc_md36"></a>
 Core Design</h2>
 <p>The framework is designed with two core concepts in mind: Mocks and Expectations. Mocks can be used to define behaviour on a per test-case basis, without the necessity of creating dozens of types. The go-to example is, if you have a custom type, which somehow makes a connection to a concrete database, you do not want to setup an actual database connection during your test runs. You then simply install a database mock, which then yields the exact replies as it were defined for that particular case: the so called "Expectations".</p>
@@ -327,6 +327,41 @@ Mocking interfaces</summary>
 <div class="line">}</div>
 <div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_gaf7eca902448118eaf4359c12be4ed098"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a></div><div class="ttdeci">#define ADD_OVERLOAD</div><div class="ttdoc">Shorthand variant of MIMICPP_ADD_OVERLOAD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:437</div></div>
 <div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_gafd903cfdd4f9496f29642c9b9e3859c0"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0">MOCK_OVERLOADED_METHOD</a></div><div class="ttdeci">#define MOCK_OVERLOADED_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_OVERLOADED_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:431</div></div>
+</div><!-- fragment --><p></p>
+</details>
+<details >
+<summary >
+Watching object-instances</summary>
+<p></p>
+<p><code><a class="el" href="d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...">mimicpp::Watched</a></code> helper can report destruction and relocations of object-instances.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="d0/db9/mimic_09_09_8hpp.html">mimic++/mimic++.hpp</a>&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line"><span class="keyword">namespace </span>then = <a class="code hl_namespace" href="d9/d4c/namespacemimicpp_1_1then.html">mimicpp::then</a>;</div>
+<div class="line"> </div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;LifetimeWatcher and RelocationWatcher can trace object instances.&quot;</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code hl_class" href="d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
+<div class="line">        <a class="code hl_class" href="d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void()&gt;,</div>
+<div class="line">        <a class="code hl_class" href="db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>,</div>
+<div class="line">        <a class="code hl_class" href="da/d45/classmimicpp_1_1_relocation_watcher.html">mimicpp::RelocationWatcher</a>&gt; watched{};</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> watched.expect_destruct();</div>
+<div class="line">    <span class="keywordtype">int</span> relocationCounter{};</div>
+<div class="line">    <a class="code hl_define" href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> watched.<a class="code hl_function" href="da/d45/classmimicpp_1_1_relocation_watcher.html#a1ab88c2edc2f770ea8c9d1e8c0ca62a2">expect_relocate</a>()</div>
+<div class="line">                and then::invoke([&amp;] { ++relocationCounter; })</div>
+<div class="line">                and expect::at_least(1);</div>
+<div class="line"> </div>
+<div class="line">    std::optional wrapped{std::move(watched)};  <span class="comment">// satisfies one relocate-expectation</span></div>
+<div class="line">    std::optional other{std::move(wrapped)};    <span class="comment">// satisfies a second relocate-expectation</span></div>
+<div class="line">    wrapped.reset();                            <span class="comment">// won&#39;t require a destruct-expectation, as moved-from objects are considered dead</span></div>
+<div class="line">    other.reset();                              <span class="comment">// fulfills the destruct-expectation</span></div>
+<div class="line">    REQUIRE(2 == relocationCounter);            <span class="comment">// let&#39;s see, how often the instance has been relocated</span></div>
+<div class="line">}</div>
+<div class="ttc" id="aclassmimicpp_1_1_lifetime_watcher_html"><div class="ttname"><a href="db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a></div><div class="ttdoc">A watcher type, which reports it's destructor calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:57</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_relocation_watcher_html"><div class="ttname"><a href="da/d45/classmimicpp_1_1_relocation_watcher.html">mimicpp::RelocationWatcher</a></div><div class="ttdoc">A watcher type, which reports it's move-constructor and -assignment calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:201</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_relocation_watcher_html_a1ab88c2edc2f770ea8c9d1e8c0ca62a2"><div class="ttname"><a href="da/d45/classmimicpp_1_1_relocation_watcher.html#a1ab88c2edc2f770ea8c9d1e8c0ca62a2">mimicpp::RelocationWatcher::expect_relocate</a></div><div class="ttdeci">auto expect_relocate()</div><div class="ttdoc">Begins a relocation-expectation construction.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:275</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_watched_html"><div class="ttname"><a href="d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a></div><div class="ttdoc">CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:400</div></div>
 </div><!-- fragment --><p></p>
 </details>
 <h2><a class="anchor" id="autotoc_md38"></a>
