@@ -3,8 +3,6 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-include(get_cpm)
-
 if (NOT TARGET enable-config-options)
 
 	add_library(enable-config-options INTERFACE)
@@ -32,6 +30,8 @@ if (NOT TARGET enable-config-options)
 
 		find_package(fmt QUIET)
 		if (NOT fmt_FOUND)
+			include(get_cpm)
+
 			CPMAddPackage("gh:fmtlib/fmt#11.0.2")
 		endif()
 
@@ -63,6 +63,8 @@ if (NOT TARGET enable-config-options)
 
 		find_package(uni-algo QUIET)
 		if (NOT uni-algo_FOUND)
+			include(get_cpm)
+
 			CPMAddPackage(
 				NAME				uni-algo
 				GITHUB_REPOSITORY	uni-algo/uni-algo
