@@ -3,6 +3,7 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "../test/unit-tests/SuppressionMacros.hpp"	// needs to disable some warnings on gcc
 #include "mimic++/ObjectWatcher.hpp"
 
 #include <catch2/catch_test_macros.hpp>
@@ -195,6 +196,10 @@ TEST_CASE(
 	//! [watched lifetime-watcher]
 }
 
+// gcc constantly complaints about the optionals as "maybe-uninitialized"
+START_WARNING_SUPPRESSION
+SUPPRESS_MAYBE_UNINITIALIZED
+
 TEST_CASE(
 	"LifetimeWatcher and RelocationWatcher can trace object instances.",
 	"[example][example::watched]"
@@ -222,3 +227,5 @@ TEST_CASE(
 	REQUIRE(2 == relocationCounter);				// let's see, how often the instance has been relocated
 	//! [watched lifetime relocation]
 }
+
+STOP_WARNING_SUPPRESSION

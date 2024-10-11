@@ -8,6 +8,7 @@
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
+#include "SuppressionMacros.hpp"
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
 

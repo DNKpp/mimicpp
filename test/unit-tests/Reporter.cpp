@@ -11,6 +11,7 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include "SuppressionMacros.hpp"
 #include "TestTypes.hpp"
 
 using namespace mimicpp;
