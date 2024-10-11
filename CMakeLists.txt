@@ -11,7 +11,7 @@ include(get_cpm)
 project(
 	mimicpp
 	LANGUAGES		CXX
-	VERSION			2
+	VERSION			3
 	DESCRIPTION		"A modern and (mostly) macro free mocking-framework"
 	HOMEPAGE_URL	"https://github.com/DNKpp/mimicpp"
 )
