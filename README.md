@@ -48,7 +48,7 @@ As I'm mainly working on template or functional-style code, I wanted something s
 So, ``mimicpp::Mock`` objects can directly be used as functional objects, but they can also be used as member objects and thus serve as actual member functions.
 
 If you are curious, have a look at the [documentation](https://dnkpp.github.io/mimicpp/), investigate the examples folder or play around online at
-[godbolt.org](https://godbolt.org/z/nfhT9xa4E).
+[godbolt.org](https://godbolt.org/z/o3Thdcr7T).
 
 ### Core Design
 
