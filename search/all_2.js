@@ -7,7 +7,7 @@ var searchData=
   ['add_5foverload_4',['ADD_OVERLOAD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098',1,'InterfaceMock.hpp']]],
   ['always_20stay_20within_20the_20language_20definition_5',['Always Stay Within The Language Definition',['../index.html#autotoc_md39',1,'']]],
   ['always_5ffalse_6',['always_false',['../d5/d8e/structmimicpp_1_1always__false.html',1,'mimicpp']]],
-  ['an_20experimental_20feature_7',['an experimental feature',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md26',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'Why is it an experimental feature?']]],
+  ['an_20experimental_20feature_7',['an experimental feature',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md26',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'Why is it an experimental feature?']]],
   ['and_20assignment_20operator_8',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
   ['and_20mostly_20macro_20free_20mocking_20framework_9',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['any_10',['any',['../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any'],['../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any']]],

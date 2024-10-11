@@ -9,9 +9,9 @@ var searchData=
   ['info_5ffor_5fsignature_6',['info_for_signature',['../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html',1,'mimicpp::call']]],
   ['info_5ffor_5fsignature_3c_20return_28args_2e_2e_2e_29_3e_7',['info_for_signature&lt; Return(Args...)&gt;',['../d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html',1,'mimicpp::call']]],
   ['info_5ffor_5fsignature_5ft_8',['info_for_signature_t',['../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb',1,'mimicpp::call']]],
-  ['inheritance_9',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md13',1,'']]],
+  ['inheritance_9',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md11',1,'']]],
   ['initfinalize_10',['InitFinalize',['../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html',1,'mimicpp::expectation_policies']]],
-  ['insensitive_20matchers_11',['Case-Insensitive Matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md5',1,'']]],
+  ['insensitive_20matchers_11',['Case-Insensitive Matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
   ['install_5freporter_12',['install_reporter',['../dd/d4f/group___r_e_p_o_r_t_i_n_g.html#ga14082268db10f80ecc210109669e626e',1,'mimicpp']]],
   ['installation_13',['Installation',['../index.html#autotoc_md50',1,'']]],
   ['integration_14',['Integration',['../index.html#autotoc_md49',1,'']]],
@@ -21,7 +21,7 @@ var searchData=
   ['introduction_18',['Introduction',['../index.html#autotoc_md35',1,'']]],
   ['invoke_19',['invoke',['../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga96fbf72e7ef44a73904c3503a383cda4',1,'mimicpp::then']]],
   ['ireporter_20',['IReporter',['../dd/df0/classmimicpp_1_1_i_reporter.html',1,'mimicpp::IReporter'],['../dd/df0/classmimicpp_1_1_i_reporter.html#a2d64e19d9351cf0f5d7c654c9c3b9e7b',1,'mimicpp::IReporter::IReporter()=default'],['../dd/df0/classmimicpp_1_1_i_reporter.html#a0efd2638c465fc97fa0e4c85bdc1a683',1,'mimicpp::IReporter::IReporter(const IReporter &amp;)=default'],['../dd/df0/classmimicpp_1_1_i_reporter.html#a5933d377de8a9e67bbcc874091b31585',1,'mimicpp::IReporter::IReporter(IReporter &amp;&amp;)=default']]],
-  ['is_20it_20an_20experimental_20feature_21',['is it an experimental feature',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md26',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'Why is it an experimental feature?']]],
+  ['is_20it_20an_20experimental_20feature_21',['is it an experimental feature',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md26',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'Why is it an experimental feature?']]],
   ['is_5fapplicable_22',['is_applicable',['../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867',1,'mimicpp::ControlPolicy']]],
   ['is_5fcharacter_23',['is_character',['../d2/d73/structmimicpp_1_1is__character.html',1,'mimicpp::is_character&lt; T &gt;'],['../dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html',1,'is_character']]],
   ['is_5fcharacter_3c_20char_20_3e_24',['is_character&lt; char &gt;',['../d2/dad/structmimicpp_1_1is__character_3_01char_01_4.html',1,'mimicpp']]],
@@ -46,5 +46,5 @@ var searchData=
   ['is_5fsorted_43',['is_sorted',['../db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#gacad6ed764831afec6ecf3668beebee4f',1,'mimicpp::matches::range']]],
   ['ismatching_44',['isMatching',['../da/d15/classmimicpp_1_1_match_report_1_1_expectation.html#aa49a27c0f7623851fab2054dfae07678',1,'mimicpp::MatchReport::Expectation']]],
   ['issues_45',['Known Issues',['../index.html#autotoc_md62',1,'']]],
-  ['it_20an_20experimental_20feature_46',['it an experimental feature',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md26',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'Why is it an experimental feature?']]]
+  ['it_20an_20experimental_20feature_46',['it an experimental feature',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md26',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'Why is it an experimental feature?']]]
 ];
