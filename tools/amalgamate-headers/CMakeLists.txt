@@ -15,6 +15,7 @@ else()
 	message(FATAL_ERROR "Unsupported platform.")
 endif()
 
+include(get_cpm)
 CPMAddPackage(
 	NAME amalgamate
 	URL "https://github.com/rindeal/Amalgamate/releases/download/${AMALGAMATE_VERSION}/amalgamate-${AMALGAMATE_VERSION}-${AMALGAMATE_URL_SUFFIX}"
