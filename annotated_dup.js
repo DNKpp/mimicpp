@@ -61,6 +61,7 @@ var annotated_dup =
       [ "PredicateMatcher", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", "dc/d5e/classmimicpp_1_1_predicate_matcher" ],
       [ "priority_tag", "d1/d9f/structmimicpp_1_1priority__tag.html", null ],
       [ "priority_tag< 0 >", "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html", null ],
+      [ "RelocationWatcher", "da/d45/classmimicpp_1_1_relocation_watcher.html", "da/d45/classmimicpp_1_1_relocation_watcher" ],
       [ "ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", "d6/dc0/classmimicpp_1_1_scoped_expectation" ],
       [ "signature_add_noexcept", "dd/db4/structmimicpp_1_1signature__add__noexcept.html", null ],
       [ "signature_add_noexcept< Return(Params...) & >", "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4.html", "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4" ],

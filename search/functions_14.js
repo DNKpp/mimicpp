@@ -6,7 +6,8 @@ var searchData=
   ['_7eireporter_3',['~IReporter',['../dd/df0/classmimicpp_1_1_i_reporter.html#a4cc60c2f384e126dd64f5e7e4f4090b6',1,'mimicpp::IReporter']]],
   ['_7elifetimewatcher_4',['~LifetimeWatcher',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#a437388b80d758c2d0338f8d86a07586d',1,'mimicpp::LifetimeWatcher']]],
   ['_7emock_5',['~Mock',['../d2/d48/classmimicpp_1_1_mock.html#a0b117b01ac737368ac453714adbfda44',1,'mimicpp::Mock']]],
-  ['_7escopedexpectation_6',['~ScopedExpectation',['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#ad74606fce962dc55495e735c56243fe7',1,'mimicpp::ScopedExpectation']]],
-  ['_7esideeffectaction_7',['~SideEffectAction',['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#a399903f019ce67d203a4c21a7936cad3',1,'mimicpp::expectation_policies::SideEffectAction']]],
-  ['_7ewatched_8',['~Watched',['../d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5',1,'mimicpp::Watched']]]
+  ['_7erelocationwatcher_6',['~RelocationWatcher',['../da/d45/classmimicpp_1_1_relocation_watcher.html#a4dd3bd4a471844869fac24d1e5e1399a',1,'mimicpp::RelocationWatcher']]],
+  ['_7escopedexpectation_7',['~ScopedExpectation',['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#ad74606fce962dc55495e735c56243fe7',1,'mimicpp::ScopedExpectation']]],
+  ['_7esideeffectaction_8',['~SideEffectAction',['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#a399903f019ce67d203a4c21a7936cad3',1,'mimicpp::expectation_policies::SideEffectAction']]],
+  ['_7ewatched_9',['~Watched',['../d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5',1,'mimicpp::Watched']]]
 ];
