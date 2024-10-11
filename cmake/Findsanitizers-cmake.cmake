@@ -14,10 +14,6 @@ CPMAddPackage(
 	DOWNLOAD_ONLY YES
 )
 
-if (sanitizers-cmake_ADDED)
-
-	list(APPEND CMAKE_MODULE_PATH "${sanitizers-cmake_SOURCE_DIR}/cmake")
-
-endif()
+list(APPEND CMAKE_MODULE_PATH "${sanitizers-cmake_SOURCE_DIR}/cmake")
 
 find_package(Sanitizers REQUIRED)
