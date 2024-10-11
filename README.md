@@ -244,6 +244,40 @@ TEST_CASE("Interface overload-sets are directly supported.")
 
 </details>
 
+<details>
+<summary>Watching object-instances</summary>
+
+``mimicpp::Watched`` helper can report destruction and relocations of object-instances.
+
+```cpp
+#include <mimic++/mimic++.hpp>
+
+namespace expect = mimicpp::expect;
+namespace then = mimicpp::then;
+
+TEST_CASE("LifetimeWatcher and RelocationWatcher can trace object instances.")
+{
+    mimicpp::Watched<
+        mimicpp::Mock<void()>,
+        mimicpp::LifetimeWatcher,
+        mimicpp::RelocationWatcher> watched{};
+
+    SCOPED_EXP watched.expect_destruct();
+    int relocationCounter{};
+    SCOPED_EXP watched.expect_relocate()
+                and then::invoke([&] { ++relocationCounter; })
+                and expect::at_least(1);
+
+    std::optional wrapped{std::move(watched)};  // satisfies one relocate-expectation
+    std::optional other{std::move(wrapped)};    // satisfies a second relocate-expectation
+    wrapped.reset();                            // won't require a destruct-expectation, as moved-from objects are considered dead
+    other.reset();                              // fulfills the destruct-expectation
+    REQUIRE(2 == relocationCounter);            // let's see, how often the instance has been relocated
+}
+```
+
+</details>
+
 ### Other Choices
 
 #### Always Stay Within The Language Definition

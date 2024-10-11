@@ -221,10 +221,10 @@ TEST_CASE(
 				and expect::at_least(1);
 
 	std::optional wrapped{std::move(watched)};	// satisfies one relocate-expectation
-	std::optional other{std::move(wrapped)};		// satisfies a second relocate-expectation
-	wrapped.reset();								// won't require a destruct-expectation, as moved-from objects are considered dead
-	other.reset();									// fulfills the destruct-expectation
-	REQUIRE(2 == relocationCounter);				// let's see, how often the instance has been relocated
+	std::optional other{std::move(wrapped)};	// satisfies a second relocate-expectation
+	wrapped.reset();							// won't require a destruct-expectation, as moved-from objects are considered dead
+	other.reset();								// fulfills the destruct-expectation
+	REQUIRE(2 == relocationCounter);			// let's see, how often the instance has been relocated
 	//! [watched lifetime relocation]
 }
 STOP_WARNING_SUPPRESSION
