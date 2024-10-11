@@ -8,6 +8,6 @@ var searchData=
   ['design_5',['Core Design',['../index.html#autotoc_md36',1,'']]],
   ['destructor_6',['Destructor',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md15',1,'']]],
   ['detail_7',['detail',['../d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html',1,'']]],
-  ['disable_20unprefixed_20macros_8',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md22',1,'']]],
+  ['disable_20unprefixed_20macros_8',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md21',1,'']]],
   ['documentation_9',['Documentation',['../index.html#autotoc_md47',1,'']]]
 ];
