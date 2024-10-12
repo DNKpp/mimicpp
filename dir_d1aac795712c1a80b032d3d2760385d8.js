@@ -11,11 +11,12 @@ var dir_d1aac795712c1a80b032d3d2760385d8 =
     [ "Matcher.hpp", "dd/d50/_matcher_8hpp.html", "dd/d50/_matcher_8hpp" ],
     [ "mimic++.hpp", "d0/db9/mimic_09_09_8hpp.html", null ],
     [ "Mock.hpp", "d5/dc5/_mock_8hpp.html", null ],
+    [ "ObjectWatcher.hpp", "d5/d92/_object_watcher_8hpp.html", null ],
     [ "Printer.hpp", "da/dab/_printer_8hpp.html", "da/dab/_printer_8hpp" ],
     [ "Reporter.hpp", "da/dd9/_reporter_8hpp.html", "da/dd9/_reporter_8hpp" ],
     [ "Reports.hpp", "d0/d3b/_reports_8hpp.html", "d0/d3b/_reports_8hpp" ],
     [ "Sequence.hpp", "d8/de4/_sequence_8hpp.html", "d8/de4/_sequence_8hpp" ],
     [ "String.hpp", "d9/dc5/_string_8hpp.html", "d9/dc5/_string_8hpp" ],
-    [ "TypeTraits.hpp", "d8/d32/_type_traits_8hpp.html", "d8/d32/_type_traits_8hpp" ],
+    [ "TypeTraits.hpp", "d8/d32/_type_traits_8hpp.html", null ],
     [ "Utility.hpp", "d4/d2c/_utility_8hpp.html", "d4/d2c/_utility_8hpp" ]
 ];

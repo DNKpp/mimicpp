@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v2</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
    </div>
   </td>
  </tr>
@@ -156,7 +156,7 @@ $(function(){initNavTree('d8/de5/_expectation_policies_8hpp_source.html','../../
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="foldopen" id="foldopen00046" data-start="{" data-end="}">
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#a490b2c9683983636afa1793de5f87280">   46</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#a490b2c9683983636afa1793de5f87280">consume</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info&lt;Return, Args...&gt;</a>&amp; info) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#a490b2c9683983636afa1793de5f87280">   46</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#a490b2c9683983636afa1793de5f87280">consume</a>([[maybe_unused]] <span class="keyword">const</span> <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info&lt;Return, Args...&gt;</a>&amp; info) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        {</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            assert(<a class="code hl_function" href="../../d1/d11/namespacemimicpp.html#a68c1d279c259f2aef30a89cd5e0d7485">mimicpp::is_matching</a>(info.fromCategory, expected) &amp;&amp; <span class="stringliteral">&quot;Call does not match.&quot;</span>);</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        }</div>
@@ -196,7 +196,7 @@ $(function(){initNavTree('d8/de5/_expectation_policies_8hpp_source.html','../../
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
 <div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="foldopen" id="foldopen00076" data-start="{" data-end="}">
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="../../db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html#a3b84699ed642f70444bc66c96d0a2c92">   76</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html#a3b84699ed642f70444bc66c96d0a2c92">consume</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info&lt;Return, Args...&gt;</a>&amp; info) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="../../db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html#a3b84699ed642f70444bc66c96d0a2c92">   76</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html#a3b84699ed642f70444bc66c96d0a2c92">consume</a>([[maybe_unused]] <span class="keyword">const</span> <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info&lt;Return, Args...&gt;</a>&amp; info) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        {</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>            assert(<a class="code hl_function" href="../../d1/d11/namespacemimicpp.html#a68c1d279c259f2aef30a89cd5e0d7485">mimicpp::is_matching</a>(info.fromConstness, constness) &amp;&amp; <span class="stringliteral">&quot;Call does not match.&quot;</span>);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        }</div>
@@ -592,15 +592,15 @@ $(function(){initNavTree('d8/de5/_expectation_policies_8hpp_source.html','../../
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span>    [[nodiscard]]</div>
 <div class="foldopen" id="foldopen00469" data-start="{" data-end="}">
 <div class="line"><a id="l00469" name="l00469"></a><span class="lineno"><a class="line" href="../../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gafe0fc1d77a4122b05f60d49183ce0106">  469</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gafe0fc1d77a4122b05f60d49183ce0106">returns_result_of</a>(</div>
-<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>        Fun&amp;&amp; fun  <span class="comment">// NOLINT(cppcoreguidelines-missing-std-forward)</span></div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span>        Fun&amp;&amp; fun</div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span>    ) <span class="keyword">noexcept</span>(std::is_nothrow_constructible_v&lt;std::remove_cvref_t&lt;Fun&gt;, Fun&gt;)</div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span>    {</div>
 <div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html">expectation_policies::ReturnsResultOf</a>{</div>
 <div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span>            [</div>
-<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>                fun = std::forward&lt;Fun&gt;(fun)</div>
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span>                fn = std::forward&lt;Fun&gt;(fun)</div>
 <div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span>            ]([[maybe_unused]] <span class="keyword">const</span> <span class="keyword">auto</span>&amp; call) <span class="keyword">mutable</span> <span class="keyword">noexcept</span>(std::is_nothrow_invocable_v&lt;<span class="keyword">decltype</span>(fun)&gt;) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>)</div>
 <div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span>            {</div>
-<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span>                <span class="keywordflow">return</span> std::invoke(fun);</div>
+<div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span>                <span class="keywordflow">return</span> std::invoke(fn);</div>
 <div class="line"><a id="l00479" name="l00479"></a><span class="lineno">  479</span>            }</div>
 <div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span>        };</div>
 <div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span>    }</div>
@@ -753,15 +753,15 @@ $(function(){initNavTree('d8/de5/_expectation_policies_8hpp_source.html','../../
 <div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>    [[nodiscard]]</div>
 <div class="foldopen" id="foldopen00719" data-start="{" data-end="}">
 <div class="line"><a id="l00719" name="l00719"></a><span class="lineno"><a class="line" href="../../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga96fbf72e7ef44a73904c3503a383cda4">  719</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga96fbf72e7ef44a73904c3503a383cda4">invoke</a>(</div>
-<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>        Action&amp;&amp; action  <span class="comment">// NOLINT(cppcoreguidelines-missing-std-forward)</span></div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>        Action&amp;&amp; action</div>
 <div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>    ) <span class="keyword">noexcept</span>(std::is_nothrow_constructible_v&lt;std::remove_cvref_t&lt;Action&gt;, Action&gt;)</div>
 <div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    {</div>
 <div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html">expectation_policies::SideEffectAction</a>{</div>
 <div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span>            [</div>
-<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>                action = std::forward&lt;Action&gt;(action)</div>
+<div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>                fn = std::forward&lt;Action&gt;(action)</div>
 <div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>            ]([[maybe_unused]] <span class="keyword">const</span> <span class="keyword">auto</span>&amp; call) <span class="keyword">mutable</span> <span class="keyword">noexcept</span>(std::is_nothrow_invocable_v&lt;Action&amp;&gt;)</div>
 <div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>            {</div>
-<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>                std::invoke(action);</div>
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>                std::invoke(fn);</div>
 <div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>            }</div>
 <div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>        };</div>
 <div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>    }</div>
@@ -832,20 +832,20 @@ $(function(){initNavTree('d8/de5/_expectation_policies_8hpp_source.html','../../
 <div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s_html_ga51b593416fa39d20f134216c56ab518f"><div class="ttname"><a href="../../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga51b593416fa39d20f134216c56ab518f">mimicpp::then::apply_arg</a></div><div class="ttdeci">constexpr auto apply_arg(Action &amp;&amp;action) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Action &gt;, Action &gt;)</div><div class="ttdoc">Applies the argument at the specified index on the given action.</div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:649</div></div>
 <div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s_html_ga96fbf72e7ef44a73904c3503a383cda4"><div class="ttname"><a href="../../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga96fbf72e7ef44a73904c3503a383cda4">mimicpp::then::invoke</a></div><div class="ttdeci">constexpr auto invoke(Action &amp;&amp;action) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Action &gt;, Action &gt;)</div><div class="ttdoc">Invokes the given function.</div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:719</div></div>
 <div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s_html_gaf865f7ad50812d38fdd5ee5420591127"><div class="ttname"><a href="../../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#gaf865f7ad50812d38fdd5ee5420591127">mimicpp::then::apply_args</a></div><div class="ttdeci">constexpr auto apply_args(Action &amp;&amp;action) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Action &gt;, Action &gt;)</div><div class="ttdoc">Applies the arguments at the specified index and in that order on the given action.</div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:675</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1expect_html"><div class="ttname"><a href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div><div class="ttdef"><b>Definition</b> ControlPolicy.hpp:267</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1expect_html"><div class="ttname"><a href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div><div class="ttdef"><b>Definition</b> ControlPolicy.hpp:266</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1expectation__policies_html"><div class="ttname"><a href="../../d0/d91/namespacemimicpp_1_1expectation__policies.html">mimicpp::expectation_policies</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:20</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1finally_html"><div class="ttname"><a href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:433</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1then_html"><div class="ttname"><a href="../../d9/d4c/namespacemimicpp_1_1then.html">mimicpp::then</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:618</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a68c1d279c259f2aef30a89cd5e0d7485"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a68c1d279c259f2aef30a89cd5e0d7485">mimicpp::is_matching</a></div><div class="ttdeci">constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept</div><div class="ttdef"><b>Definition</b> Utility.hpp:112</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Printer.hpp:40</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:112</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a68c1d279c259f2aef30a89cd5e0d7485"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a68c1d279c259f2aef30a89cd5e0d7485">mimicpp::is_matching</a></div><div class="ttdeci">constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept</div><div class="ttdef"><b>Definition</b> Utility.hpp:111</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Printer.hpp:41</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:190</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d8/de5/_expectation_policies_8hpp.html">ExpectationPolicies.hpp</a></li>
-    <li class="footer">Generated on Sun Oct 6 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sat Oct 12 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

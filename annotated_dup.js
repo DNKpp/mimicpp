@@ -55,11 +55,13 @@ var annotated_dup =
       [ "is_overload_set< First, Second, Others... >", "d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html", null ],
       [ "is_overloadable_with", "d4/dd6/structmimicpp_1_1is__overloadable__with.html", null ],
       [ "LazySequence", "db/d46/classmimicpp_1_1_lazy_sequence.html", null ],
+      [ "LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", "db/d98/classmimicpp_1_1_lifetime_watcher" ],
       [ "MatchReport", "db/d11/classmimicpp_1_1_match_report.html", "db/d11/classmimicpp_1_1_match_report" ],
       [ "Mock", "d2/d48/classmimicpp_1_1_mock.html", "d2/d48/classmimicpp_1_1_mock" ],
       [ "PredicateMatcher", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", "dc/d5e/classmimicpp_1_1_predicate_matcher" ],
       [ "priority_tag", "d1/d9f/structmimicpp_1_1priority__tag.html", null ],
       [ "priority_tag< 0 >", "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html", null ],
+      [ "RelocationWatcher", "da/d45/classmimicpp_1_1_relocation_watcher.html", "da/d45/classmimicpp_1_1_relocation_watcher" ],
       [ "ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", "d6/dc0/classmimicpp_1_1_scoped_expectation" ],
       [ "signature_add_noexcept", "dd/db4/structmimicpp_1_1signature__add__noexcept.html", null ],
       [ "signature_add_noexcept< Return(Params...) & >", "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4.html", "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4" ],
@@ -155,6 +157,7 @@ var annotated_dup =
       [ "string_traits< std::basic_string< Char, Traits, Allocator > >", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4" ],
       [ "string_traits< std::basic_string_view< Char, Traits > >", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4" ],
       [ "string_traits< T >", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4" ],
+      [ "Watched", "d3/d5d/classmimicpp_1_1_watched.html", "d3/d5d/classmimicpp_1_1_watched" ],
       [ "WildcardMatcher", "db/de6/classmimicpp_1_1_wildcard_matcher.html", "db/de6/classmimicpp_1_1_wildcard_matcher" ]
     ] ]
 ];
