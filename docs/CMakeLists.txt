@@ -11,7 +11,7 @@ message(TRACE "Begin generating docs")
 
 include(get_cpm)
 
-CPMAddPackage("gh:jothepro/doxygen-awesome-css@2.3.2")
+CPMAddPackage("gh:jothepro/doxygen-awesome-css@2.3.4")
 
 set(DOXY_PROJECT_VERSION ${PROJECT_VERSION})
 set(DOXY_INPUT_DIR "include docs")
