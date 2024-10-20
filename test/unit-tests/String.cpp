@@ -250,6 +250,8 @@ TEMPLATE_TEST_CASE_SIG(
 	"[string]",
 	((bool expected, typename T), expected, T),
 	(false, char),
+	(false, void*),
+	(false, const void*),
 
 	(true, CustomString),
 
