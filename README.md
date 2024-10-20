@@ -436,14 +436,14 @@ As new compilers become available, they will be added to the workflow, but older
 |    -   |    does not work   |
 |    ?   |     not tested     |
 
-#### Windows
+**Windows**
 
 | OS           | Compiler | c++-20 | c++-23 | std-format | fmt |
 |--------------|:--------:|:------:|:------:|:----------:|:---:|
 | Windows 2022 |   msvc   |    x   |    x   |      x     |  x  |
 | Windows 2022 |  clangCl |    x   |    x   |      x     |  x  |
 
-#### Linux
+**Linux**
 
 | Compiler | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
 |----------|:---------:|:------:|:------:|:------:|:----------:|:---:|
@@ -454,11 +454,11 @@ As new compilers become available, they will be added to the workflow, but older
 | gcc-13   |     x     |    ?   |    x   |    x   |      x     |  x  |
 | gcc-14   |     x     |    ?   |    x   |    x   |      x     |  x  |
 
-#### macOS
+**macOS**
 
 | Compiler          | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
 |-------------------|:---------:|:------:|:------:|:------:|:----------:|:---:|
-| AppleClang-16.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
+| AppleClang-16.0.6 |     ?     |    x   |    x   |    x   |      -     |  x  |
 | AppleClang-17.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 | AppleClang-18.1.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 
