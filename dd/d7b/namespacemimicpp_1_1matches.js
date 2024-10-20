@@ -20,6 +20,7 @@ var namespacemimicpp_1_1matches =
     [ "eq", "dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#gaae47b82f14695a5e774ad398df069825", null ],
     [ "ge", "dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#gac2b140b5f668cbac26e13144adce8114", null ],
     [ "gt", "dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#gaafc5970f07ac2c69f82167ae2189596e", null ],
+    [ "instance", "dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#ga369aedf4edb7313cf70f7ac78ec233f9", null ],
     [ "le", "dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#ga4a114a648ee1923e852dc3677038ad9a", null ],
     [ "lt", "dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#ga242b5abc5a65421f91a90575acbceb66", null ],
     [ "ne", "dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#gaf71aaa68ad1bea169500e80263d51db0", null ],

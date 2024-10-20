@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
    </div>
   </td>
  </tr>
@@ -456,10 +456,7 @@ CI Tests</summary>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">not tested   </td></tr>
 </table>
-<p></p>
-</details>
-<h3><a class="anchor" id="autotoc_md56"></a>
-Windows</h3>
+<p><b>Windows</b></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">OS   </th><th class="markdownTableHeadCenter">Compiler   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23   </th><th class="markdownTableHeadCenter">std-format   </th><th class="markdownTableHeadCenter">fmt    </th></tr>
@@ -468,8 +465,7 @@ Windows</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">Windows 2022   </td><td class="markdownTableBodyCenter">clangCl   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md57"></a>
-Linux</h3>
+<p><b>Linux</b></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">libstdc++   </th><th class="markdownTableHeadCenter">libc++   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23   </th><th class="markdownTableHeadCenter">std-format   </th><th class="markdownTableHeadCenter">fmt    </th></tr>
@@ -486,20 +482,21 @@ Linux</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">gcc-14   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
 </table>
-<h3><a class="anchor" id="autotoc_md58"></a>
-macOS</h3>
+<p><b>macOS</b></p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Compiler   </th><th class="markdownTableHeadCenter">libstdc++   </th><th class="markdownTableHeadCenter">libc++   </th><th class="markdownTableHeadCenter">c++-20   </th><th class="markdownTableHeadCenter">c++-23   </th><th class="markdownTableHeadCenter">std-format   </th><th class="markdownTableHeadCenter">fmt    </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">AppleClang-16.0.6   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
+<td class="markdownTableBodyNone">AppleClang-16.0.6   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">-   </td><td class="markdownTableBodyCenter">x    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">AppleClang-17.0.6   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x    </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">AppleClang-18.1.6   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td></tr>
 </table>
+<p></p>
+</details>
 <hr  />
-<h1><a class="anchor" id="autotoc_md60"></a>
+<h1><a class="anchor" id="autotoc_md57"></a>
 License</h1>
 <p><a href="LICENSE_1_0.txt">BSL-1.0</a> (free, open source)</p>
 <div class="fragment"><div class="line">         Copyright Dominic &quot;DNKpp&quot; Koepke 2024 - 2024</div>
@@ -507,9 +504,9 @@ License</h1>
 <div class="line">   (See accompanying file LICENSE_1_0.txt or copy at</div>
 <div class="line">         https://www.boost.org/LICENSE_1_0.txt)</div>
 </div><!-- fragment --><hr  />
-<h1><a class="anchor" id="autotoc_md62"></a>
+<h1><a class="anchor" id="autotoc_md59"></a>
 Known Issues</h1>
-<h2><a class="anchor" id="autotoc_md63"></a>
+<h2><a class="anchor" id="autotoc_md60"></a>
 Clang-18.1 + libc++</h2>
 <p>Date: 25.09.2024</p>
 <p>This combination introduced a regression regarding the <code>std::invocable</code> concept and a default parameter of type <code>std::source_location</code>. On this version, all invocable checks will fail, but the <code>std::is_invocable</code> trait still works as expected. Unfortunatly this can not solved easily by this lib, sorry for that.</p>

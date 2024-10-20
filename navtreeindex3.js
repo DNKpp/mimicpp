@@ -1,5 +1,6 @@
 var NAVTREEINDEX3 =
 {
+"dd/df9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___t_y_p_e.html":[1,7,6],
 "dd/df9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___t_y_p_e.html#ga87147d9464358037f54907bf773c81d7":[1,7,6,3],
 "de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html":[1,7,3],
 "de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html#ga8e3ea8f62502eac4396439c2010b9cb9":[1,7,3,25],
@@ -169,9 +170,9 @@ var NAVTREEINDEX3 =
 "index.html#autotoc_md52":[0,5,0,1],
 "index.html#autotoc_md53":[0,5,1],
 "index.html#autotoc_md55":[0,6],
-"index.html#autotoc_md60":[0,7],
-"index.html#autotoc_md62":[0,8],
-"index.html#autotoc_md63":[0,8,0],
+"index.html#autotoc_md57":[0,7],
+"index.html#autotoc_md59":[0,8],
+"index.html#autotoc_md60":[0,8,0],
 "namespacemembers.html":[2,1,0],
 "namespacemembers_enum.html":[2,1,4],
 "namespacemembers_func.html":[2,1,1],

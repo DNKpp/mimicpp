@@ -12,6 +12,7 @@ var _matcher_8hpp =
     [ "ge", "dd/d50/_matcher_8hpp.html#gac2b140b5f668cbac26e13144adce8114", null ],
     [ "gt", "dd/d50/_matcher_8hpp.html#gaafc5970f07ac2c69f82167ae2189596e", null ],
     [ "has_size", "dd/d50/_matcher_8hpp.html#gabe07e4394f348806148d665d73dc246f", null ],
+    [ "instance", "dd/d50/_matcher_8hpp.html#ga369aedf4edb7313cf70f7ac78ec233f9", null ],
     [ "is_empty", "dd/d50/_matcher_8hpp.html#gacaeaf0bcc3197e6325285d9035a019df", null ],
     [ "is_sorted", "dd/d50/_matcher_8hpp.html#gacad6ed764831afec6ecf3668beebee4f", null ],
     [ "le", "dd/d50/_matcher_8hpp.html#ga4a114a648ee1923e852dc3677038ad9a", null ],

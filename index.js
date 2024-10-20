@@ -24,8 +24,8 @@ var index =
       [ "Test Framework", "index.html#autotoc_md53", null ]
     ] ],
     [ "Testing", "index.html#autotoc_md55", null ],
-    [ "License", "index.html#autotoc_md60", null ],
-    [ "Known Issues", "index.html#autotoc_md62", [
-      [ "Clang-18.1 + libc++", "index.html#autotoc_md63", null ]
+    [ "License", "index.html#autotoc_md57", null ],
+    [ "Known Issues", "index.html#autotoc_md59", [
+      [ "Clang-18.1 + libc++", "index.html#autotoc_md60", null ]
     ] ]
 ];
