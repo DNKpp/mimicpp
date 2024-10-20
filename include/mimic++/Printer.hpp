@@ -267,7 +267,8 @@ namespace mimicpp::detail
 			std::forward<T>(value));
 	}
 
-	template <print_iterator OutIter, std::convertible_to<StringViewT> String>
+	template <print_iterator OutIter, string String>
+		requires std::convertible_to<String, StringViewT> 
 	OutIter print(
 		OutIter out,
 		String&& str,
