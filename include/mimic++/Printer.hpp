@@ -467,6 +467,25 @@ namespace mimicpp::detail
 		}
 	};
 
+	template <typename T>
+	concept pointer_like = std::is_pointer_v<T>
+							|| std::same_as<std::nullptr_t, T>;
+
+	template <pointer_like T>
+		requires (!string<T>)
+	class Printer<T>
+	{
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, T ptr)
+		{
+			return format::format_to(
+				std::move(out),
+				"0x{:0>16x}",
+				std::bit_cast<std::uintptr_t>(ptr));
+		}
+	};
+
 	template <typename Char>
 		requires is_character_v<Char>
 	struct character_literal_printer;

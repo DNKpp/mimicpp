@@ -441,6 +441,22 @@ TEST_CASE(
 			Catch::Matchers::Equals("{ {?}, 1337 }"));
 	}
 
+	SECTION("Pointers are printed in hex-format.")
+	{
+		REQUIRE_THAT(
+			mimicpp::print(nullptr),
+			Catch::Matchers::Matches("0x0{1,16}"));
+		REQUIRE_THAT(
+			mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{})),
+			Catch::Matchers::Matches("0x0{1,16}"));
+		REQUIRE_THAT(
+			mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{0x1234567890ABCDEFu})),
+			Catch::Matchers::Matches("0x1234567890[Aa][Bb][Cc][Dd][Ee][Ff]"));
+		REQUIRE_THAT(
+			mimicpp::print(reinterpret_cast<const std::string*>(std::uintptr_t{0x1234u})),
+			Catch::Matchers::Matches("0x0{1,12}1234"));
+	}
+
 	SECTION("When nothing matches, a default token is inserted.")
 	{
 		constexpr NonPrintable value{};
