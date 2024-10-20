@@ -14,7 +14,7 @@ var searchData=
   ['matcher_20unicode_20support_11',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'']]],
   ['matcher_2ehpp_12',['Matcher.hpp',['../dd/d50/_matcher_8hpp.html',1,'']]],
   ['matcher_5ftraits_13',['matcher_traits',['../d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html',1,'mimicpp::custom']]],
-  ['matchers_14',['Matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md5',1,'Case-Insensitive Matchers'],['../index.html#autotoc_md44',1,'Matchers']]],
+  ['matchers_14',['Matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md9',1,'Case-Insensitive Matchers'],['../index.html#autotoc_md44',1,'Matchers']]],
   ['matchers_15',['matchers',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html',1,'matchers'],['../db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html',1,'range matchers'],['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html',1,'string matchers']]],
   ['matches_16',['matches',['../d3/d1c/classmimicpp_1_1_expectation.html#ab030189070f8b4ad118a49f6a82ebff7',1,'mimicpp::Expectation::matches()'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#ac27966d7b0cd77e74f6970a6e56638d2',1,'mimicpp::BasicExpectation::matches()'],['../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#afdbfde04d2e9d7785ee959873be8d650',1,'mimicpp::expectation_policies::Category::matches()'],['../db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html#ad9252963b4826e2fa76b3d9e64c9b07f',1,'mimicpp::expectation_policies::Constness::matches()'],['../d1/dde/classmimicpp_1_1expectation__policies_1_1_requirement.html#a5dfdfbcac13ce47bc480fd6802b35c77',1,'mimicpp::expectation_policies::Requirement::matches()'],['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#a0bfc03a555eed8ed0126f32a858ba3ef',1,'mimicpp::expectation_policies::SideEffectAction::matches()'],['../dc/d5e/classmimicpp_1_1_predicate_matcher.html#a0acf28a054e164605fff2ede5ba4c039',1,'mimicpp::PredicateMatcher::matches()'],['../db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc',1,'mimicpp::WildcardMatcher::matches()']]],
   ['matching_20arguments_17',['Matching arguments',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#autotoc_md2',1,'']]],
@@ -93,7 +93,7 @@ var searchData=
   ['mocking_20framework_90',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['modern_20and_20mostly_20macro_20free_20mocking_20framework_91',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['mostly_20macro_20free_20mocking_20framework_92',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
-  ['move_20constructor_20and_20assignment_20operator_93',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
-  ['moving_94',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md10',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md12',1,'Moving']]],
-  ['multiple_20inheritance_95',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]]
+  ['move_20constructor_20and_20assignment_20operator_93',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md13',1,'']]],
+  ['moving_94',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md4',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md6',1,'Moving']]],
+  ['multiple_20inheritance_95',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md14',1,'']]]
 ];
