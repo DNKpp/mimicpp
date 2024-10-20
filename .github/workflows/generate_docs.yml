@@ -89,3 +89,5 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         allowUpdates: true
         artifactErrorsFailBuild: true
+        omitBody: true
+        omitName: true
