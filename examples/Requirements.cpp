@@ -125,6 +125,22 @@ TEST_CASE(
 }
 
 TEST_CASE(
+	"matches::instance checks, whether the expected instance is given.",
+	"[example][example::requirements]"
+)
+{
+	//! [matcher instance]
+	namespace matches = mimicpp::matches;
+
+	mimicpp::Mock<void(const int&)> mock{};
+
+	int myInt{};
+	SCOPED_EXP mock.expect_call(matches::instance(myInt));
+	mock(myInt);
+	//! [matcher instance]
+}
+
+TEST_CASE(
 	"Ranges can be checked.",
 	"[example][example::requirements]"
 )
