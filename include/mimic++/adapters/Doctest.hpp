@@ -21,7 +21,7 @@ namespace mimicpp::detail::doctest
 	using namespace ::doctest;
 
 	[[noreturn]]
-	inline void send_fail([[maybe_unused]] const StringViewT msg)
+	inline void send_fail(const StringViewT msg)
 	{
 		DOCTEST_FAIL(msg);
 		unreachable();

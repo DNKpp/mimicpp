@@ -55,7 +55,7 @@ namespace
 		{
 		}
 
-		void log_assert([[maybe_unused]] const doctest::AssertData& in) override
+		void log_assert(const doctest::AssertData& in) override
 		{
 			if (!in.m_failed)
 			{
@@ -63,7 +63,7 @@ namespace
 			}
 		}
 
-		void log_message([[maybe_unused]] const doctest::MessageData& in) override
+		void log_message(const doctest::MessageData& in) override
 		{
 			if (in.m_string == "Warning")
 			{
