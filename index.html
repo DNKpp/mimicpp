@@ -143,7 +143,7 @@ Introduction</h1>
 <p><code>mimic++</code> is a c++20 mocking framework, which aims to offer a natural end expressive syntax, without constantly resorting to macros. To be honest, macros cannot be completely avoided, but they can at least be reduced to a very minimum.</p>
 <p>The one thing, that this framework does different than all other (or at least all I am aware of) mocking framework is, that mock objects explicitly are function objects, thus directly callable. It's simple and straight forward.</p>
 <p>As I'm mainly working on template or functional-style code, I wanted something simpler than always creating explicit mock types for the simplest of use cases. So, <code><a class="el" href="d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a></code> objects can directly be used as functional objects, but they can also be used as member objects and thus serve as actual member functions.</p>
-<p>If you are curious, have a look at the <a href="https://dnkpp.github.io/mimicpp/">documentation</a>, investigate the examples folder or play around online at <a href="https://godbolt.org/z/o3Thdcr7T">godbolt.org</a>.</p>
+<p>If you are curious, have a look at the <a href="https://dnkpp.github.io/mimicpp/">documentation</a>, investigate the examples folder or play around online at <a href="https://godbolt.org/z/fYavvqfeM">godbolt.org</a>.</p>
 <h2><a class="anchor" id="autotoc_md36"></a>
 Core Design</h2>
 <p>The framework is designed with two core concepts in mind: Mocks and Expectations. Mocks can be used to define behaviour on a per test-case basis, without the necessity of creating dozens of types. The go-to example is, if you have a custom type, which somehow makes a connection to a concrete database, you do not want to setup an actual database connection during your test runs. You then simply install a database mock, which then yields the exact replies as it were defined for that particular case: the so called "Expectations".</p>
@@ -518,7 +518,7 @@ Clang-18.1 + libc++</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sun Oct 20 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Mon Oct 21 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
