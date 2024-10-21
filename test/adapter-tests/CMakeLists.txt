@@ -3,6 +3,7 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-add_subdirectory("catch2")
-add_subdirectory("gtest")
 add_subdirectory("boost-test")
+add_subdirectory("catch2")
+add_subdirectory("doctest")
+add_subdirectory("gtest")
