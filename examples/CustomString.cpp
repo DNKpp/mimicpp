@@ -131,7 +131,7 @@ struct mimicpp::string_traits<ComplexString>
 
 	// must construct a view object
 	[[nodiscard]]
-	static constexpr view_t view(const ComplexString& str) noexcept
+	static view_t view(const ComplexString& str) noexcept
 	{
 		return std::span{
 			str.begin(),
