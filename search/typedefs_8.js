@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['returnt_0',['ReturnT',['../d3/d1c/classmimicpp_1_1_expectation.html#ab9e16aa62ad77938e224d686349d6195',1,'mimicpp::Expectation::ReturnT'],['../d5/d86/classmimicpp_1_1_expectation_collection.html#a30e9a1cc32ffd3b2f6b7f11ae26537aa',1,'mimicpp::ExpectationCollection::ReturnT'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a72deb1105e293a672eb6231199c9833d',1,'mimicpp::BasicExpectation::ReturnT'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a97aabdc22c19b11b1ce31bf7c7526ab6',1,'mimicpp::BasicExpectationBuilder::ReturnT']]]
+  ['policylistt_0',['PolicyListT',['../d3/d4a/classmimicpp_1_1_basic_expectation.html#af12ea9bb928ea78efeec1075533854a1',1,'mimicpp::BasicExpectation::PolicyListT'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a61ddae5a025434b5abbafa19252920f9',1,'mimicpp::BasicExpectationBuilder::PolicyListT']]],
+  ['projectedarglistelementt_1',['ProjectedArgListElementT',['../de/da9/classmimicpp_1_1expectation__policies_1_1_apply_args_action.html#abf2e00e32326179d581c6e8fbd1a9ad3',1,'mimicpp::expectation_policies::ApplyArgsAction']]],
+  ['projectedargt_2',['ProjectedArgT',['../de/d9e/classmimicpp_1_1expectation__policies_1_1_apply_all_args_action.html#aa7942ca20e0d075f13ad1017d617aa2c',1,'mimicpp::expectation_policies::ApplyAllArgsAction']]]
 ];

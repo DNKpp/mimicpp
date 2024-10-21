@@ -180,6 +180,7 @@ var namespacemimicpp =
     [ "CharT", "d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc", null ],
     [ "CharTraitsT", "d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad", null ],
     [ "control_state_t", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3f12228c096cc578444846b5c410b61f", null ],
+    [ "DoctestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga2f446c319de27373286e449cc72031dc", null ],
     [ "GTestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga54e2a65c7837029b0c0c8e8a11cb8466", null ],
     [ "SequenceT", "d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf6777ae3a4ea46f945ad2e998885a07c", null ],
     [ "signature_add_noexcept_t", "de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html#ga8e3ea8f62502eac4396439c2010b9cb9", null ],

@@ -8,7 +8,8 @@ var NAVTREEINDEX1 =
 "d4/d56/classmimicpp_1_1_basic_reporter.html#a9eaf88c58daa356a3bed0e5e24e8dd6e":[1,4,4,2],
 "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html":[1,4,1],
 "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga02aa72d6aaace0343113c757d4235aa8":[1,4,1,1],
-"d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga54e2a65c7837029b0c0c8e8a11cb8466":[1,4,1,2],
+"d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga2f446c319de27373286e449cc72031dc":[1,4,1,2],
+"d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga54e2a65c7837029b0c0c8e8a11cb8466":[1,4,1,3],
 "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaf1a3d3c6e282b67df4347f523ea43e2e":[1,4,1,0],
 "d4/d84/namespacemimicpp_1_1custom.html":[2,0,0,1],
 "d4/d96/structmimicpp_1_1signature__return__type.html":[1,7,8,0],
@@ -84,8 +85,8 @@ var NAVTREEINDEX1 =
 "d5/d92/_object_watcher_8hpp_source.html":[5,0,1,11],
 "d5/d98/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_08_01_6_6noexcept_01_4.html":[1,7,4,11],
 "d5/d98/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_08_01_6_6noexcept_01_4.html#a88f14deeae0c9bfbce207c1c8b157707":[1,7,4,11,0],
-"d5/db1/gtest_8hpp.html":[5,0,1,0,2],
-"d5/db1/gtest_8hpp_source.html":[5,0,1,0,2],
+"d5/db1/gtest_8hpp.html":[5,0,1,0,3],
+"d5/db1/gtest_8hpp_source.html":[5,0,1,0,3],
 "d5/dc5/_mock_8hpp.html":[5,0,1,10],
 "d5/dc5/_mock_8hpp_source.html":[5,0,1,10],
 "d5/de1/classmimicpp_1_1_basic_expectation_builder.html":[2,0,0,11],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01const_01noexcept_01_4.html":[1,7,3,7],
 "d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01const_01noexcept_01_4.html#a41d46c601741a000fd2f6e94b43fe2ca":[1,7,3,7,0],
 "d9/dc3/_interface_mock_8hpp.html":[5,0,1,7],
-"d9/dc3/_interface_mock_8hpp_source.html":[5,0,1,7],
-"d9/dc5/_string_8hpp.html":[5,0,1,16]
+"d9/dc3/_interface_mock_8hpp_source.html":[5,0,1,7]
 };

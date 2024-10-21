@@ -6,5 +6,5 @@ var searchData=
   ['basicreporter_3',['BasicReporter',['../d4/d56/classmimicpp_1_1_basic_reporter.html',1,'mimicpp']]],
   ['boosttest_2ehpp_4',['BoostTest.hpp',['../d9/d42/_boost_test_8hpp.html',1,'']]],
   ['boosttestreportert_5',['BoostTestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaf1a3d3c6e282b67df4347f523ea43e2e',1,'mimicpp']]],
-  ['byte_20string_6',['Byte-String',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md10',1,'']]]
+  ['byte_20string_6',['Byte-String',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md8',1,'']]]
 ];

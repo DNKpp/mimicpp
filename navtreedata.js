@@ -65,8 +65,8 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "d4/d56/classmimicpp_1_1_basic_reporter.html#a267bcc67f5b470b69cc8e6a1c3ad13f9",
-"d9/dc5/_string_8hpp_source.html",
-"dd/df9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___t_y_p_e.html"
+"d9/dc5/_string_8hpp.html",
+"dd/df0/classmimicpp_1_1_i_reporter.html#ab3649ad0969a3293aff9c08c86d887ed"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
