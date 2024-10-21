@@ -68,4 +68,54 @@ namespace mimicpp::detail::gtest
 	inline const ReporterInstaller<GTestReporterT> installer{};
 }
 
+template <typename Matcher>
+	requires requires
+	{
+		typename Matcher::is_gtest_matcher;
+		requires std::is_void_v<typename Matcher::is_gtest_matcher>;
+	}
+struct mimicpp::custom::matcher_traits<Matcher>
+{
+	template <typename T>
+	[[nodiscard]]
+	static constexpr bool matches(const Matcher& matcher, const T& value)
+		requires requires{ { matcher.MatchAndExplain(value, nullptr) } -> std::convertible_to<bool>; }
+	{
+		return matcher.MatchAndExplain(value, nullptr);
+	}
+
+	[[nodiscard]]
+	static constexpr StringViewT describe(const Matcher& matcher)
+		requires requires{ { matcher.Desc() } -> std::convertible_to<StringViewT>; }
+	{
+		return matcher.Desc();
+	}
+};
+
+
+template <typename T>
+struct mimicpp::custom::matcher_traits<::testing::PolymorphicMatcher<T>>
+{
+	using MatcherT = ::testing::PolymorphicMatcher<T>;
+
+	template <typename Value>
+	[[nodiscard]]
+	static constexpr bool matches(const MatcherT& matcher, const Value& value)
+	{
+		return matcher
+				.impl()
+				.MatchAndExplain(value, nullptr);
+	}
+
+	[[nodiscard]]
+	static constexpr StringT describe(const MatcherT& matcher)
+	{
+		StringStreamT out{};
+		matcher
+			.impl()
+			.DescribeTo(&out);
+		return std::move(out).str();
+	}
+};
+
 #endif
