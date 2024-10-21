@@ -293,7 +293,7 @@ namespace mimicpp::matches
 	 * \brief The wildcard matcher, always matching.
 	 * \snippet Requirements.cpp matcher wildcard
 	 */
-	inline constexpr WildcardMatcher _{};
+	[[maybe_unused]] inline constexpr WildcardMatcher _{};
 
 	/**
 	 * \brief Tests, whether the target compares equal to the expected value.
