@@ -571,6 +571,13 @@ namespace mimicpp::detail
 					"{}",
 					string_traits<String>::view(str));
 			}
+			else if constexpr (format::detail::formattable<string_char_t<String>, CharT>)
+			{
+				for (const string_char_t<String>& c : string_traits<String>::view(str))
+				{
+					out = format::format_to(std::move(out), "{}", c);
+				}
+			}
 			// required for custom char types
 			else if constexpr (printer_for<custom::Printer<string_char_t<String>>, OutIter, string_char_t<String>>)
 			{

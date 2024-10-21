@@ -481,6 +481,12 @@ namespace
 	public:
 		std::vector<my_char> inner{};
 	};
+
+	class MyNonPrintableString
+	{
+	public:
+		std::string inner{};
+	};
 }
 
 template <>
@@ -513,6 +519,20 @@ struct string_traits<MyString>
 	}
 };
 
+template <>
+struct string_traits<MyNonPrintableString>
+{
+	using char_t = char;
+	// explicitly use view-type which isn't printable as string
+	using view_t = std::span<const char>;
+
+	[[nodiscard]]
+	static constexpr view_t view(const MyNonPrintableString& str) noexcept
+	{
+		return std::span{str.inner};
+	}
+};
+
 TEST_CASE(
 	"print supports printing of custom char-types and even strings of custom char-type.",
 	"[print]"
@@ -538,6 +558,22 @@ TEST_CASE(
 				Catch::Matchers::Equals("\"AbC\""));
 		}
 	}
+}
+
+TEST_CASE(
+	"print supports printing of non-printable strings of formattable char-type.",
+	"[print]"
+)
+{
+	STATIC_REQUIRE(string<MyNonPrintableString>);
+
+	StringStreamT stream{};
+	print(
+		std::ostreambuf_iterator{stream},
+		MyNonPrintableString{"AbC"});
+	REQUIRE_THAT(
+		std::move(stream).str(),
+		Catch::Matchers::Equals("\"AbC\""));
 }
 
 TEST_CASE(
