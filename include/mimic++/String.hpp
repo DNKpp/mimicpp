@@ -30,7 +30,8 @@ namespace mimicpp
 	 * \ingroup STRING
 	 * \ingroup TYPE_TRAITS
 	 * \brief Type-trait, which determines, whether the given type is a character-type.
-	 * \attention User are not allowed to add specializations to the trait by themselves.
+	 * \note User are allowed to add specializations to the trait by themselves, but these types must satisfy the ``std::regular`` concept.
+	 * \see https://en.cppreference.com/w/cpp/concepts/regular
 	 *
 	 * \{
 	 */
