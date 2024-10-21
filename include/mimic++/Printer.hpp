@@ -486,12 +486,8 @@ namespace mimicpp::detail
 		}
 	};
 
-	template <typename Char>
-		requires is_character_v<Char>
-	struct character_literal_printer;
-
-	template <>
-	struct character_literal_printer<char>
+	template <satisfies<is_character> Char>
+	struct character_literal_printer
 	{
 		template <print_iterator OutIter>
 		static OutIter print(OutIter out) noexcept
