@@ -421,6 +421,27 @@ namespace mimicpp::matches
 	}
 
 	/**
+	 * \brief Tests, whether the target is the expected instance.
+	 * \tparam T Instance type.
+	 * \param instance The instance to be compared to.
+	 * \snippet Requirements.cpp matcher instance
+	 */
+	template <satisfies<std::is_lvalue_reference> T>
+	[[nodiscard]]
+	constexpr auto instance(T&& instance)  // NOLINT(cppcoreguidelines-missing-std-forward)
+	{
+		return PredicateMatcher{
+			[](const std::remove_cvref_t<T>& target, const auto* instancePtr) noexcept
+			{
+				return std::addressof(target) == instancePtr;
+			},
+			"is instance at {}",
+			"is not instance at {}",
+			std::tuple{std::addressof(instance)}
+		};
+	}
+
+	/**
 	 * \}
 	 */
 }

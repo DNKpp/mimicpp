@@ -1178,3 +1178,59 @@ TEST_CASE(
 		}
 	}
 }
+
+TEMPLATE_TEST_CASE(
+	"matches::instance does only accept lvalues.",
+	"[matcher]",
+	int,
+	const int,
+	int&&,
+	const int&&
+)
+{
+	STATIC_REQUIRE(!requires{ matches::instance(std::declval<TestType>()); });
+}
+
+TEST_CASE(
+	"matches::instance matches when the target is the expected instance.",
+	"[matcher]"
+)
+{
+	int instance{42};
+	const auto matcher = matches::instance(instance);
+
+	REQUIRE_THAT(
+		matcher.describe(),
+		Catch::Matchers::Matches("is instance at 0x[\\dAaBbCcDdEeFf]{1,16}"));
+
+	SECTION("When target is the instance.")
+	{
+		REQUIRE(matcher.matches(instance));
+	}
+
+	SECTION("When target is not the instance.")
+	{
+		constexpr int target{};
+		REQUIRE(!matcher.matches(target));
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		const auto invertedMatcher = !matches::instance(instance);
+
+		REQUIRE_THAT(
+			invertedMatcher.describe(),
+			Catch::Matchers::Matches("is not instance at 0x[\\dAaBbCcDdEeFf]{1,16}"));
+
+		SECTION("When target is not the instance.")
+		{
+			constexpr int target{};
+			REQUIRE(!matcher.matches(target));
+		}
+
+		SECTION("When target is the instance.")
+		{
+			REQUIRE(matcher.matches(instance));
+		}
+	}
+}

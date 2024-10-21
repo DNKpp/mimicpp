@@ -48,7 +48,7 @@ As I'm mainly working on template or functional-style code, I wanted something s
 So, ``mimicpp::Mock`` objects can directly be used as functional objects, but they can also be used as member objects and thus serve as actual member functions.
 
 If you are curious, have a look at the [documentation](https://dnkpp.github.io/mimicpp/), investigate the examples folder or play around online at
-[godbolt.org](https://godbolt.org/z/o3Thdcr7T).
+[godbolt.org](https://godbolt.org/z/fYavvqfeM).
 
 ### Core Design
 
@@ -397,9 +397,10 @@ For more details have a look into the ``reporting`` section in the documentation
 
 Official adapters exist for the following frameworks:
 
-* [Boost.Test](https://github.com/boostorg/test)
-* [Catch2](https://github.com/catchorg)
-* [GTest](https://github.com/google/googletest)
+* [Boost.Test](https://github.com/boostorg/test) (tested with v1.85.0)
+* [Catch2](https://github.com/catchorg) (tested with v3.7.1)
+* [Doctest](https://github.com/doctest/doctest) (tested with v2.4.11)
+* [GTest](https://github.com/google/googletest) (tested with v1.15.2)
 
 ---
 
@@ -436,14 +437,14 @@ As new compilers become available, they will be added to the workflow, but older
 |    -   |    does not work   |
 |    ?   |     not tested     |
 
-#### Windows
+**Windows**
 
 | OS           | Compiler | c++-20 | c++-23 | std-format | fmt |
 |--------------|:--------:|:------:|:------:|:----------:|:---:|
 | Windows 2022 |   msvc   |    x   |    x   |      x     |  x  |
 | Windows 2022 |  clangCl |    x   |    x   |      x     |  x  |
 
-#### Linux
+**Linux**
 
 | Compiler | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
 |----------|:---------:|:------:|:------:|:------:|:----------:|:---:|
@@ -454,11 +455,11 @@ As new compilers become available, they will be added to the workflow, but older
 | gcc-13   |     x     |    ?   |    x   |    x   |      x     |  x  |
 | gcc-14   |     x     |    ?   |    x   |    x   |      x     |  x  |
 
-#### macOS
+**macOS**
 
 | Compiler          | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
 |-------------------|:---------:|:------:|:------:|:------:|:----------:|:---:|
-| AppleClang-16.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
+| AppleClang-16.0.6 |     ?     |    x   |    x   |    x   |      -     |  x  |
 | AppleClang-17.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 | AppleClang-18.1.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
 

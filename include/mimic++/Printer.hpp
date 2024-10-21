@@ -267,7 +267,8 @@ namespace mimicpp::detail
 			std::forward<T>(value));
 	}
 
-	template <print_iterator OutIter, std::convertible_to<StringViewT> String>
+	template <print_iterator OutIter, string String>
+		requires std::convertible_to<String, StringViewT> 
 	OutIter print(
 		OutIter out,
 		String&& str,
@@ -463,6 +464,25 @@ namespace mimicpp::detail
 				std::make_index_sequence<std::tuple_size_v<T>>{});
 
 			return format::format_to(std::move(out), " }}");
+		}
+	};
+
+	template <typename T>
+	concept pointer_like = std::is_pointer_v<T>
+							|| std::same_as<std::nullptr_t, T>;
+
+	template <pointer_like T>
+		requires (!string<T>)
+	class Printer<T>
+	{
+	public:
+		template <print_iterator OutIter>
+		static OutIter print(OutIter out, T ptr)
+		{
+			return format::format_to(
+				std::move(out),
+				"0x{:0>16x}",
+				std::bit_cast<std::uintptr_t>(ptr));
 		}
 	};
 
