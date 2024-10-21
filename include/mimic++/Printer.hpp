@@ -537,6 +537,33 @@ namespace mimicpp::detail
 		}
 	};
 
+	template <std::size_t byteCount>
+	struct intermediate_char;
+
+	template <>
+	struct intermediate_char<1u>
+	{
+		using type = std::uint8_t;
+	};
+
+	template <>
+	struct intermediate_char<2u>
+	{
+		using type = std::uint16_t;
+	};
+
+	template <>
+	struct intermediate_char<4u>
+	{
+		using type = std::uint32_t;
+	};
+
+	template <>
+	struct intermediate_char<8u>
+	{
+		using type = std::uint64_t;
+	};
+
 	template <string String>
 		requires (!std::same_as<CharT, string_char_t<String>>)
 	class Printer<String>
@@ -545,8 +572,7 @@ namespace mimicpp::detail
 		template <std::common_reference_with<String> T, print_iterator OutIter>
 		static OutIter print(OutIter out, T&& str)
 		{
-			using intermediate_t = std::uint32_t;
-			static_assert(sizeof(string_char_t<String>) <= sizeof(intermediate_t));
+			using intermediate_t = typename intermediate_char<sizeof(string_char_t<String>)>::type;
 
 			out = character_literal_printer<string_char_t<String>>::print(std::move(out));
 			out = format::format_to(std::move(out), "\"");
@@ -559,14 +585,14 @@ namespace mimicpp::detail
 				out = format::format_to(
 					std::move(out),
 					"{:#x}",
-					static_cast<intermediate_t>(*iter++));
+					std::bit_cast<intermediate_t>(*iter++));
 
 				for (; iter != end; ++iter)
 				{
 					out = format::format_to(
 						std::move(out),
 						", {:#x}",
-						static_cast<intermediate_t>(*iter));
+						std::bit_cast<intermediate_t>(*iter));
 				}
 			}
 
