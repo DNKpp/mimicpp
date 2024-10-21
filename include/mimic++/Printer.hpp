@@ -571,6 +571,15 @@ namespace mimicpp::detail
 					"{}",
 					string_traits<String>::view(str));
 			}
+			// required for custom char types
+			else if constexpr (printer_for<custom::Printer<string_char_t<String>>, OutIter, string_char_t<String>>)
+			{
+				for (custom::Printer<string_char_t<String>> printer{};
+					const string_char_t<String>& c : string_traits<String>::view(str))
+				{
+					out = printer.print(std::move(out), c);
+				}
+			}
 			else
 			{
 				using intermediate_t = typename intermediate_char<sizeof(string_char_t<String>)>::type;

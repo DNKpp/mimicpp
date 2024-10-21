@@ -467,6 +467,79 @@ TEST_CASE(
 	}
 }
 
+namespace
+{
+	struct my_char
+	{
+		char c{};
+
+		bool operator==(const my_char&) const = default;
+	};
+
+	class MyString
+	{
+	public:
+		std::vector<my_char> inner{};
+	};
+}
+
+template <>
+struct mimicpp::is_character<my_char>
+	: public std::true_type
+{
+};
+
+template <>
+class custom::Printer<my_char>
+{
+public:
+	static auto print(auto outIter, const my_char myChar)
+	{
+		return mimicpp::print(std::move(outIter), myChar.c);
+	}
+};
+
+template <>
+struct string_traits<MyString>
+{
+	using char_t = my_char;
+	// explicitly use view-type which isn't printable as string
+	using view_t = std::span<const char_t>;
+
+	[[nodiscard]]
+	static constexpr view_t view(const MyString& str) noexcept
+	{
+		return std::span{str.inner};
+	}
+};
+
+TEST_CASE(
+	"print supports printing of custom char-types and even strings of custom char-type.",
+	"[print]"
+)
+{
+	SECTION("my_char can be printed.")
+	{
+		StringStreamT stream{};
+		print(std::ostreambuf_iterator{stream}, my_char{'A'});
+		REQUIRE_THAT(
+			std::move(stream).str(),
+			Catch::Matchers::Equals("A"));
+
+		SECTION("And MyString can be printed.")
+		{
+			STATIC_REQUIRE(string<MyString>);
+
+			print(
+				std::ostreambuf_iterator{stream},
+				MyString{{{'A'}, {'b'}, {'C'}}});
+			REQUIRE_THAT(
+				std::move(stream).str(),
+				Catch::Matchers::Equals("\"AbC\""));
+		}
+	}
+}
+
 TEST_CASE(
 	"print supports printing of temporaries.",
 	"[print]"
