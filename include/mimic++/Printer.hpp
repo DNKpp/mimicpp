@@ -241,7 +241,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
-		[[maybe_unused]] const priority_tag<5>
+		[[maybe_unused]] const priority_tag<4>
 	)
 	{
 		return Printer::print(
@@ -259,26 +259,12 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
-		[[maybe_unused]] const priority_tag<4>
+		[[maybe_unused]] const priority_tag<3>
 	)
 	{
 		return Printer::print(
 			std::move(out),
 			std::forward<T>(value));
-	}
-
-	template <print_iterator OutIter, string String>
-		requires std::convertible_to<String, StringViewT> 
-	OutIter print(
-		OutIter out,
-		String&& str,
-		[[maybe_unused]] const priority_tag<3>
-	)
-	{
-		return format::format_to(
-			std::move(out),
-			"\"{}\"",
-			static_cast<StringViewT>(std::forward<String>(str)));
 	}
 
 	template <print_iterator OutIter, std::ranges::forward_range Range>
@@ -323,7 +309,7 @@ namespace mimicpp::detail
 		) const
 		{
 			static_assert(
-				requires(const priority_tag<6> tag)
+				requires(const priority_tag<4> tag)
 				{
 					{ print(out, std::forward<T>(value), tag) } -> std::convertible_to<OutIter>;
 				},
@@ -332,7 +318,7 @@ namespace mimicpp::detail
 			return print(
 				std::move(out),
 				std::forward<T>(value),
-				priority_tag<6>{});
+				priority_tag<4>{});
 		}
 
 		template <typename T>
@@ -565,34 +551,47 @@ namespace mimicpp::detail
 	};
 
 	template <string String>
-		requires (!std::same_as<CharT, string_char_t<String>>)
 	class Printer<String>
 	{
 	public:
 		template <std::common_reference_with<String> T, print_iterator OutIter>
 		static OutIter print(OutIter out, T&& str)
 		{
-			using intermediate_t = typename intermediate_char<sizeof(string_char_t<String>)>::type;
-
 			out = character_literal_printer<string_char_t<String>>::print(std::move(out));
 			out = format::format_to(std::move(out), "\"");
 
-			auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
-			auto iter = std::ranges::begin(view);
-			if (const auto end = std::ranges::end(view);
-				iter != end)
+			if constexpr (format::detail::formattable<String, CharT>)
+			{
+				out = format::format_to(std::move(out), "{}", str);
+			}
+			else if constexpr (format::detail::formattable<string_view_t<String>, CharT>)
 			{
 				out = format::format_to(
 					std::move(out),
-					"{:#x}",
-					std::bit_cast<intermediate_t>(*iter++));
+					"{}",
+					string_traits<String>::view(str));
+			}
+			else
+			{
+				using intermediate_t = typename intermediate_char<sizeof(string_char_t<String>)>::type;
 
-				for (; iter != end; ++iter)
+				auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
+				auto iter = std::ranges::begin(view);
+				if (const auto end = std::ranges::end(view);
+					iter != end)
 				{
 					out = format::format_to(
 						std::move(out),
-						", {:#x}",
-						std::bit_cast<intermediate_t>(*iter));
+						"{:#x}",
+						std::bit_cast<intermediate_t>(*iter++));
+
+					for (; iter != end; ++iter)
+					{
+						out = format::format_to(
+							std::move(out),
+							", {:#x}",
+							std::bit_cast<intermediate_t>(*iter));
+					}
 				}
 			}
 
@@ -611,8 +610,7 @@ namespace mimicpp
 	 *
 	 * That function internally checks for the first available option (in that order):
 	 * - ``mimicpp::custom::Printer`` specialization
-	 * - internal printer specializations
-	 * - convertible to ``std::string_view``
+	 * - internal printer specializations (handles strings, ``std::source_location``, ``std::optional``, etc.)
 	 * - satisfies ``std::ranges::forward_range``
 	 * - formattable type (in terms of the installed format-backend)
 	 *
