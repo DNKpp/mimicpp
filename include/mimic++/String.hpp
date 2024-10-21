@@ -218,6 +218,7 @@ namespace mimicpp
 	concept string = requires
 	{
 		requires is_character_v<string_char_t<T>>;
+		requires std::regular<string_char_t<T>>;
 		requires std::ranges::contiguous_range<string_view_t<T>>;
 		requires std::ranges::sized_range<string_view_t<T>>;
 		requires std::ranges::borrowed_range<string_view_t<T>>;
