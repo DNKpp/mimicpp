@@ -506,7 +506,7 @@ public:
 };
 
 template <>
-struct string_traits<MyString>
+struct mimicpp::string_traits<MyString>
 {
 	using char_t = my_char;
 	// explicitly use view-type which isn't printable as string
@@ -520,7 +520,7 @@ struct string_traits<MyString>
 };
 
 template <>
-struct string_traits<MyNonPrintableString>
+struct mimicpp::string_traits<MyNonPrintableString>
 {
 	using char_t = char;
 	// explicitly use view-type which isn't printable as string
