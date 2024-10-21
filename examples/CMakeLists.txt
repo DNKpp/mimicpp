@@ -8,6 +8,7 @@ find_package(Catch2 REQUIRED)
 add_executable(
 	mimicpp-examples
 	"CustomPrinter.cpp"
+	"CustomString.cpp"
 	"Finalizers.cpp"
 	"InterfaceMock.cpp"
 	"Mock.cpp"
