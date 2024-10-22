@@ -684,6 +684,55 @@ namespace mimicpp
 	/**
 	 * \}
 	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_UINT_WITH_SIZE unit_with_size
+	 * \ingroup TYPE_TRAITS
+	 * \brief Provides the member alias ``type`` with the expected uint-type.
+	 * \details This trait always yields a type with the exact size. If no such type exists, the member ``type`` is undefined.
+	 *
+	 *\{
+	 */
+
+	/**
+	 * \brief 1-byte specialization.
+	 */
+	template <>
+	struct uint_with_size<1u>
+	{
+		using type = std::uint8_t;
+	};
+
+	/**
+	 * \brief 2-byte specialization.
+	 */
+	template <>
+	struct uint_with_size<2u>
+	{
+		using type = std::uint16_t;
+	};
+
+	/**
+	 * \brief 4-byte specialization.
+	 */
+	template <>
+	struct uint_with_size<4u>
+	{
+		using type = std::uint32_t;
+	};
+
+	/**
+	 * \brief 8-byte specialization.
+	 */
+	template <>
+	struct uint_with_size<8u>
+	{
+		using type = std::uint64_t;
+	};
+
+	/**
+	 * \}
+	 */
 }
 
 #endif

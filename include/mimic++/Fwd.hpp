@@ -144,6 +144,22 @@ namespace mimicpp
 	template <typename First, typename... Others>
 	inline constexpr bool is_overload_set_v = is_overload_set<First, Others...>::value;
 
+	/**
+	 * \brief Primary template, purposely undefined.
+	 * \ingroup TYPE_TRAITS_UINT_WITH_SIZE
+	 * \tparam byteCount The expected size.
+	 */
+	template <std::size_t byteCount>
+	struct uint_with_size;
+
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
+	 * \ingroup TYPE_TRAITS_UINT_WITH_SIZE
+	 * \tparam byteCount The expected size.
+	 */
+	template <std::size_t byteCount>
+	using uint_with_size_t  = typename uint_with_size<byteCount>::type;
+
 	template <typename T>
 	struct is_character;
 

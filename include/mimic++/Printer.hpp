@@ -523,33 +523,6 @@ namespace mimicpp::detail
 		}
 	};
 
-	template <std::size_t byteCount>
-	struct intermediate_char;
-
-	template <>
-	struct intermediate_char<1u>
-	{
-		using type = std::uint8_t;
-	};
-
-	template <>
-	struct intermediate_char<2u>
-	{
-		using type = std::uint16_t;
-	};
-
-	template <>
-	struct intermediate_char<4u>
-	{
-		using type = std::uint32_t;
-	};
-
-	template <>
-	struct intermediate_char<8u>
-	{
-		using type = std::uint64_t;
-	};
-
 	template <string String>
 	class Printer<String>
 	{
@@ -589,7 +562,7 @@ namespace mimicpp::detail
 			}
 			else
 			{
-				using intermediate_t = typename intermediate_char<sizeof(string_char_t<String>)>::type;
+				using intermediate_t = uint_with_size_t<sizeof(string_char_t<String>)>;
 
 				auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
 				auto iter = std::ranges::begin(view);

@@ -595,3 +595,18 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == mimicpp::is_overload_set<Others..., First>::value);
 	STATIC_REQUIRE(expected == mimicpp::is_overload_set_v<Others..., First>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"uint_with_size yields a uint type with the expected size.",
+	"[type_traits]",
+	((typename Expected, std::size_t size), Expected, size),
+	(std::uint8_t, 1),
+	(std::uint16_t, 2),
+	(std::uint32_t, 4),
+	(std::uint64_t, 8)
+)
+{
+	STATIC_CHECK(size == sizeof(Expected));
+	STATIC_REQUIRE(std::same_as<Expected, typename mimicpp::uint_with_size<size>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, mimicpp::uint_with_size_t<size>>);
+}
