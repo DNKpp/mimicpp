@@ -589,77 +589,70 @@ $(function(){initNavTree('da/dab/_printer_8hpp_source.html','../../'); initResiz
 <div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span>            </div>
 <div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span>            out = format::format_to(std::move(out), <span class="stringliteral">&quot;\&quot;&quot;</span>);</div>
 <div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span> </div>
-<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (format::detail::formattable&lt;String, CharT&gt;)</div>
-<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>            {</div>
-<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>                out = format::format_to(std::move(out), <span class="stringliteral">&quot;{}&quot;</span>, str);</div>
-<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>            }</div>
-<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (format::detail::formattable&lt;string_view_t&lt;String&gt;, <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">CharT</a>&gt;)</div>
-<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>            {</div>
+<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span>            <span class="comment">// By definition, the string concepts requires the view type to be sized and contiguous.</span></div>
+<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span>            <span class="comment">// For simplicity, let&#39;s always manually convert the view type to an actual std::string_view,</span></div>
+<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span>            <span class="comment">// which is formattable for sure.</span></div>
+<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::same_as&lt;CharT, string_char_t&lt;String&gt;&gt;)</div>
+<div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span>            {</div>
+<div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span>                <span class="keyword">auto</span> view = string_traits&lt;String&gt;::view(str);</div>
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span>                out = format::format_to(</div>
 <div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span>                    std::move(out),</div>
 <div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span>                    <span class="stringliteral">&quot;{}&quot;</span>,</div>
-<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>                    string_traits&lt;String&gt;::view(str));</div>
-<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>            }</div>
-<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>            <span class="comment">// I would rather test for format::detail::formattable&lt;string_char_t&lt;String&gt;, CharT&gt;,</span></div>
-<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>            <span class="comment">// but unfortunately on some gcc versions, char8_t is formattable, but gets simply printed as</span></div>
-<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>            <span class="comment">// integral values.</span></div>
-<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::same_as&lt;CharT, string_char_t&lt;String&gt;&gt;)</div>
-<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>            {</div>
-<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&amp; c : string_traits&lt;String&gt;::view(str))</div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>                {</div>
-<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>                    out = format::format_to(std::move(out), <span class="stringliteral">&quot;{}&quot;</span>, c);</div>
-<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>                }</div>
-<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>            }</div>
-<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>            <span class="comment">// required for custom char types</span></div>
-<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (printer_for&lt;custom::Printer&lt;string_char_t&lt;String&gt;&gt;, OutIter, <a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&gt;)</div>
-<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>            {</div>
-<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>                <span class="keywordflow">for</span> (custom::Printer&lt;<a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&gt; printer{};</div>
-<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>                    <span class="keyword">const</span> <a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&amp; c : string_traits&lt;String&gt;::view(str))</div>
+<div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span>                    <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a>{</div>
+<div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>                        std::ranges::data(view),</div>
+<div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>                        std::ranges::size(view)</div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span>                    });</div>
+<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span>            }</div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>            <span class="comment">// required for custom char types</span></div>
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (printer_for&lt;custom::Printer&lt;string_char_t&lt;String&gt;&gt;, OutIter, <a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&gt;)</div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>            {</div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span>                <span class="keywordflow">for</span> (custom::Printer&lt;<a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&gt; printer{};</div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span>                    <span class="keyword">const</span> <a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&amp; c : string_traits&lt;String&gt;::view(str))</div>
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>                {</div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>                    out = printer.print(std::move(out), c);</div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>                }</div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>            }</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>            {</div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>                <span class="keyword">constexpr</span> <span class="keyword">auto</span> to_dump = [](<span class="keyword">const</span> <a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&amp; c) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>                {</div>
-<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>                    out = printer.print(std::move(out), c);</div>
-<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>                }</div>
-<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>            }</div>
-<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>            <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>            {</div>
-<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>                <span class="keyword">constexpr</span> <span class="keyword">auto</span> to_dump = [](<span class="keyword">const</span> <a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">string_char_t&lt;String&gt;</a>&amp; c) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>                {</div>
-<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>                    <span class="keyword">using </span>intermediate_t = <a class="code hl_typedef" href="../../db/d34/group___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e.html#gab237aa1f72f47b22bdef3f3667370dfc">uint_with_size_t&lt;sizeof c&gt;</a>;</div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>                    <span class="keywordflow">return</span> std::bit_cast&lt;intermediate_t&gt;(c);</div>
-<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>                };</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>                </div>
-<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span> </div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>                <span class="keyword">auto</span> view = string_traits&lt;std::remove_cvref_t&lt;T&gt;&gt;::view(std::forward&lt;T&gt;(str));</div>
-<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>                <span class="keyword">auto</span> iter = std::ranges::begin(view);</div>
-<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>                <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> end = std::ranges::end(view);</div>
-<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>                    iter != end)</div>
-<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>                {</div>
-<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>                    out = format::format_to(</div>
-<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>                        std::move(out),</div>
-<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>                        <span class="stringliteral">&quot;{:#x}&quot;</span>,</div>
-<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>                        to_dump(*iter++));</div>
-<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span> </div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>                    <span class="keywordflow">for</span> (; iter != end; ++iter)</div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>                    {</div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>                        out = format::format_to(</div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>                            std::move(out),</div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>                            <span class="stringliteral">&quot;, {:#x}&quot;</span>,</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>                            to_dump(*iter));</div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>                    }</div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>                }</div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>            }</div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span> </div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>            <span class="keywordflow">return</span> format::format_to(std::move(out), <span class="stringliteral">&quot;\&quot;&quot;</span>);</div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>        }</div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>    };</div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>}</div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span> </div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>{</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno"><a class="line" href="../../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c">  604</a></span>    [[maybe_unused]] <span class="keyword">inline</span> <span class="keyword">constexpr</span> detail::PrintFn <a class="code hl_variable" href="../../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c">print</a>{};</div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span> </div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>}</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span> </div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>                    <span class="keyword">using </span>intermediate_t = <a class="code hl_typedef" href="../../db/d34/group___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e.html#gab237aa1f72f47b22bdef3f3667370dfc">uint_with_size_t&lt;sizeof c&gt;</a>;</div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>                    <span class="keywordflow">return</span> std::bit_cast&lt;intermediate_t&gt;(c);</div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>                };</div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>                </div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span> </div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>                <span class="keyword">auto</span> view = string_traits&lt;std::remove_cvref_t&lt;T&gt;&gt;::view(std::forward&lt;T&gt;(str));</div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>                <span class="keyword">auto</span> iter = std::ranges::begin(view);</div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>                <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> end = std::ranges::end(view);</div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>                    iter != end)</div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>                {</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>                    out = format::format_to(</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>                        std::move(out),</div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>                        <span class="stringliteral">&quot;{:#x}&quot;</span>,</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>                        to_dump(*iter++));</div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span> </div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>                    <span class="keywordflow">for</span> (; iter != end; ++iter)</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>                    {</div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>                        out = format::format_to(</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>                            std::move(out),</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>                            <span class="stringliteral">&quot;, {:#x}&quot;</span>,</div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>                            to_dump(*iter));</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>                    }</div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>                }</div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>            }</div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span> </div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>            <span class="keywordflow">return</span> format::format_to(std::move(out), <span class="stringliteral">&quot;\&quot;&quot;</span>);</div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>        }</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>    };</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>}</div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span> </div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>{</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno"><a class="line" href="../../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c">  597</a></span>    [[maybe_unused]] <span class="keyword">inline</span> <span class="keyword">constexpr</span> detail::PrintFn <a class="code hl_variable" href="../../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c">print</a>{};</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span> </div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>}</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span> </div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_string_8hpp_html"><div class="ttname"><a href="../../d9/dc5/_string_8hpp.html">String.hpp</a></div></div>
 <div class="ttc" id="a_type_traits_8hpp_html"><div class="ttname"><a href="../../d8/d32/_type_traits_8hpp.html">TypeTraits.hpp</a></div></div>
@@ -667,7 +660,7 @@ $(function(){initNavTree('da/dab/_printer_8hpp_source.html','../../'); initResiz
 <div class="ttc" id="aclassmimicpp_1_1custom_1_1_printer_html"><div class="ttname"><a href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">mimicpp::custom::Printer</a></div><div class="ttdoc">User may add specializations, which will then be used during print calls.</div><div class="ttdef"><b>Definition</b> Printer.hpp:231</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1print__iterator_html"><div class="ttname"><a href="../../d3/d26/conceptmimicpp_1_1print__iterator.html">mimicpp::print_iterator</a></div><div class="ttdef"><b>Definition</b> Printer.hpp:44</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1printer__for_html"><div class="ttname"><a href="../../de/dfc/conceptmimicpp_1_1printer__for.html">mimicpp::printer_for</a></div><div class="ttdef"><b>Definition</b> Printer.hpp:47</div></div>
-<div class="ttc" id="agroup___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n_html_ga67aaa7bdf2da1595ab1b25059119242c"><div class="ttname"><a href="../../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a></div><div class="ttdeci">constexpr detail::PrintFn print</div><div class="ttdoc">Functional object, converting the given object to its textual representation.</div><div class="ttdef"><b>Definition</b> Printer.hpp:604</div></div>
+<div class="ttc" id="agroup___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n_html_ga67aaa7bdf2da1595ab1b25059119242c"><div class="ttname"><a href="../../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a></div><div class="ttdeci">constexpr detail::PrintFn print</div><div class="ttdoc">Functional object, converting the given object to its textual representation.</div><div class="ttdef"><b>Definition</b> Printer.hpp:597</div></div>
 <div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x_html_gafee032e0ba91429f52ac96404738b146"><div class="ttname"><a href="../../dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#gafee032e0ba91429f52ac96404738b146">mimicpp::string_literal_prefix</a></div><div class="ttdeci">constexpr StringViewT string_literal_prefix</div><div class="ttdoc">Primary template, yielding an empty string.</div><div class="ttdef"><b>Definition</b> String.hpp:198</div></div>
 <div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s_html_ga104833088686c7c65b347792d9d608d4"><div class="ttname"><a href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4">mimicpp::string_char_t</a></div><div class="ttdeci">typename string_traits&lt; std::remove_cvref_t&lt; T &gt; &gt;::char_t string_char_t</div><div class="ttdoc">Computes the character type for the given string.</div><div class="ttdef"><b>Definition</b> String.hpp:260</div></div>
 <div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e_html_gab237aa1f72f47b22bdef3f3667370dfc"><div class="ttname"><a href="../../db/d34/group___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e.html#gab237aa1f72f47b22bdef3f3667370dfc">mimicpp::uint_with_size_t</a></div><div class="ttdeci">typename uint_with_size&lt; byteCount &gt;::type uint_with_size_t</div><div class="ttdoc">Convenience constant, exposing the value member of the actual type-trait.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:162</div></div>

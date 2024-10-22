@@ -1,7 +1,7 @@
 var searchData=
 [
   ['a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
-  ['a_20word_20on_20sequences_20with_20times_1',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md23',1,'']]],
+  ['a_20word_20on_20sequences_20with_20times_1',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md19',1,'']]],
   ['acknowledgement_2',['Special Acknowledgement',['../index.html#autotoc_md44',1,'']]],
   ['adapters_3',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['add_5foverload_4',['ADD_OVERLOAD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098',1,'InterfaceMock.hpp']]],
@@ -11,7 +11,7 @@ var searchData=
   ['and_20assignment_20operator_8',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
   ['and_20char_20types_9',['Bring your own string- and char-types',['../index.html#autotoc_md50',1,'']]],
   ['and_20mostly_20macro_20free_20mocking_20framework_10',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
-  ['and_20related_20strings_11',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md19',1,'']]],
+  ['and_20related_20strings_11',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md21',1,'']]],
   ['any_12',['any',['../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any'],['../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any']]],
   ['apply_5fall_13',['apply_all',['../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga1115bba8873d79b6492ad72f1051e22d',1,'mimicpp::then']]],
   ['apply_5farg_14',['apply_arg',['../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga51b593416fa39d20f134216c56ab518f',1,'mimicpp::then']]],
