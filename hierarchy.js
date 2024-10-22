@@ -193,6 +193,11 @@ var hierarchy =
     [ "std::tuple_element", null, [
       [ "mimicpp::signature_param_type< index, Return(Params...)>", "d0/d24/structmimicpp_1_1signature__param__type_3_01index_00_01_return_07_params_8_8_8_08_4.html", null ]
     ] ],
+    [ "mimicpp::uint_with_size< byteCount >", "d7/da0/structmimicpp_1_1uint__with__size.html", null ],
+    [ "mimicpp::uint_with_size< 1u >", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html", null ],
+    [ "mimicpp::uint_with_size< 2u >", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html", null ],
+    [ "mimicpp::uint_with_size< 4u >", "d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html", null ],
+    [ "mimicpp::uint_with_size< 8u >", "d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html", null ],
     [ "Watchers...", null, [
       [ "mimicpp::detail::CombinedWatchers< Base, Watchers... >", null, [
         [ "mimicpp::detail::BasicWatched< Base, Watchers... >", null, null ]

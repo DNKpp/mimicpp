@@ -10,6 +10,8 @@ var _fwd_8hpp =
     [ "signature_remove_noexcept_t", "df/dde/_fwd_8hpp.html#ga1944b7b7ba7e20b04cfe5849d6a73df9", null ],
     [ "signature_return_type_t", "df/dde/_fwd_8hpp.html#gab7dbe7ae4fb93753e7e24603b98f9c5c", null ],
     [ "StringT", "df/dde/_fwd_8hpp.html#afd8074742a9c25b893fcdfe534b912e1", null ],
+    [ "StringViewT", "df/dde/_fwd_8hpp.html#afa212d98f2d4a7016c05d3e9171431c6", null ],
+    [ "uint_with_size_t", "df/dde/_fwd_8hpp.html#gab237aa1f72f47b22bdef3f3667370dfc", null ],
     [ "Constness", "df/dde/_fwd_8hpp.html#a96efa41dafaf424bc936fc152467feb1", [
       [ "non_const", "df/dde/_fwd_8hpp.html#a96efa41dafaf424bc936fc152467feb1af831ec98a5b99889012f4b32fbeb1929", null ],
       [ "as_const", "df/dde/_fwd_8hpp.html#a96efa41dafaf424bc936fc152467feb1a7d8fbf6968b41f059fd98dfa87dc47c2", null ],
