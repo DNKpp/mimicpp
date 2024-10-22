@@ -471,57 +471,6 @@ namespace mimicpp::detail
 		}
 	};
 
-	template <satisfies<is_character> Char>
-	struct character_literal_printer
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out) noexcept
-		{
-			// no special character-literal
-			return out;
-		}
-	};
-
-	template <>
-	struct character_literal_printer<wchar_t>
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out)
-		{
-			return format::format_to(std::move(out), "L");
-		}
-	};
-
-	template <>
-	struct character_literal_printer<char8_t>
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out)
-		{
-			return format::format_to(std::move(out), "u8");
-		}
-	};
-
-	template <>
-	struct character_literal_printer<char16_t>
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out)
-		{
-			return format::format_to(std::move(out), "u");
-		}
-	};
-
-	template <>
-	struct character_literal_printer<char32_t>
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out)
-		{
-			return format::format_to(std::move(out), "U");
-		}
-	};
-
 	template <string String>
 	class Printer<String>
 	{
@@ -529,7 +478,15 @@ namespace mimicpp::detail
 		template <std::common_reference_with<String> T, print_iterator OutIter>
 		static OutIter print(OutIter out, T&& str)
 		{
-			out = character_literal_printer<string_char_t<String>>::print(std::move(out));
+			if constexpr (constexpr auto prefix = string_literal_prefix<string_char_t<String>>;
+				!std::ranges::empty(prefix))
+			{
+				out = out = format::format_to(
+						std::move(out),
+						"{}",
+						prefix);
+			}
+			
 			out = format::format_to(std::move(out), "\"");
 
 			if constexpr (format::detail::formattable<String, CharT>)

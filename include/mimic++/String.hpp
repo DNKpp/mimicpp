@@ -178,6 +178,63 @@ namespace mimicpp
 	 */
 
 	/**
+	 * \defgroup TYPE_TRAITS_STRING_LITERAL_PREFIX string_literal_prefix
+	 * \ingroup STRING
+	 * \ingroup TYPE_TRAITS
+	 * \brief Yields the printable prefix for any char-type.
+	 * \note Users may add specializations for their custom types as desired.
+	 *
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, yielding an empty string.
+	 * \tparam Char The char-type.
+	 */
+	template <satisfies<is_character> Char>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix{};
+
+	/**
+	 * \brief ``char`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<char>{};
+
+	/**
+	 * \brief ``wchar_t`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<wchar_t>{"L"};
+
+	/**
+	 * \brief ``char8_t`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<char8_t>{"u8"};
+
+	/**
+	 * \brief ``char16_t`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<char16_t>{"u"};
+
+	/**
+	 * \brief ``char32_t`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<char32_t>{"U"};
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup TYPE_TRAITS_STRING_TRAITS string_traits
 	 * \ingroup STRING
 	 * \ingroup TYPE_TRAITS

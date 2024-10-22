@@ -38,6 +38,73 @@ TEMPLATE_TEST_CASE_SIG(
 
 namespace
 {
+	class CustomCharWithLiteral
+	{
+	};
+
+	class CustomCharWithoutLiteral
+	{
+	};
+}
+
+template <>
+struct mimicpp::is_character<CustomCharWithLiteral>
+	: std::true_type
+{
+};
+
+template <>
+inline constexpr StringViewT mimicpp::string_literal_prefix<CustomCharWithLiteral>{"Custom"};
+
+template <>
+struct mimicpp::is_character<CustomCharWithoutLiteral>
+	: std::true_type
+{
+};
+
+TEST_CASE(
+	"string_literal_prefix yields the printable string-literal prefix for the given char-type.",
+	"[string][string::traits]"
+)
+{
+	SECTION("For char.")
+	{
+		STATIC_REQUIRE(StringViewT{} == string_literal_prefix<char>);
+	}
+
+	SECTION("For wchar_t.")
+	{
+		STATIC_REQUIRE(StringViewT{"L"} == string_literal_prefix<wchar_t>);
+	}
+
+	SECTION("For char8_t.")
+	{
+		STATIC_REQUIRE(StringViewT{"u8"} == string_literal_prefix<char8_t>);
+	}
+
+	SECTION("For char16_t.")
+	{
+		STATIC_REQUIRE(StringViewT{"u"} == string_literal_prefix<char16_t>);
+	}
+
+	SECTION("For char32_t.")
+	{
+		STATIC_REQUIRE(StringViewT{"U"} == string_literal_prefix<char32_t>);
+	}
+
+	SECTION("For custom types without literal specialization.")
+	{
+		STATIC_REQUIRE(StringViewT{} == string_literal_prefix<CustomCharWithoutLiteral>);
+	}
+
+	SECTION("For custom types with literal specialization.")
+	{
+		STATIC_REQUIRE(StringViewT{"Custom"} == string_literal_prefix<CustomCharWithLiteral>);
+	}
+}
+
+namespace
+{
 	class CustomString
 	{
 	public:
