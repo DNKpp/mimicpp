@@ -637,7 +637,7 @@ namespace mimicpp
 	/**
 	 * \brief Functional object, converting the given object to its textual representation.
 	 */
-	inline constexpr detail::PrintFn print{};
+	[[maybe_unused]] inline constexpr detail::PrintFn print{};
 
 	/**
 	 * \}
