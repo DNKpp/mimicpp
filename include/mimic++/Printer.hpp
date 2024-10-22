@@ -500,7 +500,10 @@ namespace mimicpp::detail
 					"{}",
 					string_traits<String>::view(str));
 			}
-			else if constexpr (format::detail::formattable<string_char_t<String>, CharT>)
+			// I would rather test for format::detail::formattable<string_char_t<String>, CharT>,
+			// but unfortunately on some gcc versions, char8_t is formattable, but gets simply printed as
+			// integral values.
+			else if constexpr (std::same_as<CharT, string_char_t<String>>)
 			{
 				for (const string_char_t<String>& c : string_traits<String>::view(str))
 				{
@@ -518,7 +521,12 @@ namespace mimicpp::detail
 			}
 			else
 			{
-				using intermediate_t = uint_with_size_t<sizeof(string_char_t<String>)>;
+				constexpr auto to_dump = [](const string_char_t<String>& c) noexcept
+				{
+					using intermediate_t = uint_with_size_t<sizeof c>;
+					return std::bit_cast<intermediate_t>(c);
+				};
+				
 
 				auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
 				auto iter = std::ranges::begin(view);
@@ -528,14 +536,14 @@ namespace mimicpp::detail
 					out = format::format_to(
 						std::move(out),
 						"{:#x}",
-						std::bit_cast<intermediate_t>(*iter++));
+						to_dump(*iter++));
 
 					for (; iter != end; ++iter)
 					{
 						out = format::format_to(
 							std::move(out),
 							", {:#x}",
-							std::bit_cast<intermediate_t>(*iter));
+							to_dump(*iter));
 					}
 				}
 			}
