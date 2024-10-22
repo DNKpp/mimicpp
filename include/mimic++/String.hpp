@@ -68,6 +68,8 @@ namespace mimicpp
 	 * just as comma separated hex-values, because ``mimic++`` doesn't know yet, how to print the underlying char-type.
 	 * This can easily be fixed by proving a ``custom::Printer`` specialization for that particular char-type.
 	 * \note Proving a custom printer for the char-type is enough, to make any related string type printable, too.
+	 * \note ``mimic++`` prints all strings with a literal prefix. This depends on the underlying char-type and can be customized by
+	 * adding a specialization to \ref string_literal_prefix for any user char-type.
 	 *
 	 * ### Support for case-insensitive matching
 	 *
