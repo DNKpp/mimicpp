@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"d4/d56/classmimicpp_1_1_basic_reporter.html":[1,4,4],
 "d4/d56/classmimicpp_1_1_basic_reporter.html#a267bcc67f5b470b69cc8e6a1c3ad13f9":[1,4,4,0],
 "d4/d56/classmimicpp_1_1_basic_reporter.html#a47014f2aa98737fa525ea86f2a51a697":[1,4,4,1],
 "d4/d56/classmimicpp_1_1_basic_reporter.html#a6ebc62f6798303bcd2f24cb92c496ffe":[1,4,4,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html":[2,0,0,41],
 "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html":[4,0,0,37],
 "d9/da7/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6noexcept_01_4.html":[1,7,4,21],
-"d9/da7/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6noexcept_01_4.html#a2c9e21ff926d03687b0a3bb0ef0f87b9":[1,7,4,21,0],
-"d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4.html":[1,7,3,9]
+"d9/da7/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6noexcept_01_4.html#a2c9e21ff926d03687b0a3bb0ef0f87b9":[1,7,4,21,0]
 };

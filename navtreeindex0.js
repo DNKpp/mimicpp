@@ -165,12 +165,13 @@ var NAVTREEINDEX0 =
 "d3/d26/conceptmimicpp_1_1print__iterator.html":[2,0,0,150],
 "d3/d26/conceptmimicpp_1_1print__iterator.html":[3,0,5],
 "d3/d32/classmimicpp_1_1_default_reporter.html":[1,4,5],
-"d3/d32/classmimicpp_1_1_default_reporter.html#a4b806ba57d5927f105fb21012d1a8efd":[1,4,5,5],
-"d3/d32/classmimicpp_1_1_default_reporter.html#a4cf5585d694574f981fc28ff32b681bb":[1,4,5,3],
-"d3/d32/classmimicpp_1_1_default_reporter.html#a88bedfb2796b50bbc2ae87619a1da78e":[1,4,5,0],
-"d3/d32/classmimicpp_1_1_default_reporter.html#a963da36bfc5ae093c1a7e0235a9c20e0":[1,4,5,4],
-"d3/d32/classmimicpp_1_1_default_reporter.html#aa3deac0dcae94228fa4d2e0783704e99":[1,4,5,1],
-"d3/d32/classmimicpp_1_1_default_reporter.html#ae2852c4de013b287c48cdacc11059c21":[1,4,5,2],
+"d3/d32/classmimicpp_1_1_default_reporter.html#a223bb3a102529cd47671e5494a45e2f6":[1,4,5,6],
+"d3/d32/classmimicpp_1_1_default_reporter.html#a4cf5585d694574f981fc28ff32b681bb":[1,4,5,4],
+"d3/d32/classmimicpp_1_1_default_reporter.html#a5b6522823c7f7aa460ad5a14b91ada2e":[1,4,5,0],
+"d3/d32/classmimicpp_1_1_default_reporter.html#a963da36bfc5ae093c1a7e0235a9c20e0":[1,4,5,5],
+"d3/d32/classmimicpp_1_1_default_reporter.html#a9da4786c6fa8d7ade3995bffec348ac5":[1,4,5,2],
+"d3/d32/classmimicpp_1_1_default_reporter.html#acff04803d6f5f84bc4a42c6f6d3c79bc":[1,4,5,1],
+"d3/d32/classmimicpp_1_1_default_reporter.html#ae2852c4de013b287c48cdacc11059c21":[1,4,5,3],
 "d3/d35/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01noexcept_01_4.html":[1,7,7,8],
 "d3/d35/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01noexcept_01_4.html#a8219effd25c8593a5abb4e1f50e9aabf":[1,7,7,8,0],
 "d3/d4a/classmimicpp_1_1_basic_expectation.html":[1,0,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#af7ddcdd3d51f651ba3287aec804ec18f":[2,0,0,3,2,1],
 "d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#af7ddcdd3d51f651ba3287aec804ec18f":[4,0,0,2,2,1],
 "d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#afdbfde04d2e9d7785ee959873be8d650":[2,0,0,3,2,3],
-"d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#afdbfde04d2e9d7785ee959873be8d650":[4,0,0,2,2,3],
-"d4/d56/classmimicpp_1_1_basic_reporter.html":[1,4,4]
+"d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#afdbfde04d2e9d7785ee959873be8d650":[4,0,0,2,2,3]
 };
