@@ -75,7 +75,7 @@ namespace mimicpp
 	 *
 	 * As stated in the string-matcher section, case-insensitive-matching requires some sort of case-folding.
 	 * For ``ascii``-like strings a common strategy is to simply convert all characters to upper-case before the actual comparison.
-	 * For wide-chars and unicode this is definitely more complex, if it shall be done correctly.
+	 * For wide-chars and Unicode this is definitely more complex, if it shall be done correctly.
 	 * Nevertheless, users can provide their own strategy how to perform the case-folding by simply specializing the ``string_case_fold_converter``
 	 * trait. For the ``my_char`` from above, this may look like follows:
 	 * \snippet CustomString.cpp custom_char case-folding
