@@ -489,26 +489,19 @@ namespace mimicpp::detail
 			
 			out = format::format_to(std::move(out), "\"");
 
-			if constexpr (format::detail::formattable<String, CharT>)
+			// By definition, the string concepts requires the view type to be sized and contiguous.
+			// For simplicity, let's always manually convert the view type to an actual std::string_view,
+			// which is formattable for sure.
+			if constexpr (std::same_as<CharT, string_char_t<String>>)
 			{
-				out = format::format_to(std::move(out), "{}", str);
-			}
-			else if constexpr (format::detail::formattable<string_view_t<String>, CharT>)
-			{
+				auto view = string_traits<String>::view(str);
 				out = format::format_to(
 					std::move(out),
 					"{}",
-					string_traits<String>::view(str));
-			}
-			// I would rather test for format::detail::formattable<string_char_t<String>, CharT>,
-			// but unfortunately on some gcc versions, char8_t is formattable, but gets simply printed as
-			// integral values.
-			else if constexpr (std::same_as<CharT, string_char_t<String>>)
-			{
-				for (const string_char_t<String>& c : string_traits<String>::view(str))
-				{
-					out = format::format_to(std::move(out), "{}", c);
-				}
+					StringViewT{
+						std::ranges::data(view),
+						std::ranges::size(view)
+					});
 			}
 			// required for custom char types
 			else if constexpr (printer_for<custom::Printer<string_char_t<String>>, OutIter, string_char_t<String>>)
