@@ -17,6 +17,7 @@
 #include <cassert>
 #include <exception>
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <ranges>
@@ -412,6 +413,12 @@ namespace mimicpp
 		: public IReporter
 	{
 	public:
+		[[nodiscard]]
+		explicit DefaultReporter(std::ostream* out = nullptr) noexcept
+			: m_Out{out}
+		{
+		}
+
 		[[noreturn]]
 		void report_no_matches(
 			CallReport call,
@@ -424,9 +431,15 @@ namespace mimicpp
 					std::bind_front(std::equal_to{}, MatchResult::none),
 					&evaluate_match_report));
 
+			const auto msg = detail::stringify_no_match_report(call, matchReports);
+			if (m_Out)
+			{
+				*m_Out << msg << '\n';
+			}
+
 			const std::source_location loc{call.fromLoc};
 			throw UnmatchedCallT{
-				"No match found.",
+				msg,
 				{std::move(call), std::move(matchReports)},
 				loc
 			};
@@ -444,17 +457,23 @@ namespace mimicpp
 					std::bind_front(std::equal_to{}, MatchResult::inapplicable),
 					&evaluate_match_report));
 
+			const auto msg = detail::stringify_inapplicable_match_report(call, matchReports);
+			if (m_Out)
+			{
+				*m_Out << msg << '\n';
+			}
+
 			const std::source_location loc{call.fromLoc};
 			throw UnmatchedCallT{
-				"No applicable match found.",
+				msg,
 				{std::move(call), std::move(matchReports)},
 				loc
 			};
 		}
 
 		void report_full_match(
-			[[maybe_unused]] CallReport call,
-			[[maybe_unused]] MatchReport matchReport
+			[[maybe_unused]] const CallReport call,
+			[[maybe_unused]] const MatchReport matchReport
 		) noexcept override
 		{
 			assert(MatchResult::full == evaluate_match_report(matchReport));
@@ -466,28 +485,47 @@ namespace mimicpp
 		{
 			if (0 == std::uncaught_exceptions())
 			{
+				const auto msg = detail::stringify_unfulfilled_expectation(expectationReport);
+				if (m_Out)
+				{
+					*m_Out << msg << '\n';
+				}
+
 				throw UnfulfilledExpectationT{
-					"Expectation is unfulfilled.",
+					msg,
 					std::move(expectationReport)
 				};
 			}
 		}
 
-		void report_error(StringT message) override
+		void report_error(const StringT message) override
 		{
 			if (0 == std::uncaught_exceptions())
 			{
+				if (m_Out)
+				{
+					*m_Out << message << '\n';
+				}
+
 				throw Error{message};
 			}
 		}
 
 		void report_unhandled_exception(
-			[[maybe_unused]] CallReport call,
-			[[maybe_unused]] ExpectationReport expectationReport,
-			[[maybe_unused]] std::exception_ptr exception
+			const CallReport call,
+			const ExpectationReport expectationReport,
+			const std::exception_ptr exception
 		) override
 		{
+			if (m_Out)
+			{
+				*m_Out << detail::stringify_unhandled_exception(call, expectationReport, exception)
+					<< '\n';
+			}
 		}
+
+	private:
+		std::ostream* m_Out;
 	};
 
 	/**
@@ -501,7 +539,7 @@ namespace mimicpp::detail
 	inline std::unique_ptr<IReporter>& get_reporter() noexcept
 	{
 		static std::unique_ptr<IReporter> reporter{
-			std::make_unique<DefaultReporter>()
+			std::make_unique<DefaultReporter>(&std::cerr)
 		};
 		return reporter;
 	}

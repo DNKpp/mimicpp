@@ -152,7 +152,9 @@ TEST_CASE(
 
 	const CallReport callReport{
 		.returnTypeIndex = typeid(void),
-		.fromLoc = std::source_location::current()
+		.fromLoc = std::source_location::current(),
+		.fromCategory = ValueCategory::any,
+		.fromConstness = Constness::any
 	};
 
 	SECTION("When none matches are reported, UnmatchedCallT is thrown.")
