@@ -190,27 +190,14 @@ namespace mimicpp
 		std::source_location m_Loc;
 	};
 
-	/**
-	 * \brief A reporter, which creates text messages and reports them via the provided callbacks.
-	 * \tparam successReporter The success reporter callback.
-	 * \tparam warningReporter The warning reporter callback.
-	 * \tparam failReporter The fail reporter callback. This reporter must never return!
-	 */
-	template <
-		std::invocable<const StringT&> auto successReporter,
-		std::invocable<const StringT&> auto warningReporter,
-		std::invocable<const StringT&> auto failReporter
-	>
-	class BasicReporter
-		: public IReporter
+	namespace detail
 	{
-	public:
-		[[noreturn]]
-		void report_no_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
+		[[nodiscard]]
+		inline StringT stringify_no_match_report(const CallReport& call, const std::span<const MatchReport> matchReports)
 		{
 			StringStreamT ss{};
 			ss << "No match for ";
-			print(
+			mimicpp::print(
 				std::ostreambuf_iterator{ss},
 				call);
 			ss << "\n";
@@ -228,22 +215,22 @@ namespace mimicpp
 
 				for (const auto& report : matchReports)
 				{
-					print(
+					mimicpp::print(
 						std::ostreambuf_iterator{ss},
 						report);
 					ss << "\n";
 				}
 			}
 
-			send_fail(std::move(ss).str());
+			return std::move(ss).str();
 		}
 
-		[[noreturn]]
-		void report_inapplicable_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
+		[[nodiscard]]
+		inline StringT stringify_inapplicable_match_report(const CallReport& call, const std::span<const MatchReport> matchReports)
 		{
 			StringStreamT ss{};
 			ss << "No applicable match for ";
-			print(
+			mimicpp::print(
 				std::ostreambuf_iterator{ss},
 				call);
 			ss << "\n";
@@ -251,60 +238,52 @@ namespace mimicpp
 			ss << "Tested expectations:\n";
 			for (const auto& report : matchReports)
 			{
-				print(
+				mimicpp::print(
 					std::ostreambuf_iterator{ss},
 					report);
 				ss << "\n";
 			}
 
-			send_fail(std::move(ss).str());
+			return std::move(ss).str();
 		}
 
-		void report_full_match(const CallReport call, const MatchReport matchReport) noexcept override
+		[[nodiscard]]
+		inline StringT stringify_report(const CallReport& call, const MatchReport& matchReport)
 		{
 			StringStreamT ss{};
 			ss << "Found match for ";
-			print(
+			mimicpp::print(
 				std::ostreambuf_iterator{ss},
 				call);
 			ss << "\n";
 
-			print(
+			mimicpp::print(
 				std::ostreambuf_iterator{ss},
 				matchReport);
 			ss << "\n";
 
-			send_success(std::move(ss).str());
+			return std::move(ss).str();
 		}
 
-		void report_unfulfilled_expectation(const ExpectationReport expectationReport) override
+		[[nodiscard]]
+		inline StringT stringify_unfulfilled_expectation(const ExpectationReport& expectationReport)
 		{
-			if (0 == std::uncaught_exceptions())
-			{
-				StringStreamT ss{};
-				ss << "Unfulfilled expectation:\n";
-				print(
-					std::ostreambuf_iterator{ss},
-					expectationReport);
-				ss << "\n";
+			StringStreamT ss{};
+			ss << "Unfulfilled expectation:\n";
+			mimicpp::print(
+				std::ostreambuf_iterator{ss},
+				expectationReport);
+			ss << "\n";
 
-				send_fail(std::move(ss).str());
-			}
+			return std::move(ss).str();
 		}
 
-		void report_error(const StringT message) override
-		{
-			if (0 == std::uncaught_exceptions())
-			{
-				send_fail(message);
-			}
-		}
-
-		void report_unhandled_exception(
-			const CallReport call,
-			const ExpectationReport expectationReport,
-			const std::exception_ptr exception
-		) override
+		[[nodiscard]]
+		inline StringT stringify_unhandled_exception(
+			const CallReport& call,
+			const ExpectationReport& expectationReport,
+			const std::exception_ptr& exception
+		)
 		{
 			StringStreamT ss{};
 			ss << "Unhandled exception: ";
@@ -325,18 +304,81 @@ namespace mimicpp
 			}
 
 			ss << "while checking expectation:\n";
-			print(
+			mimicpp::print(
 				std::ostreambuf_iterator{ss},
 				expectationReport);
 			ss << "\n";
 
 			ss << "For ";
-			print(
+			mimicpp::print(
 				std::ostreambuf_iterator{ss},
 				call);
 			ss << "\n";
 
-			send_warning(std::move(ss).str());
+			return std::move(ss).str();
+		}
+	}
+
+	/**
+	 * \brief A reporter, which creates text messages and reports them via the provided callbacks.
+	 * \tparam successReporter The success reporter callback.
+	 * \tparam warningReporter The warning reporter callback.
+	 * \tparam failReporter The fail reporter callback. This reporter must never return!
+	 */
+	template <
+		std::invocable<const StringT&> auto successReporter,
+		std::invocable<const StringT&> auto warningReporter,
+		std::invocable<const StringT&> auto failReporter
+	>
+	class BasicReporter
+		: public IReporter
+	{
+	public:
+		[[noreturn]]
+		void report_no_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
+		{
+			send_fail(
+				detail::stringify_no_match_report(call, matchReports));
+		}
+
+		[[noreturn]]
+		void report_inapplicable_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
+		{
+			send_fail(
+				detail::stringify_inapplicable_match_report(call, matchReports));
+		}
+
+		void report_full_match(const CallReport call, const MatchReport matchReport) noexcept override
+		{
+			send_success(
+				detail::stringify_report(call, matchReport));
+		}
+
+		void report_unfulfilled_expectation(const ExpectationReport expectationReport) override
+		{
+			if (0 == std::uncaught_exceptions())
+			{
+				send_fail(
+					detail::stringify_unfulfilled_expectation(expectationReport));
+			}
+		}
+
+		void report_error(const StringT message) override
+		{
+			if (0 == std::uncaught_exceptions())
+			{
+				send_fail(message);
+			}
+		}
+
+		void report_unhandled_exception(
+			const CallReport call,
+			const ExpectationReport expectationReport,
+			const std::exception_ptr exception
+		) override
+		{
+			send_warning(
+				detail::stringify_unhandled_exception(call, expectationReport, exception));
 		}
 
 	private:
