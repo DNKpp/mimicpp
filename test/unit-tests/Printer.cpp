@@ -548,6 +548,7 @@ TEST_CASE(
 
 		SECTION("And MyString can be printed.")
 		{
+			stream = StringStreamT{};	// clang-16 with libc++ doesn't clear by str()&&
 			STATIC_REQUIRE(string<MyString>);
 
 			print(
