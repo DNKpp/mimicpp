@@ -327,6 +327,12 @@ The expectation policy has full control, whether a match can be made or shall be
 (like returning a value or throwing an exception). They can implement arbitrary logic, so feel free to experiment. There is no base type requirement,
 they simply have to satisfy either the ``mimicpp::expectation_policy_for``, ``mimicpp::control_policy`` or ``mimicpp::finalize_policy_for``.
 
+### Bring your own string- and char-types
+
+If you are working with a huge framework, chances are good, that this framework utilizes a custom string- or even char-type (like ``QChar`` and ``QString`` from Qt).
+They may look different, but in fact they are just strings, so it would be nice to make them fully compatible with the existing string-matchers.
+``mimic++`` supports that, users just have to provide some trait-specializations. For more infos, have a loook into the string section of the doxygen documentation.
+
 ---
 
 ## Documentation
