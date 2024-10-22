@@ -38,7 +38,6 @@
 
 namespace mimicpp
 {
-	using StringViewT = std::basic_string_view<CharT, CharTraitsT>;
 	using StringStreamT = std::basic_ostringstream<CharT, CharTraitsT>;
 
 	template <typename T>

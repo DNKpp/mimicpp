@@ -9,6 +9,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 
 namespace mimicpp::call
 {
@@ -204,6 +205,7 @@ namespace mimicpp
 	using CharT = char;
 	using CharTraitsT = std::char_traits<CharT>;
 	using StringT = std::basic_string<CharT, CharTraitsT>;
+	using StringViewT = std::basic_string_view<CharT, CharTraitsT>;
 }
 
 namespace mimicpp::sequence
