@@ -69,7 +69,7 @@ TEST_CASE(
 {
 	SECTION("For char.")
 	{
-		STATIC_REQUIRE(StringViewT{} == string_literal_prefix<char>);
+		STATIC_REQUIRE(string_literal_prefix<char>.empty());
 	}
 
 	SECTION("For wchar_t.")
@@ -94,7 +94,7 @@ TEST_CASE(
 
 	SECTION("For custom types without literal specialization.")
 	{
-		STATIC_REQUIRE(StringViewT{} == string_literal_prefix<CustomCharWithoutLiteral>);
+		STATIC_REQUIRE(string_literal_prefix<CustomCharWithoutLiteral>.empty());
 	}
 
 	SECTION("For custom types with literal specialization.")
