@@ -10,6 +10,7 @@
 #include <catch2/trompeloeil.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
+#include <catch2/matchers/catch_matchers_container_properties.hpp>
 
 #include "SuppressionMacros.hpp"
 #include "TestTypes.hpp"
@@ -148,7 +149,16 @@ TEST_CASE(
 	"[reporting]"
 )
 {
-	DefaultReporter reporter{};
+	namespace Matches = Catch::Matchers;
+
+	const bool enabledOStream = GENERATE(true, false);
+	std::unique_ptr<StringStreamT> out{
+		enabledOStream ? new StringStreamT{} : nullptr
+	};
+
+	DefaultReporter reporter{
+		out.get()
+	};
 
 	const CallReport callReport{
 		.returnTypeIndex = typeid(void),
@@ -169,6 +179,13 @@ TEST_CASE(
 					})
 				}),
 			UnmatchedCallT);
+
+		CHECKED_IF(out)
+		{
+			REQUIRE_THAT(
+				out->str(),
+				Matches::StartsWith("No match for"));
+		}
 	}
 
 	SECTION("When inapplicable matches are reported, UnmatchedCallT is thrown.")
@@ -178,6 +195,13 @@ TEST_CASE(
 				callReport,
 				{MatchReport{.controlReport = mimicpp::state_inapplicable{1, 1, 1}}}),
 			UnmatchedCallT);
+
+		CHECKED_IF(out)
+		{
+			REQUIRE_THAT(
+				out->str(),
+				Matches::StartsWith("No applicable match for"));
+		}
 	}
 
 	SECTION("When match is reported, nothing is done.")
@@ -186,6 +210,13 @@ TEST_CASE(
 			reporter.report_full_match(
 				callReport,
 				MatchReport{.controlReport = mimicpp::state_applicable{1, 1, 0}}));
+
+		CHECKED_IF(out)
+		{
+			REQUIRE_THAT(
+				out->str(),
+				Matches::IsEmpty());
+		}
 	}
 
 	SECTION("When unfulfilled expectation is reported.")
@@ -195,6 +226,13 @@ TEST_CASE(
 			REQUIRE_THROWS_AS(
 				reporter.report_unfulfilled_expectation({}),
 				UnfulfilledExpectationT);
+
+			CHECKED_IF(out)
+			{
+				REQUIRE_THAT(
+					out->str(),
+					Matches::StartsWith("Unfulfilled expectation:"));
+			}
 		}
 
 		SECTION("And when there exists an uncaught exception, nothing is done.")
@@ -218,6 +256,13 @@ TEST_CASE(
 			REQUIRE_THROWS_AS(
 				runTest(),
 				int);
+
+			CHECKED_IF(out)
+			{
+				REQUIRE_THAT(
+					out->str(),
+					Matches::IsEmpty());
+			}
 		}
 	}
 
@@ -228,6 +273,13 @@ TEST_CASE(
 			REQUIRE_THROWS_AS(
 				reporter.report_error({"Test"}),
 				Error<>);
+
+			CHECKED_IF(out)
+			{
+				REQUIRE_THAT(
+					out->str(),
+					Matches::StartsWith("Test"));
+			}
 		}
 
 		SECTION("And when there exists an uncaught exception, nothing is done.")
@@ -251,6 +303,13 @@ TEST_CASE(
 			REQUIRE_THROWS_AS(
 				runTest(),
 				int);
+
+			CHECKED_IF(out)
+			{
+				REQUIRE_THAT(
+					out->str(),
+					Matches::IsEmpty());
+			}
 		}
 	}
 
@@ -261,6 +320,13 @@ TEST_CASE(
 				callReport,
 				{},
 				std::make_exception_ptr(std::runtime_error{"Test"})));
+
+		CHECKED_IF(out)
+		{
+			REQUIRE_THAT(
+				out->str(),
+				Matches::StartsWith("Unhandled exception:"));
+		}
 	}
 }
 
