@@ -195,7 +195,7 @@ namespace mimicpp
 				m_Predicate,
 				m_InvertedFormatString,
 				m_FormatString,
-				std::move(m_AdditionalArgs));
+				m_AdditionalArgs);
 		}
 
 		[[nodiscard]]
@@ -212,7 +212,7 @@ namespace mimicpp
 		[[no_unique_address]] Predicate m_Predicate;
 		StringT m_FormatString;
 		StringT m_InvertedFormatString;
-		mutable std::tuple<AdditionalArgs...> m_AdditionalArgs{};
+		std::tuple<AdditionalArgs...> m_AdditionalArgs{};
 
 		template <typename Fn>
 		[[nodiscard]]
@@ -885,6 +885,21 @@ namespace mimicpp::matches::range
 			std::tuple{expected}
 		};
 	}
+
+	/*template <typename Matcher>
+	[[nodiscard]]
+	constexpr auto elements(Matcher&& matcher)
+	{
+		using MatcherT = std::remove_cvref_t<Matcher>;
+		return PredicateMatcher{
+			[](std::ranges::range auto&& target, const MatcherT& m)
+			{
+				return std::ranges::all_of(
+					target,
+					[&](const auto& element) { return m.matches(element); });
+			},
+			"all elements "
+	}*/
 
 	/**
 	 * \}
