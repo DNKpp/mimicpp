@@ -124,7 +124,7 @@ namespace mimicpp
 
 	namespace detail
 	{
-		template <typename Arg, typename MatchesProjection = std::identity, typename DescribeProjection = std::identity>
+		template <typename Arg, typename MatchesProjection = std::identity, typename DescribeProjection = PrintFn>
 		struct arg_storage
 		{
 			using matches_reference = std::invoke_result_t<MatchesProjection, const Arg&>;
@@ -225,7 +225,7 @@ namespace mimicpp
 							std::invoke(
 								// std::make_format_args requires lvalue-refs, so let's transform rvalue-refs to const lvalue-refs
 								[](auto&& val) noexcept -> const auto& { return val; },
-								mimicpp::print(additionalArgs.as_describe_arg()))
+								additionalArgs.as_describe_arg())
 							...));
 				},
 				m_AdditionalArgs);
@@ -931,6 +931,10 @@ namespace mimicpp::matches::range
 		};
 	}
 
+	/**
+	 * \brief Tests, whether the all elements of the target range match the specified matcher.
+	 * \param matcher The matcher.
+	 */
 	template <typename Matcher>
 	[[nodiscard]]
 	constexpr auto elements(Matcher&& matcher)
@@ -943,11 +947,11 @@ namespace mimicpp::matches::range
 					target,
 					[&](const auto& element) { return m.matches(element); });
 			},
-			"all elements matches: {}",
-			"not all elements matches: {}",
+			"each el in range: el {}",
+			"not each el in range: el {}",
 			std::tuple{
 				mimicpp::detail::arg_storage<
-					std::remove_cvref_t<Matcher>,
+					MatcherT,
 					std::identity,
 					decltype([](const auto& m) { return mimicpp::detail::describe_hook::describe(m); })>{
 					std::forward<MatcherT>(matcher)
