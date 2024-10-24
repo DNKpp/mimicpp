@@ -23,6 +23,65 @@ namespace mimicpp
 	/**
 	 * \defgroup STRING string
 	 * \brief Contains symbols for generic string processing.
+	 * \details There are plenty of different character-types and even more string-types out there.
+	 * They mostly differ in their details, but in general some common operations shall be applied (like equality- or
+	 * prefix-tests).
+	 * Therefore, ``mimic++`` offers various abstractions, which users can utilize to make their char- and string-types compatible with the framework,
+	 * and thus with all string-matchers.
+	 *
+	 * ## Custom Strings with common char-type
+	 *
+	 * Custom strings, which do use any of the common char-types (``char``, ``wchar_t``, ``char16_t``, etc.), can be made compatible in no time.
+	 * Users do just have to provide a specialization for the ``string_traits`` template:
+	 * Given the following string-type, which in fact is just an abstraction around a ``std::string``:
+	 * \snippet CustomString.cpp MyString
+	 *
+	 * To make it compatible with ``mimic++``, just that simple specialization is necessary:
+	 * \snippet CustomString.cpp MyString trait
+	 *
+	 * \note These types of strings are already printable by default, if the underlying char-type is ``formattable``.
+	 * \details
+	 * \snippet CustomString.cpp MyString example
+	 *
+	 * ## Custom char-types and related strings
+	 *
+	 * It is possible to make custom char-types (and strings which use those) compatible with ``mimic++``, but this requires quite some effort,
+	 * depending on the features you are planning to use.
+	 *
+	 * Given the following (``regular``) char-type
+	 * \snippet CustomString.cpp custom_char
+	 * and this string type:
+	 * \snippet CustomString.cpp custom_string
+	 *
+	 * At first, we have to tell ``mimic++``, that ``my_char`` is an actual char-type. This can be done by specializing the ``is_character``-trait.
+	 * \snippet CustomString.cpp custom_char trait
+	 *
+	 * Next, the ``string_traits`` must be specialized:
+	 * \snippet CustomString.cpp custom_string traits
+	 *
+	 * After that, the string can be used with any string matcher, but just with case-sensitive matching:
+	 * \snippet CustomString.cpp custom_string example
+	 *
+	 * ### Support for printing
+	 *
+	 * The current setup is already enough, that these strings can be printed. Unfortunately this will print the whole string
+	 * just as comma separated hex-values, because ``mimic++`` doesn't know yet, how to print the underlying char-type.
+	 * This can easily be fixed by proving a ``custom::Printer`` specialization for that particular char-type.
+	 * \note Proving a custom printer for the char-type is enough, to make any related string type printable, too.
+	 * \note ``mimic++`` prints all strings with a literal prefix. This depends on the underlying char-type and can be customized by
+	 * adding a specialization to \ref string_literal_prefix for any user char-type.
+	 *
+	 * ### Support for case-insensitive matching
+	 *
+	 * As stated in the string-matcher section, case-insensitive-matching requires some sort of case-folding.
+	 * For ``ascii``-like strings a common strategy is to simply convert all characters to upper-case before the actual comparison.
+	 * For wide-chars and Unicode this is definitely more complex, if it shall be done correctly.
+	 * Nevertheless, users can provide their own strategy how to perform the case-folding by simply specializing the ``string_case_fold_converter``
+	 * trait. For the ``my_char`` from above, this may look like follows:
+	 * \snippet CustomString.cpp custom_char case-folding
+	 *
+	 * This is then enough to make all strings with underlying type of ``my_char`` compatible with case-insensitive string-matchers:
+	 * \snippet CustomString.cpp custom_string case-insensitive example
 	 */
 
 	/**
@@ -30,7 +89,8 @@ namespace mimicpp
 	 * \ingroup STRING
 	 * \ingroup TYPE_TRAITS
 	 * \brief Type-trait, which determines, whether the given type is a character-type.
-	 * \attention User are not allowed to add specializations to the trait by themselves.
+	 * \note User are allowed to add specializations to the trait by themselves, but these types must satisfy the ``std::regular`` concept.
+	 * \see https://en.cppreference.com/w/cpp/concepts/regular
 	 *
 	 * \{
 	 */
@@ -114,6 +174,63 @@ namespace mimicpp
 		: public std::true_type
 	{
 	};
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup TYPE_TRAITS_STRING_LITERAL_PREFIX string_literal_prefix
+	 * \ingroup STRING
+	 * \ingroup TYPE_TRAITS
+	 * \brief Yields the printable prefix for any char-type.
+	 * \note Users may add specializations for their custom types as desired.
+	 *
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, yielding an empty string.
+	 * \tparam Char The char-type.
+	 */
+	template <satisfies<is_character> Char>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix{};
+
+	/**
+	 * \brief ``char`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<char>{};
+
+	/**
+	 * \brief ``wchar_t`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<wchar_t>{"L"};
+
+	/**
+	 * \brief ``char8_t`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<char8_t>{"u8"};
+
+	/**
+	 * \brief ``char16_t`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<char16_t>{"u"};
+
+	/**
+	 * \brief ``char32_t`` specialization.
+	 */
+	template <>
+	[[maybe_unused]]
+	inline constexpr StringViewT string_literal_prefix<char32_t>{"U"};
 
 	/**
 	 * \}
@@ -218,6 +335,7 @@ namespace mimicpp
 	concept string = requires
 	{
 		requires is_character_v<string_char_t<T>>;
+		requires std::regular<string_char_t<T>>;
 		requires std::ranges::contiguous_range<string_view_t<T>>;
 		requires std::ranges::sized_range<string_view_t<T>>;
 		requires std::ranges::borrowed_range<string_view_t<T>>;
@@ -229,7 +347,7 @@ namespace mimicpp
 	/**
 	 * \defgroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER string_case_fold_converter
 	 * \ingroup STRING
-	 * \brief Type-trait, which contains properties for the provided string type.
+	 * \brief Type-trait, which provides the case-folding algorithm for the char-type, they are specialized for.
 	 * \details This implements the case-folding algorithm for the various character-types.
 	 * Users should not make any assumptions on what any converter will return, as this is highly
 	 * implementation specific. No guarantees are made whether the result will be in upper- or lower-case (or something completely
@@ -238,6 +356,8 @@ namespace mimicpp
 	 *
 	 * \see https://unicode-org.github.io/icu/userguide/transforms/casemappings.html#case-folding
 	 * \see https://www.unicode.org/Public/UNIDATA/CaseFolding.txt
+	 *
+	 * \note Users are allowed to add specializations as desired.
 	 */
 
 	/**
@@ -296,7 +416,7 @@ struct mimicpp::string_case_fold_converter<char>
 					[](const char c) noexcept
 					{
 						// see notes of https://en.cppreference.com/w/cpp/string/byte/toupper
-						// This approach will fail, str actually contains an utf8-encoded string.
+						// This approach will fail, if str actually contains an utf8-encoded string.
 						return static_cast<char>(
 							static_cast<unsigned char>(std::toupper(c)));
 					});

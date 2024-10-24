@@ -441,6 +441,22 @@ TEST_CASE(
 			Catch::Matchers::Equals("{ {?}, 1337 }"));
 	}
 
+	SECTION("Pointers are printed in hex-format.")
+	{
+		REQUIRE_THAT(
+			mimicpp::print(nullptr),
+			Catch::Matchers::Matches("0x0{1,16}"));
+		REQUIRE_THAT(
+			mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{})),
+			Catch::Matchers::Matches("0x0{1,16}"));
+		REQUIRE_THAT(
+			mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{0x1234567890ABCDEFu})),
+			Catch::Matchers::Matches("0x1234567890[Aa][Bb][Cc][Dd][Ee][Ff]"));
+		REQUIRE_THAT(
+			mimicpp::print(reinterpret_cast<const std::string*>(std::uintptr_t{0x1234u})),
+			Catch::Matchers::Matches("0x0{1,12}1234"));
+	}
+
 	SECTION("When nothing matches, a default token is inserted.")
 	{
 		constexpr NonPrintable value{};
@@ -449,6 +465,116 @@ TEST_CASE(
 			std::move(stream).str(),
 			Catch::Matchers::Equals("{?}"));
 	}
+}
+
+namespace
+{
+	struct my_char
+	{
+		char c{};
+
+		bool operator==(const my_char&) const = default;
+	};
+
+	class MyString
+	{
+	public:
+		std::vector<my_char> inner{};
+	};
+
+	class MyNonPrintableString
+	{
+	public:
+		std::string inner{};
+	};
+}
+
+template <>
+struct mimicpp::is_character<my_char>
+	: public std::true_type
+{
+};
+
+template <>
+class custom::Printer<my_char>
+{
+public:
+	static auto print(auto outIter, const my_char myChar)
+	{
+		return mimicpp::print(std::move(outIter), myChar.c);
+	}
+};
+
+template <>
+struct mimicpp::string_traits<MyString>
+{
+	using char_t = my_char;
+	// explicitly use view-type which isn't printable as string
+	using view_t = std::span<const char_t>;
+
+	[[nodiscard]]
+	static constexpr view_t view(const MyString& str) noexcept
+	{
+		return std::span{str.inner};
+	}
+};
+
+template <>
+struct mimicpp::string_traits<MyNonPrintableString>
+{
+	using char_t = char;
+	// explicitly use view-type which isn't printable as string
+	using view_t = std::span<const char>;
+
+	[[nodiscard]]
+	static constexpr view_t view(const MyNonPrintableString& str) noexcept
+	{
+		return std::span{str.inner};
+	}
+};
+
+TEST_CASE(
+	"print supports printing of custom char-types and even strings of custom char-type.",
+	"[print]"
+)
+{
+	SECTION("my_char can be printed.")
+	{
+		StringStreamT stream{};
+		print(std::ostreambuf_iterator{stream}, my_char{'A'});
+		REQUIRE_THAT(
+			std::move(stream).str(),
+			Catch::Matchers::Equals("A"));
+
+		SECTION("And MyString can be printed.")
+		{
+			stream = StringStreamT{};	// clang-16 with libc++ doesn't clear by str()&&
+			STATIC_REQUIRE(string<MyString>);
+
+			print(
+				std::ostreambuf_iterator{stream},
+				MyString{{{'A'}, {'b'}, {'C'}}});
+			REQUIRE_THAT(
+				std::move(stream).str(),
+				Catch::Matchers::Equals("\"AbC\""));
+		}
+	}
+}
+
+TEST_CASE(
+	"print supports printing of non-printable strings of formattable char-type.",
+	"[print]"
+)
+{
+	STATIC_REQUIRE(string<MyNonPrintableString>);
+
+	StringStreamT stream{};
+	print(
+		std::ostreambuf_iterator{stream},
+		MyNonPrintableString{"AbC"});
+	REQUIRE_THAT(
+		std::move(stream).str(),
+		Catch::Matchers::Equals("\"AbC\""));
 }
 
 TEST_CASE(

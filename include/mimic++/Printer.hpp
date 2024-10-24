@@ -38,7 +38,6 @@
 
 namespace mimicpp
 {
-	using StringViewT = std::basic_string_view<CharT, CharTraitsT>;
 	using StringStreamT = std::basic_ostringstream<CharT, CharTraitsT>;
 
 	template <typename T>
@@ -241,7 +240,7 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
-		[[maybe_unused]] const priority_tag<5>
+		[[maybe_unused]] const priority_tag<4>
 	)
 	{
 		return Printer::print(
@@ -259,25 +258,12 @@ namespace mimicpp::detail
 	OutIter print(
 		OutIter out,
 		T&& value,
-		[[maybe_unused]] const priority_tag<4>
+		[[maybe_unused]] const priority_tag<3>
 	)
 	{
 		return Printer::print(
 			std::move(out),
 			std::forward<T>(value));
-	}
-
-	template <print_iterator OutIter, std::convertible_to<StringViewT> String>
-	OutIter print(
-		OutIter out,
-		String&& str,
-		[[maybe_unused]] const priority_tag<3>
-	)
-	{
-		return format::format_to(
-			std::move(out),
-			"\"{}\"",
-			static_cast<StringViewT>(std::forward<String>(str)));
 	}
 
 	template <print_iterator OutIter, std::ranges::forward_range Range>
@@ -322,7 +308,7 @@ namespace mimicpp::detail
 		) const
 		{
 			static_assert(
-				requires(const priority_tag<6> tag)
+				requires(const priority_tag<4> tag)
 				{
 					{ print(out, std::forward<T>(value), tag) } -> std::convertible_to<OutIter>;
 				},
@@ -331,7 +317,7 @@ namespace mimicpp::detail
 			return print(
 				std::move(out),
 				std::forward<T>(value),
-				priority_tag<6>{});
+				priority_tag<4>{});
 		}
 
 		template <typename T>
@@ -466,91 +452,92 @@ namespace mimicpp::detail
 		}
 	};
 
-	template <typename Char>
-		requires is_character_v<Char>
-	struct character_literal_printer;
+	template <typename T>
+	concept pointer_like = std::is_pointer_v<T>
+							|| std::same_as<std::nullptr_t, T>;
 
-	template <>
-	struct character_literal_printer<char>
+	template <pointer_like T>
+		requires (!string<T>)
+	class Printer<T>
 	{
+	public:
 		template <print_iterator OutIter>
-		static OutIter print(OutIter out) noexcept
+		static OutIter print(OutIter out, T ptr)
 		{
-			// no special character-literal
-			return out;
-		}
-	};
-
-	template <>
-	struct character_literal_printer<wchar_t>
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out)
-		{
-			return format::format_to(std::move(out), "L");
-		}
-	};
-
-	template <>
-	struct character_literal_printer<char8_t>
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out)
-		{
-			return format::format_to(std::move(out), "u8");
-		}
-	};
-
-	template <>
-	struct character_literal_printer<char16_t>
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out)
-		{
-			return format::format_to(std::move(out), "u");
-		}
-	};
-
-	template <>
-	struct character_literal_printer<char32_t>
-	{
-		template <print_iterator OutIter>
-		static OutIter print(OutIter out)
-		{
-			return format::format_to(std::move(out), "U");
+			return format::format_to(
+				std::move(out),
+				"0x{:0>16x}",
+				std::bit_cast<std::uintptr_t>(ptr));
 		}
 	};
 
 	template <string String>
-		requires (!std::same_as<CharT, string_char_t<String>>)
 	class Printer<String>
 	{
 	public:
 		template <std::common_reference_with<String> T, print_iterator OutIter>
 		static OutIter print(OutIter out, T&& str)
 		{
-			using intermediate_t = std::uint32_t;
-			static_assert(sizeof(string_char_t<String>) <= sizeof(intermediate_t));
-
-			out = character_literal_printer<string_char_t<String>>::print(std::move(out));
+			if constexpr (constexpr auto prefix = string_literal_prefix<string_char_t<String>>;
+				!std::ranges::empty(prefix))
+			{
+				out = out = format::format_to(
+						std::move(out),
+						"{}",
+						prefix);
+			}
+			
 			out = format::format_to(std::move(out), "\"");
 
-			auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
-			auto iter = std::ranges::begin(view);
-			if (const auto end = std::ranges::end(view);
-				iter != end)
+			// By definition, the string concepts requires the view type to be sized and contiguous.
+			// For simplicity, let's always manually convert the view type to an actual std::string_view,
+			// which is formattable for sure.
+			if constexpr (std::same_as<CharT, string_char_t<String>>)
 			{
+				auto view = string_traits<String>::view(str);
 				out = format::format_to(
 					std::move(out),
-					"{:#x}",
-					static_cast<intermediate_t>(*iter++));
+					"{}",
+					StringViewT{
+						std::ranges::data(view),
+						std::ranges::size(view)
+					});
+			}
+			// required for custom char types
+			else if constexpr (printer_for<custom::Printer<string_char_t<String>>, OutIter, string_char_t<String>>)
+			{
+				for (custom::Printer<string_char_t<String>> printer{};
+					const string_char_t<String>& c : string_traits<String>::view(str))
+				{
+					out = printer.print(std::move(out), c);
+				}
+			}
+			else
+			{
+				constexpr auto to_dump = [](const string_char_t<String>& c) noexcept
+				{
+					using intermediate_t = uint_with_size_t<sizeof c>;
+					return std::bit_cast<intermediate_t>(c);
+				};
+				
 
-				for (; iter != end; ++iter)
+				auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
+				auto iter = std::ranges::begin(view);
+				if (const auto end = std::ranges::end(view);
+					iter != end)
 				{
 					out = format::format_to(
 						std::move(out),
-						", {:#x}",
-						static_cast<intermediate_t>(*iter));
+						"{:#x}",
+						to_dump(*iter++));
+
+					for (; iter != end; ++iter)
+					{
+						out = format::format_to(
+							std::move(out),
+							", {:#x}",
+							to_dump(*iter));
+					}
 				}
 			}
 
@@ -569,8 +556,7 @@ namespace mimicpp
 	 *
 	 * That function internally checks for the first available option (in that order):
 	 * - ``mimicpp::custom::Printer`` specialization
-	 * - internal printer specializations
-	 * - convertible to ``std::string_view``
+	 * - internal printer specializations (handles strings, ``std::source_location``, ``std::optional``, etc.)
 	 * - satisfies ``std::ranges::forward_range``
 	 * - formattable type (in terms of the installed format-backend)
 	 *
@@ -608,7 +594,7 @@ namespace mimicpp
 	/**
 	 * \brief Functional object, converting the given object to its textual representation.
 	 */
-	inline constexpr detail::PrintFn print{};
+	[[maybe_unused]] inline constexpr detail::PrintFn print{};
 
 	/**
 	 * \}

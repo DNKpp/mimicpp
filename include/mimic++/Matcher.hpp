@@ -195,7 +195,7 @@ namespace mimicpp
 				m_Predicate,
 				m_InvertedFormatString,
 				m_FormatString,
-				std::move(m_AdditionalArgs));
+				m_AdditionalArgs);
 		}
 
 		[[nodiscard]]
@@ -212,7 +212,7 @@ namespace mimicpp
 		[[no_unique_address]] Predicate m_Predicate;
 		StringT m_FormatString;
 		StringT m_InvertedFormatString;
-		mutable std::tuple<AdditionalArgs...> m_AdditionalArgs{};
+		std::tuple<AdditionalArgs...> m_AdditionalArgs{};
 
 		template <typename Fn>
 		[[nodiscard]]
@@ -293,7 +293,7 @@ namespace mimicpp::matches
 	 * \brief The wildcard matcher, always matching.
 	 * \snippet Requirements.cpp matcher wildcard
 	 */
-	inline constexpr WildcardMatcher _{};
+	[[maybe_unused]] inline constexpr WildcardMatcher _{};
 
 	/**
 	 * \brief Tests, whether the target compares equal to the expected value.
@@ -417,6 +417,27 @@ namespace mimicpp::matches
 			std::forward<UnaryPredicate>(predicate),
 			std::move(description),
 			std::move(invertedDescription),
+		};
+	}
+
+	/**
+	 * \brief Tests, whether the target is the expected instance.
+	 * \tparam T Instance type.
+	 * \param instance The instance to be compared to.
+	 * \snippet Requirements.cpp matcher instance
+	 */
+	template <satisfies<std::is_lvalue_reference> T>
+	[[nodiscard]]
+	constexpr auto instance(T&& instance)  // NOLINT(cppcoreguidelines-missing-std-forward)
+	{
+		return PredicateMatcher{
+			[](const std::remove_cvref_t<T>& target, const auto* instancePtr) noexcept
+			{
+				return std::addressof(target) == instancePtr;
+			},
+			"is instance at {}",
+			"is not instance at {}",
+			std::tuple{std::addressof(instance)}
 		};
 	}
 
@@ -864,6 +885,21 @@ namespace mimicpp::matches::range
 			std::tuple{expected}
 		};
 	}
+
+	/*template <typename Matcher>
+	[[nodiscard]]
+	constexpr auto elements(Matcher&& matcher)
+	{
+		using MatcherT = std::remove_cvref_t<Matcher>;
+		return PredicateMatcher{
+			[](std::ranges::range auto&& target, const MatcherT& m)
+			{
+				return std::ranges::all_of(
+					target,
+					[&](const auto& element) { return m.matches(element); });
+			},
+			"all elements "
+	}*/
 
 	/**
 	 * \}
