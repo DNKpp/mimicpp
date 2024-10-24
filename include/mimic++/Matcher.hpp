@@ -932,12 +932,12 @@ namespace mimicpp::matches::range
 	}
 
 	/**
-	 * \brief Tests, whether the all elements of the target range match the specified matcher.
+	 * \brief Tests, whether the each element of the target range matches the specified matcher.
 	 * \param matcher The matcher.
 	 */
 	template <typename Matcher>
 	[[nodiscard]]
-	constexpr auto elements(Matcher&& matcher)
+	constexpr auto each_element(Matcher&& matcher)
 	{
 		using MatcherT = std::remove_cvref_t<Matcher>;
 		return PredicateMatcher{
