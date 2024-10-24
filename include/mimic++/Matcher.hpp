@@ -122,6 +122,43 @@ namespace mimicpp
 							{ detail::describe_hook::describe(matcher) } -> std::convertible_to<StringViewT>;
 						};
 
+	namespace detail
+	{
+		template <typename Arg, typename MatchesProjection = std::identity, typename DescribeProjection = std::identity>
+		struct arg_storage
+		{
+			using matches_reference = std::invoke_result_t<MatchesProjection, const Arg&>;
+			using describe_reference = std::invoke_result_t<DescribeProjection, const Arg&>;
+
+			Arg arg;
+
+			decltype(auto) as_matches_arg() const noexcept(std::is_nothrow_invocable_v<MatchesProjection, const Arg&>)
+			{
+				return std::invoke(MatchesProjection{}, arg);
+			}
+
+			decltype(auto) as_describe_arg() const noexcept(std::is_nothrow_invocable_v<DescribeProjection, const Arg&>)
+			{
+				return std::invoke(DescribeProjection{}, arg);
+			}
+		};
+
+		template <typename T>
+		struct to_arg_storage
+		{
+			using type = arg_storage<T>;
+		};
+
+		template <typename Arg, typename MatchesProjection, typename DescribeProjection>
+		struct to_arg_storage<arg_storage<Arg, MatchesProjection, DescribeProjection>>
+		{
+			using type = arg_storage<Arg, MatchesProjection, DescribeProjection>;
+		};
+
+		template <typename T>
+		using to_arg_storage_t = typename to_arg_storage<T>::type;
+	}
+
 	/**
 	 * \brief Generic matcher and the basic building block of most of the built-in matchers.
 	 * \tparam Predicate The predicate type.
@@ -134,13 +171,18 @@ namespace mimicpp
 				&& (... && std::is_move_constructible_v<AdditionalArgs>)
 	class PredicateMatcher
 	{
+	private:
+		using storage_t = std::tuple<detail::to_arg_storage_t<AdditionalArgs>...>;
+		template <typename T>
+		using matches_reference_t = typename detail::to_arg_storage_t<T>::matches_reference;
+
 	public:
 		[[nodiscard]]
 		explicit constexpr PredicateMatcher(
 			Predicate predicate,
 			StringT fmt,
 			StringT invertedFmt,
-			std::tuple<AdditionalArgs...> additionalArgs = std::tuple{}
+			std::tuple<AdditionalArgs...> additionalArgs = {}
 		) noexcept(std::is_nothrow_move_constructible_v<Predicate>
 					&& (... && std::is_nothrow_move_constructible_v<AdditionalArgs>))
 			: m_Predicate{std::move(predicate)},
@@ -151,11 +193,14 @@ namespace mimicpp
 		}
 
 		template <typename T>
-			requires std::predicate<const Predicate&, T&, const AdditionalArgs&...>
+			requires std::predicate<
+				const Predicate&,
+				T&,
+				matches_reference_t<AdditionalArgs>...>
 		[[nodiscard]]
 		constexpr bool matches(
 			T& target
-		) const noexcept(std::is_nothrow_invocable_v<const Predicate&, T&, const AdditionalArgs&...>)
+		) const noexcept(std::is_nothrow_invocable_v<const Predicate&, T&, matches_reference_t<AdditionalArgs>...>)
 		{
 			return std::apply(
 				[&, this](auto&... additionalArgs)
@@ -163,7 +208,7 @@ namespace mimicpp
 					return std::invoke(
 						m_Predicate,
 						target,
-						additionalArgs...);
+						additionalArgs.as_matches_arg()...);
 				},
 				m_AdditionalArgs);
 		}
@@ -180,7 +225,7 @@ namespace mimicpp
 							std::invoke(
 								// std::make_format_args requires lvalue-refs, so let's transform rvalue-refs to const lvalue-refs
 								[](auto&& val) noexcept -> const auto& { return val; },
-								mimicpp::print(additionalArgs))
+								mimicpp::print(additionalArgs.as_describe_arg()))
 							...));
 				},
 				m_AdditionalArgs);
@@ -189,7 +234,7 @@ namespace mimicpp
 		[[nodiscard]]
 		constexpr auto operator !() const &
 			requires std::is_copy_constructible_v<Predicate>
-					&& (... && std::is_copy_constructible_v<AdditionalArgs>)
+					&& std::is_copy_constructible_v<storage_t>
 		{
 			return make_inverted(
 				m_Predicate,
@@ -212,7 +257,7 @@ namespace mimicpp
 		[[no_unique_address]] Predicate m_Predicate;
 		StringT m_FormatString;
 		StringT m_InvertedFormatString;
-		std::tuple<AdditionalArgs...> m_AdditionalArgs{};
+		storage_t m_AdditionalArgs;
 
 		template <typename Fn>
 		[[nodiscard]]
@@ -220,11 +265,11 @@ namespace mimicpp
 			Fn&& fn,
 			StringT fmt,
 			StringT invertedFmt,
-			std::tuple<AdditionalArgs...> tuple
+			storage_t tuple
 		)
 		{
 			using NotFnT = decltype(std::not_fn(std::forward<Fn>(fn)));
-			return PredicateMatcher<NotFnT, AdditionalArgs...>{
+			return PredicateMatcher<NotFnT, detail::to_arg_storage_t<AdditionalArgs>...>{
 				std::not_fn(std::forward<Fn>(fn)),
 				std::move(fmt),
 				std::move(invertedFmt),
@@ -886,7 +931,7 @@ namespace mimicpp::matches::range
 		};
 	}
 
-	/*template <typename Matcher>
+	template <typename Matcher>
 	[[nodiscard]]
 	constexpr auto elements(Matcher&& matcher)
 	{
@@ -898,8 +943,18 @@ namespace mimicpp::matches::range
 					target,
 					[&](const auto& element) { return m.matches(element); });
 			},
-			"all elements "
-	}*/
+			"all elements matches: {}",
+			"not all elements matches: {}",
+			std::tuple{
+				mimicpp::detail::arg_storage<
+					std::remove_cvref_t<Matcher>,
+					std::identity,
+					decltype([](const auto& m) { return mimicpp::detail::describe_hook::describe(m); })>{
+					std::forward<MatcherT>(matcher)
+				}
+			}
+		};
+	}
 
 	/**
 	 * \}
