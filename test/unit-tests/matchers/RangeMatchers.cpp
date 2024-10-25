@@ -484,3 +484,65 @@ TEST_CASE(
 		}
 	}
 }
+
+TEST_CASE(
+	"matches::range::any_element matches when at least one elements of the target range matches.",
+	"[matcher][matcher::range]"
+)
+{
+	SECTION("Plain matcher.")
+	{
+		SECTION("When any element matches the matcher, it's a match.")
+		{
+			const auto threshold = GENERATE(42, 1337);
+			const auto matcher = matches::range::any_element(matches::ge(threshold));
+
+			const std::vector target{42, 1337};
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(),
+				Catch::Matchers::StartsWith("any el in range: el >= "));
+		}
+
+		SECTION("When no element matches the matcher, it's no match.")
+		{
+			const std::vector target = GENERATE(
+				std::vector<int>{},
+				(std::vector{42, 1337}));
+			const auto matcher = matches::range::any_element(matches::gt(1337));
+
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(),
+				Catch::Matchers::Equals("any el in range: el > 1337"));
+		}
+	}
+
+	SECTION("Matcher can be inverted.")
+	{
+		SECTION("When any element matches the matcher, it's no match.")
+		{
+			const auto threshold = GENERATE(42, 1337);
+			const auto matcher = !matches::range::any_element(matches::ge(threshold));
+
+			const std::vector target{42, 1337};
+			REQUIRE(!matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(),
+				Catch::Matchers::StartsWith("none el in range: el >= "));
+		}
+
+		SECTION("When no element matches the matcher, it's a match.")
+		{
+			const std::vector target = GENERATE(
+				std::vector<int>{},
+				(std::vector{42, 1337}));
+			const auto matcher = !matches::range::any_element(matches::gt(1337));
+
+			REQUIRE(matcher.matches(target));
+			REQUIRE_THAT(
+				matcher.describe(),
+				Catch::Matchers::StartsWith("none el in range: el > 1337"));
+		}
+	}
+}

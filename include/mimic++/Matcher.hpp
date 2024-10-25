@@ -932,7 +932,7 @@ namespace mimicpp::matches::range
 	}
 
 	/**
-	 * \brief Tests, whether the each element of the target range matches the specified matcher.
+	 * \brief Tests, whether each element of the target range matches the specified matcher.
 	 * \param matcher The matcher.
 	 */
 	template <typename Matcher>
@@ -949,6 +949,35 @@ namespace mimicpp::matches::range
 			},
 			"each el in range: el {}",
 			"not each el in range: el {}",
+			std::tuple{
+				mimicpp::detail::arg_storage<
+					MatcherT,
+					std::identity,
+					decltype([](const auto& m) { return mimicpp::detail::describe_hook::describe(m); })>{
+					std::forward<MatcherT>(matcher)
+				}
+			}
+		};
+	}
+
+	/**
+	 * \brief Tests, whether any element of the target range matches the specified matcher.
+	 * \param matcher The matcher.
+	 */
+	template <typename Matcher>
+	[[nodiscard]]
+	constexpr auto any_element(Matcher&& matcher)
+	{
+		using MatcherT = std::remove_cvref_t<Matcher>;
+		return PredicateMatcher{
+			[](std::ranges::range auto&& target, const MatcherT& m)
+			{
+				return std::ranges::any_of(
+					target,
+					[&](const auto& element) { return m.matches(element); });
+			},
+			"any el in range: el {}",
+			"none el in range: el {}",
 			std::tuple{
 				mimicpp::detail::arg_storage<
 					MatcherT,
