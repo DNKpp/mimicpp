@@ -1,8 +1,10 @@
 var _matcher_8hpp =
 [
     [ "mimicpp::matcher_for", "df/d23/conceptmimicpp_1_1matcher__for.html", null ],
+    [ "any_element", "dd/d50/_matcher_8hpp.html#gaaaaf2818ccdc5527192543d2e3a1e996", null ],
     [ "contains", "dd/d50/_matcher_8hpp.html#gaa099618b7bf70ca7bcce3ebf1589f2d5", null ],
     [ "contains", "dd/d50/_matcher_8hpp.html#ga1c4d7692b3fcce4102c2bca496f4f54e", null ],
+    [ "each_element", "dd/d50/_matcher_8hpp.html#ga413871e9bfa939ef03df036a4be28bf1", null ],
     [ "ends_with", "dd/d50/_matcher_8hpp.html#ga903d775e76fad77ad0e363619be9f2e9", null ],
     [ "ends_with", "dd/d50/_matcher_8hpp.html#gab39a4b8ffc34ffa744c619e3465b5db4", null ],
     [ "eq", "dd/d50/_matcher_8hpp.html#gaae47b82f14695a5e774ad398df069825", null ],

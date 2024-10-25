@@ -1,6 +1,8 @@
 var namespacemimicpp_1_1matches =
 [
     [ "range", "d2/d24/namespacemimicpp_1_1matches_1_1range.html", [
+      [ "any_element", "db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#gaaaaf2818ccdc5527192543d2e3a1e996", null ],
+      [ "each_element", "db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#ga413871e9bfa939ef03df036a4be28bf1", null ],
       [ "eq", "db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#ga2d8c4b5a400645611fb8b4374fc6a564", null ],
       [ "has_size", "db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#gabe07e4394f348806148d665d73dc246f", null ],
       [ "is_empty", "db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#gacaeaf0bcc3197e6325285d9035a019df", null ],
