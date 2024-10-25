@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
    </div>
   </td>
  </tr>
@@ -121,30 +121,58 @@ Collaboration diagram for mimicpp::DefaultReporter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a5b6522823c7f7aa460ad5a14b91ada2e" id="r_a5b6522823c7f7aa460ad5a14b91ada2e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b6522823c7f7aa460ad5a14b91ada2e">DefaultReporter</a> (std::ostream *out=nullptr) noexcept</td></tr>
+<tr class="separator:a5b6522823c7f7aa460ad5a14b91ada2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cf5585d694574f981fc28ff32b681bb" id="r_a4cf5585d694574f981fc28ff32b681bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4cf5585d694574f981fc28ff32b681bb">report_no_matches</a> (<a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a> call, std::vector&lt; <a class="el" href="../../db/d11/classmimicpp_1_1_match_report.html">MatchReport</a> &gt; matchReports) override</td></tr>
 <tr class="memdesc:a4cf5585d694574f981fc28ff32b681bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects reports about all <code>none</code> matching expectations. This is only called, if there are no better options available.  <br /></td></tr>
 <tr class="separator:a4cf5585d694574f981fc28ff32b681bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2852c4de013b287c48cdacc11059c21" id="r_ae2852c4de013b287c48cdacc11059c21"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2852c4de013b287c48cdacc11059c21">report_inapplicable_matches</a> (<a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a> call, std::vector&lt; <a class="el" href="../../db/d11/classmimicpp_1_1_match_report.html">MatchReport</a> &gt; matchReports) override</td></tr>
 <tr class="memdesc:ae2852c4de013b287c48cdacc11059c21"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects reports about all <code>inapplicable</code> matching expectations. This is only called, if there are no better options available.  <br /></td></tr>
 <tr class="separator:ae2852c4de013b287c48cdacc11059c21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3deac0dcae94228fa4d2e0783704e99" id="r_aa3deac0dcae94228fa4d2e0783704e99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3deac0dcae94228fa4d2e0783704e99">report_full_match</a> (<a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a> call, <a class="el" href="../../db/d11/classmimicpp_1_1_match_report.html">MatchReport</a> matchReport) noexcept override</td></tr>
-<tr class="memdesc:aa3deac0dcae94228fa4d2e0783704e99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects the report about a <code>full</code> matching expectation.  <br /></td></tr>
-<tr class="separator:aa3deac0dcae94228fa4d2e0783704e99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9da4786c6fa8d7ade3995bffec348ac5" id="r_a9da4786c6fa8d7ade3995bffec348ac5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9da4786c6fa8d7ade3995bffec348ac5">report_full_match</a> (const <a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a> call, const <a class="el" href="../../db/d11/classmimicpp_1_1_match_report.html">MatchReport</a> matchReport) noexcept override</td></tr>
+<tr class="memdesc:a9da4786c6fa8d7ade3995bffec348ac5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects the report about a <code>full</code> matching expectation.  <br /></td></tr>
+<tr class="separator:a9da4786c6fa8d7ade3995bffec348ac5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a963da36bfc5ae093c1a7e0235a9c20e0" id="r_a963da36bfc5ae093c1a7e0235a9c20e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a963da36bfc5ae093c1a7e0235a9c20e0">report_unfulfilled_expectation</a> (<a class="el" href="../../dd/d62/classmimicpp_1_1_expectation_report.html">ExpectationReport</a> expectationReport) override</td></tr>
 <tr class="memdesc:a963da36bfc5ae093c1a7e0235a9c20e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects the report of an unfulfilled expectation.  <br /></td></tr>
 <tr class="separator:a963da36bfc5ae093c1a7e0235a9c20e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88bedfb2796b50bbc2ae87619a1da78e" id="r_a88bedfb2796b50bbc2ae87619a1da78e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88bedfb2796b50bbc2ae87619a1da78e">report_error</a> (<a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> message) override</td></tr>
-<tr class="memdesc:a88bedfb2796b50bbc2ae87619a1da78e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects rather unspecific errors.  <br /></td></tr>
-<tr class="separator:a88bedfb2796b50bbc2ae87619a1da78e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b806ba57d5927f105fb21012d1a8efd" id="r_a4b806ba57d5927f105fb21012d1a8efd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b806ba57d5927f105fb21012d1a8efd">report_unhandled_exception</a> (<a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a> call, <a class="el" href="../../dd/d62/classmimicpp_1_1_expectation_report.html">ExpectationReport</a> expectationReport, std::exception_ptr exception) override</td></tr>
-<tr class="memdesc:a4b806ba57d5927f105fb21012d1a8efd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects reports about unhandled exceptions, during <code>handle_call</code>.  <br /></td></tr>
-<tr class="separator:a4b806ba57d5927f105fb21012d1a8efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acff04803d6f5f84bc4a42c6f6d3c79bc" id="r_acff04803d6f5f84bc4a42c6f6d3c79bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acff04803d6f5f84bc4a42c6f6d3c79bc">report_error</a> (const <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> message) override</td></tr>
+<tr class="memdesc:acff04803d6f5f84bc4a42c6f6d3c79bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects rather unspecific errors.  <br /></td></tr>
+<tr class="separator:acff04803d6f5f84bc4a42c6f6d3c79bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a223bb3a102529cd47671e5494a45e2f6" id="r_a223bb3a102529cd47671e5494a45e2f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a223bb3a102529cd47671e5494a45e2f6">report_unhandled_exception</a> (const <a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a> call, const <a class="el" href="../../dd/d62/classmimicpp_1_1_expectation_report.html">ExpectationReport</a> expectationReport, const std::exception_ptr exception) override</td></tr>
+<tr class="memdesc:a223bb3a102529cd47671e5494a45e2f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expects reports about unhandled exceptions, during <code>handle_call</code>.  <br /></td></tr>
+<tr class="separator:a223bb3a102529cd47671e5494a45e2f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The default reporter. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a88bedfb2796b50bbc2ae87619a1da78e" name="a88bedfb2796b50bbc2ae87619a1da78e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88bedfb2796b50bbc2ae87619a1da78e">&#9670;&#160;</a></span>report_error()</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a5b6522823c7f7aa460ad5a14b91ada2e" name="a5b6522823c7f7aa460ad5a14b91ada2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b6522823c7f7aa460ad5a14b91ada2e">&#9670;&#160;</a></span>DefaultReporter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mimicpp::DefaultReporter::DefaultReporter </td>
+          <td>(</td>
+          <td class="paramtype">std::ostream *</td>          <td class="paramname"><span class="paramname"><em>out</em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span><span class="mlabel">nodiscard</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="acff04803d6f5f84bc4a42c6f6d3c79bc" name="acff04803d6f5f84bc4a42c6f6d3c79bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acff04803d6f5f84bc4a42c6f6d3c79bc">&#9670;&#160;</a></span>report_error()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,7 +183,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void mimicpp::DefaultReporter::report_error </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -175,14 +203,14 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>This function is called, when an unspecific error occurs.</p>
 <dl class="section note"><dt>Note</dt><dd>In general, it is expected that this function does not return, but throws an exception instead. But, as this function may be called due to any reason, implementations shall check whether an uncaught exception already exists (e.g. via <code>std::uncaught_exceptions</code>) before throwing by themselves. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="#a88bedfb2796b50bbc2ae87619a1da78e" title="Expects rather unspecific errors.">DefaultReporter::report_error</a></code> for an example. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="#acff04803d6f5f84bc4a42c6f6d3c79bc" title="Expects rather unspecific errors.">DefaultReporter::report_error</a></code> for an example. </dd></dl>
 
 <p>Implements <a class="el" href="../../dd/df0/classmimicpp_1_1_i_reporter.html#a2cb031e96c44c627738fd210578b18db">mimicpp::IReporter</a>.</p>
 
 </div>
 </div>
-<a id="aa3deac0dcae94228fa4d2e0783704e99" name="aa3deac0dcae94228fa4d2e0783704e99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3deac0dcae94228fa4d2e0783704e99">&#9670;&#160;</a></span>report_full_match()</h2>
+<a id="a9da4786c6fa8d7ade3995bffec348ac5" name="a9da4786c6fa8d7ade3995bffec348ac5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9da4786c6fa8d7ade3995bffec348ac5">&#9670;&#160;</a></span>report_full_match()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -193,12 +221,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void mimicpp::DefaultReporter::report_full_match </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a></td>          <td class="paramname"><span class="paramname"><em>call</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a></td>          <td class="paramname"><span class="paramname"><em>call</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../db/d11/classmimicpp_1_1_match_report.html">MatchReport</a></td>          <td class="paramname"><span class="paramname"><em>matchReport</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="../../db/d11/classmimicpp_1_1_match_report.html">MatchReport</a></td>          <td class="paramname"><span class="paramname"><em>matchReport</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -222,7 +250,7 @@ Public Member Functions</h2></td></tr>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d3/d32/classmimicpp_1_1_default_reporter_aa3deac0dcae94228fa4d2e0783704e99_cgraph.svg" width="394" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d3/d32/classmimicpp_1_1_default_reporter_a9da4786c6fa8d7ade3995bffec348ac5_cgraph.svg" width="394" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -359,8 +387,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a4b806ba57d5927f105fb21012d1a8efd" name="a4b806ba57d5927f105fb21012d1a8efd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4b806ba57d5927f105fb21012d1a8efd">&#9670;&#160;</a></span>report_unhandled_exception()</h2>
+<a id="a223bb3a102529cd47671e5494a45e2f6" name="a223bb3a102529cd47671e5494a45e2f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a223bb3a102529cd47671e5494a45e2f6">&#9670;&#160;</a></span>report_unhandled_exception()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -371,17 +399,17 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname">void mimicpp::DefaultReporter::report_unhandled_exception </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a></td>          <td class="paramname"><span class="paramname"><em>call</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="../../dc/dd0/classmimicpp_1_1_call_report.html">CallReport</a></td>          <td class="paramname"><span class="paramname"><em>call</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../dd/d62/classmimicpp_1_1_expectation_report.html">ExpectationReport</a></td>          <td class="paramname"><span class="paramname"><em>expectationReport</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="../../dd/d62/classmimicpp_1_1_expectation_report.html">ExpectationReport</a></td>          <td class="paramname"><span class="paramname"><em>expectationReport</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::exception_ptr</td>          <td class="paramname"><span class="paramname"><em>exception</em></span>&#160;)</td>
+          <td class="paramtype">const std::exception_ptr</td>          <td class="paramname"><span class="paramname"><em>exception</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -415,7 +443,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html">DefaultReporter</a></li>
-    <li class="footer">Generated on Sat Oct 12 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

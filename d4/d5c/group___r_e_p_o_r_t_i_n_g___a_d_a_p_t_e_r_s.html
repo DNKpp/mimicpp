@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
    </div>
   </td>
  </tr>
@@ -119,6 +119,9 @@ Typedefs</h2></td></tr>
 <tr class="memitem:ga02aa72d6aaace0343113c757d4235aa8" id="r_ga02aa72d6aaace0343113c757d4235aa8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga02aa72d6aaace0343113c757d4235aa8">mimicpp::Catch2ReporterT</a></td></tr>
 <tr class="memdesc:ga02aa72d6aaace0343113c757d4235aa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reporter for the integration into Catch2.  <br /></td></tr>
 <tr class="separator:ga02aa72d6aaace0343113c757d4235aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f446c319de27373286e449cc72031dc" id="r_ga2f446c319de27373286e449cc72031dc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga2f446c319de27373286e449cc72031dc">mimicpp::DoctestReporterT</a></td></tr>
+<tr class="memdesc:ga2f446c319de27373286e449cc72031dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reporter for the integration into Doctest.  <br /></td></tr>
+<tr class="separator:ga2f446c319de27373286e449cc72031dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga54e2a65c7837029b0c0c8e8a11cb8466" id="r_ga54e2a65c7837029b0c0c8e8a11cb8466"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga54e2a65c7837029b0c0c8e8a11cb8466">mimicpp::GTestReporterT</a></td></tr>
 <tr class="memdesc:ga54e2a65c7837029b0c0c8e8a11cb8466"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reporter for the integration into gtest.  <br /></td></tr>
 <tr class="separator:ga54e2a65c7837029b0c0c8e8a11cb8466"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,6 +180,29 @@ Experimental Matcher integration</h2>
 
 </div>
 </div>
+<a id="ga2f446c319de27373286e449cc72031dc" name="ga2f446c319de27373286e449cc72031dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2f446c319de27373286e449cc72031dc">&#9670;&#160;</a></span>DoctestReporterT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ga2f446c319de27373286e449cc72031dc">mimicpp::DoctestReporterT</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> BasicReporter&lt;</div>
+<div class="line">        &amp;detail::doctest::send_success,</div>
+<div class="line">        &amp;detail::doctest::send_warning,</div>
+<div class="line">        &amp;detail::doctest::send_fail</div>
+<div class="line">    &gt;</div>
+</div><!-- fragment -->
+<p>Reporter for the integration into Doctest. </p>
+<p>This reporter enables the integration of <code>mimic++</code> into <code>Doctest</code> and prefixes the headers of <code>Doctest</code> with <code>doctest/</code>.</p>
+<p>This reporter installs itself by simply including this header file into any source file of the test executable. </p>
+
+</div>
+</div>
 <a id="ga54e2a65c7837029b0c0c8e8a11cb8466" name="ga54e2a65c7837029b0c0c8e8a11cb8466"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga54e2a65c7837029b0c0c8e8a11cb8466">&#9670;&#160;</a></span>GTestReporterT</h2>
 
@@ -205,7 +231,7 @@ Experimental Matcher integration</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Oct 12 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

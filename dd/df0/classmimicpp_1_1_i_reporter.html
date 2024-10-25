@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
    </div>
   </td>
  </tr>
@@ -341,9 +341,9 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <p>This function is called, when an unspecific error occurs.</p>
 <dl class="section note"><dt>Note</dt><dd>In general, it is expected that this function does not return, but throws an exception instead. But, as this function may be called due to any reason, implementations shall check whether an uncaught exception already exists (e.g. via <code>std::uncaught_exceptions</code>) before throwing by themselves. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a88bedfb2796b50bbc2ae87619a1da78e" title="Expects rather unspecific errors.">DefaultReporter::report_error</a></code> for an example. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><code><a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#acff04803d6f5f84bc4a42c6f6d3c79bc" title="Expects rather unspecific errors.">DefaultReporter::report_error</a></code> for an example. </dd></dl>
 
-<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a267bcc67f5b470b69cc8e6a1c3ad13f9">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a88bedfb2796b50bbc2ae87619a1da78e">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a267bcc67f5b470b69cc8e6a1c3ad13f9">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#acff04803d6f5f84bc4a42c6f6d3c79bc">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -384,7 +384,7 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <p>This function is called, when a match has been found. There are no other expectations on the behavior of this function; except the <code>noexcept</code> guarantee. Implementations shall simply return to the caller. </p>
 
-<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a47014f2aa98737fa525ea86f2a51a697">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#aa3deac0dcae94228fa4d2e0783704e99">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a47014f2aa98737fa525ea86f2a51a697">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a9da4786c6fa8d7ade3995bffec348ac5">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -553,7 +553,7 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <p>This function is called, when an expectation throws during a <code>matches</code> call. There are no expectations on the behavior of this function. As this function is called inside a <code>catch</code> block, throwing exceptions will result in a terminate call. </p>
 
-<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a6ebc62f6798303bcd2f24cb92c496ffe">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a4b806ba57d5927f105fb21012d1a8efd">mimicpp::DefaultReporter</a>.</p>
+<p>Implemented in <a class="el" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html#a6ebc62f6798303bcd2f24cb92c496ffe">mimicpp::BasicReporter&lt; successReporter, warningReporter, failReporter &gt;</a>, and <a class="el" href="../../d3/d32/classmimicpp_1_1_default_reporter.html#a223bb3a102529cd47671e5494a45e2f6">mimicpp::DefaultReporter</a>.</p>
 
 </div>
 </div>
@@ -566,7 +566,7 @@ Protected Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../dd/df0/classmimicpp_1_1_i_reporter.html">IReporter</a></li>
-    <li class="footer">Generated on Sat Oct 12 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

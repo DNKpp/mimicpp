@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
    </div>
   </td>
  </tr>
@@ -109,7 +109,7 @@ $(function(){initNavTree('d8/d47/group___s_t_r_i_n_g.html','../../'); initResiza
 <div class="dynheader">
 Collaboration diagram for string:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/d47/group___s_t_r_i_n_g.svg" width="290" height="135"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/d47/group___s_t_r_i_n_g.svg" width="290" height="184"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
@@ -118,7 +118,10 @@ Topics</h2></td></tr>
 <tr class="memdesc:dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-trait, which determines, whether the given type is a character-type. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d04/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___c_a_s_e___f_o_l_d___c_o_n_v_e_r_t_e_r.html">string_case_fold_converter</a></td></tr>
-<tr class="memdesc:d6/d04/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___c_a_s_e___f_o_l_d___c_o_n_v_e_r_t_e_r"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-trait, which contains properties for the provided string type. <br /></td></tr>
+<tr class="memdesc:d6/d04/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___c_a_s_e___f_o_l_d___c_o_n_v_e_r_t_e_r"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-trait, which provides the case-folding algorithm for the char-type, they are specialized for. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html">string_literal_prefix</a></td></tr>
+<tr class="memdesc:dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x"><td class="mdescLeft">&#160;</td><td class="mdescRight">Yields the printable prefix for any char-type. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html">string_traits</a></td></tr>
 <tr class="memdesc:da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-trait, which contains properties for the provided string type. <br /></td></tr>
@@ -135,12 +138,165 @@ Concepts</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Contains symbols for generic string processing. </p>
-</div><!-- contents -->
+<p>There are plenty of different character-types and even more string-types out there. They mostly differ in their details, but in general some common operations shall be applied (like equality- or prefix-tests). Therefore, <code>mimic++</code> offers various abstractions, which users can utilize to make their char- and string-types compatible with the framework, and thus with all string-matchers.</p>
+<h2><a class="anchor" id="autotoc_md20"></a>
+Custom Strings with common char-type</h2>
+<p>Custom strings, which do use any of the common char-types (<code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, etc.), can be made compatible in no time. Users do just have to provide a specialization for the <code><a class="el" href="../../d1/dee/structmimicpp_1_1string__traits.html">string_traits</a></code> template: Given the following string-type, which in fact is just an abstraction around a <code>std::string</code>: </p><div class="fragment"><div class="line">    <span class="keyword">class </span>MyString</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">explicit</span> MyString(std::string str) noexcept</div>
+<div class="line">            : m_Inner{std::move(str)}</div>
+<div class="line">        {</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        std::string_view view() const noexcept</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keywordflow">return</span> std::string_view{m_Inner};</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">private</span>:</div>
+<div class="line">        std::string m_Inner{};</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+</div><!-- fragment --><p>To make it compatible with <code>mimic++</code>, just that simple specialization is necessary: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="../../d1/dee/structmimicpp_1_1string__traits.html">mimicpp::string_traits</a>&lt;MyString&gt;</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">// must be the underlying char type</span></div>
+<div class="line">    <span class="keyword">using </span>char_t = char;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// must be a std::ranges::view like type and must be contiguous</span></div>
+<div class="line">    <span class="keyword">using </span>view_t = std::string_view;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// must construct a view object</span></div>
+<div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keyword">static</span> view_t view(<span class="keyword">const</span> MyString&amp; str) <span class="keyword">noexcept</span></div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> str.view();</div>
+<div class="line">    }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+</div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>These types of strings are already printable by default, if the underlying char-type is <code>formattable</code>.</dd></dl>
+<div class="fragment"><div class="line">    STATIC_REQUIRE(<a class="code hl_concept" href="../../d1/d44/conceptmimicpp_1_1string.html">mimicpp::string&lt;MyString&gt;</a>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line">    <span class="keyword">using </span>matches::_;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(MyString)&gt; mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(<span class="stringliteral">&quot;Hello, World!&quot;</span>);</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::str::starts_with(<span class="stringliteral">&quot;Hi&quot;</span>, <a class="code hl_variable" href="../../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga7211982f3a8ff2ab2165d7803edc9ac8">mimicpp::case_insensitive</a>));</div>
+<div class="line"> </div>
+<div class="line">    mock(MyString{<span class="stringliteral">&quot;Hello, World!&quot;</span>});    <span class="comment">// matches the first expectation</span></div>
+<div class="line">    mock(MyString{<span class="stringliteral">&quot;hI, mimic++&quot;</span>});  <span class="comment">// matches the second expectation (case-insensitive).</span></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md21"></a>
+Custom char-types and related strings</h2>
+<p>It is possible to make custom char-types (and strings which use those) compatible with <code>mimic++</code>, but this requires quite some effort, depending on the features you are planning to use.</p>
+<p>Given the following (<code>regular</code>) char-type </p><div class="fragment"><div class="line"><span class="keyword">struct </span>my_char</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">char</span> c{};</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> my_char&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+</div><!-- fragment --><p> and this string type: </p><div class="fragment"><div class="line"><span class="keyword">class </span>ComplexString</div>
+<div class="line">{</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    <span class="keyword">explicit</span> ComplexString(std::vector&lt;my_char&gt; str) noexcept</div>
+<div class="line">        : m_Inner{std::move(str)}</div>
+<div class="line">    {</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keyword">auto</span> begin() const noexcept</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> m_Inner.cbegin();</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keyword">auto</span> end() const noexcept</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> m_Inner.cend();</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">private</span>:</div>
+<div class="line">    std::vector&lt;my_char&gt; m_Inner{};</div>
+<div class="line">};</div>
+<div class="line"> </div>
+</div><!-- fragment --><p>At first, we have to tell <code>mimic++</code>, that <code>my_char</code> is an actual char-type. This can be done by specializing the <code><a class="el" href="../../d2/d73/structmimicpp_1_1is__character.html" title="Primary template, which always yields false.">is_character</a></code>-trait. </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="../../d2/d73/structmimicpp_1_1is__character.html">mimicpp::is_character</a>&lt;my_char&gt;</div>
+<div class="line">    : <span class="keyword">public</span> std::true_type</div>
+<div class="line">{</div>
+<div class="line">};</div>
+<div class="line"> </div>
+</div><!-- fragment --><p>Next, the <code><a class="el" href="../../d1/dee/structmimicpp_1_1string__traits.html">string_traits</a></code> must be specialized: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="../../d1/dee/structmimicpp_1_1string__traits.html">mimicpp::string_traits</a>&lt;ComplexString&gt;</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">// must be the underlying char type</span></div>
+<div class="line">    <span class="keyword">using </span>char_t = my_char;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// must be a std::ranges::view like type and must be contiguous</span></div>
+<div class="line">    <span class="keyword">using </span>view_t = std::span&lt;const char_t&gt;;</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// must construct a view object</span></div>
+<div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keyword">static</span> view_t view(<span class="keyword">const</span> ComplexString&amp; str) <span class="keyword">noexcept</span></div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> std::span{</div>
+<div class="line">            str.begin(),</div>
+<div class="line">            str.end()</div>
+<div class="line">        };</div>
+<div class="line">    }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+</div><!-- fragment --><p>After that, the string can be used with any string matcher, but just with case-sensitive matching: </p><div class="fragment"><div class="line">    STATIC_REQUIRE(<a class="code hl_concept" href="../../d1/d44/conceptmimicpp_1_1string.html">mimicpp::string&lt;ComplexString&gt;</a>);</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(ComplexString)&gt; mock{};</div>
+<div class="line">    ComplexString s{{{<span class="charliteral">&#39;A&#39;</span>}, {<span class="charliteral">&#39;B&#39;</span>}, {<span class="charliteral">&#39;C&#39;</span>}}};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(s);</div>
+<div class="line"> </div>
+<div class="line">    mock(s);</div>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md22"></a>
+Support for printing</h3>
+<p>The current setup is already enough, that these strings can be printed. Unfortunately this will print the whole string just as comma separated hex-values, because <code>mimic++</code> doesn't know yet, how to print the underlying char-type. This can easily be fixed by proving a <code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">custom::Printer</a></code> specialization for that particular char-type. </p><dl class="section note"><dt>Note</dt><dd>Proving a custom printer for the char-type is enough, to make any related string type printable, too. </dd>
+<dd>
+<code>mimic++</code> prints all strings with a literal prefix. This depends on the underlying char-type and can be customized by adding a specialization to <a class="el" href="../../dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#gafee032e0ba91429f52ac96404738b146">string_literal_prefix</a> for any user char-type.</dd></dl>
+<h3><a class="anchor" id="autotoc_md23"></a>
+Support for case-insensitive matching</h3>
+<p>As stated in the string-matcher section, case-insensitive-matching requires some sort of case-folding. For <code>ascii</code>-like strings a common strategy is to simply convert all characters to upper-case before the actual comparison. For wide-chars and Unicode this is definitely more complex, if it shall be done correctly. Nevertheless, users can provide their own strategy how to perform the case-folding by simply specializing the <code><a class="el" href="../../d4/d2d/structmimicpp_1_1string__case__fold__converter.html" title="Primary template, purposely undefined.">string_case_fold_converter</a></code> trait. For the <code>my_char</code> from above, this may look like follows: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d2d/structmimicpp_1_1string__case__fold__converter.html">mimicpp::string_case_fold_converter</a>&lt;my_char&gt;</div>
+<div class="line">{</div>
+<div class="line">    <span class="comment">// the string_case_fold_converter must expect the string&#39;s view-type and should return</span></div>
+<div class="line">    <span class="comment">// a forward-range with the underlying char-type.</span></div>
+<div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keyword">auto</span> operator ()(<a class="code hl_typedef" href="../../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga09d772b373cd2d8299d1d2693367111c">string_view_t&lt;ComplexString&gt;</a> view)<span class="keyword"> const</span></div>
+<div class="line"><span class="keyword">    </span>{</div>
+<div class="line">        <span class="keywordflow">return</span> view</div>
+<div class="line">                | std::views::transform(</div>
+<div class="line">                    [](<span class="keyword">const</span> my_char c)</div>
+<div class="line">                    {</div>
+<div class="line">                        <span class="comment">// see notes of https://en.cppreference.com/w/cpp/string/byte/toupper</span></div>
+<div class="line">                        <span class="keywordflow">return</span> my_char{</div>
+<div class="line">                            <span class="keyword">static_cast&lt;</span><span class="keywordtype">char</span><span class="keyword">&gt;</span>(</div>
+<div class="line">                                <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(std::toupper(c.c)))</div>
+<div class="line">                        };</div>
+<div class="line">                    });</div>
+<div class="line">    }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+</div><!-- fragment --><p>This is then enough to make all strings with underlying type of <code>my_char</code> compatible with case-insensitive string-matchers: </p><div class="fragment"><div class="line">    STATIC_REQUIRE(<a class="code hl_concept" href="../../d0/d48/conceptmimicpp_1_1case__foldable__string.html">mimicpp::case_foldable_string&lt;ComplexString&gt;</a>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(ComplexString)&gt; mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::str::starts_with(ComplexString{{{<span class="charliteral">&#39;A&#39;</span>}, {<span class="charliteral">&#39;B&#39;</span>}, {<span class="charliteral">&#39;C&#39;</span>}}}, <a class="code hl_variable" href="../../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga7211982f3a8ff2ab2165d7803edc9ac8">mimicpp::case_insensitive</a>));</div>
+<div class="line"> </div>
+<div class="line">    mock(ComplexString{{{<span class="charliteral">&#39;a&#39;</span>}, {<span class="charliteral">&#39;B&#39;</span>}, {<span class="charliteral">&#39;c&#39;</span>}}});</div>
+</div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Oct 12 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

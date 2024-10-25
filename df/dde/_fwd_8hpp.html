@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
    </div>
   </td>
  </tr>
@@ -107,10 +107,11 @@ $(function(){initNavTree('df/dde/_fwd_8hpp.html','../../'); initResizable(true);
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;string&gt;</code><br />
+<code>#include &lt;string_view&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Fwd.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d7/dbc/_fwd_8hpp__incl.svg" width="136" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d7/dbc/_fwd_8hpp__incl.svg" width="176" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -160,12 +161,18 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gaaf6745d6b76342d272c0b53912757fcf"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/dce/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t.html#gaaf6745d6b76342d272c0b53912757fcf">mimicpp::signature_param_list_t</a> = typename <a class="el" href="../../d0/df4/structmimicpp_1_1signature__param__list.html">signature_param_list</a>&lt;Signature&gt;::type</td></tr>
 <tr class="memdesc:gaaf6745d6b76342d272c0b53912757fcf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias, exposing the <code>type</code> member alias of the actual type-trait.  <br /></td></tr>
 <tr class="separator:gaaf6745d6b76342d272c0b53912757fcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab237aa1f72f47b22bdef3f3667370dfc" id="r_gab237aa1f72f47b22bdef3f3667370dfc"><td class="memTemplParams" colspan="2">template&lt;std::size_t byteCount&gt; </td></tr>
+<tr class="memitem:gab237aa1f72f47b22bdef3f3667370dfc"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../db/d34/group___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e.html#gab237aa1f72f47b22bdef3f3667370dfc">mimicpp::uint_with_size_t</a> = typename <a class="el" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;byteCount&gt;::type</td></tr>
+<tr class="memdesc:gab237aa1f72f47b22bdef3f3667370dfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience constant, exposing the <code>value</code> member of the actual type-trait.  <br /></td></tr>
+<tr class="separator:gab237aa1f72f47b22bdef3f3667370dfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3cca43cdbdd561d88dddf4ceec9839fc" id="r_a3cca43cdbdd561d88dddf4ceec9839fc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">mimicpp::CharT</a> = char</td></tr>
 <tr class="separator:a3cca43cdbdd561d88dddf4ceec9839fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a460564a0d4038b990b5938ab0ab2b4ad" id="r_a460564a0d4038b990b5938ab0ab2b4ad"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad">mimicpp::CharTraitsT</a> = std::char_traits&lt;<a class="el" href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">CharT</a>&gt;</td></tr>
 <tr class="separator:a460564a0d4038b990b5938ab0ab2b4ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd8074742a9c25b893fcdfe534b912e1" id="r_afd8074742a9c25b893fcdfe534b912e1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a> = std::basic_string&lt;<a class="el" href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">CharT</a>, <a class="el" href="../../d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad">CharTraitsT</a>&gt;</td></tr>
 <tr class="separator:afd8074742a9c25b893fcdfe534b912e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa212d98f2d4a7016c05d3e9171431c6" id="r_afa212d98f2d4a7016c05d3e9171431c6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a> = std::basic_string_view&lt;<a class="el" href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">CharT</a>, <a class="el" href="../../d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad">CharTraitsT</a>&gt;</td></tr>
+<tr class="separator:afa212d98f2d4a7016c05d3e9171431c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -206,7 +213,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></li>
-    <li class="footer">Generated on Sat Oct 12 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

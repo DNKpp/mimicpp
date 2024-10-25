@@ -9,5 +9,7 @@ var group___t_y_p_e___t_r_a_i_t_s =
     [ "signature_param_type", "dd/df9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___t_y_p_e.html", "dd/df9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___t_y_p_e" ],
     [ "signature_remove_noexcept", "d0/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t.html", "d0/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t" ],
     [ "signature_return_type", "d0/d3b/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_t_u_r_n___t_y_p_e.html", "d0/d3b/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_t_u_r_n___t_y_p_e" ],
-    [ "string_traits", "da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html", "da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s" ]
+    [ "string_literal_prefix", "dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html", "dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x" ],
+    [ "string_traits", "da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html", "da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s" ],
+    [ "unit_with_size", "db/d34/group___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e.html", "db/d34/group___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e" ]
 ];

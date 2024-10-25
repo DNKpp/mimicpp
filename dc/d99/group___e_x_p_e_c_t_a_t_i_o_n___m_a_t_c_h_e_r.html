@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
    </div>
   </td>
  </tr>
@@ -162,6 +162,10 @@ Functions</h2></td></tr>
 <tr class="memitem:ga6c028bd2a2289fbc01ce3aa5cf08451d"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga6c028bd2a2289fbc01ce3aa5cf08451d">mimicpp::matches::predicate</a> (UnaryPredicate &amp;&amp;predicate, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> description=&quot;passes predicate&quot;, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> invertedDescription=&quot;fails predicate&quot;)</td></tr>
 <tr class="memdesc:ga6c028bd2a2289fbc01ce3aa5cf08451d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target fulfills the given predicate.  <br /></td></tr>
 <tr class="separator:ga6c028bd2a2289fbc01ce3aa5cf08451d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga369aedf4edb7313cf70f7ac78ec233f9" id="r_ga369aedf4edb7313cf70f7ac78ec233f9"><td class="memTemplParams" colspan="2">template&lt;satisfies&lt; std::is_lvalue_reference &gt; T&gt; </td></tr>
+<tr class="memitem:ga369aedf4edb7313cf70f7ac78ec233f9"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga369aedf4edb7313cf70f7ac78ec233f9">mimicpp::matches::instance</a> (T &amp;&amp;instance)</td></tr>
+<tr class="memdesc:ga369aedf4edb7313cf70f7ac78ec233f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target is the expected instance.  <br /></td></tr>
+<tr class="separator:ga369aedf4edb7313cf70f7ac78ec233f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -351,6 +355,64 @@ template&lt;typename T &gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ga369aedf4edb7313cf70f7ac78ec233f9" name="ga369aedf4edb7313cf70f7ac78ec233f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga369aedf4edb7313cf70f7ac78ec233f9">&#9670;&#160;</a></span>instance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;satisfies&lt; std::is_lvalue_reference &gt; T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::instance </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>instance</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether the target is the expected instance. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Instance type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>The instance to be compared to. <div class="fragment"><div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keyword">const</span> <span class="keywordtype">int</span>&amp;)&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordtype">int</span> myInt{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::instance(myInt));</div>
+<div class="line">    mock(myInt);</div>
+</div><!-- fragment --> </td></tr>
+  </table>
+  </dd>
+</dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_ga369aedf4edb7313cf70f7ac78ec233f9_cgraph.svg" width="192" height="60"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_ga369aedf4edb7313cf70f7ac78ec233f9_icgraph.svg" width="192" height="60"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -586,7 +648,7 @@ Here is the caller graph for this function:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Oct 12 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

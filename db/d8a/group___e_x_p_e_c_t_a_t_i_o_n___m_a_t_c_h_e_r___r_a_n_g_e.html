@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v3</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
    </div>
   </td>
  </tr>
@@ -131,6 +131,14 @@ Functions</h2></td></tr>
 <tr class="memitem:gabe07e4394f348806148d665d73dc246f" id="r_gabe07e4394f348806148d665d73dc246f"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gabe07e4394f348806148d665d73dc246f">mimicpp::matches::range::has_size</a> (const std::integral auto expected)</td></tr>
 <tr class="memdesc:gabe07e4394f348806148d665d73dc246f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target range has the expected size.  <br /></td></tr>
 <tr class="separator:gabe07e4394f348806148d665d73dc246f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga413871e9bfa939ef03df036a4be28bf1" id="r_ga413871e9bfa939ef03df036a4be28bf1"><td class="memTemplParams" colspan="2">template&lt;typename Matcher &gt; </td></tr>
+<tr class="memitem:ga413871e9bfa939ef03df036a4be28bf1"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga413871e9bfa939ef03df036a4be28bf1">mimicpp::matches::range::each_element</a> (Matcher &amp;&amp;matcher)</td></tr>
+<tr class="memdesc:ga413871e9bfa939ef03df036a4be28bf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether each element of the target range matches the specified matcher.  <br /></td></tr>
+<tr class="separator:ga413871e9bfa939ef03df036a4be28bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaaaf2818ccdc5527192543d2e3a1e996" id="r_gaaaaf2818ccdc5527192543d2e3a1e996"><td class="memTemplParams" colspan="2">template&lt;typename Matcher &gt; </td></tr>
+<tr class="memitem:gaaaaf2818ccdc5527192543d2e3a1e996"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaaaaf2818ccdc5527192543d2e3a1e996">mimicpp::matches::range::any_element</a> (Matcher &amp;&amp;matcher)</td></tr>
+<tr class="memdesc:gaaaaf2818ccdc5527192543d2e3a1e996"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether any element of the target range matches the specified matcher.  <br /></td></tr>
+<tr class="separator:gaaaaf2818ccdc5527192543d2e3a1e996"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Range specific matchers. </p>
@@ -146,6 +154,76 @@ Functions</h2></td></tr>
 <div class="line">    std::vector collection{42, 1337};</div>
 <div class="line">    mock(collection);</div>
 </div><!-- fragment --> <h2 class="groupheader">Function Documentation</h2>
+<a id="gaaaaf2818ccdc5527192543d2e3a1e996" name="gaaaaf2818ccdc5527192543d2e3a1e996"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaaaf2818ccdc5527192543d2e3a1e996">&#9670;&#160;</a></span>any_element()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Matcher &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::range::any_element </td>
+          <td>(</td>
+          <td class="paramtype">Matcher &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>matcher</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether any element of the target range matches the specified matcher. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matcher</td><td>The matcher. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga413871e9bfa939ef03df036a4be28bf1" name="ga413871e9bfa939ef03df036a4be28bf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga413871e9bfa939ef03df036a4be28bf1">&#9670;&#160;</a></span>each_element()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Matcher &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::matches::range::each_element </td>
+          <td>(</td>
+          <td class="paramtype">Matcher &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>matcher</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests, whether each element of the target range matches the specified matcher. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matcher</td><td>The matcher. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga2d8c4b5a400645611fb8b4374fc6a564" name="ga2d8c4b5a400645611fb8b4374fc6a564"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga2d8c4b5a400645611fb8b4374fc6a564">&#9670;&#160;</a></span>eq()</h2>
 
@@ -346,7 +424,7 @@ template&lt;std::ranges::forward_range Range, typename Comparator  = std::equal_
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Oct 12 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

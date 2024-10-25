@@ -160,6 +160,11 @@ var namespacemimicpp =
     [ "string_traits< std::basic_string< Char, Traits, Allocator > >", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4" ],
     [ "string_traits< std::basic_string_view< Char, Traits > >", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4" ],
     [ "string_traits< T >", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4" ],
+    [ "uint_with_size", "d7/da0/structmimicpp_1_1uint__with__size.html", null ],
+    [ "uint_with_size< 1u >", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4" ],
+    [ "uint_with_size< 2u >", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4" ],
+    [ "uint_with_size< 4u >", "d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html", "d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4" ],
+    [ "uint_with_size< 8u >", "d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html", "d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4" ],
     [ "Watched", "d3/d5d/classmimicpp_1_1_watched.html", "d3/d5d/classmimicpp_1_1_watched" ],
     [ "WildcardMatcher", "db/de6/classmimicpp_1_1_wildcard_matcher.html", "db/de6/classmimicpp_1_1_wildcard_matcher" ],
     [ "expectation_policy_for", "dd/d1d/conceptmimicpp_1_1expectation__policy__for.html", null ],
@@ -180,6 +185,7 @@ var namespacemimicpp =
     [ "CharT", "d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc", null ],
     [ "CharTraitsT", "d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad", null ],
     [ "control_state_t", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3f12228c096cc578444846b5c410b61f", null ],
+    [ "DoctestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga2f446c319de27373286e449cc72031dc", null ],
     [ "GTestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga54e2a65c7837029b0c0c8e8a11cb8466", null ],
     [ "SequenceT", "d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf6777ae3a4ea46f945ad2e998885a07c", null ],
     [ "signature_add_noexcept_t", "de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html#ga8e3ea8f62502eac4396439c2010b9cb9", null ],
@@ -193,6 +199,7 @@ var namespacemimicpp =
     [ "StringStreamT", "d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8", null ],
     [ "StringT", "d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1", null ],
     [ "StringViewT", "d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6", null ],
+    [ "uint_with_size_t", "db/d34/group___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e.html#gab237aa1f72f47b22bdef3f3667370dfc", null ],
     [ "UnfulfilledExpectationT", "dd/d4f/group___r_e_p_o_r_t_i_n_g.html#gacf8452c7243d54e2117c72fdf526e80c", null ],
     [ "UnmatchedCallT", "dd/d4f/group___r_e_p_o_r_t_i_n_g.html#ga4ea0d385a653fda742526897e5c2bb5b", null ],
     [ "Constness", "d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1", [
@@ -222,5 +229,11 @@ var namespacemimicpp =
     [ "is_character_v", "dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html#ga88d25d2fd5d4f51c8a9d81bdfb57bcb2", null ],
     [ "is_overload_set_v", "df/dc6/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d___s_e_t.html#ga39bc4106334393c907fb7c716490135c", null ],
     [ "is_overloadable_with_v", "d1/d9e/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d_a_b_l_e___w_i_t_h.html#ga444a530890b564007a9d8f9b5d035785", null ],
-    [ "print", "de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c", null ]
+    [ "print", "de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c", null ],
+    [ "string_literal_prefix", "dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#gafee032e0ba91429f52ac96404738b146", null ],
+    [ "string_literal_prefix< char >", "dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#ga617d41611d53d5034250c9897b798f19", null ],
+    [ "string_literal_prefix< char16_t >", "dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#ga1c7bba6dee1c4844bd3b00aa0832d70c", null ],
+    [ "string_literal_prefix< char32_t >", "dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#ga47b81b960992af4596427f024b759251", null ],
+    [ "string_literal_prefix< char8_t >", "dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#gac62e5c953b6594a6b26768793839cec9", null ],
+    [ "string_literal_prefix< wchar_t >", "dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#ga275ba46d8d65ac39f78dc7c9b9e602ba", null ]
 ];

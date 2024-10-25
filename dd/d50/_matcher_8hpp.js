@@ -1,8 +1,10 @@
 var _matcher_8hpp =
 [
     [ "mimicpp::matcher_for", "df/d23/conceptmimicpp_1_1matcher__for.html", null ],
+    [ "any_element", "dd/d50/_matcher_8hpp.html#gaaaaf2818ccdc5527192543d2e3a1e996", null ],
     [ "contains", "dd/d50/_matcher_8hpp.html#gaa099618b7bf70ca7bcce3ebf1589f2d5", null ],
     [ "contains", "dd/d50/_matcher_8hpp.html#ga1c4d7692b3fcce4102c2bca496f4f54e", null ],
+    [ "each_element", "dd/d50/_matcher_8hpp.html#ga413871e9bfa939ef03df036a4be28bf1", null ],
     [ "ends_with", "dd/d50/_matcher_8hpp.html#ga903d775e76fad77ad0e363619be9f2e9", null ],
     [ "ends_with", "dd/d50/_matcher_8hpp.html#gab39a4b8ffc34ffa744c619e3465b5db4", null ],
     [ "eq", "dd/d50/_matcher_8hpp.html#gaae47b82f14695a5e774ad398df069825", null ],
@@ -12,6 +14,7 @@ var _matcher_8hpp =
     [ "ge", "dd/d50/_matcher_8hpp.html#gac2b140b5f668cbac26e13144adce8114", null ],
     [ "gt", "dd/d50/_matcher_8hpp.html#gaafc5970f07ac2c69f82167ae2189596e", null ],
     [ "has_size", "dd/d50/_matcher_8hpp.html#gabe07e4394f348806148d665d73dc246f", null ],
+    [ "instance", "dd/d50/_matcher_8hpp.html#ga369aedf4edb7313cf70f7ac78ec233f9", null ],
     [ "is_empty", "dd/d50/_matcher_8hpp.html#gacaeaf0bcc3197e6325285d9035a019df", null ],
     [ "is_sorted", "dd/d50/_matcher_8hpp.html#gacad6ed764831afec6ecf3668beebee4f", null ],
     [ "le", "dd/d50/_matcher_8hpp.html#ga4a114a648ee1923e852dc3677038ad9a", null ],
