@@ -673,12 +673,11 @@ namespace mimicpp
     {
     };
 
-    template <typename First, typename Second, typename... Others>
-    struct is_overload_set<First, Second, Others...>
+    template <typename First, typename... Others>
+    struct is_overload_set<First, Others...>
         : public std::conjunction<
-              is_overloadable_with<First, Second>,
-              is_overload_set<First, Others...>,
-              is_overload_set<Second, Others...>>
+              is_overloadable_with<First, Others>...,
+              is_overload_set<Others...>>
     {
     };
 
