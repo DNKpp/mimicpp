@@ -10,24 +10,24 @@
 
 BOOST_AUTO_TEST_SUITE(SuccessSuite)
 
-	BOOST_AUTO_TEST_CASE(ReportSuccess)
-	{
-		mimicpp::detail::boost_test::send_success("Report Success");
-	}
+BOOST_AUTO_TEST_CASE(ReportSuccess)
+{
+    mimicpp::detail::boost_test::send_success("Report Success");
+}
 
-	BOOST_AUTO_TEST_CASE(ReportWarning)
-	{
-		mimicpp::detail::boost_test::send_warning("Report Warning");
-	}
+BOOST_AUTO_TEST_CASE(ReportWarning)
+{
+    mimicpp::detail::boost_test::send_warning("Report Warning");
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 
 // This tests will fail. ctest has appropriate properties set, thus should be reported as success
 BOOST_AUTO_TEST_SUITE(FailureSuite)
 
-	BOOST_AUTO_TEST_CASE(ReportFail)
-	{
-		mimicpp::detail::boost_test::send_fail("Report fail");
-	}
+BOOST_AUTO_TEST_CASE(ReportFail)
+{
+    mimicpp::detail::boost_test::send_fail("Report fail");
+}
 
 BOOST_AUTO_TEST_SUITE_END()
