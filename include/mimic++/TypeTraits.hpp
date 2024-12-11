@@ -667,17 +667,17 @@ namespace mimicpp
      *\{
      */
 
-    template <typename First>
-    struct is_overload_set<First>
-        : public std::true_type
-    {
-    };
-
     template <typename First, typename... Others>
-    struct is_overload_set<First, Others...>
+    struct is_overload_set
         : public std::conjunction<
               is_overloadable_with<First, Others>...,
               is_overload_set<Others...>>
+    {
+    };
+
+    template <typename First>
+    struct is_overload_set<First>
+        : public std::true_type
     {
     };
 

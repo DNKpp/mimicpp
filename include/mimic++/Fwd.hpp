@@ -128,7 +128,7 @@ namespace mimicpp
     inline constexpr bool is_overloadable_with_v = is_overloadable_with<First, Second>::value;
 
     /**
-     * \brief Primary template, purposely undefined.
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_IS_OVERLOAD_SET
      * \tparam First The first function signature.
      * \tparam Others The other function signatures.
