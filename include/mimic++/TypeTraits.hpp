@@ -492,6 +492,162 @@ namespace mimicpp
      */
 
     /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_CONST_QUALIFIER signature_remove_constqualifier
+     * \ingroup TYPE_TRAITS
+     * \brief Removes the const-qualifier of a signature (if present).
+     *
+     *\{
+     */
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...)>
+    {
+        using type = Return(Params...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...)>
+    {
+        using type = Return(Params..., ...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) noexcept>
+    {
+        using type = Return(Params...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) noexcept>
+    {
+        using type = Return(Params..., ...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) const>
+    {
+        using type = Return(Params...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) const>
+    {
+        using type = Return(Params..., ...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) const noexcept>
+    {
+        using type = Return(Params...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) const noexcept>
+    {
+        using type = Return(Params..., ...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...)&>
+    {
+        using type = Return(Params...) &;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...)&>
+    {
+        using type = Return(Params..., ...) &;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) & noexcept>
+    {
+        using type = Return(Params...) & noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) & noexcept>
+    {
+        using type = Return(Params..., ...) & noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) const&>
+    {
+        using type = Return(Params...) &;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) const&>
+    {
+        using type = Return(Params..., ...) &;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) const & noexcept>
+    {
+        using type = Return(Params...) & noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) const & noexcept>
+    {
+        using type = Return(Params..., ...) & noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) &&>
+    {
+        using type = Return(Params...) &&;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) &&>
+    {
+        using type = Return(Params..., ...) &&;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) && noexcept>
+    {
+        using type = Return(Params...) && noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) && noexcept>
+    {
+        using type = Return(Params..., ...) && noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) const&&>
+    {
+        using type = Return(Params...) &&;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) const&&>
+    {
+        using type = Return(Params..., ...) &&;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params...) const && noexcept>
+    {
+        using type = Return(Params...) && noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_const_qualifier<Return(Params..., ...) const && noexcept>
+    {
+        using type = Return(Params..., ...) && noexcept;
+    };
+
+    /**
+     * \}
+     */
+
+    /**
      * \defgroup TYPE_TRAITS_SIGNATURE_DECAY signature_decay
      * \ingroup TYPE_TRAITS
      * \brief Removes all specifications from the given signature.

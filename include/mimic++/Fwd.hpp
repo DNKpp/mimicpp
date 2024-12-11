@@ -69,6 +69,22 @@ namespace mimicpp
 
     /**
      * \brief Primary template, purposely undefined.
+     * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_CONST_QUALIFIER
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_remove_const_qualifier;
+
+    /**
+     * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_CONST_QUALIFIER
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    using signature_remove_const_qualifier_t = typename signature_remove_const_qualifier<Signature>::type;
+
+    /**
+     * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_DECAY
      * \tparam Signature A function signature.
      */
