@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#afdbfde04d2e9d7785ee959873be8d650":[2,0,0,3,2,3],
 "d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#afdbfde04d2e9d7785ee959873be8d650":[4,0,0,2,2,3],
 "d4/d56/classmimicpp_1_1_basic_reporter.html":[1,4,4],
 "d4/d56/classmimicpp_1_1_basic_reporter.html#a267bcc67f5b470b69cc8e6a1c3ad13f9":[1,4,4,0],
@@ -130,7 +129,7 @@ var NAVTREEINDEX1 =
 "d6/d17/_control_policy_8hpp.html":[5,0,1,2],
 "d6/d17/_control_policy_8hpp_source.html":[5,0,1,2],
 "d6/d17/structmimicpp_1_1signature__param__list_3_01_signature_01_4.html":[1,7,5,1],
-"d6/d1f/conceptmimicpp_1_1same__as__any.html":[2,0,0,156],
+"d6/d1f/conceptmimicpp_1_1same__as__any.html":[2,0,0,155],
 "d6/d1f/conceptmimicpp_1_1same__as__any.html":[3,0,11],
 "d6/d79/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_08_01_6noexcept_01_4.html":[1,7,4,9],
 "d6/d79/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_08_01_6noexcept_01_4.html#aa00ccbeb52791f6b00d1372cdf1dfa75":[1,7,4,9,0],
@@ -165,7 +164,7 @@ var NAVTREEINDEX1 =
 "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gaa44f54d8e8a587300db34bd55efdace4":[1,0,4,0],
 "d7/d34/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6noexcept_01_4.html":[1,7,3,24],
 "d7/d34/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6noexcept_01_4.html#a23f066872ec42858d4150b040016d658":[1,7,3,24,0],
-"d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html":[2,0,0,155],
+"d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html":[2,0,0,154],
 "d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html":[3,0,10],
 "d7/d6d/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_4.html":[1,7,3,1],
 "d7/d6d/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_4.html#ad1c8d0e4f22f29abcf39cccc0de9ae46":[1,7,3,1,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "d9/d5a/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6noexcept_01_4.html":[1,7,4,24],
 "d9/d5a/structmimicpp_1_1signature__decay_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6noexcept_01_4.html#aa439f0550ac5d1aa77d1f3901aa057c5":[1,7,4,24,0],
 "d9/d64/conceptmimicpp_1_1finalize__policy__for.html":[1,0,6],
-"d9/d65/structmimicpp_1_1signature__return__type_3_01_signature_01_4.html":[1,7,8,1]
+"d9/d65/structmimicpp_1_1signature__return__type_3_01_signature_01_4.html":[1,7,8,1],
+"d9/d93/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6noexcept_01_4.html":[1,7,7,20]
 };

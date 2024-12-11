@@ -27,7 +27,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "std::conjunction", null, [
-      [ "mimicpp::is_overload_set< First, Second, Others... >", "d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html", null ]
+      [ "mimicpp::is_overload_set< First, Others >", "dd/df5/structmimicpp_1_1is__overload__set.html", null ]
     ] ],
     [ "mimicpp::expectation_policies::Constness< constness >", "db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html", null ],
     [ "mimicpp::ControlPolicy< Sequences >", "dc/db2/classmimicpp_1_1_control_policy.html", null ],
@@ -54,7 +54,6 @@ var hierarchy =
       [ "mimicpp::BasicReporter< successReporter, warningReporter, failReporter >", "d4/d56/classmimicpp_1_1_basic_reporter.html", null ],
       [ "mimicpp::DefaultReporter", "d3/d32/classmimicpp_1_1_default_reporter.html", null ]
     ] ],
-    [ "mimicpp::is_overload_set< First, Others >", "dd/df5/structmimicpp_1_1is__overload__set.html", null ],
     [ "mimicpp::LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", null ],
     [ "mimicpp::custom::matcher_traits< Matcher >", "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html", null ],
     [ "mimicpp::MatchReport", "db/d11/classmimicpp_1_1_match_report.html", null ],

@@ -832,63 +832,62 @@ $(function(){initNavTree('d8/d32/_type_traits_8hpp_source.html','../../'); initR
 <div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>    };</div>
 </div>
 <div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span> </div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First&gt;</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</div>
 <div class="foldopen" id="foldopen00671" data-start="{" data-end="};">
-<div class="line"><a id="l00671" name="l00671"></a><span class="lineno"><a class="line" href="../../d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html">  671</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">is_overload_set</a>&lt;First&gt;</div>
-<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>        : <span class="keyword">public</span> std::true_type</div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>    {</div>
-<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>    };</div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno"><a class="line" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">  671</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">is_overload_set</a></div>
+<div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span>        : <span class="keyword">public</span> std::conjunction&lt;</div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>              is_overloadable_with&lt;First, Others&gt;...,</div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span>              is_overload_set&lt;Others...&gt;&gt;</div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span>    {</div>
+<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>    };</div>
 </div>
-<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span> </div>
-<div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Second, <span class="keyword">typename</span>... Others&gt;</div>
-<div class="foldopen" id="foldopen00677" data-start="{" data-end="};">
-<div class="line"><a id="l00677" name="l00677"></a><span class="lineno"><a class="line" href="../../d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html">  677</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">is_overload_set</a>&lt;First, Second, Others...&gt;</div>
-<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>        : <span class="keyword">public</span> std::conjunction&lt;</div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span>              is_overloadable_with&lt;First, Second&gt;,</div>
-<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>              is_overload_set&lt;First, Others...&gt;,</div>
-<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>              is_overload_set&lt;Second, Others...&gt;&gt;</div>
-<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>    {</div>
-<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span>    };</div>
+<div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span> </div>
+<div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First&gt;</div>
+<div class="foldopen" id="foldopen00679" data-start="{" data-end="};">
+<div class="line"><a id="l00679" name="l00679"></a><span class="lineno"><a class="line" href="../../d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html">  679</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">is_overload_set</a>&lt;First&gt;</div>
+<div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span>        : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span>    {</div>
+<div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>    };</div>
 </div>
-<div class="line"><a id="l00684" name="l00684"></a><span class="lineno">  684</span> </div>
-<div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>    <span class="keyword">template</span> &lt;&gt;</div>
-<div class="foldopen" id="foldopen00702" data-start="{" data-end="};">
-<div class="line"><a id="l00702" name="l00702"></a><span class="lineno"><a class="line" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html">  702</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;1u&gt;</div>
-<div class="line"><a id="l00703" name="l00703"></a><span class="lineno">  703</span>    {</div>
-<div class="line"><a id="l00704" name="l00704"></a><span class="lineno"><a class="line" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">  704</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">type</a> = std::uint8_t;</div>
-<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>    };</div>
+<div class="line"><a id="l00683" name="l00683"></a><span class="lineno">  683</span> </div>
+<div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span>    <span class="keyword">template</span> &lt;&gt;</div>
+<div class="foldopen" id="foldopen00701" data-start="{" data-end="};">
+<div class="line"><a id="l00701" name="l00701"></a><span class="lineno"><a class="line" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html">  701</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;1u&gt;</div>
+<div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>    {</div>
+<div class="line"><a id="l00703" name="l00703"></a><span class="lineno"><a class="line" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">  703</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">type</a> = std::uint8_t;</div>
+<div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>    };</div>
 </div>
-<div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span> </div>
-<div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>    <span class="keyword">template</span> &lt;&gt;</div>
-<div class="foldopen" id="foldopen00711" data-start="{" data-end="};">
-<div class="line"><a id="l00711" name="l00711"></a><span class="lineno"><a class="line" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html">  711</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;2u&gt;</div>
-<div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>    {</div>
-<div class="line"><a id="l00713" name="l00713"></a><span class="lineno"><a class="line" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">  713</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">type</a> = std::uint16_t;</div>
-<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>    };</div>
+<div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span> </div>
+<div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>    <span class="keyword">template</span> &lt;&gt;</div>
+<div class="foldopen" id="foldopen00710" data-start="{" data-end="};">
+<div class="line"><a id="l00710" name="l00710"></a><span class="lineno"><a class="line" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html">  710</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;2u&gt;</div>
+<div class="line"><a id="l00711" name="l00711"></a><span class="lineno">  711</span>    {</div>
+<div class="line"><a id="l00712" name="l00712"></a><span class="lineno"><a class="line" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">  712</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">type</a> = std::uint16_t;</div>
+<div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>    };</div>
 </div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span> </div>
-<div class="line"><a id="l00719" name="l00719"></a><span class="lineno">  719</span>    <span class="keyword">template</span> &lt;&gt;</div>
-<div class="foldopen" id="foldopen00720" data-start="{" data-end="};">
-<div class="line"><a id="l00720" name="l00720"></a><span class="lineno"><a class="line" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html">  720</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;4u&gt;</div>
-<div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>    {</div>
-<div class="line"><a id="l00722" name="l00722"></a><span class="lineno"><a class="line" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">  722</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">type</a> = std::uint32_t;</div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>    };</div>
+<div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span> </div>
+<div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>    <span class="keyword">template</span> &lt;&gt;</div>
+<div class="foldopen" id="foldopen00719" data-start="{" data-end="};">
+<div class="line"><a id="l00719" name="l00719"></a><span class="lineno"><a class="line" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html">  719</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;4u&gt;</div>
+<div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>    {</div>
+<div class="line"><a id="l00721" name="l00721"></a><span class="lineno"><a class="line" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">  721</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">type</a> = std::uint32_t;</div>
+<div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    };</div>
 </div>
-<div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span> </div>
-<div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>    <span class="keyword">template</span> &lt;&gt;</div>
-<div class="foldopen" id="foldopen00729" data-start="{" data-end="};">
-<div class="line"><a id="l00729" name="l00729"></a><span class="lineno"><a class="line" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html">  729</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;8u&gt;</div>
-<div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>    {</div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno"><a class="line" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">  731</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">type</a> = std::uint64_t;</div>
-<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span>    };</div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span> </div>
+<div class="line"><a id="l00727" name="l00727"></a><span class="lineno">  727</span>    <span class="keyword">template</span> &lt;&gt;</div>
+<div class="foldopen" id="foldopen00728" data-start="{" data-end="};">
+<div class="line"><a id="l00728" name="l00728"></a><span class="lineno"><a class="line" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html">  728</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;8u&gt;</div>
+<div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>    {</div>
+<div class="line"><a id="l00730" name="l00730"></a><span class="lineno"><a class="line" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">  730</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">type</a> = std::uint64_t;</div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>    };</div>
 </div>
-<div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span> </div>
-<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>}</div>
-<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span> </div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span> </div>
+<div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>}</div>
+<div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span> </div>
+<div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:20</div></div>
-<div class="ttc" id="astructmimicpp_1_1is__overload__set_html"><div class="ttname"><a href="../../dd/df5/structmimicpp_1_1is__overload__set.html">mimicpp::is_overload_set</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:137</div></div>
+<div class="ttc" id="astructmimicpp_1_1is__overload__set_html"><div class="ttname"><a href="../../dd/df5/structmimicpp_1_1is__overload__set.html">mimicpp::is_overload_set</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:675</div></div>
 <div class="ttc" id="astructmimicpp_1_1is__overloadable__with_html"><div class="ttname"><a href="../../d4/dd6/structmimicpp_1_1is__overloadable__with.html">mimicpp::is_overloadable_with</a></div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:655</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6_01_4_html_a5152dc173f57f349a07feaf2405dff2c"><div class="ttname"><a href="../../d2/d96/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6_01_4.html#a5152dc173f57f349a07feaf2405dff2c">mimicpp::signature_add_noexcept&lt; Return(Params...,...) &amp;&amp; &gt;::type</a></div><div class="ttdeci">Return(Params...,...) &amp;&amp;noexcept type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:139</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6noexcept_01_4_html_aa02bdb836aeb6b764865c610c010ead7"><div class="ttname"><a href="../../dd/dd5/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6noexcept_01_4.html#aa02bdb836aeb6b764865c610c010ead7">mimicpp::signature_add_noexcept&lt; Return(Params...,...) &amp;&amp;noexcept &gt;::type</a></div><div class="ttdeci">Return(Params...,...) &amp;&amp;noexcept type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:151</div></div>
@@ -971,10 +970,10 @@ $(function(){initNavTree('d8/d32/_type_traits_8hpp_source.html','../../'); initR
 <div class="ttc" id="astructmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4_html_aae2462c73bdababb0806c9d47efba9a3"><div class="ttname"><a href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html#aae2462c73bdababb0806c9d47efba9a3">mimicpp::signature_return_type&lt; Return(Params...,...)&gt;::type</a></div><div class="ttdeci">Return type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:518</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4_html_a1d69e687d4cad1aca48534aff5c18e09"><div class="ttname"><a href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html#a1d69e687d4cad1aca48534aff5c18e09">mimicpp::signature_return_type&lt; Return(Params...)&gt;::type</a></div><div class="ttdeci">Return type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:512</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__return__type_html"><div class="ttname"><a href="../../d4/d96/structmimicpp_1_1signature__return__type.html">mimicpp::signature_return_type</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:76</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_011u_01_4_html_a7f8ddb0c20e95f3add9056e351984005"><div class="ttname"><a href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">mimicpp::uint_with_size&lt; 1u &gt;::type</a></div><div class="ttdeci">std::uint8_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:704</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_012u_01_4_html_a1087b04b099a74a359bf025a33dde0c3"><div class="ttname"><a href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">mimicpp::uint_with_size&lt; 2u &gt;::type</a></div><div class="ttdeci">std::uint16_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:713</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_014u_01_4_html_ae44882b5ea4ca17ab16f2f94c670f9e1"><div class="ttname"><a href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">mimicpp::uint_with_size&lt; 4u &gt;::type</a></div><div class="ttdeci">std::uint32_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:722</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_018u_01_4_html_a7f777d6e66976ce6720af6ecce4754a9"><div class="ttname"><a href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">mimicpp::uint_with_size&lt; 8u &gt;::type</a></div><div class="ttdeci">std::uint64_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:731</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_011u_01_4_html_a7f8ddb0c20e95f3add9056e351984005"><div class="ttname"><a href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">mimicpp::uint_with_size&lt; 1u &gt;::type</a></div><div class="ttdeci">std::uint8_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:703</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_012u_01_4_html_a1087b04b099a74a359bf025a33dde0c3"><div class="ttname"><a href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">mimicpp::uint_with_size&lt; 2u &gt;::type</a></div><div class="ttdeci">std::uint16_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:712</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_014u_01_4_html_ae44882b5ea4ca17ab16f2f94c670f9e1"><div class="ttname"><a href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">mimicpp::uint_with_size&lt; 4u &gt;::type</a></div><div class="ttdeci">std::uint32_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:721</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_018u_01_4_html_a7f777d6e66976ce6720af6ecce4754a9"><div class="ttname"><a href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">mimicpp::uint_with_size&lt; 8u &gt;::type</a></div><div class="ttdeci">std::uint64_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:730</div></div>
 <div class="ttc" id="astructmimicpp_1_1uint__with__size_html"><div class="ttname"><a href="../../d7/da0/structmimicpp_1_1uint__with__size.html">mimicpp::uint_with_size</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:154</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

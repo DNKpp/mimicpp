@@ -15,6 +15,5 @@ var searchData=
   ['is_5fcharacter_3c_20wchar_5ft_20_3e_12',['is_character&lt; wchar_t &gt;',['../df/d35/structmimicpp_1_1is__character_3_01wchar__t_01_4.html',1,'mimicpp']]],
   ['is_5foverload_5fset_13',['is_overload_set',['../dd/df5/structmimicpp_1_1is__overload__set.html',1,'mimicpp']]],
   ['is_5foverload_5fset_3c_20first_20_3e_14',['is_overload_set&lt; First &gt;',['../d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html',1,'mimicpp']]],
-  ['is_5foverload_5fset_3c_20first_2c_20second_2c_20others_2e_2e_2e_20_3e_15',['is_overload_set&lt; First, Second, Others... &gt;',['../d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html',1,'mimicpp']]],
-  ['is_5foverloadable_5fwith_16',['is_overloadable_with',['../d4/dd6/structmimicpp_1_1is__overloadable__with.html',1,'mimicpp']]]
+  ['is_5foverloadable_5fwith_15',['is_overloadable_with',['../d4/dd6/structmimicpp_1_1is__overloadable__with.html',1,'mimicpp']]]
 ];

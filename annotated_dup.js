@@ -52,7 +52,6 @@ var annotated_dup =
       [ "is_character< wchar_t >", "df/d35/structmimicpp_1_1is__character_3_01wchar__t_01_4.html", null ],
       [ "is_overload_set", "dd/df5/structmimicpp_1_1is__overload__set.html", null ],
       [ "is_overload_set< First >", "d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html", null ],
-      [ "is_overload_set< First, Second, Others... >", "d1/d32/structmimicpp_1_1is__overload__set_3_01_first_00_01_second_00_01_others_8_8_8_01_4.html", null ],
       [ "is_overloadable_with", "d4/dd6/structmimicpp_1_1is__overloadable__with.html", null ],
       [ "LazySequence", "db/d46/classmimicpp_1_1_lazy_sequence.html", null ],
       [ "LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", "db/d98/classmimicpp_1_1_lifetime_watcher" ],
