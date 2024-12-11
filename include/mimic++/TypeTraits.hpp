@@ -726,44 +726,28 @@ namespace mimicpp
      * \}
      */
 
-    /*
+    /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_CONST_QUALIFICATION signature_const_qualification
+     * \ingroup TYPE_TRAITS
+     * \brief Determines the const-qualification of the given signature.
+     *
+     *\{
+     */
+
     template <typename Signature>
         requires std::is_function_v<Signature>
-    struct signature_constness<Signature>
-        : public signature_constness<signature_remove_noexcept_t<Signature>>
+    struct signature_const_qualification<Signature>
+        : public std::integral_constant<
+              Constness,
+              std::same_as<Signature, signature_remove_const_qualifier_t<Signature>>
+                  ? Constness::non_const
+                  : Constness::as_const>
     {
     };
 
-    template <typename Return, typename... Params>
-    struct signature_constness<Return(Params...)>
-        : public std::integral_constant<Constness, Constness::non_const>
-    {
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_constness<Return(Params...) &>
-        : public std::integral_constant<Constness, Constness::non_const>
-    {
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_constness<Return(Params...) &&>
-        : public std::integral_constant<Constness, Constness::non_const>
-    {
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_constness<Return(Params...) const>
-        : public std::integral_constant<Constness, Constness::as_const>
-    {
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_constness<Return(Params...) const &>
-        : public std::integral_constant<Constness, Constness::as_const>
-    {
-    };
-    */
+    /**
+     * \}
+     */
 
     /**
      * \defgroup TYPE_TRAITS_SIGNATURE_PARAM_LIST signature_param_list

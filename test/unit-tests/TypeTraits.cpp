@@ -774,6 +774,171 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+    "signature_const_qualification extracts the const-qualifier from the given signature.",
+    "[type_traits]",
+    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    (true, void),
+    (true, void, int),
+    (true, void, float, int),
+    (true, void, float&),
+    (true, void, const float&),
+    (true, void, float&&),
+    (true, void, const float&&),
+    (true, void, float*),
+    (true, void, const float*),
+
+    (true, double),
+    (true, double, int),
+    (true, double, float, int),
+    (true, double, float&),
+    (true, double, const float&),
+    (true, double, float&&),
+    (true, double, const float&&),
+    (true, double, float*),
+    (true, double, const float*),
+
+    (true, double&),
+    (true, double&, int),
+    (true, double&, float, int),
+    (true, double&, float&),
+    (true, double&, const float&),
+    (true, double&, float&&),
+    (true, double&, const float&&),
+    (true, double&, float*),
+    (true, double&, const float*),
+
+    (true, const double&),
+    (true, const double&, int),
+    (true, const double&, float, int),
+    (true, const double&, float&),
+    (true, const double&, const float&),
+    (true, const double&, float&&),
+    (true, const double&, const float&&),
+    (true, const double&, float*),
+    (true, const double&, const float*),
+
+    (true, double&&),
+    (true, double&&, int),
+    (true, double&&, float, int),
+    (true, double&&, float&),
+    (true, double&&, const float&),
+    (true, double&&, float&&),
+    (true, double&&, const float&&),
+    (true, double&&, float*),
+    (true, double&&, const float*),
+
+    (true, const double&&),
+    (true, const double&&, int),
+    (true, const double&&, float, int),
+    (true, const double&&, float&),
+    (true, const double&&, const float&),
+    (true, const double&&, float&&),
+    (true, const double&&, const float&&),
+    (true, const double&&, float*),
+    (true, const double&&, const float*),
+
+    (true, void*),
+    (true, void*, int),
+    (true, void*, float, int),
+    (true, void*, float&),
+    (true, void*, const float&),
+    (true, void*, float&&),
+    (true, void*, const float&&),
+    (true, void*, float*),
+    (true, void*, const float*),
+
+    (true, const void*),
+    (true, const void*, int),
+    (true, const void*, float, int),
+    (true, const void*, float&),
+    (true, const void*, const float&),
+    (true, const void*, float&&),
+    (true, const void*, const float&&),
+    (true, const void*, float*),
+    (true, const void*, const float*))
+{
+    using enum mimicpp::Constness;
+
+    SECTION("Variadic c++ function.")
+    {
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args...)>::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args...)>);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args...)&>::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args...)&>);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args...) &&>::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args...) &&>);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args...) noexcept>::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args...) noexcept>);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification < Return(Args...) & noexcept > ::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v < Return(Args...) & noexcept >);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification < Return(Args...) && noexcept > ::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v < Return(Args...) && noexcept >);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args...) const>::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args...) const>);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args...) const&>::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args...) const&>);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args...) const&&>::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args...) const&&>);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args...) const noexcept>::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args...) const noexcept>);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification < Return(Args...) const& noexcept > ::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v < Return(Args...) const& noexcept >);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification < Return(Args...) const&& noexcept > ::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v < Return(Args...) const&& noexcept >);
+    }
+
+    SECTION("Function with c-ellipsis.")
+    {
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args..., ...)>::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args..., ...)>);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args..., ...)&>::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args..., ...)&>);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args..., ...) &&>::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) &&>);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args..., ...) noexcept>::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) noexcept>);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification < Return(Args..., ...) & noexcept > ::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v < Return(Args..., ...) & noexcept >);
+
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification < Return(Args..., ...) && noexcept > ::value);
+        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v < Return(Args..., ...) && noexcept >);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args..., ...) const>::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) const>);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args..., ...) const&>::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) const&>);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args..., ...) const&&>::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) const&&>);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args..., ...) const noexcept>::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) const noexcept>);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification < Return(Args..., ...) const& noexcept > ::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v < Return(Args..., ...) const& noexcept >);
+
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification < Return(Args..., ...) const&& noexcept > ::value);
+        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v < Return(Args..., ...) const&& noexcept >);
+    }
+}
+
+TEMPLATE_TEST_CASE_SIG(
     "signature_param_type extracts the n-th param type of the given signature.",
     "[type_traits]",
     ((typename Expected, std::size_t index, typename Signature), Expected, index, Signature),

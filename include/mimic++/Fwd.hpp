@@ -19,6 +19,20 @@ namespace mimicpp::call
 
 namespace mimicpp
 {
+    enum class Constness
+    {
+        non_const = 0b01,
+        as_const = 0b10,
+        any = non_const | as_const
+    };
+
+    enum class ValueCategory
+    {
+        lvalue = 0b01,
+        rvalue = 0b10,
+        any = lvalue | rvalue
+    };
+
     /**
      * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_ADD_NOEXCEPT
@@ -114,6 +128,22 @@ namespace mimicpp
      */
     template <typename Signature>
     using signature_return_type_t = typename signature_return_type<Signature>::type;
+
+    /**
+     * \brief Primary template, purposely undefined.
+     * \ingroup TYPE_TRAITS_SIGNATURE_CONST_QUALIFICATION
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_const_qualification;
+
+    /**
+     * \brief Convenience alias, exposing the ``value`` member of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_CONST_QUALIFICATION
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    inline constexpr Constness signature_const_qualification_v = signature_const_qualification<Signature>::value;
 
     /**
      * \brief Primary template, purposely undefined.
@@ -214,20 +244,6 @@ namespace mimicpp
         none,
         inapplicable,
         full
-    };
-
-    enum class Constness
-    {
-        non_const = 0b01,
-        as_const = 0b10,
-        any = non_const | as_const
-    };
-
-    enum class ValueCategory
-    {
-        lvalue = 0b01,
-        rvalue = 0b10,
-        any = lvalue | rvalue
     };
 
     class CallReport;
