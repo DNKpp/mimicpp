@@ -256,6 +256,156 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+    "signature_remove_ref_qualifier removes the ref-qualification.",
+    "[type_traits]",
+    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    (true, void),
+    (true, void, int),
+    (true, void, float, int),
+    (true, void, float&),
+    (true, void, const float&),
+    (true, void, float&&),
+    (true, void, const float&&),
+    (true, void, float*),
+    (true, void, const float*),
+
+    (true, double),
+    (true, double, int),
+    (true, double, float, int),
+    (true, double, float&),
+    (true, double, const float&),
+    (true, double, float&&),
+    (true, double, const float&&),
+    (true, double, float*),
+    (true, double, const float*),
+
+    (true, double&),
+    (true, double&, int),
+    (true, double&, float, int),
+    (true, double&, float&),
+    (true, double&, const float&),
+    (true, double&, float&&),
+    (true, double&, const float&&),
+    (true, double&, float*),
+    (true, double&, const float*),
+
+    (true, const double&),
+    (true, const double&, int),
+    (true, const double&, float, int),
+    (true, const double&, float&),
+    (true, const double&, const float&),
+    (true, const double&, float&&),
+    (true, const double&, const float&&),
+    (true, const double&, float*),
+    (true, const double&, const float*),
+
+    (true, double&&),
+    (true, double&&, int),
+    (true, double&&, float, int),
+    (true, double&&, float&),
+    (true, double&&, const float&),
+    (true, double&&, float&&),
+    (true, double&&, const float&&),
+    (true, double&&, float*),
+    (true, double&&, const float*),
+
+    (true, const double&&),
+    (true, const double&&, int),
+    (true, const double&&, float, int),
+    (true, const double&&, float&),
+    (true, const double&&, const float&),
+    (true, const double&&, float&&),
+    (true, const double&&, const float&&),
+    (true, const double&&, float*),
+    (true, const double&&, const float*),
+
+    (true, void*),
+    (true, void*, int),
+    (true, void*, float, int),
+    (true, void*, float&),
+    (true, void*, const float&),
+    (true, void*, float&&),
+    (true, void*, const float&&),
+    (true, void*, float*),
+    (true, void*, const float*),
+
+    (true, const void*),
+    (true, const void*, int),
+    (true, const void*, float, int),
+    (true, const void*, float&),
+    (true, const void*, const float&),
+    (true, const void*, float&&),
+    (true, const void*, const float&&),
+    (true, const void*, float*),
+    (true, const void*, const float*))
+{
+    SECTION("Variadic c++ function.")
+    {
+        using SignatureT = Return(Args...);
+        using SignatureNoexceptT = Return(Args...) noexcept;
+        using SignatureConstT = Return(Args...) const;
+        using SignatureConstNoexceptT = Return(Args...) const noexcept;
+
+        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...)>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...)>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureConstT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...)&>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...)&>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureConstT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const&>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const&>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) &&>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) &&>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureConstT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const&&>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const&&>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) noexcept>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) noexcept>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const noexcept>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const noexcept>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) & noexcept>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) & noexcept>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const & noexcept>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const & noexcept>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) && noexcept>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) && noexcept>>);
+
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const && noexcept>::type>);
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const && noexcept>>);
+    }
+
+    SECTION("Function with c-ellipsis.")
+    {
+        using SignatureT = Return(Args..., ...);
+        using SignatureNoexceptT = Return(Args..., ...) noexcept;
+        using SignatureConstT = Return(Args..., ...) const;
+        using SignatureConstNoexceptT = Return(Args..., ...) const noexcept;
+
+        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...)>>);
+        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const>>);
+        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...)&>>);
+        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const&>>);
+        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) &&>>);
+        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const&&>>);
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) noexcept>>);
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const noexcept>>);
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) & noexcept>>);
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const & noexcept>>);
+        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) && noexcept>>);
+        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const && noexcept>>);
+    }
+}
+
+TEMPLATE_TEST_CASE_SIG(
     "signature_decay removes all modifiers.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),

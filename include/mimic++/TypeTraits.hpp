@@ -336,6 +336,162 @@ namespace mimicpp
      */
 
     /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_REF_QUALIFIER signature_remove_ref_qualifier
+     * \ingroup TYPE_TRAITS
+     * \brief Removes the ref-qualifier of a signature (if present).
+     *
+     *\{
+     */
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...)>
+    {
+        using type = Return(Params...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...)>
+    {
+        using type = Return(Params..., ...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) noexcept>
+    {
+        using type = Return(Params...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) noexcept>
+    {
+        using type = Return(Params..., ...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) const>
+    {
+        using type = Return(Params...) const;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) const>
+    {
+        using type = Return(Params..., ...) const;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) const noexcept>
+    {
+        using type = Return(Params...) const noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) const noexcept>
+    {
+        using type = Return(Params..., ...) const noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...)&>
+    {
+        using type = Return(Params...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...)&>
+    {
+        using type = Return(Params..., ...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) & noexcept>
+    {
+        using type = Return(Params...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) & noexcept>
+    {
+        using type = Return(Params..., ...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) const&>
+    {
+        using type = Return(Params...) const;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) const&>
+    {
+        using type = Return(Params..., ...) const;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) const & noexcept>
+    {
+        using type = Return(Params...) const noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) const & noexcept>
+    {
+        using type = Return(Params..., ...) const noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) &&>
+    {
+        using type = Return(Params...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) &&>
+    {
+        using type = Return(Params..., ...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) && noexcept>
+    {
+        using type = Return(Params...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) && noexcept>
+    {
+        using type = Return(Params..., ...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) const&&>
+    {
+        using type = Return(Params...) const;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) const&&>
+    {
+        using type = Return(Params..., ...) const;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params...) const && noexcept>
+    {
+        using type = Return(Params...) const noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_ref_qualifier<Return(Params..., ...) const && noexcept>
+    {
+        using type = Return(Params..., ...) const noexcept;
+    };
+
+    /**
+     * \}
+     */
+
+    /**
      * \defgroup TYPE_TRAITS_SIGNATURE_DECAY signature_decay
      * \ingroup TYPE_TRAITS
      * \brief Removes all specifications from the given signature.
@@ -548,6 +704,45 @@ namespace mimicpp
     /**
      * \}
      */
+
+    /*
+    template <typename Signature>
+        requires std::is_function_v<Signature>
+    struct signature_constness<Signature>
+        : public signature_constness<signature_remove_noexcept_t<Signature>>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_constness<Return(Params...)>
+        : public std::integral_constant<Constness, Constness::non_const>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_constness<Return(Params...) &>
+        : public std::integral_constant<Constness, Constness::non_const>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_constness<Return(Params...) &&>
+        : public std::integral_constant<Constness, Constness::non_const>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_constness<Return(Params...) const>
+        : public std::integral_constant<Constness, Constness::as_const>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_constness<Return(Params...) const &>
+        : public std::integral_constant<Constness, Constness::as_const>
+    {
+    };
+    */
 
     /**
      * \defgroup TYPE_TRAITS_SIGNATURE_PARAM_LIST signature_param_list
