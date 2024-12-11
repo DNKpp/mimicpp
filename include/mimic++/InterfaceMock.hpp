@@ -16,41 +16,41 @@
 
 namespace mimicpp
 {
-	/**
-	 * \defgroup MOCK_INTERFACES interfaces
-	 * \ingroup MOCK
-	 * \brief Contains utility to simplify interface mocking.
-	 * \details While this library tries avoiding macros when possible, sometimes we must not be too stubborn.
-	 * Making interface mocking more enjoyable is such a situation. While this can of course be done without macros,
-	 * this quickly becomes annoying, due to the necessary boilerplate code.
-	 * \snippet InterfaceMock.cpp interface mock manual
-	 * ``mimic++`` therefore introduces some macros, which helps to reduce the effort to a minimum.
-	 * With them, the boilerplate can be reduced to this macro invocation, which effectively does the same as before:
-	 * ```cpp
-	 * MOCK_METHOD(foo, void, ());
-	 * ```
-	 *
-	 * The good news is, that these macros are just a thin layer around the macro free core and can thus be easily avoided.
-	 * Nevertheless, ``mimic++`` still aims to become macro-less as possible. As soon as reflection becomes available, an
-	 * attempt will be made to solve this feature completely in c++ language (hopefully with c++26, but only time will tell).
-	 *
-	 * ## Multiple inheritance
-	 * Multiple inheritance is fully supported, without any special tricks.
-	 * \snippet InterfaceMock.cpp interface mock multiple inheritance
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES interfaces
+     * \ingroup MOCK
+     * \brief Contains utility to simplify interface mocking.
+     * \details While this library tries avoiding macros when possible, sometimes we must not be too stubborn.
+     * Making interface mocking more enjoyable is such a situation. While this can of course be done without macros,
+     * this quickly becomes annoying, due to the necessary boilerplate code.
+     * \snippet InterfaceMock.cpp interface mock manual
+     * ``mimic++`` therefore introduces some macros, which helps to reduce the effort to a minimum.
+     * With them, the boilerplate can be reduced to this macro invocation, which effectively does the same as before:
+     * ```cpp
+     * MOCK_METHOD(foo, void, ());
+     * ```
+     *
+     * The good news is, that these macros are just a thin layer around the macro free core and can thus be easily avoided.
+     * Nevertheless, ``mimic++`` still aims to become macro-less as possible. As soon as reflection becomes available, an
+     * attempt will be made to solve this feature completely in c++ language (hopefully with c++26, but only time will tell).
+     *
+     * ## Multiple inheritance
+     * Multiple inheritance is fully supported, without any special tricks.
+     * \snippet InterfaceMock.cpp interface mock multiple inheritance
+     */
 
-	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL detail
-	 * \ingroup MOCK_INTERFACES
-	 * \brief Contains several macros, used for interface mock implementation.
-	 * \attention These macros should never be used directly by users.
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES_DETAIL detail
+     * \ingroup MOCK_INTERFACES
+     * \brief Contains several macros, used for interface mock implementation.
+     * \attention These macros should never be used directly by users.
+     */
 
-	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL_STRIP_PARENS strip_parens
-	 * \ingroup MOCK_INTERFACES_DETAIL
-	 * \brief Removes an enclosing pair of (), if present.
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES_DETAIL_STRIP_PARENS strip_parens
+     * \ingroup MOCK_INTERFACES_DETAIL
+     * \brief Removes an enclosing pair of (), if present.
+     */
 }
 
 /**
@@ -77,7 +77,7 @@ namespace mimicpp
  * \brief Black-magic.
  * \ingroup MOCK_INTERFACES_DETAIL_STRIP_PARENS
  */
-#define MIMICPP_DETAIL_STRIP_PARENS_OUTER_(...) MIMICPP_DETAIL_STRIP_PARENS_STRIPPED_ ## __VA_ARGS__
+#define MIMICPP_DETAIL_STRIP_PARENS_OUTER_(...) MIMICPP_DETAIL_STRIP_PARENS_STRIPPED_##__VA_ARGS__
 
 /**
  * \brief Swallows the leftover token.
@@ -87,16 +87,16 @@ namespace mimicpp
 
 namespace mimicpp
 {
-	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL_FOR_EACH for_each
-	 * \ingroup MOCK_INTERFACES_DETAIL
-	 * \brief This is an implementation of a for-loop for the preprocessor.
-	 * \details This solution is highly inspired by the blog-article of David Mazieres.
-	 * He does a very good job in explaining the dark corners of the macro language, but even now, I do not
-	 * fully understand how this works. Either way, thank you very much!
-	 * \see https://www.scs.stanford.edu/~dm/blog/va-opt.html
-	 * \details All macros in this group are required to make that work.
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES_DETAIL_FOR_EACH for_each
+     * \ingroup MOCK_INTERFACES_DETAIL
+     * \brief This is an implementation of a for-loop for the preprocessor.
+     * \details This solution is highly inspired by the blog-article of David Mazieres.
+     * He does a very good job in explaining the dark corners of the macro language, but even now, I do not
+     * fully understand how this works. Either way, thank you very much!
+     * \see https://www.scs.stanford.edu/~dm/blog/va-opt.html
+     * \details All macros in this group are required to make that work.
+     */
 }
 
 /**
@@ -172,15 +172,15 @@ namespace mimicpp
  * with twice the token content and so on. It's ok, to provide an empty argument.
  */
 #define MIMICPP_DETAIL_FOR_EACH_EXT(macro, token, delimiter, projection_macro, bound, ...) \
-  __VA_OPT__(MIMICPP_DETAIL_EXPAND(MIMICPP_DETAIL_FOR_EACH_EXT_HELPER(macro, token, token, delimiter, projection_macro, bound, __VA_ARGS__)))
+    __VA_OPT__(MIMICPP_DETAIL_EXPAND(MIMICPP_DETAIL_FOR_EACH_EXT_HELPER(macro, token, token, delimiter, projection_macro, bound, __VA_ARGS__)))
 
 /**
  * \brief Black-magic.
  * \ingroup MOCK_INTERFACES_DETAIL_FOR_EACH
  */
-#define MIMICPP_DETAIL_FOR_EACH_EXT_HELPER(macro, token, sequence, delimiter, projection_macro, bound, a1, ...)												\
-  MIMICPP_DETAIL_FOR_EACH_EXT_INDIRECT(macro, sequence, MIMICPP_DETAIL_STRIP_PARENS(bound), projection_macro(a1))											\
-  __VA_OPT__(delimiter() MIMICPP_FOR_EACH_EXT_AGAIN MIMICPP_DETAIL_PARENS (macro, token, sequence##token, delimiter, projection_macro, bound, __VA_ARGS__))
+#define MIMICPP_DETAIL_FOR_EACH_EXT_HELPER(macro, token, sequence, delimiter, projection_macro, bound, a1, ...)     \
+    MIMICPP_DETAIL_FOR_EACH_EXT_INDIRECT(macro, sequence, MIMICPP_DETAIL_STRIP_PARENS(bound), projection_macro(a1)) \
+    __VA_OPT__(delimiter() MIMICPP_FOR_EACH_EXT_AGAIN MIMICPP_DETAIL_PARENS(macro, token, sequence##token, delimiter, projection_macro, bound, __VA_ARGS__))
 
 /**
  * \brief Black-magic.
@@ -190,11 +190,11 @@ namespace mimicpp
 
 namespace mimicpp
 {
-	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE_LIST make_signature_list
-	 * \ingroup MOCK_INTERFACES_DETAIL
-	 * \brief Converts all given arguments to a signature.
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE_LIST make_signature_list
+     * \ingroup MOCK_INTERFACES_DETAIL
+     * \brief Converts all given arguments to a signature.
+     */
 }
 
 /**
@@ -213,13 +213,13 @@ namespace mimicpp
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE_LIST
  */
 #define MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(...) \
-	MIMICPP_DETAIL_FOR_EACH_EXT(				\
-		MIMICPP_DETAIL_MAKE_SIGNATURE,			\
-		,										\
-		MIMICPP_DETAIL_COMMA_DELIMITER,			\
-		MIMICPP_DETAIL_STRIP_PARENS,			\
-		,										\
-		__VA_ARGS__)
+    MIMICPP_DETAIL_FOR_EACH_EXT(                \
+        MIMICPP_DETAIL_MAKE_SIGNATURE,          \
+        ,                                       \
+        MIMICPP_DETAIL_COMMA_DELIMITER,         \
+        MIMICPP_DETAIL_STRIP_PARENS,            \
+        ,                                       \
+        __VA_ARGS__)
 
 /**
  * \brief Creates a mimicpp::Mock object for the given signatures.
@@ -227,16 +227,18 @@ namespace mimicpp
  * \param mock_name The mock name.
  * \param signatures The given signatures. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)	\
-	::mimicpp::Mock< MIMICPP_DETAIL_STRIP_PARENS(signatures) > mock_name{}
+#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)     \
+    ::mimicpp::Mock<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name \
+    {                                                                  \
+    }
 
 namespace mimicpp
 {
-	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_PARAM_LIST make_param_list
-	 * \ingroup MOCK_INTERFACES_DETAIL
-	 * \brief Converts all given arguments to a parameter-list.
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_PARAM_LIST make_param_list
+     * \ingroup MOCK_INTERFACES_DETAIL
+     * \brief Converts all given arguments to a parameter-list.
+     */
 }
 
 /**
@@ -253,21 +255,21 @@ namespace mimicpp
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_PARAM_LIST
  */
 #define MIMICPP_DETAIL_MAKE_PARAM_LIST(...) \
-	MIMICPP_DETAIL_FOR_EACH_EXT(			\
-		MIMICPP_DETAIL_MAKE_PARAM,			\
-		i,									\
-		MIMICPP_DETAIL_COMMA_DELIMITER,		\
-		MIMICPP_DETAIL_IDENTITY,			\
-		,									\
-		__VA_ARGS__)
+    MIMICPP_DETAIL_FOR_EACH_EXT(            \
+        MIMICPP_DETAIL_MAKE_PARAM,          \
+        i,                                  \
+        MIMICPP_DETAIL_COMMA_DELIMITER,     \
+        MIMICPP_DETAIL_IDENTITY,            \
+        ,                                   \
+        __VA_ARGS__)
 
 namespace mimicpp
 {
-	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL_FORWARD_ARGS forward_args
-	 * \ingroup MOCK_INTERFACES_DETAIL
-	 * \brief Creates ``std::forward`` calls for each given argument (not enclosed by parentheses).
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES_DETAIL_FORWARD_ARGS forward_args
+     * \ingroup MOCK_INTERFACES_DETAIL
+     * \brief Creates ``std::forward`` calls for each given argument (not enclosed by parentheses).
+     */
 }
 
 /**
@@ -278,28 +280,28 @@ namespace mimicpp
  * \param type The type of the parameter. Enclosing parentheses will be stripped.
  */
 #define MIMICPP_DETAIL_FORWARD_ARG(sequence, bound_data, type) \
-	::std::forward<::std::add_rvalue_reference_t<MIMICPP_DETAIL_STRIP_PARENS(type)>>(arg_##sequence)
+    ::std::forward<::std::add_rvalue_reference_t<MIMICPP_DETAIL_STRIP_PARENS(type)>>(arg_##sequence)
 
 /**
  * \brief Creates ``std::forward`` calls for each given argument (not enclosed by parentheses).
  * \ingroup MOCK_INTERFACES_DETAIL_FORWARD_ARGS
  */
-#define MIMICPP_DETAIL_FORWARD_ARGS(...)	\
-	MIMICPP_DETAIL_FOR_EACH_EXT(			\
-		MIMICPP_DETAIL_FORWARD_ARG,			\
-		i,									\
-		MIMICPP_DETAIL_COMMA_DELIMITER,		\
-		MIMICPP_DETAIL_IDENTITY,			\
-		,									\
-		__VA_ARGS__)
+#define MIMICPP_DETAIL_FORWARD_ARGS(...) \
+    MIMICPP_DETAIL_FOR_EACH_EXT(         \
+        MIMICPP_DETAIL_FORWARD_ARG,      \
+        i,                               \
+        MIMICPP_DETAIL_COMMA_DELIMITER,  \
+        MIMICPP_DETAIL_IDENTITY,         \
+        ,                                \
+        __VA_ARGS__)
 
 namespace mimicpp
 {
-	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS make_overload_infos
-	 * \ingroup MOCK_INTERFACES_DETAIL
-	 * \brief Related functions for MIMICPP_ADD_OVERLOAD.
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS make_overload_infos
+     * \ingroup MOCK_INTERFACES_DETAIL
+     * \brief Related functions for MIMICPP_ADD_OVERLOAD.
+     */
 }
 
 /**
@@ -310,9 +312,7 @@ namespace mimicpp
  * \param specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
  */
 #define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs, ...) \
-	(ret, param_type_list, specs, \
-		(MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))), \
-		(MIMICPP_DETAIL_FORWARD_ARGS(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))
+    (ret, param_type_list, specs, (MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))), (MIMICPP_DETAIL_FORWARD_ARGS(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))
 
 /**
  * \brief Simple overload, extending the overload info (enclosed by parentheses).
@@ -321,7 +321,7 @@ namespace mimicpp
  * \param param_type_list The parameter types.
  */
 #define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC(ret, param_type_list, ...) \
-	MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, )
+    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, )
 
 /**
  * \brief Selects the correct overload, depending on the number of arguments.
@@ -337,19 +337,19 @@ namespace mimicpp
  * \param param_type_list The parameter types.
  * \param ... An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
  */
-#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...)								\
-	MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(										\
-		__VA_ARGS__,																\
-		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,									\
-		MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__,) // clangCl doesn't compile without that extra ,
+#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \
+    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \
+        __VA_ARGS__,                                    \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) // clangCl doesn't compile without that extra ,
 
 namespace mimicpp
 {
-	/**
-	 * \defgroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES make_method_overrides
-	 * \ingroup MOCK_INTERFACES_DETAIL
-	 * \brief Creates all required override overloads.
-	 */
+    /**
+     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES make_method_overrides
+     * \ingroup MOCK_INTERFACES_DETAIL
+     * \brief Creates all required override overloads.
+     */
 }
 
 /**
@@ -364,11 +364,11 @@ namespace mimicpp
  * \param param_list Enclosed parameter list.
  * \param forward_list Enclosed forward statements.
  */
-#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, param_type_list, specs, param_list, forward_list, ...)	\
-	inline MIMICPP_DETAIL_STRIP_PARENS(ret) fn_name param_list MIMICPP_DETAIL_STRIP_PARENS(specs) override 							\
-	{																																\
-		return mock_name (MIMICPP_DETAIL_STRIP_PARENS(forward_list));																\
-	}
+#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, param_type_list, specs, param_list, forward_list, ...) \
+    inline MIMICPP_DETAIL_STRIP_PARENS(ret) fn_name param_list MIMICPP_DETAIL_STRIP_PARENS(specs) override                          \
+    {                                                                                                                               \
+        return mock_name(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                \
+    }
 
 /**
  * \brief Creates all overloads for a specific function as overrides.
@@ -376,14 +376,14 @@ namespace mimicpp
  * \param mock_name The mock name.
  * \param fn_name The function name to be overloaded.
  */
-#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(mock_name, fn_name, ...)	\
-	MIMICPP_DETAIL_FOR_EACH_EXT(										\
-		MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,							\
-		,																\
-		MIMICPP_DETAIL_NO_DELIMITER,									\
-		MIMICPP_DETAIL_STRIP_PARENS,									\
-		(mock_name, fn_name),											\
-		__VA_ARGS__)
+#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(mock_name, fn_name, ...) \
+    MIMICPP_DETAIL_FOR_EACH_EXT(                                      \
+        MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                          \
+        ,                                                             \
+        MIMICPP_DETAIL_NO_DELIMITER,                                  \
+        MIMICPP_DETAIL_STRIP_PARENS,                                  \
+        (mock_name, fn_name),                                         \
+        __VA_ARGS__)
 
 /**
  * \brief Starting point for mocking overloaded interface methods.
@@ -395,11 +395,11 @@ namespace mimicpp
  * single mock object.
  * \snippet InterfaceMock.cpp interface mock overloaded
  */
-#define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...)						\
-	MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(fn_name##_, fn_name, __VA_ARGS__)	\
-	MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(									\
-		fn_name##_,															\
-		(MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
+#define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...)                       \
+    MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(fn_name##_, fn_name, __VA_ARGS__) \
+    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                   \
+        fn_name##_,                                                        \
+        (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
 
 /**
  * \brief Starting point for mocking a single interface method.
@@ -411,30 +411,30 @@ namespace mimicpp
  * which forwards its calls to the mock object.
  * \snippet InterfaceMock.cpp interface mock simple
  */
-#define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...)					\
-	MIMICPP_MOCK_OVERLOADED_METHOD(												\
-		fn_name,																\
-		MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(,) __VA_ARGS__ ))
+#define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...) \
+    MIMICPP_MOCK_OVERLOADED_METHOD(                             \
+        fn_name,                                                \
+        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
 
 #ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
 
-/**
- * \brief Shorthand variant of \ref MIMICPP_MOCK_METHOD.
- * \ingroup MOCK_INTERFACES
- */
-#define MOCK_METHOD					MIMICPP_MOCK_METHOD
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MOCK_METHOD.
+     * \ingroup MOCK_INTERFACES
+     */
+    #define MOCK_METHOD MIMICPP_MOCK_METHOD
 
-/**
- * \brief Shorthand variant of \ref MIMICPP_MOCK_OVERLOADED_METHOD.
- * \ingroup MOCK_INTERFACES
- */
-#define MOCK_OVERLOADED_METHOD		MIMICPP_MOCK_OVERLOADED_METHOD
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MOCK_OVERLOADED_METHOD.
+     * \ingroup MOCK_INTERFACES
+     */
+    #define MOCK_OVERLOADED_METHOD MIMICPP_MOCK_OVERLOADED_METHOD
 
-/**
- * \brief Shorthand variant of \ref MIMICPP_ADD_OVERLOAD.
- * \ingroup MOCK_INTERFACES
- */
-#define ADD_OVERLOAD				MIMICPP_ADD_OVERLOAD
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_ADD_OVERLOAD.
+     * \ingroup MOCK_INTERFACES
+     */
+    #define ADD_OVERLOAD MIMICPP_ADD_OVERLOAD
 
 #endif
 
