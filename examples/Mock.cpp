@@ -9,175 +9,177 @@
 
 namespace
 {
-	//! [stack concept]
-	template <typename T, typename Value>
-	concept stack_backend_for = requires(T& container, Value v)
-	{
-		{ std::as_const(container).empty() } -> std::convertible_to<bool>;
-		{ container.back() } -> std::convertible_to<Value&>;
-		{ std::as_const(container).back() } -> std::convertible_to<const Value&>;
-		container.push_back(std::move(v));
-		{ container.pop_back() };
-	};
-	//! [stack concept]
+    //! [stack concept]
+    template <typename T, typename Value>
+    concept stack_backend_for = requires(T& container, Value v) {
+        { std::as_const(container).empty() } -> std::convertible_to<bool>;
+        { container.back() } -> std::convertible_to<Value&>;
+        { std::as_const(container).back() } -> std::convertible_to<const Value&>;
+        container.push_back(std::move(v));
+        { container.pop_back() };
+    };
 
-	//! [stack adapter]
-	template <typename T, stack_backend_for<T> Container>
-	class MyStack
-	{
-	public:
-		[[nodiscard]]
-		explicit MyStack(Container container)
-			: m_Container{std::move(container)}
-		{
-		}
+    //! [stack concept]
 
-		[[nodiscard]]
-		auto& top()
-		{
-			if (m_Container.empty())
-			{
-				throw std::runtime_error{"Container is empty."};
-			}
-			return m_Container.back();
-		}
+    //! [stack adapter]
+    template <typename T, stack_backend_for<T> Container>
+    class MyStack
+    {
+    public:
+        [[nodiscard]]
+        explicit MyStack(Container container)
+            : m_Container{std::move(container)}
+        {
+        }
 
-		[[nodiscard]]
-		const auto& top() const
-		{
-			if (m_Container.empty())
-			{
-				throw std::runtime_error{"Container is empty."};
-			}
-			return m_Container.back();
-		}
+        [[nodiscard]]
+        auto& top()
+        {
+            if (m_Container.empty())
+            {
+                throw std::runtime_error{"Container is empty."};
+            }
+            return m_Container.back();
+        }
 
-		void push(T obj)
-		{
-			m_Container.push_back(std::move(obj));
-		}
+        [[nodiscard]]
+        const auto& top() const
+        {
+            if (m_Container.empty())
+            {
+                throw std::runtime_error{"Container is empty."};
+            }
+            return m_Container.back();
+        }
 
-		void pop()
-		{
-			if (m_Container.empty())
-			{
-				throw std::runtime_error{"Container is empty."};
-			}
-			m_Container.pop_back();
-		}
+        void push(T obj)
+        {
+            m_Container.push_back(std::move(obj));
+        }
 
-	private:
-		Container m_Container;
-	};
-	//! [stack adapter]
+        void pop()
+        {
+            if (m_Container.empty())
+            {
+                throw std::runtime_error{"Container is empty."};
+            }
+            m_Container.pop_back();
+        }
+
+    private:
+        Container m_Container;
+    };
+
+    //! [stack adapter]
 }
 
 TEST_CASE(
-	"Mocks can be members and thus fulfill any interface requirement.",
-	"[example][example::mock]"
-)
+    "Mocks can be members and thus fulfill any interface requirement.",
+    "[example][example::mock]")
 {
-	//! [container mock]
-	class ContainerMock
-	{
-	public:
-		mimicpp::Mock<bool() const> empty{};
+    //! [container mock]
+    class ContainerMock
+    {
+    public:
+        mimicpp::Mock<bool() const> empty{};
 
-		mimicpp::Mock<
-			int&(),
-			const int&() const> back{};
+        mimicpp::Mock<
+            int&(),
+            const int&() const>
+            back{};
 
-		mimicpp::Mock<void(int)> push_back{};
+        mimicpp::Mock<void(int)> push_back{};
 
-		mimicpp::Mock<void()> pop_back{};
-	};
-	//! [container mock]
+        mimicpp::Mock<void()> pop_back{};
+    };
 
-	STATIC_REQUIRE(stack_backend_for<ContainerMock, int>);
+    //! [container mock]
 
-	namespace matches = mimicpp::matches;
-	namespace expect = mimicpp::expect;
-	namespace finally = mimicpp::finally;
+    STATIC_REQUIRE(stack_backend_for<ContainerMock, int>);
 
-	//! [test push]
-	SECTION("When element is added.")
-	{
-		ContainerMock innerContainer{};
-		SCOPED_EXP innerContainer.push_back.expect_call(42);
+    namespace matches = mimicpp::matches;
+    namespace expect = mimicpp::expect;
+    namespace finally = mimicpp::finally;
 
-		MyStack<int, ContainerMock> stack{std::move(innerContainer)};
-		stack.push(42);
-	}
-	//! [test push]
+    //! [test push]
+    SECTION("When element is added.")
+    {
+        ContainerMock innerContainer{};
+        SCOPED_EXP innerContainer.push_back.expect_call(42);
 
-	//! [test top]
-	SECTION("When top element is accessed.")
-	{
-		ContainerMock innerContainer{};
+        MyStack<int, ContainerMock> stack{std::move(innerContainer)};
+        stack.push(42);
+    }
+    //! [test push]
 
-		SECTION("Throws, when inner container is empty.")
-		{
-			SCOPED_EXP innerContainer.empty.expect_call()
-						and expect::times(2)	// we test both, the const and non-const top() overload
-						and finally::returns(true);
+    //! [test top]
+    SECTION("When top element is accessed.")
+    {
+        ContainerMock innerContainer{};
 
-			MyStack<int, ContainerMock> stack{std::move(innerContainer)};
+        SECTION("Throws, when inner container is empty.")
+        {
+            SCOPED_EXP innerContainer.empty.expect_call()
+                and expect::times(2) // we test both, the const and non-const top() overload
+                and finally::returns(true);
 
-			REQUIRE_THROWS_AS(stack.top(), std::runtime_error);
-			REQUIRE_THROWS_AS(std::as_const(stack).top(), std::runtime_error);
-		}
+            MyStack<int, ContainerMock> stack{std::move(innerContainer)};
 
-		SECTION("Returns a reference to the top element otherwise.")
-		{
-			SCOPED_EXP innerContainer.empty.expect_call()
-						and finally::returns(false);
+            REQUIRE_THROWS_AS(stack.top(), std::runtime_error);
+            REQUIRE_THROWS_AS(std::as_const(stack).top(), std::runtime_error);
+        }
 
-			SECTION("A const-ref, when accessed via const.")
-			{
-				SCOPED_EXP std::as_const(innerContainer).back.expect_call()
-							and finally::returns(42);
+        SECTION("Returns a reference to the top element otherwise.")
+        {
+            SCOPED_EXP innerContainer.empty.expect_call()
+                and finally::returns(false);
 
-				MyStack<int, ContainerMock> stack{std::move(innerContainer)};
+            SECTION("A const-ref, when accessed via const.")
+            {
+                SCOPED_EXP std::as_const(innerContainer).back.expect_call()
+                    and finally::returns(42);
 
-				REQUIRE(42 == std::as_const(stack).top());
-			}
+                MyStack<int, ContainerMock> stack{std::move(innerContainer)};
 
-			SECTION("A mutable ref, when accessed via non-const.")
-			{
-				SCOPED_EXP innerContainer.back.expect_call()
-							and finally::returns(42);
+                REQUIRE(42 == std::as_const(stack).top());
+            }
 
-				MyStack<int, ContainerMock> stack{std::move(innerContainer)};
+            SECTION("A mutable ref, when accessed via non-const.")
+            {
+                SCOPED_EXP innerContainer.back.expect_call()
+                    and finally::returns(42);
 
-				REQUIRE(42 == stack.top());
-			}
-		}
-	}
-	//! [test top]
+                MyStack<int, ContainerMock> stack{std::move(innerContainer)};
 
-	//! [test pop]
-	SECTION("When top element is removed.")
-	{
-		SECTION("Throws, when inner container is empty.")
-		{
-			ContainerMock innerContainer{};
-			SCOPED_EXP innerContainer.empty.expect_call()
-						and finally::returns(true);
+                REQUIRE(42 == stack.top());
+            }
+        }
+    }
+    //! [test top]
 
-			MyStack<int, ContainerMock> stack{std::move(innerContainer)};
-			REQUIRE_THROWS_AS(stack.pop(), std::runtime_error);
-		}
+    //! [test pop]
+    SECTION("When top element is removed.")
+    {
+        SECTION("Throws, when inner container is empty.")
+        {
+            ContainerMock innerContainer{};
+            SCOPED_EXP innerContainer.empty.expect_call()
+                and finally::returns(true);
 
-		SECTION("Succeeds silently, when at least one element exists.")
-		{
-			ContainerMock innerContainer{};
-			SCOPED_EXP innerContainer.empty.expect_call()
-						and finally::returns(false);
-			SCOPED_EXP innerContainer.pop_back.expect_call();
+            MyStack<int, ContainerMock> stack{std::move(innerContainer)};
+            REQUIRE_THROWS_AS(stack.pop(), std::runtime_error);
+        }
 
-			MyStack<int, ContainerMock> container{std::move(innerContainer)};
-			container.pop();
-		}
-	}
-	//! [test pop]
+        SECTION("Succeeds silently, when at least one element exists.")
+        {
+            ContainerMock innerContainer{};
+            SCOPED_EXP innerContainer.empty.expect_call()
+                and finally::returns(false);
+            SCOPED_EXP innerContainer.pop_back.expect_call();
+
+            MyStack<int, ContainerMock> container{std::move(innerContainer)};
+            container.pop();
+        }
+    }
+    //! [test pop]
 }
