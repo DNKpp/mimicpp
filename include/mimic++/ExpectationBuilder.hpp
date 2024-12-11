@@ -61,7 +61,7 @@ namespace mimicpp
                   && (!std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>)
                   && finalize_policy_for<std::remove_cvref_t<Policy>, Signature>
         [[nodiscard]]
-        constexpr auto operator&&(Policy&& policy) &&
+        friend constexpr auto operator&&(BasicExpectationBuilder&& builder, Policy&& policy)
         {
             using ExtendedExpectationBuilderT = BasicExpectationBuilder<
                 timesConfigured,
@@ -71,17 +71,17 @@ namespace mimicpp
                 Policies...>;
 
             return ExtendedExpectationBuilderT{
-                std::move(m_Storage),
-                std::move(m_TimesConfig),
-                std::move(m_SequenceConfig),
+                std::move(builder.m_Storage),
+                std::move(builder.m_TimesConfig),
+                std::move(builder.m_SequenceConfig),
                 std::forward<Policy>(policy),
-                std::move(m_ExpectationPolicies)};
+                std::move(builder.m_ExpectationPolicies)};
         }
 
         template <typename Policy>
             requires expectation_policy_for<std::remove_cvref_t<Policy>, Signature>
         [[nodiscard]]
-        constexpr auto operator&&(Policy&& policy) && // NOLINT(cppcoreguidelines-missing-std-forward)
+        friend constexpr auto operator&&(BasicExpectationBuilder&& builder, Policy&& policy)
         {
             using ExtendedExpectationBuilderT = BasicExpectationBuilder<
                 timesConfigured,
@@ -92,41 +92,39 @@ namespace mimicpp
                 std::remove_cvref_t<Policy>>;
 
             return ExtendedExpectationBuilderT{
-                std::move(m_Storage),
-                std::move(m_TimesConfig),
-                std::move(m_SequenceConfig),
-                std::move(m_FinalizePolicy),
-                std::apply(
-                    [&](auto&... policies) noexcept {
-                        return std::forward_as_tuple(
-                            std::move(policies)...,
-                            std::forward<Policy>(policy));
-                    },
-                    m_ExpectationPolicies)};
+                std::move(builder.m_Storage),
+                std::move(builder.m_TimesConfig),
+                std::move(builder.m_SequenceConfig),
+                std::move(builder.m_FinalizePolicy),
+                std::tuple_cat(
+                    std::move(builder.m_ExpectationPolicies),
+                    std::forward_as_tuple(std::forward<Policy>(policy)))};
         }
 
         [[nodiscard]]
-            constexpr auto operator&&(detail::TimesConfig&& config)
-            && requires(!timesConfigured) {
-                   using NewBuilderT = BasicExpectationBuilder<
-                       true,
-                       SequenceConfig,
-                       Signature,
-                       FinalizePolicy,
-                       Policies...>;
-
-                   return NewBuilderT{
-                       std::move(m_Storage),
-                       std::move(config),
-                       std::move(m_SequenceConfig),
-                       std::move(m_FinalizePolicy),
-                       std::move(m_ExpectationPolicies)};
-               }
-
-            template <typename... Sequences>
-            [[nodiscard]] constexpr auto operator&&(sequence::detail::Config<Sequences...>&& config) &&
+        friend constexpr auto operator&&(BasicExpectationBuilder&& builder, detail::TimesConfig&& config)
+            requires(!timesConfigured)
         {
-            sequence::detail::Config newConfig = m_SequenceConfig.concat(std::move(config));
+            using NewBuilderT = BasicExpectationBuilder<
+                true,
+                SequenceConfig,
+                Signature,
+                FinalizePolicy,
+                Policies...>;
+
+            return NewBuilderT{
+                std::move(builder.m_Storage),
+                std::move(config),
+                std::move(builder.m_SequenceConfig),
+                std::move(builder.m_FinalizePolicy),
+                std::move(builder.m_ExpectationPolicies)};
+        }
+
+        template <typename... Sequences>
+        [[nodiscard]]
+        friend constexpr auto operator&&(BasicExpectationBuilder&& builder, sequence::detail::Config<Sequences...>&& config)
+        {
+            sequence::detail::Config newConfig = builder.m_SequenceConfig.concat(std::move(config));
 
             using ExtendedExpectationBuilderT = BasicExpectationBuilder<
                 timesConfigured,
@@ -136,11 +134,11 @@ namespace mimicpp
                 Policies...>;
 
             return ExtendedExpectationBuilderT{
-                std::move(m_Storage),
-                std::move(m_TimesConfig),
+                std::move(builder.m_Storage),
+                std::move(builder.m_TimesConfig),
                 std::move(newConfig),
-                std::move(m_FinalizePolicy),
-                std::move(m_ExpectationPolicies)};
+                std::move(builder.m_FinalizePolicy),
+                std::move(builder.m_ExpectationPolicies)};
         }
 
         [[nodiscard]]
