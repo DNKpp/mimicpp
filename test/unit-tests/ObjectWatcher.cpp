@@ -15,808 +15,792 @@
 using namespace mimicpp;
 
 TEST_CASE(
-	"LifetimeWatcher tracks destruction",
-	"[object-watcher][object-watcher::lifetime]"
-)
+    "LifetimeWatcher tracks destruction",
+    "[object-watcher][object-watcher::lifetime]")
 {
-	namespace Matches = Catch::Matchers;
+    namespace Matches = Catch::Matchers;
 
-	ScopedReporter reporter{};
+    ScopedReporter reporter{};
 
-	SECTION("Reports a no-match-error, when destruction occurs without an expectation.")
-	{
-		const auto action = []() { LifetimeWatcher watcher{}; };
+    SECTION("Reports a no-match-error, when destruction occurs without an expectation.")
+    {
+        const auto action = []() { LifetimeWatcher watcher{}; };
 
-		REQUIRE_THROWS_AS(
-			action(),
-			NoMatchError);
+        REQUIRE_THROWS_AS(
+            action(),
+            NoMatchError);
 
-		REQUIRE_THAT(
-			reporter.full_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.inapplicable_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.no_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.unfulfilled_expectations(),
-			Matches::IsEmpty());
-	}
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.unfulfilled_expectations(),
+            Matches::IsEmpty());
+    }
 
-	SECTION("Reports an unfulfilled expectation, if the expectation expires before destruction occurs.")
-	{
-		auto watcher = std::make_unique<LifetimeWatcher>();
-		std::optional<ScopedExpectation> expectation = watcher->expect_destruct();
-		expectation.reset();
+    SECTION("Reports an unfulfilled expectation, if the expectation expires before destruction occurs.")
+    {
+        auto watcher = std::make_unique<LifetimeWatcher>();
+        std::optional<ScopedExpectation> expectation = watcher->expect_destruct();
+        expectation.reset();
 
-		REQUIRE_THAT(
-			reporter.full_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.inapplicable_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.no_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.unfulfilled_expectations(),
-			Matches::SizeIs(1));
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.unfulfilled_expectations(),
+            Matches::SizeIs(1));
 
-		// we need to safely tear-down the watcher
-		CHECK_THROWS_AS(
-			std::invoke([&]{ delete watcher.release(); }),
-			NoMatchError);
-	}
+        // we need to safely tear-down the watcher
+        CHECK_THROWS_AS(
+            std::invoke([&] { delete watcher.release(); }),
+            NoMatchError);
+    }
 
-	SECTION("Reports a full-match, if destruction occurs with an active expectation.")
-	{
-		SECTION("From an lvalue.")
-		{
-			auto expectation = std::invoke(
-				[]() -> ScopedExpectation
-				{
-					LifetimeWatcher watcher{};
-					return watcher.expect_destruct();
-				});
-		}
+    SECTION("Reports a full-match, if destruction occurs with an active expectation.")
+    {
+        SECTION("From an lvalue.")
+        {
+            auto expectation = std::invoke(
+                []() -> ScopedExpectation {
+                    LifetimeWatcher watcher{};
+                    return watcher.expect_destruct();
+                });
+        }
 
-		SECTION("From an rvalue.")
-		{
-			ScopedExpectation expectation = LifetimeWatcher{}.expect_destruct();
-		}
+        SECTION("From an rvalue.")
+        {
+            ScopedExpectation expectation = LifetimeWatcher{}.expect_destruct();
+        }
 
-		REQUIRE_THAT(
-			reporter.full_match_reports(),
-			Matches::SizeIs(1));
-		REQUIRE_THAT(
-			reporter.inapplicable_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.no_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.unfulfilled_expectations(),
-			Matches::IsEmpty());
-	}
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Matches::SizeIs(1));
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.unfulfilled_expectations(),
+            Matches::IsEmpty());
+    }
 
-	SECTION("An exception is thrown, if a destruction expectation is set more than once.")
-	{
-		auto expectation = std::invoke(
-			[]() -> ScopedExpectation
-			{
-				LifetimeWatcher watcher{};
-				ScopedExpectation exp1 = watcher.expect_destruct();
+    SECTION("An exception is thrown, if a destruction expectation is set more than once.")
+    {
+        auto expectation = std::invoke(
+            []() -> ScopedExpectation {
+                LifetimeWatcher watcher{};
+                ScopedExpectation exp1 = watcher.expect_destruct();
 
-				REQUIRE_THROWS_AS(
-					watcher.expect_destruct(),
-					std::logic_error);
+                REQUIRE_THROWS_AS(
+                    watcher.expect_destruct(),
+                    std::logic_error);
 
-				REQUIRE_THROWS_AS(
-					watcher.expect_destruct(),
-					std::logic_error);
+                REQUIRE_THROWS_AS(
+                    watcher.expect_destruct(),
+                    std::logic_error);
 
-				return exp1;
-			});
+                return exp1;
+            });
 
-		REQUIRE_THAT(
-			reporter.full_match_reports(),
-			Matches::SizeIs(1));
-		REQUIRE_THAT(
-			reporter.inapplicable_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.no_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.unfulfilled_expectations(),
-			Matches::IsEmpty());
-	}
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Matches::SizeIs(1));
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.unfulfilled_expectations(),
+            Matches::IsEmpty());
+    }
 
-	SECTION("LifetimeWatcher can be moved.")
-	{
-		std::optional<LifetimeWatcher> source{std::in_place};
+    SECTION("LifetimeWatcher can be moved.")
+    {
+        std::optional<LifetimeWatcher> source{std::in_place};
 
-		SECTION("With an already active destruct-expectation")
-		{
-			ScopedExpectation firstExpectation = source->expect_destruct();
+        SECTION("With an already active destruct-expectation")
+        {
+            ScopedExpectation firstExpectation = source->expect_destruct();
 
-			SECTION("When move constructed.")
-			{
-				LifetimeWatcher target{*std::move(source)};
-			}
+            SECTION("When move constructed.")
+            {
+                LifetimeWatcher target{*std::move(source)};
+            }
 
-			SECTION("When move assigned.")
-			{
-				auto innerExp = std::invoke(
-					[&]
-					{
-						LifetimeWatcher target{};
-						ScopedExpectation secondExpectation = target.expect_destruct();
+            SECTION("When move assigned.")
+            {
+                auto innerExp = std::invoke(
+                    [&] {
+                        LifetimeWatcher target{};
+                        ScopedExpectation secondExpectation = target.expect_destruct();
 
-						target = *std::move(source);
+                        target = *std::move(source);
 
-						// let's also swap the expectations, so the tracking becomes easier.
-						using std::swap;
-						swap(firstExpectation, secondExpectation);
-						return secondExpectation;
-					});
-			}
+                        // let's also swap the expectations, so the tracking becomes easier.
+                        using std::swap;
+                        swap(firstExpectation, secondExpectation);
+                        return secondExpectation;
+                    });
+            }
 
-			SECTION("When self-move assigned.")
-			{
-				START_WARNING_SUPPRESSION
-				SUPPRESS_SELF_MOVE
-				*source = *std::move(source);
-				STOP_WARNING_SUPPRESSION
+            SECTION("When self-move assigned.")
+            {
+                START_WARNING_SUPPRESSION
+                SUPPRESS_SELF_MOVE
+                *source = *std::move(source);
+                STOP_WARNING_SUPPRESSION
 
-				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
-				source.reset();
-			}
-		}
+                // need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+                source.reset();
+            }
+        }
 
-		SECTION("Without an active destruct-expectation.")
-		{
-			SECTION("When move constructed.")
-			{
-				auto expectation = std::invoke(
-					[&]() -> ScopedExpectation
-					{
-						LifetimeWatcher target{*std::move(source)};
-						return target.expect_destruct();
-					});
-			}
+        SECTION("Without an active destruct-expectation.")
+        {
+            SECTION("When move constructed.")
+            {
+                auto expectation = std::invoke(
+                    [&]() -> ScopedExpectation {
+                        LifetimeWatcher target{*std::move(source)};
+                        return target.expect_destruct();
+                    });
+            }
 
-			SECTION("When move assigned.")
-			{
-				auto innerExp = std::invoke(
-					[&]() -> ScopedExpectation
-					{
-						LifetimeWatcher target{};
-						// note: The target must have an active expectation, as it's considered dead after the move happened.
-						ScopedExpectation targetExp = target.expect_destruct();
+            SECTION("When move assigned.")
+            {
+                auto innerExp = std::invoke(
+                    [&]() -> ScopedExpectation {
+                        LifetimeWatcher target{};
+                        // note: The target must have an active expectation, as it's considered dead after the move happened.
+                        ScopedExpectation targetExp = target.expect_destruct();
 
-						target = *std::move(source);
+                        target = *std::move(source);
 
-						return target.expect_destruct();
-					});
-			}
-		}
-	}
+                        return target.expect_destruct();
+                    });
+            }
+        }
+    }
 
-	SECTION("LifetimeWatcher can be copied.")
-	{
-		std::optional<LifetimeWatcher> source{std::in_place};
+    SECTION("LifetimeWatcher can be copied.")
+    {
+        std::optional<LifetimeWatcher> source{std::in_place};
 
-		SECTION("With an already active destruct-expectation")
-		{
-			MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
+        SECTION("With an already active destruct-expectation")
+        {
+            MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
 
-			SECTION("When copy-constructing.")
-			{
-				auto expectation = std::invoke(
-					[&]() -> ScopedExpectation
-					{
-						LifetimeWatcher target{*source};
-						return target.expect_destruct();
-					});
+            SECTION("When copy-constructing.")
+            {
+                auto expectation = std::invoke(
+                    [&]() -> ScopedExpectation {
+                        LifetimeWatcher target{*source};
+                        return target.expect_destruct();
+                    });
 
-				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
-				source.reset();
-			}
+                // need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+                source.reset();
+            }
 
-			SECTION("When copy-assigning.")
-			{
-				auto expectation = std::invoke(
-					[&]() -> ScopedExpectation
-					{
-						LifetimeWatcher target{};
-						MIMICPP_SCOPED_EXPECTATION target.expect_destruct();
+            SECTION("When copy-assigning.")
+            {
+                auto expectation = std::invoke(
+                    [&]() -> ScopedExpectation {
+                        LifetimeWatcher target{};
+                        MIMICPP_SCOPED_EXPECTATION target.expect_destruct();
 
-						target = *source;
-						return target.expect_destruct();
-					});
+                        target = *source;
+                        return target.expect_destruct();
+                    });
 
-				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
-				source.reset();
-			}
+                // need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+                source.reset();
+            }
 
-			SECTION("When self-copy-assigning.")
-			{
-				source = *source;
-				MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
+            SECTION("When self-copy-assigning.")
+            {
+                source = *source;
+                MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
 
-				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
-				source.reset();
-			}
-		}
+                // need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+                source.reset();
+            }
+        }
 
-		SECTION("Without an active destruct-expectation")
-		{
-			SECTION("When copy-constructing.")
-			{
-				auto expectation = std::invoke(
-					[&]() -> ScopedExpectation
-					{
-						LifetimeWatcher target{*source};
-						return target.expect_destruct();
-					});
+        SECTION("Without an active destruct-expectation")
+        {
+            SECTION("When copy-constructing.")
+            {
+                auto expectation = std::invoke(
+                    [&]() -> ScopedExpectation {
+                        LifetimeWatcher target{*source};
+                        return target.expect_destruct();
+                    });
 
-				MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
-				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
-				source.reset();
-			}
+                MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
+                // need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+                source.reset();
+            }
 
-			SECTION("When copy-assigning.")
-			{
-				auto expectation = std::invoke(
-					[&]() -> ScopedExpectation
-					{
-						LifetimeWatcher target{};
-						MIMICPP_SCOPED_EXPECTATION target.expect_destruct();
+            SECTION("When copy-assigning.")
+            {
+                auto expectation = std::invoke(
+                    [&]() -> ScopedExpectation {
+                        LifetimeWatcher target{};
+                        MIMICPP_SCOPED_EXPECTATION target.expect_destruct();
 
-						target = *source;
-						return target.expect_destruct();
-					});
+                        target = *source;
+                        return target.expect_destruct();
+                    });
 
-				MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
-				// need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
-				source.reset();
-			}
-		}
-	}
+                MIMICPP_SCOPED_EXPECTATION source->expect_destruct();
+                // need to manually destroy the object, to prevent the expectation outliving the lifetime-watcher
+                source.reset();
+            }
+        }
+    }
 }
 
 TEST_CASE(
-	"LifetimeWatcher supports finally::throws policy.",
-	"[object-watcher][object-watcher::lifetime]"
-)
+    "LifetimeWatcher supports finally::throws policy.",
+    "[object-watcher][object-watcher::lifetime]")
 {
-	struct my_exception
-	{
-	};
+    struct my_exception
+    {
+    };
 
-	const auto action = []
-	{
-		LifetimeWatcher watcher{};
-		MIMICPP_SCOPED_EXPECTATION watcher.expect_destruct()
-									and finally::throws(my_exception{});
+    const auto action = [] {
+        LifetimeWatcher watcher{};
+        MIMICPP_SCOPED_EXPECTATION watcher.expect_destruct()
+            and finally::throws(my_exception{});
 
-		// it's very important, making sure, that the expectation outlives the LifetimeWatcher
-		LifetimeWatcher other{std::move(watcher)};
-	};
+        // it's very important, making sure, that the expectation outlives the LifetimeWatcher
+        LifetimeWatcher other{std::move(watcher)};
+    };
 
-	REQUIRE_THROWS_AS(
-		action(),
-		my_exception);
+    REQUIRE_THROWS_AS(
+        action(),
+        my_exception);
 }
 
 TEST_CASE(
-	"LifetimeWatcher watched can wrap the actual type to be watched with the utilized watcher types.",
-	"[object-watcher][object-watcher::lifetime]"
-)
+    "LifetimeWatcher watched can wrap the actual type to be watched with the utilized watcher types.",
+    "[object-watcher][object-watcher::lifetime]")
 {
-	STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Mock<void(int)>, LifetimeWatcher>>);
+    STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Mock<void(int)>, LifetimeWatcher>>);
 
-	SECTION("Detects violations.")
-	{
-		ScopedReporter reporter{};
+    SECTION("Detects violations.")
+    {
+        ScopedReporter reporter{};
 
-		struct not_nothrow_destructible
-		{
-			~not_nothrow_destructible() noexcept(false)
-			{
-			}
-		};
+        struct not_nothrow_destructible
+        {
+            ~not_nothrow_destructible() noexcept(false)
+            {
+            }
+        };
 
-		using WatcherT = Watched<not_nothrow_destructible, LifetimeWatcher>;
-		STATIC_REQUIRE(!std::is_nothrow_destructible_v<WatcherT>);
+        using WatcherT = Watched<not_nothrow_destructible, LifetimeWatcher>;
+        STATIC_REQUIRE(!std::is_nothrow_destructible_v<WatcherT>);
 
-		REQUIRE_THROWS_AS(
-			WatcherT{},
-			NoMatchError);
-	}
+        REQUIRE_THROWS_AS(
+            WatcherT{},
+            NoMatchError);
+    }
 
-	SECTION("Just plain usage.")
-	{
-		Watched<
-			Mock<void(int)>,
-			LifetimeWatcher> watched{};
+    SECTION("Just plain usage.")
+    {
+        Watched<
+            Mock<void(int)>,
+            LifetimeWatcher>
+            watched{};
 
-		MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
-		MIMICPP_SCOPED_EXPECTATION watched.expect_call(42);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
+        MIMICPP_SCOPED_EXPECTATION watched.expect_call(42);
 
-		watched(42);
+        watched(42);
 
-		// extend lifetime, to outlive all expectations
-		auto temp{std::move(watched)};
-	}
+        // extend lifetime, to outlive all expectations
+        auto temp{std::move(watched)};
+    }
 
-	SECTION("With explicit sequence.")
-	{
-		Watched<
-			Mock<void(int)>,
-			LifetimeWatcher> watched{};
+    SECTION("With explicit sequence.")
+    {
+        Watched<
+            Mock<void(int)>,
+            LifetimeWatcher>
+            watched{};
 
-		SequenceT sequence{};
-		{
-			Watched<
-				Mock<void()>,
-				LifetimeWatcher> other{};
+        SequenceT sequence{};
+        {
+            Watched<
+                Mock<void()>,
+                LifetimeWatcher>
+                other{};
 
-			MIMICPP_SCOPED_EXPECTATION other.expect_destruct()
-										and expect::in_sequence(sequence);
+            MIMICPP_SCOPED_EXPECTATION other.expect_destruct()
+                and expect::in_sequence(sequence);
 
-			// extend lifetime, to outlive its expectations
-			auto temp{std::move(other)};
-		}
+            // extend lifetime, to outlive its expectations
+            auto temp{std::move(other)};
+        }
 
-		MIMICPP_SCOPED_EXPECTATION watched.expect_call(42)
-									and expect::in_sequence(sequence);
-		MIMICPP_SCOPED_EXPECTATION watched.expect_destruct()
-									and expect::in_sequence(sequence);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_call(42)
+            and expect::in_sequence(sequence);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_destruct()
+            and expect::in_sequence(sequence);
 
-		watched(42);
+        watched(42);
 
-		// extend lifetime, to outlive its expectations
-		auto temp{std::move(watched)};
-	}
+        // extend lifetime, to outlive its expectations
+        auto temp{std::move(watched)};
+    }
 }
 
 TEST_CASE(
-	"LifetimeWatcher watched can be used on interface-mocks.",
-	"[object-watcher][object-watcher::lifetime]"
-)
+    "LifetimeWatcher watched can be used on interface-mocks.",
+    "[object-watcher][object-watcher::lifetime]")
 {
-	class Interface
-	{
-	public:
-		virtual ~Interface() = default;
-		virtual void foo() = 0;
-	};
+    class Interface
+    {
+    public:
+        virtual ~Interface() = default;
+        virtual void foo() = 0;
+    };
 
-	class Derived
-		: public Interface
-	{
-	public:
-		MIMICPP_MOCK_METHOD(foo, void, ());
-	};
+    class Derived
+        : public Interface
+    {
+    public:
+        MIMICPP_MOCK_METHOD(foo, void, ());
+    };
 
-	STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Derived, LifetimeWatcher>>);
+    STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Derived, LifetimeWatcher>>);
 
-	auto watched = std::make_unique<Watched<Derived, LifetimeWatcher>>();
+    auto watched = std::make_unique<Watched<Derived, LifetimeWatcher>>();
 
-	MIMICPP_SCOPED_EXPECTATION watched->expect_destruct();
-	MIMICPP_SCOPED_EXPECTATION watched->foo_.expect_call();
+    MIMICPP_SCOPED_EXPECTATION watched->expect_destruct();
+    MIMICPP_SCOPED_EXPECTATION watched->foo_.expect_call();
 
-	watched->foo();
+    watched->foo();
 
-	// extend lifetime, to outlive its expectations
-	const std::unique_ptr<Interface> temp{std::move(watched)};
+    // extend lifetime, to outlive its expectations
+    const std::unique_ptr<Interface> temp{std::move(watched)};
 }
 
 TEST_CASE(
-	"Violations of LifetimeWatcher watched interface-implementations will be detected.",
-	"[object-watcher][object-watcher::lifetime]"
-)
+    "Violations of LifetimeWatcher watched interface-implementations will be detected.",
+    "[object-watcher][object-watcher::lifetime]")
 {
-	class Interface
-	{
-	public:
-		// must not be noexcept, due to the installed reporter
-		virtual ~Interface() noexcept(false)
-		{
-		}
-	};
+    class Interface
+    {
+    public:
+        // must not be noexcept, due to the installed reporter
+        virtual ~Interface() noexcept(false)
+        {
+        }
+    };
 
-	class Derived
-		: public Interface
-	{
-	};
+    class Derived
+        : public Interface
+    {
+    };
 
-	STATIC_REQUIRE(!std::is_nothrow_destructible_v<Watched<Derived, LifetimeWatcher>>);
+    STATIC_REQUIRE(!std::is_nothrow_destructible_v<Watched<Derived, LifetimeWatcher>>);
 
-	ScopedReporter reporter{};
+    ScopedReporter reporter{};
 
-	REQUIRE_THROWS_AS(
-		(Watched<Derived, LifetimeWatcher>{}),
-		NoMatchError);
+    REQUIRE_THROWS_AS(
+        (Watched<Derived, LifetimeWatcher>{}),
+        NoMatchError);
 }
 
 TEST_CASE(
-	"RelocationWatcher tracks object move-constructions and -assignments.",
-	"[object-watcher][object-watcher::relocation]"
-)
+    "RelocationWatcher tracks object move-constructions and -assignments.",
+    "[object-watcher][object-watcher::relocation]")
 {
-	namespace Matches = Catch::Matchers;
+    namespace Matches = Catch::Matchers;
 
-	ScopedReporter reporter{};
+    ScopedReporter reporter{};
 
-	SECTION("Reports a no-match, if move occurs without an expectation.")
-	{
-		RelocationWatcher watcher{};
+    SECTION("Reports a no-match, if move occurs without an expectation.")
+    {
+        RelocationWatcher watcher{};
 
-		SECTION("When move constructing.")
-		{
-			REQUIRE_THROWS_AS(
-				RelocationWatcher{std::move(watcher)},
-				NoMatchError);
-		}
+        SECTION("When move constructing.")
+        {
+            REQUIRE_THROWS_AS(
+                RelocationWatcher{std::move(watcher)},
+                NoMatchError);
+        }
 
-		SECTION("When move assigning.")
-		{
-			const auto action = [&]
-			{
-				RelocationWatcher target{};
-				target = std::move(watcher);
-			};
+        SECTION("When move assigning.")
+        {
+            const auto action = [&] {
+                RelocationWatcher target{};
+                target = std::move(watcher);
+            };
 
-			REQUIRE_THROWS_AS(
-				action(),
-				NoMatchError);
-		}
+            REQUIRE_THROWS_AS(
+                action(),
+                NoMatchError);
+        }
 
-		SECTION("When self assigning.")
-		{
-			START_WARNING_SUPPRESSION
-			SUPPRESS_SELF_MOVE
-			REQUIRE_THROWS_AS(
-				watcher = std::move(watcher),
-				NoMatchError);
-			STOP_WARNING_SUPPRESSION
-		}
+        SECTION("When self assigning.")
+        {
+            START_WARNING_SUPPRESSION
+            SUPPRESS_SELF_MOVE
+            REQUIRE_THROWS_AS(
+                watcher = std::move(watcher),
+                NoMatchError);
+            STOP_WARNING_SUPPRESSION
+        }
 
-		REQUIRE_THAT(
-			reporter.full_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.inapplicable_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.no_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.unfulfilled_expectations(),
-			Matches::IsEmpty());
-	}
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.unfulfilled_expectations(),
+            Matches::IsEmpty());
+    }
 
-	SECTION("Reports an unfulfilled expectation, if the expectation expires before relocation occurs.")
-	{
-		RelocationWatcher watcher{};
-		std::optional<ScopedExpectation> expectation = watcher.expect_relocate();
-		expectation.reset();
+    SECTION("Reports an unfulfilled expectation, if the expectation expires before relocation occurs.")
+    {
+        RelocationWatcher watcher{};
+        std::optional<ScopedExpectation> expectation = watcher.expect_relocate();
+        expectation.reset();
 
-		REQUIRE_THAT(
-			reporter.full_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.inapplicable_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.no_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.unfulfilled_expectations(),
-			Matches::SizeIs(1));
-	}
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.unfulfilled_expectations(),
+            Matches::SizeIs(1));
+    }
 
-	SECTION("Is satisfied, if a relocation occurs with an existing expectation.")
-	{
-		RelocationWatcher watcher{};
-		SCOPED_EXP watcher.expect_relocate();
+    SECTION("Is satisfied, if a relocation occurs with an existing expectation.")
+    {
+        RelocationWatcher watcher{};
+        SCOPED_EXP watcher.expect_relocate();
 
-		SECTION("When move-constructing.")
-		{
-			const RelocationWatcher target{std::move(watcher)};
-		}
+        SECTION("When move-constructing.")
+        {
+            const RelocationWatcher target{std::move(watcher)};
+        }
 
-		SECTION("When move-assigning.")
-		{
-			RelocationWatcher target{};
-			target = std::move(watcher);
-		}
+        SECTION("When move-assigning.")
+        {
+            RelocationWatcher target{};
+            target = std::move(watcher);
+        }
 
-		SECTION("When self move-assigning.")
-		{
-			START_WARNING_SUPPRESSION
-			SUPPRESS_SELF_MOVE
-			watcher = std::move(watcher);
-			STOP_WARNING_SUPPRESSION
-		}
+        SECTION("When self move-assigning.")
+        {
+            START_WARNING_SUPPRESSION
+            SUPPRESS_SELF_MOVE
+            watcher = std::move(watcher);
+            STOP_WARNING_SUPPRESSION
+        }
 
-		REQUIRE_THAT(
-			reporter.full_match_reports(),
-			Matches::SizeIs(1));
-		REQUIRE_THAT(
-			reporter.inapplicable_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.no_match_reports(),
-			Matches::IsEmpty());
-		REQUIRE_THAT(
-			reporter.unfulfilled_expectations(),
-			Matches::IsEmpty());
-	}
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Matches::SizeIs(1));
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.unfulfilled_expectations(),
+            Matches::IsEmpty());
+    }
 }
 
 TEST_CASE(
-	"Copying RelocationWatcher doesn't satisfy it.",
-	"[object-watcher][object-watcher::relocation]"
-)
+    "Copying RelocationWatcher doesn't satisfy it.",
+    "[object-watcher][object-watcher::relocation]")
 {
-	namespace Matches = Catch::Matchers;
+    namespace Matches = Catch::Matchers;
 
-	ScopedReporter reporter{};
+    ScopedReporter reporter{};
 
-	RelocationWatcher watcher{};
-	std::optional<ScopedExpectation> expectation = watcher.expect_relocate();
+    RelocationWatcher watcher{};
+    std::optional<ScopedExpectation> expectation = watcher.expect_relocate();
 
-	SECTION("When copy-constructing.")
-	{
-		RelocationWatcher other{watcher};
-	}
+    SECTION("When copy-constructing.")
+    {
+        RelocationWatcher other{watcher};
+    }
 
-	SECTION("When copy-assigning.")
-	{
-		RelocationWatcher other{};
+    SECTION("When copy-assigning.")
+    {
+        RelocationWatcher other{};
 
-		other = watcher;
-	}
+        other = watcher;
+    }
 
-	SECTION("When self copy-assigning.")
-	{
-		START_WARNING_SUPPRESSION
-		SUPPRESS_SELF_ASSIGN
-		watcher = watcher;
-		STOP_WARNING_SUPPRESSION
+    SECTION("When self copy-assigning.")
+    {
+        START_WARNING_SUPPRESSION
+        SUPPRESS_SELF_ASSIGN
+        watcher = watcher;
+        STOP_WARNING_SUPPRESSION
 
-		SECTION("And it does not accept the expectation from the previous instance.")
-		{
-			START_WARNING_SUPPRESSION
-			SUPPRESS_SELF_MOVE
-			REQUIRE_THROWS_AS(
-				watcher = std::move(watcher),
-				NoMatchError);
-			STOP_WARNING_SUPPRESSION
-		}
-	}
+        SECTION("And it does not accept the expectation from the previous instance.")
+        {
+            START_WARNING_SUPPRESSION
+            SUPPRESS_SELF_MOVE
+            REQUIRE_THROWS_AS(
+                watcher = std::move(watcher),
+                NoMatchError);
+            STOP_WARNING_SUPPRESSION
+        }
+    }
 
-	expectation.reset();
+    expectation.reset();
 
-	REQUIRE_THAT(
-		reporter.full_match_reports(),
-		Matches::IsEmpty());
-	REQUIRE_THAT(
-		reporter.inapplicable_match_reports(),
-		Matches::IsEmpty());
-	REQUIRE_THAT(
-		reporter.no_match_reports(),
-		Matches::IsEmpty());
-	REQUIRE_THAT(
-		reporter.unfulfilled_expectations(),
-		Matches::SizeIs(1));
+    REQUIRE_THAT(
+        reporter.full_match_reports(),
+        Matches::IsEmpty());
+    REQUIRE_THAT(
+        reporter.inapplicable_match_reports(),
+        Matches::IsEmpty());
+    REQUIRE_THAT(
+        reporter.no_match_reports(),
+        Matches::IsEmpty());
+    REQUIRE_THAT(
+        reporter.unfulfilled_expectations(),
+        Matches::SizeIs(1));
 }
 
 TEST_CASE(
-	"RelocationWatcher supports finally::throws policy.",
-	"[object-watcher][object-watcher::relocation]"
-)
+    "RelocationWatcher supports finally::throws policy.",
+    "[object-watcher][object-watcher::relocation]")
 {
-	namespace Matches = Catch::Matchers;
+    namespace Matches = Catch::Matchers;
 
-	ScopedReporter reporter{};
+    ScopedReporter reporter{};
 
-	struct my_exception
-	{
-	};
+    struct my_exception
+    {
+    };
 
-	RelocationWatcher watcher{};
-	MIMICPP_SCOPED_EXPECTATION watcher.expect_relocate()
-								and finally::throws(my_exception{});
+    RelocationWatcher watcher{};
+    MIMICPP_SCOPED_EXPECTATION watcher.expect_relocate()
+        and finally::throws(my_exception{});
 
-	SECTION("When move-constructing.")
-	{
-		REQUIRE_THROWS_AS(
-			RelocationWatcher{std::move(watcher)},
-			my_exception);
-	}
+    SECTION("When move-constructing.")
+    {
+        REQUIRE_THROWS_AS(
+            RelocationWatcher{std::move(watcher)},
+            my_exception);
+    }
 
-	SECTION("When move-assigning.")
-	{
-		RelocationWatcher target{};
+    SECTION("When move-assigning.")
+    {
+        RelocationWatcher target{};
 
-		REQUIRE_THROWS_AS(
-			target = std::move(watcher),
-			my_exception);
-	}
+        REQUIRE_THROWS_AS(
+            target = std::move(watcher),
+            my_exception);
+    }
 
-	REQUIRE_THAT(
-		reporter.full_match_reports(),
-		Matches::SizeIs(1));
-	REQUIRE_THAT(
-		reporter.inapplicable_match_reports(),
-		Matches::IsEmpty());
-	REQUIRE_THAT(
-		reporter.no_match_reports(),
-		Matches::IsEmpty());
-	REQUIRE_THAT(
-		reporter.unfulfilled_expectations(),
-		Matches::IsEmpty());
+    REQUIRE_THAT(
+        reporter.full_match_reports(),
+        Matches::SizeIs(1));
+    REQUIRE_THAT(
+        reporter.inapplicable_match_reports(),
+        Matches::IsEmpty());
+    REQUIRE_THAT(
+        reporter.no_match_reports(),
+        Matches::IsEmpty());
+    REQUIRE_THAT(
+        reporter.unfulfilled_expectations(),
+        Matches::IsEmpty());
 }
 
 TEST_CASE(
-	"RelocationWatcher watched can wrap the actual type to be watched with the utilized watcher types.",
-	"[object-watcher][object-watcher::relocation]"
-)
+    "RelocationWatcher watched can wrap the actual type to be watched with the utilized watcher types.",
+    "[object-watcher][object-watcher::relocation]")
 {
-	STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Mock<void(int)>, LifetimeWatcher>>);
+    STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Mock<void(int)>, LifetimeWatcher>>);
 
-	SECTION("Detects violations.")
-	{
-		ScopedReporter reporter{};
+    SECTION("Detects violations.")
+    {
+        ScopedReporter reporter{};
 
-		struct not_nothrow_movable
-		{
-			~not_nothrow_movable() = default;
-			not_nothrow_movable() = default;
+        struct not_nothrow_movable
+        {
+            ~not_nothrow_movable() = default;
+            not_nothrow_movable() = default;
 
-			not_nothrow_movable(const not_nothrow_movable&) = delete;
-			not_nothrow_movable& operator =(const not_nothrow_movable&) = delete;
+            not_nothrow_movable(const not_nothrow_movable&) = delete;
+            not_nothrow_movable& operator=(const not_nothrow_movable&) = delete;
 
-			not_nothrow_movable(not_nothrow_movable&&) noexcept(false)
-			{
-			}
+            not_nothrow_movable(not_nothrow_movable&&) noexcept(false)
+            {
+            }
 
-			not_nothrow_movable& operator =(not_nothrow_movable&&) noexcept(false)
-			{
-				return *this;
-			}
-		};
+            not_nothrow_movable& operator=(not_nothrow_movable&&) noexcept(false)
+            {
+                return *this;
+            }
+        };
 
-		Watched<
-			not_nothrow_movable,
-			RelocationWatcher> watched{};
-		STATIC_REQUIRE(!std::is_nothrow_move_constructible_v<decltype(watched)>);
-		STATIC_REQUIRE(!std::is_nothrow_move_assignable_v<decltype(watched)>);
+        Watched<
+            not_nothrow_movable,
+            RelocationWatcher>
+            watched{};
+        STATIC_REQUIRE(!std::is_nothrow_move_constructible_v<decltype(watched)>);
+        STATIC_REQUIRE(!std::is_nothrow_move_assignable_v<decltype(watched)>);
 
-		REQUIRE_THROWS_AS(
-			Watched{std::move(watched)},
-			NoMatchError);
-	}
+        REQUIRE_THROWS_AS(
+            Watched{std::move(watched)},
+            NoMatchError);
+    }
 
-	SECTION("Just plain usage.")
-	{
-		Watched<
-			Mock<void(int)>,
-			RelocationWatcher> watched{};
-		STATIC_REQUIRE(std::is_nothrow_move_constructible_v<decltype(watched)>);
-		STATIC_REQUIRE(std::is_nothrow_move_assignable_v<decltype(watched)>);
+    SECTION("Just plain usage.")
+    {
+        Watched<
+            Mock<void(int)>,
+            RelocationWatcher>
+            watched{};
+        STATIC_REQUIRE(std::is_nothrow_move_constructible_v<decltype(watched)>);
+        STATIC_REQUIRE(std::is_nothrow_move_assignable_v<decltype(watched)>);
 
-		MIMICPP_SCOPED_EXPECTATION watched.expect_call(1337);
-		MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
-									and expect::twice();
-		MIMICPP_SCOPED_EXPECTATION watched.expect_call(42);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_call(1337);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
+            and expect::twice();
+        MIMICPP_SCOPED_EXPECTATION watched.expect_call(42);
 
-		watched(42);
-		Watched other{std::move(watched)};
-		other(1337);
-		watched = std::move(other);
-	}
+        watched(42);
+        Watched other{std::move(watched)};
+        other(1337);
+        watched = std::move(other);
+    }
 
-	SECTION("With explicit sequence.")
-	{
-		Watched<
-			Mock<void(int)>,
-			RelocationWatcher> watched{};
-		STATIC_REQUIRE(std::is_nothrow_move_constructible_v<decltype(watched)>);
-		STATIC_REQUIRE(std::is_nothrow_move_assignable_v<decltype(watched)>);
+    SECTION("With explicit sequence.")
+    {
+        Watched<
+            Mock<void(int)>,
+            RelocationWatcher>
+            watched{};
+        STATIC_REQUIRE(std::is_nothrow_move_constructible_v<decltype(watched)>);
+        STATIC_REQUIRE(std::is_nothrow_move_assignable_v<decltype(watched)>);
 
-		SequenceT sequence{};
+        SequenceT sequence{};
 
-		MIMICPP_SCOPED_EXPECTATION watched.expect_call(42)
-									and expect::in_sequence(sequence);
-		MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
-									and expect::in_sequence(sequence);
-		MIMICPP_SCOPED_EXPECTATION watched.expect_call(1337)
-									and expect::in_sequence(sequence);
-		MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
-									and expect::in_sequence(sequence);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_call(42)
+            and expect::in_sequence(sequence);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
+            and expect::in_sequence(sequence);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_call(1337)
+            and expect::in_sequence(sequence);
+        MIMICPP_SCOPED_EXPECTATION watched.expect_relocate()
+            and expect::in_sequence(sequence);
 
-		watched(42);
-		Watched other{std::move(watched)};
-		other(1337);
-		watched = std::move(other);
-	}
+        watched(42);
+        Watched other{std::move(watched)};
+        other(1337);
+        watched = std::move(other);
+    }
 }
 
 TEST_CASE(
-	"RelocationWatcher watched can be used on interface-mocks.",
-	"[object-watcher][object-watcher::relocation]"
-)
+    "RelocationWatcher watched can be used on interface-mocks.",
+    "[object-watcher][object-watcher::relocation]")
 {
-	class Interface
-	{
-	public:
-		virtual ~Interface() = default;
-		virtual void foo() = 0;
-	};
+    class Interface
+    {
+    public:
+        virtual ~Interface() = default;
+        virtual void foo() = 0;
+    };
 
-	class Derived
-		: public Interface
-	{
-	public:
-		MIMICPP_MOCK_METHOD(foo, void, ());
-	};
+    class Derived
+        : public Interface
+    {
+    public:
+        MIMICPP_MOCK_METHOD(foo, void, ());
+    };
 
-	STATIC_REQUIRE(std::is_nothrow_move_constructible_v<Watched<Derived, RelocationWatcher>>);
-	STATIC_REQUIRE(std::is_nothrow_move_assignable_v<Watched<Derived, RelocationWatcher>>);
+    STATIC_REQUIRE(std::is_nothrow_move_constructible_v<Watched<Derived, RelocationWatcher>>);
+    STATIC_REQUIRE(std::is_nothrow_move_assignable_v<Watched<Derived, RelocationWatcher>>);
 
-	Watched<Derived, LifetimeWatcher> watched{};
+    Watched<Derived, LifetimeWatcher> watched{};
 
-	MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
-	MIMICPP_SCOPED_EXPECTATION watched.foo_.expect_call();
+    MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
+    MIMICPP_SCOPED_EXPECTATION watched.foo_.expect_call();
 
-	watched.foo();
-	Watched other{std::move(watched)};
+    watched.foo();
+    Watched other{std::move(watched)};
 }
 
 TEST_CASE(
-	"Violations of RelocationWatcher watched interface-implementations will be detected.",
-	"[object-watcher][object-watcher::lifetime]"
-)
+    "Violations of RelocationWatcher watched interface-implementations will be detected.",
+    "[object-watcher][object-watcher::lifetime]")
 {
-	class Interface
-	{
-	public:
-		~Interface() = default;
-		Interface() = default;
+    class Interface
+    {
+    public:
+        ~Interface() = default;
+        Interface() = default;
 
-		Interface(const Interface&) = delete;
-		Interface& operator =(const Interface&) = delete;
+        Interface(const Interface&) = delete;
+        Interface& operator=(const Interface&) = delete;
 
-		Interface(Interface&&) noexcept(false)
-		{
-		}
+        Interface(Interface&&) noexcept(false)
+        {
+        }
 
-		Interface& operator =(Interface&&) noexcept(false)
-		{
-			return *this;
-		}
-	};
+        Interface& operator=(Interface&&) noexcept(false)
+        {
+            return *this;
+        }
+    };
 
-	class Derived
-		: public Interface
-	{
-	};
+    class Derived
+        : public Interface
+    {
+    };
 
-	Watched<Derived, RelocationWatcher> watched{};
-	STATIC_REQUIRE(!std::is_nothrow_move_constructible_v<decltype(watched)>);
-	STATIC_REQUIRE(!std::is_nothrow_move_assignable_v<decltype(watched)>);
+    Watched<Derived, RelocationWatcher> watched{};
+    STATIC_REQUIRE(!std::is_nothrow_move_constructible_v<decltype(watched)>);
+    STATIC_REQUIRE(!std::is_nothrow_move_assignable_v<decltype(watched)>);
 
-	ScopedReporter reporter{};
+    ScopedReporter reporter{};
 
-	REQUIRE_THROWS_AS(
-		Watched{std::move(watched)},
-		NoMatchError);
+    REQUIRE_THROWS_AS(
+        Watched{std::move(watched)},
+        NoMatchError);
 }
