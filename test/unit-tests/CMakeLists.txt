@@ -3,6 +3,8 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
+# fixes reporting in clion
+set(CATCH_CONFIG_CONSOLE_WIDTH 800 CACHE STRING "")
 find_package(Catch2 REQUIRED)
 CPMAddPackage("gh:rollbear/trompeloeil@48")
 
