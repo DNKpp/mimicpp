@@ -147,6 +147,22 @@ namespace mimicpp
 
     /**
      * \brief Primary template, purposely undefined.
+     * \ingroup TYPE_TRAITS_SIGNATURE_REF_QUALIFICATION
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_ref_qualification;
+
+    /**
+     * \brief Convenience alias, exposing the ``value`` member of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_REF_QUALIFICATION
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    inline constexpr ValueCategory signature_ref_qualification_v = signature_ref_qualification<Signature>::value;
+
+    /**
+     * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_PARAM_TYPE
      * \tparam Signature A function signature.
      */

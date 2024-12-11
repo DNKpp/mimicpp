@@ -750,6 +750,74 @@ namespace mimicpp
      */
 
     /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_REF_QUALIFICATION signature_ref_qualification
+     * \ingroup TYPE_TRAITS
+     * \brief Determines the ref-qualification of the given signature.
+     *
+     *\{
+     */
+
+    template <typename Signature>
+    struct signature_ref_qualification
+        : public signature_ref_qualification<
+              signature_remove_noexcept_t<
+                  signature_remove_const_qualifier_t<Signature>>>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_ref_qualification<Return(Params...)>
+        : public std::integral_constant<
+              ValueCategory,
+              ValueCategory::any>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_ref_qualification<Return(Params..., ...)>
+        : public std::integral_constant<
+              ValueCategory,
+              ValueCategory::any>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_ref_qualification<Return(Params...) &>
+        : public std::integral_constant<
+              ValueCategory,
+              ValueCategory::lvalue>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_ref_qualification<Return(Params..., ...) &>
+        : public std::integral_constant<
+              ValueCategory,
+              ValueCategory::lvalue>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_ref_qualification<Return(Params...) &&>
+        : public std::integral_constant<
+              ValueCategory,
+              ValueCategory::rvalue>
+    {
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_ref_qualification<Return(Params..., ...) &&>
+        : public std::integral_constant<
+              ValueCategory,
+              ValueCategory::rvalue>
+    {
+    };
+
+    /**
+     * \}
+     */
+
+    /**
      * \defgroup TYPE_TRAITS_SIGNATURE_PARAM_LIST signature_param_list
      * \ingroup TYPE_TRAITS
      * \brief Extracts all param types from a given signature (packed into a ``std::tuple``).
