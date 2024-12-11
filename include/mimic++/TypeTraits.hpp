@@ -677,8 +677,7 @@ namespace mimicpp
      */
 
     template <typename Signature>
-        requires std::is_function_v<Signature>
-    struct signature_return_type<Signature>
+    struct signature_return_type
         : public signature_return_type<signature_decay_t<Signature>>
     {
     };
@@ -708,8 +707,7 @@ namespace mimicpp
      */
 
     template <std::size_t index, typename Signature>
-        requires std::is_function_v<Signature>
-    struct signature_param_type<index, Signature>
+    struct signature_param_type
         : public signature_param_type<
               index,
               signature_decay_t<Signature>>
@@ -735,8 +733,7 @@ namespace mimicpp
      */
 
     template <typename Signature>
-        requires std::is_function_v<Signature>
-    struct signature_const_qualification<Signature>
+    struct signature_const_qualification
         : public std::integral_constant<
               Constness,
               std::same_as<Signature, signature_remove_const_qualifier_t<Signature>>
@@ -782,7 +779,7 @@ namespace mimicpp
     };
 
     template <typename Return, typename... Params>
-    struct signature_ref_qualification<Return(Params...) &>
+    struct signature_ref_qualification<Return(Params...)&>
         : public std::integral_constant<
               ValueCategory,
               ValueCategory::lvalue>
@@ -790,7 +787,7 @@ namespace mimicpp
     };
 
     template <typename Return, typename... Params>
-    struct signature_ref_qualification<Return(Params..., ...) &>
+    struct signature_ref_qualification<Return(Params..., ...)&>
         : public std::integral_constant<
               ValueCategory,
               ValueCategory::lvalue>
