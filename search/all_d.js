@@ -94,6 +94,6 @@ var searchData=
   ['modern_20and_20mostly_20macro_20free_20mocking_20framework_91',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['mostly_20macro_20free_20mocking_20framework_92',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['move_20constructor_20and_20assignment_20operator_93',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
-  ['moving_94',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md4',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md6',1,'Moving']]],
-  ['multiple_20inheritance_95',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md8',1,'']]]
+  ['moving_94',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md4',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md7',1,'Moving']]],
+  ['multiple_20inheritance_95',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md6',1,'']]]
 ];

@@ -203,13 +203,13 @@ Mocks as function objects</summary>
 <div class="line">    <span class="comment">// still a pending expectation for void() overload</span></div>
 <div class="line">    std::as_const(mock)();                                      <span class="comment">// explicitly call from a const object</span></div>
 <div class="line">}</div>
-<div class="ttc" id="aclassmimicpp_1_1_mock_html"><div class="ttname"><a href="d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a></div><div class="ttdoc">A Mock type, which fully supports overload sets.</div><div class="ttdef"><b>Definition</b> Mock.hpp:600</div></div>
-<div class="ttc" id="agroup___m_o_c_k_html_ga7e7d68eefb8f3cba28422f62bcf2f90a"><div class="ttname"><a href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a></div><div class="ttdeci">#define SCOPED_EXP</div><div class="ttdoc">Shorthand variant of MIMICPP_SCOPED_EXPECTATION.</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:307</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_mock_html"><div class="ttname"><a href="d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a></div><div class="ttdoc">A Mock type, which fully supports overload sets.</div><div class="ttdef"><b>Definition</b> Mock.hpp:593</div></div>
+<div class="ttc" id="agroup___m_o_c_k_html_ga7e7d68eefb8f3cba28422f62bcf2f90a"><div class="ttname"><a href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a></div><div class="ttdeci">#define SCOPED_EXP</div><div class="ttdoc">Shorthand variant of MIMICPP_SCOPED_EXPECTATION.</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:291</div></div>
 <div class="ttc" id="amimic_09_09_8hpp_html"><div class="ttname"><a href="d0/db9/mimic_09_09_8hpp.html">mimic++.hpp</a></div></div>
-<div class="ttc" id="anamespacemimicpp_1_1expect_html"><div class="ttname"><a href="d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div><div class="ttdef"><b>Definition</b> ControlPolicy.hpp:266</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1finally_html"><div class="ttname"><a href="d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:433</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1matches_html"><div class="ttname"><a href="dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a></div><div class="ttdef"><b>Definition</b> Matcher.hpp:303</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1then_html"><div class="ttname"><a href="d9/d4c/namespacemimicpp_1_1then.html">mimicpp::then</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:618</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1expect_html"><div class="ttname"><a href="d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div><div class="ttdef"><b>Definition</b> ControlPolicy.hpp:252</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1finally_html"><div class="ttname"><a href="d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:404</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1matches_html"><div class="ttname"><a href="dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a></div><div class="ttdef"><b>Definition</b> Matcher.hpp:288</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1then_html"><div class="ttname"><a href="d9/d4c/namespacemimicpp_1_1then.html">mimicpp::then</a></div><div class="ttdef"><b>Definition</b> ExpectationPolicies.hpp:576</div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -359,9 +359,9 @@ Watching object-instances</summary>
 <div class="line">    REQUIRE(2 == relocationCounter);            <span class="comment">// let&#39;s see, how often the instance has been relocated</span></div>
 <div class="line">}</div>
 <div class="ttc" id="aclassmimicpp_1_1_lifetime_watcher_html"><div class="ttname"><a href="db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a></div><div class="ttdoc">A watcher type, which reports it's destructor calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:57</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_relocation_watcher_html"><div class="ttname"><a href="da/d45/classmimicpp_1_1_relocation_watcher.html">mimicpp::RelocationWatcher</a></div><div class="ttdoc">A watcher type, which reports it's move-constructor and -assignment calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:201</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_relocation_watcher_html_a1ab88c2edc2f770ea8c9d1e8c0ca62a2"><div class="ttname"><a href="da/d45/classmimicpp_1_1_relocation_watcher.html#a1ab88c2edc2f770ea8c9d1e8c0ca62a2">mimicpp::RelocationWatcher::expect_relocate</a></div><div class="ttdeci">auto expect_relocate()</div><div class="ttdoc">Begins a relocation-expectation construction.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:275</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_watched_html"><div class="ttname"><a href="d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a></div><div class="ttdoc">CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:400</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_relocation_watcher_html"><div class="ttname"><a href="da/d45/classmimicpp_1_1_relocation_watcher.html">mimicpp::RelocationWatcher</a></div><div class="ttdoc">A watcher type, which reports it's move-constructor and -assignment calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:199</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_relocation_watcher_html_a1ab88c2edc2f770ea8c9d1e8c0ca62a2"><div class="ttname"><a href="da/d45/classmimicpp_1_1_relocation_watcher.html#a1ab88c2edc2f770ea8c9d1e8c0ca62a2">mimicpp::RelocationWatcher::expect_relocate</a></div><div class="ttdeci">auto expect_relocate()</div><div class="ttdoc">Begins a relocation-expectation construction.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:273</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_watched_html"><div class="ttname"><a href="d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a></div><div class="ttdoc">CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:398</div></div>
 </div><!-- fragment --><p></p>
 </details>
 <h2><a class="anchor" id="autotoc_md42"></a>
@@ -522,7 +522,7 @@ Clang-18.1 + libc++</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Dec 11 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

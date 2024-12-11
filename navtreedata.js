@@ -64,8 +64,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d4/d56/classmimicpp_1_1_basic_reporter.html",
-"d9/db8/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4.html",
+"d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#afdbfde04d2e9d7785ee959873be8d650",
+"d9/d93/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6noexcept_01_4.html",
 "dd/d5d/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6_01_4.html"
 ];
 

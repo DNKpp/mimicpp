@@ -136,6 +136,7 @@ Override existing printings or print custom types</h2>
 <div class="line">    {</div>
 <div class="line">        <span class="keywordtype">int</span> data{};</div>
 <div class="line">    };</div>
+<div class="line"> </div>
 </div><!-- fragment --><p> Users can then create a specialization as follows: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
 <div class="line"><span class="keyword">class </span><a class="code hl_class" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">mimicpp::custom::Printer</a>&lt;my_type&gt;</div>
 <div class="line">{</div>
@@ -148,6 +149,7 @@ Override existing printings or print custom types</h2>
 <div class="line">            <span class="keywordtype">object</span>.data);</div>
 <div class="line">    }</div>
 <div class="line">};</div>
+<div class="line"> </div>
 </div><!-- fragment --><p>When an object of <code>my_type</code> is then passed to <code>print</code>, that specification will be used: </p><div class="fragment"><div class="line">    <span class="keyword">constexpr</span> my_type myObject{42};</div>
 <div class="line">    <span class="keyword">const</span> std::string text = <a class="code hl_variable" href="#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a>(myObject);</div>
 <div class="line"> </div>
@@ -188,7 +190,7 @@ String printing</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Wed Dec 11 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
