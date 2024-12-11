@@ -18,137 +18,134 @@
 
 namespace mimicpp
 {
-	template <typename...>
-	struct always_false
-		: public std::bool_constant<false>
-	{
-	};
+    template <typename...>
+    struct always_false
+        : public std::bool_constant<false>
+    {
+    };
 
-	template <std::size_t priority>
-	struct priority_tag
-		/** \cond Help doxygen with recursion.*/
-		: public priority_tag<priority - 1>
-		/** \endcond */
-	{
-	};
+    template <std::size_t priority>
+    struct priority_tag
+        /** \cond Help doxygen with recursion.*/
+        : public priority_tag<priority - 1>
+    /** \endcond */
+    {
+    };
 
-	template <>
-	struct priority_tag<0>
-	{
-	};
+    template <>
+    struct priority_tag<0>
+    {
+    };
 
-	[[nodiscard]]
-	constexpr bool is_same_source_location(
-		const std::source_location& lhs,
-		const std::source_location& rhs
-	) noexcept
-	{
-		return std::string_view{lhs.file_name()} == std::string_view{rhs.file_name()}
-				&& std::string_view{lhs.function_name()} == std::string_view{rhs.function_name()}
-				&& lhs.line() == rhs.line()
-				&& lhs.column() == rhs.column();
-	}
+    [[nodiscard]]
+    constexpr bool is_same_source_location(
+        const std::source_location& lhs,
+        const std::source_location& rhs) noexcept
+    {
+        return std::string_view{lhs.file_name()} == std::string_view{rhs.file_name()}
+            && std::string_view{lhs.function_name()} == std::string_view{rhs.function_name()}
+            && lhs.line() == rhs.line()
+            && lhs.column() == rhs.column();
+    }
 
-	template <typename From, typename To>
-	concept explicitly_convertible_to =
-		requires
-		{
-			static_cast<To>(std::declval<From>());
-		};
+    template <typename From, typename To>
+    concept explicitly_convertible_to =
+        requires {
+            static_cast<To>(std::declval<From>());
+        };
 
-	template <typename From, typename To>
-	concept nothrow_explicitly_convertible_to =
-		explicitly_convertible_to<From, To>
-		&& requires
-		{
-			{ static_cast<To>(std::declval<From>()) } noexcept;
-		};
+    template <typename From, typename To>
+    concept nothrow_explicitly_convertible_to =
+        explicitly_convertible_to<From, To>
+        && requires {
+               { static_cast<To>(std::declval<From>()) } noexcept;
+           };
 
-	template <typename T, typename... Others>
-	concept same_as_any = (... || std::same_as<T, Others>);
+    template <typename T, typename... Others>
+    concept same_as_any = (... || std::same_as<T, Others>);
 
-	template <typename T>
-		requires std::is_enum_v<T>
-	[[nodiscard]]
-	constexpr std::underlying_type_t<T> to_underlying(const T value) noexcept
-	{
-		return static_cast<std::underlying_type_t<T>>(value);
-	}
+    template <typename T>
+        requires std::is_enum_v<T>
+    [[nodiscard]]
+    constexpr std::underlying_type_t<T> to_underlying(const T value) noexcept
+    {
+        return static_cast<std::underlying_type_t<T>>(value);
+    }
 
-	template <typename T, template <typename> typename Trait>
-	concept satisfies = Trait<T>::value;
+    template <typename T, template <typename> typename Trait>
+    concept satisfies = Trait<T>::value;
 
-	// GCOVR_EXCL_START
+    // GCOVR_EXCL_START
 
 #ifdef __cpp_lib_unreachable
-	using std::unreachable;
+    using std::unreachable;
 #else
 
-	/**
-	 * \brief Invokes undefined behavior
-	 * \see https://en.cppreference.com/w/cpp/utility/unreachable
-	 * \note Implementation directly taken from https://en.cppreference.com/w/cpp/utility/unreachable
-	 */
-	[[noreturn]]
-	inline void unreachable()
-	{
-		assert(false);
+    /**
+     * \brief Invokes undefined behavior
+     * \see https://en.cppreference.com/w/cpp/utility/unreachable
+     * \note Implementation directly taken from https://en.cppreference.com/w/cpp/utility/unreachable
+     */
+    [[noreturn]]
+    inline void unreachable()
+    {
+        assert(false);
 
-		// Uses compiler specific extensions if possible.
-		// Even if no extension is used, undefined behavior is still raised by
-		// an empty function body and the noreturn attribute.
-#if defined(_MSC_VER) && !defined(__clang__) // MSVC
-		__assume(false);
-#else // GCC, Clang
-	    __builtin_unreachable();
+            // Uses compiler specific extensions if possible.
+            // Even if no extension is used, undefined behavior is still raised by
+            // an empty function body and the noreturn attribute.
+    #if defined(_MSC_VER) && !defined(__clang__) // MSVC
+        __assume(false);
+    #else                                        // GCC, Clang
+        __builtin_unreachable();
+    #endif
+    }
 #endif
-	}
-#endif
 
-	// GCOVR_EXCL_STOP
+    // GCOVR_EXCL_STOP
 
-	[[nodiscard]]
-	constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
-	{
-		return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
-	}
+    [[nodiscard]]
+    constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
+    {
+        return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
+    }
 
-	[[nodiscard]]
-	constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept
-	{
-		return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
-	}
+    [[nodiscard]]
+    constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept
+    {
+        return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
+    }
 }
 
 namespace mimicpp::detail
 {
-	template <typename Parsed, typename... Rest>
-	struct unique;
+    template <typename Parsed, typename... Rest>
+    struct unique;
 
-	template <typename... Uniques, typename First, typename... Others>
-	struct unique<
-			std::tuple<Uniques...>,
-			First,
-			Others...>
-	{
-		using current_t = std::conditional_t<
-			same_as_any<First, Uniques...>,
-			std::tuple<Uniques...>,
-			std::tuple<Uniques..., First>>;
+    template <typename... Uniques, typename First, typename... Others>
+    struct unique<
+        std::tuple<Uniques...>,
+        First,
+        Others...>
+    {
+        using current_t = std::conditional_t<
+            same_as_any<First, Uniques...>,
+            std::tuple<Uniques...>,
+            std::tuple<Uniques..., First>>;
 
-		using type_t = typename unique<
-			current_t,
-			Others...>::type_t;
-	};
+        using type_t = typename unique<
+            current_t,
+            Others...>::type_t;
+    };
 
-	template <typename... Uniques>
-	struct unique<std::tuple<Uniques...>>
-	{
-		using type_t = std::tuple<Uniques...>;
-	};
+    template <typename... Uniques>
+    struct unique<std::tuple<Uniques...>>
+    {
+        using type_t = std::tuple<Uniques...>;
+    };
 
-	template <typename... Types>
-	using unique_list_t = typename unique<std::tuple<>, Types...>::type_t;
+    template <typename... Types>
+    using unique_list_t = typename unique<std::tuple<>, Types...>::type_t;
 }
 
 #endif
