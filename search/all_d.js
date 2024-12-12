@@ -7,7 +7,7 @@ var searchData=
   ['make_5foverload_5finfos_4',['make_overload_infos',['../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html',1,'']]],
   ['make_5fparam_5flist_5',['make_param_list',['../da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html',1,'']]],
   ['make_5fsignature_5flist_6',['make_signature_list',['../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html',1,'']]],
-  ['matcher_7',['Custom Matcher',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#autotoc_md5',1,'']]],
+  ['matcher_7',['Custom Matcher',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#autotoc_md3',1,'']]],
   ['matcher_20integration_8',['Experimental Matcher integration',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md0',1,'']]],
   ['matcher_20integration_9',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'']]],
   ['matcher_20unicode_20support_10',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'']]],
@@ -17,7 +17,7 @@ var searchData=
   ['matchers_14',['matchers',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html',1,'matchers'],['../db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html',1,'range matchers'],['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html',1,'string matchers']]],
   ['matches_15',['matches',['../d3/d1c/classmimicpp_1_1_expectation.html#ab030189070f8b4ad118a49f6a82ebff7',1,'mimicpp::Expectation::matches()'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#ac27966d7b0cd77e74f6970a6e56638d2',1,'mimicpp::BasicExpectation::matches()'],['../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html#afdbfde04d2e9d7785ee959873be8d650',1,'mimicpp::expectation_policies::Category::matches()'],['../db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html#ad9252963b4826e2fa76b3d9e64c9b07f',1,'mimicpp::expectation_policies::Constness::matches()'],['../d1/dde/classmimicpp_1_1expectation__policies_1_1_requirement.html#a5dfdfbcac13ce47bc480fd6802b35c77',1,'mimicpp::expectation_policies::Requirement::matches()'],['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#a0bfc03a555eed8ed0126f32a858ba3ef',1,'mimicpp::expectation_policies::SideEffectAction::matches()'],['../dc/d5e/classmimicpp_1_1_predicate_matcher.html#acf4845f25dcda928e4282e9459dfd17c',1,'mimicpp::PredicateMatcher::matches()'],['../db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc',1,'mimicpp::WildcardMatcher::matches()']]],
   ['matching_16',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
-  ['matching_20arguments_17',['Matching arguments',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#autotoc_md4',1,'']]],
+  ['matching_20arguments_17',['Matching arguments',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#autotoc_md2',1,'']]],
   ['matchreport_18',['MatchReport',['../db/d11/classmimicpp_1_1_match_report.html',1,'mimicpp']]],
   ['matchresult_19',['MatchResult',['../d1/d11/namespacemimicpp.html#a0e5bd3ba3ed7ebefe6d2016ce35bbe5b',1,'mimicpp']]],
   ['max_20',['max',['../d7/dd2/structmimicpp_1_1state__inapplicable.html#ab11df76666122ed1422be10f15a42d16',1,'mimicpp::state_inapplicable::max'],['../d0/d12/structmimicpp_1_1state__applicable.html#aeef30fe89a8bd3e3159cc5ca241187c8',1,'mimicpp::state_applicable::max'],['../de/d68/structmimicpp_1_1state__saturated.html#a1cbe431d93dff59a4431151781c206f8',1,'mimicpp::state_saturated::max']]],
@@ -93,7 +93,7 @@ var searchData=
   ['mocking_20framework_90',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['modern_20and_20mostly_20macro_20free_20mocking_20framework_91',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['mostly_20macro_20free_20mocking_20framework_92',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
-  ['move_20constructor_20and_20assignment_20operator_93',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md8',1,'']]],
-  ['moving_94',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md2',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md6',1,'Moving']]],
-  ['multiple_20inheritance_95',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md10',1,'']]]
+  ['move_20constructor_20and_20assignment_20operator_93',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md9',1,'']]],
+  ['moving_94',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md4',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md6',1,'Moving']]],
+  ['multiple_20inheritance_95',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md8',1,'']]]
 ];
