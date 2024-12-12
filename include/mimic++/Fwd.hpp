@@ -51,6 +51,22 @@ namespace mimicpp
 
     /**
      * \brief Primary template, purposely undefined.
+     * \ingroup TYPE_TRAITS_SIGNATURE_CALL_CONVENTION
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_remove_call_convention;
+
+    /**
+     * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_CALL_CONVENTION
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    using signature_remove_call_convention_t = typename signature_remove_call_convention<Signature>::type;
+
+    /**
+     * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT
      * \tparam Signature A function signature.
      */
@@ -238,6 +254,14 @@ namespace mimicpp
      */
     template <typename First, typename... Others>
     inline constexpr bool is_overload_set_v = is_overload_set<First, Others...>::value;
+
+    /**
+     * \brief Primary template, purposely undefined.
+     * \ingroup TYPE_TRAITS_CALL_CONVENTION_TRAITS
+     * \tparam Tag The call-convention tag.
+     */
+    template <typename Tag>
+    struct calling_convention_traits;
 
     /**
      * \brief Primary template, purposely undefined.
