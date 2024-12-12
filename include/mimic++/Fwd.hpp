@@ -178,7 +178,7 @@ namespace mimicpp
     using signature_param_type_t = typename signature_param_type<index, Signature>::type;
 
     /**
-     * \brief Primary template, purposely undefined.
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_SIGNATURE_PARAM_LIST
      * \tparam Signature A function signature.
      */

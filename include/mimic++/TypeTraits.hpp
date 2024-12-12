@@ -823,8 +823,7 @@ namespace mimicpp
      */
 
     template <typename Signature>
-        requires std::is_function_v<Signature>
-    struct signature_param_list<Signature>
+    struct signature_param_list
         : public signature_param_list<
               signature_decay_t<Signature>>
     {
