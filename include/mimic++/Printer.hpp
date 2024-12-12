@@ -453,10 +453,20 @@ namespace mimicpp::detail
         template <print_iterator OutIter>
         static OutIter print(OutIter out, T ptr)
         {
-            return format::format_to(
-                std::move(out),
-                "0x{:0>16x}",
-                std::bit_cast<std::uintptr_t>(ptr));
+            if constexpr (4u < sizeof(T))
+            {
+                return format::format_to(
+                    std::move(out),
+                    "0x{:0>16x}",
+                    std::bit_cast<std::uintptr_t>(ptr));
+            }
+            else
+            {
+                return format::format_to(
+                    std::move(out),
+                    "0x{:0>8x}",
+                    std::bit_cast<std::uintptr_t>(ptr));
+            }
         }
     };
 

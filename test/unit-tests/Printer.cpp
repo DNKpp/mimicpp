@@ -438,6 +438,8 @@ TEST_CASE(
             Catch::Matchers::Equals("{ {?}, 1337 }"));
     }
 
+#if INTPTR_MAX >= INT64_MAX
+
     SECTION("Pointers are printed in hex-format.")
     {
         REQUIRE_THAT(
@@ -453,6 +455,26 @@ TEST_CASE(
             mimicpp::print(reinterpret_cast<const std::string*>(std::uintptr_t{0x1234u})),
             Catch::Matchers::Matches("0x0{1,12}1234"));
     }
+
+#else
+
+    SECTION("Pointers are printed in hex-format.")
+    {
+        REQUIRE_THAT(
+            mimicpp::print(nullptr),
+            Catch::Matchers::Matches("0x0{1,8}"));
+        REQUIRE_THAT(
+            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{})),
+            Catch::Matchers::Matches("0x0{1,8}"));
+        REQUIRE_THAT(
+            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{0x90AB'CDEFu})),
+            Catch::Matchers::Matches("0x90[Aa][Bb][Cc][Dd][Ee][Ff]"));
+        REQUIRE_THAT(
+            mimicpp::print(reinterpret_cast<const std::string*>(std::uintptr_t{0x1234u})),
+            Catch::Matchers::Matches("0x0{1,4}1234"));
+    }
+
+#endif
 
     SECTION("When nothing matches, a default token is inserted.")
     {
