@@ -215,7 +215,7 @@ namespace mimicpp::detail
 
         [[nodiscard]]
         constexpr ReturnT handle_call(
-            auto&& params,
+            std::tuple<std::reference_wrapper<std::remove_reference_t<Params>>...>&& params,
             const std::source_location& from) const
         {
             return m_Expectations->handle_call(
