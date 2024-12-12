@@ -7,7 +7,9 @@ var _fwd_8hpp =
     [ "signature_decay_t", "df/dde/_fwd_8hpp.html#gae85f02e3becd1c96735ae9bbcade1212", null ],
     [ "signature_param_list_t", "df/dde/_fwd_8hpp.html#gaaf6745d6b76342d272c0b53912757fcf", null ],
     [ "signature_param_type_t", "df/dde/_fwd_8hpp.html#ga87147d9464358037f54907bf773c81d7", null ],
+    [ "signature_remove_const_qualifier_t", "df/dde/_fwd_8hpp.html#gab0af26fdf255fe11835f816be27c9f35", null ],
     [ "signature_remove_noexcept_t", "df/dde/_fwd_8hpp.html#ga1944b7b7ba7e20b04cfe5849d6a73df9", null ],
+    [ "signature_remove_ref_qualifier_t", "df/dde/_fwd_8hpp.html#ga834ae0643ab9cafd5b3b14116b86a4ca", null ],
     [ "signature_return_type_t", "df/dde/_fwd_8hpp.html#gab7dbe7ae4fb93753e7e24603b98f9c5c", null ],
     [ "StringT", "df/dde/_fwd_8hpp.html#afd8074742a9c25b893fcdfe534b912e1", null ],
     [ "StringViewT", "df/dde/_fwd_8hpp.html#afa212d98f2d4a7016c05d3e9171431c6", null ],
@@ -30,5 +32,8 @@ var _fwd_8hpp =
       [ "any", "df/dde/_fwd_8hpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec", null ]
     ] ],
     [ "is_overload_set_v", "df/dde/_fwd_8hpp.html#ga39bc4106334393c907fb7c716490135c", null ],
-    [ "is_overloadable_with_v", "df/dde/_fwd_8hpp.html#ga444a530890b564007a9d8f9b5d035785", null ]
+    [ "is_overloadable_with_v", "df/dde/_fwd_8hpp.html#ga444a530890b564007a9d8f9b5d035785", null ],
+    [ "signature_const_qualification_v", "df/dde/_fwd_8hpp.html#gac6d1b8f4ee38e8e6b60d2ddad0ce21a4", null ],
+    [ "signature_is_noexcept_v", "df/dde/_fwd_8hpp.html#ga9c8cd4e82dd32deb1f0f2afc9361ee3f", null ],
+    [ "signature_ref_qualification_v", "df/dde/_fwd_8hpp.html#ga6993c58ce901120dc2de8bae60dcdf68", null ]
 ];
