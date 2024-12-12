@@ -130,7 +130,7 @@ namespace mimicpp
     using signature_return_type_t = typename signature_return_type<Signature>::type;
 
     /**
-     * \brief Primary template, purposely undefined.
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_SIGNATURE_CONST_QUALIFICATION
      * \tparam Signature A function signature.
      */
@@ -146,7 +146,7 @@ namespace mimicpp
     inline constexpr Constness signature_const_qualification_v = signature_const_qualification<Signature>::value;
 
     /**
-     * \brief Primary template, purposely undefined.
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_SIGNATURE_REF_QUALIFICATION
      * \tparam Signature A function signature.
      */
@@ -160,6 +160,22 @@ namespace mimicpp
      */
     template <typename Signature>
     inline constexpr ValueCategory signature_ref_qualification_v = signature_ref_qualification<Signature>::value;
+
+    /**
+     * \brief Primary template.
+     * \ingroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_is_noexcept;
+
+    /**
+     * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    inline constexpr bool signature_is_noexcept_v = signature_is_noexcept<Signature>::value;
 
     /**
      * \brief Primary template, purposely undefined.

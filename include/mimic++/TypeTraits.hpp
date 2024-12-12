@@ -815,6 +815,25 @@ namespace mimicpp
      */
 
     /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT signature_is_noexcept
+     * \ingroup TYPE_TRAITS
+     * \brief Determines whether the given signature has a ``noexcept`` specification.
+     *
+     *\{
+     */
+
+    template <typename Signature>
+    struct signature_is_noexcept
+        : public std::bool_constant<
+              !std::same_as<Signature, signature_remove_noexcept_t<Signature>>>
+    {
+    };
+
+    /**
+     * \}
+     */
+
+    /**
      * \defgroup TYPE_TRAITS_SIGNATURE_PARAM_LIST signature_param_list
      * \ingroup TYPE_TRAITS
      * \brief Extracts all param types from a given signature (packed into a ``std::tuple``).
