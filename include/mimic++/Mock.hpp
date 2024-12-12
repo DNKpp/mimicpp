@@ -15,501 +15,225 @@
 
 namespace mimicpp::detail
 {
-    template <ValueCategory category, Constness constness, typename Return, typename... Params>
-    class BasicMockFrontend
+    template <typename Derived>
+    [[nodiscard]]
+    constexpr const Derived& as_derived(auto& self) noexcept
     {
+        return static_cast<const Derived&>(self);
+    }
+
+    template <
+        typename Derived,
+        typename SignatureWithoutNoexcept,
+        bool isNoexcept>
+    class MockFrontend;
+
+    template <
+        typename Derived,
+        typename Return,
+        typename... Params,
+        bool isNoexcept>
+    class MockFrontend<Derived, Return(Params...), isNoexcept>
+    {
+    public:
+        constexpr Return operator()(
+            Params... params,
+            const std::source_location& from = std::source_location::current()) noexcept(isNoexcept)
+        {
+            return as_derived<Derived>(*this)
+                .handle_call(std::tuple{std::ref(params)...}, from);
+        }
+
+        template <typename... Args>
+            requires(... && requirement_for<Args, Params>)
+        [[nodiscard]] constexpr auto expect_call(Args&&... args)
+        {
+            return as_derived<Derived>(*this)
+                .make_expectation_builder(std::forward<Args>(args)...);
+        }
+    };
+
+    template <
+        typename Derived,
+        typename Return,
+        typename... Params,
+        bool isNoexcept>
+    class MockFrontend<Derived, Return(Params...) const, isNoexcept>
+    {
+    public:
+        constexpr Return operator()(
+            Params... params,
+            const std::source_location& from = std::source_location::current()) const noexcept(isNoexcept)
+        {
+            return as_derived<Derived>(*this)
+                .handle_call(std::tuple{std::ref(params)...}, from);
+        }
+
+        template <typename... Args>
+            requires(... && requirement_for<Args, Params>)
+        [[nodiscard]] constexpr auto expect_call(Args&&... args) const
+        {
+            return as_derived<Derived>(*this)
+                .make_expectation_builder(std::forward<Args>(args)...);
+        }
+    };
+
+    template <
+        typename Derived,
+        typename Return,
+        typename... Params,
+        bool isNoexcept>
+    class MockFrontend<Derived, Return(Params...)&, isNoexcept>
+    {
+    public:
+        constexpr Return operator()(
+            Params... params,
+            const std::source_location& from = std::source_location::current()) & noexcept(isNoexcept)
+        {
+            return as_derived<Derived>(*this)
+                .handle_call(std::tuple{std::ref(params)...}, from);
+        }
+
+        template <typename... Args>
+            requires(... && requirement_for<Args, Params>)
+        [[nodiscard]] constexpr auto expect_call(Args&&... args) &
+        {
+            return as_derived<Derived>(*this)
+                .make_expectation_builder(std::forward<Args>(args)...);
+        }
+    };
+
+    template <
+        typename Derived,
+        typename Return,
+        typename... Params,
+        bool isNoexcept>
+    class MockFrontend<Derived, Return(Params...) const&, isNoexcept>
+    {
+    public:
+        constexpr Return operator()(
+            Params... params,
+            const std::source_location& from = std::source_location::current()) const& noexcept(isNoexcept)
+        {
+            return as_derived<Derived>(*this)
+                .handle_call(std::tuple{std::ref(params)...}, from);
+        }
+
+        template <typename... Args>
+            requires(... && requirement_for<Args, Params>)
+        [[nodiscard]] constexpr auto expect_call(Args&&... args) const&
+        {
+            return as_derived<Derived>(*this)
+                .make_expectation_builder(std::forward<Args>(args)...);
+        }
+    };
+
+    template <
+        typename Derived,
+        typename Return,
+        typename... Params,
+        bool isNoexcept>
+    class MockFrontend<Derived, Return(Params...)&&, isNoexcept>
+    {
+    public:
+        constexpr Return operator()(
+            Params... params,
+            const std::source_location& from = std::source_location::current()) && noexcept(isNoexcept)
+        {
+            return as_derived<Derived>(*this)
+                .handle_call(std::tuple{std::ref(params)...}, from);
+        }
+
+        template <typename... Args>
+            requires(... && requirement_for<Args, Params>)
+        [[nodiscard]] constexpr auto expect_call(Args&&... args) &&
+        {
+            return as_derived<Derived>(*this)
+                .make_expectation_builder(std::forward<Args>(args)...);
+        }
+    };
+
+    template <
+        typename Derived,
+        typename Return,
+        typename... Params,
+        bool isNoexcept>
+    class MockFrontend<Derived, Return(Params...) const&&, isNoexcept>
+    {
+    public:
+        constexpr Return operator()(
+            Params... params,
+            const std::source_location& from = std::source_location::current()) const&& noexcept(isNoexcept)
+        {
+            return as_derived<Derived>(*this)
+                .handle_call(std::tuple{std::ref(params)...}, from);
+        }
+
+        template <typename... Args>
+            requires(... && requirement_for<Args, Params>)
+        [[nodiscard]] constexpr auto expect_call(Args&&... args) const&&
+        {
+            return as_derived<Derived>(*this)
+                .make_expectation_builder(std::forward<Args>(args)...);
+        }
+    };
+
+    template <typename Signature>
+    using expectation_collection_ptr_for = std::shared_ptr<ExpectationCollection<signature_decay_t<Signature>>>;
+
+    template <typename Signature, typename ParamList = signature_param_list_t<Signature>>
+    class BasicMock;
+
+    template <typename Signature, typename... Params>
+    class BasicMock<Signature, std::tuple<Params...>>
+        : public MockFrontend<
+              BasicMock<Signature, std::tuple<Params...>>,
+              signature_remove_noexcept_t<Signature>,
+              signature_is_noexcept_v<Signature>>
+    {
+        friend class MockFrontend<
+            BasicMock,
+            signature_remove_noexcept_t<Signature>,
+            signature_is_noexcept_v<Signature>>;
+
+        using SignatureT = Signature;
+        using ReturnT = signature_return_type_t<SignatureT>;
+        static constexpr Constness constQualification = signature_const_qualification_v<SignatureT>;
+        static constexpr ValueCategory refQualification = signature_ref_qualification_v<SignatureT>;
+
     protected:
-        using ExpectationCollectionT = ExpectationCollection<Return(Params...)>;
+        using ExpectationCollectionPtrT = expectation_collection_ptr_for<Signature>;
 
         [[nodiscard]]
-        explicit BasicMockFrontend(
-            std::shared_ptr<ExpectationCollectionT> collection) noexcept
+        explicit BasicMock(ExpectationCollectionPtrT collection) noexcept
             : m_Expectations{std::move(collection)}
         {
         }
 
+    private:
+        ExpectationCollectionPtrT m_Expectations;
+
         [[nodiscard]]
-        constexpr Return handle_call(
-            std::tuple<std::reference_wrapper<std::remove_reference_t<Params>>...> params,
+        constexpr ReturnT handle_call(
+            auto&& params,
             const std::source_location& from) const
         {
-            using CallInfoT = call::Info<Return, Params...>;
-
             return m_Expectations->handle_call(
-                CallInfoT{
+                call::info_for_signature_t<SignatureT>{
                     .args = std::move(params),
-                    .fromCategory = category,
-                    .fromConstness = constness,
+                    .fromCategory = refQualification,
+                    .fromConstness = constQualification,
                     .fromSourceLocation = from});
         }
 
         template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
         [[nodiscard]]
         constexpr auto make_expectation_builder(Args&&... args) const
         {
-            return detail::make_expectation_builder(
-                       m_Expectations,
-                       std::forward<Args>(args)...)
-                && expectation_policies::Category<category>{}
-                && expectation_policies::Constness<constness>{};
+            return detail::make_expectation_builder(m_Expectations, std::forward<Args>(args)...)
+                && expectation_policies::Category<refQualification>{}
+                && expectation_policies::Constness<constQualification>{};
         }
-
-    private:
-        std::shared_ptr<ExpectationCollectionT> m_Expectations;
-    };
-
-    template <typename Signature>
-    class MockFrontend;
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...)>
-        : protected BasicMockFrontend<
-              ValueCategory::any,
-              Constness::non_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::any,
-            Constness::non_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...);
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current())
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args)
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) const>
-        : protected BasicMockFrontend<
-              ValueCategory::any,
-              Constness::as_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::any,
-            Constness::as_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) const;
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current()) const
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) const
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...)&>
-        : protected BasicMockFrontend<
-              ValueCategory::lvalue,
-              Constness::non_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::lvalue,
-            Constness::non_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) &;
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current()) &
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) &
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) const&>
-        : protected BasicMockFrontend<
-              ValueCategory::lvalue,
-              Constness::as_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::lvalue,
-            Constness::as_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) const&;
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current()) const&
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) const&
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) &&>
-        : protected BasicMockFrontend<
-              ValueCategory::rvalue,
-              Constness::non_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::rvalue,
-            Constness::non_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) &&;
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current()) &&
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) &&
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) const&&>
-        : protected BasicMockFrontend<
-              ValueCategory::rvalue,
-              Constness::as_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::rvalue,
-            Constness::as_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) const&&;
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current()) const&&
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) const&&
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) noexcept>
-        : protected BasicMockFrontend<
-              ValueCategory::any,
-              Constness::non_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::any,
-            Constness::non_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) noexcept;
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current()) noexcept
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args)
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) const noexcept>
-        : protected BasicMockFrontend<
-              ValueCategory::any,
-              Constness::as_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::any,
-            Constness::as_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) const noexcept;
-
-        constexpr Return operator()(
-            Params... params,
-            const std::source_location& from = std::source_location::current()) const noexcept
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) const
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) & noexcept>
-        : protected BasicMockFrontend<
-              ValueCategory::lvalue,
-              Constness::non_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::lvalue,
-            Constness::non_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) & noexcept;
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current()) & noexcept
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) &
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) const & noexcept>
-        : protected BasicMockFrontend<
-              ValueCategory::lvalue,
-              Constness::as_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::lvalue,
-            Constness::as_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) const& noexcept;
-
-        constexpr Return operator()(
-            Params... params,
-            const std::source_location& from = std::source_location::current()) const& noexcept
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) const&
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) && noexcept>
-        : protected BasicMockFrontend<
-              ValueCategory::rvalue,
-              Constness::non_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::rvalue,
-            Constness::non_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) && noexcept;
-
-        constexpr Return operator()(Params... params, const std::source_location& from = std::source_location::current()) && noexcept
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) &&
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
-    };
-
-    template <typename Return, typename... Params>
-    class MockFrontend<Return(Params...) const && noexcept>
-        : protected BasicMockFrontend<
-              ValueCategory::rvalue,
-              Constness::as_const,
-              Return,
-              Params...>
-    {
-        using SuperT = BasicMockFrontend<
-            ValueCategory::rvalue,
-            Constness::as_const,
-            Return,
-            Params...>;
-
-    public:
-        using SignatureT = Return(Params...) const&& noexcept;
-
-        constexpr Return operator()(
-            Params... params,
-            const std::source_location& from = std::source_location::current()) const&& noexcept
-        {
-            return SuperT::handle_call(
-                std::tuple{std::ref(params)...},
-                from);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) const&&
-        {
-            return SuperT::make_expectation_builder(
-                std::forward<Args>(args)...);
-        }
-
-    protected:
-        using SuperT::SuperT;
     };
 
     template <typename List>
@@ -588,14 +312,14 @@ namespace mimicpp
     template <typename FirstSignature, typename... OtherSignatures>
         requires is_overload_set_v<FirstSignature, OtherSignatures...>
     class Mock
-        : public detail::MockFrontend<FirstSignature>,
-          public detail::MockFrontend<OtherSignatures>...
+        : public detail::BasicMock<FirstSignature>,
+          public detail::BasicMock<OtherSignatures>...
     {
     public:
-        using detail::MockFrontend<FirstSignature>::operator();
-        using detail::MockFrontend<FirstSignature>::expect_call;
-        using detail::MockFrontend<OtherSignatures>::operator()...;
-        using detail::MockFrontend<OtherSignatures>::expect_call...;
+        using detail::BasicMock<FirstSignature>::operator();
+        using detail::BasicMock<FirstSignature>::expect_call;
+        using detail::BasicMock<OtherSignatures>::operator()...;
+        using detail::BasicMock<OtherSignatures>::expect_call...;
 
         /**
          * \brief Defaulted destructor.
@@ -638,10 +362,9 @@ namespace mimicpp
 
     private:
         template <typename... Collections>
-        explicit Mock(std::tuple<Collections...> collections)
-            : detail::MockFrontend<FirstSignature>{
-                  std::get<std::shared_ptr<ExpectationCollection<signature_decay_t<FirstSignature>>>>(collections)},
-              detail::MockFrontend<OtherSignatures>{std::get<std::shared_ptr<ExpectationCollection<signature_decay_t<OtherSignatures>>>>(collections)}...
+        explicit Mock(std::tuple<Collections...> collections) noexcept
+            : detail::BasicMock<FirstSignature>{std::get<detail::expectation_collection_ptr_for<FirstSignature>>(collections)},
+              detail::BasicMock<OtherSignatures>{std::get<detail::expectation_collection_ptr_for<OtherSignatures>>(collections)}...
         {
         }
     };
