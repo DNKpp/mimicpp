@@ -138,7 +138,7 @@ namespace mimicpp
     struct signature_const_qualification;
 
     /**
-     * \brief Convenience alias, exposing the ``value`` member of the actual type-trait.
+     * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
      * \ingroup TYPE_TRAITS_SIGNATURE_CONST_QUALIFICATION
      * \tparam Signature A function signature.
      */
@@ -154,7 +154,7 @@ namespace mimicpp
     struct signature_ref_qualification;
 
     /**
-     * \brief Convenience alias, exposing the ``value`` member of the actual type-trait.
+     * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
      * \ingroup TYPE_TRAITS_SIGNATURE_REF_QUALIFICATION
      * \tparam Signature A function signature.
      */
