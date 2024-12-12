@@ -866,7 +866,9 @@ TEST_CASE(
     REQUIRE(secondExpectation.is_satisfied());
 }
 
-TEST_CASE("Mocks support direct argument matchers.")
+TEST_CASE(
+    "Mocks support direct argument matchers.",
+    "[mock]")
 {
     SECTION("For arguments, which support operator ==")
     {
@@ -888,4 +890,90 @@ TEST_CASE("Mocks support direct argument matchers.")
         SCOPED_EXP mock.expect_call(matches::ne(42));
         mock(1337);
     }
+}
+
+#include "mimic++/call-conventions/stdcall.hpp"
+
+namespace mimicpp
+{
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...)>
+    {
+        using type = Return(Params...);
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) noexcept>
+    {
+        using type = Return(Params...) noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) const>
+    {
+        using type = Return(Params...) const;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) const noexcept>
+    {
+        using type = Return(Params...) const noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...)&>
+    {
+        using type = Return(Params...) &;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) & noexcept>
+    {
+        using type = Return(Params...) & noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) const&>
+    {
+        using type = Return(Params...) const&;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) const & noexcept>
+    {
+        using type = Return(Params...) const& noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) &&>
+    {
+        using type = Return(Params...) &&;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) && noexcept>
+    {
+        using type = Return(Params...) && noexcept;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) const&&>
+    {
+        using type = Return(Params...) const&&;
+    };
+
+    template <typename Return, typename... Params>
+    struct signature_remove_call_convention<Return __stdcall(Params...) const && noexcept>
+    {
+        using type = Return(Params...) const&& noexcept;
+    };
+}
+
+TEST_CASE(
+    "Mocks support arbitrary calling-conventions.",
+    "[mock]")
+{
+    /*using T = signature_decay_t<void __stdcall()>;
+
+     Mock<void __stdcall()> mock{};*/
 }

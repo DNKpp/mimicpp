@@ -11,97 +11,137 @@
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/ExpectationPolicies.hpp"
+#include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 
 namespace mimicpp::detail
 {
-    template <typename Derived>
-    constexpr auto as_derived = [](auto& self) noexcept -> const Derived& {
-        return static_cast<const Derived&>(self);
-    };
-
-    template <typename Signature>
-    struct signature_traits
-    {
-    public:
-        using ReturnT = signature_return_type_t<Signature>;
-        static constexpr bool isConst = Constness::as_const == signature_const_qualification_v<Signature>;
-        static constexpr bool isLvalueRef = ValueCategory::lvalue == signature_ref_qualification_v<Signature>;
-        static constexpr bool isRvalueRef = ValueCategory::rvalue == signature_ref_qualification_v<Signature>;
-        static constexpr bool isRef = isLvalueRef || isRvalueRef;
-        static constexpr bool isNoexcept = signature_is_noexcept_v<Signature>;
-    };
+    template <typename Derived, typename Signature>
+    using call_interface_t = typename calling_convention_traits<
+        typename signature_traits<Signature>::call_convention_tag>::template call_interface_t<Derived, Signature>;
 
     template <
         typename Derived,
         typename Signature,
+        Constness constQualifier = signature_const_qualification_v<Signature>,
+        ValueCategory refQualifier = signature_ref_qualification_v<Signature>,
         typename ParamList = signature_param_list_t<Signature>>
-    class InvokeInterface;
+    class DefaultCallInterface;
+}
 
-    template <
-        typename Derived,
-        typename Signature,
-        typename... Params>
-    class InvokeInterface<Derived, Signature, std::tuple<Params...>>
+template <>
+struct mimicpp::calling_convention_traits<mimicpp::default_call_convention::tag>
+{
+    template <typename Derived, typename Signature>
+    using call_interface_t = detail::DefaultCallInterface<Derived, Signature>;
+};
+
+namespace mimicpp::detail
+{
+    template <typename Derived, typename Signature, typename... Params>
+    class DefaultCallInterface<
+        Derived,
+        Signature,
+        Constness::non_const,
+        ValueCategory::any,
+        std::tuple<Params...>>
     {
-    private:
-        using TraitsT = signature_traits<Signature>;
-        using ReturnT = typename TraitsT::ReturnT;
-
-        static constexpr auto as_derived = detail::as_derived<Derived>;
-
     public:
-        constexpr ReturnT operator()(
+        constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            const std::source_location& from = std::source_location::current()) noexcept(TraitsT::isNoexcept)
-            requires(!TraitsT::isRef && !TraitsT::isConst)
+            const std::source_location& from = std::source_location::current()) noexcept(signature_is_noexcept_v<Signature>)
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .handle_call(std::tuple{std::ref(params)...}, from);
         }
+    };
 
-        constexpr ReturnT operator()(
+    template <typename Derived, typename Signature, typename... Params>
+    class DefaultCallInterface<
+        Derived,
+        Signature,
+        Constness::as_const,
+        ValueCategory::any,
+        std::tuple<Params...>>
+    {
+    public:
+        constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            const std::source_location& from = std::source_location::current()) const noexcept(TraitsT::isNoexcept)
-            requires(!TraitsT::isRef && TraitsT::isConst)
+            const std::source_location& from = std::source_location::current()) const noexcept(signature_is_noexcept_v<Signature>)
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .handle_call(std::tuple{std::ref(params)...}, from);
         }
+    };
 
-        constexpr ReturnT operator()(
+    template <typename Derived, typename Signature, typename... Params>
+    class DefaultCallInterface<
+        Derived,
+        Signature,
+        Constness::non_const,
+        ValueCategory::lvalue,
+        std::tuple<Params...>>
+    {
+    public:
+        constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            const std::source_location& from = std::source_location::current()) & noexcept(TraitsT::isNoexcept)
-            requires(TraitsT::isLvalueRef && !TraitsT::isConst)
+            const std::source_location& from = std::source_location::current()) & noexcept(signature_is_noexcept_v<Signature>)
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .handle_call(std::tuple{std::ref(params)...}, from);
         }
+    };
 
-        constexpr ReturnT operator()(
+    template <typename Derived, typename Signature, typename... Params>
+    class DefaultCallInterface<
+        Derived,
+        Signature,
+        Constness::as_const,
+        ValueCategory::lvalue,
+        std::tuple<Params...>>
+    {
+    public:
+        constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            const std::source_location& from = std::source_location::current()) const& noexcept(TraitsT::isNoexcept)
-            requires(TraitsT::isLvalueRef && TraitsT::isConst)
+            const std::source_location& from = std::source_location::current()) const& noexcept(signature_is_noexcept_v<Signature>)
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .handle_call(std::tuple{std::ref(params)...}, from);
         }
+    };
 
-        constexpr ReturnT operator()(
+    template <typename Derived, typename Signature, typename... Params>
+    class DefaultCallInterface<
+        Derived,
+        Signature,
+        Constness::non_const,
+        ValueCategory::rvalue,
+        std::tuple<Params...>>
+    {
+    public:
+        constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            const std::source_location& from = std::source_location::current()) && noexcept(TraitsT::isNoexcept)
-            requires(TraitsT::isRvalueRef && !TraitsT::isConst)
+            const std::source_location& from = std::source_location::current()) && noexcept(signature_is_noexcept_v<Signature>)
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .handle_call(std::tuple{std::ref(params)...}, from);
         }
+    };
 
-        constexpr ReturnT operator()(
+    template <typename Derived, typename Signature, typename... Params>
+    class DefaultCallInterface<
+        Derived,
+        Signature,
+        Constness::as_const,
+        ValueCategory::rvalue,
+        std::tuple<Params...>>
+    {
+    public:
+        constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            const std::source_location& from = std::source_location::current()) const&& noexcept(TraitsT::isNoexcept)
-            requires(TraitsT::isRvalueRef && TraitsT::isConst)
+            const std::source_location& from = std::source_location::current()) const&& noexcept(signature_is_noexcept_v<Signature>)
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .handle_call(std::tuple{std::ref(params)...}, from);
         }
     };
@@ -109,79 +149,121 @@ namespace mimicpp::detail
     template <
         typename Derived,
         typename Signature,
+        Constness constQualifier = signature_const_qualification_v<Signature>,
+        ValueCategory refQualifier = signature_ref_qualification_v<Signature>,
         typename ParamList = signature_param_list_t<Signature>>
     class MockFrontend;
 
-    template <
-        typename Derived,
-        typename Signature,
-        typename... Params>
-    class MockFrontend<Derived, Signature, std::tuple<Params...>>
+    template <typename Derived, typename Signature, typename... Params>
+    class MockFrontend<
+        Derived,
+        Signature,
+        Constness::non_const,
+        ValueCategory::any,
+        std::tuple<Params...>>
     {
-    private:
-        using TraitsT = signature_traits<Signature>;
-
-        static constexpr auto as_derived = detail::as_derived<Derived>;
-
     public:
-        // note: The explicit noexcept(false) statements are here, because otherwise clang-format fucks-up formatting
-
         template <typename... Args>
             requires(... && requirement_for<Args, Params>)
         [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) noexcept(false)
-            requires(!TraitsT::isRef && !TraitsT::isConst)
+        constexpr auto expect_call(Args&&... args)
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .make_expectation_builder(std::forward<Args>(args)...);
         }
+    };
 
+    template <typename Derived, typename Signature, typename... Params>
+    class MockFrontend<
+        Derived,
+        Signature,
+        Constness::as_const,
+        ValueCategory::any,
+        std::tuple<Params...>>
+    {
+    public:
         template <typename... Args>
             requires(... && requirement_for<Args, Params>)
         [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) const noexcept(false)
-            requires(!TraitsT::isRef && TraitsT::isConst)
+        constexpr auto expect_call(Args&&... args) const
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .make_expectation_builder(std::forward<Args>(args)...);
         }
+    };
 
+    template <typename Derived, typename Signature, typename... Params>
+    class MockFrontend<
+        Derived,
+        Signature,
+        Constness::non_const,
+        ValueCategory::lvalue,
+        std::tuple<Params...>>
+    {
+    public:
         template <typename... Args>
             requires(... && requirement_for<Args, Params>)
         [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) & noexcept(false)
-            requires(TraitsT::isLvalueRef && !TraitsT::isConst)
+        constexpr auto expect_call(Args&&... args) &
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
                 .make_expectation_builder(std::forward<Args>(args)...);
         }
+    };
 
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]] constexpr auto expect_call(Args&&... args) const& noexcept(false)
-            requires(TraitsT::isLvalueRef && TraitsT::isConst)
-        {
-            return as_derived(*this)
-                .make_expectation_builder(std::forward<Args>(args)...);
-        }
-
-        template <typename... Args>
-            requires(... && requirement_for<Args, Params>)
-        [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) && noexcept(false)
-            requires(TraitsT::isRvalueRef && !TraitsT::isConst)
-        {
-            return as_derived(*this)
-                .make_expectation_builder(std::forward<Args>(args)...);
-        }
-
+    template <typename Derived, typename Signature, typename... Params>
+    class MockFrontend<
+        Derived,
+        Signature,
+        Constness::as_const,
+        ValueCategory::lvalue,
+        std::tuple<Params...>>
+    {
+    public:
         template <typename... Args>
             requires(... && requirement_for<Args, Params>)
         [[nodiscard]]
-        constexpr auto expect_call(Args&&... args) const&& noexcept(false)
-            requires(TraitsT::isRvalueRef && TraitsT::isConst)
+        constexpr auto expect_call(Args&&... args) const&
         {
-            return as_derived(*this)
+            return static_cast<const Derived&>(*this)
+                .make_expectation_builder(std::forward<Args>(args)...);
+        }
+    };
+
+    template <typename Derived, typename Signature, typename... Params>
+    class MockFrontend<
+        Derived,
+        Signature,
+        Constness::non_const,
+        ValueCategory::rvalue,
+        std::tuple<Params...>>
+    {
+    public:
+        template <typename... Args>
+            requires(... && requirement_for<Args, Params>)
+        [[nodiscard]]
+        constexpr auto expect_call(Args&&... args) &&
+        {
+            return static_cast<const Derived&>(*this)
+                .make_expectation_builder(std::forward<Args>(args)...);
+        }
+    };
+
+    template <typename Derived, typename Signature, typename... Params>
+    class MockFrontend<
+        Derived,
+        Signature,
+        Constness::as_const,
+        ValueCategory::rvalue,
+        std::tuple<Params...>>
+    {
+    public:
+        template <typename... Args>
+            requires(... && requirement_for<Args, Params>)
+        [[nodiscard]]
+        constexpr auto expect_call(Args&&... args) const&&
+        {
+            return static_cast<const Derived&>(*this)
                 .make_expectation_builder(std::forward<Args>(args)...);
         }
     };
@@ -197,20 +279,20 @@ namespace mimicpp::detail
         : public MockFrontend<
               BasicMock<Signature, std::tuple<Params...>>,
               Signature>,
-          public InvokeInterface<
+          public call_interface_t<
               BasicMock<Signature, std::tuple<Params...>>,
               Signature>
     {
-        friend class MockFrontend<BasicMock, Signature>;
-        friend class InvokeInterface<BasicMock, Signature>;
-
         using SignatureT = Signature;
-        using ReturnT = signature_return_type_t<SignatureT>;
+
+        friend class MockFrontend<BasicMock, SignatureT>;
+        friend call_interface_t<BasicMock, Signature>;
+
         static constexpr Constness constQualification = signature_const_qualification_v<SignatureT>;
         static constexpr ValueCategory refQualification = signature_ref_qualification_v<SignatureT>;
 
     protected:
-        using ExpectationCollectionPtrT = expectation_collection_ptr_for<Signature>;
+        using ExpectationCollectionPtrT = expectation_collection_ptr_for<SignatureT>;
 
         [[nodiscard]]
         explicit BasicMock(ExpectationCollectionPtrT collection) noexcept
@@ -222,7 +304,7 @@ namespace mimicpp::detail
         ExpectationCollectionPtrT m_Expectations;
 
         [[nodiscard]]
-        constexpr ReturnT handle_call(
+        constexpr signature_return_type_t<SignatureT> handle_call(
             std::tuple<std::reference_wrapper<std::remove_reference_t<Params>>...>&& params,
             const std::source_location& from) const
         {
