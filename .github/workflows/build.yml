@@ -462,6 +462,14 @@ jobs:
         run: |
           echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
+      - name: Setup linux 32bit builds
+        if: ${{ matrix.config.prefix == 'Linux' && matrix.config.architecture == '32bit' }}
+        shell: bash
+        run: |
+          echo "CXXFLAGS=$(echo $CXXFLAGS -m32)" >> $GITHUB_ENV
+          echo "CFLAGS=$(echo CFLAGS -m32)" >> $GITHUB_ENV
+          echo "LDFLAGS=$(echo $LDFLAGS -m32)" >> $GITHUB_ENV
+
       - name: Setup msvc
         if: ${{ matrix.config.compiler_name  == 'msvc' }}
         shell: bash
