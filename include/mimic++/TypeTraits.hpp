@@ -1270,7 +1270,7 @@ namespace mimicpp
      */
 
     /**
-     * \defgroup TYPE_TRAITS_UINT_WITH_SIZE unit_with_size
+     * \defgroup TYPE_TRAITS_UINT_WITH_SIZE uint_with_size
      * \ingroup TYPE_TRAITS
      * \brief Provides the member alias ``type`` with the expected uint-type.
      * \details This trait always yields a type with the exact size. If no such type exists, the member ``type`` is undefined.
