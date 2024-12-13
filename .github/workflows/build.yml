@@ -334,7 +334,7 @@ jobs:
         if: ${{ matrix.config.prefix == 'Linux' && matrix.config.architecture == '32bit' }}
         shell: bash
         run: |
-          apt-get install -y gcc-{{ matrix.config.compiler_version }}-multilib g++-{{ matrix.config.compiler_version }}-multilib
+          apt-get install -y gcc-${{ matrix.config.compiler_version }}-multilib g++-${{ matrix.config.compiler_version }}-multilib
           echo "CXXFLAGS=$(echo $CXXFLAGS -m32)" >> $GITHUB_ENV
           echo "CFLAGS=$(echo CFLAGS -m32)" >> $GITHUB_ENV
           echo "LDFLAGS=$(echo $LDFLAGS -m32)" >> $GITHUB_ENV
@@ -467,7 +467,7 @@ jobs:
         if: ${{ matrix.config.prefix == 'Linux' && matrix.config.architecture == '32bit' }}
         shell: bash
         run: |
-          apt-get install -y gcc-{{ matrix.config.compiler_version }}-multilib g++-{{ matrix.config.compiler_version }}-multilib
+          apt-get install -y gcc-${{ matrix.config.compiler_version }}-multilib g++-${{ matrix.config.compiler_version }}-multilib
           echo "CXXFLAGS=$(echo $CXXFLAGS -m32)" >> $GITHUB_ENV
           echo "CFLAGS=$(echo CFLAGS -m32)" >> $GITHUB_ENV
           echo "LDFLAGS=$(echo $LDFLAGS -m32)" >> $GITHUB_ENV
