@@ -129,7 +129,7 @@ Variables</h2></td></tr>
 <li>formattable type (in terms of the installed format-backend)</li>
 </ul>
 <p>If no valid alternative has been found, the default is chosen (which just prints "{?}").</p>
-<h2><a class="anchor" id="autotoc_md18"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Override existing printings or print custom types</h2>
 <p>As <code>mimic++</code> can not know how to convert any custom type out there, a simple but effective mechanism is used. Users can add a specialization of <code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> for their own or third-party types. <code>mimic++</code> will always prefer such a specialization over any other internal alternative, even if <code>mimic++</code> already has special treatment that particular type (e.g. <code>std::source_location</code>).</p>
 <p>Given the following type. </p><div class="fragment"><div class="line">    <span class="keyword">struct </span>my_type</div>
