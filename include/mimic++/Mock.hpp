@@ -17,27 +17,10 @@
 namespace mimicpp::detail
 {
     template <typename Derived, typename Signature>
-    using call_interface_t = typename calling_convention_traits<
-        typename signature_traits<Signature>::call_convention_tag>::template call_interface_t<Derived, Signature>;
+    using call_interface_t = typename call_convention_traits<signature_call_convention_t<Signature>>::
+        // The call-convention is just needed for determining the correct call_convention trait, thus remove it afterward.
+        template call_interface_t<Derived, signature_remove_call_convention_t<Signature>>;
 
-    template <
-        typename Derived,
-        typename Signature,
-        Constness constQualifier = signature_const_qualification_v<Signature>,
-        ValueCategory refQualifier = signature_ref_qualification_v<Signature>,
-        typename ParamList = signature_param_list_t<Signature>>
-    class DefaultCallInterface;
-}
-
-template <>
-struct mimicpp::calling_convention_traits<mimicpp::default_call_convention::tag>
-{
-    template <typename Derived, typename Signature>
-    using call_interface_t = detail::DefaultCallInterface<Derived, Signature>;
-};
-
-namespace mimicpp::detail
-{
     template <typename Derived, typename Signature, typename... Params>
     class DefaultCallInterface<
         Derived,
@@ -277,8 +260,9 @@ namespace mimicpp::detail
     template <typename Signature, typename... Params>
     class BasicMock<Signature, std::tuple<Params...>>
         : public MockFrontend<
+              // MockFrontend doesn't need to know about the call-convention, thus remove it
               BasicMock<Signature, std::tuple<Params...>>,
-              Signature>,
+              signature_remove_call_convention_t<Signature>>,
           public call_interface_t<
               BasicMock<Signature, std::tuple<Params...>>,
               Signature>
@@ -286,7 +270,7 @@ namespace mimicpp::detail
         using SignatureT = Signature;
 
         friend class MockFrontend<BasicMock, SignatureT>;
-        friend call_interface_t<BasicMock, Signature>;
+        friend call_interface_t<BasicMock, SignatureT>;
 
         static constexpr Constness constQualification = signature_const_qualification_v<SignatureT>;
         static constexpr ValueCategory refQualification = signature_ref_qualification_v<SignatureT>;
