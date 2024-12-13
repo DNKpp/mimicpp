@@ -9,6 +9,16 @@ var hierarchy =
       ] ]
     ] ],
     [ "mimicpp::BasicExpectationBuilder< timesConfigured, SequenceConfig, Signature, FinalizePolicy, Policies >", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html", null ],
+    [ "mimicpp::detail::BasicMock< FirstSignature >", null, [
+      [ "mimicpp::Mock< FirstSignature, OtherSignatures >", "d2/d48/classmimicpp_1_1_mock.html", null ]
+    ] ],
+    [ "mimicpp::detail::BasicMock< OtherSignatures >", null, [
+      [ "mimicpp::Mock< void()>", "d2/d48/classmimicpp_1_1_mock.html", null ],
+      [ "mimicpp::Mock< FirstSignature, OtherSignatures >", "d2/d48/classmimicpp_1_1_mock.html", null ]
+    ] ],
+    [ "mimicpp::detail::BasicMock< void() >", null, [
+      [ "mimicpp::Mock< void()>", "d2/d48/classmimicpp_1_1_mock.html", null ]
+    ] ],
     [ "mimicpp::sequence::detail::BasicSequenceInterface< sequence::Id, sequence::detail::GreedyStrategy{}>", null, [
       [ "mimicpp::GreedySequence", "db/d43/classmimicpp_1_1_greedy_sequence.html", null ]
     ] ],
@@ -19,11 +29,13 @@ var hierarchy =
       [ "mimicpp::always_false<... >", "d5/d8e/structmimicpp_1_1always__false.html", null ],
       [ "mimicpp::signature_is_noexcept< Signature >", "d9/d28/structmimicpp_1_1signature__is__noexcept.html", null ]
     ] ],
+    [ "mimicpp::call_convention_traits< Tag >", "d3/db5/structmimicpp_1_1call__convention__traits.html", null ],
+    [ "mimicpp::call_convention_traits< detail::default_call_convention >", "d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html", null ],
     [ "mimicpp::CallReport", "dc/dd0/classmimicpp_1_1_call_report.html", null ],
     [ "mimicpp::case_insensitive_t", "d2/dd4/structmimicpp_1_1case__insensitive__t.html", null ],
     [ "mimicpp::expectation_policies::Category< expected >", "d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html", null ],
     [ "std::conditional_t", null, [
-      [ "mimicpp::detail::is_overloadable_with< signature_remove_noexcept_t< First >, signature_remove_noexcept_t< Second > >", null, [
+      [ "mimicpp::detail::is_overloadable_with< detail::normalize_overload_t< First >, detail::normalize_overload_t< Second > >", null, [
         [ "mimicpp::is_overloadable_with< First, Second >", "d4/dd6/structmimicpp_1_1is__overloadable__with.html", null ]
       ] ]
     ] ],
@@ -67,16 +79,6 @@ var hierarchy =
     [ "mimicpp::LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", null ],
     [ "mimicpp::custom::matcher_traits< Matcher >", "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html", null ],
     [ "mimicpp::MatchReport", "db/d11/classmimicpp_1_1_match_report.html", null ],
-    [ "mimicpp::detail::MockFrontend< FirstSignature >", null, [
-      [ "mimicpp::Mock< FirstSignature, OtherSignatures >", "d2/d48/classmimicpp_1_1_mock.html", null ]
-    ] ],
-    [ "mimicpp::detail::MockFrontend< OtherSignatures >", null, [
-      [ "mimicpp::Mock< void()>", "d2/d48/classmimicpp_1_1_mock.html", null ],
-      [ "mimicpp::Mock< FirstSignature, OtherSignatures >", "d2/d48/classmimicpp_1_1_mock.html", null ]
-    ] ],
-    [ "mimicpp::detail::MockFrontend< void() >", null, [
-      [ "mimicpp::Mock< void()>", "d2/d48/classmimicpp_1_1_mock.html", null ]
-    ] ],
     [ "mimicpp::PredicateMatcher< Predicate, AdditionalArgs >", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", null ],
     [ "mimicpp::custom::Printer< typename >", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],
     [ "mimicpp::priority_tag< priority >", "d1/d9f/structmimicpp_1_1priority__tag.html", null ],
@@ -112,11 +114,14 @@ var hierarchy =
     [ "mimicpp::signature_add_noexcept< Return(Params...,...) noexcept >", "dd/d02/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01noexcept_01_4.html", null ],
     [ "mimicpp::signature_add_noexcept< Return(Params...,...)& >", "d2/d09/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html", null ],
     [ "mimicpp::signature_add_noexcept< Return(Params...,...)>", "db/db4/structmimicpp_1_1signature__add__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", null ],
+    [ "mimicpp::signature_call_convention< Signature >", "dc/d9a/structmimicpp_1_1signature__call__convention.html", null ],
+    [ "mimicpp::signature_call_convention< Signature >", "da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html", null ],
     [ "mimicpp::signature_decay< Signature >", "db/df4/structmimicpp_1_1signature__decay.html", null ],
     [ "mimicpp::signature_param_list< Signature >", "d0/df4/structmimicpp_1_1signature__param__list.html", null ],
     [ "mimicpp::signature_param_list< Return(Params...)>", "d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html", null ],
     [ "mimicpp::signature_param_type< index, Signature >", "db/dd5/structmimicpp_1_1signature__param__type.html", null ],
     [ "mimicpp::signature_ref_qualification< Signature >", "d7/d97/structmimicpp_1_1signature__ref__qualification.html", null ],
+    [ "mimicpp::signature_remove_call_convention< Signature >", "dc/d70/structmimicpp_1_1signature__remove__call__convention.html", null ],
     [ "mimicpp::signature_remove_const_qualifier< Signature >", "d8/de6/structmimicpp_1_1signature__remove__const__qualifier.html", null ],
     [ "mimicpp::signature_remove_const_qualifier< Return(Params...) && >", "df/d77/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html", null ],
     [ "mimicpp::signature_remove_const_qualifier< Return(Params...) &&noexcept >", "d5/d90/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_08_01_6_6noexcept_01_4.html", null ],
@@ -142,6 +147,7 @@ var hierarchy =
     [ "mimicpp::signature_remove_const_qualifier< Return(Params...,...) noexcept >", "d8/df4/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_01noexcept_01_4.html", null ],
     [ "mimicpp::signature_remove_const_qualifier< Return(Params...,...)& >", "d5/d7a/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html", null ],
     [ "mimicpp::signature_remove_const_qualifier< Return(Params...,...)>", "dc/d34/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", null ],
+    [ "mimicpp::signature_remove_const_qualifier< Signature >", "d1/dda/structmimicpp_1_1signature__remove__const__qualifier_3_01_signature_01_4.html", null ],
     [ "mimicpp::signature_remove_noexcept< Signature >", "d4/db7/structmimicpp_1_1signature__remove__noexcept.html", null ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...) && >", "d2/d50/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html", null ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...) &&noexcept >", "d9/d57/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01_6_6noexcept_01_4.html", null ],
@@ -167,6 +173,7 @@ var hierarchy =
     [ "mimicpp::signature_remove_noexcept< Return(Params...,...) noexcept >", "dd/d02/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01noexcept_01_4.html", null ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...,...)& >", "df/d42/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html", null ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...,...)>", "d2/d09/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", null ],
+    [ "mimicpp::signature_remove_noexcept< Signature >", "dd/da2/structmimicpp_1_1signature__remove__noexcept_3_01_signature_01_4.html", null ],
     [ "mimicpp::signature_remove_ref_qualifier< Signature >", "d5/dae/structmimicpp_1_1signature__remove__ref__qualifier.html", null ],
     [ "mimicpp::signature_remove_ref_qualifier< Return(Params...) && >", "d4/d33/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html", null ],
     [ "mimicpp::signature_remove_ref_qualifier< Return(Params...) &&noexcept >", "db/d5a/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_08_01_6_6noexcept_01_4.html", null ],
@@ -192,6 +199,7 @@ var hierarchy =
     [ "mimicpp::signature_remove_ref_qualifier< Return(Params...,...) noexcept >", "da/d60/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_01noexcept_01_4.html", null ],
     [ "mimicpp::signature_remove_ref_qualifier< Return(Params...,...)& >", "d9/d10/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html", null ],
     [ "mimicpp::signature_remove_ref_qualifier< Return(Params...,...)>", "d3/daa/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", null ],
+    [ "mimicpp::signature_remove_ref_qualifier< Signature >", "d1/d98/structmimicpp_1_1signature__remove__ref__qualifier_3_01_signature_01_4.html", null ],
     [ "mimicpp::signature_return_type< Signature >", "d4/d96/structmimicpp_1_1signature__return__type.html", null ],
     [ "mimicpp::signature_return_type< Return(Params...)>", "d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html", null ],
     [ "mimicpp::signature_return_type< Return(Params...,...)>", "d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", null ],

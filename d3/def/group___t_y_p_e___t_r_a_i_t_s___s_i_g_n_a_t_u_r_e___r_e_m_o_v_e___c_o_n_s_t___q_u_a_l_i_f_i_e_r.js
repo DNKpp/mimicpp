@@ -1,6 +1,10 @@
 var group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_o_n_s_t___q_u_a_l_i_f_i_e_r =
 [
     [ "mimicpp::signature_remove_const_qualifier< Signature >", "d8/de6/structmimicpp_1_1signature__remove__const__qualifier.html", null ],
+    [ "mimicpp::signature_remove_const_qualifier< Signature >", "d1/dda/structmimicpp_1_1signature__remove__const__qualifier_3_01_signature_01_4.html", [
+      [ "call_convention_traits_t", "d1/dda/structmimicpp_1_1signature__remove__const__qualifier_3_01_signature_01_4.html#a3e10b991a0c72362e8a7ac35301151b1", null ],
+      [ "type", "d1/dda/structmimicpp_1_1signature__remove__const__qualifier_3_01_signature_01_4.html#a0b2618d9064f22b1b9f73236050273d6", null ]
+    ] ],
     [ "mimicpp::signature_remove_const_qualifier< Return(Params...)>", "dc/dfb/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_08_4.html", [
       [ "type", "dc/dfb/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_08_4.html#a5a5391f247dfaca253f350f48510b964", null ]
     ] ],
