@@ -18,7 +18,7 @@ Mail: [DNKpp2011@gmail.com](mailto:dnkpp2011@gmail.com)
 * [Introduction](#introduction)
   * [Core Design](#core-design)
   * [Examples](#examples)
-  * [Other Choices](#other-choices)
+  * [Portability](#portability)
   * [Special Acknowledgement](#special-acknowledgement)
 * [Customizability](#customizability)
   * [Stringification](#stringification)
@@ -278,16 +278,15 @@ TEST_CASE("LifetimeWatcher and RelocationWatcher can trace object instances.")
 
 </details>
 
-### Other Choices
+### Portability
 
-#### Always Stay Within The Language Definition
-
-There are a lot of mocking frameworks, which utilize clever tricks and apply some compiler specific instructions to make the work more enjoyable.
-``mimic++`` does not!
-This framework will never touch the ground of undefined behaviour or tricks, which will only work under some circumstances, as this is nothing I
-want to support and maintain over a set of compilers or configurations.
-Unfortunatle this often leads to a less elegant syntax for users. If you need that, than this framework is probably not the right for you.
-Pick your poison :)
+``mimic++`` is designed to work on any c++20 conforming compiler - independent of the underlying platform or
+architecture. This is achieved
+by always staying within the language bounds and is continuously checked by the extensive ci/cd workflow, which keeps
+track of many different configurations.
+In fact ``mimic++`` is known to work on Windows, Ubuntu and MacOs with ``x86_x64`` and ``x86_x86`` architectures. For a
+more complete
+overview head over to the [Testing](#testing) section.
 
 ### Special Acknowledgement
 
@@ -414,6 +413,8 @@ Official adapters exist for the following frameworks:
 
 ``mimic++`` utilizes a strict testing policy, thus each official feature is well tested. The effect of those test-cases are always tracked by the extensive ci,
 which checks the compilation success, test cases outcomes and coverage on dozens of different os, compiler and build configurations.
+By default, all configurations assume a ``x86_x64``-architecture. In addition, a few configurations have been added
+specifically for the ``x86_x86``-architecture.
 
 For the test builds the flags ``-Wall -Wextra -Wpedantic -Werror`` (on MSVC ``/W4 /WX``) are set.
 This is done to make sure, that ``mimic++`` won't flood your build output with endless warnings (or even worse: break your builds),

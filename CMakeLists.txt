@@ -15,6 +15,15 @@ project(
 	HOMEPAGE_URL	"https://github.com/DNKpp/mimicpp"
 )
 
+message(STATUS "mimic++ version: ${PROJECT_VERSION} from: ${mimicpp_SOURCE_DIR}")
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+	message(STATUS "targeting 64-bit architecture")
+elseif (CMAKE_SIZEOF_VOID_P EQUAL 4)
+	message(STATUS "targeting 32-bit architecture")
+else ()
+	message(WARNING "unable to determine architecture")
+endif ()
+
 include(GNUInstallDirs)
 
 add_library(mimicpp INTERFACE)
