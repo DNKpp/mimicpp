@@ -12,6 +12,10 @@
 
 #include <source_location>
 
+static_assert(
+    0u != sizeof(void(__vectorcall*)()),
+    "Your compiler doesn't support __vectorcall. Do not include this file!");
+
 namespace mimicpp::vectorcall_call_convention
 {
     /**
@@ -340,9 +344,19 @@ namespace mimicpp::vectorcall_call_convention
      */
 }
 
-template <typename Signature>
+// In cases, where __vectorcall is not the default, the detection is straight-forward.
+template <mimicpp::vectorcall_call_convention::has_call_convention Signature>
     requires(!mimicpp::vectorcall_call_convention::is_default_call_convention)
-         && mimicpp::vectorcall_call_convention::has_call_convention<Signature>
+struct mimicpp::signature_call_convention<Signature>
+{
+    using type = vectorcall_call_convention::tag;
+};
+
+// In cases, where __vectorcall is the default, we still want to get this tag,
+// because (at least on msvc) __vectorcall is only applied to non-member functions by default.
+// Due to this, we must explicitly mark the mock invoke operators as __vectorcall.
+template <mimicpp::has_default_call_convention Signature>
+    requires mimicpp::vectorcall_call_convention::is_default_call_convention
 struct mimicpp::signature_call_convention<Signature>
 {
     using type = vectorcall_call_convention::tag;
