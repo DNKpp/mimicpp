@@ -370,7 +370,7 @@ jobs:
         shell: bash
         # keep that space before the flag!
         run: |
-          echo "CXXFLAGS=$(echo $CXXFLAGS \" /Gv\")" >> $GITHUB_ENV
+          echo "CXXFLAGS=$(echo ${CXXFLAGS} /Gv)" >> $GITHUB_ENV
 
       - name: Enable Address and Undefined Sanitizer
         if: ${{ matrix.config.asan == true }}
