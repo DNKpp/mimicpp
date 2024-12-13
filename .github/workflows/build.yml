@@ -1,486 +1,486 @@
 name: build & test
 on:
-    push:
-        branches: [main, development]
-    pull_request:
-        branches: [main, development]
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
 
 jobs:
-    ############
-    #
-    # Defines the compiler configurations for the other jobs.
-    #
-    #####
-    define-matrix:
-        runs-on: ubuntu-latest
+  ############
+  #
+  # Defines the compiler configurations for the other jobs.
+  #
+  #####
+  define-matrix:
+    runs-on: ubuntu-latest
+    env:
+      config: |
+        [
+            {
+                "prefix": "Linux",
+                "suffix": "/libc++",
+                "os": "ubuntu-latest",
+                "container": {
+                    "image": "ghcr.io/dnkpp/clang:18"
+                },
+                "compiler_name": "clang",
+                "compiler_version": 18,
+                "architecture": "x64",
+                "libcxx": true,
+                "asan": true
+            },
+            {
+                "prefix": "Linux",
+                "os": "ubuntu-latest",
+                "container": {
+                    "image": "ghcr.io/dnkpp/clang:18"
+                },
+                "compiler_name": "clang",
+                "compiler_version": 18,
+                "architecture": "x64",
+                "libcxx": false,
+                "asan": true
+            },
+            {
+                "prefix": "Linux",
+                "suffix": "/libc++",
+                "os": "ubuntu-latest",
+                "container": { "image": "ghcr.io/dnkpp/clang:17" },
+                "compiler_name": "clang",
+                "compiler_version": 17,
+                "architecture": "x64",
+                "libcxx": true,
+                "asan": true
+            },
+            {
+                "prefix": "Linux",
+                "os": "ubuntu-latest",
+                "container": { "image": "ghcr.io/dnkpp/clang:17" },
+                "compiler_name": "clang",
+                "compiler_version": 17,
+                "architecture": "x64",
+                "libcxx": false,
+                "asan": true
+            },
+            {
+                "prefix": "Linux",
+                "suffix": "/libc++",
+                "os": "ubuntu-latest",
+                "container": { "image": "ghcr.io/dnkpp/clang:16" },
+                "compiler_name": "clang",
+                "compiler_version": 16,
+                "architecture": "x64",
+                "libcxx": true,
+                "asan": true
+            },
+            {
+                "prefix": "Linux",
+                "os": "ubuntu-latest",
+                "container": { "image": "ghcr.io/dnkpp/clang:16" },
+                "compiler_name": "clang",
+                "compiler_version": 16,
+                "architecture": "x64",
+                "libcxx": false,
+                "asan": true
+            },
+        
+        
+        
+            {
+                "prefix": "Linux",
+                "os": "ubuntu-latest",
+                "container": { "image": "ghcr.io/dnkpp/gcc:14" },
+                "compiler_name": "gcc",
+                "compiler_version": 14,
+                "architecture": "x64",
+                "libcxx": false,
+                "asan": true
+            },
+            {
+                "prefix": "Linux",
+                "os": "ubuntu-latest",
+                "container": { "image": "ghcr.io/dnkpp/gcc:13" },
+                "compiler_name": "gcc",
+                "compiler_version": 13,
+                "architecture": "x64",
+                "libcxx": false,
+                "asan": true
+            },
+            {
+                "prefix": "Linux",
+                "os": "ubuntu-latest",
+                "container": { "image": "ghcr.io/dnkpp/gcc:12" },
+                "compiler_name": "gcc",
+                "compiler_version": 12,
+                "architecture": "x64",
+                "libcxx": false,
+                "asan": true
+            },
+        
+        
+        
+            {
+                "prefix": "Windows 2022",
+                "os": "windows-2022",
+                "compiler_name": "msvc",
+                "compiler_version": "v143",
+                "cmake_generator": "Visual Studio 17 2022",
+                "architecture": "x64",
+                "libcxx": false,
+                "asan": false
+            },
+            {
+                "prefix": "Windows 2022",
+                "os": "windows-2022",
+                "compiler_name": "msvc",
+                "compiler_version": "ClangCl",
+                "cmake_generator": "Visual Studio 17 2022",
+                "architecture": "x64",
+                "libcxx": false,
+                "asan": false
+            },
+          {
+              "prefix": "Windows 2022",
+              "os": "windows-2022",
+              "compiler_name": "msvc",
+              "compiler_version": "v143",
+              "cmake_generator": "Visual Studio 17 2022",
+              "architecture": "Win32",
+              "libcxx": false,
+              "asan": false
+          },
+          {
+              "prefix": "Windows 2022",
+              "os": "windows-2022",
+              "compiler_name": "msvc",
+              "compiler_version": "ClangCl",
+              "cmake_generator": "Visual Studio 17 2022",
+              "architecture": "Win32",
+              "libcxx": false,
+              "asan": false
+          },
+        
+        
+        
+            {
+                "prefix": "macOS",
+                "os": "macos-latest",
+                "compiler_name": "AppleClang",
+                "compiler_version": 18,
+                "architecture": "x64",
+                "ldflags_workaround": "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind",
+                "asan": true
+            },
+            {
+                "prefix": "macOS",
+                "os": "macos-latest",
+                "compiler_name": "AppleClang",
+                "compiler_version": 17,
+                "architecture": "x64",
+                "ldflags_workaround": "-L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++",
+                "asan": true
+            },
+            {
+                "prefix": "macOS",
+                "os": "macos-latest",
+                "compiler_name": "AppleClang",
+                "compiler_version": 16,
+                "architecture": "x64",
+                "ldflags_workaround": "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++",
+                "asan": true
+            }
+        ]
+
+    outputs:
+      config: ${{ steps.output-config.outputs.config }}
+      build_modes: ${{ steps.output-options.outputs.build_modes }}
+      cxx_versions: ${{ steps.output-options.outputs.cxx_versions }}
+
+    steps:
+      - name: Output configs
+        id: output-config
+        shell: bash
+        run: |
+          # seems to convert that to a single-line json and thus please the output step
+          # wrap in single '!
+          OUTPUT='${{ env.config }}'
+          echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
+
+      # enables debug-mode and c++20 for all cases
+      - name: Enable base matrix
+        shell: bash
+        run: |
+          echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
+          echo "CXX_VERSIONS=20" >> $GITHUB_ENV
+
+      # if its a PR from development or the main branch in general, add release-mode and c++23
+      - name: Enable extended matrix
+        if: ${{
+          (github.event_name == 'pull_request' && github.head_ref == 'development')
+          || github.ref_name == 'main'
+          }}
+        shell: bash
+        run: |
+          echo "BUILD_MODES=$(echo $BUILD_MODES, \"Release\")" >> $GITHUB_ENV
+          echo "CXX_VERSIONS=$(echo $CXX_VERSIONS, 23)" >> $GITHUB_ENV
+
+      - name: Output build-modes and c++-versions
+        id: output-options
+        shell: bash
+        run: |
+          echo "build_modes=$(echo [ $BUILD_MODES ])" >> "$GITHUB_OUTPUT"
+          echo "cxx_versions=$(echo [ $CXX_VERSIONS ])" >> "$GITHUB_OUTPUT"
+
+  ############
+  #
+  # Runs all general unit tests and examples, without any adapter tests.
+  # They are excluded, because the dependency fetching and building increased the build times quite heavily,
+  # which does not scale properly.
+  #
+  # Runs all tests on every machine with
+  # - debug and release
+  # - c++20 and c++23
+  # - std- and fmt-formatting backend
+  #
+  #####
+  run-unit-tests:
+    needs: define-matrix
+    name: |
+      [UT]
+      ${{ matrix.config.prefix }} 
+      ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
+      ${{ matrix.config.suffix }} 
+      (C++${{ matrix.cxx_standard }},
+        ${{ matrix.build_mode }},
+        ${{ matrix.config.architecture }},
+        ${{ matrix.format_backend }},
+        ${{ matrix.str_matcher }})
+    runs-on: ${{ matrix.config.os }}
+    container: ${{ matrix.config.container }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        format_backend: [ std, fmt ]
+        str_matcher: [ char, unicode ]
+        build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
+        cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
+        config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
+
+        exclude:
+          # all listed compilers do not support std's format header
+          - format_backend: "std"
+            config:
+              compiler_name: "clang"
+              compiler_version: 16
+          - format_backend: "std"
+            config:
+              compiler_name: "gcc"
+              compiler_version: 12
+          - format_backend: "std"
+            config:
+              compiler_name: "AppleClang"
+              compiler_version: 16
+
+          # The format_backend and str_matcher options are rather orthogonal.
+          # To see, whether support both str_matcher variants, let's use the fmt backend,
+          # as this is supported by all compilers.
+          - format_backend: "std"
+            str_matcher: "unicode"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup macOS
+        if: startsWith(matrix.config.os, 'macOS')
+        shell: bash
+        run: |
+          env brew install ninja llvm
+          LLVM_NAME=llvm@${{ matrix.config.compiler_version }}
+          env brew install $LLVM_NAME
+          LLVM_PATH="$(brew --prefix $LLVM_NAME)"
+          echo "CC=$(echo $LLVM_PATH/bin/clang)" >> $GITHUB_ENV
+          echo "CXX=$(echo $LLVM_PATH/bin/clang++)" >> $GITHUB_ENV
+          
+          # solves this issue: https://github.com/Homebrew/homebrew-core/issues/178435
+          echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
+          
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+
+      - name: Clang libc++ setup
+        if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx == true }}
+        shell: bash
+        run: |
+          echo "CXXFLAGS=$(echo $CXXFLAGS -stdlib=libc++)" >> $GITHUB_ENV
+          echo "LDFLAGS=$(echo $LDFLAGS -lc++abi)" >> $GITHUB_ENV
+
+      - name: Setup linux
+        if: ${{ matrix.config.prefix  == 'Linux' }}
+        shell: bash
+        run: |
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+
+      - name: Setup msvc
+        if: ${{ matrix.config.compiler_name  == 'msvc' }}
+        shell: bash
+        run: |
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G\"${{ matrix.config.cmake_generator }}\" -T\"${{ matrix.config.compiler_version }}\" -A\"${{ matrix.config.architecture }}\")" >> $GITHUB_ENV
+          echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
+
+      - name: Enable Address and Undefined Sanitizer
+        if: ${{ matrix.config.asan == true }}
+        shell: bash
+        run: |
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
+
+      - name: Setup fmt as formatting backend
+        if: startsWith(matrix.format_backend, 'fmt')
+        shell: bash
+        run: |
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_USE_FMT=YES)" >> $GITHUB_ENV
+
+      - name: Enable unicode support for string matchers
+        if: startsWith(matrix.str_matcher, 'unicode')
+        shell: bash
+        run: |
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES)" >> $GITHUB_ENV
+
+      # ASan has some serious trouble with libc++ exception mechanism
+      # see: https://github.com/llvm/llvm-project/issues/59432
+      - name: Disable alloc_dealloc_mismatch detection with libc++
+        if: ${{ matrix.config.asan == true && matrix.config.libcxx == true}}
+        shell: bash
+        run: |
+          echo "ASAN_OPTIONS=$(echo $ASAN_OPTIONS:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
+
+      - name: Configure
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              -D CMAKE_VERBOSE_MAKEFILE=yes \
+              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+              ${{ env.CMAKE_CONFIG_EXTRA }}
+
+      - name: Build
+        shell: bash
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
+
+      - name: Run tests
+        shell: bash
         env:
-            config: |
-                [
-                    {
-                        "prefix": "Linux",
-                        "suffix": "/libc++",
-                        "os": "ubuntu-latest",
-                        "container": {
-                            "image": "ghcr.io/dnkpp/clang:18"
-                        },
-                        "compiler_name": "clang",
-                        "compiler_version": 18,
-                      "architecture": "x64",
-                        "libcxx": true,
-                        "asan": true
-                    },
-                    {
-                        "prefix": "Linux",
-                        "os": "ubuntu-latest",
-                        "container": {
-                            "image": "ghcr.io/dnkpp/clang:18"
-                        },
-                        "compiler_name": "clang",
-                        "compiler_version": 18,
-                      "architecture": "x64",
-                        "libcxx": false,
-                        "asan": true
-                    },
-                    {
-                        "prefix": "Linux",
-                        "suffix": "/libc++",
-                        "os": "ubuntu-latest",
-                        "container": { "image": "ghcr.io/dnkpp/clang:17" },
-                        "compiler_name": "clang",
-                        "compiler_version": 17,
-                      "architecture": "x64",
-                        "libcxx": true,
-                        "asan": true
-                    },
-                    {
-                        "prefix": "Linux",
-                        "os": "ubuntu-latest",
-                        "container": { "image": "ghcr.io/dnkpp/clang:17" },
-                        "compiler_name": "clang",
-                        "compiler_version": 17,
-                      "architecture": "x64",
-                        "libcxx": false,
-                        "asan": true
-                    },
-                    {
-                        "prefix": "Linux",
-                        "suffix": "/libc++",
-                        "os": "ubuntu-latest",
-                        "container": { "image": "ghcr.io/dnkpp/clang:16" },
-                        "compiler_name": "clang",
-                        "compiler_version": 16,
-                      "architecture": "x64",
-                        "libcxx": true,
-                        "asan": true
-                    },
-                    {
-                        "prefix": "Linux",
-                        "os": "ubuntu-latest",
-                        "container": { "image": "ghcr.io/dnkpp/clang:16" },
-                        "compiler_name": "clang",
-                        "compiler_version": 16,
-                      "architecture": "x64",
-                        "libcxx": false,
-                        "asan": true
-                    },
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build/test/unit-tests \
+              -C ${{ matrix.build_mode }} \
+              -j5
 
-
-
-                    {
-                        "prefix": "Linux",
-                        "os": "ubuntu-latest",
-                        "container": { "image": "ghcr.io/dnkpp/gcc:14" },
-                        "compiler_name": "gcc",
-                        "compiler_version": 14,
-                      "architecture": "x64",
-                        "libcxx": false,
-                        "asan": true
-                    },
-                    {
-                        "prefix": "Linux",
-                        "os": "ubuntu-latest",
-                        "container": { "image": "ghcr.io/dnkpp/gcc:13" },
-                        "compiler_name": "gcc",
-                        "compiler_version": 13,
-                      "architecture": "x64",
-                        "libcxx": false,
-                        "asan": true
-                    },
-                    {
-                        "prefix": "Linux",
-                        "os": "ubuntu-latest",
-                        "container": { "image": "ghcr.io/dnkpp/gcc:12" },
-                        "compiler_name": "gcc",
-                        "compiler_version": 12,
-                      "architecture": "x64",
-                        "libcxx": false,
-                        "asan": true
-                    },
-
-
-
-                    {
-                        "prefix": "Windows 2022",
-                        "os": "windows-2022",
-                        "compiler_name": "msvc",
-                        "compiler_version": "v143",
-                        "cmake_generator": "Visual Studio 17 2022",
-                      "architecture": "x64",
-                        "libcxx": false,
-                        "asan": false
-                    },
-                    {
-                        "prefix": "Windows 2022",
-                        "os": "windows-2022",
-                        "compiler_name": "msvc",
-                        "compiler_version": "ClangCl",
-                        "cmake_generator": "Visual Studio 17 2022",
-                      "architecture": "x64",
-                        "libcxx": false,
-                        "asan": false
-                    },
-                  {
-                      "prefix": "Windows 2022",
-                      "os": "windows-2022",
-                      "compiler_name": "msvc",
-                      "compiler_version": "v143",
-                      "cmake_generator": "Visual Studio 17 2022",
-                      "architecture": "Win32",
-                      "libcxx": false,
-                      "asan": false
-                  },
-                  {
-                      "prefix": "Windows 2022",
-                      "os": "windows-2022",
-                      "compiler_name": "msvc",
-                      "compiler_version": "ClangCl",
-                      "cmake_generator": "Visual Studio 17 2022",
-                      "architecture": "Win32",
-                      "libcxx": false,
-                      "asan": false
-                  },
-
-
-
-                    {
-                        "prefix": "macOS",
-                        "os": "macos-latest",
-                        "compiler_name": "AppleClang",
-                        "compiler_version": 18,
-                      "architecture": "x64",
-                        "ldflags_workaround": "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind",
-                        "asan": true
-                    },
-                    {
-                        "prefix": "macOS",
-                        "os": "macos-latest",
-                        "compiler_name": "AppleClang",
-                        "compiler_version": 17,
-                      "architecture": "x64",
-                        "ldflags_workaround": "-L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++",
-                        "asan": true
-                    },
-                    {
-                        "prefix": "macOS",
-                        "os": "macos-latest",
-                        "compiler_name": "AppleClang",
-                        "compiler_version": 16,
-                      "architecture": "x64",
-                        "ldflags_workaround": "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++",
-                        "asan": true
-                    }
-                ]
-
-        outputs:
-            config: ${{ steps.output-config.outputs.config }}
-            build_modes: ${{ steps.output-options.outputs.build_modes }}
-            cxx_versions: ${{ steps.output-options.outputs.cxx_versions }}
-
-        steps:
-            - name: Output configs
-              id: output-config
-              shell: bash
-              run: |
-                # seems to convert that to a single-line json and thus please the output step
-                # wrap in single '!
-                OUTPUT='${{ env.config }}'
-                echo "config=$(echo $OUTPUT)" >> "$GITHUB_OUTPUT"
-
-            # enables debug-mode and c++20 for all cases
-            - name: Enable base matrix
-              shell: bash
-              run: |
-                echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
-                echo "CXX_VERSIONS=20" >> $GITHUB_ENV
-
-             # if its a PR from development or the main branch in general, add release-mode and c++23
-            - name: Enable extended matrix
-              if: ${{
-                        (github.event_name == 'pull_request' && github.head_ref == 'development')
-                        || github.ref_name == 'main'
-                   }}
-              shell: bash
-              run: |
-                echo "BUILD_MODES=$(echo $BUILD_MODES, \"Release\")" >> $GITHUB_ENV
-                echo "CXX_VERSIONS=$(echo $CXX_VERSIONS, 23)" >> $GITHUB_ENV
-
-            - name: Output build-modes and c++-versions
-              id: output-options
-              shell: bash
-              run: |
-                 echo "build_modes=$(echo [ $BUILD_MODES ])" >> "$GITHUB_OUTPUT"
-                 echo "cxx_versions=$(echo [ $CXX_VERSIONS ])" >> "$GITHUB_OUTPUT"
-
-    ############
-    #
-    # Runs all general unit tests and examples, without any adapter tests.
-    # They are excluded, because the dependency fetching and building increased the build times quite heavily,
-    # which does not scale properly.
-    #
-    # Runs all tests on every machine with
-    # - debug and release
-    # - c++20 and c++23
-    # - std- and fmt-formatting backend
-    #
-    #####
-    run-unit-tests:
-        needs: define-matrix
-        name: |
-            [UT]
-            ${{ matrix.config.prefix }} 
-            ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
-            ${{ matrix.config.suffix }} 
-          (C++${{ matrix.cxx_standard }},
-              ${{ matrix.build_mode }},
-              ${{ matrix.config.architecture }},
-              ${{ matrix.format_backend }},
-              ${{ matrix.str_matcher }})
-        runs-on: ${{ matrix.config.os }}
-        container: ${{ matrix.config.container }}
-
-        strategy:
-            fail-fast: false
-            matrix:
-                format_backend: [std, fmt]
-                str_matcher: [char, unicode]
-                build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
-                cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
-                config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
-
-                exclude:
-                    # all listed compilers do not support std's format header
-                    - format_backend: "std"
-                      config:
-                        compiler_name: "clang"
-                        compiler_version: 16
-                    - format_backend: "std"
-                      config:
-                        compiler_name: "gcc"
-                        compiler_version: 12
-                    - format_backend: "std"
-                      config:
-                        compiler_name: "AppleClang"
-                        compiler_version: 16
-
-                    # The format_backend and str_matcher options are rather orthogonal.
-                    # To see, whether support both str_matcher variants, let's use the fmt backend,
-                    # as this is supported by all compilers.
-                    - format_backend: "std"
-                      str_matcher: "unicode"
-
-        steps:
-            - uses: actions/checkout@v4
+      - name: Run examples
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build/examples \
+              -C ${{ matrix.build_mode }} \
+              -j5
   
-            - name: Setup macOS
-              if: startsWith(matrix.config.os, 'macOS')
-              shell: bash
-              run: |
-                env brew install ninja llvm
-                LLVM_NAME=llvm@${{ matrix.config.compiler_version }}
-                env brew install $LLVM_NAME
-                LLVM_PATH="$(brew --prefix $LLVM_NAME)"
-                echo "CC=$(echo $LLVM_PATH/bin/clang)" >> $GITHUB_ENV
-                echo "CXX=$(echo $LLVM_PATH/bin/clang++)" >> $GITHUB_ENV
-                
-                # solves this issue: https://github.com/Homebrew/homebrew-core/issues/178435
-                echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
 
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+  ############
+  #
+  # Runs the adapter test on every machine.
+  #
+  #####
+  run-adapter-tests:
+    needs: define-matrix
+    name: |
+      [AT]
+      ${{ matrix.config.prefix }} 
+      ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
+      ${{ matrix.config.suffix }} 
+      (C++${{ matrix.cxx_standard }},
+      ${{ matrix.build_mode }},
+      ${{ matrix.config.architecture }})
+    runs-on: ${{ matrix.config.os }}
+    container: ${{ matrix.config.container }}
 
-            - name: Clang libc++ setup
-              if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx == true }}
-              shell: bash
-              run: |
-                echo "CXXFLAGS=$(echo $CXXFLAGS -stdlib=libc++)" >> $GITHUB_ENV
-                echo "LDFLAGS=$(echo $LDFLAGS -lc++abi)" >> $GITHUB_ENV
+    strategy:
+      fail-fast: false
+      matrix:
+        build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
+        cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
+        config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
 
-            - name: Setup linux
-              if: ${{ matrix.config.prefix  == 'Linux' }}
-              shell: bash
-              run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Setup msvc
-              if: ${{ matrix.config.compiler_name  == 'msvc' }}
-              shell: bash
-              run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G\"${{ matrix.config.cmake_generator }}\" -T\"${{ matrix.config.compiler_version }}\" -A\"${{ matrix.config.architecture }}\")" >> $GITHUB_ENV
-                echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
+      - name: Setup macOS
+        if: startsWith(matrix.config.os, 'macOS')
+        shell: bash
+        run: |
+          env brew install ninja llvm
+          LLVM_NAME=llvm@${{ matrix.config.compiler_version }}
+          env brew install $LLVM_NAME
+          LLVM_PATH="$(brew --prefix $LLVM_NAME)"
+          echo "CC=$(echo $LLVM_PATH/bin/clang)" >> $GITHUB_ENV
+          echo "CXX=$(echo $LLVM_PATH/bin/clang++)" >> $GITHUB_ENV
+          echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
+          
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
-            - name: Enable Address and Undefined Sanitizer
-              if: ${{ matrix.config.asan == true }}
-              shell: bash
-              run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
+      - name: Clang libc++ setup
+        if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
+        shell: bash
+        run: |
+          echo "CXXFLAGS=$(echo $CXXFLAGS -stdlib=libc++)" >> $GITHUB_ENV
+          echo "LDFLAGS=$(echo $LDFLAGS -lc++abi)" >> $GITHUB_ENV
 
-            - name: Setup fmt as formatting backend
-              if: startsWith(matrix.format_backend, 'fmt')
-              shell: bash
-              run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_USE_FMT=YES)" >> $GITHUB_ENV
+      - name: Setup linux
+        if: ${{ matrix.config.prefix  == 'Linux' }}
+        shell: bash
+        run: |
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
-            - name: Enable unicode support for string matchers
-              if: startsWith(matrix.str_matcher, 'unicode')
-              shell: bash
-              run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES)" >> $GITHUB_ENV
+      - name: Setup msvc
+        if: ${{ matrix.config.compiler_name  == 'msvc' }}
+        shell: bash
+        run: |
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G\"${{ matrix.config.cmake_generator }}\" -T\"${{ matrix.config.compiler_version }}\" -Ax64)" >> $GITHUB_ENV
+          echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
-            # ASan has some serious trouble with libc++ exception mechanism
-            # see: https://github.com/llvm/llvm-project/issues/59432
-            - name: Disable alloc_dealloc_mismatch detection with libc++
-              if: ${{ matrix.config.asan == true && matrix.config.libcxx == true}}
-              shell: bash
-              run: |
-                echo "ASAN_OPTIONS=$(echo $ASAN_OPTIONS:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
+      # This is enabled by default, because that's the only formatting-backend which is supported by every compiler.
+      - name: Setup fmt as formatting backend
+        shell: bash
+        run: |
+          echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_USE_FMT=YES)" >> $GITHUB_ENV
 
-            - name: Configure
-              shell: bash
-              run: |
-                cmake \
-                    -S . \
-                    -B build \
-                    -D CMAKE_VERBOSE_MAKEFILE=yes \
-                    -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
-                    ${{ env.CMAKE_CONFIG_EXTRA }}
+      - name: Configure
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              -D CMAKE_VERBOSE_MAKEFILE=yes \
+              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+              -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
+              ${{ env.CMAKE_CONFIG_EXTRA }}
 
-            - name: Build
-              shell: bash
-              run: |
-                cmake --build build \
-                    -j5 \
-                    ${{ env.CMAKE_BUILD_EXTRA }}
+      - name: Build
+        shell: bash
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
 
-            - name: Run tests
-              shell: bash
-              env:
-                CTEST_OUTPUT_ON_FAILURE: 1
-              run: |
-                ctest --test-dir build/test/unit-tests \
-                    -C ${{ matrix.build_mode }} \
-                    -j5
-
-            - name: Run examples
-              shell: bash
-              env:
-                CTEST_OUTPUT_ON_FAILURE: 1
-              run: |
-                ctest --test-dir build/examples \
-                    -C ${{ matrix.build_mode }} \
-                    -j5
-
-
-    ############
-    #
-    # Runs the adapter test on every machine.
-    #
-    #####
-    run-adapter-tests:
-        needs: define-matrix
-        name: |
-            [AT]
-            ${{ matrix.config.prefix }} 
-            ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
-            ${{ matrix.config.suffix }} 
-          (C++${{ matrix.cxx_standard }},
-            ${{ matrix.build_mode }},
-            ${{ matrix.config.architecture }})
-        runs-on: ${{ matrix.config.os }}
-        container: ${{ matrix.config.container }}
-
-        strategy:
-            fail-fast: false
-            matrix:
-                build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
-                cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
-                config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
-
-        steps:
-            - uses: actions/checkout@v4
-  
-            - name: Setup macOS
-              if: startsWith(matrix.config.os, 'macOS')
-              shell: bash
-              run: |
-                env brew install ninja llvm
-                LLVM_NAME=llvm@${{ matrix.config.compiler_version }}
-                env brew install $LLVM_NAME
-                LLVM_PATH="$(brew --prefix $LLVM_NAME)"
-                echo "CC=$(echo $LLVM_PATH/bin/clang)" >> $GITHUB_ENV
-                echo "CXX=$(echo $LLVM_PATH/bin/clang++)" >> $GITHUB_ENV
-                echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
-
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
-
-            - name: Clang libc++ setup
-              if: ${{ matrix.config.compiler_name  == 'clang' && matrix.config.libcxx  == true }}
-              shell: bash
-              run: |
-                echo "CXXFLAGS=$(echo $CXXFLAGS -stdlib=libc++)" >> $GITHUB_ENV
-                echo "LDFLAGS=$(echo $LDFLAGS -lc++abi)" >> $GITHUB_ENV
-
-            - name: Setup linux
-              if: ${{ matrix.config.prefix  == 'Linux' }}
-              shell: bash
-              run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
-
-            - name: Setup msvc
-              if: ${{ matrix.config.compiler_name  == 'msvc' }}
-              shell: bash
-              run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G\"${{ matrix.config.cmake_generator }}\" -T\"${{ matrix.config.compiler_version }}\" -Ax64)" >> $GITHUB_ENV
-                echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
-
-            # This is enabled by default, because that's the only formatting-backend which is supported by every compiler.
-            - name: Setup fmt as formatting backend
-              shell: bash
-              run: |
-                echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -DMIMICPP_CONFIG_USE_FMT=YES)" >> $GITHUB_ENV
-
-            - name: Configure
-              shell: bash
-              run: |
-                cmake \
-                    -S . \
-                    -B build \
-                    -D CMAKE_VERBOSE_MAKEFILE=yes \
-                    -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
-                    -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
-                    -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
-                    ${{ env.CMAKE_CONFIG_EXTRA }}
-
-            - name: Build
-              shell: bash
-              run: |
-                cmake --build build \
-                    -j5 \
-                    ${{ env.CMAKE_BUILD_EXTRA }}
-
-            - name: Run adapter tests
-              shell: bash
-              env:
-                CTEST_OUTPUT_ON_FAILURE: 1
-              run:  |
-                ctest --test-dir build/test/adapter-tests \
-                    -C ${{ matrix.build_mode }} \
-                    -j5
+      - name: Run adapter tests
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build/test/adapter-tests \
+              -C ${{ matrix.build_mode }} \
+              -j5
