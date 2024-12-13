@@ -267,10 +267,10 @@ namespace mimicpp::detail
               BasicMock<Signature, std::tuple<Params...>>,
               Signature>
     {
-        using SignatureT = Signature;
+        using SignatureT = signature_remove_call_convention_t<Signature>;
 
         friend class MockFrontend<BasicMock, SignatureT>;
-        friend call_interface_t<BasicMock, SignatureT>;
+        friend call_interface_t<BasicMock, Signature>;
 
         static constexpr Constness constQualification = signature_const_qualification_v<SignatureT>;
         static constexpr ValueCategory refQualification = signature_ref_qualification_v<SignatureT>;
