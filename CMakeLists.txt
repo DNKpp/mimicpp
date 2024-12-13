@@ -15,14 +15,19 @@ project(
 	HOMEPAGE_URL	"https://github.com/DNKpp/mimicpp"
 )
 
-message(STATUS "mimic++ version: ${PROJECT_VERSION} from: ${mimicpp_SOURCE_DIR}")
+set(MESSAGE_PREFIX "mimic++:")
+
+message(STATUS "${MESSAGE_PREFIX} version: v${PROJECT_VERSION} from: ${mimicpp_SOURCE_DIR}")
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	message(STATUS "targeting 64-bit architecture")
+	message(STATUS "${MESSAGE_PREFIX} targeting 64-bit architecture")
 elseif (CMAKE_SIZEOF_VOID_P EQUAL 4)
-	message(STATUS "targeting 32-bit architecture")
+	message(STATUS "${MESSAGE_PREFIX} targeting 32-bit architecture")
 else ()
-	message(WARNING "unable to determine architecture")
+	message(WARNING "${MESSAGE_PREFIX} unable to determine architecture")
 endif ()
+message(DEBUG "${MESSAGE_PREFIX} CXXFLAGS: $ENV{CXXFLAGS}")
+message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS_INIT: ${CMAKE_CXX_FLAGS_INIT}")
 
 include(GNUInstallDirs)
 

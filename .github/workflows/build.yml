@@ -313,7 +313,7 @@ jobs:
           - str_matcher: "unicode"
             config:
               default_call_convention: "vectorcall"
-          - format_backend: "std"
+          - format_backend: "fmt"
             config:
               default_call_convention: "vectorcall"
 
@@ -368,9 +368,10 @@ jobs:
       - name: Setup __vectorcall as default call-convention on msvc
         if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention == 'vectorcall' }}
         shell: bash
-        # keep that space before the flag!
+        # Do NOT remove the double /, as this will cause trouble during cmake configuration (it somehow expands to C:/Program Files/Git/Gv ???!)
+        # But, we will probably run into another issue, when CXXFLAGS happens to be not empty...
         run: |
-          echo "CXXFLAGS=$(echo ${CXXFLAGS} /Gv)" >> $GITHUB_ENV
+          echo "CXXFLAGS=$(echo ${CXXFLAGS} //Gv)" >> $GITHUB_ENV
 
       - name: Enable Address and Undefined Sanitizer
         if: ${{ matrix.config.asan == true }}
@@ -404,7 +405,8 @@ jobs:
           cmake \
               -S . \
               -B build \
-              -D CMAKE_VERBOSE_MAKEFILE=yes \
+              --log-level=DEBUG \
+              -D CMAKE_VERBOSE_MAKEFILE=YES \
               -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
               ${{ env.CMAKE_CONFIG_EXTRA }}
 
@@ -523,7 +525,8 @@ jobs:
           cmake \
               -S . \
               -B build \
-              -D CMAKE_VERBOSE_MAKEFILE=yes \
+              --log-level=DEBUG \
+              -D CMAKE_VERBOSE_MAKEFILE=YES \
               -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
               -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
