@@ -361,7 +361,7 @@ jobs:
         if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention == 'vectorcall' }}
         shell: bash
         run: |
-          echo "CXXFLAGS=$(echo $CXXFLAGS /Gv)" >> $GITHUB_ENV
+          echo "CXXFLAGS=$(echo $CXXFLAGS \"/Gv\")" >> $GITHUB_ENV
 
       - name: Enable Address and Undefined Sanitizer
         if: ${{ matrix.config.asan == true }}
