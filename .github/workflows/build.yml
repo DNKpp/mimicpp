@@ -135,9 +135,16 @@ jobs:
                 "compiler_name": "msvc",
                 "compiler_version": "v143",
                 "cmake_generator": "Visual Studio 17 2022",
+                "architecture": "x64"
+            },
+            {
+                "prefix": "Windows 2022",
+                "os": "windows-2022",
+                "compiler_name": "msvc",
+                "compiler_version": "v143",
+                "cmake_generator": "Visual Studio 17 2022",
                 "architecture": "x64",
-                "libcxx": false,
-                "asan": false
+                "default_call_convention": "vectorcall"
             },
             {
                 "prefix": "Windows 2022",
@@ -145,30 +152,33 @@ jobs:
                 "compiler_name": "msvc",
                 "compiler_version": "ClangCl",
                 "cmake_generator": "Visual Studio 17 2022",
-                "architecture": "x64",
-                "libcxx": false,
-                "asan": false
+                "architecture": "x64"
             },
-          {
-              "prefix": "Windows 2022",
-              "os": "windows-2022",
-              "compiler_name": "msvc",
-              "compiler_version": "v143",
-              "cmake_generator": "Visual Studio 17 2022",
-              "architecture": "Win32",
-              "libcxx": false,
-              "asan": false
-          },
-          {
-              "prefix": "Windows 2022",
-              "os": "windows-2022",
-              "compiler_name": "msvc",
-              "compiler_version": "ClangCl",
-              "cmake_generator": "Visual Studio 17 2022",
-              "architecture": "Win32",
-              "libcxx": false,
-              "asan": false
-          },
+            {
+                "prefix": "Windows 2022",
+                "os": "windows-2022",
+                "compiler_name": "msvc",
+                "compiler_version": "v143",
+                "cmake_generator": "Visual Studio 17 2022",
+                "architecture": "Win32"
+            },
+            {
+                "prefix": "Windows 2022",
+                "os": "windows-2022",
+                "compiler_name": "msvc",
+                "compiler_version": "v143",
+                "cmake_generator": "Visual Studio 17 2022",
+                "architecture": "Win32",
+                "default_call_convention": "vectorcall"
+            },
+            {
+                "prefix": "Windows 2022",
+                "os": "windows-2022",
+                "compiler_name": "msvc",
+                "compiler_version": "ClangCl",
+                "cmake_generator": "Visual Studio 17 2022",
+                "architecture": "Win32"
+            },
         
         
         
@@ -264,7 +274,8 @@ jobs:
         ${{ matrix.build_mode }},
         ${{ matrix.config.architecture }},
         ${{ matrix.format_backend }},
-        ${{ matrix.str_matcher }})
+        ${{ matrix.str_matcher }},
+        EXTRA={ ${{ matrix.config.default_call_convention }} })
     runs-on: ${{ matrix.config.os }}
     container: ${{ matrix.config.container }}
 
@@ -345,6 +356,12 @@ jobs:
         run: |
           echo "CMAKE_CONFIG_EXTRA=$(echo $CMAKE_CONFIG_EXTRA -G\"${{ matrix.config.cmake_generator }}\" -T\"${{ matrix.config.compiler_version }}\" -A\"${{ matrix.config.architecture }}\")" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=$(echo $CMAKE_BUILD_EXTRA --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
+
+      - name: Setup __vectorcall as default call-convention on msvc
+        if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention == 'vectorcall' }}
+        shell: bash
+        run: |
+          echo "CXXFLAGS=$(echo $CXXFLAGS /Gv)" >> $GITHUB_ENV
 
       - name: Enable Address and Undefined Sanitizer
         if: ${{ matrix.config.asan == true }}
@@ -432,6 +449,12 @@ jobs:
         build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
         cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
         config: ${{ fromJSON(needs.define-matrix.outputs.config) }}
+
+        exclude:
+          # call-conventions are not relevant to the adapter tests
+          - config:
+              compiler_name: "msvc"
+              default_call_convention: "vectorcall"
 
     steps:
       - uses: actions/checkout@v4
