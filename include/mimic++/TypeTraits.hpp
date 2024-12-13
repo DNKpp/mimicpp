@@ -203,6 +203,9 @@ namespace mimicpp
 
         template <typename Signature>
         using add_call_convention_t = std::type_identity_t<Signature>;
+
+        template <typename Derived, typename Signature>
+        using call_interface_t = detail::DefaultCallInterface<Derived, Signature>;
     };
 
     /**

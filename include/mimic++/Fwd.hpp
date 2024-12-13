@@ -348,4 +348,15 @@ namespace mimicpp::sequence
     };
 }
 
+namespace mimicpp::detail
+{
+    template <
+        typename Derived,
+        typename Signature,
+        Constness constQualifier = signature_const_qualification_v<Signature>,
+        ValueCategory refQualifier = signature_ref_qualification_v<Signature>,
+        typename ParamList = signature_param_list_t<Signature>>
+    class DefaultCallInterface;
+}
+
 #endif
