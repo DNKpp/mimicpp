@@ -50,7 +50,7 @@ namespace mimicpp
     using signature_add_noexcept_t = typename signature_add_noexcept<Signature>::type;
 
     /**
-     * \brief Primary template.
+     * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_CALL_CONVENTION
      * \tparam Signature A function signature.
      */
@@ -130,7 +130,7 @@ namespace mimicpp
     using signature_remove_const_qualifier_t = typename signature_remove_const_qualifier<Signature>::type;
 
     /**
-     * \brief Primary template, purposely undefined.
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_SIGNATURE_DECAY
      * \tparam Signature A function signature.
      */
@@ -146,7 +146,7 @@ namespace mimicpp
     using signature_decay_t = typename signature_decay<Signature>::type;
 
     /**
-     * \brief Primary template, purposely undefined.
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_SIGNATURE_RETURN_TYPE
      * \tparam Signature A function signature.
      */
@@ -210,7 +210,7 @@ namespace mimicpp
     inline constexpr bool signature_is_noexcept_v = signature_is_noexcept<Signature>::value;
 
     /**
-     * \brief Primary template, purposely undefined.
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_SIGNATURE_PARAM_TYPE
      * \tparam Signature A function signature.
      */
@@ -241,6 +241,12 @@ namespace mimicpp
     template <typename Signature>
     using signature_param_list_t = typename signature_param_list<Signature>::type;
 
+    /**
+     * \brief Primary template.
+     * \ingroup TYPE_TRAITS_IS_OVERLOADABLE_WITH
+     * \tparam First The first function signature.
+     * \tparam Second The second function signature.
+     */
     template <typename First, typename Second>
     struct is_overloadable_with;
 
@@ -248,7 +254,7 @@ namespace mimicpp
      * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
      * \ingroup TYPE_TRAITS_IS_OVERLOADABLE_WITH
      * \tparam First The first function signature.
-     * \tparam Second The first function signature.
+     * \tparam Second The second function signature.
      */
     template <typename First, typename Second>
     inline constexpr bool is_overloadable_with_v = is_overloadable_with<First, Second>::value;

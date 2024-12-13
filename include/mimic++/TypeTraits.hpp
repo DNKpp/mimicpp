@@ -184,15 +184,61 @@ namespace mimicpp
      *
      */
 
+    /**
+     * \brief Determines, whether the given signature has default call-convention.
+     * \tparam Signature The signature to check.
+     */
     template <typename Signature>
     concept has_default_call_convention = detail::has_default_call_convention_v<Signature>;
 
+    /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_CALL_CONVENTION signature_call_convention
+     * \ingroup TYPE_TRAITS
+     * \brief Determines the call-convention-tag of the given signature.
+     * \note Users may add specializations for their custom call-convention-tags.
+     *
+     *\{
+     */
+
+    /**
+     * \brief Template specialization for the default call-convention.
+     * \tparam Signature The signature.
+     */
     template <has_default_call_convention Signature>
     struct signature_call_convention<Signature>
     {
         using type = detail::default_call_convention;
     };
 
+    /**
+     * \}
+     */
+
+    /**
+     * \defgroup TYPE_TRAITS_CALL_CONVENTION_TRAITS call_convention_traits
+     * \ingroup TYPE_TRAITS
+     * \brief Used for selecting the correct behaviour depending on the call-convention.
+     * \note Users may add specializations for their custom call-convention-tags.
+     * \details All specializations are required to define at least the following members:
+     * ```cpp
+     * using tag_t = // Tag, which has been used for the specialization.
+     *
+     * template <typename Signature>
+     * using remove_call_convention_t = // Trait, which removes the call-convention from the signature (if present).
+
+     * template <typename Signature>
+     * using add_call_convention_t = // Trait, which adds the call-convention to the signature (if necessary).
+
+     * template <typename Derived, typename Signature>
+     * using call_interface_t = // Interface, which defines ``operator ()`` with the call-convention.
+     * ```
+     *
+     *\{
+     */
+
+    /**
+     * \brief Template specialization for the default call-convention.
+     */
     template <>
     struct call_convention_traits<detail::default_call_convention>
     {
@@ -207,6 +253,10 @@ namespace mimicpp
         template <typename Derived, typename Signature>
         using call_interface_t = detail::DefaultCallInterface<Derived, Signature>;
     };
+
+    /**
+     * \}
+     */
 
     /**
      * \defgroup TYPE_TRAITS_SIGNATURE_ADD_NOEXCEPT signature_add_noexcept
@@ -916,7 +966,9 @@ namespace mimicpp
 
     template <typename Signature>
     struct signature_return_type
+        /** \cond Help doxygen with recursion.*/
         : public signature_return_type<signature_decay_t<Signature>>
+    /** \endcond */
     {
     };
 
@@ -946,9 +998,11 @@ namespace mimicpp
 
     template <std::size_t index, typename Signature>
     struct signature_param_type
+        /** \cond Help doxygen with recursion.*/
         : public signature_param_type<
               index,
               signature_decay_t<Signature>>
+    /** \endcond */
     {
     };
 
@@ -994,10 +1048,12 @@ namespace mimicpp
 
     template <typename Signature>
     struct signature_ref_qualification
+        /** \cond Help doxygen with recursion.*/
         : public signature_ref_qualification<
               signature_remove_noexcept_t<
                   signature_remove_const_qualifier_t<
                       signature_remove_call_convention_t<Signature>>>>
+    /** \endcond */
     {
     };
 
@@ -1082,8 +1138,10 @@ namespace mimicpp
 
     template <typename Signature>
     struct signature_param_list
+        /** \cond Help doxygen with recursion.*/
         : public signature_param_list<
               signature_decay_t<Signature>>
+    /** \endcond */
     {
     };
 
