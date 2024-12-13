@@ -309,6 +309,14 @@ jobs:
           - format_backend: "std"
             str_matcher: "unicode"
 
+          # disable several combinations with vectorcall
+          - str_matcher: "unicode"
+            config:
+              default_call_convention: "vectorcall"
+          - format_backend: "std"
+            config:
+              default_call_convention: "vectorcall"
+
     steps:
       - uses: actions/checkout@v4
 
