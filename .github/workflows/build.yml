@@ -337,7 +337,6 @@ jobs:
           apt-get install -y gcc-${{ matrix.config.compiler_version }}-multilib g++-${{ matrix.config.compiler_version }}-multilib
           echo "CXXFLAGS=$(echo $CXXFLAGS -m32)" >> $GITHUB_ENV
           echo "CFLAGS=$(echo CFLAGS -m32)" >> $GITHUB_ENV
-          echo "LDFLAGS=$(echo $LDFLAGS -m32)" >> $GITHUB_ENV
 
       - name: Setup msvc
         if: ${{ matrix.config.compiler_name  == 'msvc' }}
@@ -470,7 +469,6 @@ jobs:
           apt-get install -y gcc-${{ matrix.config.compiler_version }}-multilib g++-${{ matrix.config.compiler_version }}-multilib
           echo "CXXFLAGS=$(echo $CXXFLAGS -m32)" >> $GITHUB_ENV
           echo "CFLAGS=$(echo CFLAGS -m32)" >> $GITHUB_ENV
-          echo "LDFLAGS=$(echo $LDFLAGS -m32)" >> $GITHUB_ENV
 
       - name: Setup msvc
         if: ${{ matrix.config.compiler_name  == 'msvc' }}
