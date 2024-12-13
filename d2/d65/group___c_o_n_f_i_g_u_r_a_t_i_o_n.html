@@ -130,14 +130,14 @@ Why is it an experimental feature?</h3>
 <p><code>mimic++</code> needs to store the matcher inside the expectation. These requirements are not playing well together. Nevertheless <code>catch2</code> offers some nice matcher definitions, which could be very helpfull for testing. But as already said, they are dangerous, thus I decided to make them opt-in as experimental features.</p>
 <hr  />
 <p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER"></a></p>
-<h2><a class="anchor" id="autotoc_md32"></a>
+<h2><a class="anchor" id="autotoc_md33"></a>
 Enable experimental string-matcher unicode support</h2>
 <p>Name: <code>MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER</code></p>
 <p>If enabled, all string-matchers get full unicode support. This is relevant, when comparing case-insensitively. It's not required for the base-version of string-matchers.</p>
 <p>This will require the rather light-weight library <code>uni-algo</code>, which can be found on github. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/uni-algo/uni-algo">https://github.com/uni-algo/uni-algo</a></dd></dl>
 <p><code>mimic++</code> first tries to find the dependency via <code>find_package</code>, but will fetch it from github if not available.</p>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, and may be removed during any release.</dd></dl>
-<h3><a class="anchor" id="autotoc_md33"></a>
+<h3><a class="anchor" id="autotoc_md34"></a>
 Why is it an experimental feature?</h3>
 <p>I recently switched from <code>cpp-unicodelib</code>, which I didn't like very much for several reasons. <code>uni-algo</code> seems more mature, but I would like to get some feedback, before I'll declare this as a stable feature. </p>
 </div><!-- contents -->
