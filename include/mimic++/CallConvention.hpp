@@ -24,6 +24,16 @@ namespace mimicpp
      * no means an official c++-feature, it's very hard to find a portable solution. Due to this, ``mimic++`` lets users
      * register the call-conventions they require by themselves (e.g. the for the microsoft ``COM``-framework).
      * \see \ref MIMICPP_REGISTER_CALL_CONVENTION "MIMICPP_REGISTER_CALL_CONVENTION"
+     *
+     * \details The following snippet registers the ``__stdcall`` call-convention. This should usually be done once
+     * per test-executable.
+     * \snippet RegisterCallConvention.cpp register __stdcall
+     *
+     * \details Every registered call-convention can be easily applied on mocks.
+     * \snippet RegisterCallConvention.cpp mock __stdcall
+     *
+     * \details Interface mocks are also aware of any registered call-convention.
+     * \snippet RegisterCallConvention.cpp mock interface __stdcall
      */
 
     /**
@@ -100,6 +110,8 @@ namespace mimicpp
  * \ingroup CALL_CONVENTIONS
  * \param call_convention The desired call-convention.
  * \param namespace_name The namespace, in which all specializations will be defined.
+ * \details For example, this makes ``mimic++`` aware of the ``__stdcall`` call-convention.
+ * \snippet RegisterCallConvention.cpp register __stdcall
  */
 #define MIMICPP_REGISTER_CALL_CONVENTION(call_convention, namespace_name)                                  \
     namespace namespace_name                                                                               \
