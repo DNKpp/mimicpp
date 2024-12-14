@@ -126,6 +126,19 @@ TEST_CASE(
         Matches::Equals("std::tuple<int, float> arg_i"));
 }
 
+namespace
+{
+    struct single_pack_helper
+    {
+        template <typename... Args>
+        [[nodiscard]]
+        decltype(auto) operator()(Args&&... arg_i)
+        {
+            return MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(i, , (Args...));
+        }
+    };
+}
+
 TEST_CASE(
     "MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE constructs a tuple from all kind of args (may be a parameter or a parameter pack).",
     "[mock][mock::interface]")
@@ -139,13 +152,9 @@ TEST_CASE(
         REQUIRE(&arg_i == &std::get<0>(t));
     }
 
-    const auto packHelper = [&]<typename... Args>(Args&&... arg_i) {
-        return MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(i, , (Args...));
-    };
-
     SECTION("When an empty parameter-pack is given.")
     {
-        std::tuple t = packHelper();
+        std::tuple t = single_pack_helper{}();
         STATIC_REQUIRE(std::same_as<std::tuple<>, decltype(t)>);
     }
 
@@ -153,7 +162,7 @@ TEST_CASE(
     {
         std::string str{};
         int value{42};
-        std::tuple t = packHelper(str, std::move(value));
+        std::tuple t = single_pack_helper{}(str, std::move(value));
         STATIC_REQUIRE(std::same_as<std::tuple<std::string&, int&&>, decltype(t)>);
 
         REQUIRE(&str == &std::get<0>(t));
@@ -284,8 +293,8 @@ TEST_CASE(
             std::tuple result = packHelper(str, std::move(value));
             STATIC_REQUIRE(
                 std::same_as<
-                std::tuple<std::tuple<int&>, std::tuple<std::string&, int&&>>,
-                decltype(result)>);
+                    std::tuple<std::tuple<int&>, std::tuple<std::string&, int&&>>,
+                    decltype(result)>);
             auto& [param0, param1] = result;
             REQUIRE(&str == &std::get<0>(param1));
             REQUIRE(&value == &std::get<1>(param1));
