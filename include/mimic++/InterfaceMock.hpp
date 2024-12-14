@@ -208,7 +208,8 @@ namespace mimicpp
  * \param specs Additional specs (e.g. ``const``, ``noexcept``).
  */
 #define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, call_convention, param_type_list, specs, ...) \
-    ret call_convention param_type_list specs
+    MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                           \
+    call_convention param_type_list specs
 
 /**
  * \brief Converts all given arguments to a signature list (not enclosed by parentheses).

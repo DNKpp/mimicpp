@@ -215,6 +215,49 @@ TEST_CASE(
         mock.foo();
     }
 
+    SECTION("Just void() const noexcept")
+    {
+        struct interface
+        {
+            virtual ~interface() = default;
+            virtual void foo() const noexcept = 0;
+        };
+
+        struct derived
+            : public interface
+        {
+            MIMICPP_MOCK_OVERLOADED_METHOD(
+                foo,
+                MIMICPP_ADD_OVERLOAD(void, (), (const noexcept)));
+        };
+
+        derived mock{};
+        ScopedExpectation expectation = mock.foo_.expect_call();
+        mock.foo();
+    }
+
+    SECTION("Just std::tuple<int, float>()")
+    {
+        struct interface
+        {
+            virtual ~interface() = default;
+            virtual std::tuple<int, float> foo() = 0;
+        };
+
+        struct derived
+            : public interface
+        {
+            MIMICPP_MOCK_OVERLOADED_METHOD(
+                foo,
+                MIMICPP_ADD_OVERLOAD((std::tuple<int, float>), ()));
+        };
+
+        derived mock{};
+        ScopedExpectation expectation = mock.foo_.expect_call()
+                                    and finally::returns(std::tuple<int, float>{});
+        mock.foo();
+    }
+
     SECTION("Just int(float&&) const noexcept")
     {
         struct interface
