@@ -24,18 +24,21 @@ if (NOT TARGET enable-config-options)
 
 	# Config option, to utilize fmt instead of std formatting.
 	# Checks, whether fmt is already available. Fetches it instead.
-	# Eventually defines the macro MIMICPP_CONFIG_USE_FMT. 
+	# Eventually defines the macro MIMICPP_CONFIG_USE_FMT.
 	OPTION(MIMICPP_CONFIG_USE_FMT "When enabled, uses fmt instead of std formatting." OFF)
 	if (MIMICPP_CONFIG_USE_FMT)
 
+		message(DEBUG "${MESSAGE_PREFIX} Searching for installed {fmt}-package.")
 		find_package(fmt QUIET)
 		if (NOT fmt_FOUND)
-			include(get_cpm)
+			message(STATUS "${MESSAGE_PREFIX} No installed {fmt}-package found. Fetching via cpm.")
 
+			include(get_cpm)
 			CPMAddPackage("gh:fmtlib/fmt#11.0.2")
 		endif()
 
 		find_package(fmt REQUIRED)
+		message(STATUS "${MESSAGE_PREFIX} Using {fmt}-package from: ${fmt_SOURCE_DIR}")
 		target_link_libraries(
 			enable-config-options
 			INTERFACE
@@ -52,23 +55,25 @@ if (NOT TARGET enable-config-options)
 
 	# Config option, to enable unicode support for string matchers.
 	# This will download the cpp-unicodelib source and create an import target
-	# Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER. 
+	# Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER.
 	OPTION(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-insensitive string matchers are available." OFF)
 	if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
 
 		# on clang-builds this somehow emits an error, if not explicitly disabled
-		# Git the info, to turn this of from here:
+		# Got the info, to turn this of from here:
 		# https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
 		set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
+		message(DEBUG "${MESSAGE_PREFIX} Searching for installed {uni-algo}-package.")
 		find_package(uni-algo QUIET)
 		if (NOT uni-algo_FOUND)
-			include(get_cpm)
+			message(STATUS "${MESSAGE_PREFIX} No installed {uni-algo}-package found. Fetching via cpm.")
 
+			include(get_cpm)
 			CPMAddPackage(
 				NAME				uni-algo
+				VERSION 1.2.0
 				GITHUB_REPOSITORY	uni-algo/uni-algo
-				GIT_TAG				v1.2.0
 				EXCLUDE_FROM_ALL	YES
 				SYSTEM				YES
 				OPTIONS
@@ -77,6 +82,7 @@ if (NOT TARGET enable-config-options)
 		endif()
 
 		find_package(uni-algo REQUIRED)
+		message(STATUS "${MESSAGE_PREFIX} Using {uni-algo}-package from: ${uni-algo_SOURCE_DIR}")
 		target_link_libraries(
 			enable-config-options
 			INTERFACE
