@@ -12,13 +12,22 @@ add_executable(
     "Finalizers.cpp"
     "InterfaceMock.cpp"
     "Mock.cpp"
-    "RegisterCallConvention.cpp"
     "Requirements.cpp"
     "Sequences.cpp"
     "SideEffects.cpp"
     "Times.cpp"
     "Watcher.cpp"
 )
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"
+    OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC"))
+
+    message(STATUS "${MESSAGE_PREFIX} Adding RegisterCallConvention example.")
+    target_sources(mimicpp-examples PRIVATE
+        "RegisterCallConvention.cpp"
+    )
+
+endif ()
 
 include(EnableWarnings)
 include(EnableSanitizers)
