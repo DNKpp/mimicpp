@@ -4,6 +4,7 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/call-conventions/vectorcall.hpp"
+#include "mimic++/InterfaceMock.hpp"
 #include "mimic++/Mock.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
@@ -337,7 +338,7 @@ TEST_CASE(
 
 TEST_CASE(
     "Mocks support __vectorcall.",
-    "[type_traits]")
+    "[mock]")
 {
     SECTION("Signatures without any other specs.")
     {
@@ -458,6 +459,67 @@ TEST_CASE(
         {
             MIMICPP_SCOPED_EXPECTATION mock.expect_call();
             mock();
+        }
+    }
+}
+
+TEST_CASE(
+    "Interface-Mocks support __vectorcall.",
+    "[mock]")
+{
+    SECTION("When mocking single method.")
+    {
+        class Interface
+        {
+        public:
+            virtual ~Interface() = default;
+
+            virtual void __vectorcall foo() = 0;
+        };
+
+        class Derived
+            : public Interface
+        {
+        public:
+            MIMICPP_MOCK_METHOD(foo, void, (), , __vectorcall);
+        };
+
+        Derived mock{};
+        MIMICPP_SCOPED_EXPECTATION mock.foo_.expect_call();
+        mock.foo();
+    }
+
+    SECTION("When mocking method overload-set.")
+    {
+        class Interface
+        {
+        public:
+            virtual ~Interface() = default;
+
+            virtual void __vectorcall foo() = 0;
+            virtual void foo() const = 0;
+        };
+
+        class Derived
+            : public Interface
+        {
+        public:
+            MIMICPP_MOCK_OVERLOADED_METHOD(
+                foo,
+                MIMICPP_ADD_OVERLOAD(void, (), , __vectorcall),
+                MIMICPP_ADD_OVERLOAD(void, (), const));
+        };
+
+        Derived mock{};
+
+        {
+            MIMICPP_SCOPED_EXPECTATION mock.foo_.expect_call();
+            mock.foo();
+        }
+
+        {
+            MIMICPP_SCOPED_EXPECTATION std::as_const(mock).foo_.expect_call();
+            std::as_const(mock).foo();
         }
     }
 }
