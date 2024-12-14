@@ -491,6 +491,28 @@ TEST_CASE(
         mock.foo();
     }
 
+    SECTION("When mocking single method, and call-convention is parenthesized.")
+    {
+        class Interface
+        {
+        public:
+            virtual ~Interface() = default;
+
+            virtual void __vectorcall foo() = 0;
+        };
+
+        class Derived
+            : public Interface
+        {
+        public:
+            MIMICPP_MOCK_METHOD(foo, void, (), , (__vectorcall));
+        };
+
+        Derived mock{};
+        MIMICPP_SCOPED_EXPECTATION mock.foo_.expect_call();
+        mock.foo();
+    }
+
     SECTION("When mocking method overload-set.")
     {
         class Interface
