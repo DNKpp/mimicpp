@@ -17,6 +17,7 @@ add_executable(
     "SideEffects.cpp"
     "Times.cpp"
     "Watcher.cpp"
+    "VariadicMocks.cpp"
 )
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"
