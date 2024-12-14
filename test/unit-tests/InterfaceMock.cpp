@@ -127,67 +127,171 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "MIMICPP_DETAIL_FORWARD_ARGS a list of forwarded arguments.",
+    "MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE constructs a tuple from all kind of args (may be a parameter or a parameter pack).",
     "[mock][mock::interface]")
 {
-    namespace Matches = Catch::Matchers;
+    SECTION("When a single parameter is given.")
+    {
+        int arg_i{};
+        std::tuple t = MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(i, , int);
+        STATIC_REQUIRE(std::same_as<std::tuple<int&&>, decltype(t)>);
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS()),
-        Matches::Equals(""));
+        REQUIRE(&arg_i == &std::get<0>(t));
+    }
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(int)),
-        Matches::Equals("::std::forward<::std::add_rvalue_reference_t< int>>(arg_i)"));
+    const auto packHelper = [&]<typename... Args>(Args&&... arg_i) {
+        return MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(i, , (Args...));
+    };
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(const int&, int&&)),
-        Matches::Matches(
-            "::std::forward<::std::add_rvalue_reference_t< const int&>>\\(arg_i\\)\\s*,"
-            " ::std::forward<::std::add_rvalue_reference_t< int&&>>\\(arg_ii\\)"));
+    SECTION("When an empty parameter-pack is given.")
+    {
+        std::tuple t = packHelper();
+        STATIC_REQUIRE(std::same_as<std::tuple<>, decltype(t)>);
+    }
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS(int, int)),
-        Matches::Matches("::std::forward<::std::add_rvalue_reference_t< int>>\\(arg_i\\)\\s*,"
-                         " ::std::forward<::std::add_rvalue_reference_t< int>>\\(arg_ii\\)"));
+    SECTION("When a non-empty parameter-pack is given.")
+    {
+        std::string str{};
+        int value{42};
+        std::tuple t = packHelper(str, std::move(value));
+        STATIC_REQUIRE(std::same_as<std::tuple<std::string&, int&&>, decltype(t)>);
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_FORWARD_ARGS((std::tuple<int, float>))),
-        Matches::Equals("::std::forward<::std::add_rvalue_reference_t< std::tuple<int, float>>>(arg_i)"));
+        REQUIRE(&str == &std::get<0>(t));
+        REQUIRE(&value == &std::get<1>(t));
+    }
 }
 
 TEST_CASE(
-    "MIMICPP_ADD_OVERLOAD prepares the necessary overload infos.",
+    "MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE returns a comma separated list of tuples.",
     "[mock][mock::interface]")
 {
-    namespace Matches = Catch::Matchers;
+    SECTION("When no arguments are given.")
+    {
+        std::tuple result = std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE());
+        STATIC_REQUIRE(std::same_as<std::tuple<>, decltype(result)>);
+    }
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_ADD_OVERLOAD(void, ())),
-        Matches::Matches(R"(\(\s*void,(\s*,\s*\(\s*\),){2}\s*\(\s*\)\))"));
+    SECTION("When single argument is given.")
+    {
+        // This has to be named exactly like this, because the macro internally expects that.
+        int arg_i{};
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_ADD_OVERLOAD(const int&&, (const std::string&, int&&), const noexcept)),
-        Matches::Matches(
-            R"(\(\s*const int&&,\s*,\s*\(const std::string&\s*,\s*int&&\),\s*const noexcept,\s*)"
-            R"(\(const std::string& arg_i\s*,\s*int&& arg_ii\),\s*)"
-            R"(\(::std::forward<::std::add_rvalue_reference_t<\s*const std::string&>>\(arg_i\)\s*,\s*)"
-            R"(::std::forward<::std::add_rvalue_reference_t<\s*int&&>>\(arg_ii\)\)\))"));
+        SECTION("By value")
+        {
+            std::tuple result = std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(int));
+            STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<int&&>>, decltype(result)>);
+            REQUIRE(&arg_i == &std::get<0>(std::get<0>(result)));
+        }
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_ADD_OVERLOAD((std::tuple<int, float>), ())),
-        Matches::Matches(R"(\(\s*\(\s*std::tuple<int, float>\),(\s*,\s*\(\s*\),){2}\s*\(\s*\)\))"));
+        SECTION("By const value")
+        {
+            std::tuple result = std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(const int));
+            STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<const int&&>>, decltype(result)>);
+            REQUIRE(&arg_i == &std::get<0>(std::get<0>(result)));
+        }
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_ADD_OVERLOAD(void, ((std::tuple<int, float>)))),
-        Matches::Matches(
-            R"(\(\s*void,\s*,\s*\(\s*\(\s*std::tuple<int, float>\)\),\s*,\s*)"
-            R"(\(\s*std::tuple<int, float> arg_i\),\s*)"
-            R"(\(\s*::std::forward<::std::add_rvalue_reference_t<\s*std::tuple<int, float>>>\(arg_i\)\)\))"));
+        SECTION("By lvalue-ref.")
+        {
+            std::tuple result = std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(int&));
+            STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<int&>>, decltype(result)>);
+            REQUIRE(&arg_i == &std::get<0>(std::get<0>(result)));
+        }
 
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_ADD_OVERLOAD(void, (), , call_conv)),
-        Matches::Matches(R"(\(\s*void,\s*call_conv,\s*\(\s*\),\s*,\s*\(\s*\),\s*\(\s*\)\))"));
+        SECTION("By const lvalue-ref.")
+        {
+            std::tuple result = std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(const int&));
+            STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<const int&>>, decltype(result)>);
+            REQUIRE(&arg_i == &std::get<0>(std::get<0>(result)));
+        }
+
+        SECTION("By rvalue-ref.")
+        {
+            std::tuple result = std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(int&&));
+            STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<int&&>>, decltype(result)>);
+            REQUIRE(&arg_i == &std::get<0>(std::get<0>(result)));
+        }
+
+        SECTION("By const rvalue-ref")
+        {
+            std::tuple result = std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(const int&&));
+            STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<const int&&>>, decltype(result)>);
+            REQUIRE(&arg_i == &std::get<0>(std::get<0>(result)));
+        }
+    }
+
+    SECTION("When multiple arguments are given.")
+    {
+        // This has to be named exactly like this, because the macro internally expects that.
+        int arg_i{};
+        std::string arg_ii{};
+
+        std::tuple result = std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(int, std::string&));
+        STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<int&&>, std::tuple<std::string&>>, decltype(result)>);
+        auto& [param0, param1] = result;
+        REQUIRE(&arg_i == &std::get<0>(param0));
+        REQUIRE(&arg_ii == &std::get<0>(param1));
+    }
+
+    SECTION("When parameter pack is given.")
+    {
+        SECTION("As only argument.")
+        {
+            const auto packHelper = [&]<typename... Args>(Args&&... arg_i) {
+                return std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(Args...));
+            };
+
+            std::string str{};
+            int value{42};
+
+            std::tuple result = packHelper(str, std::move(value));
+            STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<std::string&, int&&>>, decltype(result)>);
+            auto& [param0] = result;
+            REQUIRE(&str == &std::get<0>(param0));
+            REQUIRE(&value == &std::get<1>(param0));
+        }
+
+        SECTION("As front argument.")
+        {
+            int arg_ii{};
+            const auto packHelper = [&]<typename... Args>(Args&&... arg_i) {
+                return std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(Args..., int&));
+            };
+
+            std::string str{};
+            int value{42};
+
+            std::tuple result = packHelper(str, std::move(value));
+            STATIC_REQUIRE(
+                std::same_as<
+                std::tuple<std::tuple<std::string&, int&&>, std::tuple<int&>>,
+                decltype(result)>);
+            auto& [param0, param1] = result;
+            REQUIRE(&str == &std::get<0>(param0));
+            REQUIRE(&value == &std::get<1>(param0));
+            REQUIRE(&arg_ii == &std::get<0>(param1));
+        }
+
+        SECTION("As back argument.")
+        {
+            int arg_i{};
+            const auto packHelper = [&]<typename... Args>(Args&&... arg_ii) {
+                return std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(int&, Args...));
+            };
+
+            std::string str{};
+            int value{42};
+
+            std::tuple result = packHelper(str, std::move(value));
+            STATIC_REQUIRE(
+                std::same_as<
+                std::tuple<std::tuple<int&>, std::tuple<std::string&, int&&>>,
+                decltype(result)>);
+            auto& [param0, param1] = result;
+            REQUIRE(&str == &std::get<0>(param1));
+            REQUIRE(&value == &std::get<1>(param1));
+            REQUIRE(&arg_i == &std::get<0>(param0));
+        }
+    }
 }
 
 TEST_CASE(
@@ -353,5 +457,53 @@ TEST_CASE(
         ScopedExpectation expectation = mock.foo_.expect_call(4.2f)
                                     and finally::returns(42);
         REQUIRE(42 == mock.foo(4.2f));
+    }
+}
+
+namespace
+{
+    template <typename... Args>
+    class VariadicInterface
+    {
+    public:
+        virtual ~VariadicInterface() = default;
+        virtual void foo(Args...) = 0;
+    };
+
+    template <typename... Args>
+    class VariadicDerived final
+        : public VariadicInterface<Args...>
+    {
+    public:
+        MIMICPP_MOCK_METHOD(foo, void, (Args...));
+    };
+}
+
+TEST_CASE(
+    "MIMICPP_MOCK_METHOD supports variadic class-template arguments.",
+    "[mock][mock::interface]")
+{
+    SECTION("Without template arguments.")
+    {
+        VariadicDerived mock{};
+
+        ScopedExpectation expectation = mock.foo_.expect_call();
+        mock.foo();
+    }
+
+    SECTION("With single template argument.")
+    {
+        VariadicDerived<int> mock{};
+
+        ScopedExpectation expectation = mock.foo_.expect_call(42);
+        mock.foo(42);
+    }
+
+    SECTION("With multiple template arguments.")
+    {
+        VariadicDerived<int, std::string> mock{};
+
+        ScopedExpectation expectation = mock.foo_.expect_call(42, "Hello, World!");
+        mock.foo(42, "Hello, World!");
     }
 }

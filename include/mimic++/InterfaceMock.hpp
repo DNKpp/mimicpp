@@ -106,7 +106,7 @@ namespace mimicpp
 #define MIMICPP_DETAIL_PARENS ()
 
 /**
- * \brief Pastes a ,.
+ * \brief Pastes a comma.
  * \ingroup MOCK_INTERFACES_DETAIL_FOR_EACH
  */
 #define MIMICPP_DETAIL_COMMA_DELIMITER() ,
@@ -269,33 +269,58 @@ namespace mimicpp
 namespace mimicpp
 {
     /**
-     * \defgroup MOCK_INTERFACES_DETAIL_FORWARD_ARGS forward_args
+     * \defgroup MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE forward_args
      * \ingroup MOCK_INTERFACES_DETAIL
-     * \brief Creates ``std::forward`` calls for each given argument (not enclosed by parentheses).
+     * \brief Creates comma-separated forwarding ``std::tuple``s for each given argument (not enclosed by parentheses).
+     * \details The whole purpose of these macros are to somehow generate forwarding references from the given context.
+     * The first version just applied a ``std::forward`` call onto each argument, but this wasn't sufficient to
+     * support parameter-packs.
+     *
+     * As parameter-packs are applied in the form ``T...``, the ``MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE`` macro must
+     * somehow handle these kind of arguments. There is no way to distinguish via trait, whether the ``param_type``
+     * is a type or pack, so we can not simply apply an expanding ``...`` when required.
+     * So the question is, how to unify the handling?
+     *
+     * The solution here is to pass both, either types or packs, into a tuple and then make use of the (possibly)
+     * simultaneous expansion feature.
+     * When the param is a type, there is only one pack (the tuple with exactly one argument) in the scope.
+     * When the param is a pack, both will be expanded simultaneously, because they appear in the same pattern.
+     * \see https://en.cppreference.com/w/cpp/language/pack
      */
 }
 
-/**
- * \brief Creates a ``std::forward`` call for the given argument.
- * \ingroup MOCK_INTERFACES_DETAIL_FORWARD_ARGS
- * \param sequence A unique sequence, which will be appended to the parameter name (as suffix).
- * \param bound_data Unused.
- * \param type The type of the parameter. Enclosing parentheses will be stripped.
- */
-#define MIMICPP_DETAIL_FORWARD_ARG(sequence, bound_data, type) \
-    ::std::forward<::std::add_rvalue_reference_t<MIMICPP_DETAIL_STRIP_PARENS(type)>>(arg_##sequence)
+namespace mimicpp::detail
+{
+    template <typename... Args>
+    using param_type_pack = std::tuple<std::type_identity<Args&&>...>;
+}
 
 /**
- * \brief Creates ``std::forward`` calls for each given argument (not enclosed by parentheses).
- * \ingroup MOCK_INTERFACES_DETAIL_FORWARD_ARGS
+ * \brief Creates a forwarding ``std::tuple`` for the given argument.
+ * \ingroup MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE
+ * \param sequence A unique sequence, which will be appended to the parameter name (as suffix).
+ * \param bound_data Unused.
+ * \param param_type The type of the parameter. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_FORWARD_ARGS(...) \
-    MIMICPP_DETAIL_FOR_EACH_EXT(         \
-        MIMICPP_DETAIL_FORWARD_ARG,      \
-        i,                               \
-        MIMICPP_DETAIL_COMMA_DELIMITER,  \
-        MIMICPP_DETAIL_IDENTITY,         \
-        ,                                \
+#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type) \
+    std::apply(                                                               \
+        [&]<typename... Identity>([[maybe_unused]] Identity...) noexcept {    \
+            return ::std::forward_as_tuple(                                   \
+                ::std::forward<typename Identity::type>(arg_##sequence)...);  \
+        },                                                                    \
+        ::mimicpp::detail::param_type_pack<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
+
+/**
+ * \brief Creates forwarding ``std::tuple``s for each given argument (not enclosed by parentheses).
+ * \ingroup MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE
+ */
+#define MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(...) \
+    MIMICPP_DETAIL_FOR_EACH_EXT(                  \
+        MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE,      \
+        i,                                        \
+        MIMICPP_DETAIL_COMMA_DELIMITER,           \
+        MIMICPP_DETAIL_IDENTITY,                  \
+        ,                                         \
         __VA_ARGS__)
 
 namespace mimicpp
@@ -325,7 +350,7 @@ namespace mimicpp
         param_type_list,                                                                          \
         MIMICPP_DETAIL_STRIP_PARENS(specs),                                                       \
         (MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))),           \
-        (MIMICPP_DETAIL_FORWARD_ARGS(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))
+        (MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))
 
 /**
  * \brief Simple overload, extending the overload info (enclosed by parentheses).
@@ -376,6 +401,14 @@ namespace mimicpp
      */
 }
 
+namespace mimicpp::detail
+{
+    template <typename Return>
+    constexpr auto indirectly_apply_mock = []<typename... Args>(auto& mock, Args&&... args) -> Return {
+        return mock(std::forward<Args>(args)...);
+    };
+}
+
 /**
  * \brief Create a single overload for the given information.
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
@@ -387,11 +420,17 @@ namespace mimicpp
  * \param specs Additional specifiers (e.g. ``const``, ``noexcept``, etc.).
  * \param param_list Enclosed parameter list.
  * \param forward_list Enclosed forward statements.
+ * \note The double ``std::tuple_cat`` is here, so we can correctly handle the case, when ``forward_list`` is empty, because then we would have
+ * and issue with the comma.
  */
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
     inline MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override                                                        \
     {                                                                                                                                                \
-        return mock_name(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                 \
+        return ::std::apply(                                                                                                                         \
+            ::mimicpp::detail::indirectly_apply_mock<MIMICPP_DETAIL_STRIP_PARENS(ret)>,                                                              \
+            ::std::tuple_cat(                                                                                                                        \
+                ::std::make_tuple(::std::ref(mock_name)),                                                                                            \
+                ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list))));                                                                       \
     }
 
 /**
