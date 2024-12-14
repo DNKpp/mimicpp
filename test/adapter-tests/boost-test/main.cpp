@@ -4,6 +4,7 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Mock.hpp"
+#include "../../unit-tests/SuppressionMacros.hpp"
 
 #define BOOST_TEST_MODULE BoostAdapterTest
 #include "mimic++/adapters/BoostTest.hpp"
@@ -25,7 +26,10 @@ BOOST_AUTO_TEST_SUITE_END()
 // This tests will fail. ctest has appropriate properties set, thus should be reported as success
 BOOST_AUTO_TEST_SUITE(FailureSuite)
 
+START_WARNING_SUPPRESSION
+SUPPRESS_UNREACHABLE_CODE
 BOOST_AUTO_TEST_CASE(ReportFail)
+STOP_WARNING_SUPPRESSION
 {
     mimicpp::detail::boost_test::send_fail("Report fail");
 }
