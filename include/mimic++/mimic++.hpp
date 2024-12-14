@@ -29,5 +29,6 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/InterfaceMock.hpp"
 #include "mimic++/ObjectWatcher.hpp"
+#include "mimic++/CallConvention.hpp"
 
 #endif
