@@ -17,9 +17,8 @@
 namespace mimicpp::detail
 {
     template <typename Derived, typename Signature>
-    using call_interface_t = typename call_convention_traits<signature_call_convention_t<Signature>>::
-        // The call-convention is just needed for determining the correct call_convention trait, thus remove it afterward.
-        template call_interface_t<Derived, signature_remove_call_convention_t<Signature>>;
+    using call_interface_t = typename call_convention_traits<
+        signature_call_convention_t<Signature>>::template call_interface_t<Derived, Signature>;
 
     template <typename Derived, typename Signature, typename... Params>
     class DefaultCallInterface<
