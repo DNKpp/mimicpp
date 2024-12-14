@@ -24,6 +24,8 @@ Mail: [DNKpp2011@gmail.com](mailto:dnkpp2011@gmail.com)
   * [Stringification](#stringification)
   * [Matchers](#matchers)
   * [Policies](#policies)
+  * [Bring your own string- and char-types](#bring-your-own-string--and-char-types)
+  * [Call-Conventions](#call-conventions)
 * [Integration](#integration)
   * [Installation](#installation)
     * [CMake](#cmake)
@@ -330,7 +332,19 @@ they simply have to satisfy either the ``mimicpp::expectation_policy_for``, ``mi
 
 If you are working with a huge framework, chances are good, that this framework utilizes a custom string- or even char-type (like ``QChar`` and ``QString`` from Qt).
 They may look different, but in fact they are just strings, so it would be nice to make them fully compatible with the existing string-matchers.
-``mimic++`` supports that, users just have to provide some trait-specializations. For more infos, have a loook into the string section of the doxygen documentation.
+``mimic++`` supports that, users just have to provide some trait-specializations. For more infos, have a look into the
+string section of the doxygen documentation.
+
+### Call-Conventions
+
+Call-Conventions are a rather controversial topic, as the c++-language definition doesn't know or say anything about
+them by itself.
+On the other hand-side, the microsoft ``COM`` framework for example makes use of the ``__stdcall`` call-convention; so
+it's safe to say, that at least some compilers
+have support for these kind of specifications; and of course users need the possibility to make use of these features.
+As they are by no means portable, ``mimic++`` does not define anything by itself, but does instead provide an easy (
+macro) tool to users, which they can use to make the
+framework compatible with any call-convention they need: ``MIMICPP_REGISTER_CALL_CONVENTION``
 
 ---
 
