@@ -202,11 +202,13 @@ namespace mimicpp
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE_LIST
  * \param sequence Unused.
  * \param bound_data Unused.
+ * \param call_convention The call-convention.
  * \param ret The return type.
  * \param param_type_list The parameter types.
  * \param specs Additional specs (e.g. ``const``, ``noexcept``).
  */
-#define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, param_type_list, specs, ...) ret param_type_list specs
+#define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, call_convention, param_type_list, specs, ...) \
+    ret call_convention param_type_list specs
 
 /**
  * \brief Converts all given arguments to a signature list (not enclosed by parentheses).
@@ -311,8 +313,24 @@ namespace mimicpp
  * \param param_type_list The parameter types.
  * \param specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
  */
+#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, specs, call_convention, ...) \
+    (                                                                                             \
+        ret,                                                                                      \
+        call_convention,                                                                          \
+        param_type_list,                                                                          \
+        specs,                                                                                    \
+        (MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))),           \
+        (MIMICPP_DETAIL_FORWARD_ARGS(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))
+
+/**
+ * \brief Simple overload, extending the overload info (enclosed by parentheses).
+ * \ingroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS
+ * \param ret The return type.
+ * \param param_type_list The parameter types.
+ * \param specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
+ */
 #define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs, ...) \
-    (ret, param_type_list, specs, (MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))), (MIMICPP_DETAIL_FORWARD_ARGS(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))
+    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, specs, )
 
 /**
  * \brief Simple overload, extending the overload info (enclosed by parentheses).
@@ -321,14 +339,14 @@ namespace mimicpp
  * \param param_type_list The parameter types.
  */
 #define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC(ret, param_type_list, ...) \
-    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, )
+    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, , )
 
 /**
  * \brief Selects the correct overload, depending on the number of arguments.
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS
  * \see For an explanation of that pattern: https://stackoverflow.com/a/16683147
  */
-#define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, N, ...) N
+#define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, _2, N, ...) N
 
 /**
  * \brief Adds an overload to an interface mock. Used only in combination with \ref MIMICPP_MOCK_OVERLOADED_METHOD.
@@ -340,6 +358,7 @@ namespace mimicpp
 #define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \
     MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \
         __VA_ARGS__,                                    \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL,         \
         MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \
         MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) // clangCl doesn't compile without that extra ,
 
@@ -364,10 +383,12 @@ namespace mimicpp
  * \param param_list Enclosed parameter list.
  * \param forward_list Enclosed forward statements.
  */
-#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, param_type_list, specs, param_list, forward_list, ...) \
-    inline MIMICPP_DETAIL_STRIP_PARENS(ret) fn_name param_list MIMICPP_DETAIL_STRIP_PARENS(specs) override                          \
-    {                                                                                                                               \
-        return mock_name(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                \
+#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
+    inline MIMICPP_DETAIL_STRIP_PARENS(ret) MIMICPP_DETAIL_STRIP_PARENS(call_convention)                                                             \
+        fn_name param_list                                                                                                                           \
+        MIMICPP_DETAIL_STRIP_PARENS(specs) override                                                                                                  \
+    {                                                                                                                                                \
+        return mock_name(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                 \
     }
 
 /**
