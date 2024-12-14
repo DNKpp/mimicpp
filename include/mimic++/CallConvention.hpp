@@ -27,6 +27,12 @@
         using type = Return call_convention(Params...) specs;             \
     }
 
+/**
+ * \brief Generates the desired ``CallInterface``-specialization.
+ * \ingroup CALL_CONVENTIONS_DETAIL
+ * \param call_convention The used call-convention.
+ * \param specs All other function specifications (e.g. ``const`` and ``noexcept``).
+ */
 #define MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, specs)      \
     template <typename Derived, typename Return, typename... Params>                      \
     class CallInterface<                                                                  \
@@ -43,6 +49,10 @@
         }                                                                                 \
     }
 
+#define MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, specs) \
+    MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, specs);             \
+    MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, specs);                \
+    MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, specs)
 #define MIMICPP_REGISTER_CALL_CONVENTION(call_convention, namespace_name)                                  \
     namespace namespace_name                                                                               \
     {                                                                                                      \
@@ -57,19 +67,6 @@
                                                                                                            \
         template <typename Signature>                                                                      \
         using remove_call_convention_t = typename remove_call_convention<Signature>::type;                 \
-                                                                                                           \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, );                                   \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, noexcept);                           \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, const);                              \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, const noexcept);                     \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, &);                                  \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, & noexcept);                         \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, const&);                             \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, const& noexcept);                    \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, &&);                                 \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, && noexcept);                        \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, const&&);                            \
-        MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, const&& noexcept);                   \
                                                                                                            \
         template <typename Signature>                                                                      \
         concept has_call_convention = !std::same_as<Signature, remove_call_convention_t<Signature>>;       \
@@ -86,34 +83,21 @@
             using type = Signature;                                                                        \
         };                                                                                                 \
                                                                                                            \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, );                                      \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, noexcept);                              \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, const);                                 \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, const noexcept);                        \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, &);                                     \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, & noexcept);                            \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, const&);                                \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, const& noexcept);                       \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, &&);                                    \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, && noexcept);                           \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, const&&);                               \
-        MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, const&& noexcept);                      \
-                                                                                                           \
         template <typename Derived, typename Signature>                                                    \
         class CallInterface;                                                                               \
                                                                                                            \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, );                           \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, noexcept);                   \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, const);                      \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, const noexcept);             \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, &);                          \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, & noexcept);                 \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, const&);                     \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, const& noexcept);            \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, &&);                         \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, && noexcept);                \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, const&&);                    \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, const&& noexcept);           \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, );                          \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, noexcept);                  \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const);                     \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const noexcept);            \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, &);                         \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, & noexcept);                \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&);                    \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const& noexcept);           \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, &&);                        \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, && noexcept);               \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&&);                   \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&& noexcept);          \
     }                                                                                                      \
                                                                                                            \
     template <::namespace_name::has_call_convention Signature>                                             \
@@ -147,7 +131,5 @@
         template <typename Derived, typename Signature>                                                    \
         using call_interface_t = ::namespace_name::CallInterface<Derived, Signature>;                      \
     }
-
-MIMICPP_REGISTER_CALL_CONVENTION(__cdecl, cdecl_call_convention);
 
 #endif
