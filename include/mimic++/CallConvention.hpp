@@ -25,6 +25,13 @@ namespace mimicpp
      * register the call-conventions they require by themselves (e.g. the for the microsoft ``COM``-framework).
      * \see \ref MIMICPP_REGISTER_CALL_CONVENTION "MIMICPP_REGISTER_CALL_CONVENTION"
      *
+     * \note Even if compilers accept a call-convention, it doesn't necessarily have an effect on the function
+     * (e.g. the ``msvc`` ignores ``__stdcall`` on ``x86_64`` architectures).
+     * In these cases, ``mimic++`` can not properly distinguish between the default call-convention or ignored ones.
+     * It's then the best to perform no registration for that particular call-convention at all.
+     * As compilers do simply ignore any appearance of these call-conventions, they can be still applied on the mock signatures.
+     * \see https://learn.microsoft.com/en-us/cpp/cpp/stdcall
+     *
      * \details The following snippet registers the ``__stdcall`` call-convention. This should usually be done once
      * per test-executable.
      * \snippet RegisterCallConvention.cpp register __stdcall
