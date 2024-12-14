@@ -169,7 +169,7 @@ namespace mimicpp
                                                                                                            \
     template <::namespace_name::has_call_convention Signature>                                             \
         requires(!::namespace_name::is_default_call_convention)                                            \
-    struct ::mimicpp::signature_call_convention<Signature>                                                 \
+    struct mimicpp::signature_call_convention<Signature>                                                   \
     {                                                                                                      \
         using type = ::namespace_name::tag;                                                                \
     };                                                                                                     \
@@ -179,13 +179,13 @@ namespace mimicpp
     Due to this, we must explicitly mark the call-interface operators.*/                                   \
     template <::mimicpp::has_default_call_convention Signature>                                            \
         requires ::namespace_name::is_default_call_convention                                              \
-    struct ::mimicpp::signature_call_convention<Signature>                                                 \
+    struct mimicpp::signature_call_convention<Signature>                                                   \
     {                                                                                                      \
         using type = ::namespace_name::tag;                                                                \
     };                                                                                                     \
                                                                                                            \
     template <>                                                                                            \
-    struct ::mimicpp::call_convention_traits<::namespace_name::tag>                                        \
+    struct mimicpp::call_convention_traits<::namespace_name::tag>                                          \
     {                                                                                                      \
         using tag_t = ::namespace_name::tag;                                                               \
                                                                                                            \
