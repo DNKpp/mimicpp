@@ -102,7 +102,7 @@ namespace mimicpp
     }
 
 /**
- * \brief Generates the all required specializations.
+ * \brief Generates the required specializations.
  * \ingroup CALL_CONVENTIONS_DETAIL
  * \param call_convention The used call-convention.
  * \param specs All other function specifications (e.g. ``const`` and ``noexcept``).
