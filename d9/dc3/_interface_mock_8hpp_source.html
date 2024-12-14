@@ -169,136 +169,151 @@ $(function(){initNavTree('d9/dc3/_interface_mock_8hpp_source.html','../../'); in
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>{</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>}</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga2e9c8138d7e671043d76ee276b5572ad">  209</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, param_type_list, specs, ...) ret param_type_list specs</span></div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="foldopen" id="foldopen00215" data-start="" data-end="">
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga83e61ccca0425cb57539494651fde46a">  215</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(...) \</span></div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(                \</span></div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_SIGNATURE,          \</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span><span class="preprocessor">        ,                                       \</span></div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="preprocessor">        MIMICPP_DETAIL_COMMA_DELIMITER,         \</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="preprocessor">        MIMICPP_DETAIL_STRIP_PARENS,            \</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="preprocessor">        ,                                       \</span></div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="preprocessor">        __VA_ARGS__)</span></div>
+<div class="foldopen" id="foldopen00210" data-start="" data-end="">
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga94652cf5f9182ee774aeea4fde8b9594">  210</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, call_convention, param_type_list, specs, ...) \</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span><span class="preprocessor">    ret call_convention param_type_list specs</span></div>
 </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
-<div class="foldopen" id="foldopen00230" data-start="" data-end="">
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno"><a class="line" href="../../d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html#ga6b5a5839a7084be1c5f34ebe2be8d6c0">  230</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)     \</span></div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span><span class="preprocessor">    ::mimicpp::Mock&lt;MIMICPP_DETAIL_STRIP_PARENS(signatures)&gt; mock_name \</span></div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="preprocessor">    {                                                                  \</span></div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="preprocessor">    }</span></div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="foldopen" id="foldopen00217" data-start="" data-end="">
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga83e61ccca0425cb57539494651fde46a">  217</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(...) \</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(                \</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_SIGNATURE,          \</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span><span class="preprocessor">        ,                                       \</span></div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="preprocessor">        MIMICPP_DETAIL_COMMA_DELIMITER,         \</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span><span class="preprocessor">        MIMICPP_DETAIL_STRIP_PARENS,            \</span></div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="preprocessor">        ,                                       \</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span><span class="preprocessor">        __VA_ARGS__)</span></div>
 </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>{</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>}</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="../../da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html#gabbb445760536f41ecf62e0f385e2ddac">  251</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_PARAM(sequence, bound_data, type) MIMICPP_DETAIL_STRIP_PARENS(type) arg_##sequence</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
-<div class="foldopen" id="foldopen00257" data-start="" data-end="">
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno"><a class="line" href="../../da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html#ga57cbefd5ba9b1a1caf8cb36021c406ab">  257</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_PARAM_LIST(...) \</span></div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(            \</span></div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_PARAM,          \</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="preprocessor">        i,                                  \</span></div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="preprocessor">        MIMICPP_DETAIL_COMMA_DELIMITER,     \</span></div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="preprocessor">        MIMICPP_DETAIL_IDENTITY,            \</span></div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="preprocessor">        ,                                   \</span></div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><span class="preprocessor">        __VA_ARGS__)</span></div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
+<div class="foldopen" id="foldopen00232" data-start="" data-end="">
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno"><a class="line" href="../../d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html#ga6b5a5839a7084be1c5f34ebe2be8d6c0">  232</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)     \</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span><span class="preprocessor">    ::mimicpp::Mock&lt;MIMICPP_DETAIL_STRIP_PARENS(signatures)&gt; mock_name \</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span><span class="preprocessor">    {                                                                  \</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span><span class="preprocessor">    }</span></div>
 </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>{</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>}</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span> </div>
-<div class="foldopen" id="foldopen00282" data-start="" data-end="">
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno"><a class="line" href="../../d5/d28/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s.html#ga28679db981856c31ded9dd6f62c989b8">  282</a></span><span class="preprocessor">#define MIMICPP_DETAIL_FORWARD_ARG(sequence, bound_data, type) \</span></div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span><span class="preprocessor">    ::std::forward&lt;::std::add_rvalue_reference_t&lt;MIMICPP_DETAIL_STRIP_PARENS(type)&gt;&gt;(arg_##sequence)</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>{</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>}</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno"><a class="line" href="../../da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html#gabbb445760536f41ecf62e0f385e2ddac">  253</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_PARAM(sequence, bound_data, type) MIMICPP_DETAIL_STRIP_PARENS(type) arg_##sequence</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
+<div class="foldopen" id="foldopen00259" data-start="" data-end="">
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno"><a class="line" href="../../da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html#ga57cbefd5ba9b1a1caf8cb36021c406ab">  259</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_PARAM_LIST(...) \</span></div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(            \</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_PARAM,          \</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="preprocessor">        i,                                  \</span></div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="preprocessor">        MIMICPP_DETAIL_COMMA_DELIMITER,     \</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span><span class="preprocessor">        MIMICPP_DETAIL_IDENTITY,            \</span></div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span><span class="preprocessor">        ,                                   \</span></div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span><span class="preprocessor">        __VA_ARGS__)</span></div>
 </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span> </div>
-<div class="foldopen" id="foldopen00289" data-start="" data-end="">
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno"><a class="line" href="../../d5/d28/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s.html#ga3f742b8c01b713540c08d9c113618bbf">  289</a></span><span class="preprocessor">#define MIMICPP_DETAIL_FORWARD_ARGS(...) \</span></div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(         \</span></div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="preprocessor">        MIMICPP_DETAIL_FORWARD_ARG,      \</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">        i,                               \</span></div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">        MIMICPP_DETAIL_COMMA_DELIMITER,  \</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">        MIMICPP_DETAIL_IDENTITY,         \</span></div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="preprocessor">        ,                                \</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">        __VA_ARGS__)</span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>{</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>}</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
+<div class="foldopen" id="foldopen00284" data-start="" data-end="">
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno"><a class="line" href="../../d5/d28/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s.html#ga28679db981856c31ded9dd6f62c989b8">  284</a></span><span class="preprocessor">#define MIMICPP_DETAIL_FORWARD_ARG(sequence, bound_data, type) \</span></div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span><span class="preprocessor">    ::std::forward&lt;::std::add_rvalue_reference_t&lt;MIMICPP_DETAIL_STRIP_PARENS(type)&gt;&gt;(arg_##sequence)</span></div>
 </div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span> </div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>{</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>}</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
-<div class="foldopen" id="foldopen00314" data-start="" data-end="">
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno"><a class="line" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gac0c4c04b439893ddc57f388acd4439cf">  314</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs, ...) \</span></div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span><span class="preprocessor">    (ret, param_type_list, specs, (MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))), (MIMICPP_DETAIL_FORWARD_ARGS(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))</span></div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
+<div class="foldopen" id="foldopen00291" data-start="" data-end="">
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno"><a class="line" href="../../d5/d28/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s.html#ga3f742b8c01b713540c08d9c113618bbf">  291</a></span><span class="preprocessor">#define MIMICPP_DETAIL_FORWARD_ARGS(...) \</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(         \</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">        MIMICPP_DETAIL_FORWARD_ARG,      \</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">        i,                               \</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="preprocessor">        MIMICPP_DETAIL_COMMA_DELIMITER,  \</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">        MIMICPP_DETAIL_IDENTITY,         \</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="preprocessor">        ,                                \</span></div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="preprocessor">        __VA_ARGS__)</span></div>
 </div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span> </div>
-<div class="foldopen" id="foldopen00323" data-start="" data-end="">
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno"><a class="line" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga10423936a3e62b352191532a93fbfb5f">  323</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC(ret, param_type_list, ...) \</span></div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span><span class="preprocessor">    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, )</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>{</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>}</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span> </div>
+<div class="foldopen" id="foldopen00320" data-start="" data-end="">
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno"><a class="line" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga77c987f146661ad673e08a434b3b8a1e">  320</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, specs, call_convention, ...) \</span></div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span><span class="preprocessor">    (                                                                                             \</span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span><span class="preprocessor">        ret,                                                                                      \</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><span class="preprocessor">        MIMICPP_DETAIL_STRIP_PARENS(call_convention),                                             \</span></div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span><span class="preprocessor">        param_type_list,                                                                          \</span></div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span><span class="preprocessor">        MIMICPP_DETAIL_STRIP_PARENS(specs),                                                       \</span></div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span><span class="preprocessor">        (MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))),           \</span></div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span><span class="preprocessor">        (MIMICPP_DETAIL_FORWARD_ARGS(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))</span></div>
 </div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span> </div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno"><a class="line" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga5d9ba507f286e55b7ca9b82f94b644e6">  331</a></span><span class="preprocessor">#define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, N, ...) N</span></div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span> </div>
-<div class="foldopen" id="foldopen00340" data-start="" data-end="">
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga3612f52419579eedc315817fdf991365">  340</a></span><span class="preprocessor">#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \</span></div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="preprocessor">    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \</span></div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="preprocessor">        __VA_ARGS__,                                    \</span></div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \</span></div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) </span><span class="comment">// clangCl doesn&#39;t compile without that extra ,</span></div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span> </div>
+<div class="foldopen" id="foldopen00336" data-start="" data-end="">
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno"><a class="line" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gac0c4c04b439893ddc57f388acd4439cf">  336</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs, ...) \</span></div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span><span class="preprocessor">    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, specs, )</span></div>
 </div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>{</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>}</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span> </div>
+<div class="foldopen" id="foldopen00345" data-start="" data-end="">
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno"><a class="line" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga10423936a3e62b352191532a93fbfb5f">  345</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC(ret, param_type_list, ...) \</span></div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span><span class="preprocessor">    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, , )</span></div>
+</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span> </div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno"><a class="line" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gaf11787f60cc08d38cbdb4df94981eb6d">  353</a></span><span class="preprocessor">#define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, _2, N, ...) N</span></div>
 <div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span> </div>
-<div class="foldopen" id="foldopen00367" data-start="" data-end="">
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno"><a class="line" href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#ga333301a312485ff0ee4c7574dfbd2fbc">  367</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, param_type_list, specs, param_list, forward_list, ...) \</span></div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span><span class="preprocessor">    inline MIMICPP_DETAIL_STRIP_PARENS(ret) fn_name param_list MIMICPP_DETAIL_STRIP_PARENS(specs) override                          \</span></div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span><span class="preprocessor">    {                                                                                                                               \</span></div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span><span class="preprocessor">        return mock_name(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                \</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="preprocessor">    }</span></div>
+<div class="foldopen" id="foldopen00362" data-start="" data-end="">
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga3612f52419579eedc315817fdf991365">  362</a></span><span class="preprocessor">#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \</span></div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span><span class="preprocessor">    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \</span></div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span><span class="preprocessor">        __VA_ARGS__,                                    \</span></div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL,         \</span></div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \</span></div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) </span><span class="comment">// clangCl doesn&#39;t compile without that extra ,</span></div>
 </div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
-<div class="foldopen" id="foldopen00379" data-start="" data-end="">
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno"><a class="line" href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#ga56fd0f555d337f6b01ba2dcfd607f73d">  379</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(mock_name, fn_name, ...) \</span></div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(                                      \</span></div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                          \</span></div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span><span class="preprocessor">        ,                                                             \</span></div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="preprocessor">        MIMICPP_DETAIL_NO_DELIMITER,                                  \</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span><span class="preprocessor">        MIMICPP_DETAIL_STRIP_PARENS,                                  \</span></div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span><span class="preprocessor">        (mock_name, fn_name),                                         \</span></div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="preprocessor">        __VA_ARGS__)</span></div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>{</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>}</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span> </div>
+<div class="foldopen" id="foldopen00390" data-start="" data-end="">
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno"><a class="line" href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#gaebc80cb7e19e08a0277d2f93c3f4d48e">  390</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \</span></div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span><span class="preprocessor">    inline MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override                                                        \</span></div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span><span class="preprocessor">    {                                                                                                                                                \</span></div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span><span class="preprocessor">        return mock_name(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                 \</span></div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span><span class="preprocessor">    }</span></div>
 </div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
-<div class="foldopen" id="foldopen00398" data-start="" data-end="">
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga00ebfcf9ed01548d2001f2fca9ea8616">  398</a></span><span class="preprocessor">#define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...)                       \</span></div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span><span class="preprocessor">    MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(fn_name##_, fn_name, __VA_ARGS__) \</span></div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span><span class="preprocessor">    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                   \</span></div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span><span class="preprocessor">        fn_name##_,                                                        \</span></div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span><span class="preprocessor">        (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))</span></div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
+<div class="foldopen" id="foldopen00402" data-start="" data-end="">
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno"><a class="line" href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#ga56fd0f555d337f6b01ba2dcfd607f73d">  402</a></span><span class="preprocessor">#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(mock_name, fn_name, ...) \</span></div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(                                      \</span></div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                          \</span></div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span><span class="preprocessor">        ,                                                             \</span></div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span><span class="preprocessor">        MIMICPP_DETAIL_NO_DELIMITER,                                  \</span></div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span><span class="preprocessor">        MIMICPP_DETAIL_STRIP_PARENS,                                  \</span></div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span><span class="preprocessor">        (mock_name, fn_name),                                         \</span></div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span><span class="preprocessor">        __VA_ARGS__)</span></div>
 </div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
-<div class="foldopen" id="foldopen00414" data-start="" data-end="">
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaa7de37cb12d042d2246fe3621ea8bf60">  414</a></span><span class="preprocessor">#define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...) \</span></div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span><span class="preprocessor">    MIMICPP_MOCK_OVERLOADED_METHOD(                             \</span></div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span><span class="preprocessor">        fn_name,                                                \</span></div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span><span class="preprocessor">        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</span></div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span> </div>
+<div class="foldopen" id="foldopen00421" data-start="" data-end="">
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga00ebfcf9ed01548d2001f2fca9ea8616">  421</a></span><span class="preprocessor">#define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...)                       \</span></div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span><span class="preprocessor">    MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(fn_name##_, fn_name, __VA_ARGS__) \</span></div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span><span class="preprocessor">    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                   \</span></div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span><span class="preprocessor">        fn_name##_,                                                        \</span></div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span><span class="preprocessor">        (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))</span></div>
 </div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span> </div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span></div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span> </div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b">  425</a></span><span class="preprocessor">    #define MOCK_METHOD MIMICPP_MOCK_METHOD</span></div>
 <div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span> </div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0">  431</a></span><span class="preprocessor">    #define MOCK_OVERLOADED_METHOD MIMICPP_MOCK_OVERLOADED_METHOD</span></div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span> </div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098">  437</a></span><span class="preprocessor">    #define ADD_OVERLOAD MIMICPP_ADD_OVERLOAD</span></div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span> </div>
-<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span> </div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span><span class="preprocessor">#endif</span></div>
+<div class="foldopen" id="foldopen00437" data-start="" data-end="">
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaa7de37cb12d042d2246fe3621ea8bf60">  437</a></span><span class="preprocessor">#define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...) \</span></div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span><span class="preprocessor">    MIMICPP_MOCK_OVERLOADED_METHOD(                             \</span></div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span><span class="preprocessor">        fn_name,                                                \</span></div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span><span class="preprocessor">        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</span></div>
+</div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span> </div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span></div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span> </div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b">  448</a></span><span class="preprocessor">    #define MOCK_METHOD MIMICPP_MOCK_METHOD</span></div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span> </div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0">  454</a></span><span class="preprocessor">    #define MOCK_OVERLOADED_METHOD MIMICPP_MOCK_OVERLOADED_METHOD</span></div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span> </div>
+<div class="line"><a id="l00460" name="l00460"></a><span class="lineno"><a class="line" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098">  460</a></span><span class="preprocessor">    #define ADD_OVERLOAD MIMICPP_ADD_OVERLOAD</span></div>
+<div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span> </div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span> </div>
+<div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_mock_8hpp_html"><div class="ttname"><a href="../../d5/dc5/_mock_8hpp.html">Mock.hpp</a></div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:20</div></div>
@@ -308,7 +323,7 @@ $(function(){initNavTree('d9/dc3/_interface_mock_8hpp_source.html','../../'); in
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d9/dc3/_interface_mock_8hpp.html">InterfaceMock.hpp</a></li>
-    <li class="footer">Generated on Fri Dec 13 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sat Dec 14 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

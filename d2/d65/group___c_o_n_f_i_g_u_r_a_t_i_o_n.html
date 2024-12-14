@@ -120,11 +120,11 @@ Use <code>fmt</code> as formatting backend</h2>
 <p>Whatever the reason to use <code>fmt</code> might be, chances are good, that the library is already present. <code>mimic++</code> tries to detect that when linked as cmake-target, before pulling it from github. If you want to reuse an existing <code>fmt</code> package, make sure, that it can be found via <code>find_package(fmt)</code>.</p>
 <hr  />
 <p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION"></a></p>
-<h2><a class="anchor" id="autotoc_md29"></a>
+<h2><a class="anchor" id="autotoc_md30"></a>
 Enable experimental catch2-matcher integration</h2>
 <p>Name: <code>MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION</code></p>
 <p>If enabled, all matchers from the <code>Catch::Matcher</code> namespaces can be directly used everywhere, where <code>mimic++</code>-matchers are suitable. </p><dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, and may be removed during any release.</dd></dl>
-<h3><a class="anchor" id="autotoc_md30"></a>
+<h3><a class="anchor" id="autotoc_md31"></a>
 Why is it an experimental feature?</h3>
 <p>Unfortunatly <code>catch2</code> matchers are desgined to be used in-place. Every combination you do, like negation via <code>operator !</code> or <code>operator &amp;&amp;</code>, just takes a const-reference to the source-matcher. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#combining-operators-and-lifetimes">https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#combining-operators-and-lifetimes</a></dd></dl>
 <p><code>mimic++</code> needs to store the matcher inside the expectation. These requirements are not playing well together. Nevertheless <code>catch2</code> offers some nice matcher definitions, which could be very helpfull for testing. But as already said, they are dangerous, thus I decided to make them opt-in as experimental features.</p>
@@ -145,7 +145,7 @@ Why is it an experimental feature?</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Dec 13 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sat Dec 14 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
