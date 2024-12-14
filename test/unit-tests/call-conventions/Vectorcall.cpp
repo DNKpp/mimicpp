@@ -3,9 +3,11 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/call-conventions/vectorcall.hpp"
+#include "mimic++/CallConvention.hpp"
 #include "mimic++/InterfaceMock.hpp"
 #include "mimic++/Mock.hpp"
+
+MIMICPP_REGISTER_CALL_CONVENTION(__vectorcall, vectorcall_call_convention);
 
 #include <catch2/catch_template_test_macros.hpp>
 
@@ -319,7 +321,7 @@ TEST_CASE(
 
     STATIC_REQUIRE(
         std::same_as<
-            vectorcall_call_convention::VectorcallCallInterface<Derived, SignatureT>,
+            vectorcall_call_convention::CallInterface<Derived, SignatureT>,
             traits_t::call_interface_t<Derived, SignatureT>>);
 }
 
