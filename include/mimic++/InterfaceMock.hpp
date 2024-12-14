@@ -403,9 +403,20 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
-    template <typename Return>
-    constexpr auto indirectly_apply_mock = []<typename... Args>(auto& mock, Args&&... args) -> Return {
-        return mock(std::forward<Args>(args)...);
+    template <typename Signature>
+    constexpr auto indirectly_apply_mock = []<typename... Args>(auto& mock, Args&&... args)
+        -> signature_return_type_t<Signature> {
+        // we get the mock either as const or non-const ref.
+        // But we must respect, whether the mock shall be called as lvalue or rvalue-ref.
+
+        if constexpr (ValueCategory::rvalue == signature_ref_qualification_v<Signature>)
+        {
+            return std::move(mock)(std::forward<Args>(args)...);
+        }
+        else
+        {
+            return mock(std::forward<Args>(args)...);
+        }
     };
 }
 
@@ -426,8 +437,9 @@ namespace mimicpp::detail
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
     inline MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override                                                        \
     {                                                                                                                                                \
+        using SignatureT = MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs;                                                                   \
         return ::std::apply(                                                                                                                         \
-            ::mimicpp::detail::indirectly_apply_mock<MIMICPP_DETAIL_STRIP_PARENS(ret)>,                                                              \
+            ::mimicpp::detail::indirectly_apply_mock<SignatureT>,                                                                                    \
             ::std::tuple_cat(                                                                                                                        \
                 ::std::make_tuple(::std::ref(mock_name)),                                                                                            \
                 ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list))));                                                                       \

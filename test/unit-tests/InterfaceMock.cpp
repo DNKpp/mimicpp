@@ -263,8 +263,8 @@ TEST_CASE(
             std::tuple result = packHelper(str, std::move(value));
             STATIC_REQUIRE(
                 std::same_as<
-                std::tuple<std::tuple<std::string&, int&&>, std::tuple<int&>>,
-                decltype(result)>);
+                    std::tuple<std::tuple<std::string&, int&&>, std::tuple<int&>>,
+                    decltype(result)>);
             auto& [param0, param1] = result;
             REQUIRE(&str == &std::get<0>(param0));
             REQUIRE(&value == &std::get<1>(param0));
@@ -317,6 +317,111 @@ TEST_CASE(
         derived mock{};
         ScopedExpectation expectation = mock.foo_.expect_call();
         mock.foo();
+    }
+
+    SECTION("Just void() const")
+    {
+        struct interface
+        {
+            virtual ~interface() = default;
+            virtual void foo() const = 0;
+        };
+
+        struct derived
+            : public interface
+        {
+            MIMICPP_MOCK_OVERLOADED_METHOD(
+                foo,
+                MIMICPP_ADD_OVERLOAD(void, (), const));
+        };
+
+        derived mock{};
+        ScopedExpectation expectation = mock.foo_.expect_call();
+        mock.foo();
+    }
+
+    SECTION("Just void() &")
+    {
+        struct interface
+        {
+            virtual ~interface() = default;
+            virtual void foo() & = 0;
+        };
+
+        struct derived
+            : public interface
+        {
+            MIMICPP_MOCK_OVERLOADED_METHOD(
+                foo,
+                MIMICPP_ADD_OVERLOAD(void, (), &));
+        };
+
+        derived mock{};
+        ScopedExpectation expectation = mock.foo_.expect_call();
+        mock.foo();
+    }
+
+    SECTION("Just void() const &")
+    {
+        struct interface
+        {
+            virtual ~interface() = default;
+            virtual void foo() const& = 0;
+        };
+
+        struct derived
+            : public interface
+        {
+            MIMICPP_MOCK_OVERLOADED_METHOD(
+                foo,
+                MIMICPP_ADD_OVERLOAD(void, (), const&));
+        };
+
+        derived mock{};
+        ScopedExpectation expectation = mock.foo_.expect_call();
+        mock.foo();
+    }
+
+    SECTION("Just void() &&")
+    {
+        struct interface
+        {
+            virtual ~interface() = default;
+            virtual void foo() && = 0;
+        };
+
+        struct derived
+            : public interface
+        {
+            MIMICPP_MOCK_OVERLOADED_METHOD(
+                foo,
+                MIMICPP_ADD_OVERLOAD(void, (), &&));
+        };
+
+        derived mock{};
+        ScopedExpectation expectation = std::move(mock).foo_.expect_call();
+        std::move(mock).foo();
+    }
+
+    SECTION("Just void() const &&")
+    {
+        struct interface
+        {
+            virtual ~interface() = default;
+            virtual void foo() const&& = 0;
+        };
+
+        struct derived
+            : public interface
+        {
+            MIMICPP_MOCK_OVERLOADED_METHOD(
+                foo,
+                MIMICPP_ADD_OVERLOAD(void, (), const&&));
+        };
+
+        derived mock{};
+        ScopedExpectation expectation = std::move(mock).foo_.expect_call();
+        std::move(mock).foo();
     }
 
     SECTION("Just void() const noexcept")
