@@ -13,6 +13,34 @@
 #include <source_location>
 #include <tuple>
 
+namespace mimicpp
+{
+    /**
+     * \defgroup CALL_CONVENTIONS call-conventions
+     * \ingroup MOCK
+     * \brief Contains helper macros, which lets users register any desired call-convention.
+     * \details Call-conventions are used to communicate to the compiler, how it should lay out certain function-calls
+     * (e.g. whether the caller or callee is responsible for cleaning up the stack-frame). As call-conventions are by
+     * no means an official c++-feature, it's very hard to find a portable solution. Due to this, ``mimic++`` lets users
+     * register the call-conventions they require by themselves (e.g. the for the microsoft ``COM``-framework).
+     * \see \ref MIMICPP_REGISTER_CALL_CONVENTION "MIMICPP_REGISTER_CALL_CONVENTION"
+     */
+
+    /**
+     * \defgroup CALL_CONVENTIONS_DETAIL detail
+     * \ingroup CALL_CONVENTIONS
+     * \brief Contains several macros, used for call-convention internals.
+     * \attention These macros should never be used directly by users.
+     */
+}
+
+/**
+ * \brief Generates the desired ``remove_call_convention`` trait-specialization.
+ * \ingroup CALL_CONVENTIONS_DETAIL
+ * \param call_convention The convention to be removed.
+ * \param specs All other function specifications (e.g. ``const`` and ``noexcept``).
+ * \attention Must be used from within the desired namespace.
+ */
 #define MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, specs) \
     template <typename Return, typename... Params>                           \
     struct remove_call_convention<Return call_convention(Params...) specs>   \
@@ -20,6 +48,13 @@
         using type = Return(Params...) specs;                                \
     }
 
+/**
+ * \brief Generates the desired ``add_call_convention`` trait-specialization.
+ * \ingroup CALL_CONVENTIONS_DETAIL
+ * \param call_convention The convention to be added.
+ * \param specs All other function specifications (e.g. ``const`` and ``noexcept``).
+ * \attention Must be used from within the desired namespace.
+ */
 #define MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, specs) \
     template <typename Return, typename... Params>                        \
     struct add_call_convention<Return(Params...) specs>                   \
@@ -49,10 +84,23 @@
         }                                                                                 \
     }
 
+/**
+ * \brief Generates the all required specializations.
+ * \ingroup CALL_CONVENTIONS_DETAIL
+ * \param call_convention The used call-convention.
+ * \param specs All other function specifications (e.g. ``const`` and ``noexcept``).
+ */
 #define MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, specs) \
     MIMICPP_DETAIL_DEFINE_REMOVE_CALL_CONVENTION(call_convention, specs);             \
     MIMICPP_DETAIL_DEFINE_ADD_CALL_CONVENTION(call_convention, specs);                \
     MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, specs)
+
+/**
+ * \brief Registers the desired call-convention.
+ * \ingroup CALL_CONVENTIONS
+ * \param call_convention The desired call-convention.
+ * \param namespace_name The namespace, in which all specializations will be defined.
+ */
 #define MIMICPP_REGISTER_CALL_CONVENTION(call_convention, namespace_name)                                  \
     namespace namespace_name                                                                               \
     {                                                                                                      \
