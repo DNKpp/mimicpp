@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['safety_0',['Thread-Safety',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md19',1,'']]],
+  ['safety_0',['Thread-Safety',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md17',1,'']]],
   ['scoped_5fexp_1',['SCOPED_EXP',['../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a',1,'ExpectationBuilder.hpp']]],
   ['scopedexpectation_2',['ScopedExpectation',['../d6/dc0/classmimicpp_1_1_scoped_expectation.html',1,'mimicpp::ScopedExpectation'],['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#a8a1e5f6dd65ccb47cdc7349de63e1265',1,'mimicpp::ScopedExpectation::ScopedExpectation(std::shared_ptr&lt; ExpectationCollection&lt; Signature &gt; &gt; collection, std::shared_ptr&lt; typename ExpectationCollection&lt; Signature &gt;::ExpectationT &gt; expectation) noexcept'],['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#a485d6a5176d34d672b2a49616af68771',1,'mimicpp::ScopedExpectation::ScopedExpectation(ScopedExpectation &amp;&amp;)=default']]],
   ['sequence_3',['sequence',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html',1,'']]],
@@ -8,7 +8,7 @@ var searchData=
   ['sequencecount_5',['sequenceCount',['../dc/db2/classmimicpp_1_1_control_policy.html#aac53c9562c5f612042a72926f871aaef',1,'mimicpp::ControlPolicy']]],
   ['sequenceratings_6',['sequenceRatings',['../d7/dd2/structmimicpp_1_1state__inapplicable.html#a40bb2b0f6391e66b90176cd6b5fad662',1,'mimicpp::state_inapplicable::sequenceRatings'],['../d0/d12/structmimicpp_1_1state__applicable.html#a24c03e4dbab880dfd2837387a6615aa1',1,'mimicpp::state_applicable::sequenceRatings']]],
   ['sequences_7',['sequences',['../de/d68/structmimicpp_1_1state__saturated.html#a35a64cf83e128debf533211ac760c888',1,'mimicpp::state_saturated']]],
-  ['sequences_20with_20times_8',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md20',1,'']]],
+  ['sequences_20with_20times_8',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md18',1,'']]],
   ['sequencet_9',['SequenceT',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf6777ae3a4ea46f945ad2e998885a07c',1,'mimicpp']]],
   ['side_20effects_10',['side effects',['../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html',1,'']]],
   ['sideeffectaction_11',['SideEffectAction',['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html',1,'mimicpp::expectation_policies::SideEffectAction&lt; Action &gt;'],['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#ac480fe6513d8fef3d85c5682f44baef9',1,'mimicpp::expectation_policies::SideEffectAction::SideEffectAction(Action &amp;&amp;action) noexcept(std::is_nothrow_move_constructible_v&lt; Action &gt;)'],['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#ad9d9ebebd2c42003fc735e302ef22635',1,'mimicpp::expectation_policies::SideEffectAction::SideEffectAction(const SideEffectAction &amp;)=delete'],['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#abcc9b1986cb9ceb73fd866232b053064',1,'mimicpp::expectation_policies::SideEffectAction::SideEffectAction(SideEffectAction &amp;&amp;)=default']]],
@@ -164,7 +164,7 @@ var searchData=
   ['string_20and_20char_20types_161',['Bring your own string- and char-types',['../index.html#autotoc_md50',1,'']]],
   ['string_20matcher_20unicode_20support_162',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'']]],
   ['string_20matchers_163',['string matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html',1,'']]],
-  ['string_20printing_164',['String printing',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md18',1,'']]],
+  ['string_20printing_164',['String printing',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md20',1,'']]],
   ['string_2ehpp_165',['String.hpp',['../d9/dc5/_string_8hpp.html',1,'']]],
   ['string_5fcase_5ffold_5fconverter_166',['string_case_fold_converter',['../d4/d2d/structmimicpp_1_1string__case__fold__converter.html',1,'mimicpp::string_case_fold_converter&lt; Char &gt;'],['../d6/d04/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___c_a_s_e___f_o_l_d___c_o_n_v_e_r_t_e_r.html',1,'string_case_fold_converter']]],
   ['string_5fcase_5ffold_5fconverter_3c_20char_20_3e_167',['string_case_fold_converter&lt; char &gt;',['../de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4.html',1,'mimicpp']]],
