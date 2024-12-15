@@ -118,11 +118,6 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
-    template <typename... Args>
-        struct type_list
-    {
-    };
-
     template <typename Parsed, typename... Rest>
     struct unique;
 

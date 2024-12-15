@@ -91,13 +91,13 @@ TEMPLATE_TEST_CASE_SIG(
     "unique_list_t is an alias to a tuple with just unique types.",
     "[utility]",
     ((bool dummy, typename Expected, typename... Types), dummy, Expected, Types...),
-    (true, detail::type_list<>),
-    (true, detail::type_list<int, int&>, int, int&),
-    (true, detail::type_list<int, int&>, int, int&, int&),
-    (true, detail::type_list<int, int&, double, float>, int, int&, double, float),
-    (true, detail::type_list<int>, int, int),
-    (true, detail::type_list<int, int&>, int, int&, int),
-    (true, detail::type_list<int, double, int&>, int, double, int, int&))
+    (true, type_list<>),
+    (true, type_list<int, int&>, int, int&),
+    (true, type_list<int, int&>, int, int&, int&),
+    (true, type_list<int, int&, double, float>, int, int&, double, float),
+    (true, type_list<int>, int, int),
+    (true, type_list<int, int&>, int, int&, int),
+    (true, type_list<int, double, int&>, int, double, int, int&))
 {
     STATIC_REQUIRE(std::same_as<Expected, detail::unique_list_t<Types...>>);
 }

@@ -311,11 +311,11 @@ namespace mimicpp
  * \param bound_data Unused.
  * \param param_type The type of the parameter. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type)                      \
-    [&]<typename... Type>([[maybe_unused]] const ::mimicpp::detail::type_list<Type...>) noexcept { \
-        return ::std::forward_as_tuple(                                                            \
-            ::std::forward<Type>(arg_##sequence)...);                                              \
-    }(::mimicpp::detail::type_list<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
+#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type)              \
+    [&]<typename... Type>([[maybe_unused]] const ::mimicpp::type_list<Type...>) noexcept { \
+        return ::std::forward_as_tuple(                                                    \
+            ::std::forward<Type>(arg_##sequence)...);                                      \
+    }(::mimicpp::type_list<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
 
 /**
  * \brief Creates forwarding ``std::tuple``s for each given argument (not enclosed by parentheses).
