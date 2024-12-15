@@ -13,7 +13,6 @@
 #include <cassert>
 #include <source_location>
 #include <string_view>
-#include <tuple>
 #include <utility>
 
 namespace mimicpp
@@ -119,19 +118,24 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
+    template <typename... Args>
+        struct type_list
+    {
+    };
+
     template <typename Parsed, typename... Rest>
     struct unique;
 
     template <typename... Uniques, typename First, typename... Others>
     struct unique<
-        std::tuple<Uniques...>,
+        type_list<Uniques...>,
         First,
         Others...>
     {
         using current_t = std::conditional_t<
             same_as_any<First, Uniques...>,
-            std::tuple<Uniques...>,
-            std::tuple<Uniques..., First>>;
+            type_list<Uniques...>,
+            type_list<Uniques..., First>>;
 
         using type_t = typename unique<
             current_t,
@@ -139,18 +143,13 @@ namespace mimicpp::detail
     };
 
     template <typename... Uniques>
-    struct unique<std::tuple<Uniques...>>
+    struct unique<type_list<Uniques...>>
     {
-        using type_t = std::tuple<Uniques...>;
+        using type_t = type_list<Uniques...>;
     };
 
     template <typename... Types>
-    using unique_list_t = typename unique<std::tuple<>, Types...>::type_t;
-
-    template <typename... Args>
-    struct type_list
-    {
-    };
+    using unique_list_t = typename unique<type_list<>, Types...>::type_t;
 }
 
 #endif

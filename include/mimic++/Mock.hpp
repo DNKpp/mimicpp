@@ -313,7 +313,7 @@ namespace mimicpp::detail
     struct expectation_collection_factory;
 
     template <typename... UniqueSignatures>
-    struct expectation_collection_factory<std::tuple<UniqueSignatures...>>
+    struct expectation_collection_factory<type_list<UniqueSignatures...>>
     {
         [[nodiscard]]
         static auto make()
