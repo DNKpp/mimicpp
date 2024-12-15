@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -159,7 +159,7 @@ Custom Finalizers</h1>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;int()&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call()</div>
-<div class="line">                and MyFinalizer{};</div>
+<div class="line">        and MyFinalizer{};</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(1337 == mock());</div>
 </div><!-- fragment --> <h2 class="groupheader">Function Documentation</h2>
@@ -208,7 +208,7 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;int()&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call()</div>
-<div class="line">                and finally::returns(42);</div>
+<div class="line">        and finally::returns(42);</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(42 == mock());</div>
 </div><!-- fragment --><p>This finalizer is aware of <code>std::reference_wrapper</code>, which can be used to return values from the outer scope. Such values are explicitly unwrapped, before they are returned. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
@@ -217,7 +217,7 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">int</span> myReturn{42};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call()</div>
-<div class="line">                and finally::returns(std::ref(myReturn));</div>
+<div class="line">        and finally::returns(std::ref(myReturn));</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(&amp;myReturn == &amp;mock());</div>
 </div><!-- fragment --><p>In fact any value category can be returned; it is the users responsibility to make sure, not to use any dangling references. If an actual value is stored and a reference is returned, this is fine until the expectation goes out of scope. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
@@ -226,11 +226,11 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;<span class="keywordtype">int</span>&amp;()&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call()</div>
-<div class="line">                and expect::twice() <span class="comment">// we call the mock two times</span></div>
-<div class="line">                and finally::returns(42);</div>
+<div class="line">        and expect::twice() <span class="comment">// we call the mock two times</span></div>
+<div class="line">        and finally::returns(42);</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">int</span>&amp; result = mock();</div>
-<div class="line">    REQUIRE(42 == result);  <span class="comment">// fine</span></div>
+<div class="line">    REQUIRE(42 == result); <span class="comment">// fine</span></div>
 <div class="line"> </div>
 <div class="line">    result = 1337;</div>
 <div class="line">    REQUIRE(1337 == mock());</div>
@@ -281,7 +281,7 @@ template&lt;typename Action &gt; </div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;int(<span class="keywordtype">int</span>, <span class="keywordtype">int</span>)&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337, 42)</div>
-<div class="line">                and finally::returns_apply_all_result_of(std::plus{});</div>
+<div class="line">        and finally::returns_apply_all_result_of(std::plus{});</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(1379 == mock(1337, 42));</div>
 </div><!-- fragment --> 
@@ -333,7 +333,7 @@ template&lt;std::size_t index, std::size_t... otherIndices, typename Action &gt;
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;int(<span class="keywordtype">int</span>, <span class="keywordtype">int</span>)&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337, 42)</div>
-<div class="line">                and finally::returns_apply_result_of&lt;0, 1&gt;(std::plus{});</div>
+<div class="line">        and finally::returns_apply_result_of&lt;0, 1&gt;(std::plus{});</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(1379 == mock(1337, 42));</div>
 </div><!-- fragment --> 
@@ -371,7 +371,7 @@ template&lt;std::size_t index&gt; </div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;int(<span class="keywordtype">int</span>, <span class="keywordtype">int</span>)&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337, 42)</div>
-<div class="line">                and finally::returns_arg&lt;1&gt;();</div>
+<div class="line">        and finally::returns_arg&lt;1&gt;();</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(42 == mock(1337, 42));</div>
 </div><!-- fragment --> 
@@ -409,7 +409,7 @@ requires std::invocable&lt;std::remove_cvref_t&lt;Fun&gt;&amp;&gt; &amp;&amp; (!
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;std::string()&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call()</div>
-<div class="line">                and finally::returns_result_of([] { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello, World!&quot;</span>; });</div>
+<div class="line">        and finally::returns_result_of([] { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello, World!&quot;</span>; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(<span class="stringliteral">&quot;Hello, World!&quot;</span> == mock());</div>
 </div><!-- fragment --> <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -479,7 +479,7 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;int()&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call()</div>
-<div class="line">                and finally::throws(std::runtime_error{<span class="stringliteral">&quot;Something happened.&quot;</span>});</div>
+<div class="line">        and finally::throws(std::runtime_error{<span class="stringliteral">&quot;Something happened.&quot;</span>});</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE_THROWS_AS(</div>
 <div class="line">        mock(),</div>
@@ -492,7 +492,7 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

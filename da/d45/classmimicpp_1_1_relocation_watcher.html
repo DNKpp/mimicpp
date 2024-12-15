@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -142,23 +142,24 @@ Public Member Functions</h2></td></tr>
 <div class="line">    <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
 <div class="line">        <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void()&gt;,</div>
 <div class="line">        <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>,</div>
-<div class="line">        <a class="code hl_class" href="../../da/d45/classmimicpp_1_1_relocation_watcher.html">mimicpp::RelocationWatcher</a>&gt; watched{};</div>
+<div class="line">        <a class="code hl_class" href="../../da/d45/classmimicpp_1_1_relocation_watcher.html">mimicpp::RelocationWatcher</a>&gt;</div>
+<div class="line">        watched{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> watched.expect_destruct();</div>
 <div class="line">    <span class="keywordtype">int</span> relocationCounter{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> watched.<a class="code hl_function" href="#a1ab88c2edc2f770ea8c9d1e8c0ca62a2">expect_relocate</a>()</div>
-<div class="line">                and then::invoke([&amp;] { ++relocationCounter; })</div>
-<div class="line">                and expect::at_least(1);</div>
+<div class="line">        and then::invoke([&amp;] { ++relocationCounter; })</div>
+<div class="line">        and expect::at_least(1);</div>
 <div class="line"> </div>
-<div class="line">    std::optional wrapped{std::move(watched)};  <span class="comment">// satisfies one relocate-expectation</span></div>
-<div class="line">    std::optional other{std::move(wrapped)};    <span class="comment">// satisfies a second relocate-expectation</span></div>
-<div class="line">    wrapped.reset();                            <span class="comment">// won&#39;t require a destruct-expectation, as moved-from objects are considered dead</span></div>
-<div class="line">    other.reset();                              <span class="comment">// fulfills the destruct-expectation</span></div>
-<div class="line">    REQUIRE(2 == relocationCounter);            <span class="comment">// let&#39;s see, how often the instance has been relocated</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
+<div class="line">    std::optional wrapped{std::move(watched)}; <span class="comment">// satisfies one relocate-expectation</span></div>
+<div class="line">    std::optional other{std::move(wrapped)};   <span class="comment">// satisfies a second relocate-expectation</span></div>
+<div class="line">    wrapped.reset();                           <span class="comment">// won&#39;t require a destruct-expectation, as moved-from objects are considered dead</span></div>
+<div class="line">    other.reset();                             <span class="comment">// fulfills the destruct-expectation</span></div>
+<div class="line">    REQUIRE(2 == relocationCounter);           <span class="comment">// let&#39;s see, how often the instance has been relocated</span></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
 Moving</h2>
 <p>This watcher can be freely moved around, but any relocation events must match with a previously created relocation-expectation.</p>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Copying</h2>
 <p>This watcher is copyable, but with very special behaviour.</p>
 <p>As this watcher is generally designed to be part of a bigger object, it would be very limiting not supporting copy-operations at all. The question is, how should a copy look like?</p>
@@ -394,7 +395,7 @@ Copying</h2>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../da/d45/classmimicpp_1_1_relocation_watcher.html">RelocationWatcher</a></li>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -110,11 +110,14 @@ $(function(){initNavTree('d8/d12/group___m_o_c_k.html','../../'); initResizable(
 <div class="dynheader">
 Collaboration diagram for mock:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/d12/group___m_o_c_k.svg" width="191" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/d12/group___m_o_c_k.svg" width="228" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
 Topics</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dc9/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s.html">call-conventions</a></td></tr>
+<tr class="memdesc:d2/dc9/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains helper macros, which lets users register any desired call-convention. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html">interfaces</a></td></tr>
 <tr class="memdesc:de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains utility to simplify interface mocking. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,14 +142,14 @@ Macros</h2></td></tr>
 <p>Mocks are responsible for providing a convenient interface to set up expectations and handle received calls. At a basic level users can specify arbitrary overload sets, which the mock shall provide and for which expectations can be defined.</p>
 <p>Mocks themselves can be used as public members and can therefore serve as member function mocks. Have a look at the following example, which demonstrates how one is able to test a custom stack container adapter (like <code>std::stack</code>) by utilizing mocking.</p>
 <p>At first, we define a simple concept, which our mock must satisfy. </p><div class="fragment"><div class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> Value&gt;</div>
-<div class="line">    <span class="keyword">concept </span>stack_backend_for = <span class="keyword">requires</span>(T&amp; container, Value v)</div>
-<div class="line">    {</div>
+<div class="line">    <span class="keyword">concept </span>stack_backend_for = <span class="keyword">requires</span>(T&amp; container, Value v) {</div>
 <div class="line">        { std::as_const(container).empty() } -&gt; std::convertible_to&lt;bool&gt;;</div>
 <div class="line">        { container.back() } -&gt; std::convertible_to&lt;Value&amp;&gt;;</div>
 <div class="line">        { std::as_const(container).back() } -&gt; std::convertible_to&lt;const Value&amp;&gt;;</div>
 <div class="line">        container.push_back(std::move(v));</div>
 <div class="line">        { container.pop_back() };</div>
 <div class="line">    };</div>
+<div class="line"> </div>
 </div><!-- fragment --><p> The implemented must be test-able for emptiness, must have a <code>push_back</code> and <code>pop_back</code> function and must provide access to the last element (both, const and non-const).</p>
 <p>The <code>MyStack</code> implementation is rather simple. It provides a pair of <code>pop</code> and <code>push</code> functions and exposes the top element; as const or non-const reference. <code>pop</code> and both <code>top</code> overloads test whether the inner container is empty and throw conditionally. </p><div class="fragment"><div class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, stack_backend_for&lt;T&gt; Container&gt;</div>
 <div class="line">    <span class="keyword">class </span>MyStack</div>
@@ -195,6 +198,7 @@ Macros</h2></td></tr>
 <div class="line">    <span class="keyword">private</span>:</div>
 <div class="line">        Container m_Container;</div>
 <div class="line">    };</div>
+<div class="line"> </div>
 </div><!-- fragment --><p>To make the test simpler, let's fixate <code>T</code> as <code>int</code>. A conforming mock then must provide 5 member functions:</p><ul>
 <li><code>bool empty() const</code>,</li>
 <li><code>void push_back(int)</code>,</li>
@@ -207,12 +211,14 @@ Macros</h2></td></tr>
 <div class="line"> </div>
 <div class="line">        <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;</div>
 <div class="line">            <span class="keywordtype">int</span>&amp;(),</div>
-<div class="line">            <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() const&gt; back{};</div>
+<div class="line">            <span class="keyword">const</span> <span class="keywordtype">int</span>&amp;() const&gt;</div>
+<div class="line">            back{};</div>
 <div class="line"> </div>
 <div class="line">        <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keywordtype">int</span>)&gt; push_back{};</div>
 <div class="line"> </div>
 <div class="line">        <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void()&gt; pop_back{};</div>
 <div class="line">    };</div>
+<div class="line"> </div>
 </div><!-- fragment --> As you can see, <a class="el" href="../../d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a> accepts any valid signature and even supports overloading (as shown by <code>back</code>).</li>
 </ul>
 <p>Eventually we are able to formulate our tests. The test for <code>push</code> is rather straight-forward. </p><div class="fragment"><div class="line">    SECTION(<span class="stringliteral">&quot;When element is added.&quot;</span>)</div>
@@ -230,7 +236,7 @@ Macros</h2></td></tr>
 <div class="line">        {</div>
 <div class="line">            ContainerMock innerContainer{};</div>
 <div class="line">            <a class="code hl_define" href="#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> innerContainer.empty.expect_call()</div>
-<div class="line">                        and finally::returns(<span class="keyword">true</span>);</div>
+<div class="line">                and finally::returns(<span class="keyword">true</span>);</div>
 <div class="line"> </div>
 <div class="line">            MyStack&lt;int, ContainerMock&gt; stack{std::move(innerContainer)};</div>
 <div class="line">            REQUIRE_THROWS_AS(stack.pop(), std::runtime_error);</div>
@@ -240,7 +246,7 @@ Macros</h2></td></tr>
 <div class="line">        {</div>
 <div class="line">            ContainerMock innerContainer{};</div>
 <div class="line">            <a class="code hl_define" href="#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> innerContainer.empty.expect_call()</div>
-<div class="line">                        and finally::returns(<span class="keyword">false</span>);</div>
+<div class="line">                and finally::returns(<span class="keyword">false</span>);</div>
 <div class="line">            <a class="code hl_define" href="#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> innerContainer.pop_back.expect_call();</div>
 <div class="line"> </div>
 <div class="line">            MyStack&lt;int, ContainerMock&gt; container{std::move(innerContainer)};</div>
@@ -256,8 +262,8 @@ Macros</h2></td></tr>
 <div class="line">        SECTION(<span class="stringliteral">&quot;Throws, when inner container is empty.&quot;</span>)</div>
 <div class="line">        {</div>
 <div class="line">            <a class="code hl_define" href="#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> innerContainer.empty.expect_call()</div>
-<div class="line">                        and expect::times(2)    <span class="comment">// we test both, the const and non-const top() overload</span></div>
-<div class="line">                        and finally::returns(true);</div>
+<div class="line">                and expect::times(2) <span class="comment">// we test both, the const and non-const top() overload</span></div>
+<div class="line">                and finally::returns(true);</div>
 <div class="line"> </div>
 <div class="line">            MyStack&lt;<span class="keywordtype">int</span>, ContainerMock&gt; stack{std::move(innerContainer)};</div>
 <div class="line"> </div>
@@ -268,12 +274,12 @@ Macros</h2></td></tr>
 <div class="line">        SECTION(<span class="stringliteral">&quot;Returns a reference to the top element otherwise.&quot;</span>)</div>
 <div class="line">        {</div>
 <div class="line">            <a class="code hl_define" href="#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> innerContainer.empty.expect_call()</div>
-<div class="line">                        and finally::returns(<span class="keyword">false</span>);</div>
+<div class="line">                and finally::returns(<span class="keyword">false</span>);</div>
 <div class="line"> </div>
 <div class="line">            SECTION(<span class="stringliteral">&quot;A const-ref, when accessed via const.&quot;</span>)</div>
 <div class="line">            {</div>
 <div class="line">                <a class="code hl_define" href="#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> std::as_const(innerContainer).back.expect_call()</div>
-<div class="line">                            and finally::returns(42);</div>
+<div class="line">                    and finally::returns(42);</div>
 <div class="line"> </div>
 <div class="line">                MyStack&lt;int, ContainerMock&gt; stack{std::move(innerContainer)};</div>
 <div class="line"> </div>
@@ -283,7 +289,7 @@ Macros</h2></td></tr>
 <div class="line">            SECTION(<span class="stringliteral">&quot;A mutable ref, when accessed via non-const.&quot;</span>)</div>
 <div class="line">            {</div>
 <div class="line">                <a class="code hl_define" href="#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> innerContainer.back.expect_call()</div>
-<div class="line">                            and finally::returns(42);</div>
+<div class="line">                    and finally::returns(42);</div>
 <div class="line"> </div>
 <div class="line">                MyStack&lt;int, ContainerMock&gt; stack{std::move(innerContainer)};</div>
 <div class="line"> </div>
@@ -331,7 +337,7 @@ Macros</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

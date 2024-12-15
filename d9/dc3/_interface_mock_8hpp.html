@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -105,6 +105,7 @@ $(function(){initNavTree('d9/dc3/_interface_mock_8hpp.html','../../'); initResiz
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d5/dc5/_mock_8hpp_source.html">mimic++/Mock.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d2c/_utility_8hpp_source.html">mimic++/Utility.hpp</a>&quot;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -146,7 +147,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga1694c663bb7aece42578de03ffea5b11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pastes a pair of parentheses.  <br /></td></tr>
 <tr class="separator:ga1694c663bb7aece42578de03ffea5b11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa4c970e396930cb25eb33ff3f794d065" id="r_gaa4c970e396930cb25eb33ff3f794d065"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#gaa4c970e396930cb25eb33ff3f794d065">MIMICPP_DETAIL_COMMA_DELIMITER</a>()</td></tr>
-<tr class="memdesc:gaa4c970e396930cb25eb33ff3f794d065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pastes a ,.  <br /></td></tr>
+<tr class="memdesc:gaa4c970e396930cb25eb33ff3f794d065"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pastes a comma.  <br /></td></tr>
 <tr class="separator:gaa4c970e396930cb25eb33ff3f794d065"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga65abc07141197ad844dcba5b9c157b46" id="r_ga65abc07141197ad844dcba5b9c157b46"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#ga65abc07141197ad844dcba5b9c157b46">MIMICPP_DETAIL_NO_DELIMITER</a>()</td></tr>
 <tr class="memdesc:ga65abc07141197ad844dcba5b9c157b46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pastes nothing.  <br /></td></tr>
@@ -178,9 +179,9 @@ Macros</h2></td></tr>
 <tr class="memitem:ga2048e859384fb580450b250eec9cf806" id="r_ga2048e859384fb580450b250eec9cf806"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#ga2048e859384fb580450b250eec9cf806">MIMICPP_FOR_EACH_EXT_AGAIN</a>()</td></tr>
 <tr class="memdesc:ga2048e859384fb580450b250eec9cf806"><td class="mdescLeft">&#160;</td><td class="mdescRight">Black-magic.  <br /></td></tr>
 <tr class="separator:ga2048e859384fb580450b250eec9cf806"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2e9c8138d7e671043d76ee276b5572ad" id="r_ga2e9c8138d7e671043d76ee276b5572ad"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga2e9c8138d7e671043d76ee276b5572ad">MIMICPP_DETAIL_MAKE_SIGNATURE</a>(sequence,  bound_data,  ret,  param_type_list,  specs, ...)</td></tr>
-<tr class="memdesc:ga2e9c8138d7e671043d76ee276b5572ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the given information to a single signature.  <br /></td></tr>
-<tr class="separator:ga2e9c8138d7e671043d76ee276b5572ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga94652cf5f9182ee774aeea4fde8b9594" id="r_ga94652cf5f9182ee774aeea4fde8b9594"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga94652cf5f9182ee774aeea4fde8b9594">MIMICPP_DETAIL_MAKE_SIGNATURE</a>(sequence,  bound_data,  ret,  call_convention,  param_type_list,  specs, ...)</td></tr>
+<tr class="memdesc:ga94652cf5f9182ee774aeea4fde8b9594"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts the given information to a single signature.  <br /></td></tr>
+<tr class="separator:ga94652cf5f9182ee774aeea4fde8b9594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga83e61ccca0425cb57539494651fde46a" id="r_ga83e61ccca0425cb57539494651fde46a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga83e61ccca0425cb57539494651fde46a">MIMICPP_DETAIL_MAKE_SIGNATURE_LIST</a>(...)</td></tr>
 <tr class="memdesc:ga83e61ccca0425cb57539494651fde46a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts all given arguments to a signature list (not enclosed by parentheses).  <br /></td></tr>
 <tr class="separator:ga83e61ccca0425cb57539494651fde46a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,27 +194,30 @@ Macros</h2></td></tr>
 <tr class="memitem:ga57cbefd5ba9b1a1caf8cb36021c406ab" id="r_ga57cbefd5ba9b1a1caf8cb36021c406ab"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html#ga57cbefd5ba9b1a1caf8cb36021c406ab">MIMICPP_DETAIL_MAKE_PARAM_LIST</a>(...)</td></tr>
 <tr class="memdesc:ga57cbefd5ba9b1a1caf8cb36021c406ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts all given arguments to a parameter-list (not enclosed by parentheses).  <br /></td></tr>
 <tr class="separator:ga57cbefd5ba9b1a1caf8cb36021c406ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga28679db981856c31ded9dd6f62c989b8" id="r_ga28679db981856c31ded9dd6f62c989b8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d28/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s.html#ga28679db981856c31ded9dd6f62c989b8">MIMICPP_DETAIL_FORWARD_ARG</a>(sequence,  bound_data,  type)</td></tr>
-<tr class="memdesc:ga28679db981856c31ded9dd6f62c989b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a <code>std::forward</code> call for the given argument.  <br /></td></tr>
-<tr class="separator:ga28679db981856c31ded9dd6f62c989b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3f742b8c01b713540c08d9c113618bbf" id="r_ga3f742b8c01b713540c08d9c113618bbf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d28/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s.html#ga3f742b8c01b713540c08d9c113618bbf">MIMICPP_DETAIL_FORWARD_ARGS</a>(...)</td></tr>
-<tr class="memdesc:ga3f742b8c01b713540c08d9c113618bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates <code>std::forward</code> calls for each given argument (not enclosed by parentheses).  <br /></td></tr>
-<tr class="separator:ga3f742b8c01b713540c08d9c113618bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8587cb95f54d5bbf7248cb15dcdbad9e" id="r_ga8587cb95f54d5bbf7248cb15dcdbad9e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d6b/group___m_i_m_i_c_p_p___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s___a_s___t_u_p_l_e.html#ga8587cb95f54d5bbf7248cb15dcdbad9e">MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE</a>(sequence,  bound_data,  param_type)</td></tr>
+<tr class="memdesc:ga8587cb95f54d5bbf7248cb15dcdbad9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a forwarding <code>std::tuple</code> for the given argument.  <br /></td></tr>
+<tr class="separator:ga8587cb95f54d5bbf7248cb15dcdbad9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacaa71c8cef1bcf74abda24e92f218a84" id="r_gacaa71c8cef1bcf74abda24e92f218a84"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d6b/group___m_i_m_i_c_p_p___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s___a_s___t_u_p_l_e.html#gacaa71c8cef1bcf74abda24e92f218a84">MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE</a>(...)</td></tr>
+<tr class="memdesc:gacaa71c8cef1bcf74abda24e92f218a84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates forwarding <code>std::tuple</code>s for each given argument (not enclosed by parentheses).  <br /></td></tr>
+<tr class="separator:gacaa71c8cef1bcf74abda24e92f218a84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga77c987f146661ad673e08a434b3b8a1e" id="r_ga77c987f146661ad673e08a434b3b8a1e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga77c987f146661ad673e08a434b3b8a1e">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL</a>(ret,  param_type_list,  specs,  call_convention, ...)</td></tr>
+<tr class="memdesc:ga77c987f146661ad673e08a434b3b8a1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base overload, extending the overload info (enclosed by parentheses).  <br /></td></tr>
+<tr class="separator:ga77c987f146661ad673e08a434b3b8a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gac0c4c04b439893ddc57f388acd4439cf" id="r_gac0c4c04b439893ddc57f388acd4439cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gac0c4c04b439893ddc57f388acd4439cf">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS</a>(ret,  param_type_list,  specs, ...)</td></tr>
-<tr class="memdesc:gac0c4c04b439893ddc57f388acd4439cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base overload, extending the overload info (enclosed by parentheses).  <br /></td></tr>
+<tr class="memdesc:gac0c4c04b439893ddc57f388acd4439cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple overload, extending the overload info (enclosed by parentheses).  <br /></td></tr>
 <tr class="separator:gac0c4c04b439893ddc57f388acd4439cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga10423936a3e62b352191532a93fbfb5f" id="r_ga10423936a3e62b352191532a93fbfb5f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga10423936a3e62b352191532a93fbfb5f">MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC</a>(ret,  param_type_list, ...)</td></tr>
 <tr class="memdesc:ga10423936a3e62b352191532a93fbfb5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple overload, extending the overload info (enclosed by parentheses).  <br /></td></tr>
 <tr class="separator:ga10423936a3e62b352191532a93fbfb5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5d9ba507f286e55b7ca9b82f94b644e6" id="r_ga5d9ba507f286e55b7ca9b82f94b644e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga5d9ba507f286e55b7ca9b82f94b644e6">MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS</a>(_1,  N, ...)</td></tr>
-<tr class="memdesc:ga5d9ba507f286e55b7ca9b82f94b644e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the correct overload, depending on the number of arguments.  <br /></td></tr>
-<tr class="separator:ga5d9ba507f286e55b7ca9b82f94b644e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf11787f60cc08d38cbdb4df94981eb6d" id="r_gaf11787f60cc08d38cbdb4df94981eb6d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gaf11787f60cc08d38cbdb4df94981eb6d">MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS</a>(_1,  _2,  N, ...)</td></tr>
+<tr class="memdesc:gaf11787f60cc08d38cbdb4df94981eb6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects the correct overload, depending on the number of arguments.  <br /></td></tr>
+<tr class="separator:gaf11787f60cc08d38cbdb4df94981eb6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3612f52419579eedc315817fdf991365" id="r_ga3612f52419579eedc315817fdf991365"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a>(ret,  param_type_list, ...)</td></tr>
 <tr class="memdesc:ga3612f52419579eedc315817fdf991365"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an overload to an interface mock. Used only in combination with <a class="el" href="../../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga00ebfcf9ed01548d2001f2fca9ea8616">MIMICPP_MOCK_OVERLOADED_METHOD</a>.  <br /></td></tr>
 <tr class="separator:ga3612f52419579eedc315817fdf991365"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga333301a312485ff0ee4c7574dfbd2fbc" id="r_ga333301a312485ff0ee4c7574dfbd2fbc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#ga333301a312485ff0ee4c7574dfbd2fbc">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</a>(ignore,  mock_name,  fn_name,  ret,  param_type_list,  specs,  param_list,  forward_list, ...)</td></tr>
-<tr class="memdesc:ga333301a312485ff0ee4c7574dfbd2fbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a single overload for the given information.  <br /></td></tr>
-<tr class="separator:ga333301a312485ff0ee4c7574dfbd2fbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaebc80cb7e19e08a0277d2f93c3f4d48e" id="r_gaebc80cb7e19e08a0277d2f93c3f4d48e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#gaebc80cb7e19e08a0277d2f93c3f4d48e">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</a>(ignore,  mock_name,  fn_name,  ret,  call_convention,  param_type_list,  specs,  param_list,  forward_list, ...)</td></tr>
+<tr class="memdesc:gaebc80cb7e19e08a0277d2f93c3f4d48e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a single overload for the given information.  <br /></td></tr>
+<tr class="separator:gaebc80cb7e19e08a0277d2f93c3f4d48e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga56fd0f555d337f6b01ba2dcfd607f73d" id="r_ga56fd0f555d337f6b01ba2dcfd607f73d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html#ga56fd0f555d337f6b01ba2dcfd607f73d">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES</a>(mock_name,  fn_name, ...)</td></tr>
 <tr class="memdesc:ga56fd0f555d337f6b01ba2dcfd607f73d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates all overloads for a specific function as overrides.  <br /></td></tr>
 <tr class="separator:ga56fd0f555d337f6b01ba2dcfd607f73d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -239,7 +243,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d9/dc3/_interface_mock_8hpp.html">InterfaceMock.hpp</a></li>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

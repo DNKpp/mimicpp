@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -117,8 +117,8 @@ Topics</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html">for_each</a></td></tr>
 <tr class="memdesc:d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is an implementation of a for-loop for the preprocessor. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d28/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s.html">forward_args</a></td></tr>
-<tr class="memdesc:d5/d28/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates <code>std::forward</code> calls for each given argument (not enclosed by parentheses). <br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d6b/group___m_i_m_i_c_p_p___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s___a_s___t_u_p_l_e.html">forward_args</a></td></tr>
+<tr class="memdesc:d2/d6b/group___m_i_m_i_c_p_p___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s___a_s___t_u_p_l_e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates comma-separated forwarding <code>std::tuple</code>s for each given argument (not enclosed by parentheses). <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html">make_method_overrides</a></td></tr>
 <tr class="memdesc:db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates all required override overloads. <br /></td></tr>
@@ -164,9 +164,11 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">::mimicpp::Mock</a>&lt; <a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>(signatures) &gt; mock_name{}</div>
-<div class="ttc" id="aclassmimicpp_1_1_mock_html"><div class="ttname"><a href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a></div><div class="ttdoc">A Mock type, which fully supports overload sets.</div><div class="ttdef"><b>Definition</b> Mock.hpp:600</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s_html_ga56da9eed01048f667f12265048986cb0"><div class="ttname"><a href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a></div><div class="ttdeci">#define MIMICPP_DETAIL_STRIP_PARENS(x)</div><div class="ttdoc">Removes an enclosing pair of (), if present.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:62</div></div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">::mimicpp::Mock</a>&lt;<a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>(signatures)&gt; mock_name \</div>
+<div class="line">    {                                                                  \</div>
+<div class="line">    }</div>
+<div class="ttc" id="aclassmimicpp_1_1_mock_html"><div class="ttname"><a href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a></div><div class="ttdoc">A Mock type, which fully supports overload sets.</div><div class="ttdef"><b>Definition</b> Mock.hpp:390</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s_html_ga56da9eed01048f667f12265048986cb0"><div class="ttname"><a href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a></div><div class="ttdeci">#define MIMICPP_DETAIL_STRIP_PARENS(x)</div><div class="ttdoc">Removes an enclosing pair of (), if present.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:77</div></div>
 </div><!-- fragment -->
 <p>Creates a <a class="el" href="../../d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a> object for the given signatures. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -184,7 +186,7 @@ Macros</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

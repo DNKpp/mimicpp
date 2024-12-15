@@ -1,6 +1,10 @@
 var group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t =
 [
     [ "mimicpp::signature_remove_noexcept< Signature >", "d4/db7/structmimicpp_1_1signature__remove__noexcept.html", null ],
+    [ "mimicpp::signature_remove_noexcept< Signature >", "dd/da2/structmimicpp_1_1signature__remove__noexcept_3_01_signature_01_4.html", [
+      [ "call_convention_traits_t", "dd/da2/structmimicpp_1_1signature__remove__noexcept_3_01_signature_01_4.html#a819f862ef4980b715b70fe570f1e56be", null ],
+      [ "type", "dd/da2/structmimicpp_1_1signature__remove__noexcept_3_01_signature_01_4.html#aa8833502bad1e1cfce64965a8e56189d", null ]
+    ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...)>", "d1/d50/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_4.html", [
       [ "type", "d1/d50/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_4.html#a75aa80dff48e1efc4e0fc6d7029351d3", null ]
     ] ],
@@ -25,11 +29,11 @@ var group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_
     [ "mimicpp::signature_remove_noexcept< Return(Params...,...) const noexcept >", "d3/d35/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01noexcept_01_4.html", [
       [ "type", "d3/d35/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01noexcept_01_4.html#a8219effd25c8593a5abb4e1f50e9aabf", null ]
     ] ],
-    [ "mimicpp::signature_remove_noexcept< Return(Params...) & >", "da/d4e/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4.html", [
-      [ "type", "da/d4e/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01_6_01_4.html#ae45cf346dfe0cb6365dde21248ea9822", null ]
+    [ "mimicpp::signature_remove_noexcept< Return(Params...)& >", "d9/d4b/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_6_01_4.html", [
+      [ "type", "d9/d4b/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_6_01_4.html#a9b9cb2a0ac0cef814de6d1a9733ecbbb", null ]
     ] ],
-    [ "mimicpp::signature_remove_noexcept< Return(Params...,...) & >", "db/d89/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_01_4.html", [
-      [ "type", "db/d89/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_01_4.html#af688e4c0fd349b6ac911a071826ac33f", null ]
+    [ "mimicpp::signature_remove_noexcept< Return(Params...,...)& >", "df/d42/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html", [
+      [ "type", "df/d42/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html#acbf130a73f477bb140017d6618d54fc4", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...) &noexcept >", "db/d57/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01_6noexcept_01_4.html", [
       [ "type", "db/d57/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01_6noexcept_01_4.html#aaf64713ab1ad44be4fb1b01c7a5e69fa", null ]
@@ -38,16 +42,16 @@ var group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_
       [ "type", "d8/d2f/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6noexcept_01_4.html#a44072037d4b9e4debbb3fbf00b26789d", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...) const & >", "db/df9/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_01_4.html", [
-      [ "type", "db/df9/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_01_4.html#a738cc17beed7f5151cc19cb904aa23ea", null ]
+      [ "type", "db/df9/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_01_4.html#a41f1027c46deb0f8890992b95f1fb265", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...,...) const & >", "d6/de6/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_01_4.html", [
-      [ "type", "d6/de6/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_01_4.html#afd508c8783a8c30a32f315ba715cb630", null ]
+      [ "type", "d6/de6/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_01_4.html#ae97c94a0366a5cdb6f6e59bf3fdeb2c0", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...) const &noexcept >", "d9/d4d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6noexcept_01_4.html", [
-      [ "type", "d9/d4d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6noexcept_01_4.html#a91813400742485368c9ef8a1dcfbd75a", null ]
+      [ "type", "d9/d4d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6noexcept_01_4.html#adfde273e8a2f3a7039e5d90f2738979f", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...,...) const &noexcept >", "d3/d8c/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6noexcept_01_4.html", [
-      [ "type", "d3/d8c/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6noexcept_01_4.html#a3c3ff5d917cc30415da554e6223dfbe6", null ]
+      [ "type", "d3/d8c/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6noexcept_01_4.html#a452b13832f317f60c6e508981430472a", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...) && >", "d2/d50/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html", [
       [ "type", "d2/d50/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html#a91a8c27ef7222db64c58ac63141137b1", null ]
@@ -62,16 +66,16 @@ var group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_
       [ "type", "d9/d93/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6noexcept_01_4.html#adcbda39640055fd0008c0c3a2f652609", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...) const && >", "df/d7d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_6_01_4.html", [
-      [ "type", "df/d7d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_6_01_4.html#aa52bf0dad53638185cdcc99ef5386ef8", null ]
+      [ "type", "df/d7d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_6_01_4.html#adab283a578194d7cc865b6f54913b3c4", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...,...) const && >", "d3/d9d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6_01_4.html", [
-      [ "type", "d3/d9d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6_01_4.html#a33b9ef5f7887ea34213a4258bba1d91d", null ]
+      [ "type", "d3/d9d/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6_01_4.html#a9b433ae5140fe37013efac922bf364dc", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...) const &&noexcept >", "d0/d08/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_6noexcept_01_4.html", [
-      [ "type", "d0/d08/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_6noexcept_01_4.html#a7d4d172670e2039c7afee5cda687700b", null ]
+      [ "type", "d0/d08/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_08_01const_01_6_6noexcept_01_4.html#aecfb609fc022759e4f8f443b5e0bbe1d", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept< Return(Params...,...) const &&noexcept >", "d4/dad/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6noexcept_01_4.html", [
-      [ "type", "d4/dad/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6noexcept_01_4.html#a456d5667bb58fb8c25db4e9069e81822", null ]
+      [ "type", "d4/dad/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6_6noexcept_01_4.html#ace47b53d8892660eb63647076f81d4ad", null ]
     ] ],
     [ "mimicpp::signature_remove_noexcept_t", "d0/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t.html#ga1944b7b7ba7e20b04cfe5849d6a73df9", null ]
 ];

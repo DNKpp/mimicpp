@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -150,13 +150,13 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::SequenceT</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::ne(0))</div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::le(42))</div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// a call with arg != 0 is expected before a call with arg &lt;= 42</span></div>
 <div class="line">    mock(42); <span class="comment">// matches the first expectation</span></div>
-<div class="line">    mock(0); <span class="comment">// matches the second expectation</span></div>
+<div class="line">    mock(0);  <span class="comment">// matches the second expectation</span></div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// note: when we change the call order, the sequence would be violated</span></div>
 </div><!-- fragment --><p>Sequences can also enforce orders on expectations, which refer to different mocks. </p><div class="fragment"><div class="line">    <span class="keyword">using </span><a class="code hl_variable" href="../../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a>;</div>
@@ -167,9 +167,9 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::SequenceT</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock2.expect_call(_) <span class="comment">// mock2 must go first</span></div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock1.expect_call(_) <span class="comment">// mock1 must go second</span></div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
 <div class="line">    mock2(42);</div>
 <div class="line">    mock1(1337);</div>
@@ -183,24 +183,24 @@ Functions</h2></td></tr>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337); <span class="comment">// (2)</span></div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::SequenceT</a> sequence{};</div>
-<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337)  <span class="comment">// (3)</span></div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337) <span class="comment">// (3)</span></div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337); <span class="comment">// (4)</span></div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(42)  <span class="comment">// (5)</span></div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(42) <span class="comment">// (5)</span></div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
-<div class="line">    mock(42); <span class="comment">// matches (1), because (5) is the second element of the sequence</span></div>
+<div class="line">    mock(42);   <span class="comment">// matches (1), because (5) is the second element of the sequence</span></div>
 <div class="line">    mock(1337); <span class="comment">// matches (4), because it&#39;s the &quot;youngest&quot; available alternative</span></div>
 <div class="line">    mock(1337); <span class="comment">// matches (3), because it&#39;s &quot;younger&quot; than (2). So, the first element of the sequence got matched.</span></div>
-<div class="line">    mock(42); <span class="comment">// matches (5). The sequence is now fulfilled.</span></div>
+<div class="line">    mock(42);   <span class="comment">// matches (5). The sequence is now fulfilled.</span></div>
 <div class="line">    mock(1337); <span class="comment">// finally matches (2)</span></div>
 </div><!-- fragment --><p>It's totally fine to attach expectations to sequences, which are already queried for matches. Sequences do not have to be setup in one go.</p>
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h1><a class="anchor" id="autotoc_md19"></a>
 Thread-Safety</h1>
 <p>Sequences are not thread-safe and are never intended to be. If one attempts to enforce a strong ordering between multiple threads without any explicit synchronisation, that attempt is doomed to fail.</p>
-<h1><a class="anchor" id="autotoc_md19"></a>
+<h1><a class="anchor" id="autotoc_md20"></a>
 A word on sequences with times</h1>
 <p>Sequences and times are fully compatible, but can quickly lead to very hard to understand flows. In general, when mixing sequences with exact times (like <a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695" title="Specifies a times policy with both limits set to 2.">expect::twice</a>) it will just work. But when users are defining very permissive expectations combined with ranging times (like binary <a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515" title="Specifies a times policy with a limit range.">expect::times</a>), that may lead to surprising behaviour.</p>
 <p>Imagine a Sequence with two expectations; the first one with <code>min = 0</code> and <code>max = 1</code> and the second one with arbitrary limits. When a new call matches both expectations, which one should be preferred?</p>
@@ -215,10 +215,10 @@ A word on sequences with times</h1>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::LazySequence</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (1)</span></div>
-<div class="line">                and expect::in_sequence(sequence)</div>
-<div class="line">                and expect::at_most(1);</div>
+<div class="line">        and expect::in_sequence(sequence)</div>
+<div class="line">        and expect::at_most(1);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (2)</span></div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
 <div class="line">    mock(); <span class="comment">// matches (1)</span></div>
 <div class="line">    mock(); <span class="comment">// matches (2)</span></div>
@@ -229,13 +229,13 @@ A word on sequences with times</h1>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../db/d43/classmimicpp_1_1_greedy_sequence.html">mimicpp::GreedySequence</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (1)</span></div>
-<div class="line">                and expect::in_sequence(sequence)</div>
-<div class="line">                and expect::at_most(1);</div>
+<div class="line">        and expect::in_sequence(sequence)</div>
+<div class="line">        and expect::at_most(1);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (2)</span></div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
 <div class="line">    mock(); <span class="comment">// matches (2)</span></div>
-<div class="line">    <span class="comment">// no further call possible, because that would be out of sequence and will lead to an inapplicable match report!</span></div>
+<div class="line">            <span class="comment">// no further call possible, because that would be out of sequence and will lead to an inapplicable match report!</span></div>
 </div><!-- fragment --> <h2 class="groupheader">Typedef Documentation</h2>
 <a id="gaf6777ae3a4ea46f945ad2e998885a07c" name="gaf6777ae3a4ea46f945ad2e998885a07c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaf6777ae3a4ea46f945ad2e998885a07c">&#9670;&#160;</a></span>SequenceT</h2>
@@ -299,13 +299,13 @@ template&lt;typename Id , auto priorityStrategy&gt; </div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::SequenceT</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::ne(0))</div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::le(42))</div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// a call with arg != 0 is expected before a call with arg &lt;= 42</span></div>
 <div class="line">    mock(42); <span class="comment">// matches the first expectation</span></div>
-<div class="line">    mock(0); <span class="comment">// matches the second expectation</span></div>
+<div class="line">    mock(0);  <span class="comment">// matches the second expectation</span></div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// note: when we change the call order, the sequence would be violated</span></div>
 </div><!-- fragment --> <div class="fragment"><div class="line">    <span class="keyword">using </span><a class="code hl_variable" href="../../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a>;</div>
@@ -318,18 +318,18 @@ template&lt;typename Id , auto priorityStrategy&gt; </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337); <span class="comment">// (2)</span></div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::SequenceT</a> sequence{};</div>
-<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337)  <span class="comment">// (3)</span></div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337) <span class="comment">// (3)</span></div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337); <span class="comment">// (4)</span></div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(42)  <span class="comment">// (5)</span></div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(42) <span class="comment">// (5)</span></div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
-<div class="line">    mock(42); <span class="comment">// matches (1), because (5) is the second element of the sequence</span></div>
+<div class="line">    mock(42);   <span class="comment">// matches (1), because (5) is the second element of the sequence</span></div>
 <div class="line">    mock(1337); <span class="comment">// matches (4), because it&#39;s the &quot;youngest&quot; available alternative</span></div>
 <div class="line">    mock(1337); <span class="comment">// matches (3), because it&#39;s &quot;younger&quot; than (2). So, the first element of the sequence got matched.</span></div>
-<div class="line">    mock(42); <span class="comment">// matches (5). The sequence is now fulfilled.</span></div>
+<div class="line">    mock(42);   <span class="comment">// matches (5). The sequence is now fulfilled.</span></div>
 <div class="line">    mock(1337); <span class="comment">// finally matches (2)</span></div>
 </div><!-- fragment --> 
 </div>
@@ -391,11 +391,11 @@ template&lt;typename FirstId , auto firstPriorityStrategy, typename SecondId , a
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::SequenceT</a> sequence1{};</div>
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::SequenceT</a> sequence2{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (1)</span></div>
-<div class="line">                and expect::in_sequence(sequence1);</div>
+<div class="line">        and expect::in_sequence(sequence1);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (2)</span></div>
-<div class="line">                and expect::in_sequences(sequence1, sequence2);</div>
+<div class="line">        and expect::in_sequences(sequence1, sequence2);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (3)</span></div>
-<div class="line">                and expect::in_sequence(sequence2);</div>
+<div class="line">        and expect::in_sequence(sequence2);</div>
 <div class="line"> </div>
 <div class="line">    mock(); <span class="comment">// (1) is used here, because (3) is second in sequence2 and (2) is second in sequence1</span></div>
 <div class="line">    mock(); <span class="comment">// (2) is used here, because it&#39;s the first in both sequences now</span></div>
@@ -408,7 +408,7 @@ template&lt;typename FirstId , auto firstPriorityStrategy, typename SecondId , a
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

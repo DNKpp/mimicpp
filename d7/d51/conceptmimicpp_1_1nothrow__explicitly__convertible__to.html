@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -106,19 +106,18 @@ $(function(){initNavTree('d7/d51/conceptmimicpp_1_1nothrow__explicitly__converti
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> From, <span class="keyword">typename</span> To&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html">mimicpp::nothrow_explicitly_convertible_to</a> = </div>
 <div class="line">        <a class="code hl_concept" href="../../d0/d3a/conceptmimicpp_1_1explicitly__convertible__to.html">explicitly_convertible_to&lt;From, To&gt;</a></div>
-<div class="line">        &amp;&amp; <span class="keyword">requires</span></div>
-<div class="line">        {</div>
-<div class="line">            { <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(std::declval&lt;From&gt;()) } <span class="keyword">noexcept</span>;</div>
-<div class="line">        }</div>
-<div class="ttc" id="aconceptmimicpp_1_1explicitly__convertible__to_html"><div class="ttname"><a href="../../d0/d3a/conceptmimicpp_1_1explicitly__convertible__to.html">mimicpp::explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Utility.hpp:53</div></div>
-<div class="ttc" id="aconceptmimicpp_1_1nothrow__explicitly__convertible__to_html"><div class="ttname"><a href="../../d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html">mimicpp::nothrow_explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Utility.hpp:60</div></div>
+<div class="line">        &amp;&amp; <span class="keyword">requires</span> {</div>
+<div class="line">               { <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(std::declval&lt;From&gt;()) } <span class="keyword">noexcept</span>;</div>
+<div class="line">           }</div>
+<div class="ttc" id="aconceptmimicpp_1_1explicitly__convertible__to_html"><div class="ttname"><a href="../../d0/d3a/conceptmimicpp_1_1explicitly__convertible__to.html">mimicpp::explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Utility.hpp:51</div></div>
+<div class="ttc" id="aconceptmimicpp_1_1nothrow__explicitly__convertible__to_html"><div class="ttname"><a href="../../d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html">mimicpp::nothrow_explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Utility.hpp:57</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html">nothrow_explicitly_convertible_to</a></li>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

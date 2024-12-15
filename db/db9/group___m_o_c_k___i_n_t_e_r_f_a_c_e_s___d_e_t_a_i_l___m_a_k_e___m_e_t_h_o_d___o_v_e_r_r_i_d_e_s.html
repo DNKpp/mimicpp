@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -113,9 +113,9 @@ Collaboration diagram for make_method_overrides:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ga333301a312485ff0ee4c7574dfbd2fbc" id="r_ga333301a312485ff0ee4c7574dfbd2fbc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga333301a312485ff0ee4c7574dfbd2fbc">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</a>(ignore,  mock_name,  fn_name,  ret,  param_type_list,  specs,  param_list,  forward_list, ...)</td></tr>
-<tr class="memdesc:ga333301a312485ff0ee4c7574dfbd2fbc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a single overload for the given information.  <br /></td></tr>
-<tr class="separator:ga333301a312485ff0ee4c7574dfbd2fbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaebc80cb7e19e08a0277d2f93c3f4d48e" id="r_gaebc80cb7e19e08a0277d2f93c3f4d48e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaebc80cb7e19e08a0277d2f93c3f4d48e">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</a>(ignore,  mock_name,  fn_name,  ret,  call_convention,  param_type_list,  specs,  param_list,  forward_list, ...)</td></tr>
+<tr class="memdesc:gaebc80cb7e19e08a0277d2f93c3f4d48e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a single overload for the given information.  <br /></td></tr>
+<tr class="separator:gaebc80cb7e19e08a0277d2f93c3f4d48e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga56fd0f555d337f6b01ba2dcfd607f73d" id="r_ga56fd0f555d337f6b01ba2dcfd607f73d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga56fd0f555d337f6b01ba2dcfd607f73d">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES</a>(mock_name,  fn_name, ...)</td></tr>
 <tr class="memdesc:ga56fd0f555d337f6b01ba2dcfd607f73d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates all overloads for a specific function as overrides.  <br /></td></tr>
 <tr class="separator:ga56fd0f555d337f6b01ba2dcfd607f73d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -123,8 +123,8 @@ Macros</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Creates all required override overloads. </p>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="ga333301a312485ff0ee4c7574dfbd2fbc" name="ga333301a312485ff0ee4c7574dfbd2fbc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga333301a312485ff0ee4c7574dfbd2fbc">&#9670;&#160;</a></span>MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</h2>
+<a id="gaebc80cb7e19e08a0277d2f93c3f4d48e" name="gaebc80cb7e19e08a0277d2f93c3f4d48e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaebc80cb7e19e08a0277d2f93c3f4d48e">&#9670;&#160;</a></span>MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -148,6 +148,11 @@ Macros</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>call_convention</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -176,11 +181,16 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keyword">inline</span> <a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>(ret) fn_name param_list <a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>(specs) <span class="keyword">override</span>                          \</div>
-<div class="line">    {                                                                                                                               \</div>
-<div class="line">        <span class="keywordflow">return</span> mock_name (<a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>(forward_list));                                                               \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keyword">inline</span> <a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>(ret) call_convention fn_name param_list specs <span class="keyword">override</span>                                                        \</div>
+<div class="line">    {                                                                                                                                                \</div>
+<div class="line">        <span class="keyword">using </span>SignatureT = <a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>(ret) param_type_list specs;                                                                   \</div>
+<div class="line">        return ::std::apply(                                                                                                                         \</div>
+<div class="line">            ::mimicpp::detail::indirectly_apply_mock&lt;SignatureT&gt;,                                                                                    \</div>
+<div class="line">            ::std::tuple_cat(                                                                                                                        \</div>
+<div class="line">                ::std::make_tuple(::std::ref(mock_name)),                                                                                            \</div>
+<div class="line">                ::std::tuple_cat(<a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>(forward_list))));                                                                       \</div>
 <div class="line">    }</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s_html_ga56da9eed01048f667f12265048986cb0"><div class="ttname"><a href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a></div><div class="ttdeci">#define MIMICPP_DETAIL_STRIP_PARENS(x)</div><div class="ttdoc">Removes an enclosing pair of (), if present.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:62</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s_html_ga56da9eed01048f667f12265048986cb0"><div class="ttname"><a href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a></div><div class="ttdeci">#define MIMICPP_DETAIL_STRIP_PARENS(x)</div><div class="ttdoc">Removes an enclosing pair of (), if present.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:77</div></div>
 </div><!-- fragment -->
 <p>Create a single overload for the given information. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -196,6 +206,7 @@ Macros</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>The double <code>std::tuple_cat</code> is here, so we can correctly handle the case, when <code>forward_list</code> is empty, because then we would have and issue with the comma. </dd></dl>
 
 </div>
 </div>
@@ -222,16 +233,16 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#gaeffb38d3462206d3f8cdbb1811d3979d">MIMICPP_DETAIL_FOR_EACH_EXT</a>(                                        \</div>
-<div class="line">        <a class="code hl_define" href="#ga333301a312485ff0ee4c7574dfbd2fbc">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</a>,                            \</div>
-<div class="line">        ,                                                               \</div>
-<div class="line">        <a class="code hl_define" href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#ga65abc07141197ad844dcba5b9c157b46">MIMICPP_DETAIL_NO_DELIMITER</a>,                                    \</div>
-<div class="line">        <a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>,                                    \</div>
-<div class="line">        (mock_name, fn_name),                                           \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#gaeffb38d3462206d3f8cdbb1811d3979d">MIMICPP_DETAIL_FOR_EACH_EXT</a>(                                      \</div>
+<div class="line">        <a class="code hl_define" href="#gaebc80cb7e19e08a0277d2f93c3f4d48e">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</a>,                          \</div>
+<div class="line">        ,                                                             \</div>
+<div class="line">        <a class="code hl_define" href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#ga65abc07141197ad844dcba5b9c157b46">MIMICPP_DETAIL_NO_DELIMITER</a>,                                  \</div>
+<div class="line">        <a class="code hl_define" href="../../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html#ga56da9eed01048f667f12265048986cb0">MIMICPP_DETAIL_STRIP_PARENS</a>,                                  \</div>
+<div class="line">        (mock_name, fn_name),                                         \</div>
 <div class="line">        __VA_ARGS__)</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h_html_ga65abc07141197ad844dcba5b9c157b46"><div class="ttname"><a href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#ga65abc07141197ad844dcba5b9c157b46">MIMICPP_DETAIL_NO_DELIMITER</a></div><div class="ttdeci">#define MIMICPP_DETAIL_NO_DELIMITER()</div><div class="ttdoc">Pastes nothing.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:118</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h_html_gaeffb38d3462206d3f8cdbb1811d3979d"><div class="ttname"><a href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#gaeffb38d3462206d3f8cdbb1811d3979d">MIMICPP_DETAIL_FOR_EACH_EXT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_FOR_EACH_EXT(macro, token, delimiter, projection_macro, bound,...)</div><div class="ttdoc">The starting point of the for-each implementation.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:174</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s_html_ga333301a312485ff0ee4c7574dfbd2fbc"><div class="ttname"><a href="#ga333301a312485ff0ee4c7574dfbd2fbc">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, param_type_list, specs, param_list, forward_list,...)</div><div class="ttdoc">Create a single overload for the given information.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:367</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h_html_ga65abc07141197ad844dcba5b9c157b46"><div class="ttname"><a href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#ga65abc07141197ad844dcba5b9c157b46">MIMICPP_DETAIL_NO_DELIMITER</a></div><div class="ttdeci">#define MIMICPP_DETAIL_NO_DELIMITER()</div><div class="ttdoc">Pastes nothing.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:133</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h_html_gaeffb38d3462206d3f8cdbb1811d3979d"><div class="ttname"><a href="../../d0/df3/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___f_o_r___e_a_c_h.html#gaeffb38d3462206d3f8cdbb1811d3979d">MIMICPP_DETAIL_FOR_EACH_EXT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_FOR_EACH_EXT(macro, token, delimiter, projection_macro, bound,...)</div><div class="ttdoc">The starting point of the for-each implementation.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:189</div></div>
+<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s_html_gaebc80cb7e19e08a0277d2f93c3f4d48e"><div class="ttname"><a href="#gaebc80cb7e19e08a0277d2f93c3f4d48e">MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list,...)</div><div class="ttdoc">Create a single overload for the given information.</div><div class="ttdef"><b>Definition</b> InterfaceMock.hpp:444</div></div>
 </div><!-- fragment -->
 <p>Creates all overloads for a specific function as overrides. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -249,7 +260,7 @@ Macros</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

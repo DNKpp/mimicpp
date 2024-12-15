@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -139,31 +139,31 @@ Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// imagine this to be a function, we wanted to test</span></div>
-<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> some_function = [](<span class="keyword">auto</span> fun)</div>
-<div class="line">    {</div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> some_function = [](<span class="keyword">auto</span> fun) {</div>
 <div class="line">        fun(); <span class="comment">// let&#39;s just invoke the given fun.</span></div>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
 <div class="line">        <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void()&gt;,</div>
-<div class="line">        <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt; watched{};    <span class="comment">// let&#39;s create a watched mock</span></div>
+<div class="line">        <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt;</div>
+<div class="line">        watched{}; <span class="comment">// let&#39;s create a watched mock</span></div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Let&#39;s say, we are very suspicious and want to get sure, that ``some_function``</span></div>
 <div class="line">    <span class="comment">// invokes the provided functional, before its getting destroyed.</span></div>
 <div class="line">    <a class="code hl_class" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::SequenceT</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> watched.expect_call()</div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> watched.expect_destruct()</div>
-<div class="line">                and expect::in_sequence(sequence);</div>
+<div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// pass the mock to ``some_function`` and track from the outside, whether the expectations hold</span></div>
 <div class="line">    some_function(std::move(watched));</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// nothing to do here. Violations will be reported automatically (as usual).</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
 Moving</h2>
 <p>This watcher can be freely moved around.</p>
-<h2><a class="anchor" id="autotoc_md9"></a>
+<h2><a class="anchor" id="autotoc_md5"></a>
 Copying</h2>
 <p>This watcher is copyable, but with very special behaviour.</p>
 <p>As this watcher is generally designed to be part of a bigger object, it would be very limiting not supporting copy-operations at all. The question is, how should a copy look like?</p>
@@ -194,8 +194,7 @@ Copying</h2>
 </div><div class="memdoc">
 
 <p>Destructor, which reports the call. </p>
-<dl class="section note"><dt>Note</dt><dd>A no-match error may occur, if no destruction-expectation has been defined. <div class="fragment"><div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> action = []</div>
-<div class="line">    {</div>
+<dl class="section note"><dt>Note</dt><dd>A no-match error may occur, if no destruction-expectation has been defined. <div class="fragment"><div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> action = [] {</div>
 <div class="line">        <span class="keyword">struct </span>not_nothrow_destructible</div>
 <div class="line">        {</div>
 <div class="line">            <span class="comment">// explicitly make the destructor throwable, this isn&#39;t necessarily required in real tests</span></div>
@@ -206,7 +205,8 @@ Copying</h2>
 <div class="line"> </div>
 <div class="line">        <span class="keyword">const</span> <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
 <div class="line">            not_nothrow_destructible,</div>
-<div class="line">            <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt; watched{};    <span class="comment">// let&#39;s create a watched instance</span></div>
+<div class="line">            <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt;</div>
+<div class="line">            watched{}; <span class="comment">// let&#39;s create a watched instance</span></div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">// We purposely forget to define a destruction expectation.</span></div>
 <div class="line">        <span class="comment">// Due to this, a no-match will be reported during destruction.</span></div>
@@ -276,9 +276,8 @@ Copying</h2>
   </table>
   </dd>
 </dl>
-<p>This copy-constructor's purpose is to provide syntactically correct copy operations, but semantically this does not copy anything. In fact, it simply default-constructs the new instance, without even touching the <code>other</code>. </p><dl class="section note"><dt>Note</dt><dd>It is mandatory setting up a new destruction-expectation. Otherwise, a no-match will be reported during destruction. <div class="fragment"><div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> action = []</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keyword">struct </span>my_copyable  <span class="comment">// Mock isn&#39;t a copyable type, thus use a custom one for this example</span></div>
+<p>This copy-constructor's purpose is to provide syntactically correct copy operations, but semantically this does not copy anything. In fact, it simply default-constructs the new instance, without even touching the <code>other</code>. </p><dl class="section note"><dt>Note</dt><dd>It is mandatory setting up a new destruction-expectation. Otherwise, a no-match will be reported during destruction. <div class="fragment"><div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> action = [] {</div>
+<div class="line">        <span class="keyword">struct </span>my_copyable <span class="comment">// Mock isn&#39;t a copyable type, thus use a custom one for this example</span></div>
 <div class="line">        {</div>
 <div class="line">            <span class="comment">// explicitly make the destructor throwable, this isn&#39;t necessarily required in real tests</span></div>
 <div class="line">            ~my_copyable() noexcept(false)</div>
@@ -288,7 +287,8 @@ Copying</h2>
 <div class="line"> </div>
 <div class="line">        <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
 <div class="line">            my_copyable,</div>
-<div class="line">            <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt; source{};</div>
+<div class="line">            <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt;</div>
+<div class="line">            source{};</div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">// setting up a destruction-expectation is mandatory to prevent violation reports during scope leave</span></div>
 <div class="line">        <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> source.<a class="code hl_function" href="#ac451f8b6b44b9a684ca4aa40fb5809a8">expect_destruct</a>();</div>
@@ -297,7 +297,7 @@ Copying</h2>
 <div class="line">        <span class="comment">// but in this example we fake that by simply moving it below our expectation.</span></div>
 <div class="line">        <span class="keyword">auto</span> moved = std::move(source); <span class="comment">// note: source is now a &quot;moved-from&quot;-object, which doesn&#39;t report any violations</span></div>
 <div class="line"> </div>
-<div class="line">        <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a> other{source};         <span class="comment">// now create a &quot;copy&quot; of source</span></div>
+<div class="line">        <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a> other{source}; <span class="comment">// now create a &quot;copy&quot; of source</span></div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">// other is a new instance without an existing destruction-expectation,</span></div>
 <div class="line">        <span class="comment">// because the copy-constructor doesn&#39;t semantically copy anything.</span></div>
@@ -410,9 +410,8 @@ Here is the call graph for this function:</div>
   </table>
   </dd>
 </dl>
-<p>This copy-assignment-operator's purpose is to provide syntactically correct copy operations, but semantically this does not copy anything. In fact, it simply deletes the previous content of this instance, default-constructs a new instance and move-assigns it to this instance, without even touching the <code>other</code>. </p><dl class="section note"><dt>Note</dt><dd>It is mandatory setting up a new destruction-expectation. Otherwise, a no-match will be reported during destruction. <div class="fragment"><div class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> action = []</div>
-<div class="line">        {</div>
-<div class="line">            <span class="keyword">struct </span>my_copyable  <span class="comment">// Mock isn&#39;t a copyable type, thus use a custom one for this example</span></div>
+<p>This copy-assignment-operator's purpose is to provide syntactically correct copy operations, but semantically this does not copy anything. In fact, it simply deletes the previous content of this instance, default-constructs a new instance and move-assigns it to this instance, without even touching the <code>other</code>. </p><dl class="section note"><dt>Note</dt><dd>It is mandatory setting up a new destruction-expectation. Otherwise, a no-match will be reported during destruction. <div class="fragment"><div class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> action = [] {</div>
+<div class="line">            <span class="keyword">struct </span>my_copyable <span class="comment">// Mock isn&#39;t a copyable type, thus use a custom one for this example</span></div>
 <div class="line">            {</div>
 <div class="line">                <span class="comment">// explicitly make the destructor throwable, this isn&#39;t necessarily required in real tests</span></div>
 <div class="line">                ~my_copyable() noexcept(false)</div>
@@ -422,7 +421,8 @@ Here is the call graph for this function:</div>
 <div class="line"> </div>
 <div class="line">            <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
 <div class="line">                my_copyable,</div>
-<div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt; source{};</div>
+<div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt;</div>
+<div class="line">                source{};</div>
 <div class="line"> </div>
 <div class="line">            <span class="comment">// setting up a destruction-expectation is mandatory to prevent violation reports during scope leave</span></div>
 <div class="line">            <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> source.<a class="code hl_function" href="#ac451f8b6b44b9a684ca4aa40fb5809a8">expect_destruct</a>();</div>
@@ -433,7 +433,8 @@ Here is the call graph for this function:</div>
 <div class="line"> </div>
 <div class="line">            <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
 <div class="line">                my_copyable,</div>
-<div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt; other{};  <span class="comment">// now create another watched object</span></div>
+<div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt;</div>
+<div class="line">                other{}; <span class="comment">// now create another watched object</span></div>
 <div class="line"> </div>
 <div class="line">            <span class="comment">// other will be destructed, but there is no existing destruction-expectation</span></div>
 <div class="line">            other = source; <span class="comment">// a no-match will be reported immediately</span></div>
@@ -444,9 +445,8 @@ Here is the call graph for this function:</div>
 <div class="line">        REQUIRE_THROWS(action());</div>
 </div><!-- fragment --></dd>
 <dd>
-As this actually destructs a <code><a class="el" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html" title="A watcher type, which reports it&#39;s destructor calls.">LifetimeWatcher</a></code>, violations will be reported, if the previous instance didn't have a valid destruction-expectation. <div class="fragment"><div class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> action = []</div>
-<div class="line">        {</div>
-<div class="line">            <span class="keyword">struct </span>my_copyable  <span class="comment">// Mock isn&#39;t a copyable type, thus use a custom one for this example</span></div>
+As this actually destructs a <code><a class="el" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html" title="A watcher type, which reports it&#39;s destructor calls.">LifetimeWatcher</a></code>, violations will be reported, if the previous instance didn't have a valid destruction-expectation. <div class="fragment"><div class="line">        <span class="keyword">constexpr</span> <span class="keyword">auto</span> action = [] {</div>
+<div class="line">            <span class="keyword">struct </span>my_copyable <span class="comment">// Mock isn&#39;t a copyable type, thus use a custom one for this example</span></div>
 <div class="line">            {</div>
 <div class="line">                <span class="comment">// explicitly make the destructor throwable, this isn&#39;t necessarily required in real tests</span></div>
 <div class="line">                ~my_copyable() noexcept(false)</div>
@@ -456,7 +456,8 @@ As this actually destructs a <code><a class="el" href="../../db/d98/classmimicpp
 <div class="line"> </div>
 <div class="line">            <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
 <div class="line">                my_copyable,</div>
-<div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt; source{};</div>
+<div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt;</div>
+<div class="line">                source{};</div>
 <div class="line"> </div>
 <div class="line">            <span class="comment">// setting up a destruction-expectation is mandatory to prevent violation reports during scope leave</span></div>
 <div class="line">            <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> source.<a class="code hl_function" href="#ac451f8b6b44b9a684ca4aa40fb5809a8">expect_destruct</a>();</div>
@@ -467,9 +468,10 @@ As this actually destructs a <code><a class="el" href="../../db/d98/classmimicpp
 <div class="line"> </div>
 <div class="line">            <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a>&lt;</div>
 <div class="line">                my_copyable,</div>
-<div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt; other{};  <span class="comment">// now create another watched object</span></div>
-<div class="line">            <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> other.<a class="code hl_function" href="#ac451f8b6b44b9a684ca4aa40fb5809a8">expect_destruct</a>();     <span class="comment">// setting it up accordingly</span></div>
-<div class="line">            other = source;                         <span class="comment">// other will be destructed and the expectation from the line above fulfilled</span></div>
+<div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt;</div>
+<div class="line">                other{};                        <span class="comment">// now create another watched object</span></div>
+<div class="line">            <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> other.<a class="code hl_function" href="#ac451f8b6b44b9a684ca4aa40fb5809a8">expect_destruct</a>(); <span class="comment">// setting it up accordingly</span></div>
+<div class="line">            other = source;                     <span class="comment">// other will be destructed and the expectation from the line above fulfilled</span></div>
 <div class="line"> </div>
 <div class="line">            <span class="comment">// other is now a new instance without an existing destruction-expectation,</span></div>
 <div class="line">            <span class="comment">// because the copy-operator doesn&#39;t semantically copy anything.</span></div>
@@ -520,7 +522,7 @@ As this actually destructs a <code><a class="el" href="../../db/d98/classmimicpp
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">LifetimeWatcher</a></li>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

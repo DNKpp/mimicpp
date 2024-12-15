@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v4</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
    </div>
   </td>
  </tr>
@@ -126,88 +126,87 @@ $(function(){initNavTree('dc/d44/_call_8hpp_source.html','../../'); initResizabl
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_equal_param_list(</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        <span class="keyword">const</span> std::tuple&lt;std::reference_wrapper&lt;Args&gt;...&gt;&amp; lhs,</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">const</span> std::tuple&lt;std::reference_wrapper&lt;Args&gt;...&gt;&amp; rhs,</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">const</span> std::index_sequence&lt;indices...&gt;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    ) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keywordflow">return</span> (</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            ...</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>            &amp;&amp; (std::addressof(</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                    std::get&lt;indices&gt;(lhs).get())</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                == std::addressof(</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>                    std::get&lt;indices&gt;(rhs).get())));</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keyword">const</span> std::index_sequence&lt;indices...&gt;) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keywordflow">return</span> (</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>            ...</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            &amp;&amp; (std::addressof(</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>                    std::get&lt;indices&gt;(lhs).get())</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>                == std::addressof(</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>                    std::get&lt;indices&gt;(rhs).get())));</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>}</div>
 </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">mimicpp::call</a></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">class </span>Info</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ad37071bd6512d9c9a70826cd362efbf3">   44</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ad37071bd6512d9c9a70826cd362efbf3">ArgListT</a> = std::tuple&lt;std::reference_wrapper&lt;std::remove_reference_t&lt;Args&gt;&gt;...&gt;;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ace5f4f8de74f5a72ef2bda8884c5f0bc">   46</a></span>        <a class="code hl_typedef" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ad37071bd6512d9c9a70826cd362efbf3">ArgListT</a> <a class="code hl_variable" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ace5f4f8de74f5a72ef2bda8884c5f0bc">args</a>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a153d607922dd5ca195dc8daa23587776">   47</a></span>        <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a> <a class="code hl_variable" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a153d607922dd5ca195dc8daa23587776">fromCategory</a>{};</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3">   48</a></span>        <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">Constness</a> <a class="code hl_variable" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3">fromConstness</a>{};</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ab13116b95585c94b57e7cbd330c122a7">   49</a></span>        std::source_location <a class="code hl_variable" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ab13116b95585c94b57e7cbd330c122a7">fromSourceLocation</a>{};</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00052" data-start="{" data-end="};">
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a549782f77ea9101698425400d0ebb76d">   52</a></span>        <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code hl_friend" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a549782f77ea9101698425400d0ebb76d">operator ==</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">Info</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">Info</a>&amp; rhs)</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        {</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">return</span> lhs.fromCategory == rhs.fromCategory</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                    &amp;&amp; lhs.fromConstness == rhs.fromConstness</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                    &amp;&amp; detail::is_equal_param_list(lhs.args, rhs.args, std::index_sequence_for&lt;Args...&gt;{})</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>                    &amp;&amp; <a class="code hl_function" href="../../d1/d11/namespacemimicpp.html#a572acd40fe6bf7c5ea72c9494c8caf56">is_same_source_location</a>(lhs.fromSourceLocation, rhs.fromSourceLocation);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        }</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">mimicpp::call</a></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>{</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">class </span>Info</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ad37071bd6512d9c9a70826cd362efbf3">   43</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ad37071bd6512d9c9a70826cd362efbf3">ArgListT</a> = std::tuple&lt;std::reference_wrapper&lt;std::remove_reference_t&lt;Args&gt;&gt;...&gt;;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ace5f4f8de74f5a72ef2bda8884c5f0bc">   45</a></span>        <a class="code hl_typedef" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ad37071bd6512d9c9a70826cd362efbf3">ArgListT</a> <a class="code hl_variable" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ace5f4f8de74f5a72ef2bda8884c5f0bc">args</a>;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a153d607922dd5ca195dc8daa23587776">   46</a></span>        <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a> <a class="code hl_variable" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a153d607922dd5ca195dc8daa23587776">fromCategory</a>{};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3">   47</a></span>        <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">Constness</a> <a class="code hl_variable" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3">fromConstness</a>{};</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ab13116b95585c94b57e7cbd330c122a7">   48</a></span>        std::source_location <a class="code hl_variable" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ab13116b95585c94b57e7cbd330c122a7">fromSourceLocation</a>{};</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00051" data-start="{" data-end="};">
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a549782f77ea9101698425400d0ebb76d">   51</a></span>        <span class="keyword">friend</span> <span class="keywordtype">bool</span> <a class="code hl_friend" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a549782f77ea9101698425400d0ebb76d">operator==</a>(<span class="keyword">const</span> <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">Info</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">Info</a>&amp; rhs)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            <span class="keywordflow">return</span> lhs.fromCategory == rhs.fromCategory</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                &amp;&amp; lhs.fromConstness == rhs.fromConstness</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                &amp;&amp; detail::is_equal_param_list(lhs.args, rhs.args, std::index_sequence_for&lt;Args...&gt;{})</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                &amp;&amp; <a class="code hl_function" href="../../d1/d11/namespacemimicpp.html#a572acd40fe6bf7c5ea72c9494c8caf56">is_same_source_location</a>(lhs.fromSourceLocation, rhs.fromSourceLocation);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        }</div>
 </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    };</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="foldopen" id="foldopen00062" data-start="{" data-end="};">
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">   62</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">info_for_signature</a></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">info_for_signature</a>&lt;signature_decay_t&lt;Signature&gt;&gt;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    };</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    };</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen00061" data-start="{" data-end="};">
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">   61</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">info_for_signature</a></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">info_for_signature</a>&lt;signature_decay_t&lt;Signature&gt;&gt;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    {</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    };</div>
 </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">   70</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">info_for_signature_t</a> = <span class="keyword">typename</span> <a class="code hl_struct" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">info_for_signature&lt;Signature&gt;::type</a>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="foldopen" id="foldopen00073" data-start="{" data-end="};">
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="../../d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html">   73</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">info_for_signature</a>&lt;Return(Args...)&gt;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="../../d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html#a77e1446c4b28f9bc5df0fe21291ff73f">   75</a></span>        <span class="keyword">using </span><a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">type</a> = <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">Info</a>&lt;Return, Args...&gt;;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    };</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">   69</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">info_for_signature_t</a> = <span class="keyword">typename</span> <a class="code hl_struct" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">info_for_signature&lt;Signature&gt;::type</a>;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="};">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="../../d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html">   72</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">info_for_signature</a>&lt;Return(Args...)&gt;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="../../d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html#a77e1446c4b28f9bc5df0fe21291ff73f">   74</a></span>        <span class="keyword">using </span><a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">type</a> = <a class="code hl_class" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">Info</a>&lt;Return, Args...&gt;;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    };</div>
 </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>}</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>}</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_type_traits_8hpp_html"><div class="ttname"><a href="../../d8/d32/_type_traits_8hpp.html">TypeTraits.hpp</a></div></div>
 <div class="ttc" id="a_utility_8hpp_html"><div class="ttname"><a href="../../d4/d2c/_utility_8hpp.html">Utility.hpp</a></div></div>
 <div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">mimicpp::call::Info</a></div><div class="ttdef"><b>Definition</b> Fwd.hpp:17</div></div>
-<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_a153d607922dd5ca195dc8daa23587776"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a153d607922dd5ca195dc8daa23587776">mimicpp::call::Info::fromCategory</a></div><div class="ttdeci">ValueCategory fromCategory</div><div class="ttdef"><b>Definition</b> Call.hpp:47</div></div>
-<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_a549782f77ea9101698425400d0ebb76d"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a549782f77ea9101698425400d0ebb76d">mimicpp::call::Info::operator==</a></div><div class="ttdeci">friend bool operator==(const Info &amp;lhs, const Info &amp;rhs)</div><div class="ttdef"><b>Definition</b> Call.hpp:52</div></div>
-<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_ab13116b95585c94b57e7cbd330c122a7"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ab13116b95585c94b57e7cbd330c122a7">mimicpp::call::Info::fromSourceLocation</a></div><div class="ttdeci">std::source_location fromSourceLocation</div><div class="ttdef"><b>Definition</b> Call.hpp:49</div></div>
-<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_ace5f4f8de74f5a72ef2bda8884c5f0bc"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ace5f4f8de74f5a72ef2bda8884c5f0bc">mimicpp::call::Info::args</a></div><div class="ttdeci">ArgListT args</div><div class="ttdef"><b>Definition</b> Call.hpp:46</div></div>
-<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_ad37071bd6512d9c9a70826cd362efbf3"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ad37071bd6512d9c9a70826cd362efbf3">mimicpp::call::Info::ArgListT</a></div><div class="ttdeci">std::tuple&lt; std::reference_wrapper&lt; std::remove_reference_t&lt; Args &gt; &gt;... &gt; ArgListT</div><div class="ttdef"><b>Definition</b> Call.hpp:44</div></div>
-<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_af90735d4d5fa4d29dae955b1660defb3"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3">mimicpp::call::Info::fromConstness</a></div><div class="ttdeci">Constness fromConstness</div><div class="ttdef"><b>Definition</b> Call.hpp:48</div></div>
+<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_a153d607922dd5ca195dc8daa23587776"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a153d607922dd5ca195dc8daa23587776">mimicpp::call::Info::fromCategory</a></div><div class="ttdeci">ValueCategory fromCategory</div><div class="ttdef"><b>Definition</b> Call.hpp:46</div></div>
+<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_a549782f77ea9101698425400d0ebb76d"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#a549782f77ea9101698425400d0ebb76d">mimicpp::call::Info::operator==</a></div><div class="ttdeci">friend bool operator==(const Info &amp;lhs, const Info &amp;rhs)</div><div class="ttdef"><b>Definition</b> Call.hpp:51</div></div>
+<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_ab13116b95585c94b57e7cbd330c122a7"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ab13116b95585c94b57e7cbd330c122a7">mimicpp::call::Info::fromSourceLocation</a></div><div class="ttdeci">std::source_location fromSourceLocation</div><div class="ttdef"><b>Definition</b> Call.hpp:48</div></div>
+<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_ace5f4f8de74f5a72ef2bda8884c5f0bc"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ace5f4f8de74f5a72ef2bda8884c5f0bc">mimicpp::call::Info::args</a></div><div class="ttdeci">ArgListT args</div><div class="ttdef"><b>Definition</b> Call.hpp:45</div></div>
+<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_ad37071bd6512d9c9a70826cd362efbf3"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#ad37071bd6512d9c9a70826cd362efbf3">mimicpp::call::Info::ArgListT</a></div><div class="ttdeci">std::tuple&lt; std::reference_wrapper&lt; std::remove_reference_t&lt; Args &gt; &gt;... &gt; ArgListT</div><div class="ttdef"><b>Definition</b> Call.hpp:43</div></div>
+<div class="ttc" id="aclassmimicpp_1_1call_1_1_info_html_af90735d4d5fa4d29dae955b1660defb3"><div class="ttname"><a href="../../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3">mimicpp::call::Info::fromConstness</a></div><div class="ttdeci">Constness fromConstness</div><div class="ttdef"><b>Definition</b> Call.hpp:47</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1call_html"><div class="ttname"><a href="../../dc/d2e/namespacemimicpp_1_1call.html">mimicpp::call</a></div><div class="ttdef"><b>Definition</b> Call.hpp:20</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1call_html_a904a8502dffb5e669557ce1a8c4b05eb"><div class="ttname"><a href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">mimicpp::call::info_for_signature_t</a></div><div class="ttdeci">typename info_for_signature&lt; Signature &gt;::type info_for_signature_t</div><div class="ttdef"><b>Definition</b> Call.hpp:70</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a572acd40fe6bf7c5ea72c9494c8caf56"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a572acd40fe6bf7c5ea72c9494c8caf56">mimicpp::is_same_source_location</a></div><div class="ttdeci">constexpr bool is_same_source_location(const std::source_location &amp;lhs, const std::source_location &amp;rhs) noexcept</div><div class="ttdef"><b>Definition</b> Utility.hpp:41</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a6076e747dc4e61ff337a809d19f4824a"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">mimicpp::ValueCategory</a></div><div class="ttdeci">ValueCategory</div><div class="ttdef"><b>Definition</b> Fwd.hpp:195</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a96efa41dafaf424bc936fc152467feb1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">mimicpp::Constness</a></div><div class="ttdeci">Constness</div><div class="ttdef"><b>Definition</b> Fwd.hpp:188</div></div>
-<div class="ttc" id="astructmimicpp_1_1call_1_1info__for__signature_html"><div class="ttname"><a href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">mimicpp::call::info_for_signature</a></div><div class="ttdef"><b>Definition</b> Call.hpp:66</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1call_html_a904a8502dffb5e669557ce1a8c4b05eb"><div class="ttname"><a href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">mimicpp::call::info_for_signature_t</a></div><div class="ttdeci">typename info_for_signature&lt; Signature &gt;::type info_for_signature_t</div><div class="ttdef"><b>Definition</b> Call.hpp:69</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a572acd40fe6bf7c5ea72c9494c8caf56"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a572acd40fe6bf7c5ea72c9494c8caf56">mimicpp::is_same_source_location</a></div><div class="ttdeci">constexpr bool is_same_source_location(const std::source_location &amp;lhs, const std::source_location &amp;rhs) noexcept</div><div class="ttdef"><b>Definition</b> Utility.hpp:40</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a6076e747dc4e61ff337a809d19f4824a"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">mimicpp::ValueCategory</a></div><div class="ttdeci">ValueCategory</div><div class="ttdef"><b>Definition</b> Fwd.hpp:30</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a96efa41dafaf424bc936fc152467feb1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1">mimicpp::Constness</a></div><div class="ttdeci">Constness</div><div class="ttdef"><b>Definition</b> Fwd.hpp:23</div></div>
+<div class="ttc" id="astructmimicpp_1_1call_1_1info__for__signature_html"><div class="ttname"><a href="../../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html">mimicpp::call::info_for_signature</a></div><div class="ttdef"><b>Definition</b> Call.hpp:65</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dc/d44/_call_8hpp.html">Call.hpp</a></li>
-    <li class="footer">Generated on Fri Oct 25 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Sun Dec 15 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
