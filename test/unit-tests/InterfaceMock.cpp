@@ -246,17 +246,16 @@ TEST_CASE(
         SECTION("As only argument.")
         {
             const auto packHelper = [&]<typename... Args>(Args&&... arg_i) {
-                return std::make_tuple(MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(Args...));
+                return MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(Args...);
             };
 
             std::string str{};
             int value{42};
 
             std::tuple result = packHelper(str, std::move(value));
-            STATIC_REQUIRE(std::same_as<std::tuple<std::tuple<std::string&, int&&>>, decltype(result)>);
-            auto& [param0] = result;
-            REQUIRE(&str == &std::get<0>(param0));
-            REQUIRE(&value == &std::get<1>(param0));
+            STATIC_REQUIRE(std::same_as<std::tuple<std::string&, int&&>, decltype(result)>);
+            REQUIRE(&str == &std::get<0>(result));
+            REQUIRE(&value == &std::get<1>(result));
         }
 
         SECTION("As front argument.")
