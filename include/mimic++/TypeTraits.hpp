@@ -1131,7 +1131,7 @@ namespace mimicpp
     /**
      * \defgroup TYPE_TRAITS_SIGNATURE_PARAM_LIST signature_param_list
      * \ingroup TYPE_TRAITS
-     * \brief Extracts all param types from a given signature (packed into a ``std::tuple``).
+     * \brief Extracts all param types from a given signature (packed into a ``mimicpp::type_list``).
      *
      *\{
      */
@@ -1148,7 +1148,7 @@ namespace mimicpp
     template <typename Return, typename... Params>
     struct signature_param_list<Return(Params...)>
     {
-        using type = std::tuple<Params...>;
+        using type = type_list<Params...>;
     };
 
     /**

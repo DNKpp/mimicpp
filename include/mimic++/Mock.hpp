@@ -26,7 +26,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::any,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -44,7 +44,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::any,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -62,7 +62,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::lvalue,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -80,7 +80,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::lvalue,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -98,7 +98,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::rvalue,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -116,7 +116,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::rvalue,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -142,7 +142,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::any,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -161,7 +161,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::any,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -180,7 +180,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::lvalue,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -199,7 +199,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::lvalue,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -218,7 +218,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::rvalue,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -237,7 +237,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::rvalue,
-        std::tuple<Params...>>
+        type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -257,13 +257,13 @@ namespace mimicpp::detail
     class BasicMock;
 
     template <typename Signature, typename... Params>
-    class BasicMock<Signature, std::tuple<Params...>>
+    class BasicMock<Signature, type_list<Params...>>
         : public MockFrontend<
               // MockFrontend doesn't need to know about the call-convention, thus remove it
-              BasicMock<Signature, std::tuple<Params...>>,
+              BasicMock<Signature, type_list<Params...>>,
               signature_remove_call_convention_t<Signature>>,
           public call_interface_t<
-              BasicMock<Signature, std::tuple<Params...>>,
+              BasicMock<Signature, type_list<Params...>>,
               Signature>
     {
         using SignatureT = signature_remove_call_convention_t<Signature>;
