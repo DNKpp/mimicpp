@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Mock.hpp"
+#include "mimic++/Utility.hpp"
 
 #include <type_traits>
 #include <utility>
@@ -303,12 +304,6 @@ namespace mimicpp
      */
 }
 
-namespace mimicpp::detail
-{
-    template <typename... Args>
-    using param_type_pack = std::tuple<std::type_identity<Args&&>...>;
-}
-
 /**
  * \brief Creates a forwarding ``std::tuple`` for the given argument.
  * \ingroup MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE
@@ -316,13 +311,11 @@ namespace mimicpp::detail
  * \param bound_data Unused.
  * \param param_type The type of the parameter. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type) \
-    std::apply(                                                               \
-        [&]<typename... Identity>([[maybe_unused]] Identity...) noexcept {    \
-            return ::std::forward_as_tuple(                                   \
-                ::std::forward<typename Identity::type>(arg_##sequence)...);  \
-        },                                                                    \
-        ::mimicpp::detail::param_type_pack<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
+#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type)                      \
+    [&]<typename... Type>([[maybe_unused]] const ::mimicpp::detail::type_list<Type...>) noexcept { \
+        return ::std::forward_as_tuple(                                                            \
+            ::std::forward<Type>(arg_##sequence)...);                                              \
+    }(::mimicpp::detail::type_list<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
 
 /**
  * \brief Creates forwarding ``std::tuple``s for each given argument (not enclosed by parentheses).

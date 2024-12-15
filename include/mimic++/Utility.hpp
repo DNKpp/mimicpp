@@ -146,6 +146,11 @@ namespace mimicpp::detail
 
     template <typename... Types>
     using unique_list_t = typename unique<std::tuple<>, Types...>::type_t;
+
+    template <typename... Args>
+    struct type_list
+    {
+    };
 }
 
 #endif
