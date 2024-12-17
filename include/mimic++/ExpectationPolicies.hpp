@@ -170,6 +170,7 @@ namespace mimicpp::expectation_policies
         {
         }
 
+        [[nodiscard]]
         static constexpr bool is_satisfied() noexcept
         {
             return true;
@@ -413,6 +414,7 @@ namespace mimicpp::expect
 
     /**
      * \brief Checks, whether the selected argument matches the given matcher.
+     * \tparam index The index of the selected argument.
      * \tparam Matcher The matcher type.
      * \param matcher The matcher.
      * \param projection Projection to apply to the argument.
@@ -437,6 +439,27 @@ namespace mimicpp::expect
             std::forward_as_tuple(std::forward<Projection>(projection)));
     }
 
+    /**
+     * \brief Checks, whether the selected arguments match the given matcher.
+     * \tparam first The index of the first selected argument.
+     * \tparam others The indices of other selected arguments.
+     * \tparam Matcher The matcher type.
+     * \param matcher The matcher.
+     * \param projections Projections, the arguments will be applied on.
+     *
+     * \details This requirement checks, whether the selected arguments match the given matcher.
+     * It's useful, when multiple arguments must be checked together, because they have some kind of relationship.
+     * When ``n`` indices are provided the matcher must accept ``n`` arguments.
+     *
+     * The projections will be applied from the beginning: E.g. if ``n`` arguments and ``p`` projections are given
+     * (with ``0 <= p <= n``), then the first ``p`` arguments will be applied on these projections (the ``i``-th argument
+     * on the ``i``-th projection).
+     * \note ``std::identity`` can be used to skip arguments, which shall not be projected.
+     * \see https://en.cppreference.com/w/cpp/utility/functional/identity
+     *
+     * \details For a list of built-in matchers, see \ref EXPECTATION_MATCHER "matcher" section.
+     * \snippet Requirements.cpp expect::args
+     */
     template <
         std::size_t first,
         std::size_t... others,
@@ -454,7 +477,7 @@ namespace mimicpp::expect
 
         return detail::make_args_policy<first, others...>(
             std::forward<Matcher>(matcher),
-            expand_tuple<1u + sizeof...(others), std::identity>(
+            mimicpp::detail::expand_tuple<std::identity, 1u + sizeof...(others)>(
                 std::forward_as_tuple(std::forward<Projections>(projections)...)));
     }
 
