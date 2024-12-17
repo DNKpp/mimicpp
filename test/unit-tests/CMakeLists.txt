@@ -8,8 +8,9 @@ set(CATCH_CONFIG_CONSOLE_WIDTH 800 CACHE STRING "")
 find_package(Catch2 REQUIRED)
 CPMAddPackage("gh:rollbear/trompeloeil@48")
 
-add_executable(
-    mimicpp-tests
+set(TARGET_NAME mimicpp-tests)
+
+add_executable(${TARGET_NAME}
     "Call.cpp"
     "Config.cpp"
     "ControlPolicy.cpp"
@@ -34,18 +35,16 @@ add_subdirectory(matchers)
 
 include(EnableWarnings)
 include(EnableSanitizers)
-enable_sanitizers(mimicpp-tests)
+enable_sanitizers(${TARGET_NAME})
 
-target_compile_options(
-    mimicpp-tests
+target_compile_options(${TARGET_NAME}
     PRIVATE
     # some test files exceed some limits
     # see: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/fatal-error-c1128?view=msvc-170
     $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
 
-target_link_libraries(
-    mimicpp-tests
+target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
     mimicpp::internal::warnings
@@ -53,4 +52,10 @@ target_link_libraries(
     trompeloeil::trompeloeil
 )
 
-catch_discover_tests(mimicpp-tests)
+target_precompile_headers(${TARGET_NAME}
+    PRIVATE
+    <catch2/catch_all.hpp>
+    <catch2/trompeloeil.hpp>
+)
+
+catch_discover_tests(${TARGET_NAME})
