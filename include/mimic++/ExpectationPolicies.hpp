@@ -14,7 +14,8 @@
 #include "mimic++/Utility.hpp"
 
 #include <cassert>
-#include <functional>
+// ReSharper disable once CppUnusedIncludeDirective
+#include <functional> // std::invoke
 
 namespace mimicpp::expectation_policies
 {
@@ -140,24 +141,32 @@ namespace mimicpp::expectation_policies
         Exception m_Exception;
     };
 
-    template <typename Matcher, typename Projection, typename Describer>
+    template <typename Matcher, typename Describer, typename FirstProjection, typename... OtherProjections>
         requires std::same_as<Matcher, std::remove_cvref_t<Matcher>>
-              && std::same_as<Projection, std::remove_cvref_t<Projection>>
               && std::same_as<Describer, std::remove_cvref_t<Describer>>
+              && std::same_as<FirstProjection, std::remove_cvref_t<FirstProjection>>
+              && (... && std::same_as<OtherProjections, std::remove_cvref_t<OtherProjections>>)
               && std::is_move_constructible_v<Matcher>
-              && std::is_move_constructible_v<Projection>
               && std::is_move_constructible_v<Describer>
-    class Requirement
+              && std::is_move_constructible_v<FirstProjection>
+              && (... && std::is_move_constructible_v<OtherProjections>)
+    class ArgsRequirement
     {
     public:
+        using projection_storage_t = std::tuple<FirstProjection, OtherProjections...>;
+
         [[nodiscard]]
-        explicit constexpr Requirement(
+        explicit constexpr ArgsRequirement(
             Matcher matcher,
-            Projection projection = {},
-            Describer describer = {}) noexcept(std::is_nothrow_move_constructible_v<Matcher> && std::is_nothrow_move_constructible_v<Projection> && std::is_nothrow_move_constructible_v<Describer>)
+            Describer&& describer,
+            projection_storage_t&& projections)
+            noexcept(
+                std::is_nothrow_move_constructible_v<Matcher>
+                && std::is_nothrow_move_constructible_v<Describer>
+                && std::is_nothrow_move_constructible_v<projection_storage_t>)
             : m_Matcher{std::move(matcher)},
-              m_Projection{std::move(projection)},
-              m_Describer{std::move(describer)}
+              m_Describer{std::move(describer)},
+              m_Projections{std::move(projections)}
         {
         }
 
@@ -167,17 +176,27 @@ namespace mimicpp::expectation_policies
         }
 
         template <typename Return, typename... Args>
-            requires std::invocable<const Projection&, const call::Info<Return, Args...>&>
+            requires std::invocable<const FirstProjection&, const call::Info<Return, Args...>&>
+                  && (... && std::invocable<const OtherProjections&, const call::Info<Return, Args...>&>)
                   && matcher_for<
                          Matcher,
-                         std::invoke_result_t<const Projection&, const call::Info<Return, Args...>&>>
+                         std::invoke_result_t<const FirstProjection&, const call::Info<Return, Args...>&>,
+                         std::invoke_result_t<const OtherProjections&, const call::Info<Return, Args...>&>...>
         [[nodiscard]]
         constexpr bool matches(const call::Info<Return, Args...>& info) const
         {
-            decltype(auto) projected = std::invoke(m_Projection, info);
-            return detail::matches_hook::matches(
-                m_Matcher,
-                projected);
+            return std::apply(
+                [&info, this](const FirstProjection& first, const OtherProjections&... others) {
+                    return std::invoke(
+                        [&info, this](auto&&... projectedArgs) {
+                            return mimicpp::detail::matches_hook::matches(
+                                m_Matcher,
+                                projectedArgs...);
+                        },
+                        std::invoke(first, info),
+                        std::invoke(others, info)...);
+                },
+                m_Projections);
         }
 
         template <typename Return, typename... Args>
@@ -190,13 +209,13 @@ namespace mimicpp::expectation_policies
         {
             return std::invoke(
                 m_Describer,
-                detail::describe_hook::describe(m_Matcher));
+                mimicpp::detail::describe_hook::describe(m_Matcher));
         }
 
     private:
         [[no_unique_address]] Matcher m_Matcher;
-        [[no_unique_address]] Projection m_Projection;
         [[no_unique_address]] Describer m_Describer;
+        projection_storage_t m_Projections;
     };
 
     template <typename Action>
@@ -295,7 +314,7 @@ namespace mimicpp::expectation_policies
     {
     public:
         [[nodiscard]]
-        explicit constexpr ApplyArgsAction(
+        explicit(false) constexpr ApplyArgsAction(
             Action action = {}) noexcept(std::is_nothrow_move_constructible_v<Action>)
             : m_Action{std::move(action)}
         {
@@ -313,7 +332,8 @@ namespace mimicpp::expectation_policies
                         const Action&,
                         ProjectedArgListElementT<indices, Args...>...>
         constexpr decltype(auto) operator()(
-            const call::Info<Return, Args...>& callInfo) const noexcept(std::is_nothrow_invocable_v<const Action&, ProjectedArgListElementT<indices, Args...>...>)
+            const call::Info<Return, Args...>& callInfo) const
+            noexcept(std::is_nothrow_invocable_v<const Action&, ProjectedArgListElementT<indices, Args...>...>)
         {
             static_assert(
                 (explicitly_convertible_to<
@@ -352,6 +372,33 @@ namespace mimicpp::expect
                 return std::move(out).str();
             }
         };
+
+        template <
+            std::size_t... indices,
+            typename Matcher,
+            typename... Projections>
+        [[nodiscard]]
+        constexpr auto make_args_policy(
+            Matcher&& matcher,
+            std::tuple<Projections...>&& projections)
+        {
+            static_assert(
+                sizeof...(indices) == sizeof...(Projections),
+                "Indices and projections size mismatch.");
+
+            using PolicyT = expectation_policies::ArgsRequirement<
+                std::remove_cvref_t<Matcher>,
+                arg_requirement_describer<indices...>,
+                expectation_policies::ApplyArgsAction<
+                    std::remove_cvref_t<Projections>,
+                    std::add_lvalue_reference_t,
+                    indices>...>;
+
+            return PolicyT{
+                std::forward<Matcher>(matcher),
+                {},
+                std::move(projections)};
+        }
     }
 
     /**
@@ -381,20 +428,35 @@ namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto arg(
         Matcher&& matcher,
-        Projection projection = {}) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher> && std::is_nothrow_move_constructible_v<Projection>)
+        Projection&& projection = {})
+        noexcept(
+            std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>
+            && std::is_nothrow_constructible_v<std::remove_cvref_t<Projection>, Projection>)
     {
-        using ProjectionT = expectation_policies::ApplyArgsAction<
-            Projection,
-            std::add_lvalue_reference_t,
-            index>;
-        using PolicyT = expectation_policies::Requirement<
-            std::remove_cvref_t<Matcher>,
-            ProjectionT,
-            detail::arg_requirement_describer<index>>;
-
-        return PolicyT{
+        return detail::make_args_policy<index>(
             std::forward<Matcher>(matcher),
-            ProjectionT{std::move(projection)}};
+            std::forward_as_tuple(std::forward<Projection>(projection)));
+    }
+
+    template <
+        std::size_t first,
+        std::size_t... others,
+        typename Matcher,
+        typename... Projections>
+    [[nodiscard]]
+    constexpr auto args(Matcher&& matcher, Projections&&... projections)
+        noexcept(
+            std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>
+            && (... && std::is_nothrow_move_constructible_v<std::remove_cvref_t<Projections>>))
+    {
+        static_assert(
+            sizeof...(projections) <= 1u + sizeof...(others),
+            "The projection count exceeds the amount of indices.");
+
+        return detail::make_args_policy<first, others...>(
+            std::forward<Matcher>(matcher),
+            expand_tuple<1u + sizeof...(others), std::identity>(
+                std::forward_as_tuple(std::forward<Projections>(projections)...)));
     }
 
     /**
