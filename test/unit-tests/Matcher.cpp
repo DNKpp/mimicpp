@@ -35,6 +35,22 @@ namespace
         MAKE_CONST_MOCK1(my_matches, bool(const int&));
         MAKE_CONST_MOCK0(describe, StringViewT());
     };
+
+    class CommonVariadicMatcher
+    {
+        MAKE_CONST_MOCK(matches, auto(const int&, const double&)->bool);
+        MAKE_CONST_MOCK(matches, auto(const int&, const double&, const std::string&)->bool);
+
+        MAKE_CONST_MOCK0(describe, StringViewT());
+    };
+
+    class CustomVariadicMatcher
+    {
+        MAKE_CONST_MOCK(my_matches2, auto(const int&, const double&)->bool);
+        MAKE_CONST_MOCK(my_matches3, auto(const int&, const double&, const std::string&)->bool);
+
+        MAKE_CONST_MOCK0(my_describe, StringViewT());
+    };
 }
 
 template <>
@@ -73,6 +89,28 @@ struct custom::matcher_traits<Mixed2Matcher>
     }
 };
 
+template <>
+struct custom::matcher_traits<CustomVariadicMatcher>
+{
+    [[nodiscard]]
+    static bool matches(const CustomVariadicMatcher& matcher, const int& first, const double& second)
+    {
+        return matcher.my_matches2(first, second);
+    }
+
+    [[nodiscard]]
+    static bool matches(const CustomVariadicMatcher& matcher, const int& first, const double& second, const std::string& third)
+    {
+        return matcher.my_matches3(first, second, third);
+    }
+
+    [[nodiscard]]
+    static StringViewT describe(const CustomVariadicMatcher& matcher)
+    {
+        return matcher.my_describe();
+    }
+};
+
 TEST_CASE(
     "detail::matches_hook::matches chooses correct implementation.",
     "[matcher][matcher::detail]")
@@ -103,6 +141,35 @@ TEST_CASE(
 
             REQUIRE(result == detail::matches_hook::matches(matcher, value));
         }
+
+        SECTION("For common variadic matchers.")
+        {
+            constexpr double second{1337.};
+            const std::string third{"Test"};
+
+            CommonVariadicMatcher matcher{};
+
+            SECTION("For two arguments.")
+            {
+                REQUIRE_CALL(matcher, matches(_, _))
+                    .LR_WITH(&_1 == &value)
+                    .LR_WITH(&_2 == &second)
+                    .RETURN(result);
+
+                REQUIRE(result == detail::matches_hook::matches(matcher, value, second));
+            }
+
+            SECTION("For three arguments.")
+            {
+                REQUIRE_CALL(matcher, matches(_, _, _))
+                    .LR_WITH(&_1 == &value)
+                    .LR_WITH(&_2 == &second)
+                    .LR_WITH(&_3 == &third)
+                    .RETURN(result);
+
+                REQUIRE(result == detail::matches_hook::matches(matcher, value, second, third));
+            }
+        }
     }
 
     SECTION("For custom matches.")
@@ -125,6 +192,35 @@ TEST_CASE(
                 .RETURN(result);
 
             REQUIRE(result == detail::matches_hook::matches(matcher, value));
+        }
+
+        SECTION("For custom variadic matchers.")
+        {
+            constexpr double second{1337.};
+            const std::string third{"Test"};
+
+            CustomVariadicMatcher matcher{};
+
+            SECTION("For two arguments.")
+            {
+                REQUIRE_CALL(matcher, my_matches2(_, _))
+                    .LR_WITH(&_1 == &value)
+                    .LR_WITH(&_2 == &second)
+                    .RETURN(result);
+
+                REQUIRE(result == detail::matches_hook::matches(matcher, value, second));
+            }
+
+            SECTION("For three arguments.")
+            {
+                REQUIRE_CALL(matcher, my_matches3(_, _, _))
+                    .LR_WITH(&_1 == &value)
+                    .LR_WITH(&_2 == &second)
+                    .LR_WITH(&_3 == &third)
+                    .RETURN(result);
+
+                REQUIRE(result == detail::matches_hook::matches(matcher, value, second, third));
+            }
         }
     }
 }
@@ -188,23 +284,28 @@ TEST_CASE(
     }
 }
 
-TEMPLATE_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
     "Given types satisfy mimicpp::matcher_for concept.",
     "[matcher]",
-    std::remove_const_t<decltype(matches::_)>,
-    std::remove_const_t<decltype(matches::eq(42))>,
-    std::remove_const_t<decltype(!matches::eq(42))>,
-    CommonMatcher,
-    CustomMatcher,
-    Mixed1Matcher,
-    Mixed2Matcher)
+    ((bool dummy, typename Matcher, typename First, typename... Others), dummy, Matcher, First, Others...),
+    (true, std::remove_const_t<decltype(matches::_)>, int),
+    (true, std::remove_const_t<decltype(matches::eq(42))>, int),
+    (true, std::remove_const_t<decltype(!matches::eq(42))>, int),
+    (true, CommonMatcher, int),
+    (true, CustomMatcher, int),
+    (true, Mixed1Matcher, int),
+    (true, Mixed2Matcher, int),
+    (true, CommonVariadicMatcher, int, double),
+    (true, CommonVariadicMatcher, int, double, std::string),
+    (true, CustomVariadicMatcher, int, double),
+    (true, CustomVariadicMatcher, int, double, std::string))
 {
-    STATIC_REQUIRE(matcher_for<TestType, int>);
-    STATIC_REQUIRE(matcher_for<TestType, const int>);
-    STATIC_REQUIRE(matcher_for<TestType, int&>);
-    STATIC_REQUIRE(matcher_for<TestType, const int&>);
-    STATIC_REQUIRE(matcher_for<TestType, int&&>);
-    STATIC_REQUIRE(matcher_for<TestType, const int&&>);
+    STATIC_REQUIRE(matcher_for<Matcher, First, Others...>);
+    STATIC_REQUIRE(matcher_for<Matcher, const First, const Others...>);
+    STATIC_REQUIRE(matcher_for<Matcher, First&, Others&...>);
+    STATIC_REQUIRE(matcher_for<Matcher, const First&, const Others&...>);
+    STATIC_REQUIRE(matcher_for<Matcher, First&&, Others&&...>);
+    STATIC_REQUIRE(matcher_for<Matcher, const First&&, const Others&&...>);
 }
 
 namespace

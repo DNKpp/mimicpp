@@ -30,40 +30,42 @@ namespace mimicpp::custom
 
 namespace mimicpp::detail::matches_hook
 {
-    template <typename Matcher, typename T>
+    template <typename Matcher, typename T, typename... Others>
     [[nodiscard]]
     constexpr bool matches_impl(
+        [[maybe_unused]] const priority_tag<1>,
         const Matcher& matcher,
         T& target,
-        [[maybe_unused]] const priority_tag<1>)
+        Others&... others)
         requires requires {
             {
-                custom::matcher_traits<Matcher>{}.matches(matcher, target)
+                custom::matcher_traits<Matcher>{}.matches(matcher, target, others...)
             } -> std::convertible_to<bool>;
         }
     {
-        return custom::matcher_traits<Matcher>{}.matches(matcher, target);
+        return custom::matcher_traits<Matcher>{}.matches(matcher, target, others...);
     }
 
-    template <typename Matcher, typename T>
+    template <typename Matcher, typename T, typename... Others>
     [[nodiscard]]
     constexpr bool matches_impl(
+        [[maybe_unused]] const priority_tag<0>,
         const Matcher& matcher,
         T& target,
-        [[maybe_unused]] const priority_tag<0>)
-        requires requires { { matcher.matches(target) } -> std::convertible_to<bool>; }
+        Others&... others)
+        requires requires { { matcher.matches(target, others...) } -> std::convertible_to<bool>; }
     {
-        return matcher.matches(target);
+        return matcher.matches(target, others...);
     }
 
     constexpr priority_tag<1> maxTag;
 
-    template <typename Matcher, typename T>
+    template <typename Matcher, typename T, typename... Others>
     [[nodiscard]]
-    constexpr bool matches(const Matcher& matcher, T& target)
-        requires requires { { matches_impl(matcher, target, maxTag) } -> std::convertible_to<bool>; }
+    constexpr bool matches(const Matcher& matcher, T& target, Others&... others)
+        requires requires { { matches_impl(maxTag, matcher, target, others...) } -> std::convertible_to<bool>; }
     {
-        return matches_impl(matcher, target, maxTag);
+        return matches_impl(maxTag, matcher, target, others...);
     }
 }
 
@@ -106,12 +108,12 @@ namespace mimicpp::detail::describe_hook
 
 namespace mimicpp
 {
-    template <typename T, typename Target>
+    template <typename T, typename First, typename... Others>
     concept matcher_for = std::same_as<T, std::remove_cvref_t<T>>
                        && std::is_move_constructible_v<T>
                        && std::destructible<T>
-                       && requires(const T& matcher, Target& target) {
-                              { detail::matches_hook::matches(matcher, target) } -> std::convertible_to<bool>;
+                       && requires(const T& matcher, First& first, Others&... others) {
+                              { detail::matches_hook::matches(matcher, first, others...) } -> std::convertible_to<bool>;
                               { detail::describe_hook::describe(matcher) } -> std::convertible_to<StringViewT>;
                           };
 
