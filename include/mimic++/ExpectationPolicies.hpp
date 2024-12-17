@@ -314,8 +314,8 @@ namespace mimicpp::expectation_policies
     {
     public:
         [[nodiscard]]
-        explicit(false) constexpr ApplyArgsAction(
-            Action action = {}) noexcept(std::is_nothrow_move_constructible_v<Action>)
+        explicit(false) constexpr ApplyArgsAction(Action action)
+            noexcept(std::is_nothrow_move_constructible_v<Action>)
             : m_Action{std::move(action)}
         {
         }
@@ -606,7 +606,7 @@ namespace mimicpp::finally
             index>;
 
         return expectation_policies::ReturnsResultOf{
-            ActionT{}};
+            ActionT{{}}};
     }
 
     /**
