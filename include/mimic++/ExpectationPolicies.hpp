@@ -361,8 +361,7 @@ namespace mimicpp::expect
         struct arg_requirement_describer
         {
             [[nodiscard]]
-            constexpr StringT operator()(
-                const StringViewT matcherDescription) const
+            StringT operator()(const StringViewT matcherDescription) const
             {
                 StringStreamT out{};
                 out << "expect: arg[";
