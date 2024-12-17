@@ -188,8 +188,8 @@ namespace mimicpp::expectation_policies
             return std::apply(
                 [&info, this](const FirstProjection& first, const OtherProjections&... others) {
                     return std::invoke(
-                        [&info, this](auto&&... projectedArgs) {
-                            return mimicpp::detail::matches_hook::matches(
+                        [this](auto&&... projectedArgs) {
+                            return detail::matches_hook::matches(
                                 m_Matcher,
                                 projectedArgs...);
                         },
@@ -209,7 +209,7 @@ namespace mimicpp::expectation_policies
         {
             return std::invoke(
                 m_Describer,
-                mimicpp::detail::describe_hook::describe(m_Matcher));
+                detail::describe_hook::describe(m_Matcher));
         }
 
     private:
