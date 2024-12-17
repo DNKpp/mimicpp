@@ -116,7 +116,7 @@ TEST_CASE(
             constexpr std::tuple result = detail::expand_tuple<int, 1>(
                 std::tuple{});
             STATIC_REQUIRE(std::same_as<const std::tuple<int>, decltype(result)>);
-            STATIC_REQUIRE(std::tuple{0} == result);
+            REQUIRE(std::tuple{0} == result);
         }
 
         SECTION("And n == 2")
@@ -124,7 +124,7 @@ TEST_CASE(
             constexpr std::tuple result = detail::expand_tuple<int, 2>(
                 std::tuple{});
             STATIC_REQUIRE(std::same_as<const std::tuple<int, int>, decltype(result)>);
-            STATIC_REQUIRE(std::tuple{0, 0} == result);
+            REQUIRE(std::tuple{0, 0} == result);
         }
     }
 
@@ -142,7 +142,7 @@ TEST_CASE(
             constexpr std::tuple result = detail::expand_tuple<int, 2>(
                 std::tuple{42.});
             STATIC_REQUIRE(std::same_as<const std::tuple<double, int>, decltype(result)>);
-            STATIC_REQUIRE(std::tuple{42., 0} == result);
+            REQUIRE(std::tuple{42., 0} == result);
         }
 
         SECTION("And n == 3")
@@ -150,7 +150,7 @@ TEST_CASE(
             constexpr std::tuple result = detail::expand_tuple<int, 3>(
                 std::tuple{42.});
             STATIC_REQUIRE(std::same_as<const std::tuple<double, int, int>, decltype(result)>);
-            STATIC_REQUIRE(std::tuple{42., 0, 0} == result);
+            REQUIRE(std::tuple{42., 0, 0} == result);
         }
     }
 
@@ -161,7 +161,7 @@ TEST_CASE(
             constexpr std::tuple result = detail::expand_tuple<int, 2>(
                 std::tuple{1337., 42.f});
             STATIC_REQUIRE(std::same_as<const std::tuple<double, float>, decltype(result)>);
-            STATIC_REQUIRE(std::tuple{1337., 42.f} == result);
+            REQUIRE(std::tuple{1337., 42.f} == result);
         }
 
         SECTION("And n == 3")
@@ -169,7 +169,7 @@ TEST_CASE(
             constexpr std::tuple result = detail::expand_tuple<int, 3>(
                 std::tuple{1337., 42.f});
             STATIC_REQUIRE(std::same_as<const std::tuple<double, float, int>, decltype(result)>);
-            STATIC_REQUIRE(std::tuple{1337., 42.f, 0} == result);
+            REQUIRE(std::tuple{1337., 42.f, 0} == result);
         }
 
         SECTION("And n == 4")
@@ -177,7 +177,7 @@ TEST_CASE(
             constexpr std::tuple result = detail::expand_tuple<int, 4>(
                 std::tuple{1337., 42.f});
             STATIC_REQUIRE(std::same_as<const std::tuple<double, float, int, int>, decltype(result)>);
-            STATIC_REQUIRE(std::tuple{1337., 42.f, 0, 0} == result);
+            REQUIRE(std::tuple{1337., 42.f, 0, 0} == result);
         }
     }
 }
