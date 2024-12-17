@@ -82,6 +82,31 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "A single requirement can encompass multiple arguments.",
+    "[example][example::requirements]")
+{
+    //! [expect::args]
+    namespace matches = mimicpp::matches;
+    using matches::_;
+    namespace expect = mimicpp::expect;
+
+    mimicpp::Mock<void(int, int)> mock{};
+
+    SCOPED_EXP mock.expect_call(_, _)
+        and expect::args<0, 1>(matches::predicate(std::less{})); // this requires 0th arg < 1st arg
+    mock(42, 1337);
+
+    SCOPED_EXP mock.expect_call(_, _)
+        and expect::args<1, 0>(matches::predicate(std::less{})); // the index order can be freely changed
+    mock(1337, 42);
+
+    SCOPED_EXP mock.expect_call(_, _)
+        and expect::args<1, 1>(matches::predicate(std::equal_to{})); // the same index may appear more than once
+    mock(42, 42);
+    //! [expect::args]
+}
+
+TEST_CASE(
     "Most requirements can be inverted.",
     "[example][example::requirements]")
 {
