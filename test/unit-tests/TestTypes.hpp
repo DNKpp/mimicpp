@@ -244,12 +244,12 @@ public:
     {
     }
 
-    template <typename T>
+    template <typename... Args>
     [[nodiscard]]
-    constexpr bool matches(T&& target) const
+    constexpr bool matches(Args&&... args) const
     {
         return std::invoke(m_Projection, m_Matcher)
-            .matches(std::forward<T>(target));
+            .matches(std::forward<Args>(args)...);
     }
 
     [[nodiscard]]
