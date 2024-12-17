@@ -175,7 +175,10 @@ namespace mimicpp
             Predicate predicate,
             StringT fmt,
             StringT invertedFmt,
-            std::tuple<AdditionalArgs...> additionalArgs = {}) noexcept(std::is_nothrow_move_constructible_v<Predicate> && (... && std::is_nothrow_move_constructible_v<AdditionalArgs>))
+            std::tuple<AdditionalArgs...> additionalArgs = {})
+            noexcept(
+                std::is_nothrow_move_constructible_v<Predicate>
+                && (... && std::is_nothrow_move_constructible_v<AdditionalArgs>))
             : m_Predicate{std::move(predicate)},
               m_FormatString{std::move(fmt)},
               m_InvertedFormatString{std::move(invertedFmt)},
@@ -183,20 +186,29 @@ namespace mimicpp
         {
         }
 
-        template <typename T>
+        template <typename First, typename... Others>
             requires std::predicate<
                 const Predicate&,
-                T&,
+                First&,
+                Others&...,
                 matches_reference_t<AdditionalArgs>...>
         [[nodiscard]]
         constexpr bool matches(
-            T& target) const noexcept(std::is_nothrow_invocable_v<const Predicate&, T&, matches_reference_t<AdditionalArgs>...>)
+            First& first,
+            Others&... others) const
+            noexcept(
+                std::is_nothrow_invocable_v<
+                    const Predicate&,
+                    First&,
+                    Others&...,
+                    matches_reference_t<AdditionalArgs>...>)
         {
             return std::apply(
                 [&, this](auto&... additionalArgs) {
                     return std::invoke(
                         m_Predicate,
-                        target,
+                        first,
+                        others...,
                         additionalArgs.as_matches_arg()...);
                 },
                 m_AdditionalArgs);

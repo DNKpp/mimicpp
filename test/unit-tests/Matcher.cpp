@@ -221,6 +221,12 @@ namespace
             return check(value);
         }
     };
+
+    template <typename... Args>
+    class VariadicMatcherPredicateMock
+        : public InvocableMock<bool, Args...>
+    {
+    };
 }
 
 TEST_CASE(
@@ -326,6 +332,52 @@ TEST_CASE(
             {
                 REQUIRE("Hello, World!" == matcher.describe());
             }
+        }
+    }
+}
+
+TEST_CASE(
+    "matcher::PredicateMatcher supports variadic arguments.",
+    "[matcher]")
+{
+    SECTION("Two arguments.")
+    {
+        VariadicMatcherPredicateMock<int, const float&> predicate{};
+        const PredicateMatcher matcher{
+            std::ref(predicate),
+            "Plain",
+            "Negated"};
+
+        SECTION("When matches() is called, argument is forwarded to the predicate.")
+        {
+            const bool result = GENERATE(true, false);
+            REQUIRE_CALL(predicate, Invoke(1337, 42.f))
+                .RETURN(result);
+
+            constexpr int value{1337};
+            constexpr float other{42.f};
+            REQUIRE(result == matcher.matches(value, other));
+        }
+    }
+
+    SECTION("Three arguments.")
+    {
+        VariadicMatcherPredicateMock<const double&, int, const float&> predicate{};
+        const PredicateMatcher matcher{
+            std::ref(predicate),
+            "Plain",
+            "Negated"};
+
+        SECTION("When matches() is called, argument is forwarded to the predicate.")
+        {
+            const bool result = GENERATE(true, false);
+            REQUIRE_CALL(predicate, Invoke(4242., 1337, 42.f))
+                .RETURN(result);
+
+            constexpr double first{4242.};
+            constexpr int value{1337};
+            constexpr float other{42.f};
+            REQUIRE(result == matcher.matches(first, value, other));
         }
     }
 }
