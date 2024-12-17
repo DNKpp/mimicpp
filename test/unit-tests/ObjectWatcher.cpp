@@ -6,9 +6,6 @@
 #include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/InterfaceMock.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_container_properties.hpp>
-
 #include "SuppressionMacros.hpp"
 #include "TestReporter.hpp"
 

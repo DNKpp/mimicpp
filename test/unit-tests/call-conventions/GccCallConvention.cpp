@@ -7,8 +7,6 @@
 #include "mimic++/InterfaceMock.hpp"
 #include "mimic++/Mock.hpp"
 
-#include <catch2/catch_template_test_macros.hpp>
-
 #define CALL_CONVENTION __attribute__((ms_abi))
 MIMICPP_REGISTER_CALL_CONVENTION(CALL_CONVENTION, call_convention);
 

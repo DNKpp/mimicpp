@@ -6,13 +6,6 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Expectation.hpp"
 
-#include <catch2/catch_template_test_macros.hpp>
-#include <catch2/generators/catch_generators.hpp>
-#include <catch2/generators/catch_generators_range.hpp>
-#include <catch2/matchers/catch_matchers.hpp>
-#include <catch2/matchers/catch_matchers_container_properties.hpp>
-#include <catch2/matchers/catch_matchers_string.hpp>
-
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
 

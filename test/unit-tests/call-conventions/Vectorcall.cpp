@@ -9,8 +9,6 @@
 
 MIMICPP_REGISTER_CALL_CONVENTION(__vectorcall, vectorcall_call_convention);
 
-#include <catch2/catch_template_test_macros.hpp>
-
 using namespace mimicpp;
 
 TEMPLATE_TEST_CASE_SIG(
