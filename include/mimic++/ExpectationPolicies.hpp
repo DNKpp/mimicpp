@@ -337,17 +337,19 @@ namespace mimicpp::expect
 {
     namespace detail
     {
-        template <std::size_t index>
+        template <std::size_t index, std::size_t... others>
         struct arg_requirement_describer
         {
             [[nodiscard]]
             constexpr StringT operator()(
                 const StringViewT matcherDescription) const
             {
-                return format::format(
-                    "expect: arg[{}] {}",
-                    index,
-                    matcherDescription);
+                StringStreamT out{};
+                out << "expect: arg[";
+                out << index;
+                ((out << ", " << others), ...);
+                out << "] " << matcherDescription;
+                return std::move(out).str();
             }
         };
     }

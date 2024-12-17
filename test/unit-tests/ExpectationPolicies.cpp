@@ -228,6 +228,40 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "expect::detail::arg_requirement_describer generates a description.",
+    "[detail][expectation][expectation::policy]")
+{
+    const auto matcherDescription = GENERATE(
+        as<StringT>{},
+        "",
+        "Hello, World!");
+
+    SECTION("When single index is given.")
+    {
+        constexpr expect::detail::arg_requirement_describer<42> describer{};
+        REQUIRE_THAT(
+            describer(matcherDescription),
+            Catch::Matchers::Equals("expect: arg[42] " + matcherDescription));
+    }
+
+    SECTION("When two indices are given.")
+    {
+        constexpr expect::detail::arg_requirement_describer<42, 1337> describer{};
+        REQUIRE_THAT(
+            describer(matcherDescription),
+            Catch::Matchers::Equals("expect: arg[42, 1337] " + matcherDescription));
+    }
+
+    SECTION("When three indices are given.")
+    {
+        constexpr expect::detail::arg_requirement_describer<42, 1337, 0> describer{};
+        REQUIRE_THAT(
+            describer(matcherDescription),
+            Catch::Matchers::Equals("expect: arg[42, 1337, 0] " + matcherDescription));
+    }
+}
+
+TEST_CASE(
     "expectation_policies::Requirement checks whether the given call::Info matches.",
     "[expectation][expectation::policy]")
 {
