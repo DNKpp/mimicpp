@@ -143,7 +143,7 @@ class mimicpp::Watched&lt; Base, Watchers &gt;</div><p>CRTP-type, inheriting fir
   </table>
   </dd>
 </dl>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 Move-constructor and -assignment-operator</h2>
 <p><code><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...">Watched</a></code> automatically detects the specifications of the <code>Base</code> move-constructor and -assignment-operator, regardless of the <code>Watchers</code> specifications. This is done, so that the <code><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...">Watched</a></code> instance does mimic the interface of <code>Base</code> as closely as possible.</p>
 <p>This is important to note, as this has implications when a <code><a class="el" href="../../da/d45/classmimicpp_1_1_relocation_watcher.html" title="A watcher type, which reports it&#39;s move-constructor and -assignment calls.">RelocationWatcher</a></code> is utilized. <code><a class="el" href="../../da/d45/classmimicpp_1_1_relocation_watcher.html" title="A watcher type, which reports it&#39;s move-constructor and -assignment calls.">RelocationWatcher</a></code> may, during either move-construction or -assignment, report violations to the currently active reporter. This reporter has to act accordingly, by either throwing an exception or terminating the program.</p>
