@@ -195,13 +195,12 @@ namespace mimicpp::expectation_policies
     };
 
     template <typename... Projections>
-        requires(... && std::same_as<Projections, std::remove_cvref_t<Projections>>)
-    struct arg_list_apply
+    struct arg_list_indirect_apply_fn
     {
     public:
         [[nodiscard]]
-        explicit constexpr arg_list_apply(std::tuple<Projections...>&& projections)
-            noexcept((... && std::is_nothrow_move_constructible_v<Projections>))
+        explicit constexpr arg_list_indirect_apply_fn(std::tuple<Projections...> projections = {})
+            noexcept(std::is_nothrow_move_constructible_v<std::tuple<Projections...>>)
             : m_Projections{std::move(projections)}
         {
         }
