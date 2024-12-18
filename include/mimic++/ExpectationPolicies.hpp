@@ -161,6 +161,33 @@ namespace mimicpp::expectation_policies
         }
     };
 
+    template <template <typename> typename TypeProjection>
+    struct all_args_selector_fn
+    {
+    public:
+        static_assert(
+            std::is_reference_v<TypeProjection<int&>>,
+            "Only use reference-projections.");
+
+        template <std::size_t index, typename Signature>
+        using projected_t = TypeProjection<signature_param_type_t<index, Signature>>;
+
+        template <typename Return, typename... Args>
+        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
+        {
+            using signature_t = Return(Args...);
+
+            return std::invoke(
+                [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
+                    return std::forward_as_tuple(
+                        static_cast<projected_t<indices, signature_t>>(
+                            // all elements are std::reference_wrapper, so unwrap them first
+                            std::get<indices>(callInfo.args).get())...);
+                },
+                std::index_sequence_for<Args...>{});
+        }
+    };
+
     template <typename... Projections>
         requires(... && std::same_as<Projections, std::remove_cvref_t<Projections>>)
     struct arg_list_apply

@@ -410,6 +410,65 @@ TEST_CASE(
     }
 }
 
+namespace
+{
+    inline constexpr std::array refQualifiers{
+        ValueCategory::lvalue,
+        ValueCategory::rvalue,
+        ValueCategory::any};
+    inline constexpr std::array constQualifiers{
+        Constness::non_const,
+        Constness::as_const,
+        Constness::any};
+}
+
+TEMPLATE_TEST_CASE_SIG(
+    "expectation_policies::all_args_selector_fn returns all arg-references as tuple.",
+    "[expectation][expectation::policy]",
+    ((bool dummy, typename Expected, template <typename> typename Projection, typename... Args), dummy, Expected, Projection, Args...),
+    (true, std::tuple<int&>, std::add_lvalue_reference_t, int),
+    (true, std::tuple<int&>, std::add_lvalue_reference_t, int&),
+    (true, std::tuple<const int&>, std::add_lvalue_reference_t, const int&),
+    (true, std::tuple<int&>, std::add_lvalue_reference_t, int&&),
+    (true, std::tuple<const int&>, std::add_lvalue_reference_t, const int&&),
+
+    (true, std::tuple<int&&>, std::add_rvalue_reference_t, int),
+    (true, std::tuple<int&>, std::add_rvalue_reference_t, int&),
+    (true, std::tuple<const int&>, std::add_rvalue_reference_t, const int&),
+    (true, std::tuple<int&&>, std::add_rvalue_reference_t, int&&),
+    (true, std::tuple<const int&&>, std::add_rvalue_reference_t, const int&&),
+
+    (true, std::tuple<float&, int&, double&>, std::add_lvalue_reference_t, float, int, double),
+    (true, std::tuple<float&, int&, double&>, std::add_lvalue_reference_t, float&, int&, double&),
+    (true, std::tuple<const float&, const int&, const double&>, std::add_lvalue_reference_t, const float&, const int&, const double&),
+    (true, std::tuple<float&, int&, double&>, std::add_lvalue_reference_t, float&&, int&&, double&&),
+    (true, std::tuple<const float&, const int&, const double&>, std::add_lvalue_reference_t, const float&&, const int&&, const double&&),
+
+    (true, std::tuple<float&&, int&&, double&&>, std::add_rvalue_reference_t, float, int, double),
+    (true, std::tuple<float&, int&, double&>, std::add_rvalue_reference_t, float&, int&, double&),
+    (true, std::tuple<const float&, const int&, const double&>, std::add_rvalue_reference_t, const float&, const int&, const double&),
+    (true, std::tuple<float&&, int&&, double&&>, std::add_rvalue_reference_t, float&&, int&&, double&&),
+    (true, std::tuple<const float&&, const int&&, const double&&>, std::add_rvalue_reference_t, const float&&, const int&&, const double&&))
+{
+    std::tuple<std::remove_cvref_t<Args>...> values{};
+    using CallInfoT = call::Info<void, Args...>;
+    const CallInfoT callInfo{
+        .args = std::apply(
+            [](auto&... elements) { return std::tuple{std::ref(elements)...}; },
+            values),
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
+
+    const expectation_policies::all_args_selector_fn<Projection> selector{};
+    const std::tuple result = selector(callInfo);
+    STATIC_REQUIRE(std::same_as<const Expected, decltype(result)>);
+    const auto same_addresses = [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>) {
+        return (... && (&std::get<indices>(values) == &std::get<indices>(result)));
+    };
+    REQUIRE(same_addresses(std::index_sequence_for<Args...>{}));
+}
+
+
 TEMPLATE_TEST_CASE_SIG(
     "expectation_policies::ApplyArgsAction takes the param category into account.",
     "[expectation][expectation::policy]",
