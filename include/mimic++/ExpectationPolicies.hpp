@@ -179,6 +179,18 @@ namespace mimicpp::expectation_policies
                 callInfo);
         }
     };
+
+    struct arg_list_forward_apply_fn
+    {
+    public:
+        template <typename Fun, typename... Args>
+            requires std::invocable<Fun, Args...>
+        constexpr decltype(auto) operator()(Fun&& fun, std::tuple<Args...>&& argList) const
+            noexcept(std::is_nothrow_invocable_v<Fun, Args...>)
+        {
+            return std::apply(
+                std::forward<Fun>(fun),
+                std::move(argList));
         }
     };
 

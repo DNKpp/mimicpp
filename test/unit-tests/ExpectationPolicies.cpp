@@ -541,6 +541,67 @@ TEMPLATE_TEST_CASE_SIG(
             result));
 }
 
+TEMPLATE_TEST_CASE_SIG(
+    "expectation_policies::arg_list_forward_apply_fn forwards all elements to the given function.",
+    "[expectation][expectation::policy]",
+    ((bool dummy, typename... Args), dummy, Args...),
+    (true, int&),
+    (true, const int&),
+    (true, int&&),
+    (true, const int&&),
+
+    (true, float&, int&, double&),
+    (true, const float&, const int&, const double&),
+    (true, float&&, int&&, double&&),
+    (true, const float&&, const int&&, const double&&))
+{
+    std::tuple<std::remove_cvref_t<Args>...> values{};
+    const auto action = [&]<typename... Ts>(Ts&&... elements) {
+        STATIC_REQUIRE((... && std::same_as<Ts&&, Args>));
+
+        const auto same_addresses = [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
+            return (... && (&elements == &std::get<indices>(values)));
+        };
+        REQUIRE(same_addresses(std::index_sequence_for<Args...>{}));
+    };
+
+    constexpr expectation_policies::arg_list_forward_apply_fn forwarder{};
+    std::tuple refs = std::apply(
+        [](auto&... elements) { return std::tuple<Args...>{static_cast<Args>(elements)...}; },
+        values);
+    std::invoke(
+        forwarder,
+        action,
+        std::move(refs));
+}
+
+TEMPLATE_TEST_CASE(
+    "expectation_policies::arg_list_forward_apply_fn forwards the returned value.",
+    "[expectation][expectation::policy]",
+    int,
+    // const int, never return a const value
+    int&,
+    const int&,
+    int&&,
+    const int&&)
+{
+    int value{1337};
+    constexpr expectation_policies::arg_list_forward_apply_fn forwarder{};
+
+    const auto action = [](int& v) -> TestType {
+        return static_cast<TestType>(v);
+    };
+
+    const auto make_refs = [&] { return std::make_tuple(std::ref(value)); };
+
+    STATIC_REQUIRE(std::same_as<TestType, decltype(forwarder(action, make_refs()))>);
+    REQUIRE(1337 == forwarder(action, make_refs()));
+    CHECKED_IF(std::is_reference_v<TestType>)
+    {
+        auto&& r = forwarder(action, make_refs());
+        REQUIRE(&value == &r);
+    }
+}
 
 TEMPLATE_TEST_CASE_SIG(
     "expectation_policies::ApplyArgsAction takes the param category into account.",
