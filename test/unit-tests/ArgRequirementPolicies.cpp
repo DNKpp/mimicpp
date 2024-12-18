@@ -59,23 +59,27 @@ TEST_CASE(
         .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
         .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
 
-    using ProjectionT = InvocableMock<int&, const CallInfoT&>;
+    using ArgSelectorT = InvocableMock<std::tuple<int&>, const CallInfoT&>;
+    using ProjectionT = InvocableMock<int&, int&>;
+    using ApplyStrategyT = expectation_policies::arg_list_apply<std::reference_wrapper<ProjectionT>>;
     using DescriberT = InvocableMock<StringT, StringViewT>;
     using MatcherT = MatcherMock<int&>;
     STATIC_CHECK(matcher_for<MatcherT, int&>);
 
+    MatcherT matcher{};
+    ArgSelectorT argSelector{};
     ProjectionT projection{};
     DescriberT describer{};
-    MatcherT matcher{};
-
     expectation_policies::ArgsRequirement<
+        std::reference_wrapper<ArgSelectorT>,
+        ApplyStrategyT,
         MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>,
-        std::reference_wrapper<DescriberT>,
-        std::reference_wrapper<ProjectionT>>
+        std::reference_wrapper<DescriberT>>
         policy{
             MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
             describer,
-            projection
+            argSelector,
+            ApplyStrategyT{std::make_tuple(std::ref(projection))}
     };
 
     STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
@@ -95,28 +99,20 @@ TEST_CASE(
             Catch::Matchers::Equals("expect that: matcher description"));
     }
 
-    SECTION("When matched.")
+    SECTION("Testing matches.")
     {
-        REQUIRE_CALL(projection, Invoke(_))
+        REQUIRE_CALL(argSelector, Invoke(_))
             .LR_WITH(&_1 == &info)
+            .RETURN(_1.args);
+        REQUIRE_CALL(projection, Invoke(_))
+            .LR_WITH(&_1 == &arg0)
             .LR_RETURN(std::ref(arg0));
+        const bool expected = GENERATE(true, false);
         REQUIRE_CALL(matcher, matches(_))
             .LR_WITH(&_1 == &arg0)
-            .RETURN(true);
+            .RETURN(expected);
 
-        REQUIRE(std::as_const(policy).matches(info));
-    }
-
-    SECTION("When not matched.")
-    {
-        REQUIRE_CALL(projection, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .LR_RETURN(std::ref(arg0));
-        REQUIRE_CALL(matcher, matches(_))
-            .LR_WITH(&_1 == &arg0)
-            .RETURN(false);
-
-        REQUIRE(!std::as_const(policy).matches(info));
+        REQUIRE(expected == std::as_const(policy).matches(info));
     }
 }
 
@@ -150,33 +146,37 @@ TEST_CASE(
         .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
     };
 
-    using Projection0T = InvocableMock<int&, const CallInfoT&>;
-    using Projection1T = InvocableMock<const std::string&, const CallInfoT&>;
-    using Projection2T = InvocableMock<double&, const CallInfoT&>;
+    using Projection0T = InvocableMock<int&, int&>;
+    using Projection1T = InvocableMock<const std::string&, const std::string&>;
+    using Projection2T = InvocableMock<double&, double&>;
+    using ApplyStrategyT = expectation_policies::arg_list_apply<
+        std::reference_wrapper<Projection0T>,
+        std::reference_wrapper<Projection1T>,
+        std::reference_wrapper<Projection2T>>;
     using DescriberT = InvocableMock<StringT, StringViewT>;
     using MatcherT = VariadicMatcherMock<int&, const std::string&, double&>;
     STATIC_CHECK(matcher_for<MatcherT, int&, const std::string&, double&>);
 
+    using ArgSelectorT = InvocableMock< // let's just extract the args as they are
+        std::tuple<int&, const std::string&, double&>,
+        const CallInfoT&>;
     Projection0T projection0{};
     Projection1T projection1{};
     Projection2T projection2{};
+    ArgSelectorT argSelector{};
     DescriberT describer{};
     MatcherT matcher{};
-
     expectation_policies::ArgsRequirement<
+        std::reference_wrapper<ArgSelectorT>,
+        ApplyStrategyT,
         MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>,
-        std::reference_wrapper<DescriberT>,
-        std::reference_wrapper<Projection0T>,
-        std::reference_wrapper<Projection1T>,
-        std::reference_wrapper<Projection2T>>
+        std::reference_wrapper<DescriberT>>
         policy{
             MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
             describer,
-            std::make_tuple(
-                std::ref(projection0),
-                std::ref(projection1),
-                std::ref(projection2))
-    };
+            argSelector,
+            ApplyStrategyT{std::make_tuple(std::ref(projection0), std::ref(projection1), std::ref(projection2))}
+        };
 
     STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
 
@@ -195,42 +195,27 @@ TEST_CASE(
             Catch::Matchers::Equals("expect that: matcher description"));
     }
 
-    SECTION("When matched.")
+    SECTION("Testing matches.")
     {
+        REQUIRE_CALL(argSelector, Invoke(_))
+            .LR_WITH(&_1 == &info)
+            .RETURN(_1.args);
         REQUIRE_CALL(projection0, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .LR_RETURN(std::ref(arg0));
+            .LR_WITH(&_1 == &arg0)
+            .LR_RETURN(std::ref(_1));
         REQUIRE_CALL(projection1, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .LR_RETURN(std::ref(arg1));
+            .LR_WITH(&_1 == &arg1)
+            .LR_RETURN(std::ref(_1));
         REQUIRE_CALL(projection2, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .LR_RETURN(std::ref(arg2));
+            .LR_WITH(&_1 == &arg2)
+            .LR_RETURN(std::ref(_1));
 
+        const bool expected = GENERATE(true, false);
         using matches::instance;
         SCOPED_EXP matcher.matches.expect_call(instance(arg0), instance(arg1), instance(arg2))
-            and finally::returns(true);
+            and finally::returns(expected);
 
-        REQUIRE(std::as_const(policy).matches(info));
-    }
-
-    SECTION("When not matched.")
-    {
-        REQUIRE_CALL(projection0, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .LR_RETURN(std::ref(arg0));
-        REQUIRE_CALL(projection1, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .LR_RETURN(std::ref(arg1));
-        REQUIRE_CALL(projection2, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .LR_RETURN(std::ref(arg2));
-
-        using matches::instance;
-        SCOPED_EXP matcher.matches.expect_call(instance(arg0), instance(arg1), instance(arg2))
-            and finally::returns(false);
-
-        REQUIRE_FALSE(std::as_const(policy).matches(info));
+        REQUIRE(expected == std::as_const(policy).matches(info));
     }
 }
 

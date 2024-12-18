@@ -141,32 +141,108 @@ namespace mimicpp::expectation_policies
         Exception m_Exception;
     };
 
-    template <typename Matcher, typename Describer, typename FirstProjection, typename... OtherProjections>
-        requires std::same_as<Matcher, std::remove_cvref_t<Matcher>>
-              && std::same_as<Describer, std::remove_cvref_t<Describer>>
-              && std::same_as<FirstProjection, std::remove_cvref_t<FirstProjection>>
-              && (... && std::same_as<OtherProjections, std::remove_cvref_t<OtherProjections>>)
-              && std::is_move_constructible_v<Matcher>
-              && std::is_move_constructible_v<Describer>
-              && std::is_move_constructible_v<FirstProjection>
-              && (... && std::is_move_constructible_v<OtherProjections>)
+    template <template <typename> typename TypeProjection, std::size_t... indices>
+    struct arg_selector
+    {
+    public:
+        template <std::size_t index, typename Tuple>
+        using projected_t = TypeProjection<
+            // all elements are std::reference_wrapper, so unwrap them
+            typename std::tuple_element_t<index, Tuple>::type>;
+
+        template <typename Return, typename... Args>
+        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
+        {
+            using args_t = typename call::Info<Return, Args...>::ArgListT;
+
+            return std::forward_as_tuple(
+                static_cast<projected_t<indices, args_t>>(
+                    std::get<indices>(callInfo.args).get())...);
+        }
+    };
+
+    template <typename... Projections>
+        requires(... && std::same_as<Projections, std::remove_cvref_t<Projections>>)
+    struct arg_list_apply
+    {
+    public:
+        [[nodiscard]]
+        explicit constexpr arg_list_apply(std::tuple<Projections...>&& projections)
+            noexcept((... && std::is_nothrow_move_constructible_v<Projections>))
+            : m_Projections{std::move(projections)}
+        {
+        }
+
+        template <typename Fun, typename... Args>
+            requires(... && std::invocable<const Projections&, Args>)
+                 && std::invocable<Fun, std::invoke_result_t<const Projections&, Args>...>
+        constexpr decltype(auto) operator()(Fun&& fun, std::tuple<Args...>&& argList) const
+            noexcept(
+                (... && std::is_nothrow_invocable_v<const Projections&, Args>)
+                && std::is_nothrow_invocable_v<Fun, std::invoke_result_t<const Projections&, Args>...>)
+        {
+            return [&, this]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
+                       -> decltype(auto) {
+                return std::invoke(
+                    std::forward<Fun>(fun),
+                    std::invoke(
+                        std::get<indices>(m_Projections),
+                        std::get<indices>(argList))...);
+            }(std::index_sequence_for<Projections...>{});
+        }
+
+    private:
+        std::tuple<Projections...> m_Projections;
+    };
+
+    template <typename Matcher>
+    struct matcher_matches_fn
+    {
+    public:
+        const Matcher& matcher;
+
+        template <typename... Args>
+            requires std::invocable<
+                decltype(detail::matches_hook::matches),
+                const Matcher&,
+                Args&...>
+        [[nodiscard]]
+        // projected arguments may come as value, so Args& won't work in all cases
+        // just forward them as lvalue-ref
+        constexpr bool operator()(Args&&... args) const
+            noexcept(
+                std::is_nothrow_invocable_v<
+                    decltype(detail::matches_hook::matches),
+                    const Matcher&,
+                    Args&...>)
+        {
+            return detail::matches_hook::matches(matcher, args...);
+        }
+    };
+
+    template <
+        typename ArgSelector,
+        typename ApplyStrategy,
+        typename Matcher,
+        typename Describer>
     class ArgsRequirement
     {
     public:
-        using projection_storage_t = std::tuple<FirstProjection, OtherProjections...>;
-
         [[nodiscard]]
         explicit constexpr ArgsRequirement(
             Matcher matcher,
-            Describer&& describer,
-            projection_storage_t&& projections)
+            Describer describer,
+            ArgSelector argSelector,
+            ApplyStrategy applyStrategy)
             noexcept(
                 std::is_nothrow_move_constructible_v<Matcher>
                 && std::is_nothrow_move_constructible_v<Describer>
-                && std::is_nothrow_move_constructible_v<projection_storage_t>)
+                && std::is_nothrow_move_constructible_v<ArgSelector>
+                && std::is_nothrow_move_constructible_v<ApplyStrategy>)
             : m_Matcher{std::move(matcher)},
               m_Describer{std::move(describer)},
-              m_Projections{std::move(projections)}
+              m_ArgSelector{std::move(argSelector)},
+              m_ApplyStrategy{std::move(applyStrategy)}
         {
         }
 
@@ -177,27 +253,23 @@ namespace mimicpp::expectation_policies
         }
 
         template <typename Return, typename... Args>
-            requires std::invocable<const FirstProjection&, const call::Info<Return, Args...>&>
-                  && (... && std::invocable<const OtherProjections&, const call::Info<Return, Args...>&>)
-                  && matcher_for<
-                         Matcher,
-                         std::invoke_result_t<const FirstProjection&, const call::Info<Return, Args...>&>,
-                         std::invoke_result_t<const OtherProjections&, const call::Info<Return, Args...>&>...>
+            requires std::invocable<const ArgSelector&, const call::Info<Return, Args...>&>
+                  && std::invocable<
+                         const ApplyStrategy&,
+                         matcher_matches_fn<Matcher>,
+                         std::invoke_result_t<const ArgSelector&, const call::Info<Return, Args...>&>>
         [[nodiscard]]
         constexpr bool matches(const call::Info<Return, Args...>& info) const
+            noexcept(
+                std::is_nothrow_invocable_v<
+                    const ApplyStrategy&,
+                    matcher_matches_fn<Matcher>,
+                    std::invoke_result_t<const ArgSelector&, const call::Info<Return, Args...>&>>)
         {
-            return std::apply(
-                [&info, this](const FirstProjection& first, const OtherProjections&... others) {
-                    return std::invoke(
-                        [this](auto&&... projectedArgs) {
-                            return detail::matches_hook::matches(
-                                m_Matcher,
-                                projectedArgs...);
-                        },
-                        std::invoke(first, info),
-                        std::invoke(others, info)...);
-                },
-                m_Projections);
+            return std::invoke(
+                m_ApplyStrategy,
+                matcher_matches_fn{m_Matcher},
+                std::invoke(m_ArgSelector, info));
         }
 
         template <typename Return, typename... Args>
@@ -216,7 +288,8 @@ namespace mimicpp::expectation_policies
     private:
         [[no_unique_address]] Matcher m_Matcher;
         [[no_unique_address]] Describer m_Describer;
-        projection_storage_t m_Projections;
+        [[no_unique_address]] ArgSelector m_ArgSelector;
+        [[no_unique_address]] ApplyStrategy m_ApplyStrategy;
     };
 
     template <typename Action>
@@ -386,18 +459,19 @@ namespace mimicpp::expect
                 sizeof...(indices) == sizeof...(Projections),
                 "Indices and projections size mismatch.");
 
-            using PolicyT = expectation_policies::ArgsRequirement<
+            using apply_strategy_t = expectation_policies::arg_list_apply<std::remove_cvref_t<Projections>...>;
+            using arg_selector_t = expectation_policies::arg_selector<std::add_lvalue_reference_t, indices...>;
+            using Policy2T = expectation_policies::ArgsRequirement<
+                arg_selector_t,
+                apply_strategy_t,
                 std::remove_cvref_t<Matcher>,
-                arg_requirement_describer<indices...>,
-                expectation_policies::ApplyArgsAction<
-                    std::remove_cvref_t<Projections>,
-                    std::add_lvalue_reference_t,
-                    indices>...>;
+                arg_requirement_describer<indices...>>;
 
-            return PolicyT{
+            return Policy2T{
                 std::forward<Matcher>(matcher),
                 {},
-                std::move(projections)};
+                arg_selector_t{},
+                apply_strategy_t{std::move(projections)}};
         }
     }
 
