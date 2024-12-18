@@ -176,7 +176,7 @@ TEST_CASE(
             describer,
             argSelector,
             ApplyStrategyT{std::make_tuple(std::ref(projection0), std::ref(projection1), std::ref(projection2))}
-        };
+    };
 
     STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
 

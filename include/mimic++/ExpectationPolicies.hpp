@@ -268,7 +268,7 @@ namespace mimicpp::expectation_policies
         {
             return std::invoke(
                 m_ApplyStrategy,
-                matcher_matches_fn{m_Matcher},
+                matcher_matches_fn<Matcher>{m_Matcher},
                 std::invoke(m_ArgSelector, info));
         }
 
@@ -597,8 +597,8 @@ namespace mimicpp::finally
         requires std::invocable<std::remove_cvref_t<Fun>&>
               && (!std::is_void_v<std::invoke_result_t<std::remove_cvref_t<Fun>&>>)
     [[nodiscard]]
-    constexpr auto returns_result_of(
-        Fun&& fun) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fun>, Fun>)
+    constexpr auto returns_result_of(Fun&& fun)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fun>, Fun>)
     {
         return expectation_policies::ReturnsResultOf{
             [fn = std::forward<Fun>(fun)]([[maybe_unused]] const auto& call) mutable noexcept(std::is_nothrow_invocable_v<decltype(fun)>) -> decltype(auto) {
@@ -626,9 +626,8 @@ namespace mimicpp::finally
     template <typename T>
         requires std::copyable<std::remove_cvref_t<T>>
     [[nodiscard]]
-    constexpr auto returns(
-        T&& value // NOLINT(cppcoreguidelines-missing-std-forward)
-        ) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
+    constexpr auto returns(T&& value)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
     {
         return expectation_policies::ReturnsResultOf{
             [v = std::forward<T>(value)]([[maybe_unused]] const auto& call) mutable noexcept -> auto& {
@@ -650,8 +649,8 @@ namespace mimicpp::finally
      */
     template <std::size_t index, std::size_t... otherIndices, typename Action>
     [[nodiscard]]
-    constexpr auto returns_apply_result_of(
-        Action&& action) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+    constexpr auto returns_apply_result_of(Action&& action)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
         using ActionT = expectation_policies::ApplyArgsAction<
             std::remove_cvref_t<Action>,
@@ -675,8 +674,8 @@ namespace mimicpp::finally
      */
     template <typename Action>
     [[nodiscard]]
-    constexpr auto returns_apply_all_result_of(
-        Action&& action) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+    constexpr auto returns_apply_all_result_of(Action&& action)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
         using ActionT = expectation_policies::ApplyAllArgsAction<
             std::remove_cvref_t<Action>,
@@ -718,8 +717,8 @@ namespace mimicpp::finally
     template <typename T>
         requires std::copyable<std::remove_cvref_t<T>>
     [[nodiscard]]
-    constexpr expectation_policies::Throws<std::remove_cvref_t<T>> throws(
-        T&& exception) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
+    constexpr expectation_policies::Throws<std::remove_cvref_t<T>> throws(T&& exception)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
     {
         return expectation_policies::Throws<std::remove_cvref_t<T>>{
             std::forward<T>(exception)};
@@ -764,8 +763,8 @@ namespace mimicpp::then
      */
     template <std::size_t index, typename Action>
     [[nodiscard]]
-    constexpr auto apply_arg(
-        Action&& action) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+    constexpr auto apply_arg(Action&& action)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
         using ActionT = expectation_policies::ApplyArgsAction<
             std::remove_cvref_t<Action>,
@@ -788,8 +787,8 @@ namespace mimicpp::then
      */
     template <std::size_t index, std::size_t... additionalIndices, typename Action>
     [[nodiscard]]
-    constexpr auto apply_args(
-        Action&& action) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+    constexpr auto apply_args(Action&& action)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
         using ActionT = expectation_policies::ApplyArgsAction<
             std::remove_cvref_t<Action>,
@@ -809,8 +808,8 @@ namespace mimicpp::then
      */
     template <typename Action>
     [[nodiscard]]
-    constexpr auto apply_all(
-        Action&& action) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+    constexpr auto apply_all(Action&& action)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
         using ActionT = expectation_policies::ApplyAllArgsAction<
             std::remove_cvref_t<Action>,
@@ -828,8 +827,8 @@ namespace mimicpp::then
      */
     template <std::invocable Action>
     [[nodiscard]]
-    constexpr auto invoke(
-        Action&& action) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
+    constexpr auto invoke(Action&& action)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
         return expectation_policies::SideEffectAction{
             [fn = std::forward<Action>(action)]([[maybe_unused]] const auto& call) mutable noexcept(std::is_nothrow_invocable_v<Action&>) {
