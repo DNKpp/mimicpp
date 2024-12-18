@@ -603,6 +603,233 @@ TEMPLATE_TEST_CASE(
     }
 }
 
+TEST_CASE(
+    "expectation_policies::apply_args_fn invokes the given function.",
+    "[expectation][expectation::policy]")
+{
+    using trompeloeil::_;
+
+    SECTION("When just single param exists.")
+    {
+        int arg0{1337};
+        using CallInfoT = call::Info<void, int&>;
+        const CallInfoT callInfo{
+            .args = {arg0},
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))};
+
+        SECTION("When single param is selected.")
+        {
+            using ArgSelectorT = InvocableMock<std::tuple<int&>, const CallInfoT&>;
+            using ActionT = InvocableMock<void, int&>;
+
+            ArgSelectorT argSelector{};
+            ActionT action{};
+            const expectation_policies::apply_args_fn fun{
+                std::ref(argSelector),
+                expectation_policies::arg_list_forward_apply_fn{}};
+            STATIC_REQUIRE(
+                std::same_as<
+                    const expectation_policies::apply_args_fn<
+                        std::reference_wrapper<ArgSelectorT>,
+                        expectation_policies::arg_list_forward_apply_fn>,
+                    decltype(fun)>);
+            STATIC_REQUIRE(std::is_void_v<decltype(fun(action, callInfo))>);
+
+            trompeloeil::sequence sequence{};
+            REQUIRE_CALL(argSelector, Invoke(_))
+                .IN_SEQUENCE(sequence)
+                .LR_WITH(&_1 == &callInfo)
+                .RETURN(_1.args);
+            REQUIRE_CALL(action, Invoke(_))
+                .IN_SEQUENCE(sequence)
+                .LR_WITH(&_1 == &arg0);
+
+            REQUIRE_NOTHROW(fun(action, callInfo));
+        }
+
+        SECTION("When param is selected multiple times.")
+        {
+            using ArgSelectorT = InvocableMock<std::tuple<int&, int&, int&>, const CallInfoT&>;
+            using ActionT = InvocableMock<void, int&, int&, int&>;
+
+            ArgSelectorT argSelector{};
+            ActionT action{};
+            const expectation_policies::apply_args_fn fun{
+                std::ref(argSelector),
+                expectation_policies::arg_list_forward_apply_fn{}};
+            STATIC_REQUIRE(
+                std::same_as<
+                    const expectation_policies::apply_args_fn<
+                        std::reference_wrapper<ArgSelectorT>,
+                        expectation_policies::arg_list_forward_apply_fn>,
+                    decltype(fun)>);
+            STATIC_REQUIRE(std::is_void_v<decltype(fun(action, callInfo))>);
+
+            trompeloeil::sequence sequence{};
+            REQUIRE_CALL(argSelector, Invoke(_))
+                .IN_SEQUENCE(sequence)
+                .LR_WITH(&_1 == &callInfo)
+                .RETURN(std::tuple_cat(_1.args, _1.args, _1.args));
+            REQUIRE_CALL(action, Invoke(_, _, _))
+                .IN_SEQUENCE(sequence)
+                .LR_WITH(&_1 == &arg0)
+                .LR_WITH(&_2 == &arg0)
+                .LR_WITH(&_3 == &arg0);
+
+            REQUIRE_NOTHROW(fun(action, callInfo));
+        }
+    }
+
+    SECTION("When multiple params exist.")
+    {
+        int arg0{1337};
+        std::string arg1{"Test"};
+        double arg2{42.};
+        using CallInfoT = call::Info<void, int&, std::string&, double&>;
+        const CallInfoT callInfo{
+            .args = {arg0, arg1, arg2},
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))
+        };
+
+        SECTION("When single param is selected.")
+        {
+            using ArgSelectorT = InvocableMock<std::tuple<std::string&>, const CallInfoT&>;
+            using ActionT = InvocableMock<void, std::string&>;
+
+            ArgSelectorT argSelector{};
+            ActionT action{};
+            const expectation_policies::apply_args_fn fun{
+                std::ref(argSelector),
+                expectation_policies::arg_list_forward_apply_fn{}};
+            STATIC_REQUIRE(
+                std::same_as<
+                    const expectation_policies::apply_args_fn<
+                        std::reference_wrapper<ArgSelectorT>,
+                        expectation_policies::arg_list_forward_apply_fn>,
+                    decltype(fun)>);
+            STATIC_REQUIRE(std::is_void_v<decltype(fun(action, callInfo))>);
+
+            trompeloeil::sequence sequence{};
+            REQUIRE_CALL(argSelector, Invoke(_))
+                .IN_SEQUENCE(sequence)
+                .LR_WITH(&_1 == &callInfo)
+                .LR_RETURN(std::tie(arg1));
+            REQUIRE_CALL(action, Invoke(_))
+                .IN_SEQUENCE(sequence)
+                .LR_WITH(&_1 == &arg1);
+
+            REQUIRE_NOTHROW(fun(action, callInfo));
+        }
+
+        SECTION("When multiple params are selected.")
+        {
+            using ArgSelectorT = InvocableMock<std::tuple<double&, std::string&, double&, int&>, const CallInfoT&>;
+            using ActionT = InvocableMock<void, double&, std::string&, double&, int&>;
+
+            ArgSelectorT argSelector{};
+            ActionT action{};
+            const expectation_policies::apply_args_fn fun{
+                std::ref(argSelector),
+                expectation_policies::arg_list_forward_apply_fn{}};
+            STATIC_REQUIRE(
+                std::same_as<
+                    const expectation_policies::apply_args_fn<
+                        std::reference_wrapper<ArgSelectorT>,
+                        expectation_policies::arg_list_forward_apply_fn>,
+                    decltype(fun)>);
+            STATIC_REQUIRE(std::is_void_v<decltype(fun(action, callInfo))>);
+
+            trompeloeil::sequence sequence{};
+            REQUIRE_CALL(argSelector, Invoke(_))
+                .IN_SEQUENCE(sequence)
+                .LR_WITH(&_1 == &callInfo)
+                .LR_RETURN(std::tie(arg2, arg1, arg2, arg0));
+            REQUIRE_CALL(action, Invoke(_, _, _, _))
+                .IN_SEQUENCE(sequence)
+                .LR_WITH(&_1 == &arg2)
+                .LR_WITH(&_2 == &arg1)
+                .LR_WITH(&_3 == &arg2)
+                .LR_WITH(&_4 == &arg0);
+
+            REQUIRE_NOTHROW(fun(action, callInfo));
+        }
+    }
+}
+
+TEMPLATE_TEST_CASE_SIG(
+    "expectation_policies::apply_args_fn preserves argument qualification.",
+    "[expectation][expectation::policy]",
+    ((bool expectSameAddress, typename ActionParam, typename SigParam), expectSameAddress, ActionParam, SigParam),
+    (false, int, int),
+    (false, int, int&),
+    (false, int, const int&),
+    (false, int, int&&),
+    (false, int, const int&&),
+
+    (true, int&, int&),
+
+    (false, const int&, int),
+    (true, const int&, int&),
+    (true, const int&, const int&),
+    (true, const int&, int&&),
+    (true, const int&, const int&&))
+{
+    using trompeloeil::_;
+
+    int param0{1337};
+    const call::Info<void, SigParam> info{
+        .args = {param0},
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
+
+    InvocableMock<void, ActionParam> action{};
+    constexpr expectation_policies::apply_args_fn fun{
+        expectation_policies::all_args_selector_fn<std::add_rvalue_reference_t>{},
+        expectation_policies::arg_list_forward_apply_fn{}};
+
+    REQUIRE_CALL(action, Invoke(param0))
+        .LR_WITH(!expectSameAddress || (&_1 == &param0));
+    REQUIRE_NOTHROW(fun(action, info));
+}
+
+TEMPLATE_TEST_CASE(
+    "expectation_policies::apply_args_fn forwards the returned value.",
+    "[expectation][expectation::policy]",
+    int,
+    // const int, never return a const value
+    int&,
+    const int&,
+    int&&,
+    const int&&)
+{
+    using trompeloeil::_;
+
+    int param0{1337};
+    const call::Info<void, int> info{
+        .args = {param0},
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
+
+    constexpr expectation_policies::apply_args_fn fun{
+        expectation_policies::all_args_selector_fn<std::add_rvalue_reference_t>{},
+        expectation_policies::arg_list_forward_apply_fn{}};
+
+    int value{42};
+    const auto action = [&]([[maybe_unused]] int p) -> TestType {
+        return static_cast<TestType>(value);
+    };
+
+    STATIC_REQUIRE(std::same_as<TestType, decltype(fun(action, info))>);
+    REQUIRE(42 == fun(action, info));
+    CHECKED_IF(std::is_reference_v<TestType>)
+    {
+        auto&& r = fun(action, info);
+        REQUIRE(&value == &r);
+    }
+}
+
 TEMPLATE_TEST_CASE_SIG(
     "expectation_policies::ApplyArgsAction takes the param category into account.",
     "[expectation][expectation::policy]",

@@ -458,6 +458,45 @@ namespace mimicpp::expectation_policies
     private:
         [[no_unique_address]] Action m_Action;
     };
+
+    template <typename ArgSelector, typename ApplyStrategy>
+    struct apply_args_fn
+    {
+    public:
+        [[nodiscard]]
+        explicit constexpr apply_args_fn(ArgSelector argSelector, ApplyStrategy applyStrategy)
+            noexcept(
+                std::is_nothrow_move_constructible_v<ArgSelector>
+                && std::is_nothrow_move_constructible_v<ApplyStrategy>)
+            : m_ArgSelector{std::move(argSelector)},
+              m_ApplyStrategy{std::move(applyStrategy)}
+        {
+        }
+
+        template <typename Action, typename Return, typename... Args>
+            requires std::invocable<const ArgSelector&, const call::Info<Return, Args...>&>
+                  && std::invocable<
+                         const ApplyStrategy&,
+                         Action,
+                         std::invoke_result_t<const ArgSelector&, const call::Info<Return, Args...>&>>
+        constexpr decltype(auto) operator()(Action&& action, const call::Info<Return, Args...>& info) const
+            noexcept(
+                std::is_nothrow_invocable_v<const ArgSelector&, const call::Info<Return, Args...>&>
+                && std::is_nothrow_invocable_v<
+                    const ApplyStrategy&,
+                    Action,
+                    std::invoke_result_t<const ArgSelector&, const call::Info<Return, Args...>&>>)
+        {
+            return std::invoke(
+                m_ApplyStrategy,
+                std::forward<Action>(action),
+                std::invoke(m_ArgSelector, info));
+        }
+
+    private:
+        ArgSelector m_ArgSelector;
+        ApplyStrategy m_ApplyStrategy;
+    };
 }
 
 namespace mimicpp::expect
