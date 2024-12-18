@@ -420,6 +420,15 @@ namespace
         Constness::non_const,
         Constness::as_const,
         Constness::any};
+
+    template <typename... Ts>
+    [[nodiscard]]
+    constexpr std::tuple<Ts&...> make_ref_tuple(std::tuple<Ts...>& values) noexcept
+    {
+        return std::apply(
+            [](auto&... elements) { return std::tuple{std::ref(elements)...}; },
+            values);
+    }
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -453,19 +462,83 @@ TEMPLATE_TEST_CASE_SIG(
     std::tuple<std::remove_cvref_t<Args>...> values{};
     using CallInfoT = call::Info<void, Args...>;
     const CallInfoT callInfo{
-        .args = std::apply(
-            [](auto&... elements) { return std::tuple{std::ref(elements)...}; },
-            values),
+        .args = make_ref_tuple(values),
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
     const expectation_policies::all_args_selector_fn<Projection> selector{};
     const std::tuple result = selector(callInfo);
     STATIC_REQUIRE(std::same_as<const Expected, decltype(result)>);
-    const auto same_addresses = [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>) {
+    const auto same_addresses = [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
         return (... && (&std::get<indices>(values) == &std::get<indices>(result)));
     };
     REQUIRE(same_addresses(std::index_sequence_for<Args...>{}));
+}
+
+TEMPLATE_TEST_CASE_SIG(
+    "expectation_policies::args_selector_fn returns selected arg-references as tuple.",
+    "[expectation][expectation::policy]",
+    ((typename Expected, template <typename> typename Projection, std::size_t index, typename... Args), Expected, Projection, index, Args...),
+    (std::tuple<int&>, std::add_lvalue_reference_t, 0u, int),
+    (std::tuple<int&>, std::add_lvalue_reference_t, 0u, int&),
+    (std::tuple<const int&>, std::add_lvalue_reference_t, 0u, const int&),
+    (std::tuple<int&>, std::add_lvalue_reference_t, 0u, int&&),
+    (std::tuple<const int&>, std::add_lvalue_reference_t, 0u, const int&&),
+
+    (std::tuple<int&&>, std::add_rvalue_reference_t, 0u, int),
+    (std::tuple<int&>, std::add_rvalue_reference_t, 0u, int&),
+    (std::tuple<const int&>, std::add_rvalue_reference_t, 0u, const int&),
+    (std::tuple<int&&>, std::add_rvalue_reference_t, 0u, int&&),
+    (std::tuple<const int&&>, std::add_rvalue_reference_t, 0u, const int&&),
+
+    (std::tuple<int&>, std::add_lvalue_reference_t, 1u, float, int, double),
+    (std::tuple<int&>, std::add_lvalue_reference_t, 1u, float&, int&, double&),
+    (std::tuple<const int&>, std::add_lvalue_reference_t, 1u, const float&, const int&, const double&),
+    (std::tuple<int&>, std::add_lvalue_reference_t, 1u, float&&, int&&, double&&),
+    (std::tuple<const int&>, std::add_lvalue_reference_t, 1u, const float&&, const int&&, const double&&),
+
+    (std::tuple<int&&>, std::add_rvalue_reference_t, 1u, float, int, double),
+    (std::tuple<int&>, std::add_rvalue_reference_t, 1u, float&, int&, double&),
+    (std::tuple<const int&>, std::add_rvalue_reference_t, 1u, const float&, const int&, const double&),
+    (std::tuple<int&&>, std::add_rvalue_reference_t, 1u, float&&, int&&, double&&),
+    (std::tuple<const int&&>, std::add_rvalue_reference_t, 1u, const float&&, const int&&, const double&&))
+{
+    std::tuple<std::remove_cvref_t<Args>...> values{};
+    using CallInfoT = call::Info<void, Args...>;
+    const CallInfoT callInfo{
+        .args = make_ref_tuple(values),
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
+
+    const expectation_policies::args_selector_fn<Projection, std::index_sequence<index>> selector{};
+    const std::tuple result = selector(callInfo);
+    STATIC_REQUIRE(std::same_as<const Expected, decltype(result)>);
+    REQUIRE(&std::get<0>(result) == &std::get<index>(values));
+}
+
+TEMPLATE_TEST_CASE_SIG(
+    "expectation_policies::args_selector_fn supports arbitrary selection-sequence.",
+    "[expectation][expectation::policy]",
+    ((typename Expected, std::size_t... indices), Expected, indices...),
+    (std::tuple<float&>, 0u),
+    (std::tuple<float&, float&>, 0u, 0u),
+    (std::tuple<double&, int&, double&>, 2u, 1u, 2u),
+    (std::tuple<int&, float&>, 1u, 0u))
+{
+    std::tuple<float, int, double> values{};
+    using CallInfoT = call::Info<void, float&, int&, double&>;
+    const CallInfoT callInfo{
+        .args = make_ref_tuple(values),
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
+
+    const expectation_policies::args_selector_fn<std::add_lvalue_reference_t, std::index_sequence<indices...>> selector{};
+    const std::tuple result = selector(callInfo);
+    STATIC_REQUIRE(std::same_as<const Expected, decltype(result)>);
+    REQUIRE(
+        std::apply(
+            [&](auto&... elements) { return (... && (&elements == &std::get<indices>(values))); },
+            result));
 }
 
 

@@ -141,28 +141,11 @@ namespace mimicpp::expectation_policies
         Exception m_Exception;
     };
 
+    template <template <typename> typename TypeProjection, typename IndexSequence>
+    struct args_selector_fn;
+
     template <template <typename> typename TypeProjection, std::size_t... indices>
-    struct arg_selector
-    {
-    public:
-        template <std::size_t index, typename Tuple>
-        using projected_t = TypeProjection<
-            // all elements are std::reference_wrapper, so unwrap them
-            typename std::tuple_element_t<index, Tuple>::type>;
-
-        template <typename Return, typename... Args>
-        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
-        {
-            using args_t = typename call::Info<Return, Args...>::ArgListT;
-
-            return std::forward_as_tuple(
-                static_cast<projected_t<indices, args_t>>(
-                    std::get<indices>(callInfo.args).get())...);
-        }
-    };
-
-    template <template <typename> typename TypeProjection>
-    struct all_args_selector_fn
+    struct args_selector_fn<TypeProjection, std::index_sequence<indices...>>
     {
     public:
         static_assert(
@@ -177,14 +160,25 @@ namespace mimicpp::expectation_policies
         {
             using signature_t = Return(Args...);
 
+            return std::forward_as_tuple(
+                static_cast<projected_t<indices, signature_t>>(
+                    // all elements are std::reference_wrapper, so unwrap them first
+                    std::get<indices>(callInfo.args).get())...);
+        }
+    };
+
+    template <template <typename> typename TypeProjection>
+    struct all_args_selector_fn
+    {
+    public:
+        template <typename Return, typename... Args>
+        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
+        {
             return std::invoke(
-                [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
-                    return std::forward_as_tuple(
-                        static_cast<projected_t<indices, signature_t>>(
-                            // all elements are std::reference_wrapper, so unwrap them first
-                            std::get<indices>(callInfo.args).get())...);
-                },
-                std::index_sequence_for<Args...>{});
+                args_selector_fn<TypeProjection, std::index_sequence_for<Args...>>{},
+                callInfo);
+        }
+    };
         }
     };
 
