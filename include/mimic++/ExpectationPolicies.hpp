@@ -95,8 +95,8 @@ namespace mimicpp::expectation_policies
     {
     public:
         [[nodiscard]]
-        explicit constexpr ReturnsResultOf(
-            Action&& action) noexcept(std::is_nothrow_move_constructible_v<Action>)
+        explicit constexpr ReturnsResultOf(Action&& action)
+            noexcept(std::is_nothrow_move_constructible_v<Action>)
             : m_Action{std::move(action)}
         {
         }
@@ -107,8 +107,10 @@ namespace mimicpp::expectation_policies
                          std::invoke_result_t<Action&, const call::Info<Return, Args...>&>,
                          Return>
         [[nodiscard]]
-        constexpr Return finalize_call(
-            [[maybe_unused]] const call::Info<Return, Args...>& call) noexcept(std::is_nothrow_invocable_v<Action&, const call::Info<Return, Args...>&> && nothrow_explicitly_convertible_to<std::invoke_result_t<Action&, const call::Info<Return, Args...>&>, Return>)
+        constexpr Return finalize_call([[maybe_unused]] const call::Info<Return, Args...>& call)
+            noexcept(
+                std::is_nothrow_invocable_v<Action&, const call::Info<Return, Args...>&>
+                && nothrow_explicitly_convertible_to<std::invoke_result_t<Action&, const call::Info<Return, Args...>&>, Return>)
         {
             return static_cast<Return>(
                 std::invoke(m_Action, call));
