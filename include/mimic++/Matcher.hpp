@@ -60,13 +60,17 @@ namespace mimicpp::detail::matches_hook
 
     constexpr priority_tag<1> maxTag;
 
-    template <typename Matcher, typename T, typename... Others>
-    [[nodiscard]]
-    constexpr bool matches(const Matcher& matcher, T& target, Others&... others)
-        requires requires { { matches_impl(maxTag, matcher, target, others...) } -> std::convertible_to<bool>; }
+    constexpr auto matches = []<typename Matcher, typename T, typename... Others>(
+                                 const Matcher& matcher,
+                                 T& target,
+                                 Others&... others)
+        requires requires {
+            {
+                matches_impl(maxTag, matcher, target, others...)
+            }-> std::convertible_to<bool>; }
     {
         return matches_impl(maxTag, matcher, target, others...);
-    }
+    };
 }
 
 namespace mimicpp::detail::describe_hook
@@ -97,13 +101,11 @@ namespace mimicpp::detail::describe_hook
 
     constexpr priority_tag<1> maxTag;
 
-    template <typename Matcher>
-    [[nodiscard]]
-    constexpr decltype(auto) describe(const Matcher& matcher)
+    constexpr auto describe = []<typename Matcher>(const Matcher& matcher) -> decltype(auto)
         requires requires { { describe_impl(matcher, maxTag) } -> std::convertible_to<StringViewT>; }
     {
         return describe_impl(matcher, maxTag);
-    }
+    };
 }
 
 namespace mimicpp
