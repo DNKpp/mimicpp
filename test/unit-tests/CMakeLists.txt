@@ -11,6 +11,7 @@ CPMAddPackage("gh:rollbear/trompeloeil@49")
 set(TARGET_NAME mimicpp-tests)
 
 add_executable(${TARGET_NAME}
+    "ArgumentList.cpp"
     "ArgRequirementPolicies.cpp"
     "Call.cpp"
     "Config.cpp"

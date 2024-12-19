@@ -9,11 +9,17 @@
 #include "mimic++/Printer.hpp"
 #include "mimic++/Reports.hpp"
 
-#include "catch2/catch_test_macros.hpp"
-#include "catch2/matchers/catch_matchers_templated.hpp"
-#include "catch2/trompeloeil.hpp"
-
+#include <array>
 #include <variant>
+
+inline constexpr std::array refQualifiers{
+    mimicpp::ValueCategory::lvalue,
+    mimicpp::ValueCategory::rvalue,
+    mimicpp::ValueCategory::any};
+inline constexpr std::array constQualifiers{
+    mimicpp::Constness::non_const,
+    mimicpp::Constness::as_const,
+    mimicpp::Constness::any};
 
 class UnwrapReferenceWrapper
 {

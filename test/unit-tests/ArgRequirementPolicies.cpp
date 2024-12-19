@@ -10,18 +10,6 @@
 
 using namespace mimicpp;
 
-namespace
-{
-    inline constexpr std::array refQualifiers{
-        ValueCategory::lvalue,
-        ValueCategory::rvalue,
-        ValueCategory::any};
-    inline constexpr std::array constQualifiers{
-        Constness::non_const,
-        Constness::as_const,
-        Constness::any};
-}
-
 TEST_CASE(
     "expect::detail::arg_requirement_describer generates a description.",
     "[detail][expectation][expectation::policy]")
@@ -155,9 +143,9 @@ TEST_CASE(
 
     expectation_policies::ArgsRequirement policy{
         MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
-        expectation_policies::apply_args_fn{
-                      expectation_policies::all_args_selector_fn<std::add_lvalue_reference_t>{},
-                      expectation_policies::arg_list_forward_apply_fn{}},
+        detail::apply_args_fn{
+                      detail::all_args_selector_fn<std::add_lvalue_reference_t>{},
+                      detail::arg_list_forward_apply_fn{}},
         expect::detail::arg_requirement_describer<0u, 1u, 2u>{}
     };
 
