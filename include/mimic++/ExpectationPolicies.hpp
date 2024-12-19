@@ -656,7 +656,8 @@ namespace mimicpp::finally
         noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fun>, Fun>)
     {
         return expectation_policies::ReturnsResultOf{
-            [fn = std::forward<Fun>(fun)]([[maybe_unused]] const auto& call) mutable noexcept(std::is_nothrow_invocable_v<decltype(fun)>) -> decltype(auto) {
+            [fn = std::forward<Fun>(fun)]([[maybe_unused]] const auto& call) mutable noexcept(
+                std::is_nothrow_invocable_v<decltype(fun)>) -> decltype(auto) {
                 return std::invoke(fn);
             }};
     }
@@ -707,14 +708,17 @@ namespace mimicpp::finally
     constexpr auto returns_apply_result_of(Action&& action)
         noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
-        using ActionT = expectation_policies::ApplyArgsAction<
-            std::remove_cvref_t<Action>,
+        using arg_selector_t = expectation_policies::args_selector_fn<
             std::add_lvalue_reference_t,
-            index,
-            otherIndices...>;
+            std::index_sequence<index, otherIndices...>>;
+        using apply_strategy_t = expectation_policies::arg_list_forward_apply_fn;
 
         return expectation_policies::ReturnsResultOf{
-            ActionT{std::forward<Action>(action)}};
+            std::bind_front(
+                expectation_policies::apply_args_fn{
+                    arg_selector_t{},
+                    apply_strategy_t{}},
+                std::forward<Action>(action))};
     }
 
     /**
@@ -732,12 +736,15 @@ namespace mimicpp::finally
     constexpr auto returns_apply_all_result_of(Action&& action)
         noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
-        using ActionT = expectation_policies::ApplyAllArgsAction<
-            std::remove_cvref_t<Action>,
-            std::add_lvalue_reference_t>;
+        using arg_selector_t = expectation_policies::all_args_selector_fn<std::add_lvalue_reference_t>;
+        using apply_strategy_t = expectation_policies::arg_list_forward_apply_fn;
 
         return expectation_policies::ReturnsResultOf{
-            ActionT{std::forward<Action>(action)}};
+            std::bind_front(
+                expectation_policies::apply_args_fn{
+                    arg_selector_t{},
+                    apply_strategy_t{}},
+                std::forward<Action>(action))};
     }
 
     /**
@@ -749,15 +756,19 @@ namespace mimicpp::finally
      */
     template <std::size_t index>
     [[nodiscard]]
-    constexpr auto returns_arg() noexcept
+    constexpr auto returns_arg()
     {
-        using ActionT = expectation_policies::ApplyArgsAction<
-            std::identity,
-            std::add_rvalue_reference_t,
-            index>;
+        using arg_selector_t = expectation_policies::args_selector_fn<
+            std::add_lvalue_reference_t,
+            std::index_sequence<index>>;
+        using apply_strategy_t = expectation_policies::arg_list_forward_apply_fn;
 
         return expectation_policies::ReturnsResultOf{
-            ActionT{{}}};
+            std::bind_front(
+                expectation_policies::apply_args_fn{
+                    arg_selector_t{},
+                    apply_strategy_t{}},
+                std::identity{})};
     }
 
     /**
