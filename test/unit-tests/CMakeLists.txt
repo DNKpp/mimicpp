@@ -17,7 +17,6 @@ add_executable(${TARGET_NAME}
     "ControlPolicy.cpp"
     "Expectation.cpp"
     "ExpectationBuilder.cpp"
-    "ExpectationPolicies.cpp"
     "InterfaceMock.cpp"
     "Matcher.cpp"
     "mimic++.cpp"

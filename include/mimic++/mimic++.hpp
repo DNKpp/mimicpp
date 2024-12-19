@@ -16,7 +16,6 @@
 #include "mimic++/ControlPolicy.hpp"
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
-#include "mimic++/ExpectationPolicies.hpp"
 #include "mimic++/InterfaceMock.hpp"
 #include "mimic++/Matcher.hpp"
 #include "mimic++/Mock.hpp"
