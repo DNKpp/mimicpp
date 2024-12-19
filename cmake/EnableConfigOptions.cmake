@@ -97,4 +97,53 @@ if (NOT TARGET enable-config-options)
 
 	endif()
 
+	OPTION(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "When enabled, experimental stacktrace feature is enabled (requires either c++23 or cpptrace)." OFF)
+	if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
+
+		message(DEBUG "${MESSAGE_PREFIX} Stacktrace feature enabled.")
+
+		OPTION(MIMICPP_CONFIG_USE_CPPTRACE "When enabled, requires cpptrace library instead of c++23 stacktrace." OFF)
+		if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
+
+			message(DEBUG "${MESSAGE_PREFIX} Searching for installed {cpptrace}-package.")
+			find_package(cpptrace QUIET)
+			if (NOT cpptrace_FOUND)
+				message(STATUS "${MESSAGE_PREFIX} No installed {cpptrace}-package found. Fetching via cpm.")
+
+				include(get_cpm)
+				CPMAddPackage(
+					NAME cpptrace
+					VERSION 0.7.3
+					GITHUB_REPOSITORY jeremy-rifkin/cpptrace
+					EXCLUDE_FROM_ALL YES
+					SYSTEM YES
+				)
+			endif ()
+
+			find_package(cpptrace REQUIRED)
+			message(STATUS "${MESSAGE_PREFIX} Using {cpptrace}-package from: ${cpptrace_SOURCE_DIR}")
+			target_link_libraries(
+				enable-config-options
+				INTERFACE
+				cpptrace::cpptrace
+			)
+
+			target_compile_definitions(
+				enable-config-options
+				INTERFACE
+				MIMICPP_CONFIG_USE_CPPTRACE
+			)
+
+		else ()
+			message(DEBUG "${MESSAGE_PREFIX} Selected std::stacktrace.")
+		endif ()
+
+		target_compile_definitions(
+			enable-config-options
+			INTERFACE
+			MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+		)
+
+	endif ()
+
 endif()
