@@ -603,6 +603,80 @@ TEMPLATE_TEST_CASE(
     }
 }
 
+TEMPLATE_TEST_CASE_SIG(
+    "expectation_policies::arg_list_indirect_apply_fn forwards all projected elements to the given function.",
+    "[expectation][expectation::policy]",
+    ((bool dummy, typename... Args), dummy, Args...),
+    (true, int&),
+    (true, const int&),
+    (true, int&&),
+    (true, const int&&),
+
+    (true, float&, int&, double&),
+    (true, const float&, const int&, const double&),
+    (true, float&&, int&&, double&&),
+    (true, const float&&, const int&&, const double&&))
+{
+    std::tuple<std::remove_cvref_t<Args>...> values{};
+    int invokeCount{};
+    const auto projection = [&](auto&& value) {
+        ++invokeCount;
+        return std::ref(value);
+    };
+    const auto action = [&]<typename... Ts>(Ts... elements) {
+        STATIC_REQUIRE((... && std::same_as<Ts, std::reference_wrapper<std::remove_reference_t<Args>>>));
+
+        const auto same_addresses = [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
+            return (... && (&elements.get() == &std::get<indices>(values)));
+        };
+        REQUIRE(same_addresses(std::index_sequence_for<Args...>{}));
+    };
+
+    const auto apply = std::invoke(
+        [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
+            return expectation_policies::arg_list_indirect_apply_fn{
+                std::tuple{[&](auto) { return std::ref(projection); }(indices)...}};
+        },
+        std::index_sequence_for<Args...>{});
+    std::tuple refs = std::apply(
+        [](auto&... elements) { return std::tuple<Args...>{static_cast<Args>(elements)...}; },
+        values);
+    std::invoke(
+        apply,
+        action,
+        std::move(refs));
+
+    REQUIRE(std::cmp_equal(invokeCount, sizeof...(Args)));
+}
+
+TEMPLATE_TEST_CASE(
+    "expectation_policies::arg_list_indirect_apply_fn forwards the returned value.",
+    "[expectation][expectation::policy]",
+    int,
+    // const int, never return a const value
+    int&,
+    const int&,
+    int&&,
+    const int&&)
+{
+    int value{1337};
+    constexpr expectation_policies::arg_list_indirect_apply_fn<std::identity> forwarder{};
+
+    const auto action = [](int& v) -> TestType {
+        return static_cast<TestType>(v);
+    };
+
+    const auto make_refs = [&] { return std::make_tuple(std::ref(value)); };
+
+    STATIC_REQUIRE(std::same_as<TestType, decltype(forwarder(action, make_refs()))>);
+    REQUIRE(1337 == forwarder(action, make_refs()));
+    CHECKED_IF(std::is_reference_v<TestType>)
+    {
+        auto&& r = forwarder(action, make_refs());
+        REQUIRE(&value == &r);
+    }
+}
+
 TEST_CASE(
     "expectation_policies::apply_args_fn invokes the given function.",
     "[expectation][expectation::policy]")

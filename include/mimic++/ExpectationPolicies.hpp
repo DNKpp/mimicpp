@@ -221,7 +221,7 @@ namespace mimicpp::expectation_policies
                     std::forward<Fun>(fun),
                     std::invoke(
                         std::get<indices>(m_Projections),
-                        std::get<indices>(argList))...);
+                        std::forward<Args>(std::get<indices>(argList)))...);
             }(std::index_sequence_for<Projections...>{});
         }
 
