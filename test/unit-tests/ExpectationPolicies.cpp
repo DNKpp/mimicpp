@@ -43,8 +43,8 @@ TEST_CASE(
 {
     const call::Info<void> call{
         .args = {},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     constexpr expectation_policies::InitFinalize policy{};
 
@@ -79,8 +79,8 @@ TEMPLATE_TEST_CASE_SIG(
 
     const CallInfoT call{
         .args = {},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     if (is_matching(call.fromCategory, category))
     {
@@ -131,8 +131,8 @@ TEMPLATE_TEST_CASE_SIG(
 
     const CallInfoT call{
         .args = {},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     if (is_matching(call.fromConstness, constness))
     {
@@ -166,8 +166,8 @@ TEST_CASE(
 
     const CallInfoT call{
         .args = {},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     int value{42};
     InvocableMock<int&, const CallInfoT&> action{};
@@ -198,8 +198,8 @@ TEST_CASE(
 
         const CallInfoT call{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))};
 
         PolicyT policy{test_exception{}};
 
@@ -217,8 +217,8 @@ TEST_CASE(
 
         const CallInfoT call{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))};
 
         PolicyT policy{test_exception{}};
 
@@ -251,8 +251,8 @@ TEST_CASE(
 
     const call::Info<void> info{
         .args = {},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     InvocableMock<void, const call::Info<void>&> action{};
     expectation_policies::SideEffectAction policy{std::ref(action)};
@@ -430,8 +430,8 @@ TEST_CASE(
 
     const CallInfoT call{
         .args = {},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     InvocableMock<int&> action{};
     expectation_policies::ReturnsResultOf policy = finally::returns_result_of(std::ref(action));
@@ -453,8 +453,8 @@ TEST_CASE(
         using CallInfoT = call::Info<int>;
         const CallInfoT call{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))};
 
         const int value = GENERATE(range(0, 5));
 
@@ -482,8 +482,8 @@ TEST_CASE(
         using CallInfoT = call::Info<int&>;
         const CallInfoT call{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("And when value is stored.")
         {
@@ -511,8 +511,8 @@ TEST_CASE(
         using CallInfoT = call::Info<const int&>;
         const CallInfoT call{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("And when value is stored.")
         {
@@ -540,8 +540,8 @@ TEST_CASE(
         using CallInfoT = call::Info<int&&>;
         const CallInfoT call{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("And when value is stored.")
         {
@@ -571,8 +571,8 @@ TEST_CASE(
         using CallInfoT = call::Info<const int&&>;
         const CallInfoT call{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("And when value is stored.")
         {
@@ -614,8 +614,8 @@ TEST_CASE(
         std::string param2{"Hello, World!"};
         const CallInfoT info{
             .args = {param0, param1, param2},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_apply_result_of<2>(
@@ -636,8 +636,8 @@ TEST_CASE(
         std::string param2{"Hello, World!"};
         const CallInfoT info{
             .args = {param0, param1, param2},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_apply_result_of<1, 2, 0, 1>(
@@ -782,7 +782,7 @@ TEST_CASE(
 
     SECTION("When rvalue ref is selected.")
     {
-        using SignatureT = std::unique_ptr<int>&& (int, double&, std::unique_ptr<int>&&);
+        using SignatureT = std::unique_ptr<int> && (int, double&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         const CallInfoT info{
             .args = {param0, param1, param2},
@@ -799,7 +799,7 @@ TEST_CASE(
 
     SECTION("When const rvalue ref is selected.")
     {
-        using SignatureT = const std::unique_ptr<int>&& (int, double&, const std::unique_ptr<int>&&);
+        using SignatureT = const std::unique_ptr<int> && (int, double&, const std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         const CallInfoT info{
             .args = {param0, param1, param2},
@@ -826,8 +826,8 @@ TEST_CASE(
 
     const CallInfoT call{
         .args = {},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     REQUIRE_THROWS_AS(
         policy.finalize_call(call),
