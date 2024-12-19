@@ -168,4 +168,119 @@ namespace mimicpp
     constexpr detail::stacktrace_current_hook::current_fn current_stacktrace{};
 }
 
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+
+    #ifdef MIMICPP_CONFIG_USE_CPPTRACE
+
+        #if __has_include(<cpptrace/basic.hpp>)
+            #include <cpptrace/basic.hpp>
+        #else
+            #error "The cpptrace stacktrace backend is explicitly enabled, but the include <cpptrace/basic.hpp> can not be found."
+        #endif
+
+namespace mimicpp::cpptrace
+{
+    using namespace ::cpptrace;
+
+    class Backend
+    {
+    public:
+        ~Backend() = default;
+
+        [[nodiscard]]
+        explicit Backend(raw_trace&& trace) noexcept
+            : m_Trace{std::move(trace)}
+        {
+        }
+
+        Backend(const Backend&) = default;
+        Backend& operator=(const Backend&) = default;
+        Backend(Backend&&) = default;
+        Backend& operator=(Backend&&) = default;
+
+        [[nodiscard]]
+        const stacktrace& data() const
+        {
+            if (const auto* raw = std::get_if<raw_trace>(&m_Trace))
+            {
+                m_Trace = raw->resolve();
+            }
+
+            return std::get<stacktrace>(m_Trace);
+        }
+
+    private:
+        using TraceT = std::variant<raw_trace, stacktrace>;
+        mutable TraceT m_Trace;
+    };
+
+    // std::any requires this
+    // see: https://en.cppreference.com/w/cpp/named_req/CopyConstructible
+    static_assert(std::is_copy_constructible_v<Backend>);
+}
+
+template <>
+struct mimicpp::stacktrace_backend<mimicpp::register_tag>
+{
+    using type = cpptrace::Backend;
+};
+
+template <>
+struct mimicpp::stacktrace_traits<mimicpp::cpptrace::Backend>
+{
+    using BackendT = cpptrace::Backend;
+
+    [[nodiscard]]
+    static BackendT current(const std::size_t skip)
+    {
+        return BackendT{cpptrace::generate_raw_trace(skip + 1)};
+    }
+
+    [[nodiscard]]
+    static std::size_t size(const std::any& storage)
+    {
+        return get(storage).frames.size();
+    }
+
+    [[nodiscard]]
+    static bool empty(const std::any& storage)
+    {
+        return get(storage).empty();
+    }
+
+    [[nodiscard]]
+    static std::string description(const std::any& storage, const std::size_t at)
+    {
+        return get_frame(storage, at).symbol;
+    }
+
+    [[nodiscard]]
+    static std::string source_file(const std::any& storage, const std::size_t at)
+    {
+        return get_frame(storage, at).filename;
+    }
+
+    [[nodiscard]]
+    static std::size_t source_line(const std::any& storage, const std::size_t at)
+    {
+        return get_frame(storage, at).line.value_or(0u);
+    }
+
+    [[nodiscard]]
+    static const cpptrace::stacktrace& get(const std::any& storage)
+    {
+        return std::any_cast<const BackendT&>(storage).data();
+    }
+
+    [[nodiscard]]
+    static const cpptrace::stacktrace_frame& get_frame(const std::any& storage, const std::size_t at)
+    {
+        return get(storage).frames.at(at);
+    }
+};
+
+    #endif
+
+#endif
+
 #endif
