@@ -295,6 +295,17 @@ namespace mimicpp::expect
             }
         };
 
+        struct all_args_requirement_describer
+        {
+            [[nodiscard]]
+            StringT operator()(const StringViewT matcherDescription) const
+            {
+                StringStreamT out{};
+                out << "expect: arg[all] " << matcherDescription;
+                return std::move(out).str();
+            }
+        };
+
         template <
             std::size_t... indices,
             typename Matcher,

@@ -45,6 +45,21 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "expect::detail::all_args_requirement_describer generates a description.",
+    "[detail][expectation][expectation::policy]")
+{
+    const auto matcherDescription = GENERATE(
+        as<StringT>{},
+        "",
+        "Hello, World!");
+
+    constexpr expect::detail::all_args_requirement_describer describer{};
+    REQUIRE_THAT(
+        describer(matcherDescription),
+        Catch::Matchers::Equals("expect: arg[all] " + matcherDescription));
+}
+
+TEST_CASE(
     "expectation_policies::ArgsRequirement checks whether the given call::Info matches.",
     "[expectation][expectation::policy]")
 {
