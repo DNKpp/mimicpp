@@ -107,6 +107,25 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "A single requirement can encompass all arguments.",
+    "[example][example::requirements]")
+{
+    //! [expect::all_args]
+    namespace matches = mimicpp::matches;
+    using matches::_;
+    namespace expect = mimicpp::expect;
+
+    const std::string str{"Hello, World!"};
+    mimicpp::Mock<void(const char*, std::size_t)> mock{};
+
+    SCOPED_EXP mock.expect_call(_, _)
+        and expect::all_args(matches::predicate(
+            [&](const char* data, std::size_t length) { return str == std::string_view{data, length}; }));
+    mock(str.data(), str.size());
+    //! [expect::all_args]
+}
+
+TEST_CASE(
     "Most requirements can be inverted.",
     "[example][example::requirements]")
 {
