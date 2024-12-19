@@ -729,32 +729,33 @@ TEST_CASE(
 {
     int param0{1337};
     double param1{4.2};
-    std::string param2{"Hello, World!"};
+    std::unique_ptr param2 = std::make_unique<int>(-42);
 
     SECTION("When value is selected.")
     {
-        using SignatureT = int(int, double&, std::string&&);
+        using SignatureT = std::unique_ptr<int>(int, double&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         const CallInfoT info{
             .args = {param0, param1, param2},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
-        expectation_policies::ReturnsResultOf policy = finally::returns_arg<0>();
+        const int* ptr = param2.get();
+        expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
         STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
 
-        REQUIRE(1337 == policy.finalize_call(info));
+        REQUIRE(ptr == policy.finalize_call(info).get());
     }
 
     SECTION("When lvalue ref is selected.")
     {
-        using SignatureT = double&(int, double&, std::string&&);
+        using SignatureT = double&(int, double&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         const CallInfoT info{
             .args = {param0, param1, param2},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<1>();
@@ -765,12 +766,12 @@ TEST_CASE(
 
     SECTION("When const lvalue ref is selected.")
     {
-        using SignatureT = const double&(int, const double&, std::string&&);
+        using SignatureT = const double&(int, const double&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         const CallInfoT info{
             .args = {param0, param1, param2},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<1>();
@@ -781,35 +782,35 @@ TEST_CASE(
 
     SECTION("When rvalue ref is selected.")
     {
-        using SignatureT = std::string && (int, double&, std::string&&);
+        using SignatureT = std::unique_ptr<int>&& (int, double&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         const CallInfoT info{
             .args = {param0, param1, param2},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
         STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
 
-        std::string&& result = policy.finalize_call(info);
+        std::unique_ptr<int>&& result = policy.finalize_call(info);
         REQUIRE(&param2 == std::addressof(result));
     }
 
     SECTION("When const rvalue ref is selected.")
     {
-        using SignatureT = const std::string && (int, double&, const std::string&&);
+        using SignatureT = const std::unique_ptr<int>&& (int, double&, const std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         const CallInfoT info{
             .args = {param0, param1, param2},
-            .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-            .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
         STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
 
-        const std::string&& result = policy.finalize_call(info);
+        const std::unique_ptr<int>&& result = policy.finalize_call(info);
         REQUIRE(&param2 == std::addressof(result));
     }
 }

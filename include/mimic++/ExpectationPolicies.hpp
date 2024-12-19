@@ -552,7 +552,7 @@ namespace mimicpp::finally
     constexpr auto returns_arg()
     {
         using arg_selector_t = detail::args_selector_fn<
-            std::add_lvalue_reference_t,
+            std::add_rvalue_reference_t,
             std::index_sequence<index>>;
         using apply_strategy_t = detail::arg_list_forward_apply_fn;
 
