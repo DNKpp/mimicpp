@@ -5,6 +5,7 @@
 
 #include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/InterfaceMock.hpp"
+#include "mimic++/policies/FinalizerPolicies.hpp"
 
 #include "SuppressionMacros.hpp"
 #include "TestReporter.hpp"

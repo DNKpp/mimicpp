@@ -10,6 +10,29 @@
 
 using namespace mimicpp;
 
+TEMPLATE_TEST_CASE_SIG(
+    "expectation_policies::InitFinalize satisfies finalize_policy_for concept.",
+    "[expectation][expectation::builder]",
+    ((bool dummy, typename Policy, typename Sig), dummy, Policy, Sig),
+    (true, expectation_policies::InitFinalize, void()),
+    (true, expectation_policies::InitFinalize, void(int)))
+{
+    STATIC_REQUIRE(finalize_policy_for<Policy, Sig>);
+}
+
+TEMPLATE_TEST_CASE(
+    "Given types satisfy expectation_policy_for concept.",
+    "[expectation][expectation::builder]",
+    expectation_policies::Category<ValueCategory::lvalue>,
+    expectation_policies::Category<ValueCategory::rvalue>,
+    expectation_policies::Category<ValueCategory::any>,
+    expectation_policies::Constness<Constness::as_const>,
+    expectation_policies::Constness<Constness::non_const>,
+    expectation_policies::Constness<Constness::any>)
+{
+    STATIC_REQUIRE(expectation_policy_for<TestType, void()>);
+}
+
 TEST_CASE(
     "expectation_policies::InitFinalize does nothing.",
     "[expectation][expectation::builder]")
