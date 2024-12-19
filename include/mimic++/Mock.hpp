@@ -10,9 +10,9 @@
 
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
-#include "mimic++/ExpectationPolicies.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/policies/GeneralPolicies.hpp"
 
 namespace mimicpp::detail
 {

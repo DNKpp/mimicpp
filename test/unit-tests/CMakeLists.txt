@@ -21,6 +21,7 @@ add_executable(${TARGET_NAME}
     "ExpectationPolicies.cpp"
     "InterfaceMock.cpp"
     "Matcher.cpp"
+    "mimic++.cpp"
     "Mock.cpp"
     "ObjectWatcher.cpp"
     "Printer.cpp"
@@ -34,6 +35,12 @@ add_executable(${TARGET_NAME}
 
 add_subdirectory(call-conventions)
 add_subdirectory(matchers)
+add_subdirectory(policies)
+
+target_include_directories(${TARGET_NAME}
+    PRIVATE
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>"
+)
 
 include(EnableWarnings)
 include(EnableSanitizers)

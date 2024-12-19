@@ -32,4 +32,6 @@
 #include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/CallConvention.hpp"
 
+#include "mimic++/policies/GeneralPolicies.hpp"
+
 #endif
