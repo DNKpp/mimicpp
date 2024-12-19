@@ -1,12 +1,11 @@
 var dir_d1aac795712c1a80b032d3d2760385d8 =
 [
     [ "adapters", "dir_fea71f381ece93f367616978be34972a.html", "dir_fea71f381ece93f367616978be34972a" ],
+    [ "policies", "dir_6ddbcebc0798903b88ee4423bc0f1618.html", "dir_6ddbcebc0798903b88ee4423bc0f1618" ],
     [ "Call.hpp", "dc/d44/_call_8hpp.html", "dc/d44/_call_8hpp" ],
     [ "CallConvention.hpp", "d7/ded/_call_convention_8hpp.html", "d7/ded/_call_convention_8hpp" ],
-    [ "ControlPolicy.hpp", "d6/d17/_control_policy_8hpp.html", "d6/d17/_control_policy_8hpp" ],
     [ "Expectation.hpp", "d5/d8a/_expectation_8hpp.html", null ],
     [ "ExpectationBuilder.hpp", "d2/d4f/_expectation_builder_8hpp.html", "d2/d4f/_expectation_builder_8hpp" ],
-    [ "ExpectationPolicies.hpp", "d8/de5/_expectation_policies_8hpp.html", "d8/de5/_expectation_policies_8hpp" ],
     [ "Fwd.hpp", "df/dde/_fwd_8hpp.html", "df/dde/_fwd_8hpp" ],
     [ "InterfaceMock.hpp", "d9/dc3/_interface_mock_8hpp.html", "d9/dc3/_interface_mock_8hpp" ],
     [ "Matcher.hpp", "dd/d50/_matcher_8hpp.html", "dd/d50/_matcher_8hpp" ],

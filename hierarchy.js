@@ -1,8 +1,7 @@
 var hierarchy =
 [
-    [ "mimicpp::expectation_policies::ApplyAllArgsAction< Action, Projection >", "de/d9e/classmimicpp_1_1expectation__policies_1_1_apply_all_args_action.html", null ],
-    [ "mimicpp::expectation_policies::ApplyArgsAction< Action, Projection, indices >", "de/da9/classmimicpp_1_1expectation__policies_1_1_apply_args_action.html", null ],
     [ "mimicpp::CallReport::Arg", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html", null ],
+    [ "mimicpp::expectation_policies::ArgsRequirement< Matcher, MatchesStrategy, DescribeStrategy >", "d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html", null ],
     [ "Base", null, [
       [ "mimicpp::detail::BasicWatched< Base, Watchers... >", null, [
         [ "mimicpp::Watched< Base, Watchers >", "d3/d5d/classmimicpp_1_1_watched.html", null ]
@@ -77,6 +76,7 @@ var hierarchy =
       [ "mimicpp::DefaultReporter", "d3/d32/classmimicpp_1_1_default_reporter.html", null ]
     ] ],
     [ "mimicpp::LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", null ],
+    [ "mimicpp::expectation_policies::matcher_matches_fn< Matcher >", "d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html", null ],
     [ "mimicpp::custom::matcher_traits< Matcher >", "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html", null ],
     [ "mimicpp::MatchReport", "db/d11/classmimicpp_1_1_match_report.html", null ],
     [ "mimicpp::PredicateMatcher< Predicate, AdditionalArgs >", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", null ],
@@ -85,7 +85,6 @@ var hierarchy =
     [ "mimicpp::priority_tag< 0 >", "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html", null ],
     [ "mimicpp::sequence::rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", null ],
     [ "mimicpp::RelocationWatcher", "da/d45/classmimicpp_1_1_relocation_watcher.html", null ],
-    [ "mimicpp::expectation_policies::Requirement< Matcher, Projection, Describer >", "d1/dde/classmimicpp_1_1expectation__policies_1_1_requirement.html", null ],
     [ "mimicpp::expectation_policies::ReturnsResultOf< Action >", "dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html", null ],
     [ "mimicpp::ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", null ],
     [ "mimicpp::expectation_policies::SideEffectAction< Action >", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html", null ],

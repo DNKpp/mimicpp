@@ -136,17 +136,79 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga7f6e3b6003e71dc72c6fc7389efa0f93" id="r_ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memTemplParams" colspan="2">template&lt;std::size_t index, typename Matcher , typename Projection  = std::identity&gt; </td></tr>
-<tr class="memitem:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga7f6e3b6003e71dc72c6fc7389efa0f93">mimicpp::expect::arg</a> (Matcher &amp;&amp;matcher, Projection projection={}) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &gt; &amp;&amp;std::is_nothrow_move_constructible_v&lt; Projection &gt;)</td></tr>
-<tr class="memdesc:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks, whether the selected argument matches the given matcher.  <br /></td></tr>
-<tr class="separator:ga7f6e3b6003e71dc72c6fc7389efa0f93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0678d47507b2bf3f1446e9925a5d2761" id="r_ga0678d47507b2bf3f1446e9925a5d2761"><td class="memTemplParams" colspan="2">template&lt;std::size_t index, typename Matcher , typename Projection  = std::identity&gt; </td></tr>
+<tr class="memitem:ga0678d47507b2bf3f1446e9925a5d2761"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga0678d47507b2bf3f1446e9925a5d2761">mimicpp::expect::arg</a> (Matcher &amp;&amp;matcher, Projection &amp;&amp;projection={}) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &gt; &amp;&amp;std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Projection &gt;, Projection &gt;)</td></tr>
+<tr class="memdesc:ga0678d47507b2bf3f1446e9925a5d2761"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the selected argument satisfies the given matcher.  <br /></td></tr>
+<tr class="separator:ga0678d47507b2bf3f1446e9925a5d2761"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabf5001e888bda11e2b3ac981845d19e3" id="r_gabf5001e888bda11e2b3ac981845d19e3"><td class="memTemplParams" colspan="2">template&lt;std::size_t first, std::size_t... others, typename Matcher , typename... Projections&gt; </td></tr>
+<tr class="memitem:gabf5001e888bda11e2b3ac981845d19e3"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gabf5001e888bda11e2b3ac981845d19e3">mimicpp::expect::args</a> (Matcher &amp;&amp;matcher, Projections &amp;&amp;... projections) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &gt; &amp;&amp;(... &amp;&amp;std::is_nothrow_move_constructible_v&lt; std::remove_cvref_t&lt; Projections &gt; &gt;))</td></tr>
+<tr class="memdesc:gabf5001e888bda11e2b3ac981845d19e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the selected arguments satisfy the given matcher.  <br /></td></tr>
+<tr class="separator:gabf5001e888bda11e2b3ac981845d19e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0d61a74c6d01de398bd7b04dab1357f6" id="r_ga0d61a74c6d01de398bd7b04dab1357f6"><td class="memTemplParams" colspan="2">template&lt;typename Matcher &gt; </td></tr>
+<tr class="memitem:ga0d61a74c6d01de398bd7b04dab1357f6"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga0d61a74c6d01de398bd7b04dab1357f6">mimicpp::expect::all_args</a> (Matcher &amp;&amp;matcher) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &gt;)</td></tr>
+<tr class="memdesc:ga0d61a74c6d01de398bd7b04dab1357f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the all arguments satisfy the given matcher.  <br /></td></tr>
+<tr class="separator:ga0d61a74c6d01de398bd7b04dab1357f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Requirements determine, whether an expectation matches an incoming call. </p>
 <p>Requirements are the building blocks, which determine whether a call satisfies the expectation. If any of the specified requirements fail, there is no match. </p><dl class="section note"><dt>Note</dt><dd>An expectation without requirements matches any call. </dd></dl>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga7f6e3b6003e71dc72c6fc7389efa0f93" name="ga7f6e3b6003e71dc72c6fc7389efa0f93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7f6e3b6003e71dc72c6fc7389efa0f93">&#9670;&#160;</a></span>arg()</h2>
+<a id="ga0d61a74c6d01de398bd7b04dab1357f6" name="ga0d61a74c6d01de398bd7b04dab1357f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0d61a74c6d01de398bd7b04dab1357f6">&#9670;&#160;</a></span>all_args()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Matcher &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::expect::all_args </td>
+          <td>(</td>
+          <td class="paramtype">Matcher &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>matcher</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether the all arguments satisfy the given matcher. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Matcher</td><td>The matcher type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matcher</td><td>The matcher. </td></tr>
+    <tr><td class="paramname">projections</td><td>Projections, the arguments will be applied on.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This requirement checks, whether the all arguments satisfy the given matcher. It's useful, when all arguments must be checked together, because they have some kind of relationship. When <code>n</code> arguments are provided the matcher must accept <code>n</code> arguments.</p>
+<p>For a list of built-in matchers, see <a class="el" href="../../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html">matcher</a> section. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line">    <span class="keyword">using </span>matches::_;</div>
+<div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">const</span> std::string str{<span class="stringliteral">&quot;Hello, World!&quot;</span>};</div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keyword">const</span> <span class="keywordtype">char</span>*, std::size_t)&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(_, _)</div>
+<div class="line">        and expect::all_args(matches::predicate(</div>
+<div class="line">            [&amp;](<span class="keyword">const</span> <span class="keywordtype">char</span>* data, std::size_t length) { <span class="keywordflow">return</span> str == std::string_view{data, length}; }));</div>
+<div class="line">    mock(str.data(), str.size());</div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="ga0678d47507b2bf3f1446e9925a5d2761" name="ga0678d47507b2bf3f1446e9925a5d2761"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0678d47507b2bf3f1446e9925a5d2761">&#9670;&#160;</a></span>arg()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -164,7 +226,7 @@ template&lt;std::size_t index, typename Matcher , typename Projection  = std::id
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Projection</td>          <td class="paramname"><span class="paramname"><em>projection</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+          <td class="paramtype">Projection &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>projection</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -174,9 +236,10 @@ template&lt;std::size_t index, typename Matcher , typename Projection  = std::id
 </table>
 </div><div class="memdoc">
 
-<p>Checks, whether the selected argument matches the given matcher. </p>
+<p>Checks whether the selected argument satisfies the given matcher. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
+    <tr><td class="paramname">index</td><td>The index of the selected argument. </td></tr>
     <tr><td class="paramname">Matcher</td><td>The matcher type. </td></tr>
   </table>
   </dd>
@@ -201,12 +264,80 @@ template&lt;std::size_t index, typename Matcher , typename Projection  = std::id
 </div><!-- fragment --> 
 </div>
 </div>
+<a id="gabf5001e888bda11e2b3ac981845d19e3" name="gabf5001e888bda11e2b3ac981845d19e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabf5001e888bda11e2b3ac981845d19e3">&#9670;&#160;</a></span>args()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::size_t first, std::size_t... others, typename Matcher , typename... Projections&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::expect::args </td>
+          <td>(</td>
+          <td class="paramtype">Matcher &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>matcher</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Projections &amp;&amp;...</td>          <td class="paramname"><span class="paramname"><em>projections</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether the selected arguments satisfy the given matcher. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">first</td><td>The index of the first selected argument. </td></tr>
+    <tr><td class="paramname">others</td><td>The indices of other selected arguments. </td></tr>
+    <tr><td class="paramname">Matcher</td><td>The matcher type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">matcher</td><td>The matcher. </td></tr>
+    <tr><td class="paramname">projections</td><td>Projections, the arguments will be applied on.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>This requirement checks, whether the selected arguments match the given matcher. It's useful, when multiple arguments must be checked together, because they have some kind of relationship. When <code>n</code> indices are provided the matcher must accept <code>n</code> arguments.</p>
+<p>The projections will be applied from the beginning: E.g. if <code>n</code> arguments and <code>p</code> projections are given (with <code>0 &lt;= p &lt;= n</code>), then the first <code>p</code> arguments will be applied on these projections (the <code>i</code>-th argument on the <code>i</code>-th projection). </p><dl class="section note"><dt>Note</dt><dd><code>std::identity</code> can be used to skip arguments, which shall not be projected. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/utility/functional/identity">https://en.cppreference.com/w/cpp/utility/functional/identity</a></dd></dl>
+<p>For a list of built-in matchers, see <a class="el" href="../../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html">matcher</a> section. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line">    <span class="keyword">using </span>matches::_;</div>
+<div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keywordtype">int</span>, <span class="keywordtype">int</span>)&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(_, _)</div>
+<div class="line">        and expect::args&lt;0, 1&gt;(matches::predicate(std::less{})); <span class="comment">// this requires 0th arg &lt; 1st arg</span></div>
+<div class="line">    mock(42, 1337);</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(_, _)</div>
+<div class="line">        and expect::args&lt;1, 0&gt;(matches::predicate(std::less{})); <span class="comment">// the index order can be freely changed</span></div>
+<div class="line">    mock(1337, 42);</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(_, _)</div>
+<div class="line">        and expect::args&lt;1, 1&gt;(matches::predicate(std::equal_to{})); <span class="comment">// the same index may appear more than once</span></div>
+<div class="line">    mock(42, 42);</div>
+</div><!-- fragment --> 
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Dec 17 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Dec 19 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>

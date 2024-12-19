@@ -3,7 +3,9 @@ var namespacemimicpp =
     [ "call", "dc/d2e/namespacemimicpp_1_1call.html", "dc/d2e/namespacemimicpp_1_1call" ],
     [ "custom", "d4/d84/namespacemimicpp_1_1custom.html", "d4/d84/namespacemimicpp_1_1custom" ],
     [ "expect", "d3/d18/namespacemimicpp_1_1expect.html", [
-      [ "arg", "d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga7f6e3b6003e71dc72c6fc7389efa0f93", null ],
+      [ "all_args", "d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga0d61a74c6d01de398bd7b04dab1357f6", null ],
+      [ "arg", "d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga0678d47507b2bf3f1446e9925a5d2761", null ],
+      [ "args", "d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#gabf5001e888bda11e2b3ac981845d19e3", null ],
       [ "at_least", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gaa44f54d8e8a587300db34bd55efdace4", null ],
       [ "at_most", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga5c1b44164371e807365df6c11d5fb221", null ],
       [ "in_sequence", "d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaccf673d491adb8bec0694d4ead2bf91a", null ],
@@ -18,7 +20,7 @@ var namespacemimicpp =
       [ "returns", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gaaaa49d2747058448b5cc760ec9342400", null ],
       [ "returns_apply_all_result_of", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#ga1d9822641f9c22aae3eccc2a16136718", null ],
       [ "returns_apply_result_of", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gaa520783da83f713847e7bd3f85ca4334", null ],
-      [ "returns_arg", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gad79b00cd8116424b32a5590ad9187422", null ],
+      [ "returns_arg", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gaf1ce10575d208bda2ed786798243e214", null ],
       [ "returns_result_of", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gafe0fc1d77a4122b05f60d49183ce0106", null ],
       [ "throws", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gab4f67d2c48ef5ebaf25e31e2ac59c5c1", null ]
     ] ],

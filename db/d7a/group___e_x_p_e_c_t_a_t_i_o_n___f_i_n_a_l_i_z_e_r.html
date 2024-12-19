@@ -131,10 +131,10 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</td></tr>
 <tr class="memitem:ga1d9822641f9c22aae3eccc2a16136718"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga1d9822641f9c22aae3eccc2a16136718">mimicpp::finally::returns_apply_all_result_of</a> (Action &amp;&amp;action) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Action &gt;, Action &gt;)</td></tr>
 <tr class="memdesc:ga1d9822641f9c22aae3eccc2a16136718"><td class="mdescLeft">&#160;</td><td class="mdescRight">During the finalization step, all call arguments are applied on the given action.  <br /></td></tr>
 <tr class="separator:ga1d9822641f9c22aae3eccc2a16136718"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad79b00cd8116424b32a5590ad9187422" id="r_gad79b00cd8116424b32a5590ad9187422"><td class="memTemplParams" colspan="2">template&lt;std::size_t index&gt; </td></tr>
-<tr class="memitem:gad79b00cd8116424b32a5590ad9187422"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gad79b00cd8116424b32a5590ad9187422">mimicpp::finally::returns_arg</a> () noexcept</td></tr>
-<tr class="memdesc:gad79b00cd8116424b32a5590ad9187422"><td class="mdescLeft">&#160;</td><td class="mdescRight">During the finalization step, the selected call argument is returned.  <br /></td></tr>
-<tr class="separator:gad79b00cd8116424b32a5590ad9187422"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf1ce10575d208bda2ed786798243e214" id="r_gaf1ce10575d208bda2ed786798243e214"><td class="memTemplParams" colspan="2">template&lt;std::size_t index&gt; </td></tr>
+<tr class="memitem:gaf1ce10575d208bda2ed786798243e214"><td class="memTemplItemLeft" align="right" valign="top">consteval auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaf1ce10575d208bda2ed786798243e214">mimicpp::finally::returns_arg</a> () noexcept</td></tr>
+<tr class="memdesc:gaf1ce10575d208bda2ed786798243e214"><td class="mdescLeft">&#160;</td><td class="mdescRight">During the finalization step, the selected call argument is returned.  <br /></td></tr>
+<tr class="separator:gaf1ce10575d208bda2ed786798243e214"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab4f67d2c48ef5ebaf25e31e2ac59c5c1" id="r_gab4f67d2c48ef5ebaf25e31e2ac59c5c1"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; <br />
 requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</td></tr>
 <tr class="memitem:gab4f67d2c48ef5ebaf25e31e2ac59c5c1"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html">expectation_policies::Throws</a>&lt; std::remove_cvref_t&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gab4f67d2c48ef5ebaf25e31e2ac59c5c1">mimicpp::finally::throws</a> (T &amp;&amp;exception) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; T &gt;, T &gt;)</td></tr>
@@ -145,7 +145,7 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</td></tr>
 <p>Finalizers are the last step of a matching expectation. </p>
 <p>Finalizers are executed for calls, which have a matching expectation. They are responsible for either returning an appropriate return value or leaving the call by throwing an exception.</p>
 <p>An expectation must have exactly one finalizer applied. For mocks returning void, an appropriate finalizer is attached by default. This default finalizer can be exchanged once. If an expectation setup contains multiple finalize statements, a compile error is triggered.</p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="autotoc_md16"></a>
 Custom Finalizers</h1>
 <p>There are several provided finalizers, but user may create their own as desired. A valid finalizer has to satisfy the <code><a class="el" href="../../d9/d64/conceptmimicpp_1_1finalize__policy__for.html" title="Determines, whether the given type satisfies the requirements of a finalize-policy for the given sign...">finalize_policy_for</a></code> concept, which in fact requires the existence of a <code>finalize_call</code> member function. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>MyFinalizer</div>
 <div class="line">    {</div>
@@ -339,8 +339,8 @@ template&lt;std::size_t index, std::size_t... otherIndices, typename Action &gt;
 </div><!-- fragment --> 
 </div>
 </div>
-<a id="gad79b00cd8116424b32a5590ad9187422" name="gad79b00cd8116424b32a5590ad9187422"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad79b00cd8116424b32a5590ad9187422">&#9670;&#160;</a></span>returns_arg()</h2>
+<a id="gaf1ce10575d208bda2ed786798243e214" name="gaf1ce10575d208bda2ed786798243e214"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf1ce10575d208bda2ed786798243e214">&#9670;&#160;</a></span>returns_arg()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -359,7 +359,7 @@ template&lt;std::size_t index&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">consteval</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -492,7 +492,7 @@ requires std::copyable&lt;std::remove_cvref_t&lt;T&gt;&gt;</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Dec 17 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Generated on Thu Dec 19 2024 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
   </ul>
 </div>
 </body>
