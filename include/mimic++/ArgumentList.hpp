@@ -130,18 +130,27 @@ namespace mimicpp::detail
                 (... && std::is_nothrow_invocable_v<const Projections&, Args>)
                 && std::is_nothrow_invocable_v<Fun, std::invoke_result_t<const Projections&, Args>...>)
         {
-            return [&, this]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
-                       -> decltype(auto) {
-                return std::invoke(
-                    std::forward<Fun>(fun),
-                    std::invoke(
-                        std::get<indices>(m_Projections),
-                        std::forward<Args>(std::get<indices>(argList)))...);
-            }(std::index_sequence_for<Projections...>{});
+            return invoke_impl(
+                std::forward<Fun>(fun),
+                std::move(argList),
+                std::index_sequence_for<Projections...>{});
         }
 
     private:
         std::tuple<Projections...> m_Projections;
+
+        template <typename Fun, typename... Args, std::size_t... indices>
+        constexpr decltype(auto) invoke_impl(
+            Fun&& fun,
+            std::tuple<Args...>&& argList,
+            [[maybe_unused]] const std::index_sequence<indices...>) const
+        {
+            return std::invoke(
+                std::forward<Fun>(fun),
+                std::invoke(
+                    std::get<indices>(m_Projections),
+                    std::forward<Args>(std::get<indices>(argList)))...);
+        }
     };
 }
 
