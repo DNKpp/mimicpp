@@ -10,9 +10,9 @@
 
 #include "mimic++/ControlPolicy.hpp"
 #include "mimic++/Expectation.hpp"
-#include "mimic++/ExpectationPolicies.hpp"
 #include "mimic++/Matcher.hpp"
 #include "mimic++/Sequence.hpp"
+#include "mimic++/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 
 namespace mimicpp

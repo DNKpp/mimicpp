@@ -10,7 +10,6 @@
 
 #include "mimic++/Reports.hpp"
 #include "mimic++/Sequence.hpp"
-#include "mimic++/Utility.hpp"
 
 #include <cassert>
 #include <limits>
@@ -277,7 +276,7 @@ namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto times(const int min, const int max)
     {
-        return detail::TimesConfig{min, max};
+        return mimicpp::detail::TimesConfig{min, max};
     }
 
     /**
@@ -292,7 +291,7 @@ namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto times(const int exactly)
     {
-        return detail::TimesConfig(exactly, exactly);
+        return mimicpp::detail::TimesConfig(exactly, exactly);
     }
 
     /**
@@ -307,7 +306,7 @@ namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto at_least(const int min)
     {
-        return detail::TimesConfig{
+        return mimicpp::detail::TimesConfig{
             min,
             std::numeric_limits<int>::max()};
     }
@@ -324,7 +323,7 @@ namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto at_most(const int max)
     {
-        return detail::TimesConfig{
+        return mimicpp::detail::TimesConfig{
             0,
             max};
     }
@@ -339,7 +338,7 @@ namespace mimicpp::expect
     [[nodiscard]]
     consteval auto once() noexcept
     {
-        constexpr detail::TimesConfig config{
+        constexpr mimicpp::detail::TimesConfig config{
             1,
             1};
 
@@ -356,7 +355,7 @@ namespace mimicpp::expect
     [[nodiscard]]
     consteval auto twice() noexcept
     {
-        constexpr detail::TimesConfig config{
+        constexpr mimicpp::detail::TimesConfig config{
             2,
             2};
 

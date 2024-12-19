@@ -28,6 +28,7 @@
 #include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/policies/SideEffectPolicies.hpp"
