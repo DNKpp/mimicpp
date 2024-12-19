@@ -6,7 +6,8 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/adapters/gtest.hpp"
 
-#include "gtest/gtest-spi.h"
+#include <gtest/gtest-matchers.h>
+#include <gtest/gtest-spi.h>
 
 namespace
 {
@@ -106,4 +107,31 @@ TEST(
     EXPECT_FATAL_FAILURE(
         EXPECT_ANY_THROW(mimicpp::detail::gtest::send_fail("Test")),
         "Test");
+}
+
+TEST(
+	GTestMatcher,
+	ComparisonMatcher
+)
+{
+	static_assert(
+		mimicpp::matcher_for<
+			decltype(::testing::Ge(42)),
+			const int&>);
+
+	mimicpp::Mock<void(const int&)> mock{};
+
+	SCOPED_EXP mock.expect_call(::testing::Ge(42));
+	mock(1337);
+}
+
+TEST(
+	GTestMatcher,
+	GenericMatcher
+)
+{
+	static_assert(
+		mimicpp::matcher_for<
+			decltype(::testing::ContainsRegex("Hello, \\d")),
+			const std::string&>);
 }
