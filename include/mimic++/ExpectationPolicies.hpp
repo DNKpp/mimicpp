@@ -143,92 +143,6 @@ namespace mimicpp::expectation_policies
         Exception m_Exception;
     };
 
-    template <template <typename> typename TypeProjection, typename IndexSequence>
-    struct args_selector_fn;
-
-    template <template <typename> typename TypeProjection, std::size_t... indices>
-    struct args_selector_fn<TypeProjection, std::index_sequence<indices...>>
-    {
-    public:
-        static_assert(
-            std::is_reference_v<TypeProjection<int&>>,
-            "Only use reference-projections.");
-
-        template <std::size_t index, typename Signature>
-        using projected_t = TypeProjection<signature_param_type_t<index, Signature>>;
-
-        template <typename Return, typename... Args>
-        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
-        {
-            using signature_t = Return(Args...);
-
-            return std::forward_as_tuple(
-                static_cast<projected_t<indices, signature_t>>(
-                    // all elements are std::reference_wrapper, so unwrap them first
-                    std::get<indices>(callInfo.args).get())...);
-        }
-    };
-
-    template <template <typename> typename TypeProjection>
-    struct all_args_selector_fn
-    {
-    public:
-        template <typename Return, typename... Args>
-        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
-        {
-            return std::invoke(
-                args_selector_fn<TypeProjection, std::index_sequence_for<Args...>>{},
-                callInfo);
-        }
-    };
-
-    struct arg_list_forward_apply_fn
-    {
-    public:
-        template <typename Fun, typename... Args>
-            requires std::invocable<Fun, Args...>
-        constexpr decltype(auto) operator()(Fun&& fun, std::tuple<Args...>&& argList) const
-            noexcept(std::is_nothrow_invocable_v<Fun, Args...>)
-        {
-            return std::apply(
-                std::forward<Fun>(fun),
-                std::move(argList));
-        }
-    };
-
-    template <typename... Projections>
-    struct arg_list_indirect_apply_fn
-    {
-    public:
-        [[nodiscard]]
-        explicit constexpr arg_list_indirect_apply_fn(std::tuple<Projections...> projections = {})
-            noexcept(std::is_nothrow_move_constructible_v<std::tuple<Projections...>>)
-            : m_Projections{std::move(projections)}
-        {
-        }
-
-        template <typename Fun, typename... Args>
-            requires(... && std::invocable<const Projections&, Args>)
-                 && std::invocable<Fun, std::invoke_result_t<const Projections&, Args>...>
-        constexpr decltype(auto) operator()(Fun&& fun, std::tuple<Args...>&& argList) const
-            noexcept(
-                (... && std::is_nothrow_invocable_v<const Projections&, Args>)
-                && std::is_nothrow_invocable_v<Fun, std::invoke_result_t<const Projections&, Args>...>)
-        {
-            return [&, this]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
-                       -> decltype(auto) {
-                return std::invoke(
-                    std::forward<Fun>(fun),
-                    std::invoke(
-                        std::get<indices>(m_Projections),
-                        std::forward<Args>(std::get<indices>(argList)))...);
-            }(std::index_sequence_for<Projections...>{});
-        }
-
-    private:
-        std::tuple<Projections...> m_Projections;
-    };
-
     template <typename Matcher>
     struct matcher_matches_fn
     {
@@ -360,90 +274,6 @@ namespace mimicpp::expectation_policies
         Action m_Action;
     };
 
-    template <typename Action, template <typename> typename Projection>
-        requires std::same_as<Action, std::remove_cvref_t<Action>>
-    class ApplyAllArgsAction
-    {
-    public:
-        [[nodiscard]]
-        explicit constexpr ApplyAllArgsAction(
-            Action action = {}) noexcept(std::is_nothrow_move_constructible_v<Action>)
-            : m_Action{std::move(action)}
-        {
-        }
-
-        template <typename Arg>
-        using ProjectedArgT = Projection<Arg>;
-
-        template <typename Return, typename... Args>
-            requires std::invocable<
-                const Action&,
-                ProjectedArgT<Args>...>
-        constexpr decltype(auto) operator()(
-            const call::Info<Return, Args...>& callInfo) const noexcept(std::is_nothrow_invocable_v<const Action&, ProjectedArgT<Args>...>)
-        {
-            static_assert(
-                (... && explicitly_convertible_to<Args&, ProjectedArgT<Args>>),
-                "Projection can not be applied.");
-
-            return std::apply(
-                [this](auto&... args) -> decltype(auto) {
-                    return std::invoke(
-                        m_Action,
-                        static_cast<ProjectedArgT<Args>>(
-                            args.get())...);
-                },
-                callInfo.args);
-        }
-
-    private:
-        Action m_Action;
-    };
-
-    template <typename Action, template <typename> typename Projection, std::size_t... indices>
-        requires std::same_as<Action, std::remove_cvref_t<Action>>
-    class ApplyArgsAction
-    {
-    public:
-        [[nodiscard]]
-        explicit(false) constexpr ApplyArgsAction(Action action)
-            noexcept(std::is_nothrow_move_constructible_v<Action>)
-            : m_Action{std::move(action)}
-        {
-        }
-
-        template <std::size_t index, typename... Args>
-        using ArgListElementT = std::tuple_element_t<index, std::tuple<Args...>>;
-
-        template <std::size_t index, typename... Args>
-        using ProjectedArgListElementT = Projection<ArgListElementT<index, Args...>>;
-
-        template <typename Return, typename... Args>
-            requires(... && (indices < sizeof...(Args)))
-                 && std::invocable<
-                        const Action&,
-                        ProjectedArgListElementT<indices, Args...>...>
-        constexpr decltype(auto) operator()(
-            const call::Info<Return, Args...>& callInfo) const
-            noexcept(std::is_nothrow_invocable_v<const Action&, ProjectedArgListElementT<indices, Args...>...>)
-        {
-            static_assert(
-                (explicitly_convertible_to<
-                     ArgListElementT<indices, Args...>&,
-                     ProjectedArgListElementT<indices, Args...>>
-                 && ...),
-                "Projection can not be applied.");
-
-            return std::invoke(
-                m_Action,
-                static_cast<ProjectedArgListElementT<indices, Args...>>(
-                    std::get<indices>(callInfo.args).get())...);
-        }
-
-    private:
-        [[no_unique_address]] Action m_Action;
-    };
-
     template <typename ArgSelector, typename ApplyStrategy>
     struct apply_args_fn
     {
@@ -481,6 +311,92 @@ namespace mimicpp::expectation_policies
     private:
         ArgSelector m_ArgSelector;
         ApplyStrategy m_ApplyStrategy;
+    };
+
+    template <template <typename> typename TypeProjection, typename IndexSequence>
+    struct args_selector_fn;
+
+    template <template <typename> typename TypeProjection, std::size_t... indices>
+    struct args_selector_fn<TypeProjection, std::index_sequence<indices...>>
+    {
+    public:
+        static_assert(
+            std::is_reference_v<TypeProjection<int&>>,
+            "Only use reference-projections.");
+
+        template <std::size_t index, typename Signature>
+        using projected_t = TypeProjection<signature_param_type_t<index, Signature>>;
+
+        template <typename Return, typename... Args>
+        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
+        {
+            using signature_t = Return(Args...);
+
+            return std::forward_as_tuple(
+                static_cast<projected_t<indices, signature_t>>(
+                    // all elements are std::reference_wrapper, so unwrap them first
+                    std::get<indices>(callInfo.args).get())...);
+        }
+    };
+
+    template <template <typename> typename TypeProjection>
+    struct all_args_selector_fn
+    {
+    public:
+        template <typename Return, typename... Args>
+        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
+        {
+            return std::invoke(
+                args_selector_fn<TypeProjection, std::index_sequence_for<Args...>>{},
+                callInfo);
+        }
+    };
+
+    struct arg_list_forward_apply_fn
+    {
+    public:
+        template <typename Fun, typename... Args>
+            requires std::invocable<Fun, Args...>
+        constexpr decltype(auto) operator()(Fun&& fun, std::tuple<Args...>&& argList) const
+            noexcept(std::is_nothrow_invocable_v<Fun, Args...>)
+        {
+            return std::apply(
+                std::forward<Fun>(fun),
+                std::move(argList));
+        }
+    };
+
+    template <typename... Projections>
+    struct arg_list_indirect_apply_fn
+    {
+    public:
+        [[nodiscard]]
+        explicit constexpr arg_list_indirect_apply_fn(std::tuple<Projections...> projections = {})
+            noexcept(std::is_nothrow_move_constructible_v<std::tuple<Projections...>>)
+            : m_Projections{std::move(projections)}
+        {
+        }
+
+        template <typename Fun, typename... Args>
+            requires(... && std::invocable<const Projections&, Args>)
+                 && std::invocable<Fun, std::invoke_result_t<const Projections&, Args>...>
+        constexpr decltype(auto) operator()(Fun&& fun, std::tuple<Args...>&& argList) const
+            noexcept(
+                (... && std::is_nothrow_invocable_v<const Projections&, Args>)
+                && std::is_nothrow_invocable_v<Fun, std::invoke_result_t<const Projections&, Args>...>)
+        {
+            return [&, this]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
+                       -> decltype(auto) {
+                return std::invoke(
+                    std::forward<Fun>(fun),
+                    std::invoke(
+                        std::get<indices>(m_Projections),
+                        std::forward<Args>(std::get<indices>(argList)))...);
+            }(std::index_sequence_for<Projections...>{});
+        }
+
+    private:
+        std::tuple<Projections...> m_Projections;
     };
 }
 
