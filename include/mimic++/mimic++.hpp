@@ -10,28 +10,25 @@
 
 #include "mimic++/Fwd.hpp"
 
-#include "mimic++/Utility.hpp"
-#include "mimic++/TypeTraits.hpp"
-#include "mimic++/String.hpp"
-
-#include "mimic++/Printer.hpp"
-#include "mimic++/Reports.hpp"
-#include "mimic++/Reporter.hpp"
-
-#include "mimic++/Sequence.hpp"
-#include "mimic++/Matcher.hpp"
-#include "mimic++/ControlPolicy.hpp"
-#include "mimic++/ExpectationPolicies.hpp"
-#include "mimic++/ExpectationBuilder.hpp"
-
 #include "mimic++/ArgumentList.hpp"
 #include "mimic++/Call.hpp"
-#include "mimic++/Expectation.hpp"
-#include "mimic++/Mock.hpp"
-#include "mimic++/InterfaceMock.hpp"
-#include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/CallConvention.hpp"
-
+#include "mimic++/ControlPolicy.hpp"
+#include "mimic++/Expectation.hpp"
+#include "mimic++/ExpectationBuilder.hpp"
+#include "mimic++/ExpectationPolicies.hpp"
+#include "mimic++/InterfaceMock.hpp"
+#include "mimic++/Matcher.hpp"
+#include "mimic++/Mock.hpp"
+#include "mimic++/ObjectWatcher.hpp"
+#include "mimic++/Printer.hpp"
+#include "mimic++/Reporter.hpp"
+#include "mimic++/Reports.hpp"
+#include "mimic++/Sequence.hpp"
+#include "mimic++/String.hpp"
+#include "mimic++/TypeTraits.hpp"
+#include "mimic++/Utility.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
+#include "mimic++/policies/SideEffectPolicies.hpp"
 
 #endif
