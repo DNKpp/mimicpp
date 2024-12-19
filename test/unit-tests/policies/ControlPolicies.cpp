@@ -37,7 +37,7 @@ TEST_CASE(
     "TimesConfig when invalid limits are given.",
     "[detail][expectation][expectation::control]")
 {
-    SECTION("When max > min.")
+    SECTION("When max < min.")
     {
         const int max = GENERATE(range(0, 5));
         const int min = max + GENERATE(range(1, 5));
@@ -1002,6 +1002,14 @@ TEST_CASE(
 
         REQUIRE(limit == config.min());
         REQUIRE(std::numeric_limits<int>::max() == config.max());
+    }
+
+    SECTION("never")
+    {
+        constexpr detail::TimesConfig config = expect::never();
+
+        REQUIRE(0 == config.min());
+        REQUIRE(0 == config.max());
     }
 
     SECTION("once")
