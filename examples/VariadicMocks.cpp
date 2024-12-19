@@ -4,6 +4,8 @@
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/InterfaceMock.hpp"
+#include "mimic++/Mock.hpp"
+#include "mimic++/policies/FinalizerPolicies.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 

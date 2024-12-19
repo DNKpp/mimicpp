@@ -5,6 +5,7 @@
 
 #include "../test/unit-tests/SuppressionMacros.hpp" // needs to disable some warnings on gcc
 #include "mimic++/ObjectWatcher.hpp"
+#include "mimic++/policies/SideEffectPolicies.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
