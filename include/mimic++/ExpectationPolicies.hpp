@@ -346,7 +346,7 @@ namespace mimicpp::expect
      */
 
     /**
-     * \brief Checks, whether the selected argument matches the given matcher.
+     * \brief Checks whether the selected argument satisfies the given matcher.
      * \tparam index The index of the selected argument.
      * \tparam Matcher The matcher type.
      * \param matcher The matcher.
@@ -373,7 +373,7 @@ namespace mimicpp::expect
     }
 
     /**
-     * \brief Checks, whether the selected arguments match the given matcher.
+     * \brief Checks whether the selected arguments satisfy the given matcher.
      * \tparam first The index of the first selected argument.
      * \tparam others The indices of other selected arguments.
      * \tparam Matcher The matcher type.
@@ -412,6 +412,36 @@ namespace mimicpp::expect
             std::forward<Matcher>(matcher),
             mimicpp::detail::expand_tuple<std::identity, 1u + sizeof...(others)>(
                 std::forward_as_tuple(std::forward<Projections>(projections)...)));
+    }
+
+    /**
+     * \brief Checks whether the all arguments satisfy the given matcher.
+     * \tparam Matcher The matcher type.
+     * \param matcher The matcher.
+     * \param projections Projections, the arguments will be applied on.
+     *
+     * \details This requirement checks, whether the all arguments satisfy the given matcher.
+     * It's useful, when all arguments must be checked together, because they have some kind of relationship.
+     * When ``n`` arguments are provided the matcher must accept ``n`` arguments.
+     *
+     * \details For a list of built-in matchers, see \ref EXPECTATION_MATCHER "matcher" section.
+     * \snippet Requirements.cpp expect::all_args
+     */
+    template <typename Matcher>
+    [[nodiscard]]
+    constexpr auto all_args(Matcher&& matcher)
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>)
+    {
+        using arg_selector_t = mimicpp::detail::all_args_selector_fn<std::add_lvalue_reference_t>;
+        using apply_strategy_t = mimicpp::detail::arg_list_forward_apply_fn;
+        using describe_strategy_t = detail::all_args_requirement_describer;
+
+        return expectation_policies::ArgsRequirement{
+            std::forward<Matcher>(matcher),
+            mimicpp::detail::apply_args_fn(
+                arg_selector_t{},
+                apply_strategy_t{}),
+            describe_strategy_t{}};
     }
 
     /**

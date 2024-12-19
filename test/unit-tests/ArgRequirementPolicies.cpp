@@ -178,7 +178,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "expect::arg creates an expectation_policies::Requirement policy.",
+    "expect::arg creates an expectation_policies::ArgRequirement policy.",
     "[expectation][expectation::factories]")
 {
     using trompeloeil::_;
@@ -265,4 +265,54 @@ TEST_CASE(
         .RETURN(match);
 
     REQUIRE(match == std::as_const(policy).matches(info));
+}
+
+TEST_CASE(
+    "expect::all_args creates an expectation_policies::ArgRequirement policy.",
+    "[expectation][expectation::factories]")
+{
+    using trompeloeil::_;
+    namespace Matches = Catch::Matchers;
+
+    using SignatureT = void(int, std::string);
+    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    int arg0{42};
+    std::string arg1{"Test"};
+    const CallInfoT info{
+        .args = {arg0, arg1},
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))
+    };
+
+    using MatcherT = VariadicMatcherMock<int&, std::string&>;
+    STATIC_CHECK(matcher_for<MatcherT, int&, std::string&>);
+    MatcherT matcher{};
+
+    expectation_policies::ArgsRequirement policy = expect::all_args(
+        MatcherFacade{
+            std::ref(matcher),
+            UnwrapReferenceWrapper{}});
+    STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+
+    REQUIRE(std::as_const(policy).is_satisfied());
+    REQUIRE_NOTHROW(policy.consume(info));
+
+    SECTION("Policy description.")
+    {
+        SCOPED_EXP std::as_const(matcher).describe.expect_call()
+            and finally::returns<std::string>("matcher description");
+
+        REQUIRE_THAT(
+            policy.describe(),
+            Catch::Matchers::Equals("expect: arg[all] matcher description"));
+    }
+
+    SECTION("Policy matches().")
+    {
+        const bool match = GENERATE(true, false);
+        SCOPED_EXP std::as_const(matcher).matches.expect_call(matches::instance(arg0), matches::instance(arg1))
+            and finally::returns(match);
+
+        REQUIRE(match == std::as_const(policy).matches(info));
+    }
 }
