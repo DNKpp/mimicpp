@@ -214,7 +214,7 @@ namespace mimicpp::finally
      */
     template <std::size_t index>
     [[nodiscard]]
-    constexpr auto returns_arg()
+    consteval auto returns_arg() noexcept
     {
         using arg_selector_t = detail::args_selector_fn<
             std::add_rvalue_reference_t,
