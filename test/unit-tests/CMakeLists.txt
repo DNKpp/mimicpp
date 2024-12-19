@@ -14,7 +14,6 @@ add_executable(${TARGET_NAME}
     "ArgumentList.cpp"
     "Call.cpp"
     "Config.cpp"
-    "ControlPolicy.cpp"
     "Expectation.cpp"
     "ExpectationBuilder.cpp"
     "InterfaceMock.cpp"

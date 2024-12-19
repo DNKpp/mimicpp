@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include "mimic++/ControlPolicy.hpp"
 #include "mimic++/Expectation.hpp"
 #include "mimic++/Matcher.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/policies/ArgRequirementPolicies.hpp"
+#include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 
 namespace mimicpp

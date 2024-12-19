@@ -9,14 +9,15 @@
 #pragma once
 
 #include "mimic++/Call.hpp"
-#include "mimic++/ControlPolicy.hpp"
 #include "mimic++/Reporter.hpp"
+#include "mimic++/Sequence.hpp"
 #include "mimic++/TypeTraits.hpp"
 
 #include <cassert>
 #include <concepts>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <ranges>
 #include <tuple>
 #include <utility>

@@ -3,11 +3,12 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_CONTROL_POLICY_HPP
-#define MIMICPP_CONTROL_POLICY_HPP
+#ifndef MIMICPP_POLICIES_CONTROL_POLICY_HPP
+#define MIMICPP_POLICIES_CONTROL_POLICY_HPP
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Reports.hpp"
 #include "mimic++/Sequence.hpp"
 
