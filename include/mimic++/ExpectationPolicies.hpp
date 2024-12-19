@@ -254,29 +254,22 @@ namespace mimicpp::expectation_policies
         }
     };
 
-    template <
-        typename ArgSelector,
-        typename ApplyStrategy,
-        typename Matcher,
-        typename Describer>
+    template <typename Matcher, typename MatchesStrategy, typename DescribeStrategy>
     class ArgsRequirement
     {
     public:
         [[nodiscard]]
         explicit constexpr ArgsRequirement(
             Matcher matcher,
-            Describer describer,
-            ArgSelector argSelector,
-            ApplyStrategy applyStrategy)
+            MatchesStrategy matchesStrategy,
+            DescribeStrategy describeStrategy)
             noexcept(
                 std::is_nothrow_move_constructible_v<Matcher>
-                && std::is_nothrow_move_constructible_v<Describer>
-                && std::is_nothrow_move_constructible_v<ArgSelector>
-                && std::is_nothrow_move_constructible_v<ApplyStrategy>)
+                && std::is_nothrow_move_constructible_v<MatchesStrategy>
+                && std::is_nothrow_move_constructible_v<DescribeStrategy>)
             : m_Matcher{std::move(matcher)},
-              m_Describer{std::move(describer)},
-              m_ArgSelector{std::move(argSelector)},
-              m_ApplyStrategy{std::move(applyStrategy)}
+              m_MatchesStrategy{std::move(matchesStrategy)},
+              m_DescribeStrategy{std::move(describeStrategy)}
         {
         }
 
@@ -287,23 +280,15 @@ namespace mimicpp::expectation_policies
         }
 
         template <typename Return, typename... Args>
-            requires std::invocable<const ArgSelector&, const call::Info<Return, Args...>&>
-                  && std::invocable<
-                         const ApplyStrategy&,
-                         matcher_matches_fn<Matcher>,
-                         std::invoke_result_t<const ArgSelector&, const call::Info<Return, Args...>&>>
+            requires std::is_invocable_r_v<bool, const MatchesStrategy&, matcher_matches_fn<Matcher>, const call::Info<Return, Args...>&>
         [[nodiscard]]
         constexpr bool matches(const call::Info<Return, Args...>& info) const
-            noexcept(
-                std::is_nothrow_invocable_v<
-                    const ApplyStrategy&,
-                    matcher_matches_fn<Matcher>,
-                    std::invoke_result_t<const ArgSelector&, const call::Info<Return, Args...>&>>)
+            noexcept(std::is_nothrow_invocable_v<const MatchesStrategy&, matcher_matches_fn<Matcher>, const call::Info<Return, Args...>&>)
         {
             return std::invoke(
-                m_ApplyStrategy,
+                m_MatchesStrategy,
                 matcher_matches_fn<Matcher>{m_Matcher},
-                std::invoke(m_ArgSelector, info));
+                info);
         }
 
         template <typename Return, typename... Args>
@@ -315,15 +300,14 @@ namespace mimicpp::expectation_policies
         StringT describe() const
         {
             return std::invoke(
-                m_Describer,
+                m_DescribeStrategy,
                 detail::describe_hook::describe(m_Matcher));
         }
 
     private:
-        [[no_unique_address]] Matcher m_Matcher;
-        [[no_unique_address]] Describer m_Describer;
-        [[no_unique_address]] ArgSelector m_ArgSelector;
-        [[no_unique_address]] ApplyStrategy m_ApplyStrategy;
+        Matcher m_Matcher;
+        [[no_unique_address]] MatchesStrategy m_MatchesStrategy;
+        [[no_unique_address]] DescribeStrategy m_DescribeStrategy;
     };
 
     template <typename Action>
@@ -511,8 +495,7 @@ namespace mimicpp::expect
             StringT operator()(const StringViewT matcherDescription) const
             {
                 StringStreamT out{};
-                out << "expect: arg[";
-                out << index;
+                out << "expect: arg[" << index;
                 ((out << ", " << others), ...);
                 out << "] " << matcherDescription;
                 return std::move(out).str();
@@ -532,19 +515,18 @@ namespace mimicpp::expect
                 sizeof...(indices) == sizeof...(Projections),
                 "Indices and projections size mismatch.");
 
-            using apply_strategy_t = expectation_policies::arg_list_apply<std::remove_cvref_t<Projections>...>;
-            using arg_selector_t = expectation_policies::arg_selector<std::add_lvalue_reference_t, indices...>;
-            using Policy2T = expectation_policies::ArgsRequirement<
-                arg_selector_t,
-                apply_strategy_t,
-                std::remove_cvref_t<Matcher>,
-                arg_requirement_describer<indices...>>;
+            using arg_selector_t = expectation_policies::args_selector_fn<
+                std::add_lvalue_reference_t,
+                std::index_sequence<indices...>>;
+            using apply_strategy_t = expectation_policies::arg_list_indirect_apply_fn<std::remove_cvref_t<Projections>...>;
+            using describe_strategy_t = arg_requirement_describer<indices...>;
 
-            return Policy2T{
+            return expectation_policies::ArgsRequirement{
                 std::forward<Matcher>(matcher),
-                {},
-                arg_selector_t{},
-                apply_strategy_t{std::move(projections)}};
+                expectation_policies::apply_args_fn(
+                    arg_selector_t{},
+                    apply_strategy_t{std::move(projections)}),
+                describe_strategy_t{}};
         }
     }
 

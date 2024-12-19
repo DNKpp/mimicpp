@@ -10,6 +10,18 @@
 
 using namespace mimicpp;
 
+namespace
+{
+    inline constexpr std::array refQualifiers{
+        ValueCategory::lvalue,
+        ValueCategory::rvalue,
+        ValueCategory::any};
+    inline constexpr std::array constQualifiers{
+        Constness::non_const,
+        Constness::as_const,
+        Constness::any};
+}
+
 TEST_CASE(
     "expect::detail::arg_requirement_describer generates a description.",
     "[detail][expectation][expectation::policy]")
@@ -45,7 +57,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "expectation_policies::Requirement checks whether the given call::Info matches.",
+    "expectation_policies::ArgsRequirement checks whether the given call::Info matches.",
     "[expectation][expectation::policy]")
 {
     using trompeloeil::_;
@@ -56,30 +68,24 @@ TEST_CASE(
     int arg0{42};
     const CallInfoT info{
         .args = {arg0},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    using ArgSelectorT = InvocableMock<std::tuple<int&>, const CallInfoT&>;
-    using ProjectionT = InvocableMock<int&, int&>;
-    using ApplyStrategyT = expectation_policies::arg_list_apply<std::reference_wrapper<ProjectionT>>;
-    using DescriberT = InvocableMock<StringT, StringViewT>;
+    using DescriberStrategyT = InvocableMock<StringT, StringViewT>;
     using MatcherT = MatcherMock<int&>;
+    using MatchesStrategyT = InvocableMock<
+        bool,
+        expectation_policies::matcher_matches_fn<MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>>,
+        const CallInfoT&>;
     STATIC_CHECK(matcher_for<MatcherT, int&>);
 
     MatcherT matcher{};
-    ArgSelectorT argSelector{};
-    ProjectionT projection{};
-    DescriberT describer{};
-    expectation_policies::ArgsRequirement<
-        std::reference_wrapper<ArgSelectorT>,
-        ApplyStrategyT,
-        MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>,
-        std::reference_wrapper<DescriberT>>
-        policy{
-            MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
-            describer,
-            argSelector,
-            ApplyStrategyT{std::make_tuple(std::ref(projection))}
+    MatchesStrategyT matchesStrategy{};
+    DescriberStrategyT describeStrategy{};
+    expectation_policies::ArgsRequirement policy{
+        MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
+        std::ref(matchesStrategy),
+        std::ref(describeStrategy)
     };
 
     STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
@@ -91,7 +97,7 @@ TEST_CASE(
     {
         REQUIRE_CALL(matcher, describe())
             .RETURN("matcher description");
-        REQUIRE_CALL(describer, Invoke("matcher description"))
+        REQUIRE_CALL(describeStrategy, Invoke("matcher description"))
             .RETURN("expect that: matcher description");
 
         REQUIRE_THAT(
@@ -101,12 +107,9 @@ TEST_CASE(
 
     SECTION("Testing matches.")
     {
-        REQUIRE_CALL(argSelector, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .RETURN(_1.args);
-        REQUIRE_CALL(projection, Invoke(_))
-            .LR_WITH(&_1 == &arg0)
-            .LR_RETURN(std::ref(arg0));
+        REQUIRE_CALL(matchesStrategy, Invoke(_, _))
+            .LR_WITH(&_2 == &info)
+            .LR_RETURN(_1.matcher.matches(arg0));
         const bool expected = GENERATE(true, false);
         REQUIRE_CALL(matcher, matches(_))
             .LR_WITH(&_1 == &arg0)
@@ -129,7 +132,7 @@ namespace
 }
 
 TEST_CASE(
-    "expectation_policies::ArgsRequirement checks whether the given call::Info matches.",
+    "expectation_policies::ArgsRequirement supports variadic arguments.",
     "[expectation][expectation::policy]")
 {
     using trompeloeil::_;
@@ -142,74 +145,26 @@ TEST_CASE(
     double arg2{1337.};
     const CallInfoT info{
         .args = {arg0, arg1, arg2},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))
     };
 
-    using Projection0T = InvocableMock<int&, int&>;
-    using Projection1T = InvocableMock<const std::string&, const std::string&>;
-    using Projection2T = InvocableMock<double&, double&>;
-    using ApplyStrategyT = expectation_policies::arg_list_apply<
-        std::reference_wrapper<Projection0T>,
-        std::reference_wrapper<Projection1T>,
-        std::reference_wrapper<Projection2T>>;
-    using DescriberT = InvocableMock<StringT, StringViewT>;
     using MatcherT = VariadicMatcherMock<int&, const std::string&, double&>;
     STATIC_CHECK(matcher_for<MatcherT, int&, const std::string&, double&>);
-
-    using ArgSelectorT = InvocableMock< // let's just extract the args as they are
-        std::tuple<int&, const std::string&, double&>,
-        const CallInfoT&>;
-    Projection0T projection0{};
-    Projection1T projection1{};
-    Projection2T projection2{};
-    ArgSelectorT argSelector{};
-    DescriberT describer{};
     MatcherT matcher{};
-    expectation_policies::ArgsRequirement<
-        std::reference_wrapper<ArgSelectorT>,
-        ApplyStrategyT,
-        MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>,
-        std::reference_wrapper<DescriberT>>
-        policy{
-            MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
-            describer,
-            argSelector,
-            ApplyStrategyT{std::make_tuple(std::ref(projection0), std::ref(projection1), std::ref(projection2))}
+
+    expectation_policies::ArgsRequirement policy{
+        MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
+        expectation_policies::apply_args_fn{
+                      expectation_policies::all_args_selector_fn<std::add_lvalue_reference_t>{},
+                      expectation_policies::arg_list_forward_apply_fn{}},
+        expect::detail::arg_requirement_describer<0u, 1u, 2u>{}
     };
 
     STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
 
-    REQUIRE(std::as_const(policy).is_satisfied());
-    REQUIRE_NOTHROW(policy.consume(info));
-
-    SECTION("Policy description.")
-    {
-        SCOPED_EXP matcher.describe.expect_call()
-            and finally::returns<StringT>("matcher description");
-        REQUIRE_CALL(describer, Invoke("matcher description"))
-            .RETURN("expect that: matcher description");
-
-        REQUIRE_THAT(
-            policy.describe(),
-            Catch::Matchers::Equals("expect that: matcher description"));
-    }
-
     SECTION("Testing matches.")
     {
-        REQUIRE_CALL(argSelector, Invoke(_))
-            .LR_WITH(&_1 == &info)
-            .RETURN(_1.args);
-        REQUIRE_CALL(projection0, Invoke(_))
-            .LR_WITH(&_1 == &arg0)
-            .LR_RETURN(std::ref(_1));
-        REQUIRE_CALL(projection1, Invoke(_))
-            .LR_WITH(&_1 == &arg1)
-            .LR_RETURN(std::ref(_1));
-        REQUIRE_CALL(projection2, Invoke(_))
-            .LR_WITH(&_1 == &arg2)
-            .LR_RETURN(std::ref(_1));
-
         const bool expected = GENERATE(true, false);
         using matches::instance;
         SCOPED_EXP matcher.matches.expect_call(instance(arg0), instance(arg1), instance(arg2))
@@ -231,8 +186,8 @@ TEST_CASE(
     int arg0{42};
     const CallInfoT info{
         .args = {arg0},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     using MatcherT = MatcherMock<int&>;
     STATIC_CHECK(matcher_for<MatcherT, int&>);
@@ -280,8 +235,8 @@ TEST_CASE(
     int arg0{42};
     const CallInfoT info{
         .args = {arg0},
-        .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
-        .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
 
     using MatcherT = MatcherMock<const std::string&>;
     STATIC_CHECK(matcher_for<MatcherT, std::string>);
