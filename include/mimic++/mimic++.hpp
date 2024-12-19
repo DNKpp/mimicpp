@@ -24,6 +24,7 @@
 #include "mimic++/ExpectationPolicies.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 
+#include "mimic++/ArgumentList.hpp"
 #include "mimic++/Call.hpp"
 #include "mimic++/Expectation.hpp"
 #include "mimic++/Mock.hpp"
