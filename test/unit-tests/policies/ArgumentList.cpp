@@ -3,7 +3,7 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/ArgumentList.hpp"
+#include "mimic++/policies/ArgumentList.hpp"
 
 #include "TestTypes.hpp"
 

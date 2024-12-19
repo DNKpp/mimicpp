@@ -8,14 +8,14 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
+#include "mimic++/Utility.hpp"
+#include "mimic++/policies/ArgumentList.hpp"
+
 #include <concepts>
 #include <functional>
 #include <type_traits>
 #include <utility>
-
-#include "mimic++/ArgumentList.hpp"
-#include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
 
 namespace mimicpp::expectation_policies
 {

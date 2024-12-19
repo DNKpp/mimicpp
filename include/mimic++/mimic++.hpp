@@ -10,7 +10,6 @@
 
 #include "mimic++/Fwd.hpp"
 
-#include "mimic++/ArgumentList.hpp"
 #include "mimic++/Call.hpp"
 #include "mimic++/CallConvention.hpp"
 #include "mimic++/Expectation.hpp"
@@ -27,6 +26,7 @@
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 #include "mimic++/policies/ArgRequirementPolicies.hpp"
+#include "mimic++/policies/ArgumentList.hpp"
 #include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
