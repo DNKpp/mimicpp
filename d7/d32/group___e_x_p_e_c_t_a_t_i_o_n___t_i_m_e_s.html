@@ -125,6 +125,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5c1b44164371e807365df6c11d5fb221" id="r_ga5c1b44164371e807365df6c11d5fb221"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5c1b44164371e807365df6c11d5fb221">mimicpp::expect::at_most</a> (const int max)</td></tr>
 <tr class="memdesc:ga5c1b44164371e807365df6c11d5fb221"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies a times policy with just an upper limit.  <br /></td></tr>
 <tr class="separator:ga5c1b44164371e807365df6c11d5fb221"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga01f941f8012e59b683fb3388f0a3570a" id="r_ga01f941f8012e59b683fb3388f0a3570a"><td class="memItemLeft" align="right" valign="top">consteval auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga01f941f8012e59b683fb3388f0a3570a">mimicpp::expect::never</a> () noexcept</td></tr>
+<tr class="memdesc:ga01f941f8012e59b683fb3388f0a3570a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies a times policy with both limits set to 0.  <br /></td></tr>
+<tr class="separator:ga01f941f8012e59b683fb3388f0a3570a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga967e8516732b1a6630b2042e64d14cbf" id="r_ga967e8516732b1a6630b2042e64d14cbf"><td class="memItemLeft" align="right" valign="top">consteval auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga967e8516732b1a6630b2042e64d14cbf">mimicpp::expect::once</a> () noexcept</td></tr>
 <tr class="memdesc:ga967e8516732b1a6630b2042e64d14cbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies a times policy with both limits set to 1.  <br /></td></tr>
 <tr class="separator:ga967e8516732b1a6630b2042e64d14cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -232,6 +235,35 @@ Functions</h2></td></tr>
 <div class="line">    mock(); <span class="comment">// fine</span></div>
 <div class="line">    mock(); <span class="comment">// fine but exhausted!</span></div>
 </div><!-- fragment --> 
+</div>
+</div>
+<a id="ga01f941f8012e59b683fb3388f0a3570a" name="ga01f941f8012e59b683fb3388f0a3570a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga01f941f8012e59b683fb3388f0a3570a">&#9670;&#160;</a></span>never()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::expect::never </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">nodiscard</span><span class="mlabel">consteval</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Specifies a times policy with both limits set to 0. </p>
+<dl class="section return"><dt>Returns</dt><dd>The newly created policy.</dd></dl>
+<p>This requires the expectation to be never matched. Useful for explicitly forbidding certain calls. </p>
+
 </div>
 </div>
 <a id="ga967e8516732b1a6630b2042e64d14cbf" name="ga967e8516732b1a6630b2042e64d14cbf"></a>
