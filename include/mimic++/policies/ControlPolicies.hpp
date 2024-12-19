@@ -330,6 +330,22 @@ namespace mimicpp::expect
     }
 
     /**
+     * \brief Specifies a times policy with both limits set to 0.
+     * \return The newly created policy.
+     * \details This requires the expectation to be never matched.
+     * Useful for explicitly forbidding certain calls.
+     */
+    [[nodiscard]]
+    consteval auto never() noexcept
+    {
+        constexpr mimicpp::detail::TimesConfig config{
+            0,
+            0};
+
+        return config;
+    }
+
+    /**
      * \brief Specifies a times policy with both limits set to 1.
      * \return The newly created policy.
      * \details This requires the expectation to be matched exactly once.
