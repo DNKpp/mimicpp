@@ -24,6 +24,7 @@ add_executable(${TARGET_NAME}
     "Reports.cpp"
     "Reporter.cpp"
     "Sequence.cpp"
+    "Stacktrace.cpp"
     "String.cpp"
     "TypeTraits.cpp"
     "Utility.cpp"
