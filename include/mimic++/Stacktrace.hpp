@@ -167,7 +167,7 @@ namespace mimicpp
         {
             template <typename Tag = register_tag>
             [[nodiscard]]
-            constexpr Stacktrace operator()(const std::size_t skip) const
+            Stacktrace operator()(const std::size_t skip) const
             {
                 return Stacktrace{
                     stacktrace_current_hook::current<Tag>(maxTag, skip + 1)};
@@ -175,7 +175,7 @@ namespace mimicpp
 
             template <typename Tag = register_tag>
             [[nodiscard]]
-            constexpr Stacktrace operator()() const
+            Stacktrace operator()() const
             {
                 return Stacktrace{
                     stacktrace_current_hook::current<Tag>(maxTag, 1u)};
