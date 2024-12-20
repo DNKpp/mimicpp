@@ -426,6 +426,14 @@ jobs:
               -C ${{ matrix.build_mode }} \
               -j5
 
+      - name: Run custom-stacktrace-tests
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build/test/custom-stacktrace-tests \
+              -C ${{ matrix.build_mode }}
+
       - name: Run examples
         shell: bash
         env:

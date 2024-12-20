@@ -9,30 +9,13 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
-#include "mimic++/Utility.hpp"
 
+#include <memory>
 #include <source_location>
 #include <tuple>
 #include <utility>
-
-namespace mimicpp::call::detail
-{
-    template <typename... Args, std::size_t... indices>
-    [[nodiscard]]
-    constexpr bool is_equal_param_list(
-        const std::tuple<std::reference_wrapper<Args>...>& lhs,
-        const std::tuple<std::reference_wrapper<Args>...>& rhs,
-        const std::index_sequence<indices...>) noexcept
-    {
-        return (
-            ...
-            && (std::addressof(
-                    std::get<indices>(lhs).get())
-                == std::addressof(
-                    std::get<indices>(rhs).get())));
-    }
-}
 
 namespace mimicpp::call
 {
@@ -46,15 +29,7 @@ namespace mimicpp::call
         ValueCategory fromCategory{};
         Constness fromConstness{};
         std::source_location fromSourceLocation{};
-
-        [[nodiscard]]
-        friend bool operator==(const Info& lhs, const Info& rhs)
-        {
-            return lhs.fromCategory == rhs.fromCategory
-                && lhs.fromConstness == rhs.fromConstness
-                && detail::is_equal_param_list(lhs.args, rhs.args, std::index_sequence_for<Args...>{})
-                && is_same_source_location(lhs.fromSourceLocation, rhs.fromSourceLocation);
-        }
+        std::shared_ptr<Stacktrace> stacktrace{};
     };
 
     template <typename Signature>
