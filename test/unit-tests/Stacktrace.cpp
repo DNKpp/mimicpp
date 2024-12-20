@@ -7,6 +7,10 @@
 
 #include "TestTypes.hpp"
 
+#include <ranges> // std::views::*
+// ReSharper disable once CppUnusedIncludeDirective
+#include <source_location>
+
 using namespace mimicpp;
 
 #ifdef MIMICPP_CONFIG_USE_CPPTRACE
@@ -29,7 +33,7 @@ TEST_CASE(
 
 #endif
 
-#ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+#ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
 TEST_CASE(
     "current_stacktrace retrieves the current stacktrace.",
@@ -49,3 +53,20 @@ TEST_CASE(
 }
 
 #endif
+
+TEST_CASE(
+    "stacktrace_traits<EmptyStacktraceBackend>::current() generates a new empty stacktrace.",
+    "[stacktrace]")
+{
+    using traits_t = stacktrace_traits<EmptyStacktraceBackend>;
+
+    const Stacktrace stacktrace{traits_t::current(42)};
+
+    REQUIRE(stacktrace.empty());
+    REQUIRE(0u == stacktrace.size());
+
+    const std::size_t index = GENERATE(0, 1, 42);
+    REQUIRE_THROWS(stacktrace.description(index));
+    REQUIRE_THROWS(stacktrace.source_file(index));
+    REQUIRE_THROWS(stacktrace.source_line(index));
+}
