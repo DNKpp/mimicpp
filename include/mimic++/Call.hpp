@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
 
 #include <source_location>
@@ -27,15 +28,7 @@ namespace mimicpp::call
         ValueCategory fromCategory{};
         Constness fromConstness{};
         std::source_location fromSourceLocation{};
-
-        [[nodiscard]]
-        friend bool operator==(const Info& lhs, const Info& rhs)
-        {
-            return lhs.fromCategory == rhs.fromCategory
-                && lhs.fromConstness == rhs.fromConstness
-                && detail::is_equal_param_list(lhs.args, rhs.args, std::index_sequence_for<Args...>{})
-                && is_same_source_location(lhs.fromSourceLocation, rhs.fromSourceLocation);
-        }
+        Stacktrace stacktrace{EmptyStacktraceBackend{}};
     };
 
     template <typename Signature>
