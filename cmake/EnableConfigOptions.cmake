@@ -103,7 +103,7 @@ if (NOT TARGET enable-config-options)
 		message(DEBUG "${MESSAGE_PREFIX} Stacktrace feature enabled.")
 
 		OPTION(MIMICPP_CONFIG_USE_CPPTRACE "When enabled, requires cpptrace library instead of c++23 stacktrace." OFF)
-		if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
+		if (MIMICPP_CONFIG_USE_CPPTRACE)
 
 			message(DEBUG "${MESSAGE_PREFIX} Searching for installed {cpptrace}-package.")
 			find_package(cpptrace QUIET)
