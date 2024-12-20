@@ -12,6 +12,7 @@
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
 
+#include <memory>
 #include <source_location>
 #include <tuple>
 #include <utility>
@@ -28,7 +29,7 @@ namespace mimicpp::call
         ValueCategory fromCategory{};
         Constness fromConstness{};
         std::source_location fromSourceLocation{};
-        Stacktrace stacktrace{EmptyStacktraceBackend{}};
+        std::shared_ptr<Stacktrace> stacktrace{};
     };
 
     template <typename Signature>
