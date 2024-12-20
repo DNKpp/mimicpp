@@ -9,7 +9,6 @@ find_package(trompeloeil REQUIRED)
 set(TARGET_NAME mimicpp-tests)
 
 add_executable(${TARGET_NAME}
-    "Call.cpp"
     "Config.cpp"
     "Expectation.cpp"
     "ExpectationBuilder.cpp"

@@ -10,29 +10,10 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
-#include "mimic++/Utility.hpp"
 
 #include <source_location>
 #include <tuple>
 #include <utility>
-
-namespace mimicpp::call::detail
-{
-    template <typename... Args, std::size_t... indices>
-    [[nodiscard]]
-    constexpr bool is_equal_param_list(
-        const std::tuple<std::reference_wrapper<Args>...>& lhs,
-        const std::tuple<std::reference_wrapper<Args>...>& rhs,
-        const std::index_sequence<indices...>) noexcept
-    {
-        return (
-            ...
-            && (std::addressof(
-                    std::get<indices>(lhs).get())
-                == std::addressof(
-                    std::get<indices>(rhs).get())));
-    }
-}
 
 namespace mimicpp::call
 {
