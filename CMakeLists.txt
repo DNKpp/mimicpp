@@ -49,6 +49,7 @@ target_compile_options(
 
 set(CMAKE_CXX_STANDARD 20)
 if (MIMICPP_FORCED_CXX_STANDARD)
+	message(DEBUG "${MESSAGE_PREFIX} forced c++-standard c++${MIMICPP_FORCED_CXX_STANDARD}")
 	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
 endif()
 
