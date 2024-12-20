@@ -359,10 +359,6 @@ struct mimicpp::stacktrace_traits<std::basic_stacktrace<Allocator>>
     }
 };
 
-    #else
-
-        #error "MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE is enabled, but no valid backend is found."
-
     #endif
 
 #endif
