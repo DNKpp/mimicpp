@@ -61,7 +61,7 @@ namespace
 }
 
 template <>
-struct custom::stacktrace_backend<register_tag>
+struct custom::find_stacktrace_backend<register_tag>
 {
     using type = CustomBackend;
 };
