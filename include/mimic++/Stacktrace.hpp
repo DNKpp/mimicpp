@@ -35,6 +35,23 @@ namespace mimicpp
     template <typename Backend>
     struct stacktrace_traits;
 
+    template <typename T>
+    concept stacktrace_backend =
+        // std::any requires copy-constructible
+        // see: https://en.cppreference.com/w/cpp/utility/any/any
+        // Nevertheless, mimic++ will never explicitly copy a backend
+        std::is_copy_constructible_v<T>
+        && std::movable<T>
+        && requires(stacktrace_traits<std::remove_cvref_t<T>> traits, const std::any& any, const std::size_t value) {
+               { decltype(traits)::current() } -> std::convertible_to<std::remove_cvref_t<T>>;
+               { decltype(traits)::current(value) } -> std::convertible_to<std::remove_cvref_t<T>>;
+               { decltype(traits)::size(any) } -> std::convertible_to<std::size_t>;
+               { decltype(traits)::empty(any) } -> std::convertible_to<bool>;
+               { decltype(traits)::description(any, value) } -> std::convertible_to<std::string>;
+               { decltype(traits)::source_file(any, value) } -> std::convertible_to<std::string>;
+               { decltype(traits)::source_line(any, value) } -> std::convertible_to<std::size_t>;
+           };
+
     class Stacktrace
     {
     public:
@@ -46,7 +63,7 @@ namespace mimicpp
 
         ~Stacktrace() = default;
 
-        template <typename Inner, typename Traits = stacktrace_traits<std::remove_cvref_t<Inner>>>
+        template <stacktrace_backend Inner, typename Traits = stacktrace_traits<std::remove_cvref_t<Inner>>>
             requires(!std::same_as<Stacktrace, std::remove_cvref_t<Inner>>)
         [[nodiscard]]
         explicit constexpr Stacktrace(Inner&& inner)
@@ -67,31 +84,31 @@ namespace mimicpp
         Stacktrace& operator=(const Stacktrace&) = delete;
 
         [[nodiscard]]
-        std::size_t size() const
+        constexpr std::size_t size() const
         {
             return std::invoke(m_SizeFn, m_Inner);
         }
 
         [[nodiscard]]
-        bool empty() const
+        constexpr bool empty() const
         {
             return std::invoke(m_EmptyFn, m_EmptyFn);
         }
 
         [[nodiscard]]
-        std::string description(const std::size_t at) const
+        constexpr std::string description(const std::size_t at) const
         {
             return std::invoke(m_DescriptionFn, m_Inner, at);
         }
 
         [[nodiscard]]
-        std::string source_file(const std::size_t at) const
+        constexpr std::string source_file(const std::size_t at) const
         {
             return std::invoke(m_SourceFileFn, m_Inner, at);
         }
 
         [[nodiscard]]
-        std::size_t source_line(const std::size_t at) const
+        constexpr std::size_t source_line(const std::size_t at) const
         {
             return std::invoke(m_SourceLineFn, m_Inner, at);
         }
@@ -183,15 +200,13 @@ namespace mimicpp
 
 namespace mimicpp::cpptrace
 {
-    using namespace ::cpptrace;
-
     class Backend
     {
     public:
         ~Backend() = default;
 
         [[nodiscard]]
-        explicit Backend(raw_trace&& trace) noexcept
+        explicit Backend(::cpptrace::raw_trace&& trace) noexcept
             : m_Trace{std::move(trace)}
         {
         }
@@ -202,24 +217,20 @@ namespace mimicpp::cpptrace
         Backend& operator=(Backend&&) = default;
 
         [[nodiscard]]
-        const stacktrace& data() const
+        const ::cpptrace::stacktrace& data() const
         {
-            if (const auto* raw = std::get_if<raw_trace>(&m_Trace))
+            if (const auto* raw = std::get_if<::cpptrace::raw_trace>(&m_Trace))
             {
                 m_Trace = raw->resolve();
             }
 
-            return std::get<stacktrace>(m_Trace);
+            return std::get<::cpptrace::stacktrace>(m_Trace);
         }
 
     private:
-        using TraceT = std::variant<raw_trace, stacktrace>;
+        using TraceT = std::variant<::cpptrace::raw_trace, ::cpptrace::stacktrace>;
         mutable TraceT m_Trace;
     };
-
-    // std::any requires this
-    // see: https://en.cppreference.com/w/cpp/named_req/CopyConstructible
-    static_assert(std::is_copy_constructible_v<Backend>);
 }
 
 template <>
@@ -231,12 +242,18 @@ struct mimicpp::find_stacktrace_backend<mimicpp::register_tag>
 template <>
 struct mimicpp::stacktrace_traits<mimicpp::cpptrace::Backend>
 {
-    using type = cpptrace::Backend;
+    using BackendT = cpptrace::Backend;
 
     [[nodiscard]]
-    static type current(const std::size_t skip)
+    static BackendT current(const std::size_t skip)
     {
-        return type{::cpptrace::generate_raw_trace(skip + 1)};
+        return BackendT{::cpptrace::generate_raw_trace(skip + 1)};
+    }
+
+    [[nodiscard]]
+    static BackendT current()
+    {
+        return current(1);
     }
 
     [[nodiscard]]
@@ -270,17 +287,21 @@ struct mimicpp::stacktrace_traits<mimicpp::cpptrace::Backend>
     }
 
     [[nodiscard]]
-    static const cpptrace::stacktrace& get(const std::any& storage)
+    static const ::cpptrace::stacktrace& get(const std::any& storage)
     {
-        return std::any_cast<const BackendT&>(storage).data();
+        return std::any_cast<const type&>(storage).data();
     }
 
     [[nodiscard]]
-    static const cpptrace::stacktrace_frame& get_frame(const std::any& storage, const std::size_t at)
+    static const ::cpptrace::stacktrace_frame& get_frame(const std::any& storage, const std::size_t at)
     {
         return get(storage).frames.at(at);
     }
 };
+
+static_assert(
+    mimicpp::stacktrace_backend<mimicpp::cpptrace::Backend>,
+    "mimicpp::cpptrace::Backend does not satisfy the stacktrace_backend concept");
 
     #endif
 
