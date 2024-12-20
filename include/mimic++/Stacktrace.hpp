@@ -14,6 +14,7 @@
 #include <any>
 // ReSharper disable once CppUnusedIncludeDirective
 #include <functional> // std::invoke
+#include <stdexcept>
 #include <type_traits>
 #include <utility>
 #include <variant>
@@ -186,6 +187,68 @@ namespace mimicpp
     constexpr detail::stacktrace_current_hook::current_fn current_stacktrace{};
 }
 
+namespace mimicpp
+{
+    /**
+     * \brief The fallback stacktrace-backend.
+     * \details In fact, it's only use is to reduce the "defined" branching in the production code.
+     */
+    class EmptyStacktraceBackend
+    {
+    };
+}
+
+template <>
+struct mimicpp::stacktrace_traits<mimicpp::EmptyStacktraceBackend>
+{
+    using BackendT = EmptyStacktraceBackend;
+
+    [[nodiscard]]
+    static BackendT current([[maybe_unused]] const std::size_t skip) noexcept
+    {
+        return BackendT{};
+    }
+
+    [[nodiscard]]
+    static constexpr std::size_t size([[maybe_unused]] const std::any& storage) noexcept
+    {
+        return 0u;
+    }
+
+    [[nodiscard]]
+    static constexpr bool empty([[maybe_unused]] const std::any& storage) noexcept
+    {
+        return true;
+    }
+
+    static std::string description([[maybe_unused]] const std::any& storage, [[maybe_unused]] const std::size_t at)
+    {
+        raise_unsupported_operation();
+    }
+
+    static std::string source_file([[maybe_unused]] const std::any& storage, [[maybe_unused]] const std::size_t at)
+    {
+        raise_unsupported_operation();
+    }
+
+    [[nodiscard]]
+    static std::size_t source_line([[maybe_unused]] const std::any& storage, [[maybe_unused]] const std::size_t at)
+    {
+        raise_unsupported_operation();
+    }
+
+private:
+    [[noreturn]]
+    static void raise_unsupported_operation()
+    {
+        throw std::runtime_error{"EmptyStacktraceBackend doesn't support this operation."};
+    }
+};
+
+static_assert(
+    mimicpp::stacktrace_backend<mimicpp::EmptyStacktraceBackend>,
+    "mimicpp::EmptyStacktraceBackend does not satisfy the stacktrace_backend concept");
+
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
 
     #ifdef MIMICPP_CONFIG_USE_CPPTRACE
@@ -295,6 +358,8 @@ static_assert(
     mimicpp::stacktrace_backend<mimicpp::cpptrace::Backend>,
     "mimicpp::cpptrace::Backend does not satisfy the stacktrace_backend concept");
 
+        #define MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+
     #elif defined __cpp_lib_stacktrace
 
         #include <stacktrace>
@@ -359,7 +424,30 @@ struct mimicpp::stacktrace_traits<std::basic_stacktrace<Allocator>>
     }
 };
 
+static_assert(
+    mimicpp::stacktrace_backend<std::stacktrace>,
+    "std::stacktrace does not satisfy the stacktrace_backend concept");
+
+        #define MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+
+    #else
+
+        // neither backend is available, but maybe a custom type?
+        // so, we should not emit an error here.
+
     #endif
+
+#endif
+
+// This is enabled as fallback solution, when neither std::stacktrace nor cpptrace is available,
+// or MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE simply not defined.
+#ifndef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+
+template <>
+struct mimicpp::find_stacktrace_backend<mimicpp::register_tag>
+{
+    using type = EmptyStacktraceBackend;
+};
 
 #endif
 
