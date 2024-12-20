@@ -6,7 +6,7 @@
 # fixes reporting in clion
 set(CATCH_CONFIG_CONSOLE_WIDTH 800 CACHE STRING "")
 find_package(Catch2 REQUIRED)
-CPMAddPackage("gh:rollbear/trompeloeil@49")
+find_package(trompeloeil REQUIRED)
 
 set(TARGET_NAME mimicpp-tests)
 
