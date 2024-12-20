@@ -10,6 +10,7 @@
 
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
+#include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
@@ -278,13 +279,17 @@ namespace mimicpp::detail
         using ExpectationCollectionPtrT = expectation_collection_ptr_for<SignatureT>;
 
         [[nodiscard]]
-        explicit BasicMock(ExpectationCollectionPtrT collection) noexcept
-            : m_Expectations{std::move(collection)}
+        explicit BasicMock(
+            ExpectationCollectionPtrT collection,
+            const std::size_t stacktraceSkip) noexcept
+            : m_Expectations{std::move(collection)},
+              m_StacktraceSkip{stacktraceSkip + 1u} // additionally skips the BasicMock::handle_call from the stacktrace
         {
         }
 
     private:
         ExpectationCollectionPtrT m_Expectations;
+        std::size_t m_StacktraceSkip;
 
         [[nodiscard]]
         constexpr signature_return_type_t<SignatureT> handle_call(
@@ -296,7 +301,8 @@ namespace mimicpp::detail
                     .args = std::move(params),
                     .fromCategory = refQualification,
                     .fromConstness = constQualification,
-                    .fromSourceLocation = from});
+                    .fromSourceLocation = from,
+                    .stacktrace = current_stacktrace(m_StacktraceSkip)});
         }
 
         template <typename... Args>
@@ -404,11 +410,7 @@ namespace mimicpp
          */
         [[nodiscard]]
         Mock()
-            : Mock{
-                  detail::expectation_collection_factory<
-                      detail::unique_list_t<
-                          signature_decay_t<FirstSignature>,
-                          signature_decay_t<OtherSignatures>...>>::make()}
+            : Mock{1u} // skips the operator() from the stacktrace
         {
         }
 
@@ -434,10 +436,33 @@ namespace mimicpp
         Mock& operator=(Mock&&) = default;
 
     private:
+        /**
+         * \brief This constructor is mainly used for interface-mocks, which require to skip one additional level from the stacktrace.
+         */
+        [[nodiscard]]
+        explicit Mock(const std::size_t stacktraceSkip)
+            : Mock{
+                  detail::expectation_collection_factory<
+                      detail::unique_list_t<
+                          signature_decay_t<FirstSignature>,
+                          signature_decay_t<OtherSignatures>...>>::make(),
+                  stacktraceSkip}
+        {
+        }
+
         template <typename... Collections>
-        explicit Mock(std::tuple<Collections...> collections) noexcept
-            : detail::BasicMock<FirstSignature>{std::get<detail::expectation_collection_ptr_for<FirstSignature>>(collections)},
-              detail::BasicMock<OtherSignatures>{std::get<detail::expectation_collection_ptr_for<OtherSignatures>>(collections)}...
+        [[nodiscard]]
+        explicit Mock(
+            std::tuple<Collections...> collections,
+            const std::size_t stacktraceSkip) noexcept
+            : detail::BasicMock<FirstSignature>{
+                  std::get<detail::expectation_collection_ptr_for<FirstSignature>>(collections),
+                  stacktraceSkip},
+              // clang-format off
+              detail::BasicMock<OtherSignatures>{
+                  std::get<detail::expectation_collection_ptr_for<OtherSignatures>>(collections),
+                  stacktraceSkip}...
+        // clang-format on
         {
         }
     };
