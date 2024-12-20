@@ -120,7 +120,7 @@ TEST_CASE(
         storage.push(exp);
     }
 
-    constexpr CallInfoT call{
+    const CallInfoT call{
         .args = {},
         .fromCategory = mimicpp::ValueCategory::any,
         .fromConstness = mimicpp::Constness::any};
@@ -264,7 +264,7 @@ TEST_CASE(
     storage.push(otherExpectation);
     storage.push(throwingExpectation);
 
-    constexpr CallInfoT call{
+    const CallInfoT call{
         .args = {},
         .fromCategory = mimicpp::ValueCategory::any,
         .fromConstness = mimicpp::Constness::any};

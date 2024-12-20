@@ -53,7 +53,7 @@ TEST_CASE(
     ScopedReporter reporter{};
 
     auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
-    constexpr CallInfoT call{
+    const CallInfoT call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -86,7 +86,7 @@ TEST_CASE(
     ScopedReporter reporter{};
 
     auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
-    constexpr CallInfoT call{
+    const CallInfoT call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -151,7 +151,7 @@ TEST_CASE(
     using CallInfoT = call::info_for_signature_t<SignatureT>;
 
     auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
-    constexpr CallInfoT call{
+    const CallInfoT call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -193,7 +193,7 @@ TEST_CASE(
     using CallInfoT = call::info_for_signature_t<SignatureT>;
 
     auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
-    constexpr CallInfoT call{
+    const CallInfoT call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
