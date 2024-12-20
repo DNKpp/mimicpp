@@ -12,7 +12,8 @@
 #include "mimic++/Utility.hpp"
 
 #include <any>
-#include <functional>
+// ReSharper disable once CppUnusedIncludeDirective
+#include <functional> // std::invoke
 #include <type_traits>
 #include <utility>
 #include <variant>
@@ -43,7 +44,6 @@ namespace mimicpp
         std::is_copy_constructible_v<T>
         && std::movable<T>
         && requires(stacktrace_traits<std::remove_cvref_t<T>> traits, const std::any& any, const std::size_t value) {
-               { decltype(traits)::current() } -> std::convertible_to<std::remove_cvref_t<T>>;
                { decltype(traits)::current(value) } -> std::convertible_to<std::remove_cvref_t<T>>;
                { decltype(traits)::size(any) } -> std::convertible_to<std::size_t>;
                { decltype(traits)::empty(any) } -> std::convertible_to<bool>;
@@ -92,7 +92,7 @@ namespace mimicpp
         [[nodiscard]]
         constexpr bool empty() const
         {
-            return std::invoke(m_EmptyFn, m_EmptyFn);
+            return std::invoke(m_EmptyFn, m_Inner);
         }
 
         [[nodiscard]]
@@ -129,8 +129,7 @@ namespace mimicpp
                 {
                     stacktrace_traits<
                         typename FindBackendT::type>::current(std::size_t{})
-                } -> std::convertible_to<typename FindBackendT::type>;
-                requires std::constructible_from<Stacktrace, typename FindBackendT::type>;
+                } -> stacktrace_backend;
             }
         [[nodiscard]]
         constexpr auto current([[maybe_unused]] const priority_tag<2>, const std::size_t skip)
@@ -144,8 +143,7 @@ namespace mimicpp
                 {
                     stacktrace_traits<
                         typename FindBackendT::type>::current(std::size_t{})
-                } -> std::convertible_to<typename FindBackendT::type>;
-                requires std::constructible_from<Stacktrace, typename FindBackendT::type>;
+                } -> stacktrace_backend;
             }
         [[nodiscard]]
         constexpr auto current([[maybe_unused]] const priority_tag<1>, const std::size_t skip)
@@ -251,12 +249,6 @@ struct mimicpp::stacktrace_traits<mimicpp::cpptrace::Backend>
     }
 
     [[nodiscard]]
-    static BackendT current()
-    {
-        return current(1);
-    }
-
-    [[nodiscard]]
     static std::size_t size(const std::any& storage)
     {
         return get(storage).frames.size();
@@ -289,7 +281,7 @@ struct mimicpp::stacktrace_traits<mimicpp::cpptrace::Backend>
     [[nodiscard]]
     static const ::cpptrace::stacktrace& get(const std::any& storage)
     {
-        return std::any_cast<const type&>(storage).data();
+        return std::any_cast<const BackendT&>(storage).data();
     }
 
     [[nodiscard]]
@@ -302,6 +294,74 @@ struct mimicpp::stacktrace_traits<mimicpp::cpptrace::Backend>
 static_assert(
     mimicpp::stacktrace_backend<mimicpp::cpptrace::Backend>,
     "mimicpp::cpptrace::Backend does not satisfy the stacktrace_backend concept");
+
+    #elif defined __cpp_lib_stacktrace
+
+        #include <stacktrace>
+
+template <>
+struct mimicpp::find_stacktrace_backend<mimicpp::register_tag>
+{
+    using type = std::stacktrace;
+};
+
+template <typename Allocator>
+struct mimicpp::stacktrace_traits<std::basic_stacktrace<Allocator>>
+{
+    using BackendT = std::basic_stacktrace<Allocator>;
+
+    [[nodiscard]]
+    static BackendT current(const std::size_t skip)
+    {
+        return BackendT::current(skip + 1);
+    }
+
+    [[nodiscard]]
+    static std::size_t size(const std::any& storage)
+    {
+        return get(storage).size();
+    }
+
+    [[nodiscard]]
+    static bool empty(const std::any& storage)
+    {
+        return get(storage).empty();
+    }
+
+    [[nodiscard]]
+    static std::string description(const std::any& storage, const std::size_t at)
+    {
+        return get_entry(storage, at).description();
+    }
+
+    [[nodiscard]]
+    static std::string source_file(const std::any& storage, const std::size_t at)
+    {
+        return get_entry(storage, at).source_file();
+    }
+
+    [[nodiscard]]
+    static std::size_t source_line(const std::any& storage, const std::size_t at)
+    {
+        return get_entry(storage, at).source_line();
+    }
+
+    [[nodiscard]]
+    static const BackendT& get(const std::any& storage)
+    {
+        return std::any_cast<const BackendT&>(storage);
+    }
+
+    [[nodiscard]]
+    static const std::stacktrace_entry& get_entry(const std::any& storage, const std::size_t at)
+    {
+        return get(storage).at(at);
+    }
+};
+
+    #else
+
+        #error "MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE is enabled, but no valid backend is found."
 
     #endif
 
