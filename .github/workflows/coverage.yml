@@ -52,6 +52,11 @@ jobs:
                 CTEST_OUTPUT_ON_FAILURE: 1
               run: ctest --test-dir build/test/adapter-tests -C Debug -j4
 
+            - name: Run custom-stacktrace-tests
+              env:
+                CTEST_OUTPUT_ON_FAILURE: 1
+              run: ctest --test-dir build/test/custom-stacktrace-tests -C Debug -j4
+
             - name: Run examples
               env:
                 CTEST_OUTPUT_ON_FAILURE: 1
