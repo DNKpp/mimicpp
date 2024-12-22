@@ -341,6 +341,15 @@ namespace mimicpp
     using CharTraitsT = std::char_traits<CharT>;
     using StringT = std::basic_string<CharT, CharTraitsT>;
     using StringViewT = std::basic_string_view<CharT, CharTraitsT>;
+
+    class Stacktrace;
+    class EmptyStacktraceBackend;
+
+    template <typename Tag>
+    struct find_stacktrace_backend;
+
+    template <typename Backend>
+    struct stacktrace_traits;
 }
 
 namespace mimicpp::sequence
