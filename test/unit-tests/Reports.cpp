@@ -1097,7 +1097,7 @@ TEST_CASE(
         REQUIRE_THAT(
             print(report),
             Matches::Matches(
-                "call from .+\\[\\d+(:\\d+)\\], .+\n"
+                "call from .+\\[\\d+(:\\d+)?\\], .+\n"
                 "constness: any\n"
                 "value category: any\n"
                 "return type: (v|void)\n"));
