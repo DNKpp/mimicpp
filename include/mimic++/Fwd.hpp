@@ -350,6 +350,10 @@ namespace mimicpp
 
     template <typename Backend>
     struct stacktrace_traits;
+
+    template <typename FirstSignature, typename... OtherSignatures>
+        requires is_overload_set_v<FirstSignature, OtherSignatures...>
+    class Mock;
 }
 
 namespace mimicpp::sequence

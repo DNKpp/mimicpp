@@ -10,6 +10,7 @@
 
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
