@@ -215,6 +215,7 @@ namespace mimicpp
         std::type_index returnTypeIndex;
         std::vector<Arg> argDetails{};
         std::source_location fromLoc{};
+        Stacktrace stacktrace{EmptyStacktraceBackend{}};
         ValueCategory fromCategory{};
         Constness fromConstness{};
 
@@ -225,7 +226,15 @@ namespace mimicpp
                 && lhs.argDetails == rhs.argDetails
                 && is_same_source_location(lhs.fromLoc, rhs.fromLoc)
                 && lhs.fromCategory == rhs.fromCategory
-                && lhs.fromConstness == rhs.fromConstness;
+                && lhs.fromConstness == rhs.fromConstness
+                && lhs.stacktrace.size() == rhs.stacktrace.size()
+                && std::ranges::all_of(
+                       std::views::iota(0u, lhs.stacktrace.size()),
+                       [&](const std::size_t index) {
+                           return lhs.stacktrace.description(index) == rhs.stacktrace.description(index)
+                               && lhs.stacktrace.source_file(index) == rhs.stacktrace.source_file(index)
+                               && lhs.stacktrace.source_line(index) == rhs.stacktrace.source_line(index);
+                       });
         }
     };
 
@@ -239,7 +248,7 @@ namespace mimicpp
      */
     template <typename Return, typename... Params>
     [[nodiscard]]
-    CallReport make_call_report(const call::Info<Return, Params...>& callInfo)
+    CallReport make_call_report(call::Info<Return, Params...> callInfo)
     {
         return CallReport{
             .returnTypeIndex = typeid(Return),
@@ -253,7 +262,8 @@ namespace mimicpp
                     };
                 },
                 callInfo.args),
-            .fromLoc = callInfo.fromSourceLocation,
+            .fromLoc = std::move(callInfo.fromSourceLocation),
+            .stacktrace = std::move(callInfo.stacktrace),
             .fromCategory = callInfo.fromCategory,
             .fromConstness = callInfo.fromConstness};
     }
@@ -268,9 +278,21 @@ namespace mimicpp
             out = format::format_to(
                 std::move(out),
                 "call from ");
-            out = mimicpp::print(
-                std::move(out),
-                report.fromLoc);
+            if (!report.stacktrace.empty())
+            {
+                out = format::format_to(
+                    std::move(out),
+                    "{} [{}], {}",
+                    report.stacktrace.source_file(0u),
+                    report.stacktrace.source_line(0u),
+                    report.stacktrace.description(0u));
+            }
+            else
+            {
+                out = mimicpp::print(
+                    std::move(out),
+                    report.fromLoc);
+            }
             out = format::format_to(
                 std::move(out),
                 "\n");

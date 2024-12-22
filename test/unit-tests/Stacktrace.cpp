@@ -130,7 +130,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     // explicitly prevent a custom backend.
-    using traits_t = stacktrace_traits<typename find_stacktrace_backend<register_tag>::type>;
+    using traits_t = stacktrace_traits<find_stacktrace_backend<register_tag>::type>;
     const Stacktrace source{traits_t::current(0)};
 
     SECTION("When copy-constructing.")
@@ -158,7 +158,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     // explicitly prevent a custom backend.
-    using traits_t = stacktrace_traits<typename find_stacktrace_backend<register_tag>::type>;
+    using traits_t = stacktrace_traits<find_stacktrace_backend<register_tag>::type>;
     Stacktrace source{traits_t::current(0)};
     const Stacktrace copy{source};
 

@@ -5,6 +5,8 @@
 
 #include "mimic++/Reports.hpp"
 
+#include "TestTypes.hpp"
+
 using namespace mimicpp;
 
 TEST_CASE(
@@ -461,6 +463,7 @@ TEST_CASE(
             {.typeIndex = typeid(int),
              .stateString = "42"}},
         .fromLoc = std::source_location::current(),
+        .stacktrace = current_stacktrace(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -522,7 +525,7 @@ TEST_CASE(
         REQUIRE(!(second == first));
     }
 
-    SECTION("When source location differs, they compare not equal.")
+    SECTION("When arg-infos differ, they compare not equal.")
     {
         CallReport second{first};
 
@@ -540,38 +543,65 @@ TEST_CASE(
         REQUIRE(!(first == second));
         REQUIRE(!(second == first));
     }
+
+#ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+    SECTION("When stacktrace differs, they compare not equal.")
+    {
+        CallReport second{first};
+        second.stacktrace = current_stacktrace();
+
+        REQUIRE(first != second);
+        REQUIRE(second != first);
+        REQUIRE(!(first == second));
+        REQUIRE(!(second == first));
+    }
+#endif
 }
 
 TEST_CASE(
-    "make_call_report generates report from call info."
+    "make_call_report generates report from call::Info."
     "[reporting]")
 {
     SECTION("When call info has void return type.")
     {
         const call::Info<void> info{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::any, ValueCategory::lvalue, ValueCategory::rvalue),
-            .fromConstness = GENERATE(Constness::any, Constness::as_const, Constness::non_const),
-            .fromSourceLocation = std::source_location::current()};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers)),
+            .fromSourceLocation = std::source_location::current(),
+            .stacktrace = current_stacktrace()};
 
         const CallReport report = make_call_report(info);
 
-        REQUIRE(
-            report == CallReport{.returnTypeIndex = typeid(void), .argDetails = {}, .fromLoc = info.fromSourceLocation, .fromCategory = info.fromCategory, .fromConstness = info.fromConstness});
+        const CallReport expected{
+            .returnTypeIndex = typeid(void),
+            .argDetails = {},
+            .fromLoc = info.fromSourceLocation,
+            .stacktrace = info.stacktrace,
+            .fromCategory = info.fromCategory,
+            .fromConstness = info.fromConstness};
+        REQUIRE(report == expected);
     }
 
     SECTION("When call info has non-void return type.")
     {
         const call::Info<int> info{
             .args = {},
-            .fromCategory = GENERATE(ValueCategory::any, ValueCategory::lvalue, ValueCategory::rvalue),
-            .fromConstness = GENERATE(Constness::any, Constness::as_const, Constness::non_const),
-            .fromSourceLocation = std::source_location::current()};
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers)),
+            .fromSourceLocation = std::source_location::current(),
+            .stacktrace = current_stacktrace()};
 
         const CallReport report = make_call_report(info);
 
-        REQUIRE(
-            report == CallReport{.returnTypeIndex = typeid(int), .argDetails = {}, .fromLoc = info.fromSourceLocation, .fromCategory = info.fromCategory, .fromConstness = info.fromConstness});
+        const CallReport expected{
+            .returnTypeIndex = typeid(int),
+            .argDetails = {},
+            .fromLoc = info.fromSourceLocation,
+            .stacktrace = info.stacktrace,
+            .fromCategory = info.fromCategory,
+            .fromConstness = info.fromConstness};
+        REQUIRE(report == expected);
     }
 
     SECTION("When call info has arbitrary args.")
@@ -581,22 +611,27 @@ TEST_CASE(
         std::string arg2{"Hello, World!"};
         const call::Info<void, const int&, double, std::string> info{
             .args = {std::ref(arg0), std::ref(arg1), std::ref(arg2)},
-            .fromCategory = GENERATE(ValueCategory::any, ValueCategory::lvalue, ValueCategory::rvalue),
-            .fromConstness = GENERATE(Constness::any, Constness::as_const, Constness::non_const),
-            .fromSourceLocation = std::source_location::current()
+            .fromCategory = GENERATE(from_range(refQualifiers)),
+            .fromConstness = GENERATE(from_range(constQualifiers)),
+            .fromSourceLocation = std::source_location::current(),
+            .stacktrace = current_stacktrace()
         };
 
         const CallReport report = make_call_report(info);
 
         using ArgT = CallReport::Arg;
-        REQUIRE(
-            report == CallReport{
-                .returnTypeIndex = typeid(void),
-                .argDetails = {(ArgT{typeid(const int&), "1337"}), (ArgT{typeid(double), "4.2"}), (ArgT{typeid(std::string), "\"Hello, World!\""})},
-                .fromLoc = info.fromSourceLocation,
-                .fromCategory = info.fromCategory,
-                .fromConstness = info.fromConstness
-        });
+        const CallReport expected{
+            .returnTypeIndex = typeid(void),
+            .argDetails = {
+                           ArgT{typeid(const int&), "1337"},
+                           ArgT{typeid(double), "4.2"},
+                           ArgT{typeid(std::string), "\"Hello, World!\""}},
+            .fromLoc = info.fromSourceLocation,
+            .stacktrace = info.stacktrace,
+            .fromCategory = info.fromCategory,
+            .fromConstness = info.fromConstness
+        };
+        REQUIRE(report == expected);
     }
 }
 
@@ -1055,13 +1090,14 @@ TEST_CASE(
             .returnTypeIndex = typeid(void),
             .argDetails = {},
             .fromLoc = std::source_location::current(),
+            .stacktrace = current_stacktrace(),
             .fromCategory = ValueCategory::any,
             .fromConstness = Constness::any};
 
         REQUIRE_THAT(
             print(report),
             Matches::Matches(
-                "call from .+\\[\\d+:\\d+\\], .+\n"
+                "call from .+\\[\\d+(:\\d+)?\\], .+\n"
                 "constness: any\n"
                 "value category: any\n"
                 "return type: (v|void)\n"));
@@ -1073,13 +1109,14 @@ TEST_CASE(
             .returnTypeIndex = typeid(int),
             .argDetails = {{.typeIndex = typeid(double), .stateString = "4.2"}},
             .fromLoc = std::source_location::current(),
+            .stacktrace = current_stacktrace(),
             .fromCategory = ValueCategory::lvalue,
             .fromConstness = Constness::as_const};
 
         REQUIRE_THAT(
             print(report),
             Matches::Matches(
-                "call from .+\\[\\d+:\\d+\\], .+\n"
+                "call from .+\\[\\d+(:\\d+)?\\], .+\n"
                 "constness: const\n"
                 "value category: lvalue\n"
                 "return type: (i|int)\n"
