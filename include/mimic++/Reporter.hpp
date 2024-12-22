@@ -187,6 +187,22 @@ namespace mimicpp
 
     namespace detail
     {
+        template <print_iterator OutIter>
+        OutIter stringify_stacktrace(OutIter out, const Stacktrace& stacktrace)
+        {
+            if (!stacktrace.empty())
+            {
+                out = format::format_to(
+                    std::move(out),
+                    "Stacktrace:\n");
+                out = mimicpp::print(
+                    std::move(out),
+                    stacktrace);
+            }
+
+            return out;
+        }
+
         [[nodiscard]]
         inline StringT stringify_no_match_report(const CallReport& call, const std::span<const MatchReport> matchReports)
         {
@@ -217,6 +233,10 @@ namespace mimicpp
                 }
             }
 
+            stringify_stacktrace(
+                std::ostreambuf_iterator{ss},
+                call.stacktrace);
+
             return std::move(ss).str();
         }
 
@@ -239,6 +259,10 @@ namespace mimicpp
                 ss << "\n";
             }
 
+            stringify_stacktrace(
+                std::ostreambuf_iterator{ss},
+                call.stacktrace);
+
             return std::move(ss).str();
         }
 
@@ -256,6 +280,10 @@ namespace mimicpp
                 std::ostreambuf_iterator{ss},
                 matchReport);
             ss << "\n";
+
+            stringify_stacktrace(
+                std::ostreambuf_iterator{ss},
+                call.stacktrace);
 
             return std::move(ss).str();
         }
