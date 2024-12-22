@@ -39,11 +39,7 @@ namespace mimicpp
 
     template <typename T>
     concept stacktrace_backend =
-        // std::any requires copy-constructible
-        // see: https://en.cppreference.com/w/cpp/utility/any/any
-        // Nevertheless, mimic++ will never explicitly copy a backend
-        std::is_copy_constructible_v<T>
-        && std::movable<T>
+        std::copyable<T>
         && requires(stacktrace_traits<std::remove_cvref_t<T>> traits, const std::any& any, const std::size_t value) {
                { decltype(traits)::current(value) } -> std::convertible_to<std::remove_cvref_t<T>>;
                { decltype(traits)::size(any) } -> std::convertible_to<std::size_t>;
@@ -78,11 +74,12 @@ namespace mimicpp
         }
 
         [[nodiscard]]
+        Stacktrace(const Stacktrace&) = default;
+        Stacktrace& operator=(const Stacktrace&) = default;
+
+        [[nodiscard]]
         Stacktrace(Stacktrace&&) = default;
         Stacktrace& operator=(Stacktrace&&) = default;
-
-        Stacktrace(const Stacktrace&) = delete;
-        Stacktrace& operator=(const Stacktrace&) = delete;
 
         [[nodiscard]]
         constexpr std::size_t size() const

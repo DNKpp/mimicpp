@@ -302,8 +302,7 @@ namespace mimicpp::detail
                     .fromCategory = refQualification,
                     .fromConstness = constQualification,
                     .fromSourceLocation = from,
-                    .stacktrace = std::make_shared<Stacktrace>(
-                        current_stacktrace(m_StacktraceSkip))});
+                    .stacktrace = current_stacktrace(m_StacktraceSkip)});
         }
 
         template <typename... Args>
