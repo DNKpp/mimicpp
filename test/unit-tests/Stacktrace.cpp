@@ -79,6 +79,68 @@ TEST_CASE(
     REQUIRE(std::cmp_less(line, after.line()));
 }
 
+TEST_CASE(
+    "current_stacktrace supports skipping of the top elements.",
+    "[stacktrace]")
+{
+    const Stacktrace full = current_stacktrace();
+    CHECK(!full.empty());
+
+    const auto compare = [&](const std::size_t skip, const Stacktrace& other) {
+        return std::ranges::all_of(
+            std::views::iota(0u, other.size()),
+            [&](const std::size_t i) {
+                return full.description(i + skip) == other.description(i)
+                    && full.source_file(i + skip) == other.source_file(i)
+                    && full.source_line(i + skip) == other.source_line(i);
+            });
+    };
+
+    SECTION("When skip == 0")
+    {
+        const Stacktrace other = current_stacktrace();
+        CHECK(full.size() == other.size());
+
+        REQUIRE( // everything except the top element must be equal
+            std::ranges::all_of(
+                std::views::iota(1u, other.size()),
+                [&](const std::size_t i) {
+                    return full.description(i) == other.description(i)
+                        && full.source_file(i) == other.source_file(i)
+                        && full.source_line(i) == other.source_line(i);
+                }));
+        // of the top elements description may differ
+        REQUIRE_THAT(
+            other.source_file(0),
+            Catch::Matchers::Equals(full.source_file(0)));
+        REQUIRE(full.source_line(0) < other.source_line(0));
+    }
+
+    SECTION("When skip == 1.")
+    {
+        const Stacktrace partial = current_stacktrace(1);
+        CHECK(!partial.empty());
+        CHECK(full.size() == partial.size() + 1u);
+
+        REQUIRE(compare(1u, partial));
+    }
+
+    SECTION("When skip == 2.")
+    {
+        const Stacktrace partial = current_stacktrace(2);
+        CHECK(!partial.empty());
+        CHECK(full.size() == partial.size() + 2u);
+
+        REQUIRE(compare(2u, partial));
+    }
+
+    SECTION("When skip is very high.")
+    {
+        const Stacktrace partial = current_stacktrace(1337);
+        REQUIRE(partial.empty());
+    }
+}
+
 #endif
 
 TEST_CASE(
