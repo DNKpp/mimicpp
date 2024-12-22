@@ -239,6 +239,20 @@ namespace mimicpp
         ,                                       \
         __VA_ARGS__)
 
+namespace mimicpp::detail
+{
+    template <typename FirstSignature, typename... OtherSignatures>
+    [[nodiscard]]
+    Mock<FirstSignature, OtherSignatures...> make_interface_mock()
+    {
+        // remove the following calls from the stacktrace
+        // * detail::indirectly_apply_mock
+        // * detail::indirectly_apply_mock::lambda
+        // * the generated interface implementation
+        return Mock<FirstSignature, OtherSignatures...>{3u};
+    }
+}
+
 /**
  * \brief Creates a mimicpp::Mock object for the given signatures.
  * \ingroup MOCK_INTERFACES_DETAIL

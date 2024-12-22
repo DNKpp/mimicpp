@@ -398,8 +398,6 @@ namespace mimicpp
         : public detail::BasicMock<FirstSignature>,
           public detail::BasicMock<OtherSignatures>...
     {
-        friend Mock detail::make_interface_mock<FirstSignature, OtherSignatures...>();
-
     public:
         using detail::BasicMock<FirstSignature>::operator();
         using detail::BasicMock<FirstSignature>::expect_call;
@@ -417,6 +415,24 @@ namespace mimicpp
         [[nodiscard]]
         Mock()
             : Mock{0u}
+        {
+        }
+
+        /**
+         * \brief Constructor, initializing the base-stacktrace-skip.
+         * \param baseStacktraceSkip The base-stacktrace-skip.
+         * \details This sets up the base-stacktrace-skip, which will be used when generating stacktraces for the
+         * invocations. This can be used, to eliminate irrelevant or noise stacktrace-entries from the top.
+         * \note This sets just the base value. Internally this value will be further increased.
+         */
+        [[nodiscard]]
+        explicit Mock(const std::size_t baseStacktraceSkip)
+            : Mock{
+                  detail::expectation_collection_factory<
+                      detail::unique_list_t<
+                          signature_decay_t<FirstSignature>,
+                          signature_decay_t<OtherSignatures>...>>::make(),
+                  baseStacktraceSkip}
         {
         }
 
@@ -442,20 +458,6 @@ namespace mimicpp
         Mock& operator=(Mock&&) = default;
 
     private:
-        /**
-         * \brief This constructor is mainly used for interface-mocks, which require to skip one additional level from the stacktrace.
-         */
-        [[nodiscard]]
-        explicit Mock(const std::size_t stacktraceSkip)
-            : Mock{
-                  detail::expectation_collection_factory<
-                      detail::unique_list_t<
-                          signature_decay_t<FirstSignature>,
-                          signature_decay_t<OtherSignatures>...>>::make(),
-                  stacktraceSkip}
-        {
-        }
-
         template <typename... Collections>
         [[nodiscard]]
         explicit Mock(
@@ -476,20 +478,6 @@ namespace mimicpp
     /**
      * \}
      */
-}
-
-namespace mimicpp::detail
-{
-    template <typename FirstSignature, typename... OtherSignatures>
-    [[nodiscard]]
-    Mock<FirstSignature, OtherSignatures...> make_interface_mock()
-    {
-        // remove the following calls from the stacktrace
-        // * detail::indirectly_apply_mock
-        // * detail::indirectly_apply_mock::lambda
-        // * the generated interface implementation
-        return Mock<FirstSignature, OtherSignatures...>{3u};
-    }
 }
 
 #endif
