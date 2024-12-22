@@ -36,7 +36,9 @@ jobs:
                     -D CMAKE_BUILD_TYPE="Debug" \
                     -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
                     -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
-                    -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES
+                    -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES \
+                    -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES \
+                    -D MIMICPP_CONFIG_USE_CPPTRACE=YES
 
             - name: Build
               run: |
