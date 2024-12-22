@@ -833,6 +833,37 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "Mocks stacktrace-skip value can be adjusted.",
+    "[mock]")
+{
+    ScopedReporter reporter{};
+
+    Mock<void()> mock{};
+    ScopedExpectation exp = mock.expect_call();
+    mock();
+    const std::size_t skip = GENERATE(1u, 2u, 3u);
+    mock = Mock<void()>{skip};
+    exp = mock.expect_call();
+    mock();
+
+    const auto& [first, _1] = reporter.full_match_reports().front();
+    const auto& [second, _2] = reporter.full_match_reports().at(1u);
+    CHECKED_IF(!first.stacktrace.empty())
+    {
+        CHECK(first.stacktrace.size() == second.stacktrace.size() + skip);
+
+        REQUIRE(
+            std::ranges::all_of(
+                std::views::iota(0u, second.stacktrace.size()),
+                [&](const std::size_t i) {
+                    return first.stacktrace.source_file(i + skip) == second.stacktrace.source_file(i)
+                        && first.stacktrace.source_line(i + skip) == second.stacktrace.source_line(i)
+                        && first.stacktrace.description(i + skip) == second.stacktrace.description(i);
+                }));
+    }
+}
+
+TEST_CASE(
     "Mock supports arbitrary overload sets.",
     "[mock]")
 {
