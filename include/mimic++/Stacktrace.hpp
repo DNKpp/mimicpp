@@ -60,8 +60,9 @@ namespace mimicpp
 
         ~Stacktrace() = default;
 
-        template <stacktrace_backend Inner, typename Traits = stacktrace_traits<std::remove_cvref_t<Inner>>>
+        template <typename Inner, typename Traits = stacktrace_traits<std::remove_cvref_t<Inner>>>
             requires(!std::same_as<Stacktrace, std::remove_cvref_t<Inner>>)
+                     && stacktrace_backend<Inner>
         [[nodiscard]]
         explicit constexpr Stacktrace(Inner&& inner)
             : m_Inner{std::forward<Inner>(inner)},
