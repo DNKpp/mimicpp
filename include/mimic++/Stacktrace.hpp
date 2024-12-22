@@ -255,8 +255,12 @@ static_assert(
 
         #if __has_include(<cpptrace/basic.hpp>)
             #include <cpptrace/basic.hpp>
+        #elif __has_include(<cpptrace/cpptrace.hpp>)
+            // this is necessary for old cpptrace versions.
+            // see: https://github.com/jeremy-rifkin/libassert/issues/110
+            #include <cpptrace/cpptrace.hpp>
         #else
-            #error "The cpptrace stacktrace backend is explicitly enabled, but the include <cpptrace/basic.hpp> can not be found."
+            #error "The cpptrace stacktrace backend is explicitly enabled, but the the required include-file can not be found."
         #endif
 
 namespace mimicpp::cpptrace
