@@ -617,3 +617,40 @@ TEST_CASE(
         mock.foo(42, "Hello, World!");
     }
 }
+
+TEST_CASE(
+    "Interface mock omits the forwarding functions stacktrace entry.",
+    "[mock][mock::interface]")
+{
+    struct interface
+    {
+        virtual ~interface() = default;
+        virtual void foo() = 0;
+    };
+
+    struct derived
+        : public interface
+    {
+        MIMICPP_MOCK_METHOD(foo, void, ());
+    };
+
+    ScopedReporter reporter{};
+
+    derived mock{};
+    ScopedExpectation exp = mock.foo_.expect_call();
+    const std::source_location before = std::source_location::current();
+    mock.foo();
+    [[maybe_unused]] volatile constexpr int dummy{42}; // make the after source_loc line strictly > the invocation line
+    const std::source_location after = std::source_location::current();
+
+    const CallReport& report = std::get<0>(reporter.full_match_reports().front());
+    CHECKED_IF(!report.stacktrace.empty())
+    {
+        REQUIRE_THAT(
+            report.stacktrace.source_file(0u),
+            Catch::Matchers::Equals(before.file_name()));
+        // there is no straight-forward way to check the description
+        REQUIRE(before.line() < report.stacktrace.source_line(0u));
+        REQUIRE(report.stacktrace.source_line(0u) < after.line());
+    }
+}

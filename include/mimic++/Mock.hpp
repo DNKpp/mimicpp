@@ -284,7 +284,7 @@ namespace mimicpp::detail
             ExpectationCollectionPtrT collection,
             const std::size_t stacktraceSkip) noexcept
             : m_Expectations{std::move(collection)},
-              m_StacktraceSkip{stacktraceSkip + 1u} // additionally skips the BasicMock::handle_call from the stacktrace
+              m_StacktraceSkip{stacktraceSkip + 2u} // skips the operator() and the handle_call from the stacktrace
         {
         }
 
@@ -329,6 +329,9 @@ namespace mimicpp::detail
                 std::make_shared<ExpectationCollection<UniqueSignatures>>()...};
         }
     };
+
+    template <typename FirstSignature, typename... OtherSignatures>
+    Mock<FirstSignature, OtherSignatures...> make_interface_mock();
 }
 
 namespace mimicpp
@@ -395,6 +398,8 @@ namespace mimicpp
         : public detail::BasicMock<FirstSignature>,
           public detail::BasicMock<OtherSignatures>...
     {
+        friend Mock detail::make_interface_mock<FirstSignature, OtherSignatures...>();
+
     public:
         using detail::BasicMock<FirstSignature>::operator();
         using detail::BasicMock<FirstSignature>::expect_call;
@@ -411,7 +416,7 @@ namespace mimicpp
          */
         [[nodiscard]]
         Mock()
-            : Mock{1u} // skips the operator() from the stacktrace
+            : Mock{0u}
         {
         }
 
@@ -471,6 +476,20 @@ namespace mimicpp
     /**
      * \}
      */
+}
+
+namespace mimicpp::detail
+{
+    template <typename FirstSignature, typename... OtherSignatures>
+    [[nodiscard]]
+    Mock<FirstSignature, OtherSignatures...> make_interface_mock()
+    {
+        // remove the following calls from the stacktrace
+        // * detail::indirectly_apply_mock
+        // * detail::indirectly_apply_mock::lambda
+        // * the generated interface implementation
+        return Mock<FirstSignature, OtherSignatures...>{3u};
+    }
 }
 
 #endif

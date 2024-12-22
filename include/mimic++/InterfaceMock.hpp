@@ -245,10 +245,9 @@ namespace mimicpp
  * \param mock_name The mock name.
  * \param signatures The given signatures. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)     \
-    ::mimicpp::Mock<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name \
-    {                                                                  \
-    }
+#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)       \
+    ::mimicpp::Mock<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name = \
+        ::mimicpp::detail::make_interface_mock<MIMICPP_DETAIL_STRIP_PARENS(signatures)>()
 
 namespace mimicpp
 {
@@ -410,20 +409,26 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
-    template <typename Signature>
-    constexpr auto indirectly_apply_mock = []<typename... Args>(auto& mock, Args&&... args)
-        -> signature_return_type_t<Signature> {
-        // we get the mock either as const or non-const ref.
-        // But we must respect, whether the mock shall be called as lvalue or rvalue-ref.
-
-        if constexpr (ValueCategory::rvalue == signature_ref_qualification_v<Signature>)
-        {
-            return std::move(mock)(std::forward<Args>(args)...);
-        }
-        else
-        {
-            return mock(std::forward<Args>(args)...);
-        }
+    /**
+     * \brief Applies the given args on the mock.
+     * \details This function helps with the general apply procedure of the mock.
+     * It casts it to the correct reference and forwards the arguments.
+     * Additionally, this helps letting mimic++ reliably know, how many entries we need to skip from the stacktrace,
+     * as the general implementation of ``std::apply`` varies.
+     * That's also the reason, why no ``std::invoke`` is used here.
+     */
+    template <typename Signature, typename Mock, typename... Args>
+    constexpr signature_return_type_t<Signature> indirectly_apply_mock(Mock& mock, std::tuple<Args...>&& args)
+    {
+        using mock_ref_t = std::conditional_t<
+            ValueCategory::rvalue == signature_ref_qualification_v<Signature>,
+            Mock&&,
+            Mock&>;
+        return [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
+                   -> signature_return_type_t<Signature> {
+            return static_cast<mock_ref_t>(mock)(
+                std::forward<Args>(std::get<indices>(args))...);
+        }(std::index_sequence_for<Args...>{});
     };
 }
 
@@ -438,18 +443,14 @@ namespace mimicpp::detail
  * \param specs Additional specifiers (e.g. ``const``, ``noexcept``, etc.).
  * \param param_list Enclosed parameter list.
  * \param forward_list Enclosed forward statements.
- * \note The double ``std::tuple_cat`` is here, so we can correctly handle the case, when ``forward_list`` is empty, because then we would have
- * and issue with the comma.
  */
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
     inline MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override                                                        \
     {                                                                                                                                                \
         using SignatureT = MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs;                                                                   \
-        return ::std::apply(                                                                                                                         \
-            ::mimicpp::detail::indirectly_apply_mock<SignatureT>,                                                                                    \
-            ::std::tuple_cat(                                                                                                                        \
-                ::std::make_tuple(::std::ref(mock_name)),                                                                                            \
-                ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list))));                                                                       \
+        return ::mimicpp::detail::indirectly_apply_mock<SignatureT>(                                                                                 \
+            mock_name,                                                                                                                               \
+            ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list)));                                                                            \
     }
 
 /**
