@@ -255,3 +255,38 @@ TEST_CASE(
         REQUIRE(equal_entries(copy, source));
     }
 }
+
+TEST_CASE(
+    "Stacktrace is printable.",
+    "[print][stacktrace]")
+{
+    SECTION("Empty stacktraces have special treatment.")
+    {
+        const Stacktrace stacktrace{EmptyStacktraceBackend{}};
+        REQUIRE_THAT(
+            mimicpp::print(stacktrace),
+            Catch::Matchers::Equals("empty"));
+    }
+
+#ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+
+    Stacktrace stacktrace = current_stacktrace();
+    CHECK(!stacktrace.empty());
+
+    // the std::regex on windows is too complex, so we limit it
+    constexpr std::size_t maxLength{6u};
+    const auto size = std::min(maxLength, stacktrace.size());
+    const auto skip = stacktrace.size() - size;
+    stacktrace = current_stacktrace(skip);
+    CHECK(size == stacktrace.size());
+
+    const std::string pattern = format::format(
+        "(.+?\\[\\d+\\], .+?\\n){{{}}}"
+        ".+?\\[\\d+\\], .*?\\n", // on linux, the description of the lowest entry may be empty.
+        size - 1u);
+    REQUIRE_THAT(
+        mimicpp::print(stacktrace),
+        Catch::Matchers::Matches(pattern));
+
+#endif
+}

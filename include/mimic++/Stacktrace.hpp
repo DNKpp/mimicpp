@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "Stacktrace.hpp"
+#include "mimic++/Fwd.hpp"
+#include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
 #include <any>
@@ -184,6 +185,34 @@ namespace mimicpp
     [[maybe_unused]]
     constexpr detail::stacktrace_current_hook::current_fn current_stacktrace{};
 }
+
+template <>
+class mimicpp::detail::Printer<mimicpp::Stacktrace>
+{
+public:
+    template <print_iterator OutIter>
+    static OutIter print(OutIter out, const Stacktrace& stacktrace)
+    {
+        if (stacktrace.empty())
+        {
+            return format::format_to(
+                std::move(out),
+                "empty");
+        }
+
+        for (const std::size_t i : std::views::iota(0u, stacktrace.size()))
+        {
+            out = format::format_to(
+                std::move(out),
+                "{} [{}], {}\n",
+                stacktrace.source_file(i),
+                stacktrace.source_line(i),
+                stacktrace.description(i));
+        }
+
+        return out;
+    }
+};
 
 namespace mimicpp
 {
