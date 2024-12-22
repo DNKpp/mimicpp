@@ -101,7 +101,7 @@ TEST_CASE(
 namespace
 {
     [[nodiscard]]
-    constexpr bool equal_entries(const Stacktrace& original, const Stacktrace& test)
+    bool equal_entries(const Stacktrace& original, const Stacktrace& test)
     {
 #ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
         return std::ranges::all_of(
