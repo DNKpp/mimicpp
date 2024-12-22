@@ -246,9 +246,6 @@ namespace mimicpp::detail
             std::forward<T>(value));
     }
 
-    template <typename>
-    class Printer;
-
     template <
         print_iterator OutIter,
         typename T,
