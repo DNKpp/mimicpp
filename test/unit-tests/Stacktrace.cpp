@@ -16,11 +16,11 @@ using namespace mimicpp;
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
 TEST_CASE(
-    "stacktrace_traits<mimicpp::cpptrace::Backend>::current() generates a new cpptrace::stacktrace.",
+    "stacktrace::backend_traits<stacktrace::CpptraceBackend>::current() generates a new cpptrace::stacktrace.",
     "[cpptrace][stacktrace]")
 {
     using BackendT = stacktrace::CpptraceBackend;
-    using traits_t = stacktrace::stacktrace_traits<BackendT>;
+    using traits_t = stacktrace::backend_traits<BackendT>;
 
     const BackendT first = traits_t::current(0);
     const BackendT second = traits_t::current(0);
@@ -37,7 +37,7 @@ TEST_CASE(
 #elif defined(__cpp_lib_stacktrace)
 
 TEST_CASE(
-    "stacktrace_traits<std::stacktrace>::current() generates a new std::stacktrace.",
+    "stacktrace::backend_traits<std::stacktrace>::current() generates a new std::stacktrace.",
     "[stacktrace]")
 {
     using BackendT = std::stacktrace;
@@ -60,7 +60,7 @@ TEST_CASE(
 #ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
 TEST_CASE(
-    "current_stacktrace retrieves the current stacktrace.",
+    "stacktrace::current retrieves the current stacktrace.",
     "[stacktrace]")
 {
     const auto before = std::source_location::current();
@@ -77,7 +77,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "current_stacktrace supports skipping of the top elements.",
+    "stacktrace::current supports skipping of the top elements.",
     "[stacktrace]")
 {
     const Stacktrace full = stacktrace::current();
@@ -141,7 +141,7 @@ TEST_CASE(
 #endif
 
 TEST_CASE(
-    "stacktrace_traits<EmptyStacktraceBackend>::current() generates a new empty stacktrace.",
+    "stacktrace::backend_traits<stacktrace::NullBackend>::current() generates a new stacktrace::NullBackend.",
     "[stacktrace]")
 {
     using traits_t = stacktrace::backend_traits<stacktrace::NullBackend>;

@@ -28,7 +28,7 @@ struct custom::find_stacktrace_backend
 };
 
 template <>
-struct mimicpp::stacktrace_traits<CustomBackend>
+struct mimicpp::stacktrace::backend_traits<CustomBackend>
 {
     using BackendT = CustomBackend;
 
@@ -94,11 +94,11 @@ TEST_CASE(
     using trompeloeil::_;
     using trompeloeil::gt;
 
-    using traits_t = stacktrace_traits<CustomBackend>;
+    using traits_t = stacktrace::backend_traits<CustomBackend>;
 
     REQUIRE_CALL(traits_t::currentMock, Invoke(gt(42)))
         .RETURN(CustomBackend{});
-    const Stacktrace stacktrace = current_stacktrace(42);
+    const Stacktrace stacktrace = stacktrace::current(42);
 
     SECTION("Testing empty.")
     {
@@ -160,7 +160,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     using trompeloeil::_;
-    using traits_t = stacktrace_traits<CustomBackend>;
+    using traits_t = stacktrace::backend_traits<CustomBackend>;
     const Stacktrace stacktrace{CustomBackend{}};
 
     SECTION("When stacktrace is empty")
