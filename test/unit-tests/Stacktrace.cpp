@@ -64,7 +64,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     const auto before = std::source_location::current();
-    const Stacktrace cur = stacktrace::current_stacktrace();
+    const Stacktrace cur = stacktrace::current();
     const auto after = std::source_location::current();
 
     REQUIRE(!cur.empty());
@@ -80,7 +80,7 @@ TEST_CASE(
     "current_stacktrace supports skipping of the top elements.",
     "[stacktrace]")
 {
-    const Stacktrace full = stacktrace::current_stacktrace();
+    const Stacktrace full = stacktrace::current();
     CHECK(!full.empty());
 
     const auto compare = [&](const std::size_t skip, const Stacktrace& other) {
@@ -95,7 +95,7 @@ TEST_CASE(
 
     SECTION("When skip == 0")
     {
-        const Stacktrace other = stacktrace::current_stacktrace();
+        const Stacktrace other = stacktrace::current();
         CHECK(full.size() == other.size());
 
         REQUIRE( // everything except the top element must be equal
@@ -115,7 +115,7 @@ TEST_CASE(
 
     SECTION("When skip == 1.")
     {
-        const Stacktrace partial = stacktrace::current_stacktrace(1);
+        const Stacktrace partial = stacktrace::current(1);
         CHECK(!partial.empty());
         CHECK(full.size() == partial.size() + 1u);
 
@@ -124,7 +124,7 @@ TEST_CASE(
 
     SECTION("When skip == 2.")
     {
-        const Stacktrace partial = stacktrace::current_stacktrace(2);
+        const Stacktrace partial = stacktrace::current(2);
         CHECK(!partial.empty());
         CHECK(full.size() == partial.size() + 2u);
 
@@ -133,7 +133,7 @@ TEST_CASE(
 
     SECTION("When skip is very high.")
     {
-        const Stacktrace partial = stacktrace::current_stacktrace(1337);
+        const Stacktrace partial = stacktrace::current(1337);
         REQUIRE(partial.empty());
     }
 }
@@ -267,14 +267,14 @@ TEST_CASE(
 
 #ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
-    Stacktrace stacktrace = stacktrace::current_stacktrace();
+    Stacktrace stacktrace = stacktrace::current();
     CHECK(!stacktrace.empty());
 
     // the std::regex on windows is too complex, so we limit it
     constexpr std::size_t maxLength{6u};
     const auto size = std::min(maxLength, stacktrace.size());
     const auto skip = stacktrace.size() - size;
-    stacktrace = stacktrace::current_stacktrace(skip);
+    stacktrace = stacktrace::current(skip);
     CHECK(size == stacktrace.size());
 
     const std::string pattern = format::format(

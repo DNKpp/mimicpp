@@ -463,7 +463,7 @@ TEST_CASE(
             {.typeIndex = typeid(int),
              .stateString = "42"}},
         .fromLoc = std::source_location::current(),
-        .stacktrace = stacktrace::current_stacktrace(),
+        .stacktrace = stacktrace::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -548,7 +548,7 @@ TEST_CASE(
     SECTION("When stacktrace differs, they compare not equal.")
     {
         CallReport second{first};
-        second.stacktrace = stacktrace::current_stacktrace();
+        second.stacktrace = stacktrace::current();
 
         REQUIRE(first != second);
         REQUIRE(second != first);
@@ -569,7 +569,7 @@ TEST_CASE(
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers)),
             .fromSourceLocation = std::source_location::current(),
-            .stacktrace = stacktrace::current_stacktrace()};
+            .stacktrace = stacktrace::current()};
 
         const CallReport report = make_call_report(info);
 
@@ -590,7 +590,7 @@ TEST_CASE(
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers)),
             .fromSourceLocation = std::source_location::current(),
-            .stacktrace = stacktrace::current_stacktrace()};
+            .stacktrace = stacktrace::current()};
 
         const CallReport report = make_call_report(info);
 
@@ -614,7 +614,7 @@ TEST_CASE(
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers)),
             .fromSourceLocation = std::source_location::current(),
-            .stacktrace = stacktrace::current_stacktrace()
+            .stacktrace = stacktrace::current()
         };
 
         const CallReport report = make_call_report(info);
@@ -1090,7 +1090,7 @@ TEST_CASE(
             .returnTypeIndex = typeid(void),
             .argDetails = {},
             .fromLoc = std::source_location::current(),
-            .stacktrace = stacktrace::current_stacktrace(),
+            .stacktrace = stacktrace::current(),
             .fromCategory = ValueCategory::any,
             .fromConstness = Constness::any};
 
@@ -1109,7 +1109,7 @@ TEST_CASE(
             .returnTypeIndex = typeid(int),
             .argDetails = {{.typeIndex = typeid(double), .stateString = "4.2"}},
             .fromLoc = std::source_location::current(),
-            .stacktrace = stacktrace::current_stacktrace(),
+            .stacktrace = stacktrace::current(),
             .fromCategory = ValueCategory::lvalue,
             .fromConstness = Constness::as_const};
 

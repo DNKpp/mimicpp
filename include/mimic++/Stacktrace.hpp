@@ -295,7 +295,7 @@ namespace mimicpp::stacktrace
      * Callers may specify the optional ``skip`` parameter to remove additional entries.
      */
     [[maybe_unused]]
-    constexpr detail::current_hook::current_fn current_stacktrace{};
+    constexpr detail::current_hook::current_fn current{};
 }
 
 template <>
@@ -498,7 +498,7 @@ static_assert(
 
         #define MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
-    #elif defined __cpp_lib_stacktrace
+    #elif defined(__cpp_lib_stacktrace)
 
         #include <stacktrace>
 
