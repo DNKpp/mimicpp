@@ -388,7 +388,7 @@ namespace mimicpp::stacktrace
     struct find_stacktrace_backend;
 
     template <typename Backend>
-    struct stacktrace_traits;
+    struct backend_traits;
 }
 
 namespace mimicpp

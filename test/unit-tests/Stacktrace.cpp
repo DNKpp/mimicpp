@@ -41,7 +41,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     using BackendT = std::stacktrace;
-    using traits_t = stacktrace::stacktrace_traits<BackendT>;
+    using traits_t = stacktrace::backend_traits<BackendT>;
 
     const BackendT first = traits_t::current(0);
     const BackendT second = traits_t::current(0);
@@ -144,7 +144,7 @@ TEST_CASE(
     "stacktrace_traits<EmptyStacktraceBackend>::current() generates a new empty stacktrace.",
     "[stacktrace]")
 {
-    using traits_t = stacktrace::stacktrace_traits<stacktrace::EmptyStacktraceBackend>;
+    using traits_t = stacktrace::backend_traits<stacktrace::EmptyStacktraceBackend>;
 
     const Stacktrace stacktrace{traits_t::current(42)};
 
@@ -189,7 +189,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     // explicitly prevent a custom backend.
-    using traits_t = stacktrace::stacktrace_traits<stacktrace::find_stacktrace_backend::type>;
+    using traits_t = stacktrace::backend_traits<stacktrace::find_stacktrace_backend::type>;
     const Stacktrace source{traits_t::current(0)};
 
     SECTION("When copy-constructing.")
@@ -217,7 +217,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     // explicitly prevent a custom backend.
-    using traits_t = stacktrace::stacktrace_traits<stacktrace::find_stacktrace_backend::type>;
+    using traits_t = stacktrace::backend_traits<stacktrace::find_stacktrace_backend::type>;
     Stacktrace source{traits_t::current(0)};
     const Stacktrace copy{source};
 

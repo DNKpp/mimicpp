@@ -86,7 +86,7 @@ namespace mimicpp::stacktrace
     template <typename T>
     concept backend =
         std::copyable<T>
-        && requires(stacktrace_traits<std::remove_cvref_t<T>> traits, const std::any& any, const std::size_t value) {
+        && requires(backend_traits<std::remove_cvref_t<T>> traits, const std::any& any, const std::size_t value) {
                { decltype(traits)::current(value) } -> std::convertible_to<std::remove_cvref_t<T>>;
                { decltype(traits)::size(any) } -> std::convertible_to<std::size_t>;
                { decltype(traits)::empty(any) } -> std::convertible_to<bool>;
@@ -126,7 +126,7 @@ namespace mimicpp
          * \tparam Traits The auto-detected trait type.
          * \param inner The actual stacktrace-backend object.
          */
-        template <typename Inner, typename Traits = stacktrace::stacktrace_traits<std::remove_cvref_t<Inner>>>
+        template <typename Inner, typename Traits = stacktrace::backend_traits<std::remove_cvref_t<Inner>>>
             requires(!std::same_as<Stacktrace, std::remove_cvref_t<Inner>>)
                      && stacktrace::backend<Inner>
         [[nodiscard]]
@@ -267,7 +267,7 @@ namespace mimicpp::stacktrace::detail::current_hook
 
     struct current_fn
     {
-        template <typename... Canary, template <typename> typename Traits = stacktrace_traits>
+        template <typename... Canary, template <typename> typename Traits = backend_traits>
         [[nodiscard]]
         Stacktrace operator()(const std::size_t skip) const
         {
@@ -275,7 +275,7 @@ namespace mimicpp::stacktrace::detail::current_hook
                 current_hook::current<Traits>(maxTag, skip + 1u)};
         }
 
-        template <typename... Canary, template <typename> typename Traits = stacktrace_traits>
+        template <typename... Canary, template <typename> typename Traits = backend_traits>
         [[nodiscard]]
         Stacktrace operator()() const
         {
@@ -338,7 +338,7 @@ namespace mimicpp::stacktrace
 }
 
 template <>
-struct mimicpp::stacktrace::stacktrace_traits<mimicpp::stacktrace::EmptyStacktraceBackend>
+struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::EmptyStacktraceBackend>
 {
     [[nodiscard]]
     static EmptyStacktraceBackend current([[maybe_unused]] const std::size_t skip) noexcept
@@ -508,7 +508,7 @@ struct mimicpp::stacktrace::find_stacktrace_backend
 };
 
 template <typename Allocator>
-struct mimicpp::stacktrace::stacktrace_traits<std::basic_stacktrace<Allocator>>
+struct mimicpp::stacktrace::backend_traits<std::basic_stacktrace<Allocator>>
 {
     using BackendT = std::basic_stacktrace<Allocator>;
 
