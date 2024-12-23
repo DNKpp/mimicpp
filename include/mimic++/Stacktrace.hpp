@@ -84,7 +84,7 @@ namespace mimicpp::stacktrace
      * \tparam T Type to check.
      */
     template <typename T>
-    concept stacktrace_backend =
+    concept backend =
         std::copyable<T>
         && requires(stacktrace_traits<std::remove_cvref_t<T>> traits, const std::any& any, const std::size_t value) {
                { decltype(traits)::current(value) } -> std::convertible_to<std::remove_cvref_t<T>>;
@@ -128,7 +128,7 @@ namespace mimicpp
          */
         template <typename Inner, typename Traits = stacktrace::stacktrace_traits<std::remove_cvref_t<Inner>>>
             requires(!std::same_as<Stacktrace, std::remove_cvref_t<Inner>>)
-                     && stacktrace::stacktrace_backend<Inner>
+                     && stacktrace::backend<Inner>
         [[nodiscard]]
         explicit constexpr Stacktrace(Inner&& inner)
             : m_Inner{std::forward<Inner>(inner)},
@@ -232,7 +232,7 @@ namespace mimicpp::stacktrace::detail::current_hook
         {
             Traits<
                 typename FindBackend::type>::current(std::size_t{})
-        } -> stacktrace_backend;
+        } -> backend;
     };
 
     template <
@@ -383,7 +383,7 @@ private:
 };
 
 static_assert(
-    mimicpp::stacktrace::stacktrace_backend<mimicpp::stacktrace::EmptyStacktraceBackend>,
+    mimicpp::stacktrace::backend<mimicpp::stacktrace::EmptyStacktraceBackend>,
     "stacktrace::EmptyStacktraceBackend does not satisfy the stacktrace::stacktrace_backend concept");
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
@@ -562,7 +562,7 @@ struct mimicpp::stacktrace::stacktrace_traits<std::basic_stacktrace<Allocator>>
 };
 
 static_assert(
-    mimicpp::stacktrace::stacktrace_backend<std::stacktrace>,
+    mimicpp::stacktrace::backend<std::stacktrace>,
     "std::stacktrace does not satisfy the stacktrace::stacktrace_backend concept");
 
         #define MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
