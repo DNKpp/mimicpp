@@ -22,16 +22,67 @@
 
 namespace mimicpp::custom
 {
-    template <typename Tag>
+    /**
+     * \brief Users may define this type to enable their own stacktrace-backend
+     * \note See \ref STACKTRACE "stacktrace" documentation for an example.
+     * \ingroup STACKTRACE
+     */
     struct find_stacktrace_backend;
 }
 
 namespace mimicpp
 {
-    struct register_tag
-    {
-    };
+    /**
+     * \defgroup STACKTRACE stacktrace
+     * \brief Contains stacktrace related functionalities.
+     * \details As ``mimic++`` is officially a C++20 framework, it can not rely on built-in stack trace support from the STL.
+     * However, stack traces are particularly valuable for users in the context of mocking, especially when expectations are violated.
+     * To address this, ``mimic++`` introduces a simple stack trace abstraction that can be used to integrate any existing
+     * stack trace implementation.
+     *
+     * \note The ``MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE`` macro must be defined to fully enable the support.
+     * - If the ``MIMICPP_CONFIG_USE_CPPTRACE`` is defined, the ``cpptrace::stacktrace`` is selected as the active stacktrace-backend.
+     * - If ``std::stacktrace`` is available (i.e. c++23 is available), it's selected as the active stacktrace-backend.
+     * - Otherwise, the ``EmptyStacktraceBackend`` is selected, which does not provide any valuable information.
+     *
+     * \details
+     * ### Custom Stacktrace Backends
+     *
+     * In any case, users can define ``mimicpp::custom::find_stacktrace_backend`` to enable their own stacktrace-backend,
+     * which will then be preferred over any other stacktrace-backend.
+     * That type must contain at least a ``type`` member-alias, which denotes the desired stacktrace-backend implementation.
+     *
+     * ```cpp
+     * struct mimicpp::custom::find_stacktrace_backend
+     * {
+     *      using type = MyStacktraceBackend;
+     * };
+     * ```
+     * Additionally, a specialization for the ``stacktrace_traits`` template must be added, which defines at least the
+     * following functions:
+     * ```cpp
+     * template <>
+     * struct mimicpp::stacktrace_traits<MyStacktraceBackend>
+     * {
+     *    static MyStacktraceBackend current(const std::size_t skip);
+     *    static std::size_t size(const std::any& backend);
+     *    static bool empty(const std::any& backend);
+     *    static std::string description(const std::any& backend,  const std::size_t index);
+     *    static std::string source_file( const std::any& backend, const std::size_t index);
+     *    static std::size_t source_line(const std::any& backend, const std::size_t index);
+     * };
+     * ```
+     * \note The ``backend`` param can be safely casted to ``const MyStacktraceBackend&`` via ``std::any_cast``.
+     * \see https://en.cppreference.com/w/cpp/utility/any/any_cast
+     * \note The ``index`` param denotes the index of the selected stacktrace-entry.
+     *
+     * \{
+     */
 
+    /**
+     * \brief Checks whether the given type satisfies the requirements of a stacktrace backend.
+     * \tparam T Type to check.
+     */
     template <typename T>
     concept stacktrace_backend =
         std::copyable<T>
@@ -44,6 +95,9 @@ namespace mimicpp
                { decltype(traits)::source_line(any, value) } -> std::convertible_to<std::size_t>;
            };
 
+    /**
+     * \brief A simple type-erase stacktrace abstraction.
+     */
     class Stacktrace
     {
     public:
@@ -53,8 +107,17 @@ namespace mimicpp
         using source_file_fn = std::string (*)(const std::any&, std::size_t);
         using source_line_fn = std::size_t (*)(const std::any&, std::size_t);
 
+        /**
+         * \brief Defaulted destructor.
+         */
         ~Stacktrace() = default;
 
+        /**
+         * \brief Constructor storing the given stacktrace-backend type-erased.
+         * \tparam Inner The actual stacktrace-backend type.
+         * \tparam Traits The auto-detected trait type.
+         * \param inner The actual stacktrace-backend object.
+         */
         template <typename Inner, typename Traits = stacktrace_traits<std::remove_cvref_t<Inner>>>
             requires(!std::same_as<Stacktrace, std::remove_cvref_t<Inner>>)
                      && stacktrace_backend<Inner>
@@ -69,38 +132,75 @@ namespace mimicpp
         {
         }
 
+        /**
+         * \brief Defaulted move-constructor.
+         */
         [[nodiscard]]
         Stacktrace(const Stacktrace&) = default;
+
+        /**
+         * \brief Defaulted move-assignment-operator.
+         */
         Stacktrace& operator=(const Stacktrace&) = default;
 
+        /**
+         * \brief Defaulted copy-constructor.
+         */
         [[nodiscard]]
         Stacktrace(Stacktrace&&) = default;
+
+        /**
+         * \brief Defaulted copy-assignment-operator.
+         */
         Stacktrace& operator=(Stacktrace&&) = default;
 
+        /**
+         * \brief Queries the underlying stacktrace-backend for its size.
+         * \return The stacktrace-entry size.
+         */
         [[nodiscard]]
         constexpr std::size_t size() const
         {
             return std::invoke(m_SizeFn, m_Inner);
         }
 
+        /**
+         * \brief Queries the underlying stacktrace-backend whether its empty.
+         * \return ``True`` if no stacktrace-entries exist.
+         */
         [[nodiscard]]
         constexpr bool empty() const
         {
             return std::invoke(m_EmptyFn, m_Inner);
         }
 
+        /**
+         * \brief Queries the underlying stacktrace-backend for the description of the selected stacktrace-entry.
+         * \param at The stacktrace-entry index.
+         * \return The description of the selected stacktrace-entry.
+         */
         [[nodiscard]]
         constexpr std::string description(const std::size_t at) const
         {
             return std::invoke(m_DescriptionFn, m_Inner, at);
         }
 
+        /**
+         * \brief Queries the underlying stacktrace-backend for the source-file of the selected stacktrace-entry.
+         * \param at The stacktrace-entry index.
+         * \return The source-file of the selected stacktrace-entry.
+         */
         [[nodiscard]]
         constexpr std::string source_file(const std::size_t at) const
         {
             return std::invoke(m_SourceFileFn, m_Inner, at);
         }
 
+        /**
+         * \brief Queries the underlying stacktrace-backend for the source-line of the selected stacktrace-entry.
+         * \param at The stacktrace-entry index.
+         * \return The source-line of the selected stacktrace-entry.
+         */
         [[nodiscard]]
         constexpr std::size_t source_line(const std::size_t at) const
         {
@@ -115,6 +215,10 @@ namespace mimicpp
         source_file_fn m_SourceFileFn;
         source_line_fn m_SourceLineFn;
     };
+
+    /**
+     * \}
+     */
 
     namespace detail::stacktrace_current_hook
     {
@@ -176,6 +280,12 @@ namespace mimicpp
         };
     }
 
+    /**
+     * \brief Function object, which generates the current-stacktrace.
+     * \ingroup STACKTRACE
+     * \details This function skips at least all internal stacktrace-entries.
+     * Callers may specify the optional ``skip`` parameter to remove additional entries.
+     */
     [[maybe_unused]]
     constexpr detail::stacktrace_current_hook::current_fn current_stacktrace{};
 }
