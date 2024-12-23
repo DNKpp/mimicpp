@@ -333,6 +333,11 @@ namespace mimicpp
             if (!std::ranges::empty(matches))
             {
                 auto&& [exp, report] = *detail::pick_best_match(matches);
+
+                // Todo: Avoid the call copy
+                // Maybe we can prevent the copy here, but we should keep the instruction order as-is, because
+                // in cases of a throwing finalizer, we might introduce bugs. At least there are some tests, which
+                // will fail if done wrong.
                 detail::report_full_match(
                     make_call_report(call),
                     std::move(report));
