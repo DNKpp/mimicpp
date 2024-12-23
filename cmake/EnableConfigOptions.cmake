@@ -62,6 +62,7 @@ if (NOT TARGET enable-config-options)
 		# on clang-builds this somehow emits an error, if not explicitly disabled
 		# Got the info, to turn this of from here:
 		# https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
+		set(OLD_CMAKE_CXX_SCAN_FOR_MODULES ${CMAKE_CXX_SCAN_FOR_MODULES})
 		set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 		message(DEBUG "${MESSAGE_PREFIX} Searching for installed {uni-algo}-package.")
@@ -95,6 +96,8 @@ if (NOT TARGET enable-config-options)
 			MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
 		)
 
+		set(CMAKE_CXX_SCAN_FOR_MODULES ${OLD_CMAKE_CXX_SCAN_FOR_MODULES})
+
 	endif()
 
 	# Config option to enable full stacktrace support.
@@ -104,11 +107,19 @@ if (NOT TARGET enable-config-options)
 
 		message(DEBUG "${MESSAGE_PREFIX} Stacktrace feature enabled.")
 
+		#set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
 		# Config option to enable cpptrace as stacktrace-backend.
 		# This will download the cpptrace source if not found.
 		# Eventually defines the macro MIMICPP_CONFIG_USE_CPPTRACE.
 		OPTION(MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE "When enabled, registers cpptrace library as stacktrace-backend." OFF)
 		if (MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE)
+
+			# on clang-builds this somehow emits an error, if not explicitly disabled
+			# Got the info, to turn this of from here:
+			# https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
+			set(OLD_CMAKE_CXX_SCAN_FOR_MODULES ${CMAKE_CXX_SCAN_FOR_MODULES})
+			set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 			message(DEBUG "${MESSAGE_PREFIX} Searching for installed {cpptrace}-package.")
 			find_package(cpptrace QUIET)
@@ -138,6 +149,8 @@ if (NOT TARGET enable-config-options)
 				INTERFACE
 				MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 			)
+
+			set(CMAKE_CXX_SCAN_FOR_MODULES ${OLD_CMAKE_CXX_SCAN_FOR_MODULES})
 
 		else ()
 			message(DEBUG "${MESSAGE_PREFIX} Selected std::stacktrace.")
