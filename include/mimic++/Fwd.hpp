@@ -345,7 +345,6 @@ namespace mimicpp
     class Stacktrace;
     class EmptyStacktraceBackend;
 
-    template <typename Tag>
     struct find_stacktrace_backend;
 
     template <typename Backend>

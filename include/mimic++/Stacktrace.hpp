@@ -118,39 +118,39 @@ namespace mimicpp
 
     namespace detail::stacktrace_current_hook
     {
-        template <typename Tag, typename FindBackendT = custom::find_stacktrace_backend<Tag>>
-            requires requires {
-                {
-                    stacktrace_traits<
-                        typename FindBackendT::type>::current(std::size_t{})
-                } -> stacktrace_backend;
-            }
+        template <typename FindBackend, template <typename> typename Traits>
+        concept accessible_stacktrace_backend = requires {
+            {
+                Traits<
+                    typename FindBackend::type>::current(std::size_t{})
+            } -> stacktrace_backend;
+        };
+
+        template <
+            template <typename> typename Traits,
+            accessible_stacktrace_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
         [[nodiscard]]
         constexpr auto current([[maybe_unused]] const priority_tag<2>, const std::size_t skip)
         {
-            return stacktrace_traits<
-                typename FindBackendT::type>::current(skip + 1);
+            return Traits<
+                typename FindBackendT::type>::current(skip + 1u);
         }
 
-        template <typename Tag, typename FindBackendT = find_stacktrace_backend<Tag>>
-            requires requires {
-                {
-                    stacktrace_traits<
-                        typename FindBackendT::type>::current(std::size_t{})
-                } -> stacktrace_backend;
-            }
+        template <
+            template <typename> typename Traits,
+            accessible_stacktrace_backend<Traits> FindBackendT = find_stacktrace_backend>
         [[nodiscard]]
         constexpr auto current([[maybe_unused]] const priority_tag<1>, const std::size_t skip)
         {
-            return stacktrace_traits<
-                typename FindBackendT::type>::current(skip + 1);
+            return Traits<
+                typename FindBackendT::type>::current(skip + 1u);
         }
 
-        template <typename Tag>
+        template <template <typename> typename Traits>
         constexpr auto current([[maybe_unused]] const priority_tag<0>, [[maybe_unused]] const std::size_t skip)
         {
             static_assert(
-                always_false<Tag>{},
+                always_false<Traits<void>>{},
                 "mimic++ does not have a registered stacktrace-backend.");
         }
 
@@ -158,20 +158,20 @@ namespace mimicpp
 
         struct current_fn
         {
-            template <typename Tag = register_tag>
+            template <typename... Canary, template <typename> typename Traits = stacktrace_traits>
             [[nodiscard]]
             Stacktrace operator()(const std::size_t skip) const
             {
                 return Stacktrace{
-                    stacktrace_current_hook::current<Tag>(maxTag, skip + 1)};
+                    stacktrace_current_hook::current<Traits>(maxTag, skip + 1u)};
             }
 
-            template <typename Tag = register_tag>
+            template <typename... Canary, template <typename> typename Traits = stacktrace_traits>
             [[nodiscard]]
             Stacktrace operator()() const
             {
                 return Stacktrace{
-                    stacktrace_current_hook::current<Tag>(maxTag, 1u)};
+                    stacktrace_current_hook::current<Traits>(maxTag, 1u)};
             }
         };
     }
@@ -319,8 +319,7 @@ namespace mimicpp::cpptrace
     };
 }
 
-template <>
-struct mimicpp::find_stacktrace_backend<mimicpp::register_tag>
+struct mimicpp::find_stacktrace_backend
 {
     using type = cpptrace::Backend;
 };
@@ -389,8 +388,7 @@ static_assert(
 
         #include <stacktrace>
 
-template <>
-struct mimicpp::find_stacktrace_backend<mimicpp::register_tag>
+struct mimicpp::find_stacktrace_backend
 {
     using type = std::stacktrace;
 };
@@ -468,8 +466,7 @@ static_assert(
 // or MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE simply not defined.
 #ifndef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
-template <>
-struct mimicpp::find_stacktrace_backend<mimicpp::register_tag>
+struct mimicpp::find_stacktrace_backend
 {
     using type = EmptyStacktraceBackend;
 };
