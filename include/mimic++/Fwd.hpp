@@ -342,14 +342,6 @@ namespace mimicpp
     using StringT = std::basic_string<CharT, CharTraitsT>;
     using StringViewT = std::basic_string_view<CharT, CharTraitsT>;
 
-    class Stacktrace;
-    class EmptyStacktraceBackend;
-
-    struct find_stacktrace_backend;
-
-    template <typename Backend>
-    struct stacktrace_traits;
-
     template <typename FirstSignature, typename... OtherSignatures>
         requires is_overload_set_v<FirstSignature, OtherSignatures...>
     class Mock;
@@ -387,6 +379,21 @@ namespace mimicpp::detail
 
     template <typename>
     class Printer;
+}
+
+namespace mimicpp::stacktrace
+{
+    class EmptyStacktraceBackend;
+
+    struct find_stacktrace_backend;
+
+    template <typename Backend>
+    struct stacktrace_traits;
+}
+
+namespace mimicpp
+{
+    class Stacktrace;
 }
 
 #endif

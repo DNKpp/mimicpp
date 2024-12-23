@@ -9,19 +9,18 @@
 #include "TestTypes.hpp"
 
 #include <ranges> // std::views::*
-// ReSharper disable once CppUnusedIncludeDirective
 #include <source_location>
 
 using namespace mimicpp;
 
-#ifdef MIMICPP_CONFIG_USE_CPPTRACE
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
 TEST_CASE(
     "stacktrace_traits<mimicpp::cpptrace::Backend>::current() generates a new cpptrace::stacktrace.",
     "[cpptrace][stacktrace]")
 {
-    using BackendT = mimicpp::cpptrace::Backend;
-    using traits_t = stacktrace_traits<BackendT>;
+    using BackendT = stacktrace::CpptraceBackend;
+    using traits_t = stacktrace::stacktrace_traits<BackendT>;
 
     const BackendT first = traits_t::current(0);
     const BackendT second = traits_t::current(0);
@@ -35,16 +34,14 @@ TEST_CASE(
     REQUIRE(first.data().frames.front() != second.data().frames.front());
 }
 
-#endif
-
-#ifdef __cpp_lib_stacktrace
+#elif defined(__cpp_lib_stacktrace)
 
 TEST_CASE(
     "stacktrace_traits<std::stacktrace>::current() generates a new std::stacktrace.",
     "[stacktrace]")
 {
     using BackendT = std::stacktrace;
-    using traits_t = stacktrace_traits<BackendT>;
+    using traits_t = stacktrace::stacktrace_traits<BackendT>;
 
     const BackendT first = traits_t::current(0);
     const BackendT second = traits_t::current(0);
@@ -67,7 +64,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     const auto before = std::source_location::current();
-    const Stacktrace cur = current_stacktrace();
+    const Stacktrace cur = stacktrace::current_stacktrace();
     const auto after = std::source_location::current();
 
     REQUIRE(!cur.empty());
@@ -83,7 +80,7 @@ TEST_CASE(
     "current_stacktrace supports skipping of the top elements.",
     "[stacktrace]")
 {
-    const Stacktrace full = current_stacktrace();
+    const Stacktrace full = stacktrace::current_stacktrace();
     CHECK(!full.empty());
 
     const auto compare = [&](const std::size_t skip, const Stacktrace& other) {
@@ -98,7 +95,7 @@ TEST_CASE(
 
     SECTION("When skip == 0")
     {
-        const Stacktrace other = current_stacktrace();
+        const Stacktrace other = stacktrace::current_stacktrace();
         CHECK(full.size() == other.size());
 
         REQUIRE( // everything except the top element must be equal
@@ -118,7 +115,7 @@ TEST_CASE(
 
     SECTION("When skip == 1.")
     {
-        const Stacktrace partial = current_stacktrace(1);
+        const Stacktrace partial = stacktrace::current_stacktrace(1);
         CHECK(!partial.empty());
         CHECK(full.size() == partial.size() + 1u);
 
@@ -127,7 +124,7 @@ TEST_CASE(
 
     SECTION("When skip == 2.")
     {
-        const Stacktrace partial = current_stacktrace(2);
+        const Stacktrace partial = stacktrace::current_stacktrace(2);
         CHECK(!partial.empty());
         CHECK(full.size() == partial.size() + 2u);
 
@@ -136,7 +133,7 @@ TEST_CASE(
 
     SECTION("When skip is very high.")
     {
-        const Stacktrace partial = current_stacktrace(1337);
+        const Stacktrace partial = stacktrace::current_stacktrace(1337);
         REQUIRE(partial.empty());
     }
 }
@@ -147,7 +144,7 @@ TEST_CASE(
     "stacktrace_traits<EmptyStacktraceBackend>::current() generates a new empty stacktrace.",
     "[stacktrace]")
 {
-    using traits_t = stacktrace_traits<EmptyStacktraceBackend>;
+    using traits_t = stacktrace::stacktrace_traits<stacktrace::EmptyStacktraceBackend>;
 
     const Stacktrace stacktrace{traits_t::current(42)};
 
@@ -192,7 +189,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     // explicitly prevent a custom backend.
-    using traits_t = stacktrace_traits<find_stacktrace_backend::type>;
+    using traits_t = stacktrace::stacktrace_traits<stacktrace::find_stacktrace_backend::type>;
     const Stacktrace source{traits_t::current(0)};
 
     SECTION("When copy-constructing.")
@@ -220,7 +217,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     // explicitly prevent a custom backend.
-    using traits_t = stacktrace_traits<find_stacktrace_backend::type>;
+    using traits_t = stacktrace::stacktrace_traits<stacktrace::find_stacktrace_backend::type>;
     Stacktrace source{traits_t::current(0)};
     const Stacktrace copy{source};
 
@@ -262,7 +259,7 @@ TEST_CASE(
 {
     SECTION("Empty stacktraces have special treatment.")
     {
-        const Stacktrace stacktrace{EmptyStacktraceBackend{}};
+        const Stacktrace stacktrace{stacktrace::EmptyStacktraceBackend{}};
         REQUIRE_THAT(
             mimicpp::print(stacktrace),
             Catch::Matchers::Equals("empty"));
@@ -270,14 +267,14 @@ TEST_CASE(
 
 #ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
-    Stacktrace stacktrace = current_stacktrace();
+    Stacktrace stacktrace = stacktrace::current_stacktrace();
     CHECK(!stacktrace.empty());
 
     // the std::regex on windows is too complex, so we limit it
     constexpr std::size_t maxLength{6u};
     const auto size = std::min(maxLength, stacktrace.size());
     const auto skip = stacktrace.size() - size;
-    stacktrace = current_stacktrace(skip);
+    stacktrace = stacktrace::current_stacktrace(skip);
     CHECK(size == stacktrace.size());
 
     const std::string pattern = format::format(

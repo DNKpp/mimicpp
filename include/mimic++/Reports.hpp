@@ -215,7 +215,7 @@ namespace mimicpp
         std::type_index returnTypeIndex;
         std::vector<Arg> argDetails{};
         std::source_location fromLoc{};
-        Stacktrace stacktrace{EmptyStacktraceBackend{}};
+        Stacktrace stacktrace{stacktrace::EmptyStacktraceBackend{}};
         ValueCategory fromCategory{};
         Constness fromConstness{};
 

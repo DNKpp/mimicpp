@@ -303,7 +303,7 @@ namespace mimicpp::detail
                     .fromCategory = refQualification,
                     .fromConstness = constQualification,
                     .fromSourceLocation = from,
-                    .stacktrace = current_stacktrace(m_StacktraceSkip)});
+                    .stacktrace = stacktrace::current_stacktrace(m_StacktraceSkip)});
         }
 
         template <typename... Args>
