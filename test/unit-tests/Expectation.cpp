@@ -106,6 +106,7 @@ TEST_CASE(
     "mimicpp::ExpectationCollection queries its expectations, whether they match the call, in reverse order of construction.",
     "[expectation]")
 {
+    using mimicpp::is_same_source_location;
     using namespace mimicpp::call;
     using StorageT = mimicpp::ExpectationCollection<void()>;
     using CallInfoT = Info<void>;
@@ -123,32 +124,33 @@ TEST_CASE(
     const CallInfoT call{
         .args = {},
         .fromCategory = mimicpp::ValueCategory::any,
-        .fromConstness = mimicpp::Constness::any};
+        .fromConstness = mimicpp::Constness::any,
+        .fromSourceLocation = std::source_location::current()};
 
     SECTION("If a full match is found.")
     {
         trompeloeil::sequence sequence{};
         REQUIRE_CALL(*expectations[3], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(commonNoMatchReport);
         REQUIRE_CALL(*expectations[2], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(commonNoMatchReport);
         REQUIRE_CALL(*expectations[1], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(commonFullMatchReport);
         REQUIRE_CALL(*expectations[0], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(commonNoMatchReport);
         REQUIRE_CALL(*expectations[1], consume(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence);
         REQUIRE_CALL(*expectations[1], finalize_call(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence);
 
         REQUIRE_NOTHROW(storage.handle_call(call));
@@ -181,19 +183,19 @@ TEST_CASE(
 
         trompeloeil::sequence sequence{};
         REQUIRE_CALL(*expectations[3], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(result0);
         REQUIRE_CALL(*expectations[2], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(result1);
         REQUIRE_CALL(*expectations[1], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(result2);
         REQUIRE_CALL(*expectations[0], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(result3);
 
@@ -215,19 +217,19 @@ TEST_CASE(
     {
         trompeloeil::sequence sequence{};
         REQUIRE_CALL(*expectations[3], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(commonNoMatchReport);
         REQUIRE_CALL(*expectations[2], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(commonNoMatchReport);
         REQUIRE_CALL(*expectations[1], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(commonNoMatchReport);
         REQUIRE_CALL(*expectations[0], matches(_))
-            .LR_WITH(&_1 == &call)
+            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
             .IN_SEQUENCE(sequence)
             .RETURN(commonNoMatchReport);
 

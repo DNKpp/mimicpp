@@ -15,6 +15,7 @@
 
 #include <cassert>
 #include <concepts>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <optional>
@@ -298,7 +299,7 @@ namespace mimicpp
          * If matches are possible, but all expectations are saturated, an "inapplicable match"-report is emitted.
          */
         [[nodiscard]]
-        ReturnT handle_call(const CallInfoT& call)
+        ReturnT handle_call(CallInfoT call)
         {
             std::vector<std::tuple<ExpectationT&, MatchReport>> matches{};
             std::vector<MatchReport> noMatches{};
@@ -342,12 +343,12 @@ namespace mimicpp
             if (!std::ranges::empty(inapplicableMatches))
             {
                 detail::report_inapplicable_matches(
-                    make_call_report(call),
+                    make_call_report(std::move(call)),
                     std::move(inapplicableMatches));
             }
 
             detail::report_no_matches(
-                make_call_report(call),
+                make_call_report(std::move(call)),
                 std::move(noMatches));
         }
 
