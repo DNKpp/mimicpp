@@ -144,7 +144,7 @@ TEST_CASE(
     "stacktrace_traits<EmptyStacktraceBackend>::current() generates a new empty stacktrace.",
     "[stacktrace]")
 {
-    using traits_t = stacktrace::backend_traits<stacktrace::EmptyStacktraceBackend>;
+    using traits_t = stacktrace::backend_traits<stacktrace::NullBackend>;
 
     const Stacktrace stacktrace{traits_t::current(42)};
 
@@ -259,7 +259,7 @@ TEST_CASE(
 {
     SECTION("Empty stacktraces have special treatment.")
     {
-        const Stacktrace stacktrace{stacktrace::EmptyStacktraceBackend{}};
+        const Stacktrace stacktrace{stacktrace::NullBackend{}};
         REQUIRE_THAT(
             mimicpp::print(stacktrace),
             Catch::Matchers::Equals("empty"));

@@ -383,7 +383,7 @@ namespace mimicpp::detail
 
 namespace mimicpp::stacktrace
 {
-    class EmptyStacktraceBackend;
+    class NullBackend;
 
     struct find_backend;
 

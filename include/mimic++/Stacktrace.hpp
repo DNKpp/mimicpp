@@ -332,18 +332,18 @@ namespace mimicpp::stacktrace
      * \brief The fallback stacktrace-backend.
      * \details In fact, it's only use is to reduce the "defined" branching in the production code.
      */
-    class EmptyStacktraceBackend
+    class NullBackend
     {
     };
 }
 
 template <>
-struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::EmptyStacktraceBackend>
+struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::NullBackend>
 {
     [[nodiscard]]
-    static EmptyStacktraceBackend current([[maybe_unused]] const std::size_t skip) noexcept
+    static NullBackend current([[maybe_unused]] const std::size_t skip) noexcept
     {
-        return EmptyStacktraceBackend{};
+        return NullBackend{};
     }
 
     [[nodiscard]]
@@ -383,7 +383,7 @@ private:
 };
 
 static_assert(
-    mimicpp::stacktrace::backend<mimicpp::stacktrace::EmptyStacktraceBackend>,
+    mimicpp::stacktrace::backend<mimicpp::stacktrace::NullBackend>,
     "stacktrace::EmptyStacktraceBackend does not satisfy the stacktrace::stacktrace_backend concept");
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
@@ -582,7 +582,7 @@ static_assert(
 
 struct mimicpp::stacktrace::find_stacktrace_backend
 {
-    using type = EmptyStacktraceBackend;
+    using type = NullBackend;
 };
 
 #endif
