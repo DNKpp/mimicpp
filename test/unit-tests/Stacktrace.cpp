@@ -281,9 +281,8 @@ TEST_CASE(
     CHECK(size == stacktrace.size());
 
     const std::string pattern = format::format(
-        "(.+?\\[\\d+\\], .+?\\n){{{}}}"
-        ".+?\\[\\d+\\], .*?\\n", // on linux, the description of the lowest entry may be empty.
-        size - 1u);
+        "(.+?\\[\\d+\\],.+?\\n){{{}}}",
+        size);
     REQUIRE_THAT(
         mimicpp::print(stacktrace),
         Catch::Matchers::Matches(pattern));
