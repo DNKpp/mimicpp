@@ -107,8 +107,6 @@ if (NOT TARGET enable-config-options)
 
 		message(DEBUG "${MESSAGE_PREFIX} Stacktrace feature enabled.")
 
-		#set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
-
 		# Config option to enable cpptrace as stacktrace-backend.
 		# This will download the cpptrace source if not found.
 		# Eventually defines the macro MIMICPP_CONFIG_USE_CPPTRACE.
