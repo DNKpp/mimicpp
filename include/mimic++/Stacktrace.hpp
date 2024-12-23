@@ -80,6 +80,19 @@ namespace mimicpp::stacktrace
      */
 
     /**
+     * \brief Helper type for getting the default stacktrace-backend.
+     * \note See \ref STACKTRACE "stacktrace" documentation for an example.
+     */
+    struct find_backend;
+
+    /**
+     * \brief Trait type for stacktrace backends.
+     * \note See \ref STACKTRACE "stacktrace" documentation for an example.
+     */
+    template <typename Backend>
+    struct backend_traits;
+
+    /**
      * \brief Checks whether the given type satisfies the requirements of a stacktrace backend.
      * \tparam T Type to check.
      */
