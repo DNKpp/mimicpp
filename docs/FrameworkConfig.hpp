@@ -68,4 +68,38 @@
  * 
  * I recently switched from ``cpp-unicodelib``, which I didn't like very much for several reasons. ``uni-algo`` seems more mature, but I would like
  * to get some feedback, before I'll declare this as a stable feature.
+ *
+ * ---
+ * \anchor MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+ * ## Enable experimental stacktrace support
+ * Name: ``MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE``
+ *
+ * When enabled, ``mimic++`` uses stacktrace information to provide more useful information to the users.
+ * Users can decide whether they use the c++23 ``std::stacktrace``, the third-party ``cpptrace`` or any custom stacktrace-backend.
+ * \see \ref STACKTRACE "stacktrace" documentation
+ * \see \ref MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+ *
+ * \attention This is an experimental feature, which may be removed during any release.
+ *
+ * ### Why is it an experimental feature?
+ *
+ * Stack traces require significantly more work for each mock call. It can be worthwhile, but it can also be too excessive.
+ *
+ * ---
+ * \anchor MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+ * ## Enable experimental cpptrace stacktrace-backend
+ * Name: ``MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE``
+ *
+ * When enabled, ``mimic++`` installs the ``cpptrace`` stacktrace as default stacktrace-backend.
+ * \note This option is only available, if \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE is enabled.
+ *
+ * ``mimic++`` attempts to detect whether ``cpptrace`` is already available before pulling it from GitHub.
+ * If you want to reuse an existing ``cpptrace`` package, make sure that it can be found via ``find_package(cpptrace)``.
+ * \see https://github.com/jeremy-rifkin/cpptrace
+ *
+ * \attention This is an experimental feature, which may be removed during any release.
+ *
+ * ### Why is it an experimental feature?
+ *
+ * Since general stacktrace support is currently declared experimental, this feature is also considered experimental.
  */

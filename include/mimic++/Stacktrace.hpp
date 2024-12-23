@@ -40,9 +40,9 @@ namespace mimicpp
      * To address this, ``mimic++`` introduces a simple stack trace abstraction that can be used to integrate any existing
      * stack trace implementation.
      *
-     * \note The ``MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE`` macro must be defined to fully enable the support.
-     * - If the ``MIMICPP_CONFIG_USE_CPPTRACE`` is defined, the ``cpptrace::stacktrace`` is selected as the active stacktrace-backend.
-     * - If ``std::stacktrace`` is available (i.e. c++23 is available), it's selected as the active stacktrace-backend.
+     * \note The \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE macro must be defined to fully enable the support.
+     * - If the \ref MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE is defined, the ``cpptrace::stacktrace`` is selected as the default stacktrace-backend.
+     * - If ``std::stacktrace`` is available (i.e. c++23 is available), it's selected as the default stacktrace-backend.
      * - Otherwise, the ``EmptyStacktraceBackend`` is selected, which does not provide any valuable information.
      *
      * \details
@@ -382,7 +382,7 @@ static_assert(
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
 
-    #ifdef MIMICPP_CONFIG_USE_CPPTRACE
+    #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
         #if __has_include(<cpptrace/basic.hpp>)
             #include <cpptrace/basic.hpp>

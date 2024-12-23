@@ -97,13 +97,18 @@ if (NOT TARGET enable-config-options)
 
 	endif()
 
+	# Config option to enable full stacktrace support.
+	# Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE.
 	OPTION(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "When enabled, experimental stacktrace feature is enabled (requires either c++23 or cpptrace)." OFF)
 	if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
 
 		message(DEBUG "${MESSAGE_PREFIX} Stacktrace feature enabled.")
 
-		OPTION(MIMICPP_CONFIG_USE_CPPTRACE "When enabled, requires cpptrace library instead of c++23 stacktrace." OFF)
-		if (MIMICPP_CONFIG_USE_CPPTRACE)
+		# Config option to enable cpptrace as stacktrace-backend.
+		# This will download the cpptrace source if not found.
+		# Eventually defines the macro MIMICPP_CONFIG_USE_CPPTRACE.
+		OPTION(MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE "When enabled, registers cpptrace library as stacktrace-backend." OFF)
+		if (MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE)
 
 			message(DEBUG "${MESSAGE_PREFIX} Searching for installed {cpptrace}-package.")
 			find_package(cpptrace QUIET)
@@ -131,7 +136,7 @@ if (NOT TARGET enable-config-options)
 			target_compile_definitions(
 				enable-config-options
 				INTERFACE
-				MIMICPP_CONFIG_USE_CPPTRACE
+				MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 			)
 
 		else ()
