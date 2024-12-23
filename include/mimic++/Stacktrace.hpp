@@ -247,7 +247,7 @@ namespace mimicpp::stacktrace::detail::current_hook
 
     template <
         template <typename> typename Traits,
-        accessible_stacktrace_backend<Traits> FindBackendT = find_stacktrace_backend>
+        accessible_stacktrace_backend<Traits> FindBackendT = find_backend>
     [[nodiscard]]
     constexpr auto current([[maybe_unused]] const priority_tag<1>, const std::size_t skip)
     {
@@ -502,7 +502,7 @@ static_assert(
 
         #include <stacktrace>
 
-struct mimicpp::stacktrace::find_stacktrace_backend
+struct mimicpp::stacktrace::find_backend
 {
     using type = std::stacktrace;
 };

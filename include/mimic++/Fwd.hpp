@@ -385,7 +385,7 @@ namespace mimicpp::stacktrace
 {
     class EmptyStacktraceBackend;
 
-    struct find_stacktrace_backend;
+    struct find_backend;
 
     template <typename Backend>
     struct backend_traits;
