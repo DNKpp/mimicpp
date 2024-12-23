@@ -37,13 +37,13 @@ namespace mimicpp::stacktrace
      * \brief Contains stacktrace related functionalities.
      * \details As ``mimic++`` is officially a C++20 framework, it can not rely on built-in stack trace support from the STL.
      * However, stack traces are particularly valuable for users in the context of mocking, especially when expectations are violated.
-     * To address this, ``mimic++`` introduces a simple stack trace abstraction that can be used to integrate any existing
-     * stack trace implementation.
+     * To address this, ``mimic++`` introduces a simple stacktrace abstraction that can be used to integrate any existing
+     * stacktrace implementation.
      *
      * \note The \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE macro must be defined to fully enable the support.
      * - If the \ref MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE is defined, the ``cpptrace::stacktrace`` is selected as the default stacktrace-backend.
      * - If ``std::stacktrace`` is available (i.e. c++23 is available), it's selected as the default stacktrace-backend.
-     * - Otherwise, the ``EmptyStacktraceBackend`` is selected, which does not provide any valuable information.
+     * - Otherwise, the ``stacktrace::NullBackend`` is selected, which does not provide any valuable information.
      *
      * \details
      * ### Custom Stacktrace Backends
@@ -58,11 +58,11 @@ namespace mimicpp::stacktrace
      *      using type = MyStacktraceBackend;
      * };
      * ```
-     * Additionally, a specialization for the ``stacktrace_traits`` template must be added, which defines at least the
+     * Additionally, a specialization for the ``stacktrace::backend_traits`` template must be added, which defines at least the
      * following functions:
      * ```cpp
      * template <>
-     * struct mimicpp::stacktrace_traits<MyStacktraceBackend>
+     * struct mimicpp::stacktrace::backend_traits<MyStacktraceBackend>
      * {
      *    static MyStacktraceBackend current(const std::size_t skip);
      *    static std::size_t size(const std::any& backend);
@@ -378,13 +378,13 @@ private:
     [[noreturn]]
     static void raise_unsupported_operation()
     {
-        throw std::runtime_error{"EmptyStacktraceBackend doesn't support this operation."};
+        throw std::runtime_error{"stacktrace::NullBackend doesn't support this operation."};
     }
 };
 
 static_assert(
     mimicpp::stacktrace::backend<mimicpp::stacktrace::NullBackend>,
-    "stacktrace::EmptyStacktraceBackend does not satisfy the stacktrace::stacktrace_backend concept");
+    "stacktrace::NullBackend does not satisfy the stacktrace::backend concept");
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
 
@@ -408,7 +408,7 @@ namespace mimicpp::stacktrace
         ~CpptraceBackend() = default;
 
         [[nodiscard]]
-        explicit CpptraceBackend(::cpptrace::raw_trace&& trace) noexcept
+        explicit CpptraceBackend(cpptrace::raw_trace&& trace) noexcept
             : m_Trace{std::move(trace)}
         {
         }
@@ -419,34 +419,34 @@ namespace mimicpp::stacktrace
         CpptraceBackend& operator=(CpptraceBackend&&) = default;
 
         [[nodiscard]]
-        const ::cpptrace::stacktrace& data() const
+        const cpptrace::stacktrace& data() const
         {
-            if (const auto* raw = std::get_if<::cpptrace::raw_trace>(&m_Trace))
+            if (const auto* raw = std::get_if<cpptrace::raw_trace>(&m_Trace))
             {
                 m_Trace = raw->resolve();
             }
 
-            return std::get<::cpptrace::stacktrace>(m_Trace);
+            return std::get<cpptrace::stacktrace>(m_Trace);
         }
 
     private:
-        using TraceT = std::variant<::cpptrace::raw_trace, ::cpptrace::stacktrace>;
+        using TraceT = std::variant<cpptrace::raw_trace, cpptrace::stacktrace>;
         mutable TraceT m_Trace;
     };
 }
 
-struct mimicpp::stacktrace::find_stacktrace_backend
+struct mimicpp::stacktrace::find_backend
 {
     using type = CpptraceBackend;
 };
 
 template <>
-struct mimicpp::stacktrace::stacktrace_traits<mimicpp::stacktrace::CpptraceBackend>
+struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::CpptraceBackend>
 {
     [[nodiscard]]
     static CpptraceBackend current(const std::size_t skip)
     {
-        return CpptraceBackend{::cpptrace::generate_raw_trace(skip + 1)};
+        return CpptraceBackend{cpptrace::generate_raw_trace(skip + 1)};
     }
 
     [[nodiscard]]
@@ -486,15 +486,15 @@ struct mimicpp::stacktrace::stacktrace_traits<mimicpp::stacktrace::CpptraceBacke
     }
 
     [[nodiscard]]
-    static const ::cpptrace::stacktrace_frame& get_frame(const std::any& storage, const std::size_t at)
+    static const cpptrace::stacktrace_frame& get_frame(const std::any& storage, const std::size_t at)
     {
         return get(storage).frames.at(at);
     }
 };
 
 static_assert(
-    mimicpp::stacktrace::stacktrace_backend<mimicpp::stacktrace::CpptraceBackend>,
-    "stacktrace::CpptraceBackend does not satisfy the stacktrace::stacktrace_backend concept");
+    mimicpp::stacktrace::backend<mimicpp::stacktrace::CpptraceBackend>,
+    "stacktrace::CpptraceBackend does not satisfy the stacktrace::backend concept");
 
         #define MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
@@ -563,7 +563,7 @@ struct mimicpp::stacktrace::backend_traits<std::basic_stacktrace<Allocator>>
 
 static_assert(
     mimicpp::stacktrace::backend<std::stacktrace>,
-    "std::stacktrace does not satisfy the stacktrace::stacktrace_backend concept");
+    "std::stacktrace does not satisfy the stacktrace::backend concept");
 
         #define MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
@@ -580,7 +580,7 @@ static_assert(
 // or MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE simply not defined.
 #ifndef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
 
-struct mimicpp::stacktrace::find_stacktrace_backend
+struct mimicpp::stacktrace::find_backend
 {
     using type = NullBackend;
 };
