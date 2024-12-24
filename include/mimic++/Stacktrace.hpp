@@ -241,7 +241,7 @@ namespace mimicpp
 namespace mimicpp::stacktrace::detail::current_hook
 {
     template <typename FindBackend, template <typename> typename Traits>
-    concept accessible_stacktrace_backend = requires {
+    concept existing_backend = requires {
         {
             Traits<
                 typename FindBackend::type>::current(std::size_t{})
@@ -250,7 +250,7 @@ namespace mimicpp::stacktrace::detail::current_hook
 
     template <
         template <typename> typename Traits,
-        accessible_stacktrace_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
+        existing_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
     [[nodiscard]]
     constexpr auto current([[maybe_unused]] const priority_tag<2>, const std::size_t skip)
     {
@@ -260,7 +260,7 @@ namespace mimicpp::stacktrace::detail::current_hook
 
     template <
         template <typename> typename Traits,
-        accessible_stacktrace_backend<Traits> FindBackendT = find_backend>
+        existing_backend<Traits> FindBackendT = find_backend>
     [[nodiscard]]
     constexpr auto current([[maybe_unused]] const priority_tag<1>, const std::size_t skip)
     {
