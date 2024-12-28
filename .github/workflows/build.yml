@@ -424,7 +424,7 @@ jobs:
       # Workflow is skipped, when an alternative default call-convention is applied.
       - name: Configure adapter tests
         id: config-adapter-test
-        if: ${{ matrix.config.default_call_convention != '' }}
+        if: ${{ matrix.config.default_call_convention == '' }}
         shell: bash
         run: |
           cmake \
