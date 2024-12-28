@@ -1,0 +1,55 @@
+name: build linux
+on:
+  workflow_run:
+    workflows: [ "generate build matrix" ]
+    types:
+      - completed
+
+jobs:
+  run-job:
+    runs-on: ubuntu-latest
+    fail-fast: false
+    strategy:
+      format_backend: [ std, fmt ]
+      str_matcher: [ char, unicode ]
+      build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
+      cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Clang libc++ setup
+        if: ${{ matrix.config.compiler_name == 'clang' && matrix.config.libcxx == true }}
+        shell: bash
+        run: |
+          echo "CXXFLAGS=$(echo ${CXXFLAGS} -stdlib=libc++)" >> $GITHUB_ENV
+          echo "LDFLAGS=$(echo ${LDFLAGS} -lc++abi)" >> $GITHUB_ENV
+          
+          # ASan has some serious trouble with libc++ exception mechanism
+          # see: https://github.com/llvm/llvm-project/issues/59432
+          echo "ASAN_OPTIONS=$(echo ${ASAN_OPTIONS}:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
+
+      - name: Configure Basic Framework
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              --log-level=DEBUG \
+              -D CMAKE_VERBOSE_MAKEFILE=YES \
+              -D CMAKE_BUILD_TYPE="${{ matrix.build_mode }}" \
+              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}"
+
+      - name: Build Basic Framework
+        shell: bash
+        run: |
+          cmake --build build -j5
+
+      - name: Run Basic Framework tests
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build \
+              -C ${{ matrix.build_mode }} \
+              -j5
