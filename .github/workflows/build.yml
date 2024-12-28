@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      config: ${{ steps.output-config.outputs.config }}
       build_modes: ${{ steps.output-options.outputs.build_modes }}
       cxx_versions: ${{ steps.output-options.outputs.cxx_versions }}
 
@@ -46,118 +45,120 @@ jobs:
           echo "cxx_versions=$(echo [ $CXX_VERSIONS ])" >> "$GITHUB_OUTPUT"
 
   build-and-test:
-    needs: define-matrix
-    runs-on: generate-base-matrix
-    fail-fast: false
+    needs: generate-base-matrix
+    runs-on: ${{ matrix.config.os }}
+    container: ${{ matrix.config.container }}
     strategy:
-      build_mode: ${{ fromJSON(needs.define-matrix.outputs.build_modes) }}
-      cxx_standard: ${{ fromJSON(needs.define-matrix.outputs.cxx_versions) }}
-      config:
-        - prefix: "Linux"
-          suffix: "/libc++"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/clang:18"
-          compiler_name: "clang"
-          compiler_version: 18
-          architecture: "x64"
-          libcxx: true
-          asan: true
+      fail-fast: false
+      matrix:
+        build_mode: ${{ fromJSON(needs.generate-base-matrix.outputs.build_modes) }}
+        cxx_standard: ${{ fromJSON(needs.generate-base-matrix.outputs.cxx_versions) }}
+        config:
+          - prefix: "Linux"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:18"
+            compiler_name: "clang"
+            compiler_version: 18
+            architecture: "x64"
+            libcxx: true
+            asan: true
 
-        - prefix: "Linux"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/clang:18"
-          compiler_name: "clang"
-          compiler_version: 18
-          architecture: "x64"
-          libcxx: false
-          asan: true
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:18"
+            compiler_name: "clang"
+            compiler_version: 18
+            architecture: "x64"
+            libcxx: false
+            asan: true
 
-        - prefix: "Linux"
-          suffix: "/libc++"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/clang:17"
-          compiler_name: "clang"
-          compiler_version: 17
-          architecture: "x64"
-          libcxx: true
-          asan: true
+          - prefix: "Linux"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:17"
+            compiler_name: "clang"
+            compiler_version: 17
+            architecture: "x64"
+            libcxx: true
+            asan: true
 
-        - prefix: "Linux"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/clang:17"
-          compiler_name: "clang"
-          compiler_version: 17
-          architecture: "x64"
-          libcxx: false
-          asan: true
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:17"
+            compiler_name: "clang"
+            compiler_version: 17
+            architecture: "x64"
+            libcxx: false
+            asan: true
 
-        - prefix: "Linux"
-          suffix: "/libc++"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/clang:16"
-          compiler_name: "clang"
-          compiler_version: 16
-          only_fmt: true
-          architecture: "x64"
-          libcxx: true
-          asan: true
+          - prefix: "Linux"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:16"
+            compiler_name: "clang"
+            compiler_version: 16
+            only_fmt: true
+            architecture: "x64"
+            libcxx: true
+            asan: true
 
-        - prefix: "Linux"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/clang:16"
-          compiler_name: "clang"
-          compiler_version: 16
-          only_fmt: true
-          architecture: "x64"
-          libcxx: false
-          asan: true
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:16"
+            compiler_name: "clang"
+            compiler_version: 16
+            only_fmt: true
+            architecture: "x64"
+            libcxx: false
+            asan: true
 
-        - prefix: "Linux"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/gcc:14"
-          compiler_name: "gcc"
-          compiler_version: 14
-          architecture: "x64"
-          libcxx: false
-          asan: true
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:14"
+            compiler_name: "gcc"
+            compiler_version: 14
+            architecture: "x64"
+            libcxx: false
+            asan: true
 
-        - prefix: "Linux"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/gcc:14"
-          compiler_name: "gcc"
-          compiler_version: 14
-          architecture: "32bit"
-          libcxx: false
-          asan: true
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:14"
+            compiler_name: "gcc"
+            compiler_version: 14
+            architecture: "32bit"
+            libcxx: false
+            asan: true
 
-        - prefix: "Linux"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/gcc:13"
-          compiler_name: "gcc"
-          compiler_version: 13
-          architecture: "x64"
-          libcxx: false
-          asan: true
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:13"
+            compiler_name: "gcc"
+            compiler_version: 13
+            architecture: "x64"
+            libcxx: false
+            asan: true
 
-        - prefix: "Linux"
-          os: "ubuntu-latest"
-          container:
-            image: "ghcr.io/dnkpp/gcc:12"
-          compiler_name: "gcc"
-          compiler_version: 12
-          only_fmt: true
-          architecture: "x64"
-          libcxx: false
-          asan: true
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:12"
+            compiler_name: "gcc"
+            compiler_version: 12
+            only_fmt: true
+            architecture: "x64"
+            libcxx: false
+            asan: true
 
     steps:
       - name: Checkout code
