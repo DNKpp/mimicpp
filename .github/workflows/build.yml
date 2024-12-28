@@ -255,7 +255,7 @@ jobs:
                                           --log-level=DEBUG \
                                           -D CMAKE_VERBOSE_MAKEFILE=YES \
                                           -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
-                                    >> $GITHUB_ENV
+                                      )" >> $GITHUB_ENV
 
       - name: Setup macOS
         if: startsWith(matrix.config.os, 'macOS')
@@ -284,10 +284,10 @@ jobs:
         shell: bash
         run: |
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
-                  -G\"${{ matrix.config.cmake_generator }}\" \
-                  -T\"${{ matrix.config.compiler_version }}\" \
-                  -A\"${{ matrix.config.architecture }}\")" \
-              >> $GITHUB_ENV
+                                            -G\"${{ matrix.config.cmake_generator }}\" \
+                                            -T\"${{ matrix.config.compiler_version }}\" \
+                                            -A\"${{ matrix.config.architecture }}\" \
+                                      )" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=$(echo ${CMAKE_BUILD_EXTRA} --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
       - name: Clang libc++ setup
