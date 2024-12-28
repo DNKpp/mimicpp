@@ -238,6 +238,7 @@ jobs:
             os: "macos-latest"
             compiler_name: "AppleClang"
             compiler_version: "16"
+            only_fmt: true
             architecture: "x64"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
             asan: true
@@ -246,6 +247,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Setup base cmake options
+        shell: bash
+        run: |
+          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
+                                          --log-level=DEBUG \
+                                          -D CMAKE_VERBOSE_MAKEFILE=YES \
+                                          -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+                                    >> $GITHUB_ENV
 
       - name: Setup macOS
         if: startsWith(matrix.config.os, 'macOS')
@@ -261,19 +271,19 @@ jobs:
           # solves this issue: https://github.com/Homebrew/homebrew-core/issues/178435
           echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
 
-          echo "CMAKE_CONFIG_EXTRA=$(echo ${CMAKE_CONFIG_EXTRA} -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
       - name: Setup linux
         if: ${{ matrix.config.prefix == 'Linux' }}
         shell: bash
         run: |
-          echo "CMAKE_CONFIG_EXTRA=$(echo ${CMAKE_CONFIG_EXTRA} -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
       - name: Setup msvc
         if: ${{ matrix.config.compiler_name  == 'msvc' }}
         shell: bash
         run: |
-          echo "CMAKE_CONFIG_EXTRA=$(echo ${CMAKE_CONFIG_EXTRA} \
+          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
                   -G\"${{ matrix.config.cmake_generator }}\" \
                   -T\"${{ matrix.config.compiler_version }}\" \
                   -A\"${{ matrix.config.architecture }}\")" \
@@ -308,7 +318,7 @@ jobs:
         if: ${{ matrix.config.asan == true }}
         shell: bash
         run: |
-          echo "CMAKE_CONFIG_EXTRA=$(echo ${CMAKE_CONFIG_EXTRA} -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
+          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
 
         # ASan has some serious trouble with libc++ exception mechanism
         # see: https://github.com/llvm/llvm-project/issues/59432
@@ -328,15 +338,15 @@ jobs:
           cmake \
               -S . \
               -B build \
-              --log-level=DEBUG \
-              -D CMAKE_VERBOSE_MAKEFILE=YES \
-              -D CMAKE_BUILD_TYPE="${{ matrix.build_mode }}" \
-              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}"
+              ${{ env.CMAKE_BASE_OPTIONS }}
 
       - name: Build Basic Framework
         if: ${{ steps.config-basic.outcome == 'success' }}
         shell: bash
-        run: cmake --build build -j5
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run Basic Framework tests
         if: ${{ steps.config-basic.outcome == 'success' }}
@@ -358,15 +368,15 @@ jobs:
           cmake \
               -S . \
               -B build \
-              --log-level=DEBUG \
-              -D CMAKE_VERBOSE_MAKEFILE=YES \
-              -D CMAKE_BUILD_TYPE="${{ matrix.build_mode }}" \
-              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+              ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES
 
       - name: Build with fmt formatting-backend
         shell: bash
-        run: cmake --build build -j5
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with fmt formatting-backend
         shell: bash
@@ -380,23 +390,23 @@ jobs:
       #################################
 
       #################################
-      # Feature: unicode string-matchers
+      # Feature: Unicode string-matchers
       - name: Configure with unicode string-matchers
         shell: bash
         run: |
           cmake \
               -S . \
               -B build \
-              --log-level=DEBUG \
-              -D CMAKE_VERBOSE_MAKEFILE=YES \
-              -D CMAKE_BUILD_TYPE="${{ matrix.build_mode }}" \
-              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+              ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES
 
       - name: Build with unicode string-matchers
         shell: bash
-        run: cmake --build build -j5
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests unicode string-matchers
         shell: bash
@@ -411,25 +421,30 @@ jobs:
 
       #################################
       # Adapter Tests
+      # Workflow is skipped, when an alternative default call-convention is applied.
       - name: Configure adapter tests
+        id: config-adapter-test
+        if: ${{ matrix.config.default_call_convention != '' }}
         shell: bash
         run: |
           cmake \
               -S . \
               -B build \
-              --log-level=DEBUG \
-              -D CMAKE_VERBOSE_MAKEFILE=YES \
-              -D CMAKE_BUILD_TYPE="${{ matrix.build_mode }}" \
-              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+              ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
               -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES
 
       - name: Build adapter tests
+        if: ${{ steps.config-adapter-test.outcome == 'success' }}
         shell: bash
-        run: cmake --build build -j5
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run adapter tests
+        if: ${{ steps.config-adapter-test.outcome == 'success' }}
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
