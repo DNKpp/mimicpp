@@ -47,7 +47,7 @@ jobs:
   build-and-test:
     needs: generate-base-matrix
     runs-on: ${{ matrix.config.os }}
-    container: ${{ matrix.config.container }}
+    container: ${{ matrix.config.container.image }}
     strategy:
       fail-fast: false
       matrix:
@@ -179,6 +179,15 @@ jobs:
         run: |
           echo "ASAN_OPTIONS=$(echo ${ASAN_OPTIONS}:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
 
+      - name: Setup linux 32bit builds
+        if: ${{ matrix.config.prefix == 'Linux' && matrix.config.architecture == '32bit' }}
+        shell: bash
+        run: |
+          apt-get install -y gcc-${{ matrix.config.compiler_version }}-multilib g++-${{ matrix.config.compiler_version }}-multilib
+          echo "CXXFLAGS=$(echo ${CXXFLAGS} -m32)" >> $GITHUB_ENV
+          echo "CFLAGS=$(echo ${CFLAGS} -m32)" >> $GITHUB_ENV
+          echo "LDFLAGS=$(echo ${LDFLAGS} -m32)" >> $GITHUB_ENV
+
       #################################
       #
       - name: Configure Basic Framework
@@ -197,8 +206,7 @@ jobs:
       - name: Build Basic Framework
         if: ${{ steps.config-basic.outcome == 'success' }}
         shell: bash
-        run: |
-          cmake --build build -j5
+        run: cmake --build build -j5
 
       - name: Run Basic Framework tests
         if: ${{ steps.config-basic.outcome == 'success' }}
@@ -207,6 +215,96 @@ jobs:
           CTEST_OUTPUT_ON_FAILURE: 1
         run: |
           ctest --test-dir build \
+              -C ${{ matrix.build_mode }} \
+              -j5
+      #
+      #################################
+
+      #################################
+      #
+      - name: Configure with fmt formatting-backend
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              --log-level=DEBUG \
+              -D CMAKE_VERBOSE_MAKEFILE=YES \
+              -D CMAKE_BUILD_TYPE="${{ matrix.build_mode }}" \
+              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+              -D MIMICPP_CONFIG_USE_FMT=YES
+
+      - name: Build with fmt formatting-backend
+        shell: bash
+        run: cmake --build build -j5
+
+      - name: Run tests with fmt formatting-backend
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build \
+              -C ${{ matrix.build_mode }} \
+              -j5
+      #
+      #################################
+
+      #################################
+      #
+      - name: Configure with unicode string-matchers
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              --log-level=DEBUG \
+              -D CMAKE_VERBOSE_MAKEFILE=YES \
+              -D CMAKE_BUILD_TYPE="${{ matrix.build_mode }}" \
+              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+              -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES
+
+      - name: Build with unicode string-matchers
+        shell: bash
+        run: cmake --build build -j5
+
+      - name: Run tests unicode string-matchers
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build \
+              -C ${{ matrix.build_mode }} \
+              -j5
+      #
+      #################################
+
+      #################################
+      #
+      - name: Configure adapter tests
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              --log-level=DEBUG \
+              -D CMAKE_VERBOSE_MAKEFILE=YES \
+              -D CMAKE_BUILD_TYPE="${{ matrix.build_mode }}" \
+              -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+              -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES
+
+      - name: Build adapter tests
+        shell: bash
+        run: cmake --build build -j5
+
+      - name: Run adapter tests
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build/test/adapter-tests \
               -C ${{ matrix.build_mode }} \
               -j5
       #
