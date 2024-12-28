@@ -28,10 +28,10 @@ jobs:
 
       # if its a PR from development or the main branch in general, add release-mode and c++23
       - name: Enable extended matrix
-        if: ${{
-          (github.event_name == 'pull_request' && github.head_ref == 'development')
-          || github.ref_name == 'main'
-          }}
+        #if: ${{
+        #  (github.event_name == 'pull_request' && github.head_ref == 'development')
+        #  || github.ref_name == 'main'
+        #  }}
         shell: bash
         run: |
           echo "BUILD_MODES=$(echo $BUILD_MODES, \"Release\")" >> $GITHUB_ENV
