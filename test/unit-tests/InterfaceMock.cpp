@@ -640,7 +640,7 @@ TEST_CASE(
     ScopedExpectation exp = mock.foo_.expect_call();
     const std::source_location before = std::source_location::current();
     mock.foo();
-    [[maybe_unused]] volatile constexpr int dummy{42}; // make the after source_loc line strictly > the invocation line
+    // make the after source_loc line strictly > the invocation line
     const std::source_location after = std::source_location::current();
 
     const CallReport& report = std::get<0>(reporter.full_match_reports().front());
