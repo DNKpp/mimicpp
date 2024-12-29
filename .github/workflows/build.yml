@@ -235,12 +235,15 @@ jobs:
 
       - name: Setup base cmake options
         shell: bash
+        # sets up common options, used by all cmake configure steps.
+        # explicitly disable all optional features here
         run: |
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
                                           --log-level=DEBUG \
                                           -D CMAKE_VERBOSE_MAKEFILE=YES \
                                           -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
-                                          # explicitly disable all optional features here
+                                          -D MIMICPP_ENABLE_ADAPTER_TESTS=OFF \
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=OFF \
