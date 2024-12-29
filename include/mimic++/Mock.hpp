@@ -329,9 +329,6 @@ namespace mimicpp::detail
                 std::make_shared<ExpectationCollection<UniqueSignatures>>()...};
         }
     };
-
-    template <typename FirstSignature, typename... OtherSignatures>
-    Mock<FirstSignature, OtherSignatures...> make_interface_mock();
 }
 
 namespace mimicpp
