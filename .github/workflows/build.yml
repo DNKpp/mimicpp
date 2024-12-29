@@ -28,10 +28,10 @@ jobs:
 
       # if it's a PR from development or the main branch in general, add release-mode and c++23
       - name: Enable extended matrix
-        #if: ${{
-        #  (github.event_name == 'pull_request' && github.head_ref == 'development')
-        #  || github.ref_name == 'main'
-        #  }}
+        if: ${{
+          (github.event_name == 'pull_request' && github.head_ref == 'development')
+          || github.ref_name == 'main'
+          }}
         shell: bash
         run: |
           echo "BUILD_MODES=$(echo $BUILD_MODES, \"Release\")" >> $GITHUB_ENV
@@ -60,6 +60,27 @@ jobs:
         cxx_standard: ${{ fromJSON(needs.generate-base-matrix.outputs.cxx_versions) }}
         config:
           # clang
+          - prefix: "Linux"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:19"
+            compiler_name: "clang"
+            compiler_version: "19"
+            architecture: "x64"
+            libcxx: true
+            asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:19"
+            compiler_name: "clang"
+            compiler_version: "19"
+            architecture: "x64"
+            libcxx: false
+            asan: true
+
           - prefix: "Linux"
             suffix: "/libc++"
             os: "ubuntu-latest"
