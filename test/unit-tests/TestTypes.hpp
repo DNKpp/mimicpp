@@ -459,7 +459,7 @@ public:
 
     std::string describe() const override
     {
-        return "Variant state equals: " + Catch::Detail::stringify(m_Value);
+        return std::string{"Variant state equals: "} + Catch::Detail::stringify(m_Value);
     }
 
 private:
