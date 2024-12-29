@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "ARCHITECTURES=\"64bit\"" >> $GITHUB_ENV
           echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
-          echo "CXX_VERSIONS=20" >> $GITHUB_ENV
+          echo "CXX_VERSIONS=20, 23" >> $GITHUB_ENV
 
       # if it's a PR from development or the main branch in general, add release-mode, c++23 and 32bit
       - name: Enable extended matrix
@@ -421,6 +421,68 @@ jobs:
               ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests unicode string-matchers
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build \
+              -C ${{ matrix.build_mode }} \
+              -j5
+      #
+      #################################
+
+      #################################
+      # Feature: stacktrace
+      - name: Configure with std::stacktrace backend
+        id: config-cxx23-stacktrace
+        if: ${{ matrix.cxx_standard >= 23 }}
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              ${{ env.CMAKE_BASE_OPTIONS }} \
+              -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES
+
+      - name: Build with std::stacktrace backend
+        if: ${{ steps.config-cxx23-stacktrace.outcome == 'success' }}
+        shell: bash
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
+
+      - name: Run tests with std::stacktrace backend
+        if: ${{ steps.config-cxx23-stacktrace.outcome == 'success' }}
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build \
+              -C ${{ matrix.build_mode }} \
+              -j5
+
+      # cpptrace
+      - name: Configure with cpptrace backend
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              ${{ env.CMAKE_BASE_OPTIONS }} \
+              -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
+
+      - name: Build with cpptrace backend
+        shell: bash
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
+
+      - name: Run tests with cpptrace backend
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
