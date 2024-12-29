@@ -487,7 +487,7 @@ jobs:
               -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
 
       - name: Build with cpptrace backend
-        if: ${{ steps.config-cpptrace-backend == 'success' }}
+        if: ${{ steps.config-cpptrace-backend.outcome == 'success' }}
         shell: bash
         run: |
           cmake --build build \
@@ -495,7 +495,7 @@ jobs:
               ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with cpptrace backend
-        if: ${{ steps.config-cpptrace-backend == 'success' }}
+        if: ${{ steps.config-cpptrace-backend.outcome == 'success' }}
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
