@@ -464,7 +464,11 @@ jobs:
               -j5
 
       # cpptrace
+      # cpptrace doesn't support alternative default call conventions
+      # see: https://github.com/jeremy-rifkin/cpptrace/issues/197
       - name: Configure with cpptrace backend
+        id: config-cpptrace-backend
+        if: ${{matrix.config.default_call_convention == '' }}
         shell: bash
         run: |
           cmake \
@@ -476,6 +480,7 @@ jobs:
               -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
 
       - name: Build with cpptrace backend
+        if: ${{ steps.config-cpptrace-backend == 'success' }}
         shell: bash
         run: |
           cmake --build build \
@@ -483,6 +488,7 @@ jobs:
               ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with cpptrace backend
+        if: ${{ steps.config-cpptrace-backend == 'success' }}
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
