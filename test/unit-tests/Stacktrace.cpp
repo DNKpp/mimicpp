@@ -13,7 +13,8 @@
 
 using namespace mimicpp;
 
-#ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+    #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
 TEST_CASE(
     "stacktrace::backend_traits<stacktrace::CpptraceBackend>::current() generates a new cpptrace::stacktrace.",
@@ -34,7 +35,7 @@ TEST_CASE(
     REQUIRE(first.data().frames.front() != second.data().frames.front());
 }
 
-#elif defined(__cpp_lib_stacktrace)
+    #elif defined(__cpp_lib_stacktrace)
 
 TEST_CASE(
     "stacktrace::backend_traits<std::stacktrace>::current() generates a new std::stacktrace.",
@@ -55,6 +56,7 @@ TEST_CASE(
     REQUIRE(first.at(0) != second.at(0));
 }
 
+    #endif
 #endif
 
 #ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
