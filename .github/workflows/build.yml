@@ -240,6 +240,10 @@ jobs:
                                           --log-level=DEBUG \
                                           -D CMAKE_VERBOSE_MAKEFILE=YES \
                                           -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+                                          # explicitly disable all optional features here
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=OFF \
                                       )" >> $GITHUB_ENV
 
       - name: Setup macOS
