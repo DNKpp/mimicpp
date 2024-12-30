@@ -53,6 +53,10 @@ target_link_libraries(${TARGET_NAME}
     mimicpp::internal::warnings
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil
+
+    # required to make stacktrace work on gcc
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>:stdc++_libbacktrace>
+    $<$<CXX_COMPILER_ID:GNU>:stdc++exp>
 )
 
 target_precompile_headers(${TARGET_NAME}
