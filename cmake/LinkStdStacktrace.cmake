@@ -27,7 +27,7 @@ if (NOT TARGET link-std-stacktrace)
     string(CONCAT CLANG_LINK_LIBBACKTRACE
         "$<"
             "$<AND:"
-                "$<NOT:$<PLATFORM_ID:APPLE>>,"
+                "$<PLATFORM_ID:Linux>,"
                 "$<CXX_COMPILER_ID:Clang>,"
                 "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,17>,"
                 "$<VERSION_LESS:$<CXX_COMPILER_VERSION>,19>>"
