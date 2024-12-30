@@ -7,6 +7,7 @@
 #include "mimic++/Printer.hpp"
 
 #include <cstdint>
+#include <tuple>
 
 using namespace mimicpp;
 
@@ -102,6 +103,10 @@ TEST_CASE(
     "detail::expand_tuple appends elements, until the desired size is reached.",
     "[detail][utility]")
 {
+    // on clang-19, libc++ and c++23, the direct tuple comparisons won't compile.
+    // so use std::equal_to as workaround.
+    // see: https://github.com/llvm/llvm-project/issues/113087
+
     SECTION("When tuple is empty")
     {
         std::tuple input{};
@@ -116,14 +121,14 @@ TEST_CASE(
         {
             const std::tuple result = detail::expand_tuple<int, 1>(std::move(input));
             STATIC_REQUIRE(std::same_as<const std::tuple<int>, decltype(result)>);
-            REQUIRE(std::tuple{0} == result);
+            REQUIRE(std::equal_to{}(std::tuple{0}, result));
         }
 
         SECTION("And n == 2")
         {
             const std::tuple result = detail::expand_tuple<int, 2>(std::move(input));
             STATIC_REQUIRE(std::same_as<const std::tuple<int, int>, decltype(result)>);
-            REQUIRE(std::tuple{0, 0} == result);
+            REQUIRE(std::equal_to{}(std::tuple{0, 0}, result));
         }
     }
 
@@ -141,14 +146,14 @@ TEST_CASE(
         {
             const std::tuple result = detail::expand_tuple<int, 2>(std::move(input));
             STATIC_REQUIRE(std::same_as<const std::tuple<double, int>, decltype(result)>);
-            REQUIRE(std::tuple{42., 0} == result);
+            REQUIRE(std::equal_to{}(std::tuple{42., 0}, result));
         }
 
         SECTION("And n == 3")
         {
             const std::tuple result = detail::expand_tuple<int, 3>(std::move(input));
             STATIC_REQUIRE(std::same_as<const std::tuple<double, int, int>, decltype(result)>);
-            REQUIRE(std::tuple{42., 0, 0} == result);
+            REQUIRE(std::equal_to{}(std::tuple{42., 0, 0}, result));
         }
     }
 
@@ -160,21 +165,21 @@ TEST_CASE(
         {
             const std::tuple result = detail::expand_tuple<int, 2>(std::move(input));
             STATIC_REQUIRE(std::same_as<const std::tuple<double, float>, decltype(result)>);
-            REQUIRE(std::tuple{1337., 42.f} == result);
+            REQUIRE(std::equal_to{}(std::tuple{1337., 42.f}, result));
         }
 
         SECTION("And n == 3")
         {
             const std::tuple result = detail::expand_tuple<int, 3>(std::move(input));
             STATIC_REQUIRE(std::same_as<const std::tuple<double, float, int>, decltype(result)>);
-            REQUIRE(std::tuple{1337., 42.f, 0} == result);
+            REQUIRE(std::equal_to{}(std::tuple{1337., 42.f, 0}, result));
         }
 
         SECTION("And n == 4")
         {
             const std::tuple result = detail::expand_tuple<int, 4>(std::move(input));
             STATIC_REQUIRE(std::same_as<const std::tuple<double, float, int, int>, decltype(result)>);
-            REQUIRE(std::tuple{1337., 42.f, 0, 0} == result);
+            REQUIRE(std::equal_to{}(std::tuple{1337., 42.f, 0, 0}, result));
         }
     }
 
