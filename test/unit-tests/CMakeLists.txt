@@ -3,9 +3,6 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-find_package(Catch2 REQUIRED)
-find_package(trompeloeil REQUIRED)
-
 set(TARGET_NAME mimicpp-tests)
 
 add_executable(${TARGET_NAME}
@@ -36,7 +33,6 @@ target_include_directories(${TARGET_NAME}
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>"
 )
 
-include(EnableWarnings)
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
@@ -47,16 +43,17 @@ target_compile_options(${TARGET_NAME}
     $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 )
 
+find_package(Catch2 REQUIRED)
+find_package(trompeloeil REQUIRED)
+include(EnableWarnings)
+include(LinkStdStacktrace)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
     mimicpp::internal::warnings
+    mimicpp::internal::link-std-stacktrace
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil
-
-    # required to make stacktrace work on gcc
-    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>:stdc++_libbacktrace>
-    $<$<CXX_COMPILER_ID:GNU>:stdc++exp>
 )
 
 target_precompile_headers(${TARGET_NAME}

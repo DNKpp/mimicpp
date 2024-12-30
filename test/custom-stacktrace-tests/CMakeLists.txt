@@ -20,16 +20,14 @@ enable_sanitizers(${TARGET_NAME})
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
 include(EnableWarnings)
+include(LinkStdStacktrace)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
     mimicpp::internal::warnings
+    mimicpp::internal::link-std-stacktrace
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil
-
-    # required to make stacktrace work on gcc
-    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>:stdc++_libbacktrace>
-    $<$<CXX_COMPILER_ID:GNU>:stdc++exp>
 )
 
 catch_discover_tests(${TARGET_NAME})
