@@ -96,7 +96,8 @@ TEST_CASE(
 
     using traits_t = stacktrace::backend_traits<CustomBackend>;
 
-    REQUIRE_CALL(traits_t::currentMock, Invoke(gt(42)))
+    REQUIRE_CALL(traits_t::currentMock, Invoke(_))
+        .WITH(_1 > 42)
         .RETURN(CustomBackend{});
     const Stacktrace stacktrace = stacktrace::current(42);
 
