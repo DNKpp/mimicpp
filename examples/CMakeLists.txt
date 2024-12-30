@@ -3,8 +3,6 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-find_package(Catch2 REQUIRED)
-
 add_executable(
     mimicpp-examples
     "CustomPrinter.cpp"
@@ -30,15 +28,18 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"
 
 endif ()
 
-include(EnableWarnings)
 include(EnableSanitizers)
 enable_sanitizers(mimicpp-examples)
 
+find_package(Catch2 REQUIRED)
+include(EnableWarnings)
+include(LinkStdStacktrace)
 target_link_libraries(
     mimicpp-examples
     PRIVATE
     mimicpp::mimicpp
     mimicpp::internal::warnings
+    mimicpp::internal::link-std-stacktrace
     Catch2::Catch2WithMain
 )
 
