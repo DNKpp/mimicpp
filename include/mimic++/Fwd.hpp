@@ -10,6 +10,8 @@
 
 #include <string>
 #include <string_view>
+// ReSharper disable once CppUnusedIncludeDirective
+#include <version>
 
 namespace mimicpp::call
 {
