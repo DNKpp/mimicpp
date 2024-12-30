@@ -127,8 +127,8 @@ if (NOT TARGET enable-config-options)
 				include(get_cpm)
 				CPMAddPackage(
 					NAME cpptrace
-					VERSION 0.7.4
-					GITHUB_REPOSITORY jeremy-rifkin/cpptrace
+					GIT_TAG 3f2cb98e2cd0093947ac09e4cd287d73bad775eb
+					GITHUB_REPOSITORY DNKpp/cpptrace
 					EXCLUDE_FROM_ALL YES
 					SYSTEM YES
 				)
