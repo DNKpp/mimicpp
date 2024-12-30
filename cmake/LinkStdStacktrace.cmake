@@ -8,29 +8,38 @@ if (NOT TARGET link-std-stacktrace)
     add_library(link-std-stacktrace INTERFACE)
     add_library(mimicpp::internal::link-std-stacktrace ALIAS link-std-stacktrace)
 
+    # @formatter:off
     string(CONCAT GCC_LINK_LIBBACKTRACE
         "$<"
-        "$<AND:"
-        "$<CXX_COMPILER_ID:GNU>,"
-        "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,13>,"
-        "$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>"
-        ":stdc++_libbacktrace>"
+            "$<AND:"
+                "$<CXX_COMPILER_ID:GNU>,"
+                "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,13>,"
+                "$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>"
+            ":stdc++_libbacktrace>"
     )
-    message(DEBUG "${MESSAGE_PREFIX} GCC_LINK_LIBBACKTRACE: ${GCC_LINK_LIBBACKTRACE}")
     string(CONCAT GCC_LINK_EXP
         "$<"
-        "$<AND:"
-        "$<CXX_COMPILER_ID:GNU>,"
-        "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>"
-        ":stdc++exp>"
+            "$<AND:"
+                "$<CXX_COMPILER_ID:GNU>,"
+                "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>"
+            ":stdc++exp>"
     )
-    message(DEBUG "${MESSAGE_PREFIX} GCC_LINK_EXP: ${GCC_LINK_EXP}")
+    string(CONCAT CLANG_LINK_LIBBACKTRACE
+        "$<"
+            "$<AND:"
+                "$<CXX_COMPILER_ID:Clang>,"
+                "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,17>,"
+                "$<VERSION_LESS:$<CXX_COMPILER_VERSION>,19>>"
+            ":stdc++_libbacktrace>"
+    )
+    # @formatter:on
 
     target_link_libraries(link-std-stacktrace
         INTERFACE
         # required to make stacktrace work on gcc
         ${GCC_LINK_LIBBACKTRACE}
         ${GCC_LINK_EXP}
+        ${CLANG_LINK_LIBBACKTRACE}
     )
 
 endif ()
