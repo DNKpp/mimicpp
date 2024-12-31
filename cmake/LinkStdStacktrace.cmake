@@ -33,14 +33,22 @@ if (NOT TARGET link-std-stacktrace)
                 "$<VERSION_LESS:$<CXX_COMPILER_VERSION>,19>>"
             ":stdc++_libbacktrace>"
     )
+    string(CONCAT CLANG_LINK_EXP
+        "$<"
+            "$<AND:"
+                "$<PLATFORM_ID:Linux>,"
+                "$<CXX_COMPILER_ID:Clang>,"
+                "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,19>>"
+            ":stdc++exp>"
+    )
     # @formatter:on
 
     target_link_libraries(link-std-stacktrace
         INTERFACE
-        # required to make stacktrace work on gcc
         ${GCC_LINK_LIBBACKTRACE}
         ${GCC_LINK_EXP}
         ${CLANG_LINK_LIBBACKTRACE}
+        ${CLANG_LINK_EXP}
     )
 
 endif ()
