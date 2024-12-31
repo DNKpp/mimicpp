@@ -56,9 +56,10 @@ If you are curious, have a look at the [documentation](https://dnkpp.github.io/m
 
 The framework is designed with two core concepts in mind: Mocks and Expectations.
 Mocks can be used to define behaviour on a per test-case basis, without the necessity of creating dozens of types. The go-to example is,
-if you have a custom type, which somehow makes a connection to a concrete database, you do not want to setup an actual database connection during
+if you have a custom type, which somehow makes a connection to a concrete database, you do not want to set up an actual
+database connection during
 your test runs. You then simply install a database mock, which then yields the exact replies as it were defined for that particular case:
-the so called "Expectations".
+the so-called "Expectations".
 
 So, Mocks and Expectations are going together hand in hand.
 
@@ -286,9 +287,8 @@ TEST_CASE("LifetimeWatcher and RelocationWatcher can trace object instances.")
 architecture. This is achieved
 by always staying within the language bounds and is continuously checked by the extensive ci/cd workflow, which keeps
 track of many different configurations.
-In fact ``mimic++`` is known to work on Windows, Ubuntu and MacOs with ``x86_x64`` and ``x86_x86`` architectures. For a
-more complete
-overview head over to the [Testing](#testing) section.
+In fact ``mimic++`` is known to work on Windows, Ubuntu and macOS with ``x86_64`` and ``x86_32`` architectures. For a
+more complete overview head over to the [Testing](#testing) section.
 
 ### Special Acknowledgement
 
@@ -451,38 +451,41 @@ On the other hand-side, there is a whole range of code which doesn't even get in
 The listed configurations are explicitly tested, but other do probably work, too.
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.
 
-| Symbol |     Description    |
+| Symbol |    Description     |
 |:------:|:------------------:|
-|    x   |        works       |
-|    *   | works with caveats |
-|    -   |    does not work   |
-|    ?   |     not tested     |
+|   x    |       works        |
+|   *    | works with caveats |
+|   -    |   does not work    |
+|   ?    |     not tested     |
 
 **Windows**
 
-| OS           | Compiler | c++-20 | c++-23 | std-format | fmt |
-|--------------|:--------:|:------:|:------:|:----------:|:---:|
-| Windows 2022 |   msvc   |    x   |    x   |      x     |  x  |
-| Windows 2022 |  clangCl |    x   |    x   |      x     |  x  |
+| OS           | Compiler | x86_32 | x86_64 | c++-20 | c++-23 | formatting |  stacktrace  |
+|--------------|:--------:|:------:|:------:|:------:|:------:|:----------:|:------------:|
+| Windows 2022 |   msvc   |   x    |   x    |   x    |   x    |  std/fmt   | std/cpptrace |
+| Windows 2022 | clangCl  |   x    |   x    |   x    |   x    |  std/fmt   | std/cpptrace |
 
 **Linux**
 
-| Compiler | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
-|----------|:---------:|:------:|:------:|:------:|:----------:|:---:|
-| clang-16 |     x     |    x   |    x   |    x   |      -     |  x  |
-| clang-17 |     x     |    x   |    x   |    x   |      x     |  x  |
-| clang-18 |     x     |    *   |    x   |    x   |      x     |  x  |
-| gcc-12   |     x     |    ?   |    x   |    x   |      -     |  x  |
-| gcc-13   |     x     |    ?   |    x   |    x   |      x     |  x  |
-| gcc-14   |     x     |    ?   |    x   |    x   |      x     |  x  |
+| Compiler | x86_32 | x86_64 | libstdc++ | libc++ | c++-20 | c++-23 | formatting |  stacktrace   |
+|----------|:------:|:------:|:---------:|:------:|:------:|:------:|:----------:|:-------------:|
+| clang-16 |   x    |   x    |     x     |   x    |   x    |   x    |    fmt     |   cpptrace    |
+| clang-17 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| clang-18 |   x    |   x    |     x     |   *    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| clang-19 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| gcc-12   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace    |
+| gcc-13   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| gcc-14   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
+
+Note: ``libc++`` doesn't support ``std::stacktrace`` yet.
 
 **macOS**
 
-| Compiler          | libstdc++ | libc++ | c++-20 | c++-23 | std-format | fmt |
-|-------------------|:---------:|:------:|:------:|:------:|:----------:|:---:|
-| AppleClang-16.0.6 |     ?     |    x   |    x   |    x   |      -     |  x  |
-| AppleClang-17.0.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
-| AppleClang-18.1.6 |     ?     |    x   |    x   |    x   |      x     |  x  |
+| Compiler          | x86_32 | x86_64 | libstdc++ | libc++ | c++-20 | c++-23 | formatting |  stacktrace   |
+|-------------------|:------:|:------:|:---------:|:------:|:------:|:------:|:----------:|:-------------:|
+| AppleClang-16.0.6 |   ?    |   x    |     ?     |   x    |   x    |   x    |    fmt     |   cpptrace    |
+| AppleClang-17.0.6 |   ?    |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| AppleClang-18.1.6 |   ?    |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
 
 </details>
 
