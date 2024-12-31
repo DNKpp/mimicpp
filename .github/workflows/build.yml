@@ -15,32 +15,36 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
+      architectures: ${{ steps.output-options.outputs.architectures }}
       build_modes: ${{ steps.output-options.outputs.build_modes }}
       cxx_versions: ${{ steps.output-options.outputs.cxx_versions }}
 
     steps:
-      # enables debug-mode and c++20 for all cases
+      # enables debug-mode, c++20 and 64bit for all cases
       - name: Enable base matrix
         shell: bash
         run: |
+          echo "ARCHITECTURES=64bit" >> $GITHUB_ENV
           echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
           echo "CXX_VERSIONS=20" >> $GITHUB_ENV
 
-      # if it's a PR from development or the main branch in general, add release-mode and c++23
+      # if it's a PR from development or the main branch in general, add release-mode, c++23 and 32bit
       - name: Enable extended matrix
-        if: ${{
-          (github.event_name == 'pull_request' && github.head_ref == 'development')
-          || github.ref_name == 'main'
-          }}
+        # if: ${{
+        #   (github.event_name == 'pull_request' && github.head_ref == 'development')
+        #   || github.ref_name == 'main'
+        #   }}
         shell: bash
         run: |
-          echo "BUILD_MODES=$(echo $BUILD_MODES, \"Release\")" >> $GITHUB_ENV
-          echo "CXX_VERSIONS=$(echo $CXX_VERSIONS, 23)" >> $GITHUB_ENV
+          echo "ARCHITECTURES=$(echo ${ARCHITECTURES}, 32bit)" >> $GITHUB_ENV
+          echo "BUILD_MODES=$(echo ${BUILD_MODES}, \"Release\")" >> $GITHUB_ENV
+          echo "CXX_VERSIONS=$(echo ${CXX_VERSIONS}, 23)" >> $GITHUB_ENV
 
       - name: Output build-modes and c++-versions
         id: output-options
         shell: bash
         run: |
+          echo "architectures=$(echo [ $ARCHITECTURES ])" >> "$GITHUB_OUTPUT"
           echo "build_modes=$(echo [ $BUILD_MODES ])" >> "$GITHUB_OUTPUT"
           echo "cxx_versions=$(echo [ $CXX_VERSIONS ])" >> "$GITHUB_OUTPUT"
 
@@ -56,6 +60,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        architecture: ${{ fromJSON(needs.generate-base-matrix.outputs.architectures) }}
         build_mode: ${{ fromJSON(needs.generate-base-matrix.outputs.build_modes) }}
         cxx_standard: ${{ fromJSON(needs.generate-base-matrix.outputs.cxx_versions) }}
         config:
@@ -67,7 +72,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:19"
             compiler_name: "clang"
             compiler_version: "19"
-            architecture: "x64"
             libcxx: true
             asan: true
 
@@ -77,7 +81,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:19"
             compiler_name: "clang"
             compiler_version: "19"
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -88,7 +91,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:18"
             compiler_name: "clang"
             compiler_version: "18"
-            architecture: "x64"
             libcxx: true
             asan: true
 
@@ -98,7 +100,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:18"
             compiler_name: "clang"
             compiler_version: "18"
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -109,7 +110,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:17"
             compiler_name: "clang"
             compiler_version: "17"
-            architecture: "x64"
             libcxx: true
             asan: true
 
@@ -119,7 +119,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:17"
             compiler_name: "clang"
             compiler_version: "17"
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -131,7 +130,6 @@ jobs:
             compiler_name: "clang"
             compiler_version: "16"
             only_fmt: true
-            architecture: "x64"
             libcxx: true
             asan: true
 
@@ -142,7 +140,6 @@ jobs:
             compiler_name: "clang"
             compiler_version: "16"
             only_fmt: true
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -153,18 +150,6 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:14"
             compiler_name: "gcc"
             compiler_version: "14"
-            architecture: "x64"
-            libcxx: false
-            asan: true
-
-          - prefix: "Linux"
-            suffix: "32bit"
-            os: "ubuntu-latest"
-            container:
-              image: "ghcr.io/dnkpp/gcc:14"
-            compiler_name: "gcc"
-            compiler_version: "14"
-            architecture: "32bit"
             libcxx: false
             asan: true
 
@@ -174,7 +159,6 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:13"
             compiler_name: "gcc"
             compiler_version: "13"
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -185,7 +169,6 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "12"
             only_fmt: true
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -195,7 +178,6 @@ jobs:
             compiler_name: "msvc"
             compiler_version: "v143"
             cmake_generator: "Visual Studio 17 2022"
-            architecture: "x64"
 
           - prefix: "Windows 2022"
             suffix: "/Gv"
@@ -203,24 +185,6 @@ jobs:
             compiler_name: "msvc"
             compiler_version: "v143"
             cmake_generator: "Visual Studio 17 2022"
-            architecture: "x64"
-            default_call_convention: "vectorcall"
-
-          - prefix: "Windows 2022"
-            suffix: "Win32"
-            os: "windows-2022"
-            compiler_name: "msvc"
-            compiler_version: "v143"
-            cmake_generator: "Visual Studio 17 2022"
-            architecture: "Win32"
-
-          - prefix: "Windows 2022"
-            suffix: "Win32 /Gv"
-            os: "windows-2022"
-            compiler_name: "msvc"
-            compiler_version: "v143"
-            cmake_generator: "Visual Studio 17 2022"
-            architecture: "Win32"
             default_call_convention: "vectorcall"
 
           - prefix: "Windows 2022"
@@ -228,22 +192,12 @@ jobs:
             compiler_name: "msvc"
             compiler_version: "ClangCl"
             cmake_generator: "Visual Studio 17 2022"
-            architecture: "x64"
-
-          - prefix: "Windows 2022"
-            suffix: "Win32"
-            os: "windows-2022"
-            compiler_name: "msvc"
-            compiler_version: "ClangCl"
-            cmake_generator: "Visual Studio 17 2022"
-            architecture: "Win32"
 
           # macOs
           - prefix: "macOS"
             os: "macos-latest"
             compiler_name: "AppleClang"
             compiler_version: "18"
-            architecture: "x64"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
             asan: true
 
@@ -251,7 +205,6 @@ jobs:
             os: "macos-latest"
             compiler_name: "AppleClang"
             compiler_version: "17"
-            architecture: "x64"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++"
             asan: true
 
@@ -260,7 +213,6 @@ jobs:
             compiler_name: "AppleClang"
             compiler_version: "16"
             only_fmt: true
-            architecture: "x64"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
             asan: true
 
@@ -314,7 +266,7 @@ jobs:
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
                                             -G\"${{ matrix.config.cmake_generator }}\" \
                                             -T\"${{ matrix.config.compiler_version }}\" \
-                                            -A\"${{ matrix.config.architecture }}\" \
+                                            -A\"${{ matrix.architecture }}\" \
                                       )" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=$(echo ${CMAKE_BUILD_EXTRA} --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
@@ -326,7 +278,7 @@ jobs:
           echo "LDFLAGS=$(echo ${LDFLAGS} -lc++abi)" >> $GITHUB_ENV
 
       - name: Setup linux 32bit builds
-        if: ${{ matrix.config.prefix == 'Linux' && matrix.config.architecture == '32bit' }}
+        if: ${{ matrix.config.prefix == 'Linux' && matrix.architecture == '32bit' }}
         shell: bash
         run: |
           apt-get install -y gcc-${{ matrix.config.compiler_version }}-multilib g++-${{ matrix.config.compiler_version }}-multilib
