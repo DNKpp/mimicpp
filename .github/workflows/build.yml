@@ -24,7 +24,7 @@ jobs:
       - name: Enable base matrix
         shell: bash
         run: |
-          echo "ARCHITECTURES=64bit" >> $GITHUB_ENV
+          echo "ARCHITECTURES=\"64bit\"" >> $GITHUB_ENV
           echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
           echo "CXX_VERSIONS=20" >> $GITHUB_ENV
 
@@ -36,7 +36,7 @@ jobs:
         #   }}
         shell: bash
         run: |
-          echo "ARCHITECTURES=$(echo ${ARCHITECTURES}, 32bit)" >> $GITHUB_ENV
+          echo "ARCHITECTURES=$(echo ${ARCHITECTURES}, \"32bit\")" >> $GITHUB_ENV
           echo "BUILD_MODES=$(echo ${BUILD_MODES}, \"Release\")" >> $GITHUB_ENV
           echo "CXX_VERSIONS=$(echo ${CXX_VERSIONS}, 23)" >> $GITHUB_ENV
 
