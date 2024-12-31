@@ -40,13 +40,13 @@ jobs:
           echo "BUILD_MODES=$(echo ${BUILD_MODES}, \"Release\")" >> $GITHUB_ENV
           echo "CXX_VERSIONS=$(echo ${CXX_VERSIONS}, 23)" >> $GITHUB_ENV
 
-      - name: Output build-modes and c++-versions
+      - name: Output architectures, build-modes and c++-versions
         id: output-options
         shell: bash
         run: |
-          echo "architectures=$(echo [ $ARCHITECTURES ])" >> "$GITHUB_OUTPUT"
-          echo "build_modes=$(echo [ $BUILD_MODES ])" >> "$GITHUB_OUTPUT"
-          echo "cxx_versions=$(echo [ $CXX_VERSIONS ])" >> "$GITHUB_OUTPUT"
+          echo "architectures=$(echo [ ${ARCHITECTURES} ])" >> "$GITHUB_OUTPUT"
+          echo "build_modes=$(echo [ ${BUILD_MODES} ])" >> "$GITHUB_OUTPUT"
+          echo "cxx_versions=$(echo [ ${CXX_VERSIONS} ])" >> "$GITHUB_OUTPUT"
 
   build-and-test:
     needs: generate-base-matrix
@@ -56,7 +56,8 @@ jobs:
       ${{ matrix.config.prefix }} 
       ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
       ${{ matrix.config.suffix }} 
-      (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }})
+      (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }}, ${{ matrix.architecture }})
+
     strategy:
       fail-fast: false
       matrix:
@@ -277,11 +278,13 @@ jobs:
           echo "CXXFLAGS=$(echo ${CXXFLAGS} -stdlib=libc++)" >> $GITHUB_ENV
           echo "LDFLAGS=$(echo ${LDFLAGS} -lc++abi)" >> $GITHUB_ENV
 
-      - name: Setup linux 32bit builds
-        if: ${{ matrix.config.prefix == 'Linux' && matrix.architecture == '32bit' }}
+      - name: Setup Linux or macOS 32bit builds
+        if: ${{
+          matrix.architecture == '32bit'
+          && (matrix.config.prefix == 'Linux' || startsWith(matrix.config.os, 'macOS'))
+          }}
         shell: bash
         run: |
-          apt-get install -y gcc-${{ matrix.config.compiler_version }}-multilib g++-${{ matrix.config.compiler_version }}-multilib
           echo "CXXFLAGS=$(echo ${CXXFLAGS} -m32)" >> $GITHUB_ENV
           echo "CFLAGS=$(echo ${CFLAGS} -m32)" >> $GITHUB_ENV
           echo "LDFLAGS=$(echo ${LDFLAGS} -m32)" >> $GITHUB_ENV
