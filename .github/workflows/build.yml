@@ -44,26 +44,26 @@ jobs:
         id: output-options
         shell: bash
         run: |
-          echo "architectures=$(echo [ ${ARCHITECTURES} ])" >> $GITHUB_OUTPUT
-          echo "build_modes=$(echo [ ${BUILD_MODES} ])" >> $GITHUB_OUTPUT
-          echo "cxx_versions=$(echo [ ${CXX_VERSIONS} ])" >> $GITHUB_OUTPUT
+          echo "architectures=$(echo [ ${ARCHITECTURES} ])" >> "$GITHUB_OUTPUT"
+          echo "build_modes=$(echo [ ${BUILD_MODES} ])" >> "$GITHUB_OUTPUT"
+          echo "cxx_versions=$(echo [ ${CXX_VERSIONS} ])" >> "$GITHUB_OUTPUT"
 
   build-and-test:
     needs: generate-base-matrix
     runs-on: ${{ matrix.config.os }}
     container: ${{ matrix.config.container.image }}
     name: |
-      ${{ matrix.config.prefix }}
-      ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }}
-      ${{ matrix.config.suffix }}
+      ${{ matrix.config.prefix }} 
+      ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
+      ${{ matrix.config.suffix }} 
       (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }}, ${{ matrix.architecture }})
 
     strategy:
       fail-fast: false
       matrix:
+        architecture: ${{ fromJSON(needs.generate-base-matrix.outputs.architectures) }}
         build_mode: ${{ fromJSON(needs.generate-base-matrix.outputs.build_modes) }}
         cxx_standard: ${{ fromJSON(needs.generate-base-matrix.outputs.cxx_versions) }}
-        architecture: ${{ fromJSON(needs.generate-base-matrix.outputs.architectures) }}
         config:
           # clang
           - prefix: "Linux"
@@ -75,6 +75,159 @@ jobs:
             compiler_version: "19"
             libcxx: true
             asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:19"
+            compiler_name: "clang"
+            compiler_version: "19"
+            libcxx: false
+            asan: true
+
+          - prefix: "Linux"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:18"
+            compiler_name: "clang"
+            compiler_version: "18"
+            libcxx: true
+            asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:18"
+            compiler_name: "clang"
+            compiler_version: "18"
+            libcxx: false
+            asan: true
+
+          - prefix: "Linux"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:17"
+            compiler_name: "clang"
+            compiler_version: "17"
+            libcxx: true
+            asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:17"
+            compiler_name: "clang"
+            compiler_version: "17"
+            libcxx: false
+            asan: true
+
+          - prefix: "Linux"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:16"
+            compiler_name: "clang"
+            compiler_version: "16"
+            only_fmt: true
+            libcxx: true
+            asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:16"
+            compiler_name: "clang"
+            compiler_version: "16"
+            only_fmt: true
+            libcxx: false
+            asan: true
+
+          # gcc
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:14"
+            compiler_name: "gcc"
+            compiler_version: "14"
+            libcxx: false
+            asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:13"
+            compiler_name: "gcc"
+            compiler_version: "13"
+            libcxx: false
+            asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:12"
+            compiler_name: "gcc"
+            compiler_version: "12"
+            only_fmt: true
+            libcxx: false
+            asan: true
+
+          # msvc
+          - prefix: "Windows 2022"
+            os: "windows-2022"
+            compiler_name: "msvc"
+            compiler_version: "v143"
+            cmake_generator: "Visual Studio 17 2022"
+
+          - prefix: "Windows 2022"
+            suffix: "/Gv"
+            os: "windows-2022"
+            compiler_name: "msvc"
+            compiler_version: "v143"
+            cmake_generator: "Visual Studio 17 2022"
+            default_call_convention: "vectorcall"
+
+          - prefix: "Windows 2022"
+            os: "windows-2022"
+            compiler_name: "msvc"
+            compiler_version: "ClangCl"
+            cmake_generator: "Visual Studio 17 2022"
+
+          # macOs
+          - prefix: "macOS"
+            os: "macos-latest"
+            compiler_name: "AppleClang"
+            compiler_version: "18"
+            ldflags_workaround: "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+            asan: true
+
+          - prefix: "macOS"
+            os: "macos-latest"
+            compiler_name: "AppleClang"
+            compiler_version: "17"
+            ldflags_workaround: "-L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++"
+            asan: true
+
+          - prefix: "macOS"
+            os: "macos-latest"
+            compiler_name: "AppleClang"
+            compiler_version: "16"
+            only_fmt: true
+            ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
+            asan: true
+
+        exclude:
+          # This combination results in a compile error in ranges header.
+          - cxx_standard: 23
+            config:
+              compiler_name: "clang"
+              compiler_version: "16"
+              libcxx: false
+          # seems like macOS doesn't support 32bit builds
+          - architecture: "32bit"
+            config:
+              prefix: "macOS"
 
     steps:
       - name: Checkout code
@@ -115,10 +268,17 @@ jobs:
         if: ${{ matrix.config.compiler_name  == 'msvc' }}
         shell: bash
         run: |
+          # translate architecture to appropriate platform config
+          if [[ "${{ matrix.architecture }}" == "64bit" ]]
+            PLATFORM="x64"
+          elif [[ "${{ matrix.architecture }}" == "32bit" ]]
+            PLATFORM="Win32"
+          fi
+          
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
                                             -G\"${{ matrix.config.cmake_generator }}\" \
                                             -T\"${{ matrix.config.compiler_version }}\" \
-                                            -A\"${{ matrix.platform }}\" \
+                                            -A\"${PLATFORM}\" \
                                       )" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=$(echo ${CMAKE_BUILD_EXTRA} --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
