@@ -76,29 +76,6 @@ jobs:
             libcxx: true
             asan: true
 
-        exclude:
-          # This combination results in a compile error in ranges header.
-          - cxx_standard: 23
-            config:
-              compiler_name: "clang"
-              compiler_version: "16"
-              libcxx: false
-          # seems like macOS doesn't support 32bit builds
-          - architecture: "32bit"
-            config:
-              prefix: "macOS"
-
-        include:
-          # translate architecture to appropriate platform for msvc
-          - config:
-              compiler_name: "msvc"
-            architecture: "64bit"
-            platform: "x64"
-          - config:
-              compiler_name: "msvc"
-            architecture: "32bit"
-            platform: "Win32"
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
