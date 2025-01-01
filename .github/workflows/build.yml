@@ -30,10 +30,10 @@ jobs:
 
       # if it's a PR from development or the main branch in general, add release-mode, c++23 and 32bit
       - name: Enable extended matrix
-        # if: ${{
-        #   (github.event_name == 'pull_request' && github.head_ref == 'development')
-        #   || github.ref_name == 'main'
-        #   }}
+        if: ${{
+          (github.event_name == 'pull_request' && github.head_ref == 'development')
+          || github.ref_name == 'main'
+          }}
         shell: bash
         run: |
           echo "ARCHITECTURES=$(echo ${ARCHITECTURES}, \"32bit\")" >> $GITHUB_ENV
@@ -218,8 +218,6 @@ jobs:
             asan: true
 
         exclude:
-          # Todo: remove
-          - build_mode: "Release"
           # This combination results in a compile error in ranges header.
           - cxx_standard: 23
             config:
