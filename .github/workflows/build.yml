@@ -295,16 +295,33 @@ jobs:
           echo "CXXFLAGS=$(echo ${CXXFLAGS} -stdlib=libc++)" >> $GITHUB_ENV
           echo "LDFLAGS=$(echo ${LDFLAGS} -lc++abi)" >> $GITHUB_ENV
 
-      - name: Setup Linux or macOS 32bit builds
-        if: ${{
-          matrix.architecture == '32bit'
-          && (matrix.config.prefix == 'Linux' || startsWith(matrix.config.os, 'macOS'))
-          }}
+      - name: Setup 32bit on Linux
+        if: ${{ matrix.architecture == '32bit' && matrix.config.prefix == 'Linux' }}
         shell: bash
         run: |
           echo "CXXFLAGS=$(echo ${CXXFLAGS} -m32)" >> $GITHUB_ENV
           echo "CFLAGS=$(echo ${CFLAGS} -m32)" >> $GITHUB_ENV
           echo "LDFLAGS=$(echo ${LDFLAGS} -m32)" >> $GITHUB_ENV
+
+      - name: Setup 32bit libc++ on Linux
+        if: ${{
+          matrix.architecture == '32bit'
+          && matrix.config.prefix == 'Linux'
+          && matrix.config.libcxx == true
+          }}
+        shell: bash
+        # remove 64bit binaries and install 32bit versions.
+        # I don't know, how to install them side by side.
+        run: |
+          apt-get remove -y \
+            libc++-${{ matrix.config.compiler_version }}-dev \
+            libc++abi-${{ matrix.config.compiler_version }}-dev
+          
+          dpkg --add-architecture i386
+          apt-get update -y
+          apt-get install -y \
+            libc++-${{ matrix.config.compiler_version }}-dev:i386 \
+            libc++abi-${{ matrix.config.compiler_version }}-dev:i386
 
       - name: Setup __vectorcall as default call-convention on msvc
         if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention == 'vectorcall' }}
