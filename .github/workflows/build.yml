@@ -61,9 +61,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        architecture: ${{ fromJSON(needs.generate-base-matrix.outputs.architectures) }}
         build_mode: ${{ fromJSON(needs.generate-base-matrix.outputs.build_modes) }}
         cxx_standard: ${{ fromJSON(needs.generate-base-matrix.outputs.cxx_versions) }}
+        architecture: ${{ fromJSON(needs.generate-base-matrix.outputs.architectures) }}
         config:
           # clang
           - prefix: "Linux"
