@@ -229,17 +229,6 @@ jobs:
             config:
               prefix: "macOS"
 
-        include:
-          # translate architecture to appropriate platform for msvc
-          - config:
-              compiler_name: "msvc"
-            architecture: "64bit"
-            platform: "x64"
-          - config:
-              compiler_name: "msvc"
-            architecture: "32bit"
-            platform: "Win32"
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -279,10 +268,17 @@ jobs:
         if: ${{ matrix.config.compiler_name  == 'msvc' }}
         shell: bash
         run: |
+          # translate architecture to appropriate platform config
+          if [[ "${{ matrix.architecture }}" == "64bit" ]]; then
+            PLATFORM="x64"
+          elif [[ "${{ matrix.architecture }}" == "32bit" ]]; then
+            PLATFORM="Win32"
+          fi
+          
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
                                             -G\"${{ matrix.config.cmake_generator }}\" \
                                             -T\"${{ matrix.config.compiler_version }}\" \
-                                            -A\"${{ matrix.platform }}\" \
+                                            -A\"${PLATFORM}\" \
                                       )" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=$(echo ${CMAKE_BUILD_EXTRA} --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
