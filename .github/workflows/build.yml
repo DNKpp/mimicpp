@@ -15,18 +15,20 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
+      architectures: ${{ steps.output-options.outputs.architectures }}
       build_modes: ${{ steps.output-options.outputs.build_modes }}
       cxx_versions: ${{ steps.output-options.outputs.cxx_versions }}
 
     steps:
-      # enables debug-mode and c++20 for all cases
+      # enables debug-mode, c++20 and 64bit for all cases
       - name: Enable base matrix
         shell: bash
         run: |
+          echo "ARCHITECTURES=\"64bit\"" >> $GITHUB_ENV
           echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
           echo "CXX_VERSIONS=20" >> $GITHUB_ENV
 
-      # if it's a PR from development or the main branch in general, add release-mode and c++23
+      # if it's a PR from development or the main branch in general, add release-mode, c++23 and 32bit
       - name: Enable extended matrix
         if: ${{
           (github.event_name == 'pull_request' && github.head_ref == 'development')
@@ -34,15 +36,17 @@ jobs:
           }}
         shell: bash
         run: |
-          echo "BUILD_MODES=$(echo $BUILD_MODES, \"Release\")" >> $GITHUB_ENV
-          echo "CXX_VERSIONS=$(echo $CXX_VERSIONS, 23)" >> $GITHUB_ENV
+          echo "ARCHITECTURES=$(echo ${ARCHITECTURES}, \"32bit\")" >> $GITHUB_ENV
+          echo "BUILD_MODES=$(echo ${BUILD_MODES}, \"Release\")" >> $GITHUB_ENV
+          echo "CXX_VERSIONS=$(echo ${CXX_VERSIONS}, 23)" >> $GITHUB_ENV
 
-      - name: Output build-modes and c++-versions
+      - name: Output architectures, build-modes and c++-versions
         id: output-options
         shell: bash
         run: |
-          echo "build_modes=$(echo [ $BUILD_MODES ])" >> "$GITHUB_OUTPUT"
-          echo "cxx_versions=$(echo [ $CXX_VERSIONS ])" >> "$GITHUB_OUTPUT"
+          echo "architectures=$(echo [ ${ARCHITECTURES} ])" >> "$GITHUB_OUTPUT"
+          echo "build_modes=$(echo [ ${BUILD_MODES} ])" >> "$GITHUB_OUTPUT"
+          echo "cxx_versions=$(echo [ ${CXX_VERSIONS} ])" >> "$GITHUB_OUTPUT"
 
   build-and-test:
     needs: generate-base-matrix
@@ -52,10 +56,12 @@ jobs:
       ${{ matrix.config.prefix }} 
       ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
       ${{ matrix.config.suffix }} 
-      (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }})
+      (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }}, ${{ matrix.architecture }})
+
     strategy:
       fail-fast: false
       matrix:
+        architecture: ${{ fromJSON(needs.generate-base-matrix.outputs.architectures) }}
         build_mode: ${{ fromJSON(needs.generate-base-matrix.outputs.build_modes) }}
         cxx_standard: ${{ fromJSON(needs.generate-base-matrix.outputs.cxx_versions) }}
         config:
@@ -67,7 +73,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:19"
             compiler_name: "clang"
             compiler_version: "19"
-            architecture: "x64"
             libcxx: true
             asan: true
 
@@ -77,7 +82,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:19"
             compiler_name: "clang"
             compiler_version: "19"
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -88,7 +92,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:18"
             compiler_name: "clang"
             compiler_version: "18"
-            architecture: "x64"
             libcxx: true
             asan: true
 
@@ -98,7 +101,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:18"
             compiler_name: "clang"
             compiler_version: "18"
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -109,7 +111,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:17"
             compiler_name: "clang"
             compiler_version: "17"
-            architecture: "x64"
             libcxx: true
             asan: true
 
@@ -119,7 +120,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:17"
             compiler_name: "clang"
             compiler_version: "17"
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -131,7 +131,6 @@ jobs:
             compiler_name: "clang"
             compiler_version: "16"
             only_fmt: true
-            architecture: "x64"
             libcxx: true
             asan: true
 
@@ -142,7 +141,6 @@ jobs:
             compiler_name: "clang"
             compiler_version: "16"
             only_fmt: true
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -153,18 +151,6 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:14"
             compiler_name: "gcc"
             compiler_version: "14"
-            architecture: "x64"
-            libcxx: false
-            asan: true
-
-          - prefix: "Linux"
-            suffix: "32bit"
-            os: "ubuntu-latest"
-            container:
-              image: "ghcr.io/dnkpp/gcc:14"
-            compiler_name: "gcc"
-            compiler_version: "14"
-            architecture: "32bit"
             libcxx: false
             asan: true
 
@@ -174,7 +160,6 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:13"
             compiler_name: "gcc"
             compiler_version: "13"
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -185,7 +170,6 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "12"
             only_fmt: true
-            architecture: "x64"
             libcxx: false
             asan: true
 
@@ -195,7 +179,6 @@ jobs:
             compiler_name: "msvc"
             compiler_version: "v143"
             cmake_generator: "Visual Studio 17 2022"
-            architecture: "x64"
 
           - prefix: "Windows 2022"
             suffix: "/Gv"
@@ -203,24 +186,6 @@ jobs:
             compiler_name: "msvc"
             compiler_version: "v143"
             cmake_generator: "Visual Studio 17 2022"
-            architecture: "x64"
-            default_call_convention: "vectorcall"
-
-          - prefix: "Windows 2022"
-            suffix: "Win32"
-            os: "windows-2022"
-            compiler_name: "msvc"
-            compiler_version: "v143"
-            cmake_generator: "Visual Studio 17 2022"
-            architecture: "Win32"
-
-          - prefix: "Windows 2022"
-            suffix: "Win32 /Gv"
-            os: "windows-2022"
-            compiler_name: "msvc"
-            compiler_version: "v143"
-            cmake_generator: "Visual Studio 17 2022"
-            architecture: "Win32"
             default_call_convention: "vectorcall"
 
           - prefix: "Windows 2022"
@@ -228,22 +193,12 @@ jobs:
             compiler_name: "msvc"
             compiler_version: "ClangCl"
             cmake_generator: "Visual Studio 17 2022"
-            architecture: "x64"
-
-          - prefix: "Windows 2022"
-            suffix: "Win32"
-            os: "windows-2022"
-            compiler_name: "msvc"
-            compiler_version: "ClangCl"
-            cmake_generator: "Visual Studio 17 2022"
-            architecture: "Win32"
 
           # macOs
           - prefix: "macOS"
             os: "macos-latest"
             compiler_name: "AppleClang"
             compiler_version: "18"
-            architecture: "x64"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
             asan: true
 
@@ -251,7 +206,6 @@ jobs:
             os: "macos-latest"
             compiler_name: "AppleClang"
             compiler_version: "17"
-            architecture: "x64"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++"
             asan: true
 
@@ -260,7 +214,6 @@ jobs:
             compiler_name: "AppleClang"
             compiler_version: "16"
             only_fmt: true
-            architecture: "x64"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
             asan: true
 
@@ -271,6 +224,21 @@ jobs:
               compiler_name: "clang"
               compiler_version: "16"
               libcxx: false
+          # seems like macOS doesn't support 32bit builds
+          - architecture: "32bit"
+            config:
+              prefix: "macOS"
+
+        include:
+          # translate architecture to appropriate platform for msvc
+          - config:
+              compiler_name: "msvc"
+            architecture: "64bit"
+            platform: "x64"
+          - config:
+              compiler_name: "msvc"
+            architecture: "32bit"
+            platform: "Win32"
 
     steps:
       - name: Checkout code
@@ -314,7 +282,7 @@ jobs:
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
                                             -G\"${{ matrix.config.cmake_generator }}\" \
                                             -T\"${{ matrix.config.compiler_version }}\" \
-                                            -A\"${{ matrix.config.architecture }}\" \
+                                            -A\"${{ matrix.platform }}\" \
                                       )" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=$(echo ${CMAKE_BUILD_EXTRA} --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
 
@@ -325,14 +293,34 @@ jobs:
           echo "CXXFLAGS=$(echo ${CXXFLAGS} -stdlib=libc++)" >> $GITHUB_ENV
           echo "LDFLAGS=$(echo ${LDFLAGS} -lc++abi)" >> $GITHUB_ENV
 
-      - name: Setup linux 32bit builds
-        if: ${{ matrix.config.prefix == 'Linux' && matrix.config.architecture == '32bit' }}
+      - name: Setup 32bit on Linux
+        if: ${{ matrix.architecture == '32bit' && matrix.config.prefix == 'Linux' }}
         shell: bash
         run: |
-          apt-get install -y gcc-${{ matrix.config.compiler_version }}-multilib g++-${{ matrix.config.compiler_version }}-multilib
           echo "CXXFLAGS=$(echo ${CXXFLAGS} -m32)" >> $GITHUB_ENV
           echo "CFLAGS=$(echo ${CFLAGS} -m32)" >> $GITHUB_ENV
           echo "LDFLAGS=$(echo ${LDFLAGS} -m32)" >> $GITHUB_ENV
+
+      - name: Setup 32bit libc++ on Linux
+        if: ${{
+          matrix.architecture == '32bit'
+          && matrix.config.prefix == 'Linux'
+          && matrix.config.libcxx == true
+          }}
+        shell: bash
+        # remove 64bit binaries and install 32bit versions.
+        # I don't know, how to install them side by side.
+        run: |
+          apt-get remove -y \
+            libc++-${{ matrix.config.compiler_version }}-dev \
+            libc++abi-${{ matrix.config.compiler_version }}-dev
+          apt-get autoremove -y
+          
+          dpkg --add-architecture i386
+          apt-get update -y
+          apt-get install -y \
+            libc++-${{ matrix.config.compiler_version }}-dev:i386 \
+            libc++abi-${{ matrix.config.compiler_version }}-dev:i386
 
       - name: Setup __vectorcall as default call-convention on msvc
         if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention == 'vectorcall' }}
