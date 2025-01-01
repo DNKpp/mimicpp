@@ -44,18 +44,19 @@ jobs:
         id: output-options
         shell: bash
         run: |
-          echo "architectures=$(echo [ ${ARCHITECTURES} ])" >> "$GITHUB_OUTPUT"
-          echo "build_modes=$(echo [ ${BUILD_MODES} ])" >> "$GITHUB_OUTPUT"
-          echo "cxx_versions=$(echo [ ${CXX_VERSIONS} ])" >> "$GITHUB_OUTPUT"
+          echo "architectures=$(echo [ ${ARCHITECTURES} ])" >> $GITHUB_OUTPUT
+          echo "build_modes=$(echo [ ${BUILD_MODES} ])" >> $GITHUB_OUTPUT
+          echo "cxx_versions=$(echo [ ${CXX_VERSIONS} ])" >> $GITHUB_OUTPUT
 
   build-and-test:
     needs: generate-base-matrix
     runs-on: ${{ matrix.config.os }}
     container: ${{ matrix.config.container.image }}
     name: |
-      ${{ matrix.config.prefix }} 
-      ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
+      ${{ matrix.config.prefix }}
+      ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }}
       ${{ matrix.config.suffix }}
+      (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }}, ${{ matrix.architecture }})
 
     strategy:
       fail-fast: false
