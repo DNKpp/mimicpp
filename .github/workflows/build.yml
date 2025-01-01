@@ -30,14 +30,14 @@ jobs:
 
       # if it's a PR from development or the main branch in general, add release-mode, c++23 and 32bit
       - name: Enable extended matrix
-        #if: ${{
-        #  (github.event_name == 'pull_request' && github.head_ref == 'development')
-        #  || github.ref_name == 'main'
-        #  }}
+        if: ${{
+          (github.event_name == 'pull_request' && github.head_ref == 'development')
+          || github.ref_name == 'main'
+          }}
         shell: bash
         run: |
           echo "ARCHITECTURES=$(echo ${ARCHITECTURES}, \"32bit\")" >> $GITHUB_ENV
-          # echo "BUILD_MODES=$(echo ${BUILD_MODES}, \"Release\")" >> $GITHUB_ENV
+          echo "BUILD_MODES=$(echo ${BUILD_MODES}, \"Release\")" >> $GITHUB_ENV
           echo "CXX_VERSIONS=$(echo ${CXX_VERSIONS}, 23)" >> $GITHUB_ENV
 
       - name: Output architectures, build-modes and c++-versions
@@ -55,8 +55,7 @@ jobs:
     name: |
       ${{ matrix.config.prefix }} 
       ${{ matrix.config.compiler_name }}-${{ matrix.config.compiler_version }} 
-      ${{ matrix.config.suffix }} 
-      (C++${{ matrix.cxx_standard }}, ${{ matrix.build_mode }}, ${{ matrix.architecture }})
+      ${{ matrix.config.suffix }}
 
     strategy:
       fail-fast: false
