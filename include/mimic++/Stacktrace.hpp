@@ -37,8 +37,8 @@ namespace mimicpp::stacktrace
      * \brief Contains stacktrace related functionalities.
      * \details As ``mimic++`` is officially a C++20 framework, it can not rely on built-in stack trace support from the STL.
      * However, stack traces are particularly valuable for users in the context of mocking, especially when expectations are violated.
-     * To address this, ``mimic++`` introduces a simple stacktrace abstraction that can be used to integrate any existing
-     * stacktrace implementation.
+     * To address this, ``mimic++`` introduces a simple stacktrace abstraction that can be used to integrate existing stacktrace
+     * implementations.
      *
      * \note The \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE macro must be defined to fully enable the support.
      * - If the \ref MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE is defined, the ``cpptrace::stacktrace`` is selected as the default stacktrace-backend.
@@ -65,15 +65,13 @@ namespace mimicpp::stacktrace
      * struct mimicpp::stacktrace::backend_traits<MyStacktraceBackend>
      * {
      *    static MyStacktraceBackend current(const std::size_t skip);
-     *    static std::size_t size(const std::any& backend);
-     *    static bool empty(const std::any& backend);
-     *    static std::string description(const std::any& backend,  const std::size_t index);
-     *    static std::string source_file( const std::any& backend, const std::size_t index);
-     *    static std::size_t source_line(const std::any& backend, const std::size_t index);
+     *    static std::size_t size(const MyStacktraceBackend& backend);
+     *    static bool empty(const MyStacktraceBackend& backend);
+     *    static std::string description(const MyStacktraceBackend& backend, const std::size_t index);
+     *    static std::string source_file(const MyStacktraceBackend& backend, const std::size_t index);
+     *    static std::size_t source_line(const MyStacktraceBackend& backend, const std::size_t index);
      * };
      * ```
-     * \note The ``backend`` param can be safely casted to ``const MyStacktraceBackend&`` via ``std::any_cast``.
-     * \see https://en.cppreference.com/w/cpp/utility/any/any_cast
      * \note The ``index`` param denotes the index of the selected stacktrace-entry.
      *
      * \{
@@ -99,18 +97,64 @@ namespace mimicpp::stacktrace
     template <typename T>
     concept backend =
         std::copyable<T>
-        && requires(backend_traits<std::remove_cvref_t<T>> traits, const std::any& any, const std::size_t value) {
+        && requires(backend_traits<std::remove_cvref_t<T>> traits, const std::remove_cvref_t<T>& backend, const std::size_t value) {
                { decltype(traits)::current(value) } -> std::convertible_to<std::remove_cvref_t<T>>;
-               { decltype(traits)::size(any) } -> std::convertible_to<std::size_t>;
-               { decltype(traits)::empty(any) } -> std::convertible_to<bool>;
-               { decltype(traits)::description(any, value) } -> std::convertible_to<std::string>;
-               { decltype(traits)::source_file(any, value) } -> std::convertible_to<std::string>;
-               { decltype(traits)::source_line(any, value) } -> std::convertible_to<std::size_t>;
+               { decltype(traits)::size(backend) } -> std::convertible_to<std::size_t>;
+               { decltype(traits)::empty(backend) } -> std::convertible_to<bool>;
+               { decltype(traits)::description(backend, value) } -> std::convertible_to<std::string>;
+               { decltype(traits)::source_file(backend, value) } -> std::convertible_to<std::string>;
+               { decltype(traits)::source_line(backend, value) } -> std::convertible_to<std::size_t>;
            };
 
     /**
      * \}
      */
+}
+
+namespace mimicpp::stacktrace::detail
+{
+    template <typename Backend>
+    [[nodiscard]]
+    std::size_t size(const std::any& backend)
+    {
+        return backend_traits<Backend>::size(
+            std::any_cast<const Backend&>(backend));
+    }
+
+    template <typename Backend>
+    [[nodiscard]]
+    bool empty(const std::any& backend)
+    {
+        return backend_traits<Backend>::empty(
+            std::any_cast<const Backend&>(backend));
+    }
+
+    template <typename Backend>
+    [[nodiscard]]
+    std::string description(const std::any& backend, const std::size_t index)
+    {
+        return backend_traits<Backend>::description(
+            std::any_cast<const Backend&>(backend),
+            index);
+    }
+
+    template <typename Backend>
+    [[nodiscard]]
+    std::string source_file(const std::any& backend, const std::size_t index)
+    {
+        return backend_traits<Backend>::source_file(
+            std::any_cast<const Backend&>(backend),
+            index);
+    }
+
+    template <typename Backend>
+    [[nodiscard]]
+    std::size_t source_line(const std::any& backend, const std::size_t index)
+    {
+        return backend_traits<Backend>::source_line(
+            std::any_cast<const Backend&>(backend),
+            index);
+    }
 }
 
 namespace mimicpp
@@ -139,17 +183,17 @@ namespace mimicpp
          * \tparam Traits The auto-detected trait type.
          * \param inner The actual stacktrace-backend object.
          */
-        template <typename Inner, typename Traits = stacktrace::backend_traits<std::remove_cvref_t<Inner>>>
+        template <typename Inner>
             requires(!std::same_as<Stacktrace, std::remove_cvref_t<Inner>>)
                      && stacktrace::backend<Inner>
         [[nodiscard]]
         explicit constexpr Stacktrace(Inner&& inner)
             : m_Inner{std::forward<Inner>(inner)},
-              m_SizeFn{&Traits::size},
-              m_EmptyFn{&Traits::empty},
-              m_DescriptionFn{&Traits::description},
-              m_SourceFileFn{&Traits::source_file},
-              m_SourceLineFn{&Traits::source_line}
+              m_SizeFn{&stacktrace::detail::size<std::remove_cvref_t<Inner>>},
+              m_EmptyFn{&stacktrace::detail::empty<std::remove_cvref_t<Inner>>},
+              m_DescriptionFn{&stacktrace::detail::description<std::remove_cvref_t<Inner>>},
+              m_SourceFileFn{&stacktrace::detail::source_file<std::remove_cvref_t<Inner>>},
+              m_SourceLineFn{&stacktrace::detail::source_line<std::remove_cvref_t<Inner>>}
         {
         }
 
@@ -360,29 +404,29 @@ struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::NullBackend>
     }
 
     [[nodiscard]]
-    static constexpr std::size_t size([[maybe_unused]] const std::any& storage) noexcept
+    static constexpr std::size_t size([[maybe_unused]] const NullBackend& backend) noexcept
     {
         return 0u;
     }
 
     [[nodiscard]]
-    static constexpr bool empty([[maybe_unused]] const std::any& storage) noexcept
+    static constexpr bool empty([[maybe_unused]] const NullBackend& backend) noexcept
     {
         return true;
     }
 
-    static std::string description([[maybe_unused]] const std::any& storage, [[maybe_unused]] const std::size_t at)
+    static std::string description([[maybe_unused]] const NullBackend& backend, [[maybe_unused]] const std::size_t at)
     {
         raise_unsupported_operation();
     }
 
-    static std::string source_file([[maybe_unused]] const std::any& storage, [[maybe_unused]] const std::size_t at)
+    static std::string source_file([[maybe_unused]] const NullBackend& backend, [[maybe_unused]] const std::size_t at)
     {
         raise_unsupported_operation();
     }
 
     [[nodiscard]]
-    static std::size_t source_line([[maybe_unused]] const std::any& storage, [[maybe_unused]] const std::size_t at)
+    static std::size_t source_line([[maybe_unused]] const NullBackend& backend, [[maybe_unused]] const std::size_t at)
     {
         raise_unsupported_operation();
     }
@@ -463,45 +507,39 @@ struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::CpptraceBackend>
     }
 
     [[nodiscard]]
-    static std::size_t size(const std::any& storage)
+    static std::size_t size(const CpptraceBackend& backend)
     {
-        return get(storage).frames.size();
+        return backend.data().frames.size();
     }
 
     [[nodiscard]]
-    static bool empty(const std::any& storage)
+    static bool empty(const CpptraceBackend& backend)
     {
-        return get(storage).empty();
+        return backend.data().empty();
     }
 
     [[nodiscard]]
-    static std::string description(const std::any& storage, const std::size_t at)
+    static std::string description(const CpptraceBackend& backend, const std::size_t at)
     {
-        return get_frame(storage, at).symbol;
+        return frame(backend, at).symbol;
     }
 
     [[nodiscard]]
-    static std::string source_file(const std::any& storage, const std::size_t at)
+    static std::string source_file(const CpptraceBackend& backend, const std::size_t at)
     {
-        return get_frame(storage, at).filename;
+        return frame(backend, at).filename;
     }
 
     [[nodiscard]]
-    static std::size_t source_line(const std::any& storage, const std::size_t at)
+    static std::size_t source_line(const CpptraceBackend& backend, const std::size_t at)
     {
-        return get_frame(storage, at).line.value_or(0u);
+        return frame(backend, at).line.value_or(0u);
     }
 
     [[nodiscard]]
-    static const cpptrace::stacktrace& get(const std::any& storage)
+    static const cpptrace::stacktrace_frame& frame(const CpptraceBackend& backend, const std::size_t at)
     {
-        return std::any_cast<const CpptraceBackend&>(storage).data();
-    }
-
-    [[nodiscard]]
-    static const cpptrace::stacktrace_frame& get_frame(const std::any& storage, const std::size_t at)
-    {
-        return get(storage).frames.at(at);
+        return backend.data().frames.at(at);
     }
 };
 
@@ -532,45 +570,39 @@ struct mimicpp::stacktrace::backend_traits<std::basic_stacktrace<Allocator>>
     }
 
     [[nodiscard]]
-    static std::size_t size(const std::any& storage)
+    static std::size_t size(const BackendT& backend)
     {
-        return get(storage).size();
+        return backend.size();
     }
 
     [[nodiscard]]
-    static bool empty(const std::any& storage)
+    static bool empty(const BackendT& backend)
     {
-        return get(storage).empty();
+        return backend.empty();
     }
 
     [[nodiscard]]
-    static std::string description(const std::any& storage, const std::size_t at)
+    static std::string description(const BackendT& backend, const std::size_t at)
     {
-        return get_entry(storage, at).description();
+        return entry(backend, at).description();
     }
 
     [[nodiscard]]
-    static std::string source_file(const std::any& storage, const std::size_t at)
+    static std::string source_file(const BackendT& backend, const std::size_t at)
     {
-        return get_entry(storage, at).source_file();
+        return entry(backend, at).source_file();
     }
 
     [[nodiscard]]
-    static std::size_t source_line(const std::any& storage, const std::size_t at)
+    static std::size_t source_line(const BackendT& backend, const std::size_t at)
     {
-        return get_entry(storage, at).source_line();
+        return entry(backend, at).source_line();
     }
 
     [[nodiscard]]
-    static const BackendT& get(const std::any& storage)
+    static const std::stacktrace_entry& entry(const BackendT& backend, const std::size_t at)
     {
-        return std::any_cast<const BackendT&>(storage);
-    }
-
-    [[nodiscard]]
-    static const std::stacktrace_entry& get_entry(const std::any& storage, const std::size_t at)
-    {
-        return get(storage).at(at);
+        return backend.at(at);
     }
 };
 

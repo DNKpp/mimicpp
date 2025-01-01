@@ -43,47 +43,41 @@ struct mimicpp::stacktrace::backend_traits<CustomBackend>
     inline static InvocableMock<std::size_t, const BackendT&> sizeMock{};
 
     [[nodiscard]]
-    static std::size_t size(const std::any& storage)
+    static std::size_t size(const BackendT& backend)
     {
-        return sizeMock.Invoke(get(storage));
+        return sizeMock.Invoke(backend);
     }
 
     inline static InvocableMock<bool, const BackendT&> emptyMock{};
 
     [[nodiscard]]
-    static bool empty(const std::any& storage)
+    static bool empty(const BackendT& backend)
     {
-        return emptyMock.Invoke(get(storage));
+        return emptyMock.Invoke(backend);
     }
 
     inline static InvocableMock<std::string, const BackendT&, std::size_t> descriptionMock{};
 
     [[nodiscard]]
-    static std::string description(const std::any& storage, const std::size_t at)
+    static std::string description(const BackendT& backend, const std::size_t at)
     {
-        return descriptionMock.Invoke(get(storage), at);
+        return descriptionMock.Invoke(backend, at);
     }
 
     inline static InvocableMock<std::string, const BackendT&, std::size_t> sourceMock{};
 
     [[nodiscard]]
-    static std::string source_file(const std::any& storage, const std::size_t at)
+    static std::string source_file(const BackendT& backend, const std::size_t at)
     {
-        return sourceMock.Invoke(get(storage), at);
+        return sourceMock.Invoke(backend, at);
     }
 
     inline static InvocableMock<std::size_t, const BackendT&, std::size_t> lineMock{};
 
     [[nodiscard]]
-    static std::size_t source_line(const std::any& storage, const std::size_t at)
+    static std::size_t source_line(const BackendT& backend, const std::size_t at)
     {
-        return lineMock.Invoke(get(storage), at);
-    }
-
-    [[nodiscard]]
-    static const BackendT& get(const std::any& storage)
-    {
-        return std::any_cast<const BackendT&>(storage);
+        return lineMock.Invoke(backend, at);
     }
 };
 
