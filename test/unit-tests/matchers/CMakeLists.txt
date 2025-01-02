@@ -4,6 +4,7 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 target_sources(mimicpp-tests PRIVATE
+    "FloatingPointMatchers.cpp"
     "RangeMatchers.cpp"
     "StringContains.cpp"
     "StringEndsWith.cpp"

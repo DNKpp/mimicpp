@@ -15,6 +15,7 @@
 #include "mimic++/Utility.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <concepts>
 #include <functional>
 #include <optional>
@@ -436,6 +437,21 @@ namespace mimicpp::matches
             "< {}",
             std::tuple{std::forward<T>(value)}};
     }
+
+    /**
+     * \brief Tests, whether the floating-point target is NaN.
+     */
+    [[nodiscard]]
+    consteval auto NaN() noexcept
+    {
+        return PredicateMatcher{
+            []<std::floating_point T>(const T target) noexcept {
+                return std::isnan(target);
+            },
+            "is not a number (NaN)",
+            "is a number"};
+    }
+
 
     /**
      * \brief Tests, whether the target fulfills the given predicate.
