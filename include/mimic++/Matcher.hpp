@@ -177,8 +177,8 @@ namespace mimicpp
         [[nodiscard]]
         explicit constexpr PredicateMatcher(
             Predicate predicate,
-            StringT fmt,
-            StringT invertedFmt,
+            StringViewT fmt,
+            StringViewT invertedFmt,
             std::tuple<AdditionalArgs...> additionalArgs = {})
             noexcept(
                 std::is_nothrow_move_constructible_v<Predicate>
@@ -258,16 +258,16 @@ namespace mimicpp
 
     private:
         [[no_unique_address]] Predicate m_Predicate;
-        StringT m_FormatString;
-        StringT m_InvertedFormatString;
+        StringViewT m_FormatString;
+        StringViewT m_InvertedFormatString;
         storage_t m_AdditionalArgs;
 
         template <typename Fn>
         [[nodiscard]]
         static constexpr auto make_inverted(
             Fn&& fn,
-            StringT fmt,
-            StringT invertedFmt,
+            StringViewT fmt,
+            StringViewT invertedFmt,
             storage_t tuple)
         {
             using NotFnT = decltype(std::not_fn(std::forward<Fn>(fn)));
@@ -449,8 +449,8 @@ namespace mimicpp::matches
     [[nodiscard]]
     constexpr auto predicate(
         UnaryPredicate&& predicate,
-        StringT description = "passes predicate",
-        StringT invertedDescription = "fails predicate")
+        StringViewT description = "passes predicate",
+        StringViewT invertedDescription = "fails predicate")
     {
         return PredicateMatcher{
             std::forward<UnaryPredicate>(predicate),
