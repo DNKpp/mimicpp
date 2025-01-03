@@ -452,6 +452,41 @@ namespace mimicpp::matches
             "is a number"};
     }
 
+    /**
+     * \brief Tests, whether the floating-point target is approximately equal to value.
+     * \param value The value to compare to.
+     * \param epsilon The maximum absolute difference.
+     * \throws std::runtime_error When ``value`` is ``NaN`` or ``infinity``.
+     * \throws std::runtime_error When ``epsilon`` is ``NaN``, ``infinity`` or not positive.
+     * \return The newly created matcher.
+     */
+    [[nodiscard]]
+    constexpr auto approx_abs(
+        const std::floating_point auto value,
+        const std::floating_point auto epsilon)
+    {
+        if (std::isnan(value)
+            || std::isinf(value))
+        {
+            throw std::runtime_error{"Value must be not NaN and not infinity."};
+        }
+
+        if (std::isnan(epsilon)
+            || std::isinf(epsilon)
+            || epsilon <= 0.)
+        {
+            throw std::runtime_error{"Epsilon must be not NaN, not infinity and not less or equal 0."};
+        }
+
+        return PredicateMatcher{
+            [](const std::floating_point auto target, const auto val, const auto eps) {
+                return std::abs(target - val) <= eps;
+                                                                                       },
+            "is approximately {} +-{}",
+            "is not approximately {} +-{}",
+            std::tuple{value, epsilon}
+        };
+    }
 
     /**
      * \brief Tests, whether the target fulfills the given predicate.
