@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "ARCHITECTURES=\"64bit\"" >> $GITHUB_ENV
           echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
-          echo "CXX_VERSIONS=20, 23" >> $GITHUB_ENV
+          echo "CXX_VERSIONS=20" >> $GITHUB_ENV
 
       # if it's a PR from development or the main branch in general, add release-mode, c++23 and 32bit
       - name: Enable extended matrix
