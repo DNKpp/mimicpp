@@ -18,7 +18,6 @@
 #include <cmath>
 #include <concepts>
 #include <functional>
-#include <optional>
 #include <ranges>
 #include <tuple>
 #include <type_traits>
