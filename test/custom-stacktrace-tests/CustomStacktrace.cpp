@@ -3,83 +3,14 @@
 // //    (See accompanying file LICENSE_1_0.txt or copy at
 // //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/Stacktrace.hpp"
+#include "CustomStacktrace.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <catch2/matchers/catch_matchers_templated.hpp>
 #include <catch2/trompeloeil.hpp>
 
-#include "../unit-tests/TestTypes.hpp"
-
 using namespace mimicpp;
-
-namespace
-{
-    class CustomBackend
-    {
-    };
-}
-
-struct custom::find_stacktrace_backend
-{
-    using type = CustomBackend;
-};
-
-template <>
-struct mimicpp::stacktrace::backend_traits<CustomBackend>
-{
-    using BackendT = CustomBackend;
-
-    inline static InvocableMock<CustomBackend, std::size_t> currentMock{};
-
-    [[nodiscard]]
-    static BackendT current(const std::size_t skip)
-    {
-        return currentMock.Invoke(skip);
-    }
-
-    inline static InvocableMock<std::size_t, const BackendT&> sizeMock{};
-
-    [[nodiscard]]
-    static std::size_t size(const BackendT& backend)
-    {
-        return sizeMock.Invoke(backend);
-    }
-
-    inline static InvocableMock<bool, const BackendT&> emptyMock{};
-
-    [[nodiscard]]
-    static bool empty(const BackendT& backend)
-    {
-        return emptyMock.Invoke(backend);
-    }
-
-    inline static InvocableMock<std::string, const BackendT&, std::size_t> descriptionMock{};
-
-    [[nodiscard]]
-    static std::string description(const BackendT& backend, const std::size_t at)
-    {
-        return descriptionMock.Invoke(backend, at);
-    }
-
-    inline static InvocableMock<std::string, const BackendT&, std::size_t> sourceMock{};
-
-    [[nodiscard]]
-    static std::string source_file(const BackendT& backend, const std::size_t at)
-    {
-        return sourceMock.Invoke(backend, at);
-    }
-
-    inline static InvocableMock<std::size_t, const BackendT&, std::size_t> lineMock{};
-
-    [[nodiscard]]
-    static std::size_t source_line(const BackendT& backend, const std::size_t at)
-    {
-        return lineMock.Invoke(backend, at);
-    }
-};
 
 TEST_CASE(
     "current_stacktrace prefers custom registrations, when present.",
@@ -90,15 +21,16 @@ TEST_CASE(
 
     using traits_t = stacktrace::backend_traits<CustomBackend>;
 
+    const std::shared_ptr inner = std::make_shared<CustomBackend::Inner>();
     REQUIRE_CALL(traits_t::currentMock, Invoke(_))
         .WITH(_1 > 42)
-        .RETURN(CustomBackend{});
+        .LR_RETURN(CustomBackend{inner});
     const Stacktrace stacktrace = stacktrace::current(42);
 
     SECTION("Testing empty.")
     {
         const bool empty = GENERATE(true, false);
-        REQUIRE_CALL(traits_t::emptyMock, Invoke(_))
+        REQUIRE_CALL(inner->emptyMock, Invoke())
             .RETURN(empty);
 
         REQUIRE(empty == stacktrace.empty());
@@ -107,7 +39,7 @@ TEST_CASE(
     SECTION("Testing size.")
     {
         const std::size_t size = GENERATE(0u, 1u, 42u);
-        REQUIRE_CALL(traits_t::sizeMock, Invoke(_))
+        REQUIRE_CALL(inner->sizeMock, Invoke())
             .RETURN(size);
 
         REQUIRE(size == stacktrace.size());
@@ -120,7 +52,7 @@ TEST_CASE(
         SECTION("Testing description.")
         {
             const std::string description = GENERATE("", "Test", " Hello, World! ");
-            REQUIRE_CALL(traits_t::descriptionMock, Invoke(_, at))
+            REQUIRE_CALL(inner->descriptionMock, Invoke(at))
                 .RETURN(description);
 
             REQUIRE_THAT(
@@ -131,7 +63,7 @@ TEST_CASE(
         SECTION("Testing source_file.")
         {
             const std::string sourceFile = GENERATE("", "Test", " Hello, World! ");
-            REQUIRE_CALL(traits_t::sourceMock, Invoke(_, at))
+            REQUIRE_CALL(inner->sourceMock, Invoke(at))
                 .RETURN(sourceFile);
 
             REQUIRE_THAT(
@@ -142,76 +74,10 @@ TEST_CASE(
         SECTION("Testing line.")
         {
             const std::size_t line = GENERATE(0u, 1u, 42u);
-            REQUIRE_CALL(traits_t::lineMock, Invoke(_, at))
+            REQUIRE_CALL(inner->lineMock, Invoke(at))
                 .RETURN(line);
 
             REQUIRE(line == stacktrace.source_line(at));
         }
-    }
-}
-
-TEST_CASE(
-    "Stacktrace is printable.",
-    "[stacktrace]")
-{
-    using trompeloeil::_;
-    using traits_t = stacktrace::backend_traits<CustomBackend>;
-    const Stacktrace stacktrace{CustomBackend{}};
-
-    SECTION("When stacktrace is empty")
-    {
-        REQUIRE_CALL(traits_t::emptyMock, Invoke(_))
-            .RETURN(true);
-
-        const auto text = mimicpp::print(stacktrace);
-        REQUIRE_THAT(
-            text,
-            Catch::Matchers::Equals("empty"));
-    }
-
-    SECTION("When stacktrace contains one entry.")
-    {
-        REQUIRE_CALL(traits_t::emptyMock, Invoke(_))
-            .RETURN(false);
-        REQUIRE_CALL(traits_t::sizeMock, Invoke(_))
-            .RETURN(1u);
-        REQUIRE_CALL(traits_t::sourceMock, Invoke(_, 0u))
-            .RETURN("test.cpp");
-        REQUIRE_CALL(traits_t::lineMock, Invoke(_, 0u))
-            .RETURN(1337u);
-        REQUIRE_CALL(traits_t::descriptionMock, Invoke(_, 0u))
-            .RETURN("Hello, World!");
-
-        const auto text = mimicpp::print(stacktrace);
-        REQUIRE_THAT(
-            text,
-            Catch::Matchers::Equals("test.cpp [1337], Hello, World!\n"));
-    }
-
-    SECTION("When stacktrace contains multiple entries.")
-    {
-        REQUIRE_CALL(traits_t::emptyMock, Invoke(_))
-            .RETURN(false);
-        REQUIRE_CALL(traits_t::sizeMock, Invoke(_))
-            .RETURN(2u);
-        REQUIRE_CALL(traits_t::sourceMock, Invoke(_, 0u))
-            .RETURN("other-test.cpp");
-        REQUIRE_CALL(traits_t::lineMock, Invoke(_, 0u))
-            .RETURN(42u);
-        REQUIRE_CALL(traits_t::descriptionMock, Invoke(_, 0u))
-            .RETURN("Hello, mimic++!");
-        REQUIRE_CALL(traits_t::sourceMock, Invoke(_, 1u))
-            .RETURN("test.cpp");
-        REQUIRE_CALL(traits_t::lineMock, Invoke(_, 1u))
-            .RETURN(1337u);
-        REQUIRE_CALL(traits_t::descriptionMock, Invoke(_, 1u))
-            .RETURN("Hello, World!");
-
-        const auto text = mimicpp::print(stacktrace);
-        REQUIRE_THAT(
-            text,
-            Catch::Matchers::Equals(
-                "other-test.cpp [42], Hello, mimic++!\n"
-                "test.cpp [1337], Hello, World!\n"));
     }
 }

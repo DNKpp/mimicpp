@@ -16,12 +16,17 @@ TEST_CASE(
     "[stacktrace]")
 {
     using trompeloeil::_;
-    using traits_t = stacktrace::backend_traits<CustomBackend>;
-    const Stacktrace stacktrace{CustomBackend{}};
+    auto&& [stacktrace, inner] = std::invoke(
+        [] {
+            const std::shared_ptr ptr = std::make_shared<CustomBackend::Inner>();
+            return std::tuple{
+                Stacktrace{CustomBackend{ptr}},
+                ptr};
+        });
 
     SECTION("When stacktrace is empty")
     {
-        REQUIRE_CALL(traits_t::emptyMock, Invoke(_))
+        REQUIRE_CALL(inner->emptyMock, Invoke())
             .RETURN(true);
 
         const auto text = mimicpp::print(stacktrace);
@@ -32,15 +37,15 @@ TEST_CASE(
 
     SECTION("When stacktrace contains one entry.")
     {
-        REQUIRE_CALL(traits_t::emptyMock, Invoke(_))
+        REQUIRE_CALL(inner->emptyMock, Invoke())
             .RETURN(false);
-        REQUIRE_CALL(traits_t::sizeMock, Invoke(_))
+        REQUIRE_CALL(inner->sizeMock, Invoke())
             .RETURN(1u);
-        REQUIRE_CALL(traits_t::sourceMock, Invoke(_, 0u))
+        REQUIRE_CALL(inner->sourceMock, Invoke(0u))
             .RETURN("test.cpp");
-        REQUIRE_CALL(traits_t::lineMock, Invoke(_, 0u))
+        REQUIRE_CALL(inner->lineMock, Invoke(0u))
             .RETURN(1337u);
-        REQUIRE_CALL(traits_t::descriptionMock, Invoke(_, 0u))
+        REQUIRE_CALL(inner->descriptionMock, Invoke(0u))
             .RETURN("Hello, World!");
 
         const auto text = mimicpp::print(stacktrace);
@@ -51,21 +56,21 @@ TEST_CASE(
 
     SECTION("When stacktrace contains multiple entries.")
     {
-        REQUIRE_CALL(traits_t::emptyMock, Invoke(_))
+        REQUIRE_CALL(inner->emptyMock, Invoke())
             .RETURN(false);
-        REQUIRE_CALL(traits_t::sizeMock, Invoke(_))
+        REQUIRE_CALL(inner->sizeMock, Invoke())
             .RETURN(2u);
-        REQUIRE_CALL(traits_t::sourceMock, Invoke(_, 0u))
+        REQUIRE_CALL(inner->sourceMock, Invoke(0u))
             .RETURN("other-test.cpp");
-        REQUIRE_CALL(traits_t::lineMock, Invoke(_, 0u))
+        REQUIRE_CALL(inner->lineMock, Invoke(0u))
             .RETURN(42u);
-        REQUIRE_CALL(traits_t::descriptionMock, Invoke(_, 0u))
+        REQUIRE_CALL(inner->descriptionMock, Invoke(0u))
             .RETURN("Hello, mimic++!");
-        REQUIRE_CALL(traits_t::sourceMock, Invoke(_, 1u))
+        REQUIRE_CALL(inner->sourceMock, Invoke(1u))
             .RETURN("test.cpp");
-        REQUIRE_CALL(traits_t::lineMock, Invoke(_, 1u))
+        REQUIRE_CALL(inner->lineMock, Invoke(1u))
             .RETURN(1337u);
-        REQUIRE_CALL(traits_t::descriptionMock, Invoke(_, 1u))
+        REQUIRE_CALL(inner->descriptionMock, Invoke(1u))
             .RETURN("Hello, World!");
 
         const auto text = mimicpp::print(stacktrace);

@@ -20,6 +20,18 @@
 
 class CustomBackend
 {
+public:
+    class Inner
+    {
+    public:
+        InvocableMock<std::size_t> sizeMock{};
+        InvocableMock<bool> emptyMock{};
+        InvocableMock<std::string, std::size_t> descriptionMock{};
+        InvocableMock<std::string, std::size_t> sourceMock{};
+        InvocableMock<std::size_t, std::size_t> lineMock{};
+    };
+
+    std::shared_ptr<Inner> inner{};
 };
 
 struct mimicpp::custom::find_stacktrace_backend
@@ -40,45 +52,37 @@ struct mimicpp::stacktrace::backend_traits<CustomBackend>
         return currentMock.Invoke(skip);
     }
 
-    inline static InvocableMock<std::size_t, const BackendT&> sizeMock{};
-
     [[nodiscard]]
     static std::size_t size(const BackendT& backend)
     {
-        return sizeMock.Invoke(backend);
+        return backend.inner->sizeMock.Invoke();
     }
-
-    inline static InvocableMock<bool, const BackendT&> emptyMock{};
 
     [[nodiscard]]
     static bool empty(const BackendT& backend)
     {
-        return emptyMock.Invoke(backend);
+        return backend.inner->emptyMock.Invoke();
     }
-
-    inline static InvocableMock<std::string, const BackendT&, std::size_t> descriptionMock{};
 
     [[nodiscard]]
     static std::string description(const BackendT& backend, const std::size_t at)
     {
-        return descriptionMock.Invoke(backend, at);
+        return backend.inner->descriptionMock.Invoke(at);
     }
-
-    inline static InvocableMock<std::string, const BackendT&, std::size_t> sourceMock{};
 
     [[nodiscard]]
     static std::string source_file(const BackendT& backend, const std::size_t at)
     {
-        return sourceMock.Invoke(backend, at);
+        return backend.inner->sourceMock.Invoke(at);
     }
-
-    inline static InvocableMock<std::size_t, const BackendT&, std::size_t> lineMock{};
 
     [[nodiscard]]
     static std::size_t source_line(const BackendT& backend, const std::size_t at)
     {
-        return lineMock.Invoke(backend, at);
+        return backend.inner->lineMock.Invoke(at);
     }
 };
+
+static_assert(mimicpp::stacktrace::backend<CustomBackend>);
 
 #endif
