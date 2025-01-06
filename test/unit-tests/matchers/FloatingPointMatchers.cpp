@@ -52,6 +52,11 @@ TEMPLATE_TEST_CASE(
     }
 }
 
+namespace
+{
+    inline const std::string fpRegex = R"(\d+(.\d+)?(e(\+|-)\d+)?)";
+}
+
 TEMPLATE_TEST_CASE(
     "matches::approx_abs determines a match when the floating-point value is within the specified epsilon range to the"
     " expected value",
@@ -85,7 +90,7 @@ TEMPLATE_TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Matches(R"(is approximately -?\d+(.\d+)? \+- \d+(e-\d+|.\d+)?)"));
+            Catch::Matchers::Matches(R"(is approximately -?)" + fpRegex + R"( \+- )" + fpRegex));
 
         REQUIRE(expected == matcher.matches(target));
     }
@@ -96,7 +101,7 @@ TEMPLATE_TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Matches(R"(is not approximately -?\d+(.\d+)? \+- \d+(e-\d+|.\d+)?)"));
+            Catch::Matchers::Matches(R"(is not approximately -?)" + fpRegex + R"( \+- )" + fpRegex));
 
         REQUIRE(expected != matcher.matches(target));
     }
@@ -187,7 +192,7 @@ TEMPLATE_TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Matches(R"(is approximately -?\d+(.\d+)? \+- \(\d+(e-\d+|.\d+)? \* max\(\|lhs\|, \|rhs\|\)\))"));
+            Catch::Matchers::Matches(R"(is approximately -?)" + fpRegex + R"( \+- \()" + fpRegex + R"( \* max\(\|lhs\|, \|rhs\|\)\))"));
 
         REQUIRE(expected == matcher.matches(target));
     }
@@ -198,7 +203,7 @@ TEMPLATE_TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Matches(R"(is not approximately -?\d+(.\d+)? \+- \(\d+(e-\d+|.\d+)? \* max\(\|lhs\|, \|rhs\|\)\))"));
+            Catch::Matchers::Matches(R"(is not approximately -?)" + fpRegex + R"( \+- \()" + fpRegex + R"( \* max\(\|lhs\|, \|rhs\|\)\))"));
 
         REQUIRE(expected != matcher.matches(target));
     }
