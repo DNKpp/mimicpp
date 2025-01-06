@@ -227,14 +227,7 @@ namespace mimicpp
                 && is_same_source_location(lhs.fromLoc, rhs.fromLoc)
                 && lhs.fromCategory == rhs.fromCategory
                 && lhs.fromConstness == rhs.fromConstness
-                && lhs.stacktrace.size() == rhs.stacktrace.size()
-                && std::ranges::all_of(
-                       std::views::iota(0u, lhs.stacktrace.size()),
-                       [&](const std::size_t index) {
-                           return lhs.stacktrace.description(index) == rhs.stacktrace.description(index)
-                               && lhs.stacktrace.source_file(index) == rhs.stacktrace.source_file(index)
-                               && lhs.stacktrace.source_line(index) == rhs.stacktrace.source_line(index);
-                       });
+                && lhs.stacktrace == rhs.stacktrace;
         }
     };
 
