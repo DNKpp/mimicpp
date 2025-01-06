@@ -180,7 +180,7 @@ namespace mimicpp::expect
      * \details This requirement checks, whether the selected argument matches the given matcher. One argument can be checked multiple times
      * in different requirements and all results will be combined as conjunction.
      *
-     * For a list of built-in matchers, see \ref EXPECTATION_MATCHER "matcher" section.
+     * For a list of built-in matchers, see \ref MATCHERS "matcher" section.
      * \snippet Requirements.cpp expect::arg
      */
     template <std::size_t index, typename Matcher, typename Projection = std::identity>
@@ -215,7 +215,7 @@ namespace mimicpp::expect
      * \note ``std::identity`` can be used to skip arguments, which shall not be projected.
      * \see https://en.cppreference.com/w/cpp/utility/functional/identity
      *
-     * \details For a list of built-in matchers, see \ref EXPECTATION_MATCHER "matcher" section.
+     * \details For a list of built-in matchers, see \ref MATCHERS "matcher" section.
      * \snippet Requirements.cpp expect::args
      */
     template <
@@ -243,13 +243,12 @@ namespace mimicpp::expect
      * \brief Checks whether the all arguments satisfy the given matcher.
      * \tparam Matcher The matcher type.
      * \param matcher The matcher.
-     * \param projections Projections, the arguments will be applied on.
      *
      * \details This requirement checks, whether the all arguments satisfy the given matcher.
      * It's useful, when all arguments must be checked together, because they have some kind of relationship.
      * When ``n`` arguments are provided the matcher must accept ``n`` arguments.
      *
-     * \details For a list of built-in matchers, see \ref EXPECTATION_MATCHER "matcher" section.
+     * \details For a list of built-in matchers, see \ref MATCHERS "matcher" section.
      * \snippet Requirements.cpp expect::all_args
      */
     template <typename Matcher>

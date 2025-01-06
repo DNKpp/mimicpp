@@ -161,8 +161,7 @@ namespace mimicpp
      * \brief Generic matcher and the basic building block of most of the built-in matchers.
      * \tparam Predicate The predicate type.
      * \tparam AdditionalArgs Addition argument types.
-     * \ingroup EXPECTATION_REQUIREMENT
-     * \ingroup EXPECTATION_MATCHER
+     * \ingroup MATCHERS
      */
     template <typename Predicate, typename... AdditionalArgs>
         requires std::is_move_constructible_v<Predicate>
@@ -282,8 +281,7 @@ namespace mimicpp
 
     /**
      * \brief Matcher, which never fails.
-     * \ingroup EXPECTATION_REQUIREMENT
-     * \ingroup EXPECTATION_MATCHER
+     * \ingroup MATCHERS
      * \snippet Requirements.cpp matcher wildcard
      */
     class WildcardMatcher
@@ -304,8 +302,7 @@ namespace mimicpp
 namespace mimicpp::matches
 {
     /**
-     * \defgroup EXPECTATION_MATCHER matchers
-     * \ingroup EXPECTATION_REQUIREMENT
+     * \defgroup MATCHERS matchers
      * \brief Matchers check various argument properties.
      * \details Matchers can be used to check various argument properties and are highly customizable. In general,
      * they simply compare their arguments with a pre-defined predicate, but also provide a meaningful description.
@@ -313,7 +310,7 @@ namespace mimicpp::matches
      * \attention Matchers receive their arguments as possibly non-const, which is due to workaround some restrictions
      * on const qualified views. Either way, matchers should never modify any of their arguments.
      *
-     * # Matching arguments
+     * ### Matching arguments
      * In general matchers can be applied via the ``expect::arg<n>`` factory, but they can also be directly used
      * at the expect statement.
      * \snippet Requirements.cpp expect::arg
@@ -326,7 +323,7 @@ namespace mimicpp::matches
      * condition.
      * \snippet Requirements.cpp matcher inverted
      *
-     * # Custom Matcher
+     * ### Custom Matcher
      * Matchers are highly customizable. In fact, any type which satisfies ``matcher_for`` concept can be used.
      * There exists no base or interface type, but the ``PredicateMatcher`` servers as a convenient generic type, which
      * simply contains a predicate, a format string and optional additional arguments. But, this is just one option. If
@@ -612,7 +609,7 @@ namespace mimicpp
 {
     /**
      * \brief Tag type, used in string matchers.
-     * \ingroup EXPECTATION_MATCHERS_STRING
+     * \ingroup MATCHERS_STRING
      */
     struct case_insensitive_t
     {
@@ -652,9 +649,8 @@ namespace mimicpp::matches::detail
 namespace mimicpp::matches::str
 {
     /**
-     * \defgroup EXPECTATION_MATCHERS_STRING string matchers
-     * \ingroup EXPECTATION_REQUIREMENT
-     * \ingroup EXPECTATION_MATCHER
+     * \defgroup MATCHERS_STRING string matchers
+     * \ingroup MATCHERS
      * \brief String specific matchers.
      * \details These matchers are designed to work with any string- and character-type.
      * This comes with some caveats and restrictions, e.g. comparisons between strings of different character-types are not supported.
@@ -903,9 +899,8 @@ namespace mimicpp::matches::str
 namespace mimicpp::matches::range
 {
     /**
-     * \defgroup EXPECTATION_MATCHER_RANGE range matchers
-     * \ingroup EXPECTATION_REQUIREMENT
-     * \ingroup EXPECTATION_MATCHER
+     * \defgroup MATCHERS_RANGE range matchers
+     * \ingroup MATCHERS
      * \brief Range specific matchers.
      * \snippet Requirements.cpp matcher range sorted
      *\{
