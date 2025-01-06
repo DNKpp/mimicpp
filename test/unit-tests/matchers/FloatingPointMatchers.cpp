@@ -63,8 +63,8 @@ TEMPLATE_TEST_CASE(
     using T = TestType;
     const auto [expected, value, target, eps] = GENERATE(
         (table<bool, T, T, T>({
-            { true,   T{0.},                                   T{0.},    T{0.}},
-            { true,   T{1.},                                   T{1.},    T{0.}},
+            { true,   T{0.},                                   T{0.}, T{1.e-7}},
+            { true,   T{1.},                                   T{1.}, T{1.e-7}},
             { true,   T{1.},                                   T{0.},    T{1.}},
             { true,  T{-1.},                                   T{0.},    T{1.}},
             { true,  T{1.1},                                   T{1.},  T{0.15}},
@@ -85,7 +85,7 @@ TEMPLATE_TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Matches(R"(is approximately -?\d+(.\d+)? \+-\d+(.\d+)?)"));
+            Catch::Matchers::Matches(R"(is approximately -?\d+(.\d+)? \+- \d+(e-\d+|.\d+)?)"));
 
         REQUIRE(expected == matcher.matches(target));
     }
@@ -96,7 +96,7 @@ TEMPLATE_TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Matches(R"(is not approximately -?\d+(.\d+)? \+-\d+(.\d+)?)"));
+            Catch::Matchers::Matches(R"(is not approximately -?\d+(.\d+)? \+- \d+(e-\d+|.\d+)?)"));
 
         REQUIRE(expected != matcher.matches(target));
     }

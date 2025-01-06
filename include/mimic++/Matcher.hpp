@@ -481,8 +481,8 @@ namespace mimicpp::matches
             [](const std::floating_point auto target, const auto val, const auto eps) {
                 return std::abs(target - val) <= eps;
                                                                                        },
-            "is approximately {} +-{}",
-            "is not approximately {} +-{}",
+            "is approximately {} +- {}",
+            "is not approximately {} +- {}",
             std::tuple{value, epsilon}
         };
     }
