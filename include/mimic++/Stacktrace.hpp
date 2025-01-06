@@ -12,9 +12,11 @@
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
+#include <algorithm>
 #include <any>
 // ReSharper disable once CppUnusedIncludeDirective
 #include <functional> // std::invoke
+#include <ranges>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -270,6 +272,19 @@ namespace mimicpp
         constexpr std::size_t source_line(const std::size_t at) const
         {
             return std::invoke(m_SourceLineFn, m_Inner, at);
+        }
+
+        [[nodiscard]]
+        friend bool operator==(const Stacktrace& lhs, const Stacktrace& rhs)
+        {
+            return lhs.size() == rhs.size()
+                && std::ranges::all_of(
+                       std::views::iota(0u, lhs.size()),
+                       [&](const std::size_t index) {
+                           return lhs.description(index) == rhs.description(index)
+                               && lhs.source_file(index) == rhs.source_file(index)
+                               && lhs.source_line(index) == rhs.source_line(index);
+                       });
         }
 
     private:
