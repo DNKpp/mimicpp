@@ -451,6 +451,28 @@ namespace mimicpp::matches
             "is a number"};
     }
 
+    namespace detail
+    {
+        void check_fp_value(const std::floating_point auto value)
+        {
+            if (std::isnan(value)
+                || std::isinf(value))
+            {
+                throw std::runtime_error{"Value must be not NaN and not infinity."};
+            }
+        }
+
+        void check_fp_epsilon(const std::floating_point auto epsilon)
+        {
+            if (std::isnan(epsilon)
+                || std::isinf(epsilon)
+                || epsilon <= 0.)
+            {
+                throw std::runtime_error{"Epsilon must be not NaN, not infinity and not less or equal 0."};
+            }
+        }
+    }
+
     /**
      * \brief Tests, whether the floating-point target is approximately equal to value.
      * \param value The value to compare to.
@@ -464,18 +486,8 @@ namespace mimicpp::matches
         const std::floating_point auto value,
         const std::floating_point auto epsilon)
     {
-        if (std::isnan(value)
-            || std::isinf(value))
-        {
-            throw std::runtime_error{"Value must be not NaN and not infinity."};
-        }
-
-        if (std::isnan(epsilon)
-            || std::isinf(epsilon)
-            || epsilon <= 0.)
-        {
-            throw std::runtime_error{"Epsilon must be not NaN, not infinity and not less or equal 0."};
-        }
+        detail::check_fp_value(value);
+        detail::check_fp_epsilon(epsilon);
 
         return PredicateMatcher{
             [](const std::floating_point auto target, const auto val, const auto eps) {
