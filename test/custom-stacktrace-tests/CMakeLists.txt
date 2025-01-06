@@ -12,6 +12,7 @@ set(TARGET_NAME mimicpp-custom-stacktrace-tests)
 
 add_executable(${TARGET_NAME}
     "CustomStacktrace.cpp"
+    "Printing.cpp"
 )
 
 include(EnableSanitizers)
