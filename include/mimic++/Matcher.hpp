@@ -524,15 +524,16 @@ namespace mimicpp::matches
 
         return PredicateMatcher{
             [](const std::floating_point auto target, const auto val, const auto rel) {
-                // a target equal to +-infinity leads to an inf epsilon, which is not very useful
-                if (std::isinf(target))
+                // when target equals +-infinity, that leads to an inf epsilon, which is not very useful
+                if (!std::isinf(target))
                 {
-                    return false;
+                    const auto absDiff = std::abs(target - val);
+                    const auto scaledEpsilon = rel * std::max(std::abs(target), std::abs(val));
+                    return absDiff <= scaledEpsilon;
                 }
 
-                const auto absDiff = std::abs(target - val);
-                const auto scaledEpsilon = rel * std::max(std::abs(target), std::abs(val));
-                return absDiff <= scaledEpsilon; },
+                return false;
+            },
             "is approximately {} +- ({} * max(|lhs|, |rhs|))",
             "is not approximately {} +- ({} * max(|lhs|, |rhs|))",
             std::make_tuple(value, relEpsilon)};
