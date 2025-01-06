@@ -441,7 +441,8 @@ namespace mimicpp::detail
                 std::forward<Args>(std::get<indices>(args))...);
         };
 
-        return forward_apply(std::index_sequence_for<Args...>{});
+        constexpr auto sequence = std::index_sequence_for<Args...>{};
+        return forward_apply(sequence);
     };
 }
 
