@@ -435,11 +435,13 @@ namespace mimicpp::detail
             ValueCategory::rvalue == signature_ref_qualification_v<Signature>,
             Mock&&,
             Mock&>;
-        return [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
-                   -> signature_return_type_t<Signature> {
+        const auto forward_apply = [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
+            -> signature_return_type_t<Signature> {
             return static_cast<mock_ref_t>(mock)(
                 std::forward<Args>(std::get<indices>(args))...);
-        }(std::index_sequence_for<Args...>{});
+        };
+
+        return forward_apply(std::index_sequence_for<Args...>{});
     };
 }
 
