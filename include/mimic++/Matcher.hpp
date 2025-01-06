@@ -355,7 +355,7 @@ namespace mimicpp::matches
             std::equal_to{},
             "== {}",
             "!= {}",
-            std::tuple{std::forward<T>(value)}};
+            std::make_tuple(std::forward<T>(value))};
     }
 
     /**
@@ -371,7 +371,7 @@ namespace mimicpp::matches
             std::not_equal_to{},
             "!= {}",
             "== {}",
-            std::tuple{std::forward<T>(value)}};
+            std::make_tuple(std::forward<T>(value))};
     }
 
     /**
@@ -387,7 +387,7 @@ namespace mimicpp::matches
             std::less{},
             "< {}",
             ">= {}",
-            std::tuple{std::forward<T>(value)}};
+            std::make_tuple(std::forward<T>(value))};
     }
 
     /**
@@ -403,7 +403,7 @@ namespace mimicpp::matches
             std::less_equal{},
             "<= {}",
             "> {}",
-            std::tuple{std::forward<T>(value)}};
+            std::make_tuple(std::forward<T>(value))};
     }
 
     /**
@@ -419,7 +419,7 @@ namespace mimicpp::matches
             std::greater{},
             "> {}",
             "<= {}",
-            std::tuple{std::forward<T>(value)}};
+            std::make_tuple(std::forward<T>(value))};
     }
 
     /**
@@ -435,7 +435,7 @@ namespace mimicpp::matches
             std::greater_equal{},
             ">= {}",
             "< {}",
-            std::tuple{std::forward<T>(value)}};
+            std::make_tuple(std::forward<T>(value))};
     }
 
     /**
@@ -493,11 +493,10 @@ namespace mimicpp::matches
         return PredicateMatcher{
             [](const std::floating_point auto target, const auto val, const auto eps) {
                 return std::abs(target - val) <= eps;
-                                                                                       },
+            },
             "is approximately {} +- {}",
             "is not approximately {} +- {}",
-            std::tuple{value, epsilon}
-        };
+            std::make_tuple(value, epsilon)};
     }
 
     /**
@@ -528,7 +527,7 @@ namespace mimicpp::matches
 
         return PredicateMatcher{
             [](const std::floating_point auto target, const auto val, const auto rel) {
-                // a target equal to +-infinity would result in an inf epsilon, which is not very useful
+                // a target equal to +-infinity leads to an inf epsilon, which is not very useful
                 if (std::isinf(target))
                 {
                     return false;
@@ -539,8 +538,7 @@ namespace mimicpp::matches
                 return absDiff <= scaledEpsilon; },
             "is approximately {} +- ({} * max(|lhs|, |rhs|))",
             "is not approximately {} +- ({} * max(|lhs|, |rhs|))",
-            std::tuple{value, relEpsilon}
-        };
+            std::make_tuple(value, relEpsilon)};
     }
 
     /**
@@ -602,7 +600,7 @@ namespace mimicpp::matches
             },
             "is instance at {}",
             "is not instance at {}",
-            std::tuple{std::addressof(instance)}};
+            std::make_tuple(std::addressof(instance))};
     }
 
     /**
@@ -722,7 +720,7 @@ namespace mimicpp::matches::str
             },
             "is equal to {}",
             "is not equal to {}",
-            std::tuple{std::forward<Pattern>(pattern)}};
+            std::make_tuple(std::forward<Pattern>(pattern))};
     }
 
     /**
@@ -744,7 +742,7 @@ namespace mimicpp::matches::str
             },
             "is case-insensitively equal to {}",
             "is case-insensitively not equal to {}",
-            std::tuple{std::forward<Pattern>(pattern)}};
+            std::make_tuple(std::forward<Pattern>(pattern))};
     }
 
     /**
@@ -769,7 +767,7 @@ namespace mimicpp::matches::str
             },
             "starts with {}",
             "starts not with {}",
-            std::tuple{std::forward<Pattern>(pattern)}};
+            std::make_tuple(std::forward<Pattern>(pattern))};
     }
 
     /**
@@ -794,7 +792,7 @@ namespace mimicpp::matches::str
             },
             "case-insensitively starts with {}",
             "case-insensitively starts not with {}",
-            std::tuple{std::forward<Pattern>(pattern)}};
+            std::make_tuple(std::forward<Pattern>(pattern))};
     }
 
     /**
@@ -820,7 +818,7 @@ namespace mimicpp::matches::str
             },
             "ends with {}",
             "ends not with {}",
-            std::tuple{std::forward<Pattern>(pattern)}};
+            std::make_tuple(std::forward<Pattern>(pattern))};
     }
 
     /**
@@ -846,7 +844,7 @@ namespace mimicpp::matches::str
             },
             "case-insensitively ends with {}",
             "case-insensitively ends not with {}",
-            std::tuple{std::forward<Pattern>(pattern)}};
+            std::make_tuple(std::forward<Pattern>(pattern))};
     }
 
     /**
@@ -871,7 +869,7 @@ namespace mimicpp::matches::str
             },
             "contains {}",
             "contains not {}",
-            std::tuple{std::forward<Pattern>(pattern)}};
+            std::make_tuple(std::forward<Pattern>(pattern))};
     }
 
     /**
@@ -894,7 +892,7 @@ namespace mimicpp::matches::str
             },
             "case-insensitively contains {}",
             "case-insensitively contains not {}",
-            std::tuple{std::forward<Pattern>(pattern)}};
+            std::make_tuple(std::forward<Pattern>(pattern))};
     }
 
     /**
@@ -938,7 +936,7 @@ namespace mimicpp::matches::range
             },
             "elements are {}",
             "elements are not {}",
-            std::tuple{std::views::all(std::forward<Range>(expected))}};
+            std::make_tuple(std::views::all(std::forward<Range>(expected)))};
     }
 
     /**
@@ -966,7 +964,7 @@ namespace mimicpp::matches::range
             },
             "is a permutation of {}",
             "is not a permutation of {}",
-            std::tuple{std::views::all(std::forward<Range>(expected))}};
+            std::make_tuple(std::views::all(std::forward<Range>(expected)))};
     }
 
     /**
@@ -1022,7 +1020,7 @@ namespace mimicpp::matches::range
             },
             "has size of {}",
             "has different size than {}",
-            std::tuple{expected}};
+            std::make_tuple(expected)};
     }
 
     /**
@@ -1042,12 +1040,12 @@ namespace mimicpp::matches::range
             },
             "each el in range: el {}",
             "not each el in range: el {}",
-            std::tuple{
+            std::make_tuple(
                 mimicpp::detail::arg_storage<
                     MatcherT,
                     std::identity,
                     decltype([](const auto& m) { return mimicpp::detail::describe_hook::describe(m); })>{
-                    std::forward<MatcherT>(matcher)}}};
+                    std::forward<MatcherT>(matcher)})};
     }
 
     /**
@@ -1067,12 +1065,12 @@ namespace mimicpp::matches::range
             },
             "any el in range: el {}",
             "none el in range: el {}",
-            std::tuple{
+            std::make_tuple(
                 mimicpp::detail::arg_storage<
                     MatcherT,
                     std::identity,
                     decltype([](const auto& m) { return mimicpp::detail::describe_hook::describe(m); })>{
-                    std::forward<MatcherT>(matcher)}}};
+                    std::forward<MatcherT>(matcher)})};
     }
 
     /**
