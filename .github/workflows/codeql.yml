@@ -52,7 +52,7 @@ jobs:
 
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-      - name: Build
+      - name: Configure
         shell: bash
         run: |
           cmake -S . \
@@ -60,7 +60,12 @@ jobs:
               -D CMAKE_BUILD_TYPE="Release" \
               -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES
+              -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
+
+      - name: Build
+        run: cmake --build build -j4
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
