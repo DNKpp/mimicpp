@@ -1,149 +1,142 @@
 name: coverage
 
 env:
-    COBERTURA_REPORT: cobertura.xml
-    COVERALLS_REPORT: coveralls.json
-    HTML_REPORT_DIR: html/
-    COVERAGE_ARTIFACT_NAME: coverage-report
+  COBERTURA_REPORT: cobertura.xml
+  COVERALLS_REPORT: coveralls.json
+  HTML_REPORT_DIR: html/
+  COVERAGE_ARTIFACT_NAME: coverage-report
 
 on:
-    push:
-        branches: [main, development]
-    pull_request:
-        branches: [main, development]
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
 
 jobs:
-    create-coverage-report:
-        runs-on: ubuntu-latest
-        container:
-            image: "ghcr.io/dnkpp/gcc:14"
+  create-coverage-report:
+    runs-on: ubuntu-latest
+    container:
+      image: "ghcr.io/dnkpp/gcc:14"
 
-        steps:
-            - uses: actions/checkout@v4
-  
-            - name: Install gcovr
-              run: |
-                python -m pip install gcovr
+    steps:
+      - uses: actions/checkout@v4
 
+      - name: Install gcovr
+        run: |
+          python -m pip install gcovr
+          gcovr --version
 
-            - name: Configure
-              env:
-                LDFLAGS: "-fprofile-arcs"
-                CXXFLAGS: "-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions"
-              run: |
-                cmake -S . \
-                    -B build \
-                    -D CMAKE_BUILD_TYPE="Debug" \
-                    -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
-                    -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
-                    -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES \
-                    -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES \
-                    -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
+      - name: Configure
+        env:
+          LDFLAGS: "-fprofile-arcs"
+          CXXFLAGS: "-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions"
+        run: |
+          cmake -S . \
+              -B build \
+              -D CMAKE_BUILD_TYPE="Debug" \
+              -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
 
-            - name: Build
-              run: |
-                cmake --build build -j4
+      - name: Build
+        run: |
+          cmake --build build -j5
 
-            - name: Run tests
-              env:
-                CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/test/unit-tests -C Debug -j4
+      - name: Run tests
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build \
+              -C Debug \
+              -j5
 
-            - name: Run adapter tests
-              env:
-                CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/test/adapter-tests -C Debug -j4
+      - name: Run gcovr
+        run: |
+          # circumvent "fatal: detected dubious ownership in repository" error
+          git config --global --add safe.directory ${GITHUB_WORKSPACE}
+          gcovr --root build --filter "include/mimic++" --keep -j4 -v \
+              --exclude-lines-by-pattern "\s*assert\(|\s*unreachable\(\);" \
+              --exclude-unreachable-branches \
+              --exclude-function-lines \
+              --exclude-noncode-lines \
+              --exclude-throw-branches \
+              --decisions \
+              --calls \
+              --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
+              --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
+              --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
 
-            - name: Run custom-stacktrace-tests
-              env:
-                CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/test/custom-stacktrace-tests -C Debug -j4
+      - name: Upload gcov coverage report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gcov-files
+          path: "build/*.gcov"
 
-            - name: Run examples
-              env:
-                CTEST_OUTPUT_ON_FAILURE: 1
-              run: ctest --test-dir build/examples -C Debug -j4
+      - name: Upload generated report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
+          path: |
+            ${{env.COBERTURA_REPORT}}
+            ${{env.COVERALLS_REPORT}}
+            ${{env.HTML_REPORT_DIR}}
 
-            - name: Run gcovr
-              run: |
-                # circumvnet "fatal: detected dubious ownership in repository" error
-                git config --global --add safe.directory /__w/mimicpp/mimicpp
-                gcovr --root build/test/unit-tests --filter "include/mimic++" --keep -j4 -v \
-                    --exclude-lines-by-pattern "\s*assert\(|\s*unreachable\(\);" \
-                    --exclude-unreachable-branches \
-                    --exclude-function-lines \
-                    --exclude-noncode-lines \
-                    --exclude-throw-branches \
-                    --decisions \
-                    --calls \
-                    --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
-                    --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
-                    --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
+  codacy-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Upload gcov coverage report artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                name: gcov-files
-                path: "build/test/unit-tests/*.gcov"
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
-            - name: Upload generated report artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                name: ${{env.COVERAGE_ARTIFACT_NAME}}
-                path: |
-                  ${{env.COBERTURA_REPORT}}
-                  ${{env.COVERALLS_REPORT}}
-                  ${{env.HTML_REPORT_DIR}}
+      - name: Upload coverage to Codacy
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{secrets.CODACY_PROJECT_TOKEN}}
+          coverage-reports: ${{env.COBERTURA_REPORT}}
 
-    codacy-report:
-        needs: create-coverage-report
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-  
-            - uses: actions/download-artifact@v4
-              with:
-                name: ${{env.COVERAGE_ARTIFACT_NAME}}
+  codecov-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Upload coverage to Codacy
-              uses: codacy/codacy-coverage-reporter-action@v1
-              with:
-                project-token: ${{secrets.CODACY_PROJECT_TOKEN}}
-                coverage-reports: ${{env.COBERTURA_REPORT}}
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
-    codecov-report:
-        needs: create-coverage-report
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          name: $GITHUB_REPOSITORY
+          token: ${{secrets.CODECOV_TOKEN}}
+          files: ${{env.COBERTURA_REPORT}}
+          fail_ci_if_error: true
+          verbose: true
 
-            - uses: actions/download-artifact@v4
-              with:
-                name: ${{env.COVERAGE_ARTIFACT_NAME}}
+  coveralls-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-            - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v4
-              with:
-                name: $GITHUB_REPOSITORY
-                token: ${{secrets.CODECOV_TOKEN}}
-                files: ${{env.COBERTURA_REPORT}}
-                fail_ci_if_error: true
-                verbose: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
-    coveralls-report:
-        needs: create-coverage-report
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-  
-            - uses: actions/download-artifact@v4
-              with:
-                name: ${{env.COVERAGE_ARTIFACT_NAME}}
-
-            - name: Upload coverage to Coveralls
-              uses: coverallsapp/github-action@v2
-              with:
-                github-token: ${{secrets.GITHUB_TOKEN}}
-                file: ${{env.COVERALLS_REPORT}}
-                format: coveralls
-                fail-on-error: true
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          file: ${{env.COVERALLS_REPORT}}
+          # can not use ${{ github.workspace }} here
+          # see: https://github.com/actions/checkout/issues/785
+          base-path: "/__w/mimicpp/mimicpp/include"
+          format: coveralls
+          debug: true
+          fail-on-error: true
