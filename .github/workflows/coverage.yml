@@ -28,11 +28,13 @@ jobs:
 
       - name: Configure
         env:
-          LDFLAGS: "-fprofile-arcs"
+          LDFLAGS: "--coverage"
           CXXFLAGS: "-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions"
         run: |
           cmake -S . \
               -B build \
+              --log-level=DEBUG \
+              -D CMAKE_VERBOSE_MAKEFILE=YES \
               -D CMAKE_BUILD_TYPE="Debug" \
               -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
@@ -51,14 +53,13 @@ jobs:
         run: |
           ctest --test-dir build \
               -C Debug \
-              -j5
+              -j4
 
       - name: Run gcovr
         run: |
           # circumvent "fatal: detected dubious ownership in repository" error
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-          gcovr --keep -j4 -v \
-              --gcov-exclude-directories "build/_deps" \
+          gcovr -j4 -v \
               --exclude-lines-by-pattern "(\s*assert\(|\s*unreachable\(\);)" \
               --exclude-unreachable-branches \
               --exclude-function-lines \
@@ -66,6 +67,7 @@ jobs:
               --exclude-throw-branches \
               --decisions \
               --calls \
+              --keep \
               --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
               --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
               --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
@@ -74,8 +76,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gcov-files
-          path: "build/**/*.gcov"
-          if-no-files-found: fail
+          path: "**/*.gcov"
+          if-no-files-found: error
 
       - name: Upload generated report artifacts
         uses: actions/upload-artifact@v4
@@ -85,6 +87,7 @@ jobs:
             ${{env.COBERTURA_REPORT}}
             ${{env.COVERALLS_REPORT}}
             ${{env.HTML_REPORT_DIR}}
+          if-no-files-found: error
 
   codacy-report:
     needs: create-coverage-report
