@@ -57,8 +57,9 @@ jobs:
         run: |
           # circumvent "fatal: detected dubious ownership in repository" error
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-          gcovr --root build --filter "include/mimic++" --keep -j4 -v \
-              --exclude-lines-by-pattern "\s*assert\(|\s*unreachable\(\);" \
+          gcovr --keep -j4 -v \
+              --gcov-exclude-directories "build/_deps" \
+              --exclude-lines-by-pattern "(\s*assert\(|\s*unreachable\(\);)" \
               --exclude-unreachable-branches \
               --exclude-function-lines \
               --exclude-noncode-lines \
@@ -73,7 +74,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gcov-files
-          path: "build/*.gcov"
+          path: "build/**/*.gcov"
+          if-no-files-found: fail
 
       - name: Upload generated report artifacts
         uses: actions/upload-artifact@v4
