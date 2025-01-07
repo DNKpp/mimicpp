@@ -496,7 +496,7 @@ Note: ``libc++`` doesn't support ``std::stacktrace`` yet.
 [BSL-1.0](LICENSE_1_0.txt) (free, open source)
 
 ```text
-          Copyright Dominic "DNKpp" Koepke 2024 - 2024
+          Copyright Dominic "DNKpp" Koepke 2024 - 2025
  Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
           https://www.boost.org/LICENSE_1_0.txt)
