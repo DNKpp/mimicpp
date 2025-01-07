@@ -58,7 +58,7 @@ jobs:
           # circumvent "fatal: detected dubious ownership in repository" error
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
           gcovr -j4 -v \
-              --filter "include/mimic++"
+              --filter "include/mimic++" \
               --exclude-lines-by-pattern "(\s*assert\(|\s*unreachable\(\);)" \
               --exclude-unreachable-branches \
               --exclude-function-lines \
@@ -67,6 +67,7 @@ jobs:
               --decisions \
               --calls \
               --keep \
+              --print-summary \
               --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
               --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
               --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
