@@ -238,6 +238,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup alternative default call-convention for msvc
+        if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention != '' }}
+        shell: bash
+        run: |
+          # translate default_call_convention to appropriate option
+          if [[ "${{ matrix.config.default_call_convention }}" == 'vectorcall' ]]; then
+            CALL_CONVENTION="/Gv"
+          else
+            echo "Invalid call-convention: ${{ matrix.config.default_call_convention }}"
+            exit 1
+          fi
+          
+          echo "EXT_COMPILER_FLAGS=$(echo ${EXT_COMPILER_FLAGS} ${CALL_CONVENTION})" >> $GITHUB_ENV
+
       - name: Setup base cmake options
         shell: bash
         # sets up common options, used by all cmake configure steps.
@@ -247,6 +261,7 @@ jobs:
                                           --log-level=DEBUG \
                                           -D CMAKE_VERBOSE_MAKEFILE=YES \
                                           -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+                                          -D MIMICPP_TEST_ADDITIONAL_COMPILER_FLAGS=${EXT_COMPILER_FLAGS} \
                                           -D MIMICPP_ENABLE_ADAPTER_TESTS=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
@@ -329,14 +344,6 @@ jobs:
           apt-get install -y \
             libc++-${{ matrix.config.compiler_version }}-dev:i386 \
             libc++abi-${{ matrix.config.compiler_version }}-dev:i386
-
-      - name: Setup __vectorcall as default call-convention on msvc
-        if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention == 'vectorcall' }}
-        shell: bash
-        # Do NOT remove the double /, as this will cause trouble during cmake configuration (it somehow expands to C:/Program Files/Git/Gv ???!)
-        # But, we will probably run into another issue, when CXXFLAGS happens to be not empty...
-        run: |
-          echo "CXXFLAGS=$(echo ${CXXFLAGS} //Gv)" >> $GITHUB_ENV
 
       - name: Enable Address and Undefined Sanitizer
         if: ${{ matrix.config.asan == true }}
@@ -476,11 +483,8 @@ jobs:
               -j5
 
       # cpptrace
-      # cpptrace doesn't support alternative default call conventions
-      # see: https://github.com/jeremy-rifkin/cpptrace/issues/197
       - name: Configure with cpptrace backend
         id: config-cpptrace-backend
-        if: ${{matrix.config.default_call_convention == '' }}
         shell: bash
         run: |
           cmake \
@@ -492,7 +496,6 @@ jobs:
               -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
 
       - name: Build with cpptrace backend
-        if: ${{ steps.config-cpptrace-backend.outcome == 'success' }}
         shell: bash
         run: |
           cmake --build build \
@@ -500,7 +503,6 @@ jobs:
               ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with cpptrace backend
-        if: ${{ steps.config-cpptrace-backend.outcome == 'success' }}
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
@@ -513,10 +515,8 @@ jobs:
 
       #################################
       # Adapter Tests
-      # Workflow is skipped, when an alternative default call-convention is applied.
       - name: Configure adapter tests
         id: config-adapter-test
-        if: ${{ matrix.config.default_call_convention == '' }}
         shell: bash
         run: |
           cmake \
@@ -528,7 +528,6 @@ jobs:
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES
 
       - name: Build adapter tests
-        if: ${{ steps.config-adapter-test.outcome == 'success' }}
         shell: bash
         run: |
           cmake --build build \
@@ -536,7 +535,6 @@ jobs:
               ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run adapter tests
-        if: ${{ steps.config-adapter-test.outcome == 'success' }}
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
