@@ -46,11 +46,13 @@ target_compile_options(${TARGET_NAME}
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
 include(EnableWarnings)
+include(EnableCoverageFlags)
 include(LinkStdStacktrace)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
     mimicpp::internal::warnings
+    mimicpp::internal::coverage-flags
     mimicpp::internal::link-std-stacktrace
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil

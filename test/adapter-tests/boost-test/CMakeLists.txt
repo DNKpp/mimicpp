@@ -9,6 +9,7 @@ add_executable(
 )
 
 include(EnableWarnings)
+include(EnableCoverageFlags)
 include(EnableSanitizers)
 enable_sanitizers(mimicpp-adapter-tests-boost-test)
 
@@ -30,6 +31,7 @@ target_link_libraries(
 	mimicpp-adapter-tests-boost-test
 	PRIVATE
 	mimicpp::internal::warnings
+	mimicpp::internal::coverage-flags
 	mimicpp::mimicpp
 	Boost::unit_test_framework
 )

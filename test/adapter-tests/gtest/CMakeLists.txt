@@ -9,6 +9,7 @@ add_executable(
 )
 
 include(EnableWarnings)
+include(EnableCoverageFlags)
 include(EnableSanitizers)
 enable_sanitizers(mimicpp-adapter-tests-gtest)
 
@@ -27,6 +28,7 @@ target_link_libraries(
 	PRIVATE
 	mimicpp::mimicpp
 	mimicpp::internal::warnings
+	mimicpp::internal::coverage-flags
 	GTest::gtest_main
 )
 

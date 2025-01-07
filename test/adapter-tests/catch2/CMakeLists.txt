@@ -11,6 +11,7 @@ add_executable(
 )
 
 include(EnableWarnings)
+include(EnableCoverageFlags)
 include(EnableSanitizers)
 enable_sanitizers(mimicpp-adapter-tests-catch2)
 
@@ -19,6 +20,7 @@ target_link_libraries(
 	PRIVATE
 	mimicpp::mimicpp
 	mimicpp::internal::warnings
+	mimicpp::internal::coverage-flags
 	Catch2::Catch2WithMain
 )
 

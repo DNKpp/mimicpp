@@ -27,15 +27,13 @@ jobs:
           gcovr --version
 
       - name: Configure
-        env:
-          LDFLAGS: "--coverage"
-          CXXFLAGS: "-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions"
         run: |
           cmake -S . \
               -B build \
               --log-level=DEBUG \
               -D CMAKE_VERBOSE_MAKEFILE=YES \
               -D CMAKE_BUILD_TYPE="Debug" \
+              -D MIMICPP_ENABLE_COVERAGE_FLAGS=YES \
               -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES \
@@ -60,7 +58,6 @@ jobs:
           # circumvent "fatal: detected dubious ownership in repository" error
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
           gcovr -j4 -v \
-              --filter "include/mimic++" \
               --exclude-directories "build/_deps" \
               --exclude-lines-by-pattern "(\s*assert\(|\s*unreachable\(\);)" \
               --exclude-unreachable-branches \

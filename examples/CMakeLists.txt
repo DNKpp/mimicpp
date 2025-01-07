@@ -33,12 +33,14 @@ enable_sanitizers(mimicpp-examples)
 
 find_package(Catch2 REQUIRED)
 include(EnableWarnings)
+include(EnableCoverageFlags)
 include(LinkStdStacktrace)
 target_link_libraries(
     mimicpp-examples
     PRIVATE
     mimicpp::mimicpp
     mimicpp::internal::warnings
+    mimicpp::internal::coverage-flags
     mimicpp::internal::link-std-stacktrace
     Catch2::Catch2WithMain
 )

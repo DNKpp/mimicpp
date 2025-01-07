@@ -9,6 +9,7 @@ add_executable(${TARGET_NAME}
 )
 
 include(EnableWarnings)
+include(EnableCoverageFlags)
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
@@ -18,6 +19,7 @@ target_link_libraries(${TARGET_NAME}
 	PRIVATE
 	mimicpp::mimicpp
 	mimicpp::internal::warnings
+	mimicpp::internal::coverage-flags
 	doctest::doctest
 )
 
