@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v5</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v6</span>
    </div>
   </td>
  </tr>
@@ -100,10 +100,10 @@ $(function(){initNavTree('d5/db1/gtest_8hpp_source.html','../../'); initResizabl
   <div class="headertitle"><div class="title">gtest.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d5/db1/gtest_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// //          Copyright Dominic (DNKpp) Koepke 2024 - 2024.</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// // Distributed under the Boost Software License, Version 1.0.</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">// //    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// //          https://www.boost.org/LICENSE_1_0.txt)</span></div>
+<a href="../../d5/db1/gtest_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.</span></div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Distributed under the Boost Software License, Version 1.0.</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//          https://www.boost.org/LICENSE_1_0.txt)</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifndef MIMICPP_ADAPTERS_GTEST_HPP</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#define MIMICPP_ADAPTERS_GTEST_HPP</span></div>
@@ -149,21 +149,26 @@ $(function(){initNavTree('d5/db1/gtest_8hpp_source.html','../../'); initResizabl
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>{</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga6ccf9eea58860121e1301d1ab0a82821">   58</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga6ccf9eea58860121e1301d1ab0a82821">GTestReporterT</a> = <a class="code hl_class" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">BasicReporter</a>&lt;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        &amp;detail::gtest::send_success,</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        &amp;detail::gtest::send_warning,</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        &amp;detail::gtest::send_fail&gt;;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">namespace </span>mimicpp::detail::gtest</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>{</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">inline</span> <span class="keyword">const</span> ReporterInstaller&lt;GTestReporterT&gt; installer{};</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>}</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="comment">// GCOVR_EXCL_START</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga6ccf9eea58860121e1301d1ab0a82821">   60</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga6ccf9eea58860121e1301d1ab0a82821">GTestReporterT</a> = <a class="code hl_class" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">BasicReporter</a>&lt;</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        &amp;detail::gtest::send_success,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        &amp;detail::gtest::send_warning,</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>        &amp;detail::gtest::send_fail&gt;;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// GCOVR_EXCL_STOP</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">namespace </span>mimicpp::detail::gtest</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>{</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    [[maybe_unused]]</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">inline</span> <span class="keyword">const</span> ReporterInstaller&lt;GTestReporterT&gt; installer{};</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>}</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_reporter_8hpp_html"><div class="ttname"><a href="../../da/dd9/_reporter_8hpp.html">Reporter.hpp</a></div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_reporter_html"><div class="ttname"><a href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">mimicpp::BasicReporter</a></div><div class="ttdoc">A reporter, which creates text messages and reports them via the provided callbacks.</div><div class="ttdef"><b>Definition</b> Reporter.hpp:356</div></div>
-<div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s_html_ga6ccf9eea58860121e1301d1ab0a82821"><div class="ttname"><a href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga6ccf9eea58860121e1301d1ab0a82821">mimicpp::GTestReporterT</a></div><div class="ttdeci">BasicReporter&lt; &amp;detail::gtest::send_success, &amp;detail::gtest::send_warning, &amp;detail::gtest::send_fail &gt; GTestReporterT</div><div class="ttdoc">Reporter for the integration into gtest.</div><div class="ttdef"><b>Definition</b> gtest.hpp:58</div></div>
+<div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s_html_ga6ccf9eea58860121e1301d1ab0a82821"><div class="ttname"><a href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga6ccf9eea58860121e1301d1ab0a82821">mimicpp::GTestReporterT</a></div><div class="ttdeci">BasicReporter&lt; &amp;detail::gtest::send_success, &amp;detail::gtest::send_warning, &amp;detail::gtest::send_fail &gt; GTestReporterT</div><div class="ttdoc">Reporter for the integration into gtest.</div><div class="ttdef"><b>Definition</b> gtest.hpp:60</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:20</div></div>
 <div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:345</div></div>
 </div><!-- fragment --></div><!-- contents -->
