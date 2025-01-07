@@ -13,7 +13,7 @@ var searchData=
   ['inheritance_10',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md8',1,'']]],
   ['initfinalize_11',['InitFinalize',['../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html',1,'mimicpp::expectation_policies']]],
   ['insensitive_20matchers_12',['Case-Insensitive Matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md4',1,'']]],
-  ['insensitive_20matching_13',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
+  ['insensitive_20matching_13',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
   ['install_5freporter_14',['install_reporter',['../dd/d4f/group___r_e_p_o_r_t_i_n_g.html#ga14082268db10f80ecc210109669e626e',1,'mimicpp']]],
   ['installation_15',['Installation',['../index.html#autotoc_md63',1,'']]],
   ['instance_16',['instance',['../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html#ga369aedf4edb7313cf70f7ac78ec233f9',1,'mimicpp::matches']]],

@@ -164,7 +164,7 @@ var searchData=
   ['stacktrace_161',['Stacktrace',['../db/d18/classmimicpp_1_1_stacktrace.html',1,'mimicpp::Stacktrace'],['../db/d18/classmimicpp_1_1_stacktrace.html#a183ad8b1325f69bdf161aa618b2da5a9',1,'mimicpp::Stacktrace::Stacktrace(Inner &amp;&amp;inner)'],['../db/d18/classmimicpp_1_1_stacktrace.html#a0f3863795c2ac1268d2f7ac2941f6190',1,'mimicpp::Stacktrace::Stacktrace(const Stacktrace &amp;)=default'],['../db/d18/classmimicpp_1_1_stacktrace.html#a12cf057633250d1f4463e97cdd0869b0',1,'mimicpp::Stacktrace::Stacktrace(Stacktrace &amp;&amp;)=default']]],
   ['stacktrace_162',['stacktrace',['../d4/d44/classmimicpp_1_1call_1_1_info.html#a7008c600682cac5a597ada6b0c90bb64',1,'mimicpp::call::Info::stacktrace'],['../dc/dd0/classmimicpp_1_1_call_report.html#aea59c14511e6881ce40297e6e1a2a1f2',1,'mimicpp::CallReport::stacktrace'],['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html',1,'stacktrace']]],
   ['stacktrace_20backend_163',['Enable experimental cpptrace stacktrace-backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md40',1,'']]],
-  ['stacktrace_20backends_164',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md25',1,'']]],
+  ['stacktrace_20backends_164',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md21',1,'']]],
   ['stacktrace_20support_165',['Enable experimental stacktrace support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md37',1,'']]],
   ['stacktrace_2ehpp_166',['Stacktrace.hpp',['../de/df5/_stacktrace_8hpp.html',1,'']]],
   ['starts_5fwith_167',['starts_with',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#gaa2e0f61116d7f3180daea6744a927fdd',1,'mimicpp::matches::str::starts_with(Pattern &amp;&amp;pattern)'],['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga309492df10a2b9b4f2a38fdd6edabcb6',1,'mimicpp::matches::str::starts_with(Pattern &amp;&amp;pattern, const case_insensitive_t)']]],
@@ -198,14 +198,14 @@ var searchData=
   ['string_5fview_5ft_195',['string_view_t',['../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga09d772b373cd2d8299d1d2693367111c',1,'mimicpp']]],
   ['stringification_196',['Stringification',['../index.html#autotoc_md54',1,'']]],
   ['stringification_197',['stringification',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html',1,'']]],
-  ['strings_198',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
-  ['strings_20with_20common_20char_20type_199',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md21',1,'']]],
+  ['strings_198',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
+  ['strings_20with_20common_20char_20type_199',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['strings_20with_20other_20character_20types_200',['Strings with other character-types',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
   ['stringstreamt_201',['StringStreamT',['../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8',1,'mimicpp']]],
   ['stringt_202',['StringT',['../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1',1,'mimicpp']]],
   ['stringviewt_203',['StringViewT',['../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6',1,'mimicpp']]],
   ['strip_5fparens_204',['strip_parens',['../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html',1,'']]],
   ['support_205',['support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md37',1,'Enable experimental stacktrace support'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md34',1,'Enable experimental string-matcher unicode support']]],
-  ['support_20for_20case_20insensitive_20matching_206',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
-  ['support_20for_20printing_207',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]]
+  ['support_20for_20case_20insensitive_20matching_206',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
+  ['support_20for_20printing_207',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]]
 ];
