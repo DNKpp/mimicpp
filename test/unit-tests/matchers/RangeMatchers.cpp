@@ -315,7 +315,7 @@ TEST_CASE(
 {
     SECTION("When target is empty, it's a match.")
     {
-        const auto matcher = matches::range::is_empty();
+        constexpr auto matcher = matches::range::is_empty();
 
         const std::vector<int> target{};
 
@@ -327,7 +327,7 @@ TEST_CASE(
 
     SECTION("When a non-empty range is stored, it's no match.")
     {
-        const auto matcher = matches::range::is_empty();
+        constexpr auto matcher = matches::range::is_empty();
 
         const std::vector target{42};
 
@@ -339,7 +339,7 @@ TEST_CASE(
 
     SECTION("Matcher can be inverted.")
     {
-        const auto matcher = !matches::range::is_empty();
+        constexpr auto matcher = !matches::range::is_empty();
 
         REQUIRE_THAT(
             matcher.describe(),
@@ -367,7 +367,7 @@ TEST_CASE(
 {
     SECTION("When target has the expected size, it's a match.")
     {
-        const auto matcher = matches::range::has_size(2);
+        constexpr auto matcher = matches::range::has_size(2);
         const std::vector target{42, 1337};
 
         REQUIRE(matcher.matches(target));
@@ -378,7 +378,7 @@ TEST_CASE(
 
     SECTION("When target has different size, it's no match.")
     {
-        const auto matcher = matches::range::has_size(1);
+        constexpr auto matcher = matches::range::has_size(1);
         const std::vector target = GENERATE(
             std::vector<int>{},
             (std::vector{42, 1337}));
@@ -391,7 +391,7 @@ TEST_CASE(
 
     SECTION("Matcher can be inverted.")
     {
-        const auto matcher = !matches::range::has_size(2);
+        constexpr auto matcher = !matches::range::has_size(2);
 
         REQUIRE_THAT(
             matcher.describe(),
