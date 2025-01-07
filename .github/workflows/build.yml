@@ -238,21 +238,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup alternative default call-convention for msvc
-        if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention != '' }}
-        shell: bash
-        run: |
-          # translate default_call_convention to appropriate option
-          if [[ "${{ matrix.config.default_call_convention }}" == 'vectorcall' ]]; then
-            CALL_CONVENTION="/Gv"
-          else
-            echo "Invalid call-convention: ${{ matrix.config.default_call_convention }}"
-            exit 1
-          fi
-          
-          # Do NOT remove the double /, as this will cause trouble during cmake configuration (it somehow expands to C:/Program Files/Git/Gv ???!)
-          echo "EXT_COMPILER_FLAGS=$(echo ${EXT_COMPILER_FLAGS} /${CALL_CONVENTION})" >> $GITHUB_ENV
-
       - name: Setup base cmake options
         shell: bash
         # sets up common options, used by all cmake configure steps.
@@ -262,7 +247,6 @@ jobs:
                                           --log-level=DEBUG \
                                           -D CMAKE_VERBOSE_MAKEFILE=YES \
                                           -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
-                                          -D MIMICPP_TEST_ADDITIONAL_COMPILER_FLAGS=${EXT_COMPILER_FLAGS} \
                                           -D MIMICPP_ENABLE_ADAPTER_TESTS=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
@@ -309,6 +293,21 @@ jobs:
                                             -A\"${PLATFORM}\" \
                                       )" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=$(echo ${CMAKE_BUILD_EXTRA} --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
+
+      - name: Setup alternative default call-convention for msvc
+        if: ${{ matrix.config.compiler_name  == 'msvc' && matrix.config.default_call_convention != '' }}
+        shell: bash
+        run: |
+          # translate default_call_convention to appropriate option
+          if [[ "${{ matrix.config.default_call_convention }}" == 'vectorcall' ]]; then
+            CALL_CONVENTION="/Gv"
+          else
+            echo "Invalid call-convention: ${{ matrix.config.default_call_convention }}"
+            exit 1
+          fi
+          
+          # Do NOT remove the double /, as this will cause trouble during cmake configuration (it somehow expands to C:/Program Files/Git/Gv ???!)
+          echo "CXXFLAGS=$(echo ${CXXFLAGS} /${CALL_CONVENTION})" >> $GITHUB_ENV
 
       - name: Clang libc++ setup
         if: ${{ matrix.config.compiler_name == 'clang' && matrix.config.libcxx == true }}
@@ -485,7 +484,6 @@ jobs:
 
       # cpptrace
       - name: Configure with cpptrace backend
-        id: config-cpptrace-backend
         shell: bash
         run: |
           cmake \
@@ -516,8 +514,11 @@ jobs:
 
       #################################
       # Adapter Tests
+      # Workflow is skipped, when an alternative default call-convention is applied, because not all of these
+      # framework supports it.
       - name: Configure adapter tests
         id: config-adapter-test
+        if: ${{ matrix.config.default_call_convention == '' }}
         shell: bash
         run: |
           cmake \
@@ -529,6 +530,7 @@ jobs:
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES
 
       - name: Build adapter tests
+        if: ${{ steps.config-adapter-test.outcome == 'success' }}
         shell: bash
         run: |
           cmake --build build \
@@ -536,6 +538,7 @@ jobs:
               ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run adapter tests
+        if: ${{ steps.config-adapter-test.outcome == 'success' }}
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
