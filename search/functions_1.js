@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['basicexpectation_0',['BasicExpectation',['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a482e36dadc5934857c5802e62a565d85',1,'mimicpp::BasicExpectation']]],
+  ['basicexpectationbuilder_1',['BasicExpectationBuilder',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#ad57f0697174ed29c3e22ff72ca83cbbf',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(std::shared_ptr&lt; StorageT &gt; storage, detail::TimesConfig timesConfig, SequenceConfig sequenceConfig, FinalizePolicyArg &amp;&amp;finalizePolicyArg, PolicyListArg &amp;&amp;policyListArg) noexcept'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a99b43a6ad6e94ecdb44e3c4a43c90363',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(const BasicExpectationBuilder &amp;)=delete'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1972372a9dee2539cc9f1c63beb3c6c6',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(BasicExpectationBuilder &amp;&amp;)=default']]]
+];
