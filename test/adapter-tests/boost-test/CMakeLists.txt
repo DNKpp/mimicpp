@@ -3,14 +3,13 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-add_executable(
-	mimicpp-adapter-tests-boost-test
+set(TARGET_NAME mimicpp-adapter-tests-boost-test)
+add_executable(${TARGET_NAME}
 	"main.cpp"
 )
 
-include(EnableWarnings)
 include(EnableSanitizers)
-enable_sanitizers(mimicpp-adapter-tests-boost-test)
+enable_sanitizers(${TARGET_NAME})
 
 if (WIN32)
 	set(BOOST_ARCHIVE_URL "https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0-cmake.zip")
@@ -26,23 +25,25 @@ CPMAddPackage(
 	SYSTEM				YES
 )
 
-target_link_libraries(
-	mimicpp-adapter-tests-boost-test
+include(EnableAdditionalTestFlags)
+include(EnableWarnings)
+target_link_libraries(${TARGET_NAME}
 	PRIVATE
-	mimicpp::internal::warnings
 	mimicpp::mimicpp
+	mimicpp::internal::additional-test-flags
+	mimicpp::internal::warnings
 	Boost::unit_test_framework
 )
 
 add_test(
 	NAME boost_adapter_test
-	COMMAND mimicpp-adapter-tests-boost-test --run_test=SuccessSuite
+	COMMAND ${TARGET_NAME} --run_test=SuccessSuite
 )
 
 # executes test which are expected to fail
 add_test(
 	NAME failing_boost_adapter_test
-	COMMAND mimicpp-adapter-tests-boost-test --run_test=FailureSuite
+	COMMAND ${TARGET_NAME} --run_test=FailureSuite
 )
 set_property(
 	TEST failing_boost_adapter_test
