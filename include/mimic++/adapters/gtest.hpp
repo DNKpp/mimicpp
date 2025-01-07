@@ -47,6 +47,8 @@ namespace mimicpp::detail::gtest
 
 namespace mimicpp
 {
+    // GCOVR_EXCL_START
+
     /**
      * \brief Reporter for the integration into gtest.
      * \ingroup REPORTING_ADAPTERS
@@ -59,10 +61,13 @@ namespace mimicpp
         &detail::gtest::send_success,
         &detail::gtest::send_warning,
         &detail::gtest::send_fail>;
+
+    // GCOVR_EXCL_STOP
 }
 
 namespace mimicpp::detail::gtest
 {
+    [[maybe_unused]]
     inline const ReporterInstaller<GTestReporterT> installer{};
 }
 

@@ -53,6 +53,8 @@ namespace mimicpp::detail::catch2
 
 namespace mimicpp
 {
+    // GCOVR_EXCL_START
+
     /**
      * \brief Reporter for the integration into Catch2.
      * \ingroup REPORTING_ADAPTERS
@@ -71,10 +73,13 @@ namespace mimicpp
         &detail::catch2::send_success,
         &detail::catch2::send_warning,
         &detail::catch2::send_fail>;
+
+    // GCOVR_EXCL_STOP
 }
 
 namespace mimicpp::detail::catch2
 {
+    [[maybe_unused]]
     inline const ReporterInstaller<Catch2ReporterT> installer{};
 }
 

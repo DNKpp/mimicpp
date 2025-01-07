@@ -45,6 +45,8 @@ namespace mimicpp::detail::boost_test
 
 namespace mimicpp
 {
+    // GCOVR_EXCL_START
+
     /**
      * \brief Reporter for the integration into ``Boost.Test``.
      * \ingroup REPORTING_ADAPTERS
@@ -57,10 +59,13 @@ namespace mimicpp
         &detail::boost_test::send_success,
         &detail::boost_test::send_warning,
         &detail::boost_test::send_fail>;
+
+    // GCOVR_EXCL_STOP
 }
 
 namespace mimicpp::detail::boost_test
 {
+    [[maybe_unused]]
     inline const ReporterInstaller<BoostTestReporterT> installer{};
 }
 

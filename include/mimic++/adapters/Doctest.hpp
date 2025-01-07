@@ -40,6 +40,8 @@ namespace mimicpp::detail::doctest
 
 namespace mimicpp
 {
+    // GCOVR_EXCL_START
+
     /**
      * \brief Reporter for the integration into Doctest.
      * \ingroup REPORTING_ADAPTERS
@@ -52,10 +54,13 @@ namespace mimicpp
         &detail::doctest::send_success,
         &detail::doctest::send_warning,
         &detail::doctest::send_fail>;
+
+    // GCOVR_EXCL_STOP
 }
 
 namespace mimicpp::detail::doctest
 {
+    [[maybe_unused]]
     inline const ReporterInstaller<DoctestReporterT> installer{};
 }
 
