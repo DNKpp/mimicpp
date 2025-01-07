@@ -10,7 +10,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project(
 	mimicpp
 	LANGUAGES		CXX
-	VERSION 5
+	VERSION 6
 	DESCRIPTION		"A modern and (mostly) macro free mocking-framework"
 	HOMEPAGE_URL	"https://github.com/DNKpp/mimicpp"
 )
