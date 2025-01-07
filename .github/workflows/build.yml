@@ -250,7 +250,8 @@ jobs:
             exit 1
           fi
           
-          echo "EXT_COMPILER_FLAGS=$(echo ${EXT_COMPILER_FLAGS} ${CALL_CONVENTION})" >> $GITHUB_ENV
+          # Do NOT remove the double /, as this will cause trouble during cmake configuration (it somehow expands to C:/Program Files/Git/Gv ???!)
+          echo "EXT_COMPILER_FLAGS=$(echo ${EXT_COMPILER_FLAGS} /${CALL_CONVENTION})" >> $GITHUB_ENV
 
       - name: Setup base cmake options
         shell: bash
