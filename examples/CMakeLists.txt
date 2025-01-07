@@ -3,8 +3,8 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-add_executable(
-    mimicpp-examples
+set(TARGET_NAME mimicpp-examples)
+add_executable(${TARGET_NAME}
     "CustomPrinter.cpp"
     "CustomString.cpp"
     "Finalizers.cpp"
@@ -21,28 +21,28 @@ add_executable(
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"
     OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC"))
 
-    message(STATUS "${MESSAGE_PREFIX} Adding RegisterCallConvention example.")
-    target_sources(mimicpp-examples PRIVATE
+    message(DEBUG "${MESSAGE_PREFIX} Adding RegisterCallConvention example.")
+    target_sources(${TARGET_NAME}
+        PRIVATE
         "RegisterCallConvention.cpp"
     )
 
 endif ()
 
 include(EnableSanitizers)
-enable_sanitizers(mimicpp-examples)
+enable_sanitizers(${TARGET_NAME})
 
-find_package(Catch2 REQUIRED)
+include(EnableAdditionalTestFlags)
 include(EnableWarnings)
-include(EnableCoverageFlags)
 include(LinkStdStacktrace)
-target_link_libraries(
-    mimicpp-examples
+find_package(Catch2 REQUIRED)
+target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
+    mimicpp::internal::additional-test-flags
     mimicpp::internal::warnings
-    mimicpp::internal::coverage-flags
     mimicpp::internal::link-std-stacktrace
     Catch2::Catch2WithMain
 )
 
-catch_discover_tests(mimicpp-examples)
+catch_discover_tests(${TARGET_NAME})

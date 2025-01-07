@@ -3,23 +3,22 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-set(TARGET_NAME "mimicpp-adapter-tests-doctest")
+set(TARGET_NAME mimicpp-adapter-tests-doctest)
 add_executable(${TARGET_NAME}
 	"main.cpp"
 )
 
-include(EnableWarnings)
-include(EnableCoverageFlags)
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
+include(EnableAdditionalTestFlags)
+include(EnableWarnings)
 CPMAddPackage("gh:doctest/doctest@2.4.11")
-
 target_link_libraries(${TARGET_NAME}
 	PRIVATE
 	mimicpp::mimicpp
+	mimicpp::internal::additional-test-flags
 	mimicpp::internal::warnings
-	mimicpp::internal::coverage-flags
 	doctest::doctest
 )
 

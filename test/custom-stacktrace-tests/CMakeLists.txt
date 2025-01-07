@@ -9,7 +9,6 @@
 # see: https://eel.is/c++draft/temp.spec#general-5 for the technical reason
 
 set(TARGET_NAME mimicpp-custom-stacktrace-tests)
-
 add_executable(${TARGET_NAME}
     "CustomStacktrace.cpp"
     "EqualityComparison.cpp"
@@ -19,16 +18,16 @@ add_executable(${TARGET_NAME}
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
+include(EnableAdditionalTestFlags)
+include(EnableWarnings)
+include(LinkStdStacktrace)
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
-include(EnableWarnings)
-include(EnableCoverageFlags)
-include(LinkStdStacktrace)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
+    mimicpp::internal::additional-test-flags
     mimicpp::internal::warnings
-    mimicpp::internal::coverage-flags
     mimicpp::internal::link-std-stacktrace
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil

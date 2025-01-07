@@ -40,19 +40,19 @@ target_compile_options(${TARGET_NAME}
     PRIVATE
     # some test files exceed some limits
     # see: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/fatal-error-c1128?view=msvc-170
-    $<$<CXX_COMPILER_ID:MSVC>:/bigobj>
+    "$<$<CXX_COMPILER_ID:MSVC>:/bigobj>"
 )
 
+include(EnableAdditionalTestFlags)
+include(EnableWarnings)
+include(LinkStdStacktrace)
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
-include(EnableWarnings)
-include(EnableCoverageFlags)
-include(LinkStdStacktrace)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
+    mimicpp::internal::additional-test-flags
     mimicpp::internal::warnings
-    mimicpp::internal::coverage-flags
     mimicpp::internal::link-std-stacktrace
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil

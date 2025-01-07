@@ -3,15 +3,13 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-add_executable(
-	mimicpp-adapter-tests-gtest
+set(TARGET_NAME mimicpp-adapter-tests-gtest)
+add_executable(${TARGET_NAME}
 	"main.cpp"
 )
 
-include(EnableWarnings)
-include(EnableCoverageFlags)
 include(EnableSanitizers)
-enable_sanitizers(mimicpp-adapter-tests-gtest)
+enable_sanitizers(${TARGET_NAME})
 
 CPMAddPackage(
 	NAME GTest
@@ -23,14 +21,15 @@ CPMAddPackage(
 						"gtest_force_shared_crt ON"
 )
 
-target_link_libraries(
-	mimicpp-adapter-tests-gtest
+include(EnableAdditionalTestFlags)
+include(EnableWarnings)
+target_link_libraries(${TARGET_NAME}
 	PRIVATE
 	mimicpp::mimicpp
+	mimicpp::internal::additional-test-flags
 	mimicpp::internal::warnings
-	mimicpp::internal::coverage-flags
 	GTest::gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(mimicpp-adapter-tests-gtest)
+gtest_discover_tests(${TARGET_NAME})
