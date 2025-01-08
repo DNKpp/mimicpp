@@ -149,18 +149,18 @@ Enable experimental stacktrace support</h2>
 <dd>
 <a class="el" href="#MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE">MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE</a></dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, which may be removed during any release.</dd></dl>
-<h3><a class="anchor" id="autotoc_md38"></a>
+<h3><a class="anchor" id="autotoc_md39"></a>
 Why is it an experimental feature?</h3>
 <p>Stack traces require significantly more work for each mock call. It can be worthwhile, but it can also be too excessive.</p>
 <hr  />
 <p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE"></a></p>
-<h2><a class="anchor" id="autotoc_md40"></a>
+<h2><a class="anchor" id="autotoc_md41"></a>
 Enable experimental cpptrace stacktrace-backend</h2>
 <p>Name: <code>MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE</code></p>
 <p>When enabled, <code>mimic++</code> installs the <code>cpptrace</code> stacktrace as default stacktrace-backend. </p><dl class="section note"><dt>Note</dt><dd>This option is only available, if <a class="el" href="#MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE">MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</a> is enabled.</dd></dl>
 <p><code>mimic++</code> attempts to detect whether <code>cpptrace</code> is already available before pulling it from GitHub. If you want to reuse an existing <code>cpptrace</code> package, make sure that it can be found via <code>find_package(cpptrace)</code>. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/jeremy-rifkin/cpptrace">https://github.com/jeremy-rifkin/cpptrace</a></dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, which may be removed during any release.</dd></dl>
-<h3><a class="anchor" id="autotoc_md41"></a>
+<h3><a class="anchor" id="autotoc_md42"></a>
 Why is it an experimental feature?</h3>
 <p>Since general stacktrace support is currently declared experimental, this feature is also considered experimental. </p>
 </div><!-- contents -->
