@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['feature_0',['feature',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md35',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md42',1,'Why is it an experimental feature?']]],
+  ['feature_0',['feature',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md35',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md38',1,'Why is it an experimental feature?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md41',1,'Why is it an experimental feature?']]],
   ['finalize_1',['Finalize',['../d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html',1,'mimicpp::MatchReport']]],
   ['finalize_2',['finalize',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0cd1928fa4daf48cb38496d6b02da4d6',1,'mimicpp::BasicExpectationBuilder']]],
   ['finalize_5fcall_3',['finalize_call',['../d3/d1c/classmimicpp_1_1_expectation.html#ad37db14b76d614af34a80397ccc6ffc1',1,'mimicpp::Expectation::finalize_call()'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a76f17839b261d2635a537d95e266e0f2',1,'mimicpp::BasicExpectation::finalize_call()'],['../dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html#ae4a47686619394f81841a765d714b4ce',1,'mimicpp::expectation_policies::ReturnsResultOf::finalize_call()'],['../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html#a3a753d9c68ff93c16898b7b4600d044e',1,'mimicpp::expectation_policies::Throws::finalize_call()'],['../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html#aa309cf22f6a191101d4f6d5e64c8c9da',1,'mimicpp::expectation_policies::InitFinalize::finalize_call()']]],
@@ -22,7 +22,7 @@ var searchData=
   ['formatter_3c_20mimicpp_3a_3avaluecategory_2c_20mimicpp_3a_3achart_20_3e_19',['formatter&lt; mimicpp::ValueCategory, mimicpp::CharT &gt;',['../db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html',1,'mimicpp::format']]],
   ['formatting_20backend_20',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'']]],
   ['forward_5fargs_21',['forward_args',['../d2/d6b/group___m_i_m_i_c_p_p___d_e_t_a_i_l___f_o_r_w_a_r_d___a_r_g_s___a_s___t_u_p_l_e.html',1,'']]],
-  ['framework_22',['Test Framework',['../index.html#autotoc_md66',1,'']]],
+  ['framework_22',['Test Framework',['../index.html#autotoc_md65',1,'']]],
   ['framework_23',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['framework_20adapters_24',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['framework_20configuration_25',['framework configuration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html',1,'']]],
