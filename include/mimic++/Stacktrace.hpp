@@ -47,11 +47,15 @@ namespace mimicpp::stacktrace
      * - If ``std::stacktrace`` is available (i.e. c++23 is available), it's selected as the default stacktrace-backend.
      * - Otherwise, the ``stacktrace::NullBackend`` is selected, which does not provide any valuable information.
      *
+     * \attention The built-in backend-priority is skipped if a non-debug build-mode is detected (i.e. when ``NDEBUG`` is defined),
+     * because neither ``std::stacktrace`` nor ``cpptrace`` do provide correct information.
+     * In this case the ``stacktrace::NullBackend`` is chosen as the active stacktrace-backend.
+     *
      * \details
      * ### Custom Stacktrace Backends
      *
      * In any case, users can define ``mimicpp::custom::find_stacktrace_backend`` to enable their own stacktrace-backend,
-     * which will then be preferred over any other stacktrace-backend.
+     * which will then be preferred over any other stacktrace-backend (even for non-debug builds).
      * That type must contain at least a ``type`` member-alias, which denotes the desired stacktrace-backend implementation.
      *
      * ```cpp
@@ -458,7 +462,8 @@ static_assert(
     mimicpp::stacktrace::backend<mimicpp::stacktrace::NullBackend>,
     "stacktrace::NullBackend does not satisfy the stacktrace::backend concept");
 
-#ifdef MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+#if defined(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE) \
+    && not defined(NDEBUG)
 
     #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
