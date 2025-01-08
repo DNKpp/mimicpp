@@ -88,10 +88,10 @@ var searchData=
   ['mock_5fmethod_85',['MOCK_METHOD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b',1,'InterfaceMock.hpp']]],
   ['mock_5foverloaded_5fmethod_86',['MOCK_OVERLOADED_METHOD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0',1,'InterfaceMock.hpp']]],
   ['mocking_20framework_87',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
-  ['mocks_20and_20variadic_20templates_88',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
+  ['mocks_20and_20variadic_20templates_88',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md13',1,'']]],
   ['modern_20and_20mostly_20macro_20free_20mocking_20framework_89',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['mostly_20macro_20free_20mocking_20framework_90',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['move_20constructor_20and_20assignment_20operator_91',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
-  ['moving_92',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md10',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md12',1,'Moving']]],
-  ['multiple_20inheritance_93',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md8',1,'']]]
+  ['moving_92',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md8',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md10',1,'Moving']]],
+  ['multiple_20inheritance_93',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md12',1,'']]]
 ];

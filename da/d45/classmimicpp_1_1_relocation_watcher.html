@@ -156,10 +156,10 @@ Public Member Functions</h2></td></tr>
 <div class="line">    wrapped.reset();                           <span class="comment">// won&#39;t require a destruct-expectation, as moved-from objects are considered dead</span></div>
 <div class="line">    other.reset();                             <span class="comment">// fulfills the destruct-expectation</span></div>
 <div class="line">    REQUIRE(2 == relocationCounter);           <span class="comment">// let&#39;s see, how often the instance has been relocated</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
 Moving</h2>
 <p>This watcher can be freely moved around, but any relocation events must match with a previously created relocation-expectation.</p>
-<h2><a class="anchor" id="autotoc_md13"></a>
+<h2><a class="anchor" id="autotoc_md11"></a>
 Copying</h2>
 <p>This watcher is copyable, but with very special behaviour.</p>
 <p>As this watcher is generally designed to be part of a bigger object, it would be very limiting not supporting copy-operations at all. The question is, how should a copy look like?</p>
@@ -420,7 +420,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../da/d45/classmimicpp_1_1_relocation_watcher.html">RelocationWatcher</a></li>
-    <li class="footer">Generated on Tue Jan 7 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
+    <li class="footer">Generated on Wed Jan 8 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
   </ul>
 </div>
 </body>

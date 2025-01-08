@@ -44,7 +44,7 @@ var searchData=
   ['controlreport_41',['controlReport',['../db/d11/classmimicpp_1_1_match_report.html#ad9c88790ba56c6ef4e4339cb1212f9bd',1,'mimicpp::MatchReport']]],
   ['conventions_42',['Call-Conventions',['../index.html#autotoc_md58',1,'']]],
   ['conventions_43',['call-conventions',['../d2/dc9/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s.html',1,'']]],
-  ['copying_44',['Copying',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md11',1,'Copying'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md13',1,'Copying']]],
+  ['copying_44',['Copying',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md9',1,'Copying'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md11',1,'Copying']]],
   ['core_20design_45',['Core Design',['../index.html#autotoc_md48',1,'']]],
   ['count_46',['count',['../d7/dd2/structmimicpp_1_1state__inapplicable.html#a4842914d211afe5f1e18df79947026fe',1,'mimicpp::state_inapplicable::count'],['../d0/d12/structmimicpp_1_1state__applicable.html#a2d29022d757fe0d91c340cfcb5eade6b',1,'mimicpp::state_applicable::count'],['../de/d68/structmimicpp_1_1state__saturated.html#a728e616eb8bfe48a3f9dfeeeadbc05c3',1,'mimicpp::state_saturated::count']]],
   ['cpptrace_20stacktrace_20backend_47',['Enable experimental cpptrace stacktrace-backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md40',1,'']]],

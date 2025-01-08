@@ -3,7 +3,7 @@ var searchData=
   ['table_20of_20contents_0',['Table of Contents',['../index.html#autotoc_md45',1,'']]],
   ['tag_1',['Tag',['../d8/dce/namespacemimicpp_1_1sequence.html#ade137497ede2a9436dd532cf2e95fec8',1,'mimicpp::sequence']]],
   ['tag_2',['tag',['../de/d81/structmimicpp_1_1sequence_1_1rating.html#a6f87b0812185f39e0b38c0ef64640076',1,'mimicpp::sequence::rating']]],
-  ['templates_3',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
+  ['templates_3',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md13',1,'']]],
   ['test_20framework_4',['Test Framework',['../index.html#autotoc_md66',1,'']]],
   ['test_20framework_20adapters_5',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['testing_6',['Testing',['../index.html#autotoc_md68',1,'']]],

@@ -12,7 +12,7 @@ var searchData=
   ['and_20char_20types_9',['Bring your own string- and char-types',['../index.html#autotoc_md57',1,'']]],
   ['and_20mostly_20macro_20free_20mocking_20framework_10',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['and_20related_20strings_11',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
-  ['and_20variadic_20templates_12',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
+  ['and_20variadic_20templates_12',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md13',1,'']]],
   ['any_13',['any',['../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any'],['../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any']]],
   ['any_5felement_14',['any_element',['../db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#gaaaaf2818ccdc5527192543d2e3a1e996',1,'mimicpp::matches::range']]],
   ['apply_5fall_15',['apply_all',['../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga1115bba8873d79b6492ad72f1051e22d',1,'mimicpp::then']]],
