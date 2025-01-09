@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Mock.hpp"
+#include "mimic++/matchers/RangeMatchers.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 

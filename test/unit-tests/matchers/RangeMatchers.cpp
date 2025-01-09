@@ -3,9 +3,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/Matcher.hpp"
+#include "mimic++/matchers/RangeMatchers.hpp"
 
-#include "../TestTypes.hpp"
+#include "TestTypes.hpp"
 
 using namespace mimicpp;
 

@@ -10,7 +10,6 @@ add_executable(${TARGET_NAME}
     "Expectation.cpp"
     "ExpectationBuilder.cpp"
     "InterfaceMock.cpp"
-    "Matcher.cpp"
     "mimic++.cpp"
     "Mock.cpp"
     "ObjectWatcher.cpp"
