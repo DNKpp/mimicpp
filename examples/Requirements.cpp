@@ -24,7 +24,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "A simplified syntax for the matches::eq matcher is available.",
+    "A terse syntax for the matches::eq matcher is available.",
     "[example][example::requirements]")
 {
     //! [expect arg equal short]
@@ -61,7 +61,8 @@ TEST_CASE(
     mimicpp::Mock<void(int)> mock{};
 
     SCOPED_EXP mock.expect_call(_)
-        and expect::arg<0>(matches::gt(42));
+        and expect::arg<0>(matches::gt(42))
+        and expect::arg<0>(matches::lt(1338));
     mock(1337);
     //! [expect::arg]
 }
@@ -70,13 +71,12 @@ TEST_CASE(
     "Both requirement types can be combined.",
     "[example][example::requirements]")
 {
-    using mimicpp::matches::le;
     namespace matches = mimicpp::matches;
     namespace expect = mimicpp::expect;
 
     mimicpp::Mock<void(int)> mock{};
 
-    SCOPED_EXP mock.expect_call(le(1337))
+    SCOPED_EXP mock.expect_call(matches::le(1337))
         and expect::arg<0>(matches::gt(42));
     mock(1337);
 }
@@ -177,22 +177,24 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "Ranges can be checked.",
+    "Ranges can be checked with various constraints.",
     "[example][example::requirements]")
 {
-    //! [matcher range sorted]
+    //! [matcher range]
     using mimicpp::matches::_;
     namespace matches = mimicpp::matches;
     namespace expect = mimicpp::expect;
 
     mimicpp::Mock<void(std::span<int>)> mock{};
 
-    SCOPED_EXP mock.expect_call(_)
-        and expect::arg<0>(matches::range::is_sorted());
+    SCOPED_EXP mock.expect_call(!matches::range::is_empty())                // The range argument shall not be empty...
+        and expect::arg<0>(matches::range::has_size(2))                     // ... and contain exactly 2 elements.
+        and expect::all_args(matches::range::is_sorted())                   // With just one argument, expect::arg<0> is equivalent to expect::all_args.
+        and expect::arg<0>(matches::range::any_element(matches::eq(1337))); // At least one element is equal to 1337.
 
     std::vector collection{42, 1337};
     mock(collection);
-    //! [matcher range sorted]
+    //! [matcher range]
 }
 
 TEST_CASE(

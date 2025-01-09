@@ -903,7 +903,7 @@ namespace mimicpp::matches::range
      * \defgroup MATCHERS_RANGE range matchers
      * \ingroup MATCHERS
      * \brief Range specific matchers.
-     * \snippet Requirements.cpp matcher range sorted
+     * \snippet Requirements.cpp matcher range
      *\{
      */
 
