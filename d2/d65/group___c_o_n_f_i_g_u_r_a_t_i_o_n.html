@@ -137,30 +137,30 @@ Enable experimental string-matcher unicode support</h2>
 <p>This will require the rather light-weight library <code>uni-algo</code>, which can be found on github. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/uni-algo/uni-algo">https://github.com/uni-algo/uni-algo</a></dd></dl>
 <p><code>mimic++</code> first tries to find the dependency via <code>find_package</code>, but will fetch it from github if not available.</p>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, and may be removed during any release.</dd></dl>
-<h3><a class="anchor" id="autotoc_md35"></a>
+<h3><a class="anchor" id="autotoc_md36"></a>
 Why is it an experimental feature?</h3>
 <p>I recently switched from <code>cpp-unicodelib</code>, which I didn't like very much for several reasons. <code>uni-algo</code> seems more mature, but I would like to get some feedback, before I'll declare this as a stable feature.</p>
 <hr  />
 <p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE"></a></p>
-<h2><a class="anchor" id="autotoc_md37"></a>
+<h2><a class="anchor" id="autotoc_md38"></a>
 Enable experimental stacktrace support</h2>
 <p>Name: <code>MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</code></p>
 <p>When enabled, <code>mimic++</code> uses stacktrace information to provide more useful information to the users. Users can decide whether they use the c++23 <code>std::stacktrace</code>, the third-party <code>cpptrace</code> or any custom stacktrace-backend. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="../../da/d23/group___s_t_a_c_k_t_r_a_c_e.html">stacktrace</a> documentation </dd>
 <dd>
 <a class="el" href="#MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE">MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE</a></dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, which may be removed during any release.</dd></dl>
-<h3><a class="anchor" id="autotoc_md38"></a>
+<h3><a class="anchor" id="autotoc_md39"></a>
 Why is it an experimental feature?</h3>
 <p>Stack traces require significantly more work for each mock call. It can be worthwhile, but it can also be too excessive.</p>
 <hr  />
 <p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE"></a></p>
-<h2><a class="anchor" id="autotoc_md40"></a>
+<h2><a class="anchor" id="autotoc_md41"></a>
 Enable experimental cpptrace stacktrace-backend</h2>
 <p>Name: <code>MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE</code></p>
 <p>When enabled, <code>mimic++</code> installs the <code>cpptrace</code> stacktrace as default stacktrace-backend. </p><dl class="section note"><dt>Note</dt><dd>This option is only available, if <a class="el" href="#MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE">MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</a> is enabled.</dd></dl>
 <p><code>mimic++</code> attempts to detect whether <code>cpptrace</code> is already available before pulling it from GitHub. If you want to reuse an existing <code>cpptrace</code> package, make sure that it can be found via <code>find_package(cpptrace)</code>. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/jeremy-rifkin/cpptrace">https://github.com/jeremy-rifkin/cpptrace</a></dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, which may be removed during any release.</dd></dl>
-<h3><a class="anchor" id="autotoc_md41"></a>
+<h3><a class="anchor" id="autotoc_md42"></a>
 Why is it an experimental feature?</h3>
 <p>Since general stacktrace support is currently declared experimental, this feature is also considered experimental. </p>
 </div><!-- contents -->
@@ -168,7 +168,7 @@ Why is it an experimental feature?</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Jan 8 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
+    <li class="footer">Generated on Thu Jan 9 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
   </ul>
 </div>
 </body>

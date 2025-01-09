@@ -24,7 +24,7 @@ var searchData=
   ['type_5flist_3c_20params_2e_2e_2e_20_3e_21',['type_list&lt; Params... &gt;',['../db/dc6/structmimicpp_1_1type__list.html',1,'mimicpp']]],
   ['type_5flist_3c_20uniques_2e_2e_2e_20_3e_22',['type_list&lt; Uniques... &gt;',['../db/dc6/structmimicpp_1_1type__list.html',1,'mimicpp']]],
   ['typeindex_23',['typeIndex',['../dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#a5adaad7e0085d86273c6eb6679480356',1,'mimicpp::CallReport::Arg']]],
-  ['types_24',['types',['../index.html#autotoc_md56',1,'Bring your own string- and char-types'],['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md19',1,'Override existing printings or print custom types'],['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'Strings with other character-types']]],
+  ['types_24',['types',['../index.html#autotoc_md56',1,'Bring your own string- and char-types'],['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md19',1,'Override existing printings or print custom types'],['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md13',1,'Strings with other character-types']]],
   ['types_20and_20related_20strings_25',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['typetraits_2ehpp_26',['TypeTraits.hpp',['../d8/d32/_type_traits_8hpp.html',1,'']]]
 ];

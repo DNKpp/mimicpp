@@ -9,7 +9,7 @@ var searchData=
   ['unfulfilledexpectationt_6',['UnfulfilledExpectationT',['../dd/d4f/group___r_e_p_o_r_t_i_n_g.html#gacf8452c7243d54e2117c72fdf526e80c',1,'mimicpp']]],
   ['unicode_20support_7',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md34',1,'']]],
   ['unmatchedcallt_8',['UnmatchedCallT',['../dd/d4f/group___r_e_p_o_r_t_i_n_g.html#ga4ea0d385a653fda742526897e5c2bb5b',1,'mimicpp']]],
-  ['unordered_5feq_9',['unordered_eq',['../db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html#ga8df6332ce4e7f78809fe8c1f900e9e34',1,'mimicpp::matches::range']]],
+  ['unordered_5feq_9',['unordered_eq',['../de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#ga8df6332ce4e7f78809fe8c1f900e9e34',1,'mimicpp::matches::range']]],
   ['unprefixed_20macros_10',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md27',1,'']]],
   ['unreachable_11',['unreachable',['../d1/d11/namespacemimicpp.html#a4020ddef344a068c5d7beea28cd4e5df',1,'mimicpp']]],
   ['use_20tt_20fmt_20tt_20as_20formatting_20backend_12',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'']]],

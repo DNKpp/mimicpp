@@ -17,7 +17,7 @@ var searchData=
   ['signature_5freturn_5ftype_14',['signature_return_type',['../d0/d3b/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_t_u_r_n___t_y_p_e.html',1,'']]],
   ['stacktrace_15',['stacktrace',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html',1,'']]],
   ['string_16',['string',['../d8/d47/group___s_t_r_i_n_g.html',1,'']]],
-  ['string_20matchers_17',['string matchers',['../de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html',1,'']]],
+  ['string_20matchers_17',['string matchers',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html',1,'']]],
   ['string_5fcase_5ffold_5fconverter_18',['string_case_fold_converter',['../d6/d04/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___c_a_s_e___f_o_l_d___c_o_n_v_e_r_t_e_r.html',1,'']]],
   ['string_5fliteral_5fprefix_19',['string_literal_prefix',['../dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html',1,'']]],
   ['string_5ftraits_20',['string_traits',['../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html',1,'']]],

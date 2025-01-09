@@ -275,7 +275,7 @@ var namespacemimicpp =
     [ "make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga877915dccf6f8ac53665ba6774dcfa57", null ],
     [ "to_underlying", "d1/d11/namespacemimicpp.html#add9703907de32b233525df612144e00f", null ],
     [ "unreachable", "d1/d11/namespacemimicpp.html#a4020ddef344a068c5d7beea28cd4e5df", null ],
-    [ "case_insensitive", "de/dd6/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga7211982f3a8ff2ab2165d7803edc9ac8", null ],
+    [ "case_insensitive", "d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga7211982f3a8ff2ab2165d7803edc9ac8", null ],
     [ "is_character_v", "dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html#ga88d25d2fd5d4f51c8a9d81bdfb57bcb2", null ],
     [ "is_overload_set_v", "df/dc6/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d___s_e_t.html#ga39bc4106334393c907fb7c716490135c", null ],
     [ "is_overloadable_with_v", "d1/d9e/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d_a_b_l_e___w_i_t_h.html#ga444a530890b564007a9d8f9b5d035785", null ],

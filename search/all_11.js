@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['range_20matchers_0',['range matchers',['../db/d8a/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r___r_a_n_g_e.html',1,'']]],
+  ['range_20matchers_0',['range matchers',['../de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html',1,'']]],
   ['rating_1',['rating',['../de/d81/structmimicpp_1_1sequence_1_1rating.html',1,'mimicpp::sequence']]],
   ['readme_2emd_2',['README.md',['../d9/dd6/_r_e_a_d_m_e_8md.html',1,'']]],
   ['related_20strings_3',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],

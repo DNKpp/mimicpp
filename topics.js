@@ -2,6 +2,7 @@ var topics =
 [
     [ "expectation", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n" ],
     [ "framework configuration", "d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html", null ],
+    [ "matchers", "d4/d14/group___m_a_t_c_h_e_r_s.html", "d4/d14/group___m_a_t_c_h_e_r_s" ],
     [ "mock", "d8/d12/group___m_o_c_k.html", "d8/d12/group___m_o_c_k" ],
     [ "object-watching", "dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html", "dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g" ],
     [ "reporting", "dd/d4f/group___r_e_p_o_r_t_i_n_g.html", "dd/d4f/group___r_e_p_o_r_t_i_n_g" ],

@@ -100,7 +100,7 @@ $(function(){initNavTree('dc/d5e/classmimicpp_1_1_predicate_matcher.html','../..
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../d9/da2/classmimicpp_1_1_predicate_matcher-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">mimicpp::PredicateMatcher&lt; Predicate, AdditionalArgs &gt; Class Template Reference<div class="ingroups"><a class="el" href="../../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html">expectation</a> &raquo; <a class="el" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html">requirement</a> &#124; <a class="el" href="../../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html">expectation</a> &raquo; <a class="el" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html">requirement</a> &raquo; <a class="el" href="../../dc/d99/group___e_x_p_e_c_t_a_t_i_o_n___m_a_t_c_h_e_r.html">matchers</a></div></div></div>
+  <div class="headertitle"><div class="title">mimicpp::PredicateMatcher&lt; Predicate, AdditionalArgs &gt; Class Template Reference<div class="ingroups"><a class="el" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html">matchers</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -111,8 +111,8 @@ $(function(){initNavTree('dc/d5e/classmimicpp_1_1_predicate_matcher.html','../..
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9dbf713280864e284683693aebf62405" id="r_a9dbf713280864e284683693aebf62405"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9dbf713280864e284683693aebf62405">PredicateMatcher</a> (Predicate predicate, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> fmt, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> invertedFmt, std::tuple&lt; AdditionalArgs... &gt; additionalArgs={}) noexcept(std::is_nothrow_move_constructible_v&lt; Predicate &gt; &amp;&amp;(... &amp;&amp;std::is_nothrow_move_constructible_v&lt; AdditionalArgs &gt;))</td></tr>
-<tr class="separator:a9dbf713280864e284683693aebf62405"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc8b06d41f4cceb5eb2e33eca039fe16" id="r_acc8b06d41f4cceb5eb2e33eca039fe16"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acc8b06d41f4cceb5eb2e33eca039fe16">PredicateMatcher</a> (Predicate predicate, <a class="el" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> fmt, <a class="el" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> invertedFmt, std::tuple&lt; AdditionalArgs... &gt; additionalArgs={}) noexcept(std::is_nothrow_move_constructible_v&lt; Predicate &gt; &amp;&amp;(... &amp;&amp;std::is_nothrow_move_constructible_v&lt; AdditionalArgs &gt;))</td></tr>
+<tr class="separator:acc8b06d41f4cceb5eb2e33eca039fe16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a401b3f81cf64c82778a00c689ff34223" id="r_a401b3f81cf64c82778a00c689ff34223"><td class="memTemplParams" colspan="2">template&lt;typename First, typename... Others&gt; <br />
 requires std::predicate&lt; const Predicate&amp;, First&amp;, Others&amp;..., matches_reference_t&lt;AdditionalArgs&gt;...&gt;</td></tr>
 <tr class="memitem:a401b3f81cf64c82778a00c689ff34223"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a401b3f81cf64c82778a00c689ff34223">matches</a> (First &amp;first, Others &amp;... others) const noexcept(std::is_nothrow_invocable_v&lt; const Predicate &amp;, First &amp;, Others &amp;..., matches_reference_t&lt; AdditionalArgs &gt;... &gt;)</td></tr>
@@ -136,8 +136,8 @@ class mimicpp::PredicateMatcher&lt; Predicate, AdditionalArgs &gt;</div><p>Gener
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9dbf713280864e284683693aebf62405" name="a9dbf713280864e284683693aebf62405"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dbf713280864e284683693aebf62405">&#9670;&#160;</a></span>PredicateMatcher()</h2>
+<a id="acc8b06d41f4cceb5eb2e33eca039fe16" name="acc8b06d41f4cceb5eb2e33eca039fe16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc8b06d41f4cceb5eb2e33eca039fe16">&#9670;&#160;</a></span>PredicateMatcher()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -155,12 +155,12 @@ template&lt;typename Predicate, typename... AdditionalArgs&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>fmt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a></td>          <td class="paramname"><span class="paramname"><em>fmt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>invertedFmt</em></span>, </td>
+          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a></td>          <td class="paramname"><span class="paramname"><em>invertedFmt</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -302,7 +302,7 @@ template&lt;typename Predicate, typename... AdditionalArgs&gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a></li>
-    <li class="footer">Generated on Wed Jan 8 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
+    <li class="footer">Generated on Thu Jan 9 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.1 </li>
   </ul>
 </div>
 </body>
