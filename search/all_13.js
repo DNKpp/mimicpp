@@ -3,7 +3,7 @@ var searchData=
   ['table_20of_20contents_0',['Table of Contents',['../index.html#autotoc_md44',1,'']]],
   ['tag_1',['Tag',['../d8/dce/namespacemimicpp_1_1sequence.html#ade137497ede2a9436dd532cf2e95fec8',1,'mimicpp::sequence']]],
   ['tag_2',['tag',['../de/d81/structmimicpp_1_1sequence_1_1rating.html#a6f87b0812185f39e0b38c0ef64640076',1,'mimicpp::sequence::rating']]],
-  ['templates_3',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
+  ['templates_3',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md11',1,'']]],
   ['test_20framework_4',['Test Framework',['../index.html#autotoc_md65',1,'']]],
   ['test_20framework_20adapters_5',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['testing_6',['Testing',['../index.html#autotoc_md67',1,'']]],
@@ -25,6 +25,6 @@ var searchData=
   ['type_5flist_3c_20uniques_2e_2e_2e_20_3e_22',['type_list&lt; Uniques... &gt;',['../db/dc6/structmimicpp_1_1type__list.html',1,'mimicpp']]],
   ['typeindex_23',['typeIndex',['../dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#a5adaad7e0085d86273c6eb6679480356',1,'mimicpp::CallReport::Arg']]],
   ['types_24',['types',['../index.html#autotoc_md56',1,'Bring your own string- and char-types'],['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md19',1,'Override existing printings or print custom types'],['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'Strings with other character-types']]],
-  ['types_20and_20related_20strings_25',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
+  ['types_20and_20related_20strings_25',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['typetraits_2ehpp_26',['TypeTraits.hpp',['../d8/d32/_type_traits_8hpp.html',1,'']]]
 ];

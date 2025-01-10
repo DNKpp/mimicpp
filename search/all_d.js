@@ -11,7 +11,7 @@ var searchData=
   ['matcher_8',['matcher',['../d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html#a482fdfa38f20ed2c377cd2e18f8af2b4',1,'mimicpp::expectation_policies::matcher_matches_fn']]],
   ['matcher_20integration_9',['Experimental Matcher integration',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md0',1,'']]],
   ['matcher_20integration_10',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md31',1,'']]],
-  ['matcher_20unicode_20support_11',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md35',1,'']]],
+  ['matcher_20unicode_20support_11',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md34',1,'']]],
   ['matcher_5ffor_12',['matcher_for',['../df/d23/conceptmimicpp_1_1matcher__for.html',1,'mimicpp']]],
   ['matcher_5fmatches_5ffn_13',['matcher_matches_fn',['../d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html',1,'mimicpp::expectation_policies']]],
   ['matcher_5ftraits_14',['matcher_traits',['../d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html',1,'mimicpp::custom']]],
@@ -88,10 +88,10 @@ var searchData=
   ['mock_5fmethod_85',['MOCK_METHOD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b',1,'InterfaceMock.hpp']]],
   ['mock_5foverloaded_5fmethod_86',['MOCK_OVERLOADED_METHOD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0',1,'InterfaceMock.hpp']]],
   ['mocking_20framework_87',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
-  ['mocks_20and_20variadic_20templates_88',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
+  ['mocks_20and_20variadic_20templates_88',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md11',1,'']]],
   ['modern_20and_20mostly_20macro_20free_20mocking_20framework_89',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['mostly_20macro_20free_20mocking_20framework_90',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['move_20constructor_20and_20assignment_20operator_91',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
-  ['moving_92',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md10',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md12',1,'Moving']]],
-  ['multiple_20inheritance_93',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md8',1,'']]]
+  ['moving_92',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md8',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md12',1,'Moving']]],
+  ['multiple_20inheritance_93',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md10',1,'']]]
 ];
