@@ -4,18 +4,20 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.15)
+set(MESSAGE_PREFIX "mimic++:")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+include(ReadProjectVersion)
+read_project_version("include/mimic++/Version.hpp" MIMICPP_VERSION)
 
 project(
 	mimicpp
 	LANGUAGES		CXX
-	VERSION 6
+    VERSION ${MIMICPP_VERSION}
 	DESCRIPTION		"A modern and (mostly) macro free mocking-framework"
 	HOMEPAGE_URL	"https://github.com/DNKpp/mimicpp"
 )
-
-set(MESSAGE_PREFIX "mimic++:")
 
 message(STATUS "${MESSAGE_PREFIX} version: v${PROJECT_VERSION} from: ${mimicpp_SOURCE_DIR}")
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)

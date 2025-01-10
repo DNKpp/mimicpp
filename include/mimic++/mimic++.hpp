@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/Version.hpp"
 
 #include "mimic++/Call.hpp"
 #include "mimic++/CallConvention.hpp"
