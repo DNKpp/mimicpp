@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#gacaeaf0bcc3197e6325285d9035a019df":[1,2,0,4],
+"de/df5/_stacktrace_8hpp.html":[5,0,1,16],
+"de/df5/_stacktrace_8hpp_source.html":[5,0,1,16],
 "de/dfc/conceptmimicpp_1_1printer__for.html":[2,0,0,193],
 "de/dfc/conceptmimicpp_1_1printer__for.html":[3,0,7],
 "df/d23/conceptmimicpp_1_1matcher__for.html":[2,0,0,190],

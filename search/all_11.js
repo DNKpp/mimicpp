@@ -4,7 +4,7 @@ var searchData=
   ['rangematchers_2ehpp_1',['RangeMatchers.hpp',['../df/df3/_range_matchers_8hpp.html',1,'']]],
   ['rating_2',['rating',['../de/d81/structmimicpp_1_1sequence_1_1rating.html',1,'mimicpp::sequence']]],
   ['readme_2emd_3',['README.md',['../d9/dd6/_r_e_a_d_m_e_8md.html',1,'']]],
-  ['related_20strings_4',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
+  ['related_20strings_4',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['relocationwatcher_5',['RelocationWatcher',['../da/d45/classmimicpp_1_1_relocation_watcher.html',1,'mimicpp::RelocationWatcher'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#a515ae828d859b8494b23ca7050c24488',1,'mimicpp::RelocationWatcher::RelocationWatcher()=default'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#a507822c29620bdcc0851e78d5f81a1c9',1,'mimicpp::RelocationWatcher::RelocationWatcher(const RelocationWatcher &amp;other)'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#a329211c53e2ff3bbf2c58a72180fed81',1,'mimicpp::RelocationWatcher::RelocationWatcher(RelocationWatcher &amp;&amp;other) noexcept(false)']]],
   ['remove_6',['remove',['../d5/d86/classmimicpp_1_1_expectation_collection.html#addb9c1c2d2e899344cc2194fc906e9ff',1,'mimicpp::ExpectationCollection']]],
   ['report_7',['report',['../d3/d1c/classmimicpp_1_1_expectation.html#a73093b259b40576b1c0b00eeff5a2f0b',1,'mimicpp::Expectation::report()'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a80385a3d307b861b9251627e0b447c90',1,'mimicpp::BasicExpectation::report()']]],
