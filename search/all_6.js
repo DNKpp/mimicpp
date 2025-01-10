@@ -14,7 +14,7 @@ var searchData=
   ['error_3c_20expectationreport_20_3e_11',['Error&lt; ExpectationReport &gt;',['../db/d10/classmimicpp_1_1_error.html',1,'mimicpp']]],
   ['error_3c_20std_3a_3atuple_3c_20callreport_2c_20std_3a_3avector_3c_20matchreport_20_3e_20_3e_20_3e_12',['Error&lt; std::tuple&lt; CallReport, std::vector&lt; MatchReport &gt; &gt; &gt;',['../db/d10/classmimicpp_1_1_error.html',1,'mimicpp']]],
   ['evaluate_5fmatch_5freport_13',['evaluate_match_report',['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga28bf45ff6df85506325c64349d37ca85',1,'mimicpp']]],
-  ['example_14',['Example',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md2',1,'']]],
+  ['example_14',['Example',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md3',1,'']]],
   ['examples_15',['Examples',['../index.html#autotoc_md48',1,'']]],
   ['existing_20printings_20or_20print_20custom_20types_16',['Override existing printings or print custom types',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md19',1,'']]],
   ['expect_5fdestruct_17',['expect_destruct',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#ac451f8b6b44b9a684ca4aa40fb5809a8',1,'mimicpp::LifetimeWatcher']]],

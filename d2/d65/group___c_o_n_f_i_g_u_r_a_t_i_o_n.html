@@ -107,13 +107,13 @@ $(function(){initNavTree('d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html','../../
 <p><code>mimic++</code> offers various configuration options, which are listed below. In general, these options can be enabled by defining a macro with that specified name, before any <code>mimic++</code> header is included. If <code>mimic++</code> is integrated as cmake-target, it also offers appropriate cmake-options with the same name, which can be set during cmake configuration. If an option is enabled, <code>mimic++</code> defines the relevant macro by itself.</p>
 <hr  />
 <p> <a class="anchor" id="MIMICPP_CONFIG_ONLY_PREFIXED_MACROS"></a></p>
-<h2><a class="anchor" id="autotoc_md28"></a>
+<h2><a class="anchor" id="autotoc_md27"></a>
 Disable unprefixed macros</h2>
 <p>Name: <code>MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</code></p>
 <p>By default, <code>mimic++</code> defines several shorthand macros for their longer counterparts, to make it less verbose (e.g <a class="el" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> is shorthand for <a class="el" href="../../d8/d12/group___m_o_c_k.html#ga77b154196ed19c6ad4649b0a604f7601">MIMICPP_SCOPED_EXPECTATION</a>). Even if very unlikely, this may lead to name clashes with other dependencies. Because of that, the option <a class="el" href="#MIMICPP_CONFIG_ONLY_PREFIXED_MACROS">MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</a> is offered, which then disables all shorthand macros.</p>
 <hr  />
 <p> <a class="anchor" id="MIMICPP_CONFIG_USE_FMT"></a></p>
-<h2><a class="anchor" id="autotoc_md30"></a>
+<h2><a class="anchor" id="autotoc_md29"></a>
 Use <code>fmt</code> as formatting backend</h2>
 <p>Name: <code>MIMICPP_CONFIG_USE_FMT</code> </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/fmtlib/fmt">https://github.com/fmtlib/fmt</a></dd></dl>
 <p>As of c++20, the format library is offically part of the <code>std</code>. Unfortunatly some compilers, which already support the majority of c++20 features, do not support the formatting part. In such cases, users can enable this option and thus use <code>fmt</code> instead.</p>
