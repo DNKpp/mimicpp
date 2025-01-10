@@ -1,5 +1,11 @@
 var NAVTREEINDEX1 =
 {
+"d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a":[1,2,11],
+"d4/d14/group___m_a_t_c_h_e_r_s.html#ga5ad9dad2daac36bba4d44337b7833c31":[1,2,4],
+"d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e":[1,2,16],
+"d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825":[1,2,7],
+"d4/d14/group___m_a_t_c_h_e_r_s.html#gaafc5970f07ac2c69f82167ae2189596e":[1,2,9],
+"d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c":[1,2,15],
 "d4/d14/group___m_a_t_c_h_e_r_s.html#gac2b140b5f668cbac26e13144adce8114":[1,2,8],
 "d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0":[1,2,14],
 "d4/d2c/_utility_8hpp.html":[5,0,1,19],
@@ -126,8 +132,8 @@ var NAVTREEINDEX1 =
 "d5/d86/classmimicpp_1_1_expectation_collection.html#addac3b52fbacc023b71132174ef993b0":[1,0,9,9],
 "d5/d86/classmimicpp_1_1_expectation_collection.html#addb9c1c2d2e899344cc2194fc906e9ff":[1,0,9,11],
 "d5/d86/classmimicpp_1_1_expectation_collection.html#af18bb4e89420aa03fb38362c165e3642":[1,0,9,1],
-"d5/d8a/_expectation_8hpp.html":[5,0,1,4],
-"d5/d8a/_expectation_8hpp_source.html":[5,0,1,4],
+"d5/d8a/_expectation_8hpp.html":[5,0,1,5],
+"d5/d8a/_expectation_8hpp_source.html":[5,0,1,5],
 "d5/d8e/structmimicpp_1_1always__false.html":[2,0,0,10],
 "d5/d8e/structmimicpp_1_1always__false.html":[4,0,0,6],
 "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html":[2,0,0,3,6],
@@ -243,11 +249,5 @@ var NAVTREEINDEX1 =
 "d6/d04/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___c_a_s_e___f_o_l_d___c_o_n_v_e_r_t_e_r.html":[1,7,1],
 "d6/d1f/conceptmimicpp_1_1same__as__any.html":[2,0,0,199],
 "d6/d1f/conceptmimicpp_1_1same__as__any.html":[3,0,13],
-"d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html":[1,9,12],
-"d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7":[1,9,12,1],
-"d6/da6/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___d_e_c_a_y.html":[1,9,7],
-"d6/da6/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___d_e_c_a_y.html#gae85f02e3becd1c96735ae9bbcade1212":[1,9,7,1],
-"d6/dc0/classmimicpp_1_1_scoped_expectation.html":[1,0,11],
-"d6/dc0/classmimicpp_1_1_scoped_expectation.html#a03c2a991b53bf9a0dae759a2233b3dfb":[1,0,11,5],
-"d6/dc0/classmimicpp_1_1_scoped_expectation.html#a100b15ef4d509421ea0d5f806b0d0b6e":[1,0,11,8]
+"d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html":[1,9,12]
 };
