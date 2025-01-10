@@ -55,8 +55,9 @@ What sets ``mimic++`` apart from other mocking frameworks is its unique approach
 Mock objects are explicitly defined as function objects, making them directly callable and overloadable.
 This design choice ensures that the framework remains extensible and straightforward to use.
 
-If you're curious to learn more, feel free to explore the [documentation](https://dnkpp.github.io/mimicpp/),
-check out the examples folder, or experiment with the framework online
+If you're curious to learn more, feel free to explore the [documentation](https://dnkpp.github.io/mimicpp/) and the
+cheat-sheet of to the latest release.
+You can also check out the examples folder or experiment with the framework online
 at [godbolt.org](https://godbolt.org/z/fYavvqfeM).
 
 ### Core Design
