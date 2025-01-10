@@ -32,7 +32,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mimic++_cheat-sheet
-          path: mimic++_cheat-sheet.pdf
+          path: docs/mimic++_cheat-sheet.pdf
+          if-no-files-found: error
 
   release-cheat-sheet:
     runs-on: ubuntu-latest
