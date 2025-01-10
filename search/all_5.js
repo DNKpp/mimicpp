@@ -8,7 +8,7 @@ var searchData=
   ['design_5',['Core Design',['../index.html#autotoc_md47',1,'']]],
   ['destructor_6',['Destructor',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md15',1,'']]],
   ['detail_7',['detail',['../db/d59/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s___d_e_t_a_i_l.html',1,'detail'],['../d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html',1,'detail']]],
-  ['disable_20unprefixed_20macros_8',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md27',1,'']]],
+  ['disable_20unprefixed_20macros_8',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md28',1,'']]],
   ['doctest_2ehpp_9',['Doctest.hpp',['../dc/d42/_doctest_8hpp.html',1,'']]],
   ['doctestreportert_10',['DoctestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga858ff9942a3a1336b76a511608b567db',1,'mimicpp']]],
   ['documentation_11',['Documentation',['../index.html#autotoc_md59',1,'']]]
