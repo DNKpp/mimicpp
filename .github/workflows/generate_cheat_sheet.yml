@@ -1,0 +1,60 @@
+#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          https://www.boost.org/LICENSE_1_0.txt)
+
+name: "Generate Cheat-Sheet"
+
+on:
+  push:
+    branches: [ main, development ]
+  release:
+    types: [ released ]
+
+jobs:
+  generate-cheat-sheet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: rlespinasse/drawio-export-action@v2
+        with:
+          action-mode: all
+          path: docs
+          output: .
+          format: pdf
+          crop: true
+          transparent: false
+          remove-page-suffix: true
+
+      - name: Upload Cheat-Sheet
+        uses: actions/upload-artifact@v4
+        with:
+          name: mimic++_cheat-sheet
+          path: mimic++_cheat-sheet.pdf
+
+  release-cheat-sheet:
+    runs-on: ubuntu-latest
+    needs: generate-cheat-sheet
+    if: ${{ github.event_name == 'release' }}
+
+    # this is required for the asset attachment
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: mimic++_cheat-sheet
+          path: .
+
+      - name: Attach Assets to Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "mimic++_cheat-sheet.pdf"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          omitBody: true
+          omitName: true
