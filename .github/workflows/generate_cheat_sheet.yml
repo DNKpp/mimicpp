@@ -8,6 +8,8 @@ name: "Generate Cheat-Sheet"
 on:
   push:
     branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
   release:
     types: [ released ]
 
