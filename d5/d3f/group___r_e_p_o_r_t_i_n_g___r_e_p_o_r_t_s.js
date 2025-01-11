@@ -33,7 +33,8 @@ var group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s =
       [ "fromCategory", "dc/dd0/classmimicpp_1_1_call_report.html#ad0af98e56cddb30e0074ff8dc8fd54ee", null ],
       [ "fromConstness", "dc/dd0/classmimicpp_1_1_call_report.html#a804aea975ce3fd4f4348b4cc1f51f333", null ],
       [ "fromLoc", "dc/dd0/classmimicpp_1_1_call_report.html#aeb9ed8b5928e4a5673abb5e7e34978de", null ],
-      [ "returnTypeIndex", "dc/dd0/classmimicpp_1_1_call_report.html#a75c1ad8b191ba8dd5d36258c38017609", null ]
+      [ "returnTypeIndex", "dc/dd0/classmimicpp_1_1_call_report.html#a75c1ad8b191ba8dd5d36258c38017609", null ],
+      [ "stacktrace", "dc/dd0/classmimicpp_1_1_call_report.html#aea59c14511e6881ce40297e6e1a2a1f2", null ]
     ] ],
     [ "mimicpp::ExpectationReport", "dd/d62/classmimicpp_1_1_expectation_report.html", [
       [ "operator==", "dd/d62/classmimicpp_1_1_expectation_report.html#a9c3682131a4e9fb08a0d9c873c3cca7f", null ],
@@ -60,6 +61,6 @@ var group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s =
     ] ],
     [ "mimicpp::control_state_t", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga7bf75ebaaabf547897c17050ad3f0229", null ],
     [ "mimicpp::evaluate_match_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga28bf45ff6df85506325c64349d37ca85", null ],
-    [ "mimicpp::call::Info::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga2c27e9e8df2ddd35c1d1c5977652247c", null ],
-    [ "mimicpp::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gac15b3bfd4b2baf807baa26875e5b888c", null ]
+    [ "mimicpp::call::Info::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3d607fd28ec8623aae626660a688c88e", null ],
+    [ "mimicpp::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga877915dccf6f8ac53665ba6774dcfa57", null ]
 ];

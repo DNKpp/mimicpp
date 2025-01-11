@@ -1,6 +1,9 @@
 var concepts =
 [
     [ "mimicpp", "d1/d11/namespacemimicpp.html", [
+      [ "stacktrace", "df/d4b/namespacemimicpp_1_1stacktrace.html", [
+        [ "backend", "d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html", null ]
+      ] ],
       [ "expectation_policy_for", "dd/d1d/conceptmimicpp_1_1expectation__policy__for.html", null ],
       [ "finalize_policy_for", "d9/d64/conceptmimicpp_1_1finalize__policy__for.html", null ],
       [ "control_policy", "d4/df8/conceptmimicpp_1_1control__policy.html", null ],

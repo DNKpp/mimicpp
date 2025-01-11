@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['rating_0',['rating',['../de/d81/structmimicpp_1_1sequence_1_1rating.html',1,'mimicpp::sequence']]],
-  ['relocationwatcher_1',['RelocationWatcher',['../da/d45/classmimicpp_1_1_relocation_watcher.html',1,'mimicpp']]],
-  ['requirement_2',['Requirement',['../d1/dde/classmimicpp_1_1expectation__policies_1_1_requirement.html',1,'mimicpp::expectation_policies']]],
-  ['returnsresultof_3',['ReturnsResultOf',['../dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html',1,'mimicpp::expectation_policies']]]
+  ['predicatematcher_0',['PredicateMatcher',['../dc/d5e/classmimicpp_1_1_predicate_matcher.html',1,'mimicpp']]],
+  ['printer_1',['Printer',['../da/d68/classmimicpp_1_1custom_1_1_printer.html',1,'mimicpp::custom']]],
+  ['priority_5ftag_2',['priority_tag',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]],
+  ['priority_5ftag_3c_200_20_3e_3',['priority_tag&lt; 0 &gt;',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]]
 ];

@@ -64,11 +64,11 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d4/d12/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_01const_01_6noexcept_01_4.html#ae12cf9d045d0e8380eb75bbac2e00141",
-"d7/ded/_call_convention_8hpp.html",
-"dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#ga47b81b960992af4596427f024b759251",
-"df/dde/_fwd_8hpp.html#ade137497ede2a9436dd532cf2e95fec8"
+"d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a",
+"d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7",
+"db/d70/_control_policies_8hpp.html",
+"de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#gacaeaf0bcc3197e6325285d9035a019df"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';
