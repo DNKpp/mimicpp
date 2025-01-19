@@ -8,9 +8,12 @@
 
 #pragma once
 
-#include "mimic++/Reporter.hpp"
-
-#include <iterator>
+#if __has_include("mimic++/Reporter.hpp")
+    #include "mimic++/Reporter.hpp"
+#elif not defined(MIMICPP_VERSION)
+    #error "It appears that the test-adapter is not included in the mimic++ project or package." \
+        "If you plan to use it alongside the mimic++-amalgamated header, please ensure to include the adapter-header afterwards."
+#endif
 
 #if __has_include(<catch2/catch_test_macros.hpp>)
     #include <catch2/catch_test_macros.hpp>
@@ -85,7 +88,7 @@ namespace mimicpp::detail::catch2
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
 
-    #include <catch2/matchers/catch_matchers_templated.hpp>
+#include <catch2/matchers/catch_matchers_templated.hpp>
 
 template <typename Matcher>
     requires std::derived_from<Matcher, Catch::Matchers::MatcherGenericBase> // new style

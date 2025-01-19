@@ -8,7 +8,12 @@
 
 #pragma once
 
-#include "mimic++/Reporter.hpp"
+#if __has_include("mimic++/Reporter.hpp")
+    #include "mimic++/Reporter.hpp"
+#elif not defined(MIMICPP_VERSION)
+    #error "It appears that the test-adapter is not included in the mimic++ project or package." \
+        "If you plan to use it alongside the mimic++-amalgamated header, please ensure to include the adapter-header afterwards."
+#endif
 
 #if __has_include(<doctest/doctest.h>)
     #include <doctest/doctest.h>
