@@ -16,8 +16,9 @@ var searchData=
   ['source_5fline_5ffn_13',['source_line_fn',['../db/d18/classmimicpp_1_1_stacktrace.html#acc8a7c0f7debad972cc870808bc94075',1,'mimicpp::Stacktrace']]],
   ['storaget_14',['StorageT',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e58b0aaa6d8d3389e2134dec6e8b47c',1,'mimicpp::BasicExpectationBuilder']]],
   ['string_5fchar_5ft_15',['string_char_t',['../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga104833088686c7c65b347792d9d608d4',1,'mimicpp']]],
-  ['string_5fview_5ft_16',['string_view_t',['../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga09d772b373cd2d8299d1d2693367111c',1,'mimicpp']]],
-  ['stringstreamt_17',['StringStreamT',['../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8',1,'mimicpp']]],
-  ['stringt_18',['StringT',['../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1',1,'mimicpp']]],
-  ['stringviewt_19',['StringViewT',['../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6',1,'mimicpp']]]
+  ['string_5ft_16',['string_t',['../d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html#aa40fd85e9a1f224e9de6854467eb1716',1,'mimicpp::string_traits&lt; std::basic_string&lt; Char, Traits, Allocator &gt; &gt;']]],
+  ['string_5fview_5ft_17',['string_view_t',['../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html#ga09d772b373cd2d8299d1d2693367111c',1,'mimicpp']]],
+  ['stringstreamt_18',['StringStreamT',['../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8',1,'mimicpp']]],
+  ['stringt_19',['StringT',['../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1',1,'mimicpp']]],
+  ['stringviewt_20',['StringViewT',['../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6',1,'mimicpp']]]
 ];

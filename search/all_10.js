@@ -16,6 +16,6 @@ var searchData=
   ['printings_20or_20print_20custom_20types_13',['Override existing printings or print custom types',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md19',1,'']]],
   ['priority_14',['priority',['../de/d81/structmimicpp_1_1sequence_1_1rating.html#ab35a049b08e0096a5a61ed0c60c26e7b',1,'mimicpp::sequence::rating']]],
   ['priority_5ftag_15',['priority_tag',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]],
-  ['priority_5ftag_3c_200_20_3e_16',['priority_tag&lt; 0 &gt;',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]],
+  ['priority_5ftag_3c_200_20_3e_16',['priority_tag&lt; 0 &gt;',['../d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html',1,'mimicpp']]],
   ['push_17',['push',['../d5/d86/classmimicpp_1_1_expectation_collection.html#a78ffe18283eb86c491ff77fbbd787969',1,'mimicpp::ExpectationCollection']]]
 ];

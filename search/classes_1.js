@@ -1,7 +1,7 @@
 var searchData=
 [
   ['backend_5ftraits_0',['backend_traits',['../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html',1,'mimicpp::stacktrace']]],
-  ['backend_5ftraits_3c_20mimicpp_3a_3astacktrace_3a_3anullbackend_20_3e_1',['backend_traits&lt; mimicpp::stacktrace::NullBackend &gt;',['../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html',1,'mimicpp::stacktrace']]],
+  ['backend_5ftraits_3c_20mimicpp_3a_3astacktrace_3a_3anullbackend_20_3e_1',['backend_traits&lt; mimicpp::stacktrace::NullBackend &gt;',['../d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html',1,'mimicpp::stacktrace']]],
   ['basicexpectation_2',['BasicExpectation',['../d3/d4a/classmimicpp_1_1_basic_expectation.html',1,'mimicpp']]],
   ['basicexpectationbuilder_3',['BasicExpectationBuilder',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html',1,'mimicpp']]],
   ['basicreporter_4',['BasicReporter',['../d4/d56/classmimicpp_1_1_basic_reporter.html',1,'mimicpp']]],

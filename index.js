@@ -1,6 +1,5 @@
 var index =
 [
-    [ "", "index.html#autotoc_md43", null ],
     [ "Table of Contents", "index.html#autotoc_md44", null ],
     [ "Introduction", "index.html#autotoc_md46", [
       [ "Core Design", "index.html#autotoc_md47", null ],
