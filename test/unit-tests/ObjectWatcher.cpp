@@ -947,8 +947,8 @@ TEST_CASE(
                 RelocationWatcher>
                 watched{};
 
-            ScopedExpectation exp = watched.expect_relocate();
-            // and expect::never();
+            ScopedExpectation exp = watched.expect_relocate()
+                                and expect::never();
             REQUIRE_THAT(
                 *exp.mock_name(),
                 Catch::Matchers::StartsWith("RelocationWatcher for ")
@@ -962,4 +962,77 @@ TEST_CASE(
 
             return exp;
         });
+}
+
+TEST_CASE(
+    "Watched omits the forwarding functions stacktrace entry.",
+    "[mock][mock::interface]")
+{
+    struct my_base
+    {
+    };
+
+    ScopedReporter reporter{};
+
+    const auto check_stacktrace = [](const Stacktrace& stacktrace, const std::source_location& before, const std::source_location& after) {
+        CHECKED_IF(!stacktrace.empty())
+        {
+            INFO("stacktrace:\n"
+                 << print(stacktrace));
+
+            REQUIRE_THAT(
+                stacktrace.source_file(0u),
+                Catch::Matchers::Equals(before.file_name()));
+            // there is no straight-forward way to check the description
+            REQUIRE(before.line() < stacktrace.source_line(0u));
+            // strict < fails on some compilers
+            REQUIRE(stacktrace.source_line(0u) <= after.line());
+        }
+    };
+
+    SECTION("When LifetimeWatcher is used.")
+    {
+        Watched<my_base, LifetimeWatcher> watched{};
+        MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
+
+        constexpr std::source_location before = std::source_location::current();
+        {
+            Watched other = std::move(watched);
+        }
+        constexpr std::source_location after = std::source_location::current();
+
+        const CallReport& report = std::get<0>(reporter.full_match_reports().front());
+        check_stacktrace(report.stacktrace, before, after);
+    }
+
+    SECTION("When RelocationWatcher is used.")
+    {
+        Watched<my_base, RelocationWatcher> watched{};
+        MIMICPP_SCOPED_EXPECTATION watched.expect_relocate();
+
+        std::source_location before{};
+        std::source_location after{};
+
+        SECTION("When move constructing.")
+        {
+            before = std::source_location::current();
+            Watched other = std::move(watched);
+            after = std::source_location::current();
+
+            const CallReport& report = std::get<0>(reporter.full_match_reports().front());
+            check_stacktrace(report.stacktrace, before, after);
+        }
+
+        SECTION("When move assigning.")
+        {
+            Watched<my_base, RelocationWatcher> other{};
+
+            before = std::source_location::current();
+            other = std::move(watched);
+            after = std::source_location::current();
+
+            const CallReport& report = std::get<0>(reporter.full_match_reports().front());
+            check_stacktrace(report.stacktrace, before, after);
+        }
+    }
 }

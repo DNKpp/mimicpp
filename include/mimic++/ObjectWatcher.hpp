@@ -88,6 +88,13 @@ namespace mimicpp
      */
     class LifetimeWatcher
     {
+        // omits the following entries:
+        // - ~LifetimeWatcher
+        // - ~CombinedWatchers
+        // - ~BasicWatched
+        // - ~Watched
+        static constexpr std::size_t stacktraceSkip = 4u;
+
     public:
         /**
          * \brief Destructor, which reports the call.
@@ -114,7 +121,9 @@ namespace mimicpp
         [[nodiscard]] explicit LifetimeWatcher([[maybe_unused]] const for_base_tag<Base>)
             : LifetimeWatcher{
                   MockSettings{
-                      .name = detail::generate_lifetime_watcher_mock_name<Base>()}}
+                               .name = detail::generate_lifetime_watcher_mock_name<Base>(),
+                               .stacktraceSkip = stacktraceSkip}
+        }
         {
         }
 
@@ -245,6 +254,14 @@ namespace mimicpp
      */
     class RelocationWatcher
     {
+        // omits the following entries:
+        // - RelocationWatcher::handle_move
+        // - RelocationWatcher move ctor/assignment
+        // - CombinedWatchers move ctor/assignment
+        // - BasicWatched move ctor/assignment
+        // - Watched move ctor/assignment
+        static constexpr std::size_t stacktraceSkip = 5u;
+
     public:
         /**
          * \brief Defaulted destructor.
@@ -261,7 +278,9 @@ namespace mimicpp
         [[nodiscard]] explicit RelocationWatcher([[maybe_unused]] const for_base_tag<Base>)
             : RelocationWatcher{
                   MockSettings{
-                      .name = detail::generate_relocation_watcher_mock_name<Base>()}}
+                               .name = detail::generate_relocation_watcher_mock_name<Base>(),
+                               .stacktraceSkip = stacktraceSkip}
+        }
         {
         }
 
@@ -304,7 +323,7 @@ namespace mimicpp
         [[nodiscard]]
         RelocationWatcher(RelocationWatcher&& other) noexcept(false)
         {
-            *this = std::move(other);
+            handle_move(std::move(other));
         }
 
         /**
@@ -314,11 +333,7 @@ namespace mimicpp
          */
         RelocationWatcher& operator=(RelocationWatcher&& other) noexcept(false)
         {
-            other.m_RelocationMock();
-
-            std::ranges::swap(m_MockSettings, other.m_MockSettings);
-            // do not swap here, because we want the target mock to be destroyed NOW
-            m_RelocationMock = std::move(other).m_RelocationMock;
+            handle_move(std::move(other));
 
             return *this;
         }
@@ -344,6 +359,15 @@ namespace mimicpp
         explicit RelocationWatcher(MockSettings settings)
             : m_MockSettings{std::move(settings)}
         {
+        }
+
+        void handle_move(RelocationWatcher&& other)
+        {
+            other.m_RelocationMock();
+
+            std::ranges::swap(m_MockSettings, other.m_MockSettings);
+            // do not swap here, because we want the target mock to be destroyed NOW
+            m_RelocationMock = std::move(other).m_RelocationMock;
         }
     };
 
