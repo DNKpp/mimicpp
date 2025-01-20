@@ -687,5 +687,5 @@ TEST_CASE(
         *expectation.mock_name(),
         Catch::Matchers::ContainsSubstring("derived")
             && Catch::Matchers::EndsWith("::foo")
-            && Catch::Matchers::Matches(R"(.+\sderived\s?::foo)"));
+            && Catch::Matchers::Matches(R"(.+derived::foo)"));
 }
