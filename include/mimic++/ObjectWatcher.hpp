@@ -8,10 +8,34 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Mock.hpp"
 
 #include <stdexcept>
 #include <utility>
+
+namespace mimicpp::detail
+{
+    template <typename Base>
+    [[nodiscard]]
+    static StringT generate_lifetime_watcher_mock_name()
+    {
+        const std::type_index rtti = typeid(Base);
+        StringStreamT out{};
+        out << "LifetimeWatcher for " << rtti.name();
+        return std::move(out).str();
+    }
+
+    template <typename Base>
+    [[nodiscard]]
+    static StringT generate_relocation_watcher_mock_name()
+    {
+        const std::type_index rtti = typeid(Base);
+        StringStreamT out{};
+        out << "RelocationWatcher for " << rtti.name();
+        return std::move(out).str();
+    }
+}
 
 namespace mimicpp
 {
@@ -23,6 +47,15 @@ namespace mimicpp
      *
      *\{
      */
+
+    template <typename Base>
+    struct for_base_tag
+    {
+        using type = Base;
+    };
+
+    template <typename Base>
+    constexpr for_base_tag<Base> for_base_v{};
 
     /**
      * \brief A watcher type, which reports it's destructor calls.
@@ -63,7 +96,7 @@ namespace mimicpp
          */
         ~LifetimeWatcher() noexcept(false)
         {
-            if (const auto destruction = std::exchange(
+            if (const std::unique_ptr destruction = std::exchange(
                     m_DestructionMock,
                     nullptr))
             {
@@ -72,10 +105,18 @@ namespace mimicpp
         }
 
         /**
-         * \brief Defaulted default constructor.
+         * \brief Default constructor.
          */
         [[nodiscard]]
         LifetimeWatcher() = default;
+
+        template <typename Base>
+        [[nodiscard]] explicit LifetimeWatcher([[maybe_unused]] const for_base_tag<Base>)
+            : LifetimeWatcher{
+                  MockSettings{
+                      .name = detail::generate_lifetime_watcher_mock_name<Base>()}}
+        {
+        }
 
         /**
          * \brief Copy-constructor.
@@ -88,8 +129,8 @@ namespace mimicpp
          * \snippet Watcher.cpp watched lifetime-watcher copy-construction violation
          */
         [[nodiscard]]
-        LifetimeWatcher([[maybe_unused]] const LifetimeWatcher& other)
-            : LifetimeWatcher{}
+        LifetimeWatcher(const LifetimeWatcher& other)
+            : LifetimeWatcher{other.m_MockSettings}
         {
         }
 
@@ -108,7 +149,7 @@ namespace mimicpp
          * instance didn't have a valid destruction-expectation.
          * \snippet Watcher.cpp watched lifetime-watcher copy-assignment violation2
          */
-        LifetimeWatcher& operator=([[maybe_unused]] const LifetimeWatcher& other)
+        LifetimeWatcher& operator=(const LifetimeWatcher& other)
         {
             // let's make this a two-step.
             // First destroy the previous instance, which may already report a violation.
@@ -118,7 +159,7 @@ namespace mimicpp
                 LifetimeWatcher temp{std::move(*this)};
             }
 
-            *this = LifetimeWatcher{};
+            *this = LifetimeWatcher{other.m_MockSettings};
 
             return *this;
         }
@@ -161,8 +202,15 @@ namespace mimicpp
 
     private:
         bool m_HasDestructExpectation{};
+        MockSettings m_MockSettings{};
         std::unique_ptr<Mock<void()>> m_DestructionMock{
-            std::make_unique<Mock<void()>>()};
+            std::make_unique<Mock<void()>>(m_MockSettings)};
+
+        [[nodiscard]]
+        explicit LifetimeWatcher(MockSettings settings)
+            : m_MockSettings{std::move(settings)}
+        {
+        }
     };
 
     /**
@@ -209,6 +257,14 @@ namespace mimicpp
         [[nodiscard]]
         RelocationWatcher() = default;
 
+        template <typename Base>
+        [[nodiscard]] explicit RelocationWatcher([[maybe_unused]] const for_base_tag<Base>)
+            : RelocationWatcher{
+                  MockSettings{
+                      .name = detail::generate_relocation_watcher_mock_name<Base>()}}
+        {
+        }
+
         /**
          * \brief Copy-constructor.
          * \param other The other object.
@@ -217,8 +273,8 @@ namespace mimicpp
          * In fact, it simply default-constructs the new instance, without even touching the ``other``.
          */
         [[nodiscard]]
-        RelocationWatcher([[maybe_unused]] const RelocationWatcher& other)
-            : RelocationWatcher{}
+        RelocationWatcher(const RelocationWatcher& other)
+            : RelocationWatcher{other.m_MockSettings}
         {
         }
 
@@ -229,11 +285,13 @@ namespace mimicpp
          * but semantically this does not copy anything.
          * In fact, it simply overrides its internals with a fresh instance, without even touching the ``other``.
          */
-        RelocationWatcher& operator=([[maybe_unused]] const RelocationWatcher& other)
+        RelocationWatcher& operator=(const RelocationWatcher& other)
         {
-            // explicitly circumvent default construct and assign, because that would
+            m_MockSettings = other.m_MockSettings;
+
+            // explicitly circumvent default construct and assign, because otherwise that would
             // involve the move-assignment.
-            m_RelocationMock = Mock<void()>{};
+            m_RelocationMock = Mock<void()>{m_MockSettings};
 
             return *this;
         }
@@ -257,6 +315,9 @@ namespace mimicpp
         RelocationWatcher& operator=(RelocationWatcher&& other) noexcept(false)
         {
             other.m_RelocationMock();
+
+            std::ranges::swap(m_MockSettings, other.m_MockSettings);
+            // do not swap here, because we want the target mock to be destroyed NOW
             m_RelocationMock = std::move(other).m_RelocationMock;
 
             return *this;
@@ -276,16 +337,23 @@ namespace mimicpp
         }
 
     private:
-        Mock<void()> m_RelocationMock{};
+        MockSettings m_MockSettings{};
+        Mock<void()> m_RelocationMock{m_MockSettings};
+
+        [[nodiscard]]
+        explicit RelocationWatcher(MockSettings settings)
+            : m_MockSettings{std::move(settings)}
+        {
+        }
     };
 
-    template <typename T>
-    concept object_watcher = std::is_default_constructible_v<T>
-                          && std::is_copy_constructible_v<T>
-                          && std::is_copy_assignable_v<T>
-                          && std::is_move_constructible_v<T>
-                          && std::is_move_assignable_v<T>
-                          && std::is_destructible_v<T>;
+    template <typename T, typename Base>
+    concept object_watcher_for = std::is_constructible_v<T, for_base_tag<Base>>
+                              && std::is_copy_constructible_v<T>
+                              && std::is_copy_assignable_v<T>
+                              && std::is_move_constructible_v<T>
+                              && std::is_move_assignable_v<T>
+                              && std::is_destructible_v<T>;
 
     namespace detail
     {
@@ -296,7 +364,10 @@ namespace mimicpp
         public:
             ~CombinedWatchers() noexcept(std::is_nothrow_destructible_v<Base>) = default;
 
-            CombinedWatchers() = default;
+            CombinedWatchers()
+                : Watchers{for_base_v<Base>}...
+            {
+            }
 
             CombinedWatchers(const CombinedWatchers&) = default;
             CombinedWatchers& operator=(const CombinedWatchers&) = default;
@@ -391,7 +462,7 @@ namespace mimicpp
      * should print the no-match report to the console. After that, the program will than probably terminate (or halt, if a debugger
      * is attached), but you should at least have an idea, which test is affected.
      */
-    template <typename Base, object_watcher... Watchers>
+    template <typename Base, object_watcher_for<Base>... Watchers>
         requires std::same_as<Base, std::remove_cvref_t<Base>>
     class Watched
         : public detail::BasicWatched<Base, Watchers...>

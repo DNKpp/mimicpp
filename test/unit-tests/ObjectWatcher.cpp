@@ -277,6 +277,74 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "LifetimeWatcher generates appropriate mock name.",
+    "[object-watcher][object-watcher::lifetime]")
+{
+    struct my_base
+    {
+    };
+
+    SECTION("When directly used.")
+    {
+        volatile const auto expectation = std::invoke(
+            []() -> ScopedExpectation {
+                LifetimeWatcher watcher{for_base_v<my_base>};
+                ScopedExpectation exp = watcher.expect_destruct();
+
+                REQUIRE_THAT(
+                    *exp.mock_name(),
+                    Catch::Matchers::StartsWith("LifetimeWatcher for ")
+                        && Catch::Matchers::EndsWith("my_base"));
+
+                return exp;
+            });
+    }
+
+    SECTION("When copied.")
+    {
+        std::optional<LifetimeWatcher> watcher{for_base_v<my_base>};
+        MIMICPP_SCOPED_EXPECTATION watcher->expect_destruct();
+
+        SECTION("Copy constructed.")
+        {
+            volatile const auto expectation = std::invoke(
+                [&]() -> ScopedExpectation {
+                    LifetimeWatcher inner{*watcher};
+                    ScopedExpectation exp = inner.expect_destruct();
+
+                    REQUIRE_THAT(
+                        *exp.mock_name(),
+                        Catch::Matchers::StartsWith("LifetimeWatcher for ")
+                            && Catch::Matchers::EndsWith("my_base"));
+
+                    return exp;
+                });
+        }
+
+        SECTION("Copy assigned.")
+        {
+            volatile const auto expectation = std::invoke(
+                [&]() -> ScopedExpectation {
+                    LifetimeWatcher inner{};
+                    MIMICPP_SCOPED_EXPECTATION inner.expect_destruct();
+
+                    inner = *watcher;
+                    ScopedExpectation exp = inner.expect_destruct();
+
+                    REQUIRE_THAT(
+                        *exp.mock_name(),
+                        Catch::Matchers::StartsWith("LifetimeWatcher for ")
+                            && Catch::Matchers::EndsWith("my_base"));
+
+                    return exp;
+                });
+        }
+
+        watcher.reset();
+    }
+}
+
+TEST_CASE(
     "LifetimeWatcher supports finally::throws policy.",
     "[object-watcher][object-watcher::lifetime]")
 {
@@ -602,6 +670,66 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "RelocationWatcher generates appropriate mock name.",
+    "[object-watcher][object-watcher::relocation]")
+{
+    struct my_base
+    {
+    };
+
+    std::optional<RelocationWatcher> watcher{for_base_v<my_base>};
+    ScopedExpectation exp = watcher->expect_relocate();
+
+    REQUIRE_THAT(
+        exp.mock_name().value(),
+        Catch::Matchers::StartsWith("RelocationWatcher for ")
+            && Catch::Matchers::EndsWith("my_base"));
+
+    RelocationWatcher other = std::move(*watcher);
+    watcher.reset();
+    exp = other.expect_relocate();
+
+    REQUIRE_THAT(
+        exp.mock_name().value(),
+        Catch::Matchers::StartsWith("RelocationWatcher for ")
+            && Catch::Matchers::EndsWith("my_base"));
+
+    watcher = std::move(other);
+    exp = watcher->expect_relocate()
+      and expect::never();
+
+    REQUIRE_THAT(
+        exp.mock_name().value(),
+        Catch::Matchers::StartsWith("RelocationWatcher for ")
+            && Catch::Matchers::EndsWith("my_base"));
+
+    SECTION("Copy constructed.")
+    {
+        RelocationWatcher inner{watcher.value()};
+        ScopedExpectation innerExp = inner.expect_relocate()
+                                 and expect::never();
+
+        REQUIRE_THAT(
+            innerExp.mock_name().value(),
+            Catch::Matchers::StartsWith("RelocationWatcher for ")
+                && Catch::Matchers::EndsWith("my_base"));
+    }
+
+    SECTION("Copy constructed.")
+    {
+        RelocationWatcher inner{};
+        inner = watcher.value();
+        ScopedExpectation innerExp = inner.expect_relocate()
+                                 and expect::never();
+
+        REQUIRE_THAT(
+            innerExp.mock_name().value(),
+            Catch::Matchers::StartsWith("RelocationWatcher for ")
+                && Catch::Matchers::EndsWith("my_base"));
+    }
+}
+
+TEST_CASE(
     "RelocationWatcher supports finally::throws policy.",
     "[object-watcher][object-watcher::relocation]")
 {
@@ -801,4 +929,37 @@ TEST_CASE(
     REQUIRE_THROWS_AS(
         Watched{std::move(watched)},
         NoMatchError);
+}
+
+TEST_CASE(
+    "Watched sets up an appropriate name for each watcher Mock.",
+    "[object-watcher]")
+{
+    struct my_base
+    {
+    };
+
+    volatile const auto expectation = std::invoke(
+        []() -> ScopedExpectation {
+            Watched<
+                my_base,
+                LifetimeWatcher,
+                RelocationWatcher>
+                watched{};
+
+            ScopedExpectation exp = watched.expect_relocate();
+            // and expect::never();
+            REQUIRE_THAT(
+                *exp.mock_name(),
+                Catch::Matchers::StartsWith("RelocationWatcher for ")
+                    && Catch::Matchers::EndsWith("my_base"));
+
+            exp = watched.expect_destruct();
+            REQUIRE_THAT(
+                *exp.mock_name(),
+                Catch::Matchers::StartsWith("LifetimeWatcher for ")
+                    && Catch::Matchers::EndsWith("my_base"));
+
+            return exp;
+        });
 }
