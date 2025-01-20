@@ -992,12 +992,13 @@ TEST_CASE(
 
     SECTION("When LifetimeWatcher is used.")
     {
-        Watched<my_base, LifetimeWatcher> watched{};
+        using WatchedT = Watched<my_base, LifetimeWatcher>;
+        WatchedT watched{};
         MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
 
         constexpr std::source_location before = std::source_location::current();
         {
-            Watched other = std::move(watched);
+            WatchedT other{std::move(watched)};
         }
         constexpr std::source_location after = std::source_location::current();
 
@@ -1007,17 +1008,15 @@ TEST_CASE(
 
     SECTION("When RelocationWatcher is used.")
     {
-        Watched<my_base, RelocationWatcher> watched{};
+        using WatchedT = Watched<my_base, RelocationWatcher>;
+        WatchedT watched{};
         MIMICPP_SCOPED_EXPECTATION watched.expect_relocate();
-
-        std::source_location before{};
-        std::source_location after{};
 
         SECTION("When move constructing.")
         {
-            before = std::source_location::current();
-            Watched other = std::move(watched);
-            after = std::source_location::current();
+            constexpr auto before = std::source_location::current();
+            WatchedT other{std::move(watched)};
+            constexpr auto after = std::source_location::current();
 
             const CallReport& report = std::get<0>(reporter.full_match_reports().front());
             check_stacktrace(report.stacktrace, before, after);
@@ -1025,11 +1024,11 @@ TEST_CASE(
 
         SECTION("When move assigning.")
         {
-            Watched<my_base, RelocationWatcher> other{};
+            WatchedT other{};
 
-            before = std::source_location::current();
+            constexpr auto before = std::source_location::current();
             other = std::move(watched);
-            after = std::source_location::current();
+            constexpr auto after = std::source_location::current();
 
             const CallReport& report = std::get<0>(reporter.full_match_reports().front());
             check_stacktrace(report.stacktrace, before, after);
