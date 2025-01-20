@@ -916,3 +916,31 @@ TEST_CASE(
         mock(1337);
     }
 }
+
+TEST_CASE(
+    "Mocks can have names.",
+    "[mock]")
+{
+    SECTION("When name is set.")
+    {
+        Mock<void()> mock{
+            MockSettings{.name = "MyMock"}};
+        const ScopedExpectation expectation = mock.expect_call()
+                                          and expect::never();
+
+        REQUIRE(expectation.mock_name());
+        REQUIRE_THAT(
+            expectation.mock_name().value(),
+            Catch::Matchers::Equals("MyMock"));
+    }
+
+    SECTION("When name is not set.")
+    {
+        Mock<void()> mock{
+            MockSettings{.name = std::nullopt}};
+        const ScopedExpectation expectation = mock.expect_call()
+                                          and expect::never();
+
+        REQUIRE_FALSE(expectation.mock_name());
+    }
+}

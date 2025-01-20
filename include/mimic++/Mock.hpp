@@ -321,7 +321,7 @@ namespace mimicpp::detail
         [[nodiscard]]
         constexpr auto make_expectation_builder(Args&&... args) const
         {
-            return detail::make_expectation_builder(m_Expectations, std::forward<Args>(args)...)
+            return detail::make_expectation_builder(m_Expectations, m_Settings.name, std::forward<Args>(args)...)
                 && expectation_policies::Category<refQualification>{}
                 && expectation_policies::Constness<constQualification>{};
         }

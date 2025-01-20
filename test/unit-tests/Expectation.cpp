@@ -984,12 +984,12 @@ TEST_CASE(
     {
         mimicpp::GreedySequence sequence{};
 
-        mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection)
+        mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection, std::nullopt)
                                        && expect::times(0, 1)
                                        && expect::in_sequence(sequence)
                                        && finally::returns(42);
 
-        mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection)
+        mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection, std::nullopt)
                                        && expect::times(0, 1)
                                        && expect::in_sequence(sequence)
                                        && finally::returns(1337);
@@ -1001,12 +1001,12 @@ TEST_CASE(
     {
         mimicpp::LazySequence sequence{};
 
-        mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection)
+        mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection, std::nullopt)
                                        && expect::times(0, 1)
                                        && expect::in_sequence(sequence)
                                        && finally::returns(42);
 
-        mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection)
+        mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection, std::nullopt)
                                        && expect::times(0, 1)
                                        && expect::in_sequence(sequence)
                                        && finally::returns(1337);
