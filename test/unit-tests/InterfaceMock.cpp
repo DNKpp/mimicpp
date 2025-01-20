@@ -79,20 +79,28 @@ TEST_CASE(
 {
     SECTION("Just void()")
     {
-        MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(
-            mock,
-            (void()));
+        struct helper
+        {
+            MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(
+                mock,
+                test,
+                (void()));
+        };
 
-        STATIC_REQUIRE(std::is_invocable_r_v<void, decltype(mock)>);
+        STATIC_REQUIRE(std::is_invocable_r_v<void, decltype(helper::mock)>);
     }
 
     SECTION("Just float&(int&&)")
     {
-        MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(
-            mock,
-            (float&(int&&)));
+        struct helper
+        {
+            MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(
+                mock,
+                test,
+                (float&(int&&)));
+        };
 
-        STATIC_REQUIRE(std::is_invocable_r_v<float&, decltype(mock), int&&>);
+        STATIC_REQUIRE(std::is_invocable_r_v<float&, decltype(helper::mock), int&&>);
     }
 }
 
@@ -653,4 +661,31 @@ TEST_CASE(
         // strict < fails on some compilers
         REQUIRE(report.stacktrace.source_line(0u) <= after.line());
     }
+}
+
+TEST_CASE(
+    "Interface mock generates appropriate mock names.",
+    "[mock][mock::interface]")
+{
+    struct interface
+    {
+        virtual ~interface() = default;
+        virtual void foo() = 0;
+    };
+
+    struct derived
+        : public interface
+    {
+        MIMICPP_MOCK_METHOD(foo, void, ());
+    };
+
+    derived mock{};
+    const ScopedExpectation expectation = mock.foo_.expect_call()
+                                      and expect::never();
+    REQUIRE(expectation.mock_name());
+    REQUIRE_THAT(
+        *expectation.mock_name(),
+        Catch::Matchers::ContainsSubstring("derived")
+            && Catch::Matchers::EndsWith("::foo")
+            && Catch::Matchers::Matches(R"(.+\sderived\s?::foo)"));
 }

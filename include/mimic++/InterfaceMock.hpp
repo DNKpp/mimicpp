@@ -246,21 +246,32 @@ namespace mimicpp::detail
     // * detail::indirectly_apply_mock::lambda
     // * the generated interface implementation
     inline constexpr std::size_t interfaceMockStacktraceSkip{3u};
+
+    [[nodiscard]]
+    StringT generate_interface_mock_name([[maybe_unused]] const auto& self, const StringViewT functionName)
+    {
+        const std::type_index rtti = typeid(std::remove_cvref_t<decltype(self)>);
+        StringStreamT out{};
+        out << rtti.name() << "::" << functionName;
+        return std::move(out).str();
+    }
 }
 
 /**
  * \brief Creates a mimicpp::Mock object for the given signatures.
  * \ingroup MOCK_INTERFACES_DETAIL
  * \param mock_name The mock name.
+ * \param fn_name The function name.
  * \param signatures The given signatures. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, signatures)           \
-    ::mimicpp::Mock<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name       \
-    {                                                                        \
-        ::mimicpp::MockSettings                                              \
-        {                                                                    \
-            .stacktraceSkip = ::mimicpp::detail::interfaceMockStacktraceSkip \
-        }                                                                    \
+#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, fn_name, signatures)           \
+    ::mimicpp::Mock<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name                \
+    {                                                                                 \
+        ::mimicpp::MockSettings                                                       \
+        {                                                                             \
+            .name = ::mimicpp::detail::generate_interface_mock_name(*this, #fn_name), \
+            .stacktraceSkip = ::mimicpp::detail::interfaceMockStacktraceSkip          \
+        }                                                                             \
     }
 
 namespace mimicpp
@@ -499,6 +510,7 @@ namespace mimicpp::detail
     MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(fn_name##_, fn_name, __VA_ARGS__) \
     MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                   \
         fn_name##_,                                                        \
+        fn_name,                                                           \
         (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
 
 /**
