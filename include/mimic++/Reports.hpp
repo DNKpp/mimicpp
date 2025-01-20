@@ -11,6 +11,7 @@
 #include "mimic++/Call.hpp"
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Printer.hpp"
+#include "mimic++/Utility.hpp"
 
 #include <algorithm>
 #include <functional>
@@ -330,23 +331,13 @@ namespace mimicpp
     class ExpectationReport
     {
     public:
-        std::optional<StringT> mockName{};
-        std::optional<std::source_location> sourceLocation{};
+        detail::expectation_info expectationInfo{};
         std::optional<StringT> finalizerDescription{};
         std::optional<StringT> timesDescription{};
         std::vector<std::optional<StringT>> expectationDescriptions{};
 
         [[nodiscard]]
-        friend bool operator==(const ExpectationReport& lhs, const ExpectationReport& rhs)
-        {
-            return lhs.mockName == rhs.mockName
-                && lhs.finalizerDescription == rhs.finalizerDescription
-                && lhs.timesDescription == rhs.timesDescription
-                && lhs.expectationDescriptions == rhs.expectationDescriptions
-                && lhs.sourceLocation.has_value() == rhs.sourceLocation.has_value()
-                && (!lhs.sourceLocation.has_value()
-                    || is_same_source_location(*lhs.sourceLocation, *rhs.sourceLocation));
-        }
+        friend bool operator==(const ExpectationReport& lhs, const ExpectationReport& rhs) = default;
     };
 
     template <>
@@ -360,26 +351,23 @@ namespace mimicpp
                 std::move(out),
                 "Expectation report:\n");
 
-            if (report.mockName)
+            if (report.expectationInfo.mockName)
             {
                 out = format::format_to(
                     std::move(out),
                     "mock: {}\n",
-                    *report.mockName);
+                    *report.expectationInfo.mockName);
             }
 
-            if (report.sourceLocation)
-            {
-                out = format::format_to(
-                    std::move(out),
-                    "from: ");
-                out = mimicpp::print(
-                    std::move(out),
-                    *report.sourceLocation);
-                out = format::format_to(
-                    std::move(out),
-                    "\n");
-            }
+            out = format::format_to(
+                std::move(out),
+                "from: ");
+            out = mimicpp::print(
+                std::move(out),
+                report.expectationInfo.sourceLocation);
+            out = format::format_to(
+                std::move(out),
+                "\n");
 
             if (report.timesDescription)
             {

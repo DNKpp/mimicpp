@@ -640,26 +640,13 @@ TEST_CASE(
     "[reporting]")
 {
     const ExpectationReport first{
-        .mockName = "Mock-Name",
-        .sourceLocation = std::source_location::current(),
+        .expectationInfo = detail::expectation_info{
+                                                    .sourceLocation = std::source_location::current(),
+                                                    .mockName = "Mock-Name"},
         .finalizerDescription = "finalizer description",
         .timesDescription = "times description",
-        .expectationDescriptions = {
-            "first expectation description"}};
-
-    SECTION("When mockName differs, reports do not compare equal.")
-    {
-        ExpectationReport second{first};
-        second.mockName = GENERATE(
-            as<std::optional<StringT>>{},
-            std::nullopt,
-            "other mock-name");
-
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
-    }
+        .expectationDescriptions = {"first expectation description"}
+    };
 
     SECTION("When all members are equal, reports compare equal.")
     {
@@ -671,16 +658,16 @@ TEST_CASE(
         REQUIRE(!(second != first));
     }
 
-    SECTION("When source-location differs, reports do not compare equal.")
+    SECTION("When expectation_info differs, reports do not compare equal.")
     {
         ExpectationReport second{first};
-        second.sourceLocation = GENERATE(
-            as<std::optional<std::source_location>>{},
+        second.expectationInfo.mockName = GENERATE(
+            as<std::optional<StringT>>{},
             std::nullopt,
-            std::source_location::current());
+            "other mock-name");
 
-        REQUIRE(!(first == second));
-        REQUIRE(!(second == first));
+        REQUIRE_FALSE(first == second);
+        REQUIRE_FALSE(second == first);
         REQUIRE(first != second);
         REQUIRE(second != first);
     }
@@ -1204,12 +1191,13 @@ TEST_CASE(
     namespace Matches = Catch::Matchers;
 
     ExpectationReport report{
-        .mockName = "Mock-Name",
-        .sourceLocation = std::source_location::current(),
+        .expectationInfo = detail::expectation_info{
+                                                    .sourceLocation = std::source_location::current(),
+                                                    .mockName = "Mock-Name"},
         .finalizerDescription = "finalizer description",
         .timesDescription = "times description",
-        .expectationDescriptions = {
-            "expectation1 description"}};
+        .expectationDescriptions = {"expectation1 description"}
+    };
 
     SECTION("When full report is given.")
     {
@@ -1227,7 +1215,7 @@ TEST_CASE(
 
     SECTION("When mock-name is missing.")
     {
-        report.mockName.reset();
+        report.expectationInfo.mockName.reset();
 
         REQUIRE_THAT(
             print(std::as_const(report)),
@@ -1309,21 +1297,6 @@ TEST_CASE(
                 "Expectation report:\n"
                 "mock: Mock-Name\n"
                 "from: .+\\[\\d+:\\d+\\], .+\n"
-                "times: times description\n"
-                "expects:\n"
-                "\texpectation1 description,\n"
-                "finally: finalizer description\n"));
-    }
-
-    SECTION("When expectation contains no source-location.")
-    {
-        report.sourceLocation.reset();
-
-        REQUIRE_THAT(
-            print(std::as_const(report)),
-            Matches::Equals(
-                "Expectation report:\n"
-                "mock: Mock-Name\n"
                 "times: times description\n"
                 "expects:\n"
                 "\texpectation1 description,\n"
