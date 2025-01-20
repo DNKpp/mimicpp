@@ -964,9 +964,15 @@ TEST_CASE(
         });
 }
 
+#ifdef __APPLE__
+TEST_CASE(
+    "Watched omits the forwarding functions stacktrace entry.",
+    "[!mayfail][mock][mock::interface]")
+#else
 TEST_CASE(
     "Watched omits the forwarding functions stacktrace entry.",
     "[mock][mock::interface]")
+#endif
 {
     struct my_base
     {

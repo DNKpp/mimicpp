@@ -93,11 +93,7 @@ namespace mimicpp
         // - ~CombinedWatchers
         // - ~BasicWatched
         // - ~Watched
-#ifdef __APPLE__
-        static constexpr std::size_t stacktraceSkip = 0u;
-#else
         static constexpr std::size_t stacktraceSkip = 4u;
-#endif
 
     public:
         /**
@@ -264,11 +260,7 @@ namespace mimicpp
         // - CombinedWatchers move ctor/assignment
         // - BasicWatched move ctor/assignment
         // - Watched move ctor/assignment
-#ifdef __APPLE__
-        static constexpr std::size_t stacktraceSkip = 0u;
-#else
         static constexpr std::size_t stacktraceSkip = 5u;
-#endif
 
     public:
         /**
