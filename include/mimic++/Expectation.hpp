@@ -12,6 +12,7 @@
 #include "mimic++/Reporter.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/TypeTraits.hpp"
+#include "mimic++/Utility.hpp"
 
 #include <cassert>
 #include <concepts>
@@ -400,15 +401,6 @@ namespace mimicpp
                                  policy.consume();
                              };
 
-    namespace detail
-    {
-        struct expectation_info
-        {
-            std::source_location sourceLocation = std::source_location::current();
-            std::optional<StringT> mockName = std::nullopt;
-        };
-    }
-
     /**
      * \brief The actual expectation template.
      * \tparam Signature The decayed signature.
@@ -470,8 +462,7 @@ namespace mimicpp
         ExpectationReport report() const override
         {
             return ExpectationReport{
-                .mockName = m_Info.mockName,
-                .sourceLocation = m_Info.sourceLocation,
+                .expectationInfo = m_Info,
                 .finalizerDescription = std::nullopt,
                 .timesDescription = describe_times(),
                 .expectationDescriptions = std::apply(

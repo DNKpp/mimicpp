@@ -223,3 +223,49 @@ TEST_CASE(
         }
     }
 }
+
+TEST_CASE(
+    "detail::expectation_info is equality-comparable.",
+    "[utility]")
+{
+    using namespace mimicpp;
+
+    const detail::expectation_info first{
+        .sourceLocation = std::source_location::current(),
+        .mockName = "MyMock"};
+
+    SECTION("When both sides are equal, they compare equal.")
+    {
+        const detail::expectation_info second{first};
+
+        REQUIRE(first == second);
+        REQUIRE(second == first);
+        REQUIRE_FALSE(first != second);
+        REQUIRE_FALSE(second != first);
+    }
+
+    SECTION("When mock-name differs, reports do not compare equal.")
+    {
+        detail::expectation_info second{first};
+        second.mockName = GENERATE(
+            as<std::optional<StringT>>{},
+            std::nullopt,
+            "Other Mock-Name");
+
+        REQUIRE_FALSE(first == second);
+        REQUIRE_FALSE(second == first);
+        REQUIRE(first != second);
+        REQUIRE(second != first);
+    }
+
+    SECTION("When source-location differs, reports do not compare equal.")
+    {
+        detail::expectation_info second{first};
+        second.sourceLocation = std::source_location::current();
+
+        REQUIRE_FALSE(first == second);
+        REQUIRE_FALSE(second == first);
+        REQUIRE(first != second);
+        REQUIRE(second != first);
+    }
+}
