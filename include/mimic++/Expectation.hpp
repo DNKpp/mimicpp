@@ -193,6 +193,13 @@ namespace mimicpp
          */
         [[nodiscard]]
         virtual constexpr const std::source_location& from() const noexcept = 0;
+
+        /**
+         * \brief Returns the name of the related mock.
+         * \return Immutable reference to the optional mock-name.
+         */
+        [[nodiscard]]
+        virtual constexpr const std::optional<StringT>& mock_name() const noexcept = 0;
     };
 
     /**
@@ -531,6 +538,15 @@ namespace mimicpp
             return m_Info.sourceLocation;
         }
 
+        /**
+         * \copydoc Expectation::mock_name
+         */
+        [[nodiscard]]
+        constexpr const std::optional<StringT>& mock_name() const noexcept override
+        {
+            return m_Info.mockName;
+        }
+
     private:
         expectation_info m_Info;
         ControlPolicyT m_ControlPolicy;
@@ -590,6 +606,8 @@ namespace mimicpp
 
             [[nodiscard]]
             virtual const std::source_location& from() const noexcept = 0;
+            [[nodiscard]]
+            virtual const std::optional<StringT>& mock_name() const noexcept = 0;
 
         protected:
             Concept() = default;
@@ -631,6 +649,12 @@ namespace mimicpp
             const std::source_location& from() const noexcept override
             {
                 return m_Expectation->from();
+            }
+
+            [[nodiscard]]
+            const std::optional<StringT>& mock_name() const noexcept override
+            {
+                return m_Expectation->mock_name();
             }
 
         private:
@@ -722,6 +746,16 @@ namespace mimicpp
         const std::source_location& from() const noexcept
         {
             return m_Inner->from();
+        }
+
+        /**
+         * \brief Queries the stored expectation for the name of the related mock.
+         * \return The stored optional mock-name.
+         */
+        [[nodiscard]]
+        constexpr const std::optional<StringT>& mock_name() const noexcept
+        {
+            return m_Inner->mock_name();
         }
 
     private:

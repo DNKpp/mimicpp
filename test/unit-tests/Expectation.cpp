@@ -29,6 +29,7 @@ namespace
         MAKE_CONST_MOCK0(report, mimicpp::ExpectationReport(), override);
         MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
         MAKE_CONST_MOCK0(from, const std::source_location&(), noexcept override);
+        MAKE_CONST_MOCK0(mock_name, const std::optional<mimicpp::StringT>&(), noexcept override);
         MAKE_CONST_MOCK1(matches, mimicpp::MatchReport(const CallInfoT&), override);
         MAKE_MOCK1(consume, void(const CallInfoT&), override);
         MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
@@ -374,8 +375,7 @@ TEST_CASE(
         FinalizerT{}};
 
     REQUIRE(mimicpp::is_same_source_location(info.sourceLocation, expectation.from()));
-
-    // mockName member is not directly exposed and thus not tested here.
+    REQUIRE(info.mockName == expectation.mock_name());
 }
 
 TEST_CASE(
@@ -897,6 +897,14 @@ TEST_CASE(
             mimicpp::is_same_source_location(
                 loc,
                 std::as_const(expectation)->from()));
+    }
+
+    SECTION("When calling mock_name()")
+    {
+        const auto mockName = GENERATE(as<std::optional<mimicpp::StringT>>{}, std::nullopt, "MyMock");
+        REQUIRE_CALL(*innerExpectation, mock_name())
+            .LR_RETURN(std::ref(mockName));
+        REQUIRE(mockName == std::as_const(expectation)->mock_name());
     }
 
     SECTION("When ScopedExpectation is moved.")
