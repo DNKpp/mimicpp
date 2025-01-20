@@ -358,20 +358,24 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEST_CASE(
-    "mimicpp::BasicExpectation stores std::source_location.",
+    "mimicpp::BasicExpectation stores detail::expectation_info.",
     "[expectation]")
 {
     using ControlPolicyT = ControlPolicyFake;
     using FinalizerT = FinalizerFake<void()>;
 
-    constexpr auto loc = std::source_location::current();
+    const mimicpp::detail::expectation_info info{
+        .sourceLocation = std::source_location::current(),
+        .mockName = GENERATE(as<std::optional<mimicpp::StringT>>{}, std::nullopt, "MyMock")};
 
     mimicpp::BasicExpectation<void(), ControlPolicyT, FinalizerT> expectation{
-        loc,
+        info,
         ControlPolicyT{},
         FinalizerT{}};
 
-    REQUIRE(mimicpp::is_same_source_location(loc, expectation.from()));
+    REQUIRE(mimicpp::is_same_source_location(info.sourceLocation, expectation.from()));
+
+    // mockName member is not directly exposed and thus not tested here.
 }
 
 TEST_CASE(
@@ -393,10 +397,26 @@ TEST_CASE(
 
     ControlPolicyMock times{};
 
+    SECTION("expectation_infos are gathered.")
+    {
+        const mimicpp::detail::expectation_info info{
+            .sourceLocation = std::source_location::current(),
+            .mockName = GENERATE(as<std::optional<mimicpp::StringT>>{}, std::nullopt, "MyMock")};
+
+        mimicpp::BasicExpectation<SignatureT, ControlPolicyFake, FinalizerT> expectation{
+            info,
+            ControlPolicyFake{},
+            FinalizerT{}};
+
+        const mimicpp::MatchReport report = expectation.matches(call);
+        REQUIRE(mimicpp::is_same_source_location(info.sourceLocation, report.sourceLocation.value()));
+        REQUIRE(info.mockName == report.mockName);
+    }
+
     SECTION("With no other expectation policies.")
     {
         mimicpp::BasicExpectation<SignatureT, ControlPolicyT, FinalizerT> expectation{
-            std::source_location::current(),
+            {},
             std::ref(times),
             FinalizerT{}};
 
@@ -444,7 +464,7 @@ TEST_CASE(
     {
         PolicyMockT policy{};
         mimicpp::BasicExpectation<SignatureT, ControlPolicyT, FinalizerT, PolicyRefT> expectation{
-            std::source_location::current(),
+            {},
             std::ref(times),
             FinalizerT{},
             std::ref(policy)};
@@ -545,7 +565,7 @@ TEMPLATE_TEST_CASE(
     SECTION("With no policies at all.")
     {
         mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
-            std::source_location::current(),
+            {},
             ControlPolicyFake{
                               .isSatisfied = true,
                               .stateData = commonFullMatchReport.controlReport},
@@ -565,7 +585,7 @@ TEMPLATE_TEST_CASE(
     {
         PolicyMockT policy{};
         mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
-            std::source_location::current(),
+            {},
             ControlPolicyFake{
                               .isSatisfied = true,
                               .stateData = commonFullMatchReport.controlReport},
@@ -620,7 +640,7 @@ TEMPLATE_TEST_CASE(
         PolicyMockT policy1{};
         PolicyMockT policy2{};
         mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
-            std::source_location::current(),
+            {},
             ControlPolicyFake{
                               .isSatisfied = true,
                               .stateData = commonFullMatchReport.controlReport},
@@ -723,6 +743,26 @@ TEST_CASE(
 
     using FinalizerPolicyT = FinalizerFake<void()>;
 
+    SECTION("expectation_infos are gathered.")
+    {
+        const mimicpp::detail::expectation_info info{
+            .sourceLocation = std::source_location::current(),
+            .mockName = GENERATE(as<std::optional<mimicpp::StringT>>{}, std::nullopt, "MyMock")};
+
+        mimicpp::BasicExpectation<
+            void(),
+            ControlPolicyFake,
+            FinalizerPolicyT>
+            expectation{
+                info,
+                ControlPolicyFake{},
+                FinalizerPolicyT{}};
+
+        const mimicpp::ExpectationReport report = expectation.report();
+        REQUIRE(mimicpp::is_same_source_location(info.sourceLocation, report.sourceLocation.value()));
+        REQUIRE(info.mockName == report.mockName);
+    }
+
     SECTION("Finalizer policy has no description.")
     {
         // Todo:
@@ -738,7 +778,7 @@ TEST_CASE(
             ControlT,
             FinalizerPolicyT>
             expectation{
-                std::source_location::current(),
+                {},
                 ControlT{std::ref(controlPolicy)},
                 FinalizerPolicyT{}};
 
@@ -766,7 +806,7 @@ TEST_CASE(
             FinalizerPolicyT,
             PolicyT>
             expectation{
-                std::source_location::current(),
+                {},
                 ControlPolicyFake{},
                 FinalizerPolicyT{},
                 PolicyT{std::ref(policy)}};
@@ -804,7 +844,7 @@ TEMPLATE_TEST_CASE(
 
     FinalizerT finalizer{};
     mimicpp::BasicExpectation<SignatureT, ControlPolicyFake, FinalizerRefT> expectation{
-        std::source_location::current(),
+        {},
         ControlPolicyFake{},
         std::ref(finalizer)};
 

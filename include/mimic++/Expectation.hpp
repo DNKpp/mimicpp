@@ -400,6 +400,15 @@ namespace mimicpp
                                  policy.consume();
                              };
 
+    namespace detail
+    {
+        struct expectation_info
+        {
+            std::source_location sourceLocation = std::source_location::current();
+            std::optional<StringT> mockName = std::nullopt;
+        };
+    }
+
     /**
      * \brief The actual expectation template.
      * \tparam Signature The decayed signature.
@@ -415,6 +424,8 @@ namespace mimicpp
     class BasicExpectation final
         : public Expectation<Signature>
     {
+        using expectation_info = detail::expectation_info;
+
     public:
         using ControlPolicyT = ControlPolicy;
         using FinalizerT = FinalizePolicy;
@@ -427,7 +438,7 @@ namespace mimicpp
          * \tparam ControlPolicyArg The control-policy constructor argument types.
          * \tparam FinalizerArg The finalize-policy constructor argument types.
          * \tparam PolicyArgs The expectation-policies constructor argument types.
-         * \param sourceLocation The source-location, where the construction has been requested from.
+         * \param info General infos about the expectation.
          * \param controlArg The control-policy constructor argument.
          * \param finalizerArg The finalize-policy constructor argument.
          * \param args The expectation-policies constructor arguments.
@@ -437,11 +448,15 @@ namespace mimicpp
                       && std::constructible_from<FinalizerT, FinalizerArg>
                       && std::constructible_from<PolicyListT, PolicyArgs...>
         constexpr explicit BasicExpectation(
-            const std::source_location& sourceLocation,
+            expectation_info info,
             ControlPolicyArg&& controlArg,
             FinalizerArg&& finalizerArg,
-            PolicyArgs&&... args) noexcept(std::is_nothrow_constructible_v<ControlPolicyT, ControlPolicyArg> && std::is_nothrow_constructible_v<FinalizerT, FinalizerArg> && (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
-            : m_SourceLocation{sourceLocation},
+            PolicyArgs&&... args)
+            noexcept(
+                std::is_nothrow_constructible_v<ControlPolicyT, ControlPolicyArg>
+                && std::is_nothrow_constructible_v<FinalizerT, FinalizerArg>
+                && (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
+            : m_Info{std::move(info)},
               m_ControlPolicy{std::forward<ControlPolicyArg>(controlArg)},
               m_Policies{std::forward<PolicyArgs>(args)...},
               m_Finalizer{std::forward<FinalizerArg>(finalizerArg)}
@@ -455,7 +470,8 @@ namespace mimicpp
         ExpectationReport report() const override
         {
             return ExpectationReport{
-                .sourceLocation = m_SourceLocation,
+                .mockName = m_Info.mockName,
+                .sourceLocation = m_Info.sourceLocation,
                 .finalizerDescription = std::nullopt,
                 .timesDescription = describe_times(),
                 .expectationDescriptions = std::apply(
@@ -487,19 +503,11 @@ namespace mimicpp
         MatchReport matches(const CallInfoT& call) const override
         {
             return MatchReport{
-                .sourceLocation = m_SourceLocation,
+                .mockName = m_Info.mockName,
+                .sourceLocation = m_Info.sourceLocation,
                 .finalizeReport = {std::nullopt},
                 .controlReport = m_ControlPolicy.state(),
-                .expectationReports = std::apply(
-                    [&](const auto&... policies) {
-                        return std::vector<MatchReport::Expectation>{
-                            MatchReport::Expectation{
-                                                     .isMatching = policies.matches(call),
-                                                     .description = policies.describe()}
-                            ...
-                        };
-                    },
-                    m_Policies)};
+                .expectationReports = gather_expectation_reports(call)};
         }
 
         /**
@@ -530,11 +538,11 @@ namespace mimicpp
         [[nodiscard]]
         constexpr const std::source_location& from() const noexcept override
         {
-            return m_SourceLocation;
+            return m_Info.sourceLocation;
         }
 
     private:
-        std::source_location m_SourceLocation;
+        expectation_info m_Info;
         ControlPolicyT m_ControlPolicy;
         PolicyListT m_Policies;
         [[no_unique_address]] FinalizerT m_Finalizer{};
@@ -549,6 +557,21 @@ namespace mimicpp
                     std::ostreambuf_iterator{ss}),
                 m_ControlPolicy.state());
             return std::move(ss).str();
+        }
+
+        [[nodiscard]]
+        std::vector<MatchReport::Expectation> gather_expectation_reports(const CallInfoT& call) const
+        {
+            return std::apply(
+                [&](const auto&... policies) {
+                    return std::vector<MatchReport::Expectation>{
+                        MatchReport::Expectation{
+                                                 .isMatching = policies.matches(call),
+                                                 .description = policies.describe()}
+                        ...
+                    };
+                },
+                m_Policies);
         }
     };
 
