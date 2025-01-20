@@ -296,6 +296,8 @@ namespace mimicpp::detail
             : m_Expectations{std::move(collection)},
               m_Settings{std::move(settings)}
         {
+            assert(m_Settings.name && "Empty mock-name.");
+
             m_Settings.stacktraceSkip += 2u; // skips the operator() and the handle_call from the stacktrace
         }
 
@@ -340,6 +342,64 @@ namespace mimicpp::detail
                 std::make_shared<ExpectationCollection<UniqueSignatures>>()...};
         }
     };
+
+    template <typename T>
+    constexpr auto& print_type(auto& out)
+    {
+        return out << typeid(T).name();
+    }
+
+    template <typename Signature>
+    constexpr auto& print_signature(auto& out)
+    {
+        print_type<signature_return_type_t<Signature>>(out) << "(";
+
+        using param_list_t = signature_param_list_t<Signature>;
+        if constexpr (0u < param_list_t::size)
+        {
+            std::invoke(
+                [&]<typename First, typename... Params>([[maybe_unused]] const type_list<First, Params...>) {
+                    print_type<First>(out);
+                    ((out << ", ", print_type<Params>(out)), ...);
+                },
+                param_list_t{});
+        }
+
+        out << ")";
+
+        if constexpr (Constness::as_const == signature_const_qualification_v<Signature>)
+        {
+            out << " const";
+        }
+
+        if constexpr (ValueCategory::lvalue == signature_ref_qualification_v<Signature>)
+        {
+            out << " &";
+        }
+        else if constexpr (ValueCategory::rvalue == signature_ref_qualification_v<Signature>)
+        {
+            out << " &&";
+        }
+
+        if constexpr (signature_is_noexcept_v<Signature>)
+        {
+            out << " noexcept";
+        }
+
+        return out;
+    }
+
+    template <typename FirstSignature, typename... OtherSignatures>
+    [[nodiscard]]
+    StringT generate_mock_name()
+    {
+        StringStreamT out{};
+        out << "Mock<", print_signature<FirstSignature>(out);
+        ((out << ", ", print_signature<OtherSignatures>(out)), ...);
+        out << ">";
+
+        return std::move(out).str();
+    }
 }
 
 namespace mimicpp
@@ -437,7 +497,7 @@ namespace mimicpp
                       detail::unique_list_t<
                           signature_decay_t<FirstSignature>,
                           signature_decay_t<OtherSignatures>...>>::make(),
-                  settings}
+                  complete_settings(std::move(settings))}
         {
         }
 
@@ -477,6 +537,17 @@ namespace mimicpp
                   settings}...
         // clang-format on
         {
+        }
+
+        [[nodiscard]]
+        static MockSettings complete_settings(MockSettings settings)
+        {
+            if (!settings.name)
+            {
+                settings.name = detail::generate_mock_name<FirstSignature, OtherSignatures...>();
+            }
+
+            return settings;
         }
     };
 

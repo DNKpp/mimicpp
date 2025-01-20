@@ -42,6 +42,7 @@ namespace mimicpp
     template <typename... Args>
     struct type_list
     {
+        static constexpr std::size_t size = sizeof...(Args);
     };
 
     /**

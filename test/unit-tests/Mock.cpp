@@ -934,13 +934,35 @@ TEST_CASE(
             Catch::Matchers::Equals("MyMock"));
     }
 
-    SECTION("When name is not set.")
+    SECTION("When not specified, it will be automatically generated.")
     {
-        Mock<void()> mock{
-            MockSettings{.name = std::nullopt}};
-        const ScopedExpectation expectation = mock.expect_call()
-                                          and expect::never();
+        SECTION("When single signature is given.")
+        {
+            Mock<void()> mock{};
+            const ScopedExpectation expectation = mock.expect_call()
+                                              and expect::never();
 
-        REQUIRE_FALSE(expectation.mock_name());
+            REQUIRE(expectation.mock_name());
+            REQUIRE_THAT(
+                expectation.mock_name().value(),
+                Catch::Matchers::Matches(R"(Mock\<void\(\)\>)"));
+        }
+
+        SECTION("When multiple signatures are given.")
+        {
+            Mock<void(), void(int) const, float(double, int) & noexcept> mock{};
+            const ScopedExpectation expectation = mock.expect_call()
+                                              and expect::never();
+
+            REQUIRE(expectation.mock_name());
+            REQUIRE_THAT(
+                expectation.mock_name().value(),
+                Catch::Matchers::Matches(
+                    R"(Mock\<)"
+                    R"(void\(\), )"
+                    R"(void\(int\) const, )"
+                    R"(float\(double, int\) & noexcept)"
+                    R"(\>)"));
+        }
     }
 }
