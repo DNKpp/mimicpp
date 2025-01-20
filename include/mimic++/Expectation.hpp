@@ -753,7 +753,7 @@ namespace mimicpp
          * \return The stored optional mock-name.
          */
         [[nodiscard]]
-        constexpr const std::optional<StringT>& mock_name() const noexcept
+        const std::optional<StringT>& mock_name() const noexcept
         {
             return m_Inner->mock_name();
         }
