@@ -60,8 +60,12 @@ TEST_CASE(
 
     SECTION("When expectation is unfulfilled, it is reported.")
     {
+        // CodeQL complains about the inner expectationInfo.mockName not being initialized
+        START_WARNING_SUPPRESSION
+        SUPPRESS_MAYBE_UNINITIALIZED
         const mimicpp::ExpectationReport expReport{
             .timesDescription = "times description"};
+        SUPPRESS_MAYBE_UNINITIALIZED
 
         REQUIRE_CALL(*expectation, is_satisfied())
             .RETURN(false);
@@ -276,8 +280,12 @@ TEST_CASE(
     {
     };
 
+    // CodeQL complains about the inner expectationInfo.mockName not being initialized
+    START_WARNING_SUPPRESSION
+    SUPPRESS_MAYBE_UNINITIALIZED
     const mimicpp::ExpectationReport throwingReport{
         .timesDescription = "times description"};
+    STOP_WARNING_SUPPRESSION
 
     const auto matches = [&](const auto& info) {
         try
