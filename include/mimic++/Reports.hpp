@@ -330,6 +330,7 @@ namespace mimicpp
     class ExpectationReport
     {
     public:
+        std::optional<StringT> mockName{};
         std::optional<std::source_location> sourceLocation{};
         std::optional<StringT> finalizerDescription{};
         std::optional<StringT> timesDescription{};
@@ -338,7 +339,8 @@ namespace mimicpp
         [[nodiscard]]
         friend bool operator==(const ExpectationReport& lhs, const ExpectationReport& rhs)
         {
-            return lhs.finalizerDescription == rhs.finalizerDescription
+            return lhs.mockName == rhs.mockName
+                && lhs.finalizerDescription == rhs.finalizerDescription
                 && lhs.timesDescription == rhs.timesDescription
                 && lhs.expectationDescriptions == rhs.expectationDescriptions
                 && lhs.sourceLocation.has_value() == rhs.sourceLocation.has_value()
@@ -357,6 +359,14 @@ namespace mimicpp
             out = format::format_to(
                 std::move(out),
                 "Expectation report:\n");
+
+            if (report.mockName)
+            {
+                out = format::format_to(
+                    std::move(out),
+                    "mock: {}\n",
+                    *report.mockName);
+            }
 
             if (report.sourceLocation)
             {

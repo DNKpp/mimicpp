@@ -640,11 +640,26 @@ TEST_CASE(
     "[reporting]")
 {
     const ExpectationReport first{
+        .mockName = "Mock-Name",
         .sourceLocation = std::source_location::current(),
         .finalizerDescription = "finalizer description",
         .timesDescription = "times description",
         .expectationDescriptions = {
             "first expectation description"}};
+
+    SECTION("When mockName differs, reports do not compare equal.")
+    {
+        ExpectationReport second{first};
+        second.mockName = GENERATE(
+            as<std::optional<StringT>>{},
+            std::nullopt,
+            "other mock-name");
+
+        REQUIRE_FALSE(first == second);
+        REQUIRE_FALSE(second == first);
+        REQUIRE(first != second);
+        REQUIRE(second != first);
+    }
 
     SECTION("When all members are equal, reports compare equal.")
     {
@@ -1135,6 +1150,7 @@ TEST_CASE(
     namespace Matches = Catch::Matchers;
 
     ExpectationReport report{
+        .mockName = "Mock-Name",
         .sourceLocation = std::source_location::current(),
         .finalizerDescription = "finalizer description",
         .timesDescription = "times description",
@@ -1143,6 +1159,22 @@ TEST_CASE(
 
     SECTION("When full report is given.")
     {
+        REQUIRE_THAT(
+            print(std::as_const(report)),
+            Matches::Matches(
+                "Expectation report:\n"
+                "mock: Mock-Name\n"
+                "from: .+\\[\\d+:\\d+\\], .+\n"
+                "times: times description\n"
+                "expects:\n"
+                "\texpectation1 description,\n"
+                "finally: finalizer description\n"));
+    }
+
+    SECTION("When mock-name is missing.")
+    {
+        report.mockName.reset();
+
         REQUIRE_THAT(
             print(std::as_const(report)),
             Matches::Matches(
@@ -1162,6 +1194,7 @@ TEST_CASE(
             print(std::as_const(report)),
             Matches::Matches(
                 "Expectation report:\n"
+                "mock: Mock-Name\n"
                 "from: .+\\[\\d+:\\d+\\], .+\n"
                 "expects:\n"
                 "\texpectation1 description,\n"
@@ -1176,6 +1209,7 @@ TEST_CASE(
             print(std::as_const(report)),
             Matches::Matches(
                 "Expectation report:\n"
+                "mock: Mock-Name\n"
                 "from: .+\\[\\d+:\\d+\\], .+\n"
                 "times: times description\n"
                 "expects:\n"
@@ -1191,6 +1225,7 @@ TEST_CASE(
             print(std::as_const(report)),
             Matches::Matches(
                 "Expectation report:\n"
+                "mock: Mock-Name\n"
                 "from: .+\\[\\d+:\\d+\\], .+\n"
                 "times: times description\n"
                 "finally: finalizer description\n"));
@@ -1204,6 +1239,7 @@ TEST_CASE(
             print(std::as_const(report)),
             Matches::Matches(
                 "Expectation report:\n"
+                "mock: Mock-Name\n"
                 "from: .+\\[\\d+:\\d+\\], .+\n"
                 "times: times description\n"
                 "finally: finalizer description\n"));
@@ -1217,6 +1253,7 @@ TEST_CASE(
             print(std::as_const(report)),
             Matches::Matches(
                 "Expectation report:\n"
+                "mock: Mock-Name\n"
                 "from: .+\\[\\d+:\\d+\\], .+\n"
                 "times: times description\n"
                 "expects:\n"
@@ -1232,6 +1269,7 @@ TEST_CASE(
             print(std::as_const(report)),
             Matches::Equals(
                 "Expectation report:\n"
+                "mock: Mock-Name\n"
                 "times: times description\n"
                 "expects:\n"
                 "\texpectation1 description,\n"
