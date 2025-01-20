@@ -779,6 +779,7 @@ TEST_CASE(
     "[reporting]")
 {
     const MatchReport first{
+        .mockName = "Mock-Name",
         .sourceLocation = std::source_location::current(),
         .finalizeReport = {"finalize description"},
         .controlReport = state_applicable{1, 1, 0},
@@ -794,6 +795,20 @@ TEST_CASE(
         REQUIRE(second == first);
         REQUIRE(!(first != second));
         REQUIRE(!(second != first));
+    }
+
+    SECTION("When mock-name differs, reports do not compare equal.")
+    {
+        MatchReport second{first};
+        second.mockName = GENERATE(
+            as<std::optional<StringT>>{},
+            std::nullopt,
+            "Other Mock-Name");
+
+        REQUIRE_FALSE(first == second);
+        REQUIRE_FALSE(second == first);
+        REQUIRE(first != second);
+        REQUIRE(second != first);
     }
 
     SECTION("When source-location differs, reports do not compare equal.")
@@ -919,6 +934,7 @@ TEST_CASE(
         SECTION("Without any requirements.")
         {
             const MatchReport report{
+                .mockName = "Mock-Name",
                 .sourceLocation = std::source_location::current(),
                 .finalizeReport = {},
                 .controlReport = state_applicable{0, 1, 0},
@@ -929,6 +945,7 @@ TEST_CASE(
                 print(report),
                 Matches::Matches(
                     "Matched expectation: \\{\n"
+                    "mock: Mock-Name\n"
                     "from: .+\\[\\d+:\\d+\\], .+\n"
                     "\\}\n"));
         }
@@ -936,6 +953,7 @@ TEST_CASE(
         SECTION("When contains requirements.")
         {
             const MatchReport report{
+                .mockName = "Mock-Name",
                 .sourceLocation = std::source_location::current(),
                 .finalizeReport = {},
                 .controlReport = state_applicable{0, 1, 0},
@@ -948,6 +966,7 @@ TEST_CASE(
                 print(report),
                 Matches::Matches(
                     "Matched expectation: \\{\n"
+                    "mock: Mock-Name\n"
                     "from: .+\\[\\d+:\\d+\\], .+\n"
                     "passed:\n"
                     "\tRequirement1 description,\n"
@@ -963,6 +982,7 @@ TEST_CASE(
             SECTION("Is saturated.")
             {
                 const MatchReport report{
+                    .mockName = "Mock-Name",
                     .sourceLocation = std::source_location::current(),
                     .finalizeReport = {},
                     .controlReport = state_saturated{0, 42, 42},
@@ -973,6 +993,7 @@ TEST_CASE(
                     print(report),
                     Matches::Matches(
                         "Inapplicable, but otherwise matched expectation: \\{\n"
+                        "mock: Mock-Name\n"
                         "reason: already saturated \\(matched 42 times\\)\n"
                         "from: .+\\[\\d+:\\d+\\], .+\n"
                         "\\}\n"));
@@ -981,6 +1002,7 @@ TEST_CASE(
             SECTION("Is inapplicable.")
             {
                 const MatchReport report{
+                    .mockName = "Mock-Name",
                     .sourceLocation = std::source_location::current(),
                     .finalizeReport = {},
                     .controlReport = state_inapplicable{
@@ -997,6 +1019,7 @@ TEST_CASE(
                     print(report),
                     Matches::Matches(
                         "Inapplicable, but otherwise matched expectation: \\{\n"
+                        "mock: Mock-Name\n"
                         "reason: accepts further matches \\(matched 5 out of 42 times\\),\n"
                         "\tbut is not the current element of 2 sequence\\(s\\) \\(3 total\\).\n"
                         "from: .+\\[\\d+:\\d+\\], .+\n"
@@ -1007,6 +1030,7 @@ TEST_CASE(
         SECTION("When contains requirements.")
         {
             const MatchReport report{
+                .mockName = "Mock-Name",
                 .sourceLocation = std::source_location::current(),
                 .finalizeReport = {},
                 .controlReport = state_saturated{0, 42, 42},
@@ -1019,6 +1043,7 @@ TEST_CASE(
                 print(report),
                 Matches::Matches(
                     "Inapplicable, but otherwise matched expectation: \\{\n"
+                    "mock: Mock-Name\n"
                     "reason: already saturated \\(matched 42 times\\)\n"
                     "from: .+\\[\\d+:\\d+\\], .+\n"
                     "passed:\n"
@@ -1033,6 +1058,7 @@ TEST_CASE(
         SECTION("When contains only failed requirements.")
         {
             const MatchReport report{
+                .mockName = "Mock-Name",
                 .sourceLocation = std::source_location::current(),
                 .finalizeReport = {},
                 .controlReport = state_applicable{0, 1, 0},
@@ -1045,6 +1071,7 @@ TEST_CASE(
                 print(report),
                 Matches::Matches(
                     "Unmatched expectation: \\{\n"
+                    "mock: Mock-Name\n"
                     "from: .+\\[\\d+:\\d+\\], .+\n"
                     "failed:\n"
                     "\tRequirement1 description,\n"
@@ -1055,6 +1082,7 @@ TEST_CASE(
         SECTION("When contains only mixed requirements.")
         {
             const MatchReport report{
+                .mockName = "Mock-Name",
                 .sourceLocation = std::source_location::current(),
                 .finalizeReport = {},
                 .controlReport = state_applicable{0, 1, 0},
@@ -1067,6 +1095,7 @@ TEST_CASE(
                 print(report),
                 Matches::Matches(
                     "Unmatched expectation: \\{\n"
+                    "mock: Mock-Name\n"
                     "from: .+\\[\\d+:\\d+\\], .+\n"
                     "failed:\n"
                     "\tRequirement2 description,\n"
@@ -1076,20 +1105,45 @@ TEST_CASE(
         }
     }
 
+    static const std::array<control_state_t, 3> commonControlStates{
+        state_applicable{0, 1, 0},
+        state_saturated{0, 42, 42},
+        state_inapplicable{
+            .min = 0,
+            .max = 42,
+            .count = 5,
+            .sequenceRatings = {
+                sequence::rating{0, sequence::Tag{123}}},
+            .inapplicableSequences = {sequence::Tag{1337}, sequence::Tag{1338}}}
+    };
+
     SECTION("When source location is empty, that information is omitted.")
     {
         const MatchReport report{
+            .mockName = "Mock-Name",
             .sourceLocation = std::nullopt,
             .finalizeReport = {},
-            .controlReport = state_applicable{0, 1, 0},
+            .controlReport = GENERATE(from_range(commonControlStates)),
             .expectationReports = {}
         };
 
         REQUIRE_THAT(
             print(report),
-            Matches::Matches(
-                "Matched expectation: \\{\n"
-                "\\}\n"));
+            !Matches::ContainsSubstring("\nfrom:"));
+    }
+
+    SECTION("When mock-name is empty, that information is omitted.")
+    {
+        const MatchReport report{
+            .sourceLocation = std::source_location::current(),
+            .finalizeReport = {},
+            .controlReport = GENERATE(from_range(commonControlStates)),
+            .expectationReports = {}
+        };
+
+        REQUIRE_THAT(
+            print(report),
+            !Matches::ContainsSubstring("\nmock:"));
     }
 }
 

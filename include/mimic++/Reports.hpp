@@ -452,6 +452,7 @@ namespace mimicpp
             friend bool operator==(const Expectation&, const Expectation&) = default;
         };
 
+        std::optional<StringT> mockName{};
         std::optional<std::source_location> sourceLocation{};
         Finalize finalizeReport{};
         control_state_t controlReport{};
@@ -460,7 +461,8 @@ namespace mimicpp
         [[nodiscard]]
         friend bool operator==(const MatchReport& lhs, const MatchReport& rhs)
         {
-            return lhs.finalizeReport == rhs.finalizeReport
+            return lhs.mockName == rhs.mockName
+                && lhs.finalizeReport == rhs.finalizeReport
                 && lhs.controlReport == rhs.controlReport
                 && lhs.expectationReports == rhs.expectationReports
                 && lhs.sourceLocation.has_value() == rhs.sourceLocation.has_value()
@@ -515,6 +517,7 @@ namespace mimicpp
                 }
             }
 
+            bool printReason = false;
             switch (evaluate_match_report(report))
             {
             case MatchResult::full:
@@ -526,12 +529,8 @@ namespace mimicpp
             case MatchResult::inapplicable:
                 out = format::format_to(
                     std::move(out),
-                    "Inapplicable, but otherwise matched expectation: {{\n"
-                    "reason: ");
-                out = std::visit(
-                    std::bind_front(control_state_printer{}, std::move(out)),
-                    report.controlReport);
-                out = format::format_to(std::move(out), "\n");
+                    "Inapplicable, but otherwise matched expectation: {{\n");
+                printReason = true;
                 break;
 
             case MatchResult::none:
@@ -543,7 +542,24 @@ namespace mimicpp
             // GCOVR_EXCL_START
             default: // NOLINT(clang-diagnostic-covered-switch-default)
                 unreachable();
-                // GCOVR_EXCL_STOP
+            // GCOVR_EXCL_STOP
+            }
+
+            if (report.mockName)
+            {
+                out = format::format_to(
+                    std::move(out),
+                    "mock: {}\n",
+                    *report.mockName);
+            }
+
+            if (printReason)
+            {
+                out = format::format_to(std::move(out), "reason: ");
+                out = std::visit(
+                    std::bind_front(control_state_printer{}, std::move(out)),
+                    report.controlReport);
+                out = format::format_to(std::move(out), "\n");
             }
 
             if (report.sourceLocation)
