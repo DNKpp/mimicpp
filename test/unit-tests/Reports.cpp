@@ -635,14 +635,23 @@ TEST_CASE(
     }
 }
 
+namespace
+{
+    [[nodiscard]]
+    detail::expectation_info make_common_expectation_info(const std::source_location& loc = std::source_location::current())
+    {
+        return detail::expectation_info{
+            .sourceLocation = loc,
+            .mockName = "Mock-Name"};
+    }
+}
+
 TEST_CASE(
     "ExpectationReport is equality comparable.",
     "[reporting]")
 {
     const ExpectationReport first{
-        .expectationInfo = detail::expectation_info{
-                                                    .sourceLocation = std::source_location::current(),
-                                                    .mockName = "Mock-Name"},
+        .expectationInfo = make_common_expectation_info(),
         .finalizerDescription = "finalizer description",
         .timesDescription = "times description",
         .expectationDescriptions = {"first expectation description"}
@@ -766,8 +775,7 @@ TEST_CASE(
     "[reporting]")
 {
     const MatchReport first{
-        .mockName = "Mock-Name",
-        .sourceLocation = std::source_location::current(),
+        .expectationInfo = make_common_expectation_info(),
         .finalizeReport = {"finalize description"},
         .controlReport = state_applicable{1, 1, 0},
         .expectationReports = {
@@ -784,27 +792,13 @@ TEST_CASE(
         REQUIRE(!(second != first));
     }
 
-    SECTION("When mock-name differs, reports do not compare equal.")
+    SECTION("When expectation_info differs, reports do not compare equal.")
     {
         MatchReport second{first};
-        second.mockName = GENERATE(
+        second.expectationInfo.mockName = GENERATE(
             as<std::optional<StringT>>{},
             std::nullopt,
-            "Other Mock-Name");
-
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
-    }
-
-    SECTION("When source-location differs, reports do not compare equal.")
-    {
-        MatchReport second{first};
-        second.sourceLocation = GENERATE(
-            as<std::optional<std::source_location>>{},
-            std::nullopt,
-            std::source_location::current());
+            "other mock-name");
 
         REQUIRE_FALSE(first == second);
         REQUIRE_FALSE(second == first);
@@ -921,8 +915,7 @@ TEST_CASE(
         SECTION("Without any requirements.")
         {
             const MatchReport report{
-                .mockName = "Mock-Name",
-                .sourceLocation = std::source_location::current(),
+                .expectationInfo = make_common_expectation_info(),
                 .finalizeReport = {},
                 .controlReport = state_applicable{0, 1, 0},
                 .expectationReports = {}
@@ -940,8 +933,7 @@ TEST_CASE(
         SECTION("When contains requirements.")
         {
             const MatchReport report{
-                .mockName = "Mock-Name",
-                .sourceLocation = std::source_location::current(),
+                .expectationInfo = make_common_expectation_info(),
                 .finalizeReport = {},
                 .controlReport = state_applicable{0, 1, 0},
                 .expectationReports = {
@@ -969,8 +961,7 @@ TEST_CASE(
             SECTION("Is saturated.")
             {
                 const MatchReport report{
-                    .mockName = "Mock-Name",
-                    .sourceLocation = std::source_location::current(),
+                    .expectationInfo = make_common_expectation_info(),
                     .finalizeReport = {},
                     .controlReport = state_saturated{0, 42, 42},
                     .expectationReports = {}
@@ -989,8 +980,7 @@ TEST_CASE(
             SECTION("Is inapplicable.")
             {
                 const MatchReport report{
-                    .mockName = "Mock-Name",
-                    .sourceLocation = std::source_location::current(),
+                    .expectationInfo = make_common_expectation_info(),
                     .finalizeReport = {},
                     .controlReport = state_inapplicable{
                                        .min = 0,
@@ -1017,8 +1007,7 @@ TEST_CASE(
         SECTION("When contains requirements.")
         {
             const MatchReport report{
-                .mockName = "Mock-Name",
-                .sourceLocation = std::source_location::current(),
+                .expectationInfo = make_common_expectation_info(),
                 .finalizeReport = {},
                 .controlReport = state_saturated{0, 42, 42},
                 .expectationReports = {
@@ -1045,8 +1034,7 @@ TEST_CASE(
         SECTION("When contains only failed requirements.")
         {
             const MatchReport report{
-                .mockName = "Mock-Name",
-                .sourceLocation = std::source_location::current(),
+                .expectationInfo = make_common_expectation_info(),
                 .finalizeReport = {},
                 .controlReport = state_applicable{0, 1, 0},
                 .expectationReports = {
@@ -1069,8 +1057,7 @@ TEST_CASE(
         SECTION("When contains only mixed requirements.")
         {
             const MatchReport report{
-                .mockName = "Mock-Name",
-                .sourceLocation = std::source_location::current(),
+                .expectationInfo = make_common_expectation_info(),
                 .finalizeReport = {},
                 .controlReport = state_applicable{0, 1, 0},
                 .expectationReports = {
@@ -1104,25 +1091,10 @@ TEST_CASE(
             .inapplicableSequences = {sequence::Tag{1337}, sequence::Tag{1338}}}
     };
 
-    SECTION("When source location is empty, that information is omitted.")
-    {
-        const MatchReport report{
-            .mockName = "Mock-Name",
-            .sourceLocation = std::nullopt,
-            .finalizeReport = {},
-            .controlReport = GENERATE(from_range(commonControlStates)),
-            .expectationReports = {}
-        };
-
-        REQUIRE_THAT(
-            print(report),
-            !Matches::ContainsSubstring("\nfrom:"));
-    }
-
     SECTION("When mock-name is empty, that information is omitted.")
     {
         const MatchReport report{
-            .sourceLocation = std::source_location::current(),
+            .expectationInfo = {std::source_location::current(), std::nullopt},
             .finalizeReport = {},
             .controlReport = GENERATE(from_range(commonControlStates)),
             .expectationReports = {}
@@ -1191,9 +1163,7 @@ TEST_CASE(
     namespace Matches = Catch::Matchers;
 
     ExpectationReport report{
-        .expectationInfo = detail::expectation_info{
-                                                    .sourceLocation = std::source_location::current(),
-                                                    .mockName = "Mock-Name"},
+        .expectationInfo = make_common_expectation_info(),
         .finalizerDescription = "finalizer description",
         .timesDescription = "times description",
         .expectationDescriptions = {"expectation1 description"}

@@ -494,8 +494,7 @@ namespace mimicpp
         MatchReport matches(const CallInfoT& call) const override
         {
             return MatchReport{
-                .mockName = m_Info.mockName,
-                .sourceLocation = m_Info.sourceLocation,
+                .expectationInfo = m_Info,
                 .finalizeReport = {std::nullopt},
                 .controlReport = m_ControlPolicy.state(),
                 .expectationReports = gather_expectation_reports(call)};

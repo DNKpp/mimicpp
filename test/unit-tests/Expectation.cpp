@@ -409,8 +409,7 @@ TEST_CASE(
             FinalizerT{}};
 
         const mimicpp::MatchReport report = expectation.matches(call);
-        REQUIRE(mimicpp::is_same_source_location(info.sourceLocation, report.sourceLocation.value()));
-        REQUIRE(info.mockName == report.mockName);
+        REQUIRE(info == report.expectationInfo);
     }
 
     SECTION("With no other expectation policies.")

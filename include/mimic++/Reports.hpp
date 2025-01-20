@@ -440,23 +440,13 @@ namespace mimicpp
             friend bool operator==(const Expectation&, const Expectation&) = default;
         };
 
-        std::optional<StringT> mockName{};
-        std::optional<std::source_location> sourceLocation{};
+        detail::expectation_info expectationInfo{};
         Finalize finalizeReport{};
         control_state_t controlReport{};
         std::vector<Expectation> expectationReports{};
 
         [[nodiscard]]
-        friend bool operator==(const MatchReport& lhs, const MatchReport& rhs)
-        {
-            return lhs.mockName == rhs.mockName
-                && lhs.finalizeReport == rhs.finalizeReport
-                && lhs.controlReport == rhs.controlReport
-                && lhs.expectationReports == rhs.expectationReports
-                && lhs.sourceLocation.has_value() == rhs.sourceLocation.has_value()
-                && (!lhs.sourceLocation.has_value()
-                    || is_same_source_location(*lhs.sourceLocation, *rhs.sourceLocation));
-        }
+        friend bool operator==(const MatchReport& lhs, const MatchReport& rhs) = default;
     };
 
     /**
@@ -533,12 +523,12 @@ namespace mimicpp
             // GCOVR_EXCL_STOP
             }
 
-            if (report.mockName)
+            if (report.expectationInfo.mockName)
             {
                 out = format::format_to(
                     std::move(out),
                     "mock: {}\n",
-                    *report.mockName);
+                    *report.expectationInfo.mockName);
             }
 
             if (printReason)
@@ -550,18 +540,15 @@ namespace mimicpp
                 out = format::format_to(std::move(out), "\n");
             }
 
-            if (report.sourceLocation)
-            {
-                out = format::format_to(
-                    std::move(out),
-                    "from: ");
-                out = mimicpp::print(
-                    std::move(out),
-                    *report.sourceLocation);
-                out = format::format_to(
-                    std::move(out),
-                    "\n");
-            }
+            out = format::format_to(
+                std::move(out),
+                "from: ");
+            out = mimicpp::print(
+                std::move(out),
+                report.expectationInfo.sourceLocation);
+            out = format::format_to(
+                std::move(out),
+                "\n");
 
             if (!std::ranges::empty(unmatchedExpectationDescriptions))
             {
