@@ -12,6 +12,7 @@
 
 #include <array>
 #include <cassert>
+#include <optional>
 #include <source_location>
 #include <string_view>
 #include <tuple>
