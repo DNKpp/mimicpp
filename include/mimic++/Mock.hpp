@@ -16,6 +16,16 @@
 #include "mimic++/Utility.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 
+namespace mimicpp
+{
+    class MockSettings
+    {
+    public:
+        std::optional<StringT> name{};
+        std::size_t stacktraceSkip{};
+    };
+}
+
 namespace mimicpp::detail
 {
     template <typename Derived, typename Signature>
@@ -282,15 +292,16 @@ namespace mimicpp::detail
         [[nodiscard]]
         explicit BasicMock(
             ExpectationCollectionPtrT collection,
-            const std::size_t stacktraceSkip) noexcept
+            MockSettings settings) noexcept
             : m_Expectations{std::move(collection)},
-              m_StacktraceSkip{stacktraceSkip + 2u} // skips the operator() and the handle_call from the stacktrace
+            m_Settings{std::move(settings)}
         {
+            m_Settings.stacktraceSkip += 2u; // skips the operator() and the handle_call from the stacktrace
         }
 
     private:
         ExpectationCollectionPtrT m_Expectations;
-        std::size_t m_StacktraceSkip;
+        MockSettings m_Settings;
 
         [[nodiscard]]
         constexpr signature_return_type_t<SignatureT> handle_call(
@@ -303,7 +314,7 @@ namespace mimicpp::detail
                     .fromCategory = refQualification,
                     .fromConstness = constQualification,
                     .fromSourceLocation = from,
-                    .stacktrace = stacktrace::current(m_StacktraceSkip)});
+                    .stacktrace = stacktrace::current(m_Settings.stacktraceSkip)});
         }
 
         template <typename... Args>
@@ -411,25 +422,22 @@ namespace mimicpp
          */
         [[nodiscard]]
         Mock()
-            : Mock{0u}
+            : Mock{MockSettings{}}
         {
         }
 
         /**
-         * \brief Constructor, initializing the base-stacktrace-skip.
-         * \param baseStacktraceSkip The base-stacktrace-skip.
-         * \details This sets up the base-stacktrace-skip, which will be used when generating stacktraces for the
-         * invocations. This can be used, to eliminate irrelevant or noise stacktrace-entries from the top.
-         * \note This sets just the base value. Internally this value will be further increased.
+         * \brief Constructor, applying customized settings.
+         * \param settings The mock configuration.
          */
         [[nodiscard]]
-        explicit Mock(const std::size_t baseStacktraceSkip)
+        explicit Mock(MockSettings settings)
             : Mock{
-                  detail::expectation_collection_factory<
-                      detail::unique_list_t<
-                          signature_decay_t<FirstSignature>,
-                          signature_decay_t<OtherSignatures>...>>::make(),
-                  baseStacktraceSkip}
+                detail::expectation_collection_factory<
+                    detail::unique_list_t<
+                        signature_decay_t<FirstSignature>,
+                        signature_decay_t<OtherSignatures>...>>::make(),
+                settings}
         {
         }
 
@@ -459,14 +467,14 @@ namespace mimicpp
         [[nodiscard]]
         explicit Mock(
             std::tuple<Collections...> collections,
-            const std::size_t stacktraceSkip) noexcept
+            MockSettings settings) noexcept
             : detail::BasicMock<FirstSignature>{
                   std::get<detail::expectation_collection_ptr_for<FirstSignature>>(collections),
-                  stacktraceSkip},
+                  settings},
               // clang-format off
               detail::BasicMock<OtherSignatures>{
                   std::get<detail::expectation_collection_ptr_for<OtherSignatures>>(collections),
-                  stacktraceSkip}...
+                  settings}...
         // clang-format on
         {
         }

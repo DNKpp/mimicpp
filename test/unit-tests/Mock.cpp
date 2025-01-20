@@ -842,7 +842,8 @@ TEST_CASE(
     ScopedExpectation exp = mock.expect_call();
     mock();
     const std::size_t skip = GENERATE(1u, 2u, 3u);
-    mock = Mock<void()>{skip};
+    mock = Mock<void()>{
+        MockSettings{.stacktraceSkip = skip}};
     exp = mock.expect_call();
     mock();
 
