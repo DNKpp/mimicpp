@@ -294,7 +294,7 @@ namespace mimicpp::detail
             ExpectationCollectionPtrT collection,
             MockSettings settings) noexcept
             : m_Expectations{std::move(collection)},
-            m_Settings{std::move(settings)}
+              m_Settings{std::move(settings)}
         {
             m_Settings.stacktraceSkip += 2u; // skips the operator() and the handle_call from the stacktrace
         }
@@ -433,11 +433,11 @@ namespace mimicpp
         [[nodiscard]]
         explicit Mock(MockSettings settings)
             : Mock{
-                detail::expectation_collection_factory<
-                    detail::unique_list_t<
-                        signature_decay_t<FirstSignature>,
-                        signature_decay_t<OtherSignatures>...>>::make(),
-                settings}
+                  detail::expectation_collection_factory<
+                      detail::unique_list_t<
+                          signature_decay_t<FirstSignature>,
+                          signature_decay_t<OtherSignatures>...>>::make(),
+                  settings}
         {
         }
 
