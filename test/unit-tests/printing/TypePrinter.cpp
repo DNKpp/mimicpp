@@ -241,6 +241,42 @@ TEST_CASE(
             (print_type<std::span<std::tuple<float&, std::tuple<>>, 1>>()),
             Catch::Matchers::Equals("std::span<std::tuple<float&, std::tuple<>>, 1>"));
     }
+
+    SECTION("std unique_ptr types")
+    {
+        REQUIRE_THAT(
+            (print_type<std::unique_ptr<int>>()),
+            Catch::Matchers::Equals("std::unique_ptr<int>"));
+        REQUIRE_THAT(
+            (print_type<std::unique_ptr<int[]>>()),
+            Catch::Matchers::Equals("std::unique_ptr<int[]>"));
+        REQUIRE_THAT(
+            (print_type<std::unique_ptr<std::unique_ptr<int>>>()),
+            Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>>"));
+        REQUIRE_THAT(
+            (print_type<std::unique_ptr<std::tuple<float&, std::tuple<>>>>()),
+            Catch::Matchers::Equals("std::unique_ptr<std::tuple<float&, std::tuple<>>>"));
+        REQUIRE_THAT(
+            (print_type<std::unique_ptr<std::tuple<float&, std::tuple<>>[]>>()),
+            Catch::Matchers::Equals("std::unique_ptr<std::tuple<float&, std::tuple<>>[]>"));
+    }
+
+    SECTION("std shared_ptr and weak_ptr types")
+    {
+        REQUIRE_THAT(
+            print_type<std::shared_ptr<int>>(),
+            Catch::Matchers::Equals("std::shared_ptr<int>"));
+        REQUIRE_THAT(
+            (print_type<std::shared_ptr<std::tuple<float&, std::tuple<>>>>()),
+            Catch::Matchers::Equals("std::shared_ptr<std::tuple<float&, std::tuple<>>>"));
+
+        REQUIRE_THAT(
+            print_type<std::weak_ptr<int>>(),
+            Catch::Matchers::Equals("std::weak_ptr<int>"));
+        REQUIRE_THAT(
+            (print_type<std::weak_ptr<std::tuple<float&, std::tuple<>>>>()),
+            Catch::Matchers::Equals("std::weak_ptr<std::tuple<float&, std::tuple<>>>"));
+    }
 }
 
 namespace
@@ -581,6 +617,37 @@ TEST_CASE(
     REQUIRE_THAT(
         (print_type<std::vector<std::vector<int>, custom_allocator<std::vector<int>>>>()),
         Catch::Matchers::Equals("std::vector<std::vector<int>, custom_allocator<std::vector<int>>>"));
+}
+
+namespace
+{
+    template <typename T>
+    struct custom_deleter
+        : std::default_delete<T>
+    {
+    };
+}
+
+TEST_CASE(
+    "std::unique_ptr with alternative deleter is printed completely.",
+    "[print]")
+{
+    REQUIRE_THAT(
+        (print_type<std::unique_ptr<int, custom_deleter<int>>>()),
+        Catch::Matchers::Equals("std::unique_ptr<int, custom_deleter<int>>"));
+    REQUIRE_THAT(
+        (print_type<std::unique_ptr<std::unique_ptr<int, custom_deleter<int>>, custom_deleter<std::unique_ptr<int, custom_deleter<int>>>>>()),
+        Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int, custom_deleter<int>>, custom_deleter<std::unique_ptr<int, custom_deleter<int>>>>"));
+    REQUIRE_THAT(
+        (print_type<std::unique_ptr<std::unique_ptr<int>, custom_deleter<std::unique_ptr<int>>>>()),
+        Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>, custom_deleter<std::unique_ptr<int>>>"));
+
+    REQUIRE_THAT(
+        (print_type<std::unique_ptr<int[], custom_deleter<int[]>>>()),
+        Catch::Matchers::Equals("std::unique_ptr<int[], custom_deleter<int[]>>"));
+    REQUIRE_THAT(
+        (print_type<std::unique_ptr<std::unique_ptr<int>[], custom_deleter<std::unique_ptr<int>[]>>>()),
+        Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>[], custom_deleter<std::unique_ptr<int>[]>>"));
 }
 
 TEST_CASE(
