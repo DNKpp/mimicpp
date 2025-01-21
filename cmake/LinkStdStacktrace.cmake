@@ -12,6 +12,7 @@ if (NOT TARGET link-std-stacktrace)
     string(CONCAT GCC_LINK_LIBBACKTRACE
         "$<"
             "$<AND:"
+                "$<PLATFORM_ID:Linux>,"
                 "$<CXX_COMPILER_ID:GNU>,"
                 "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,13>,"
                 "$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>"
@@ -20,6 +21,7 @@ if (NOT TARGET link-std-stacktrace)
     string(CONCAT GCC_LINK_EXP
         "$<"
             "$<AND:"
+                "$<PLATFORM_ID:Linux>,"
                 "$<CXX_COMPILER_ID:GNU>,"
                 "$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>"
             ":stdc++exp>"
