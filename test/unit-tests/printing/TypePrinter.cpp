@@ -5,6 +5,11 @@
 
 #include "mimic++/printing/TypePrinter.hpp"
 
+#include <optional>
+#include <string>
+#include <string_view>
+#include <vector>
+
 using namespace mimicpp;
 
 TEST_CASE(
@@ -92,5 +97,71 @@ TEST_CASE(
         REQUIRE_THAT(
             print_type<unsigned long long>(),
             Catch::Matchers::Equals("unsigned long long"));
+    }
+}
+
+TEST_CASE(
+    "print_type prints common std types nicely.",
+    "[print]")
+{
+    SECTION("std string types")
+    {
+        REQUIRE_THAT(
+            print_type<std::string>(),
+            Catch::Matchers::Equals("std::string"));
+        REQUIRE_THAT(
+            print_type<std::wstring>(),
+            Catch::Matchers::Equals("std::wstring"));
+        REQUIRE_THAT(
+            print_type<std::u8string>(),
+            Catch::Matchers::Equals("std::u8string"));
+        REQUIRE_THAT(
+            print_type<std::u8string>(),
+            Catch::Matchers::Equals("std::u16string"));
+        REQUIRE_THAT(
+            print_type<std::u8string>(),
+            Catch::Matchers::Equals("std::u32string"));
+    }
+
+    SECTION("std string_view types")
+    {
+        REQUIRE_THAT(
+            print_type<std::string_view>(),
+            Catch::Matchers::Equals("std::string_view"));
+        REQUIRE_THAT(
+            print_type<std::wstring_view>(),
+            Catch::Matchers::Equals("std::wstring_view"));
+        REQUIRE_THAT(
+            print_type<std::u8string_view>(),
+            Catch::Matchers::Equals("std::u8string_view"));
+        REQUIRE_THAT(
+            print_type<std::u8string_view>(),
+            Catch::Matchers::Equals("std::u16string_view"));
+        REQUIRE_THAT(
+            print_type<std::u8string_view>(),
+            Catch::Matchers::Equals("std::u32string_view"));
+    }
+
+    SECTION("std vector types")
+    {
+        REQUIRE_THAT(
+            print_type<std::vector<int>>(),
+            Catch::Matchers::Equals("std::vector<int>"));
+        REQUIRE_THAT(
+            print_type<std::vector<std::vector<int>>>(),
+            Catch::Matchers::Equals("std::vector<std::vector<int>>"));
+    }
+
+    SECTION("std optional types")
+    {
+        REQUIRE_THAT(
+            print_type<std::nullopt_t>(),
+            Catch::Matchers::Equals("std::nullopt_t"));
+        REQUIRE_THAT(
+            print_type<std::optional<int>>(),
+            Catch::Matchers::Equals("std::optional<int>"));
+        REQUIRE_THAT(
+            print_type<std::optional<std::optional<int>>>(),
+            Catch::Matchers::Equals("std::optional<std::optional<int>>"));
     }
 }
