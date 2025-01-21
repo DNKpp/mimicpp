@@ -225,6 +225,22 @@ TEST_CASE(
             (print_type<std::array<std::tuple<float&, std::tuple<>>, 1>>()),
             Catch::Matchers::Equals("std::array<std::tuple<float&, std::tuple<>>, 1>"));
     }
+
+    SECTION("std span types")
+    {
+        REQUIRE_THAT(
+            (print_type<std::span<int>>()),
+            Catch::Matchers::Equals("std::span<int>"));
+        REQUIRE_THAT(
+            (print_type<std::span<int const, 42>>()),
+            Catch::Matchers::Equals("std::span<int const, 42>"));
+        REQUIRE_THAT(
+            (print_type<std::span<std::vector<std::string>, 1>>()),
+            Catch::Matchers::Equals("std::span<std::vector<std::string>, 1>"));
+        REQUIRE_THAT(
+            (print_type<std::span<std::tuple<float&, std::tuple<>>, 1>>()),
+            Catch::Matchers::Equals("std::span<std::tuple<float&, std::tuple<>>, 1>"));
+    }
 }
 
 namespace

@@ -596,6 +596,36 @@ namespace mimicpp::detail
             return str;
         }
     };
+
+    // std::span
+    template <typename T>
+    struct CommonTypePrinter<std::span<T>>
+    {
+        [[nodiscard]]
+        static StringViewT name()
+        {
+            static const StringT str = format::format(
+                "std::span<{}>",
+                mimicpp::print_type<T>());
+
+            return str;
+        }
+    };
+
+    template <typename T, std::size_t n>
+    struct CommonTypePrinter<std::span<T, n>>
+    {
+        [[nodiscard]]
+        static StringViewT name()
+        {
+            static const StringT str = format::format(
+                "std::span<{}, {}>",
+                mimicpp::print_type<T>(),
+                n);
+
+            return str;
+        }
+    };
 }
 
 #endif
