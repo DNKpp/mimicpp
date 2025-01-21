@@ -175,6 +175,28 @@ TEST_CASE(
             Catch::Matchers::Equals("std::optional<std::optional<int>>"));
     }
 }
+
+namespace
+{
+    template <typename T>
+    struct custom_allocator
+        : std::allocator<T>
+    {
+    };
+}
+
+TEST_CASE(
+    "std::vector with alternative allocator is printed completely.",
+    "[print]")
+{
+    REQUIRE_THAT(
+        (print_type<std::vector<int, custom_allocator<int>>>()),
+        Catch::Matchers::Equals("std::vector<int, custom_allocator<int>>"));
+    REQUIRE_THAT(
+        (print_type<std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>>()),
+        Catch::Matchers::Equals("std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>"));
+}
+
 namespace
 {
     struct my_type
