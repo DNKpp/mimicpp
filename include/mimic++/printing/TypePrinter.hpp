@@ -426,6 +426,7 @@ namespace mimicpp::detail
         }
     };
 
+    // required for gcc
     template <>
     struct CommonTypePrinter<std::nullptr_t>
     {
@@ -433,6 +434,17 @@ namespace mimicpp::detail
         static consteval StringViewT name() noexcept
         {
             return {"std::nullptr_t"};
+        }
+    };
+
+    // required for AppleClang
+    template <>
+    struct CommonTypePrinter<char8_t>
+    {
+        [[nodiscard]]
+        static consteval StringViewT name() noexcept
+        {
+            return {"char8_t"};
         }
     };
 
