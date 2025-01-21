@@ -25,6 +25,10 @@ namespace mimicpp
     #define MIMICPP_DETAIL_IS_GCC
 #endif
 
+#ifdef _LIBCPP_VERSION
+    #define MIMICPP_DETAIL_IS_LIBCXX
+#endif
+
 namespace mimicpp::detail
 {
     inline StringT regex_replace_all(StringT str, const RegexT& regex, const StringViewT fmt)
@@ -86,7 +90,11 @@ namespace mimicpp::detail
         static const RegexT unifyClosingAngleBrackets{R"(\>\s*\>)"};
         name = regex_replace_all(name, unifyClosingAngleBrackets, ">>");
 
-        static const RegexT handleStdNamespace{R"(std::__cxx11::)"};
+    #ifdef MIMICPP_DETAIL_IS_LIBCXX
+        static const RegexT handleStdNamespace{"std::__1::"};
+    #else
+        static const RegexT handleStdNamespace{"std::__cxx11::"};
+    #endif
         name = std::regex_replace(name, handleStdNamespace, "std::");
 
         static const RegexT omitAnonymousNamespace{R"(\(anonymous namespace\)::)"};
