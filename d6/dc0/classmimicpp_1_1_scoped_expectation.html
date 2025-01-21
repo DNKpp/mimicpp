@@ -139,6 +139,9 @@ requires requires(const std::source_location&amp; <a class="el" href="#a100b15ef
 <tr class="memitem:a86c2ce76f1c4172362bbb740716ba8c0" id="r_a86c2ce76f1c4172362bbb740716ba8c0"><td class="memItemLeft" align="right" valign="top">const std::source_location &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86c2ce76f1c4172362bbb740716ba8c0">from</a> () const noexcept</td></tr>
 <tr class="memdesc:a86c2ce76f1c4172362bbb740716ba8c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries the stored expectation for it's stored source-location.  <br /></td></tr>
 <tr class="separator:a86c2ce76f1c4172362bbb740716ba8c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26c8a1559b6c84283f7285c09c592274" id="r_a26c8a1559b6c84283f7285c09c592274"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26c8a1559b6c84283f7285c09c592274">mock_name</a> () const noexcept</td></tr>
+<tr class="memdesc:a26c8a1559b6c84283f7285c09c592274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries the stored expectation for the name of the related mock.  <br /></td></tr>
+<tr class="separator:a26c8a1559b6c84283f7285c09c592274"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -370,6 +373,34 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<a id="a26c8a1559b6c84283f7285c09c592274" name="a26c8a1559b6c84283f7285c09c592274"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26c8a1559b6c84283f7285c09c592274">&#9670;&#160;</a></span>mock_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> &amp; mimicpp::ScopedExpectation::mock_name </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Queries the stored expectation for the name of the related mock. </p>
+<dl class="section return"><dt>Returns</dt><dd>The stored mock-name. </dd></dl>
+
+</div>
+</div>
 <a id="a9b3d1d989056d9ddcbb506e9158b9af8" name="a9b3d1d989056d9ddcbb506e9158b9af8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9b3d1d989056d9ddcbb506e9158b9af8">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
 
@@ -453,8 +484,8 @@ Here is the call graph for this function:</div>
 <div class="line"> </div>
 <div class="line">        </div>
 <div class="line">        <a class="code hl_function" href="#a8a1e5f6dd65ccb47cdc7349de63e1265">ScopedExpectation</a>(<span class="keyword">const</span> <a class="code hl_function" href="#a8a1e5f6dd65ccb47cdc7349de63e1265">ScopedExpectation</a>&amp;) = <span class="keyword">delete</span></div>
-<div class="ttc" id="aclassmimicpp_1_1_scoped_expectation_html_a100b15ef4d509421ea0d5f806b0d0b6e"><div class="ttname"><a href="#a100b15ef4d509421ea0d5f806b0d0b6e">mimicpp::ScopedExpectation::loc</a></div><div class="ttdeci">const std::source_location &amp; loc</div><div class="ttdef"><b>Definition</b> Expectation.hpp:668</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_scoped_expectation_html_a8a1e5f6dd65ccb47cdc7349de63e1265"><div class="ttname"><a href="#a8a1e5f6dd65ccb47cdc7349de63e1265">mimicpp::ScopedExpectation::ScopedExpectation</a></div><div class="ttdeci">ScopedExpectation(std::shared_ptr&lt; ExpectationCollection&lt; Signature &gt; &gt; collection, std::shared_ptr&lt; typename ExpectationCollection&lt; Signature &gt;::ExpectationT &gt; expectation) noexcept</div><div class="ttdoc">Constructor, which generates the type-erase storage.</div><div class="ttdef"><b>Definition</b> Expectation.hpp:647</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_scoped_expectation_html_a100b15ef4d509421ea0d5f806b0d0b6e"><div class="ttname"><a href="#a100b15ef4d509421ea0d5f806b0d0b6e">mimicpp::ScopedExpectation::loc</a></div><div class="ttdeci">const std::source_location &amp; loc</div><div class="ttdef"><b>Definition</b> Expectation.hpp:705</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_scoped_expectation_html_a8a1e5f6dd65ccb47cdc7349de63e1265"><div class="ttname"><a href="#a8a1e5f6dd65ccb47cdc7349de63e1265">mimicpp::ScopedExpectation::ScopedExpectation</a></div><div class="ttdeci">ScopedExpectation(std::shared_ptr&lt; ExpectationCollection&lt; Signature &gt; &gt; collection, std::shared_ptr&lt; typename ExpectationCollection&lt; Signature &gt;::ExpectationT &gt; expectation) noexcept</div><div class="ttdoc">Constructor, which generates the type-erase storage.</div><div class="ttdef"><b>Definition</b> Expectation.hpp:684</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -467,7 +498,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html">ScopedExpectation</a></li>
-    <li class="footer">Generated on Sun Jan 19 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Jan 21 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

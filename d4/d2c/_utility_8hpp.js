@@ -3,6 +3,8 @@ var _utility_8hpp =
     [ "mimicpp::always_false<... >", "d5/d8e/structmimicpp_1_1always__false.html", null ],
     [ "mimicpp::priority_tag< priority >", "d1/d9f/structmimicpp_1_1priority__tag.html", null ],
     [ "mimicpp::priority_tag< 0 >", "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html", null ],
+    [ "mimicpp::type_list< Args >", "db/dc6/structmimicpp_1_1type__list.html", "db/dc6/structmimicpp_1_1type__list" ],
+    [ "std::tuple_size< mimicpp::type_list< Args... > >", "d9/d11/structstd_1_1tuple__size_3_01mimicpp_1_1type__list_3_01_args_8_8_8_01_4_01_4.html", null ],
     [ "mimicpp::explicitly_convertible_to", "d0/d3a/conceptmimicpp_1_1explicitly__convertible__to.html", null ],
     [ "mimicpp::nothrow_explicitly_convertible_to", "d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html", null ],
     [ "mimicpp::same_as_any", "d6/d1f/conceptmimicpp_1_1same__as__any.html", null ],

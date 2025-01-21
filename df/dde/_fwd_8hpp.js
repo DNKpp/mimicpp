@@ -1,6 +1,5 @@
 var _fwd_8hpp =
 [
-    [ "mimicpp::type_list< Args >", "db/dc6/structmimicpp_1_1type__list.html", null ],
     [ "mimicpp::sequence::rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", "de/d81/structmimicpp_1_1sequence_1_1rating" ],
     [ "mimicpp::CharT", "d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc", null ],
     [ "mimicpp::CharTraitsT", "d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad", null ],

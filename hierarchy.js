@@ -72,6 +72,7 @@ var hierarchy =
     ] ],
     [ "mimicpp::MatchReport::Finalize", "d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html", null ],
     [ "mimicpp::stacktrace::find_backend", "dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend.html", null ],
+    [ "mimicpp::for_base_tag< Base >", "d6/da7/structmimicpp_1_1for__base__tag.html", null ],
     [ "formatter", null, [
       [ "mimicpp::format::formatter< mimicpp::Constness, mimicpp::CharT >", "d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html", null ],
       [ "mimicpp::format::formatter< mimicpp::ValueCategory, mimicpp::CharT >", "db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html", null ]
@@ -87,7 +88,8 @@ var hierarchy =
       [ "mimicpp::signature_ref_qualification< Return(Params...)>", "db/df8/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_4.html", null ],
       [ "mimicpp::signature_ref_qualification< Return(Params...,...) && >", "d5/dfd/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6_01_4.html", null ],
       [ "mimicpp::signature_ref_qualification< Return(Params...,...)& >", "d6/d7d/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html", null ],
-      [ "mimicpp::signature_ref_qualification< Return(Params...,...)>", "d5/db0/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", null ]
+      [ "mimicpp::signature_ref_qualification< Return(Params...,...)>", "d5/db0/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", null ],
+      [ "std::tuple_size< mimicpp::type_list< Args... > >", "d9/d11/structstd_1_1tuple__size_3_01mimicpp_1_1type__list_3_01_args_8_8_8_01_4_01_4.html", null ]
     ] ],
     [ "mimicpp::IReporter", "dd/df0/classmimicpp_1_1_i_reporter.html", [
       [ "mimicpp::BasicReporter< &detail::boost_test::send_success, &detail::boost_test::send_warning, &detail::boost_test::send_fail >", "d4/d56/classmimicpp_1_1_basic_reporter.html", null ],
@@ -101,6 +103,7 @@ var hierarchy =
     [ "mimicpp::expectation_policies::matcher_matches_fn< Matcher >", "d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html", null ],
     [ "mimicpp::custom::matcher_traits< Matcher >", "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html", null ],
     [ "mimicpp::MatchReport", "db/d11/classmimicpp_1_1_match_report.html", null ],
+    [ "mimicpp::MockSettings", "d4/d24/classmimicpp_1_1_mock_settings.html", null ],
     [ "mimicpp::stacktrace::NullBackend", "d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html", null ],
     [ "mimicpp::PredicateMatcher< Predicate, AdditionalArgs >", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", null ],
     [ "mimicpp::custom::Printer< typename >", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],

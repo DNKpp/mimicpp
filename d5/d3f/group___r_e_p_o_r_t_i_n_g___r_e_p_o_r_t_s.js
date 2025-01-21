@@ -37,10 +37,10 @@ var group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s =
       [ "stacktrace", "dc/dd0/classmimicpp_1_1_call_report.html#aea59c14511e6881ce40297e6e1a2a1f2", null ]
     ] ],
     [ "mimicpp::ExpectationReport", "dd/d62/classmimicpp_1_1_expectation_report.html", [
-      [ "operator==", "dd/d62/classmimicpp_1_1_expectation_report.html#a9c3682131a4e9fb08a0d9c873c3cca7f", null ],
+      [ "operator==", "dd/d62/classmimicpp_1_1_expectation_report.html#a7dfdd30607f6765ffb3c425f931ef62e", null ],
       [ "expectationDescriptions", "dd/d62/classmimicpp_1_1_expectation_report.html#a58c124daff3201aa82c755e7ebafbe34", null ],
+      [ "expectationInfo", "dd/d62/classmimicpp_1_1_expectation_report.html#aab0b4a692e255af6f78cb6e2d5bf74f2", null ],
       [ "finalizerDescription", "dd/d62/classmimicpp_1_1_expectation_report.html#a4170deeff1bba26b0357f710e1378cb1", null ],
-      [ "sourceLocation", "dd/d62/classmimicpp_1_1_expectation_report.html#a57b7f9b0d18c0b7e90d350c0ed3609ca", null ],
       [ "timesDescription", "dd/d62/classmimicpp_1_1_expectation_report.html#a4286056857a39f172534d15d647fdbad", null ]
     ] ],
     [ "mimicpp::MatchReport", "db/d11/classmimicpp_1_1_match_report.html", [
@@ -53,11 +53,11 @@ var group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s =
         [ "operator==", "d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html#ab333440bbcca9ceb0ef7f0bee24264ac", null ],
         [ "description", "d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html#a5af31dceb9d8e2f4402cbe08c588f533", null ]
       ] ],
-      [ "operator==", "db/d11/classmimicpp_1_1_match_report.html#a9af3b7d94043ff1d4969cb1283a70a7e", null ],
+      [ "operator==", "db/d11/classmimicpp_1_1_match_report.html#a28b7cecdeaf517df7f26922a7afd1de6", null ],
       [ "controlReport", "db/d11/classmimicpp_1_1_match_report.html#ad9c88790ba56c6ef4e4339cb1212f9bd", null ],
+      [ "expectationInfo", "db/d11/classmimicpp_1_1_match_report.html#afb2b6576d021037460be5f08a5bf2d84", null ],
       [ "expectationReports", "db/d11/classmimicpp_1_1_match_report.html#a4a0f546bbd6d5cdc94aaf8ce753c55ae", null ],
-      [ "finalizeReport", "db/d11/classmimicpp_1_1_match_report.html#a96bc13493c977acf05ecf6eb216d212a", null ],
-      [ "sourceLocation", "db/d11/classmimicpp_1_1_match_report.html#ae54d08447ba833e1d44f000bb7a1a4c7", null ]
+      [ "finalizeReport", "db/d11/classmimicpp_1_1_match_report.html#a96bc13493c977acf05ecf6eb216d212a", null ]
     ] ],
     [ "mimicpp::control_state_t", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga7bf75ebaaabf547897c17050ad3f0229", null ],
     [ "mimicpp::evaluate_match_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga28bf45ff6df85506325c64349d37ca85", null ],

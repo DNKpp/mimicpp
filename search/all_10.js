@@ -12,7 +12,7 @@ var searchData=
   ['printer_9',['Printer',['../da/d68/classmimicpp_1_1custom_1_1_printer.html',1,'mimicpp::custom']]],
   ['printer_2ehpp_10',['Printer.hpp',['../da/dab/_printer_8hpp.html',1,'']]],
   ['printer_5ffor_11',['printer_for',['../de/dfc/conceptmimicpp_1_1printer__for.html',1,'mimicpp']]],
-  ['printing_12',['printing',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md20',1,'String printing'],['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'Support for printing']]],
+  ['printing_12',['printing',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md20',1,'String printing'],['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'Support for printing']]],
   ['printings_20or_20print_20custom_20types_13',['Override existing printings or print custom types',['../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md19',1,'']]],
   ['priority_14',['priority',['../de/d81/structmimicpp_1_1sequence_1_1rating.html#ab35a049b08e0096a5a61ed0c60c26e7b',1,'mimicpp::sequence::rating']]],
   ['priority_5ftag_15',['priority_tag',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]],

@@ -121,10 +121,10 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac21118a6f294d01b1ed2fa9cf347cf72" id="r_ac21118a6f294d01b1ed2fa9cf347cf72"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac21118a6f294d01b1ed2fa9cf347cf72">~BasicExpectationBuilder</a> ()=default</td></tr>
 <tr class="separator:ac21118a6f294d01b1ed2fa9cf347cf72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad57f0697174ed29c3e22ff72ca83cbbf" id="r_ad57f0697174ed29c3e22ff72ca83cbbf"><td class="memTemplParams" colspan="2">template&lt;typename FinalizePolicyArg, typename PolicyListArg&gt; <br />
+<tr class="memitem:a756da2f2bfcf5eead1ed2bcd3627f928" id="r_a756da2f2bfcf5eead1ed2bcd3627f928"><td class="memTemplParams" colspan="2">template&lt;typename FinalizePolicyArg, typename PolicyListArg&gt; <br />
 requires std::constructible_from&lt;FinalizePolicy, FinalizePolicyArg&gt; &amp;&amp; std::constructible_from&lt;<a class="el" href="#a61ddae5a025434b5abbafa19252920f9">PolicyListT</a>, PolicyListArg&gt;</td></tr>
-<tr class="memitem:ad57f0697174ed29c3e22ff72ca83cbbf"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ad57f0697174ed29c3e22ff72ca83cbbf">BasicExpectationBuilder</a> (std::shared_ptr&lt; <a class="el" href="#a4e58b0aaa6d8d3389e2134dec6e8b47c">StorageT</a> &gt; storage, detail::TimesConfig timesConfig, SequenceConfig sequenceConfig, FinalizePolicyArg &amp;&amp;finalizePolicyArg, PolicyListArg &amp;&amp;policyListArg) noexcept</td></tr>
-<tr class="separator:ad57f0697174ed29c3e22ff72ca83cbbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a756da2f2bfcf5eead1ed2bcd3627f928"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a756da2f2bfcf5eead1ed2bcd3627f928">BasicExpectationBuilder</a> (std::shared_ptr&lt; <a class="el" href="#a4e58b0aaa6d8d3389e2134dec6e8b47c">StorageT</a> &gt; storage, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> mockName, detail::TimesConfig timesConfig, SequenceConfig sequenceConfig, FinalizePolicyArg &amp;&amp;finalizePolicyArg, PolicyListArg &amp;&amp;policyListArg) noexcept</td></tr>
+<tr class="separator:a756da2f2bfcf5eead1ed2bcd3627f928"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99b43a6ad6e94ecdb44e3c4a43c90363" id="r_a99b43a6ad6e94ecdb44e3c4a43c90363"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99b43a6ad6e94ecdb44e3c4a43c90363">BasicExpectationBuilder</a> (const <a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;)=delete</td></tr>
 <tr class="separator:a99b43a6ad6e94ecdb44e3c4a43c90363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74c1d734ba231e03cb33bc8432e5c77b" id="r_a74c1d734ba231e03cb33bc8432e5c77b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74c1d734ba231e03cb33bc8432e5c77b">operator=</a> (const <a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;)=delete</td></tr>
@@ -229,8 +229,8 @@ template&lt;bool timesConfigured, typename SequenceConfig, typename Signature, t
 
 </div>
 </div>
-<a id="ad57f0697174ed29c3e22ff72ca83cbbf" name="ad57f0697174ed29c3e22ff72ca83cbbf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad57f0697174ed29c3e22ff72ca83cbbf">&#9670;&#160;</a></span>BasicExpectationBuilder() <span class="overload">[1/3]</span></h2>
+<a id="a756da2f2bfcf5eead1ed2bcd3627f928" name="a756da2f2bfcf5eead1ed2bcd3627f928"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a756da2f2bfcf5eead1ed2bcd3627f928">&#9670;&#160;</a></span>BasicExpectationBuilder() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -247,6 +247,11 @@ requires std::constructible_from&lt;FinalizePolicy, FinalizePolicyArg&gt; &amp;&
           <td class="memname"><a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">mimicpp::BasicExpectationBuilder</a>&lt; timesConfigured, SequenceConfig, Signature, FinalizePolicy, Policies &gt;::BasicExpectationBuilder </td>
           <td>(</td>
           <td class="paramtype">std::shared_ptr&lt; <a class="el" href="#a4e58b0aaa6d8d3389e2134dec6e8b47c">StorageT</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>storage</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>mockName</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -278,7 +283,7 @@ requires std::constructible_from&lt;FinalizePolicy, FinalizePolicyArg&gt; &amp;&
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d5/de1/classmimicpp_1_1_basic_expectation_builder_ad57f0697174ed29c3e22ff72ca83cbbf_icgraph.svg" width="474" height="444"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d5/de1/classmimicpp_1_1_basic_expectation_builder_a756da2f2bfcf5eead1ed2bcd3627f928_icgraph.svg" width="474" height="444"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -581,7 +586,7 @@ template&lt;typename... Sequences&gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a></li>
-    <li class="footer">Generated on Sun Jan 19 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Jan 21 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

@@ -47,6 +47,7 @@ var annotated_dup =
       [ "Expectation", "d3/d1c/classmimicpp_1_1_expectation.html", "d3/d1c/classmimicpp_1_1_expectation" ],
       [ "ExpectationCollection", "d5/d86/classmimicpp_1_1_expectation_collection.html", "d5/d86/classmimicpp_1_1_expectation_collection" ],
       [ "ExpectationReport", "dd/d62/classmimicpp_1_1_expectation_report.html", "dd/d62/classmimicpp_1_1_expectation_report" ],
+      [ "for_base_tag", "d6/da7/structmimicpp_1_1for__base__tag.html", "d6/da7/structmimicpp_1_1for__base__tag" ],
       [ "GreedySequence", "db/d43/classmimicpp_1_1_greedy_sequence.html", null ],
       [ "IReporter", "dd/df0/classmimicpp_1_1_i_reporter.html", "dd/df0/classmimicpp_1_1_i_reporter" ],
       [ "is_character", "d2/d73/structmimicpp_1_1is__character.html", null ],
@@ -64,6 +65,7 @@ var annotated_dup =
       [ "LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", "db/d98/classmimicpp_1_1_lifetime_watcher" ],
       [ "MatchReport", "db/d11/classmimicpp_1_1_match_report.html", "db/d11/classmimicpp_1_1_match_report" ],
       [ "Mock", "d2/d48/classmimicpp_1_1_mock.html", "d2/d48/classmimicpp_1_1_mock" ],
+      [ "MockSettings", "d4/d24/classmimicpp_1_1_mock_settings.html", "d4/d24/classmimicpp_1_1_mock_settings" ],
       [ "PredicateMatcher", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", "dc/d5e/classmimicpp_1_1_predicate_matcher" ],
       [ "priority_tag", "d1/d9f/structmimicpp_1_1priority__tag.html", null ],
       [ "priority_tag< 0 >", "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html", null ],
@@ -202,7 +204,7 @@ var annotated_dup =
       [ "string_traits< std::basic_string< Char, Traits, Allocator > >", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4" ],
       [ "string_traits< std::basic_string_view< Char, Traits > >", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4" ],
       [ "string_traits< T >", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4" ],
-      [ "type_list", "db/dc6/structmimicpp_1_1type__list.html", null ],
+      [ "type_list", "db/dc6/structmimicpp_1_1type__list.html", "db/dc6/structmimicpp_1_1type__list" ],
       [ "uint_with_size", "d7/da0/structmimicpp_1_1uint__with__size.html", null ],
       [ "uint_with_size< 1u >", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4" ],
       [ "uint_with_size< 2u >", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4" ],
@@ -210,5 +212,8 @@ var annotated_dup =
       [ "uint_with_size< 8u >", "d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html", "d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4" ],
       [ "Watched", "d3/d5d/classmimicpp_1_1_watched.html", "d3/d5d/classmimicpp_1_1_watched" ],
       [ "WildcardMatcher", "db/de6/classmimicpp_1_1_wildcard_matcher.html", "db/de6/classmimicpp_1_1_wildcard_matcher" ]
+    ] ],
+    [ "std", null, [
+      [ "tuple_size< mimicpp::type_list< Args... > >", "d9/d11/structstd_1_1tuple__size_3_01mimicpp_1_1type__list_3_01_args_8_8_8_01_4_01_4.html", null ]
     ] ]
 ];

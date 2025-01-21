@@ -64,10 +64,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html",
-"d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html",
-"db/d98/classmimicpp_1_1_lifetime_watcher.html#a5e426a85357e527476ef9edf9cf6c5fc",
-"df/d77/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html#a511997842cd51e8373b836b9f91086dd"
+"d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf6777ae3a4ea46f945ad2e998885a07c",
+"d7/d2f/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_08_01_6noexcept_01_4.html#a1e867de04fc41f944daab8913ec69ee8",
+"db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html",
+"de/dfc/conceptmimicpp_1_1printer__for.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

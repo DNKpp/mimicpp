@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['origin_0',['origin',['../dd/d68/_c_make_lists_8txt.html#a4421eb9d096b69b442520fd7e3857268',1,'CMakeLists.txt']]]
+  ['name_0',['name',['../d4/d24/classmimicpp_1_1_mock_settings.html#a9583b785b7a674d0b958f94e333ff911',1,'mimicpp::MockSettings']]]
 ];
