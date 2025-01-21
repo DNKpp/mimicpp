@@ -146,12 +146,28 @@ namespace mimicpp::detail
             typename CommonTypePrinter<T>;
             { CommonTypePrinter<T>::name() } -> std::convertible_to<StringViewT>;
         }
-    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<2u>, OutIter out)
+    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<3u>, OutIter out)
     {
         return format::format_to(
             std::move(out),
             "{}",
             CommonTypePrinter<T>::name());
+    }
+
+    template <typename T>
+    struct SignatureTypePrinter;
+
+    template <typename T, print_iterator OutIter>
+        requires requires {
+            typename SignatureTypePrinter<T>;
+            { SignatureTypePrinter<T>::name() } -> std::convertible_to<StringViewT>;
+        }
+    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<2u>, OutIter out)
+    {
+        return format::format_to(
+            std::move(out),
+            "{}",
+            SignatureTypePrinter<T>::name());
     }
 
     template <typename T>
@@ -182,7 +198,7 @@ namespace mimicpp::detail
             name);
     }
 
-    constexpr priority_tag<2u> maxPrintTypePriority{};
+    constexpr priority_tag<3u> maxPrintTypePriority{};
 
     template <typename T>
     struct print_type_helper
@@ -307,6 +323,60 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
+    template <satisfies<std::is_function> Signature>
+    struct SignatureTypePrinter<Signature>
+    {
+        [[nodiscard]]
+        static StringViewT name()
+        {
+            static const StringT name = generate_name();
+            return name;
+        }
+
+    private:
+        [[nodiscard]]
+        static StringT generate_name()
+        {
+            StringStreamT out{};
+            mimicpp::print_type<signature_return_type_t<Signature>>(std::ostreambuf_iterator{out});
+            out << "(";
+
+            using param_list_t = signature_param_list_t<Signature>;
+            if constexpr (0u < param_list_t::size)
+            {
+                std::invoke(
+                    [&]<typename First, typename... Params>([[maybe_unused]] const type_list<First, Params...>) {
+                        mimicpp::print_type<First>(std::ostreambuf_iterator{out});
+                        ((out << ", ", mimicpp::print_type<Params>(std::ostreambuf_iterator{out})), ...);
+                    },
+                    param_list_t{});
+            }
+
+            out << ")";
+
+            if constexpr (Constness::as_const == signature_const_qualification_v<Signature>)
+            {
+                out << " const";
+            }
+
+            if constexpr (ValueCategory::lvalue == signature_ref_qualification_v<Signature>)
+            {
+                out << " &";
+            }
+            else if constexpr (ValueCategory::rvalue == signature_ref_qualification_v<Signature>)
+            {
+                out << " &&";
+            }
+
+            if constexpr (signature_is_noexcept_v<Signature>)
+            {
+                out << " noexcept";
+            }
+
+            return std::move(out).str();
+        }
+    };
+
     template <template <typename...> typename Template, typename First, typename... Others>
     struct TemplateTypePrinter<Template<First, Others...>>
     {
