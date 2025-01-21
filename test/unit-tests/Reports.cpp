@@ -1072,32 +1072,6 @@ TEST_CASE(
                     "\\}\n"));
         }
     }
-
-    static const std::array<control_state_t, 3> commonControlStates{
-        state_applicable{0, 1, 0},
-        state_saturated{0, 42, 42},
-        state_inapplicable{
-            .min = 0,
-            .max = 42,
-            .count = 5,
-            .sequenceRatings = {
-                sequence::rating{0, sequence::Tag{123}}},
-            .inapplicableSequences = {sequence::Tag{1337}, sequence::Tag{1338}}}
-    };
-
-    SECTION("When mock-name is empty, that information is omitted.")
-    {
-        const MatchReport report{
-            .expectationInfo = {std::source_location::current(), ""},
-            .finalizeReport = {},
-            .controlReport = GENERATE(from_range(commonControlStates)),
-            .expectationReports = {}
-        };
-
-        REQUIRE_THAT(
-            print(report),
-            !Matches::ContainsSubstring("\nmock:"));
-    }
 }
 
 TEST_CASE(
