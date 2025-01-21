@@ -25,7 +25,7 @@ namespace
     {
         return BaseBuilderT<Signature>{
             std::move(collection),
-            std::nullopt,
+            "Test-Mock",
             detail::TimesConfig{},
             sequence::detail::Config<>{},
             expectation_policies::InitFinalize{},

@@ -166,7 +166,7 @@ namespace mimicpp::detail
     struct expectation_info
     {
         std::source_location sourceLocation = std::source_location::current();
-        std::optional<StringT> mockName = std::nullopt;
+        StringT mockName{};
 
         [[nodiscard]]
         friend bool operator==(const expectation_info& lhs, const expectation_info& rhs)

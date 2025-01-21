@@ -196,10 +196,10 @@ namespace mimicpp
 
         /**
          * \brief Returns the name of the related mock.
-         * \return Immutable reference to the optional mock-name.
+         * \return Immutable reference to the mock-name.
          */
         [[nodiscard]]
-        virtual constexpr const std::optional<StringT>& mock_name() const noexcept = 0;
+        virtual constexpr const StringT& mock_name() const noexcept = 0;
     };
 
     /**
@@ -542,7 +542,7 @@ namespace mimicpp
          * \copydoc Expectation::mock_name
          */
         [[nodiscard]]
-        constexpr const std::optional<StringT>& mock_name() const noexcept override
+        constexpr const StringT& mock_name() const noexcept override
         {
             return m_Info.mockName;
         }
@@ -607,7 +607,7 @@ namespace mimicpp
             [[nodiscard]]
             virtual const std::source_location& from() const noexcept = 0;
             [[nodiscard]]
-            virtual const std::optional<StringT>& mock_name() const noexcept = 0;
+            virtual const StringT& mock_name() const noexcept = 0;
 
         protected:
             Concept() = default;
@@ -652,7 +652,7 @@ namespace mimicpp
             }
 
             [[nodiscard]]
-            const std::optional<StringT>& mock_name() const noexcept override
+            const StringT& mock_name() const noexcept override
             {
                 return m_Expectation->mock_name();
             }
@@ -750,10 +750,10 @@ namespace mimicpp
 
         /**
          * \brief Queries the stored expectation for the name of the related mock.
-         * \return The stored optional mock-name.
+         * \return The stored mock-name.
          */
         [[nodiscard]]
-        const std::optional<StringT>& mock_name() const noexcept
+        const StringT& mock_name() const noexcept
         {
             return m_Inner->mock_name();
         }

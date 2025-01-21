@@ -350,15 +350,10 @@ namespace mimicpp
             out = format::format_to(
                 std::move(out),
                 "Expectation report:\n");
-
-            if (report.expectationInfo.mockName)
-            {
-                out = format::format_to(
-                    std::move(out),
-                    "mock: {}\n",
-                    *report.expectationInfo.mockName);
-            }
-
+            out = format::format_to(
+                std::move(out),
+                "mock: {}\n",
+                report.expectationInfo.mockName);
             out = format::format_to(
                 std::move(out),
                 "from: ");
@@ -523,13 +518,10 @@ namespace mimicpp
             // GCOVR_EXCL_STOP
             }
 
-            if (report.expectationInfo.mockName)
-            {
-                out = format::format_to(
-                    std::move(out),
-                    "mock: {}\n",
-                    *report.expectationInfo.mockName);
-            }
+            out = format::format_to(
+                std::move(out),
+                "mock: {}\n",
+                report.expectationInfo.mockName);
 
             if (printReason)
             {

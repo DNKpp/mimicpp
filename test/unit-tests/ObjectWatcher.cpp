@@ -292,7 +292,7 @@ TEST_CASE(
                 ScopedExpectation exp = watcher.expect_destruct();
 
                 REQUIRE_THAT(
-                    *exp.mock_name(),
+                    exp.mock_name(),
                     Catch::Matchers::StartsWith("LifetimeWatcher for ")
                         && Catch::Matchers::EndsWith("my_base"));
 
@@ -313,7 +313,7 @@ TEST_CASE(
                     ScopedExpectation exp = inner.expect_destruct();
 
                     REQUIRE_THAT(
-                        *exp.mock_name(),
+                        exp.mock_name(),
                         Catch::Matchers::StartsWith("LifetimeWatcher for ")
                             && Catch::Matchers::EndsWith("my_base"));
 
@@ -332,7 +332,7 @@ TEST_CASE(
                     ScopedExpectation exp = inner.expect_destruct();
 
                     REQUIRE_THAT(
-                        *exp.mock_name(),
+                        exp.mock_name(),
                         Catch::Matchers::StartsWith("LifetimeWatcher for ")
                             && Catch::Matchers::EndsWith("my_base"));
 
@@ -681,7 +681,7 @@ TEST_CASE(
     ScopedExpectation exp = watcher->expect_relocate();
 
     REQUIRE_THAT(
-        exp.mock_name().value(),
+        exp.mock_name(),
         Catch::Matchers::StartsWith("RelocationWatcher for ")
             && Catch::Matchers::EndsWith("my_base"));
 
@@ -690,7 +690,7 @@ TEST_CASE(
     exp = other.expect_relocate();
 
     REQUIRE_THAT(
-        exp.mock_name().value(),
+        exp.mock_name(),
         Catch::Matchers::StartsWith("RelocationWatcher for ")
             && Catch::Matchers::EndsWith("my_base"));
 
@@ -699,7 +699,7 @@ TEST_CASE(
       and expect::never();
 
     REQUIRE_THAT(
-        exp.mock_name().value(),
+        exp.mock_name(),
         Catch::Matchers::StartsWith("RelocationWatcher for ")
             && Catch::Matchers::EndsWith("my_base"));
 
@@ -710,7 +710,7 @@ TEST_CASE(
                                  and expect::never();
 
         REQUIRE_THAT(
-            innerExp.mock_name().value(),
+            innerExp.mock_name(),
             Catch::Matchers::StartsWith("RelocationWatcher for ")
                 && Catch::Matchers::EndsWith("my_base"));
     }
@@ -723,7 +723,7 @@ TEST_CASE(
                                  and expect::never();
 
         REQUIRE_THAT(
-            innerExp.mock_name().value(),
+            innerExp.mock_name(),
             Catch::Matchers::StartsWith("RelocationWatcher for ")
                 && Catch::Matchers::EndsWith("my_base"));
     }
@@ -950,13 +950,13 @@ TEST_CASE(
             ScopedExpectation exp = watched.expect_relocate()
                                 and expect::never();
             REQUIRE_THAT(
-                *exp.mock_name(),
+                exp.mock_name(),
                 Catch::Matchers::StartsWith("RelocationWatcher for ")
                     && Catch::Matchers::EndsWith("my_base"));
 
             exp = watched.expect_destruct();
             REQUIRE_THAT(
-                *exp.mock_name(),
+                exp.mock_name(),
                 Catch::Matchers::StartsWith("LifetimeWatcher for ")
                     && Catch::Matchers::EndsWith("my_base"));
 

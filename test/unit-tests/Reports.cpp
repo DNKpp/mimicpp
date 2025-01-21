@@ -670,10 +670,7 @@ TEST_CASE(
     SECTION("When expectation_info differs, reports do not compare equal.")
     {
         ExpectationReport second{first};
-        second.expectationInfo.mockName = GENERATE(
-            as<std::optional<StringT>>{},
-            std::nullopt,
-            "other mock-name");
+        second.expectationInfo.mockName = "other mock-name";
 
         REQUIRE_FALSE(first == second);
         REQUIRE_FALSE(second == first);
@@ -795,10 +792,7 @@ TEST_CASE(
     SECTION("When expectation_info differs, reports do not compare equal.")
     {
         MatchReport second{first};
-        second.expectationInfo.mockName = GENERATE(
-            as<std::optional<StringT>>{},
-            std::nullopt,
-            "other mock-name");
+        second.expectationInfo.mockName = "other mock-name";
 
         REQUIRE_FALSE(first == second);
         REQUIRE_FALSE(second == first);
@@ -1094,7 +1088,7 @@ TEST_CASE(
     SECTION("When mock-name is empty, that information is omitted.")
     {
         const MatchReport report{
-            .expectationInfo = {std::source_location::current(), std::nullopt},
+            .expectationInfo = {std::source_location::current(), ""},
             .finalizeReport = {},
             .controlReport = GENERATE(from_range(commonControlStates)),
             .expectationReports = {}
@@ -1176,21 +1170,6 @@ TEST_CASE(
             Matches::Matches(
                 "Expectation report:\n"
                 "mock: Mock-Name\n"
-                "from: .+\\[\\d+:\\d+\\], .+\n"
-                "times: times description\n"
-                "expects:\n"
-                "\texpectation1 description,\n"
-                "finally: finalizer description\n"));
-    }
-
-    SECTION("When mock-name is missing.")
-    {
-        report.expectationInfo.mockName.reset();
-
-        REQUIRE_THAT(
-            print(std::as_const(report)),
-            Matches::Matches(
-                "Expectation report:\n"
                 "from: .+\\[\\d+:\\d+\\], .+\n"
                 "times: times description\n"
                 "expects:\n"

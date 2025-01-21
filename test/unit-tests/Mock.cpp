@@ -928,9 +928,8 @@ TEST_CASE(
         const ScopedExpectation expectation = mock.expect_call()
                                           and expect::never();
 
-        REQUIRE(expectation.mock_name());
         REQUIRE_THAT(
-            expectation.mock_name().value(),
+            expectation.mock_name(),
             Catch::Matchers::Equals("MyMock"));
     }
 
@@ -942,9 +941,8 @@ TEST_CASE(
             const ScopedExpectation expectation = mock.expect_call()
                                               and expect::never();
 
-            REQUIRE(expectation.mock_name());
             REQUIRE_THAT(
-                expectation.mock_name().value(),
+                expectation.mock_name(),
                 Catch::Matchers::Matches(R"(Mock\<(v|void)\(\)\>)"));
         }
 
@@ -954,9 +952,8 @@ TEST_CASE(
             const ScopedExpectation expectation = mock.expect_call()
                                               and expect::never();
 
-            REQUIRE(expectation.mock_name());
             REQUIRE_THAT(
-                expectation.mock_name().value(),
+                expectation.mock_name(),
                 Catch::Matchers::Matches(
                     R"(Mock\<)"
                     R"((v|void)\(\), )"

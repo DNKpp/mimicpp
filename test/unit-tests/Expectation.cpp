@@ -29,7 +29,7 @@ namespace
         MAKE_CONST_MOCK0(report, mimicpp::ExpectationReport(), override);
         MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
         MAKE_CONST_MOCK0(from, const std::source_location&(), noexcept override);
-        MAKE_CONST_MOCK0(mock_name, const std::optional<mimicpp::StringT>&(), noexcept override);
+        MAKE_CONST_MOCK0(mock_name, const mimicpp::StringT&(), noexcept override);
         MAKE_CONST_MOCK1(matches, mimicpp::MatchReport(const CallInfoT&), override);
         MAKE_MOCK1(consume, void(const CallInfoT&), override);
         MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
@@ -375,7 +375,7 @@ TEST_CASE(
 
     const mimicpp::detail::expectation_info info{
         .sourceLocation = std::source_location::current(),
-        .mockName = GENERATE(as<std::optional<mimicpp::StringT>>{}, std::nullopt, "MyMock")};
+        .mockName = "MyMock"};
 
     mimicpp::BasicExpectation<void(), ControlPolicyT, FinalizerT> expectation{
         info,
@@ -383,7 +383,9 @@ TEST_CASE(
         FinalizerT{}};
 
     REQUIRE(mimicpp::is_same_source_location(info.sourceLocation, expectation.from()));
-    REQUIRE(info.mockName == expectation.mock_name());
+    REQUIRE_THAT(
+        info.mockName,
+        Catch::Matchers::Equals(expectation.mock_name()));
 }
 
 TEST_CASE(
@@ -409,7 +411,7 @@ TEST_CASE(
     {
         const mimicpp::detail::expectation_info info{
             .sourceLocation = std::source_location::current(),
-            .mockName = GENERATE(as<std::optional<mimicpp::StringT>>{}, std::nullopt, "MyMock")};
+            .mockName = "MyMock"};
 
         mimicpp::BasicExpectation<SignatureT, ControlPolicyFake, FinalizerT> expectation{
             info,
@@ -754,7 +756,7 @@ TEST_CASE(
     {
         const mimicpp::detail::expectation_info info{
             .sourceLocation = std::source_location::current(),
-            .mockName = GENERATE(as<std::optional<mimicpp::StringT>>{}, std::nullopt, "MyMock")};
+            .mockName = "MyMock"};
 
         mimicpp::BasicExpectation<
             void(),
@@ -909,7 +911,7 @@ TEST_CASE(
 
     SECTION("When calling mock_name()")
     {
-        const auto mockName = GENERATE(as<std::optional<mimicpp::StringT>>{}, std::nullopt, "MyMock");
+        const mimicpp::StringT mockName = "MyMock";
         REQUIRE_CALL(*innerExpectation, mock_name())
             .LR_RETURN(std::ref(mockName));
         REQUIRE(mockName == std::as_const(expectation)->mock_name());
@@ -992,12 +994,12 @@ TEST_CASE(
     {
         mimicpp::GreedySequence sequence{};
 
-        mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection, std::nullopt)
+        mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection, "")
                                        && expect::times(0, 1)
                                        && expect::in_sequence(sequence)
                                        && finally::returns(42);
 
-        mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection, std::nullopt)
+        mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection, "")
                                        && expect::times(0, 1)
                                        && expect::in_sequence(sequence)
                                        && finally::returns(1337);
@@ -1009,12 +1011,12 @@ TEST_CASE(
     {
         mimicpp::LazySequence sequence{};
 
-        mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection, std::nullopt)
+        mimicpp::ScopedExpectation exp1 = mimicpp::detail::make_expectation_builder(collection, "")
                                        && expect::times(0, 1)
                                        && expect::in_sequence(sequence)
                                        && finally::returns(42);
 
-        mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection, std::nullopt)
+        mimicpp::ScopedExpectation exp2 = mimicpp::detail::make_expectation_builder(collection, "")
                                        && expect::times(0, 1)
                                        && expect::in_sequence(sequence)
                                        && finally::returns(1337);

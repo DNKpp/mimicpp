@@ -40,7 +40,7 @@ namespace mimicpp
         [[nodiscard]]
         explicit constexpr BasicExpectationBuilder(
             std::shared_ptr<StorageT> storage,
-            std::optional<StringT> mockName,
+            StringT mockName,
             detail::TimesConfig timesConfig,
             SequenceConfig sequenceConfig,
             FinalizePolicyArg&& finalizePolicyArg,
@@ -185,7 +185,7 @@ namespace mimicpp
 
     private:
         std::shared_ptr<StorageT> m_Storage;
-        std::optional<StringT> m_MockName;
+        StringT m_MockName;
         detail::TimesConfig m_TimesConfig{};
         SequenceConfig m_SequenceConfig{};
         FinalizePolicy m_FinalizePolicy{};
@@ -262,7 +262,7 @@ namespace mimicpp::detail
     template <typename Signature, typename... Args>
     constexpr auto make_expectation_builder(
         std::shared_ptr<ExpectationCollection<Signature>> expectations,
-        std::optional<StringT> mockName,
+        StringT mockName,
         Args&&... args)
     {
         using BaseBuilderT = BasicExpectationBuilder<

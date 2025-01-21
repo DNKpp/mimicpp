@@ -682,9 +682,8 @@ TEST_CASE(
     derived mock{};
     const ScopedExpectation expectation = mock.foo_.expect_call()
                                       and expect::never();
-    REQUIRE(expectation.mock_name());
     REQUIRE_THAT(
-        *expectation.mock_name(),
+        expectation.mock_name(),
         Catch::Matchers::ContainsSubstring("derived")
             && Catch::Matchers::EndsWith("::foo")
             && Catch::Matchers::Matches(R"(.+derived::foo)"));

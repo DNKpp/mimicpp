@@ -247,10 +247,7 @@ TEST_CASE(
     SECTION("When mock-name differs, reports do not compare equal.")
     {
         detail::expectation_info second{first};
-        second.mockName = GENERATE(
-            as<std::optional<StringT>>{},
-            std::nullopt,
-            "Other Mock-Name");
+        second.mockName = "Other Mock-Name";
 
         REQUIRE_FALSE(first == second);
         REQUIRE_FALSE(second == first);
