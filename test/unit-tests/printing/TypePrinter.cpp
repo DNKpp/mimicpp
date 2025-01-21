@@ -116,10 +116,10 @@ TEST_CASE(
             print_type<std::u8string>(),
             Catch::Matchers::Equals("std::u8string"));
         REQUIRE_THAT(
-            print_type<std::u8string>(),
+            print_type<std::u16string>(),
             Catch::Matchers::Equals("std::u16string"));
         REQUIRE_THAT(
-            print_type<std::u8string>(),
+            print_type<std::u32string>(),
             Catch::Matchers::Equals("std::u32string"));
     }
 
@@ -135,10 +135,10 @@ TEST_CASE(
             print_type<std::u8string_view>(),
             Catch::Matchers::Equals("std::u8string_view"));
         REQUIRE_THAT(
-            print_type<std::u8string_view>(),
+            print_type<std::u16string_view>(),
             Catch::Matchers::Equals("std::u16string_view"));
         REQUIRE_THAT(
-            print_type<std::u8string_view>(),
+            print_type<std::u32string_view>(),
             Catch::Matchers::Equals("std::u32string_view"));
     }
 

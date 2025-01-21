@@ -59,8 +59,8 @@ namespace mimicpp::detail
 
 #ifdef MIMICPP_DETAIL_IS_GCC
 
-#include <cstdlib>
-#include <cxxabi.h>
+    #include <cstdlib>
+    #include <cxxabi.h>
 
 namespace mimicpp::detail
 {
@@ -309,6 +309,68 @@ namespace mimicpp::detail
     struct CommonTypePrinter<unsigned long long>
     {
         static constexpr StringViewT value{"unsigned long long"};
+    };
+
+    // std::basic_string
+    template <>
+    struct CommonTypePrinter<std::string>
+    {
+        static constexpr StringViewT value{"std::string"};
+    };
+
+    template <>
+    struct CommonTypePrinter<std::u8string>
+    {
+        static constexpr StringViewT value{"std::u8string"};
+    };
+
+    template <>
+    struct CommonTypePrinter<std::u16string>
+    {
+        static constexpr StringViewT value{"std::u16string"};
+    };
+
+    template <>
+    struct CommonTypePrinter<std::u32string>
+    {
+        static constexpr StringViewT value{"std::u32string"};
+    };
+
+    template <>
+    struct CommonTypePrinter<std::wstring>
+    {
+        static constexpr StringViewT value{"std::wstring"};
+    };
+
+    // std::basic_string_view
+    template <>
+    struct CommonTypePrinter<std::string_view>
+    {
+        static constexpr StringViewT value{"std::string_view"};
+    };
+
+    template <>
+    struct CommonTypePrinter<std::u8string_view>
+    {
+        static constexpr StringViewT value{"std::u8string_view"};
+    };
+
+    template <>
+    struct CommonTypePrinter<std::u16string_view>
+    {
+        static constexpr StringViewT value{"std::u16string_view"};
+    };
+
+    template <>
+    struct CommonTypePrinter<std::u32string_view>
+    {
+        static constexpr StringViewT value{"std::u32string_view"};
+    };
+
+    template <>
+    struct CommonTypePrinter<std::wstring_view>
+    {
+        static constexpr StringViewT value{"std::wstring_view"};
     };
 }
 
