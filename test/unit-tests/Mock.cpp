@@ -918,7 +918,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "Mocks can have names.",
+    "Mocks have names.",
     "[mock]")
 {
     SECTION("When name is set.")
@@ -945,7 +945,7 @@ TEST_CASE(
             REQUIRE(expectation.mock_name());
             REQUIRE_THAT(
                 expectation.mock_name().value(),
-                Catch::Matchers::Matches(R"(Mock\<void\(\)\>)"));
+                Catch::Matchers::Matches(R"(Mock\<(v|void)\(\)\>)"));
         }
 
         SECTION("When multiple signatures are given.")
@@ -959,9 +959,9 @@ TEST_CASE(
                 expectation.mock_name().value(),
                 Catch::Matchers::Matches(
                     R"(Mock\<)"
-                    R"(void\(\), )"
-                    R"(void\(int\) const, )"
-                    R"(float\(double, int\) & noexcept)"
+                    R"((v|void)\(\), )"
+                    R"((v|void)\((i|int)\) const, )"
+                    R"((f|float)\((d|double), (i|int)\) & noexcept)"
                     R"(\>)"));
         }
     }
