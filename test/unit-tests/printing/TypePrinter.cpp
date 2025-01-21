@@ -5,6 +5,7 @@
 
 #include "mimic++/printing/TypePrinter.hpp"
 
+#include <array>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -207,6 +208,22 @@ TEST_CASE(
         REQUIRE_THAT(
             (print_type<std::tuple<std::tuple<int, float, std::string>>>()),
             Catch::Matchers::Equals("std::tuple<std::tuple<int, float, std::string>>"));
+    }
+
+    SECTION("std array types")
+    {
+        REQUIRE_THAT(
+            (print_type<std::array<int, 0>>()),
+            Catch::Matchers::Equals("std::array<int, 0>"));
+        REQUIRE_THAT(
+            (print_type<std::array<int, 42>>()),
+            Catch::Matchers::Equals("std::array<int, 42>"));
+        REQUIRE_THAT(
+            (print_type<std::array<std::vector<std::string>, 1>>()),
+            Catch::Matchers::Equals("std::array<std::vector<std::string>, 1>"));
+        REQUIRE_THAT(
+            (print_type<std::array<std::tuple<float&, std::tuple<>>, 1>>()),
+            Catch::Matchers::Equals("std::array<std::tuple<float&, std::tuple<>>, 1>"));
     }
 }
 

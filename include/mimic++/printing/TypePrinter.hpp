@@ -8,11 +8,13 @@
 
 #include "mimic++/Printer.hpp"
 
+#include <array>
 #include <cassert>
 #include <concepts>
 #include <functional>
 #include <iterator>
 #include <regex>
+#include <span>
 #include <string>
 #include <string_view>
 #include <typeinfo>
@@ -574,6 +576,22 @@ namespace mimicpp::detail
             static const StringT str = format::format(
                 "std::pmr::vector<{}>",
                 mimicpp::print_type<T>());
+
+            return str;
+        }
+    };
+
+    // std::array
+    template <typename T, std::size_t n>
+    struct CommonTypePrinter<std::array<T, n>>
+    {
+        [[nodiscard]]
+        static StringViewT name()
+        {
+            static const StringT str = format::format(
+                "std::array<{}, {}>",
+                mimicpp::print_type<T>(),
+                n);
 
             return str;
         }
