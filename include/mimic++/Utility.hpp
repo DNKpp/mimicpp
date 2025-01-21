@@ -117,7 +117,19 @@ namespace mimicpp
     {
         return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
     }
+
+    template <typename... Args>
+    struct type_list
+    {
+        static constexpr std::size_t size = sizeof...(Args);
+    };
 }
+
+template <typename... Args>
+struct std::tuple_size<mimicpp::type_list<Args...>>
+    : std::integral_constant<std::size_t, mimicpp::type_list<Args...>::size>
+{
+};
 
 namespace mimicpp::detail
 {

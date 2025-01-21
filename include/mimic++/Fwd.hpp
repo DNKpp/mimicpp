@@ -40,10 +40,7 @@ namespace mimicpp
      * \tparam Args The types.
      */
     template <typename... Args>
-    struct type_list
-    {
-        static constexpr std::size_t size = sizeof...(Args);
-    };
+    struct type_list;
 
     /**
      * \brief Primary template, purposely undefined.

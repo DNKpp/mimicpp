@@ -85,6 +85,22 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+    "type_list::size holds the amount of arguments.",
+    "[utility]",
+    ((std::size_t expected, typename... Args), expected, Args...),
+    (0u),
+    (1u, int),
+    (2u, int, int),
+    (2u, float, int),
+    (3u, int, int, int))
+{
+    using type_list_t = type_list<Args...>;
+
+    STATIC_REQUIRE(expected == type_list_t::size);
+    STATIC_REQUIRE(expected == std::tuple_size_v<type_list_t>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
     "unique_list_t is an alias to a tuple with just unique types.",
     "[utility]",
     ((bool dummy, typename Expected, typename... Types), dummy, Expected, Types...),
