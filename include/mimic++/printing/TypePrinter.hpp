@@ -159,13 +159,108 @@ namespace mimicpp::detail
     constexpr priority_tag<1u> maxPrintTypePriority{};
 
     template <typename T>
+    struct print_type_helper
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return print_type_to<T>(maxPrintTypePriority, std::move(out));
+        }
+    };
+
+    template <typename T>
+    struct print_type_helper<volatile T>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return std::ranges::copy(
+                       StringViewT{" volatile"},
+                       print_type_helper<T>{}(std::move(out)))
+                .out;
+        }
+    };
+
+    template <typename T>
+    struct print_type_helper<const T>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return std::ranges::copy(
+                       StringViewT{" const"},
+                       print_type_helper<T>{}(std::move(out)))
+                .out;
+        }
+    };
+
+    template <typename T>
+    struct print_type_helper<const volatile T>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return std::ranges::copy(
+                       StringViewT{" const volatile"},
+                       print_type_helper<T>{}(std::move(out)))
+                .out;
+        }
+    };
+
+    template <typename T>
+    struct print_type_helper<T&>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return std::ranges::fill_n(
+                print_type_helper<T>{}(std::move(out)),
+                1u,
+                '&');
+        }
+    };
+
+    template <typename T>
+    struct print_type_helper<T&&>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return std::ranges::fill_n(
+                print_type_helper<T>{}(std::move(out)),
+                2u,
+                '&');
+        }
+    };
+
+    template <typename T>
+    struct print_type_helper<T*>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return std::ranges::fill_n(
+                print_type_helper<T>{}(std::move(out)),
+                1u,
+                '*');
+        }
+    };
+
+    template <typename T>
     class PrintTypeFn
     {
     public:
         template <print_iterator OutIter>
         constexpr OutIter operator()(OutIter out) const
         {
-            return print_type_to<T>(maxPrintTypePriority, std::move(out));
+            return print_type_helper<T>{}(std::move(out));
         }
 
         [[nodiscard]]

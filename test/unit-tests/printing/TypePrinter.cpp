@@ -178,6 +178,277 @@ TEST_CASE(
 
 namespace
 {
+    struct my_type
+    {
+    };
+
+    template <unsigned N>
+    class FixedString
+    {
+    public:
+        char buffer[N + 1];
+
+        [[nodiscard]]
+        explicit consteval FixedString(char const* s) noexcept
+        {
+            std::ranges::copy_n(s, N, std::ranges::begin(buffer));
+            buffer[N] = CharT{0};
+        }
+
+        [[nodiscard]]
+        explicit(false) constexpr operator StringViewT() const noexcept
+        {
+            return {std::ranges::data(buffer), N};
+        }
+    };
+
+    template <unsigned N>
+    FixedString(CharT const (&)[N]) -> FixedString<N - 1>;
+}
+
+TEMPLATE_TEST_CASE_SIG(
+    "print_type supports all type qualifications.",
+    "[print]",
+    ((auto baseName, typename T), baseName, T),
+    (FixedString{"int"}, int),
+    (FixedString{"int*"}, int*),
+    (FixedString{"int const*"}, int const*),
+    (FixedString{"int volatile*"}, int volatile*),
+    (FixedString{"int const volatile*"}, int const volatile*),
+
+    (FixedString{"std::vector<int>"}, std::vector<int>),
+    (FixedString{"std::vector<int>*"}, std::vector<int>*),
+    (FixedString{"std::vector<int> const*"}, std::vector<int> const*),
+    (FixedString{"std::vector<int> volatile*"}, std::vector<int> volatile*),
+    (FixedString{"std::vector<int> const volatile*"}, std::vector<int> const volatile*),
+
+    (FixedString{"std::vector<std::vector<int>>"}, std::vector<std::vector<int>>),
+    (FixedString{"std::vector<std::vector<int>>*"}, std::vector<std::vector<int>>*),
+    (FixedString{"std::vector<std::vector<int>> const*"}, std::vector<std::vector<int>> const*),
+    (FixedString{"std::vector<std::vector<int>> volatile*"}, std::vector<std::vector<int>> volatile*),
+    (FixedString{"std::vector<std::vector<int>> const volatile*"}, std::vector<std::vector<int>> const volatile*),
+
+    (FixedString{"my_type"}, my_type),
+    (FixedString{"my_type*"}, my_type*),
+    (FixedString{"my_type const*"}, my_type const*),
+    (FixedString{"my_type volatile*"}, my_type volatile*),
+    (FixedString{"my_type const volatile*"}, my_type const volatile*))
+{
+    const StringT name{baseName};
+
+    SECTION("As value type")
+    {
+        REQUIRE_THAT(
+            print_type<T const>(),
+            Catch::Matchers::Equals(name + " const"));
+        REQUIRE_THAT(
+            print_type<T volatile>(),
+            Catch::Matchers::Equals(name + " volatile"));
+        REQUIRE_THAT(
+            print_type<T const volatile>(),
+            Catch::Matchers::Equals(name + " const volatile"));
+    }
+
+    SECTION("As lvalue-ref type")
+    {
+        REQUIRE_THAT(
+            print_type<T&>(),
+            Catch::Matchers::Equals(name + "&"));
+        REQUIRE_THAT(
+            print_type<T const&>(),
+            Catch::Matchers::Equals(name + " const&"));
+        REQUIRE_THAT(
+            print_type<T volatile&>(),
+            Catch::Matchers::Equals(name + " volatile&"));
+        REQUIRE_THAT(
+            print_type<T const volatile&>(),
+            Catch::Matchers::Equals(name + " const volatile&"));
+    }
+
+    SECTION("As rvalue-ref type")
+    {
+        REQUIRE_THAT(
+            print_type<T&&>(),
+            Catch::Matchers::Equals(name + "&&"));
+        REQUIRE_THAT(
+            print_type<T const&&>(),
+            Catch::Matchers::Equals(name + " const&&"));
+        REQUIRE_THAT(
+            print_type<T volatile&&>(),
+            Catch::Matchers::Equals(name + " volatile&&"));
+        REQUIRE_THAT(
+            print_type<T const volatile&&>(),
+            Catch::Matchers::Equals(name + " const volatile&&"));
+    }
+
+    SECTION("As pointer type")
+    {
+        REQUIRE_THAT(
+            print_type<T*>(),
+            Catch::Matchers::Equals(name + "*"));
+        REQUIRE_THAT(
+            print_type<T const*>(),
+            Catch::Matchers::Equals(name + " const*"));
+        REQUIRE_THAT(
+            print_type<T volatile*>(),
+            Catch::Matchers::Equals(name + " volatile*"));
+        REQUIRE_THAT(
+            print_type<T const volatile*>(),
+            Catch::Matchers::Equals(name + " const volatile*"));
+
+        REQUIRE_THAT(
+            print_type<T* const>(),
+            Catch::Matchers::Equals(name + "* const"));
+        REQUIRE_THAT(
+            print_type<T const* const>(),
+            Catch::Matchers::Equals(name + " const* const"));
+        REQUIRE_THAT(
+            print_type<T volatile* const>(),
+            Catch::Matchers::Equals(name + " volatile* const"));
+        REQUIRE_THAT(
+            print_type<T const volatile* const>(),
+            Catch::Matchers::Equals(name + " const volatile* const"));
+
+        REQUIRE_THAT(
+            print_type<T* volatile>(),
+            Catch::Matchers::Equals(name + "* volatile"));
+        REQUIRE_THAT(
+            print_type<T const* volatile>(),
+            Catch::Matchers::Equals(name + " const* volatile"));
+        REQUIRE_THAT(
+            print_type<T volatile* volatile>(),
+            Catch::Matchers::Equals(name + " volatile* volatile"));
+        REQUIRE_THAT(
+            print_type<T const volatile* volatile>(),
+            Catch::Matchers::Equals(name + " const volatile* volatile"));
+
+        REQUIRE_THAT(
+            print_type<T* const volatile>(),
+            Catch::Matchers::Equals(name + "* const volatile"));
+        REQUIRE_THAT(
+            print_type<T const* const volatile>(),
+            Catch::Matchers::Equals(name + " const* const volatile"));
+        REQUIRE_THAT(
+            print_type<T volatile* const volatile>(),
+            Catch::Matchers::Equals(name + " volatile* const volatile"));
+        REQUIRE_THAT(
+            print_type<T const volatile* const volatile>(),
+            Catch::Matchers::Equals(name + " const volatile* const volatile"));
+    }
+
+    SECTION("As lvalue-ref pointer type")
+    {
+        REQUIRE_THAT(
+            print_type<T*&>(),
+            Catch::Matchers::Equals(name + "*&"));
+        REQUIRE_THAT(
+            print_type<T const*&>(),
+            Catch::Matchers::Equals(name + " const*&"));
+        REQUIRE_THAT(
+            print_type<T volatile*&>(),
+            Catch::Matchers::Equals(name + " volatile*&"));
+        REQUIRE_THAT(
+            print_type<T const volatile*&>(),
+            Catch::Matchers::Equals(name + " const volatile*&"));
+
+        REQUIRE_THAT(
+            print_type<T* const&>(),
+            Catch::Matchers::Equals(name + "* const&"));
+        REQUIRE_THAT(
+            print_type<T const* const&>(),
+            Catch::Matchers::Equals(name + " const* const&"));
+        REQUIRE_THAT(
+            print_type<T volatile* const&>(),
+            Catch::Matchers::Equals(name + " volatile* const&"));
+        REQUIRE_THAT(
+            print_type<T const volatile* const&>(),
+            Catch::Matchers::Equals(name + " const volatile* const&"));
+
+        REQUIRE_THAT(
+            print_type<T* volatile&>(),
+            Catch::Matchers::Equals(name + "* volatile&"));
+        REQUIRE_THAT(
+            print_type<T const* volatile&>(),
+            Catch::Matchers::Equals(name + " const* volatile&"));
+        REQUIRE_THAT(
+            print_type<T volatile* volatile&>(),
+            Catch::Matchers::Equals(name + " volatile* volatile&"));
+        REQUIRE_THAT(
+            print_type<T const volatile* volatile&>(),
+            Catch::Matchers::Equals(name + " const volatile* volatile&"));
+
+        REQUIRE_THAT(
+            print_type<T* const volatile&>(),
+            Catch::Matchers::Equals(name + "* const volatile&"));
+        REQUIRE_THAT(
+            print_type<T const* const volatile&>(),
+            Catch::Matchers::Equals(name + " const* const volatile&"));
+        REQUIRE_THAT(
+            print_type<T volatile* const volatile&>(),
+            Catch::Matchers::Equals(name + " volatile* const volatile&"));
+        REQUIRE_THAT(
+            print_type<T const volatile* const volatile&>(),
+            Catch::Matchers::Equals(name + " const volatile* const volatile&"));
+    }
+
+    SECTION("As rvalue-ref pointer type")
+    {
+        REQUIRE_THAT(
+            print_type<T*&&>(),
+            Catch::Matchers::Equals(name + "*&&"));
+        REQUIRE_THAT(
+            print_type<T const*&&>(),
+            Catch::Matchers::Equals(name + " const*&&"));
+        REQUIRE_THAT(
+            print_type<T volatile*&&>(),
+            Catch::Matchers::Equals(name + " volatile*&&"));
+        REQUIRE_THAT(
+            print_type<T const volatile*&&>(),
+            Catch::Matchers::Equals(name + " const volatile*&&"));
+
+        REQUIRE_THAT(
+            print_type<T* const&&>(),
+            Catch::Matchers::Equals(name + "* const&&"));
+        REQUIRE_THAT(
+            print_type<T const* const&&>(),
+            Catch::Matchers::Equals(name + " const* const&&"));
+        REQUIRE_THAT(
+            print_type<T volatile* const&&>(),
+            Catch::Matchers::Equals(name + " volatile* const&&"));
+        REQUIRE_THAT(
+            print_type<T const volatile* const&&>(),
+            Catch::Matchers::Equals(name + " const volatile* const&&"));
+
+        REQUIRE_THAT(
+            print_type<T* volatile&&>(),
+            Catch::Matchers::Equals(name + "* volatile&&"));
+        REQUIRE_THAT(
+            print_type<T const* volatile&&>(),
+            Catch::Matchers::Equals(name + " const* volatile&&"));
+        REQUIRE_THAT(
+            print_type<T volatile* volatile&&>(),
+            Catch::Matchers::Equals(name + " volatile* volatile&&"));
+        REQUIRE_THAT(
+            print_type<T const volatile* volatile&&>(),
+            Catch::Matchers::Equals(name + " const volatile* volatile&&"));
+
+        REQUIRE_THAT(
+            print_type<T* const volatile&&>(),
+            Catch::Matchers::Equals(name + "* const volatile&&"));
+        REQUIRE_THAT(
+            print_type<T const* const volatile&&>(),
+            Catch::Matchers::Equals(name + " const* const volatile&&"));
+        REQUIRE_THAT(
+            print_type<T volatile* const volatile&&>(),
+            Catch::Matchers::Equals(name + " volatile* const volatile&&"));
+        REQUIRE_THAT(
+            print_type<T const volatile* const volatile&&>(),
+            Catch::Matchers::Equals(name + " const volatile* const volatile&&"));
+    }
+}
+
+namespace
+{
     template <typename T>
     struct custom_allocator
         : std::allocator<T>
@@ -195,13 +466,6 @@ TEST_CASE(
     REQUIRE_THAT(
         (print_type<std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>>()),
         Catch::Matchers::Equals("std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>"));
-}
-
-namespace
-{
-    struct my_type
-    {
-    };
 }
 
 TEST_CASE(
