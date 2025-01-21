@@ -89,6 +89,9 @@ namespace mimicpp::detail
         static const RegexT handleStdNamespace{R"(std::__cxx11::)"};
         name = std::regex_replace(name, handleStdNamespace, "std::");
 
+        static const RegexT omitAnonymousNamespace{R"(\(anonymous namespace\)::)"};
+        name = std::regex_replace(name, omitAnonymousNamespace, "");
+
         return name;
     }
 }
@@ -113,6 +116,9 @@ namespace mimicpp::detail
 
         static const RegexT omitClassStructEnum{R"(\b(class|struct|enum)\s+)"};
         name = std::regex_replace(name, omitClassStructEnum, "");
+
+        static const RegexT omitAnonymousNamespace{"`anonymous namespace'::"};
+        name = std::regex_replace(name, omitAnonymousNamespace, "");
 
         return name;
     }

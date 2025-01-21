@@ -175,3 +175,18 @@ TEST_CASE(
             Catch::Matchers::Equals("std::optional<std::optional<int>>"));
     }
 }
+namespace
+{
+    struct my_type
+    {
+    };
+}
+
+TEST_CASE(
+    "Types in anonymous namespaces are printed nicely.",
+    "[print]")
+{
+    REQUIRE_THAT(
+        print_type<my_type>(),
+        Catch::Matchers::Equals("my_type"));
+}
