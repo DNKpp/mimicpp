@@ -214,6 +214,7 @@ namespace mimicpp::detail
     };
 
     template <typename T>
+        requires(!std::is_array_v<T>)
     struct print_type_helper<volatile T>
     {
         template <print_iterator OutIter>
@@ -228,6 +229,7 @@ namespace mimicpp::detail
     };
 
     template <typename T>
+        requires(!std::is_array_v<T>)
     struct print_type_helper<const T>
     {
         template <print_iterator OutIter>
@@ -242,6 +244,7 @@ namespace mimicpp::detail
     };
 
     template <typename T>
+        requires(!std::is_array_v<T>)
     struct print_type_helper<const volatile T>
     {
         template <print_iterator OutIter>
@@ -294,6 +297,50 @@ namespace mimicpp::detail
                 print_type_helper<T>{}(std::move(out)),
                 1u,
                 '*');
+        }
+    };
+
+    template <typename T>
+    struct print_type_helper<T[]>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return std::ranges::copy(
+                       StringViewT{"[]"},
+                       print_type_helper<T>{}(std::move(out)))
+                .out;
+        }
+    };
+
+    template <typename T, std::size_t n>
+    struct print_type_helper<T[n]>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return format::format_to(
+                print_type_helper<T>{}(std::move(out)),
+                "[{}]",
+                n);
+        }
+    };
+
+    // multidimensional arrays are evaluated from left to right,
+    // but we need it from right to left.
+    template <typename T, std::size_t n, std::size_t m>
+    struct print_type_helper<T[n][m]>
+    {
+        template <print_iterator OutIter>
+        [[nodiscard]]
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return format::format_to(
+                print_type_helper<T[n]>{}(std::move(out)),
+                "[{}]",
+                m);
         }
     };
 
@@ -622,6 +669,21 @@ namespace mimicpp::detail
                 "std::span<{}, {}>",
                 mimicpp::print_type<T>(),
                 n);
+
+            return str;
+        }
+    };
+
+    // std::unique_ptr
+    template <typename T>
+    struct CommonTypePrinter<std::unique_ptr<T>>
+    {
+        [[nodiscard]]
+        static StringViewT name()
+        {
+            static const StringT str = format::format(
+                "std::unique_ptr<{}>",
+                mimicpp::print_type<T>());
 
             return str;
         }

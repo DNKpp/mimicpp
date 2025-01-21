@@ -348,6 +348,51 @@ TEMPLATE_TEST_CASE_SIG(
             Catch::Matchers::Equals(name + " const volatile&&"));
     }
 
+    SECTION("As unbounded array type")
+    {
+        REQUIRE_THAT(
+            print_type<T[]>(),
+            Catch::Matchers::Equals(name + "[]"));
+        REQUIRE_THAT(
+            print_type<T const[]>(),
+            Catch::Matchers::Equals(name + " const[]"));
+        REQUIRE_THAT(
+            print_type<T volatile[]>(),
+            Catch::Matchers::Equals(name + " volatile[]"));
+        REQUIRE_THAT(
+            print_type<T const volatile[]>(),
+            Catch::Matchers::Equals(name + " const volatile[]"));
+    }
+
+    SECTION("As bounded array type")
+    {
+        REQUIRE_THAT(
+            print_type<T[42]>(),
+            Catch::Matchers::Equals(name + "[42]"));
+        REQUIRE_THAT(
+            print_type<T const[42]>(),
+            Catch::Matchers::Equals(name + " const[42]"));
+        REQUIRE_THAT(
+            print_type<T volatile[42]>(),
+            Catch::Matchers::Equals(name + " volatile[42]"));
+        REQUIRE_THAT(
+            print_type<T const volatile[42]>(),
+            Catch::Matchers::Equals(name + " const volatile[42]"));
+
+        REQUIRE_THAT(
+            print_type<T[42][3]>(),
+            Catch::Matchers::Equals(name + "[42][3]"));
+        REQUIRE_THAT(
+            print_type<T const[42][3]>(),
+            Catch::Matchers::Equals(name + " const[42][3]"));
+        REQUIRE_THAT(
+            print_type<T volatile[42][3]>(),
+            Catch::Matchers::Equals(name + " volatile[42][3]"));
+        REQUIRE_THAT(
+            print_type<T const volatile[42][3]>(),
+            Catch::Matchers::Equals(name + " const volatile[42][3]"));
+    }
+
     SECTION("As pointer type")
     {
         REQUIRE_THAT(
