@@ -26,6 +26,7 @@ add_executable(${TARGET_NAME}
 add_subdirectory(call-conventions)
 add_subdirectory(matchers)
 add_subdirectory(policies)
+add_subdirectory(printing)
 
 target_include_directories(${TARGET_NAME}
     PRIVATE
