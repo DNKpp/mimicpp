@@ -153,6 +153,12 @@ TEST_CASE(
         REQUIRE_THAT(
             print_type<std::vector<std::vector<int>>>(),
             Catch::Matchers::Equals("std::vector<std::vector<int>>"));
+        REQUIRE_THAT(
+            print_type<std::vector<std::string>>(),
+            Catch::Matchers::Equals("std::vector<std::string>"));
+        REQUIRE_THAT(
+            print_type<std::vector<std::vector<std::string>>>(),
+            Catch::Matchers::Equals("std::vector<std::vector<std::string>>"));
 
         REQUIRE_THAT(
             print_type<std::pmr::vector<int>>(),
@@ -160,6 +166,12 @@ TEST_CASE(
         REQUIRE_THAT(
             print_type<std::pmr::vector<std::pmr::vector<int>>>(),
             Catch::Matchers::Equals("std::pmr::vector<std::pmr::vector<int>>"));
+        REQUIRE_THAT(
+            print_type<std::pmr::vector<std::string>>(),
+            Catch::Matchers::Equals("std::pmr::vector<std::string>"));
+        REQUIRE_THAT(
+            print_type<std::pmr::vector<std::pmr::vector<std::string>>>(),
+            Catch::Matchers::Equals("std::pmr::vector<std::pmr::vector<std::string>>"));
     }
 
     SECTION("std optional types")
@@ -171,8 +183,30 @@ TEST_CASE(
             print_type<std::optional<int>>(),
             Catch::Matchers::Equals("std::optional<int>"));
         REQUIRE_THAT(
+            print_type<std::optional<std::string>>(),
+            Catch::Matchers::Equals("std::optional<std::string>"));
+        REQUIRE_THAT(
             print_type<std::optional<std::optional<int>>>(),
             Catch::Matchers::Equals("std::optional<std::optional<int>>"));
+        REQUIRE_THAT(
+            print_type<std::optional<std::optional<std::string>>>(),
+            Catch::Matchers::Equals("std::optional<std::optional<std::string>>"));
+    }
+
+    SECTION("std tuple types")
+    {
+        REQUIRE_THAT(
+            print_type<std::tuple<>>(),
+            Catch::Matchers::Equals("std::tuple<>"));
+        REQUIRE_THAT(
+            print_type<std::tuple<int>>(),
+            Catch::Matchers::Equals("std::tuple<int>"));
+        REQUIRE_THAT(
+            print_type<std::tuple<std::tuple<>>>(),
+            Catch::Matchers::Equals("std::tuple<std::tuple<>>"));
+        REQUIRE_THAT(
+            (print_type<std::tuple<std::tuple<int, float, std::string>>>()),
+            Catch::Matchers::Equals("std::tuple<std::tuple<int, float, std::string>>"));
     }
 }
 
@@ -466,6 +500,9 @@ TEST_CASE(
     REQUIRE_THAT(
         (print_type<std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>>()),
         Catch::Matchers::Equals("std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>"));
+    REQUIRE_THAT(
+        (print_type<std::vector<std::vector<int>, custom_allocator<std::vector<int>>>>()),
+        Catch::Matchers::Equals("std::vector<std::vector<int>, custom_allocator<std::vector<int>>>"));
 }
 
 TEST_CASE(

@@ -13,6 +13,8 @@
 #include <functional>
 #include <iterator>
 #include <regex>
+#include <string>
+#include <string_view>
 #include <typeinfo>
 #include <utility>
 
@@ -144,12 +146,28 @@ namespace mimicpp::detail
             typename CommonTypePrinter<T>;
             { CommonTypePrinter<T>::name() } -> std::convertible_to<StringViewT>;
         }
-    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<1u>, OutIter out)
+    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<2u>, OutIter out)
     {
         return format::format_to(
             std::move(out),
             "{}",
             CommonTypePrinter<T>::name());
+    }
+
+    template <typename T>
+    struct TemplateTypePrinter;
+
+    template <typename T, print_iterator OutIter>
+        requires requires {
+            typename TemplateTypePrinter<T>;
+            { TemplateTypePrinter<T>::name() } -> std::convertible_to<StringViewT>;
+        }
+    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<1u>, OutIter out)
+    {
+        return format::format_to(
+            std::move(out),
+            "{}",
+            TemplateTypePrinter<T>::name());
     }
 
     template <typename T, print_iterator OutIter>
@@ -164,7 +182,7 @@ namespace mimicpp::detail
             name);
     }
 
-    constexpr priority_tag<1u> maxPrintTypePriority{};
+    constexpr priority_tag<2u> maxPrintTypePriority{};
 
     template <typename T>
     struct print_type_helper
@@ -289,7 +307,34 @@ namespace mimicpp
 
 namespace mimicpp::detail
 {
-    template <>
+    template <template <typename...> typename Template, typename First, typename... Others>
+    struct TemplateTypePrinter<Template<First, Others...>>
+    {
+        [[nodiscard]]
+        static StringViewT name()
+        {
+            static const StringT name = generate_name();
+            return name;
+        }
+
+    private:
+        [[nodiscard]]
+        static StringT generate_name()
+        {
+            StringT fullName = detail::prettify_type_name(
+                detail::type_name<Template<First, Others...>>());
+            fullName.erase(std::ranges::find(fullName, '<'), fullName.cend());
+
+            StringStreamT out{};
+            out << fullName << '<' << mimicpp::print_type<First>();
+            ((out << ", " << mimicpp::print_type<Others>()), ...);
+            out << '>';
+
+            return std::move(out).str();
+        }
+    };
+
+    /*template <>
     struct CommonTypePrinter<void>
     {
         [[nodiscard]]
