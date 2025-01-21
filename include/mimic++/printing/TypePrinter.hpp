@@ -334,206 +334,7 @@ namespace mimicpp::detail
         }
     };
 
-    /*template <>
-    struct CommonTypePrinter<void>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"void"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<bool>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"bool"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::nullptr_t>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::nullptr_t"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::byte>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::byte"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<char>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"char"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<signed char>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"signed char"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<unsigned char>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"unsigned char"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<char8_t>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"char8_t"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<char16_t>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"char16_t"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<char32_t>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"char32_t"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<wchar_t>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"wchar_t"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<float>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"float"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<double>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"double"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<long double>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"long double"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<short>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"short"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<unsigned short>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"unsigned short"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<int>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"int"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<unsigned int>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"unsigned int"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<long>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"long"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<unsigned long>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"unsigned long"};
-        }
-    };
-
+    // required for msvc
     template <>
     struct CommonTypePrinter<long long>
     {
@@ -544,6 +345,7 @@ namespace mimicpp::detail
         }
     };
 
+    // required for msvc
     template <>
     struct CommonTypePrinter<unsigned long long>
     {
@@ -551,6 +353,16 @@ namespace mimicpp::detail
         static consteval StringViewT name() noexcept
         {
             return {"unsigned long long"};
+        }
+    };
+
+    template <>
+    struct CommonTypePrinter<std::nullptr_t>
+    {
+        [[nodiscard]]
+        static consteval StringViewT name() noexcept
+        {
+            return {"std::nullptr_t"};
         }
     };
 
