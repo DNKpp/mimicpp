@@ -16,18 +16,21 @@ TEST_CASE(
     "print_type supports fundamental types.",
     "[print]")
 {
-    REQUIRE_THAT(
-        print_type<void>(),
-        Catch::Matchers::Equals("void"));
-    REQUIRE_THAT(
-        print_type<bool>(),
-        Catch::Matchers::Equals("bool"));
-    REQUIRE_THAT(
-        print_type<std::nullptr_t>(),
-        Catch::Matchers::Equals("std::nullptr_t"));
-    REQUIRE_THAT(
-        print_type<std::byte>(),
-        Catch::Matchers::Equals("std::byte"));
+    SECTION("General types")
+    {
+        REQUIRE_THAT(
+            print_type<void>(),
+            Catch::Matchers::Equals("void"));
+        REQUIRE_THAT(
+            print_type<bool>(),
+            Catch::Matchers::Equals("bool"));
+        REQUIRE_THAT(
+            print_type<std::nullptr_t>(),
+            Catch::Matchers::Equals("std::nullptr_t"));
+        REQUIRE_THAT(
+            print_type<std::byte>(),
+            Catch::Matchers::Equals("std::byte"));
+    }
 
     SECTION("Character types.")
     {
@@ -150,6 +153,13 @@ TEST_CASE(
         REQUIRE_THAT(
             print_type<std::vector<std::vector<int>>>(),
             Catch::Matchers::Equals("std::vector<std::vector<int>>"));
+
+        REQUIRE_THAT(
+            print_type<std::pmr::vector<int>>(),
+            Catch::Matchers::Equals("std::pmr::vector<int>"));
+        REQUIRE_THAT(
+            print_type<std::pmr::vector<std::pmr::vector<int>>>(),
+            Catch::Matchers::Equals("std::pmr::vector<std::pmr::vector<int>>"));
     }
 
     SECTION("std optional types")
