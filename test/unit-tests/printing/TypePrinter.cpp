@@ -6,7 +6,10 @@
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/printing/CommonTypePrinter.hpp"
 
+#include <memory_resource>
 #include <optional>
+#include <string>
+#include <string_view>
 #include <tuple>
 
 using namespace mimicpp;
