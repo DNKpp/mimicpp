@@ -917,8 +917,6 @@ TEST_CASE(
     }
 }
 
-#ifndef MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING
-
 TEST_CASE(
     "Mocks have names.",
     "[mock]")
@@ -950,64 +948,23 @@ TEST_CASE(
 
         SECTION("When multiple signatures are given.")
         {
-            Mock<void(), void(std::vector<int>) const, float(double, int) & noexcept> mock{};
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+            Mock<void(), void(std::vector<int>*) const, float(std::string const&&, int) & noexcept> mock{};
             const ScopedExpectation expectation = mock.expect_call()
-                                                  and expect::never();
+                                              and expect::never();
 
             REQUIRE_THAT(
                 expectation.mock_name(),
-                Catch::Matchers::Equals("Mock<void(), void(std::vector<int>) const, float(double, int) & noexcept>"));
-        }
-    }
-}
-
+                Catch::Matchers::Equals("Mock<void(), void(std::vector<int>*) const, float(std::string const&&, int) & noexcept>"));
 #else
-
-TEST_CASE(
-    "Mocks have names.",
-    "[mock]")
-{
-    SECTION("When name is set.")
-    {
-        Mock<void()> mock{
-            MockSettings{.name = "MyMock"}};
-        const ScopedExpectation expectation = mock.expect_call()
-                                          and expect::never();
-
-        REQUIRE_THAT(
-            expectation.mock_name(),
-            Catch::Matchers::Equals("MyMock"));
-    }
-
-    SECTION("When not specified, it will be automatically generated.")
-    {
-        SECTION("When single signature is given.")
-        {
-            Mock<void()> mock{};
+            Mock<void(), void(std::string*) const, float(std::string const&&, int) & noexcept> mock{};
             const ScopedExpectation expectation = mock.expect_call()
                                               and expect::never();
 
             REQUIRE_THAT(
                 expectation.mock_name(),
-                Catch::Matchers::Matches(R"(Mock\<(v|void)\(\)\>)"));
-        }
-
-        SECTION("When multiple signatures are given.")
-        {
-            Mock<void(), void(int) const, float(double, int) & noexcept> mock{};
-            const ScopedExpectation expectation = mock.expect_call()
-                                              and expect::never();
-
-            REQUIRE_THAT(
-                expectation.mock_name(),
-                Catch::Matchers::Matches(
-                    R"(Mock\<)"
-                    R"((v|void)\(\), )"
-                    R"((v|void)\((i|int)\) const, )"
-                    R"((f|float)\((d|double), (i|int)\) & noexcept)"
-                    R"(\>)"));
+                Catch::Matchers::Equals("Mock<void(), void(std::string*) const, float(std::string const&&, int) & noexcept>"));
+#endif
         }
     }
 }
-
-#endif

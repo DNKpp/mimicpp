@@ -21,6 +21,8 @@
 
 using namespace mimicpp;
 
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+
 namespace
 {
     template <typename T>
@@ -1050,3 +1052,5 @@ TEST_CASE(
             Catch::Matchers::Equals("std::priority_queue<std::priority_queue<std::string>, std::vector<std::priority_queue<std::string>>, custom_compare>"));
     }
 }
+
+#endif

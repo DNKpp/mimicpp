@@ -163,6 +163,8 @@ TEST_CASE(
             Catch::Matchers::Equals("std::u32string_view"));
     }
 
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+
     SECTION("std optional types")
     {
         REQUIRE_THAT(
@@ -233,6 +235,8 @@ TEST_CASE(
             (print_type<std::weak_ptr<std::tuple<float&, std::tuple<>>>>()),
             Catch::Matchers::Equals("std::weak_ptr<std::tuple<float&, std::tuple<>>>"));
     }
+
+#endif
 }
 
 namespace
@@ -265,6 +269,7 @@ namespace
     FixedString(CharT const (&)[N]) -> FixedString<N - 1>;
 }
 
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 TEMPLATE_TEST_CASE_SIG(
     "print_type supports all type qualifications.",
     "[print]",
@@ -274,6 +279,12 @@ TEMPLATE_TEST_CASE_SIG(
     (FixedString{"int const*"}, int const*),
     (FixedString{"int volatile*"}, int volatile*),
     (FixedString{"int const volatile*"}, int const volatile*),
+
+    (FixedString{"std::string"}, std::string),
+    (FixedString{"std::string*"}, std::string*),
+    (FixedString{"std::string const*"}, std::string const*),
+    (FixedString{"std::string volatile*"}, std::string volatile*),
+    (FixedString{"std::string const volatile*"}, std::string const volatile*),
 
     (FixedString{"std::vector<int>"}, std::vector<int>),
     (FixedString{"std::vector<int>*"}, std::vector<int>*),
@@ -292,6 +303,23 @@ TEMPLATE_TEST_CASE_SIG(
     (FixedString{"my_type const*"}, my_type const*),
     (FixedString{"my_type volatile*"}, my_type volatile*),
     (FixedString{"my_type const volatile*"}, my_type const volatile*))
+#else
+TEMPLATE_TEST_CASE_SIG(
+    "print_type supports all type qualifications.",
+    "[print]",
+    ((auto baseName, typename T), baseName, T),
+    (FixedString{"int"}, int),
+    (FixedString{"int*"}, int*),
+    (FixedString{"int const*"}, int const*),
+    (FixedString{"int volatile*"}, int volatile*),
+    (FixedString{"int const volatile*"}, int const volatile*),
+
+    (FixedString{"std::string"}, std::string),
+    (FixedString{"std::string*"}, std::string*),
+    (FixedString{"std::string const*"}, std::string const*),
+    (FixedString{"std::string volatile*"}, std::string volatile*),
+    (FixedString{"std::string const volatile*"}, std::string const volatile*))
+#endif
 {
     const StringT name{baseName};
 
@@ -551,6 +579,8 @@ TEMPLATE_TEST_CASE_SIG(
     }
 }
 
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+
 TEMPLATE_TEST_CASE_SIG(
     "detail::default_arg_for determines, whether the type is default argument for the template.",
     "[print][detail]",
@@ -618,6 +648,8 @@ TEST_CASE(
         Catch::Matchers::Equals("my_type"));
 }
 
+#endif
+
 namespace
 {
     template <typename T>
@@ -627,14 +659,24 @@ namespace
     };
 }
 
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 TEMPLATE_TEST_CASE_SIG(
     "Signatures are printed nicely.",
     "[print]",
     ((auto baseName, typename Return, typename... Params), baseName, Return, Params...),
     (FixedString{"void()"}, void),
+    (FixedString{"std::string&(float const&&, char*)"}, std::string&, float const&&, char*),
     (
         FixedString{"std::optional<std::vector<int, custom_allocator<int>>>(std::string&&, std::tuple<std::vector<int>> const*)"},
         (std::optional<std::vector<int, custom_allocator<int>>>, std::string&&, std::tuple<std::vector<int>> const*)))
+#else
+TEMPLATE_TEST_CASE_SIG(
+    "Signatures are printed nicely.",
+    "[print]",
+    ((auto baseName, typename Return, typename... Params), baseName, Return, Params...),
+    (FixedString{"void()"}, void),
+    (FixedString{"std::string&(float const&&, char*)"}, std::string&, float const&&, char*))
+#endif
 {
     SECTION("Plain function.")
     {

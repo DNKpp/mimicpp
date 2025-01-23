@@ -12,15 +12,16 @@
 #include "mimic++/Utility.hpp"
 #include "mimic++/printing/Format.hpp"
 
-#ifndef MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING
-
 #include <algorithm>
 #include <concepts>
 #include <functional>
 #include <iterator>
-#include <regex>
 #include <typeinfo>
 #include <utility>
+
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+
+    #include <regex>
 
 namespace mimicpp
 {
@@ -126,6 +127,25 @@ namespace mimicpp::printing::detail
         static const RegexT omitAnonymousNamespace{"`anonymous namespace'::"};
         name = std::regex_replace(name, omitAnonymousNamespace, "");
 
+        return name;
+    }
+}
+
+#endif
+
+#else
+
+namespace mimicpp::printing::detail
+{
+    template <typename T>
+    StringT type_name()
+    {
+        return typeid(T).name();
+    }
+
+    [[nodiscard]]
+    inline StringT prettify_type_name(StringT name) noexcept
+    {
         return name;
     }
 }
@@ -375,8 +395,7 @@ namespace mimicpp::printing::detail
         if constexpr (0u < sizeof...(Ts))
         {
             std::invoke(
-                [&]<typename First, typename... Others>([[maybe_unused]] const type_list<First, Others...>)
-                {
+                [&]<typename First, typename... Others>([[maybe_unused]] const type_list<First, Others...>) {
                     mimicpp::print_type<First>(std::ostreambuf_iterator{out});
                     ((out << separator, mimicpp::print_type<Others>(std::ostreambuf_iterator{out})), ...);
                 },
@@ -385,7 +404,10 @@ namespace mimicpp::printing::detail
 
         return out;
     }
+}
 
+namespace mimicpp::printing::detail
+{
     template <satisfies<std::is_function> Signature>
     struct SignatureTypePrinter<Signature>
     {
@@ -428,6 +450,8 @@ namespace mimicpp::printing::detail
             return std::move(out).str();
         }
     };
+
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 
     template <typename T>
     [[nodiscard]]
@@ -621,43 +645,9 @@ namespace mimicpp::printing::detail
             })>
     {
     };
-}
-
-#else
-
-#include <algorithm>
-#include <typeinfo>
-
-namespace mimicpp::printing::detail
-{
-    template <typename T>
-    class PrintTypeFn
-    {
-    public:
-        template <print_iterator OutIter>
-        constexpr OutIter operator()(OutIter out) const
-        {
-            return std::ranges::copy(
-                typeid(T).name(),
-                std::move(out));
-        }
-
-        [[nodiscard]]
-        StringT operator()() const
-        {
-            StringStreamT stream{};
-            std::invoke(*this, std::ostreambuf_iterator{stream});
-            return std::move(stream).str();
-        }
-    };
-}
-
-namespace mimicpp
-{
-    template <typename T>
-    [[maybe_unused]] inline constexpr printing::detail::PrintTypeFn<T> print_type{};
-}
 
 #endif
+
+}
 
 #endif
