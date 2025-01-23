@@ -5,7 +5,6 @@
 
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/printing/CommonTypePrinter.hpp"
-#include "mimic++/printing/ContainerTypePrinter.hpp"
 
 #include <optional>
 #include <tuple>

@@ -3,7 +3,20 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/printing/ContainerTypePrinter.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
+
+#include <array>
+#include <span>
+#include <vector>
+#include <list>
+#include <forward_list>
+#include <set>
+#include <unordered_set>
+#include <map>
+#include <unordered_map>
+#include <deque>
+#include <queue>
+#include <stack>
 
 using namespace mimicpp;
 
@@ -509,10 +522,10 @@ TEST_CASE(
         REQUIRE_THAT(
             (print_type<
                 std::unordered_set<
-                    std::optional<std::string>,
-                    custom_hash<std::optional<std::string>>,
-                    custom_compare,
-                    custom_allocator<std::optional<std::string>>>>()),
+                std::optional<std::string>,
+                custom_hash<std::optional<std::string>>,
+                custom_compare,
+                custom_allocator<std::optional<std::string>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_set<"
                 "std::optional<std::string>, "
@@ -593,10 +606,10 @@ TEST_CASE(
         REQUIRE_THAT(
             (print_type<
                 std::unordered_multiset<
-                    std::optional<std::string>,
-                    custom_hash<std::optional<std::string>>,
-                    custom_compare,
-                    custom_allocator<std::optional<std::string>>>>()),
+                std::optional<std::string>,
+                custom_hash<std::optional<std::string>>,
+                custom_compare,
+                custom_allocator<std::optional<std::string>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_multiset<"
                 "std::optional<std::string>, "
@@ -784,11 +797,11 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::unordered_map<
-                 std::string,
-                 int,
-                 custom_hash<std::string>,
-                 custom_compare,
-                 custom_allocator<std::pair<const std::string, int>>>>()),
+                std::string,
+                int,
+                custom_hash<std::string>,
+                custom_compare,
+                custom_allocator<std::pair<const std::string, int>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_map<"
                 "std::string, "
@@ -798,11 +811,11 @@ TEST_CASE(
                 "custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
             (print_type<std::unordered_map<
-                 int,
-                 std::tuple<int, int>,
-                 custom_hash<int>,
-                 custom_compare,
-                 custom_allocator<std::pair<const int, std::tuple<int, int>>>>>()),
+                int,
+                std::tuple<int, int>,
+                custom_hash<int>,
+                custom_compare,
+                custom_allocator<std::pair<const int, std::tuple<int, int>>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_map<"
                 "int, "
@@ -881,11 +894,11 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::unordered_multimap<
-                 std::string,
-                 int,
-                 custom_hash<std::string>,
-                 custom_compare,
-                 custom_allocator<std::pair<std::string const, int>>>>()),
+                std::string,
+                int,
+                custom_hash<std::string>,
+                custom_compare,
+                custom_allocator<std::pair<std::string const, int>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_multimap<"
                 "std::string, "
@@ -895,11 +908,11 @@ TEST_CASE(
                 "custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
             (print_type<std::unordered_multimap<
-                 int,
-                 std::tuple<int, int>,
-                 custom_hash<int>,
-                 custom_compare,
-                 custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
+                int,
+                std::tuple<int, int>,
+                custom_hash<int>,
+                custom_compare,
+                custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_multimap<"
                 "int, "
