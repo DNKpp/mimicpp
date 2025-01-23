@@ -207,6 +207,7 @@ namespace mimicpp
         {
         public:
             std::type_index typeIndex;
+            StringT typeString;
             StringT stateString;
 
             [[nodiscard]]
@@ -214,6 +215,7 @@ namespace mimicpp
         };
 
         std::type_index returnTypeIndex;
+        StringT returnTypeString;
         std::vector<Arg> argDetails{};
         std::source_location fromLoc{};
         Stacktrace stacktrace{stacktrace::NullBackend{}};
@@ -224,6 +226,7 @@ namespace mimicpp
         friend bool operator==(const CallReport& lhs, const CallReport& rhs)
         {
             return lhs.returnTypeIndex == rhs.returnTypeIndex
+                && lhs.returnTypeString == rhs.returnTypeString
                 && lhs.argDetails == rhs.argDetails
                 && is_same_source_location(lhs.fromLoc, rhs.fromLoc)
                 && lhs.fromCategory == rhs.fromCategory
@@ -246,11 +249,13 @@ namespace mimicpp
     {
         return CallReport{
             .returnTypeIndex = typeid(Return),
+            .returnTypeString = print_type<Return>(),
             .argDetails = std::apply(
                 [](auto&... args) {
                     return std::vector<CallReport::Arg>{
                         CallReport::Arg{
                                         .typeIndex = typeid(Params),
+                                        .typeString = print_type<Params>(),
                                         .stateString = mimicpp::print(args.get())}
                         ...
                     };
@@ -298,7 +303,7 @@ namespace mimicpp
                 "return type: {}\n",
                 report.fromConstness,
                 report.fromCategory,
-                report.returnTypeIndex.name());
+                report.returnTypeString);
 
             if (!std::ranges::empty(report.argDetails))
             {
@@ -314,7 +319,7 @@ namespace mimicpp
                         "\t\tvalue: {}\n"
                         "\t}},\n",
                         i,
-                        report.argDetails[i].typeIndex.name(),
+                        report.argDetails[i].typeString,
                         report.argDetails[i].stateString);
                 }
             }

@@ -438,13 +438,14 @@ TEST_CASE(
 
     const ArgT first{
         .typeIndex = typeid(int),
+        .typeString = print_type<int>(),
         .stateString = "42"};
 
     const auto [expectedEquality, second] = GENERATE(
         (table<bool, ArgT>({
-            {false, {typeid(int), "1337"}},
-            {false, {typeid(short), "42"}},
-            { true,   {typeid(int), "42"}}
+            {false,   {typeid(int), print_type<int>(), "1337"}},
+            {false, {typeid(short), print_type<short>(), "42"}},
+            { true,     {typeid(int), print_type<int>(), "42"}}
     })));
 
     REQUIRE(expectedEquality == (first == second));
@@ -459,8 +460,10 @@ TEST_CASE(
 {
     const CallReport first{
         .returnTypeIndex = typeid(std::string),
+        .returnTypeString = print_type<std::string>(),
         .argDetails = {
             {.typeIndex = typeid(int),
+             .typeString = print_type<int>(),
              .stateString = "42"}},
         .fromLoc = std::source_location::current(),
         .stacktrace = stacktrace::current(),
@@ -533,10 +536,10 @@ TEST_CASE(
         second.argDetails = GENERATE(
             std::vector<ArgT>{},
             std::vector{
-                (ArgT{.typeIndex = typeid(int), .stateString = "1337"})},
+                (ArgT{.typeIndex = typeid(int), .typeString = print_type<int>(), .stateString = "1337"})},
             std::vector{
-                (ArgT{.typeIndex = typeid(int), .stateString = "42"}),
-                (ArgT{.typeIndex = typeid(int), .stateString = "1337"})});
+                (ArgT{.typeIndex = typeid(int), .typeString = print_type<int>(), .stateString = "42"}),
+                (ArgT{.typeIndex = typeid(int), .typeString = print_type<int>(), .stateString = "1337"})});
 
         REQUIRE(first != second);
         REQUIRE(second != first);
@@ -575,6 +578,7 @@ TEST_CASE(
 
         const CallReport expected{
             .returnTypeIndex = typeid(void),
+            .returnTypeString = print_type<void>(),
             .argDetails = {},
             .fromLoc = info.fromSourceLocation,
             .stacktrace = info.stacktrace,
@@ -596,6 +600,7 @@ TEST_CASE(
 
         const CallReport expected{
             .returnTypeIndex = typeid(int),
+            .returnTypeString = print_type<int>(),
             .argDetails = {},
             .fromLoc = info.fromSourceLocation,
             .stacktrace = info.stacktrace,
@@ -622,10 +627,11 @@ TEST_CASE(
         using ArgT = CallReport::Arg;
         const CallReport expected{
             .returnTypeIndex = typeid(void),
+            .returnTypeString = print_type<void>(),
             .argDetails = {
-                           ArgT{typeid(const int&), "1337"},
-                           ArgT{typeid(double), "4.2"},
-                           ArgT{typeid(std::string), "\"Hello, World!\""}},
+                           ArgT{typeid(const int&), print_type<int const&>(), "1337"},
+                           ArgT{typeid(double), print_type<double>(), "4.2"},
+                           ArgT{typeid(std::string), print_type<std::string>(), "\"Hello, World!\""}},
             .fromLoc = info.fromSourceLocation,
             .stacktrace = info.stacktrace,
             .fromCategory = info.fromCategory,
@@ -1084,6 +1090,7 @@ TEST_CASE(
     {
         const CallReport report{
             .returnTypeIndex = typeid(void),
+            .returnTypeString = print_type<void>(),
             .argDetails = {},
             .fromLoc = std::source_location::current(),
             .stacktrace = stacktrace::current(),
@@ -1103,7 +1110,8 @@ TEST_CASE(
     {
         const CallReport report{
             .returnTypeIndex = typeid(int),
-            .argDetails = {{.typeIndex = typeid(double), .stateString = "4.2"}},
+            .returnTypeString = print_type<int>(),
+            .argDetails = {{.typeIndex = typeid(double), .typeString = print_type<double>(), .stateString = "4.2"}},
             .fromLoc = std::source_location::current(),
             .stacktrace = stacktrace::current(),
             .fromCategory = ValueCategory::lvalue,

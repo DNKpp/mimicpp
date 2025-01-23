@@ -60,6 +60,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     const CallReport callReport{
         .returnTypeIndex = typeid(void),
+        .returnTypeString = print_type<void>(),
         .fromLoc = std::source_location::current()};
 
     const std::vector<MatchReport> matchReports{
@@ -151,6 +152,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     const CallReport callReport{
         .returnTypeIndex = typeid(void),
+        .returnTypeString = print_type<void>(),
         .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
