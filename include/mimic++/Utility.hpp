@@ -156,10 +156,10 @@ namespace mimicpp
         template <typename ProcessedList, typename PendingList>
         struct type_list_pop_back;
 
-        template <typename ProcessedList, typename Last>
-        struct type_list_pop_back<ProcessedList, type_list<Last>>
+        template <typename... ProcessedArgs, typename Last>
+        struct type_list_pop_back<type_list<ProcessedArgs...>, type_list<Last>>
         {
-            using type = ProcessedList;
+            using type = type_list<ProcessedArgs...>;
             using popped = Last;
         };
 
