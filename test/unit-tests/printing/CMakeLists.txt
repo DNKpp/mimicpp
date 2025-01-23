@@ -12,3 +12,9 @@ if (NOT MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING)
     )
 
 endif ()
+
+target_sources(${TARGET_NAME}
+    PRIVATE
+    "Format.cpp"
+    "StatePrinter.cpp"
+)

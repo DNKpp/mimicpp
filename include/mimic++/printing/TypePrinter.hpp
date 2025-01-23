@@ -8,8 +8,9 @@
 
 #include "mimic++/Config.hpp"
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Printer.hpp"
+#include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/printing/Format.hpp"
 
 #ifndef MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING
 

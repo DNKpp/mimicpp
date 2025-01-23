@@ -11,12 +11,11 @@
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Fwd.hpp"
+#include "mimic++/Printer.hpp"
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
-#include "mimic++/printing/TypePrinter.hpp"
-#include "mimic++/printing/CommonTypePrinter.hpp"
 
 namespace mimicpp
 {
