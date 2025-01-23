@@ -638,11 +638,11 @@ TEST_CASE(
     SECTION("With alternative arguments.")
     {
         REQUIRE_THAT(
-            (print_type<std::map<std::string, int, custom_compare, custom_allocator<std::pair<const std::string, int>>>>()),
-            Catch::Matchers::Equals("std::map<std::string, int, custom_compare, custom_allocator<std::pair<const std::string, int>>>"));
+            (print_type<std::map<std::string, int, custom_compare, custom_allocator<std::pair<std::string const, int>>>>()),
+            Catch::Matchers::Equals("std::map<std::string, int, custom_compare, custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
-            (print_type<std::map<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<const int, std::tuple<int, int>>>>>()),
-            Catch::Matchers::Equals("std::map<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<const int, std::tuple<int, int>>>>"));
+            (print_type<std::map<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
+            Catch::Matchers::Equals("std::map<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
     }
 }
 
@@ -693,11 +693,11 @@ TEST_CASE(
     SECTION("With alternative arguments.")
     {
         REQUIRE_THAT(
-            (print_type<std::multimap<std::string, int, custom_compare, custom_allocator<std::pair<const std::string, int>>>>()),
-            Catch::Matchers::Equals("std::multimap<std::string, int, custom_compare, custom_allocator<std::pair<const std::string, int>>>"));
+            (print_type<std::multimap<std::string, int, custom_compare, custom_allocator<std::pair<std::string const, int>>>>()),
+            Catch::Matchers::Equals("std::multimap<std::string, int, custom_compare, custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
-            (print_type<std::multimap<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<const int, std::tuple<int, int>>>>>()),
-            Catch::Matchers::Equals("std::multimap<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<const int, std::tuple<int, int>>>>"));
+            (print_type<std::multimap<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
+            Catch::Matchers::Equals("std::multimap<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
     }
 }
 
@@ -780,7 +780,7 @@ TEST_CASE(
                 "int, "
                 "custom_hash<std::string>, "
                 "custom_compare, "
-                "custom_allocator<std::pair<const std::string, int>>>"));
+                "custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
             (print_type<std::unordered_map<
                  int,
@@ -794,7 +794,7 @@ TEST_CASE(
                 "std::tuple<int, int>, "
                 "custom_hash<int>, "
                 "custom_compare, "
-                "custom_allocator<std::pair<const int, std::tuple<int, int>>>>"));
+                "custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
     }
 }
 
@@ -870,28 +870,28 @@ TEST_CASE(
                  int,
                  custom_hash<std::string>,
                  custom_compare,
-                 custom_allocator<std::pair<const std::string, int>>>>()),
+                 custom_allocator<std::pair<std::string const, int>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_multimap<"
                 "std::string, "
                 "int, "
                 "custom_hash<std::string>, "
                 "custom_compare, "
-                "custom_allocator<std::pair<const std::string, int>>>"));
+                "custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
             (print_type<std::unordered_multimap<
                  int,
                  std::tuple<int, int>,
                  custom_hash<int>,
                  custom_compare,
-                 custom_allocator<std::pair<const int, std::tuple<int, int>>>>>()),
+                 custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_multimap<"
                 "int, "
                 "std::tuple<int, int>, "
                 "custom_hash<int>, "
                 "custom_compare, "
-                "custom_allocator<std::pair<const int, std::tuple<int, int>>>>"));
+                "custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
     }
 }
 
@@ -1012,10 +1012,10 @@ TEST_CASE(
             Catch::Matchers::Equals("std::priority_queue<int, std::vector<int>, custom_compare>"));
         REQUIRE_THAT(
             (print_type<std::priority_queue<std::priority_queue<int>, std::vector<std::priority_queue<int>>, custom_compare>>()),
-            Catch::Matchers::Equals("std::priority_queue<std::priority_queue<int>, std::vector<std::priority_queue<int>>, custom_compare>>"));
+            Catch::Matchers::Equals("std::priority_queue<std::priority_queue<int>, std::vector<std::priority_queue<int>>, custom_compare>"));
         REQUIRE_THAT(
             (print_type<std::priority_queue<std::string, std::vector<std::string>, custom_compare>>()),
-            Catch::Matchers::Equals("std::priority_queue<std::string>"));
+            Catch::Matchers::Equals("std::priority_queue<std::string, std::vector<std::string>, custom_compare>"));
         REQUIRE_THAT(
             (print_type<std::priority_queue<std::priority_queue<std::string>, std::vector<std::priority_queue<std::string>>, custom_compare>>()),
             Catch::Matchers::Equals("std::priority_queue<std::priority_queue<std::string>, std::vector<std::priority_queue<std::string>>, custom_compare>"));

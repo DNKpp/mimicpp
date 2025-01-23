@@ -66,7 +66,7 @@ namespace mimicpp::printing::detail
     #include <cstdlib>
     #include <cxxabi.h>
 
-namespace mimicpp::detail
+namespace mimicpp::printing::detail
 {
     template <typename T>
     StringT type_name()
@@ -140,7 +140,8 @@ namespace mimicpp::printing::detail
     struct common_type_printer;
 
     template <typename T, print_iterator OutIter>
-        requires requires {
+        requires requires
+        {
             typename common_type_printer<T>;
             { common_type_printer<T>::name() } -> std::convertible_to<StringViewT>;
         }
@@ -156,7 +157,8 @@ namespace mimicpp::printing::detail
     struct SignatureTypePrinter;
 
     template <typename T, print_iterator OutIter>
-        requires requires {
+        requires requires
+        {
             typename SignatureTypePrinter<T>;
             { SignatureTypePrinter<T>::name() } -> std::convertible_to<StringViewT>;
         }
@@ -172,7 +174,8 @@ namespace mimicpp::printing::detail
     struct template_type_printer;
 
     template <typename T, print_iterator OutIter>
-        requires requires {
+        requires requires
+        {
             typename template_type_printer<T>;
             { template_type_printer<T>::name() } -> std::convertible_to<StringViewT>;
         }
@@ -218,8 +221,8 @@ namespace mimicpp::printing::detail
         constexpr OutIter operator()(OutIter out) const
         {
             return std::ranges::copy(
-                       StringViewT{" volatile"},
-                       print_type_helper<T>{}(std::move(out)))
+                    StringViewT{" volatile"},
+                    print_type_helper<T>{}(std::move(out)))
                 .out;
         }
     };
@@ -233,8 +236,8 @@ namespace mimicpp::printing::detail
         constexpr OutIter operator()(OutIter out) const
         {
             return std::ranges::copy(
-                       StringViewT{" const"},
-                       print_type_helper<T>{}(std::move(out)))
+                    StringViewT{" const"},
+                    print_type_helper<T>{}(std::move(out)))
                 .out;
         }
     };
@@ -248,8 +251,8 @@ namespace mimicpp::printing::detail
         constexpr OutIter operator()(OutIter out) const
         {
             return std::ranges::copy(
-                       StringViewT{" const volatile"},
-                       print_type_helper<T>{}(std::move(out)))
+                    StringViewT{" const volatile"},
+                    print_type_helper<T>{}(std::move(out)))
                 .out;
         }
     };
@@ -304,8 +307,8 @@ namespace mimicpp::printing::detail
         constexpr OutIter operator()(OutIter out) const
         {
             return std::ranges::copy(
-                       StringViewT{"[]"},
-                       print_type_helper<T>{}(std::move(out)))
+                    StringViewT{"[]"},
+                    print_type_helper<T>{}(std::move(out)))
                 .out;
         }
     };
@@ -374,7 +377,8 @@ namespace mimicpp::printing::detail
         if constexpr (0u < sizeof...(Ts))
         {
             std::invoke(
-                [&]<typename First, typename... Others>([[maybe_unused]] const type_list<First, Others...>) {
+                [&]<typename First, typename... Others>([[maybe_unused]] const type_list<First, Others...>)
+                {
                     mimicpp::print_type<First>(std::ostreambuf_iterator{out});
                     ((out << separator, mimicpp::print_type<Others>(std::ostreambuf_iterator{out})), ...);
                 },
@@ -448,19 +452,76 @@ namespace mimicpp::printing::detail
         }
     };
 
+    template <typename Type, template <typename...> typename Template, typename LeadingArgList>
+    struct is_default_arg_for
+        : public std::false_type
+    {
+    };
+
+    template <typename Type, template <typename...> typename Template, typename... LeadingArgs>
+        requires requires { typename Template<LeadingArgs...>; }
+    struct is_default_arg_for<Type, Template, type_list<LeadingArgs...>>
+        : public std::bool_constant<
+            std::same_as<
+                Template<LeadingArgs...>,
+                Template<LeadingArgs..., Type>>>
+    {
+    };
+
+    template <typename Type, template <typename...> typename Template, typename LeadingArgList>
+    concept default_arg_for = is_default_arg_for<Type, Template, LeadingArgList>::value;
+
+    template <typename List>
+    struct type_list_pop_back_if_can
+        : public type_list_pop_back<List>
+    {
+    };
+
+    template <>
+    struct type_list_pop_back_if_can<type_list<>>
+    {
+        using type = type_list<>;
+    };
+
+    template <
+        typename ArgList,
+        template <typename...> typename Template,
+        typename PopBack = type_list_pop_back_if_can<ArgList>>
+    struct drop_default_args_for_impl
+    {
+        using type = ArgList;
+    };
+
+    template <typename ArgList, template <typename...> typename Template, typename PopBack>
+        requires requires { typename PopBack::popped; }
+        && default_arg_for<typename PopBack::popped, Template, typename PopBack::type>
+    struct drop_default_args_for_impl<ArgList, Template, PopBack>
+        : public drop_default_args_for_impl<typename PopBack::type, Template>
+    {
+    };
+
+    template <template <typename...> typename Template, typename ArgList>
+    struct drop_default_args_for
+        : public drop_default_args_for_impl<ArgList, Template>
+    {
+    };
+
     template <template <typename...> typename Template, typename... Ts>
     struct template_type_printer<Template<Ts...>>
         : public basic_template_type_printer<
-              decltype([] {
-                  const StringT templateName = pretty_template_name<Template<Ts...>>();
+            decltype([]
+            {
+                using ArgList = typename drop_default_args_for<Template, type_list<Ts...>>::type;
+                using Type = type_list_populate_t<Template, ArgList>;
+                const StringT templateName = pretty_template_name<Type>();
 
-                  StringStreamT out{};
-                  out << templateName << '<';
-                  print_separated(out, ", ", type_list<Ts...>{});
-                  out << '>';
+                StringStreamT out{};
+                out << templateName << '<';
+                print_separated(out, ", ", ArgList{});
+                out << '>';
 
-                  return std::move(out).str();
-              })>
+                return std::move(out).str();
+            })>
     {
     };
 }

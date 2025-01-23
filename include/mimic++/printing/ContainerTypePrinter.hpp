@@ -10,6 +10,8 @@
 
 #include <concepts>
 #include <cstddef>
+#include <list>
+#include <forward_list>
 #include <map>
 #include <memory>
 #include <memory_resource>
