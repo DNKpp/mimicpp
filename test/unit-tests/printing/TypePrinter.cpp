@@ -14,6 +14,15 @@
 
 using namespace mimicpp;
 
+namespace
+{
+    template <typename T>
+    struct custom_deleter
+        : std::default_delete<T>
+    {
+    };
+}
+
 TEST_CASE(
     "print_type supports fundamental types.",
     "[print]")
@@ -202,21 +211,44 @@ TEST_CASE(
 
     SECTION("std unique_ptr types")
     {
-        REQUIRE_THAT(
-            (print_type<std::unique_ptr<int>>()),
-            Catch::Matchers::Equals("std::unique_ptr<int>"));
-        REQUIRE_THAT(
-            (print_type<std::unique_ptr<int[]>>()),
-            Catch::Matchers::Equals("std::unique_ptr<int[]>"));
-        REQUIRE_THAT(
-            (print_type<std::unique_ptr<std::unique_ptr<int>>>()),
-            Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>>"));
-        REQUIRE_THAT(
-            (print_type<std::unique_ptr<std::tuple<float&, std::tuple<>>>>()),
-            Catch::Matchers::Equals("std::unique_ptr<std::tuple<float&, std::tuple<>>>"));
-        REQUIRE_THAT(
-            (print_type<std::unique_ptr<std::tuple<float&, std::tuple<>>[]>>()),
-            Catch::Matchers::Equals("std::unique_ptr<std::tuple<float&, std::tuple<>>[]>"));
+        SECTION("With default deleter.")
+        {
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<int>>()),
+                Catch::Matchers::Equals("std::unique_ptr<int>"));
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<int[]>>()),
+                Catch::Matchers::Equals("std::unique_ptr<int[]>"));
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<std::unique_ptr<int>>>()),
+                Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>>"));
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<std::tuple<float&, std::tuple<>>>>()),
+                Catch::Matchers::Equals("std::unique_ptr<std::tuple<float&, std::tuple<>>>"));
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<std::tuple<float&, std::tuple<>>[]>>()),
+                Catch::Matchers::Equals("std::unique_ptr<std::tuple<float&, std::tuple<>>[]>"));
+        }
+
+        SECTION("With custom deleter.")
+        {
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<int, custom_deleter<int>>>()),
+                Catch::Matchers::Equals("std::unique_ptr<int, custom_deleter<int>>"));
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<std::unique_ptr<int, custom_deleter<int>>, custom_deleter<std::unique_ptr<int, custom_deleter<int>>>>>()),
+                Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int, custom_deleter<int>>, custom_deleter<std::unique_ptr<int, custom_deleter<int>>>>"));
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<std::unique_ptr<int>, custom_deleter<std::unique_ptr<int>>>>()),
+                Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>, custom_deleter<std::unique_ptr<int>>>"));
+
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<int[], custom_deleter<int[]>>>()),
+                Catch::Matchers::Equals("std::unique_ptr<int[], custom_deleter<int[]>>"));
+            REQUIRE_THAT(
+                (print_type<std::unique_ptr<std::unique_ptr<int>[], custom_deleter<std::unique_ptr<int>[]>>>()),
+                Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>[], custom_deleter<std::unique_ptr<int>[]>>"));
+        }
     }
 
     SECTION("std shared_ptr and weak_ptr types")
@@ -606,37 +638,6 @@ TEMPLATE_TEST_CASE_SIG(
     (std::ignore, type_list<int, std::pmr::polymorphic_allocator<int>>, std::vector, int, std::pmr::polymorphic_allocator<int>))
 {
     STATIC_REQUIRE(std::same_as<Expected, typename printing::detail::drop_default_args_for<Template, type_list<Args...>>::type>);
-}
-
-namespace
-{
-    template <typename T>
-    struct custom_deleter
-        : std::default_delete<T>
-    {
-    };
-}
-
-TEST_CASE(
-    "std::unique_ptr with alternative deleter is printed completely.",
-    "[print]")
-{
-    REQUIRE_THAT(
-        (print_type<std::unique_ptr<int, custom_deleter<int>>>()),
-        Catch::Matchers::Equals("std::unique_ptr<int, custom_deleter<int>>"));
-    REQUIRE_THAT(
-        (print_type<std::unique_ptr<std::unique_ptr<int, custom_deleter<int>>, custom_deleter<std::unique_ptr<int, custom_deleter<int>>>>>()),
-        Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int, custom_deleter<int>>, custom_deleter<std::unique_ptr<int, custom_deleter<int>>>>"));
-    REQUIRE_THAT(
-        (print_type<std::unique_ptr<std::unique_ptr<int>, custom_deleter<std::unique_ptr<int>>>>()),
-        Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>, custom_deleter<std::unique_ptr<int>>>"));
-
-    REQUIRE_THAT(
-        (print_type<std::unique_ptr<int[], custom_deleter<int[]>>>()),
-        Catch::Matchers::Equals("std::unique_ptr<int[], custom_deleter<int[]>>"));
-    REQUIRE_THAT(
-        (print_type<std::unique_ptr<std::unique_ptr<int>[], custom_deleter<std::unique_ptr<int>[]>>>()),
-        Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>[], custom_deleter<std::unique_ptr<int>[]>>"));
 }
 
 TEST_CASE(
