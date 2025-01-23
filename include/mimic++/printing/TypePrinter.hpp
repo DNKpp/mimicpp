@@ -588,7 +588,7 @@ namespace mimicpp::printing::detail
     // used for array, span and the like
     // should also handle c++26s inplace_vector
     // see: https://en.cppreference.com/w/cpp/container/inplace_vector
-    template <template <typename, auto> typename Template, typename T, auto n>
+    template <template <typename, auto...> typename Template, typename T, auto n>
     struct template_type_printer<Template<T, n>>
         : public basic_template_type_printer<
             decltype([]
@@ -611,8 +611,7 @@ namespace mimicpp::printing::detail
                 return format::format(
                     "{}<{}>",
                     pretty_template_name<Template<T>>(),
-                    mimicpp::print_type<T>(),
-                    n);
+                    mimicpp::print_type<T>());
             })>
     {
     };
