@@ -123,6 +123,33 @@ namespace mimicpp
     {
         static constexpr std::size_t size = sizeof...(Args);
     };
+
+    namespace detail
+    {
+        template <typename ProcessedList, typename PendingList>
+        struct type_list_reverse;
+
+        template <typename ProcessedList>
+        struct type_list_reverse<ProcessedList, type_list<>>
+        {
+            using type = ProcessedList;
+        };
+
+        template <typename... ProcessedArgs, typename First, typename... Args>
+        struct type_list_reverse<type_list<ProcessedArgs...>, type_list<First, Args...>>
+            : public type_list_reverse<type_list<First, ProcessedArgs...>, type_list<Args...>>
+        {
+        };
+    }
+
+    template <typename TypeList>
+    struct type_list_reverse
+    {
+        using type = typename detail::type_list_reverse<type_list<>, TypeList>::type;
+    };
+
+    template <typename TypeList>
+    using type_list_reverse_t = typename type_list_reverse<TypeList>::type;
 }
 
 template <typename... Args>

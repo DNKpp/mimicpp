@@ -101,6 +101,19 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+    "type_list_reverse reverses the type_list elements.",
+    "[utility]",
+    ((auto dummy, typename Expected, typename Input), dummy, Expected, Input),
+    (std::ignore, type_list<>, type_list<>),
+    (std::ignore, type_list<int>, type_list<int>),
+    (std::ignore, type_list<int, float>, type_list<float, int>),
+    (std::ignore, type_list<double, int, float>, type_list<float, int, double>))
+{
+    STATIC_REQUIRE(std::same_as<Expected, typename type_list_reverse<Input>::type>);
+    STATIC_REQUIRE(std::same_as<Expected, type_list_reverse_t<Input>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
     "unique_list_t is an alias to a tuple with just unique types.",
     "[utility]",
     ((bool dummy, typename Expected, typename... Types), dummy, Expected, Types...),
