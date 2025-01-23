@@ -8,6 +8,8 @@
 
 #include "mimic++/printing/TypePrinter.hpp"
 
+#ifndef MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING
+
 #include <cstddef>
 #include <string>
 // ReSharper disable once CppUnusedIncludeDirective
@@ -211,5 +213,7 @@ namespace mimicpp::printing::detail
         }
     };
 }
+
+#endif
 
 #endif

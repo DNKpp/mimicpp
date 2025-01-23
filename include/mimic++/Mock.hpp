@@ -15,6 +15,8 @@
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/printing/CommonTypePrinter.hpp"
 
 namespace mimicpp
 {
@@ -343,59 +345,13 @@ namespace mimicpp::detail
         }
     };
 
-    template <typename T>
-    constexpr auto& print_type(auto& out)
-    {
-        return out << typeid(T).name();
-    }
-
-    template <typename Signature>
-    constexpr auto& print_signature(auto& out)
-    {
-        print_type<signature_return_type_t<Signature>>(out) << "(";
-
-        using param_list_t = signature_param_list_t<Signature>;
-        if constexpr (0u < param_list_t::size)
-        {
-            std::invoke(
-                [&]<typename First, typename... Params>([[maybe_unused]] const type_list<First, Params...>) {
-                    print_type<First>(out);
-                    ((out << ", ", print_type<Params>(out)), ...);
-                },
-                param_list_t{});
-        }
-
-        out << ")";
-
-        if constexpr (Constness::as_const == signature_const_qualification_v<Signature>)
-        {
-            out << " const";
-        }
-
-        if constexpr (ValueCategory::lvalue == signature_ref_qualification_v<Signature>)
-        {
-            out << " &";
-        }
-        else if constexpr (ValueCategory::rvalue == signature_ref_qualification_v<Signature>)
-        {
-            out << " &&";
-        }
-
-        if constexpr (signature_is_noexcept_v<Signature>)
-        {
-            out << " noexcept";
-        }
-
-        return out;
-    }
-
-    template <typename FirstSignature, typename... OtherSignatures>
+    template <typename... Signatures>
     [[nodiscard]]
     StringT generate_mock_name()
     {
         StringStreamT out{};
-        out << "Mock<", print_signature<FirstSignature>(out);
-        ((out << ", ", print_signature<OtherSignatures>(out)), ...);
+        out << "Mock<";
+        printing::detail::print_separated(out, ", ", type_list<Signatures...>{});
         out << ">";
 
         return std::move(out).str();

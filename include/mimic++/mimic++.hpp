@@ -36,5 +36,7 @@
 #include "mimic++/policies/FinalizerPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/policies/SideEffectPolicies.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/printing/CommonTypePrinter.hpp"
 
 #endif
