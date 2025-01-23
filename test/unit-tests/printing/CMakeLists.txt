@@ -4,6 +4,7 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 target_sources(${TARGET_NAME}
-               PRIVATE
-               "TypePrinter.cpp"
+    PRIVATE
+    "TypePrinter.cpp"
+    "ContainerTypePrinting.cpp"
 )

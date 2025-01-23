@@ -7,16 +7,13 @@
 #define MIMICPP_PRINTING_TYPE_PRINTER_HPP
 
 #include "mimic++/Printer.hpp"
+#include "mimic++/Utility.hpp"
 
-#include <array>
-#include <cassert>
+#include <algorithm>
 #include <concepts>
 #include <functional>
 #include <iterator>
 #include <regex>
-#include <span>
-#include <string>
-#include <string_view>
 #include <typeinfo>
 #include <utility>
 
@@ -33,7 +30,7 @@ namespace mimicpp
     #define MIMICPP_DETAIL_IS_LIBCXX
 #endif
 
-namespace mimicpp::detail
+namespace mimicpp::printing::detail
 {
     inline StringT regex_replace_all(StringT str, const RegexT& regex, const StringViewT fmt)
     {
@@ -45,7 +42,6 @@ namespace mimicpp::detail
             if (match_result_t match{};
                 std::regex_search(processedIter, str.cend(), match, regex))
             {
-                assert(1 == match.size());
                 const auto matchBegin = match[0].first;
                 const auto matchEnd = match[0].second;
                 str.replace(matchBegin, matchEnd, fmt);
@@ -110,7 +106,7 @@ namespace mimicpp::detail
 
 #else
 
-namespace mimicpp::detail
+namespace mimicpp::printing::detail
 {
     template <typename T>
     StringT type_name()
@@ -138,22 +134,22 @@ namespace mimicpp::detail
 
 #endif
 
-namespace mimicpp::detail
+namespace mimicpp::printing::detail
 {
     template <typename T>
-    struct CommonTypePrinter;
+    struct common_type_printer;
 
     template <typename T, print_iterator OutIter>
         requires requires {
-            typename CommonTypePrinter<T>;
-            { CommonTypePrinter<T>::name() } -> std::convertible_to<StringViewT>;
+            typename common_type_printer<T>;
+            { common_type_printer<T>::name() } -> std::convertible_to<StringViewT>;
         }
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<3u>, OutIter out)
     {
         return format::format_to(
             std::move(out),
             "{}",
-            CommonTypePrinter<T>::name());
+            common_type_printer<T>::name());
     }
 
     template <typename T>
@@ -173,19 +169,19 @@ namespace mimicpp::detail
     }
 
     template <typename T>
-    struct TemplateTypePrinter;
+    struct template_type_printer;
 
     template <typename T, print_iterator OutIter>
         requires requires {
-            typename TemplateTypePrinter<T>;
-            { TemplateTypePrinter<T>::name() } -> std::convertible_to<StringViewT>;
+            typename template_type_printer<T>;
+            { template_type_printer<T>::name() } -> std::convertible_to<StringViewT>;
         }
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<1u>, OutIter out)
     {
         return format::format_to(
             std::move(out),
             "{}",
-            TemplateTypePrinter<T>::name());
+            template_type_printer<T>::name());
     }
 
     template <typename T, print_iterator OutIter>
@@ -200,7 +196,7 @@ namespace mimicpp::detail
             name);
     }
 
-    constexpr priority_tag<3u> maxPrintTypePriority{};
+    constexpr priority_tag<4u> maxPrintTypePriority{};
 
     template <typename T>
     struct print_type_helper
@@ -367,11 +363,27 @@ namespace mimicpp::detail
 namespace mimicpp
 {
     template <typename T>
-    [[maybe_unused]] inline constexpr detail::PrintTypeFn<T> print_type{};
+    [[maybe_unused]] inline constexpr printing::detail::PrintTypeFn<T> print_type{};
 }
 
-namespace mimicpp::detail
+namespace mimicpp::printing::detail
 {
+    template <typename Out, typename... Ts>
+    constexpr Out& print_separated(Out& out, const StringViewT separator, const type_list<Ts...> ts)
+    {
+        if constexpr (0u < sizeof...(Ts))
+        {
+            std::invoke(
+                [&]<typename First, typename... Others>([[maybe_unused]] const type_list<First, Others...>) {
+                    mimicpp::print_type<First>(std::ostreambuf_iterator{out});
+                    ((out << separator, mimicpp::print_type<Others>(std::ostreambuf_iterator{out})), ...);
+                },
+                ts);
+        }
+
+        return out;
+    }
+
     template <satisfies<std::is_function> Signature>
     struct SignatureTypePrinter<Signature>
     {
@@ -389,18 +401,7 @@ namespace mimicpp::detail
             StringStreamT out{};
             mimicpp::print_type<signature_return_type_t<Signature>>(std::ostreambuf_iterator{out});
             out << "(";
-
-            using param_list_t = signature_param_list_t<Signature>;
-            if constexpr (0u < param_list_t::size)
-            {
-                std::invoke(
-                    [&]<typename First, typename... Params>([[maybe_unused]] const type_list<First, Params...>) {
-                        mimicpp::print_type<First>(std::ostreambuf_iterator{out});
-                        ((out << ", ", mimicpp::print_type<Params>(std::ostreambuf_iterator{out})), ...);
-                    },
-                    param_list_t{});
-            }
-
+            print_separated(out, ", ", signature_param_list_t<Signature>{});
             out << ")";
 
             if constexpr (Constness::as_const == signature_const_qualification_v<Signature>)
@@ -426,267 +427,41 @@ namespace mimicpp::detail
         }
     };
 
-    template <template <typename...> typename Template, typename First, typename... Others>
-    struct TemplateTypePrinter<Template<First, Others...>>
+    template <typename T>
+    [[nodiscard]]
+    StringT pretty_template_name()
+    {
+        StringT name = detail::prettify_type_name(detail::type_name<T>());
+        name.erase(std::ranges::find(name, '<'), name.cend());
+
+        return name;
+    }
+
+    template <typename NameGenerator>
+    struct basic_template_type_printer
     {
         [[nodiscard]]
         static StringViewT name()
         {
-            static const StringT name = generate_name();
+            static const StringT name = std::invoke(NameGenerator{});
             return name;
         }
-
-    private:
-        [[nodiscard]]
-        static StringT generate_name()
-        {
-            StringT fullName = detail::prettify_type_name(
-                detail::type_name<Template<First, Others...>>());
-            fullName.erase(std::ranges::find(fullName, '<'), fullName.cend());
-
-            StringStreamT out{};
-            out << fullName << '<' << mimicpp::print_type<First>();
-            ((out << ", " << mimicpp::print_type<Others>()), ...);
-            out << '>';
-
-            return std::move(out).str();
-        }
     };
 
-    // required for msvc
-    template <>
-    struct CommonTypePrinter<long long>
+    template <template <typename...> typename Template, typename... Ts>
+    struct template_type_printer<Template<Ts...>>
+        : public basic_template_type_printer<
+              decltype([] {
+                  const StringT templateName = pretty_template_name<Template<Ts...>>();
+
+                  StringStreamT out{};
+                  out << templateName << '<';
+                  print_separated(out, ", ", type_list<Ts...>{});
+                  out << '>';
+
+                  return std::move(out).str();
+              })>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"long long"};
-        }
-    };
-
-    // required for msvc
-    template <>
-    struct CommonTypePrinter<unsigned long long>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"unsigned long long"};
-        }
-    };
-
-    // required for gcc
-    template <>
-    struct CommonTypePrinter<std::nullptr_t>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::nullptr_t"};
-        }
-    };
-
-    // required for AppleClang
-    template <>
-    struct CommonTypePrinter<char8_t>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"char8_t"};
-        }
-    };
-
-    // std::basic_string
-    template <>
-    struct CommonTypePrinter<std::string>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::string"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::u8string>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::u8string"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::u16string>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::u16string"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::u32string>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::u32string"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::wstring>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::wstring"};
-        }
-    };
-
-    // std::basic_string_view
-    template <>
-    struct CommonTypePrinter<std::string_view>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::string_view"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::u8string_view>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::u8string_view"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::u16string_view>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::u16string_view"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::u32string_view>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::u32string_view"};
-        }
-    };
-
-    template <>
-    struct CommonTypePrinter<std::wstring_view>
-    {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
-        {
-            return {"std::wstring_view"};
-        }
-    };
-
-    // std::vector
-    template <typename T>
-    struct CommonTypePrinter<std::vector<T>>
-    {
-        [[nodiscard]]
-        static StringViewT name()
-        {
-            static const StringT str = format::format(
-                "std::vector<{}>",
-                mimicpp::print_type<T>());
-
-            return str;
-        }
-    };
-
-    template <typename T>
-    struct CommonTypePrinter<std::pmr::vector<T>>
-    {
-        [[nodiscard]]
-        static StringViewT name()
-        {
-            static const StringT str = format::format(
-                "std::pmr::vector<{}>",
-                mimicpp::print_type<T>());
-
-            return str;
-        }
-    };
-
-    // std::array
-    template <typename T, std::size_t n>
-    struct CommonTypePrinter<std::array<T, n>>
-    {
-        [[nodiscard]]
-        static StringViewT name()
-        {
-            static const StringT str = format::format(
-                "std::array<{}, {}>",
-                mimicpp::print_type<T>(),
-                n);
-
-            return str;
-        }
-    };
-
-    // std::span
-    template <typename T>
-    struct CommonTypePrinter<std::span<T>>
-    {
-        [[nodiscard]]
-        static StringViewT name()
-        {
-            static const StringT str = format::format(
-                "std::span<{}>",
-                mimicpp::print_type<T>());
-
-            return str;
-        }
-    };
-
-    template <typename T, std::size_t n>
-    struct CommonTypePrinter<std::span<T, n>>
-    {
-        [[nodiscard]]
-        static StringViewT name()
-        {
-            static const StringT str = format::format(
-                "std::span<{}, {}>",
-                mimicpp::print_type<T>(),
-                n);
-
-            return str;
-        }
-    };
-
-    // std::unique_ptr
-    template <typename T>
-    struct CommonTypePrinter<std::unique_ptr<T>>
-    {
-        [[nodiscard]]
-        static StringViewT name()
-        {
-            static const StringT str = format::format(
-                "std::unique_ptr<{}>",
-                mimicpp::print_type<T>());
-
-            return str;
-        }
     };
 }
 

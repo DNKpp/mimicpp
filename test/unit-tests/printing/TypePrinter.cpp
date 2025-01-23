@@ -4,12 +4,11 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/printing/CommonTypePrinter.hpp"
+#include "mimic++/printing/ContainerTypePrinter.hpp"
 
-#include <array>
 #include <optional>
-#include <string>
-#include <string_view>
-#include <vector>
+#include <tuple>
 
 using namespace mimicpp;
 
@@ -146,35 +145,6 @@ TEST_CASE(
             Catch::Matchers::Equals("std::u32string_view"));
     }
 
-    SECTION("std vector types")
-    {
-        REQUIRE_THAT(
-            print_type<std::vector<int>>(),
-            Catch::Matchers::Equals("std::vector<int>"));
-        REQUIRE_THAT(
-            print_type<std::vector<std::vector<int>>>(),
-            Catch::Matchers::Equals("std::vector<std::vector<int>>"));
-        REQUIRE_THAT(
-            print_type<std::vector<std::string>>(),
-            Catch::Matchers::Equals("std::vector<std::string>"));
-        REQUIRE_THAT(
-            print_type<std::vector<std::vector<std::string>>>(),
-            Catch::Matchers::Equals("std::vector<std::vector<std::string>>"));
-
-        REQUIRE_THAT(
-            print_type<std::pmr::vector<int>>(),
-            Catch::Matchers::Equals("std::pmr::vector<int>"));
-        REQUIRE_THAT(
-            print_type<std::pmr::vector<std::pmr::vector<int>>>(),
-            Catch::Matchers::Equals("std::pmr::vector<std::pmr::vector<int>>"));
-        REQUIRE_THAT(
-            print_type<std::pmr::vector<std::string>>(),
-            Catch::Matchers::Equals("std::pmr::vector<std::string>"));
-        REQUIRE_THAT(
-            print_type<std::pmr::vector<std::pmr::vector<std::string>>>(),
-            Catch::Matchers::Equals("std::pmr::vector<std::pmr::vector<std::string>>"));
-    }
-
     SECTION("std optional types")
     {
         REQUIRE_THAT(
@@ -208,38 +178,6 @@ TEST_CASE(
         REQUIRE_THAT(
             (print_type<std::tuple<std::tuple<int, float, std::string>>>()),
             Catch::Matchers::Equals("std::tuple<std::tuple<int, float, std::string>>"));
-    }
-
-    SECTION("std array types")
-    {
-        REQUIRE_THAT(
-            (print_type<std::array<int, 0>>()),
-            Catch::Matchers::Equals("std::array<int, 0>"));
-        REQUIRE_THAT(
-            (print_type<std::array<int, 42>>()),
-            Catch::Matchers::Equals("std::array<int, 42>"));
-        REQUIRE_THAT(
-            (print_type<std::array<std::vector<std::string>, 1>>()),
-            Catch::Matchers::Equals("std::array<std::vector<std::string>, 1>"));
-        REQUIRE_THAT(
-            (print_type<std::array<std::tuple<float&, std::tuple<>>, 1>>()),
-            Catch::Matchers::Equals("std::array<std::tuple<float&, std::tuple<>>, 1>"));
-    }
-
-    SECTION("std span types")
-    {
-        REQUIRE_THAT(
-            (print_type<std::span<int>>()),
-            Catch::Matchers::Equals("std::span<int>"));
-        REQUIRE_THAT(
-            (print_type<std::span<int const, 42>>()),
-            Catch::Matchers::Equals("std::span<int const, 42>"));
-        REQUIRE_THAT(
-            (print_type<std::span<std::vector<std::string>, 1>>()),
-            Catch::Matchers::Equals("std::span<std::vector<std::string>, 1>"));
-        REQUIRE_THAT(
-            (print_type<std::span<std::tuple<float&, std::tuple<>>, 1>>()),
-            Catch::Matchers::Equals("std::span<std::tuple<float&, std::tuple<>>, 1>"));
     }
 
     SECTION("std unique_ptr types")
@@ -598,30 +536,6 @@ TEMPLATE_TEST_CASE_SIG(
 namespace
 {
     template <typename T>
-    struct custom_allocator
-        : std::allocator<T>
-    {
-    };
-}
-
-TEST_CASE(
-    "std::vector with alternative allocator is printed completely.",
-    "[print]")
-{
-    REQUIRE_THAT(
-        (print_type<std::vector<int, custom_allocator<int>>>()),
-        Catch::Matchers::Equals("std::vector<int, custom_allocator<int>>"));
-    REQUIRE_THAT(
-        (print_type<std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>>()),
-        Catch::Matchers::Equals("std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>"));
-    REQUIRE_THAT(
-        (print_type<std::vector<std::vector<int>, custom_allocator<std::vector<int>>>>()),
-        Catch::Matchers::Equals("std::vector<std::vector<int>, custom_allocator<std::vector<int>>>"));
-}
-
-namespace
-{
-    template <typename T>
     struct custom_deleter
         : std::default_delete<T>
     {
@@ -657,6 +571,15 @@ TEST_CASE(
     REQUIRE_THAT(
         print_type<my_type>(),
         Catch::Matchers::Equals("my_type"));
+}
+
+namespace
+{
+    template <typename T>
+    struct custom_allocator
+        : std::allocator<T>
+    {
+    };
 }
 
 TEMPLATE_TEST_CASE_SIG(
