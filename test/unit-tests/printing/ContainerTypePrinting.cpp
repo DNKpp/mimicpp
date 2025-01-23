@@ -25,6 +25,21 @@ namespace
         : std::hash<T>
     {
     };
+
+    template <typename T, typename Allocator = std::allocator<T>>
+    class custom_vector
+        : public std::vector<T, Allocator>
+    {
+    };
+}
+
+TEST_CASE(
+    "Non-std types do not receive a pmr:: namespace, when they use std::pmr::polymorphic_allocator.",
+    "[print]")
+{
+    REQUIRE_THAT(
+        (print_type<custom_vector<int, std::pmr::polymorphic_allocator<int>>>()),
+        Catch::Matchers::Equals("custom_vector<int, std::pmr::polymorphic_allocator<int>>"));
 }
 
 TEST_CASE(

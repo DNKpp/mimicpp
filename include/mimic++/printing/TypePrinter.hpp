@@ -506,21 +506,81 @@ namespace mimicpp::printing::detail
     {
     };
 
+    template <template <typename...> typename Template, typename ArgList>
+    struct template_type_name_generator_fn
+    {
+        [[nodiscard]]
+        StringT operator()() const
+        {
+            using MinimalArgList = typename drop_default_args_for<Template, ArgList>::type;
+            using Type = type_list_populate_t<Template, MinimalArgList>;
+            const StringT templateName = pretty_template_name<Type>();
+
+            StringStreamT out{};
+            out << templateName << '<';
+            print_separated(out, ", ", MinimalArgList{});
+            out << '>';
+
+            return std::move(out).str();
+        }
+    };
+
     template <template <typename...> typename Template, typename... Ts>
+    struct template_type_printer<Template<Ts...>>
+        : public basic_template_type_printer<
+            template_type_name_generator_fn<Template, type_list<Ts...>>>
+    {
+    };
+
+    template <typename Allocator>
+    struct is_pmr_allocator
+        : public std::false_type
+    {
+    };
+
+    template <typename T>
+    struct is_pmr_allocator<std::pmr::polymorphic_allocator<T>>
+        : public std::true_type
+    {
+    };
+
+    template <template <typename...> typename Template, typename... Ts>
+    concept std_pmr_container = requires
+        {
+            typename Template<Ts...>::allocator_type;
+            typename Template<Ts...>::value_type;
+        }
+        && is_pmr_allocator<typename Template<Ts...>::allocator_type>::value
+        && default_arg_for<
+            std::allocator<typename Template<Ts...>::value_type>,
+            Template,
+            type_list_pop_back_t<type_list<Ts...>>>;
+
+    static constexpr StringViewT stdPrefix{"std::"};
+
+    template <template <typename...> typename Template, typename... Ts>
+        requires std_pmr_container<Template, Ts...>
     struct template_type_printer<Template<Ts...>>
         : public basic_template_type_printer<
             decltype([]
             {
-                using ArgList = typename drop_default_args_for<Template, type_list<Ts...>>::type;
-                using Type = type_list_populate_t<Template, ArgList>;
-                const StringT templateName = pretty_template_name<Type>();
+                StringT name = std::invoke(
+                    template_type_name_generator_fn<
+                        Template,
+                        type_list_pop_back_t<type_list<Ts...>>>{});
 
-                StringStreamT out{};
-                out << templateName << '<';
-                print_separated(out, ", ", ArgList{});
-                out << '>';
+                // we do not want to accidentally manipulate non-std types, so make sure the `std::`` is actually part of the type
+                if (name.starts_with(stdPrefix))
+                {
+                    name.insert(stdPrefix.size(), StringViewT{"pmr::"});
+                }
+                // It's not an actual `std` type, but we've removed the allocator for the name generation.
+                else
+                {
+                    name = std::invoke(template_type_name_generator_fn<Template, type_list<Ts...>>{});
+                }
 
-                return std::move(out).str();
+                return name;
             })>
     {
     };
