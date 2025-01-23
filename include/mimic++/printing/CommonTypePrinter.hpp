@@ -9,7 +9,6 @@
 #include "mimic++/printing/TypePrinter.hpp"
 
 #include <cstddef>
-#include <memory>
 #include <string>
 #include <string_view>
 
@@ -158,21 +157,6 @@ namespace mimicpp::printing::detail
         static consteval StringViewT name() noexcept
         {
             return {"std::wstring_view"};
-        }
-    };
-
-    // std::unique_ptr
-    template <typename T>
-    struct common_type_printer<std::unique_ptr<T>>
-    {
-        [[nodiscard]]
-        static StringViewT name()
-        {
-            static const StringT str = format::format(
-                "std::unique_ptr<{}>",
-                mimicpp::print_type<T>());
-
-            return str;
         }
     };
 }

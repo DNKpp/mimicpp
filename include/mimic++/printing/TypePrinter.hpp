@@ -565,9 +565,9 @@ namespace mimicpp::printing::detail
         StringT operator()() const
         {
             StringT name = std::invoke(
-                    template_type_name_generator_fn<
-                        Template,
-                        type_list_pop_back_t<ArgList>>{});
+                template_type_name_generator_fn<
+                    Template,
+                    type_list_pop_back_t<ArgList>>{});
 
             // we do not want to accidentally manipulate non-std types, so make sure the `std::`` is actually part of the type
             if (name.starts_with(stdPrefix))
