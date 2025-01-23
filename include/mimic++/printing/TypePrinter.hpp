@@ -9,6 +9,8 @@
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
+#ifndef MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING
+
 #include <algorithm>
 #include <concepts>
 #include <functional>
@@ -624,5 +626,42 @@ namespace mimicpp::printing::detail
     {
     };
 }
+
+#else
+
+#include <algorithm>
+#include <typeinfo>
+
+namespace mimicpp::printing::detail
+{
+    template <typename T>
+    class PrintTypeFn
+    {
+    public:
+        template <print_iterator OutIter>
+        constexpr OutIter operator()(OutIter out) const
+        {
+            return std::ranges::copy(
+                typeid(T).name(),
+                std::move(out));
+        }
+
+        [[nodiscard]]
+        StringT operator()() const
+        {
+            StringStreamT stream{};
+            std::invoke(*this, std::ostreambuf_iterator{stream});
+            return std::move(stream).str();
+        }
+    };
+}
+
+namespace mimicpp
+{
+    template <typename T>
+    [[maybe_unused]] inline constexpr printing::detail::PrintTypeFn<T> print_type{};
+}
+
+#endif
 
 #endif

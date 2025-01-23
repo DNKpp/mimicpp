@@ -10,6 +10,16 @@
  * In general, these options can be enabled by defining a macro with that specified name, before any ``mimic++`` header is included.
  * If ``mimic++`` is integrated as cmake-target, it also offers appropriate cmake-options with the same name,
  * which can be set during cmake configuration. If an option is enabled, ``mimic++`` defines the relevant macro by itself.
+ *
+ *---
+ * \anchor MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING
+ * ## Disable pretty type-printing
+ * Name: ``MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING``
+ *
+ * By default, mimic++ attempts to display types in a format that closely resembles their actual representation in code.
+ * However, this can introduce additional overhead, particularly with heavily templated types.
+ * This configuration disables these enhancements and instead prints all types using typeid(T).name(),
+ * which typically provides a sufficient indication of the actual type, albeit with quite a lot of additional noise.
  * 
  * ---
  * \anchor MIMICPP_CONFIG_ONLY_PREFIXED_MACROS

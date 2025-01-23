@@ -8,16 +8,21 @@ if (NOT TARGET enable-config-options)
 	add_library(enable-config-options INTERFACE)
 	add_library(mimicpp::internal::config-options ALIAS enable-config-options)
 
+	OPTION(MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING "Disables pretty type-printing." OFF)
+	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING: ${MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING}")
 	OPTION(MIMICPP_CONFIG_ONLY_PREFIXED_MACROS "When enabled, all macros will be prefixed with MIMICPP_." OFF)
+	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_ONLY_PREFIXED_MACROS: ${MIMICPP_CONFIG_ONLY_PREFIXED_MACROS}")
 	OPTION(
 		MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
 		"When enabled, catch2 matchers integration will be enabled, if catch2 adapter is used (experimental)."
 		OFF
 	)
+	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION: ${MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION}")
 
 	target_compile_definitions(
 		enable-config-options
 		INTERFACE
+		$<$<BOOL:${MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING}>:MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING>
 		$<$<BOOL:${MIMICPP_CONFIG_ONLY_PREFIXED_MACROS}>:MIMICPP_CONFIG_ONLY_PREFIXED_MACROS>
 		$<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION}>:MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION>
 	)
@@ -26,6 +31,7 @@ if (NOT TARGET enable-config-options)
 	# Checks, whether fmt is already available. Fetches it instead.
 	# Eventually defines the macro MIMICPP_CONFIG_USE_FMT.
 	OPTION(MIMICPP_CONFIG_USE_FMT "When enabled, uses fmt instead of std formatting." OFF)
+	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_USE_FMT: ${MIMICPP_CONFIG_USE_FMT}")
 	if (MIMICPP_CONFIG_USE_FMT)
 
 		message(DEBUG "${MESSAGE_PREFIX} Searching for installed {fmt}-package.")
@@ -57,6 +63,7 @@ if (NOT TARGET enable-config-options)
 	# This will download the cpp-unicodelib source and create an import target
 	# Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER.
 	OPTION(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-insensitive string matchers are available." OFF)
+	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER: ${MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER}")
 	if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
 
 		# on clang-builds this somehow emits an error, if not explicitly disabled
@@ -103,6 +110,7 @@ if (NOT TARGET enable-config-options)
 	# Config option to enable full stacktrace support.
 	# Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE.
 	OPTION(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "When enabled, experimental stacktrace feature is enabled (requires either c++23 or cpptrace)." OFF)
+	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
 	if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
 
 		message(DEBUG "${MESSAGE_PREFIX} Stacktrace feature enabled.")
@@ -111,6 +119,7 @@ if (NOT TARGET enable-config-options)
 		# This will download the cpptrace source if not found.
 		# Eventually defines the macro MIMICPP_CONFIG_USE_CPPTRACE.
 		OPTION(MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE "When enabled, registers cpptrace library as stacktrace-backend." OFF)
+		message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE}")
 		if (MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE)
 
 			# on clang-builds this somehow emits an error, if not explicitly disabled
