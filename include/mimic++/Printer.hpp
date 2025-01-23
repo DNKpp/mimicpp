@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "mimic++/Config.hpp"
 #include "mimic++/Fwd.hpp"
 #include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp"
@@ -57,7 +58,7 @@ namespace mimicpp::format
 #ifndef MIMICPP_CONFIG_USE_FMT
 
         // use std format
-    #ifndef _LIBCPP_VERSION
+    #if not MIMICPP_DETAIL_USES_LIBCXX
 
     using std::format;
     using std::format_to;

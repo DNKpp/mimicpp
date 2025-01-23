@@ -13,10 +13,10 @@ using namespace mimicpp;
 
 // This disables the std::invocable checks for Mocks, due to an issue on clang 18.1
 // see: https://github.com/llvm/llvm-project/issues/106428
-#if defined(__clang_major__) \
+#if MIMICPP_DETAIL_IS_CLANG  \
     && __clang_major__ == 18 \
     && __clang_minor__ == 1  \
-    && defined(_LIBCPP_VERSION)
+    && MIMICPP_DETAIL_USES_LIBCXX
 
     #define CLANG_18_STD_INVOCABLE_REGRESSION
 

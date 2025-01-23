@@ -6,6 +6,8 @@
 #ifndef MIMICPP_PRINTING_TYPE_PRINTER_HPP
 #define MIMICPP_PRINTING_TYPE_PRINTER_HPP
 
+#include "mimic++/Config.hpp"
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
@@ -23,14 +25,6 @@ namespace mimicpp
 {
     using RegexT = std::regex;
 }
-
-#ifdef __GNUC__
-    #define MIMICPP_DETAIL_IS_GCC
-#endif
-
-#ifdef _LIBCPP_VERSION
-    #define MIMICPP_DETAIL_IS_LIBCXX
-#endif
 
 namespace mimicpp::printing::detail
 {
@@ -63,10 +57,11 @@ namespace mimicpp::printing::detail
     }
 }
 
-#ifdef MIMICPP_DETAIL_IS_GCC
+#if MIMICPP_DETAIL_IS_GCC \
+        || MIMICPP_DETAIL_IS_CLANG
 
-    #include <cstdlib>
-    #include <cxxabi.h>
+        #include <cstdlib>
+        #include <cxxabi.h>
 
 namespace mimicpp::printing::detail
 {
@@ -92,7 +87,7 @@ namespace mimicpp::printing::detail
         static const RegexT unifyClosingAngleBrackets{R"(\>\s*\>)"};
         name = regex_replace_all(name, unifyClosingAngleBrackets, ">>");
 
-    #ifdef MIMICPP_DETAIL_IS_LIBCXX
+        #if MIMICPP_DETAIL_USES_LIBCXX
         static const RegexT handleStdNamespace{"std::__1::"};
     #else
         static const RegexT handleStdNamespace{"std::__cxx11::"};

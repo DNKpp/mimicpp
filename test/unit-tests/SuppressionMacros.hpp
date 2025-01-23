@@ -5,10 +5,9 @@
 
 #pragma once
 
-#include <version>
+#include "mimic++/Config.hpp"
 
-#if defined(_MSC_VER) \
-    && !defined(__clang__)
+#if MIMICPP_DETAIL_IS_MSVC
 
     #define START_WARNING_SUPPRESSION __pragma(warning(push))
     #define STOP_WARNING_SUPPRESSION  __pragma(warning(pop))
@@ -35,8 +34,7 @@
                 _Pragma("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
 
     // gcc 12 doesn't know -Wself-move option
-    #if !defined(__clang__)  \
-        && defined(__GNUC__) \
+    #if MIMICPP_DETAIL_IS_GCC \
         && 12 >= __GNUC__
         #define SUPPRESS_SELF_MOVE
     #else
@@ -44,7 +42,7 @@
     #endif
 
     // gcc doesn't know -Wself-assign-overloaded option
-    #if defined(__clang__)
+    #if not MIMICPP_DETAIL_IS_GCC
         #define SUPPRESS_SELF_ASSIGN _Pragma("GCC diagnostic ignored \"-Wself-assign-overloaded\"")
     #else
         #define SUPPRESS_SELF_ASSIGN
