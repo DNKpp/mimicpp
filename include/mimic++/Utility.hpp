@@ -150,10 +150,50 @@ namespace mimicpp
 
     template <typename TypeList>
     using type_list_reverse_t = typename type_list_reverse<TypeList>::type;
+
+    namespace detail
+    {
+        template <typename ProcessedList, typename PendingList>
+        struct type_list_pop_back;
+
+        template <typename ProcessedList, typename Last>
+        struct type_list_pop_back<ProcessedList, type_list<Last>>
+        {
+            using type = ProcessedList;
+            using popped = Last;
+        };
+
+        template <typename... ProcessedArgs, typename First, typename... Args>
+        struct type_list_pop_back<type_list<ProcessedArgs...>, type_list<First, Args...>>
+            : public type_list_pop_back<type_list<ProcessedArgs..., First>, type_list<Args...>>
+        {
+        };
+    }
+
+    template <typename TypeList>
+    struct type_list_pop_back
+        : public detail::type_list_pop_back<type_list<>, TypeList>
+    {
+    };
+
+    template <typename TypeList>
+    using type_list_pop_back_t = typename type_list_pop_back<TypeList>::type;
+
+    template <template <typename...> typename Template, typename TypeList>
+    struct type_list_populate;
+
+    template <template <typename...> typename Template, typename... Args>
+    struct type_list_populate<Template, type_list<Args...>>
+    {
+        using type = Template<Args...>;
+    };
+
+    template <template <typename...> typename Template, typename TypeList>
+    using type_list_populate_t = typename type_list_populate<Template, TypeList>::type;
 }
 
 template <typename... Args>
-struct std::tuple_size<mimicpp::type_list<Args...>>
+struct std::tuple_size<mimicpp::type_list<Args...>> // NOLINT(*-dcl58-cpp)
     : std::integral_constant<std::size_t, mimicpp::type_list<Args...>::size>
 {
 };
