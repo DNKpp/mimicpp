@@ -248,7 +248,7 @@ jobs:
                                           -D CMAKE_VERBOSE_MAKEFILE=YES \
                                           -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
                                           -D MIMICPP_ENABLE_ADAPTER_TESTS=OFF \
-                                          -D MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING=OFF \
+                                          -D MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
@@ -430,7 +430,8 @@ jobs:
               -S . \
               -B build \
               ${{ env.CMAKE_BASE_OPTIONS }} \
-              -D MIMICPP_CONFIG_DISABLE_PRETTY_TYPE_PRINTING=YES
+              -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING=YES
 
       - name: Build with disabled pretty type-printing
         shell: bash
