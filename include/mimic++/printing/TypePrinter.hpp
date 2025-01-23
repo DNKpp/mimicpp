@@ -172,20 +172,20 @@ namespace mimicpp::printing::detail
     }
 
     template <typename T>
-    struct SignatureTypePrinter;
+    struct signature_type_printer;
 
     template <typename T, print_iterator OutIter>
         requires requires
         {
-            typename SignatureTypePrinter<T>;
-            { SignatureTypePrinter<T>::name() } -> std::convertible_to<StringViewT>;
+            typename signature_type_printer<T>;
+            { signature_type_printer<T>::name() } -> std::convertible_to<StringViewT>;
         }
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<2u>, OutIter out)
     {
         return format::format_to(
             std::move(out),
             "{}",
-            SignatureTypePrinter<T>::name());
+            signature_type_printer<T>::name());
     }
 
     template <typename T>
@@ -409,7 +409,7 @@ namespace mimicpp::printing::detail
 namespace mimicpp::printing::detail
 {
     template <satisfies<std::is_function> Signature>
-    struct SignatureTypePrinter<Signature>
+    struct signature_type_printer<Signature>
     {
         [[nodiscard]]
         static StringViewT name()
