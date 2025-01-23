@@ -558,30 +558,38 @@ namespace mimicpp::printing::detail
 
     static constexpr StringViewT stdPrefix{"std::"};
 
+    template <template <typename...> typename Template, typename ArgList>
+    struct potential_pmr_container_type_name_generator_fn
+    {
+        [[nodiscard]]
+        StringT operator()() const
+        {
+            StringT name = std::invoke(
+                    template_type_name_generator_fn<
+                        Template,
+                        type_list_pop_back_t<ArgList>>{});
+
+            // we do not want to accidentally manipulate non-std types, so make sure the `std::`` is actually part of the type
+            if (name.starts_with(stdPrefix))
+            {
+                name.insert(stdPrefix.size(), StringViewT{"pmr::"});
+            }
+            // It's not an actual `std` type, but we've removed the allocator for the name generation, thus we need
+            // generate it again with the actual allocator.
+            else
+            {
+                name = std::invoke(template_type_name_generator_fn<Template, ArgList>{});
+            }
+
+            return name;
+        }
+    };
+
     template <template <typename...> typename Template, typename... Ts>
         requires std_pmr_container<Template, Ts...>
     struct template_type_printer<Template<Ts...>>
         : public basic_template_type_printer<
-            decltype([]
-            {
-                StringT name = std::invoke(
-                    template_type_name_generator_fn<
-                        Template,
-                        type_list_pop_back_t<type_list<Ts...>>>{});
-
-                // we do not want to accidentally manipulate non-std types, so make sure the `std::`` is actually part of the type
-                if (name.starts_with(stdPrefix))
-                {
-                    name.insert(stdPrefix.size(), StringViewT{"pmr::"});
-                }
-                // It's not an actual `std` type, but we've removed the allocator for the name generation.
-                else
-                {
-                    name = std::invoke(template_type_name_generator_fn<Template, type_list<Ts...>>{});
-                }
-
-                return name;
-            })>
+            potential_pmr_container_type_name_generator_fn<Template, type_list<Ts...>>>
     {
     };
 
