@@ -123,6 +123,22 @@ TEST_CASE(
         REQUIRE_THAT(
             print_type<std::u32string>(),
             Catch::Matchers::Equals("std::u32string"));
+
+        REQUIRE_THAT(
+            print_type<std::pmr::string>(),
+            Catch::Matchers::Equals("std::pmr::string"));
+        REQUIRE_THAT(
+            print_type<std::pmr::wstring>(),
+            Catch::Matchers::Equals("std::pmr::wstring"));
+        REQUIRE_THAT(
+            print_type<std::pmr::u8string>(),
+            Catch::Matchers::Equals("std::pmr::u8string"));
+        REQUIRE_THAT(
+            print_type<std::pmr::u16string>(),
+            Catch::Matchers::Equals("std::pmr::u16string"));
+        REQUIRE_THAT(
+            print_type<std::pmr::u32string>(),
+            Catch::Matchers::Equals("std::pmr::u32string"));
     }
 
     SECTION("std string_view types")

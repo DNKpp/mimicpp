@@ -10,7 +10,8 @@
 
 #include <cstddef>
 #include <string>
-#include <string_view>
+// ReSharper disable once CppUnusedIncludeDirective
+#include <string_view> // false-positive
 
 namespace mimicpp::printing::detail
 {
@@ -70,12 +71,32 @@ namespace mimicpp::printing::detail
     };
 
     template <>
+    struct common_type_printer<std::pmr::string>
+    {
+        [[nodiscard]]
+        static consteval StringViewT name() noexcept
+        {
+            return {"std::pmr::string"};
+        }
+    };
+
+    template <>
     struct common_type_printer<std::u8string>
     {
         [[nodiscard]]
         static consteval StringViewT name() noexcept
         {
             return {"std::u8string"};
+        }
+    };
+
+    template <>
+    struct common_type_printer<std::pmr::u8string>
+    {
+        [[nodiscard]]
+        static consteval StringViewT name() noexcept
+        {
+            return {"std::pmr::u8string"};
         }
     };
 
@@ -90,6 +111,16 @@ namespace mimicpp::printing::detail
     };
 
     template <>
+    struct common_type_printer<std::pmr::u16string>
+    {
+        [[nodiscard]]
+        static consteval StringViewT name() noexcept
+        {
+            return {"std::pmr::u16string"};
+        }
+    };
+
+    template <>
     struct common_type_printer<std::u32string>
     {
         [[nodiscard]]
@@ -100,12 +131,32 @@ namespace mimicpp::printing::detail
     };
 
     template <>
+    struct common_type_printer<std::pmr::u32string>
+    {
+        [[nodiscard]]
+        static consteval StringViewT name() noexcept
+        {
+            return {"std::pmr::u32string"};
+        }
+    };
+
+    template <>
     struct common_type_printer<std::wstring>
     {
         [[nodiscard]]
         static consteval StringViewT name() noexcept
         {
             return {"std::wstring"};
+        }
+    };
+
+    template <>
+    struct common_type_printer<std::pmr::wstring>
+    {
+        [[nodiscard]]
+        static consteval StringViewT name() noexcept
+        {
+            return {"std::pmr::wstring"};
         }
     };
 
