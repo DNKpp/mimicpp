@@ -649,6 +649,29 @@ TEST_CASE(
         Catch::Matchers::Equals("my_type"));
 }
 
+namespace
+{
+    enum MyEnum
+    {
+    };
+
+    enum class MyEnumClass
+    {
+    };
+}
+
+TEST_CASE(
+    "Enum (class) types are printed nicely.",
+    "[print]")
+{
+    REQUIRE_THAT(
+        print_type<MyEnum>(),
+        Catch::Matchers::Equals("MyEnum"));
+    REQUIRE_THAT(
+        print_type<MyEnumClass>(),
+        Catch::Matchers::Equals("MyEnumClass"));
+}
+
 #endif
 
 namespace
