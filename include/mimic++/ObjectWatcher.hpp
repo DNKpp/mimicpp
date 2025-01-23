@@ -10,8 +10,12 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Mock.hpp"
+#include "mimic++/Printer.hpp"
 
+#include <concepts>
+#include <memory>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 namespace mimicpp::detail
@@ -20,9 +24,8 @@ namespace mimicpp::detail
     [[nodiscard]]
     static StringT generate_lifetime_watcher_mock_name()
     {
-        const std::type_index rtti = typeid(Base);
         StringStreamT out{};
-        out << "LifetimeWatcher for " << rtti.name();
+        out << "LifetimeWatcher for " << print_type<Base>();
         return std::move(out).str();
     }
 
@@ -30,9 +33,8 @@ namespace mimicpp::detail
     [[nodiscard]]
     static StringT generate_relocation_watcher_mock_name()
     {
-        const std::type_index rtti = typeid(Base);
         StringStreamT out{};
-        out << "RelocationWatcher for " << rtti.name();
+        out << "RelocationWatcher for " << print_type<Base>();
         return std::move(out).str();
     }
 }
