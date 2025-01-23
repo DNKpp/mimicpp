@@ -6,17 +6,18 @@
 #include "mimic++/printing/TypePrinter.hpp"
 
 #include <array>
-#include <span>
-#include <vector>
-#include <list>
-#include <forward_list>
-#include <set>
-#include <unordered_set>
-#include <map>
-#include <unordered_map>
 #include <deque>
+#include <forward_list>
+#include <list>
+#include <map>
+#include <memory_resource>
 #include <queue>
+#include <set>
+#include <span>
 #include <stack>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 using namespace mimicpp;
 
