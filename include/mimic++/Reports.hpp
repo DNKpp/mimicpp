@@ -195,6 +195,52 @@ namespace mimicpp
     }
 
     /**
+     * \brief Contains information about a specific (potentially cv-ref-qualified) type.
+     */
+    class TypeReport
+    {
+    public:
+        template <typename T>
+        [[nodiscard]]
+        static TypeReport make()
+        {
+            return TypeReport{typeid(T), print_type<T>()};
+        }
+
+        [[nodiscard]]
+        std::type_index type_index() const noexcept
+        {
+            return m_TypeIndex;
+        }
+
+        [[nodiscard]]
+        constexpr StringT const& name() const noexcept
+        {
+            return m_Name;
+        }
+
+        [[nodiscard]]
+        friend bool operator==(TypeReport const& lhs, TypeReport const& rhs) noexcept
+        {
+            return lhs.m_TypeIndex == rhs.m_TypeIndex
+                // typeid decays cv-qualifications.
+                // So, we must compare the name, too.
+                && lhs.m_Name == rhs.m_Name;
+        }
+
+    private:
+        std::type_index m_TypeIndex;
+        StringT m_Name;
+
+        explicit TypeReport(std::type_index&& index, StringT&& name) noexcept
+            : m_TypeIndex{std::move(index)},
+              m_Name{std::move(name)}
+        {
+            assert(!m_Name.empty() && "Type name must not be empty.");
+        }
+    };
+
+    /**
      * \brief Contains the extracted info from a typed ``call::Info``.
      * \details This type is meant to be used to communicate with independent domains via the reporter interface and thus contains
      * the generic information as plain ``std`` types (e.g. the return type is provided as ``std::type_index`` instead of an actual
@@ -520,7 +566,7 @@ namespace mimicpp
             // GCOVR_EXCL_START
             default: // NOLINT(clang-diagnostic-covered-switch-default)
                 unreachable();
-            // GCOVR_EXCL_STOP
+                // GCOVR_EXCL_STOP
             }
 
             out = format::format_to(
