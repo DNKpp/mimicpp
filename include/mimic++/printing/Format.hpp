@@ -13,8 +13,8 @@
 
 #include <concepts>
 #include <sstream>
-#include <utility>
 #include <type_traits>
+#include <utility>
 
 #ifndef MIMICPP_CONFIG_USE_FMT
     #include <format>
@@ -38,10 +38,10 @@ namespace mimicpp
     template <typename Printer, typename OutIter, typename T>
     concept printer_for = print_iterator<OutIter>
                        && requires(OutIter out) {
-        {
-            Printer::print(out, std::declval<T&&>())
-        } -> std::convertible_to<OutIter>;
-                       };
+                              {
+                                  Printer::print(out, std::declval<T&&>())
+                              } -> std::convertible_to<OutIter>;
+                          };
 }
 
 namespace mimicpp::format

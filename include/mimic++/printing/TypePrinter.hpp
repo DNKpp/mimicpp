@@ -160,11 +160,13 @@ namespace mimicpp::custom
 
 namespace mimicpp::printing::detail
 {
-    template <typename T, print_iterator OutIter, typename Printer = mimicpp::custom::TypePrinter<T>>
-        requires requires {
-            typename Printer;
-            { Printer::name() } -> std::convertible_to<StringViewT>;
-        }
+    template <typename Printer, typename T>
+    concept type_printer_for = requires {
+        typename Printer;
+        { Printer::name() } -> std::convertible_to<StringViewT>;
+    };
+
+    template <typename T, print_iterator OutIter, type_printer_for<T> Printer = mimicpp::custom::TypePrinter<T>>
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<4u>, OutIter out)
     {
         return std::ranges::copy(Printer::name(), std::move(out))
@@ -174,64 +176,40 @@ namespace mimicpp::printing::detail
     template <typename T>
     struct common_type_printer;
 
-    template <typename T, print_iterator OutIter>
-        requires requires
-        {
-            typename common_type_printer<T>;
-            { common_type_printer<T>::name() } -> std::convertible_to<StringViewT>;
-        }
+    template <typename T, print_iterator OutIter, type_printer_for<T> Printer = common_type_printer<T>>
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<3u>, OutIter out)
     {
-        return format::format_to(
-            std::move(out),
-            "{}",
-            common_type_printer<T>::name());
+        return std::ranges::copy(Printer::name(), std::move(out))
+            .out;
     }
 
     template <typename T>
     struct signature_type_printer;
 
-    template <typename T, print_iterator OutIter>
-        requires requires
-        {
-            typename signature_type_printer<T>;
-            { signature_type_printer<T>::name() } -> std::convertible_to<StringViewT>;
-        }
+    template <typename T, print_iterator OutIter, type_printer_for<T> Printer = signature_type_printer<T>>
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<2u>, OutIter out)
     {
-        return format::format_to(
-            std::move(out),
-            "{}",
-            signature_type_printer<T>::name());
+        return std::ranges::copy(Printer::name(), std::move(out))
+            .out;
     }
 
     template <typename T>
     struct template_type_printer;
 
-    template <typename T, print_iterator OutIter>
-        requires requires
-        {
-            typename template_type_printer<T>;
-            { template_type_printer<T>::name() } -> std::convertible_to<StringViewT>;
-        }
+    template <typename T, print_iterator OutIter, type_printer_for<T> Printer = template_type_printer<T>>
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<1u>, OutIter out)
     {
-        return format::format_to(
-            std::move(out),
-            "{}",
-            template_type_printer<T>::name());
+        return std::ranges::copy(Printer::name(), std::move(out))
+            .out;
     }
 
     template <typename T, print_iterator OutIter>
     OutIter print_type_to([[maybe_unused]] const priority_tag<0u>, OutIter out)
     {
-        static const StringT name = detail::prettify_type_name(
-            detail::type_name<T>());
-
-        return format::format_to(
-            std::move(out),
-            "{}",
-            name);
+        return std::ranges::copy(
+                   detail::prettify_type_name(detail::type_name<T>()),
+                   std::move(out))
+            .out;
     }
 
     constexpr priority_tag<4u> maxPrintTypePriority{};
