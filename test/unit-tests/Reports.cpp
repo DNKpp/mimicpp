@@ -489,15 +489,14 @@ TEST_CASE(
     using ArgT = CallReport::Arg;
 
     const ArgT first{
-        .typeIndex = typeid(int),
-        .typeString = print_type<int>(),
+        .typeInfo = TypeReport::make<int>(),
         .stateString = "42"};
 
     const auto [expectedEquality, second] = GENERATE(
         (table<bool, ArgT>({
-            {false,   {typeid(int), print_type<int>(), "1337"}},
-            {false, {typeid(short), print_type<short>(), "42"}},
-            { true,     {typeid(int), print_type<int>(), "42"}}
+            {false, {TypeReport::make<int>(), "1337"}},
+            {false, {TypeReport::make<short>(), "42"}},
+            { true,   {TypeReport::make<int>(), "42"}}
     })));
 
     REQUIRE(expectedEquality == (first == second));
@@ -511,12 +510,8 @@ TEST_CASE(
     "[reporting]")
 {
     const CallReport first{
-        .returnTypeIndex = typeid(std::string),
-        .returnTypeString = print_type<std::string>(),
-        .argDetails = {
-            {.typeIndex = typeid(int),
-             .typeString = print_type<int>(),
-             .stateString = "42"}},
+        .returnTypeInfo = TypeReport::make<std::string>(),
+        .argDetails = {{.typeInfo = TypeReport::make<int>(), .stateString = "42"}},
         .fromLoc = std::source_location::current(),
         .stacktrace = stacktrace::current(),
         .fromCategory = ValueCategory::any,
@@ -536,7 +531,7 @@ TEST_CASE(
     {
         CallReport second{first};
 
-        second.returnTypeIndex = GENERATE(as<std::type_index>{}, typeid(void), typeid(std::string_view));
+        second.returnTypeInfo = GENERATE(TypeReport::make<void>(), TypeReport::make<std::string_view>());
 
         REQUIRE(first != second);
         REQUIRE(second != first);
@@ -588,10 +583,10 @@ TEST_CASE(
         second.argDetails = GENERATE(
             std::vector<ArgT>{},
             std::vector{
-                (ArgT{.typeIndex = typeid(int), .typeString = print_type<int>(), .stateString = "1337"})},
+                (ArgT{.typeInfo = TypeReport::make<int>(), .stateString = "1337"})},
             std::vector{
-                (ArgT{.typeIndex = typeid(int), .typeString = print_type<int>(), .stateString = "42"}),
-                (ArgT{.typeIndex = typeid(int), .typeString = print_type<int>(), .stateString = "1337"})});
+                (ArgT{.typeInfo = TypeReport::make<int>(), .stateString = "42"}),
+                (ArgT{.typeInfo = TypeReport::make<int>(), .stateString = "1337"})});
 
         REQUIRE(first != second);
         REQUIRE(second != first);
@@ -629,8 +624,7 @@ TEST_CASE(
         const CallReport report = make_call_report(info);
 
         const CallReport expected{
-            .returnTypeIndex = typeid(void),
-            .returnTypeString = print_type<void>(),
+            .returnTypeInfo = TypeReport::make<void>(),
             .argDetails = {},
             .fromLoc = info.fromSourceLocation,
             .stacktrace = info.stacktrace,
@@ -651,8 +645,7 @@ TEST_CASE(
         const CallReport report = make_call_report(info);
 
         const CallReport expected{
-            .returnTypeIndex = typeid(int),
-            .returnTypeString = print_type<int>(),
+            .returnTypeInfo = TypeReport::make<int>(),
             .argDetails = {},
             .fromLoc = info.fromSourceLocation,
             .stacktrace = info.stacktrace,
@@ -678,12 +671,11 @@ TEST_CASE(
 
         using ArgT = CallReport::Arg;
         const CallReport expected{
-            .returnTypeIndex = typeid(void),
-            .returnTypeString = print_type<void>(),
+            .returnTypeInfo = TypeReport::make<void>(),
             .argDetails = {
-                           ArgT{typeid(const int&), print_type<int const&>(), "1337"},
-                           ArgT{typeid(double), print_type<double>(), "4.2"},
-                           ArgT{typeid(std::string), print_type<std::string>(), "\"Hello, World!\""}},
+                           ArgT{TypeReport::make<int const&>(), "1337"},
+                           ArgT{TypeReport::make<double>(), "4.2"},
+                           ArgT{TypeReport::make<std::string>(), "\"Hello, World!\""}},
             .fromLoc = info.fromSourceLocation,
             .stacktrace = info.stacktrace,
             .fromCategory = info.fromCategory,
@@ -1141,8 +1133,7 @@ TEST_CASE(
     SECTION("When report without arguments is given.")
     {
         const CallReport report{
-            .returnTypeIndex = typeid(void),
-            .returnTypeString = print_type<void>(),
+            .returnTypeInfo = TypeReport::make<void>(),
             .argDetails = {},
             .fromLoc = std::source_location::current(),
             .stacktrace = stacktrace::current(),
@@ -1161,9 +1152,8 @@ TEST_CASE(
     SECTION("When report with arguments is given.")
     {
         const CallReport report{
-            .returnTypeIndex = typeid(int),
-            .returnTypeString = print_type<int>(),
-            .argDetails = {{.typeIndex = typeid(double), .typeString = print_type<double>(), .stateString = "4.2"}},
+            .returnTypeInfo = TypeReport::make<int>(),
+            .argDetails = {{.typeInfo = TypeReport::make<double>(), .stateString = "4.2"}},
             .fromLoc = std::source_location::current(),
             .stacktrace = stacktrace::current(),
             .fromCategory = ValueCategory::lvalue,

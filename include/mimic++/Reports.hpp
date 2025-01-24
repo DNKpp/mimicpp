@@ -252,16 +252,14 @@ namespace mimicpp
         class Arg
         {
         public:
-            std::type_index typeIndex;
-            StringT typeString;
+            TypeReport typeInfo;
             StringT stateString;
 
             [[nodiscard]]
             friend bool operator==(const Arg&, const Arg&) = default;
         };
 
-        std::type_index returnTypeIndex;
-        StringT returnTypeString;
+        TypeReport returnTypeInfo;
         std::vector<Arg> argDetails{};
         std::source_location fromLoc{};
         Stacktrace stacktrace{stacktrace::NullBackend{}};
@@ -271,8 +269,7 @@ namespace mimicpp
         [[nodiscard]]
         friend bool operator==(const CallReport& lhs, const CallReport& rhs)
         {
-            return lhs.returnTypeIndex == rhs.returnTypeIndex
-                && lhs.returnTypeString == rhs.returnTypeString
+            return lhs.returnTypeInfo == rhs.returnTypeInfo
                 && lhs.argDetails == rhs.argDetails
                 && is_same_source_location(lhs.fromLoc, rhs.fromLoc)
                 && lhs.fromCategory == rhs.fromCategory
@@ -294,14 +291,12 @@ namespace mimicpp
     CallReport make_call_report(call::Info<Return, Params...> callInfo)
     {
         return CallReport{
-            .returnTypeIndex = typeid(Return),
-            .returnTypeString = print_type<Return>(),
+            .returnTypeInfo = TypeReport::make<Return>(),
             .argDetails = std::apply(
                 [](auto&... args) {
                     return std::vector<CallReport::Arg>{
                         CallReport::Arg{
-                                        .typeIndex = typeid(Params),
-                                        .typeString = print_type<Params>(),
+                                        .typeInfo = TypeReport::make<Params>(),
                                         .stateString = mimicpp::print(args.get())}
                         ...
                     };
@@ -349,7 +344,7 @@ namespace mimicpp
                 "return type: {}\n",
                 report.fromConstness,
                 report.fromCategory,
-                report.returnTypeString);
+                report.returnTypeInfo.name());
 
             if (!std::ranges::empty(report.argDetails))
             {
@@ -358,6 +353,7 @@ namespace mimicpp
                     "args:\n");
                 for (const std::size_t i : std::views::iota(0u, std::ranges::size(report.argDetails)))
                 {
+                    auto const& arg = report.argDetails[i];
                     out = format::format_to(
                         std::move(out),
                         "\targ[{}]: {{\n"
@@ -365,8 +361,8 @@ namespace mimicpp
                         "\t\tvalue: {}\n"
                         "\t}},\n",
                         i,
-                        report.argDetails[i].typeString,
-                        report.argDetails[i].stateString);
+                        arg.typeInfo.name(),
+                        arg.stateString);
                 }
             }
 

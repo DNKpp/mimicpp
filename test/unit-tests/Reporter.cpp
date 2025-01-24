@@ -59,8 +59,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     auto& reporter = dynamic_cast<ReporterMock&>(*detail::get_reporter());
 
     const CallReport callReport{
-        .returnTypeIndex = typeid(void),
-        .returnTypeString = print_type<void>(),
+        .returnTypeInfo = TypeReport::make<void>(),
         .fromLoc = std::source_location::current()};
 
     const std::vector<MatchReport> matchReports{
@@ -151,8 +150,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
         out.get()};
 
     const CallReport callReport{
-        .returnTypeIndex = typeid(void),
-        .returnTypeString = print_type<void>(),
+        .returnTypeInfo = TypeReport::make<void>(),
         .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
