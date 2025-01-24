@@ -22,18 +22,24 @@ var group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s =
       [ "min", "de/d68/structmimicpp_1_1state__saturated.html#ac4f440908f1d7c307e3368874684e80a", null ],
       [ "sequences", "de/d68/structmimicpp_1_1state__saturated.html#a35a64cf83e128debf533211ac760c888", null ]
     ] ],
+    [ "mimicpp::TypeReport", "df/d82/classmimicpp_1_1_type_report.html", [
+      [ "make", "df/d82/classmimicpp_1_1_type_report.html#a92f650c8930dfd0b160e365a905498be", null ],
+      [ "name", "df/d82/classmimicpp_1_1_type_report.html#a395661c2bf7226ee18177a8c5bbb88ab", null ],
+      [ "type_index", "df/d82/classmimicpp_1_1_type_report.html#a637c24883ff4bd4aa5865103d6f539c8", null ],
+      [ "operator==", "df/d82/classmimicpp_1_1_type_report.html#a6ec1f70369ca6dcf79957f889b393e03", null ]
+    ] ],
     [ "mimicpp::CallReport", "dc/dd0/classmimicpp_1_1_call_report.html", [
       [ "Arg", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html", [
         [ "operator==", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#a5ea21a96c1b8d78fd25b9471f62b74f9", null ],
         [ "stateString", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#a7e4239ebd09fd4b1fe3964408eda9c96", null ],
-        [ "typeIndex", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#a5adaad7e0085d86273c6eb6679480356", null ]
+        [ "typeInfo", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#ab2c90ae1a0dd891c3861e8a4e7791053", null ]
       ] ],
       [ "operator==", "dc/dd0/classmimicpp_1_1_call_report.html#a76d4b7d57fceb67734daa037e186814f", null ],
       [ "argDetails", "dc/dd0/classmimicpp_1_1_call_report.html#ad71a0206d331b986f85a6c9a59729fde", null ],
       [ "fromCategory", "dc/dd0/classmimicpp_1_1_call_report.html#ad0af98e56cddb30e0074ff8dc8fd54ee", null ],
       [ "fromConstness", "dc/dd0/classmimicpp_1_1_call_report.html#a804aea975ce3fd4f4348b4cc1f51f333", null ],
       [ "fromLoc", "dc/dd0/classmimicpp_1_1_call_report.html#aeb9ed8b5928e4a5673abb5e7e34978de", null ],
-      [ "returnTypeIndex", "dc/dd0/classmimicpp_1_1_call_report.html#a75c1ad8b191ba8dd5d36258c38017609", null ],
+      [ "returnTypeInfo", "dc/dd0/classmimicpp_1_1_call_report.html#a56a45f8946450a62f4fbc3f16d9b4237", null ],
       [ "stacktrace", "dc/dd0/classmimicpp_1_1_call_report.html#aea59c14511e6881ce40297e6e1a2a1f2", null ]
     ] ],
     [ "mimicpp::ExpectationReport", "dd/d62/classmimicpp_1_1_expectation_report.html", [

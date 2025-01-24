@@ -10,7 +10,8 @@ var searchData=
   ['mimicpp_3a_3amatches_7',['matches',['../dd/d7b/namespacemimicpp_1_1matches.html',1,'mimicpp']]],
   ['mimicpp_3a_3amatches_3a_3arange_8',['range',['../d2/d24/namespacemimicpp_1_1matches_1_1range.html',1,'mimicpp::matches']]],
   ['mimicpp_3a_3amatches_3a_3astr_9',['str',['../dc/d7d/namespacemimicpp_1_1matches_1_1str.html',1,'mimicpp::matches']]],
-  ['mimicpp_3a_3asequence_10',['sequence',['../d8/dce/namespacemimicpp_1_1sequence.html',1,'mimicpp']]],
-  ['mimicpp_3a_3astacktrace_11',['stacktrace',['../df/d4b/namespacemimicpp_1_1stacktrace.html',1,'mimicpp']]],
-  ['mimicpp_3a_3athen_12',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]]
+  ['mimicpp_3a_3aprinting_10',['printing',['../d8/ddf/namespacemimicpp_1_1printing.html',1,'mimicpp']]],
+  ['mimicpp_3a_3asequence_11',['sequence',['../d8/dce/namespacemimicpp_1_1sequence.html',1,'mimicpp']]],
+  ['mimicpp_3a_3astacktrace_12',['stacktrace',['../df/d4b/namespacemimicpp_1_1stacktrace.html',1,'mimicpp']]],
+  ['mimicpp_3a_3athen_13',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]]
 ];

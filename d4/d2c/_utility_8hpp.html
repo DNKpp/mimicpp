@@ -101,6 +101,7 @@ $(function(){initNavTree('d4/d2c/_utility_8hpp.html','../../'); initResizable(tr
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#concepts">Concepts</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">Utility.hpp File Reference</div></div>
 </div><!--header-->
@@ -116,7 +117,7 @@ $(function(){initNavTree('d4/d2c/_utility_8hpp.html','../../'); initResizable(tr
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Utility.hpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../df/d28/_utility_8hpp__incl.svg" width="100%" height="438"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../df/d28/_utility_8hpp__incl.svg" width="100%" height="493"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -137,6 +138,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc6/structmimicpp_1_1type__list.html">mimicpp::type_list&lt; Args &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A very basic type-list template.  <a href="../../db/dc6/structmimicpp_1_1type__list.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d17/structmimicpp_1_1type__list__reverse.html">mimicpp::type_list_reverse&lt; TypeList &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d6a/structmimicpp_1_1type__list__pop__back.html">mimicpp::type_list_pop_back&lt; TypeList &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/df5/structmimicpp_1_1type__list__populate_3_01_template_00_01type__list_3_01_args_8_8_8_01_4_01_4.html">mimicpp::type_list_populate&lt; Template, type_list&lt; Args... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d11/structstd_1_1tuple__size_3_01mimicpp_1_1type__list_3_01_args_8_8_8_01_4_01_4.html">std::tuple_size&lt; mimicpp::type_list&lt; Args... &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -155,6 +162,18 @@ Concepts</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d12/conceptmimicpp_1_1satisfies.html">mimicpp::satisfies</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a572544c75c33222e3851363d3c9bf844" id="r_a572544c75c33222e3851363d3c9bf844"><td class="memTemplParams" colspan="2">template&lt;typename TypeList&gt; </td></tr>
+<tr class="memitem:a572544c75c33222e3851363d3c9bf844"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a572544c75c33222e3851363d3c9bf844">mimicpp::type_list_reverse_t</a> = typename <a class="el" href="../../d4/d17/structmimicpp_1_1type__list__reverse.html">type_list_reverse</a>&lt;TypeList&gt;::type</td></tr>
+<tr class="separator:a572544c75c33222e3851363d3c9bf844"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6932cfa355ecfe0e151021be2bcefe26" id="r_a6932cfa355ecfe0e151021be2bcefe26"><td class="memTemplParams" colspan="2">template&lt;typename TypeList&gt; </td></tr>
+<tr class="memitem:a6932cfa355ecfe0e151021be2bcefe26"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a6932cfa355ecfe0e151021be2bcefe26">mimicpp::type_list_pop_back_t</a> = typename <a class="el" href="../../d2/d6a/structmimicpp_1_1type__list__pop__back.html">type_list_pop_back</a>&lt;TypeList&gt;::type</td></tr>
+<tr class="separator:a6932cfa355ecfe0e151021be2bcefe26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b3d111b4a63c4d2605b467d1947027d" id="r_a8b3d111b4a63c4d2605b467d1947027d"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename... &gt; typename Template, typename TypeList&gt; </td></tr>
+<tr class="memitem:a8b3d111b4a63c4d2605b467d1947027d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a8b3d111b4a63c4d2605b467d1947027d">mimicpp::type_list_populate_t</a> = typename <a class="el" href="../../da/d90/structmimicpp_1_1type__list__populate.html">type_list_populate</a>&lt;Template, TypeList&gt;::type</td></tr>
+<tr class="separator:a8b3d111b4a63c4d2605b467d1947027d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -178,7 +197,7 @@ requires std::is_enum_v&lt;T&gt;</td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d4/d2c/_utility_8hpp.html">Utility.hpp</a></li>
-    <li class="footer">Generated on Tue Jan 21 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jan 24 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

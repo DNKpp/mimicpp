@@ -97,34 +97,17 @@ $(function(){initNavTree('da/dab/_printer_8hpp.html','../../'); initResizable(tr
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#concepts">Concepts</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Printer.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d9/dc5/_string_8hpp_source.html">mimic++/String.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/d32/_type_traits_8hpp_source.html">mimic++/TypeTraits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d4/d2c/_utility_8hpp_source.html">mimic++/Utility.hpp</a>&quot;</code><br />
-<code>#include &lt;cstdint&gt;</code><br />
-<code>#include &lt;functional&gt;</code><br />
-<code>#include &lt;iterator&gt;</code><br />
-<code>#include &lt;optional&gt;</code><br />
-<code>#include &lt;ranges&gt;</code><br />
-<code>#include &lt;source_location&gt;</code><br />
-<code>#include &lt;sstream&gt;</code><br />
-<code>#include &lt;string&gt;</code><br />
-<code>#include &lt;string_view&gt;</code><br />
-<code>#include &lt;utility&gt;</code><br />
-<code>#include &lt;format&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d5/dec/_format_8hpp_source.html">mimic++/printing/Format.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/d09/_common_type_printer_8hpp_source.html">mimic++/printing/CommonTypePrinter.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../de/d62/_state_printer_8hpp_source.html">mimic++/printing/StatePrinter.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/d35/_type_printer_8hpp_source.html">mimic++/printing/TypePrinter.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Printer.hpp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d3/d5e/_printer_8hpp__incl.svg" width="100%" height="548"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d3/d5e/_printer_8hpp__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -133,48 +116,13 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <p><a href="../../da/dab/_printer_8hpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html">mimicpp::format::formatter&lt; mimicpp::ValueCategory, mimicpp::CharT &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html">mimicpp::format::formatter&lt; mimicpp::Constness, mimicpp::CharT &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d54/namespacemimicpp_1_1format.html">mimicpp::format</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d84/namespacemimicpp_1_1custom.html">mimicpp::custom</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
-Concepts</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d26/conceptmimicpp_1_1print__iterator.html">mimicpp::print_iterator</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dfc/conceptmimicpp_1_1printer__for.html">mimicpp::printer_for</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:a6b761dc4fb4f361e95dd3ec37da4a8a8" id="r_a6b761dc4fb4f361e95dd3ec37da4a8a8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8">mimicpp::StringStreamT</a> = std::basic_ostringstream&lt;<a class="el" href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">CharT</a>, <a class="el" href="../../d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad">CharTraitsT</a>&gt;</td></tr>
-<tr class="separator:a6b761dc4fb4f361e95dd3ec37da4a8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga67aaa7bdf2da1595ab1b25059119242c" id="r_ga67aaa7bdf2da1595ab1b25059119242c"><td class="memItemLeft" align="right" valign="top">constexpr detail::PrintFn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a> {}</td></tr>
-<tr class="memdesc:ga67aaa7bdf2da1595ab1b25059119242c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, converting the given object to its textual representation.  <br /></td></tr>
-<tr class="separator:ga67aaa7bdf2da1595ab1b25059119242c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../da/dab/_printer_8hpp.html">Printer.hpp</a></li>
-    <li class="footer">Generated on Tue Jan 21 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jan 24 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

@@ -98,99 +98,36 @@ $(function(){initNavTree('de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html','..
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#groups">Topics</a>  </div>
   <div class="headertitle"><div class="title">stringification</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Stringification describes the process of converting an object state into its textual representation.  
+<p>Stringification describes the process of converting an object state or type into its textual representation.  
 <a href="#details">More...</a></p>
+<div class="dynheader">
+Collaboration diagram for stringification:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../de/dd2/group___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.svg" width="324" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">mimicpp::custom::Printer&lt; typename &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">User may add specializations, which will then be used during <code>print</code> calls.  <a href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html#details">More...</a><br /></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="groups" name="groups"></a>
+Topics</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d0d/group___s_t_a_t_e___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html">object-state stringification</a></td></tr>
+<tr class="memdesc:de/d0d/group___s_t_a_t_e___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n"><td class="mdescLeft">&#160;</td><td class="mdescRight">State stringification occurs when an object's state is transformed into a textual representation. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga67aaa7bdf2da1595ab1b25059119242c" id="r_ga67aaa7bdf2da1595ab1b25059119242c"><td class="memItemLeft" align="right" valign="top">constexpr detail::PrintFn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a> {}</td></tr>
-<tr class="memdesc:ga67aaa7bdf2da1595ab1b25059119242c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, converting the given object to its textual representation.  <br /></td></tr>
-<tr class="separator:ga67aaa7bdf2da1595ab1b25059119242c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d68/group___t_y_p_e___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html">object-type stringification</a></td></tr>
+<tr class="memdesc:d3/d68/group___t_y_p_e___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n"><td class="mdescLeft">&#160;</td><td class="mdescRight">State stringification occurs when an object's type is transformed into a textual representation. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Stringification describes the process of converting an object state into its textual representation. </p>
-<p><code>mimic++</code> often wants to present users a textual representation of their tested objects, because they might have failed a test case. It utilizes the <code>print</code> function for that purpose.</p>
-<p>That function internally checks for the first available option (in that order):</p><ul>
-<li><code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> specialization</li>
-<li>internal printer specializations (handles strings, <code>std::source_location</code>, <code>std::optional</code>, etc.)</li>
-<li>satisfies <code>std::ranges::forward_range</code></li>
-<li>formattable type (in terms of the installed format-backend)</li>
-</ul>
-<p>If no valid alternative has been found, the default is chosen (which just prints "{?}").</p>
-<h2><a class="anchor" id="autotoc_md19"></a>
-Override existing printings or print custom types</h2>
-<p>As <code>mimic++</code> can not know how to convert any custom type out there, a simple but effective mechanism is used. Users can add a specialization of <code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> for their own or third-party types. <code>mimic++</code> will always prefer such a specialization over any other internal alternative, even if <code>mimic++</code> already has special treatment that particular type (e.g. <code>std::source_location</code>).</p>
-<p>Given the following type. </p><div class="fragment"><div class="line">    <span class="keyword">struct </span>my_type</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keywordtype">int</span> data{};</div>
-<div class="line">    };</div>
-<div class="line"> </div>
-</div><!-- fragment --><p> Users can then create a specialization as follows: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><span class="keyword">class </span><a class="code hl_class" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">mimicpp::custom::Printer</a>&lt;my_type&gt;</div>
-<div class="line">{</div>
-<div class="line"><span class="keyword">public</span>:</div>
-<div class="line">    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="#ga67aaa7bdf2da1595ab1b25059119242c">print</a>(<span class="keyword">auto</span> outIter, <span class="keyword">const</span> my_type&amp; <span class="keywordtype">object</span>)</div>
-<div class="line">    {</div>
-<div class="line">        <span class="keywordflow">return</span> format::format_to(</div>
-<div class="line">            outIter,</div>
-<div class="line">            <span class="stringliteral">&quot;Object of my_type has value: {}&quot;</span>,</div>
-<div class="line">            <span class="keywordtype">object</span>.data);</div>
-<div class="line">    }</div>
-<div class="line">};</div>
-<div class="line"> </div>
-</div><!-- fragment --><p>When an object of <code>my_type</code> is then passed to <code>print</code>, that specification will be used: </p><div class="fragment"><div class="line">    <span class="keyword">constexpr</span> my_type myObject{42};</div>
-<div class="line">    <span class="keyword">const</span> std::string text = <a class="code hl_variable" href="#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a>(myObject);</div>
-<div class="line"> </div>
-<div class="line">    REQUIRE_THAT(</div>
-<div class="line">        text,</div>
-<div class="line">        Catch::Matchers::Equals(<span class="stringliteral">&quot;Object of my_type has value: 42&quot;</span>));</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md20"></a>
-String printing</h2>
-<p>All char-strings (like <code>const char*</code> or <code>std::string</code>) will be printed as they are. Other character-types (e.g. <code>wchar_t</code> or <code>char8_t</code>) must be treated with care. Making <code>mimic++</code> 100% compatible with any existing character-type is either a major work-load or has to be outsourced to a dependency. Currently, <code>mimic++</code> chooses another option: If a string of a non-printable character-type (in terms of the type-trait <code><a class="el" href="../../d2/d73/structmimicpp_1_1is__character.html" title="Primary template, which always yields false.">is_character</a></code>) is detected, it prints the string-literal and all elements are converted to their value-representation and printed as comma separated hex-values.</p>
-<p>For example, the string <code>u8"Hello, World!"</code> will then be printed as <code>u8"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21"</code>. </p>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="ga67aaa7bdf2da1595ab1b25059119242c" name="ga67aaa7bdf2da1595ab1b25059119242c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga67aaa7bdf2da1595ab1b25059119242c">&#9670;&#160;</a></span>print</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">detail::PrintFn mimicpp::print {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Functional object, converting the given object to its textual representation. </p>
-
-</div>
-</div>
+<p>Stringification describes the process of converting an object state or type into its textual representation. </p>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Jan 21 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jan 24 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

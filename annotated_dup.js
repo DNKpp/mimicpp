@@ -8,7 +8,8 @@ var annotated_dup =
       ] ],
       [ "custom", "d4/d84/namespacemimicpp_1_1custom.html", [
         [ "matcher_traits", "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html", null ],
-        [ "Printer", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ]
+        [ "Printer", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],
+        [ "TypePrinter", "de/de7/classmimicpp_1_1custom_1_1_type_printer.html", null ]
       ] ],
       [ "expectation_policies", "d0/d91/namespacemimicpp_1_1expectation__policies.html", [
         [ "ArgsRequirement", "d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html", "d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement" ],
@@ -205,6 +206,11 @@ var annotated_dup =
       [ "string_traits< std::basic_string_view< Char, Traits > >", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4" ],
       [ "string_traits< T >", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4" ],
       [ "type_list", "db/dc6/structmimicpp_1_1type__list.html", "db/dc6/structmimicpp_1_1type__list" ],
+      [ "type_list_pop_back", "d2/d6a/structmimicpp_1_1type__list__pop__back.html", null ],
+      [ "type_list_populate", "da/d90/structmimicpp_1_1type__list__populate.html", null ],
+      [ "type_list_populate< Template, type_list< Args... > >", "d3/df5/structmimicpp_1_1type__list__populate_3_01_template_00_01type__list_3_01_args_8_8_8_01_4_01_4.html", "d3/df5/structmimicpp_1_1type__list__populate_3_01_template_00_01type__list_3_01_args_8_8_8_01_4_01_4" ],
+      [ "type_list_reverse", "d4/d17/structmimicpp_1_1type__list__reverse.html", "d4/d17/structmimicpp_1_1type__list__reverse" ],
+      [ "TypeReport", "df/d82/classmimicpp_1_1_type_report.html", "df/d82/classmimicpp_1_1_type_report" ],
       [ "uint_with_size", "d7/da0/structmimicpp_1_1uint__with__size.html", null ],
       [ "uint_with_size< 1u >", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4" ],
       [ "uint_with_size< 2u >", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4" ],

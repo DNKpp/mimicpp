@@ -112,7 +112,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <p></p>
 </blockquote>
 <hr  />
-<h1><a class="anchor" id="autotoc_md44"></a>
+<h1><a class="anchor" id="autotoc_md47"></a>
 Table of Contents</h1>
 <ul>
 <li>Introduction<ul>
@@ -143,18 +143,18 @@ Table of Contents</h1>
 <li>Known Issues</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md46"></a>
+<h1><a class="anchor" id="autotoc_md49"></a>
 Introduction</h1>
 <p><code>mimic++</code> is a C++20 mocking framework designed to offer a natural and expressive syntax. While many similar frameworks aim for this goal, they often rely heavily on an extensive list of macros. Although macros can be beneficial, <code>mimic++</code> strives to minimize their usage to enhance readability and maintainability.</p>
 <p>What sets <code>mimic++</code> apart from other mocking frameworks is its unique approach: Mock objects are explicitly defined as function objects, making them directly callable and overloadable. This design choice ensures that the framework remains extensible and straightforward to use.</p>
 <p>If you're curious to learn more, feel free to explore the <a href="https://dnkpp.github.io/mimicpp/">documentation</a> and the cheat-sheet of to the latest release. You can also check out the examples folder or experiment with the framework online at <a href="https://godbolt.org/z/fYavvqfeM">godbolt.org</a>.</p>
-<h2><a class="anchor" id="autotoc_md47"></a>
+<h2><a class="anchor" id="autotoc_md50"></a>
 Core Design</h2>
 <p>The framework is built around two core concepts: <b>Mocks</b> and <b>Expectations</b>.</p>
 <p><b>Mocks</b> are objects that simulate functional implementations, allowing you to set up behavior on a per-test-case basis. These behaviors are referred to as <b>Expectations</b>, which define whether and how the mock should respond during testing.</p>
 <p>The framework diligently tracks all Expectations and reports any that are either violated or left unfulfilled, providing useful information for debugging. This tracking mechanism helps developers quickly identify issues in their tests, ensuring that the intended behavior is accurately represented and maintained.</p>
 <p>In essence, Mocks and Expectations work hand in hand to facilitate effective testing.</p>
-<h2><a class="anchor" id="autotoc_md48"></a>
+<h2><a class="anchor" id="autotoc_md51"></a>
 Examples</h2>
 <details >
 <summary >
@@ -186,7 +186,7 @@ Mocks as function objects</summary>
 <div class="line">    <span class="keywordtype">int</span> result = mock(<span class="stringliteral">&quot;Hello, World&quot;</span>, 1336);                        <span class="comment">// This matches the expectation.</span></div>
 <div class="line">    REQUIRE(42 == result);</div>
 <div class="line">}</div>
-<div class="ttc" id="aclassmimicpp_1_1_mock_html"><div class="ttname"><a href="d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a></div><div class="ttdoc">A Mock type, which fully supports overload sets.</div><div class="ttdef"><b>Definition</b> Mock.hpp:468</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_mock_html"><div class="ttname"><a href="d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a></div><div class="ttdoc">A Mock type, which fully supports overload sets.</div><div class="ttdef"><b>Definition</b> Mock.hpp:423</div></div>
 <div class="ttc" id="agroup___m_o_c_k_html_ga7e7d68eefb8f3cba28422f62bcf2f90a"><div class="ttname"><a href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a></div><div class="ttdeci">#define SCOPED_EXP</div><div class="ttdoc">Shorthand variant of MIMICPP_SCOPED_EXPECTATION.</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:304</div></div>
 <div class="ttc" id="amimic_09_09_8hpp_html"><div class="ttname"><a href="d0/db9/mimic_09_09_8hpp.html">mimic++.hpp</a></div></div>
 <div class="ttc" id="anamespacemimicpp_1_1expect_html"><div class="ttname"><a href="d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div><div class="ttdef"><b>Definition</b> ArgRequirementPolicies.hpp:106</div></div>
@@ -352,54 +352,54 @@ Watching object-instances</summary>
 <div class="line">    </div>
 <div class="line">    REQUIRE(2 == relocationCounter);            <span class="comment">// Let&#39;s see how often the instance has been relocated.</span></div>
 <div class="line">}</div>
-<div class="ttc" id="aclassmimicpp_1_1_lifetime_watcher_html"><div class="ttname"><a href="db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a></div><div class="ttdoc">A watcher type, which reports it&#39;s destructor calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:90</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_relocation_watcher_html"><div class="ttname"><a href="da/d45/classmimicpp_1_1_relocation_watcher.html">mimicpp::RelocationWatcher</a></div><div class="ttdoc">A watcher type, which reports it&#39;s move-constructor and -assignment calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:256</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_watched_html"><div class="ttname"><a href="d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a></div><div class="ttdoc">CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:493</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_lifetime_watcher_html"><div class="ttname"><a href="db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a></div><div class="ttdoc">A watcher type, which reports it&#39;s destructor calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:92</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_relocation_watcher_html"><div class="ttname"><a href="da/d45/classmimicpp_1_1_relocation_watcher.html">mimicpp::RelocationWatcher</a></div><div class="ttdoc">A watcher type, which reports it&#39;s move-constructor and -assignment calls.</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:258</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_watched_html"><div class="ttname"><a href="d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a></div><div class="ttdoc">CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...</div><div class="ttdef"><b>Definition</b> ObjectWatcher.hpp:495</div></div>
 </div><!-- fragment --><p></p>
 </details>
-<h2><a class="anchor" id="autotoc_md49"></a>
+<h2><a class="anchor" id="autotoc_md52"></a>
 Portability</h2>
 <p><code>mimic++</code> is designed to work with any C++20 conforming compiler, independent of the underlying platform or architecture. This is achieved by consistently adhering to the language standards, which is continuously verified through an extensive CI/CD workflow that tracks numerous configurations.</p>
 <p>In fact, <code>mimic++</code> is known to work on Windows, Ubuntu, and macOS with both <code>x86_64</code> and <code>x86_32</code> architectures. For a more comprehensive overview, please refer to the Testing section.</p>
-<h2><a class="anchor" id="autotoc_md50"></a>
+<h2><a class="anchor" id="autotoc_md53"></a>
 Special Acknowledgement</h2>
 <p>This framework is heavily inspired by the well-known <a href="https://github.com/rollbear/trompeloeil">trompeloeil</a>, which I have personally used for several years. While it is definitely a solid choice, it can sometimes feel a bit dated, and some macros may not work well with formatting tools and similar utilities. If you need a pre-C++20 mocking framework, I highly recommend giving it a try.</p>
 <p>Fun fact: <code>mimic++</code> uses <code>trompeloeil</code> for its own test suite :D</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md52"></a>
+<h1><a class="anchor" id="autotoc_md55"></a>
 Customizability</h1>
 <p>A framework should be a versatile tool that can be utilized in various ways and tailored to meet specific needs. For this reason, <code>mimic++</code> offers a range of customization options. For example, users can create their own expectation policies and integrate them seamlessly without modifying any line of the <code>mimic++</code> codebase.</p>
-<h2><a class="anchor" id="autotoc_md53"></a>
+<h2><a class="anchor" id="autotoc_md56"></a>
 Stringification</h2>
 <p><code>mimic++</code> cannot provide stringification for every type, but having a proper textual representation of an object can be very useful when a test fails. <code>mimic++</code> will use <code>std::format</code> (or <a href="https://github.com/fmtlib/fmt">fmt</a>) for types that are formattable, but sometimes that may not meet users' needs, as they might prefer an alternative stringification specifically for testing purposes.</p>
 <p>To address this, users can add their own specializations of the <code><a class="el" href="da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> type, allowing them to specify how a given type should be printed. Custom specializations will always take precedence over any pre-existing printing methods, enabling users to override the stringification of internal report types as well.</p>
-<h2><a class="anchor" id="autotoc_md54"></a>
+<h2><a class="anchor" id="autotoc_md57"></a>
 Matchers</h2>
 <p>Matchers are used to check whether arguments satisfy specific requirements. While there are many existing matchers available, users often have unique needs.</p>
 <p><code>mimic++</code> provides a very generic <code><a class="el" href="dc/d5e/classmimicpp_1_1_predicate_matcher.html" title="Generic matcher and the basic building block of most of the built-in matchers.">mimicpp::PredicateMatcher</a></code>, which is often sufficient for most cases. However, if you need full control, you can start with a fresh type (without any inheritance) and build your own. Custom matchers simply need to conform to the <code><a class="el" href="df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for</a></code> concept. For more information, please refer to the documentation.</p>
-<h2><a class="anchor" id="autotoc_md55"></a>
+<h2><a class="anchor" id="autotoc_md58"></a>
 Policies</h2>
 <p>There are multiple types of policies, depending on the tasks they are designed to fulfill. The <b>expectation policy</b> has full control over whether a match can be made or should be rejected, while the <b>finalize policy</b> determines what a mock should do when it actually matches (such as returning a value or throwing an exception).</p>
 <p>These policies can implement arbitrary logic, so feel free to experiment. There is no base type requirement; they simply need to satisfy either the <code><a class="el" href="dd/d1d/conceptmimicpp_1_1expectation__policy__for.html" title="Determines, whether the given type satisfies the requirements of an expectation-policy for the given ...">mimicpp::expectation_policy_for</a></code>, <code><a class="el" href="d4/df8/conceptmimicpp_1_1control__policy.html" title="Determines, whether the given type satisfies the requirements of a control-policy.">mimicpp::control_policy</a></code>, or <code><a class="el" href="d9/d64/conceptmimicpp_1_1finalize__policy__for.html" title="Determines, whether the given type satisfies the requirements of a finalize-policy for the given sign...">mimicpp::finalize_policy_for</a></code>.</p>
-<h2><a class="anchor" id="autotoc_md56"></a>
+<h2><a class="anchor" id="autotoc_md59"></a>
 Bring your own string- and char-types</h2>
 <p>If you are working with a large framework, there’s a good chance that it utilizes a custom string or character type ( such as <code>QChar</code> and <code>QString</code> from Qt). While they may appear different, they are essentially just strings, so it would be beneficial to make them fully compatible with the existing string matchers.</p>
 <p><code>mimic++</code> supports this; users simply need to provide some trait-specializations. For more information, please refer to the string section of the documentation.</p>
-<h2><a class="anchor" id="autotoc_md57"></a>
+<h2><a class="anchor" id="autotoc_md60"></a>
 Call-Conventions</h2>
 <p>Call conventions are a somewhat controversial topic, as the C++ language definition does not explicitly address them. However, frameworks like Microsoft's COM utilize the <code>__stdcall</code> call convention, indicating that at least some compilers support these specifications. Consequently, users need the ability to leverage these features.</p>
 <p>Since call conventions are not universally portable, <code>mimic++</code> does not define any conventions itself. Instead, it provides an easy macro tool, <code>MIMICPP_REGISTER_CALL_CONVENTION</code>, which users can utilize to make the framework compatible with any call convention they require.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md59"></a>
+<h1><a class="anchor" id="autotoc_md62"></a>
 Documentation</h1>
 <p>The documentation is generated using Doxygen. Users can generate it locally by enabling both the <code>MIMICPP_CONFIGURE_DOXYGEN</code> and <code>MIMICPP_ENABLE_GENERATE_DOCS</code> CMake options, and then manually building the target <code>mimicpp-generate-docs</code>.</p>
 <p>The documentation for the <b>main</b> branch is always available on GitHub Pages. For the <b>development</b> branch, it is also available on the <b>dev-gh-pages</b> branch, but unfortunately, it is not directly viewable in the browser.</p>
 <p>Each release includes the generated documentation as an attachment.</p>
 <hr  />
-<h1><a class="anchor" id="autotoc_md61"></a>
+<h1><a class="anchor" id="autotoc_md64"></a>
 Integration</h1>
 <p><code>mimic++</code> is a header-only library, allowing users to easily access all features by simply including the <code>mimic++/mimic++.hpp</code> header. Of course, users can also take a more granular approach and include only what is necessary. The choice is yours.</p>
-<h2><a class="anchor" id="autotoc_md62"></a>
+<h2><a class="anchor" id="autotoc_md65"></a>
 CMake</h2>
 <p>The integration into a cmake project is straight-forward.</p>
 <div class="fragment"><div class="line">target_link_libraries(</div>
@@ -423,15 +423,15 @@ CMake</h2>
 <div class="line"> </div>
 <div class="line">CPMAddPackage(&quot;gh:DNKpp/mimicpp@5&quot;) # or gh:DNKpp/mimicpp#&lt;commit_hash&gt;</div>
 <div class="line"># do not forget linking via target_link_libraries as shown above</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md63"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md66"></a>
 Packaging Tools</h2>
 <ul>
 <li><a href="https://github.com/Microsoft/vcpkg">vcpkg</a> - The Microsoft VC++ Packaging Tool. Thanks to contributions from community members, <code>mimic++</code> also has a <b>vcpkg port</b>, which can be found here: <a href="https://vcpkg.link/ports/mimicpp"><img src="https://img.shields.io/vcpkg/v/mimicpp" alt="Vcpkg port" class="inline"/></a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md64"></a>
+<h2><a class="anchor" id="autotoc_md67"></a>
 Single-Header</h2>
 <p>As an alternative, each release includes a header file named <code>mimic++-amalgamated.hpp</code>, which contains all definitions (except for the specific test framework adapters) and can be easily dropped into any C++20 project. After that, users can simply select the appropriate adapter header from the <code>adapters</code>-folder and include it in their project as well.</p>
-<h2><a class="anchor" id="autotoc_md65"></a>
+<h2><a class="anchor" id="autotoc_md68"></a>
 Test Framework</h2>
 <p>Mocking frameworks typically do not exist in isolation; rather, they are advanced techniques for creating tests. They should work seamlessly with any existing test framework. Therefore, <code>mimic++</code> provides the <code>IReporter</code> interface, which serves as a bridge from <code>mimic++</code> to the utilized test framework.</p>
 <p><code>mimic++</code> already brings some existing reporter implementations for well-known test frameworks, but users can also create custom adapters for any test framework or simply use the default reporter. For more details, please refer to the reporting section in the documentation.</p>
@@ -443,7 +443,7 @@ Test Framework</h2>
 <li><a href="https://github.com/google/googletest">GTest</a> (tested with v1.15.2)</li>
 </ul>
 <hr  />
-<h1><a class="anchor" id="autotoc_md67"></a>
+<h1><a class="anchor" id="autotoc_md70"></a>
 Testing</h1>
 <p><code>mimic++</code> employs a strict testing policy, ensuring that each official feature is thoroughly tested. The results of these test cases are consistently tracked by an extensive CI system, which checks compilation success, test case outcomes, and coverage across dozens of different operating systems, compilers, and build configurations.</p>
 <p>For the test builds, the flags <code>-Wall -Wextra -Wpedantic -Werror</code> (or <code>/W4 /WX</code> on MSVC) are set. This ensures that <code>mimic++</code> won't flood your build output with endless warnings - or, even worse, break your builds — if you enable these flags in your own projects.</p>
@@ -511,9 +511,9 @@ CI Tests</summary>
 <p></p>
 </details>
 <hr  />
-<h1><a class="anchor" id="autotoc_md69"></a>
+<h1><a class="anchor" id="autotoc_md72"></a>
 Known Issues</h1>
-<h2><a class="anchor" id="autotoc_md70"></a>
+<h2><a class="anchor" id="autotoc_md73"></a>
 Clang-18.1 + libc++</h2>
 <p>Date: 25.09.2024</p>
 <p>This combination introduced a regression regarding the <code>std::invocable</code> concept and a default parameter of type <code>std::source_location</code>. On this version, all invocable checks will fail, but the <code>std::is_invocable</code> trait still works as expected. Unfortunately this can not solved easily by this framework - sorry for that.</p>
@@ -525,7 +525,7 @@ Clang-18.1 + libc++</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Jan 21 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jan 24 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

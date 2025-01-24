@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['backend_0',['backend',['../d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html',1,'mimicpp::stacktrace'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md41',1,'Enable experimental cpptrace stacktrace-backend'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend']]],
+  ['backend_0',['backend',['../d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html',1,'mimicpp::stacktrace'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md44',1,'Enable experimental cpptrace stacktrace-backend'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend']]],
   ['backend_5ftraits_1',['backend_traits',['../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html',1,'mimicpp::stacktrace']]],
   ['backend_5ftraits_3c_20mimicpp_3a_3astacktrace_3a_3anullbackend_20_3e_2',['backend_traits&lt; mimicpp::stacktrace::NullBackend &gt;',['../d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html',1,'mimicpp::stacktrace']]],
-  ['backends_3',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md24',1,'']]],
+  ['backends_3',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md22',1,'']]],
   ['basicexpectation_4',['BasicExpectation',['../d3/d4a/classmimicpp_1_1_basic_expectation.html',1,'mimicpp::BasicExpectation&lt; Signature, ControlPolicy, FinalizePolicy, Policies &gt;'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a81d0dfde241a1dccfa4515ce9b27a010',1,'mimicpp::BasicExpectation::BasicExpectation()']]],
   ['basicexpectationbuilder_5',['BasicExpectationBuilder',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html',1,'mimicpp::BasicExpectationBuilder&lt; timesConfigured, SequenceConfig, Signature, FinalizePolicy, Policies &gt;'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a756da2f2bfcf5eead1ed2bcd3627f928',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(std::shared_ptr&lt; StorageT &gt; storage, StringT mockName, detail::TimesConfig timesConfig, SequenceConfig sequenceConfig, FinalizePolicyArg &amp;&amp;finalizePolicyArg, PolicyListArg &amp;&amp;policyListArg) noexcept'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a99b43a6ad6e94ecdb44e3c4a43c90363',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(const BasicExpectationBuilder &amp;)=delete'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1972372a9dee2539cc9f1c63beb3c6c6',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(BasicExpectationBuilder &amp;&amp;)=default']]],
   ['basicreporter_6',['BasicReporter',['../d4/d56/classmimicpp_1_1_basic_reporter.html',1,'mimicpp']]],
@@ -13,6 +13,6 @@ var searchData=
   ['basicreporter_3c_20_26detail_3a_3agtest_3a_3asend_5fsuccess_2c_20_26detail_3a_3agtest_3a_3asend_5fwarning_2c_20_26detail_3a_3agtest_3a_3asend_5ffail_20_3e_10',['BasicReporter&lt; &amp;detail::gtest::send_success, &amp;detail::gtest::send_warning, &amp;detail::gtest::send_fail &gt;',['../d4/d56/classmimicpp_1_1_basic_reporter.html',1,'mimicpp']]],
   ['boosttest_2ehpp_11',['BoostTest.hpp',['../d9/d42/_boost_test_8hpp.html',1,'']]],
   ['boosttestreportert_12',['BoostTestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaff6166a635def8d5ecbca2a02bc6018c',1,'mimicpp']]],
-  ['bring_20your_20own_20string_20and_20char_20types_13',['Bring your own string- and char-types',['../index.html#autotoc_md56',1,'']]],
+  ['bring_20your_20own_20string_20and_20char_20types_13',['Bring your own string- and char-types',['../index.html#autotoc_md59',1,'']]],
   ['byte_20string_14',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md6',1,'']]]
 ];

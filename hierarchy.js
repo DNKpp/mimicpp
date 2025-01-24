@@ -255,6 +255,17 @@ var hierarchy =
       [ "mimicpp::signature_param_type< index, Return(Params...)>", "d0/d24/structmimicpp_1_1signature__param__type_3_01index_00_01_return_07_params_8_8_8_08_4.html", null ]
     ] ],
     [ "mimicpp::type_list< Args >", "db/dc6/structmimicpp_1_1type__list.html", null ],
+    [ "mimicpp::detail::type_list_pop_back< type_list<>, List >", null, [
+      [ "mimicpp::type_list_pop_back< List >", "d2/d6a/structmimicpp_1_1type__list__pop__back.html", null ]
+    ] ],
+    [ "mimicpp::detail::type_list_pop_back< type_list<>, TypeList >", null, [
+      [ "mimicpp::type_list_pop_back< TypeList >", "d2/d6a/structmimicpp_1_1type__list__pop__back.html", null ]
+    ] ],
+    [ "mimicpp::type_list_populate< Template, TypeList >", "da/d90/structmimicpp_1_1type__list__populate.html", null ],
+    [ "mimicpp::type_list_populate< Template, type_list< Args... > >", "d3/df5/structmimicpp_1_1type__list__populate_3_01_template_00_01type__list_3_01_args_8_8_8_01_4_01_4.html", null ],
+    [ "mimicpp::type_list_reverse< TypeList >", "d4/d17/structmimicpp_1_1type__list__reverse.html", null ],
+    [ "mimicpp::custom::TypePrinter< typename >", "de/de7/classmimicpp_1_1custom_1_1_type_printer.html", null ],
+    [ "mimicpp::TypeReport", "df/d82/classmimicpp_1_1_type_report.html", null ],
     [ "mimicpp::uint_with_size< byteCount >", "d7/da0/structmimicpp_1_1uint__with__size.html", null ],
     [ "mimicpp::uint_with_size< 1u >", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html", null ],
     [ "mimicpp::uint_with_size< 2u >", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html", null ],
