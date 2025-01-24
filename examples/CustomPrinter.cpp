@@ -48,3 +48,34 @@ TEST_CASE(
         Catch::Matchers::Equals("Object of my_type has value: 42"));
     //! [my_type print]
 }
+
+//! [my_type type-printer]
+template <>
+class mimicpp::custom::TypePrinter<my_type>
+{
+public:
+    static consteval std::string_view name() noexcept
+    {
+        return {"This-Is-My-Might-Type"};
+    }
+};
+
+//! [my_type type-printer]
+
+TEST_CASE(
+    "mimicpp::custom::TypePrinter can be specialized for arbitrary types."
+    "[example][example::printer]")
+{
+    //! [my_type type-print]
+    const std::string name = mimicpp::print_type<my_type>();
+
+    REQUIRE_THAT(
+        name,
+        Catch::Matchers::Equals("This-Is-My-Might-Type"));
+
+    const std::string qualifiedName = mimicpp::print_type<my_type* const&&>();
+    REQUIRE_THAT(
+        qualifiedName,
+        Catch::Matchers::Equals("This-Is-My-Might-Type* const&&"));
+    //! [my_type type-print]
+}
