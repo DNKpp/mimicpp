@@ -97,7 +97,7 @@ namespace mimicpp::custom
 {
     /**
      * \brief User may add specializations, which will then be used during ``print`` calls.
-     * \ingroup STRINGIFICATION
+     * \ingroup STATE_STRINGIFICATION
      */
     template <typename>
     class Printer;
@@ -416,26 +416,33 @@ namespace mimicpp
 {
     /**
      * \defgroup STRINGIFICATION stringification
-     * \brief Stringification describes the process of converting an object state into its textual representation.
-     * \details ``mimic++`` often wants to present users a textual representation of their tested objects,
-     * because they might have failed a test case. It utilizes the ``print`` function for that purpose.
+     * \brief Stringification describes the process of converting an object state or type into its textual representation.
+     */
+
+    /**
+     * \defgroup STATE_STRINGIFICATION object-state stringification
+     * \ingroup STRINGIFICATION
+     * \brief State stringification occurs when an object's state is transformed into a textual representation.
+     * \details ``mimic++`` often aims to provide users with a textual representation of their tested objects,
+     * particularly when a test case has failed.
+     * It employs the ``print`` function for this purpose.
      *
-     * That function internally checks for the first available option (in that order):
+     * This function internally checks for the first available option in the following order:
      * - ``mimicpp::custom::Printer`` specialization
-     * - internal printer specializations (handles strings, ``std::source_location``, ``std::optional``, etc.)
-     * - satisfies ``std::ranges::forward_range``
-     * - formattable type (in terms of the installed format-backend)
+     * - internal printer specializations (which handle strings, ``std::source_location``, ``std::optional``, etc.)
+     * - Types that satisfy ``std::ranges::forward_range``
+     * - Formattable types (based on the installed format backend)
      *
-     * If no valid alternative has been found, the default is chosen (which just prints "{?}").
+     * If no valid alternative is found, the default option is used, which simply prints "{?}").
      *
-     * ## Override existing printings or print custom types
+     * ### Override existing printings or print custom types
      *
-     * As ``mimic++`` can not know how to convert any custom type out there, a simple but effective mechanism is used.
-     * Users can add a specialization of ``mimicpp::custom::Printer`` for their own or third-party types.
-     * ``mimic++`` will always prefer such a specialization over any other internal alternative, even if ``mimic++`` already
-     * has special treatment that particular type (e.g. ``std::source_location``).
+     * As ``mimic++``  cannot automatically convert every custom type, it employs a simple yet effective mechanism.
+     * Users can create a specialization of ``mimicpp::custom::Printer`` for their own or third-party types.
+     * ``mimic++`` will always prioritize these specializations over any internal alternatives,
+     * even if it already has specific handling for that particular type (e.g. ``std::source_location``).
      *
-     * Given the following type.
+     * Consider the following type.
      * \snippet CustomPrinter.cpp my_type
      * Users can then create a specialization as follows:
      * \snippet CustomPrinter.cpp my_type printer
@@ -443,15 +450,18 @@ namespace mimicpp
      * When an object of ``my_type`` is then passed to ``print``, that specification will be used:
      * \snippet CustomPrinter.cpp my_type print
      *
-     * ## String printing
+     * ### String printing
      *
      * All char-strings (like ``const char*`` or ``std::string``) will be printed as they are.
-     * Other character-types (e.g. ``wchar_t`` or ``char8_t``) must be treated with care. Making ``mimic++`` 100% compatible with any
-     * existing character-type is either a major work-load or has to be outsourced to a dependency.
-     * Currently, ``mimic++`` chooses another option: If a string of a non-printable character-type (in terms of the type-trait ``is_character``)
-     * is detected, it prints the string-literal and all elements are converted to their value-representation and printed as comma separated hex-values.
+     * However, other character types (e.g. ``wchar_t`` or ``char8_t``) require careful handling.
+     * Achieving 100% compatibility with all existing character types in ``mimic++`` would either involve significant workload
+     * or necessitate reliance on an external dependency.
+     * Currently, ``mimic++`` takes a different approach:
+     * if a string of a non-printable character type (as determined by the type trait ``is_character``) is detected,
+     * it prints the string literal, converting all elements to their value representation
+     * and displaying them as comma-separated hexadecimal values.
      *
-     * For example, the string ``u8"Hello, World!"`` will then be printed as
+     * For example, the string ``u8"Hello, World!"`` will then be printed as:
      * ``u8"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21"``.
      *
      *\{
