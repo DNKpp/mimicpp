@@ -16,6 +16,7 @@
 #include <concepts>
 #include <functional>
 #include <iterator>
+#include <memory>
 #include <typeinfo>
 #include <utility>
 
@@ -74,13 +75,14 @@ namespace mimicpp::printing::detail
 
         // see: https://gcc.gnu.org/onlinedocs/libstdc++/manual/ext_demangling.html
         int status{};
-        char* rawName = abi::__cxa_demangle(name.data(), nullptr, nullptr, &status);
+        using free_deleter_t = decltype([](char* c) noexcept { std::free(c); });
+        std::unique_ptr<char, free_deleter_t> const demangledName{
+            abi::__cxa_demangle(name.data(), nullptr, nullptr, &status)};
         if (0 == status)
         {
-            name = StringT{rawName};
+            name.assign(demangledName.get());
         }
 
-        std::free(rawName);
         return name;
     }
 
