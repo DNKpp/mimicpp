@@ -422,8 +422,8 @@ jobs:
       #################################
 
       #################################
-      # Feature: disable pretty type-printing
-      - name: Configure with disabled pretty type-printing
+      # Feature: minimal pretty type-printing
+      - name: Configure with minimal pretty type-printing
         shell: bash
         run: |
           cmake \
@@ -433,14 +433,14 @@ jobs:
               -D MIMICPP_CONFIG_USE_FMT=YES \
               -D MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING=YES
 
-      - name: Build with disabled pretty type-printing
+      - name: Build with minimal pretty type-printing
         shell: bash
         run: |
           cmake --build build \
               -j5 \
               ${{ env.CMAKE_BUILD_EXTRA }}
 
-      - name: Run tests with disabled pretty type-printing
+      - name: Run tests with minimal pretty type-printing
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
