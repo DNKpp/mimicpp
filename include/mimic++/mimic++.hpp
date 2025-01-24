@@ -26,18 +26,23 @@
 #include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
+
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/FloatingPointMatchers.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 #include "mimic++/matchers/RangeMatchers.hpp"
 #include "mimic++/matchers/StringMatchers.hpp"
+
 #include "mimic++/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/policies/ArgumentList.hpp"
 #include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/policies/SideEffectPolicies.hpp"
-#include "mimic++/printing/TypePrinter.hpp"
+
 #include "mimic++/printing/CommonTypePrinter.hpp"
+#include "mimic++/printing/Format.hpp"
+#include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
 
 #endif
