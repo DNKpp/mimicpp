@@ -56,7 +56,7 @@ class mimicpp::custom::TypePrinter<my_type>
 public:
     static consteval std::string_view name() noexcept
     {
-        return {"This-Is-My-Might-Type"};
+        return {"This-Is-My-Mighty-Type"};
     }
 };
 
@@ -71,11 +71,11 @@ TEST_CASE(
 
     REQUIRE_THAT(
         name,
-        Catch::Matchers::Equals("This-Is-My-Might-Type"));
+        Catch::Matchers::Equals("This-Is-My-Mighty-Type"));
 
     const std::string qualifiedName = mimicpp::print_type<my_type* const&&>();
     REQUIRE_THAT(
         qualifiedName,
-        Catch::Matchers::Equals("This-Is-My-Might-Type* const&&"));
+        Catch::Matchers::Equals("This-Is-My-Mighty-Type* const&&"));
     //! [my_type type-print]
 }
