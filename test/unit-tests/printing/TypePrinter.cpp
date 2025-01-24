@@ -273,6 +273,35 @@ TEST_CASE(
 
 namespace
 {
+    // no special treatment
+    template <auto...>
+    struct my_custom_type
+    {
+    };
+}
+
+template <auto... Args>
+class mimicpp::custom::TypePrinter<my_custom_type<Args...>>
+{
+public:
+    [[nodiscard]]
+    static consteval StringViewT name() noexcept
+    {
+        return {"user::my_custom_type"};
+    }
+};
+
+TEST_CASE(
+    "print_type supports user customizations.",
+    "[print]")
+{
+    REQUIRE_THAT(
+        (print_type<my_custom_type<42, 1337, std::ignore>>()),
+        Catch::Matchers::Equals("user::my_custom_type"));
+}
+
+namespace
+{
     struct my_type
     {
     };
@@ -334,7 +363,13 @@ TEMPLATE_TEST_CASE_SIG(
     (FixedString{"my_type*"}, my_type*),
     (FixedString{"my_type const*"}, my_type const*),
     (FixedString{"my_type volatile*"}, my_type volatile*),
-    (FixedString{"my_type const volatile*"}, my_type const volatile*))
+    (FixedString{"my_type const volatile*"}, my_type const volatile*),
+
+    (FixedString{"user::my_custom_type"}, my_custom_type<42>),
+    (FixedString{"user::my_custom_type*"}, my_custom_type<42>*),
+    (FixedString{"user::my_custom_type const*"}, my_custom_type<42> const*),
+    (FixedString{"user::my_custom_type volatile*"}, my_custom_type<42> volatile*),
+    (FixedString{"user::my_custom_type const volatile*"}, my_custom_type<42> const volatile*))
 #else
 TEMPLATE_TEST_CASE_SIG(
     "print_type supports all type qualifications.",
@@ -350,7 +385,13 @@ TEMPLATE_TEST_CASE_SIG(
     (FixedString{"std::string*"}, std::string*),
     (FixedString{"std::string const*"}, std::string const*),
     (FixedString{"std::string volatile*"}, std::string volatile*),
-    (FixedString{"std::string const volatile*"}, std::string const volatile*))
+    (FixedString{"std::string const volatile*"}, std::string const volatile*),
+
+    (FixedString{"user::my_custom_type"}, my_custom_type<42>),
+    (FixedString{"user::my_custom_type*"}, my_custom_type<42>*),
+    (FixedString{"user::my_custom_type const*"}, my_custom_type<42> const*),
+    (FixedString{"user::my_custom_type volatile*"}, my_custom_type<42> volatile*),
+    (FixedString{"user::my_custom_type const volatile*"}, my_custom_type<42> const volatile*))
 #endif
 {
     const StringT name{baseName};

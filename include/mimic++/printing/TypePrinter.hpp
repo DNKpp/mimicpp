@@ -152,8 +152,25 @@ namespace mimicpp::printing::detail
 
 #endif
 
+namespace mimicpp::custom
+{
+    template <typename>
+    class TypePrinter;
+}
+
 namespace mimicpp::printing::detail
 {
+    template <typename T, print_iterator OutIter, typename Printer = mimicpp::custom::TypePrinter<T>>
+        requires requires {
+            typename Printer;
+            { Printer::name() } -> std::convertible_to<StringViewT>;
+        }
+    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<4u>, OutIter out)
+    {
+        return std::ranges::copy(Printer::name(), std::move(out))
+            .out;
+    }
+
     template <typename T>
     struct common_type_printer;
 
