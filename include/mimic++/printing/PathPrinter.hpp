@@ -59,7 +59,24 @@ namespace mimicpp::printing::detail
 
 namespace mimicpp
 {
+    /**
+     * \defgroup PRINTING_PATH path
+     * \ingroup PRINTING
+     * \brief Printing paths in a specific format.
+     * \details ``mimic++`` currently limits all paths to a level of 3.
+     * E.g. ``/a/very/long/absolute/file.path`` will be printed as ``long/absolute/file.path``.
+     *
+     *\{
+     */
+
+    /**
+     * \brief Functional object that outputs paths in a specific format.
+     */
     [[maybe_unused]] inline constexpr printing::detail::PathPrinterFn print_path{};
+
+    /**
+     * \}
+     */
 }
 
 #endif
