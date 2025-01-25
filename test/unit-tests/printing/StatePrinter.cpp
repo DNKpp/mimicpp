@@ -378,7 +378,11 @@ TEST_CASE(
 
         REQUIRE_THAT(
             mimicpp::print(loc),
-            Catch::Matchers::Matches(".+\\[\\d+:\\d+\\], .+"));
+            Catch::Matchers::Matches(
+                // should be close enough to what is allowed on all systems
+                R"(((\d|\w|_|-|\+|\*)+(\\|/)){2})"
+                R"(StatePrinter\.cpp)"
+                R"(\[\d+:\d+\], .+)"));
     }
 
     SECTION("std::optional and std::nullopt_t have special treatment")

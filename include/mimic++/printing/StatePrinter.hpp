@@ -15,6 +15,7 @@
 #include "mimic++/TypeTraits.hpp" // uint_with_size
 #include "mimic++/Utility.hpp"
 #include "mimic++/printing/Format.hpp"
+#include "mimic++/printing/PathPrinter.hpp"
 
 #include <bit>
 #include <concepts>
@@ -226,10 +227,11 @@ namespace mimicpp::detail
         template <print_iterator OutIter>
         static OutIter print(OutIter out, const std::source_location& loc)
         {
+            out = print_path(std::move(out), loc.file_name());
+
             return format::format_to(
                 std::move(out),
-                "{}[{}:{}], {}",
-                loc.file_name(),
+                "[{}:{}], {}",
                 loc.line(),
                 loc.column(),
                 loc.function_name());
