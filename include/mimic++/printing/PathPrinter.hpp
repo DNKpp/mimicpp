@@ -29,18 +29,17 @@ namespace mimicpp::printing::detail
             static constexpr CharT separator{std::filesystem::path::preferred_separator};
 
             auto const pathString = weakly_canonical(path).string();
-            std::basic_string_view fraction{pathString};
+            StringViewT printPath{pathString};
             for (auto reversedPath = pathString | std::views::reverse;
                  auto const& element : std::views::split(reversedPath, separator)
                                            | std::views::take(maxPathElements))
             {
-
-                fraction = std::basic_string_view{
+                printPath = StringViewT{
                     element.end().base(),
                     pathString.end()};
             }
 
-            return std::ranges::copy(fraction, std::move(out)).out;
+            return std::ranges::copy(printPath, std::move(out)).out;
         }
 
         [[nodiscard]]
