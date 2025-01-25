@@ -280,7 +280,10 @@ TEST_CASE(
     CHECK(size == stacktrace.size());
 
     const std::string pattern = format::format(
-        "(.+?\\[\\d+\\],.+?\\n){{{}}}",
+        R"((?:(?:\/?)"                             // may begin with a /
+        R"((?:(?:\d|\w|_|-|\+|\*|\.)+(?:\\|\/))*)" // arbitrary times `dir/`
+        R"((?:\d|\w|_|-|\+|\*|\.)+)?)"             // file name; sometimes there is no file, so the whole path may be empty
+        R"((?:\[\d+\],.+?\n)){{{}}})",             // other stuff
         size);
     REQUIRE_THAT(
         mimicpp::print(stacktrace),

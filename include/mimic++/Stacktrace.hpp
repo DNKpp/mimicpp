@@ -9,8 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/printing/PathPrinter.hpp"
+#include "mimic++/printing/StatePrinter.hpp"
 
 #include <algorithm>
 #include <any>
@@ -390,10 +391,10 @@ public:
 
         for (const std::size_t i : std::views::iota(0u, stacktrace.size()))
         {
+            out = print_path(std::move(out), stacktrace.source_file(i));
             out = format::format_to(
                 std::move(out),
-                "{} [{}], {}\n",
-                stacktrace.source_file(i),
+                "[{}], {}\n",
                 stacktrace.source_line(i),
                 stacktrace.description(i));
         }

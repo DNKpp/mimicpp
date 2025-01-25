@@ -51,7 +51,7 @@ TEST_CASE(
         const auto text = mimicpp::print(stacktrace);
         REQUIRE_THAT(
             text,
-            Catch::Matchers::Equals("test.cpp [1337], Hello, World!\n"));
+            Catch::Matchers::Equals("test.cpp[1337], Hello, World!\n"));
     }
 
     SECTION("When stacktrace contains multiple entries.")
@@ -77,7 +77,7 @@ TEST_CASE(
         REQUIRE_THAT(
             text,
             Catch::Matchers::Equals(
-                "other-test.cpp [42], Hello, mimic++!\n"
-                "test.cpp [1337], Hello, World!\n"));
+                "other-test.cpp[42], Hello, mimic++!\n"
+                "test.cpp[1337], Hello, World!\n"));
     }
 }
