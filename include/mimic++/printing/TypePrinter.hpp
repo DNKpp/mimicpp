@@ -158,7 +158,7 @@ namespace mimicpp::custom
 {
     /**
      * \brief User may add specializations that will be utilized during ``type_print`` calls.
-     * \ingroup TYPE_STRINGIFICATION
+     * \ingroup PRINTING_TYPE
      */
     template <typename>
     class TypePrinter;
@@ -385,8 +385,8 @@ namespace mimicpp::printing::detail
 namespace mimicpp
 {
     /**
-     * \defgroup TYPE_STRINGIFICATION object-type stringification
-     * \ingroup STRINGIFICATION
+     * \defgroup PRINTING_TYPE object-type stringification
+     * \ingroup PRINTING
      * \brief State stringification occurs when an object's type is transformed into a textual representation.
      * \details Type stringification requires special care in C++,
      * as there is no portable way to print types exactly as users would write them in code.

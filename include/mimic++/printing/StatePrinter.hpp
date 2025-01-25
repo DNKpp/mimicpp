@@ -98,7 +98,7 @@ namespace mimicpp::custom
 {
     /**
      * \brief User may add specializations, which will then be used during ``print`` calls.
-     * \ingroup STATE_STRINGIFICATION
+     * \ingroup PRINTING_STATE
      */
     template <typename>
     class Printer;
@@ -402,13 +402,13 @@ namespace mimicpp::detail
 namespace mimicpp
 {
     /**
-     * \defgroup STRINGIFICATION stringification
-     * \brief Stringification describes the process of converting an object state or type into its textual representation.
+     * \defgroup PRINTING printing
+     * \brief Contains several printing related functionalities.
      */
 
     /**
-     * \defgroup STATE_STRINGIFICATION object-state stringification
-     * \ingroup STRINGIFICATION
+     * \defgroup PRINTING_STATE object-state stringification
+     * \ingroup PRINTING
      * \brief State stringification occurs when an object's state is transformed into a textual representation.
      * \details ``mimic++`` often aims to provide users with a textual representation of their tested objects,
      * particularly when a test case has failed.
