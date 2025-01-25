@@ -364,7 +364,6 @@ namespace mimicpp::stacktrace::detail::current_hook
 
 namespace mimicpp::stacktrace
 {
-
     /**
      * \brief Function object, which generates the current-stacktrace.
      * \ingroup STACKTRACE
@@ -373,6 +372,24 @@ namespace mimicpp::stacktrace
      */
     [[maybe_unused]]
     constexpr detail::current_hook::current_fn current{};
+}
+
+namespace mimicpp::stacktrace::detail
+{
+    template <print_iterator OutIter>
+    OutIter print_entry(OutIter out, Stacktrace const& stacktrace, std::size_t const index)
+    {
+        assert(index < stacktrace.size() && "Index out of bounds.");
+
+        out = print_path(std::move(out), stacktrace.source_file(index));
+        out = format::format_to(
+            std::move(out),
+            "[{}], {}",
+            stacktrace.source_line(index),
+            stacktrace.description(index));
+
+        return out;
+    }
 }
 
 template <>
@@ -391,12 +408,11 @@ public:
 
         for (const std::size_t i : std::views::iota(0u, stacktrace.size()))
         {
-            out = print_path(std::move(out), stacktrace.source_file(i));
-            out = format::format_to(
+            out = stacktrace::detail::print_entry(
                 std::move(out),
-                "[{}], {}\n",
-                stacktrace.source_line(i),
-                stacktrace.description(i));
+                stacktrace,
+                i);
+            out = std::ranges::fill_n(std::move(out), 1u, '\n');
         }
 
         return out;
