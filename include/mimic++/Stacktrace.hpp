@@ -401,18 +401,17 @@ public:
     {
         if (stacktrace.empty())
         {
-            return format::format_to(
-                std::move(out),
-                "empty");
+            return format::format_to(std::move(out), "empty");
         }
 
         for (const std::size_t i : std::views::iota(0u, stacktrace.size()))
         {
+            out = format::format_to(std::move(out), "#{} ", i);
             out = stacktrace::detail::print_entry(
                 std::move(out),
                 stacktrace,
                 i);
-            out = std::ranges::fill_n(std::move(out), 1u, '\n');
+            out = format::format_to(std::move(out), "\n");
         }
 
         return out;

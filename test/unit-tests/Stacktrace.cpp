@@ -280,7 +280,8 @@ TEST_CASE(
     CHECK(size == stacktrace.size());
 
     const std::string pattern = format::format(
-        R"((?:(?:\/?)"                             // may begin with a /
+        R"((?:#\d+ )"                              // always starts with the entry index
+        R"((?:\/?)"                                // may begin with a /
         R"((?:(?:\d|\w|_|-|\+|\*|\.)+(?:\\|\/))*)" // arbitrary times `dir/`
         R"((?:\d|\w|_|-|\+|\*|\.)+)?)"             // file name; sometimes there is no file, so the whole path may be empty
         R"((?:\[\d+\],.+?\n)){{{}}})",             // other stuff

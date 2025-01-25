@@ -40,6 +40,7 @@ TEST_CASE(
         REQUIRE_CALL(inner->emptyMock, Invoke())
             .RETURN(false);
         REQUIRE_CALL(inner->sizeMock, Invoke())
+            .TIMES(AT_LEAST(1u))
             .RETURN(1u);
         REQUIRE_CALL(inner->sourceMock, Invoke(0u))
             .RETURN("test.cpp");
@@ -51,7 +52,7 @@ TEST_CASE(
         const auto text = mimicpp::print(stacktrace);
         REQUIRE_THAT(
             text,
-            Catch::Matchers::Equals("test.cpp[1337], Hello, World!\n"));
+            Catch::Matchers::Equals("#0 test.cpp[1337], Hello, World!\n"));
     }
 
     SECTION("When stacktrace contains multiple entries.")
@@ -59,6 +60,7 @@ TEST_CASE(
         REQUIRE_CALL(inner->emptyMock, Invoke())
             .RETURN(false);
         REQUIRE_CALL(inner->sizeMock, Invoke())
+            .TIMES(AT_LEAST(1u))
             .RETURN(2u);
         REQUIRE_CALL(inner->sourceMock, Invoke(0u))
             .RETURN("other-test.cpp");
@@ -77,7 +79,7 @@ TEST_CASE(
         REQUIRE_THAT(
             text,
             Catch::Matchers::Equals(
-                "other-test.cpp[42], Hello, mimic++!\n"
-                "test.cpp[1337], Hello, World!\n"));
+                "#0 other-test.cpp[42], Hello, mimic++!\n"
+                "#1 test.cpp[1337], Hello, World!\n"));
     }
 }
