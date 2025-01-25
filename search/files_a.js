@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['printer_2ehpp_0',['Printer.hpp',['../da/dab/_printer_8hpp.html',1,'']]]
+  ['pathprinter_2ehpp_0',['PathPrinter.hpp',['../de/d4b/_path_printer_8hpp.html',1,'']]],
+  ['printer_2ehpp_1',['Printer.hpp',['../da/dab/_printer_8hpp.html',1,'']]]
 ];

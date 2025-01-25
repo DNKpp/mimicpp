@@ -16,7 +16,7 @@ var searchData=
   ['evaluate_5fmatch_5freport_13',['evaluate_match_report',['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga28bf45ff6df85506325c64349d37ca85',1,'mimicpp']]],
   ['example_14',['Example',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md3',1,'']]],
   ['examples_15',['Examples',['../index.html#autotoc_md51',1,'']]],
-  ['existing_20printings_20or_20print_20custom_20types_16',['Override existing printings or print custom types',['../de/d0d/group___s_t_a_t_e___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md17',1,'']]],
+  ['existing_20printings_20or_20print_20custom_20types_16',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
   ['expect_5fdestruct_17',['expect_destruct',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#ac451f8b6b44b9a684ca4aa40fb5809a8',1,'mimicpp::LifetimeWatcher']]],
   ['expect_5frelocate_18',['expect_relocate',['../da/d45/classmimicpp_1_1_relocation_watcher.html#a1ab88c2edc2f770ea8c9d1e8c0ca62a2',1,'mimicpp::RelocationWatcher']]],
   ['expectation_19',['Expectation',['../d3/d1c/classmimicpp_1_1_expectation.html',1,'mimicpp::Expectation&lt; Signature &gt;'],['../da/d15/classmimicpp_1_1_match_report_1_1_expectation.html',1,'mimicpp::MatchReport::Expectation'],['../d3/d1c/classmimicpp_1_1_expectation.html#ac58cc9bcb1a8af7452200d9a41932003',1,'mimicpp::Expectation::Expectation()=default'],['../d3/d1c/classmimicpp_1_1_expectation.html#ac99436e494b6e1902b8293e4bdcd5254',1,'mimicpp::Expectation::Expectation(const Expectation &amp;)=delete'],['../d3/d1c/classmimicpp_1_1_expectation.html#a3ffc7b5fa9454e7c052abdea70fdc7ec',1,'mimicpp::Expectation::Expectation(Expectation &amp;&amp;)=delete']]],

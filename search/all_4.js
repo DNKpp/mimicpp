@@ -21,7 +21,7 @@ var searchData=
   ['catch2_2ehpp_18',['Catch2.hpp',['../d3/d04/_catch2_8hpp.html',1,'']]],
   ['catch2reportert_19',['Catch2ReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga83491b3ee848d76b88f36fa99b9e1b54',1,'mimicpp']]],
   ['category_20',['Category',['../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html',1,'mimicpp::expectation_policies']]],
-  ['char_20type_21',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
+  ['char_20type_21',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['char_20types_22',['Bring your own string- and char-types',['../index.html#autotoc_md59',1,'']]],
   ['char_20types_20and_20related_20strings_23',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
   ['char_5ft_24',['char_t',['../d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html#ab90a1a63ff498a9f5f76138607f59e5b',1,'mimicpp::string_traits&lt; T &gt;::char_t'],['../d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html#aed509ffd263aa177a674530bd8f81a45',1,'mimicpp::string_traits&lt; std::basic_string&lt; Char, Traits, Allocator &gt; &gt;::char_t'],['../d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html#ab2cfc43da383f4f0eb0a80c5d8d3c179',1,'mimicpp::string_traits&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;::char_t']]],
@@ -31,7 +31,7 @@ var searchData=
   ['clang_2018_201_20libc_28',['Clang-18.1 + libc++',['../index.html#autotoc_md73',1,'']]],
   ['cmake_29',['CMake',['../index.html#autotoc_md65',1,'']]],
   ['cmakelists_2etxt_30',['CMakeLists.txt',['../dd/d68/_c_make_lists_8txt.html',1,'']]],
-  ['common_20char_20type_31',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
+  ['common_20char_20type_31',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['common_2ehpp_32',['Common.hpp',['../d3/d58/_common_8hpp.html',1,'']]],
   ['commontypeprinter_2ehpp_33',['CommonTypePrinter.hpp',['../d8/d09/_common_type_printer_8hpp.html',1,'']]],
   ['config_2ehpp_34',['Config.hpp',['../d8/dd2/_config_8hpp.html',1,'']]],
@@ -58,9 +58,9 @@ var searchData=
   ['custom_20char_20types_20and_20related_20strings_55',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
   ['custom_20finalizers_56',['Custom Finalizers',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#autotoc_md16',1,'']]],
   ['custom_20matcher_57',['Custom Matcher',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md2',1,'']]],
-  ['custom_20stacktrace_20backends_58',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md22',1,'']]],
-  ['custom_20strings_20with_20common_20char_20type_59',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
-  ['custom_20types_60',['Override existing printings or print custom types',['../de/d0d/group___s_t_a_t_e___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md17',1,'']]],
+  ['custom_20stacktrace_20backends_58',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md23',1,'']]],
+  ['custom_20strings_20with_20common_20char_20type_59',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
+  ['custom_20types_60',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
   ['customizability_61',['Customizability',['../index.html#autotoc_md55',1,'']]],
-  ['customize_20type_20stringification_62',['Customize type-stringification',['../d3/d68/group___t_y_p_e___s_t_r_i_n_g_i_f_i_c_a_t_i_o_n.html#autotoc_md19',1,'']]]
+  ['customize_20type_20stringification_62',['Customize type-stringification',['../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#autotoc_md19',1,'']]]
 ];
