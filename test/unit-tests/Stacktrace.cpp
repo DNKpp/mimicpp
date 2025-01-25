@@ -13,7 +13,7 @@
 
 using namespace mimicpp;
 
-#ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
     #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
 TEST_CASE(
@@ -59,7 +59,7 @@ TEST_CASE(
     #endif
 #endif
 
-#ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
 TEST_CASE(
     "stacktrace::current retrieves the current stacktrace.",
@@ -164,7 +164,7 @@ namespace
     [[nodiscard]]
     bool equal_entries(const Stacktrace& original, const Stacktrace& test)
     {
-#ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
         return std::ranges::all_of(
             std::views::iota(0u, original.size()),
             [&](const std::size_t index) {
@@ -267,7 +267,7 @@ TEST_CASE(
             Catch::Matchers::Equals("empty"));
     }
 
-#ifdef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
     Stacktrace stacktrace = stacktrace::current();
     CHECK(!stacktrace.empty());

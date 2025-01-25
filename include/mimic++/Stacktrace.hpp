@@ -567,7 +567,7 @@ static_assert(
     mimicpp::stacktrace::backend<mimicpp::stacktrace::CpptraceBackend>,
     "stacktrace::CpptraceBackend does not satisfy the stacktrace::backend concept");
 
-        #define MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+        #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
 
     #elif defined(__cpp_lib_stacktrace)
 
@@ -630,7 +630,7 @@ static_assert(
     mimicpp::stacktrace::backend<std::stacktrace>,
     "std::stacktrace does not satisfy the stacktrace::backend concept");
 
-        #define MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+        #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
 
     #else
 
@@ -643,7 +643,7 @@ static_assert(
 
 // This is enabled as fallback solution, when neither std::stacktrace nor cpptrace is available,
 // or MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE simply not defined.
-#ifndef MIMICPP_DETAIL_WORKING_STACKTRACE_BACKEND
+#if not MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
 struct mimicpp::stacktrace::find_backend
 {
