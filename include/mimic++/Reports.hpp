@@ -320,12 +320,10 @@ namespace mimicpp
                 "call from ");
             if (!report.stacktrace.empty())
             {
-                out = format::format_to(
+                out = stacktrace::detail::print_entry(
                     std::move(out),
-                    "{} [{}], {}",
-                    report.stacktrace.source_file(0u),
-                    report.stacktrace.source_line(0u),
-                    report.stacktrace.description(0u));
+                    report.stacktrace,
+                    0u);
             }
             else
             {
