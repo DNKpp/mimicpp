@@ -22,6 +22,10 @@
     #endif
 #endif
 
+#ifdef _WIN32
+    #define MIMICPP_DETAIL_IS_WINDOWS 1
+#endif
+
 #ifdef _MSC_VER
     #ifdef __clang__
         #define MIMICPP_DETAIL_IS_CLANG_CL 1
