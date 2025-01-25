@@ -26,15 +26,15 @@ TEST_CASE(
     SECTION("When empty path is given.")
     {
         REQUIRE_THAT(
-           print_path(""),
-           Catch::Matchers::Equals(""));
+            print_path(""),
+            Catch::Matchers::Equals(""));
     }
 
     SECTION("When just the filename is given.")
     {
         REQUIRE_THAT(
-           print_path("foo"),
-           Catch::Matchers::Equals("foo"));
+            print_path("foo"),
+            Catch::Matchers::Equals("foo"));
         REQUIRE_THAT(
             print_path("foo.cpp"),
             Catch::Matchers::Equals("foo.cpp"));
@@ -78,8 +78,8 @@ TEST_CASE(
     SECTION("When some windows specific paths are given.")
     {
         REQUIRE_THAT(
-           print_path("abc//def\\foo.cpp"),
-           Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
+            print_path("abc//def\\foo.cpp"),
+            Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
         REQUIRE_THAT(
             print_path("C://abc/foo.cpp"),
             Catch::Matchers::Equals(make_path("C:/abc/foo.cpp").string()));
