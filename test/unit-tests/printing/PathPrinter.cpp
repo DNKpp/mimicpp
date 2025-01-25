@@ -48,10 +48,12 @@ TEST_CASE(
         print_path("abc/def/g/h/i/foo.cpp"),
         Catch::Matchers::Equals(make_path("h/i/foo.cpp").string()));
 
+#if MIMICPP_DETAIL_IS_WINDOWS
     REQUIRE_THAT(
         print_path("abc//def\\foo.cpp"),
         Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
     REQUIRE_THAT(
         print_path("C://abc/foo.cpp"),
         Catch::Matchers::Equals(make_path("C:/abc/foo.cpp").string()));
+#endif
 }
