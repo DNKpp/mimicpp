@@ -201,7 +201,7 @@ namespace mimicpp::detail
         Range&& range, // NOLINT(cppcoreguidelines-missing-std-forward)
         const priority_tag<2>)
     {
-        out = std::ranges::copy(StringViewT{"{ "}, std::move(out)).out;
+        out = format::format_to(std::move(out), "{{ ");
         auto iter = std::ranges::begin(range);
         if (const auto end = std::ranges::end(range);
             iter != end)
@@ -217,7 +217,7 @@ namespace mimicpp::detail
             }
         }
 
-        return std::ranges::copy(StringViewT{" }"}, std::move(out)).out;
+        return format::format_to(std::move(out), " }}");
     }
 
     template <>
@@ -245,7 +245,7 @@ namespace mimicpp::detail
         template <print_iterator OutIter>
         static OutIter print(OutIter out, [[maybe_unused]] const std::nullopt_t)
         {
-            return std::ranges::copy(StringViewT{"nullopt"}, std::move(out)).out;
+            return format::format_to(std::move(out), "nullopt");
         }
     };
 
@@ -260,9 +260,9 @@ namespace mimicpp::detail
 
             if (opt)
             {
-                out = std::ranges::copy(StringViewT{"{ value: "}, std::move(out)).out;
+                out = format::format_to(std::move(out), "{{ value: ");
                 out = print(std::move(out), *opt);
-                return std::ranges::copy(StringViewT{" }"}, std::move(out)).out;
+                return format::format_to(std::move(out), " }}");
             }
             return print(std::move(out), std::nullopt);
         }
@@ -273,7 +273,7 @@ namespace mimicpp::detail
     {
         if constexpr (0u != index)
         {
-            out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
+            out = format::format_to(std::move(out), ", ");
         }
 
         constexpr PrintFn printer{};
@@ -294,8 +294,7 @@ namespace mimicpp::detail
         template <print_iterator OutIter>
         static OutIter print(OutIter out, const T& tuple)
         {
-            out = std::ranges::copy(StringViewT{"{ "}, std::move(out)).out;
-
+            out = format::format_to(std::move(out), "{{ ");
             std::invoke(
                 [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
                     (...,
@@ -303,7 +302,7 @@ namespace mimicpp::detail
                 },
                 std::make_index_sequence<std::tuple_size_v<T>>{});
 
-            return std::ranges::copy(StringViewT{" }"}, std::move(out)).out;
+            return format::format_to(std::move(out), " }}");
         }
     };
 
@@ -349,7 +348,7 @@ namespace mimicpp::detail
                 out = std::ranges::copy(prefix, std::move(out)).out;
             }
 
-            out = std::ranges::copy(StringViewT{"\""}, std::move(out)).out;
+            out = format::format_to(std::move(out), "\"");
 
             if constexpr (std::same_as<CharT, string_char_t<String>>)
             {
@@ -394,7 +393,7 @@ namespace mimicpp::detail
                 }
             }
 
-            return std::ranges::copy(StringViewT{"\""}, std::move(out)).out;
+            return format::format_to(std::move(out), "\"");
         }
     };
 }

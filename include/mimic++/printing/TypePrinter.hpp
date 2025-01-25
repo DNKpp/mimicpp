@@ -239,10 +239,9 @@ namespace mimicpp::printing::detail
         [[nodiscard]]
         constexpr OutIter operator()(OutIter out) const
         {
-            return std::ranges::copy(
-                       StringViewT{" volatile"},
-                       print_type_helper<T>{}(std::move(out)))
-                .out;
+            return format::format_to(
+                print_type_helper<T>{}(std::move(out)),
+                " volatile");
         }
     };
 
@@ -254,10 +253,9 @@ namespace mimicpp::printing::detail
         [[nodiscard]]
         constexpr OutIter operator()(OutIter out) const
         {
-            return std::ranges::copy(
-                       StringViewT{" const"},
-                       print_type_helper<T>{}(std::move(out)))
-                .out;
+            return format::format_to(
+                print_type_helper<T>{}(std::move(out)),
+                " const");
         }
     };
 
@@ -269,10 +267,9 @@ namespace mimicpp::printing::detail
         [[nodiscard]]
         constexpr OutIter operator()(OutIter out) const
         {
-            return std::ranges::copy(
-                       StringViewT{" const volatile"},
-                       print_type_helper<T>{}(std::move(out)))
-                .out;
+            return format::format_to(
+                print_type_helper<T>{}(std::move(out)),
+                " const volatile");
         }
     };
 
@@ -283,10 +280,9 @@ namespace mimicpp::printing::detail
         [[nodiscard]]
         constexpr OutIter operator()(OutIter out) const
         {
-            return std::ranges::fill_n(
+            return format::format_to(
                 print_type_helper<T>{}(std::move(out)),
-                1u,
-                '&');
+                "&");
         }
     };
 
@@ -297,10 +293,9 @@ namespace mimicpp::printing::detail
         [[nodiscard]]
         constexpr OutIter operator()(OutIter out) const
         {
-            return std::ranges::fill_n(
+            return format::format_to(
                 print_type_helper<T>{}(std::move(out)),
-                2u,
-                '&');
+                "&&");
         }
     };
 
@@ -311,10 +306,9 @@ namespace mimicpp::printing::detail
         [[nodiscard]]
         constexpr OutIter operator()(OutIter out) const
         {
-            return std::ranges::fill_n(
+            return format::format_to(
                 print_type_helper<T>{}(std::move(out)),
-                1u,
-                '*');
+                "*");
         }
     };
 
@@ -325,10 +319,9 @@ namespace mimicpp::printing::detail
         [[nodiscard]]
         constexpr OutIter operator()(OutIter out) const
         {
-            return std::ranges::copy(
-                       StringViewT{"[]"},
-                       print_type_helper<T>{}(std::move(out)))
-                .out;
+            return format::format_to(
+                print_type_helper<T>{}(std::move(out)),
+                "[]");
         }
     };
 
