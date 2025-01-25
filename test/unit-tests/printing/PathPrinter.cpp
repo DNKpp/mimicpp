@@ -23,37 +23,66 @@ TEST_CASE(
     "print_path prints just the last 3 path elements.",
     "[print]")
 {
-    REQUIRE_THAT(
-        print_path("foo"),
-        Catch::Matchers::Equals(make_path("foo").string()));
-    REQUIRE_THAT(
-        print_path("foo.cpp"),
-        Catch::Matchers::Equals(make_path("foo.cpp").string()));
+    SECTION("When empty path is given.")
+    {
+        REQUIRE_THAT(
+           print_path(""),
+           Catch::Matchers::Equals(""));
+    }
 
-    REQUIRE_THAT(
-        print_path("abc/foo.cpp"),
-        Catch::Matchers::Equals(make_path("abc/foo.cpp").string()));
-    REQUIRE_THAT(
-        print_path("/abc/foo.cpp"),
-        Catch::Matchers::Equals(make_path("/abc/foo.cpp").string()));
+    SECTION("When just the filename is given.")
+    {
+        REQUIRE_THAT(
+           print_path("foo"),
+           Catch::Matchers::Equals("foo"));
+        REQUIRE_THAT(
+            print_path("foo.cpp"),
+            Catch::Matchers::Equals("foo.cpp"));
+    }
 
-    REQUIRE_THAT(
-        print_path("abc/def/foo.cpp"),
-        Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
-    REQUIRE_THAT(
-        print_path("/abc/def/foo.cpp"),
-        Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
+    SECTION("When filename is preceded by directories.")
+    {
+        REQUIRE_THAT(
+            print_path("abc/foo.cpp"),
+            Catch::Matchers::Equals(make_path("abc/foo.cpp").string()));
+        REQUIRE_THAT(
+            print_path("/abc/foo.cpp"),
+            Catch::Matchers::Equals(make_path("/abc/foo.cpp").string()));
 
-    REQUIRE_THAT(
-        print_path("abc/def/g/h/i/foo.cpp"),
-        Catch::Matchers::Equals(make_path("h/i/foo.cpp").string()));
+        REQUIRE_THAT(
+            print_path("abc/def/foo.cpp"),
+            Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
+        REQUIRE_THAT(
+            print_path("/abc/def/foo.cpp"),
+            Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
+
+        REQUIRE_THAT(
+            print_path("abc/def/g/h/i/foo.cpp"),
+            Catch::Matchers::Equals(make_path("h/i/foo.cpp").string()));
+    }
+
+    SECTION("Multiple / are filtered.")
+    {
+        REQUIRE_THAT(
+            print_path("abc//foo.cpp"),
+            Catch::Matchers::Equals(make_path("abc/foo.cpp").string()));
+        REQUIRE_THAT(
+            print_path("//abc/foo.cpp"),
+            Catch::Matchers::Equals(make_path("/abc/foo.cpp").string()));
+        REQUIRE_THAT(
+            print_path("//////////abc//////////foo.cpp"),
+            Catch::Matchers::Equals(make_path("/abc/foo.cpp").string()));
+    }
 
 #if MIMICPP_DETAIL_IS_WINDOWS
-    REQUIRE_THAT(
-        print_path("abc//def\\foo.cpp"),
-        Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
-    REQUIRE_THAT(
-        print_path("C://abc/foo.cpp"),
-        Catch::Matchers::Equals(make_path("C:/abc/foo.cpp").string()));
+    SECTION("When some windows specific paths are given.")
+    {
+        REQUIRE_THAT(
+           print_path("abc//def\\foo.cpp"),
+           Catch::Matchers::Equals(make_path("abc/def/foo.cpp").string()));
+        REQUIRE_THAT(
+            print_path("C://abc/foo.cpp"),
+            Catch::Matchers::Equals(make_path("C:/abc/foo.cpp").string()));
+    }
 #endif
 }

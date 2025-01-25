@@ -14,7 +14,9 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <functional>
 #include <ranges>
+#include <utility>
 
 namespace mimicpp::printing::detail
 {
@@ -28,7 +30,7 @@ namespace mimicpp::printing::detail
         {
             static constexpr CharT separator{std::filesystem::path::preferred_separator};
 
-            auto const pathString = weakly_canonical(path).string();
+            auto const pathString = path.lexically_normal().string();
             StringViewT printPath{pathString};
             for (auto reversedPath = pathString | std::views::reverse;
                  auto const& element : std::views::split(reversedPath, separator)
