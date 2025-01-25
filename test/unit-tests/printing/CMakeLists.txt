@@ -5,8 +5,9 @@
 
 target_sources(${TARGET_NAME}
     PRIVATE
+    "ContainerTypePrinting.cpp"
     "Format.cpp"
+    "PathPrinter.cpp"
     "StatePrinter.cpp"
     "TypePrinter.cpp"
-    "ContainerTypePrinting.cpp"
 )
