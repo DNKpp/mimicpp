@@ -65,7 +65,7 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static OutIter print(OutIter out, auto& tuple)
         {
-            out = format::format_to(std::move(out), "{{ ");
+            out = format::format_to(std::move(out), "(");
             std::invoke(
                 [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
                     (...,
@@ -73,7 +73,7 @@ namespace mimicpp::printing::detail::state
                 },
                 std::make_index_sequence<std::tuple_size_v<T>>{});
 
-            return format::format_to(std::move(out), " }}");
+            return format::format_to(std::move(out), ")");
         }
     };
 }

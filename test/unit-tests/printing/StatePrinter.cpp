@@ -520,7 +520,7 @@ TEST_CASE(
 
     SECTION("Empty tuples.")
     {
-        StringT const expected{"{  }"};
+        StringT const expected{"()"};
 
         SECTION("Printing to specific out-iter.")
         {
@@ -540,7 +540,7 @@ TEST_CASE(
 
     SECTION("Tuples with printable elements.")
     {
-        StringT const expected{"{ 1337 }"};
+        StringT const expected{"(1337)"};
 
         constexpr std::tuple tuple{1337};
 
@@ -562,7 +562,7 @@ TEST_CASE(
 
     SECTION("Tuples with mixed elements.")
     {
-        StringT const expected{"{ {?}, 1337 }"};
+        StringT const expected{"({?}, 1337)"};
 
         constexpr std::tuple tuple{NonPrintable{}, 1337};
 
@@ -584,7 +584,7 @@ TEST_CASE(
 
     SECTION("Tuples with view element.")
     {
-        StringT const expected{"{ { 42, 1337 } }"};
+        StringT const expected{"([42, 1337])"};
 
         // mutable func removes const begin/end overloads from transform_view
         auto func = [](const auto v) mutable { return v; };
@@ -609,7 +609,7 @@ TEST_CASE(
 
     SECTION("Pairs with printable elements.")
     {
-        StringT const expected{"{ 1337, 42 }"};
+        StringT const expected{"(1337, 42)"};
 
         constexpr std::pair pair{1337, 42};
 
