@@ -111,13 +111,13 @@ namespace mimicpp::detail
         typename T,
         printer_for<OutIter, T> Printer = custom::Printer<std::remove_cvref_t<T>>>
     OutIter print(
+        [[maybe_unused]] priority_tag<4> const,
         OutIter out,
-        T&& value,
-        [[maybe_unused]] const priority_tag<4>)
+        const T& value)
     {
         return Printer::print(
             std::move(out),
-            std::forward<T>(value));
+            value);
     }
 
     template <
@@ -125,81 +125,91 @@ namespace mimicpp::detail
         typename T,
         printer_for<OutIter, T> Printer = Printer<std::remove_cvref_t<T>>>
     OutIter print(
+        [[maybe_unused]] priority_tag<3> const,
         OutIter out,
-        T&& value,
-        [[maybe_unused]] const priority_tag<3>)
+        const T& value)
     {
         return Printer::print(
             std::move(out),
-            std::forward<T>(value));
+            value);
     }
 
     template <print_iterator OutIter, std::ranges::forward_range Range>
     OutIter print(
+        priority_tag<2>,
         OutIter out,
-        Range&& range,
-        priority_tag<2>);
+        const Range& range);
 
     template <print_iterator OutIter, format::detail::formattable<CharT> T>
     OutIter print(
+        [[maybe_unused]] priority_tag<1> const,
         OutIter out,
-        T&& value,
-        [[maybe_unused]] const priority_tag<1>)
+        const T& value)
     {
         return format::format_to(
             std::move(out),
             "{}",
-            std::forward<T>(value));
+            value);
     }
 
     template <print_iterator OutIter>
     OutIter print(
+        [[maybe_unused]] priority_tag<0> const,
         OutIter out,
-        auto&&,
-        [[maybe_unused]] const priority_tag<0>)
+        const auto&)
     {
         return format::format_to(
             std::move(out),
             "{{?}}");
     }
 
+    constexpr priority_tag<4> maxStatePrinterTag{};
+
     class PrintFn
     {
     public:
         template <print_iterator OutIter, typename T>
-        OutIter operator()(
-            OutIter out,
-            T&& value) const
+        OutIter operator()(OutIter out, const T& value) const
         {
             static_assert(
-                requires(const priority_tag<4> tag) {
-                    { print(out, std::forward<T>(value), tag) } -> std::convertible_to<OutIter>;
-                },
+                requires {{ print(maxStatePrinterTag, out, value) } -> std::convertible_to<OutIter>; },
                 "The given type is not printable. ");
 
             return print(
+                maxStatePrinterTag,
                 std::move(out),
-                std::forward<T>(value),
-                priority_tag<4>{});
+                value);
+        }
+
+        template <print_iterator OutIter, only_non_const_viewable_forward_range T>
+        OutIter operator()(OutIter out, T&& range) const
+        {
+            return std::invoke(*this, std::move(out), std::ranges::ref_view{range});
         }
 
         template <typename T>
-        StringT operator()(T&& value) const
+        [[nodiscard]]
+        StringT operator()(const T& value) const
         {
             StringStreamT stream{};
-            std::invoke(
-                *this,
-                std::ostreambuf_iterator{stream},
-                std::forward<T>(value));
+            std::invoke(*this, std::ostreambuf_iterator{stream}, value);
+
             return std::move(stream).str();
+        }
+
+        template <only_non_const_viewable_forward_range T>
+        [[nodiscard]]
+        StringT operator()(T&& range) const
+        {
+            return std::invoke(*this, std::ranges::ref_view{range});
         }
     };
 
     template <print_iterator OutIter, std::ranges::forward_range Range>
     OutIter print(
+        [[maybe_unused]] priority_tag<2> const,
         OutIter out,
-        Range&& range, // NOLINT(cppcoreguidelines-missing-std-forward)
-        const priority_tag<2>)
+        const Range& range)
     {
         out = format::format_to(std::move(out), "{{ ");
         auto iter = std::ranges::begin(range);

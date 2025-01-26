@@ -13,6 +13,7 @@
 #include <array>
 #include <cassert>
 #include <optional>
+#include <ranges>
 #include <source_location>
 #include <string_view>
 #include <tuple>
@@ -254,6 +255,12 @@ namespace mimicpp::detail
                 && is_same_source_location(lhs.sourceLocation, rhs.sourceLocation);
         }
     };
+
+    // some std::views do only provide non-const begin/end overloads, but still do not mutate the underlying storage.
+    // Nevertheless, we do not want to mess around with input-ranges.
+    template <typename T>
+    concept only_non_const_viewable_forward_range = std::ranges::forward_range<T>
+                                                 && !std::ranges::forward_range<const T>;
 }
 
 #endif

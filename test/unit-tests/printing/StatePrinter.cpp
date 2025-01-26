@@ -316,62 +316,6 @@ TEST_CASE(
         }
     }
 
-    SECTION("Ranges have special treatment.")
-    {
-        SECTION("Empty ranges are supported.")
-        {
-            const std::vector<int> vec{};
-
-            print(std::ostreambuf_iterator{stream}, vec);
-            REQUIRE_THAT(
-                std::move(stream).str(),
-                Catch::Matchers::Equals("{  }"));
-        }
-
-        SECTION("Ranges with single element are supported.")
-        {
-            const std::vector vec{42};
-
-            print(std::ostreambuf_iterator{stream}, vec);
-            REQUIRE_THAT(
-                std::move(stream).str(),
-                Catch::Matchers::Equals("{ 42 }"));
-        }
-
-        SECTION("Ranges with multiple elements are supported.")
-        {
-            const std::vector vec{42, 1337};
-
-            print(std::ostreambuf_iterator{stream}, vec);
-            REQUIRE_THAT(
-                std::move(stream).str(),
-                Catch::Matchers::Equals("{ 42, 1337 }"));
-        }
-
-        SECTION("Range elements are forwarded to the print function..")
-        {
-            const std::vector vec{NonPrintable{}, NonPrintable{}, NonPrintable{}};
-
-            print(std::ostreambuf_iterator{stream}, vec);
-            REQUIRE_THAT(
-                std::move(stream).str(),
-                Catch::Matchers::Equals("{ {?}, {?}, {?} }"));
-        }
-
-        SECTION("Views are supported.")
-        {
-            const std::vector vec{42, 1337};
-
-            print(
-                std::ostreambuf_iterator{stream},
-                vec
-                    | std::views::transform([](const auto v) { return 2 * v; }));
-            REQUIRE_THAT(
-                std::move(stream).str(),
-                Catch::Matchers::Equals("{ 84, 2674 }"));
-        }
-    }
-
     SECTION("std::source_location has specialized printer.")
     {
         const std::source_location loc = std::source_location::current();
@@ -462,6 +406,128 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("{?}"));
+    }
+}
+
+TEST_CASE(
+    "All forward-ranges are printable.",
+    "[print]")
+{
+    StringStreamT stream{};
+
+    SECTION("Empty ranges are supported.")
+    {
+        const std::vector<int> vec{};
+
+        StringT const expected{"{  }"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, vec);
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                print(vec),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("Ranges with single element are supported.")
+    {
+        const std::vector vec{42};
+
+        StringT const expected{"{ 42 }"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, vec);
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                print(vec),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("Ranges with multiple elements are supported.")
+    {
+        const std::vector vec{42, 1337};
+
+        StringT const expected{"{ 42, 1337 }"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, vec);
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                print(vec),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("Range elements are forwarded to the print function..")
+    {
+        const std::vector vec{NonPrintable{}, NonPrintable{}, NonPrintable{}};
+
+        StringT const expected{"{ {?}, {?}, {?} }"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, vec);
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                print(vec),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("All std views are supported.")
+    {
+        std::vector const vec{42, 1337};
+
+        // mutable func removes const begin/end overloads from transform_view
+        auto func = [](const auto v) mutable { return 2 * v; };
+
+        StringT const expected{"{ 84, 2674 }"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(
+                std::ostreambuf_iterator{stream},
+                vec | std::views::transform(func));
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                print(vec | std::views::transform(func)),
+                Catch::Matchers::Equals(expected));
+        }
     }
 }
 
