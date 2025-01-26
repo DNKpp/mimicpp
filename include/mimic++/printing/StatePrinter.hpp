@@ -14,7 +14,9 @@
 // ReSharper disable once CppUnusedIncludeDirective
 #include "mimic++/TypeTraits.hpp" // uint_with_size
 #include "mimic++/Utility.hpp"
+
 #include "mimic++/printing/Format.hpp"
+#include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 
 #include <bit>
@@ -94,22 +96,12 @@ struct mimicpp::format::formatter<mimicpp::Constness, mimicpp::CharT>
     }
 };
 
-namespace mimicpp::custom
-{
-    /**
-     * \brief User may add specializations, which will then be used during ``print`` calls.
-     * \ingroup PRINTING_STATE
-     */
-    template <typename>
-    class Printer;
-}
-
 namespace mimicpp::detail
 {
     template <
         print_iterator OutIter,
         typename T,
-        printer_for<OutIter, T> Printer = custom::Printer<std::remove_cvref_t<T>>>
+        printer_for<OutIter, T> Printer = custom::Printer<std::remove_const_t<T>>>
     OutIter print(
         [[maybe_unused]] priority_tag<4> const,
         OutIter out,
@@ -123,7 +115,7 @@ namespace mimicpp::detail
     template <
         print_iterator OutIter,
         typename T,
-        printer_for<OutIter, T> Printer = Printer<std::remove_cvref_t<T>>>
+        printer_for<OutIter, T> Printer = printing::detail::state::cxx23_backport_printer<std::remove_const_t<T>>>
     OutIter print(
         [[maybe_unused]] priority_tag<3> const,
         OutIter out,
@@ -134,11 +126,19 @@ namespace mimicpp::detail
             value);
     }
 
-    template <print_iterator OutIter, std::ranges::forward_range Range>
+    template <
+        print_iterator OutIter,
+        typename T,
+        printer_for<OutIter, T> Printer = printing::detail::state::common_type_printer<std::remove_const_t<T>>>
     OutIter print(
-        priority_tag<2>,
+        [[maybe_unused]] priority_tag<2> const,
         OutIter out,
-        Range& range);
+        T& value)
+    {
+        return Printer::print(
+            std::move(out),
+            value);
+    }
 
     template <print_iterator OutIter, format::detail::formattable<CharT> T>
     OutIter print(
@@ -188,211 +188,6 @@ namespace mimicpp::detail
             std::invoke(*this, std::ostreambuf_iterator{stream}, value);
 
             return std::move(stream).str();
-        }
-    };
-
-    template <print_iterator OutIter, std::ranges::forward_range Range>
-    OutIter print(
-        [[maybe_unused]] priority_tag<2> const,
-        OutIter out,
-        Range& range)
-    {
-        out = format::format_to(std::move(out), "{{ ");
-        auto iter = std::ranges::begin(range);
-        if (const auto end = std::ranges::end(range);
-            iter != end)
-        {
-            constexpr PrintFn print{};
-            out = print(std::move(out), *iter++);
-
-            for (; iter != end; ++iter)
-            {
-                out = print(
-                    format::format_to(std::move(out), ", "),
-                    *iter);
-            }
-        }
-
-        return format::format_to(std::move(out), " }}");
-    }
-
-    template <>
-    class Printer<std::source_location>
-    {
-    public:
-        template <print_iterator OutIter>
-        static OutIter print(OutIter out, std::source_location const& loc)
-        {
-            out = print_path(std::move(out), loc.file_name());
-
-            return format::format_to(
-                std::move(out),
-                "[{}:{}], {}",
-                loc.line(),
-                loc.column(),
-                loc.function_name());
-        }
-    };
-
-    template <>
-    class Printer<std::nullopt_t>
-    {
-    public:
-        template <print_iterator OutIter>
-        static OutIter print(OutIter out, [[maybe_unused]] std::nullopt_t const)
-        {
-            return format::format_to(std::move(out), "nullopt");
-        }
-    };
-
-    template <typename T>
-    class Printer<std::optional<T>>
-    {
-    public:
-        template <print_iterator OutIter>
-        static OutIter print(OutIter out, auto& opt)
-        {
-            constexpr PrintFn print{};
-
-            if (opt)
-            {
-                out = format::format_to(std::move(out), "{{ value: ");
-                out = print(std::move(out), *opt);
-                return format::format_to(std::move(out), " }}");
-            }
-            return print(std::move(out), std::nullopt);
-        }
-    };
-
-    template <std::size_t index, print_iterator OutIter>
-    OutIter tuple_element_print(OutIter out, auto& tuple)
-    {
-        if constexpr (0u != index)
-        {
-            out = format::format_to(std::move(out), ", ");
-        }
-
-        constexpr PrintFn printer{};
-        return std::invoke(
-            printer,
-            std::move(out),
-            std::get<index>(tuple));
-    }
-
-    template <typename T>
-    concept tuple_like = requires {
-        typename std::tuple_size<T>::type;
-        { std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
-        requires 0u <= std::tuple_size_v<T>;
-    };
-
-    template <tuple_like T>
-    class Printer<T>
-    {
-    public:
-        template <print_iterator OutIter>
-        static OutIter print(OutIter out, auto& tuple)
-        {
-            out = format::format_to(std::move(out), "{{ ");
-            std::invoke(
-                [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
-                    (...,
-                     (out = tuple_element_print<indices>(std::move(out), tuple)));
-                },
-                std::make_index_sequence<std::tuple_size_v<T>>{});
-
-            return format::format_to(std::move(out), " }}");
-        }
-    };
-
-    template <typename T>
-    concept pointer_like = std::is_pointer_v<T>
-                        || std::same_as<std::nullptr_t, T>;
-
-    template <pointer_like T>
-        requires(!string<T>)
-    class Printer<T>
-    {
-    public:
-        template <print_iterator OutIter>
-        static OutIter print(OutIter out, T ptr)
-        {
-            if constexpr (4u < sizeof(T))
-            {
-                return format::format_to(
-                    std::move(out),
-                    "0x{:0>16x}",
-                    std::bit_cast<std::uintptr_t>(ptr));
-            }
-            else
-            {
-                return format::format_to(
-                    std::move(out),
-                    "0x{:0>8x}",
-                    std::bit_cast<std::uintptr_t>(ptr));
-            }
-        }
-    };
-
-    template <string String>
-    class Printer<String>
-    {
-    public:
-        template <std::common_reference_with<String> T, print_iterator OutIter>
-        static OutIter print(OutIter out, T&& str)
-        {
-            if constexpr (constexpr auto prefix = string_literal_prefix<string_char_t<String>>;
-                          !std::ranges::empty(prefix))
-            {
-                out = std::ranges::copy(prefix, std::move(out)).out;
-            }
-
-            out = format::format_to(std::move(out), "\"");
-
-            if constexpr (std::same_as<CharT, string_char_t<String>>)
-            {
-                out = std::ranges::copy(
-                          string_traits<String>::view(str),
-                          std::move(out))
-                          .out;
-            }
-            // required for custom char types
-            else if constexpr (printer_for<custom::Printer<string_char_t<String>>, OutIter, string_char_t<String>>)
-            {
-                for (custom::Printer<string_char_t<String>> printer{};
-                     const string_char_t<String>& c : string_traits<String>::view(str))
-                {
-                    out = printer.print(std::move(out), c);
-                }
-            }
-            else
-            {
-                constexpr auto to_dump = [](const string_char_t<String>& c) noexcept {
-                    using intermediate_t = uint_with_size_t<sizeof c>;
-                    return std::bit_cast<intermediate_t>(c);
-                };
-
-                auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
-                auto iter = std::ranges::begin(view);
-                if (const auto end = std::ranges::end(view);
-                    iter != end)
-                {
-                    out = format::format_to(
-                        std::move(out),
-                        "{:#x}",
-                        to_dump(*iter++));
-
-                    for (; iter != end; ++iter)
-                    {
-                        out = format::format_to(
-                            std::move(out),
-                            ", {:#x}",
-                            to_dump(*iter));
-                    }
-                }
-            }
-
-            return format::format_to(std::move(out), "\"");
         }
     };
 }

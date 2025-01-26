@@ -4,6 +4,8 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/printing/state/C++23Backports.hpp"
+#include "mimic++/printing/state/CommonTypes.hpp"
 
 using namespace mimicpp;
 
