@@ -112,12 +112,24 @@ namespace mimicpp::detail
             value);
     }
 
+    template <print_iterator OutIter, format::detail::formattable<CharT> T>
+    OutIter print(
+        [[maybe_unused]] priority_tag<3> const,
+        OutIter out,
+        T& value)
+    {
+        return format::format_to(
+            std::move(out),
+            "{}",
+            value);
+    }
+
     template <
         print_iterator OutIter,
         typename T,
         printer_for<OutIter, T> Printer = printing::detail::state::cxx23_backport_printer<std::remove_const_t<T>>>
     OutIter print(
-        [[maybe_unused]] priority_tag<3> const,
+        [[maybe_unused]] priority_tag<2> const,
         OutIter out,
         T& value)
     {
@@ -131,24 +143,12 @@ namespace mimicpp::detail
         typename T,
         printer_for<OutIter, T> Printer = printing::detail::state::common_type_printer<std::remove_const_t<T>>>
     OutIter print(
-        [[maybe_unused]] priority_tag<2> const,
+        [[maybe_unused]] priority_tag<1> const,
         OutIter out,
         T& value)
     {
         return Printer::print(
             std::move(out),
-            value);
-    }
-
-    template <print_iterator OutIter, format::detail::formattable<CharT> T>
-    OutIter print(
-        [[maybe_unused]] priority_tag<1> const,
-        OutIter out,
-        T& value)
-    {
-        return format::format_to(
-            std::move(out),
-            "{}",
             value);
     }
 
