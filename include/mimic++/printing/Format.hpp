@@ -39,7 +39,7 @@ namespace mimicpp
     concept printer_for = print_iterator<OutIter>
                        && requires(OutIter out) {
                               {
-                                  Printer::print(out, std::declval<T&&>())
+                                  Printer::print(out, std::declval<T&>())
                               } -> std::convertible_to<OutIter>;
                           };
 }
