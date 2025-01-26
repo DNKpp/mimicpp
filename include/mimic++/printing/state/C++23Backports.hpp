@@ -23,7 +23,7 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static OutIter print(OutIter out, auto& range)
         {
-            out = format::format_to(std::move(out), "{{ ");
+            out = format::format_to(std::move(out), "[");
             auto iter = std::ranges::begin(range);
             if (const auto end = std::ranges::end(range);
                 iter != end)
@@ -37,7 +37,7 @@ namespace mimicpp::printing::detail::state
                 }
             }
 
-            return format::format_to(std::move(out), " }}");
+            return format::format_to(std::move(out), "]");
         }
     };
 

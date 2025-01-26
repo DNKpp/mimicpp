@@ -400,7 +400,7 @@ TEST_CASE(
     {
         const std::vector<int> vec{};
 
-        StringT const expected{"{  }"};
+        StringT const expected{"[]"};
 
         SECTION("Printing to specific out-iter.")
         {
@@ -422,7 +422,7 @@ TEST_CASE(
     {
         const std::vector vec{42};
 
-        StringT const expected{"{ 42 }"};
+        StringT const expected{"[42]"};
 
         SECTION("Printing to specific out-iter.")
         {
@@ -444,7 +444,7 @@ TEST_CASE(
     {
         const std::vector vec{42, 1337};
 
-        StringT const expected{"{ 42, 1337 }"};
+        StringT const expected{"[42, 1337]"};
 
         SECTION("Printing to specific out-iter.")
         {
@@ -466,7 +466,7 @@ TEST_CASE(
     {
         const std::vector vec{NonPrintable{}, NonPrintable{}, NonPrintable{}};
 
-        StringT const expected{"{ {?}, {?}, {?} }"};
+        StringT const expected{"[{?}, {?}, {?}]"};
 
         SECTION("Printing to specific out-iter.")
         {
@@ -491,7 +491,7 @@ TEST_CASE(
         // mutable func removes const begin/end overloads from transform_view
         auto func = [](const auto v) mutable { return 2 * v; };
 
-        StringT const expected{"{ 84, 2674 }"};
+        StringT const expected{"[84, 2674]"};
 
         SECTION("Printing to specific out-iter.")
         {
