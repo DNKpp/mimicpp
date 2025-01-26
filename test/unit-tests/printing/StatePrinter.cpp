@@ -340,19 +340,6 @@ TEST_CASE(
             Catch::Matchers::Equals("{ value: {?} }"));
     }
 
-    SECTION("Tuple-likes have special treatment")
-    {
-        REQUIRE_THAT(
-            mimicpp::print(std::tuple{}),
-            Catch::Matchers::Equals("{  }"));
-        REQUIRE_THAT(
-            mimicpp::print(std::tuple{1337}),
-            Catch::Matchers::Equals("{ 1337 }"));
-        REQUIRE_THAT(
-            mimicpp::print(std::tuple{NonPrintable{}, 1337}),
-            Catch::Matchers::Equals("{ {?}, 1337 }"));
-    }
-
 #if INTPTR_MAX >= INT64_MAX
 
     SECTION("Pointers are printed in hex-format.")
@@ -518,6 +505,124 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 print(vec | std::views::transform(func)),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+}
+
+TEST_CASE(
+    "All tuple-like types are printable.",
+    "[print]")
+{
+    StringStreamT stream{};
+
+    SECTION("Empty tuples.")
+    {
+        StringT const expected{"{  }"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, std::tuple{});
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                mimicpp::print(std::tuple{}),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("Tuples with printable elements.")
+    {
+        StringT const expected{"{ 1337 }"};
+
+        constexpr std::tuple tuple{1337};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, tuple);
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                mimicpp::print(tuple),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("Tuples with mixed elements.")
+    {
+        StringT const expected{"{ {?}, 1337 }"};
+
+        constexpr std::tuple tuple{NonPrintable{}, 1337};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, tuple);
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                mimicpp::print(tuple),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("Tuples with view element.")
+    {
+        StringT const expected{"{ { 42, 1337 } }"};
+
+        // mutable func removes const begin/end overloads from transform_view
+        auto func = [](const auto v) mutable { return v; };
+        std::vector const vec{42, 1337};
+        std::tuple tuple{vec | std::views::transform(func)};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, tuple);
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                mimicpp::print(tuple),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("Pairs with printable elements.")
+    {
+        StringT const expected{"{ 1337, 42 }"};
+
+        constexpr std::pair pair{1337, 42};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, pair);
+            REQUIRE_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            REQUIRE_THAT(
+                mimicpp::print(pair),
                 Catch::Matchers::Equals(expected));
         }
     }

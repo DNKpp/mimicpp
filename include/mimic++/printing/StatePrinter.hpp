@@ -113,7 +113,7 @@ namespace mimicpp::detail
     OutIter print(
         [[maybe_unused]] priority_tag<4> const,
         OutIter out,
-        const T& value)
+        T& value)
     {
         return Printer::print(
             std::move(out),
@@ -127,7 +127,7 @@ namespace mimicpp::detail
     OutIter print(
         [[maybe_unused]] priority_tag<3> const,
         OutIter out,
-        const T& value)
+        T& value)
     {
         return Printer::print(
             std::move(out),
@@ -138,13 +138,13 @@ namespace mimicpp::detail
     OutIter print(
         priority_tag<2>,
         OutIter out,
-        const Range& range);
+        Range& range);
 
     template <print_iterator OutIter, format::detail::formattable<CharT> T>
     OutIter print(
         [[maybe_unused]] priority_tag<1> const,
         OutIter out,
-        const T& value)
+        T& value)
     {
         return format::format_to(
             std::move(out),
@@ -156,7 +156,7 @@ namespace mimicpp::detail
     OutIter print(
         [[maybe_unused]] priority_tag<0> const,
         OutIter out,
-        const auto&)
+        auto&)
     {
         return format::format_to(
             std::move(out),
@@ -168,8 +168,8 @@ namespace mimicpp::detail
     class PrintFn
     {
     public:
-        template <print_iterator OutIter, typename T>
-        OutIter operator()(OutIter out, const T& value) const
+        template <print_iterator OutIter>
+        OutIter operator()(OutIter out, auto&& value) const
         {
             static_assert(
                 requires {{ print(maxStatePrinterTag, out, value) } -> std::convertible_to<OutIter>; },
@@ -181,27 +181,13 @@ namespace mimicpp::detail
                 value);
         }
 
-        template <print_iterator OutIter, only_non_const_viewable_forward_range T>
-        OutIter operator()(OutIter out, T&& range) const
-        {
-            return std::invoke(*this, std::move(out), std::ranges::ref_view{range});
-        }
-
-        template <typename T>
         [[nodiscard]]
-        StringT operator()(const T& value) const
+        StringT operator()(auto&& value) const
         {
             StringStreamT stream{};
             std::invoke(*this, std::ostreambuf_iterator{stream}, value);
 
             return std::move(stream).str();
-        }
-
-        template <only_non_const_viewable_forward_range T>
-        [[nodiscard]]
-        StringT operator()(T&& range) const
-        {
-            return std::invoke(*this, std::ranges::ref_view{range});
         }
     };
 
@@ -209,7 +195,7 @@ namespace mimicpp::detail
     OutIter print(
         [[maybe_unused]] priority_tag<2> const,
         OutIter out,
-        const Range& range)
+        Range& range)
     {
         out = format::format_to(std::move(out), "{{ ");
         auto iter = std::ranges::begin(range);
@@ -235,7 +221,7 @@ namespace mimicpp::detail
     {
     public:
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, const std::source_location& loc)
+        static OutIter print(OutIter out, std::source_location const& loc)
         {
             out = print_path(std::move(out), loc.file_name());
 
@@ -253,7 +239,7 @@ namespace mimicpp::detail
     {
     public:
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, [[maybe_unused]] const std::nullopt_t)
+        static OutIter print(OutIter out, [[maybe_unused]] std::nullopt_t const)
         {
             return format::format_to(std::move(out), "nullopt");
         }
@@ -264,7 +250,7 @@ namespace mimicpp::detail
     {
     public:
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, const std::optional<T>& opt)
+        static OutIter print(OutIter out, auto& opt)
         {
             constexpr PrintFn print{};
 
@@ -278,8 +264,8 @@ namespace mimicpp::detail
         }
     };
 
-    template <std::size_t index, print_iterator OutIter, typename Tuple>
-    OutIter tuple_element_print(OutIter out, Tuple&& tuple)
+    template <std::size_t index, print_iterator OutIter>
+    OutIter tuple_element_print(OutIter out, auto& tuple)
     {
         if constexpr (0u != index)
         {
@@ -287,22 +273,25 @@ namespace mimicpp::detail
         }
 
         constexpr PrintFn printer{};
-        return printer(
+        return std::invoke(
+            printer,
             std::move(out),
-            std::get<index>(std::forward<Tuple>(tuple)));
+            std::get<index>(tuple));
     }
 
     template <typename T>
-        requires requires {
-            typename std::tuple_size<T>::type;
-            requires std::convertible_to<typename std::tuple_size<T>::type, std::size_t>;
-            requires 0u <= std::tuple_size_v<T>;
-        }
+    concept tuple_like = requires {
+        typename std::tuple_size<T>::type;
+        { std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
+        requires 0u <= std::tuple_size_v<T>;
+    };
+
+    template <tuple_like T>
     class Printer<T>
     {
     public:
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, const T& tuple)
+        static OutIter print(OutIter out, auto& tuple)
         {
             out = format::format_to(std::move(out), "{{ ");
             std::invoke(
