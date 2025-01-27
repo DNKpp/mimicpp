@@ -84,9 +84,10 @@ namespace mimicpp::matches::detail
         make_view_fn,
         describe_fn>;
 
-    template <string String>
+    template <typename String>
+        requires string<std::remove_cvref_t<String>>
     [[nodiscard]]
-    constexpr auto forward_store(String&& str)
+    constexpr auto forward_store(std::remove_reference_t<String>& str)
     {
         return string_arg_storage<std::decay_t<String>>{
             std::forward<String>(str)};
