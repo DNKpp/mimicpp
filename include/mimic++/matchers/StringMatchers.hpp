@@ -29,14 +29,6 @@ namespace mimicpp
 
 namespace mimicpp::matches::detail
 {
-    template <string String>
-    [[nodiscard]]
-    constexpr auto make_view(String&& str)
-    {
-        using traits_t = string_traits<std::remove_cvref_t<String>>;
-        return traits_t::view(std::forward<String>(str));
-    }
-
     template <case_foldable_string String>
         requires std::ranges::view<String>
     [[nodiscard]]
@@ -67,6 +59,13 @@ namespace mimicpp::matches::detail
         }
     };
 
+    template <string String>
+    [[nodiscard]]
+    constexpr auto make_view(String const& str)
+    {
+        return make_view_fn{}(str);
+    }
+
     struct describe_fn
     {
         template <string T>
@@ -84,7 +83,14 @@ namespace mimicpp::matches::detail
         T,
         make_view_fn,
         describe_fn>;
-    ;
+
+    template <string String>
+    [[nodiscard]]
+    constexpr auto forward_store(String&& str)
+    {
+        return string_arg_storage<std::decay_t<String>>{
+            std::forward<String>(str)};
+    }
 }
 
 namespace mimicpp::matches::str
@@ -157,8 +163,7 @@ namespace mimicpp::matches::str
             },
             "is equal to {}",
             "is not equal to {}",
-            std::make_tuple(
-                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
+            std::make_tuple(detail::forward_store<Pattern>(pattern))};
     }
 
     /**
@@ -180,8 +185,7 @@ namespace mimicpp::matches::str
             },
             "is case-insensitively equal to {}",
             "is case-insensitively not equal to {}",
-            std::make_tuple(
-                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
+            std::make_tuple(detail::forward_store<Pattern>(pattern))};
     }
 
     /**
@@ -205,8 +209,7 @@ namespace mimicpp::matches::str
             },
             "starts with {}",
             "starts not with {}",
-            std::make_tuple(
-                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
+            std::make_tuple(detail::forward_store<Pattern>(pattern))};
     }
 
     /**
@@ -231,8 +234,7 @@ namespace mimicpp::matches::str
             },
             "case-insensitively starts with {}",
             "case-insensitively starts not with {}",
-            std::make_tuple(
-                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
+            std::make_tuple(detail::forward_store<Pattern>(pattern))};
     }
 
     /**
@@ -257,8 +259,7 @@ namespace mimicpp::matches::str
             },
             "ends with {}",
             "ends not with {}",
-            std::make_tuple(
-                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
+            std::make_tuple(detail::forward_store<Pattern>(pattern))};
     }
 
     /**
@@ -284,8 +285,7 @@ namespace mimicpp::matches::str
             },
             "case-insensitively ends with {}",
             "case-insensitively ends not with {}",
-            std::make_tuple(
-                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
+            std::make_tuple(detail::forward_store<Pattern>(pattern))};
     }
 
     /**
@@ -309,8 +309,7 @@ namespace mimicpp::matches::str
             },
             "contains {}",
             "contains not {}",
-            std::make_tuple(
-                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
+            std::make_tuple(detail::forward_store<Pattern>(pattern))};
     }
 
     /**
@@ -333,8 +332,7 @@ namespace mimicpp::matches::str
             },
             "case-insensitively contains {}",
             "case-insensitively contains not {}",
-            std::make_tuple(
-                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
+            std::make_tuple(detail::forward_store<Pattern>(pattern))};
     }
 
     /**
