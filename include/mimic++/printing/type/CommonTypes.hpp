@@ -3,17 +3,19 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_PRINTING_COMMON_TYPE_PRINTER_HPP
-#define MIMICPP_PRINTING_COMMON_TYPE_PRINTER_HPP
+#ifndef MIMICPP_PRINTING_TYPE_COMMON_TYPES_HPP
+#define MIMICPP_PRINTING_TYPE_COMMON_TYPES_HPP
 
-#include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/Fwd.hpp"
+#include "mimic++/printing/Format.hpp"
+#include "mimic++/printing/Fwd.hpp"
 
 #include <cstddef>
 #include <string>
 // ReSharper disable once CppUnusedIncludeDirective
 #include <string_view> // false-positive
 
-namespace mimicpp::printing::detail
+namespace mimicpp::printing::detail::type
 {
     // general types
     template <>

@@ -9,8 +9,8 @@
 #pragma once
 
 #include "mimic++/printing/Format.hpp"
+#include "mimic++/printing/Fwd.hpp"
 
-#include "mimic++/printing/CommonTypePrinter.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/printing/TypePrinter.hpp"

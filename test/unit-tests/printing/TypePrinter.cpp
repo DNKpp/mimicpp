@@ -4,12 +4,8 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/printing/TypePrinter.hpp"
-#include "mimic++/printing/CommonTypePrinter.hpp"
 
-#include <memory_resource>
 #include <optional>
-#include <string>
-#include <string_view>
 #include <tuple>
 
 using namespace mimicpp;
@@ -665,7 +661,7 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void, std::greater),
     (true, std::allocator<int>, std::vector, int))
 {
-    STATIC_REQUIRE(expected == printing::detail::default_arg_for<DefaultArg, Template, type_list<LeadingArgs...>>);
+    STATIC_REQUIRE(expected == printing::detail::type::default_arg_for<DefaultArg, Template, type_list<LeadingArgs...>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -678,7 +674,7 @@ TEMPLATE_TEST_CASE_SIG(
     (std::ignore, type_list<int>, std::vector, int, std::allocator<int>),
     (std::ignore, type_list<int, std::pmr::polymorphic_allocator<int>>, std::vector, int, std::pmr::polymorphic_allocator<int>))
 {
-    STATIC_REQUIRE(std::same_as<Expected, typename printing::detail::drop_default_args_for<Template, type_list<Args...>>::type>);
+    STATIC_REQUIRE(std::same_as<Expected, typename printing::detail::type::drop_default_args_for<Template, type_list<Args...>>::type>);
 }
 
 TEST_CASE(

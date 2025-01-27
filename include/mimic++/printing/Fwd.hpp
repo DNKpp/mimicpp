@@ -6,6 +6,8 @@
 #ifndef MIMICPP_PRINTING_FWD_HPP
 #define MIMICPP_PRINTING_FWD_HPP
 
+#pragma once
+
 namespace mimicpp::custom
 {
     /**
@@ -14,6 +16,21 @@ namespace mimicpp::custom
      */
     template <typename>
     class Printer;
+
+    /**
+     * \brief User may add specializations that will be utilized during ``type_print`` calls.
+     * \ingroup PRINTING_TYPE
+     */
+    template <typename>
+    class TypePrinter;
+}
+
+namespace mimicpp::printing
+{
+    class PrintFn;
+
+    template <typename T>
+    class PrintTypeFn;
 }
 
 namespace mimicpp::printing::detail::state
@@ -31,9 +48,16 @@ namespace mimicpp::printing::detail::state
     struct unknown_type_printer;
 }
 
-namespace mimicpp::printing
+namespace mimicpp::printing::detail::type
 {
-    class PrintFn;
+    template <typename T>
+    struct common_type_printer;
+
+    template <typename T>
+    struct signature_type_printer;
+
+    template <typename T>
+    struct template_type_printer;
 }
 
 #endif

@@ -11,11 +11,11 @@
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Printer.hpp"
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
 
 namespace mimicpp
 {
@@ -350,7 +350,7 @@ namespace mimicpp::detail
     {
         StringStreamT out{};
         out << "Mock<";
-        printing::detail::print_separated(out, ", ", type_list<Signatures...>{});
+        printing::detail::type::print_separated(out, ", ", type_list<Signatures...>{});
         out << ">";
 
         return std::move(out).str();
