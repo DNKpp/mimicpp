@@ -173,8 +173,7 @@ namespace mimicpp::printing::detail::state
                 case ValueCategory::lvalue: return {"lvalue"};
                 case ValueCategory::rvalue: return {"rvalue"};
                 case ValueCategory::any:    return {"any"};
-                default:
-                    unreachable();
+                default:                    unreachable();
                 }
             };
 
@@ -194,8 +193,7 @@ namespace mimicpp::printing::detail::state
                 case Constness::non_const: return {"mutable"};
                 case Constness::as_const:  return {"const"};
                 case Constness::any:       return {"any"};
-                default:
-                    unreachable();
+                default:                   unreachable();
                 }
             };
 
