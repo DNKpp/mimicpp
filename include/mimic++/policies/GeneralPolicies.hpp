@@ -9,10 +9,11 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/printing/StatePrinter.hpp"
 
 #include <cassert>
+#include <iterator>
 
 namespace mimicpp::expectation_policies
 {
