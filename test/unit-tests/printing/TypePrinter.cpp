@@ -280,10 +280,10 @@ template <auto... Args>
 class mimicpp::custom::TypePrinter<my_custom_type<Args...>>
 {
 public:
-    [[nodiscard]]
-    static consteval StringViewT name() noexcept
+    template <print_iterator OutIter>
+    static OutIter print(OutIter out)
     {
-        return {"user::my_custom_type"};
+        return format::format_to(std::move(out), "user::my_custom_type");
     }
 };
 

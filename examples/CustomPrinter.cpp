@@ -54,9 +54,9 @@ template <>
 class mimicpp::custom::TypePrinter<my_type>
 {
 public:
-    static consteval std::string_view name() noexcept
+    static auto print(auto out)
     {
-        return {"This-Is-My-Mighty-Type"};
+        return format::format_to(out, "This-Is-My-Mighty-Type");
     }
 };
 

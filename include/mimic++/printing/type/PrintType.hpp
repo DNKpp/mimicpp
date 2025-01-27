@@ -160,17 +160,15 @@ namespace mimicpp::printing::detail::type
 {
     template <typename Printer, typename T, typename OutIter>
     concept type_printer_for = print_iterator<OutIter>
-                            && (requires {
-        typename Printer;
-        { Printer::name() } -> std::convertible_to<StringViewT>; } || requires(OutIter out) {
-        typename Printer;
-        { Printer::print(out) } -> std::convertible_to<OutIter>; });
+                            && requires(OutIter out) {
+                                   typename Printer;
+                                   { Printer::print(out) } -> std::convertible_to<OutIter>;
+                               };
 
     template <typename T, print_iterator OutIter, type_printer_for<T, OutIter> Printer = mimicpp::custom::TypePrinter<T>>
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<4u>, OutIter out)
     {
-        return std::ranges::copy(Printer::name(), std::move(out))
-            .out;
+        return Printer::print(std::move(out));
     }
 
     template <typename T, print_iterator OutIter, type_printer_for<T, OutIter> Printer = common_type_printer<T>>
