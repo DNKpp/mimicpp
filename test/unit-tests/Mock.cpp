@@ -907,6 +907,20 @@ TEST_CASE(
         Mock<void(const char*)> mock{};
         SCOPED_EXP mock.expect_call("Hello, World!");
         mock("Hello, World!");
+
+        SECTION("If both, param and argument, are character pointers, they are not treated as strings.")
+        {
+            constexpr std::array<char, 2> value1{42, 0};
+            constexpr std::array<char, 2> value2{42, 0};
+
+            // If the second expectation is matched, then we know, that the argument has been treated as a string.
+            // Therefore, the first expectation must be chosen, which compares the actual pointers.
+            SCOPED_EXP mock.expect_call(matches::eq(value2.data()));
+            SCOPED_EXP mock.expect_call(value1.data())
+                and expect::at_least(0u);
+
+            mock(value2.data());
+        }
     }
 
     SECTION("With explicit matchers.")
@@ -926,7 +940,7 @@ TEST_CASE(
         Mock<void()> mock{
             MockSettings{.name = "MyMock"}};
         const ScopedExpectation expectation = mock.expect_call()
-                                              and expect::never();
+                                          and expect::never();
 
         REQUIRE_THAT(
             expectation.mock_name(),
@@ -939,7 +953,7 @@ TEST_CASE(
         {
             Mock<void()> mock{};
             const ScopedExpectation expectation = mock.expect_call()
-                                                  and expect::never();
+                                              and expect::never();
 
             REQUIRE_THAT(
                 expectation.mock_name(),

@@ -205,7 +205,12 @@ namespace mimicpp::detail
         return std::forward<Arg>(arg);
     }
 
+    // if the param is a character-pointer, there is no evidence, whether it denotes a null-terminated string or just an
+    // actual pointer to a value.
+    // But, the Mock user shall know it, thus if `Arg` is not a character-pointer, we enable this matcher.
     template <string Param, string Arg>
+        requires(!std::is_pointer_v<std::remove_reference_t<Param>>)
+             || (!std::is_pointer_v<std::remove_reference_t<Arg>>)
     [[nodiscard]]
     constexpr auto make_arg_matcher(Arg&& arg, [[maybe_unused]] const priority_tag<1>)
     {
