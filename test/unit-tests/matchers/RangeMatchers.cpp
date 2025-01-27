@@ -19,7 +19,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Equals("elements are {  }"));
+            Catch::Matchers::Equals("elements are []"));
 
         SECTION("When target is also empty, they match.")
         {
@@ -42,7 +42,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Equals("elements are { 1337, 42 }"));
+            Catch::Matchers::Equals("elements are [1337, 42]"));
 
         SECTION("When target is equal, they match.")
         {
@@ -72,7 +72,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Equals("elements are not { 1337, 42 }"));
+            Catch::Matchers::Equals("elements are not [1337, 42]"));
 
         SECTION("When target is equal, they do not match.")
         {
@@ -114,7 +114,7 @@ TEST_CASE(
         REQUIRE(matcher.matches(target));
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Equals("elements are { 1337, 42 }"));
+            Catch::Matchers::Equals("elements are [1337, 42]"));
     }
 }
 
@@ -128,7 +128,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Equals("is a permutation of {  }"));
+            Catch::Matchers::Equals("is a permutation of []"));
 
         SECTION("When target is also empty, they match.")
         {
@@ -151,7 +151,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Equals("is a permutation of { 1337, 42 }"));
+            Catch::Matchers::Equals("is a permutation of [1337, 42]"));
 
         SECTION("When target is equal, they match.")
         {
@@ -181,7 +181,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Equals("is not a permutation of { 1337, 42 }"));
+            Catch::Matchers::Equals("is not a permutation of [1337, 42]"));
 
         SECTION("When target is equal, they do not match.")
         {
@@ -215,7 +215,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             matcher.describe(),
-            Catch::Matchers::Equals("is a permutation of { 1337, 42 }"));
+            Catch::Matchers::Equals("is a permutation of [1337, 42]"));
 
         const std::vector target{1337, 42};
 
