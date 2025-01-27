@@ -70,7 +70,7 @@ TEMPLATE_TEST_CASE_SIG(
     {
         REQUIRE_THAT(
             policy.describe(),
-            Catch::Matchers::Equals(format::format("expect: from {} category overload", category)));
+            Catch::Matchers::Equals(StringT{"expect: from "} + print(category) + " category overload"));
     }
 
     const CallInfoT call{
@@ -122,7 +122,7 @@ TEMPLATE_TEST_CASE_SIG(
     {
         REQUIRE_THAT(
             policy.describe(),
-            Catch::Matchers::Equals(format::format("expect: from {} qualified overload", constness)));
+            Catch::Matchers::Equals(StringT{"expect: from "} + print(constness) + " qualified overload"));
     }
 
     const CallInfoT call{

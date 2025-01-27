@@ -762,7 +762,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "ValueCategory is formattable.",
+    "ValueCategory is printable.",
     "[print]")
 {
     namespace Matches = Catch::Matchers;
@@ -777,20 +777,13 @@ TEST_CASE(
         }));
 
         REQUIRE_THAT(
-            format::format("{}", category),
+            mimicpp::print(category),
             Matches::Equals(expected));
-    }
-
-    SECTION("When an invalid ValueCategory is given, std::invalid_argument is thrown.")
-    {
-        REQUIRE_THROWS_AS(
-            format::format("{}", ValueCategory{42}),
-            std::invalid_argument);
     }
 }
 
 TEST_CASE(
-    "Constness is formattable.",
+    "Constness is printable.",
     "[print]")
 {
     namespace Matches = Catch::Matchers;
@@ -805,15 +798,8 @@ TEST_CASE(
         }));
 
         REQUIRE_THAT(
-            format::format("{}", category),
+            mimicpp::print(category),
             Matches::Equals(expected));
-    }
-
-    SECTION("When an invalid Constness is given, std::invalid_argument is thrown.")
-    {
-        REQUIRE_THROWS_AS(
-            format::format("{}", Constness{42}),
-            std::invalid_argument);
     }
 }
 

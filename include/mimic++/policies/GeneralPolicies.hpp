@@ -49,9 +49,12 @@ namespace mimicpp::expectation_policies
         [[nodiscard]]
         static StringT describe()
         {
-            return format::format(
-                "expect: from {} category overload",
-                expected);
+            StringStreamT stream{};
+            stream << "expect: from ";
+            mimicpp::print(std::ostreambuf_iterator{stream}, expected);
+            stream << " category overload";
+
+            return std::move(stream).str();
         }
     };
 
@@ -79,9 +82,12 @@ namespace mimicpp::expectation_policies
         [[nodiscard]]
         static StringT describe()
         {
-            return format::format(
-                "expect: from {} qualified overload",
-                constness);
+            StringStreamT stream{};
+            stream << "expect: from ";
+            mimicpp::print(std::ostreambuf_iterator{stream}, constness);
+            stream << " qualified overload";
+
+            return std::move(stream).str();
         }
     };
 }

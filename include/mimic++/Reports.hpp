@@ -330,17 +330,13 @@ namespace mimicpp
                     std::move(out),
                     report.fromLoc);
             }
+            out = format::format_to(std::move(out), "\nconstness: ");
+            out = mimicpp::print(std::move(out), report.fromConstness);
+            out = format::format_to(std::move(out), "\nvalue category: ");
+            out = mimicpp::print(std::move(out), report.fromCategory);
             out = format::format_to(
                 std::move(out),
-                "\n");
-
-            out = format::format_to(
-                std::move(out),
-                "constness: {}\n"
-                "value category: {}\n"
-                "return type: {}\n",
-                report.fromConstness,
-                report.fromCategory,
+                "\nreturn type: {}\n",
                 report.returnTypeInfo.name());
 
             if (!std::ranges::empty(report.argDetails))

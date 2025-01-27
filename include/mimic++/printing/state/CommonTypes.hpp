@@ -23,69 +23,8 @@
 #include <iterator>
 #include <optional>
 #include <source_location>
-#include <stdexcept>
 #include <type_traits>
 #include <utility>
-
-template <>
-struct mimicpp::format::formatter<mimicpp::ValueCategory, mimicpp::CharT>
-    : public formatter<std::string_view, mimicpp::CharT>
-{
-    using ValueCategoryT = mimicpp::ValueCategory;
-
-    auto format(
-        const ValueCategoryT category,
-        auto& ctx) const
-    {
-        constexpr auto toString = [](const ValueCategoryT cat) {
-            switch (cat)
-            {
-            case ValueCategoryT::lvalue:
-                return "lvalue";
-            case ValueCategoryT::rvalue:
-                return "rvalue";
-            case ValueCategoryT::any:
-                return "any";
-            }
-
-            throw std::invalid_argument{"Unknown category value."};
-        };
-
-        return formatter<std::string_view, mimicpp::CharT>::format(
-            toString(category),
-            ctx);
-    }
-};
-
-template <>
-struct mimicpp::format::formatter<mimicpp::Constness, mimicpp::CharT>
-    : public formatter<std::string_view, mimicpp::CharT>
-{
-    using ConstnessT = mimicpp::Constness;
-
-    auto format(
-        const ConstnessT category,
-        auto& ctx) const
-    {
-        constexpr auto toString = [](const ConstnessT value) {
-            switch (value)
-            {
-            case ConstnessT::non_const:
-                return "mutable";
-            case ConstnessT::as_const:
-                return "const";
-            case ConstnessT::any:
-                return "any";
-            }
-
-            throw std::invalid_argument{"Unknown constness value."};
-        };
-
-        return formatter<std::string_view, mimicpp::CharT>::format(
-            toString(category),
-            ctx);
-    }
-};
 
 namespace mimicpp::printing::detail::state
 {
@@ -219,6 +158,48 @@ namespace mimicpp::printing::detail::state
             }
 
             return format::format_to(std::move(out), "\"");
+        }
+    };
+
+    template <>
+    struct common_type_printer<ValueCategory>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, ValueCategory const category)
+        {
+            constexpr auto toString = [](ValueCategory const cat) -> StringViewT {
+                switch (cat)
+                {
+                case ValueCategory::lvalue: return {"lvalue"};
+                case ValueCategory::rvalue: return {"rvalue"};
+                case ValueCategory::any:    return {"any"};
+                default:
+                    unreachable();
+                }
+            };
+
+            return std::ranges::copy(toString(category), std::move(out)).out;
+        }
+    };
+
+    template <>
+    struct common_type_printer<Constness>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, Constness const constness)
+        {
+            constexpr auto toString = [](Constness const value) -> StringViewT {
+                switch (value)
+                {
+                case Constness::non_const: return {"mutable"};
+                case Constness::as_const:  return {"const"};
+                case Constness::any:       return {"any"};
+                default:
+                    unreachable();
+                }
+            };
+
+            return std::ranges::copy(toString(constness), std::move(out)).out;
         }
     };
 }
