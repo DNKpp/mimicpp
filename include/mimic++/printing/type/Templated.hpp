@@ -155,20 +155,26 @@ namespace mimicpp::printing::detail::type
         template <print_iterator OutIter>
         OutIter operator()(OutIter out) const
         {
-            StringStreamT stream{};
-            std::invoke(
-                template_type_name_generator_fn<
-                    Template,
-                    type_list_pop_back_t<ArgList>>{},
-                std::ostreambuf_iterator{stream});
+            StringT const name = std::invoke(
+                [] {
+                    StringStreamT stream{};
+                    std::invoke(
+                        template_type_name_generator_fn<
+                            Template,
+                            type_list_pop_back_t<ArgList>>{},
+                        std::ostreambuf_iterator{stream});
+                    return std::move(stream).str();
+                });
 
             // we do not want to accidentally manipulate non-std types, so make sure the `std::`` is actually part of the type
-            if (auto name = stream.view();
-                name.starts_with(stdPrefix))
+            if (name.starts_with(stdPrefix))
             {
-                name.remove_prefix(stdPrefix.size());
                 out = format::format_to(std::move(out), "std::pmr::");
-                out = std::ranges::copy(name, std::move(out)).out;
+                out = std::ranges::copy(
+                          name.cbegin() + stdPrefix.size(),
+                          name.cend(),
+                          std::move(out))
+                          .out;
             }
             // It's not an actual `std` type, but we've removed the allocator for the name generation, thus we need
             // generate it again with the actual allocator.
