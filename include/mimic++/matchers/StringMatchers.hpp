@@ -53,7 +53,7 @@ namespace mimicpp::matches::detail
     [[nodiscard]]
     constexpr auto make_view(String const& str)
     {
-        return make_view_fn{}(str);
+        return std::invoke(make_view_fn{}, str);
     }
 
     template <case_foldable_string String, std::ranges::borrowed_range View>
@@ -71,7 +71,7 @@ namespace mimicpp::matches::detail
         [[nodiscard]]
         constexpr auto operator()(T const& str) const
         {
-            return mimicpp::print(std::invoke(make_view_fn{}, str));
+            return mimicpp::print(make_view(str));
         }
     };
 
