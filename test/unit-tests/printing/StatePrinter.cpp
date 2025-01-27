@@ -336,10 +336,10 @@ TEST_CASE(
             Catch::Matchers::Equals("nullopt"));
         REQUIRE_THAT(
             mimicpp::print(std::optional{1337}),
-            Catch::Matchers::Equals("{ value: 1337 }"));
+            Catch::Matchers::Equals("1337"));
         REQUIRE_THAT(
             mimicpp::print(std::optional{NonPrintable{}}),
-            Catch::Matchers::Equals("{ value: {?} }"));
+            Catch::Matchers::Equals("{?}"));
     }
 
     SECTION("When nothing matches, a default token is inserted.")
