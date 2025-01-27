@@ -113,7 +113,7 @@ namespace mimicpp::printing::detail::type
 
             StringStreamT out{};
             out << templateName << '<';
-            print_separated(out, ", ", MinimalArgList{});
+            print_separated(std::ostreambuf_iterator{out}, ", ", MinimalArgList{});
             out << '>';
 
             return std::move(out).str();

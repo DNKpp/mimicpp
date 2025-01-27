@@ -350,7 +350,10 @@ namespace mimicpp::detail
     {
         StringStreamT out{};
         out << "Mock<";
-        printing::detail::type::print_separated(out, ", ", type_list<Signatures...>{});
+        printing::detail::type::print_separated(
+            std::ostreambuf_iterator{out},
+            ", ",
+            type_list<Signatures...>{});
         out << ">";
 
         return std::move(out).str();

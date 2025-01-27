@@ -15,21 +15,22 @@
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
 
+#include <algorithm>
 #include <functional>
 #include <iterator>
 #include <type_traits>
 
 namespace mimicpp::printing::detail::type
 {
-    template <typename Out, typename... Ts>
-    constexpr Out& print_separated(Out& out, const StringViewT separator, const type_list<Ts...> ts)
+    template <print_iterator OutIter, typename... Ts>
+    constexpr OutIter print_separated(OutIter out, StringViewT const separator, type_list<Ts...> const ts)
     {
         if constexpr (0u < sizeof...(Ts))
         {
             std::invoke(
-                [&]<typename First, typename... Others>([[maybe_unused]] const type_list<First, Others...>) {
-                    mimicpp::print_type<First>(std::ostreambuf_iterator{out});
-                    ((out << separator, mimicpp::print_type<Others>(std::ostreambuf_iterator{out})), ...);
+                [&]<typename First, typename... Others>([[maybe_unused]] type_list<First, Others...> const) {
+                    out = mimicpp::print_type<First>(std::move(out));
+                    ((out = mimicpp::print_type<Others>(std::ranges::copy(separator, std::move(out)).out)), ...);
                 },
                 ts);
         }
@@ -40,43 +41,34 @@ namespace mimicpp::printing::detail::type
     template <satisfies<std::is_function> Signature>
     struct signature_type_printer<Signature>
     {
-        [[nodiscard]]
-        static StringViewT name()
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            static const StringT name = generate_name();
-            return name;
-        }
-
-    private:
-        [[nodiscard]]
-        static StringT generate_name()
-        {
-            StringStreamT out{};
-            mimicpp::print_type<signature_return_type_t<Signature>>(std::ostreambuf_iterator{out});
-            out << "(";
-            print_separated(out, ", ", signature_param_list_t<Signature>{});
-            out << ")";
+            out = mimicpp::print_type<signature_return_type_t<Signature>>(std::move(out));
+            out = format::format_to(std::move(out), "(");
+            out = print_separated(out, ", ", signature_param_list_t<Signature>{});
+            out = format::format_to(std::move(out), ")");
 
             if constexpr (Constness::as_const == signature_const_qualification_v<Signature>)
             {
-                out << " const";
+                out = format::format_to(std::move(out), " const");
             }
 
             if constexpr (ValueCategory::lvalue == signature_ref_qualification_v<Signature>)
             {
-                out << " &";
+                out = format::format_to(std::move(out), " &");
             }
             else if constexpr (ValueCategory::rvalue == signature_ref_qualification_v<Signature>)
             {
-                out << " &&";
+                out = format::format_to(std::move(out), " &&");
             }
 
             if constexpr (signature_is_noexcept_v<Signature>)
             {
-                out << " noexcept";
+                out = format::format_to(std::move(out), " noexcept");
             }
 
-            return std::move(out).str();
+            return out;
         }
     };
 }
