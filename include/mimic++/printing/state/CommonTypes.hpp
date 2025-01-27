@@ -165,7 +165,7 @@ namespace mimicpp::printing::detail::state
     struct common_type_printer<String>
     {
         template <std::common_reference_with<String> T, print_iterator OutIter>
-        static OutIter print(OutIter out, T&& str)
+        static OutIter print(OutIter out, T& str)
         {
             if constexpr (constexpr auto prefix = string_literal_prefix<string_char_t<String>>;
                           !std::ranges::empty(prefix))

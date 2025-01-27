@@ -393,9 +393,8 @@ namespace mimicpp::stacktrace::detail
 }
 
 template <>
-class mimicpp::detail::Printer<mimicpp::Stacktrace>
+struct mimicpp::printing::detail::state::common_type_printer<mimicpp::Stacktrace>
 {
-public:
     template <print_iterator OutIter>
     static OutIter print(OutIter out, const Stacktrace& stacktrace)
     {

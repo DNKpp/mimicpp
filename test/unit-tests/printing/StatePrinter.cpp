@@ -104,9 +104,8 @@ public:
 };
 
 template <>
-class detail::Printer<InternalPrintable>
+struct printing::detail::state::common_type_printer<InternalPrintable>
 {
-public:
     inline static int printCallCounter{0};
 
     static auto print(print_iterator auto out, const InternalPrintable&)
@@ -130,9 +129,8 @@ public:
 };
 
 template <>
-class detail::Printer<CustomAndInternalPrintable>
+struct printing::detail::state::common_type_printer<CustomAndInternalPrintable>
 {
-public:
     inline static int printCallCounter{0};
 
     static auto print(print_iterator auto out, const CustomAndInternalPrintable&)
@@ -210,9 +208,9 @@ TEST_CASE(
             Catch::Matchers::Equals("CustomPrintable"));
     }
 
-    SECTION("detail::Printer specialization is supported.")
+    SECTION("internal Printer specializations are supported.")
     {
-        using PrinterT = detail::Printer<InternalPrintable>;
+        using PrinterT = printing::detail::state::common_type_printer<InternalPrintable>;
         PrinterT::printCallCounter = 0;
 
         constexpr InternalPrintable value{};
@@ -228,7 +226,7 @@ TEST_CASE(
     SECTION("custom::Printer is preferred, if both printers have valid specializations.")
     {
         using CustomPrinterT = custom::Printer<CustomAndInternalPrintable>;
-        using DetailPrinterT = detail::Printer<CustomAndInternalPrintable>;
+        using DetailPrinterT = printing::detail::state::common_type_printer<CustomAndInternalPrintable>;
         CustomPrinterT::printCallCounter = 0;
         DetailPrinterT::printCallCounter = 0;
 

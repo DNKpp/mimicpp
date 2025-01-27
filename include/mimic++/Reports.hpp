@@ -309,9 +309,8 @@ namespace mimicpp
     }
 
     template <>
-    class detail::Printer<CallReport>
+    struct printing::detail::state::common_type_printer<CallReport>
     {
-    public:
         template <print_iterator OutIter>
         static OutIter print(OutIter out, const CallReport& report)
         {
@@ -386,9 +385,8 @@ namespace mimicpp
     };
 
     template <>
-    class detail::Printer<ExpectationReport>
+    struct printing::detail::state::common_type_printer<ExpectationReport>
     {
-    public:
         template <print_iterator OutIter>
         static OutIter print(OutIter out, const ExpectationReport& report)
         {
@@ -511,9 +509,8 @@ namespace mimicpp
     }
 
     template <>
-    class detail::Printer<MatchReport>
+    struct printing::detail::state::common_type_printer<MatchReport>
     {
-    public:
         template <print_iterator OutIter>
         static OutIter print(OutIter out, const MatchReport& report)
         {
@@ -572,7 +569,7 @@ namespace mimicpp
             {
                 out = format::format_to(std::move(out), "reason: ");
                 out = std::visit(
-                    std::bind_front(control_state_printer{}, std::move(out)),
+                    std::bind_front(mimicpp::detail::control_state_printer{}, std::move(out)),
                     report.controlReport);
                 out = format::format_to(std::move(out), "\n");
             }

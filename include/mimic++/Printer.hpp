@@ -14,7 +14,5 @@
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
-#include "mimic++/printing/state/C++23Backports.hpp"
-#include "mimic++/printing/state/CommonTypes.hpp"
 
 #endif
