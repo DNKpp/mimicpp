@@ -34,15 +34,17 @@ namespace mimicpp::printing::detail::state
             value);
     }
 
-    template <print_iterator OutIter, format::detail::formattable<CharT> T>
+    template <
+        print_iterator OutIter,
+        typename T,
+        printer_for<OutIter, T> Printer = state::common_type_printer<std::remove_const_t<T>>>
     OutIter print(
         [[maybe_unused]] priority_tag<3> const,
         OutIter out,
         T& value)
     {
-        return format::format_to(
+        return Printer::print(
             std::move(out),
-            "{}",
             value);
     }
 
@@ -60,17 +62,15 @@ namespace mimicpp::printing::detail::state
             value);
     }
 
-    template <
-        print_iterator OutIter,
-        typename T,
-        printer_for<OutIter, T> Printer = state::common_type_printer<std::remove_const_t<T>>>
+    template <print_iterator OutIter, format::detail::formattable<CharT> T>
     OutIter print(
         [[maybe_unused]] priority_tag<1> const,
         OutIter out,
         T& value)
     {
-        return Printer::print(
+        return format::format_to(
             std::move(out),
+            "{}",
             value);
     }
 
@@ -138,7 +138,6 @@ namespace mimicpp
      * This function internally checks for the first available option in the following order:
      * - ``mimicpp::custom::Printer`` specialization
      * - internal printer specializations (which handle strings, ``std::source_location``, ``std::optional``, etc.)
-     * - Types that satisfy ``std::ranges::forward_range``
      * - Formattable types (based on the installed format backend)
      *
      * If no valid alternative is found, the default option is used, which simply prints "{?}").
