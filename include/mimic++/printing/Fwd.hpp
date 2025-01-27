@@ -31,4 +31,9 @@ namespace mimicpp::printing::detail::state
     struct unknown_type_printer;
 }
 
+namespace mimicpp::printing
+{
+    class PrintFn;
+}
+
 #endif

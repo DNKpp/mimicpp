@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/matchers/Common.hpp"
+#include "mimic++/printing/Fwd.hpp"
 
 #include <functional>
 #include <tuple>
@@ -18,7 +19,7 @@
 
 namespace mimicpp::detail
 {
-    template <typename Arg, typename MatchesProjection = std::identity, typename DescribeProjection = PrintFn>
+    template <typename Arg, typename MatchesProjection = std::identity, typename DescribeProjection = printing::PrintFn>
     struct arg_storage
     {
         using matches_reference = std::invoke_result_t<MatchesProjection, const Arg&>;

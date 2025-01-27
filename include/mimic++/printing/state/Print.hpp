@@ -86,7 +86,10 @@ namespace mimicpp::printing::detail::state
     }
 
     constexpr priority_tag<4> maxStatePrinterTag{};
+}
 
+namespace mimicpp::printing
+{
     class PrintFn
     {
     public:
@@ -94,11 +97,14 @@ namespace mimicpp::printing::detail::state
         OutIter operator()(OutIter out, auto&& value) const
         {
             static_assert(
-                requires {{ print(maxStatePrinterTag, out, value) } -> std::convertible_to<OutIter>; },
+                requires {
+                    {
+                       detail::state::print(detail::state::maxStatePrinterTag, out, value)
+                    } -> std::convertible_to<OutIter>; },
                 "The given type is not printable. ");
 
-            return print(
-                maxStatePrinterTag,
+            return detail::state::print(
+                detail::state::maxStatePrinterTag,
                 std::move(out),
                 value);
         }
