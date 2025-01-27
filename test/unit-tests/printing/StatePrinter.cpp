@@ -7,6 +7,8 @@
 #include "mimic++/printing/state/C++23Backports.hpp"
 #include "mimic++/printing/state/CommonTypes.hpp"
 
+#include <memory>
+
 using namespace mimicpp;
 
 namespace
@@ -340,44 +342,6 @@ TEST_CASE(
             Catch::Matchers::Equals("{ value: {?} }"));
     }
 
-#if INTPTR_MAX >= INT64_MAX
-
-    SECTION("Pointers are printed in hex-format.")
-    {
-        REQUIRE_THAT(
-            mimicpp::print(nullptr),
-            Catch::Matchers::Matches("0x0{1,16}"));
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{})),
-            Catch::Matchers::Matches("0x0{1,16}"));
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{0x1234'5678'90AB'CDEFu})),
-            Catch::Matchers::Matches("0x1234567890[Aa][Bb][Cc][Dd][Ee][Ff]"));
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const std::string*>(std::uintptr_t{0x1234u})),
-            Catch::Matchers::Matches("0x0{1,12}1234"));
-    }
-
-#else
-
-    SECTION("Pointers are printed in hex-format.")
-    {
-        REQUIRE_THAT(
-            mimicpp::print(nullptr),
-            Catch::Matchers::Matches("0x0{1,8}"));
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{})),
-            Catch::Matchers::Matches("0x0{1,8}"));
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{0x90AB'CDEFu})),
-            Catch::Matchers::Matches("0x90[Aa][Bb][Cc][Dd][Ee][Ff]"));
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const std::string*>(std::uintptr_t{0x1234u})),
-            Catch::Matchers::Matches("0x0{1,4}1234"));
-    }
-
-#endif
-
     SECTION("When nothing matches, a default token is inserted.")
     {
         constexpr NonPrintable value{};
@@ -628,6 +592,73 @@ TEST_CASE(
     }
 }
 
+TEST_CASE(
+    "Pointer-likes are printed in hex-format."
+    "[print]")
+{
+    SECTION("Explicit nullptr.")
+    {
+        REQUIRE_THAT(
+            mimicpp::print(nullptr),
+            Catch::Matchers::Matches("nullptr"));
+    }
+
+    SECTION("Raw pointers.")
+    {
+        REQUIRE_THAT(
+            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{})),
+            Catch::Matchers::Matches("nullptr"));
+
+        REQUIRE_THAT(
+            mimicpp::print(reinterpret_cast<const char*>(std::uintptr_t{0x1234u})),
+            Catch::Matchers::Matches("0x0{1,12}1234"));
+        REQUIRE_THAT(
+            mimicpp::print(reinterpret_cast<const std::string*>(std::uintptr_t{0x1234u})),
+            Catch::Matchers::Matches("0x0{1,12}1234"));
+
+#if not MIMICPP_DETAIL_IS_32BIT
+        REQUIRE_THAT(
+            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{0x1234'5678'90AB'CDEFu})),
+            Catch::Matchers::Matches("0x1234567890[Aa][Bb][Cc][Dd][Ee][Ff]"));
+#else
+        REQUIRE_THAT(
+            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{0x90AB'CDEFu})),
+            Catch::Matchers::Matches("0x90[Aa][Bb][Cc][Dd][Ee][Ff]"));
+#endif
+    }
+
+    SECTION("Std smart-pointers are unwrapped.")
+    {
+        REQUIRE_THAT(
+            mimicpp::print(std::unique_ptr<int>{}),
+            Catch::Matchers::Matches("nullptr"));
+
+        auto const uniqueInt = std::make_unique<int>(42);
+        REQUIRE_THAT(
+            mimicpp::print(uniqueInt),
+            Catch::Matchers::Matches(print(uniqueInt.get())));
+
+        REQUIRE_THAT(
+            mimicpp::print(std::shared_ptr<int>{}),
+            Catch::Matchers::Matches("nullptr"));
+        auto sharedInt = std::make_shared<int>(42);
+        REQUIRE_THAT(
+            mimicpp::print(sharedInt),
+            Catch::Matchers::Matches(print(sharedInt.get())));
+
+        REQUIRE_THAT(
+            mimicpp::print(std::weak_ptr<int>{}),
+            Catch::Matchers::Matches("nullptr"));
+        REQUIRE_THAT(
+            mimicpp::print(std::weak_ptr{sharedInt}),
+            Catch::Matchers::Matches(print(sharedInt.get())));
+        sharedInt.reset();
+        REQUIRE_THAT(
+            mimicpp::print(std::weak_ptr{sharedInt}),
+            Catch::Matchers::Matches("nullptr"));
+    }
+}
+
 namespace
 {
     struct my_char
@@ -806,7 +837,6 @@ TEST_CASE(
 TEMPLATE_TEST_CASE(
     "wchar_t strings will be formatted as value range.",
     "[print]",
-    const wchar_t*,
     std::wstring,
     const std::wstring,
     std::wstring_view,
@@ -829,7 +859,6 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
     "char8_t strings will be formatted as value range.",
     "[print]",
-    const char8_t*,
     std::u8string,
     const std::u8string,
     std::u8string_view,
@@ -852,7 +881,6 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
     "char16_t strings will be formatted as value range.",
     "[print]",
-    const char16_t*,
     std::u16string,
     const std::u16string,
     std::u16string_view,
@@ -875,7 +903,6 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
     "char32_t strings will be formatted as value range.",
     "[print]",
-    const char32_t*,
     std::u32string,
     const std::u32string,
     std::u32string_view,

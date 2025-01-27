@@ -21,6 +21,7 @@
 #include <concepts>
 #include <cstddef>
 #include <iterator>
+#include <memory>
 #include <optional>
 #include <source_location>
 #include <type_traits>
@@ -72,31 +73,71 @@ namespace mimicpp::printing::detail::state
         }
     };
 
-    template <typename T>
-    concept pointer_like = std::is_pointer_v<T>
-                        || std::same_as<std::nullptr_t, T>;
+    template <>
+    struct common_type_printer<std::nullptr_t>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, [[maybe_unused]] std::nullptr_t const& ptr)
+        {
+            return format::format_to(std::move(out), "nullptr");
+        }
+    };
 
-    template <pointer_like T>
-        requires(!string<T>)
+    template <typename T>
+    struct common_type_printer<T*>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, T const* ptr)
+        {
+            if (auto const* inner = std::to_address(ptr))
+            {
+                auto const value = std::bit_cast<std::uintptr_t>(inner);
+                if constexpr (4u < sizeof(std::uintptr_t))
+                {
+                    return format::format_to(
+                        std::move(out),
+                        "0x{:0>16x}",
+                        value);
+                }
+                else
+                {
+                    return format::format_to(
+                        std::move(out),
+                        "0x{:0>8x}",
+                        value);
+                }
+            }
+
+            return common_type_printer<std::nullptr_t>::print(std::move(out), nullptr);
+        }
+    };
+
+    template <typename T>
+    concept smart_pointer = requires(T const& ptr) {
+        typename T::element_type;
+        { ptr.get() } -> std::convertible_to<typename T::element_type*>;
+    };
+
+    template <smart_pointer T>
     struct common_type_printer<T>
     {
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, T ptr)
+        static constexpr OutIter print(OutIter out, T const& ptr)
         {
-            if constexpr (4u < sizeof(T))
-            {
-                return format::format_to(
-                    std::move(out),
-                    "0x{:0>16x}",
-                    std::bit_cast<std::uintptr_t>(ptr));
-            }
-            else
-            {
-                return format::format_to(
-                    std::move(out),
-                    "0x{:0>8x}",
-                    std::bit_cast<std::uintptr_t>(ptr));
-            }
+            using element_type = typename T::element_type;
+            return common_type_printer<element_type*>::print(std::move(out), ptr.get());
+        }
+    };
+
+    template <typename T>
+    struct common_type_printer<std::weak_ptr<T>>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, std::weak_ptr<T> const& ptr)
+        {
+            return common_type_printer<std::shared_ptr<T>>::print(
+                std::move(out),
+                ptr.lock());
         }
     };
 
