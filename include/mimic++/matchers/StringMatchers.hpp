@@ -29,16 +29,6 @@ namespace mimicpp
 
 namespace mimicpp::matches::detail
 {
-    template <case_foldable_string String>
-        requires std::ranges::view<String>
-    [[nodiscard]]
-    constexpr auto make_case_folded_string(String str)
-    {
-        return std::invoke(
-            string_case_fold_converter<string_char_t<String>>{},
-            std::move(str));
-    }
-
     template <string Target, string Pattern>
     constexpr void check_string_compatibility() noexcept
     {
@@ -66,6 +56,15 @@ namespace mimicpp::matches::detail
         return make_view_fn{}(str);
     }
 
+    template <case_foldable_string String, std::ranges::borrowed_range View>
+    [[nodiscard]]
+    constexpr auto make_case_folded_string(View&& str)
+    {
+        return std::invoke(
+            string_case_fold_converter<string_char_t<String>>{},
+            std::forward<View>(str));
+    }
+
     struct describe_fn
     {
         template <string T>
@@ -84,8 +83,7 @@ namespace mimicpp::matches::detail
         make_view_fn,
         describe_fn>;
 
-    template <typename String>
-        requires string<std::remove_cvref_t<String>>
+    template <string String>
     [[nodiscard]]
     constexpr auto forward_store(std::remove_reference_t<String>& str)
     {
@@ -181,8 +179,8 @@ namespace mimicpp::matches::str
                 detail::check_string_compatibility<T, Pattern>();
 
                 return std::ranges::equal(
-                    detail::make_case_folded_string(detail::make_view(target)),
-                    detail::make_case_folded_string(patternView));
+                    detail::make_case_folded_string<T>(detail::make_view(target)),
+                    detail::make_case_folded_string<Pattern>(patternView));
             },
             "is case-insensitively equal to {}",
             "is case-insensitively not equal to {}",
@@ -226,9 +224,9 @@ namespace mimicpp::matches::str
             []<case_foldable_string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto const caseFoldedPattern = detail::make_case_folded_string(patternView);
+                auto const caseFoldedPattern = detail::make_case_folded_string<Pattern>(patternView);
                 auto const [ignore, patternIter] = std::ranges::mismatch(
-                    detail::make_case_folded_string(detail::make_view(target)),
+                    detail::make_case_folded_string<T>(detail::make_view(target)),
                     caseFoldedPattern);
 
                 return patternIter == std::ranges::end(caseFoldedPattern);
@@ -276,10 +274,10 @@ namespace mimicpp::matches::str
             []<case_foldable_string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto reversedCaseFoldedPattern = detail::make_case_folded_string(patternView)
+                auto reversedCaseFoldedPattern = detail::make_case_folded_string<Pattern>(patternView)
                                                | std::views::reverse;
                 const auto [ignore, patternIter] = std::ranges::mismatch(
-                    detail::make_case_folded_string(detail::make_view(target)) | std::views::reverse,
+                    detail::make_case_folded_string<T>(detail::make_view(target)) | std::views::reverse,
                     reversedCaseFoldedPattern);
 
                 return patternIter == std::ranges::end(reversedCaseFoldedPattern);
@@ -326,8 +324,8 @@ namespace mimicpp::matches::str
             []<case_foldable_string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto caseFoldedPattern = detail::make_case_folded_string(patternView);
-                auto targetView = detail::make_case_folded_string(detail::make_view(target));
+                auto caseFoldedPattern = detail::make_case_folded_string<Pattern>(patternView);
+                auto targetView = detail::make_case_folded_string<T>(detail::make_view(target));
                 return std::ranges::empty(caseFoldedPattern)
                     || !std::ranges::empty(std::ranges::search(targetView, caseFoldedPattern));
             },
