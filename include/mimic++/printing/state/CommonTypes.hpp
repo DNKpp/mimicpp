@@ -6,22 +6,86 @@
 #ifndef MIMICPP_PRINTING_STATE_COMMON_TYPES_HPP
 #define MIMICPP_PRINTING_STATE_COMMON_TYPES_HPP
 
+#pragma once
+
 #include "mimic++/Fwd.hpp"
 #include "mimic++/String.hpp"
+#include "mimic++/TypeTraits.hpp" // uint_with_size
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
-#include "mimic++/printing/StatePrinter.hpp"
-#include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/printing/state/Print.hpp"
 
 #include <algorithm>
 #include <bit>
 #include <concepts>
+#include <cstddef>
 #include <iterator>
 #include <optional>
 #include <source_location>
+#include <stdexcept>
 #include <type_traits>
 #include <utility>
+
+template <>
+struct mimicpp::format::formatter<mimicpp::ValueCategory, mimicpp::CharT>
+    : public formatter<std::string_view, mimicpp::CharT>
+{
+    using ValueCategoryT = mimicpp::ValueCategory;
+
+    auto format(
+        const ValueCategoryT category,
+        auto& ctx) const
+    {
+        constexpr auto toString = [](const ValueCategoryT cat) {
+            switch (cat)
+            {
+            case ValueCategoryT::lvalue:
+                return "lvalue";
+            case ValueCategoryT::rvalue:
+                return "rvalue";
+            case ValueCategoryT::any:
+                return "any";
+            }
+
+            throw std::invalid_argument{"Unknown category value."};
+        };
+
+        return formatter<std::string_view, mimicpp::CharT>::format(
+            toString(category),
+            ctx);
+    }
+};
+
+template <>
+struct mimicpp::format::formatter<mimicpp::Constness, mimicpp::CharT>
+    : public formatter<std::string_view, mimicpp::CharT>
+{
+    using ConstnessT = mimicpp::Constness;
+
+    auto format(
+        const ConstnessT category,
+        auto& ctx) const
+    {
+        constexpr auto toString = [](const ConstnessT value) {
+            switch (value)
+            {
+            case ConstnessT::non_const:
+                return "mutable";
+            case ConstnessT::as_const:
+                return "const";
+            case ConstnessT::any:
+                return "any";
+            }
+
+            throw std::invalid_argument{"Unknown constness value."};
+        };
+
+        return formatter<std::string_view, mimicpp::CharT>::format(
+            toString(category),
+            ctx);
+    }
+};
 
 namespace mimicpp::printing::detail::state
 {

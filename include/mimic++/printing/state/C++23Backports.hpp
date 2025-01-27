@@ -6,8 +6,10 @@
 #ifndef MIMICPP_PRINTING_STATE_CXX23_BACKPORTS_HPP
 #define MIMICPP_PRINTING_STATE_CXX23_BACKPORTS_HPP
 
+#pragma once
+
 #include "mimic++/printing/Format.hpp"
-#include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/printing/state/Print.hpp"
 
 #include <concepts>
 #include <functional>
