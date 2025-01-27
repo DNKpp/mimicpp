@@ -106,7 +106,7 @@ namespace mimicpp::printing::detail::state
                 }
             }
 
-            return common_type_printer<std::nullptr_t>::print(std::move(out), nullptr);
+            return mimicpp::print(std::move(out), nullptr);
         }
     };
 
@@ -122,8 +122,7 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static constexpr OutIter print(OutIter out, T const& ptr)
         {
-            using element_type = typename T::element_type;
-            return common_type_printer<element_type*>::print(std::move(out), ptr.get());
+            return mimicpp::print(std::move(out), ptr.get());
         }
     };
 
@@ -133,9 +132,7 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static constexpr OutIter print(OutIter out, std::weak_ptr<T> const& ptr)
         {
-            return common_type_printer<std::shared_ptr<T>>::print(
-                std::move(out),
-                ptr.lock());
+            return mimicpp::print(std::move(out), ptr.lock());
         }
     };
 
