@@ -38,12 +38,13 @@ namespace mimicpp::matches::detail
     }
 
     template <case_foldable_string String>
+        requires std::ranges::view<String>
     [[nodiscard]]
-    constexpr auto make_case_folded_string(String&& str)
+    constexpr auto make_case_folded_string(String str)
     {
         return std::invoke(
             string_case_fold_converter<string_char_t<String>>{},
-            detail::make_view(std::forward<String>(str)));
+            std::move(str));
     }
 
     template <string Target, string Pattern>
@@ -55,6 +56,35 @@ namespace mimicpp::matches::detail
                 string_char_t<Pattern>>,
             "Pattern and target string must have the same character-type.");
     }
+
+    struct make_view_fn
+    {
+        template <string T>
+        [[nodiscard]]
+        constexpr auto operator()(T const& str) const
+        {
+            return string_traits<T>::view(str);
+        }
+    };
+
+    struct describe_fn
+    {
+        template <string T>
+        [[nodiscard]]
+        constexpr auto operator()(T const& str) const
+        {
+            return mimicpp::print(std::invoke(make_view_fn{}, str));
+        }
+    };
+
+    // This specialization is needed for raw char (const)* strings, for which the matcher loses information about
+    // and wrongly treats as general raw-pointer.
+    template <string T>
+    using string_arg_storage = mimicpp::detail::arg_storage<
+        T,
+        make_view_fn,
+        describe_fn>;
+    ;
 }
 
 namespace mimicpp::matches::str
@@ -118,16 +148,17 @@ namespace mimicpp::matches::str
     constexpr auto eq(Pattern&& pattern)
     {
         return PredicateMatcher{
-            []<string T, typename Stored>(T&& target, Stored&& stored) {
+            []<string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
                 return std::ranges::equal(
-                    detail::make_view(std::forward<T>(target)),
-                    detail::make_view(std::forward<Stored>(stored)));
+                    detail::make_view(target),
+                    patternView);
             },
             "is equal to {}",
             "is not equal to {}",
-            std::make_tuple(std::forward<Pattern>(pattern))};
+            std::make_tuple(
+                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
     }
 
     /**
@@ -140,16 +171,17 @@ namespace mimicpp::matches::str
     constexpr auto eq(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
     {
         return PredicateMatcher{
-            []<case_foldable_string T, typename Stored>(T&& target, Stored&& stored) {
+            []<case_foldable_string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
                 return std::ranges::equal(
-                    detail::make_case_folded_string(std::forward<T>(target)),
-                    detail::make_case_folded_string(std::forward<Stored>(stored)));
+                    detail::make_case_folded_string(detail::make_view(target)),
+                    detail::make_case_folded_string(patternView));
             },
             "is case-insensitively equal to {}",
             "is case-insensitively not equal to {}",
-            std::make_tuple(std::forward<Pattern>(pattern))};
+            std::make_tuple(
+                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
     }
 
     /**
@@ -162,19 +194,19 @@ namespace mimicpp::matches::str
     constexpr auto starts_with(Pattern&& pattern)
     {
         return PredicateMatcher{
-            []<string T, typename Stored>(T&& target, Stored&& stored) {
+            []<string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto patternView = detail::make_view(std::forward<Stored>(stored));
-                const auto [ignore, patternIter] = std::ranges::mismatch(
-                    detail::make_view(std::forward<T>(target)),
+                auto const [ignore, patternIter] = std::ranges::mismatch(
+                    detail::make_view(target),
                     patternView);
 
                 return patternIter == std::ranges::end(patternView);
             },
             "starts with {}",
             "starts not with {}",
-            std::make_tuple(std::forward<Pattern>(pattern))};
+            std::make_tuple(
+                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
     }
 
     /**
@@ -187,19 +219,20 @@ namespace mimicpp::matches::str
     constexpr auto starts_with(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
     {
         return PredicateMatcher{
-            []<string T, typename Stored>(T&& target, Stored&& stored) {
+            []<case_foldable_string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto caseFoldedPattern = detail::make_case_folded_string(std::forward<Stored>(stored));
-                const auto [ignore, patternIter] = std::ranges::mismatch(
-                    detail::make_case_folded_string(std::forward<T>(target)),
+                auto const caseFoldedPattern = detail::make_case_folded_string(patternView);
+                auto const [ignore, patternIter] = std::ranges::mismatch(
+                    detail::make_case_folded_string(detail::make_view(target)),
                     caseFoldedPattern);
 
                 return patternIter == std::ranges::end(caseFoldedPattern);
             },
             "case-insensitively starts with {}",
             "case-insensitively starts not with {}",
-            std::make_tuple(std::forward<Pattern>(pattern))};
+            std::make_tuple(
+                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
     }
 
     /**
@@ -212,20 +245,20 @@ namespace mimicpp::matches::str
     constexpr auto ends_with(Pattern&& pattern)
     {
         return PredicateMatcher{
-            []<string T, typename Stored>(T&& target, Stored&& stored) {
+            []<string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto patternView = detail::make_view(std::forward<Stored>(stored))
-                                 | std::views::reverse;
+                auto reversedPattern = patternView | std::views::reverse;
                 const auto [ignore, patternIter] = std::ranges::mismatch(
-                    detail::make_view(std::forward<T>(target)) | std::views::reverse,
-                    patternView);
+                    detail::make_view(target) | std::views::reverse,
+                    reversedPattern);
 
-                return patternIter == std::ranges::end(patternView);
+                return patternIter == std::ranges::end(reversedPattern);
             },
             "ends with {}",
             "ends not with {}",
-            std::make_tuple(std::forward<Pattern>(pattern))};
+            std::make_tuple(
+                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
     }
 
     /**
@@ -238,20 +271,21 @@ namespace mimicpp::matches::str
     constexpr auto ends_with(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
     {
         return PredicateMatcher{
-            []<string T, typename Stored>(T&& target, Stored&& stored) {
+            []<case_foldable_string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto caseFoldedPattern = detail::make_case_folded_string(std::forward<Stored>(stored))
-                                       | std::views::reverse;
+                auto reversedCaseFoldedPattern = detail::make_case_folded_string(patternView)
+                                               | std::views::reverse;
                 const auto [ignore, patternIter] = std::ranges::mismatch(
-                    detail::make_case_folded_string(std::forward<T>(target)) | std::views::reverse,
-                    caseFoldedPattern);
+                    detail::make_case_folded_string(detail::make_view(target)) | std::views::reverse,
+                    reversedCaseFoldedPattern);
 
-                return patternIter == std::ranges::end(caseFoldedPattern);
+                return patternIter == std::ranges::end(reversedCaseFoldedPattern);
             },
             "case-insensitively ends with {}",
             "case-insensitively ends not with {}",
-            std::make_tuple(std::forward<Pattern>(pattern))};
+            std::make_tuple(
+                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
     }
 
     /**
@@ -264,19 +298,19 @@ namespace mimicpp::matches::str
     constexpr auto contains(Pattern&& pattern)
     {
         return PredicateMatcher{
-            []<string T, typename Stored>(T&& target, Stored&& stored) {
+            []<string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto patternView = detail::make_view(std::forward<Stored>(stored));
                 return std::ranges::empty(patternView)
                     || !std::ranges::empty(
                            std::ranges::search(
-                               detail::make_view(std::forward<T>(target)),
-                               std::move(patternView)));
+                               detail::make_view(target),
+                               patternView));
             },
             "contains {}",
             "contains not {}",
-            std::make_tuple(std::forward<Pattern>(pattern))};
+            std::make_tuple(
+                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
     }
 
     /**
@@ -289,17 +323,18 @@ namespace mimicpp::matches::str
     constexpr auto contains(Pattern&& pattern, [[maybe_unused]] const case_insensitive_t)
     {
         return PredicateMatcher{
-            []<string T, typename Stored>(T&& target, Stored&& stored) {
+            []<case_foldable_string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto patternView = detail::make_case_folded_string(std::forward<Stored>(stored));
-                auto targetView = detail::make_case_folded_string(std::forward<T>(target));
-                return std::ranges::empty(patternView)
-                    || !std::ranges::empty(std::ranges::search(targetView, patternView));
+                auto caseFoldedPattern = detail::make_case_folded_string(patternView);
+                auto targetView = detail::make_case_folded_string(detail::make_view(target));
+                return std::ranges::empty(caseFoldedPattern)
+                    || !std::ranges::empty(std::ranges::search(targetView, caseFoldedPattern));
             },
             "case-insensitively contains {}",
             "case-insensitively contains not {}",
-            std::make_tuple(std::forward<Pattern>(pattern))};
+            std::make_tuple(
+                detail::string_arg_storage{std::forward<Pattern>(pattern)})};
     }
 
     /**

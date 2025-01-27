@@ -328,26 +328,26 @@ TEST_CASE(
 {
     SECTION("For char-strings.")
     {
-        constexpr auto* patter = "";
+        constexpr auto* pattern = "";
         constexpr auto* alternativeMatch = " ";
 
         SECTION("For plain matchers.")
         {
-            const auto matcher = matches::str::contains(patter, mimicpp::case_insensitive);
+            const auto matcher = matches::str::contains(pattern, mimicpp::case_insensitive);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("case-insensitively contains \"\""));
-            REQUIRE(matcher.matches(patter));
+            REQUIRE(matcher.matches(pattern));
             REQUIRE(matcher.matches(alternativeMatch));
         }
 
         SECTION("For inverted matchers.")
         {
-            const auto matcher = !matches::str::contains(patter, mimicpp::case_insensitive);
+            const auto matcher = !matches::str::contains(pattern, mimicpp::case_insensitive);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("case-insensitively contains not \"\""));
-            REQUIRE(!matcher.matches(patter));
+            REQUIRE(!matcher.matches(pattern));
             REQUIRE(!matcher.matches(alternativeMatch));
         }
     }
