@@ -188,8 +188,7 @@ namespace mimicpp::printing::detail::type
     template <typename T, print_iterator OutIter, type_printer_for<T, OutIter> Printer = template_type_printer<T>>
     constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<1u>, OutIter out)
     {
-        return std::ranges::copy(Printer::name(), std::move(out))
-            .out;
+        return Printer::print(std::move(out));
     }
 
     template <typename T, print_iterator OutIter>

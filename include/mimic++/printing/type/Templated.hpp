@@ -26,24 +26,24 @@ namespace mimicpp::printing::detail::type
 {
 #ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 
-    template <typename T>
-    [[nodiscard]]
-    StringT pretty_template_name()
+    template <typename T, print_iterator OutIter>
+    OutIter pretty_template_name(OutIter out)
     {
-        StringT name = detail::prettify_type_name(detail::type_name<T>());
-        name.erase(std::ranges::find(name, '<'), name.cend());
-
-        return name;
+        auto const name = detail::prettify_type_name(detail::type_name<T>());
+        return std::ranges::copy(
+                   name.cbegin(),
+                   std::ranges::find(name, '<'),
+                   std::move(out))
+            .out;
     }
 
     template <typename NameGenerator>
     struct basic_template_type_printer
     {
-        [[nodiscard]]
-        static StringViewT name()
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out)
         {
-            static const StringT name = std::invoke(NameGenerator{});
-            return name;
+            return std::invoke(NameGenerator{}, std::move(out));
         }
     };
 
@@ -104,19 +104,18 @@ namespace mimicpp::printing::detail::type
     template <template <typename...> typename Template, typename ArgList>
     struct template_type_name_generator_fn
     {
-        [[nodiscard]]
-        StringT operator()() const
+        template <print_iterator OutIter>
+        constexpr OutIter operator()(OutIter out) const
         {
             using MinimalArgList = typename drop_default_args_for<Template, ArgList>::type;
             using Type = type_list_populate_t<Template, MinimalArgList>;
-            const StringT templateName = pretty_template_name<Type>();
 
-            StringStreamT out{};
-            out << templateName << '<';
-            print_separated(std::ostreambuf_iterator{out}, ", ", MinimalArgList{});
-            out << '>';
+            out = pretty_template_name<Type>(std::move(out));
+            out = format::format_to(std::move(out), "<");
+            out = print_separated(std::move(out), ", ", MinimalArgList{});
+            out = format::format_to(std::move(out), ">");
 
-            return std::move(out).str();
+            return out;
         }
     };
 
@@ -153,27 +152,34 @@ namespace mimicpp::printing::detail::type
     template <template <typename...> typename Template, typename ArgList>
     struct potential_pmr_container_type_name_generator_fn
     {
-        [[nodiscard]]
-        StringT operator()() const
+        template <print_iterator OutIter>
+        OutIter operator()(OutIter out) const
         {
-            StringT name = std::invoke(
+            StringStreamT stream{};
+            std::invoke(
                 template_type_name_generator_fn<
                     Template,
-                    type_list_pop_back_t<ArgList>>{});
+                    type_list_pop_back_t<ArgList>>{},
+                std::ostreambuf_iterator{stream});
 
             // we do not want to accidentally manipulate non-std types, so make sure the `std::`` is actually part of the type
-            if (name.starts_with(stdPrefix))
+            if (auto name = stream.view();
+                name.starts_with(stdPrefix))
             {
-                name.insert(stdPrefix.size(), StringViewT{"pmr::"});
+                name.remove_prefix(stdPrefix.size());
+                out = format::format_to(std::move(out), "std::pmr::");
+                out = std::ranges::copy(name, std::move(out)).out;
             }
             // It's not an actual `std` type, but we've removed the allocator for the name generation, thus we need
             // generate it again with the actual allocator.
             else
             {
-                name = std::invoke(template_type_name_generator_fn<Template, ArgList>{});
+                out = std::invoke(
+                    template_type_name_generator_fn<Template, ArgList>{},
+                    std::move(out));
             }
 
-            return name;
+            return out;
         }
     };
 
@@ -191,12 +197,13 @@ namespace mimicpp::printing::detail::type
     template <template <typename, auto...> typename Template, typename T, auto n>
     struct template_type_printer<Template<T, n>>
         : public basic_template_type_printer<
-              decltype([] {
-                  return format::format(
-                      "{}<{}, {}>",
-                      pretty_template_name<Template<T, n>>(),
-                      mimicpp::print_type<T>(),
-                      n);
+              decltype([]<print_iterator OutIter>(OutIter out) {
+                  out = pretty_template_name<Template<T, n>>(std::move(out));
+                  out = format::format_to(std::move(out), "<");
+                  out = mimicpp::print_type<T>(std::move(out));
+                  out = format::format_to(std::move(out), ", {}>", n);
+
+                  return out;
               })>
     {
     };
@@ -205,11 +212,13 @@ namespace mimicpp::printing::detail::type
         requires std::same_as<Template<T>, Template<T, n>>
     struct template_type_printer<Template<T, n>>
         : public basic_template_type_printer<
-              decltype([] {
-                  return format::format(
-                      "{}<{}>",
-                      pretty_template_name<Template<T>>(),
-                      mimicpp::print_type<T>());
+              decltype([]<print_iterator OutIter>(OutIter out) {
+                  out = pretty_template_name<Template<T, n>>(std::move(out));
+                  out = format::format_to(std::move(out), "<");
+                  out = mimicpp::print_type<T>(std::move(out));
+                  out = format::format_to(std::move(out), ">");
+
+                  return out;
               })>
     {
     };
