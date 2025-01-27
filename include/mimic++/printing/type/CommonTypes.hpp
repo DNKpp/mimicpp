@@ -21,30 +21,30 @@ namespace mimicpp::printing::detail::type
     template <>
     struct common_type_printer<void>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"void"};
+            return format::format_to(std::move(out), "void");
         }
     };
 
     template <>
     struct common_type_printer<bool>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"bool"};
+            return format::format_to(std::move(out), "bool");
         }
     };
 
     template <>
     struct common_type_printer<std::byte>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::byte"};
+            return format::format_to(std::move(out), "std::byte");
         }
     };
 
@@ -52,10 +52,10 @@ namespace mimicpp::printing::detail::type
     template <>
     struct common_type_printer<std::nullptr_t>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::nullptr_t"};
+            return format::format_to(std::move(out), "std::nullptr_t");
         }
     };
 
@@ -63,80 +63,80 @@ namespace mimicpp::printing::detail::type
     template <>
     struct common_type_printer<short>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"short"};
+            return format::format_to(std::move(out), "short");
         }
     };
 
     template <>
     struct common_type_printer<unsigned short>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"unsigned short"};
+            return format::format_to(std::move(out), "unsigned short");
         }
     };
 
     template <>
     struct common_type_printer<int>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"int"};
+            return format::format_to(std::move(out), "int");
         }
     };
 
     template <>
     struct common_type_printer<unsigned int>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"unsigned int"};
+            return format::format_to(std::move(out), "unsigned int");
         }
     };
 
     template <>
     struct common_type_printer<long>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"long"};
+            return format::format_to(std::move(out), "long");
         }
     };
 
     template <>
     struct common_type_printer<unsigned long>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"unsigned long"};
+            return format::format_to(std::move(out), "unsigned long");
         }
     };
 
     template <>
     struct common_type_printer<long long>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"long long"};
+            return format::format_to(std::move(out), "long long");
         }
     };
 
     template <>
     struct common_type_printer<unsigned long long>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"unsigned long long"};
+            return format::format_to(std::move(out), "unsigned long long");
         }
     };
 
@@ -144,30 +144,30 @@ namespace mimicpp::printing::detail::type
     template <>
     struct common_type_printer<float>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"float"};
+            return format::format_to(std::move(out), "float");
         }
     };
 
     template <>
     struct common_type_printer<double>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"double"};
+            return format::format_to(std::move(out), "double");
         }
     };
 
     template <>
     struct common_type_printer<long double>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"long double"};
+            return format::format_to(std::move(out), "long double");
         }
     };
 
@@ -175,70 +175,70 @@ namespace mimicpp::printing::detail::type
     template <>
     struct common_type_printer<char>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"char"};
+            return format::format_to(std::move(out), "char");
         }
     };
 
     template <>
     struct common_type_printer<signed char>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"signed char"};
+            return format::format_to(std::move(out), "signed char");
         }
     };
 
     template <>
     struct common_type_printer<unsigned char>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"unsigned char"};
+            return format::format_to(std::move(out), "unsigned char");
         }
     };
 
     template <>
     struct common_type_printer<char8_t>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"char8_t"};
+            return format::format_to(std::move(out), "char8_t");
         }
     };
 
     template <>
     struct common_type_printer<char16_t>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"char16_t"};
+            return format::format_to(std::move(out), "char16_t");
         }
     };
 
     template <>
     struct common_type_printer<char32_t>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"char32_t"};
+            return format::format_to(std::move(out), "char32_t");
         }
     };
 
     template <>
     struct common_type_printer<wchar_t>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"wchar_t"};
+            return format::format_to(std::move(out), "wchar_t");
         }
     };
 
@@ -246,100 +246,100 @@ namespace mimicpp::printing::detail::type
     template <>
     struct common_type_printer<std::string>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::string"};
+            return format::format_to(std::move(out), "std::string");
         }
     };
 
     template <>
     struct common_type_printer<std::pmr::string>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::pmr::string"};
+            return format::format_to(std::move(out), "std::pmr::string");
         }
     };
 
     template <>
     struct common_type_printer<std::u8string>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::u8string"};
+            return format::format_to(std::move(out), "std::u8string");
         }
     };
 
     template <>
     struct common_type_printer<std::pmr::u8string>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::pmr::u8string"};
+            return format::format_to(std::move(out), "std::pmr::u8string");
         }
     };
 
     template <>
     struct common_type_printer<std::u16string>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::u16string"};
+            return format::format_to(std::move(out), "std::u16string");
         }
     };
 
     template <>
     struct common_type_printer<std::pmr::u16string>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::pmr::u16string"};
+            return format::format_to(std::move(out), "std::pmr::u16string");
         }
     };
 
     template <>
     struct common_type_printer<std::u32string>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::u32string"};
+            return format::format_to(std::move(out), "std::u32string");
         }
     };
 
     template <>
     struct common_type_printer<std::pmr::u32string>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::pmr::u32string"};
+            return format::format_to(std::move(out), "std::pmr::u32string");
         }
     };
 
     template <>
     struct common_type_printer<std::wstring>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::wstring"};
+            return format::format_to(std::move(out), "std::wstring");
         }
     };
 
     template <>
     struct common_type_printer<std::pmr::wstring>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::pmr::wstring"};
+            return format::format_to(std::move(out), "std::pmr::wstring");
         }
     };
 
@@ -347,50 +347,50 @@ namespace mimicpp::printing::detail::type
     template <>
     struct common_type_printer<std::string_view>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::string_view"};
+            return format::format_to(std::move(out), "std::string_view");
         }
     };
 
     template <>
     struct common_type_printer<std::u8string_view>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::u8string_view"};
+            return format::format_to(std::move(out), "std::u8string_view");
         }
     };
 
     template <>
     struct common_type_printer<std::u16string_view>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::u16string_view"};
+            return format::format_to(std::move(out), "std::u16string_view");
         }
     };
 
     template <>
     struct common_type_printer<std::u32string_view>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::u32string_view"};
+            return format::format_to(std::move(out), "std::u32string_view");
         }
     };
 
     template <>
     struct common_type_printer<std::wstring_view>
     {
-        [[nodiscard]]
-        static consteval StringViewT name() noexcept
+        template <print_iterator OutIter>
+        static OutIter print(OutIter out)
         {
-            return {"std::wstring_view"};
+            return format::format_to(std::move(out), "std::wstring_view");
         }
     };
 }
