@@ -21,9 +21,8 @@ var annotated_dup =
         [ "SideEffectAction", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action" ],
         [ "Throws", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws" ]
       ] ],
-      [ "format", "d3/d54/namespacemimicpp_1_1format.html", [
-        [ "formatter< mimicpp::Constness, mimicpp::CharT >", "d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html", "d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4" ],
-        [ "formatter< mimicpp::ValueCategory, mimicpp::CharT >", "db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html", "db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4" ]
+      [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", [
+        [ "PrintFn", "d1/db9/classmimicpp_1_1printing_1_1_print_fn.html", "d1/db9/classmimicpp_1_1printing_1_1_print_fn" ]
       ] ],
       [ "sequence", "d8/dce/namespacemimicpp_1_1sequence.html", [
         [ "rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", "de/d81/structmimicpp_1_1sequence_1_1rating" ]

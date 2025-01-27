@@ -137,7 +137,7 @@ Variables</h2></td></tr>
 <div class="line">    std::less&lt;int&gt;,</div>
 <div class="line">    std::allocator&lt;std::pair&lt;int const, std::vector&lt;float, std::allocator&lt;float&gt;&gt;&gt;&gt;&gt;</div>
 </div><!-- fragment --><p> will be printed as <code>std::map&lt;int, std::vector&lt;float&gt;&gt;</code> which is likely how users have written it.</p>
-<h3><a class="anchor" id="autotoc_md19"></a>
+<h3><a class="anchor" id="autotoc_md21"></a>
 Customize type-stringification</h3>
 <p><code>mimic++</code> automatically converts every type into a meaningful textual representation, but users may sometimes want to customize this process. Users can create a specialization of <code><a class="el" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html" title="User may add specializations that will be utilized during type_print calls.">mimicpp::custom::TypePrinter</a></code> for their any type, which will then be prioritized over the internal conversions.</p>
 <p>Consider the following type. </p><div class="fragment"><div class="line">    <span class="keyword">struct </span>my_type</div>
@@ -197,7 +197,7 @@ template&lt;typename T&gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Jan 25 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Jan 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

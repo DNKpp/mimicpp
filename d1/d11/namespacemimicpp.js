@@ -25,9 +25,9 @@ var namespacemimicpp =
       [ "returns_result_of", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gafe0fc1d77a4122b05f60d49183ce0106", null ],
       [ "throws", "db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gab4f67d2c48ef5ebaf25e31e2ac59c5c1", null ]
     ] ],
-    [ "format", "d3/d54/namespacemimicpp_1_1format.html", "d3/d54/namespacemimicpp_1_1format" ],
+    [ "format", "d3/d54/namespacemimicpp_1_1format.html", null ],
     [ "matches", "dd/d7b/namespacemimicpp_1_1matches.html", "dd/d7b/namespacemimicpp_1_1matches" ],
-    [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", null ],
+    [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", "d8/ddf/namespacemimicpp_1_1printing" ],
     [ "sequence", "d8/dce/namespacemimicpp_1_1sequence.html", "d8/dce/namespacemimicpp_1_1sequence" ],
     [ "stacktrace", "df/d4b/namespacemimicpp_1_1stacktrace.html", "df/d4b/namespacemimicpp_1_1stacktrace" ],
     [ "then", "d9/d4c/namespacemimicpp_1_1then.html", [
@@ -292,7 +292,7 @@ var namespacemimicpp =
     [ "is_character_v", "dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html#ga88d25d2fd5d4f51c8a9d81bdfb57bcb2", null ],
     [ "is_overload_set_v", "df/dc6/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d___s_e_t.html#ga39bc4106334393c907fb7c716490135c", null ],
     [ "is_overloadable_with_v", "d1/d9e/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d_a_b_l_e___w_i_t_h.html#ga444a530890b564007a9d8f9b5d035785", null ],
-    [ "print", "d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga67aaa7bdf2da1595ab1b25059119242c", null ],
+    [ "print", "d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9", null ],
     [ "print_path", "d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f", null ],
     [ "print_type", "df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#gaee62255077a2b4dc33dc009b71c88059", null ],
     [ "signature_const_qualification_v", "da/dc2/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___c_o_n_s_t___q_u_a_l_i_f_i_c_a_t_i_o_n.html#gac6d1b8f4ee38e8e6b60d2ddad0ce21a4", null ],

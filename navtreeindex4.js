@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"de/d68/structmimicpp_1_1state__saturated.html#a85e543d5105c143f999faa00fc7e33aa":[1,6,0,2,0],
+"de/d68/structmimicpp_1_1state__saturated.html#ac4f440908f1d7c307e3368874684e80a":[1,6,0,2,3],
 "de/d81/structmimicpp_1_1sequence_1_1rating.html":[2,0,0,8,0],
 "de/d81/structmimicpp_1_1sequence_1_1rating.html":[4,0,0,4,0],
 "de/d81/structmimicpp_1_1sequence_1_1rating.html#a6f87b0812185f39e0b38c0ef64640076":[2,0,0,8,0,2],
@@ -72,6 +74,7 @@ var NAVTREEINDEX4 =
 "df/df3/_range_matchers_8hpp.html":[5,0,1,1,3],
 "df/df3/_range_matchers_8hpp_source.html":[5,0,1,1,3],
 "dir_092aa99ea44c2ea5c05e2b02d3022b6c.html":[5,0,1,3],
+"dir_4553e22d3617b98ba370154df220a736.html":[5,0,1,3,0],
 "dir_49e56c817e5e54854c35e136979f97ca.html":[5,0,0],
 "dir_6ddbcebc0798903b88ee4423bc0f1618.html":[5,0,1,2],
 "dir_c8613b7c6812845d24ae03bf6f0c949e.html":[5,0,1,1],

@@ -120,9 +120,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga67aaa7bdf2da1595ab1b25059119242c" id="r_ga67aaa7bdf2da1595ab1b25059119242c"><td class="memItemLeft" align="right" valign="top">constexpr detail::PrintFn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a> {}</td></tr>
-<tr class="memdesc:ga67aaa7bdf2da1595ab1b25059119242c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, converting the given object to its textual representation.  <br /></td></tr>
-<tr class="separator:ga67aaa7bdf2da1595ab1b25059119242c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4dbd7a323f25eecf13e0b10059f52ea9" id="r_ga4dbd7a323f25eecf13e0b10059f52ea9"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html">printing::PrintFn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga4dbd7a323f25eecf13e0b10059f52ea9">mimicpp::print</a> {}</td></tr>
+<tr class="memdesc:ga4dbd7a323f25eecf13e0b10059f52ea9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, converting the given object to its textual representation.  <br /></td></tr>
+<tr class="separator:ga4dbd7a323f25eecf13e0b10059f52ea9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>State stringification occurs when an object's state is transformed into a textual representation. </p>
@@ -130,7 +130,6 @@ Variables</h2></td></tr>
 <p>This function internally checks for the first available option in the following order:</p><ul>
 <li><code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> specialization</li>
 <li>internal printer specializations (which handle strings, <code>std::source_location</code>, <code>std::optional</code>, etc.)</li>
-<li>Types that satisfy <code>std::ranges::forward_range</code></li>
 <li>Formattable types (based on the installed format backend)</li>
 </ul>
 <p>If no valid alternative is found, the default option is used, which simply prints "{?}").</p>
@@ -146,7 +145,7 @@ Override existing printings or print custom types</h3>
 <div class="line"><span class="keyword">class </span><a class="code hl_class" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">mimicpp::custom::Printer</a>&lt;my_type&gt;</div>
 <div class="line">{</div>
 <div class="line"><span class="keyword">public</span>:</div>
-<div class="line">    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="#ga67aaa7bdf2da1595ab1b25059119242c">print</a>(<span class="keyword">auto</span> outIter, <span class="keyword">const</span> my_type&amp; <span class="keywordtype">object</span>)</div>
+<div class="line">    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(<span class="keyword">auto</span> outIter, <span class="keyword">const</span> my_type&amp; <span class="keywordtype">object</span>)</div>
 <div class="line">    {</div>
 <div class="line">        <span class="keywordflow">return</span> format::format_to(</div>
 <div class="line">            outIter,</div>
@@ -156,7 +155,7 @@ Override existing printings or print custom types</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 </div><!-- fragment --><p>When an object of <code>my_type</code> is then passed to <code>print</code>, that specification will be used: </p><div class="fragment"><div class="line">    <span class="keyword">constexpr</span> my_type myObject{42};</div>
-<div class="line">    <span class="keyword">const</span> std::string text = <a class="code hl_variable" href="#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a>(myObject);</div>
+<div class="line">    <span class="keyword">const</span> std::string text = <a class="code hl_variable" href="#ga4dbd7a323f25eecf13e0b10059f52ea9">mimicpp::print</a>(myObject);</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE_THAT(</div>
 <div class="line">        text,</div>
@@ -166,8 +165,8 @@ String printing</h3>
 <p>All char-strings (like <code>const char*</code> or <code>std::string</code>) will be printed as they are. However, other character types (e.g. <code>wchar_t</code> or <code>char8_t</code>) require careful handling. Achieving 100% compatibility with all existing character types in <code>mimic++</code> would either involve significant workload or necessitate reliance on an external dependency. Currently, <code>mimic++</code> takes a different approach: if a string of a non-printable character type (as determined by the type trait <code><a class="el" href="../../d2/d73/structmimicpp_1_1is__character.html" title="Primary template, which always yields false.">is_character</a></code>) is detected, it prints the string literal, converting all elements to their value representation and displaying them as comma-separated hexadecimal values.</p>
 <p>For example, the string <code>u8"Hello, World!"</code> will then be printed as: <code>u8"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21"</code>. </p>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="ga67aaa7bdf2da1595ab1b25059119242c" name="ga67aaa7bdf2da1595ab1b25059119242c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga67aaa7bdf2da1595ab1b25059119242c">&#9670;&#160;</a></span>print</h2>
+<a id="ga4dbd7a323f25eecf13e0b10059f52ea9" name="ga4dbd7a323f25eecf13e0b10059f52ea9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4dbd7a323f25eecf13e0b10059f52ea9">&#9670;&#160;</a></span>print</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,7 +175,7 @@ String printing</h3>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">detail::PrintFn mimicpp::print {}</td>
+          <td class="memname"><a class="el" href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html">printing::PrintFn</a> mimicpp::print {}</td>
         </tr>
       </table>
   </td>
@@ -195,7 +194,7 @@ String printing</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Jan 25 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Jan 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

@@ -97,34 +97,12 @@ $(function(){initNavTree('de/d62/_state_printer_8hpp.html','../../'); initResiza
 </div>
 
 <div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">StatePrinter.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d8/dd2/_config_8hpp_source.html">mimic++/Config.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d9/dc5/_string_8hpp_source.html">mimic++/String.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/d32/_type_traits_8hpp_source.html">mimic++/TypeTraits.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d4/d2c/_utility_8hpp_source.html">mimic++/Utility.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d5/dec/_format_8hpp_source.html">mimic++/printing/Format.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../de/d4b/_path_printer_8hpp_source.html">mimic++/printing/PathPrinter.hpp</a>&quot;</code><br />
-<code>#include &lt;bit&gt;</code><br />
-<code>#include &lt;concepts&gt;</code><br />
-<code>#include &lt;cstddef&gt;</code><br />
-<code>#include &lt;functional&gt;</code><br />
-<code>#include &lt;iterator&gt;</code><br />
-<code>#include &lt;optional&gt;</code><br />
-<code>#include &lt;ranges&gt;</code><br />
-<code>#include &lt;source_location&gt;</code><br />
-<code>#include &lt;stdexcept&gt;</code><br />
-<code>#include &lt;string&gt;</code><br />
-<code>#include &lt;string_view&gt;</code><br />
-<code>#include &lt;tuple&gt;</code><br />
-<code>#include &lt;type_traits&gt;</code><br />
-<code>#include &lt;utility&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../da/d76/_print_8hpp_source.html">mimic++/printing/state/Print.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dd/d25/_c_09_0923_backports_8hpp_source.html">mimic++/printing/state/C++23Backports.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/d67/_common_types_8hpp_source.html">mimic++/printing/state/CommonTypes.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for StatePrinter.hpp:</div>
 <div class="dyncontent">
@@ -137,34 +115,13 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <p><a href="../../de/d62/_state_printer_8hpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html">mimicpp::format::formatter&lt; mimicpp::ValueCategory, mimicpp::CharT &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html">mimicpp::format::formatter&lt; mimicpp::Constness, mimicpp::CharT &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d84/namespacemimicpp_1_1custom.html">mimicpp::custom</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ga67aaa7bdf2da1595ab1b25059119242c" id="r_ga67aaa7bdf2da1595ab1b25059119242c"><td class="memItemLeft" align="right" valign="top">constexpr detail::PrintFn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga67aaa7bdf2da1595ab1b25059119242c">mimicpp::print</a> {}</td></tr>
-<tr class="memdesc:ga67aaa7bdf2da1595ab1b25059119242c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, converting the given object to its textual representation.  <br /></td></tr>
-<tr class="separator:ga67aaa7bdf2da1595ab1b25059119242c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_092aa99ea44c2ea5c05e2b02d3022b6c.html">printing</a></li><li class="navelem"><a class="el" href="../../de/d62/_state_printer_8hpp.html">StatePrinter.hpp</a></li>
-    <li class="footer">Generated on Sat Jan 25 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Jan 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

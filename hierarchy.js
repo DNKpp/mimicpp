@@ -73,10 +73,6 @@ var hierarchy =
     [ "mimicpp::MatchReport::Finalize", "d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html", null ],
     [ "mimicpp::stacktrace::find_backend", "dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend.html", null ],
     [ "mimicpp::for_base_tag< Base >", "d6/da7/structmimicpp_1_1for__base__tag.html", null ],
-    [ "formatter", null, [
-      [ "mimicpp::format::formatter< mimicpp::Constness, mimicpp::CharT >", "d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html", null ],
-      [ "mimicpp::format::formatter< mimicpp::ValueCategory, mimicpp::CharT >", "db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html", null ]
-    ] ],
     [ "mimicpp::call::Info< Return, Args >", "d4/d44/classmimicpp_1_1call_1_1_info.html", null ],
     [ "mimicpp::call::info_for_signature< Signature >", "d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html", null ],
     [ "mimicpp::call::info_for_signature< Return(Args...)>", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html", null ],
@@ -107,6 +103,7 @@ var hierarchy =
     [ "mimicpp::stacktrace::NullBackend", "d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html", null ],
     [ "mimicpp::PredicateMatcher< Predicate, AdditionalArgs >", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", null ],
     [ "mimicpp::custom::Printer< typename >", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],
+    [ "mimicpp::printing::PrintFn", "d1/db9/classmimicpp_1_1printing_1_1_print_fn.html", null ],
     [ "mimicpp::priority_tag< priority >", "d1/d9f/structmimicpp_1_1priority__tag.html", null ],
     [ "mimicpp::priority_tag< 0 >", "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html", null ],
     [ "mimicpp::sequence::rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", null ],
