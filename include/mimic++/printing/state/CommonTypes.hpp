@@ -50,7 +50,7 @@ namespace mimicpp::printing::detail::state
     struct common_type_printer<std::nullopt_t>
     {
         template <print_iterator OutIter>
-        static constexpr OutIter print(OutIter out, [[maybe_unused]] std::nullopt_t const)
+        static OutIter print(OutIter out, [[maybe_unused]] std::nullopt_t const)
         {
             return format::format_to(std::move(out), "nullopt");
         }
@@ -75,7 +75,7 @@ namespace mimicpp::printing::detail::state
     struct common_type_printer<std::nullptr_t>
     {
         template <print_iterator OutIter>
-        static constexpr OutIter print(OutIter out, [[maybe_unused]] std::nullptr_t const& ptr)
+        static OutIter print(OutIter out, [[maybe_unused]] std::nullptr_t const& ptr)
         {
             return format::format_to(std::move(out), "nullptr");
         }
@@ -85,7 +85,7 @@ namespace mimicpp::printing::detail::state
     struct common_type_printer<T*>
     {
         template <print_iterator OutIter>
-        static constexpr OutIter print(OutIter out, T const* ptr)
+        static OutIter print(OutIter out, T const* ptr)
         {
             if (auto const* inner = std::to_address(ptr))
             {

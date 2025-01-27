@@ -24,7 +24,7 @@ namespace mimicpp::printing::detail::state
         print_iterator OutIter,
         typename T,
         printer_for<OutIter, T> Printer = custom::Printer<std::remove_const_t<T>>>
-    OutIter print(
+    constexpr OutIter print(
         [[maybe_unused]] priority_tag<4> const,
         OutIter out,
         T& value)
@@ -38,7 +38,7 @@ namespace mimicpp::printing::detail::state
         print_iterator OutIter,
         typename T,
         printer_for<OutIter, T> Printer = state::common_type_printer<std::remove_const_t<T>>>
-    OutIter print(
+    constexpr OutIter print(
         [[maybe_unused]] priority_tag<3> const,
         OutIter out,
         T& value)
@@ -52,7 +52,7 @@ namespace mimicpp::printing::detail::state
         print_iterator OutIter,
         typename T,
         printer_for<OutIter, T> Printer = state::cxx23_backport_printer<std::remove_const_t<T>>>
-    OutIter print(
+    constexpr OutIter print(
         [[maybe_unused]] priority_tag<2> const,
         OutIter out,
         T& value)
@@ -94,7 +94,7 @@ namespace mimicpp::printing
     {
     public:
         template <print_iterator OutIter>
-        OutIter operator()(OutIter out, auto&& value) const
+        constexpr OutIter operator()(OutIter out, auto&& value) const
         {
             static_assert(
                 requires {
