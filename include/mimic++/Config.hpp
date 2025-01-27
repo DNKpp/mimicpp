@@ -8,7 +8,12 @@
 
 #pragma once
 
+#include <cstdint>
 #include <version>
+
+#if INTPTR_MAX < INT64_MAX
+    #define MIMICPP_DETAIL_IS_32BIT 1
+#endif
 
 #ifdef _LIBCPP_VERSION
     #define MIMICPP_DETAIL_USES_LIBCXX 1
