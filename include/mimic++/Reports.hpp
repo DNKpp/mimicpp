@@ -13,6 +13,10 @@
 #include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
+#include "mimic++/reporting/CallReport.hpp"
+#include "mimic++/reporting/Fwd.hpp"
+#include "mimic++/reporting/TypeReport.hpp"
+
 #include <algorithm>
 #include <functional>
 #include <iterator>
@@ -195,48 +199,6 @@ namespace mimicpp
     }
 
     /**
-     * \brief Contains information about a specific (potentially cv-ref-qualified) type.
-     */
-    class TypeReport
-    {
-    private:
-        using make_name_fn = StringT (*)();
-
-        template <typename T>
-        [[nodiscard]]
-        static constexpr StringT make_type_name()
-        {
-            return mimicpp::print_type<T>();
-        }
-
-    public:
-        template <typename T>
-        [[nodiscard]]
-        static constexpr TypeReport make() noexcept
-        {
-            return TypeReport{&TypeReport::make_type_name<T>};
-        }
-
-        [[nodiscard]]
-        constexpr StringT name() const
-        {
-            return std::invoke(m_MakeNameFn);
-        }
-
-        [[nodiscard]]
-        friend bool operator==(TypeReport const&, TypeReport const&) = default;
-
-    private:
-        make_name_fn m_MakeNameFn;
-
-        explicit TypeReport(make_name_fn const makeFn) noexcept
-            : m_MakeNameFn{makeFn}
-        {
-            assert(m_MakeNameFn && "Null make-function is not allowed.");
-        }
-    };
-
-    /**
      * \brief Contains the extracted info from a typed ``call::Info``.
      * \details This type is meant to be used to communicate with independent domains via the reporter interface and thus contains
      * the generic information as plain ``std`` types (e.g. the return type is provided as ``std::type_index`` instead of an actual
@@ -248,14 +210,14 @@ namespace mimicpp
         class Arg
         {
         public:
-            TypeReport typeInfo;
+            reporting::TypeReport typeInfo;
             StringT stateString;
 
             [[nodiscard]]
             friend bool operator==(const Arg&, const Arg&) = default;
         };
 
-        TypeReport returnTypeInfo;
+        reporting::TypeReport returnTypeInfo;
         std::vector<Arg> argDetails{};
         std::source_location fromLoc{};
         Stacktrace stacktrace{stacktrace::NullBackend{}};
@@ -287,12 +249,12 @@ namespace mimicpp
     CallReport make_call_report(call::Info<Return, Params...> callInfo)
     {
         return CallReport{
-            .returnTypeInfo = TypeReport::make<Return>(),
+            .returnTypeInfo = reporting::TypeReport::make<Return>(),
             .argDetails = std::apply(
                 [](auto&... args) {
                     return std::vector<CallReport::Arg>{
                         CallReport::Arg{
-                                        .typeInfo = TypeReport::make<Params>(),
+                                        .typeInfo = reporting::TypeReport::make<Params>(),
                                         .stateString = mimicpp::print(args.get())}
                         ...
                     };

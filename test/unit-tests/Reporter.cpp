@@ -11,6 +11,8 @@
 
 using namespace mimicpp;
 
+using reporting::TypeReport;
+
 namespace
 {
     class ReporterMock
