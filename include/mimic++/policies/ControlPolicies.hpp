@@ -9,8 +9,8 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Reports.hpp"
 #include "mimic++/Sequence.hpp"
+#include "mimic++/reporting/ExpectationReport.hpp"
 
 #include <cassert>
 #include <limits>
@@ -89,7 +89,7 @@ namespace mimicpp
     namespace detail
     {
         [[nodiscard]]
-        control_state_t make_control_state(
+        reporting::control_state_t make_control_state(
             const int min,
             const int max,
             const int count,
@@ -97,7 +97,7 @@ namespace mimicpp
         {
             if (count == max)
             {
-                return state_saturated{
+                return reporting::state_saturated{
                     .min = min,
                     .max = max,
                     .count = count,
@@ -134,7 +134,7 @@ namespace mimicpp
 
             if (!std::ranges::empty(inapplicable))
             {
-                return state_inapplicable{
+                return reporting::state_inapplicable{
                     .min = min,
                     .max = max,
                     .count = count,
@@ -142,7 +142,7 @@ namespace mimicpp
                     .inapplicableSequences = std::move(inapplicable)};
             }
 
-            return state_applicable{
+            return reporting::state_applicable{
                 .min = min,
                 .max = max,
                 .count = count,
@@ -209,7 +209,7 @@ namespace mimicpp
         }
 
         [[nodiscard]]
-        control_state_t state() const
+        reporting::control_state_t state() const
         {
             return detail::make_control_state(
                 m_Min,

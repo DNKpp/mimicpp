@@ -9,6 +9,10 @@
 #include "TestTypes.hpp"
 
 using namespace mimicpp;
+using reporting::control_state_t;
+using reporting::state_applicable;
+using reporting::state_inapplicable;
+using reporting::state_saturated;
 
 TEST_CASE(
     "TimesConfig has exactly 1 as limit by default.",

@@ -5,12 +5,15 @@
 
 #pragma once
 
-#include "mimic++/Reporter.hpp"
+#include "mimic++/reporting/CallReport.hpp"
+#include "mimic++/reporting/DefaultReporter.hpp"
+#include "mimic++/reporting/ExpectationReport.hpp"
+#include "mimic++/reporting/GlobalReporter.hpp"
+#include "mimic++/reporting/IReporter.hpp"
+#include "mimic++/reporting/MatchReport.hpp"
 
-#include <any>
 #include <exception>
 #include <memory>
-#include <ranges>
 #include <vector>
 
 class NoMatchError
@@ -22,19 +25,19 @@ class NonApplicableMatchError
 };
 
 class TestReporter final
-    : public mimicpp::IReporter
+    : public mimicpp::reporting::IReporter
 {
 public:
     using call_report_t = mimicpp::reporting::CallReport;
-    using expectation_report_t = mimicpp::ExpectationReport;
-    using match_report_t = mimicpp::MatchReport;
+    using expectation_report_t = mimicpp::reporting::ExpectationReport;
+    using match_report_t = mimicpp::reporting::MatchReport;
 
     std::vector<std::tuple<call_report_t, match_report_t>> noMatchResults{};
 
     [[noreturn]]
     void report_no_matches(
         call_report_t call,
-        std::vector<mimicpp::MatchReport> matchReports) override
+        std::vector<match_report_t> matchReports) override
     {
         for (auto& exp : matchReports)
         {
@@ -51,7 +54,7 @@ public:
     [[noreturn]]
     void report_inapplicable_matches(
         call_report_t call,
-        std::vector<mimicpp::MatchReport> matchReports) override
+        std::vector<match_report_t> matchReports) override
     {
         for (auto& exp : matchReports)
         {
@@ -67,7 +70,7 @@ public:
 
     void report_full_match(
         call_report_t call,
-        mimicpp::MatchReport matchReport) noexcept override
+        match_report_t matchReport) noexcept override
     {
         fullMatchResults.emplace_back(
             std::move(call),
@@ -115,12 +118,12 @@ class ScopedReporter
 public:
     ~ScopedReporter() noexcept
     {
-        mimicpp::install_reporter<mimicpp::DefaultReporter>();
+        mimicpp::reporting::install_reporter<mimicpp::reporting::DefaultReporter>();
     }
 
     ScopedReporter() noexcept
     {
-        mimicpp::install_reporter<TestReporter>();
+        mimicpp::reporting::install_reporter<TestReporter>();
     }
 
     ScopedReporter(const ScopedReporter&) = delete;
@@ -169,6 +172,6 @@ private:
     static const TestReporter& reporter()
     {
         return dynamic_cast<const TestReporter&>(
-            *mimicpp::detail::get_reporter());
+            *mimicpp::reporting::detail::get_reporter());
     }
 };

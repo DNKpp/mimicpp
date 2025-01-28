@@ -18,19 +18,24 @@
 #include <ranges>
 #include <source_location>
 
+using namespace mimicpp;
+
 namespace
 {
     class ExpectationMock final
-        : public mimicpp::Expectation<void()>
+        : public Expectation<void()>
     {
     public:
-        using CallInfoT = mimicpp::call::info_for_signature_t<void()>;
+        using ExpectationReport = reporting::ExpectationReport;
+        using MatchReport = reporting::MatchReport;
+        using CallReport = reporting::CallReport;
+        using CallInfoT = call::info_for_signature_t<void()>;
 
-        MAKE_CONST_MOCK0(report, mimicpp::ExpectationReport(), override);
+        MAKE_CONST_MOCK0(report, ExpectationReport(), override);
         MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
         MAKE_CONST_MOCK0(from, const std::source_location&(), noexcept override);
         MAKE_CONST_MOCK0(mock_name, const mimicpp::StringT&(), noexcept override);
-        MAKE_CONST_MOCK1(matches, mimicpp::MatchReport(const CallInfoT&), override);
+        MAKE_CONST_MOCK1(matches, MatchReport(const CallInfoT&), override);
         MAKE_MOCK1(consume, void(const CallInfoT&), override);
         MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
     };
@@ -40,7 +45,7 @@ TEST_CASE(
     "mimicpp::ExpectationCollection collects expectations and reports when they are removed but unfulfilled.",
     "[expectation]")
 {
-    using StorageT = mimicpp::ExpectationCollection<void()>;
+    using StorageT = ExpectationCollection<void()>;
 
     StorageT storage{};
     auto expectation = std::make_shared<ExpectationMock>();
@@ -60,7 +65,7 @@ TEST_CASE(
 
     SECTION("When expectation is unfulfilled, it is reported.")
     {
-        const mimicpp::ExpectationReport expReport{
+        const reporting::ExpectationReport expReport{
             .timesDescription = "times description"};
 
         REQUIRE_CALL(*expectation, is_satisfied())
@@ -77,28 +82,28 @@ TEST_CASE(
 
 namespace
 {
-    inline const mimicpp::MatchReport commonNoMatchReport{
-        .controlReport = mimicpp::state_applicable{
-                                                   .min = 0,
-                                                   .max = 1337,
-                                                   .count = 0},
+    inline const reporting::MatchReport commonNoMatchReport{
+        .controlReport = reporting::state_applicable{
+                                                     .min = 0,
+                                                     .max = 1337,
+                                                     .count = 0},
         .expectationReports = {{.isMatching = false}}
     };
 
-    inline const mimicpp::MatchReport commonFullMatchReport{
-        .controlReport = mimicpp::state_applicable{
-                                                   .min = 0,
-                                                   .max = 1337,
-                                                   .count = 0},
+    inline const reporting::MatchReport commonFullMatchReport{
+        .controlReport = reporting::state_applicable{
+                                                     .min = 0,
+                                                     .max = 1337,
+                                                     .count = 0},
         .expectationReports = {}
     };
 
-    inline const mimicpp::MatchReport commonInapplicableMatchReport{
-        .controlReport = mimicpp::state_inapplicable{
-                                                     .min = 0,
-                                                     .max = 1337,
-                                                     .count = 0,
-                                                     .inapplicableSequences = {mimicpp::sequence::Tag{42}}},
+    inline const reporting::MatchReport commonInapplicableMatchReport{
+        .controlReport = reporting::state_inapplicable{
+                                                       .min = 0,
+                                                       .max = 1337,
+                                                       .count = 0,
+                                                       .inapplicableSequences = {sequence::Tag{42}}},
         .expectationReports = {}
     };
 }
@@ -168,7 +173,7 @@ TEST_CASE(
 
     SECTION("If at least one matches but is inapplicable.")
     {
-        using match_report_t = mimicpp::MatchReport;
+        using match_report_t = reporting::MatchReport;
         const auto [count, result0, result1, result2, result3] = GENERATE(
             (table<std::size_t, match_report_t, match_report_t, match_report_t, match_report_t>)({
                 {1u, commonInapplicableMatchReport,           commonNoMatchReport,           commonNoMatchReport,           commonNoMatchReport},
@@ -276,7 +281,7 @@ TEST_CASE(
     {
     };
 
-    const mimicpp::ExpectationReport throwingReport{
+    const reporting::ExpectationReport throwingReport{
         .timesDescription = "times description"};
 
     const auto matches = [&](const auto& info) {
@@ -410,7 +415,7 @@ TEST_CASE(
             ControlPolicyFake{},
             FinalizerT{}};
 
-        const mimicpp::MatchReport report = expectation.matches(call);
+        const reporting::MatchReport report = expectation.matches(call);
         REQUIRE(info == report.expectationInfo);
     }
 
@@ -431,12 +436,12 @@ TEST_CASE(
 
         SECTION("When times is applicable, call is matched.")
         {
-            const mimicpp::control_state_t controlState{
-                mimicpp::state_applicable{0, 1, 0}
+            const reporting::control_state_t controlState{
+                reporting::state_applicable{0, 1, 0}
             };
             REQUIRE_CALL(times, state())
                 .RETURN(controlState);
-            const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
+            const reporting::MatchReport matchReport = std::as_const(expectation).matches(call);
             REQUIRE(matchReport.controlReport == controlState);
             REQUIRE(mimicpp::MatchResult::full == evaluate_match_report(matchReport));
         }
@@ -444,12 +449,12 @@ TEST_CASE(
         SECTION("When times is not applicable => inapplicable.")
         {
             const auto controlState = GENERATE(
-                as<mimicpp::control_state_t>{},
-                (mimicpp::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
-                (mimicpp::state_saturated{0, 1, 1}));
+                as<reporting::control_state_t>{},
+                (reporting::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
+                (reporting::state_saturated{0, 1, 1}));
             REQUIRE_CALL(times, state())
                 .LR_RETURN(controlState);
-            const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
+            const reporting::MatchReport matchReport = std::as_const(expectation).matches(call);
             REQUIRE(matchReport.controlReport == controlState);
             REQUIRE(mimicpp::MatchResult::inapplicable == evaluate_match_report(matchReport));
         }
@@ -495,10 +500,10 @@ TEST_CASE(
             REQUIRE_CALL(policy, describe())
                 .RETURN(mimicpp::StringT{});
             const auto controlState = GENERATE(
-                as<mimicpp::control_state_t>{},
-                (mimicpp::state_applicable{0, 1, 0}),
-                (mimicpp::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
-                (mimicpp::state_saturated{0, 1, 1}));
+                as<reporting::control_state_t>{},
+                (reporting::state_applicable{0, 1, 0}),
+                (reporting::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
+                (reporting::state_saturated{0, 1, 1}));
             REQUIRE_CALL(times, state())
                 .RETURN(controlState);
             REQUIRE(mimicpp::MatchResult::none == evaluate_match_report(std::as_const(expectation).matches(call)));
@@ -509,7 +514,7 @@ TEST_CASE(
             SECTION("And when times is applicable => ok")
             {
                 REQUIRE_CALL(times, state())
-                    .RETURN(mimicpp::state_applicable{0, 1, 0});
+                    .RETURN(reporting::state_applicable{0, 1, 0});
                 REQUIRE_CALL(policy, matches(_))
                     .LR_WITH(&_1 == &call)
                     .RETURN(true);
@@ -521,9 +526,9 @@ TEST_CASE(
             SECTION("And when times not applicable => inapplicable")
             {
                 const auto controlState = GENERATE(
-                    as<mimicpp::control_state_t>{},
-                    (mimicpp::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
-                    (mimicpp::state_saturated{0, 1, 1}));
+                    as<reporting::control_state_t>{},
+                    (reporting::state_inapplicable{0, 1, 0, {}, {mimicpp::sequence::Tag{1337}}}),
+                    (reporting::state_saturated{0, 1, 1}));
                 REQUIRE_CALL(times, state())
                     .LR_RETURN(controlState);
                 REQUIRE_CALL(policy, matches(_))
@@ -555,8 +560,8 @@ TEMPLATE_TEST_CASE(
     using FinalizerT = FinalizerFake<TestType>;
     using PolicyMockT = PolicyMock<TestType>;
     using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
-    using CallInfoT = mimicpp::call::info_for_signature_t<TestType>;
-    using ExpectationReportT = mimicpp::MatchReport::Expectation;
+    using CallInfoT = call::info_for_signature_t<TestType>;
+    using ExpectationReportT = reporting::MatchReport::Expectation;
 
     const CallInfoT call{
         .args = {},
@@ -574,7 +579,7 @@ TEMPLATE_TEST_CASE(
         };
 
         REQUIRE(std::as_const(expectation).is_satisfied());
-        const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
+        const reporting::MatchReport matchReport = std::as_const(expectation).matches(call);
         REQUIRE_THAT(
             matchReport.expectationReports,
             Catch::Matchers::IsEmpty());
@@ -606,7 +611,7 @@ TEMPLATE_TEST_CASE(
                 .RETURN(true);
             REQUIRE_CALL(policy, describe())
                 .RETURN("policy description");
-            const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
+            const reporting::MatchReport matchReport = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
                 matchReport.expectationReports,
                 Catch::Matchers::RangeEquals(std::vector<ExpectationReportT>{
@@ -622,7 +627,7 @@ TEMPLATE_TEST_CASE(
                 .RETURN(false);
             REQUIRE_CALL(policy, describe())
                 .RETURN("policy description");
-            const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
+            const reporting::MatchReport matchReport = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
                 matchReport.expectationReports,
                 Catch::Matchers::RangeEquals(std::vector<ExpectationReportT>{
@@ -683,7 +688,7 @@ TEMPLATE_TEST_CASE(
             REQUIRE_CALL(policy2, describe())
                 .RETURN("policy2 description");
 
-            const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
+            const reporting::MatchReport matchReport = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
                 matchReport.expectationReports,
                 Catch::Matchers::UnorderedRangeEquals(
@@ -714,7 +719,7 @@ TEMPLATE_TEST_CASE(
             REQUIRE_CALL(policy2, describe())
                 .RETURN("policy2 description");
 
-            const mimicpp::MatchReport matchReport = std::as_const(expectation).matches(call);
+            const reporting::MatchReport matchReport = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
                 matchReport.expectationReports,
                 Catch::Matchers::UnorderedRangeEquals(
@@ -759,7 +764,7 @@ TEST_CASE(
                 ControlPolicyFake{},
                 FinalizerPolicyT{}};
 
-        const mimicpp::ExpectationReport report = expectation.report();
+        const reporting::ExpectationReport report = expectation.report();
         REQUIRE(info == report.expectationInfo);
     }
 
@@ -783,9 +788,9 @@ TEST_CASE(
                 FinalizerPolicyT{}};
 
         REQUIRE_CALL(controlPolicy, state())
-            .RETURN(mimicpp::state_applicable{0, 1, 0});
+            .RETURN(reporting::state_applicable{0, 1, 0});
 
-        const mimicpp::ExpectationReport report = expectation.report();
+        const reporting::ExpectationReport report = expectation.report();
         REQUIRE(report.timesDescription);
         REQUIRE_THAT(
             *report.timesDescription,
@@ -814,7 +819,7 @@ TEST_CASE(
         REQUIRE_CALL(policy, describe())
             .RETURN("expectation description");
 
-        const mimicpp::ExpectationReport report = expectation.report();
+        const reporting::ExpectationReport report = expectation.report();
         REQUIRE_THAT(
             report.expectationDescriptions,
             Matches::SizeIs(1));

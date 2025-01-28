@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "mimic++/Call.hpp"
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Fwd.hpp"

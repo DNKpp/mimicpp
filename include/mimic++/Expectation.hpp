@@ -9,11 +9,13 @@
 #pragma once
 
 #include "mimic++/Call.hpp"
-#include "mimic++/Reporter.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
 #include "mimic++/reporting/CallReport.hpp"
+#include "mimic++/reporting/ExpectationReport.hpp"
+#include "mimic++/reporting/GlobalReporter.hpp"
+#include "mimic++/reporting/MatchReport.hpp"
 
 #include <cassert>
 #include <concepts>
@@ -29,7 +31,7 @@
 namespace mimicpp::detail
 {
     template <typename Return, typename... Params, typename Signature>
-    std::optional<MatchReport> make_match_report(
+    std::optional<reporting::MatchReport> make_match_report(
         const call::Info<Return, Params...>& call,
         const Expectation<Signature>& expectation) noexcept
     {
@@ -39,7 +41,7 @@ namespace mimicpp::detail
         }
         catch (...)
         {
-            report_unhandled_exception(
+            reporting::detail::report_unhandled_exception(
                 reporting::make_call_report(call),
                 expectation.report(),
                 std::current_exception());
@@ -49,11 +51,11 @@ namespace mimicpp::detail
     }
 
     template <typename Signature>
-    constexpr auto pick_best_match(std::vector<std::tuple<Expectation<Signature>&, MatchReport>>& matches)
+    constexpr auto pick_best_match(std::vector<std::tuple<Expectation<Signature>&, reporting::MatchReport>>& matches)
     {
         constexpr auto ratings = [](const auto& el) noexcept -> const auto& {
-            return std::get<state_applicable>(
-                       std::get<MatchReport>(el).controlReport)
+            return std::get<reporting::state_applicable>(
+                       std::get<reporting::MatchReport>(el).controlReport)
                 .sequenceRatings;
         };
 
@@ -155,7 +157,7 @@ namespace mimicpp
          * \return A newly generated report.
          */
         [[nodiscard]]
-        virtual ExpectationReport report() const = 0;
+        virtual reporting::ExpectationReport report() const = 0;
 
         /**
          * \brief Queries all policies, whether they are satisfied.
@@ -170,7 +172,7 @@ namespace mimicpp
          * \return Returns true, if all policies accept the call.
          */
         [[nodiscard]]
-        virtual MatchReport matches(const CallInfoT& call) const = 0;
+        virtual reporting::MatchReport matches(const CallInfoT& call) const = 0;
 
         /**
          * \brief Informs all policies, that the given call has been accepted.
@@ -293,7 +295,7 @@ namespace mimicpp
 
             if (!expectation->is_satisfied())
             {
-                detail::report_unfulfilled_expectation(
+                reporting::detail::report_unfulfilled_expectation(
                     expectation->report());
             }
         }
@@ -310,9 +312,9 @@ namespace mimicpp
         [[nodiscard]]
         ReturnT handle_call(CallInfoT call)
         {
-            std::vector<std::tuple<ExpectationT&, MatchReport>> matches{};
-            std::vector<MatchReport> noMatches{};
-            std::vector<MatchReport> inapplicableMatches{};
+            std::vector<std::tuple<ExpectationT&, reporting::MatchReport>> matches{};
+            std::vector<reporting::MatchReport> noMatches{};
+            std::vector<reporting::MatchReport> inapplicableMatches{};
 
             for (const std::scoped_lock lock{m_ExpectationsMx};
                  auto& exp : m_Expectations | std::views::reverse)
@@ -347,7 +349,7 @@ namespace mimicpp
                 // Maybe we can prevent the copy here, but we should keep the instruction order as-is, because
                 // in cases of a throwing finalizer, we might introduce bugs. At least there are some tests, which
                 // will fail if done wrong.
-                detail::report_full_match(
+                reporting::detail::report_full_match(
                     reporting::make_call_report(call),
                     std::move(report));
                 exp.consume(call);
@@ -356,12 +358,12 @@ namespace mimicpp
 
             if (!std::ranges::empty(inapplicableMatches))
             {
-                detail::report_inapplicable_matches(
+                reporting::detail::report_inapplicable_matches(
                     reporting::make_call_report(std::move(call)),
                     std::move(inapplicableMatches));
             }
 
-            detail::report_no_matches(
+            reporting::detail::report_no_matches(
                 reporting::make_call_report(std::move(call)),
                 std::move(noMatches));
         }
@@ -405,7 +407,7 @@ namespace mimicpp
                           && std::same_as<T, std::remove_cvref_t<T>>
                           && requires(T& policy) {
                                  { std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-                                 { std::as_const(policy).state() } -> std::convertible_to<control_state_t>;
+                                 { std::as_const(policy).state() } -> std::convertible_to<reporting::control_state_t>;
                                  policy.consume();
                              };
 
@@ -467,9 +469,9 @@ namespace mimicpp
          * \copydoc Expectation::report
          */
         [[nodiscard]]
-        ExpectationReport report() const override
+        reporting::ExpectationReport report() const override
         {
-            return ExpectationReport{
+            return reporting::ExpectationReport{
                 .expectationInfo = m_Info,
                 .finalizerDescription = std::nullopt,
                 .timesDescription = describe_times(),
@@ -499,9 +501,9 @@ namespace mimicpp
          * \copydoc Expectation::matches
          */
         [[nodiscard]]
-        MatchReport matches(const CallInfoT& call) const override
+        reporting::MatchReport matches(const CallInfoT& call) const override
         {
-            return MatchReport{
+            return reporting::MatchReport{
                 .expectationInfo = m_Info,
                 .finalizeReport = {std::nullopt},
                 .controlReport = m_ControlPolicy.state(),
@@ -560,21 +562,21 @@ namespace mimicpp
             StringStreamT ss{};
             std::visit(
                 std::bind_front(
-                    detail::control_state_printer{},
+                    reporting::detail::control_state_printer{},
                     std::ostreambuf_iterator{ss}),
                 m_ControlPolicy.state());
             return std::move(ss).str();
         }
 
         [[nodiscard]]
-        std::vector<MatchReport::Expectation> gather_expectation_reports(const CallInfoT& call) const
+        std::vector<reporting::MatchReport::Expectation> gather_expectation_reports(const CallInfoT& call) const
         {
             return std::apply(
                 [&](const auto&... policies) {
-                    return std::vector<MatchReport::Expectation>{
-                        MatchReport::Expectation{
-                                                 .isMatching = policies.matches(call),
-                                                 .description = policies.describe()}
+                    return std::vector<reporting::MatchReport::Expectation>{
+                        reporting::MatchReport::Expectation{
+                                                            .isMatching = policies.matches(call),
+                                                            .description = policies.describe()}
                         ...
                     };
                 },
