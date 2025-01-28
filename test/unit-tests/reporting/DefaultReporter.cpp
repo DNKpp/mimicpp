@@ -1,0 +1,204 @@
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
+#include "mimic++/reporting/DefaultReporter.hpp"
+
+#include "SuppressionMacros.hpp"
+
+using namespace mimicpp;
+using reporting::CallReport;
+using reporting::ExpectationReport;
+using reporting::MatchReport;
+using reporting::TypeReport;
+
+// required for the REQUIRE_THROWS_AS tests
+START_WARNING_SUPPRESSION
+SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-case
+
+    TEST_CASE(
+        "DefaultReporter throws exceptions on expectation violations.",
+        "[reporting]")
+{
+    namespace Matches = Catch::Matchers;
+
+    std::unique_ptr<StringStreamT> out{};
+    if (GENERATE(true, false))
+    {
+        out = std::make_unique<StringStreamT>();
+    }
+
+    reporting::DefaultReporter reporter{
+        out.get()};
+
+    const CallReport callReport{
+        .returnTypeInfo = TypeReport::make<void>(),
+        .fromLoc = std::source_location::current(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    SECTION("When none matches are reported, UnmatchedCallT is thrown.")
+    {
+        REQUIRE_THROWS_AS(
+            reporter.report_no_matches(
+                callReport,
+                {
+                    (MatchReport{
+                                 .controlReport = reporting::state_applicable{1, 1, 0},
+                                 .expectationReports = {{false}}}
+                    )
+        }),
+            reporting::UnmatchedCallT);
+
+        CHECKED_IF(out)
+        {
+            REQUIRE_THAT(
+                out->str(),
+                Matches::StartsWith("No match for"));
+        }
+    }
+
+    SECTION("When inapplicable matches are reported, UnmatchedCallT is thrown.")
+    {
+        REQUIRE_THROWS_AS(
+            reporter.report_inapplicable_matches(
+                callReport,
+                {MatchReport{.controlReport = reporting::state_inapplicable{1, 1, 1}}}),
+            reporting::UnmatchedCallT);
+
+        CHECKED_IF(out)
+        {
+            REQUIRE_THAT(
+                out->str(),
+                Matches::StartsWith("No applicable match for"));
+        }
+    }
+
+    SECTION("When match is reported, nothing is done.")
+    {
+        REQUIRE_NOTHROW(
+            reporter.report_full_match(
+                callReport,
+                MatchReport{
+                    .controlReport = reporting::state_applicable{1, 1, 0}
+        }));
+
+        CHECKED_IF(out)
+        {
+            REQUIRE_THAT(
+                out->str(),
+                Matches::IsEmpty());
+        }
+    }
+
+    SECTION("When unfulfilled expectation is reported.")
+    {
+        SECTION("And when there exists no uncaught exception, UnfulfilledExpectationT is thrown.")
+        {
+            REQUIRE_THROWS_AS(
+                reporter.report_unfulfilled_expectation({}),
+                reporting::UnfulfilledExpectationT);
+
+            CHECKED_IF(out)
+            {
+                REQUIRE_THAT(
+                    out->str(),
+                    Matches::StartsWith("Unfulfilled expectation:"));
+            }
+        }
+
+        SECTION("And when there exists an uncaught exception, nothing is done.")
+        {
+            struct helper
+            {
+                ~helper()
+                {
+                    rep.report_unfulfilled_expectation({});
+                }
+
+                reporting::DefaultReporter& rep;
+            };
+
+            const auto runTest = [&] {
+                helper h{reporter};
+                throw 42;
+            };
+
+            REQUIRE_THROWS_AS(
+                runTest(),
+                int);
+
+            CHECKED_IF(out)
+            {
+                REQUIRE_THAT(
+                    out->str(),
+                    Matches::IsEmpty());
+            }
+        }
+    }
+
+    SECTION("When error is reported")
+    {
+        SECTION("And when there exists no uncaught exception, Error is thrown.")
+        {
+            REQUIRE_THROWS_AS(
+                reporter.report_error({"Test"}),
+                reporting::Error<>);
+
+            CHECKED_IF(out)
+            {
+                REQUIRE_THAT(
+                    out->str(),
+                    Matches::StartsWith("Test"));
+            }
+        }
+
+        SECTION("And when there exists an uncaught exception, nothing is done.")
+        {
+            struct helper
+            {
+                ~helper()
+                {
+                    rep.report_error({"Test"});
+                }
+
+                reporting::DefaultReporter& rep;
+            };
+
+            const auto runTest = [&] {
+                helper h{reporter};
+                throw 42;
+            };
+
+            REQUIRE_THROWS_AS(
+                runTest(),
+                int);
+
+            CHECKED_IF(out)
+            {
+                REQUIRE_THAT(
+                    out->str(),
+                    Matches::IsEmpty());
+            }
+        }
+    }
+
+    SECTION("When unhandled exception is reported, nothing is done.")
+    {
+        REQUIRE_NOTHROW(
+            reporter.report_unhandled_exception(
+                callReport,
+                {},
+                std::make_exception_ptr(std::runtime_error{"Test"})));
+
+        CHECKED_IF(out)
+        {
+            REQUIRE_THAT(
+                out->str(),
+                Matches::StartsWith("Unhandled exception:"));
+        }
+    }
+}
+
+STOP_WARNING_SUPPRESSION

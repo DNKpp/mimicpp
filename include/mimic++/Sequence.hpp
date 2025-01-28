@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Printer.hpp"
-#include "mimic++/Reporter.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/printing/Format.hpp"
+#include "mimic++/reporting/GlobalReporter.hpp"
 
 #include <algorithm>
 #include <array>
@@ -99,7 +99,7 @@ namespace mimicpp::sequence
 
                 if (iter != m_Entries.cend())
                 {
-                    mimicpp::detail::report_error(
+                    reporting::detail::report_error(
                         format::format(
                             "Unfulfilled sequence. {} out of {} expectation(s) are satisfied.",
                             std::ranges::distance(m_Entries.cbegin(), iter),

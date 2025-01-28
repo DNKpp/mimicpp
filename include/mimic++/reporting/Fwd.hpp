@@ -10,6 +10,9 @@
 
 namespace mimicpp::reporting
 {
+    class IReporter;
+    class DefaultReporter;
+
     class TypeReport;
     class CallReport;
     class ExpectationReport;

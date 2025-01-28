@@ -9,4 +9,8 @@ target_sources(${TARGET_NAME}
     "ExpectationReport.cpp"
     "MatchReport.cpp"
     "TypeReport.cpp"
+
+    "BasicReporter.cpp"
+    "DefaultReporter.cpp"
+    "GlobalReporter.cpp"
 )
