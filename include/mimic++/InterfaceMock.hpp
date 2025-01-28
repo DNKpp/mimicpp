@@ -250,9 +250,8 @@ namespace mimicpp::detail
     [[nodiscard]]
     StringT generate_interface_mock_name([[maybe_unused]] const auto& self, const StringViewT functionName)
     {
-        const std::type_index rtti = typeid(std::remove_cvref_t<decltype(self)>);
         StringStreamT out{};
-        out << rtti.name() << "::" << functionName;
+        out << typeid(std::remove_cvref_t<decltype(self)>).name() << "::" << functionName;
         return std::move(out).str();
     }
 }
