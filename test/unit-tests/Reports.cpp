@@ -23,7 +23,6 @@ TEMPLATE_TEST_CASE(
     using T = TestType;
 
     TypeReport const report = TypeReport::make<T>();
-    REQUIRE(std::type_index{typeid(T)} == report.type_index());
     REQUIRE_THAT(
         report.name(),
         Catch::Matchers::Equals(print_type<T>()));

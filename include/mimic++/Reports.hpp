@@ -199,44 +199,40 @@ namespace mimicpp
      */
     class TypeReport
     {
+    private:
+        using make_name_fn = StringT (*)();
+
+        template <typename T>
+        [[nodiscard]]
+        static constexpr StringT make_type_name()
+        {
+            return mimicpp::print_type<T>();
+        }
+
     public:
         template <typename T>
         [[nodiscard]]
-        static TypeReport make()
+        static constexpr TypeReport make() noexcept
         {
-            return TypeReport{typeid(T), print_type<T>()};
+            return TypeReport{&TypeReport::make_type_name<T>};
         }
 
         [[nodiscard]]
-        std::type_index type_index() const noexcept
+        constexpr StringT name() const
         {
-            return m_TypeIndex;
+            return std::invoke(m_MakeNameFn);
         }
 
         [[nodiscard]]
-        constexpr StringT const& name() const noexcept
-        {
-            return m_Name;
-        }
-
-        [[nodiscard]]
-        friend bool operator==(TypeReport const& lhs, TypeReport const& rhs) noexcept
-        {
-            return lhs.m_TypeIndex == rhs.m_TypeIndex
-                // typeid decays cv-qualifications.
-                // So, we must compare the name, too.
-                && lhs.m_Name == rhs.m_Name;
-        }
+        friend bool operator==(TypeReport const&, TypeReport const&) = default;
 
     private:
-        std::type_index m_TypeIndex;
-        StringT m_Name;
+        make_name_fn m_MakeNameFn;
 
-        explicit TypeReport(std::type_index&& index, StringT&& name) noexcept
-            : m_TypeIndex{std::move(index)},
-              m_Name{std::move(name)}
+        explicit TypeReport(make_name_fn const makeFn) noexcept
+            : m_MakeNameFn{makeFn}
         {
-            assert(!m_Name.empty() && "Type name must not be empty.");
+            assert(m_MakeNameFn && "Null make-function is not allowed.");
         }
     };
 
