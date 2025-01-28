@@ -85,14 +85,14 @@ TEST_SUITE("adapter::doctest")
     {
         g_SuccessCounter = 0;
 
-        mimicpp::detail::doctest::send_success("Success");
+        mimicpp::reporting::detail::doctest::send_success("Success");
 
         REQUIRE(g_SuccessCounter == 1);
     }
 
     TEST_CASE("doctest::send_warning notifies Doctest.")
     {
-        mimicpp::detail::doctest::send_warning("Warning");
+        mimicpp::reporting::detail::doctest::send_warning("Warning");
 
         REQUIRE(g_WarningCounter == 1);
     }
@@ -101,6 +101,6 @@ TEST_SUITE("adapter::doctest")
         "doctest::send_fail notifies Doctest for failures and aborts."
         * doctest::should_fail{})
     {
-        mimicpp::detail::doctest::send_fail("Fail");
+        mimicpp::reporting::detail::doctest::send_fail("Fail");
     }
 }

@@ -13,12 +13,12 @@ BOOST_AUTO_TEST_SUITE(SuccessSuite)
 
 BOOST_AUTO_TEST_CASE(ReportSuccess)
 {
-    mimicpp::detail::boost_test::send_success("Report Success");
+    mimicpp::reporting::detail::boost_test::send_success("Report Success");
 }
 
 BOOST_AUTO_TEST_CASE(ReportWarning)
 {
-    mimicpp::detail::boost_test::send_warning("Report Warning");
+    mimicpp::reporting::detail::boost_test::send_warning("Report Warning");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
@@ -31,7 +31,7 @@ SUPPRESS_UNREACHABLE_CODE
 
 BOOST_AUTO_TEST_CASE(ReportFail)
 {
-    mimicpp::detail::boost_test::send_fail("Report fail");
+    mimicpp::reporting::detail::boost_test::send_fail("Report fail");
 }
 
 STOP_WARNING_SUPPRESSION

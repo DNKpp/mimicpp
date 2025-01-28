@@ -85,7 +85,7 @@ TEST(
 
     g_SuccessCounter = 0;
 
-    mimicpp::detail::gtest::send_success("Test");
+    mimicpp::reporting::detail::gtest::send_success("Test");
 
     EXPECT_EQ(g_SuccessCounter, 1);
 }
@@ -94,7 +94,7 @@ TEST(
     GTestReporter,
     ReportWarning)
 {
-    mimicpp::detail::gtest::send_warning("Test");
+    mimicpp::reporting::detail::gtest::send_warning("Test");
 
     // nothing to do
 }
@@ -104,6 +104,6 @@ TEST(
     ReportFail)
 {
     EXPECT_FATAL_FAILURE(
-        EXPECT_ANY_THROW(mimicpp::detail::gtest::send_fail("Test")),
+        EXPECT_ANY_THROW(mimicpp::reporting::detail::gtest::send_fail("Test")),
         "Test");
 }

@@ -48,7 +48,7 @@ TEST_CASE(
 {
     g_SuccessCounter = 0;
 
-    mimicpp::detail::catch2::send_success("Test");
+    mimicpp::reporting::detail::catch2::send_success("Test");
 
     REQUIRE(g_SuccessCounter == 1);
 }
@@ -57,7 +57,7 @@ TEST_CASE(
     "catch2::send_warning notifies Catch2.",
     "[adapter][adapter::catch2]")
 {
-    mimicpp::detail::catch2::send_warning("Test");
+    mimicpp::reporting::detail::catch2::send_warning("Test");
 
     // not testable
 }
@@ -66,7 +66,7 @@ TEST_CASE(
     "catch2::send_fail notifies Catch2 for failures and aborts.",
     "[!shouldfail][adapter][adapter::catch2]")
 {
-    mimicpp::detail::catch2::send_fail("Test");
+    mimicpp::reporting::detail::catch2::send_fail("Test");
 }
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION

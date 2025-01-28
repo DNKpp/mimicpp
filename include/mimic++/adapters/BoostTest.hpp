@@ -8,8 +8,9 @@
 
 #pragma once
 
-#if __has_include("mimic++/Reporter.hpp")
-    #include "mimic++/Reporter.hpp"
+#if __has_include("mimic++/Reporting.hpp")
+    #include "mimic++/Reporting.hpp"
+    #include "mimic++/Utility.hpp"
 #elif not defined(MIMICPP_VERSION)
     #error "It appears that the test-adapter is not included in the mimic++ project or package." \
         "If you plan to use it alongside the mimic++-amalgamated header, please ensure to include the adapter-header afterwards."
@@ -21,7 +22,7 @@
     #error "Unable to find Boost.Test includes."
 #endif
 
-namespace mimicpp::detail::boost_test
+namespace mimicpp::reporting::detail::boost_test
 {
     struct failure
     {
@@ -48,7 +49,7 @@ namespace mimicpp::detail::boost_test
     }
 }
 
-namespace mimicpp
+namespace mimicpp::reporting
 {
     // GCOVR_EXCL_START
 
@@ -68,7 +69,7 @@ namespace mimicpp
     // GCOVR_EXCL_STOP
 }
 
-namespace mimicpp::detail::boost_test
+namespace mimicpp::reporting::detail::boost_test
 {
     [[maybe_unused]]
     inline const ReporterInstaller<BoostTestReporterT> installer{};
