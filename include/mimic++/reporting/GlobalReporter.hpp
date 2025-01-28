@@ -28,7 +28,7 @@ namespace mimicpp::reporting::detail
     inline std::unique_ptr<IReporter>& get_reporter() noexcept
     {
         static std::unique_ptr<IReporter> reporter{
-            std::make_unique<DefaultReporter>(&std::cerr)};
+            std::make_unique<DefaultReporter>(std::cerr)};
         return reporter;
     }
 

@@ -9,6 +9,8 @@
 #pragma once
 
 #include "mimic++/reporting/BasicReporter.hpp"
+#include "mimic++/reporting/CallReport.hpp"
+#include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/reporting/MatchReport.hpp"
 
@@ -33,8 +35,11 @@ namespace mimicpp::reporting
     {
     public:
         [[nodiscard]]
-        explicit DefaultReporter(std::ostream* out = nullptr) noexcept
-            : m_Out{out}
+        DefaultReporter() = default;
+
+        [[nodiscard]]
+        explicit DefaultReporter(std::ostream& out) noexcept
+            : m_Out{std::addressof(out)}
         {
         }
 
@@ -138,7 +143,7 @@ namespace mimicpp::reporting
         }
 
     private:
-        std::ostream* m_Out;
+        std::ostream* m_Out{};
     };
 }
 

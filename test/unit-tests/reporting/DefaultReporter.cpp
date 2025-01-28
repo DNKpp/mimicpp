@@ -23,14 +23,21 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 {
     namespace Matches = Catch::Matchers;
 
-    std::unique_ptr<StringStreamT> out{};
-    if (GENERATE(true, false))
-    {
-        out = std::make_unique<StringStreamT>();
-    }
+    auto [reporter, out] = std::invoke(
+        [] {
+            std::unique_ptr<StringStreamT> ss{};
+            if (GENERATE(true, false))
+            {
+                ss = std::make_unique<StringStreamT>();
+                return std::tuple{
+                    reporting::DefaultReporter{*ss},
+                    std::move(ss)};
+            }
 
-    reporting::DefaultReporter reporter{
-        out.get()};
+            return std::tuple{
+                reporting::DefaultReporter{},
+                std::move(ss)};
+        });
 
     const CallReport callReport{
         .returnTypeInfo = TypeReport::make<void>(),
