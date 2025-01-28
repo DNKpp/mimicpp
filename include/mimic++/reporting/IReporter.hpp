@@ -8,11 +8,10 @@
 
 #pragma once
 
-#include "mimic++/Reports.hpp"
-#include "mimic++/reporting/CallReport.hpp"
+#include "mimic++/reporting/Fwd.hpp"
 
-#include <vector>
 #include <exception>
+#include <vector>
 
 namespace mimicpp::reporting
 {
