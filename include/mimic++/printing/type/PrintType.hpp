@@ -23,43 +23,7 @@
 
 #ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 
-    #include <regex>
-
-namespace mimicpp
-{
-    using RegexT = std::regex;
-}
-
-namespace mimicpp::printing::detail
-{
-    inline StringT regex_replace_all(StringT str, const RegexT& regex, const StringViewT fmt)
-    {
-        using match_result_t = std::match_results<StringT::const_iterator>;
-
-        auto processedIter = str.cbegin();
-        while (processedIter != str.cend())
-        {
-            if (match_result_t match{};
-                std::regex_search(processedIter, str.cend(), match, regex))
-            {
-                const auto matchBegin = match[0].first;
-                const auto matchEnd = match[0].second;
-                str.replace(matchBegin, matchEnd, fmt);
-
-                // just advance by one, so that we can find matches which involves the replaced fmt
-                // like: `> > >` with regex `> >` and fmt = `>>`
-                //      => `>> >` => `>>>`
-                processedIter = std::ranges::next(matchBegin);
-            }
-            else
-            {
-                processedIter = str.cend();
-            }
-        }
-
-        return str;
-    }
-}
+    #include "mimic++/utilities/Regex.hpp"
 
     #if MIMICPP_DETAIL_IS_GCC \
         || MIMICPP_DETAIL_IS_CLANG
@@ -91,7 +55,7 @@ namespace mimicpp::printing::detail
     inline StringT prettify_type_name(StringT name)
     {
         static const RegexT unifyClosingAngleBrackets{R"(\>\s*\>)"};
-        name = regex_replace_all(name, unifyClosingAngleBrackets, ">>");
+        name = util::regex_replace_all(std::move(name), unifyClosingAngleBrackets, StringViewT{">>"});
 
         #if MIMICPP_DETAIL_USES_LIBCXX
         static const RegexT handleStdNamespace{"std::__1::"};
@@ -120,7 +84,7 @@ namespace mimicpp::printing::detail
     inline StringT prettify_type_name(StringT name)
     {
         static const RegexT unifyClosingAngleBrackets{R"(\>\s*\>)"};
-        name = regex_replace_all(name, unifyClosingAngleBrackets, ">>");
+        name = util::regex_replace_all(std::move(name), unifyClosingAngleBrackets, StringViewT{">>"});
 
         static const RegexT unifyComma{R"(\s*,\s*)"};
         name = std::regex_replace(name, unifyComma, ", ");
