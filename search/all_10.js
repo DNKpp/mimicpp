@@ -14,15 +14,17 @@ var searchData=
   ['print_2ehpp_11',['Print.hpp',['../da/d76/_print_8hpp.html',1,'']]],
   ['print_5fiterator_12',['print_iterator',['../d3/d26/conceptmimicpp_1_1print__iterator.html',1,'mimicpp']]],
   ['print_5fpath_13',['print_path',['../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f',1,'mimicpp']]],
-  ['print_5ftype_14',['print_type',['../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#gaee62255077a2b4dc33dc009b71c88059',1,'mimicpp']]],
+  ['print_5ftype_14',['print_type',['../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#gade385e24aa5d66a888de57611065a490',1,'mimicpp']]],
   ['printer_15',['Printer',['../da/d68/classmimicpp_1_1custom_1_1_printer.html',1,'mimicpp::custom']]],
   ['printer_2ehpp_16',['Printer.hpp',['../da/dab/_printer_8hpp.html',1,'']]],
   ['printer_5ffor_17',['printer_for',['../de/dfc/conceptmimicpp_1_1printer__for.html',1,'mimicpp']]],
   ['printfn_18',['PrintFn',['../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html',1,'mimicpp::printing']]],
   ['printing_19',['printing',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'Minimal pretty type-printing'],['../d7/d26/group___p_r_i_n_t_i_n_g.html',1,'printing'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md18',1,'String printing'],['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'Support for printing']]],
   ['printings_20or_20print_20custom_20types_20',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
-  ['priority_21',['priority',['../de/d81/structmimicpp_1_1sequence_1_1rating.html#ab35a049b08e0096a5a61ed0c60c26e7b',1,'mimicpp::sequence::rating']]],
-  ['priority_5ftag_22',['priority_tag',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]],
-  ['priority_5ftag_3c_200_20_3e_23',['priority_tag&lt; 0 &gt;',['../d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html',1,'mimicpp']]],
-  ['push_24',['push',['../d5/d86/classmimicpp_1_1_expectation_collection.html#a78ffe18283eb86c491ff77fbbd787969',1,'mimicpp::ExpectationCollection']]]
+  ['printtype_2ehpp_21',['PrintType.hpp',['../da/db0/_print_type_8hpp.html',1,'']]],
+  ['printtypefn_22',['PrintTypeFn',['../d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html',1,'mimicpp::printing']]],
+  ['priority_23',['priority',['../de/d81/structmimicpp_1_1sequence_1_1rating.html#ab35a049b08e0096a5a61ed0c60c26e7b',1,'mimicpp::sequence::rating']]],
+  ['priority_5ftag_24',['priority_tag',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]],
+  ['priority_5ftag_3c_200_20_3e_25',['priority_tag&lt; 0 &gt;',['../d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html',1,'mimicpp']]],
+  ['push_26',['push',['../d5/d86/classmimicpp_1_1_expectation_collection.html#a78ffe18283eb86c491ff77fbbd787969',1,'mimicpp::ExpectationCollection']]]
 ];

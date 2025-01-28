@@ -22,7 +22,8 @@ var annotated_dup =
         [ "Throws", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws" ]
       ] ],
       [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", [
-        [ "PrintFn", "d1/db9/classmimicpp_1_1printing_1_1_print_fn.html", "d1/db9/classmimicpp_1_1printing_1_1_print_fn" ]
+        [ "PrintFn", "d1/db9/classmimicpp_1_1printing_1_1_print_fn.html", "d1/db9/classmimicpp_1_1printing_1_1_print_fn" ],
+        [ "PrintTypeFn", "d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html", "d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn" ]
       ] ],
       [ "sequence", "d8/dce/namespacemimicpp_1_1sequence.html", [
         [ "rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", "de/d81/structmimicpp_1_1sequence_1_1rating" ]

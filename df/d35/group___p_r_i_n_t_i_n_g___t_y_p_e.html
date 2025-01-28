@@ -120,10 +120,10 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:gaee62255077a2b4dc33dc009b71c88059" id="r_gaee62255077a2b4dc33dc009b71c88059"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:gaee62255077a2b4dc33dc009b71c88059"><td class="memTemplItemLeft" align="right" valign="top">constexpr printing::detail::PrintTypeFn&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaee62255077a2b4dc33dc009b71c88059">mimicpp::print_type</a> {}</td></tr>
-<tr class="memdesc:gaee62255077a2b4dc33dc009b71c88059"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, converting the given type to its textual representation.  <br /></td></tr>
-<tr class="separator:gaee62255077a2b4dc33dc009b71c88059"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gade385e24aa5d66a888de57611065a490" id="r_gade385e24aa5d66a888de57611065a490"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:gade385e24aa5d66a888de57611065a490"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html">printing::PrintTypeFn</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gade385e24aa5d66a888de57611065a490">mimicpp::print_type</a> {}</td></tr>
+<tr class="memdesc:gade385e24aa5d66a888de57611065a490"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, converting the given type to its textual representation.  <br /></td></tr>
+<tr class="separator:gade385e24aa5d66a888de57611065a490"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>State stringification occurs when an object's type is transformed into a textual representation. </p>
@@ -137,7 +137,7 @@ Variables</h2></td></tr>
 <div class="line">    std::less&lt;int&gt;,</div>
 <div class="line">    std::allocator&lt;std::pair&lt;int const, std::vector&lt;float, std::allocator&lt;float&gt;&gt;&gt;&gt;&gt;</div>
 </div><!-- fragment --><p> will be printed as <code>std::map&lt;int, std::vector&lt;float&gt;&gt;</code> which is likely how users have written it.</p>
-<h3><a class="anchor" id="autotoc_md21"></a>
+<h3><a class="anchor" id="autotoc_md19"></a>
 Customize type-stringification</h3>
 <p><code>mimic++</code> automatically converts every type into a meaningful textual representation, but users may sometimes want to customize this process. Users can create a specialization of <code><a class="el" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html" title="User may add specializations that will be utilized during type_print calls.">mimicpp::custom::TypePrinter</a></code> for their any type, which will then be prioritized over the internal conversions.</p>
 <p>Consider the following type. </p><div class="fragment"><div class="line">    <span class="keyword">struct </span>my_type</div>
@@ -149,25 +149,25 @@ Customize type-stringification</h3>
 <div class="line"><span class="keyword">class </span><a class="code hl_class" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html">mimicpp::custom::TypePrinter</a>&lt;my_type&gt;</div>
 <div class="line">{</div>
 <div class="line"><span class="keyword">public</span>:</div>
-<div class="line">    <span class="keyword">static</span> <span class="keyword">consteval</span> std::string_view name() noexcept</div>
+<div class="line">    <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(<span class="keyword">auto</span> out)</div>
 <div class="line">    {</div>
-<div class="line">        <span class="keywordflow">return</span> {<span class="stringliteral">&quot;This-Is-My-Mighty-Type&quot;</span>};</div>
+<div class="line">        <span class="keywordflow">return</span> format::format_to(out, <span class="stringliteral">&quot;This-Is-My-Mighty-Type&quot;</span>);</div>
 <div class="line">    }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-</div><!-- fragment --><p>When the name of the (potentially cv-ref qualified) <code>my_type</code> is requested via <code>print_type</code>, that specification will be used: </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::string name = <a class="code hl_variable" href="#gaee62255077a2b4dc33dc009b71c88059">mimicpp::print_type&lt;my_type&gt;</a>();</div>
+</div><!-- fragment --><p>When the name of the (potentially cv-ref qualified) <code>my_type</code> is requested via <code>print_type</code>, that specification will be used: </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::string name = <a class="code hl_variable" href="#gade385e24aa5d66a888de57611065a490">mimicpp::print_type&lt;my_type&gt;</a>();</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE_THAT(</div>
 <div class="line">        name,</div>
 <div class="line">        Catch::Matchers::Equals(<span class="stringliteral">&quot;This-Is-My-Mighty-Type&quot;</span>));</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">const</span> std::string qualifiedName = <a class="code hl_variable" href="#gaee62255077a2b4dc33dc009b71c88059">mimicpp::print_type&lt;my_type* const&amp;&amp;&gt;</a>();</div>
+<div class="line">    <span class="keyword">const</span> std::string qualifiedName = <a class="code hl_variable" href="#gade385e24aa5d66a888de57611065a490">mimicpp::print_type&lt;my_type* const&amp;&amp;&gt;</a>();</div>
 <div class="line">    REQUIRE_THAT(</div>
 <div class="line">        qualifiedName,</div>
 <div class="line">        Catch::Matchers::Equals(<span class="stringliteral">&quot;This-Is-My-Mighty-Type* const&amp;&amp;&quot;</span>));</div>
 </div><!-- fragment --> <h2 class="groupheader">Variable Documentation</h2>
-<a id="gaee62255077a2b4dc33dc009b71c88059" name="gaee62255077a2b4dc33dc009b71c88059"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaee62255077a2b4dc33dc009b71c88059">&#9670;&#160;</a></span>print_type</h2>
+<a id="gade385e24aa5d66a888de57611065a490" name="gade385e24aa5d66a888de57611065a490"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gade385e24aa5d66a888de57611065a490">&#9670;&#160;</a></span>print_type</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -178,7 +178,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">printing::detail::PrintTypeFn&lt;T&gt; mimicpp::print_type {}</td>
+          <td class="memname"><a class="el" href="../../d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html">printing::PrintTypeFn</a>&lt;T&gt; mimicpp::print_type {}</td>
         </tr>
       </table>
   </td>
@@ -197,7 +197,7 @@ template&lt;typename T&gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Jan 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Jan 28 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

@@ -380,15 +380,9 @@ $(function(){initNavTree('d4/d2c/_utility_8hpp_source.html','../../'); initResiz
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>                &amp;&amp; <a class="code hl_function" href="../../d1/d11/namespacemimicpp.html#a572acd40fe6bf7c5ea72c9494c8caf56">is_same_source_location</a>(lhs.sourceLocation, rhs.sourceLocation);</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>        }</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    };</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="comment">// some std::views do only provide non-const begin/end overloads, but still do not mutate the underlying storage.</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    <span class="comment">// Nevertheless, we do not want to mess around with input-ranges.</span></div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    <span class="keyword">concept </span>only_non_const_viewable_forward_range = std::ranges::forward_range&lt;T&gt;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                                                 &amp;&amp; !std::ranges::forward_range&lt;const T&gt;;</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>}</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>}</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="aconceptmimicpp_1_1explicitly__convertible__to_html"><div class="ttname"><a href="../../d0/d3a/conceptmimicpp_1_1explicitly__convertible__to.html">mimicpp::explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Utility.hpp:55</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1nothrow__explicitly__convertible__to_html"><div class="ttname"><a href="../../d7/d51/conceptmimicpp_1_1nothrow__explicitly__convertible__to.html">mimicpp::nothrow_explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Utility.hpp:61</div></div>
@@ -420,7 +414,7 @@ $(function(){initNavTree('d4/d2c/_utility_8hpp_source.html','../../'); initResiz
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d4/d2c/_utility_8hpp.html">Utility.hpp</a></li>
-    <li class="footer">Generated on Mon Jan 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Jan 28 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

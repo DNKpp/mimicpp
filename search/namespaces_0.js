@@ -13,5 +13,6 @@ var searchData=
   ['mimicpp_3a_3aprinting_10',['printing',['../d8/ddf/namespacemimicpp_1_1printing.html',1,'mimicpp']]],
   ['mimicpp_3a_3asequence_11',['sequence',['../d8/dce/namespacemimicpp_1_1sequence.html',1,'mimicpp']]],
   ['mimicpp_3a_3astacktrace_12',['stacktrace',['../df/d4b/namespacemimicpp_1_1stacktrace.html',1,'mimicpp']]],
-  ['mimicpp_3a_3athen_13',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]]
+  ['mimicpp_3a_3athen_13',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]],
+  ['mimicpp_3a_3autil_14',['util',['../d8/da3/namespacemimicpp_1_1util.html',1,'mimicpp']]]
 ];

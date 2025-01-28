@@ -104,6 +104,7 @@ var hierarchy =
     [ "mimicpp::PredicateMatcher< Predicate, AdditionalArgs >", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", null ],
     [ "mimicpp::custom::Printer< typename >", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],
     [ "mimicpp::printing::PrintFn", "d1/db9/classmimicpp_1_1printing_1_1_print_fn.html", null ],
+    [ "mimicpp::printing::PrintTypeFn< T >", "d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html", null ],
     [ "mimicpp::priority_tag< priority >", "d1/d9f/structmimicpp_1_1priority__tag.html", null ],
     [ "mimicpp::priority_tag< 0 >", "d9/d94/structmimicpp_1_1priority__tag_3_010_01_4.html", null ],
     [ "mimicpp::sequence::rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", null ],
