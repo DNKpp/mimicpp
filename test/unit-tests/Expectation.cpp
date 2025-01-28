@@ -286,7 +286,7 @@ TEST_CASE(
         }
         catch (const Exception&)
         {
-            return info.call == mimicpp::make_call_report(call)
+            return info.call == mimicpp::reporting::make_call_report(call)
                 && info.expectation == throwingReport;
         }
         catch (...)

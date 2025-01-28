@@ -13,6 +13,7 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/reporting/CallReport.hpp"
 
 #include <cassert>
 #include <concepts>
@@ -39,7 +40,7 @@ namespace mimicpp::detail
         catch (...)
         {
             report_unhandled_exception(
-                make_call_report(call),
+                reporting::make_call_report(call),
                 expectation.report(),
                 std::current_exception());
         }
@@ -347,7 +348,7 @@ namespace mimicpp
                 // in cases of a throwing finalizer, we might introduce bugs. At least there are some tests, which
                 // will fail if done wrong.
                 detail::report_full_match(
-                    make_call_report(call),
+                    reporting::make_call_report(call),
                     std::move(report));
                 exp.consume(call);
                 return exp.finalize_call(call);
@@ -356,12 +357,12 @@ namespace mimicpp
             if (!std::ranges::empty(inapplicableMatches))
             {
                 detail::report_inapplicable_matches(
-                    make_call_report(std::move(call)),
+                    reporting::make_call_report(std::move(call)),
                     std::move(inapplicableMatches));
             }
 
             detail::report_no_matches(
-                make_call_report(std::move(call)),
+                reporting::make_call_report(std::move(call)),
                 std::move(noMatches));
         }
 

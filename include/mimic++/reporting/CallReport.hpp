@@ -1,0 +1,151 @@
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef MIMICPP_REPORTING_CALL_REPORT_HPP
+#define MIMICPP_REPORTING_CALL_REPORT_HPP
+
+#include "mimic++/Call.hpp"
+#include "mimic++/Fwd.hpp"
+#include "mimic++/Stacktrace.hpp"
+#include "mimic++/Utility.hpp"
+#include "mimic++/printing/Format.hpp"
+#include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/reporting/TypeReport.hpp"
+
+#include <ranges>
+#include <source_location>
+#include <tuple>
+#include <utility>
+#include <vector>
+
+namespace mimicpp::reporting
+{
+    /**
+     * \brief Contains the extracted info from a typed ``call::Info``.
+     * \details This type is meant to be used to communicate with independent domains via the reporter interface and thus contains
+     * the generic information as plain ``std`` types (e.g. the return type is provided as ``std::type_index`` instead of an actual
+     * type).
+     */
+    class CallReport
+    {
+    public:
+        class Arg
+        {
+        public:
+            TypeReport typeInfo;
+            StringT stateString;
+
+            [[nodiscard]]
+            friend bool operator==(const Arg&, const Arg&) = default;
+        };
+
+        TypeReport returnTypeInfo;
+        std::vector<Arg> argDetails{};
+        std::source_location fromLoc{};
+        Stacktrace stacktrace{stacktrace::NullBackend{}};
+        ValueCategory fromCategory{};
+        Constness fromConstness{};
+
+        [[nodiscard]]
+        friend bool operator==(const CallReport& lhs, const CallReport& rhs)
+        {
+            return lhs.returnTypeInfo == rhs.returnTypeInfo
+                && lhs.argDetails == rhs.argDetails
+                && is_same_source_location(lhs.fromLoc, rhs.fromLoc)
+                && lhs.fromCategory == rhs.fromCategory
+                && lhs.fromConstness == rhs.fromConstness
+                && lhs.stacktrace == rhs.stacktrace;
+        }
+    };
+
+    /**
+     * \brief Generates the call report for a given call info.
+     * \tparam Return The function return type.
+     * \tparam Params The function parameter types.
+     * \param callInfo The call info.
+     * \return The call report.
+     * \relatesalso call::Info
+     */
+    template <typename Return, typename... Params>
+    [[nodiscard]]
+    CallReport make_call_report(call::Info<Return, Params...> callInfo)
+    {
+        return CallReport{
+            .returnTypeInfo = TypeReport::make<Return>(),
+            .argDetails = std::apply(
+                [](auto&... args) {
+                    return std::vector<CallReport::Arg>{
+                        CallReport::Arg{
+                                        .typeInfo = TypeReport::make<Params>(),
+                                        .stateString = mimicpp::print(args.get())}
+                        ...
+                    };
+                },
+                callInfo.args),
+            .fromLoc = std::move(callInfo.fromSourceLocation),
+            .stacktrace = std::move(callInfo.stacktrace),
+            .fromCategory = callInfo.fromCategory,
+            .fromConstness = callInfo.fromConstness};
+    }
+}
+
+template <>
+struct mimicpp::printing::detail::state::common_type_printer<mimicpp::reporting::CallReport>
+{
+    using CallReport = reporting::CallReport;
+
+    template <print_iterator OutIter>
+    static OutIter print(OutIter out, const CallReport& report)
+    {
+        out = format::format_to(
+            std::move(out),
+            "call from ");
+        if (!report.stacktrace.empty())
+        {
+            out = stacktrace::detail::print_entry(
+                std::move(out),
+                report.stacktrace,
+                0u);
+        }
+        else
+        {
+            out = mimicpp::print(
+                std::move(out),
+                report.fromLoc);
+        }
+        out = format::format_to(std::move(out), "\nconstness: ");
+        out = mimicpp::print(std::move(out), report.fromConstness);
+        out = format::format_to(std::move(out), "\nvalue category: ");
+        out = mimicpp::print(std::move(out), report.fromCategory);
+        out = format::format_to(
+            std::move(out),
+            "\nreturn type: {}\n",
+            report.returnTypeInfo.name());
+
+        if (!std::ranges::empty(report.argDetails))
+        {
+            out = format::format_to(
+                std::move(out),
+                "args:\n");
+            for (const std::size_t i : std::views::iota(0u, std::ranges::size(report.argDetails)))
+            {
+                auto const& arg = report.argDetails[i];
+                out = format::format_to(
+                    std::move(out),
+                    "\targ[{}]: {{\n"
+                    "\t\ttype: {},\n"
+                    "\t\tvalue: {}\n"
+                    "\t}},\n",
+                    i,
+                    arg.typeInfo.name(),
+                    arg.stateString);
+            }
+        }
+
+        return out;
+    }
+};
+
+#endif

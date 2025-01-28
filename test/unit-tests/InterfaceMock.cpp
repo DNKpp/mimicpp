@@ -650,7 +650,7 @@ TEST_CASE(
     mock.foo();
     const std::source_location after = std::source_location::current();
 
-    const CallReport& report = std::get<0>(reporter.full_match_reports().front());
+    const reporting::CallReport& report = std::get<0>(reporter.full_match_reports().front());
     CHECKED_IF(!report.stacktrace.empty())
     {
         REQUIRE_THAT(

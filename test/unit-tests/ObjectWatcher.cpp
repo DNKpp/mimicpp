@@ -1008,7 +1008,7 @@ TEST_CASE(
         }
         constexpr std::source_location after = std::source_location::current();
 
-        const CallReport& report = std::get<0>(reporter.full_match_reports().front());
+        const reporting::CallReport& report = std::get<0>(reporter.full_match_reports().front());
         check_stacktrace(report.stacktrace, before, after);
     }
 
@@ -1024,7 +1024,7 @@ TEST_CASE(
             WatchedT other{std::move(watched)};
             constexpr auto after = std::source_location::current();
 
-            const CallReport& report = std::get<0>(reporter.full_match_reports().front());
+            const reporting::CallReport& report = std::get<0>(reporter.full_match_reports().front());
             check_stacktrace(report.stacktrace, before, after);
         }
 
@@ -1036,7 +1036,7 @@ TEST_CASE(
             other = std::move(watched);
             constexpr auto after = std::source_location::current();
 
-            const CallReport& report = std::get<0>(reporter.full_match_reports().front());
+            const reporting::CallReport& report = std::get<0>(reporter.full_match_reports().front());
             check_stacktrace(report.stacktrace, before, after);
         }
     }

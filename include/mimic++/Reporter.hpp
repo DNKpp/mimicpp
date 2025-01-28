@@ -12,6 +12,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Printer.hpp"
 #include "mimic++/Reports.hpp"
+#include "mimic++/reporting/CallReport.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -73,7 +74,7 @@ namespace mimicpp
          */
         [[noreturn]]
         virtual void report_no_matches(
-            CallReport call,
+            reporting::CallReport call,
             std::vector<MatchReport> matchReports) = 0;
 
         /**
@@ -89,7 +90,7 @@ namespace mimicpp
          */
         [[noreturn]]
         virtual void report_inapplicable_matches(
-            CallReport call,
+            reporting::CallReport call,
             std::vector<MatchReport> matchReports) = 0;
 
         /**
@@ -100,7 +101,7 @@ namespace mimicpp
          * except the ``noexcept`` guarantee. Implementations shall simply return to the caller.
          */
         virtual void report_full_match(
-            CallReport call,
+            reporting::CallReport call,
             MatchReport matchReport) noexcept = 0;
 
         /**
@@ -138,7 +139,7 @@ namespace mimicpp
          * function. As this function is called inside a ``catch`` block, throwing exceptions will result in a terminate call.
          */
         virtual void report_unhandled_exception(
-            CallReport call,
+            reporting::CallReport call,
             ExpectationReport expectationReport,
             std::exception_ptr exception) = 0;
 
@@ -204,7 +205,7 @@ namespace mimicpp
         }
 
         [[nodiscard]]
-        inline StringT stringify_no_match_report(const CallReport& call, const std::span<const MatchReport> matchReports)
+        inline StringT stringify_no_match_report(const reporting::CallReport& call, const std::span<const MatchReport> matchReports)
         {
             StringStreamT ss{};
             ss << "No match for ";
@@ -241,7 +242,7 @@ namespace mimicpp
         }
 
         [[nodiscard]]
-        inline StringT stringify_inapplicable_match_report(const CallReport& call, const std::span<const MatchReport> matchReports)
+        inline StringT stringify_inapplicable_match_report(const reporting::CallReport& call, const std::span<const MatchReport> matchReports)
         {
             StringStreamT ss{};
             ss << "No applicable match for ";
@@ -267,7 +268,7 @@ namespace mimicpp
         }
 
         [[nodiscard]]
-        inline StringT stringify_report(const CallReport& call, const MatchReport& matchReport)
+        inline StringT stringify_report(const reporting::CallReport& call, const MatchReport& matchReport)
         {
             StringStreamT ss{};
             ss << "Found match for ";
@@ -303,7 +304,7 @@ namespace mimicpp
 
         [[nodiscard]]
         inline StringT stringify_unhandled_exception(
-            const CallReport& call,
+            const reporting::CallReport& call,
             const ExpectationReport& expectationReport,
             const std::exception_ptr& exception)
         {
@@ -356,20 +357,20 @@ namespace mimicpp
     {
     public:
         [[noreturn]]
-        void report_no_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
+        void report_no_matches(const reporting::CallReport call, const std::vector<MatchReport> matchReports) override
         {
             send_fail(
                 detail::stringify_no_match_report(call, matchReports));
         }
 
         [[noreturn]]
-        void report_inapplicable_matches(const CallReport call, const std::vector<MatchReport> matchReports) override
+        void report_inapplicable_matches(const reporting::CallReport call, const std::vector<MatchReport> matchReports) override
         {
             send_fail(
                 detail::stringify_inapplicable_match_report(call, matchReports));
         }
 
-        void report_full_match(const CallReport call, const MatchReport matchReport) noexcept override
+        void report_full_match(const reporting::CallReport call, const MatchReport matchReport) noexcept override
         {
             send_success(
                 detail::stringify_report(call, matchReport));
@@ -393,7 +394,7 @@ namespace mimicpp
         }
 
         void report_unhandled_exception(
-            const CallReport call,
+            const reporting::CallReport call,
             const ExpectationReport expectationReport,
             const std::exception_ptr exception) override
         {
@@ -422,7 +423,7 @@ namespace mimicpp
         }
     };
 
-    using UnmatchedCallT = Error<std::tuple<CallReport, std::vector<MatchReport>>>;
+    using UnmatchedCallT = Error<std::tuple<reporting::CallReport, std::vector<MatchReport>>>;
     using UnfulfilledExpectationT = Error<ExpectationReport>;
 
     /**
@@ -440,7 +441,7 @@ namespace mimicpp
 
         [[noreturn]]
         void report_no_matches(
-            CallReport call,
+            reporting::CallReport call,
             std::vector<MatchReport> matchReports) override
         {
             assert(
@@ -465,7 +466,7 @@ namespace mimicpp
 
         [[noreturn]]
         void report_inapplicable_matches(
-            CallReport call,
+            reporting::CallReport call,
             std::vector<MatchReport> matchReports) override
         {
             assert(
@@ -489,7 +490,7 @@ namespace mimicpp
         }
 
         void report_full_match(
-            [[maybe_unused]] const CallReport call,
+            [[maybe_unused]] const reporting::CallReport call,
             [[maybe_unused]] const MatchReport matchReport) noexcept override
         {
             assert(MatchResult::full == evaluate_match_report(matchReport));
@@ -526,7 +527,7 @@ namespace mimicpp
         }
 
         void report_unhandled_exception(
-            const CallReport call,
+            const reporting::CallReport call,
             const ExpectationReport expectationReport,
             const std::exception_ptr exception) override
         {
@@ -558,7 +559,7 @@ namespace mimicpp::detail
 
     [[noreturn]]
     inline void report_no_matches(
-        CallReport callReport,
+        reporting::CallReport callReport,
         std::vector<MatchReport> matchReports)
     {
         get_reporter()
@@ -576,7 +577,7 @@ namespace mimicpp::detail
 
     [[noreturn]]
     inline void report_inapplicable_matches(
-        CallReport callReport,
+        reporting::CallReport callReport,
         std::vector<MatchReport> matchReports)
     {
         get_reporter()
@@ -593,7 +594,7 @@ namespace mimicpp::detail
     }
 
     inline void report_full_match(
-        CallReport callReport,
+        reporting::CallReport callReport,
         MatchReport matchReport) noexcept
     {
         get_reporter()
@@ -616,7 +617,7 @@ namespace mimicpp::detail
     }
 
     inline void report_unhandled_exception(
-        CallReport callReport,
+        reporting::CallReport callReport,
         ExpectationReport expectationReport,
         const std::exception_ptr& exception)
     {

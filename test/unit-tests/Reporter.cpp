@@ -19,12 +19,12 @@ namespace
         : public IReporter
     {
     public:
-        MAKE_MOCK2(report_no_matches, void(CallReport, std::vector<MatchReport>), override);
-        MAKE_MOCK2(report_inapplicable_matches, void(CallReport, std::vector<MatchReport>), override);
-        MAKE_MOCK2(report_full_match, void(CallReport, MatchReport), noexcept override);
+        MAKE_MOCK2(report_no_matches, void(reporting::CallReport, std::vector<MatchReport>), override);
+        MAKE_MOCK2(report_inapplicable_matches, void(reporting::CallReport, std::vector<MatchReport>), override);
+        MAKE_MOCK2(report_full_match, void(reporting::CallReport, MatchReport), noexcept override);
         MAKE_MOCK1(report_unfulfilled_expectation, void(ExpectationReport), override);
         MAKE_MOCK1(report_error, void(StringT), override);
-        MAKE_MOCK3(report_unhandled_exception, void(CallReport, ExpectationReport, std::exception_ptr), override);
+        MAKE_MOCK3(report_unhandled_exception, void(reporting::CallReport, ExpectationReport, std::exception_ptr), override);
     };
 }
 
@@ -60,7 +60,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     install_reporter<ReporterMock>();
     auto& reporter = dynamic_cast<ReporterMock&>(*detail::get_reporter());
 
-    const CallReport callReport{
+    const reporting::CallReport callReport{
         .returnTypeInfo = TypeReport::make<void>(),
         .fromLoc = std::source_location::current()};
 
@@ -151,7 +151,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     DefaultReporter reporter{
         out.get()};
 
-    const CallReport callReport{
+    const reporting::CallReport callReport{
         .returnTypeInfo = TypeReport::make<void>(),
         .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,

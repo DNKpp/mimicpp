@@ -25,7 +25,7 @@ class TestReporter final
     : public mimicpp::IReporter
 {
 public:
-    using call_report_t = mimicpp::CallReport;
+    using call_report_t = mimicpp::reporting::CallReport;
     using expectation_report_t = mimicpp::ExpectationReport;
     using match_report_t = mimicpp::MatchReport;
 

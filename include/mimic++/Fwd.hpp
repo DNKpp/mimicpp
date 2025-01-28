@@ -333,7 +333,6 @@ namespace mimicpp
         full
     };
 
-    class CallReport;
     class MatchReport;
     class ExpectationReport;
 
