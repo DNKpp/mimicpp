@@ -20,7 +20,6 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/Printer.hpp"
-#include "mimic++/Reporter.hpp"
 #include "mimic++/Reports.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/String.hpp"
