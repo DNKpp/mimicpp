@@ -6,10 +6,14 @@
 #ifndef MIMICPP_REPORTING_FWD_HPP
 #define MIMICPP_REPORTING_FWD_HPP
 
+#pragma once
+
 namespace mimicpp::reporting
 {
     class TypeReport;
     class CallReport;
+    class ExpectationReport;
+    class MatchReport;
 }
 
 #endif

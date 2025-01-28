@@ -6,6 +6,8 @@
 #ifndef MIMICPP_REPORTING_CALL_REPORT_HPP
 #define MIMICPP_REPORTING_CALL_REPORT_HPP
 
+#pragma once
+
 #include "mimic++/Call.hpp"
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
@@ -22,6 +24,19 @@
 
 namespace mimicpp::reporting
 {
+    /**
+     * \defgroup REPORTING_REPORTS reports
+     * \ingroup REPORTING
+     * \brief Contains reports of ``mimic++`` types.
+     * \details Reports are simplified object representations of ``mimic++`` types. In fact, reports are used to communicate with
+     * independent domains (e.g. unit-test frameworks) over the ``IReporter`` interface and are thus designed to provide as much
+     * transparent information as possible, without requiring them to be a generic type.
+     *
+     * Each report type can be printed via ``mimicpp::print`` function, but users may customize that by adding a specialization for
+     * ``mimicpp::custom::Printer``.
+     * \{
+     */
+
     /**
      * \brief Contains the extracted info from a typed ``call::Info``.
      * \details This type is meant to be used to communicate with independent domains via the reporter interface and thus contains
@@ -89,6 +104,10 @@ namespace mimicpp::reporting
             .fromCategory = callInfo.fromCategory,
             .fromConstness = callInfo.fromConstness};
     }
+
+    /**
+     * \}
+     */
 }
 
 template <>

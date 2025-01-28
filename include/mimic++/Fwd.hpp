@@ -333,9 +333,6 @@ namespace mimicpp
         full
     };
 
-    class MatchReport;
-    class ExpectationReport;
-
     using CharT = char;
     using CharTraitsT = std::char_traits<CharT>;
     using StringT = std::basic_string<CharT, CharTraitsT>;

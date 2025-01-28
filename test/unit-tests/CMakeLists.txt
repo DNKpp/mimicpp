@@ -13,7 +13,6 @@ add_executable(${TARGET_NAME}
     "mimic++.cpp"
     "Mock.cpp"
     "ObjectWatcher.cpp"
-    "Reports.cpp"
     "Reporter.cpp"
     "Sequence.cpp"
     "Stacktrace.cpp"

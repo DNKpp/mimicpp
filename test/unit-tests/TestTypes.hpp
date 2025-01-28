@@ -7,7 +7,7 @@
 
 #include "mimic++/Call.hpp"
 #include "mimic++/Printer.hpp"
-#include "mimic++/Reports.hpp"
+#include "mimic++/reporting/ExpectationReport.hpp"
 
 #include <array>
 #include <variant>
@@ -181,10 +181,10 @@ public:
         return isSatisfied;
     }
 
-    mimicpp::control_state_t stateData{};
+    mimicpp::reporting::control_state_t stateData{};
 
     [[nodiscard]]
-    mimicpp::control_state_t state() const
+    mimicpp::reporting::control_state_t state() const
     {
         return stateData;
     }
@@ -199,7 +199,7 @@ class ControlPolicyMock
 public:
     MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
     MAKE_CONST_MOCK0(describe_state, std::optional<mimicpp::StringT>());
-    MAKE_CONST_MOCK0(state, mimicpp::control_state_t());
+    MAKE_CONST_MOCK0(state, mimicpp::reporting::control_state_t());
     MAKE_MOCK0(consume, void());
 };
 
@@ -218,7 +218,7 @@ public:
     }
 
     [[nodiscard]]
-    mimicpp::control_state_t state() const
+    mimicpp::reporting::control_state_t state() const
     {
         return std::invoke(projection, policy)
             .state();

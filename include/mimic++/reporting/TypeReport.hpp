@@ -6,6 +6,8 @@
 #ifndef MIMICPP_REPORTING_TYPE_REPORT_HPP
 #define MIMICPP_REPORTING_TYPE_REPORT_HPP
 
+#pragma once
+
 #include "mimic++/Fwd.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 
