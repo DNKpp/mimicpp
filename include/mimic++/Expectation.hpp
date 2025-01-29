@@ -167,6 +167,13 @@ namespace mimicpp
         virtual bool is_satisfied() const noexcept = 0;
 
         /**
+         * \brief Queries the control policy, whether it's in the applicable state.
+         * \return Returns true, if expectation is applicable.
+         */
+        [[nodiscard]]
+        virtual bool is_applicable() const noexcept = 0;
+
+        /**
          * \brief Queries all policies, whether they accept the given call.
          * \param call The call to be matched.
          * \return Returns true, if all policies accept the call.
@@ -495,6 +502,16 @@ namespace mimicpp
                            return (... && policies.is_satisfied());
                        },
                        m_Policies);
+        }
+
+        /**
+         * \copydoc Expectation::is_applicable
+         */
+        [[nodiscard]]
+        constexpr bool is_applicable() const noexcept override
+        {
+            return std::holds_alternative<reporting::state_applicable>(
+                m_ControlPolicy.state());
         }
 
         /**

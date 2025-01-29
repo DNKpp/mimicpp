@@ -385,6 +385,13 @@ TEST_CASE(
         Catch::Matchers::Equals(expectation.mock_name()));
 }
 
+namespace
+{
+    constexpr reporting::control_state_t commonApplicableState = reporting::state_applicable{0, 1, 0};
+    constexpr reporting::control_state_t commonInapplicableState = reporting::state_inapplicable{0, 1, 0, {}, {sequence::Tag{1337}}};
+    constexpr reporting::control_state_t commonSaturatedState = reporting::state_saturated{0, 1, 1};
+}
+
 TEST_CASE(
     "Control policy of mimicpp::BasicExpectation controls, how often its expectations must be matched.",
     "[expectation]")
@@ -434,6 +441,19 @@ TEST_CASE(
             REQUIRE(isSatisfied == std::as_const(expectation).is_satisfied());
         }
 
+        SECTION("When calling is_applicable.")
+        {
+            auto const [expected, state] = GENERATE(
+                table<bool, reporting::control_state_t>({
+                    { true,   commonApplicableState},
+                    {false, commonInapplicableState},
+                    {false,    commonSaturatedState}
+            }));
+            REQUIRE_CALL(times, state())
+                .RETURN(state);
+            REQUIRE(expected == std::as_const(expectation).is_applicable());
+        }
+
         SECTION("When times is applicable, call is matched.")
         {
             const reporting::control_state_t controlState{
@@ -474,6 +494,19 @@ TEST_CASE(
             std::ref(times),
             FinalizerT{},
             std::ref(policy)};
+
+        SECTION("When calling is_applicable.")
+        {
+            auto const [expected, state] = GENERATE(
+                table<bool, reporting::control_state_t>({
+                    { true,   commonApplicableState},
+                    {false, commonInapplicableState},
+                    {false,    commonSaturatedState}
+            }));
+            REQUIRE_CALL(times, state())
+                .RETURN(state);
+            REQUIRE(expected == std::as_const(expectation).is_applicable());
+        }
 
         SECTION("When times is not satisfied.")
         {
