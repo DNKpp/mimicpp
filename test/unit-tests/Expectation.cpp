@@ -911,26 +911,34 @@ TEST_CASE(
     using trompeloeil::_;
     using SignatureT = void();
     using ExpectationT = ExpectationMock;
-    using CollectionT = mimicpp::ExpectationCollection<SignatureT>;
+    using CollectionT = ExpectationCollection<SignatureT>;
 
     auto collection = std::make_shared<CollectionT>();
     auto innerExpectation = std::make_shared<ExpectationT>();
-    std::optional<mimicpp::ScopedExpectation> expectation{
+    std::optional<ScopedExpectation> expectation{
         std::in_place,
         collection,
         innerExpectation};
 
     SECTION("When calling is_satisfied()")
     {
-        const bool isSatisfied = GENERATE(false, true);
+        bool const isSatisfied = GENERATE(false, true);
         REQUIRE_CALL(*innerExpectation, is_satisfied())
             .RETURN(isSatisfied);
         REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
     }
 
+    SECTION("When calling is_applicable.")
+    {
+        bool const isApplicable = GENERATE(false, true);
+        REQUIRE_CALL(*innerExpectation, is_applicable())
+            .RETURN(isApplicable);
+        REQUIRE(isApplicable == std::as_const(expectation)->is_applicable());
+    }
+
     SECTION("When calling from()")
     {
-        const auto loc = std::source_location::current();
+        auto const loc = std::source_location::current();
         REQUIRE_CALL(*innerExpectation, from())
             .RETURN(loc);
         REQUIRE(
@@ -941,7 +949,7 @@ TEST_CASE(
 
     SECTION("When calling mock_name()")
     {
-        const mimicpp::StringT mockName = "MyMock";
+        StringT const mockName = "MyMock";
         REQUIRE_CALL(*innerExpectation, mock_name())
             .LR_RETURN(std::ref(mockName));
         REQUIRE(mockName == std::as_const(expectation)->mock_name());
@@ -949,14 +957,22 @@ TEST_CASE(
 
     SECTION("When ScopedExpectation is moved.")
     {
-        mimicpp::ScopedExpectation otherExpectation = *std::move(expectation);
+        ScopedExpectation otherExpectation = *std::move(expectation);
 
         SECTION("When calling is_satisfied()")
         {
-            const bool isSatisfied = GENERATE(false, true);
+            bool const isSatisfied = GENERATE(false, true);
             REQUIRE_CALL(*innerExpectation, is_satisfied())
                 .RETURN(isSatisfied);
             REQUIRE(isSatisfied == std::as_const(otherExpectation).is_satisfied());
+        }
+
+        SECTION("When calling is_applicable.")
+        {
+            bool const isApplicable = GENERATE(false, true);
+            REQUIRE_CALL(*innerExpectation, is_applicable())
+                .RETURN(isApplicable);
+            REQUIRE(isApplicable == std::as_const(otherExpectation).is_applicable());
         }
 
         SECTION("And then move assigned.")
@@ -965,10 +981,18 @@ TEST_CASE(
 
             SECTION("When calling is_satisfied()")
             {
-                const bool isSatisfied = GENERATE(false, true);
+                bool const isSatisfied = GENERATE(false, true);
                 REQUIRE_CALL(*innerExpectation, is_satisfied())
                     .RETURN(isSatisfied);
                 REQUIRE(isSatisfied == std::as_const(expectation)->is_satisfied());
+            }
+
+            SECTION("When calling is_applicable.")
+            {
+                bool const isApplicable = GENERATE(false, true);
+                REQUIRE_CALL(*innerExpectation, is_applicable())
+                    .RETURN(isApplicable);
+                REQUIRE(isApplicable == std::as_const(expectation)->is_applicable());
             }
 
             // just move back, so we can unify the cleanup process
@@ -984,10 +1008,18 @@ TEST_CASE(
 
             SECTION("When calling is_satisfied()")
             {
-                const bool isSatisfied = GENERATE(false, true);
+                bool const isSatisfied = GENERATE(false, true);
                 REQUIRE_CALL(*innerExpectation, is_satisfied())
                     .RETURN(isSatisfied);
                 REQUIRE(isSatisfied == std::as_const(otherExpectation).is_satisfied());
+            }
+
+            SECTION("When calling is_applicable.")
+            {
+                bool const isApplicable = GENERATE(false, true);
+                REQUIRE_CALL(*innerExpectation, is_applicable())
+                    .RETURN(isApplicable);
+                REQUIRE(isApplicable == std::as_const(otherExpectation).is_applicable());
             }
         }
 

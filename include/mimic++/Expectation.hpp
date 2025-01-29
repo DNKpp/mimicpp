@@ -623,6 +623,8 @@ namespace mimicpp
 
             [[nodiscard]]
             virtual bool is_satisfied() const = 0;
+            [[nodiscard]]
+            virtual bool is_applicable() const = 0;
 
             [[nodiscard]]
             virtual const std::source_location& from() const noexcept = 0;
@@ -663,6 +665,12 @@ namespace mimicpp
             bool is_satisfied() const override
             {
                 return m_Expectation->is_satisfied();
+            }
+
+            [[nodiscard]]
+            bool is_applicable() const override
+            {
+                return m_Expectation->is_applicable();
             }
 
             [[nodiscard]]
@@ -756,6 +764,16 @@ namespace mimicpp
         bool is_satisfied() const
         {
             return m_Inner->is_satisfied();
+        }
+
+        /**
+         * \brief Queries the stored expectation, whether it's applicable.
+         * \return True, if applicable.
+         */
+        [[nodiscard]]
+        bool is_applicable() const
+        {
+            return m_Inner->is_applicable();
         }
 
         /**
