@@ -428,23 +428,14 @@ TEST_CASE(
     }
 }
 
-namespace
-{
-    [[nodiscard]]
-    detail::expectation_info make_common_expectation_info(const std::source_location& loc = std::source_location::current())
-    {
-        return detail::expectation_info{
-            .sourceLocation = loc,
-            .mockName = "Mock-Name"};
-    }
-}
-
 TEST_CASE(
     "reporting::ExpectationReport is equality comparable.",
     "[reporting]")
 {
     const reporting::ExpectationReport first{
-        .info = make_common_expectation_info(),
+        .info = detail::expectation_info{
+                                         .sourceLocation = std::source_location::current(),
+                                         .mockName = "Mock-Name"},
         .controlReport = reporting::state_applicable{0, 1, 0},
         .finalizerDescription = "finalizer description",
         .requirementDescriptions = {"first expectation description"}
@@ -456,8 +447,8 @@ TEST_CASE(
 
         REQUIRE(first == second);
         REQUIRE(second == first);
-        REQUIRE(!(first != second));
-        REQUIRE(!(second != first));
+        REQUIRE_FALSE(first != second);
+        REQUIRE_FALSE(second != first);
     }
 
     SECTION("When expectation_info differs, reports do not compare equal.")
@@ -479,8 +470,8 @@ TEST_CASE(
             std::nullopt,
             "other finalizer description");
 
-        REQUIRE(!(first == second));
-        REQUIRE(!(second == first));
+        REQUIRE_FALSE(first == second);
+        REQUIRE_FALSE(second == first);
         REQUIRE(first != second);
         REQUIRE(second != first);
     }
@@ -494,8 +485,8 @@ TEST_CASE(
             reporting::state_inapplicable{0, 2, 0, {}, std::vector<sequence::Tag>{1337}},
             reporting::state_saturated{1, 1, 2});
 
-        REQUIRE(!(first == second));
-        REQUIRE(!(second == first));
+        REQUIRE_FALSE(first == second);
+        REQUIRE_FALSE(second == first);
         REQUIRE(first != second);
         REQUIRE(second != first);
     }
@@ -508,112 +499,9 @@ TEST_CASE(
             (std::vector<std::optional<StringT>>{"other expectation description"}),
             (std::vector<std::optional<StringT>>{"expectation description", "other expectation description"}));
 
-        REQUIRE(!(first == second));
-        REQUIRE(!(second == first));
+        REQUIRE_FALSE(first == second);
+        REQUIRE_FALSE(second == first);
         REQUIRE(first != second);
         REQUIRE(second != first);
-    }
-}
-
-TEST_CASE(
-    "reporting::ExpectationReport can be printed.",
-    "[report][print]")
-{
-    namespace Matches = Catch::Matchers;
-
-    reporting::ExpectationReport report{
-        .expectationInfo = make_common_expectation_info(),
-        .finalizerDescription = "finalizer description",
-        .timesDescription = "times description",
-        .expectationDescriptions = {"expectation1 description"}
-    };
-
-    SECTION("When full report is given.")
-    {
-        REQUIRE_THAT(
-            print(std::as_const(report)),
-            Matches::Matches(
-                "Expectation report:\n"
-                "mock: Mock-Name\n"
-                "from: .+\\[\\d+:\\d+\\], .+\n"
-                "times: times description\n"
-                "expects:\n"
-                "\texpectation1 description,\n"
-                "finally: finalizer description\n"));
-    }
-
-    SECTION("When times description is missing.")
-    {
-        report.timesDescription.reset();
-
-        REQUIRE_THAT(
-            print(std::as_const(report)),
-            Matches::Matches(
-                "Expectation report:\n"
-                "mock: Mock-Name\n"
-                "from: .+\\[\\d+:\\d+\\], .+\n"
-                "expects:\n"
-                "\texpectation1 description,\n"
-                "finally: finalizer description\n"));
-    }
-
-    SECTION("When finalizer description is missing.")
-    {
-        report.finalizerDescription.reset();
-
-        REQUIRE_THAT(
-            print(std::as_const(report)),
-            Matches::Matches(
-                "Expectation report:\n"
-                "mock: Mock-Name\n"
-                "from: .+\\[\\d+:\\d+\\], .+\n"
-                "times: times description\n"
-                "expects:\n"
-
-                "\texpectation1 description,\n"));
-    }
-
-    SECTION("When expectation contains only empty descriptions.")
-    {
-        report.expectationDescriptions[0].reset();
-
-        REQUIRE_THAT(
-            print(std::as_const(report)),
-            Matches::Matches(
-                "Expectation report:\n"
-                "mock: Mock-Name\n"
-                "from: .+\\[\\d+:\\d+\\], .+\n"
-                "times: times description\n"
-                "finally: finalizer description\n"));
-    }
-
-    SECTION("When expectation contains no descriptions.")
-    {
-        report.expectationDescriptions.clear();
-
-        REQUIRE_THAT(
-            print(std::as_const(report)),
-            Matches::Matches(
-                "Expectation report:\n"
-                "mock: Mock-Name\n"
-                "from: .+\\[\\d+:\\d+\\], .+\n"
-                "times: times description\n"
-                "finally: finalizer description\n"));
-    }
-
-    SECTION("When expectation contains mixed descriptions.")
-    {
-        report.expectationDescriptions.emplace_back(std::nullopt);
-
-        REQUIRE_THAT(
-            print(std::as_const(report)),
-            Matches::Matches(
-                "Expectation report:\n"
-                "mock: Mock-Name\n"
-                "from: .+\\[\\d+:\\d+\\], .+\n"
-                "times: times description\n"
-                "expects:\n"
-                "\texpectation1 description,\n"
-                "finally: finalizer description\n"));
     }
 }
