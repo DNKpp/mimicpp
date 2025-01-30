@@ -256,6 +256,15 @@ TEST_CASE(
             .IN_SEQUENCE(sequence)
             .RETURN(commonNonMatchingOutcome);
 
+        REQUIRE_CALL(*expectations[3], report())
+            .RETURN(reporting::ExpectationReport{});
+        REQUIRE_CALL(*expectations[2], report())
+            .RETURN(reporting::ExpectationReport{});
+        REQUIRE_CALL(*expectations[1], report())
+            .RETURN(reporting::ExpectationReport{});
+        REQUIRE_CALL(*expectations[0], report())
+            .RETURN(reporting::ExpectationReport{});
+
         REQUIRE_THROWS_AS(
             storage.handle_call(call),
             NoMatchError);
@@ -289,7 +298,7 @@ TEST_CASE(
     storage.push(otherExpectation);
     storage.push(throwingExpectation);
 
-    const CallInfoT call{
+    CallInfoT const call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -302,6 +311,10 @@ TEST_CASE(
         .info = make_common_expectation_info(),
         .controlReport = commonApplicableState};
 
+    reporting::ExpectationReport const otherReport{
+        .info = make_common_expectation_info(),
+        .controlReport = commonApplicableState};
+
     auto const matches = [&](const auto& info) {
         try
         {
@@ -309,7 +322,7 @@ TEST_CASE(
         }
         catch (const Exception&)
         {
-            return info.call == mimicpp::reporting::make_call_report(call)
+            return info.call == reporting::make_call_report(call)
                 && info.expectation == throwingReport;
         }
         catch (...)
@@ -326,6 +339,10 @@ TEST_CASE(
             .RETURN(throwingReport);
         REQUIRE_CALL(*otherExpectation, matches(_))
             .RETURN(commonMatchingOutcome);
+        REQUIRE_CALL(*otherExpectation, is_applicable())
+            .RETURN(true);
+        REQUIRE_CALL(*otherExpectation, report())
+            .RETURN(otherReport);
         REQUIRE_CALL(*otherExpectation, consume(_));
         REQUIRE_CALL(*otherExpectation, finalize_call(_));
         REQUIRE_NOTHROW(storage.handle_call(call));
@@ -544,8 +561,6 @@ TEST_CASE(
             REQUIRE_CALL(policy, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(matches);
-            REQUIRE_CALL(policy, describe())
-                .RETURN(mimicpp::StringT{});
             reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
                 outcomes.outcomes,
@@ -573,16 +588,15 @@ TEMPLATE_TEST_CASE(
     using PolicyMockT = PolicyMock<TestType>;
     using PolicyRefT = PolicyFacade<TestType, std::reference_wrapper<PolicyMock<TestType>>, UnwrapReferenceWrapper>;
     using CallInfoT = call::info_for_signature_t<TestType>;
-    using ExpectationReportT = reporting::MatchReport::Expectation;
 
     const CallInfoT call{
         .args = {},
-        .fromCategory = mimicpp::ValueCategory::any,
-        .fromConstness = mimicpp::Constness::any};
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
 
     SECTION("With no policies at all.")
     {
-        mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
+        BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
             {},
             ControlPolicyFake{
                               .isSatisfied = true,
@@ -601,7 +615,7 @@ TEMPLATE_TEST_CASE(
     SECTION("With one policy.")
     {
         PolicyMockT policy{};
-        mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
+        BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
             {},
             ControlPolicyFake{
                               .isSatisfied = true,
@@ -610,7 +624,7 @@ TEMPLATE_TEST_CASE(
             PolicyRefT{std::ref(policy)}
         };
 
-        const bool isSatisfied = GENERATE(false, true);
+        bool const isSatisfied = GENERATE(false, true);
         REQUIRE_CALL(policy, is_satisfied())
             .RETURN(isSatisfied);
         REQUIRE(isSatisfied == std::as_const(expectation).is_satisfied());
@@ -620,8 +634,6 @@ TEMPLATE_TEST_CASE(
             REQUIRE_CALL(policy, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(true);
-            REQUIRE_CALL(policy, describe())
-                .RETURN("policy description");
             reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
                 outcomes.outcomes,
@@ -633,8 +645,6 @@ TEMPLATE_TEST_CASE(
             REQUIRE_CALL(policy, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(false);
-            REQUIRE_CALL(policy, describe())
-                .RETURN("policy description");
             reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
                 outcomes.outcomes,
@@ -650,7 +660,7 @@ TEMPLATE_TEST_CASE(
     {
         PolicyMockT policy1{};
         PolicyMockT policy2{};
-        mimicpp::BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
+        BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
             {},
             ControlPolicyFake{
                               .isSatisfied = true,
@@ -662,9 +672,9 @@ TEMPLATE_TEST_CASE(
 
         SECTION("When calling is_satisfied()")
         {
-            const bool isSatisfied1 = GENERATE(false, true);
-            const bool isSatisfied2 = GENERATE(false, true);
-            const bool expectedIsSatisfied = isSatisfied1 && isSatisfied2;
+            bool const isSatisfied1 = GENERATE(false, true);
+            bool const isSatisfied2 = GENERATE(false, true);
+            bool const expectedIsSatisfied = isSatisfied1 && isSatisfied2;
             REQUIRE_CALL(policy1, is_satisfied())
                 .RETURN(isSatisfied1);
             auto policy2Expectation = std::invoke(
@@ -685,13 +695,9 @@ TEMPLATE_TEST_CASE(
             REQUIRE_CALL(policy1, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(true);
-            REQUIRE_CALL(policy1, describe())
-                .RETURN("policy1 description");
             REQUIRE_CALL(policy2, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(true);
-            REQUIRE_CALL(policy2, describe())
-                .RETURN("policy2 description");
 
             reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
@@ -701,7 +707,7 @@ TEMPLATE_TEST_CASE(
 
         SECTION("When at least one not matches => no match")
         {
-            const auto [isMatching1, isMatching2] = GENERATE(
+            auto const [isMatching1, isMatching2] = GENERATE(
                 (table<bool, bool>)({
                     {false,  true},
                     { true, false},
@@ -711,13 +717,9 @@ TEMPLATE_TEST_CASE(
             REQUIRE_CALL(policy1, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(isMatching1);
-            REQUIRE_CALL(policy1, describe())
-                .RETURN("policy1 description");
             REQUIRE_CALL(policy2, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(isMatching2);
-            REQUIRE_CALL(policy2, describe())
-                .RETURN("policy2 description");
 
             reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call);
             REQUIRE_THAT(
@@ -802,7 +804,7 @@ TEST_CASE(
             UnwrapReferenceWrapper>;
 
         PolicyMock<void()> policy{};
-        mimicpp::BasicExpectation<
+        BasicExpectation<
             void(),
             ControlPolicyFake,
             FinalizerPolicyT,
@@ -837,15 +839,15 @@ TEMPLATE_TEST_CASE(
     using SignatureT = TestType;
     using FinalizerT = FinalizerMock<SignatureT>;
     using FinalizerRefT = FinalizerFacade<SignatureT, std::reference_wrapper<FinalizerT>, UnwrapReferenceWrapper>;
-    using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
+    using CallInfoT = call::info_for_signature_t<SignatureT>;
 
     const CallInfoT call{
         .args = {},
-        .fromCategory = mimicpp::ValueCategory::any,
-        .fromConstness = mimicpp::Constness::any};
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
 
     FinalizerT finalizer{};
-    mimicpp::BasicExpectation<SignatureT, ControlPolicyFake, FinalizerRefT> expectation{
+    BasicExpectation<SignatureT, ControlPolicyFake, FinalizerRefT> expectation{
         {},
         ControlPolicyFake{},
         std::ref(finalizer)};
