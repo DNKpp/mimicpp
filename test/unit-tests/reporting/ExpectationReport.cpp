@@ -444,10 +444,10 @@ TEST_CASE(
     "[reporting]")
 {
     const reporting::ExpectationReport first{
-        .expectationInfo = make_common_expectation_info(),
+        .info = make_common_expectation_info(),
+        .controlReport = reporting::state_applicable{0, 1, 0},
         .finalizerDescription = "finalizer description",
-        .timesDescription = "times description",
-        .expectationDescriptions = {"first expectation description"}
+        .requirementDescriptions = {"first expectation description"}
     };
 
     SECTION("When all members are equal, reports compare equal.")
@@ -463,7 +463,7 @@ TEST_CASE(
     SECTION("When expectation_info differs, reports do not compare equal.")
     {
         reporting::ExpectationReport second{first};
-        second.expectationInfo.mockName = "other mock-name";
+        second.info.mockName = "other mock-name";
 
         REQUIRE_FALSE(first == second);
         REQUIRE_FALSE(second == first);
@@ -488,10 +488,11 @@ TEST_CASE(
     SECTION("When times description differs, reports do not compare equal.")
     {
         reporting::ExpectationReport second{first};
-        second.timesDescription = GENERATE(
-            as<std::optional<StringT>>{},
-            std::nullopt,
-            "other times description");
+        second.controlReport = GENERATE(
+            as<reporting::control_state_t>{},
+            reporting::state_applicable{0, 2, 0},
+            reporting::state_inapplicable{0, 2, 0, {}, std::vector<sequence::Tag>{1337}},
+            reporting::state_saturated{1, 1, 2});
 
         REQUIRE(!(first == second));
         REQUIRE(!(second == first));
@@ -502,7 +503,7 @@ TEST_CASE(
     SECTION("When expectation descriptions differ, reports do not compare equal.")
     {
         reporting::ExpectationReport second{first};
-        second.expectationDescriptions = GENERATE(
+        second.requirementDescriptions = GENERATE(
             (std::vector<std::optional<StringT>>{}),
             (std::vector<std::optional<StringT>>{"other expectation description"}),
             (std::vector<std::optional<StringT>>{"expectation description", "other expectation description"}));

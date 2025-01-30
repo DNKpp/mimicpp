@@ -479,10 +479,10 @@ namespace mimicpp
         reporting::ExpectationReport report() const override
         {
             return reporting::ExpectationReport{
-                .expectationInfo = m_Info,
+                .info = m_Info,
+                .controlReport = m_ControlPolicy.state(),
                 .finalizerDescription = std::nullopt,
-                .timesDescription = describe_times(),
-                .expectationDescriptions = std::apply(
+                .requirementDescriptions = std::apply(
                     [&](const auto&... policies) {
                         return std::vector<std::optional<StringT>>{
                             policies.describe()...};

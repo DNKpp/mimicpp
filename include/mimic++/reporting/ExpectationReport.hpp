@@ -188,13 +188,22 @@ namespace mimicpp::reporting
     class ExpectationReport
     {
     public:
-        detail::expectation_info expectationInfo{};
+        detail::expectation_info info{};
+        control_state_t controlReport{};
         std::optional<StringT> finalizerDescription{};
-        std::optional<StringT> timesDescription{};
-        std::vector<std::optional<StringT>> expectationDescriptions{};
+        std::vector<std::optional<StringT>> requirementDescriptions{};
 
         [[nodiscard]]
-        friend bool operator==(const ExpectationReport& lhs, const ExpectationReport& rhs) = default;
+        friend bool operator==(const ExpectationReport&, const ExpectationReport&) = default;
+    };
+
+    class RequirementOutcomes
+    {
+    public:
+        std::vector<bool> outcomes{};
+
+        [[nodiscard]]
+        friend bool operator==(const RequirementOutcomes&, const RequirementOutcomes&) = default;
     };
 }
 
