@@ -62,109 +62,8 @@ namespace mimicpp::reporting
 
     namespace detail
     {
-        template <print_iterator OutIter>
-        OutIter stringify_stacktrace(OutIter out, const Stacktrace& stacktrace)
-        {
-            if (!stacktrace.empty())
-            {
-                out = format::format_to(
-                    std::move(out),
-                    "Stacktrace:\n");
-                out = mimicpp::print(
-                    std::move(out),
-                    stacktrace);
-            }
-
-            return out;
-        }
-
         [[nodiscard]]
-        inline StringT stringify_no_match_report(const CallReport& call, const std::span<const MatchReport> matchReports)
-        {
-            StringStreamT ss{};
-            ss << "No match for ";
-            mimicpp::print(
-                std::ostreambuf_iterator{ss},
-                call);
-            ss << "\n";
-
-            if (std::ranges::empty(matchReports))
-            {
-                ss << "No expectations available.\n";
-            }
-            else
-            {
-                format::format_to(
-                    std::ostreambuf_iterator{ss},
-                    "{} available expectation(s):\n",
-                    std::ranges::size(matchReports));
-
-                for (const auto& report : matchReports)
-                {
-                    mimicpp::print(
-                        std::ostreambuf_iterator{ss},
-                        report);
-                    ss << "\n";
-                }
-            }
-
-            stringify_stacktrace(
-                std::ostreambuf_iterator{ss},
-                call.stacktrace);
-
-            return std::move(ss).str();
-        }
-
-        [[nodiscard]]
-        inline StringT stringify_inapplicable_match_report(const CallReport& call, const std::span<const MatchReport> matchReports)
-        {
-            StringStreamT ss{};
-            ss << "No applicable match for ";
-            mimicpp::print(
-                std::ostreambuf_iterator{ss},
-                call);
-            ss << "\n";
-
-            ss << "Tested expectations:\n";
-            for (const auto& report : matchReports)
-            {
-                mimicpp::print(
-                    std::ostreambuf_iterator{ss},
-                    report);
-                ss << "\n";
-            }
-
-            stringify_stacktrace(
-                std::ostreambuf_iterator{ss},
-                call.stacktrace);
-
-            return std::move(ss).str();
-        }
-
-        [[nodiscard]]
-        inline StringT stringify_report(const CallReport& call, const MatchReport& matchReport)
-        {
-            StringStreamT ss{};
-            ss << "Found match for ";
-            mimicpp::print(
-                std::ostreambuf_iterator{ss},
-                call);
-            ss << "\n";
-
-            mimicpp::print(
-                std::ostreambuf_iterator{ss},
-                matchReport);
-            ss << "\n";
-
-            stringify_stacktrace(
-                std::ostreambuf_iterator{ss},
-                call.stacktrace);
-
-            return std::move(ss).str();
-        }
-
-        [[nodiscard]]
-        inline StringT stringify_unfulfilled_expectation(const ExpectationReport& expectationReport)
+        inline StringT stringify_unfulfilled_expectation(ExpectationReport const& expectationReport)
         {
             StringStreamT ss{};
             ss << "Unfulfilled expectation:\n";
@@ -178,9 +77,9 @@ namespace mimicpp::reporting
 
         [[nodiscard]]
         inline StringT stringify_unhandled_exception(
-            const CallReport& call,
-            const ExpectationReport& expectationReport,
-            const std::exception_ptr& exception)
+            CallReport const& call,
+            ExpectationReport const& expectationReport,
+            std::exception_ptr const& exception)
         {
             StringStreamT ss{};
             ss << "Unhandled exception: ";
