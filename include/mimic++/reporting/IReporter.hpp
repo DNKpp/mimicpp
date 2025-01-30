@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
 #include "mimic++/reporting/Fwd.hpp"
 
 #include <exception>
@@ -53,7 +54,7 @@ namespace mimicpp::reporting
         /**
          * \brief Expects reports about all ``none`` matching expectations. This is only called, if there are no better options available.
          * \param call The call report.
-         * \param matchReports Reports of all ``none`` matching expectations.
+         * \param noMatchReports Reports of all ``none`` matching expectations.
          * \details This function is called, when no match has been found and there are no other expectations, which are matching but
          * inapplicable. In fact, this is the fallback reporting mechanism, for unmatched calls.
          * \note ``matchReports`` may be empty.
@@ -64,12 +65,12 @@ namespace mimicpp::reporting
         [[noreturn]]
         virtual void report_no_matches(
             CallReport call,
-            std::vector<MatchReport> matchReports) = 0;
+            std::vector<NoMatchReport> noMatchReports) = 0;
 
         /**
          * \brief Expects reports about all ``inapplicable`` matching expectations. This is only called, if there are no better options available.
          * \param call The call report.
-         * \param matchReports Reports of all ``inapplicable`` matching expectations.
+         * \param expectationReports Reports of all ``inapplicable`` expectations.
          * \details This function is called, when no applicable match has been found, but actually the call expectations are fulfilled. This in fact
          * happens, when the ``times`` policy is already saturated (e.g. it was once expected and already matched once) or otherwise not applicable
          * (e.g. a sequence element is not the current element).
@@ -80,18 +81,18 @@ namespace mimicpp::reporting
         [[noreturn]]
         virtual void report_inapplicable_matches(
             CallReport call,
-            std::vector<MatchReport> matchReports) = 0;
+            std::vector<ExpectationReport> expectationReports) = 0;
 
         /**
          * \brief Expects the report about a ``full`` matching expectation.
          * \param call The call report.
-         * \param matchReport Report of the ``full`` matching expectation.
+         * \param expectationReport Report of the fully matched expectation.
          * \details This function is called, when a match has been found. There are no other expectations on the behavior of this function;
          * except the ``noexcept`` guarantee. Implementations shall simply return to the caller.
          */
         virtual void report_full_match(
             CallReport call,
-            MatchReport matchReport) noexcept = 0;
+            ExpectationReport expectationReport) noexcept = 0;
 
         /**
          * \brief Expects the report of an unfulfilled expectation.
