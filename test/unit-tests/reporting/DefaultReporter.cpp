@@ -11,7 +11,20 @@ using namespace mimicpp;
 using reporting::CallReport;
 using reporting::ExpectationReport;
 using reporting::MatchReport;
+using reporting::NoMatchReport;
+using reporting::RequirementOutcomes;
 using reporting::TypeReport;
+
+namespace
+{
+    [[nodiscard]]
+    detail::expectation_info make_common_expectation_info(const std::source_location& loc = std::source_location::current())
+    {
+        return detail::expectation_info{
+            .sourceLocation = loc,
+            .mockName = "Mock-Name"};
+    }
+}
 
 // required for the REQUIRE_THROWS_AS tests
 START_WARNING_SUPPRESSION
@@ -39,57 +52,76 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
                 std::move(ss)};
         });
 
-    const CallReport callReport{
+    CallReport const callReport{
         .returnTypeInfo = TypeReport::make<void>(),
         .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
-    SECTION("When none matches are reported, UnmatchedCallT is thrown.")
+    SECTION("When no-match is reported, UnmatchedCallT is thrown.")
     {
+        ExpectationReport const expectationReport{
+            .info = make_common_expectation_info(),
+            .controlReport = reporting::state_applicable{1, 1, 0},
+            .requirementDescriptions = std::vector<std::optional<StringT>>{"Invalid"}
+        };
+        RequirementOutcomes const requirementOutcomes{
+            .outcomes = {false}};
+        std::vector noMatchReports{
+            NoMatchReport{expectationReport, requirementOutcomes}
+        };
+
         REQUIRE_THROWS_AS(
-            reporter.report_no_matches(
-                callReport,
-                {
-                    (MatchReport{
-                                 .controlReport = reporting::state_applicable{1, 1, 0},
-                                 .expectationReports = {{false}}}
-                    )
-        }),
+            reporter.report_no_matches(callReport, noMatchReports),
             reporting::UnmatchedCallT);
 
         CHECKED_IF(out)
         {
             REQUIRE_THAT(
                 out->str(),
-                Matches::StartsWith("No match for"));
+                Matches::StartsWith("Unmatched Call from ")
+                    && Matches::ContainsSubstring("1 non-matching Expectation(s):\n")
+                    && Matches::ContainsSubstring("#1 Expectation from ")
+                    && Matches::ContainsSubstring("Due to Violation(s):\n")
+                    && Matches::ContainsSubstring("  - expect: Invalid")
+                    && !Matches::ContainsSubstring("With Adherence(s):"));
         }
     }
 
     SECTION("When inapplicable matches are reported, UnmatchedCallT is thrown.")
     {
+        ExpectationReport const expectationReport{
+            .info = make_common_expectation_info(),
+            .controlReport = reporting::state_inapplicable{1, 1, 1},
+            .requirementDescriptions = std::vector<std::optional<StringT>>{"Valid"}
+        };
+
         REQUIRE_THROWS_AS(
-            reporter.report_inapplicable_matches(
-                callReport,
-                {MatchReport{.controlReport = reporting::state_inapplicable{1, 1, 1}}}),
+            reporter.report_inapplicable_matches(callReport, {expectationReport}),
             reporting::UnmatchedCallT);
 
         CHECKED_IF(out)
         {
             REQUIRE_THAT(
                 out->str(),
-                Matches::StartsWith("No applicable match for"));
+                Matches::StartsWith("Unmatched Call from ")
+                    && Matches::ContainsSubstring("1 inapplicable but otherwise matching Expectation(s):\n")
+                    && Matches::ContainsSubstring("#1 Expectation from ")
+                    && Matches::ContainsSubstring("With Adherence(s):\n")
+                    && Matches::ContainsSubstring("  + expect: Valid")
+                    && !Matches::ContainsSubstring("Due to Violation(s):"));
         }
     }
 
     SECTION("When match is reported, nothing is done.")
     {
-        REQUIRE_NOTHROW(
-            reporter.report_full_match(
-                callReport,
-                MatchReport{
-                    .controlReport = reporting::state_applicable{1, 1, 0}
-        }));
+        ExpectationReport const expectationReport{
+            .info = make_common_expectation_info(),
+            .controlReport = reporting::state_applicable{1, 1, 0},
+            .requirementDescriptions = std::vector<std::optional<StringT>>{"Valid"}
+        };
+
+        REQUIRE_NOTHROW(reporter.report_full_match(callReport, expectationReport));
 
         CHECKED_IF(out)
         {

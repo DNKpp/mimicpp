@@ -134,7 +134,8 @@ TEST_CASE(
         mock(42);
         REQUIRE_THAT(
             g_SuccessMessage.value(),
-            matches::StartsWith("Found match for"));
+            matches::StartsWith("Matched Call from ")
+                && !matches::ContainsSubstring("Due to Violation(s):\n"));
     }
 
     SECTION("Sends fail, when no match can be found.")
@@ -149,14 +150,14 @@ TEST_CASE(
 
             REQUIRE_THAT(
                 g_FailMessage.value(),
-                matches::StartsWith("No match for")
-                    && matches::ContainsSubstring("No expectations available."));
+                matches::StartsWith("Unmatched Call from ")
+                    && matches::ContainsSubstring("No Expectations available!"));
         }
 
         SECTION("When non matching expectation exists.")
         {
             SCOPED_EXP mock.expect_call(42)
-                && expect::at_most(1); // prevent unfulfilled reporting
+                && expect::never();
 
             REQUIRE_THROWS_AS(
                 mock(1337),
@@ -164,8 +165,10 @@ TEST_CASE(
 
             REQUIRE_THAT(
                 g_FailMessage.value(),
-                matches::StartsWith("No match for")
-                    && matches::ContainsSubstring("1 available expectation(s):"));
+                matches::StartsWith("Unmatched Call from ")
+                    && matches::ContainsSubstring("1 non-matching Expectation(s):\n")
+                    && matches::ContainsSubstring("#1 Expectation from ")
+                    && matches::ContainsSubstring("Due to Violation(s):\n"));
         }
     }
 
@@ -182,8 +185,10 @@ TEST_CASE(
 
         REQUIRE_THAT(
             g_FailMessage.value(),
-            matches::StartsWith("No applicable match for")
-                && matches::ContainsSubstring("Tested expectations:"));
+            matches::StartsWith("Unmatched Call from ")
+                && matches::ContainsSubstring("1 inapplicable but otherwise matching Expectation(s):\n")
+                && matches::ContainsSubstring("#1 Expectation from ")
+                && !matches::ContainsSubstring("Due to Violation(s):\n"));
     }
 
     SECTION("Sends fail, when unfulfilled expectation is reported.")
