@@ -11,7 +11,7 @@
 using namespace mimicpp;
 using reporting::CallReport;
 using reporting::ExpectationReport;
-using reporting::MatchReport;
+using reporting::NoMatchReport;
 using reporting::TypeReport;
 
 namespace
@@ -20,9 +20,9 @@ namespace
         : public reporting::IReporter
     {
     public:
-        MAKE_MOCK2(report_no_matches, void(CallReport, std::vector<MatchReport>), override);
-        MAKE_MOCK2(report_inapplicable_matches, void(CallReport, std::vector<MatchReport>), override);
-        MAKE_MOCK2(report_full_match, void(CallReport, MatchReport), noexcept override);
+        MAKE_MOCK2(report_no_matches, void(CallReport, std::vector<NoMatchReport>), override);
+        MAKE_MOCK2(report_inapplicable_matches, void(CallReport, std::vector<ExpectationReport>), override);
+        MAKE_MOCK2(report_full_match, void(CallReport, ExpectationReport), noexcept override);
         MAKE_MOCK1(report_unfulfilled_expectation, void(ExpectationReport), override);
         MAKE_MOCK1(report_error, void(StringT), override);
         MAKE_MOCK3(report_unhandled_exception, void(CallReport, ExpectationReport, std::exception_ptr), override);
@@ -60,47 +60,47 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     reporting::install_reporter<ReporterMock>();
     auto& reporter = dynamic_cast<ReporterMock&>(*reporting::detail::get_reporter());
 
-    const CallReport callReport{
+    CallReport const callReport{
         .returnTypeInfo = TypeReport::make<void>(),
         .fromLoc = std::source_location::current()};
 
-    const std::vector<MatchReport> matchReports{
-        {.finalizeReport = {"match1"}},
-        {.finalizeReport = {"match2"}}};
-
-    const ExpectationReport expectationReport{};
+    ExpectationReport const expectationReport{};
 
     SECTION("When report_no_matches() is called.")
     {
-        REQUIRE_CALL(reporter, report_no_matches(callReport, matchReports))
+        NoMatchReport const noMatchReport{
+            .expectationReport = expectationReport,
+            .requirementOutcomes = std::vector{false}};
+
+        REQUIRE_CALL(reporter, report_no_matches(callReport, std::vector{noMatchReport}))
             .THROW(TestException{});
 
         REQUIRE_THROWS_AS(
             reporting::detail::report_no_matches(
                 callReport,
-                matchReports),
+                std::vector{noMatchReport}),
             TestException);
     }
 
     SECTION("When report_inapplicable_matches() is called.")
     {
-        REQUIRE_CALL(reporter, report_inapplicable_matches(callReport, matchReports))
+        REQUIRE_CALL(reporter, report_inapplicable_matches(callReport, std::vector{expectationReport}))
             .THROW(TestException{});
 
         REQUIRE_THROWS_AS(
             reporting::detail::report_inapplicable_matches(
                 callReport,
-                matchReports),
+                std::vector{expectationReport}),
             TestException);
     }
 
     SECTION("When report_full_match() is called.")
     {
-        REQUIRE_CALL(reporter, report_full_match(callReport, matchReports.front()));
+        REQUIRE_CALL(reporter, report_full_match(callReport, expectationReport));
 
         reporting::detail::report_full_match(
             callReport,
-            matchReports.front());
+            expectationReport);
     }
 
     SECTION("When report_unfulfilled_expectation() is called.")
