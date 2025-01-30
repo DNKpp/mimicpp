@@ -35,17 +35,17 @@ namespace mimicpp::reporting::detail
     [[noreturn]]
     inline void report_no_matches(
         CallReport callReport,
-        std::vector<MatchReport> matchReports)
+        std::vector<NoMatchReport> noMatchReports)
     {
         get_reporter()
             // GCOVR_EXCL_START
             ->report_no_matches(
                 // GCOVR_EXCL_STOP
                 std::move(callReport),
-                std::move(matchReports));
+                std::move(noMatchReports));
 
         // GCOVR_EXCL_START
-        // ReSharper disable once CppUnreachableCode
+        // ReSharper disable once CppDFAUnreachableCode
         unreachable();
         // GCOVR_EXCL_STOP
     }
@@ -53,29 +53,29 @@ namespace mimicpp::reporting::detail
     [[noreturn]]
     inline void report_inapplicable_matches(
         CallReport callReport,
-        std::vector<MatchReport> matchReports)
+        std::vector<ExpectationReport> expectationReports)
     {
         get_reporter()
             // GCOVR_EXCL_START
             ->report_inapplicable_matches(
                 // GCOVR_EXCL_STOP
                 std::move(callReport),
-                std::move(matchReports));
+                std::move(expectationReports));
 
         // GCOVR_EXCL_START
-        // ReSharper disable once CppUnreachableCode
+        // ReSharper disable once CppDFAUnreachableCode
         unreachable();
         // GCOVR_EXCL_STOP
     }
 
     inline void report_full_match(
         CallReport callReport,
-        MatchReport matchReport) noexcept
+        ExpectationReport expectationReport) noexcept
     {
         get_reporter()
             ->report_full_match(
                 std::move(callReport),
-                std::move(matchReport));
+                std::move(expectationReport));
     }
 
     inline void report_unfulfilled_expectation(
