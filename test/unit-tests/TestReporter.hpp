@@ -28,18 +28,18 @@ class TestReporter final
     : public mimicpp::reporting::IReporter
 {
 public:
-    using call_report_t = mimicpp::reporting::CallReport;
-    using expectation_report_t = mimicpp::reporting::ExpectationReport;
-    using match_report_t = mimicpp::reporting::MatchReport;
+    using CallReport = mimicpp::reporting::CallReport;
+    using ExpectationReport = mimicpp::reporting::ExpectationReport;
+    using NoMatchReport = mimicpp::reporting::NoMatchReport;
 
-    std::vector<std::tuple<call_report_t, match_report_t>> noMatchResults{};
+    std::vector<std::tuple<CallReport, NoMatchReport>> noMatchResults{};
 
     [[noreturn]]
     void report_no_matches(
-        call_report_t call,
-        std::vector<match_report_t> matchReports) override
+        CallReport call,
+        std::vector<NoMatchReport> noMatchReports) override
     {
-        for (auto& exp : matchReports)
+        for (auto& exp : noMatchReports)
         {
             noMatchResults.emplace_back(
                 call,
@@ -49,14 +49,14 @@ public:
         throw NoMatchError{};
     }
 
-    std::vector<std::tuple<call_report_t, match_report_t>> inapplicableMatchResults{};
+    std::vector<std::tuple<CallReport, ExpectationReport>> inapplicableMatchResults{};
 
     [[noreturn]]
     void report_inapplicable_matches(
-        call_report_t call,
-        std::vector<match_report_t> matchReports) override
+        CallReport call,
+        std::vector<ExpectationReport> expectationReports) override
     {
-        for (auto& exp : matchReports)
+        for (auto& exp : expectationReports)
         {
             inapplicableMatchResults.emplace_back(
                 call,
@@ -66,21 +66,21 @@ public:
         throw NonApplicableMatchError{};
     }
 
-    std::vector<std::tuple<call_report_t, match_report_t>> fullMatchResults{};
+    std::vector<std::tuple<CallReport, ExpectationReport>> fullMatchResults{};
 
     void report_full_match(
-        call_report_t call,
-        match_report_t matchReport) noexcept override
+        CallReport call,
+        ExpectationReport expectationReport) noexcept override
     {
         fullMatchResults.emplace_back(
             std::move(call),
-            std::move(matchReport));
+            std::move(expectationReport));
     }
 
-    std::vector<expectation_report_t> unfulfilledExpectations{};
+    std::vector<mimicpp::reporting::ExpectationReport> unfulfilledExpectations{};
 
     void report_unfulfilled_expectation(
-        expectation_report_t expectationReport) override
+        mimicpp::reporting::ExpectationReport expectationReport) override
     {
         unfulfilledExpectations.emplace_back(std::move(expectationReport));
     }
@@ -94,16 +94,16 @@ public:
 
     struct unhandled_exception_info
     {
-        call_report_t call;
-        expectation_report_t expectation{};
+        CallReport call;
+        mimicpp::reporting::ExpectationReport expectation{};
         std::exception_ptr exception;
     };
 
     std::vector<unhandled_exception_info> unhandledExceptions{};
 
     void report_unhandled_exception(
-        call_report_t call,
-        expectation_report_t expectationReport,
+        CallReport call,
+        mimicpp::reporting::ExpectationReport expectationReport,
         std::exception_ptr exception) override
     {
         unhandledExceptions.emplace_back(
