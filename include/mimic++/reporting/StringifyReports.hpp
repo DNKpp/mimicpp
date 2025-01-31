@@ -23,7 +23,6 @@
 #include <optional>
 #include <span>
 #include <utility>
-#include <vector>
 
 namespace mimicpp::reporting::detail
 {
@@ -142,7 +141,7 @@ namespace mimicpp::reporting::detail
     }
 
     [[nodiscard]]
-    inline StringT stringify_inapplicable_matches(CallReport const& call, std::vector<ExpectationReport> expectations)
+    inline StringT stringify_inapplicable_matches(CallReport const& call, std::span<ExpectationReport> expectations)
     {
         assert(!expectations.empty() && "No expectations given.");
 
@@ -187,7 +186,7 @@ namespace mimicpp::reporting::detail
     }
 
     [[nodiscard]]
-    inline StringT stringify_no_matches(CallReport const& call, std::vector<NoMatchReport> noMatchReports)
+    inline StringT stringify_no_matches(CallReport const& call, std::span<NoMatchReport> noMatchReports)
     {
         StringStreamT ss{};
 

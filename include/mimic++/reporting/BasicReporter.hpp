@@ -133,14 +133,14 @@ namespace mimicpp::reporting
         void report_no_matches(CallReport call, std::vector<NoMatchReport> noMatchReports) override
         {
             send_fail(
-                detail::stringify_no_matches(std::move(call), std::move(noMatchReports)));
+                detail::stringify_no_matches(std::move(call), noMatchReports));
         }
 
         [[noreturn]]
         void report_inapplicable_matches(CallReport call, std::vector<ExpectationReport> expectationReports) override
         {
             send_fail(
-                detail::stringify_inapplicable_matches(std::move(call), std::move(expectationReports)));
+                detail::stringify_inapplicable_matches(std::move(call), expectationReports));
         }
 
         void report_full_match(CallReport call, ExpectationReport expectationReport) noexcept override

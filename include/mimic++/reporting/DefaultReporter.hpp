@@ -46,15 +46,9 @@ namespace mimicpp::reporting
         [[noreturn]]
         void report_no_matches(
             CallReport call,
-            std::vector<MatchReport> matchReports) override
+            std::vector<NoMatchReport> noMatchReports) override
         {
-            assert(
-                std::ranges::all_of(
-                    matchReports,
-                    std::bind_front(std::equal_to{}, MatchResult::none),
-                    &evaluate_match_report));
-
-            const auto msg = detail::stringify_no_match_report(call, matchReports);
+            auto const msg = detail::stringify_no_matches(call, noMatchReports);
             if (m_Out)
             {
                 *m_Out << msg << '\n';
@@ -71,15 +65,10 @@ namespace mimicpp::reporting
         [[noreturn]]
         void report_inapplicable_matches(
             CallReport call,
-            std::vector<MatchReport> matchReports) override
-        {
-            assert(
-                std::ranges::all_of(
-                    matchReports,
-                    std::bind_front(std::equal_to{}, MatchResult::inapplicable),
-                    &evaluate_match_report));
+            std::vector<ExpectationReport> expectationReports) override
 
-            const auto msg = detail::stringify_inapplicable_match_report(call, matchReports);
+        {
+            const auto msg = detail::stringify_inapplicable_matches(call, expectationReports);
             if (m_Out)
             {
                 *m_Out << msg << '\n';
