@@ -15,6 +15,7 @@
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/MatchReport.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
+#include "mimic++/utilities/Algorithm.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -186,29 +187,6 @@ namespace mimicpp::reporting::detail
     }
 
     [[nodiscard]]
-    inline std::span<std::optional<StringT>> partition_requirement_descriptions(
-        std::span<std::optional<StringT>> descriptions,
-        std::vector<bool>& outcomes) noexcept
-    {
-        assert(descriptions.size() == outcomes.size() && "Size mismatch.");
-        assert(!descriptions.empty() && "No requirements can not be a no-match.");
-
-        auto midpoint = descriptions.end();
-        auto end = outcomes.end();
-        for (auto iter = std::ranges::find(outcomes, false);
-             iter != end;
-             iter = std::ranges::find(iter, end, false))
-        {
-            auto const index = std::ranges::distance(outcomes.cbegin(), iter);
-            std::ranges::iter_swap(iter, --end);
-            std::ranges::iter_swap(descriptions.begin() + index, --midpoint);
-        }
-
-        assert(midpoint != descriptions.end() && "No violated descriptions can not be a no-match.");
-        return {midpoint, descriptions.end()};
-    }
-
-    [[nodiscard]]
     inline StringT stringify_no_matches(CallReport const& call, std::vector<NoMatchReport> noMatchReports)
     {
         StringStreamT ss{};
@@ -235,7 +213,12 @@ namespace mimicpp::reporting::detail
                 stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
 
                 ss << "\t" << "Due to Violation(s):\n";
-                std::span const violations = partition_requirement_descriptions(expReport.requirementDescriptions, outcomes.outcomes);
+                assert(!expReport.requirementDescriptions.empty() && "No requirements can not be a no-match.");
+                std::span const violations = util::partition_by(
+                    expReport.requirementDescriptions,
+                    outcomes.outcomes,
+                    std::bind_front(std::equal_to{}, true));
+                assert(!violations.empty() && "No violated descriptions can not be a no-match.");
                 std::ranges::sort(violations);
                 stringify_expectation_report_requirement_descriptions(
                     std::ostreambuf_iterator{ss},
