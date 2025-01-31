@@ -326,13 +326,6 @@ namespace mimicpp
 
     class ScopedExpectation;
 
-    enum class MatchResult
-    {
-        none,
-        inapplicable,
-        full
-    };
-
     using CharT = char;
     using CharTraitsT = std::char_traits<CharT>;
     using StringT = std::basic_string<CharT, CharTraitsT>;
