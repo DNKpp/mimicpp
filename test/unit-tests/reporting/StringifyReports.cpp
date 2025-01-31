@@ -135,7 +135,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
     CAPTURE(text);
     constexpr std::string_view stacktraceToken{"Stacktrace:\n"};
-    auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).cbegin();
+    auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
     REQUIRE(stacktraceBegin != text.cend());
     std::string_view const upper{
         text.cbegin(),
@@ -160,7 +160,7 @@ TEST_CASE(
         ss << "#" << i << " "
            << (i < 3 ? ".+\\[\\d+\\], .+" : ".*\\[\\d+\\], .*")
            << "\n";
-        auto const lineEnd = std::ranges::search(stacktracePart, newlineToken).cend();
+        auto const lineEnd = std::ranges::search(stacktracePart, newlineToken).end();
         std::string line{stacktracePart.cbegin(), lineEnd};
         REQUIRE_THAT(
             line,
