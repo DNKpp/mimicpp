@@ -70,7 +70,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     {
         NoMatchReport const noMatchReport{
             .expectationReport = expectationReport,
-            .requirementOutcomes = std::vector{{false}}};
+            .requirementOutcomes = {{false}}};
 
         REQUIRE_CALL(reporter, report_no_matches(callReport, std::vector{noMatchReport}))
             .THROW(TestException{});

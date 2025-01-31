@@ -62,7 +62,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
         ExpectationReport const expectationReport{
             .info = make_common_expectation_info(),
             .controlReport = reporting::state_applicable{1, 1, 0},
-            .requirementDescriptions = std::vector<std::optional<StringT>>{"expect: Invalid"}
+            .requirementDescriptions = {{"expect: Invalid"}}
         };
         RequirementOutcomes const requirementOutcomes{
             .outcomes = {false}};
@@ -92,7 +92,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
         ExpectationReport const expectationReport{
             .info = make_common_expectation_info(),
             .controlReport = reporting::state_inapplicable{1, 1, 1},
-            .requirementDescriptions = std::vector<std::optional<StringT>>{"expect: Valid"}
+            .requirementDescriptions = {{"expect: Valid"}}
         };
 
         REQUIRE_THROWS_AS(
@@ -117,7 +117,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
         ExpectationReport const expectationReport{
             .info = make_common_expectation_info(),
             .controlReport = reporting::state_applicable{1, 1, 0},
-            .requirementDescriptions = std::vector<std::optional<StringT>>{"expect: Valid"}
+            .requirementDescriptions = {{"expect: Valid"}}
         };
 
         REQUIRE_NOTHROW(reporter.report_full_match(callReport, expectationReport));
