@@ -51,7 +51,7 @@ namespace mimicpp::reporting
     private:
         make_name_fn m_MakeNameFn;
 
-        explicit TypeReport(make_name_fn const makeFn) noexcept
+        explicit constexpr TypeReport(make_name_fn const makeFn) noexcept
             : m_MakeNameFn{makeFn}
         {
             assert(m_MakeNameFn && "Null make-function is not allowed.");
