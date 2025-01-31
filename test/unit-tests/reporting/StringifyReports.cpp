@@ -10,6 +10,21 @@ using namespace mimicpp;
 namespace
 {
     inline reporting::control_state_t const commonApplicableState = reporting::state_applicable{13, 1337, 42};
+    [[nodiscard]]
+    Stacktrace make_shallow_stacktrace()
+    {
+        Stacktrace stacktrace = stacktrace::current();
+        CHECK(!stacktrace.empty());
+
+        // the std::regex on windows is too complex, so we limit it
+        constexpr std::size_t maxLength{6u};
+        const auto size = std::min(maxLength, stacktrace.size());
+        const auto skip = stacktrace.size() - size;
+        stacktrace = stacktrace::current(skip);
+        CHECK(size == stacktrace.size());
+
+        return stacktrace;
+    }
 }
 
 TEST_CASE(
@@ -37,12 +52,13 @@ TEST_CASE(
 
     auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
 
+    // note the Adherence reordering
     std::string const regex =
-        R"(Matched Call from .+\[\d+(?::\d+)?\], .+
+        R"(Matched Call from `.+`#L\d+, `.+`
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
-	Chose Expectation from .+\[\d+(?::\d+)?\], .+
+	Chose Expectation from `.+`#L\d+, `.+`
 	With Adherence\(s\):
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
@@ -73,8 +89,8 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
 
     std::string const regex =
-        R"(Matched Call from .+\[\d+(?::\d+)?\], .+
-	Chose Expectation from .+\[\d+(?::\d+)?\], .+
+        R"(Matched Call from `.+`#L\d+, `.+`
+	Chose Expectation from `.+`#L\d+, `.+`
 	With Adherence\(s\):
 	  \+ expect: some requirement
 )";
@@ -103,8 +119,8 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
 
     std::string const regex =
-        R"(Matched Call from .+\[\d+(?::\d+)?\], .+
-	Chose Expectation from .+\[\d+(?::\d+)?\], .+
+        R"(Matched Call from `.+`#L\d+, `.+`
+	Chose Expectation from `.+`#L\d+, `.+`
 	Without any Requirements.
 )";
     REQUIRE_THAT(
@@ -122,7 +138,7 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
-        .stacktrace = stacktrace::current(),
+        .stacktrace = make_shallow_stacktrace(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -144,33 +160,13 @@ TEST_CASE(
         std::string{upper},
         Catch::Matchers::EndsWith("Without any Requirements.\n\n"));
 
-    // thanks to msvc's poor regex implementation, I must parse the entries line by line...
-    std::string_view stacktracePart{stacktraceBegin, text.cend()};
+    std::string const stacktraceRegex =
+        R"(Stacktrace:
+#0 `.+`#L\d+, `.+`
+(?:#\d+ `.*`#L\d+, `.*`\n)*)";
     REQUIRE_THAT(
-        std::string{stacktracePart},
-        Catch::Matchers::StartsWith(std::string{stacktraceToken}));
-    stacktracePart.remove_prefix(stacktraceToken.size());
-
-    constexpr std::string_view newlineToken{"\n"};
-    for (auto const i : std::views::iota(0u, callReport.stacktrace.size()))
-    {
-        std::ostringstream ss{};
-        // I'm just interested in the general pattern: #i {file.name}[{line}], {text}
-        // {file.name} and {text} may be empty for deeper entries
-        ss << "#" << i << " "
-           << (i < 3 ? ".+\\[\\d+\\], .+" : ".*\\[\\d+\\], .*")
-           << "\n";
-        auto const lineEnd = std::ranges::search(stacktracePart, newlineToken).end();
-        std::string line{stacktracePart.cbegin(), lineEnd};
-        REQUIRE_THAT(
-            line,
-            Catch::Matchers::Matches(ss.str()));
-        stacktracePart.remove_prefix(line.size());
-    }
-
-    REQUIRE_THAT(
-        stacktracePart,
-        Catch::Matchers::IsEmpty());
+        (std::string{stacktraceBegin, text.cend()}),
+        Catch::Matchers::Matches(stacktraceRegex));
 }
 
 #endif
