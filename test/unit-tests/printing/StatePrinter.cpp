@@ -318,9 +318,9 @@ TEST_CASE(
             mimicpp::print(loc),
             Catch::Matchers::Matches(
                 // should be close enough to what is allowed on all systems
-                R"(((\d|\w|_|-|\+|\*)+(\\|/)){2})"
-                R"(StatePrinter\.cpp)"
-                R"(\[\d+:\d+\], .+)"));
+                R"(`((\d|\w|_|-|\+|\*)+(\\|/)){2})"
+                R"(StatePrinter\.cpp`)"
+                R"(#L\d+, `.+`)"));
     }
 
     SECTION("std::optional and std::nullopt_t have special treatment")

@@ -35,13 +35,14 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static OutIter print(OutIter out, std::source_location const& loc)
         {
+            out = format::format_to(std::move(out), "`");
             out = print_path(std::move(out), loc.file_name());
+            out = format::format_to(std::move(out), "`");
 
             return format::format_to(
                 std::move(out),
-                "[{}:{}], {}",
+                "#L{}, `{}`",
                 loc.line(),
-                loc.column(),
                 loc.function_name());
         }
     };
