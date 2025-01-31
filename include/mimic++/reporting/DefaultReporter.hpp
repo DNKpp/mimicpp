@@ -13,18 +13,54 @@
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/reporting/MatchReport.hpp"
+#include "mimic++/reporting/StringifyReports.hpp"
 
 #include <algorithm>
 #include <cassert>
+#include <cstddef>
 #include <exception>
 #include <functional>
 #include <ostream>
 #include <source_location>
+#include <stdexcept>
 #include <utility>
 
 namespace mimicpp::reporting
 {
-    using UnmatchedCallT = Error<std::tuple<CallReport, std::vector<MatchReport>>>;
+    template <typename Data = std::nullptr_t>
+    class Error final
+        : public std::logic_error
+    {
+    public:
+        [[nodiscard]]
+        explicit Error(
+            const std::string& what,
+            Data&& data = {},
+            const std::source_location& loc = std::source_location::current())
+            : std::logic_error{what},
+              m_Data{std::move(data)},
+              m_Loc{loc}
+        {
+        }
+
+        [[nodiscard]]
+        Data const& data() const noexcept
+        {
+            return m_Data;
+        }
+
+        [[nodiscard]]
+        std::source_location const& where() const noexcept
+        {
+            return m_Loc;
+        }
+
+    private:
+        Data m_Data;
+        std::source_location m_Loc;
+    };
+
+    using UnmatchedCallT = Error<CallReport>;
     using UnfulfilledExpectationT = Error<ExpectationReport>;
 
     /**
@@ -54,12 +90,8 @@ namespace mimicpp::reporting
                 *m_Out << msg << '\n';
             }
 
-            const std::source_location loc{call.fromLoc};
-            throw UnmatchedCallT{
-                msg,
-                {std::move(call), std::move(matchReports)},
-                loc
-            };
+            std::source_location const loc{call.fromLoc};
+            throw UnmatchedCallT{msg, std::move(call), loc};
         }
 
         [[noreturn]]
@@ -74,19 +106,15 @@ namespace mimicpp::reporting
                 *m_Out << msg << '\n';
             }
 
-            const std::source_location loc{call.fromLoc};
-            throw UnmatchedCallT{
-                msg,
-                {std::move(call), std::move(matchReports)},
-                loc
-            };
+            std::source_location const loc{call.fromLoc};
+            throw UnmatchedCallT{msg, std::move(call), loc};
         }
 
         void report_full_match(
-            [[maybe_unused]] const CallReport call,
-            [[maybe_unused]] const MatchReport matchReport) noexcept override
+            [[maybe_unused]] CallReport const call,
+            [[maybe_unused]] ExpectationReport const expectationReport) noexcept override
         {
-            assert(MatchResult::full == evaluate_match_report(matchReport));
+            assert(std::holds_alternative<state_applicable>(expectationReport.controlReport) && "Report denotes inapplicable expectation.");
         }
 
         void report_unfulfilled_expectation(

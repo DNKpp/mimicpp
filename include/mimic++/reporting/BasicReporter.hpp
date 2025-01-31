@@ -14,52 +14,18 @@
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/reporting/MatchReport.hpp"
+#include "mimic++/reporting/StringifyReports.hpp"
 
+#include <algorithm>
 #include <concepts>
-#include <cstddef>
 #include <exception>
 #include <functional>
 #include <iterator>
-#include <source_location>
-#include <stdexcept>
 #include <string>
 #include <utility>
 
 namespace mimicpp::reporting
 {
-    template <typename Data = std::nullptr_t>
-    class Error final
-        : public std::runtime_error
-    {
-    public:
-        [[nodiscard]]
-        explicit Error(
-            const std::string& what,
-            Data&& data = Data{},
-            const std::source_location& loc = std::source_location::current())
-            : std::runtime_error{what},
-              m_Data{std::move(data)},
-              m_Loc{loc}
-        {
-        }
-
-        [[nodiscard]]
-        const Data& data() const noexcept
-        {
-            return m_Data;
-        }
-
-        [[nodiscard]]
-        const std::source_location& where() const noexcept
-        {
-            return m_Loc;
-        }
-
-    private:
-        Data m_Data;
-        std::source_location m_Loc;
-    };
-
     namespace detail
     {
         [[nodiscard]]
