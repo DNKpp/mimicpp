@@ -142,6 +142,39 @@ namespace mimicpp::reporting::detail
         return std::move(ss).str();
     }
 
+    struct inapplicable_reason_printer
+    {
+        template <print_iterator OutIter>
+        OutIter operator()([[maybe_unused]] OutIter out, [[maybe_unused]] state_applicable const& state) const
+        {
+            unreachable();
+        }
+
+        template <print_iterator OutIter>
+        OutIter operator()(OutIter out, const state_inapplicable& state) const
+        {
+            auto const totalSequences = std::ranges::ssize(state.sequenceRatings)
+                                      + std::ranges::ssize(state.inapplicableSequences);
+            return format::format_to(
+                std::move(out),
+                "it's not head of {} Sequence(s) ({} total).",
+                std::ranges::ssize(state.inapplicableSequences),
+                totalSequences);
+        }
+
+        template <print_iterator OutIter>
+        OutIter operator()(OutIter out, const state_saturated& state) const
+        {
+            out = format::format_to(
+                std::move(out),
+                "it's already saturated (matched {} out of {} times).",
+                state.count,
+                state.max);
+
+            return out;
+        }
+    };
+
     [[nodiscard]]
     inline StringT stringify_inapplicable_matches(CallReport const& call, std::span<ExpectationReport> expectations)
     {
@@ -160,13 +193,19 @@ namespace mimicpp::reporting::detail
             stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
         }
 
-        ss << expectations.size() << " inapplicable but otherwise matching Expectation(s):\n";
+        ss << expectations.size() << " inapplicable but otherwise matching Expectation(s):";
 
         for (int i{};
              auto& expReport : expectations)
         {
-            ss << "\t#" << ++i << " ";
+            ss << "\n\t#" << ++i << " ";
             stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
+
+            ss << "\tBecause ";
+            std::visit(
+                std::bind_front(inapplicable_reason_printer{}, std::ostreambuf_iterator{ss}),
+                expReport.controlReport);
+            ss << "\n";
 
             if (!expReport.requirementDescriptions.empty())
             {
@@ -176,10 +215,6 @@ namespace mimicpp::reporting::detail
                     std::ostreambuf_iterator{ss},
                     expReport.requirementDescriptions,
                     "\t  + ");
-            }
-            else
-            {
-                ss << "\t" << "With any Requirements.\n";
             }
         }
 
@@ -212,12 +247,12 @@ namespace mimicpp::reporting::detail
         }
         else
         {
-            ss << noMatchReports.size() << " non-matching Expectation(s):\n";
+            ss << noMatchReports.size() << " non-matching Expectation(s):";
 
             for (int i{};
                  auto& [expReport, outcomes] : noMatchReports)
             {
-                ss << "\t#" << ++i << " ";
+                ss << "\n\t#" << ++i << " ";
                 stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
 
                 ss << "\t" << "Due to Violation(s):\n";
