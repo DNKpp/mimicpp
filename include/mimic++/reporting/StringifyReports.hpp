@@ -30,7 +30,7 @@ namespace mimicpp::reporting::detail
     {
         if (!stacktrace.empty())
         {
-            out = format::format_to(std::move(out), "Stacktrace:\n");
+            out = format::format_to(std::move(out), "\nStacktrace:\n");
             out = mimicpp::print(std::move(out), stacktrace);
         }
 
@@ -111,8 +111,12 @@ namespace mimicpp::reporting::detail
         stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
 
         // Todo: target
-        ss << "\t" << "Where\n";
-        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
+
+        if (!call.argDetails.empty())
+        {
+            ss << "\t" << "Where:\n";
+            stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
+        }
 
         ss << "\t" << "Chose ";
         stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectation);
@@ -128,10 +132,9 @@ namespace mimicpp::reporting::detail
         }
         else
         {
-            ss << "\t" << "With any Requirements.\n";
+            ss << "\t" << "Without any Requirements.\n";
         }
 
-        ss << "\n";
         stringify_stacktrace(
             std::ostreambuf_iterator{ss},
             call.stacktrace);
@@ -150,8 +153,12 @@ namespace mimicpp::reporting::detail
         stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
 
         // Todo: target
-        ss << "\t" << "Where\n";
-        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
+
+        if (!call.argDetails.empty())
+        {
+            ss << "\t" << "Where:\n";
+            stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
+        }
 
         ss << expectations.size() << " inapplicable but otherwise matching Expectation(s):\n";
 
@@ -176,7 +183,6 @@ namespace mimicpp::reporting::detail
             }
         }
 
-        ss << "\n";
         stringify_stacktrace(
             std::ostreambuf_iterator{ss},
             call.stacktrace);
@@ -193,8 +199,12 @@ namespace mimicpp::reporting::detail
         stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
 
         // Todo: target
-        ss << "\t" << "Where\n";
-        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
+
+        if (!call.argDetails.empty())
+        {
+            ss << "\t" << "Where:\n";
+            stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
+        }
 
         if (noMatchReports.empty())
         {
@@ -236,7 +246,6 @@ namespace mimicpp::reporting::detail
             }
         }
 
-        ss << "\n";
         stringify_stacktrace(
             std::ostreambuf_iterator{ss},
             call.stacktrace);

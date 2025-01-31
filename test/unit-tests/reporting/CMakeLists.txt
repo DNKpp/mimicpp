@@ -11,4 +11,5 @@ target_sources(${TARGET_NAME}
     "BasicReporter.cpp"
     "DefaultReporter.cpp"
     "GlobalReporter.cpp"
+    "StringifyReports.cpp"
 )
