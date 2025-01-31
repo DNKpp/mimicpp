@@ -10,7 +10,6 @@
 using namespace mimicpp;
 using reporting::CallReport;
 using reporting::ExpectationReport;
-using reporting::MatchReport;
 using reporting::NoMatchReport;
 using reporting::RequirementOutcomes;
 using reporting::TypeReport;

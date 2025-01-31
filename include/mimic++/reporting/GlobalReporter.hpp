@@ -14,7 +14,6 @@
 #include "mimic++/reporting/DefaultReporter.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
-#include "mimic++/reporting/MatchReport.hpp"
 
 #include <exception>
 #include <iostream>

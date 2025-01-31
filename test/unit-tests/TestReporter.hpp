@@ -10,7 +10,6 @@
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
 #include "mimic++/reporting/IReporter.hpp"
-#include "mimic++/reporting/MatchReport.hpp"
 
 #include <exception>
 #include <memory>

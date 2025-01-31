@@ -7,7 +7,6 @@ target_sources(${TARGET_NAME}
     PRIVATE
     "CallReport.cpp"
     "ExpectationReport.cpp"
-    "MatchReport.cpp"
     "TypeReport.cpp"
     "BasicReporter.cpp"
     "DefaultReporter.cpp"

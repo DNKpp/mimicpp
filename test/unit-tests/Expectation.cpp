@@ -96,31 +96,6 @@ TEST_CASE(
 
 namespace
 {
-    inline reporting::MatchReport const commonNoMatchReport{
-        .controlReport = reporting::state_applicable{
-                                                     .min = 0,
-                                                     .max = 1337,
-                                                     .count = 0},
-        .expectationReports = {{.isMatching = false}}
-    };
-
-    inline reporting::MatchReport const commonFullMatchReport{
-        .controlReport = reporting::state_applicable{
-                                                     .min = 0,
-                                                     .max = 1337,
-                                                     .count = 0},
-        .expectationReports = {}
-    };
-
-    inline reporting::MatchReport const commonInapplicableMatchReport{
-        .controlReport = reporting::state_inapplicable{
-                                                       .min = 0,
-                                                       .max = 1337,
-                                                       .count = 0,
-                                                       .inapplicableSequences = {sequence::Tag{42}}},
-        .expectationReports = {}
-    };
-
     inline reporting::RequirementOutcomes const commonMatchingOutcome{
         .outcomes = {true}};
 
@@ -599,8 +574,8 @@ TEMPLATE_TEST_CASE(
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
             {},
             ControlPolicyFake{
-                              .isSatisfied = true,
-                              .stateData = commonFullMatchReport.controlReport},
+             .isSatisfied = true,
+             .stateData = commonApplicableState},
             FinalizerT{}
         };
 
@@ -618,8 +593,8 @@ TEMPLATE_TEST_CASE(
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
             {},
             ControlPolicyFake{
-                              .isSatisfied = true,
-                              .stateData = commonFullMatchReport.controlReport},
+             .isSatisfied = true,
+             .stateData = commonApplicableState},
             FinalizerT{},
             PolicyRefT{std::ref(policy)}
         };
@@ -663,8 +638,8 @@ TEMPLATE_TEST_CASE(
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
             {},
             ControlPolicyFake{
-                              .isSatisfied = true,
-                              .stateData = commonFullMatchReport.controlReport},
+             .isSatisfied = true,
+             .stateData = commonApplicableState},
             FinalizerT{},
             PolicyRefT{std::ref(policy1)},
             PolicyRefT{std::ref(policy2)}
