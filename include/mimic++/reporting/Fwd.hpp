@@ -16,7 +16,7 @@ namespace mimicpp::reporting
     class TypeReport;
     class CallReport;
     class ExpectationReport;
-    class MatchReport;
+    class NoMatchReport;
 }
 
 #endif
