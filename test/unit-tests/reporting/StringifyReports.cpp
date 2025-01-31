@@ -13,7 +13,7 @@ namespace
     inline reporting::control_state_t const commonInapplicableState = reporting::state_inapplicable{13, 1337, 42, {sequence::rating{1}}, {{sequence::Tag{1337}}}};
     inline reporting::control_state_t const commonSaturatedState = reporting::state_saturated{42, 42, 42};
 
-    [[nodiscard]]
+    [[nodiscard, maybe_unused]]
     Stacktrace make_shallow_stacktrace()
     {
         Stacktrace stacktrace = stacktrace::current();
