@@ -6,6 +6,8 @@
 #ifndef MIMICPP_UTILITIES_REGEX_HPP
 #define MIMICPP_UTILITIES_REGEX_HPP
 
+#pragma once
+
 #include <regex>
 #include <string>
 #include <string_view>
