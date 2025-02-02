@@ -80,7 +80,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
                 out->str(),
                 Matches::StartsWith("Unmatched Call originated from ")
                     && Matches::ContainsSubstring("1 non-matching Expectation(s):\n")
-                    && Matches::ContainsSubstring("#1 Expectation from ")
+                    && Matches::ContainsSubstring("#1 Expectation defined at ")
                     && Matches::ContainsSubstring("Due to Violation(s):\n")
                     && Matches::ContainsSubstring("  - expect: Invalid")
                     && !Matches::ContainsSubstring("With Adherence(s):"));
@@ -105,7 +105,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
                 out->str(),
                 Matches::StartsWith("Unmatched Call originated from ")
                     && Matches::ContainsSubstring("1 inapplicable but otherwise matching Expectation(s):\n")
-                    && Matches::ContainsSubstring("#1 Expectation from ")
+                    && Matches::ContainsSubstring("#1 Expectation defined at ")
                     && Matches::ContainsSubstring("With Adherence(s):\n")
                     && Matches::ContainsSubstring("  + expect: Valid")
                     && !Matches::ContainsSubstring("Due to Violation(s):"));
@@ -147,7 +147,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
             {
                 REQUIRE_THAT(
                     out->str(),
-                    Matches::StartsWith("Unfulfilled Expectation from "));
+                    Matches::StartsWith("Unfulfilled Expectation defined at "));
             }
         }
 

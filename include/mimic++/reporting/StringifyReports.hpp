@@ -75,7 +75,7 @@ namespace mimicpp::reporting::detail
     template <print_iterator OutIter>
     OutIter stringify_expectation_report_from(OutIter out, ExpectationReport const& expectation)
     {
-        out = format::format_to(std::move(out), "Expectation from ");
+        out = format::format_to(std::move(out), "Expectation defined at ");
         out = mimicpp::print(std::move(out), expectation.info.sourceLocation);
         out = format::format_to(std::move(out), "\n");
 

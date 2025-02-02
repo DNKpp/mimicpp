@@ -62,7 +62,7 @@ TEST_CASE(
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
-	Chose Expectation from `.+`#L\d+, `.+`
+	Chose Expectation defined at `.+`#L\d+, `.+`
 	With Adherence\(s\):
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
@@ -94,7 +94,7 @@ TEST_CASE(
 
     std::string const regex =
         R"(Matched Call originated from `.+`#L\d+, `.+`
-	Chose Expectation from `.+`#L\d+, `.+`
+	Chose Expectation defined at `.+`#L\d+, `.+`
 	With Adherence\(s\):
 	  \+ expect: some requirement
 )";
@@ -124,7 +124,7 @@ TEST_CASE(
 
     std::string const regex =
         R"(Matched Call originated from `.+`#L\d+, `.+`
-	Chose Expectation from `.+`#L\d+, `.+`
+	Chose Expectation defined at `.+`#L\d+, `.+`
 	Without any Requirements.
 )";
     REQUIRE_THAT(
@@ -215,13 +215,13 @@ TEST_CASE(
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
 2 inapplicable but otherwise matching Expectation\(s\):
-	#1 Expectation from `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+`#L\d+, `.+`
 	Because it's not head of 1 Sequence\(s\) \(2 total\).
 	With Adherence\(s\):
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
 
-	#2 Expectation from `.+`#L\d+, `.+`
+	#2 Expectation defined at `.+`#L\d+, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
 	With Adherence\(s\):
 	  \+ expect: test
@@ -255,7 +255,7 @@ TEST_CASE(
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
 1 inapplicable but otherwise matching Expectation\(s\):
-	#1 Expectation from `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+`#L\d+, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
 	With Adherence\(s\):
 	  \+ expect: some requirement
@@ -288,7 +288,7 @@ TEST_CASE(
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
 1 inapplicable but otherwise matching Expectation\(s\):
-	#1 Expectation from `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+`#L\d+, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
 )";
     REQUIRE_THAT(
@@ -387,14 +387,14 @@ TEST_CASE(
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
 2 non-matching Expectation\(s\):
-	#1 Expectation from `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+`#L\d+, `.+`
 	Due to Violation\(s\):
 	  \- expect: arg\[0\] > 0
 	  \- 2 Requirement\(s\) failed without further description\.
 	With Adherence\(s\):
 	  \+ expect: arg\[1\] not empty
 
-	#2 Expectation from `.+`#L\d+, `.+`
+	#2 Expectation defined at `.+`#L\d+, `.+`
 	Due to Violation\(s\):
 	  \- expect: violated
 	With Adherence\(s\):
@@ -438,7 +438,7 @@ TEST_CASE(
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
 1 non-matching Expectation\(s\):
-	#1 Expectation from `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+`#L\d+, `.+`
 	Due to Violation\(s\):
 	  \- expect: violation
 	With Adherence\(s\):
@@ -477,7 +477,7 @@ TEST_CASE(
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
 1 non-matching Expectation\(s\):
-	#1 Expectation from `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+`#L\d+, `.+`
 	Due to Violation\(s\):
 	  \- expect: violation
 )";
@@ -580,7 +580,7 @@ TEST_CASE(
 
     auto const text = reporting::detail::stringify_unfulfilled_expectation(expectationReport);
     std::string const regex = format::format(
-        R"(Unfulfilled Expectation from `.+`#L\d+, `.+`
+        R"(Unfulfilled Expectation defined at `.+`#L\d+, `.+`
 	Because matching {} was expected => requires {} further match\(es\)\.
 )",
         expectedTimesText,

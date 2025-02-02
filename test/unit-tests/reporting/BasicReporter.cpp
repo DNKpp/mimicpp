@@ -167,7 +167,7 @@ TEST_CASE(
                 g_FailMessage.value(),
                 matches::StartsWith("Unmatched Call originated from ")
                     && matches::ContainsSubstring("1 non-matching Expectation(s):\n")
-                    && matches::ContainsSubstring("#1 Expectation from ")
+                    && matches::ContainsSubstring("#1 Expectation defined at ")
                     && matches::ContainsSubstring("Due to Violation(s):\n"));
         }
     }
@@ -187,7 +187,7 @@ TEST_CASE(
             g_FailMessage.value(),
             matches::StartsWith("Unmatched Call originated from ")
                 && matches::ContainsSubstring("1 inapplicable but otherwise matching Expectation(s):\n")
-                && matches::ContainsSubstring("#1 Expectation from ")
+                && matches::ContainsSubstring("#1 Expectation defined at ")
                 && !matches::ContainsSubstring("Due to Violation(s):\n"));
     }
 
@@ -204,7 +204,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             g_FailMessage.value(),
-            matches::StartsWith("Unfulfilled Expectation from "));
+            matches::StartsWith("Unfulfilled Expectation defined at "));
     }
 
     SECTION("Does not send fail, when unfulfilled expectation is reported, but an other exception already exists.")
