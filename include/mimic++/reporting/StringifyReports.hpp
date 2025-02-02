@@ -159,7 +159,7 @@ namespace mimicpp::reporting::detail
         }
 
         template <print_iterator OutIter>
-        OutIter operator()(OutIter out, const state_inapplicable& state) const
+        OutIter operator()(OutIter out, state_inapplicable const& state) const
         {
             auto const totalSequences = std::ranges::ssize(state.sequenceRatings)
                                       + std::ranges::ssize(state.inapplicableSequences);
@@ -325,6 +325,96 @@ namespace mimicpp::reporting::detail
         stringify_stacktrace(
             std::ostreambuf_iterator{ss},
             call.stacktrace);
+
+        return std::move(ss).str();
+    }
+
+    struct unfulfilled_reason_printer
+    {
+        template <print_iterator OutIter>
+        OutIter operator()(OutIter out, state_applicable const& state) const
+        {
+            return stringify_times_state(
+                std::move(out),
+                state.count,
+                state.min,
+                state.max);
+        }
+
+        template <print_iterator OutIter>
+        OutIter operator()(OutIter out, state_inapplicable const& state) const
+        {
+            return stringify_times_state(
+                std::move(out),
+                state.count,
+                state.min,
+                state.max);
+        }
+
+        template <print_iterator OutIter>
+        OutIter operator()([[maybe_unused]] OutIter out, [[maybe_unused]] state_saturated const& state) const
+        {
+            unreachable();
+        }
+
+    private:
+        template <print_iterator OutIter>
+        static OutIter stringify_times_state(OutIter out, int const current, int const min, int const max)
+        {
+            const auto verbalizeValue = [](OutIter o, int const value) {
+                assert(0 < value && "Invalid value.");
+
+                switch (value)
+                {
+                case 1:  return format::format_to(std::move(o), "once");
+                case 2:  return format::format_to(std::move(o), "twice");
+                default: return format::format_to(std::move(o), "{} times", value);
+                }
+            };
+
+            assert(current < min && "State doesn't denote an unsatisfied state.");
+
+            out = format::format_to(std::move(out), "matching ");
+
+            if (min == max)
+            {
+                out = format::format_to(std::move(out), "exactly ");
+                out = verbalizeValue(std::move(out), min);
+                out = format::format_to(std::move(out), " ");
+            }
+            else if (max == std::numeric_limits<int>::max())
+            {
+                out = format::format_to(std::move(out), "at least ");
+                out = verbalizeValue(std::move(out), min);
+                out = format::format_to(std::move(out), " ");
+            }
+            else
+            {
+                out = format::format_to(
+                    std::move(out),
+                    "between {} and {} times ",
+                    min,
+                    max);
+            }
+
+            return format::format_to(
+                std::move(out),
+                "was expected => requires {} further match(es).\n",
+                min - current);
+        }
+    };
+
+    [[nodiscard]]
+    inline StringT stringify_unfulfilled_expectation(ExpectationReport const& expectationReport)
+    {
+        StringStreamT ss{};
+
+        ss << "Unfulfilled ";
+        stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectationReport);
+        ss << "\tBecause ";
+        std::visit(
+            std::bind_front(unfulfilled_reason_printer{}, std::ostreambuf_iterator{ss}),
+            expectationReport.controlReport);
 
         return std::move(ss).str();
     }

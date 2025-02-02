@@ -204,7 +204,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             g_FailMessage.value(),
-            matches::StartsWith("Unfulfilled expectation:"));
+            matches::StartsWith("Unfulfilled Expectation from "));
     }
 
     SECTION("Does not send fail, when unfulfilled expectation is reported, but an other exception already exists.")

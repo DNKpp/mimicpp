@@ -116,20 +116,17 @@ namespace mimicpp::reporting
             assert(std::holds_alternative<state_applicable>(expectationReport.controlReport) && "Report denotes inapplicable expectation.");
         }
 
-        void report_unfulfilled_expectation(
-            ExpectationReport expectationReport) override
+        void report_unfulfilled_expectation(ExpectationReport expectationReport) override
         {
             if (0 == std::uncaught_exceptions())
             {
-                const auto msg = detail::stringify_unfulfilled_expectation(expectationReport);
+                auto const msg = detail::stringify_unfulfilled_expectation(expectationReport);
                 if (m_Out)
                 {
                     *m_Out << msg << '\n';
                 }
 
-                throw UnfulfilledExpectationT{
-                    msg,
-                    std::move(expectationReport)};
+                throw UnfulfilledExpectationT{msg, std::move(expectationReport)};
             }
         }
 

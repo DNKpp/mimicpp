@@ -553,3 +553,39 @@ TEST_CASE(
 }
 
 #endif
+
+TEST_CASE(
+    "detail::stringify_unfulfilled_expectation converts the information to a pretty formatted text.",
+    "[reporting][detail]")
+{
+    static constexpr auto maxSize = std::numeric_limits<int>::max();
+    auto [expectedTimesText, expectedDiff, state] = GENERATE(
+        (table<std::string, int, reporting::control_state_t>)({
+            {           "exactly once", 1,         reporting::state_applicable{.min = 1, .max = 1, .count = 0}},
+            {          "exactly twice", 2,         reporting::state_applicable{.min = 2, .max = 2, .count = 0}},
+            {       "exactly 42 times", 5,      reporting::state_applicable{.min = 42, .max = 42, .count = 37}},
+
+            {  "between 1 and 2 times", 1,         reporting::state_applicable{.min = 1, .max = 2, .count = 0}},
+            {"between 42 and 47 times", 5,      reporting::state_applicable{.min = 42, .max = 47, .count = 37}},
+
+            {          "at least once", 1,   reporting::state_applicable{.min = 1, .max = maxSize, .count = 0}},
+            {         "at least twice", 2,   reporting::state_applicable{.min = 2, .max = maxSize, .count = 0}},
+            {      "at least 42 times", 5, reporting::state_applicable{.min = 42, .max = maxSize, .count = 37}}
+    }));
+
+    reporting::ExpectationReport const expectationReport{
+        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .controlReport = state
+    };
+
+    auto const text = reporting::detail::stringify_unfulfilled_expectation(expectationReport);
+    std::string const regex = format::format(
+        R"(Unfulfilled Expectation from `.+`#L\d+, `.+`
+	Because matching {} was expected => requires {} further match\(es\)\.
+)",
+        expectedTimesText,
+        expectedDiff);
+    REQUIRE_THAT(
+        text,
+        Catch::Matchers::Matches(regex));
+}

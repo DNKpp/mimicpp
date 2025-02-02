@@ -28,19 +28,6 @@ namespace mimicpp::reporting
     namespace detail
     {
         [[nodiscard]]
-        inline StringT stringify_unfulfilled_expectation(ExpectationReport const& expectationReport)
-        {
-            StringStreamT ss{};
-            ss << "Unfulfilled expectation:\n";
-            mimicpp::print(
-                std::ostreambuf_iterator{ss},
-                expectationReport);
-            ss << "\n";
-
-            return std::move(ss).str();
-        }
-
-        [[nodiscard]]
         inline StringT stringify_unhandled_exception(
             CallReport const& call,
             ExpectationReport const& expectationReport,

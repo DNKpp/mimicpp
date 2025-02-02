@@ -132,17 +132,22 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     SECTION("When unfulfilled expectation is reported.")
     {
+        static ExpectationReport const expectationReport{
+            .info = make_common_expectation_info(),
+            .controlReport = reporting::state_applicable{1, 1, 0}
+        };
+
         SECTION("And when there exists no uncaught exception, UnfulfilledExpectationT is thrown.")
         {
             REQUIRE_THROWS_AS(
-                reporter.report_unfulfilled_expectation({}),
+                reporter.report_unfulfilled_expectation(expectationReport),
                 reporting::UnfulfilledExpectationT);
 
             CHECKED_IF(out)
             {
                 REQUIRE_THAT(
                     out->str(),
-                    Matches::StartsWith("Unfulfilled expectation:"));
+                    Matches::StartsWith("Unfulfilled Expectation from "));
             }
         }
 
@@ -152,7 +157,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
             {
                 ~helper()
                 {
-                    rep.report_unfulfilled_expectation({});
+                    rep.report_unfulfilled_expectation(expectationReport);
                 }
 
                 reporting::DefaultReporter& rep;
