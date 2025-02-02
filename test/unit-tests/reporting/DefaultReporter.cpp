@@ -239,7 +239,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
         {
             REQUIRE_THAT(
                 out->str(),
-                Matches::StartsWith("Unhandled exception:"));
+                Matches::StartsWith("Unhandled Exception with message `Test`"));
         }
     }
 }

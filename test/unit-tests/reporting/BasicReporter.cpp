@@ -269,7 +269,7 @@ TEST_CASE(
             REQUIRE_NOTHROW(mock());
             REQUIRE_THAT(
                 g_WarningMessage.value(),
-                matches::StartsWith("Unhandled exception: what: An std::exception type."));
+                matches::StartsWith("Unhandled Exception with message `An std::exception type.`"));
         }
 
         SECTION("When an unknown exception is thrown.")
@@ -281,7 +281,7 @@ TEST_CASE(
             REQUIRE_NOTHROW(mock());
             REQUIRE_THAT(
                 g_WarningMessage.value(),
-                matches::StartsWith("Unhandled exception: Unknown exception type."));
+                matches::StartsWith("Unhandled Exception of unknown type."));
         }
     }
 }
