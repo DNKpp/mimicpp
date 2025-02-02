@@ -81,16 +81,6 @@ namespace mimicpp::reporting
         [[nodiscard]]
         friend bool operator==(const RequirementOutcomes&, const RequirementOutcomes&) = default;
     };
-
-    class NoMatchReport
-    {
-    public:
-        ExpectationReport expectationReport;
-        RequirementOutcomes requirementOutcomes;
-
-        [[nodiscard]]
-        friend bool operator==(NoMatchReport const&, NoMatchReport const&) = default;
-    };
 }
 
 #endif

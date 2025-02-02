@@ -12,6 +12,7 @@
 
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
+#include "mimic++/reporting/NoMatchReport.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
 
 #include "mimic++/reporting/StringifyReports.hpp"

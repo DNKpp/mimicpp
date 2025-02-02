@@ -11,6 +11,7 @@
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
+#include "mimic++/reporting/NoMatchReport.hpp"
 #include "mimic++/reporting/StringifyReports.hpp"
 
 #include <cassert>
