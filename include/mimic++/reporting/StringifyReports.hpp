@@ -38,13 +38,21 @@ namespace mimicpp::reporting::detail
     }
 
     template <print_iterator OutIter>
-    OutIter stringify_call_report_arguments(OutIter out, CallReport const& call, StringViewT const prefix)
+    OutIter stringify_call_report_arguments(OutIter out, CallReport const& call, StringViewT const linePrefix)
     {
+        if (call.argDetails.empty())
+        {
+            return out;
+        }
+
+        out = std::ranges::copy(linePrefix, std::move(out)).out;
+        out = format::format_to(std::move(out), "Where:\n");
+
         for (int i{};
              auto const& [type, state] : call.argDetails)
         {
-            out = std::ranges::copy(prefix, std::move(out)).out;
-            out = format::format_to(std::move(out), "arg[{}] => ", i++);
+            out = std::ranges::copy(linePrefix, std::move(out)).out;
+            out = format::format_to(std::move(out), "\targ[{}] => ", i++);
             out = std::ranges::copy(type.name(), std::move(out)).out;
             out = format::format_to(std::move(out), ": ");
             out = std::ranges::copy(state, std::move(out)).out;
@@ -121,11 +129,7 @@ namespace mimicpp::reporting::detail
 
         // Todo: target
 
-        if (!call.argDetails.empty())
-        {
-            ss << "\t" << "Where:\n";
-            stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
-        }
+        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         ss << "\t" << "Chose ";
         stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectation);
@@ -195,11 +199,7 @@ namespace mimicpp::reporting::detail
 
         // Todo: target
 
-        if (!call.argDetails.empty())
-        {
-            ss << "\t" << "Where:\n";
-            stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
-        }
+        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         ss << expectations.size() << " inapplicable but otherwise matching Expectation(s):";
 
@@ -282,11 +282,7 @@ namespace mimicpp::reporting::detail
 
         // Todo: target
 
-        if (!call.argDetails.empty())
-        {
-            ss << "\t" << "Where:\n";
-            stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t\t");
-        }
+        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         if (noMatchReports.empty())
         {
