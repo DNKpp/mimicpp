@@ -74,7 +74,7 @@ TEST(
     EXPECT_FATAL_FAILURE(
         mimicpp::Mock<void(int)> mock{};
         EXPECT_ANY_THROW(mock(1337)),
-        "Unmatched Call from ");
+        "Unmatched Call originated from ");
 }
 
 TEST(
