@@ -12,11 +12,9 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/Utility.hpp"
-#include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
 
-#include <ranges>
 #include <source_location>
 #include <tuple>
 #include <utility>
