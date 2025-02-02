@@ -32,16 +32,11 @@ namespace mimicpp::reporting
      * independent domains (e.g. unit-test frameworks) over the ``IReporter`` interface and are thus designed to provide as much
      * transparent information as possible, without requiring them to be a generic type.
      *
-     * Each report type can be printed via ``mimicpp::print`` function, but users may customize that by adding a specialization for
-     * ``mimicpp::custom::Printer``.
      * \{
      */
 
     /**
      * \brief Contains the extracted info from a typed ``call::Info``.
-     * \details This type is meant to be used to communicate with independent domains via the reporter interface and thus contains
-     * the generic information as plain ``std`` types (e.g. the return type is provided as ``std::type_index`` instead of an actual
-     * type).
      */
     class CallReport
     {
