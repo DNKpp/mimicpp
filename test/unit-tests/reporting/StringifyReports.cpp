@@ -19,7 +19,8 @@ namespace
         Stacktrace stacktrace = stacktrace::current();
         CHECK(!stacktrace.empty());
 
-        // the std::regex on windows is too complex, so we limit it
+        // When evaluating the stacktrace via regex, this will fail on msvc, because the regex-state becomes too big.
+        // So, we limit the stacktrace here, to have a manageable size.
         constexpr std::size_t maxLength{6u};
         const auto size = std::min(maxLength, stacktrace.size());
         const auto skip = stacktrace.size() - size;
@@ -323,6 +324,224 @@ TEST_CASE(
     REQUIRE_THAT(
         (std::string{text.cbegin(), stacktraceBegin}),
         Catch::Matchers::EndsWith("Because it's not head of 1 Sequence(s) (2 total).\n\n"));
+
+    std::string const stacktraceRegex =
+        R"(Stacktrace:
+#0 `.+`#L\d+, `.+`
+(?:#\d+ `.*`#L\d+, `.*`\n)*)";
+    REQUIRE_THAT(
+        (std::string{stacktraceBegin, text.cend()}),
+        Catch::Matchers::Matches(stacktraceRegex));
+}
+
+#endif
+
+TEST_CASE(
+    "detail::stringify_no_matches converts the information to a pretty formatted text.",
+    "[reporting][detail]")
+{
+    reporting::CallReport const callReport{
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {
+            {{reporting::TypeReport::make<int>(), "1337"},
+             {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
+        .fromLoc = std::source_location::current(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    reporting::ExpectationReport const expectationReport1{
+        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .controlReport = commonApplicableState,
+        .finalizerDescription = std::nullopt,
+        .requirementDescriptions = {
+                 {std::nullopt,
+             "expect: arg[1] not empty",
+             std::nullopt,
+             "expect: arg[0] > 0",
+             std::nullopt}}
+    };
+    reporting::RequirementOutcomes const outcomes1{
+        .outcomes = {{false, true, false, false, true}}};
+
+    reporting::ExpectationReport const expectationReport2{
+        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name2"},
+        .controlReport = commonApplicableState,
+        .finalizerDescription = std::nullopt,
+        .requirementDescriptions = {
+                 {"expect: violated",
+             "expect: adhered"}}
+    };
+    reporting::RequirementOutcomes const outcomes2{
+        .outcomes = {false, true}
+    };
+
+    std::vector noMatchReports{
+        reporting::NoMatchReport{expectationReport1, outcomes1},
+        reporting::NoMatchReport{expectationReport2, outcomes2}
+    };
+    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+
+    std::string const regex =
+        R"(Unmatched Call from `.+`#L\d+, `.+`
+	Where:
+		arg\[0\] => int: 1337
+		arg\[1\] => std::string: "Hello, World!"
+2 non-matching Expectation\(s\):
+	#1 Expectation from `.+`#L\d+, `.+`
+	Due to Violation\(s\):
+	  \- expect: arg\[0\] > 0
+	  \- 2 Requirement\(s\) failed without further description\.
+	With Adherence\(s\):
+	  \+ expect: arg\[1\] not empty
+
+	#2 Expectation from `.+`#L\d+, `.+`
+	Due to Violation\(s\):
+	  \- expect: violated
+	With Adherence\(s\):
+	  \+ expect: adhered
+)";
+    REQUIRE_THAT(
+        text,
+        Catch::Matchers::Matches(regex));
+}
+
+TEST_CASE(
+    "detail::stringify_no_matches omits \"Where\"-Section, when no arguments exist.",
+    "[reporting][detail]")
+{
+    reporting::CallReport const callReport{
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {},
+        .fromLoc = std::source_location::current(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    reporting::ExpectationReport const expectationReport{
+        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .controlReport = commonApplicableState,
+        .finalizerDescription = std::nullopt,
+        .requirementDescriptions = {
+                 {
+                "expect: adherence",
+                "expect: violation",
+            }}
+    };
+    reporting::RequirementOutcomes const outcomes{
+        .outcomes = {true, false}
+    };
+
+    std::vector noMatchReports{
+        reporting::NoMatchReport{expectationReport, outcomes},
+    };
+    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+
+    std::string const regex =
+        R"(Unmatched Call from `.+`#L\d+, `.+`
+1 non-matching Expectation\(s\):
+	#1 Expectation from `.+`#L\d+, `.+`
+	Due to Violation\(s\):
+	  \- expect: violation
+	With Adherence\(s\):
+	  \+ expect: adherence
+)";
+    REQUIRE_THAT(
+        text,
+        Catch::Matchers::Matches(regex));
+}
+
+TEST_CASE(
+    "detail::stringify_no_matches omits \"With Adherence(s)\"-Section, when no requirements exist.",
+    "[reporting][detail]")
+{
+    reporting::CallReport const callReport{
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {},
+        .fromLoc = std::source_location::current(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    reporting::ExpectationReport const expectationReport{
+        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .controlReport = commonApplicableState,
+        .requirementDescriptions = {{"expect: violation"}}
+    };
+
+    reporting::RequirementOutcomes const outcomes{
+        .outcomes = {false}};
+
+    std::vector noMatchReports{
+        reporting::NoMatchReport{expectationReport, outcomes}
+    };
+    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+
+    std::string const regex =
+        R"(Unmatched Call from `.+`#L\d+, `.+`
+1 non-matching Expectation\(s\):
+	#1 Expectation from `.+`#L\d+, `.+`
+	Due to Violation\(s\):
+	  \- expect: violation
+)";
+    REQUIRE_THAT(
+        text,
+        Catch::Matchers::Matches(regex));
+}
+
+TEST_CASE(
+    "detail::stringify_no_matches has special treatment, when no expectations exist.",
+    "[reporting][detail]")
+{
+    reporting::CallReport const callReport{
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {},
+        .fromLoc = std::source_location::current(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    std::vector<reporting::NoMatchReport> noMatchReports{};
+    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+
+    std::string const regex =
+        R"(Unmatched Call from `.+`#L\d+, `.+`
+No Expectations available!
+)";
+    REQUIRE_THAT(
+        text,
+        Catch::Matchers::Matches(regex));
+}
+
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+
+TEST_CASE(
+    "detail::stringify_no_matches adds the Stacktrace, if existing.",
+    "[reporting][detail]")
+{
+    reporting::CallReport const callReport{
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {},
+        .fromLoc = std::source_location::current(),
+        .stacktrace = make_shallow_stacktrace(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    reporting::ExpectationReport const expectationReport{
+        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .controlReport = commonApplicableState,
+        .requirementDescriptions = {{"expect: violation"}}
+    };
+
+    reporting::RequirementOutcomes const outcomes{
+        .outcomes = {false}};
+
+    std::vector noMatchReports{
+        reporting::NoMatchReport{expectationReport, outcomes}
+    };
+    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+    CAPTURE(text);
+    auto const stacktraceBegin = std::ranges::search(text, std::string_view{"Stacktrace:\n"}).begin();
+    REQUIRE(stacktraceBegin != text.cend());
+    REQUIRE_THAT(
+        (std::string{text.cbegin(), stacktraceBegin}),
+        Catch::Matchers::EndsWith("- expect: violation\n\n"));
 
     std::string const stacktraceRegex =
         R"(Stacktrace:

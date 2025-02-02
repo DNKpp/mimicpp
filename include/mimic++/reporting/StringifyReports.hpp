@@ -229,6 +229,49 @@ namespace mimicpp::reporting::detail
         return std::move(ss).str();
     }
 
+    template <print_iterator OutIter>
+    OutIter stringify_expectation_report_requirement_violations(
+        OutIter out,
+        std::span<std::optional<StringT> const> const descriptions,
+        StringViewT const linePrefix)
+    {
+        if (descriptions.empty())
+        {
+            return out;
+        }
+
+        out = std::ranges::copy(linePrefix, std::move(out)).out;
+        out = format::format_to(std::move(out), "Due to Violation(s):\n");
+
+        int withoutDescription{0};
+        for (auto const& description : descriptions)
+        {
+            if (description)
+            {
+                out = std::ranges::copy(linePrefix, std::move(out)).out;
+                out = format::format_to(std::move(out), "  - ");
+                out = std::ranges::copy(*description, std::move(out)).out;
+                out = format::format_to(std::move(out), "\n");
+            }
+            else
+            {
+                ++withoutDescription;
+            }
+        }
+
+        if (0 < withoutDescription)
+        {
+            out = std::ranges::copy(linePrefix, std::move(out)).out;
+            out = format::format_to(std::move(out), "  - ");
+            out = format::format_to(
+                std::move(out),
+                "{} Requirement(s) failed without further description.\n",
+                withoutDescription);
+        }
+
+        return out;
+    }
+
     [[nodiscard]]
     inline StringT stringify_no_matches(CallReport const& call, std::span<NoMatchReport> noMatchReports)
     {
@@ -270,16 +313,12 @@ namespace mimicpp::reporting::detail
                     violations,
                     "\t");
 
-                if (std::span const adherences{expReport.requirementDescriptions.data(), violations.data()};
-                    !adherences.empty())
-                {
-                    ss << "\t" << "With Adherence(s):\n";
-                    std::ranges::sort(adherences);
-                    stringify_expectation_report_requirement_descriptions(
-                        std::ostreambuf_iterator{ss},
-                        adherences,
-                        "\t  + ");
-                }
+                std::span const adherences{expReport.requirementDescriptions.data(), violations.data()};
+                std::ranges::sort(adherences);
+                stringify_expectation_report_requirement_adherences(
+                    std::ostreambuf_iterator{ss},
+                    adherences,
+                    "\t");
             }
         }
 
