@@ -9,6 +9,7 @@ target_sources(${TARGET_NAME}
     "ExpectationReport.cpp"
     "NoMatchReport.cpp"
     "StringifyReports.cpp"
+    "TargetReport.cpp"
     "TypeReport.cpp"
 
     "BasicReporter.cpp"
