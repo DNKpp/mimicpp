@@ -57,7 +57,7 @@ namespace mimicpp::reporting::detail
     template <print_iterator OutIter>
     OutIter stringify_call_report_from(OutIter out, CallReport const& call)
     {
-        out = format::format_to(std::move(out), "Call from ");
+        out = format::format_to(std::move(out), "Call originated from ");
 
         if (!call.stacktrace.empty())
         {

@@ -58,7 +58,7 @@ TEST_CASE(
 
     // note the Adherence reordering
     std::string const regex =
-        R"(Matched Call from `.+`#L\d+, `.+`
+        R"(Matched Call originated from `.+`#L\d+, `.+`
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
@@ -93,7 +93,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
 
     std::string const regex =
-        R"(Matched Call from `.+`#L\d+, `.+`
+        R"(Matched Call originated from `.+`#L\d+, `.+`
 	Chose Expectation from `.+`#L\d+, `.+`
 	With Adherence\(s\):
 	  \+ expect: some requirement
@@ -123,7 +123,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
 
     std::string const regex =
-        R"(Matched Call from `.+`#L\d+, `.+`
+        R"(Matched Call originated from `.+`#L\d+, `.+`
 	Chose Expectation from `.+`#L\d+, `.+`
 	Without any Requirements.
 )";
@@ -210,7 +210,7 @@ TEST_CASE(
 
     // note the Adherence reordering
     std::string const regex =
-        R"(Unmatched Call from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+`#L\d+, `.+`
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
@@ -253,7 +253,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_inapplicable_matches(callReport, expectationReports);
 
     std::string const regex =
-        R"(Unmatched Call from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+`#L\d+, `.+`
 1 inapplicable but otherwise matching Expectation\(s\):
 	#1 Expectation from `.+`#L\d+, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
@@ -286,7 +286,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_inapplicable_matches(callReport, expectationReports);
 
     std::string const regex =
-        R"(Unmatched Call from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+`#L\d+, `.+`
 1 inapplicable but otherwise matching Expectation\(s\):
 	#1 Expectation from `.+`#L\d+, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
@@ -382,7 +382,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+`#L\d+, `.+`
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
@@ -436,7 +436,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+`#L\d+, `.+`
 1 non-matching Expectation\(s\):
 	#1 Expectation from `.+`#L\d+, `.+`
 	Due to Violation\(s\):
@@ -475,7 +475,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+`#L\d+, `.+`
 1 non-matching Expectation\(s\):
 	#1 Expectation from `.+`#L\d+, `.+`
 	Due to Violation\(s\):
@@ -501,7 +501,7 @@ TEST_CASE(
     auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+`#L\d+, `.+`
 No Expectations available!
 )";
     REQUIRE_THAT(

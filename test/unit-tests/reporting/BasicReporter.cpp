@@ -134,7 +134,7 @@ TEST_CASE(
         mock(42);
         REQUIRE_THAT(
             g_SuccessMessage.value(),
-            matches::StartsWith("Matched Call from ")
+            matches::StartsWith("Matched Call originated from ")
                 && !matches::ContainsSubstring("Due to Violation(s):\n"));
     }
 
@@ -150,7 +150,7 @@ TEST_CASE(
 
             REQUIRE_THAT(
                 g_FailMessage.value(),
-                matches::StartsWith("Unmatched Call from ")
+                matches::StartsWith("Unmatched Call originated from ")
                     && matches::ContainsSubstring("No Expectations available!"));
         }
 
@@ -165,7 +165,7 @@ TEST_CASE(
 
             REQUIRE_THAT(
                 g_FailMessage.value(),
-                matches::StartsWith("Unmatched Call from ")
+                matches::StartsWith("Unmatched Call originated from ")
                     && matches::ContainsSubstring("1 non-matching Expectation(s):\n")
                     && matches::ContainsSubstring("#1 Expectation from ")
                     && matches::ContainsSubstring("Due to Violation(s):\n"));
@@ -185,7 +185,7 @@ TEST_CASE(
 
         REQUIRE_THAT(
             g_FailMessage.value(),
-            matches::StartsWith("Unmatched Call from ")
+            matches::StartsWith("Unmatched Call originated from ")
                 && matches::ContainsSubstring("1 inapplicable but otherwise matching Expectation(s):\n")
                 && matches::ContainsSubstring("#1 Expectation from ")
                 && !matches::ContainsSubstring("Due to Violation(s):\n"));
