@@ -8,65 +8,18 @@
 
 #pragma once
 
-#include "mimic++/Stacktrace.hpp"
-#include "mimic++/printing/Format.hpp"
+#include "mimic++/Fwd.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/reporting/StringifyReports.hpp"
 
-#include <algorithm>
 #include <concepts>
 #include <exception>
-#include <functional>
-#include <iterator>
-#include <string>
 #include <utility>
 
 namespace mimicpp::reporting
 {
-    namespace detail
-    {
-        [[nodiscard]]
-        inline StringT stringify_unhandled_exception(
-            CallReport const& call,
-            ExpectationReport const& expectationReport,
-            std::exception_ptr const& exception)
-        {
-            StringStreamT ss{};
-            ss << "Unhandled exception: ";
-
-            try
-            {
-                std::rethrow_exception(exception);
-            }
-            catch (const std::exception& e)
-            {
-                ss << "what: "
-                   << e.what()
-                   << "\n";
-            }
-            catch (...)
-            {
-                ss << "Unknown exception type.\n";
-            }
-
-            ss << "while checking expectation:\n";
-            mimicpp::print(
-                std::ostreambuf_iterator{ss},
-                expectationReport);
-            ss << "\n";
-
-            ss << "For ";
-            mimicpp::print(
-                std::ostreambuf_iterator{ss},
-                call);
-            ss << "\n";
-
-            return std::move(ss).str();
-        }
-    }
-
     /**
      * \brief A reporter, which creates text messages and reports them via the provided callbacks.
      * \tparam successReporter The success reporter callback.
@@ -74,9 +27,9 @@ namespace mimicpp::reporting
      * \tparam failReporter The fail reporter callback. This reporter must never return!
      */
     template <
-        std::invocable<const StringT&> auto successReporter,
-        std::invocable<const StringT&> auto warningReporter,
-        std::invocable<const StringT&> auto failReporter>
+        std::invocable<StringT const&> auto successReporter,
+        std::invocable<StringT const&> auto warningReporter,
+        std::invocable<StringT const&> auto failReporter>
     class BasicReporter
         : public IReporter
     {
@@ -110,7 +63,7 @@ namespace mimicpp::reporting
             }
         }
 
-        void report_error(const StringT message) override
+        void report_error(StringT const message) override
         {
             if (0 == std::uncaught_exceptions())
             {
@@ -119,27 +72,27 @@ namespace mimicpp::reporting
         }
 
         void report_unhandled_exception(
-            const CallReport call,
-            const ExpectationReport expectationReport,
-            const std::exception_ptr exception) override
+            CallReport const call,
+            ExpectationReport const expectationReport,
+            std::exception_ptr const exception) override
         {
             send_warning(
                 detail::stringify_unhandled_exception(call, expectationReport, exception));
         }
 
     private:
-        void send_success(const StringT& msg)
+        void send_success(StringT const& msg)
         {
             std::invoke(successReporter, msg);
         }
 
-        void send_warning(const StringT& msg)
+        void send_warning(StringT const& msg)
         {
             std::invoke(warningReporter, msg);
         }
 
         [[noreturn]]
-        void send_fail(const StringT& msg)
+        void send_fail(StringT const& msg)
         {
             // GCOVR_EXCL_START
             std::invoke(failReporter, msg);

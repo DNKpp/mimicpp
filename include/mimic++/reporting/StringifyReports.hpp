@@ -414,6 +414,43 @@ namespace mimicpp::reporting::detail
 
         return std::move(ss).str();
     }
+
+    [[nodiscard]]
+    inline StringT stringify_unhandled_exception(
+        CallReport const& call,
+        ExpectationReport const& expectationReport,
+        std::exception_ptr const& exception)
+    {
+        StringStreamT ss{};
+        ss << "Unhandled Exception ";
+
+        try
+        {
+            std::rethrow_exception(exception);
+        }
+        catch (const std::exception& e)
+        {
+            ss << "with message `"
+               << e.what()
+               << "`\n";
+        }
+        catch (...)
+        {
+            ss << "of unknown type.\n";
+        }
+
+        ss << "\t" << "While checking ";
+        stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectationReport);
+
+        ss << "For ";
+        stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
+
+        // Todo: target
+
+        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
+
+        return std::move(ss).str();
+    }
 }
 
 #endif

@@ -589,3 +589,98 @@ TEST_CASE(
         text,
         Catch::Matchers::Matches(regex));
 }
+
+TEST_CASE(
+    "detail::stringify_unhandled_exception converts the information to a pretty formatted text.",
+    "[reporting][detail]")
+{
+    reporting::CallReport const callReport{
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {
+            {{reporting::TypeReport::make<int>(), "1337"},
+             {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
+        .fromLoc = std::source_location::current(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    reporting::ExpectationReport const expectationReport{
+        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .controlReport = commonApplicableState,
+        .finalizerDescription = std::nullopt
+    };
+
+    SECTION("When std::exception is given.")
+    {
+        auto const exceptionPtr = std::make_exception_ptr(std::runtime_error{"Something went wrong."});
+        auto const text = reporting::detail::stringify_unhandled_exception(
+            callReport,
+            expectationReport,
+            exceptionPtr);
+
+        std::string const regex =
+            R"(Unhandled Exception with message `Something went wrong\.`
+	While checking Expectation defined at `.+`#L\d+, `.+`
+For Call originated from `.+`#L\d+, `.+`
+	Where:
+		arg\[0\] => int: 1337
+		arg\[1\] => std::string: "Hello, World!"
+)";
+        REQUIRE_THAT(
+            text,
+            Catch::Matchers::Matches(regex));
+    }
+
+    SECTION("When unknown exception is given.")
+    {
+        auto const exceptionPtr = std::make_exception_ptr(42);
+        auto const text = reporting::detail::stringify_unhandled_exception(
+            callReport,
+            expectationReport,
+            exceptionPtr);
+
+        std::string const regex =
+            R"(Unhandled Exception of unknown type\.
+	While checking Expectation defined at `.+`#L\d+, `.+`
+For Call originated from `.+`#L\d+, `.+`
+	Where:
+		arg\[0\] => int: 1337
+		arg\[1\] => std::string: "Hello, World!"
+)";
+        REQUIRE_THAT(
+            text,
+            Catch::Matchers::Matches(regex));
+    }
+}
+
+TEST_CASE(
+    "detail::stringify_unhandled_exception omits \"Where\"-Section, when no arguments exist.",
+    "[reporting][detail]")
+{
+    reporting::CallReport const callReport{
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {},
+        .fromLoc = std::source_location::current(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    reporting::ExpectationReport const expectationReport{
+        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .controlReport = commonApplicableState,
+        .finalizerDescription = std::nullopt
+    };
+
+    auto const exceptionPtr = std::make_exception_ptr(std::runtime_error{"Something went wrong."});
+    auto const text = reporting::detail::stringify_unhandled_exception(
+        callReport,
+        expectationReport,
+        exceptionPtr);
+
+    std::string const regex =
+        R"(Unhandled Exception with message `Something went wrong\.`
+	While checking Expectation defined at `.+`#L\d+, `.+`
+For Call originated from `.+`#L\d+, `.+`
+)";
+    REQUIRE_THAT(
+        text,
+        Catch::Matchers::Matches(regex));
+}

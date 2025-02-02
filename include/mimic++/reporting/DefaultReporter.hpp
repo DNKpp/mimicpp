@@ -8,17 +8,14 @@
 
 #pragma once
 
-#include "mimic++/reporting/BasicReporter.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/reporting/StringifyReports.hpp"
 
-#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <exception>
-#include <functional>
 #include <ostream>
 #include <source_location>
 #include <stdexcept>
