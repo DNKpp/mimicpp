@@ -17,6 +17,10 @@
 
 namespace mimicpp::reporting
 {
+    /**
+     * \brief Denotes an inapplicable expectation state.
+     * \ingroup REPORTING_REPORTS
+     */
     struct state_inapplicable
     {
         int min{};
@@ -29,6 +33,10 @@ namespace mimicpp::reporting
         friend bool operator==(const state_inapplicable&, const state_inapplicable&) = default;
     };
 
+    /**
+     * \brief Denotes a applicable expectation state.
+     * \ingroup REPORTING_REPORTS
+     */
     struct state_applicable
     {
         int min{};
@@ -40,6 +48,10 @@ namespace mimicpp::reporting
         friend bool operator==(const state_applicable&, const state_applicable&) = default;
     };
 
+    /**
+     * \brief Denotes a saturated expectation state.
+     * \ingroup REPORTING_REPORTS
+     */
     struct state_saturated
     {
         int min{};
@@ -51,6 +63,10 @@ namespace mimicpp::reporting
         friend bool operator==(const state_saturated&, const state_saturated&) = default;
     };
 
+    /**
+     * \brief Denotes an expectation state.
+     * \ingroup REPORTING_REPORTS
+     */
     using control_state_t = std::variant<
         state_inapplicable,
         state_applicable,
@@ -58,8 +74,7 @@ namespace mimicpp::reporting
 
     /**
      * \brief Contains the extracted info from a typed expectation.
-     * \details This type is meant to be used to communicate with independent domains via the reporter interface and thus contains
-     * the generic information as plain ``std`` types.
+     * \ingroup REPORTING_REPORTS
      */
     class ExpectationReport
     {
@@ -73,6 +88,10 @@ namespace mimicpp::reporting
         friend bool operator==(const ExpectationReport&, const ExpectationReport&) = default;
     };
 
+    /**
+     * \brief Contains the boolean outcomes of a match-test.
+     * \ingroup REPORTING_REPORTS
+     */
     class RequirementOutcomes
     {
     public:

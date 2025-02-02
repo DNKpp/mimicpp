@@ -317,3 +317,46 @@ TEST_CASE(
         REQUIRE(second != first);
     }
 }
+
+TEST_CASE(
+    "reporting::RequirementOutcomes is equality-comparable.",
+    "[reporting]")
+{
+    reporting::RequirementOutcomes const outcomes{
+        .outcomes = {true}};
+
+    SECTION("Compares equal, when both sides are equal.")
+    {
+        reporting::RequirementOutcomes const other = outcomes;
+
+        REQUIRE(other == outcomes);
+        REQUIRE(outcomes == other);
+        REQUIRE_FALSE(other != outcomes);
+        REQUIRE_FALSE(outcomes != other);
+    }
+
+    SECTION("Compares unequal, when both sides have different sizes.")
+    {
+        reporting::RequirementOutcomes other{
+            .outcomes = GENERATE(
+                std::vector<bool>{},
+                std::vector{true, false},
+                std::vector{false, true})};
+
+        REQUIRE_FALSE(other == outcomes);
+        REQUIRE_FALSE(outcomes == other);
+        REQUIRE(other != outcomes);
+        REQUIRE(outcomes != other);
+    }
+
+    SECTION("Compares unequal, when both sides have same sizes but different elements.")
+    {
+        reporting::RequirementOutcomes other{
+            .outcomes = {false}};
+
+        REQUIRE_FALSE(other == outcomes);
+        REQUIRE_FALSE(outcomes == other);
+        REQUIRE(other != outcomes);
+        REQUIRE(outcomes != other);
+    }
+}
