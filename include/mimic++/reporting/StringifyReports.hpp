@@ -83,16 +83,25 @@ namespace mimicpp::reporting::detail
     }
 
     template <print_iterator OutIter>
-    OutIter stringify_expectation_report_requirement_descriptions(
+    OutIter stringify_expectation_report_requirement_adherences(
         OutIter out,
         std::span<std::optional<StringT> const> const descriptions,
         StringViewT const linePrefix)
     {
+        if (descriptions.empty())
+        {
+            return out;
+        }
+
+        out = std::ranges::copy(linePrefix, std::move(out)).out;
+        out = format::format_to(std::move(out), "With Adherence(s):\n");
+
         for (auto const& description : descriptions)
         {
             if (description)
             {
                 out = std::ranges::copy(linePrefix, std::move(out)).out;
+                out = format::format_to(std::move(out), "  + ");
                 out = std::ranges::copy(*description, std::move(out)).out;
                 out = format::format_to(std::move(out), "\n");
             }
@@ -123,12 +132,11 @@ namespace mimicpp::reporting::detail
 
         if (!expectation.requirementDescriptions.empty())
         {
-            ss << "\t" << "With Adherence(s):\n";
             std::ranges::sort(expectation.requirementDescriptions);
-            stringify_expectation_report_requirement_descriptions(
+            stringify_expectation_report_requirement_adherences(
                 std::ostreambuf_iterator{ss},
                 expectation.requirementDescriptions,
-                "\t  + ");
+                "\t");
         }
         else
         {
@@ -207,15 +215,11 @@ namespace mimicpp::reporting::detail
                 expReport.controlReport);
             ss << "\n";
 
-            if (!expReport.requirementDescriptions.empty())
-            {
-                ss << "\t" << "With Adherence(s):\n";
-                std::ranges::sort(expReport.requirementDescriptions);
-                stringify_expectation_report_requirement_descriptions(
-                    std::ostreambuf_iterator{ss},
-                    expReport.requirementDescriptions,
-                    "\t  + ");
-            }
+            std::ranges::sort(expReport.requirementDescriptions);
+            stringify_expectation_report_requirement_adherences(
+                std::ostreambuf_iterator{ss},
+                expReport.requirementDescriptions,
+                "\t");
         }
 
         stringify_stacktrace(
@@ -255,18 +259,16 @@ namespace mimicpp::reporting::detail
                 ss << "\n\t#" << ++i << " ";
                 stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
 
-                ss << "\t" << "Due to Violation(s):\n";
-                assert(!expReport.requirementDescriptions.empty() && "No requirements can not be a no-match.");
                 std::span const violations = util::partition_by(
                     expReport.requirementDescriptions,
                     outcomes.outcomes,
                     std::bind_front(std::equal_to{}, true));
-                assert(!violations.empty() && "No violated descriptions can not be a no-match.");
+                assert(!violations.empty() && "Zero violations do not denote a no-match.");
                 std::ranges::sort(violations);
-                stringify_expectation_report_requirement_descriptions(
+                stringify_expectation_report_requirement_violations(
                     std::ostreambuf_iterator{ss},
                     violations,
-                    "\t  - ");
+                    "\t");
 
                 if (std::span const adherences{expReport.requirementDescriptions.data(), violations.data()};
                     !adherences.empty())
