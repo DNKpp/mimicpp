@@ -608,18 +608,6 @@ namespace mimicpp
         [[no_unique_address]] FinalizerT m_Finalizer{};
 
         [[nodiscard]]
-        StringT describe_times() const
-        {
-            StringStreamT ss{};
-            std::visit(
-                std::bind_front(
-                    reporting::detail::control_state_printer{},
-                    std::ostreambuf_iterator{ss}),
-                m_ControlPolicy.state());
-            return std::move(ss).str();
-        }
-
-        [[nodiscard]]
         std::vector<bool> gather_requirement_outcomes(CallInfoT const& call) const
         {
             return std::apply(

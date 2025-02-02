@@ -9,13 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/printing/Format.hpp"
-#include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/Utility.hpp"
 
-#include <algorithm>
 #include <optional>
-#include <ranges>
-#include <utility>
 #include <variant>
 #include <vector>
 
@@ -59,126 +55,6 @@ namespace mimicpp::reporting
         state_inapplicable,
         state_applicable,
         state_saturated>;
-
-    namespace detail
-    {
-        using mimicpp::detail::expectation_info;
-
-        template <print_iterator OutIter>
-        OutIter print_times_state(OutIter out, const std::size_t current, const std::size_t min, const std::size_t max)
-        {
-            const auto verbalizeValue = [](OutIter o, const std::size_t value) {
-                switch (value)
-                {
-                case 0:  return format::format_to(std::move(o), "never");
-                case 1:  return format::format_to(std::move(o), "once");
-                case 2:  return format::format_to(std::move(o), "twice");
-                default: return format::format_to(std::move(o), "{} times", value);
-                }
-            };
-
-            if (current == max)
-            {
-                out = format::format_to(
-                    std::move(out),
-                    "already saturated (matched ");
-                out = verbalizeValue(std::move(out), current);
-                return format::format_to(std::move(out), ")");
-            }
-
-            if (min <= current)
-            {
-                return format::format_to(
-                    std::move(out),
-                    "accepts further matches (matched {} out of {} times)",
-                    current,
-                    max);
-            }
-
-            const auto verbalizeInterval = [verbalizeValue](OutIter o, const std::size_t start, const std::size_t end) {
-                if (start < end)
-                {
-                    return format::format_to(
-                        std::move(o),
-                        "between {} and {} times",
-                        start,
-                        end);
-                }
-
-                o = format::format_to(std::move(o), "exactly ");
-                return verbalizeValue(std::move(o), end);
-            };
-
-            out = format::format_to(std::move(out), "matched ");
-            out = verbalizeValue(std::move(out), current);
-            out = format::format_to(std::move(out), " - ");
-            out = verbalizeInterval(std::move(out), min, max);
-            return format::format_to(std::move(out), " is expected");
-        }
-
-        struct control_state_printer
-        {
-            template <print_iterator OutIter>
-            OutIter operator()(OutIter out, const state_applicable& state) const
-            {
-                out = print_times_state(
-                    std::move(out),
-                    state.count,
-                    state.min,
-                    state.max);
-
-                if (const auto sequenceCount = std::ranges::ssize(state.sequenceRatings);
-                    0 < sequenceCount)
-                {
-                    out = format::format_to(
-                        std::move(out),
-                        ",\n\tand is the current element of {} sequence(s).",
-                        sequenceCount);
-                }
-
-                return out;
-            }
-
-            template <print_iterator OutIter>
-            OutIter operator()(OutIter out, const state_inapplicable& state) const
-            {
-                out = print_times_state(
-                    std::move(out),
-                    state.count,
-                    state.min,
-                    state.max);
-
-                const auto totalSequences = std::ranges::ssize(state.sequenceRatings)
-                                          + std::ranges::ssize(state.inapplicableSequences);
-                return format::format_to(
-                    std::move(out),
-                    ",\n\tbut is not the current element of {} sequence(s) ({} total).",
-                    std::ranges::ssize(state.inapplicableSequences),
-                    totalSequences);
-            }
-
-            template <print_iterator OutIter>
-            OutIter operator()(OutIter out, const state_saturated& state) const
-            {
-                out = print_times_state(
-                    std::move(out),
-                    state.count,
-                    state.min,
-                    state.max);
-
-                if (const auto sequenceCount = std::ranges::ssize(state.sequences);
-                    0 < sequenceCount)
-                {
-                    out = format::format_to(
-                        std::move(out),
-                        ",\n\tand is part of {} sequence(s).",
-                        sequenceCount);
-                }
-
-                return out;
-            }
-        };
-    }
 
     /**
      * \brief Contains the extracted info from a typed expectation.
