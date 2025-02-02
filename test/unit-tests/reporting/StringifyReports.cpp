@@ -32,8 +32,8 @@ namespace
 }
 
 TEST_CASE(
-    "detail::stringify_full_match converts the information to a pretty formatted text.",
-    "[reporting][detail]")
+    "reporting::stringify_full_match converts the information to a pretty formatted text.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -54,7 +54,7 @@ TEST_CASE(
              "expect: arg[0] > 0"}}
     };
 
-    auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
+    auto const text = reporting::stringify_full_match(callReport, expectationReport);
 
     // note the Adherence reordering
     std::string const regex =
@@ -73,8 +73,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::stringify_full_match omits \"Where\"-Section, when no arguments exist.",
-    "[reporting][detail]")
+    "reporting::stringify_full_match omits \"Where\"-Section, when no arguments exist.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -90,7 +90,7 @@ TEST_CASE(
         .requirementDescriptions = {{"expect: some requirement"}}
     };
 
-    auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
+    auto const text = reporting::stringify_full_match(callReport, expectationReport);
 
     std::string const regex =
         R"(Matched Call originated from `.+`#L\d+, `.+`
@@ -104,7 +104,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::stringify_full_match omits \"With Adherence(s)\"-Section, when no requirements exist.",
+    "reporting::stringify_full_match omits \"With Adherence(s)\"-Section, when no requirements exist.",
     "[reporting][detail]")
 {
     reporting::CallReport const callReport{
@@ -120,7 +120,7 @@ TEST_CASE(
         .finalizerDescription = std::nullopt
     };
 
-    auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
+    auto const text = reporting::stringify_full_match(callReport, expectationReport);
 
     std::string const regex =
         R"(Matched Call originated from `.+`#L\d+, `.+`
@@ -135,8 +135,8 @@ TEST_CASE(
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
 TEST_CASE(
-    "detail::stringify_full_match adds the Stacktrace, if existing.",
-    "[reporting][detail]")
+    "reporting::stringify_full_match adds the Stacktrace, if existing.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -152,7 +152,7 @@ TEST_CASE(
         .finalizerDescription = std::nullopt
     };
 
-    auto const text = reporting::detail::stringify_full_match(callReport, expectationReport);
+    auto const text = reporting::stringify_full_match(callReport, expectationReport);
     CAPTURE(text);
     constexpr std::string_view stacktraceToken{"Stacktrace:\n"};
     auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
@@ -176,8 +176,8 @@ TEST_CASE(
 #endif
 
 TEST_CASE(
-    "detail::stringify_inapplicable_matches converts the information to a pretty formatted text.",
-    "[reporting][detail]")
+    "reporting::stringify_inapplicable_matches converts the information to a pretty formatted text.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -206,7 +206,7 @@ TEST_CASE(
     };
 
     std::vector expectationReports{expectationReport1, expectationReport2};
-    auto const text = reporting::detail::stringify_inapplicable_matches(callReport, expectationReports);
+    auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
 
     // note the Adherence reordering
     std::string const regex =
@@ -232,8 +232,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::stringify_inapplicable_matches omits \"Where\"-Section, when no arguments exist.",
-    "[reporting][detail]")
+    "reporting::stringify_inapplicable_matches omits \"Where\"-Section, when no arguments exist.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -250,7 +250,7 @@ TEST_CASE(
     };
 
     std::vector expectationReports{expectationReport};
-    auto const text = reporting::detail::stringify_inapplicable_matches(callReport, expectationReports);
+    auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
 
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
@@ -266,8 +266,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::stringify_inapplicable_matches omits \"With Adherence(s)\"-Section, when no requirements exist.",
-    "[reporting][detail]")
+    "reporting::stringify_inapplicable_matches omits \"With Adherence(s)\"-Section, when no requirements exist.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -283,7 +283,7 @@ TEST_CASE(
     };
 
     std::vector expectationReports{expectationReport};
-    auto const text = reporting::detail::stringify_inapplicable_matches(callReport, expectationReports);
+    auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
 
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
@@ -299,8 +299,8 @@ TEST_CASE(
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
 TEST_CASE(
-    "detail::stringify_inapplicable_matches adds the Stacktrace, if existing.",
-    "[reporting][detail]")
+    "reporting::stringify_inapplicable_matches adds the Stacktrace, if existing.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -317,7 +317,7 @@ TEST_CASE(
     };
 
     std::vector expectationReports{expectationReport};
-    auto const text = reporting::detail::stringify_inapplicable_matches(callReport, expectationReports);
+    auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
     CAPTURE(text);
     auto const stacktraceBegin = std::ranges::search(text, std::string_view{"Stacktrace:\n"}).begin();
     REQUIRE(stacktraceBegin != text.cend());
@@ -337,8 +337,8 @@ TEST_CASE(
 #endif
 
 TEST_CASE(
-    "detail::stringify_no_matches converts the information to a pretty formatted text.",
-    "[reporting][detail]")
+    "reporting::stringify_no_matches converts the information to a pretty formatted text.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -379,7 +379,7 @@ TEST_CASE(
         reporting::NoMatchReport{expectationReport1, outcomes1},
         reporting::NoMatchReport{expectationReport2, outcomes2}
     };
-    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+    auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
@@ -406,8 +406,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::stringify_no_matches omits \"Where\"-Section, when no arguments exist.",
-    "[reporting][detail]")
+    "reporting::stringify_no_matches omits \"Where\"-Section, when no arguments exist.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -433,7 +433,7 @@ TEST_CASE(
     std::vector noMatchReports{
         reporting::NoMatchReport{expectationReport, outcomes},
     };
-    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+    auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
@@ -450,8 +450,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::stringify_no_matches omits \"With Adherence(s)\"-Section, when no requirements exist.",
-    "[reporting][detail]")
+    "reporting::stringify_no_matches omits \"With Adherence(s)\"-Section, when no requirements exist.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -472,7 +472,7 @@ TEST_CASE(
     std::vector noMatchReports{
         reporting::NoMatchReport{expectationReport, outcomes}
     };
-    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+    auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
@@ -487,8 +487,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::stringify_no_matches has special treatment, when no expectations exist.",
-    "[reporting][detail]")
+    "reporting::stringify_no_matches has special treatment, when no expectations exist.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -498,7 +498,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     std::vector<reporting::NoMatchReport> noMatchReports{};
-    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+    auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
@@ -512,8 +512,8 @@ No Expectations available!
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
 TEST_CASE(
-    "detail::stringify_no_matches adds the Stacktrace, if existing.",
-    "[reporting][detail]")
+    "reporting::stringify_no_matches adds the Stacktrace, if existing.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -535,7 +535,7 @@ TEST_CASE(
     std::vector noMatchReports{
         reporting::NoMatchReport{expectationReport, outcomes}
     };
-    auto const text = reporting::detail::stringify_no_matches(callReport, noMatchReports);
+    auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
     CAPTURE(text);
     auto const stacktraceBegin = std::ranges::search(text, std::string_view{"Stacktrace:\n"}).begin();
     REQUIRE(stacktraceBegin != text.cend());
@@ -555,8 +555,8 @@ TEST_CASE(
 #endif
 
 TEST_CASE(
-    "detail::stringify_unfulfilled_expectation converts the information to a pretty formatted text.",
-    "[reporting][detail]")
+    "reporting::stringify_unfulfilled_expectation converts the information to a pretty formatted text.",
+    "[reporting]")
 {
     static constexpr auto maxSize = std::numeric_limits<int>::max();
     auto [expectedTimesText, expectedDiff, state] = GENERATE(
@@ -578,7 +578,7 @@ TEST_CASE(
         .controlReport = state
     };
 
-    auto const text = reporting::detail::stringify_unfulfilled_expectation(expectationReport);
+    auto const text = reporting::stringify_unfulfilled_expectation(expectationReport);
     std::string const regex = format::format(
         R"(Unfulfilled Expectation defined at `.+`#L\d+, `.+`
 	Because matching {} was expected => requires {} further match\(es\)\.
@@ -591,8 +591,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::stringify_unhandled_exception converts the information to a pretty formatted text.",
-    "[reporting][detail]")
+    "reporting::stringify_unhandled_exception converts the information to a pretty formatted text.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -612,7 +612,7 @@ TEST_CASE(
     SECTION("When std::exception is given.")
     {
         auto const exceptionPtr = std::make_exception_ptr(std::runtime_error{"Something went wrong."});
-        auto const text = reporting::detail::stringify_unhandled_exception(
+        auto const text = reporting::stringify_unhandled_exception(
             callReport,
             expectationReport,
             exceptionPtr);
@@ -633,7 +633,7 @@ For Call originated from `.+`#L\d+, `.+`
     SECTION("When unknown exception is given.")
     {
         auto const exceptionPtr = std::make_exception_ptr(42);
-        auto const text = reporting::detail::stringify_unhandled_exception(
+        auto const text = reporting::stringify_unhandled_exception(
             callReport,
             expectationReport,
             exceptionPtr);
@@ -653,8 +653,8 @@ For Call originated from `.+`#L\d+, `.+`
 }
 
 TEST_CASE(
-    "detail::stringify_unhandled_exception omits \"Where\"-Section, when no arguments exist.",
-    "[reporting][detail]")
+    "reporting::stringify_unhandled_exception omits \"Where\"-Section, when no arguments exist.",
+    "[reporting]")
 {
     reporting::CallReport const callReport{
         .returnTypeInfo = reporting::TypeReport::make<void>(),
@@ -670,7 +670,7 @@ TEST_CASE(
     };
 
     auto const exceptionPtr = std::make_exception_ptr(std::runtime_error{"Something went wrong."});
-    auto const text = reporting::detail::stringify_unhandled_exception(
+    auto const text = reporting::stringify_unhandled_exception(
         callReport,
         expectationReport,
         exceptionPtr);

@@ -118,42 +118,6 @@ namespace mimicpp::reporting::detail
         return out;
     }
 
-    [[nodiscard]]
-    inline StringT stringify_full_match(CallReport const& call, ExpectationReport expectation)
-    {
-        assert(std::holds_alternative<state_applicable>(expectation.controlReport) && "Report denotes inapplicable expectation.");
-
-        StringStreamT ss{};
-        ss << "Matched ";
-        stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
-
-        // Todo: target
-
-        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
-
-        ss << "\t" << "Chose ";
-        stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectation);
-
-        if (!expectation.requirementDescriptions.empty())
-        {
-            std::ranges::sort(expectation.requirementDescriptions);
-            stringify_expectation_report_requirement_adherences(
-                std::ostreambuf_iterator{ss},
-                expectation.requirementDescriptions,
-                "\t");
-        }
-        else
-        {
-            ss << "\t" << "Without any Requirements.\n";
-        }
-
-        stringify_stacktrace(
-            std::ostreambuf_iterator{ss},
-            call.stacktrace);
-
-        return std::move(ss).str();
-    }
-
     struct inapplicable_reason_printer
     {
         template <print_iterator OutIter>
@@ -186,48 +150,6 @@ namespace mimicpp::reporting::detail
             return out;
         }
     };
-
-    [[nodiscard]]
-    inline StringT stringify_inapplicable_matches(CallReport const& call, std::span<ExpectationReport> expectations)
-    {
-        assert(!expectations.empty() && "No expectations given.");
-
-        StringStreamT ss{};
-
-        ss << "Unmatched ";
-        stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
-
-        // Todo: target
-
-        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
-
-        ss << expectations.size() << " inapplicable but otherwise matching Expectation(s):";
-
-        for (int i{};
-             auto& expReport : expectations)
-        {
-            ss << "\n\t#" << ++i << " ";
-            stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
-
-            ss << "\tBecause ";
-            std::visit(
-                std::bind_front(inapplicable_reason_printer{}, std::ostreambuf_iterator{ss}),
-                expReport.controlReport);
-            ss << "\n";
-
-            std::ranges::sort(expReport.requirementDescriptions);
-            stringify_expectation_report_requirement_adherences(
-                std::ostreambuf_iterator{ss},
-                expReport.requirementDescriptions,
-                "\t");
-        }
-
-        stringify_stacktrace(
-            std::ostreambuf_iterator{ss},
-            call.stacktrace);
-
-        return std::move(ss).str();
-    }
 
     template <print_iterator OutIter>
     OutIter stringify_expectation_report_requirement_violations(
@@ -270,59 +192,6 @@ namespace mimicpp::reporting::detail
         }
 
         return out;
-    }
-
-    [[nodiscard]]
-    inline StringT stringify_no_matches(CallReport const& call, std::span<NoMatchReport> noMatchReports)
-    {
-        StringStreamT ss{};
-
-        ss << "Unmatched ";
-        stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
-
-        // Todo: target
-
-        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
-
-        if (noMatchReports.empty())
-        {
-            ss << "No Expectations available!\n";
-        }
-        else
-        {
-            ss << noMatchReports.size() << " non-matching Expectation(s):";
-
-            for (int i{};
-                 auto& [expReport, outcomes] : noMatchReports)
-            {
-                ss << "\n\t#" << ++i << " ";
-                stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
-
-                std::span const violations = util::partition_by(
-                    expReport.requirementDescriptions,
-                    outcomes.outcomes,
-                    std::bind_front(std::equal_to{}, true));
-                assert(!violations.empty() && "Zero violations do not denote a no-match.");
-                std::ranges::sort(violations);
-                stringify_expectation_report_requirement_violations(
-                    std::ostreambuf_iterator{ss},
-                    violations,
-                    "\t");
-
-                std::span const adherences{expReport.requirementDescriptions.data(), violations.data()};
-                std::ranges::sort(adherences);
-                stringify_expectation_report_requirement_adherences(
-                    std::ostreambuf_iterator{ss},
-                    adherences,
-                    "\t");
-            }
-        }
-
-        stringify_stacktrace(
-            std::ostreambuf_iterator{ss},
-            call.stacktrace);
-
-        return std::move(ss).str();
     }
 
     struct unfulfilled_reason_printer
@@ -399,6 +268,140 @@ namespace mimicpp::reporting::detail
                 min - current);
         }
     };
+}
+
+namespace mimicpp::reporting
+{
+    [[nodiscard]]
+    inline StringT stringify_full_match(CallReport const& call, ExpectationReport expectation)
+    {
+        assert(std::holds_alternative<state_applicable>(expectation.controlReport) && "Report denotes inapplicable expectation.");
+
+        StringStreamT ss{};
+        ss << "Matched ";
+        detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
+
+        // Todo: target
+
+        detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
+
+        ss << "\t" << "Chose ";
+        detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectation);
+
+        if (!expectation.requirementDescriptions.empty())
+        {
+            std::ranges::sort(expectation.requirementDescriptions);
+            detail::stringify_expectation_report_requirement_adherences(
+                std::ostreambuf_iterator{ss},
+                expectation.requirementDescriptions,
+                "\t");
+        }
+        else
+        {
+            ss << "\t" << "Without any Requirements.\n";
+        }
+
+        detail::stringify_stacktrace(
+            std::ostreambuf_iterator{ss},
+            call.stacktrace);
+
+        return std::move(ss).str();
+    }
+
+    [[nodiscard]]
+    inline StringT stringify_inapplicable_matches(CallReport const& call, std::span<ExpectationReport> expectations)
+    {
+        assert(!expectations.empty() && "No expectations given.");
+
+        StringStreamT ss{};
+
+        ss << "Unmatched ";
+        detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
+
+        // Todo: target
+
+        detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
+
+        ss << expectations.size() << " inapplicable but otherwise matching Expectation(s):";
+
+        for (int i{};
+             auto& expReport : expectations)
+        {
+            ss << "\n\t#" << ++i << " ";
+            detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
+
+            ss << "\tBecause ";
+            std::visit(
+                std::bind_front(detail::inapplicable_reason_printer{}, std::ostreambuf_iterator{ss}),
+                expReport.controlReport);
+            ss << "\n";
+
+            std::ranges::sort(expReport.requirementDescriptions);
+            detail::stringify_expectation_report_requirement_adherences(
+                std::ostreambuf_iterator{ss},
+                expReport.requirementDescriptions,
+                "\t");
+        }
+
+        detail::stringify_stacktrace(
+            std::ostreambuf_iterator{ss},
+            call.stacktrace);
+
+        return std::move(ss).str();
+    }
+
+    [[nodiscard]]
+    inline StringT stringify_no_matches(CallReport const& call, std::span<NoMatchReport> noMatchReports)
+    {
+        StringStreamT ss{};
+
+        ss << "Unmatched ";
+        detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
+
+        // Todo: target
+
+        detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
+
+        if (noMatchReports.empty())
+        {
+            ss << "No Expectations available!\n";
+        }
+        else
+        {
+            ss << noMatchReports.size() << " non-matching Expectation(s):";
+
+            for (int i{};
+                 auto& [expReport, outcomes] : noMatchReports)
+            {
+                ss << "\n\t#" << ++i << " ";
+                detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
+
+                std::span const violations = util::partition_by(
+                    expReport.requirementDescriptions,
+                    outcomes.outcomes,
+                    std::bind_front(std::equal_to{}, true));
+                assert(!violations.empty() && "Zero violations do not denote a no-match.");
+                std::ranges::sort(violations);
+                detail::stringify_expectation_report_requirement_violations(
+                    std::ostreambuf_iterator{ss},
+                    violations,
+                    "\t");
+
+                std::span const adherences{expReport.requirementDescriptions.data(), violations.data()};
+                std::ranges::sort(adherences);
+                detail::stringify_expectation_report_requirement_adherences(
+                    std::ostreambuf_iterator{ss},
+                    adherences,
+                    "\t");
+            }
+        }
+
+        detail::stringify_stacktrace(
+            std::ostreambuf_iterator{ss},
+            call.stacktrace);
+
+        return std::move(ss).str();
+    }
 
     [[nodiscard]]
     inline StringT stringify_unfulfilled_expectation(ExpectationReport const& expectationReport)
@@ -406,10 +409,10 @@ namespace mimicpp::reporting::detail
         StringStreamT ss{};
 
         ss << "Unfulfilled ";
-        stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectationReport);
+        detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectationReport);
         ss << "\tBecause ";
         std::visit(
-            std::bind_front(unfulfilled_reason_printer{}, std::ostreambuf_iterator{ss}),
+            std::bind_front(detail::unfulfilled_reason_printer{}, std::ostreambuf_iterator{ss}),
             expectationReport.controlReport);
 
         return std::move(ss).str();
@@ -440,14 +443,14 @@ namespace mimicpp::reporting::detail
         }
 
         ss << "\t" << "While checking ";
-        stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectationReport);
+        detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectationReport);
 
         ss << "For ";
-        stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
+        detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
 
         // Todo: target
 
-        stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
+        detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         return std::move(ss).str();
     }

@@ -37,29 +37,25 @@ namespace mimicpp::reporting
         [[noreturn]]
         void report_no_matches(CallReport call, std::vector<NoMatchReport> noMatchReports) override
         {
-            send_fail(
-                detail::stringify_no_matches(std::move(call), noMatchReports));
+            send_fail(stringify_no_matches(std::move(call), noMatchReports));
         }
 
         [[noreturn]]
         void report_inapplicable_matches(CallReport call, std::vector<ExpectationReport> expectationReports) override
         {
-            send_fail(
-                detail::stringify_inapplicable_matches(std::move(call), expectationReports));
+            send_fail(stringify_inapplicable_matches(std::move(call), expectationReports));
         }
 
         void report_full_match(CallReport call, ExpectationReport expectationReport) noexcept override
         {
-            send_success(
-                detail::stringify_full_match(std::move(call), std::move(expectationReport)));
+            send_success(stringify_full_match(std::move(call), std::move(expectationReport)));
         }
 
         void report_unfulfilled_expectation(const ExpectationReport expectationReport) override
         {
             if (0 == std::uncaught_exceptions())
             {
-                send_fail(
-                    detail::stringify_unfulfilled_expectation(expectationReport));
+                send_fail(stringify_unfulfilled_expectation(expectationReport));
             }
         }
 
@@ -76,8 +72,7 @@ namespace mimicpp::reporting
             ExpectationReport const expectationReport,
             std::exception_ptr const exception) override
         {
-            send_warning(
-                detail::stringify_unhandled_exception(call, expectationReport, exception));
+            send_warning(stringify_unhandled_exception(call, expectationReport, exception));
         }
 
     private:

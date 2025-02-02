@@ -80,7 +80,7 @@ namespace mimicpp::reporting
             CallReport call,
             std::vector<NoMatchReport> noMatchReports) override
         {
-            auto const msg = detail::stringify_no_matches(call, noMatchReports);
+            auto const msg = stringify_no_matches(call, noMatchReports);
             if (m_Out)
             {
                 *m_Out << msg << '\n';
@@ -96,7 +96,7 @@ namespace mimicpp::reporting
             std::vector<ExpectationReport> expectationReports) override
 
         {
-            const auto msg = detail::stringify_inapplicable_matches(call, expectationReports);
+            const auto msg = stringify_inapplicable_matches(call, expectationReports);
             if (m_Out)
             {
                 *m_Out << msg << '\n';
@@ -117,7 +117,7 @@ namespace mimicpp::reporting
         {
             if (0 == std::uncaught_exceptions())
             {
-                auto const msg = detail::stringify_unfulfilled_expectation(expectationReport);
+                auto const msg = stringify_unfulfilled_expectation(expectationReport);
                 if (m_Out)
                 {
                     *m_Out << msg << '\n';
@@ -147,7 +147,7 @@ namespace mimicpp::reporting
         {
             if (m_Out)
             {
-                *m_Out << detail::stringify_unhandled_exception(call, expectationReport, exception)
+                *m_Out << stringify_unhandled_exception(call, expectationReport, exception)
                        << '\n';
             }
         }
