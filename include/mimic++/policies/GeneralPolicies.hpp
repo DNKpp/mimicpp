@@ -15,6 +15,21 @@
 #include <cassert>
 #include <iterator>
 
+namespace mimicpp::detail
+{
+    [[nodiscard]]
+    constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
+    {
+        return std::cmp_not_equal(0, util::to_underlying(lhs) & util::to_underlying(rhs));
+    }
+
+    [[nodiscard]]
+    constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept
+    {
+        return std::cmp_not_equal(0, util::to_underlying(lhs) & util::to_underlying(rhs));
+    }
+}
+
 namespace mimicpp::expectation_policies
 {
     class InitFinalize
@@ -38,13 +53,13 @@ namespace mimicpp::expectation_policies
         template <typename Return, typename... Args>
         static constexpr bool matches(const call::Info<Return, Args...>& info) noexcept
         {
-            return mimicpp::is_matching(info.fromCategory, expected);
+            return mimicpp::detail::is_matching(info.fromCategory, expected);
         }
 
         template <typename Return, typename... Args>
         static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
         {
-            assert(mimicpp::is_matching(info.fromCategory, expected) && "Call does not match.");
+            assert(mimicpp::detail::is_matching(info.fromCategory, expected) && "Call does not match.");
         }
 
         [[nodiscard]]
@@ -71,13 +86,13 @@ namespace mimicpp::expectation_policies
         template <typename Return, typename... Args>
         static constexpr bool matches(const call::Info<Return, Args...>& info) noexcept
         {
-            return mimicpp::is_matching(info.fromConstness, constness);
+            return mimicpp::detail::is_matching(info.fromConstness, constness);
         }
 
         template <typename Return, typename... Args>
         static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
         {
-            assert(mimicpp::is_matching(info.fromConstness, constness) && "Call does not match.");
+            assert(mimicpp::detail::is_matching(info.fromConstness, constness) && "Call does not match.");
         }
 
         [[nodiscard]]

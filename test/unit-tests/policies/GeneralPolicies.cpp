@@ -78,7 +78,7 @@ TEMPLATE_TEST_CASE_SIG(
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    if (is_matching(call.fromCategory, category))
+    if (mimicpp::detail::is_matching(call.fromCategory, category))
     {
         SECTION("When call and policy category matches, success is returned.")
         {
@@ -130,7 +130,7 @@ TEMPLATE_TEST_CASE_SIG(
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    if (is_matching(call.fromConstness, constness))
+    if (mimicpp::detail::is_matching(call.fromConstness, constness))
     {
         SECTION("When call and policy constness matches, success is returned.")
         {
