@@ -6,7 +6,6 @@
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Printing.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
 #include "SuppressionMacros.hpp"

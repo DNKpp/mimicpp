@@ -17,7 +17,6 @@ add_executable(${TARGET_NAME}
     "Stacktrace.cpp"
     "String.cpp"
     "TypeTraits.cpp"
-    "Utility.cpp"
 )
 
 add_subdirectory(call-conventions)

@@ -9,7 +9,6 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"

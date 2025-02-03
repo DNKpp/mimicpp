@@ -11,7 +11,6 @@
 #include "mimic++/Call.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/TypeTraits.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"

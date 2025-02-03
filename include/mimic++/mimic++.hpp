@@ -24,7 +24,6 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp"
-#include "mimic++/Utility.hpp"
 
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/FloatingPointMatchers.hpp"

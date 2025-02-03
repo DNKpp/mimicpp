@@ -9,7 +9,6 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 
 #include <cassert>
