@@ -8,6 +8,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
+#include "mimic++/reporting/TargetReport.hpp"
 
 #include <concepts>
 #include <source_location>
@@ -85,20 +86,23 @@ namespace mimicpp
  * \param call_convention The used call-convention.
  * \param specs All other function specifications (e.g. ``const`` and ``noexcept``).
  */
-#define MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, specs)      \
-    template <typename Derived, typename Return, typename... Params>                      \
-    class CallInterface<                                                                  \
-        Derived,                                                                          \
-        Return call_convention(Params...) specs>                                          \
-    {                                                                                     \
-    public:                                                                               \
-        constexpr Return call_convention operator()(                                      \
-            Params... params,                                                             \
-            const ::std::source_location& from = ::std::source_location::current()) specs \
-        {                                                                                 \
-            return static_cast<const Derived&>(*this)                                     \
-                .handle_call(::std::tuple{::std::ref(params)...}, from);                  \
-        }                                                                                 \
+#define MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_CALL_INTERFACE(call_convention, specs)   \
+    template <typename Derived, typename Return, typename... Params>                   \
+    class CallInterface<                                                               \
+        Derived,                                                                       \
+        Return call_convention(Params...) specs>                                       \
+    {                                                                                  \
+    public:                                                                            \
+        constexpr Return call_convention operator()(                                   \
+            Params... params,                                                          \
+            ::std::source_location from = ::std::source_location::current()) specs     \
+        {                                                                              \
+            return static_cast<Derived const&>(*this)                                  \
+                .handle_call(                                                          \
+                    ::mimicpp::reporting::TypeReport::make<Return(Params...) specs>(), \
+                    ::std::tuple{::std::ref(params)...},                               \
+                    ::std::move(from));                                                \
+        }                                                                              \
     }
 
 /**

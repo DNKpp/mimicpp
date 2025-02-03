@@ -346,7 +346,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (__vectorcall MockT::*)(const std::source_location&)>);
+                void (__vectorcall MockT::*)(std::source_location)>);
     }
 
     SECTION("Signatures with noexcept.")
@@ -355,7 +355,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (__vectorcall MockT::*)(const std::source_location&) noexcept>);
+                void (__vectorcall MockT::*)(std::source_location) noexcept>);
     }
 
     SECTION("Signatures with const.")
@@ -364,7 +364,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (__vectorcall MockT::*)(const std::source_location&) const>);
+                void (__vectorcall MockT::*)(std::source_location) const>);
     }
 
     SECTION("Signatures with const noexcept.")
@@ -373,7 +373,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (__vectorcall MockT::*)(const std::source_location&) const noexcept>);
+                void (__vectorcall MockT::*)(std::source_location) const noexcept>);
     }
 
     SECTION("Signatures with &.")
@@ -382,7 +382,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (__vectorcall MockT::*)(const std::source_location&)&>);
+                void (__vectorcall MockT::*)(std::source_location)&>);
     }
 
     SECTION("Signatures with & noexcept.")
@@ -390,7 +390,7 @@ TEST_CASE(
         using MockT = Mock<void __vectorcall() & noexcept>;
         STATIC_REQUIRE(
             std::convertible_to < decltype(&MockT::operator()),
-            void (__vectorcall MockT::*)(const std::source_location&)& noexcept >);
+            void (__vectorcall MockT::*)(std::source_location)& noexcept >);
     }
 
     SECTION("Signatures with const&.")
@@ -399,7 +399,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (__vectorcall MockT::*)(const std::source_location&) const&>);
+                void (__vectorcall MockT::*)(std::source_location) const&>);
     }
 
     SECTION("Signatures with const& noexcept.")
@@ -407,7 +407,7 @@ TEST_CASE(
         using MockT = Mock<void __vectorcall() const & noexcept>;
         STATIC_REQUIRE(
             std::convertible_to < decltype(&MockT::operator()),
-            void (__vectorcall MockT::*)(const std::source_location&) const& noexcept >);
+            void (__vectorcall MockT::*)(std::source_location) const& noexcept >);
     }
 
     SECTION("Signatures with &&.")
@@ -416,7 +416,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (__vectorcall MockT::*)(const std::source_location&) &&>);
+                void (__vectorcall MockT::*)(std::source_location) &&>);
     }
 
     SECTION("Signatures with && noexcept.")
@@ -424,7 +424,7 @@ TEST_CASE(
         using MockT = Mock<void __vectorcall() && noexcept>;
         STATIC_REQUIRE(
             std::convertible_to < decltype(&MockT::operator()),
-            void (__vectorcall MockT::*)(const std::source_location&)&& noexcept >);
+            void (__vectorcall MockT::*)(std::source_location)&& noexcept >);
     }
 
     SECTION("Signatures with const&&.")
@@ -433,7 +433,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (__vectorcall MockT::*)(const std::source_location&) const&&>);
+                void (__vectorcall MockT::*)(std::source_location) const&&>);
     }
 
     SECTION("Signatures with const&& noexcept.")
@@ -441,7 +441,7 @@ TEST_CASE(
         using MockT = Mock<void __vectorcall() const && noexcept>;
         STATIC_REQUIRE(
             std::convertible_to < decltype(&MockT::operator()),
-            void (__vectorcall MockT::*)(const std::source_location&) const&& noexcept >);
+            void (__vectorcall MockT::*)(std::source_location) const&& noexcept >);
     }
 
     SECTION("Mocks still supports overloading.")
