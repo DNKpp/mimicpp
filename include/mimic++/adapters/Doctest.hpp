@@ -27,18 +27,18 @@ namespace mimicpp::reporting::detail::doctest
     using namespace ::doctest;
 
     [[noreturn]]
-    inline void send_fail(const StringViewT msg)
+    inline void send_fail(StringViewT const msg)
     {
         DOCTEST_FAIL(msg);
         unreachable();
     }
 
-    inline void send_success(const StringViewT msg)
+    inline void send_success(StringViewT const msg)
     {
         DOCTEST_REQUIRE_MESSAGE(true, msg);
     }
 
-    inline void send_warning(const StringViewT msg)
+    inline void send_warning(StringViewT const msg)
     {
         DOCTEST_MESSAGE(msg);
     }
@@ -67,7 +67,7 @@ namespace mimicpp::reporting
 namespace mimicpp::reporting::detail::doctest
 {
     [[maybe_unused]]
-    inline const ReporterInstaller<DoctestReporterT> installer{};
+    inline ReporterInstaller<DoctestReporterT> const installer{};
 }
 
 #endif

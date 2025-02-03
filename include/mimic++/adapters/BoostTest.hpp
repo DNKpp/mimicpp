@@ -29,23 +29,20 @@ namespace mimicpp::reporting::detail::boost_test
     };
 
     [[noreturn]]
-    inline void send_fail(const StringViewT msg)
+    inline void send_fail(StringViewT const msg)
     {
         BOOST_TEST_FAIL(msg);
         unreachable();
     }
 
-    inline void send_success(const StringViewT msg)
+    inline void send_success(StringViewT const msg)
     {
         BOOST_TEST_MESSAGE(msg);
     }
 
-    inline void send_warning(const StringViewT msg)
+    inline void send_warning(StringViewT const msg)
     {
-        BOOST_TEST_MESSAGE(
-            format::format(
-                "warning: {}",
-                msg));
+        BOOST_TEST_MESSAGE("warning: ") << msg.data();
     }
 }
 
@@ -72,7 +69,7 @@ namespace mimicpp::reporting
 namespace mimicpp::reporting::detail::boost_test
 {
     [[maybe_unused]]
-    inline const ReporterInstaller<BoostTestReporterT> installer{};
+    inline ReporterInstaller<BoostTestReporterT> const installer{};
 }
 
 #endif

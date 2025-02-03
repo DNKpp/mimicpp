@@ -28,7 +28,7 @@ namespace mimicpp::reporting::detail::gtest
     };
 
     [[noreturn]]
-    inline void send_fail(const StringViewT& msg)
+    inline void send_fail(StringViewT const msg)
     {
         // GTEST_FAIL has an immediate return
         std::invoke(
@@ -39,12 +39,12 @@ namespace mimicpp::reporting::detail::gtest
         throw failure{};
     }
 
-    inline void send_success(const StringViewT& msg)
+    inline void send_success(StringViewT const msg)
     {
         GTEST_SUCCEED() << msg;
     }
 
-    inline void send_warning([[maybe_unused]] const StringViewT& msg)
+    inline void send_warning([[maybe_unused]] StringViewT const msg)
     {
         // seems unsupported
     }
@@ -73,7 +73,7 @@ namespace mimicpp::reporting
 namespace mimicpp::reporting::detail::gtest
 {
     [[maybe_unused]]
-    inline const ReporterInstaller<GTestReporterT> installer{};
+    inline ReporterInstaller<GTestReporterT> const installer{};
 }
 
 #endif

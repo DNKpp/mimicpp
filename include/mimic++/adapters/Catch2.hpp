@@ -25,7 +25,7 @@
 namespace mimicpp::reporting::detail::catch2
 {
     [[noreturn]]
-    inline void send_fail(const StringViewT msg)
+    inline void send_fail(StringViewT const msg)
     {
 #ifdef CATCH_CONFIG_PREFIX_ALL
         CATCH_FAIL(msg);
@@ -36,7 +36,7 @@ namespace mimicpp::reporting::detail::catch2
         unreachable();
     }
 
-    inline void send_success(const StringViewT msg)
+    inline void send_success(StringViewT const msg)
     {
 #ifdef CATCH_CONFIG_PREFIX_ALL
         CATCH_SUCCEED(msg);
@@ -45,7 +45,7 @@ namespace mimicpp::reporting::detail::catch2
 #endif
     }
 
-    inline void send_warning(const StringViewT msg)
+    inline void send_warning(StringViewT const msg)
     {
 #ifdef CATCH_CONFIG_PREFIX_MESSAGES
         CATCH_WARN(msg);
