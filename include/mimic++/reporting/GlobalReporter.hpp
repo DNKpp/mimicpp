@@ -22,19 +22,49 @@
 
 namespace mimicpp::reporting::detail
 {
+#ifdef __cpp_lib_atomic_shared_ptr
+
     [[nodiscard]]
-    inline std::atomic<std::shared_ptr<IReporter>>& access_reporter() noexcept
+    inline std::atomic<std::shared_ptr<IReporter>>& reporter() noexcept
     {
         static std::atomic<std::shared_ptr<IReporter>> reporter{
             std::make_shared<DefaultReporter>(std::cerr)};
         return reporter;
     }
 
+    inline void set_reporter(std::shared_ptr<IReporter> newReporter) noexcept
+    {
+        reporter().store(std::move(newReporter));
+    }
+
     [[nodiscard]]
     inline std::shared_ptr<IReporter> get_reporter() noexcept
     {
-        return access_reporter().load();
+        return reporter().load();
     }
+
+#else // libc++ doesn't support std::atomic<std::shared_ptr> yet, so fallback to older free-functions approach instead
+
+    [[nodiscard]]
+    inline std::shared_ptr<IReporter>* reporter() noexcept
+    {
+        static std::shared_ptr<IReporter> reporter{
+            std::make_shared<DefaultReporter>(std::cerr)};
+        return std::addressof(reporter);
+    }
+
+    inline void set_reporter(std::shared_ptr<IReporter> newReporter)
+    {
+        std::atomic_store(reporter(), std::move(newReporter));
+    }
+
+    [[nodiscard]]
+    inline std::shared_ptr<IReporter> get_reporter() noexcept
+    {
+        return std::atomic_load(reporter());
+    }
+
+#endif
 
     [[noreturn]]
     inline void report_no_matches(
@@ -122,7 +152,7 @@ namespace mimicpp::reporting
         requires std::constructible_from<T, Args...>
     void install_reporter(Args&&... args)
     {
-        detail::access_reporter().store(
+        detail::set_reporter(
             std::make_shared<T>(std::forward<Args>(args)...));
     }
 
