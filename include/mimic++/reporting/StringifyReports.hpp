@@ -450,9 +450,7 @@ namespace mimicpp::reporting
         }
         catch (const std::exception& e)
         {
-            ss << "with message `"
-               << e.what()
-               << "`\n";
+            ss << "with message `" << e.what() << "`\n";
         }
         catch (...)
         {
@@ -466,6 +464,10 @@ namespace mimicpp::reporting
         detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
+
+        detail::stringify_stacktrace(
+            std::ostreambuf_iterator{ss},
+            call.stacktrace);
 
         return std::move(ss).str();
     }

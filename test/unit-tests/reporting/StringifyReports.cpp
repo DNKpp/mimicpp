@@ -13,11 +13,13 @@ namespace
     inline reporting::control_state_t const commonInapplicableState = reporting::state_inapplicable{13, 1337, 42, {sequence::rating{1}}, {sequence::Tag{1337}}};
     inline reporting::control_state_t const commonSaturatedState = reporting::state_saturated{42, 42, 42};
 
+    constexpr std::string_view stacktraceToken{"Stacktrace:\n"};
+
     [[nodiscard, maybe_unused]]
     Stacktrace make_shallow_stacktrace()
     {
         Stacktrace stacktrace = stacktrace::current();
-        CHECK(!stacktrace.empty());
+        REQUIRE(!stacktrace.empty());
 
         // When evaluating the stacktrace via regex, this will fail on msvc, because the regex-state becomes too big.
         // So, we limit the stacktrace here, to have a manageable size.
@@ -25,7 +27,7 @@ namespace
         const auto size = std::min(maxLength, stacktrace.size());
         const auto skip = stacktrace.size() - size;
         stacktrace = stacktrace::current(skip);
-        CHECK(size == stacktrace.size());
+        REQUIRE(size == stacktrace.size());
 
         return stacktrace;
     }
@@ -50,7 +52,6 @@ TEST_CASE(
         .argDetails = {
             {{reporting::TypeReport::make<int>(), "1337"},
              {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -78,7 +79,7 @@ TEST_CASE(
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -91,7 +92,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -111,7 +111,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: some requirement
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -124,7 +124,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -142,7 +141,7 @@ TEST_CASE(
 	Chose Expectation defined at `.+`#L\d+, `.+`
 	Without any Requirements.
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -157,7 +156,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .stacktrace = make_shallow_stacktrace(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -170,7 +168,6 @@ TEST_CASE(
 
     auto const text = reporting::stringify_full_match(callReport, expectationReport);
     CAPTURE(text);
-    constexpr std::string_view stacktraceToken{"Stacktrace:\n"};
     auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
     REQUIRE(stacktraceBegin != text.cend());
     std::string_view const upper{
@@ -184,7 +181,7 @@ TEST_CASE(
         R"(Stacktrace:
 #0 `.+`#L\d+, `.+`
 (?:#\d+ `.*`#L\d+, `.*`\n)*)";
-    REQUIRE_THAT(
+    CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
 }
@@ -201,7 +198,6 @@ TEST_CASE(
         .argDetails = {
             {{reporting::TypeReport::make<int>(), "1337"},
              {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -244,7 +240,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: test
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -257,7 +253,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -280,7 +275,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: some requirement
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -293,7 +288,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -313,7 +307,7 @@ TEST_CASE(
 	#1 Expectation defined at `.+`#L\d+, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -328,7 +322,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .stacktrace = make_shallow_stacktrace(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -342,7 +335,7 @@ TEST_CASE(
     std::vector expectationReports{expectationReport};
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
     CAPTURE(text);
-    auto const stacktraceBegin = std::ranges::search(text, std::string_view{"Stacktrace:\n"}).begin();
+    auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
     REQUIRE(stacktraceBegin != text.cend());
     REQUIRE_THAT(
         (std::string{text.cbegin(), stacktraceBegin}),
@@ -352,7 +345,7 @@ TEST_CASE(
         R"(Stacktrace:
 #0 `.+`#L\d+, `.+`
 (?:#\d+ `.*`#L\d+, `.*`\n)*)";
-    REQUIRE_THAT(
+    CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
 }
@@ -369,7 +362,6 @@ TEST_CASE(
         .argDetails = {
             {{reporting::TypeReport::make<int>(), "1337"},
              {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -425,7 +417,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: adhered
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -438,7 +430,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -471,7 +462,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: adherence
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -484,7 +475,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -510,7 +500,7 @@ TEST_CASE(
 	Due to Violation\(s\):
 	  \- expect: violation
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -523,7 +513,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -535,7 +524,7 @@ TEST_CASE(
 	On Target `Mock-Name` used Overload `void\(\)`
 No Expectations available!
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -550,7 +539,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .stacktrace = make_shallow_stacktrace(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -569,7 +557,7 @@ TEST_CASE(
     };
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
     CAPTURE(text);
-    auto const stacktraceBegin = std::ranges::search(text, std::string_view{"Stacktrace:\n"}).begin();
+    auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
     REQUIRE(stacktraceBegin != text.cend());
     REQUIRE_THAT(
         (std::string{text.cbegin(), stacktraceBegin}),
@@ -579,7 +567,7 @@ TEST_CASE(
         R"(Stacktrace:
 #0 `.+`#L\d+, `.+`
 (?:#\d+ `.*`#L\d+, `.*`\n)*)";
-    REQUIRE_THAT(
+    CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
 }
@@ -629,7 +617,7 @@ TEST_CASE(
 )",
         expectedTimesText,
         expectedDiff);
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
@@ -644,7 +632,6 @@ TEST_CASE(
         .argDetails = {
             {{reporting::TypeReport::make<int>(), "1337"},
              {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -671,7 +658,7 @@ For Call originated from `.+`#L\d+, `.+`
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
 )";
-        REQUIRE_THAT(
+        CHECK_THAT(
             text,
             Catch::Matchers::Matches(regex));
     }
@@ -693,7 +680,7 @@ For Call originated from `.+`#L\d+, `.+`
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
 )";
-        REQUIRE_THAT(
+        CHECK_THAT(
             text,
             Catch::Matchers::Matches(regex));
     }
@@ -707,7 +694,6 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -729,7 +715,48 @@ TEST_CASE(
 For Call originated from `.+`#L\d+, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
 )";
-    REQUIRE_THAT(
+    CHECK_THAT(
         text,
         Catch::Matchers::Matches(regex));
 }
+
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+
+TEST_CASE(
+    "reporting::stringify_unhandled_exception adds the Stacktrace, if existing.",
+    "[reporting]")
+{
+    reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {},
+        .stacktrace = make_shallow_stacktrace(),
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    reporting::ExpectationReport const expectationReport{
+        .target = make_common_target_report<void()>(),
+        .controlReport = commonApplicableState,
+        .finalizerDescription = std::nullopt};
+    auto const exceptionPtr = std::make_exception_ptr(std::runtime_error{"Something went wrong."});
+    auto const text = reporting::stringify_unhandled_exception(
+        callReport,
+        expectationReport,
+        exceptionPtr);
+    CAPTURE(text);
+    auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
+    REQUIRE(stacktraceBegin != text.cend());
+    REQUIRE_THAT(
+        (std::string{text.cbegin(), stacktraceBegin}),
+        Catch::Matchers::EndsWith("On Target `Mock-Name` used Overload `void()`\n\n"));
+
+    std::string const stacktraceRegex =
+        R"(Stacktrace:
+#0 `.+`#L\d+, `.+`
+(?:#\d+ `.*`#L\d+, `.*`\n)*)";
+    CHECK_THAT(
+        (std::string{stacktraceBegin, text.cend()}),
+        Catch::Matchers::Matches(stacktraceRegex));
+}
+
+#endif
