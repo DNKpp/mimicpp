@@ -13,6 +13,7 @@
 #include "mimic++/reporting/DefaultReporter.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
+#include "mimic++/utilities/C++23Backports.hpp"
 
 #include <exception>
 #include <iostream>
@@ -80,7 +81,7 @@ namespace mimicpp::reporting::detail
 
         // GCOVR_EXCL_START
         // ReSharper disable once CppDFAUnreachableCode
-        unreachable();
+        util::unreachable();
         // GCOVR_EXCL_STOP
     }
 
@@ -98,7 +99,7 @@ namespace mimicpp::reporting::detail
 
         // GCOVR_EXCL_START
         // ReSharper disable once CppDFAUnreachableCode
-        unreachable();
+        util::unreachable();
         // GCOVR_EXCL_STOP
     }
 

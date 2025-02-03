@@ -16,6 +16,7 @@
 #include "mimic++/reporting/NoMatchReport.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
+#include "mimic++/utilities/C++23Backports.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -148,7 +149,7 @@ namespace mimicpp::reporting::detail
         template <print_iterator OutIter>
         OutIter operator()([[maybe_unused]] OutIter out, [[maybe_unused]] state_applicable const& state) const
         {
-            unreachable();
+            util::unreachable();
         }
 
         template <print_iterator OutIter>
@@ -241,7 +242,7 @@ namespace mimicpp::reporting::detail
         template <print_iterator OutIter>
         OutIter operator()([[maybe_unused]] OutIter out, [[maybe_unused]] state_saturated const& state) const
         {
-            unreachable();
+            util::unreachable();
         }
 
     private:

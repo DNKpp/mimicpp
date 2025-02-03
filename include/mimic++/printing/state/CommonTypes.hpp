@@ -15,6 +15,7 @@
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/state/Print.hpp"
+#include "mimic++/utilities/C++23Backports.hpp" // unreachable
 
 #include <algorithm>
 #include <bit>
@@ -212,7 +213,7 @@ namespace mimicpp::printing::detail::state
                 case ValueCategory::any:    return {"any"};
                     // GCOVR_EXCL_START
                 default:
-                    unreachable();
+                    util::unreachable();
                     // GCOVR_EXCL_STOP
                 }
             };
@@ -235,7 +236,7 @@ namespace mimicpp::printing::detail::state
                 case Constness::any:       return {"any"};
                     // GCOVR_EXCL_START
                 default:
-                    unreachable();
+                    util::unreachable();
                     // GCOVR_EXCL_STOP
                 }
             };

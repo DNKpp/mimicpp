@@ -14,6 +14,7 @@
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/reporting/NoMatchReport.hpp"
 #include "mimic++/reporting/StringifyReports.hpp"
+#include "mimic++/utilities/C++23Backports.hpp"
 
 #include <concepts>
 #include <exception>
@@ -92,7 +93,7 @@ namespace mimicpp::reporting
         {
             // GCOVR_EXCL_START
             std::invoke(failReporter, msg);
-            unreachable();
+            util::unreachable();
             // GCOVR_EXCL_STOP
         }
     };
