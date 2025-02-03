@@ -82,11 +82,35 @@ namespace mimicpp::reporting::detail
     }
 
     template <print_iterator OutIter>
+    OutIter stringify_call_report_target(OutIter out, CallReport const& call)
+    {
+        out = format::format_to(
+            std::move(out),
+            "\tOn Target `{}` used Overload `{}`\n",
+            call.target.name,
+            call.target.overloadReport.name());
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
     OutIter stringify_expectation_report_from(OutIter out, ExpectationReport const& expectation)
     {
         out = format::format_to(std::move(out), "Expectation defined at ");
         out = mimicpp::print(std::move(out), expectation.from);
         out = format::format_to(std::move(out), "\n");
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
+    OutIter stringify_expectation_report_target(OutIter out, ExpectationReport const& expectation)
+    {
+        out = format::format_to(
+            std::move(out),
+            "\tOf Target `{}` related to Overload `{}`\n",
+            expectation.target.name,
+            expectation.target.overloadReport.name());
 
         return out;
     }
@@ -281,9 +305,7 @@ namespace mimicpp::reporting
         StringStreamT ss{};
         ss << "Matched ";
         detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
-
-        // Todo: target
-
+        detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         ss << "\t" << "Chose ";
@@ -318,9 +340,7 @@ namespace mimicpp::reporting
 
         ss << "Unmatched ";
         detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
-
-        // Todo: target
-
+        detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         ss << expectations.size() << " inapplicable but otherwise matching Expectation(s):";
@@ -358,9 +378,7 @@ namespace mimicpp::reporting
 
         ss << "Unmatched ";
         detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
-
-        // Todo: target
-
+        detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         if (noMatchReports.empty())
@@ -411,6 +429,7 @@ namespace mimicpp::reporting
 
         ss << "Unfulfilled ";
         detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectationReport);
+        detail::stringify_expectation_report_target(std::ostreambuf_iterator{ss}, expectationReport);
         ss << "\tBecause ";
         std::visit(
             std::bind_front(detail::unfulfilled_reason_printer{}, std::ostreambuf_iterator{ss}),
@@ -448,9 +467,7 @@ namespace mimicpp::reporting
 
         ss << "For ";
         detail::stringify_call_report_from(std::ostreambuf_iterator{ss}, call);
-
-        // Todo: target
-
+        detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         return std::move(ss).str();
