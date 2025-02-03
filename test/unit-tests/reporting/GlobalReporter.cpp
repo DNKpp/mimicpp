@@ -115,7 +115,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     SECTION("When report_error() is called.")
     {
-        const StringT error{"Error!"};
+        StringT const error{"Error!"};
         REQUIRE_CALL(reporter, report_error(error));
 
         reporting::detail::report_error(error);
@@ -123,7 +123,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     SECTION("When report_unhandled_exception() is called.")
     {
-        const std::exception_ptr exception = std::make_exception_ptr(TestException{});
+        std::exception_ptr const exception = std::make_exception_ptr(TestException{});
         REQUIRE_CALL(reporter, report_unhandled_exception(callReport, expectationReport, exception));
 
         reporting::detail::report_unhandled_exception(
