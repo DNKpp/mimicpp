@@ -11,11 +11,10 @@
 #include "mimic++/Call.hpp"
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
-#include <source_location>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -51,21 +50,13 @@ namespace mimicpp::reporting
 
         TypeReport returnTypeInfo;
         std::vector<Arg> argDetails{};
-        std::source_location fromLoc{};
+        util::SourceLocation fromLoc{};
         Stacktrace stacktrace{stacktrace::NullBackend{}};
         ValueCategory fromCategory{};
         Constness fromConstness{};
 
         [[nodiscard]]
-        friend bool operator==(const CallReport& lhs, const CallReport& rhs)
-        {
-            return lhs.returnTypeInfo == rhs.returnTypeInfo
-                && lhs.argDetails == rhs.argDetails
-                && is_same_source_location(lhs.fromLoc, rhs.fromLoc)
-                && lhs.fromCategory == rhs.fromCategory
-                && lhs.fromConstness == rhs.fromConstness
-                && lhs.stacktrace == rhs.stacktrace;
-        }
+        friend bool operator==(CallReport const&, CallReport const&) = default;
     };
 
     /**

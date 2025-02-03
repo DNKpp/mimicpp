@@ -11,8 +11,8 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
-#include <source_location>
 #include <tuple>
 #include <utility>
 
@@ -27,7 +27,7 @@ namespace mimicpp::call
         ArgListT args;
         ValueCategory fromCategory{};
         Constness fromConstness{};
-        std::source_location fromSourceLocation{};
+        util::SourceLocation fromSourceLocation{};
         Stacktrace stacktrace{stacktrace::NullBackend{}};
     };
 

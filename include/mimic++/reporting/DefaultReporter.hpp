@@ -87,7 +87,7 @@ namespace mimicpp::reporting
                 *m_Out << msg << '\n';
             }
 
-            std::source_location const loc{call.fromLoc};
+            std::source_location const loc{*call.fromLoc};
             throw UnmatchedCallT{msg, std::move(call), loc};
         }
 
@@ -103,7 +103,7 @@ namespace mimicpp::reporting
                 *m_Out << msg << '\n';
             }
 
-            std::source_location const loc{call.fromLoc};
+            std::source_location const loc{*call.fromLoc};
             throw UnmatchedCallT{msg, std::move(call), loc};
         }
 

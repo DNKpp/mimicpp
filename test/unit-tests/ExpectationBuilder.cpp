@@ -178,7 +178,7 @@ TEST_CASE(
                                            && FinalizerPolicyT{std::ref(finalizer)};
 
         REQUIRE_CALL(finalizer, finalize_call(_))
-            .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation));
+            .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation);
 
         REQUIRE_NOTHROW(expectation.is_satisfied());
         REQUIRE_NOTHROW(collection->handle_call(call));
@@ -211,7 +211,7 @@ TEST_CASE(
                                        && FinalizerPolicyT{std::ref(finalizer)};
 
     REQUIRE_CALL(finalizer, finalize_call(_))
-        .LR_WITH(is_same_source_location(_1.fromSourceLocation, call.fromSourceLocation))
+        .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
         .RETURN(0);
 
     REQUIRE_NOTHROW(expectation.is_satisfied());
