@@ -16,6 +16,7 @@
 
 #include <algorithm>
 #include <any>
+#include <cassert>
 // ReSharper disable once CppUnusedIncludeDirective
 #include <functional> // std::invoke
 #include <ranges>
