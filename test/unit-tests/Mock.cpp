@@ -44,15 +44,15 @@ TEMPLATE_TEST_CASE(
 {
     using MockT = Mock<TestType>;
 
-    STATIC_REQUIRE(!std::is_copy_constructible_v<MockT>);
-    STATIC_REQUIRE(!std::is_copy_assignable_v<MockT>);
+    STATIC_CHECK(!std::is_copy_constructible_v<MockT>);
+    STATIC_CHECK(!std::is_copy_assignable_v<MockT>);
 
-    STATIC_REQUIRE(std::is_move_constructible_v<MockT>);
-    STATIC_REQUIRE(std::is_move_assignable_v<MockT>);
-    STATIC_REQUIRE(std::is_default_constructible_v<MockT>);
+    STATIC_CHECK(std::is_move_constructible_v<MockT>);
+    STATIC_CHECK(std::is_move_assignable_v<MockT>);
+    STATIC_CHECK(std::is_default_constructible_v<MockT>);
 
-    STATIC_REQUIRE(std::is_nothrow_move_constructible_v<MockT>);
-    STATIC_REQUIRE(std::is_nothrow_move_assignable_v<MockT>);
+    STATIC_CHECK(std::is_nothrow_move_constructible_v<MockT>);
+    STATIC_CHECK(std::is_nothrow_move_assignable_v<MockT>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -64,53 +64,53 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void(int&), int&),
     (true, float && (int&), int&),
     (true, float && (std::tuple<int&>&&), std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, const std::tuple<double&&>&), std::tuple<int&>&&, const std::tuple<double&&>&))
+    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&), std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
     using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
 
     // negative checks
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const&&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const&&, Args...>);
 
 #ifndef CLANG_18_STD_INVOCABLE_REGRESSION
 
-    STATIC_REQUIRE(std::invocable<MockT, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+    STATIC_CHECK(std::invocable<MockT, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::invocable<MockT&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&&, Args...>);
 
     // negative checks
 
-    STATIC_REQUIRE(!std::invocable<const MockT, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<const MockT&, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<const MockT&&, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const&&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const&&, Args...>);
 
 #endif
 }
@@ -124,49 +124,49 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void(int&) const, int&),
     (true, float && (int&) const, int&),
     (true, float && (std::tuple<int&>&&) const, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, const std::tuple<double&&>&) const, std::tuple<int&>&&, const std::tuple<double&&>&))
+    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&) const, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
     using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT const, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT const&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT const&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT const&&, Args...>);
 
 #ifndef CLANG_18_STD_INVOCABLE_REGRESSION
 
-    STATIC_REQUIRE(std::invocable<MockT, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+    STATIC_CHECK(std::invocable<MockT, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::invocable<const MockT, Args...>);
-    STATIC_REQUIRE(std::invocable<const NothrowMockT, Args...>);
+    STATIC_CHECK(std::invocable<MockT const, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(std::invocable<MockT&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(std::invocable<const MockT&, Args...>);
-    STATIC_REQUIRE(std::invocable<const NothrowMockT&, Args...>);
+    STATIC_CHECK(std::invocable<MockT const&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&&, Args...>);
 
-    STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
-    STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::invocable<MockT const&&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT const&&, Args...>);
 
 #endif
 }
@@ -180,53 +180,53 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void(int&) &, int&),
     (true, float && (int&)&, int&),
     (true, float && (std::tuple<int&>&&)&, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, const std::tuple<double&&>&)&, std::tuple<int&>&&, const std::tuple<double&&>&))
+    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&)&, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
     using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
 
     // negative checks
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, MockT, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const&&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const&&, Args...>);
 
 #ifndef CLANG_18_STD_INVOCABLE_REGRESSION
 
-    STATIC_REQUIRE(std::invocable<MockT&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&, Args...>);
 
     // negative checks
 
-    STATIC_REQUIRE(!std::invocable<MockT, Args...>);
-    STATIC_REQUIRE(!std::invocable<NothrowMockT, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<const MockT, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<const MockT&, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<MockT&&, Args...>);
-    STATIC_REQUIRE(!std::invocable<NothrowMockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT&&, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<const MockT&&, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const&&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const&&, Args...>);
 
 #endif
 }
@@ -240,49 +240,49 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void(int&) const&, int&),
     (true, float && (int&) const&, int&),
     (true, float && (std::tuple<int&>&&) const&, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, const std::tuple<double&&>&) const&, std::tuple<int&>&&, const std::tuple<double&&>&))
+    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&) const&, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
     using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT const, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT const&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT const&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT const&&, Args...>);
 
 #ifndef CLANG_18_STD_INVOCABLE_REGRESSION
 
-    STATIC_REQUIRE(std::invocable<MockT, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+    STATIC_CHECK(std::invocable<MockT, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::invocable<const MockT, Args...>);
-    STATIC_REQUIRE(std::invocable<const NothrowMockT, Args...>);
+    STATIC_CHECK(std::invocable<MockT const, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(std::invocable<MockT&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(std::invocable<const MockT&, Args...>);
-    STATIC_REQUIRE(std::invocable<const NothrowMockT&, Args...>);
+    STATIC_CHECK(std::invocable<MockT const&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&&, Args...>);
 
-    STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
-    STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::invocable<MockT const&&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT const&&, Args...>);
 
 #endif
 }
@@ -296,53 +296,53 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void(int&) &&, int&),
     (true, float && (int&) &&, int&),
     (true, float && (std::tuple<int&>&&) &&, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, const std::tuple<double&&>&) &&, std::tuple<int&>&&, const std::tuple<double&&>&))
+    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&) &&, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
     using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
 
     // negative checks
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const&&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const&&, Args...>);
 
 #ifndef CLANG_18_STD_INVOCABLE_REGRESSION
 
-    STATIC_REQUIRE(std::invocable<MockT, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+    STATIC_CHECK(std::invocable<MockT, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&&, Args...>);
 
     // negative checks
 
-    STATIC_REQUIRE(!std::invocable<const MockT, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<MockT&, Args...>);
-    STATIC_REQUIRE(!std::invocable<NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<const MockT&, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const&, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<const MockT&&, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT&&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const&&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const&&, Args...>);
 
 #endif
 }
@@ -356,53 +356,53 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void(int&) const&&, int&),
     (true, float && (int&) const&&, int&),
     (true, float && (std::tuple<int&>&&) const&&, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, const std::tuple<double&&>&) const&&, std::tuple<int&>&&, const std::tuple<double&&>&))
+    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&) const&&, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
     using NothrowMockT = Mock<signature_add_noexcept_t<Sig>>;
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT const, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT&&, Args...>);
 
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const MockT&&, Args...>);
-    STATIC_REQUIRE(std::is_invocable_r_v<ReturnT, const NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, MockT const&&, Args...>);
+    STATIC_CHECK(std::is_invocable_r_v<ReturnT, NothrowMockT const&&, Args...>);
 
     // negative checks
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, MockT&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const MockT&, Args...>);
-    STATIC_REQUIRE(!std::is_invocable_r_v<ReturnT, const NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, MockT const&, Args...>);
+    STATIC_CHECK_FALSE(std::is_invocable_r_v<ReturnT, NothrowMockT const&, Args...>);
 
 #ifndef CLANG_18_STD_INVOCABLE_REGRESSION
 
-    STATIC_REQUIRE(std::invocable<MockT, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT, Args...>);
+    STATIC_CHECK(std::invocable<MockT, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT, Args...>);
 
-    STATIC_REQUIRE(std::invocable<const MockT, Args...>);
-    STATIC_REQUIRE(std::invocable<const NothrowMockT, Args...>);
+    STATIC_CHECK(std::invocable<MockT const, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT const, Args...>);
 
-    STATIC_REQUIRE(std::invocable<MockT&&, Args...>);
-    STATIC_REQUIRE(std::invocable<NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::invocable<MockT&&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT&&, Args...>);
 
-    STATIC_REQUIRE(std::invocable<const MockT&&, Args...>);
-    STATIC_REQUIRE(std::invocable<const NothrowMockT&&, Args...>);
+    STATIC_CHECK(std::invocable<MockT const&&, Args...>);
+    STATIC_CHECK(std::invocable<NothrowMockT const&&, Args...>);
 
     // negative checks
 
-    STATIC_REQUIRE(!std::invocable<MockT&, Args...>);
-    STATIC_REQUIRE(!std::invocable<NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT&, Args...>);
 
-    STATIC_REQUIRE(!std::invocable<const MockT&, Args...>);
-    STATIC_REQUIRE(!std::invocable<const NothrowMockT&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<MockT const&, Args...>);
+    STATIC_CHECK_FALSE(std::invocable<NothrowMockT const&, Args...>);
 
 #endif
 }
@@ -417,24 +417,24 @@ TEST_CASE(
     {
         Mock<void()> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int()> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -448,24 +448,24 @@ TEST_CASE(
     {
         Mock<void() const> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() const> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -479,24 +479,24 @@ TEST_CASE(
     {
         Mock<void()&> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int()&> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -510,24 +510,24 @@ TEST_CASE(
     {
         Mock<void() const&> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() const&> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -541,24 +541,24 @@ TEST_CASE(
     {
         Mock<void() &&> mock{};
 
-        const ScopedExpectation expectation = std::move(mock).expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = std::move(mock).expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         std::move(mock)();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() &&> mock{};
 
-        const ScopedExpectation expectation = std::move(mock).expect_call()
+        ScopedExpectation const expectation = std::move(mock).expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == std::move(mock)());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == std::move(mock)());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -572,24 +572,24 @@ TEST_CASE(
     {
         Mock<void() const&&> mock{};
 
-        const ScopedExpectation expectation = std::move(mock).expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = std::move(mock).expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         std::move(mock)();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() const&&> mock{};
 
-        const ScopedExpectation expectation = std::move(mock).expect_call()
+        ScopedExpectation const expectation = std::move(mock).expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == std::move(mock)());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == std::move(mock)());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -603,24 +603,24 @@ TEST_CASE(
     {
         Mock<void() noexcept> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() noexcept> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -634,24 +634,24 @@ TEST_CASE(
     {
         Mock<void() const noexcept> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() const noexcept> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -665,24 +665,24 @@ TEST_CASE(
     {
         Mock<void() & noexcept> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() & noexcept> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -696,24 +696,24 @@ TEST_CASE(
     {
         Mock<void() const & noexcept> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() const & noexcept> mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -727,24 +727,24 @@ TEST_CASE(
     {
         Mock<void() && noexcept> mock{};
 
-        const ScopedExpectation expectation = std::move(mock).expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = std::move(mock).expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         std::move(mock)();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() && noexcept> mock{};
 
-        const ScopedExpectation expectation = std::move(mock).expect_call()
+        ScopedExpectation const expectation = std::move(mock).expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == std::move(mock)());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == std::move(mock)());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -758,24 +758,24 @@ TEST_CASE(
     {
         Mock<void() const && noexcept> mock{};
 
-        const ScopedExpectation expectation = std::move(mock).expect_call();
-        CHECK(!expectation.is_satisfied());
+        ScopedExpectation const expectation = std::move(mock).expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
 
         std::move(mock)();
 
-        REQUIRE(expectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
     {
         Mock<int() const && noexcept> mock{};
 
-        const ScopedExpectation expectation = std::move(mock).expect_call()
+        ScopedExpectation const expectation = std::move(mock).expect_call()
                                            && finally::returns(42);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
 
-        REQUIRE(42 == std::move(mock)());
-        REQUIRE(expectation.is_satisfied());
+        CHECK(42 == std::move(mock)());
+        CHECK(expectation.is_satisfied());
     }
 }
 
@@ -792,20 +792,20 @@ TEST_CASE(
             void() const>
             mock{};
 
-        const ScopedExpectation expectation = mock.expect_call();
-        const ScopedExpectation constExpectation = std::as_const(mock).expect_call();
-        CHECK(!expectation.is_satisfied());
-        CHECK(!constExpectation.is_satisfied());
+        ScopedExpectation const expectation = mock.expect_call();
+        ScopedExpectation const constExpectation = std::as_const(mock).expect_call();
+        REQUIRE_FALSE(expectation.is_satisfied());
+        REQUIRE_FALSE(constExpectation.is_satisfied());
 
         mock();
 
-        REQUIRE(expectation.is_satisfied());
-        REQUIRE(!constExpectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
+        CHECK(!constExpectation.is_satisfied());
 
         std::as_const(mock)();
 
-        REQUIRE(expectation.is_satisfied());
-        REQUIRE(constExpectation.is_satisfied());
+        CHECK(expectation.is_satisfied());
+        CHECK(constExpectation.is_satisfied());
     }
 
     SECTION("With int() signature.")
@@ -815,20 +815,20 @@ TEST_CASE(
             int() const>
             mock{};
 
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
-        const ScopedExpectation constExpectation = std::as_const(mock).expect_call()
+        ScopedExpectation const constExpectation = std::as_const(mock).expect_call()
                                                 && finally::returns(1337);
-        CHECK(!expectation.is_satisfied());
+        REQUIRE_FALSE(expectation.is_satisfied());
+        REQUIRE_FALSE(constExpectation.is_satisfied());
+
+        CHECK(42 == mock());
+        CHECK(expectation.is_satisfied());
         CHECK(!constExpectation.is_satisfied());
 
-        REQUIRE(42 == mock());
-        REQUIRE(expectation.is_satisfied());
-        REQUIRE(!constExpectation.is_satisfied());
-
-        REQUIRE(1337 == std::as_const(mock)());
-        REQUIRE(expectation.is_satisfied());
-        REQUIRE(constExpectation.is_satisfied());
+        CHECK(1337 == std::as_const(mock)());
+        CHECK(expectation.is_satisfied());
+        CHECK(constExpectation.is_satisfied());
     }
 }
 
@@ -841,22 +841,22 @@ TEST_CASE(
     Mock<void()> mock{};
     ScopedExpectation exp = mock.expect_call();
     mock();
-    const std::size_t skip = GENERATE(1u, 2u, 3u);
+    std::size_t const skip = GENERATE(1u, 2u, 3u);
     mock = Mock<void()>{
         MockSettings{.stacktraceSkip = skip}};
     exp = mock.expect_call();
     mock();
 
-    const auto& [first, _1] = reporter.full_match_reports().front();
-    const auto& [second, _2] = reporter.full_match_reports().at(1u);
+    auto const& [first, _1] = reporter.full_match_reports().front();
+    auto const& [second, _2] = reporter.full_match_reports().at(1u);
     CHECKED_IF(!first.stacktrace.empty())
     {
-        CHECK(first.stacktrace.size() == second.stacktrace.size() + skip);
+        REQUIRE(first.stacktrace.size() == second.stacktrace.size() + skip);
 
-        REQUIRE(
+        CHECK(
             std::ranges::all_of(
                 std::views::iota(0u, second.stacktrace.size()),
-                [&](const std::size_t i) {
+                [&](std::size_t const i) {
                     return first.stacktrace.source_file(i + skip) == second.stacktrace.source_file(i)
                         && first.stacktrace.source_line(i + skip) == second.stacktrace.source_line(i)
                         && first.stacktrace.description(i + skip) == second.stacktrace.description(i);
@@ -875,20 +875,20 @@ TEST_CASE(
         double(int) const>
         mock{};
 
-    const ScopedExpectation firstExpectation = mock.expect_call();
-    const ScopedExpectation secondExpectation = mock.expect_call(1337)
+    ScopedExpectation const firstExpectation = mock.expect_call();
+    ScopedExpectation const secondExpectation = mock.expect_call(1337)
                                              && finally::returns(4.2);
 
-    CHECK(!firstExpectation.is_satisfied());
-    CHECK(!secondExpectation.is_satisfied());
+    REQUIRE_FALSE(firstExpectation.is_satisfied());
+    REQUIRE_FALSE(secondExpectation.is_satisfied());
 
     mock();
-    REQUIRE(firstExpectation.is_satisfied());
-    REQUIRE(!secondExpectation.is_satisfied());
+    CHECK(firstExpectation.is_satisfied());
+    CHECK(!secondExpectation.is_satisfied());
 
-    REQUIRE(4.2 == mock(1337));
-    REQUIRE(firstExpectation.is_satisfied());
-    REQUIRE(secondExpectation.is_satisfied());
+    CHECK(4.2 == mock(1337));
+    CHECK(firstExpectation.is_satisfied());
+    CHECK(secondExpectation.is_satisfied());
 }
 
 TEST_CASE(
@@ -939,10 +939,10 @@ TEST_CASE(
     {
         Mock<void()> mock{
             MockSettings{.name = "MyMock"}};
-        const ScopedExpectation expectation = mock.expect_call()
+        ScopedExpectation const expectation = mock.expect_call()
                                           and expect::never();
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             expectation.mock_name(),
             Catch::Matchers::Equals("MyMock"));
     }
@@ -952,10 +952,10 @@ TEST_CASE(
         SECTION("When single signature is given.")
         {
             Mock<void()> mock{};
-            const ScopedExpectation expectation = mock.expect_call()
+            ScopedExpectation const expectation = mock.expect_call()
                                               and expect::never();
 
-            REQUIRE_THAT(
+            CHECK_THAT(
                 expectation.mock_name(),
                 Catch::Matchers::Equals("Mock<void()>"));
         }
@@ -964,10 +964,10 @@ TEST_CASE(
         {
 #ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
             Mock<void(), void(std::vector<int>*) const, float(std::string const&&, int) & noexcept> mock{};
-            const ScopedExpectation expectation = mock.expect_call()
+            ScopedExpectation const expectation = mock.expect_call()
                                               and expect::never();
 
-            REQUIRE_THAT(
+            CHECK_THAT(
                 expectation.mock_name(),
                 Catch::Matchers::Equals("Mock<void(), void(std::vector<int>*) const, float(std::string const&&, int) & noexcept>"));
 #else
