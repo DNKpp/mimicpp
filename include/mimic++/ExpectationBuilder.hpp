@@ -16,6 +16,7 @@
 #include "mimic++/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
+#include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
 namespace mimicpp
@@ -41,13 +42,13 @@ namespace mimicpp
         [[nodiscard]]
         explicit constexpr BasicExpectationBuilder(
             std::shared_ptr<StorageT> storage,
-            StringT mockName,
+            reporting::TargetReport target,
             detail::TimesConfig timesConfig,
             SequenceConfig sequenceConfig,
             FinalizePolicyArg&& finalizePolicyArg,
             PolicyListArg&& policyListArg) noexcept
             : m_Storage{std::move(storage)},
-              m_MockName{std::move(mockName)},
+              m_TargetReport{std::move(target)},
               m_TimesConfig{std::move(timesConfig)},
               m_SequenceConfig{std::move(sequenceConfig)},
               m_FinalizePolicy{std::forward<FinalizePolicyArg>(finalizePolicyArg)},
@@ -79,7 +80,7 @@ namespace mimicpp
 
             return ExtendedExpectationBuilderT{
                 std::move(builder.m_Storage),
-                std::move(builder.m_MockName),
+                std::move(builder.m_TargetReport),
                 std::move(builder.m_TimesConfig),
                 std::move(builder.m_SequenceConfig),
                 std::forward<Policy>(policy),
@@ -101,7 +102,7 @@ namespace mimicpp
 
             return ExtendedExpectationBuilderT{
                 std::move(builder.m_Storage),
-                std::move(builder.m_MockName),
+                std::move(builder.m_TargetReport),
                 std::move(builder.m_TimesConfig),
                 std::move(builder.m_SequenceConfig),
                 std::move(builder.m_FinalizePolicy),
@@ -123,7 +124,7 @@ namespace mimicpp
 
             return NewBuilderT{
                 std::move(builder.m_Storage),
-                std::move(builder.m_MockName),
+                std::move(builder.m_TargetReport),
                 std::move(config),
                 std::move(builder.m_SequenceConfig),
                 std::move(builder.m_FinalizePolicy),
@@ -145,7 +146,7 @@ namespace mimicpp
 
             return ExtendedExpectationBuilderT{
                 std::move(builder.m_Storage),
-                std::move(builder.m_MockName),
+                std::move(builder.m_TargetReport),
                 std::move(builder.m_TimesConfig),
                 std::move(newConfig),
                 std::move(builder.m_FinalizePolicy),
@@ -153,7 +154,7 @@ namespace mimicpp
         }
 
         [[nodiscard]]
-        ScopedExpectation finalize(std::source_location const& sourceLocation) &&
+        ScopedExpectation finalize(const std::source_location& sourceLocation) &&
         {
             static_assert(
                 finalize_policy_for<FinalizePolicy, Signature>,
@@ -175,9 +176,10 @@ namespace mimicpp
 
                         return std::make_unique<ExpectationT>(
                             util::SourceLocation{sourceLocation},
+                            std::move(m_TargetReport),
                             detail::expectation_info{
                                 .sourceLocation = sourceLocation,
-                                .mockName = std::move(m_MockName)},
+                                .mockName = m_TargetReport.name},
                             std::move(controlPolicy),
                             std::move(m_FinalizePolicy),
                             std::move(policies)...);
@@ -187,7 +189,7 @@ namespace mimicpp
 
     private:
         std::shared_ptr<StorageT> m_Storage;
-        StringT m_MockName;
+        reporting::TargetReport m_TargetReport;
         detail::TimesConfig m_TimesConfig{};
         SequenceConfig m_SequenceConfig{};
         FinalizePolicy m_FinalizePolicy{};
@@ -269,7 +271,7 @@ namespace mimicpp::detail
     template <typename Signature, typename... Args>
     constexpr auto make_expectation_builder(
         std::shared_ptr<ExpectationCollection<Signature>> expectations,
-        StringT mockName,
+        reporting::TargetReport target,
         Args&&... args)
     {
         using BaseBuilderT = BasicExpectationBuilder<
@@ -281,7 +283,7 @@ namespace mimicpp::detail
         return detail::extend_builder_with_arg_policies<Signature>(
             BaseBuilderT{
                 std::move(expectations),
-                std::move(mockName),
+                std::move(target),
                 TimesConfig{},
                 sequence::detail::Config<>{},
                 expectation_policies::InitFinalize{},

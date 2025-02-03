@@ -25,7 +25,7 @@ namespace
     {
         return BaseBuilderT<Signature>{
             std::move(collection),
-            "Test-Mock",
+            reporting::TargetReport{"Test-Mock", reporting::TypeReport::make<Signature>()},
             detail::TimesConfig{},
             sequence::detail::Config<>{},
             expectation_policies::InitFinalize{},

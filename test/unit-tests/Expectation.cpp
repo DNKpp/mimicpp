@@ -988,17 +988,19 @@ TEST_CASE(
     "ExpectationCollection disambiguates multiple possible matches in a deterministic manner.",
     "[expectation]")
 {
-    namespace expect = mimicpp::expect;
-    namespace finally = mimicpp::finally;
     using SignatureT = int();
-    using CollectionT = mimicpp::ExpectationCollection<SignatureT>;
-    using CallInfoT = mimicpp::call::info_for_signature_t<SignatureT>;
+    using CollectionT = ExpectationCollection<SignatureT>;
+    using CallInfoT = call::info_for_signature_t<SignatureT>;
 
     auto collection = std::make_shared<CollectionT>();
 
     ScopedReporter reporter{};
 
-    const CallInfoT call{
+    reporting::TargetReport const targetReport{
+        .name = "Test",
+        .overloadReport = reporting::TypeReport::make<SignatureT>()};
+
+    CallInfoT const call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -1007,12 +1009,12 @@ TEST_CASE(
     {
         GreedySequence sequence{};
 
-        ScopedExpectation exp1 = detail::make_expectation_builder(collection, "")
+        ScopedExpectation exp1 = detail::make_expectation_builder(collection, targetReport)
                               && expect::times(0, 1)
                               && expect::in_sequence(sequence)
                               && finally::returns(42);
 
-        ScopedExpectation exp2 = detail::make_expectation_builder(collection, "")
+        ScopedExpectation exp2 = detail::make_expectation_builder(collection, targetReport)
                               && expect::times(0, 1)
                               && expect::in_sequence(sequence)
                               && finally::returns(1337);
@@ -1024,12 +1026,12 @@ TEST_CASE(
     {
         LazySequence sequence{};
 
-        ScopedExpectation exp1 = detail::make_expectation_builder(collection, "")
+        ScopedExpectation exp1 = detail::make_expectation_builder(collection, targetReport)
                               && expect::times(0, 1)
                               && expect::in_sequence(sequence)
                               && finally::returns(42);
 
-        ScopedExpectation exp2 = detail::make_expectation_builder(collection, "")
+        ScopedExpectation exp2 = detail::make_expectation_builder(collection, targetReport)
                               && expect::times(0, 1)
                               && expect::in_sequence(sequence)
                               && finally::returns(1337);

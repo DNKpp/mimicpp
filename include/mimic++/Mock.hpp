@@ -17,6 +17,7 @@
 #include "mimic++/Utility.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/reporting/TargetReport.hpp"
 
 namespace mimicpp
 {
@@ -165,7 +166,7 @@ namespace mimicpp::detail
         constexpr auto expect_call(Args&&... args)
         {
             return static_cast<const Derived&>(*this)
-                .make_expectation_builder(std::forward<Args>(args)...);
+                .make_expectation_builder(reporting::TypeReport::make<Signature>(), std::forward<Args>(args)...);
         }
     };
 
@@ -184,7 +185,7 @@ namespace mimicpp::detail
         constexpr auto expect_call(Args&&... args) const
         {
             return static_cast<const Derived&>(*this)
-                .make_expectation_builder(std::forward<Args>(args)...);
+                .make_expectation_builder(reporting::TypeReport::make<Signature>(), std::forward<Args>(args)...);
         }
     };
 
@@ -203,7 +204,7 @@ namespace mimicpp::detail
         constexpr auto expect_call(Args&&... args) &
         {
             return static_cast<const Derived&>(*this)
-                .make_expectation_builder(std::forward<Args>(args)...);
+                .make_expectation_builder(reporting::TypeReport::make<Signature>(), std::forward<Args>(args)...);
         }
     };
 
@@ -222,7 +223,7 @@ namespace mimicpp::detail
         constexpr auto expect_call(Args&&... args) const&
         {
             return static_cast<const Derived&>(*this)
-                .make_expectation_builder(std::forward<Args>(args)...);
+                .make_expectation_builder(reporting::TypeReport::make<Signature>(), std::forward<Args>(args)...);
         }
     };
 
@@ -241,7 +242,7 @@ namespace mimicpp::detail
         constexpr auto expect_call(Args&&... args) &&
         {
             return static_cast<const Derived&>(*this)
-                .make_expectation_builder(std::forward<Args>(args)...);
+                .make_expectation_builder(reporting::TypeReport::make<Signature>(), std::forward<Args>(args)...);
         }
     };
 
@@ -260,7 +261,7 @@ namespace mimicpp::detail
         constexpr auto expect_call(Args&&... args) const&&
         {
             return static_cast<const Derived&>(*this)
-                .make_expectation_builder(std::forward<Args>(args)...);
+                .make_expectation_builder(reporting::TypeReport::make<Signature>(), std::forward<Args>(args)...);
         }
     };
 
@@ -323,9 +324,12 @@ namespace mimicpp::detail
 
         template <typename... Args>
         [[nodiscard]]
-        constexpr auto make_expectation_builder(Args&&... args) const
+        constexpr auto make_expectation_builder(reporting::TypeReport overloadReport, Args&&... args) const
         {
-            return detail::make_expectation_builder(m_Expectations, *m_Settings.name, std::forward<Args>(args)...)
+            return detail::make_expectation_builder(
+                       m_Expectations,
+                       reporting::TargetReport{.name = *m_Settings.name, .overloadReport = std::move(overloadReport)},
+                       std::forward<Args>(args)...)
                 && expectation_policies::Category<refQualification>{}
                 && expectation_policies::Constness<constQualification>{};
         }
