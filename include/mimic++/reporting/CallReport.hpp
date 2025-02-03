@@ -68,7 +68,7 @@ namespace mimicpp::reporting
      * \param target The mock-target report.
      * \param callInfo The call info.
      * \return The call report.
-     * \relatesalso call::Info
+     * \relatesalso CallReport
      */
     template <typename Return, typename... Params>
     [[nodiscard]]

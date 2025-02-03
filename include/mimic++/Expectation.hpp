@@ -489,7 +489,6 @@ namespace mimicpp
          * \tparam PolicyArgs The expectation-policies constructor argument types.
          * \param from The source-location, where this expectation was created.
          * \param target Information about the target-mock.
-         * \param info General infos about the expectation.
          * \param controlArg The control-policy constructor argument.
          * \param finalizerArg The finalize-policy constructor argument.
          * \param args The expectation-policies constructor arguments.
