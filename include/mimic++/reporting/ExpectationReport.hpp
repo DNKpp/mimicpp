@@ -9,7 +9,8 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
+#include "mimic++/reporting/TargetReport.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #include <optional>
 #include <variant>
@@ -79,7 +80,8 @@ namespace mimicpp::reporting
     class ExpectationReport
     {
     public:
-        detail::expectation_info info{};
+        util::SourceLocation from{};
+        TargetReport target;
         control_state_t controlReport{};
         std::optional<StringT> finalizerDescription{};
         std::vector<std::optional<StringT>> requirementDescriptions{};

@@ -16,12 +16,13 @@ using reporting::TypeReport;
 
 namespace
 {
+    template <typename Signature>
     [[nodiscard]]
-    detail::expectation_info make_common_expectation_info(const std::source_location& loc = std::source_location::current())
+    reporting::TargetReport make_common_target_report()
     {
-        return detail::expectation_info{
-            .sourceLocation = loc,
-            .mockName = "Mock-Name"};
+        return reporting::TargetReport{
+            .name = "Mock-Name",
+            .overloadReport = reporting::TypeReport::make<Signature>()};
     }
 }
 
@@ -60,7 +61,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     SECTION("When no-match is reported, UnmatchedCallT is thrown.")
     {
         ExpectationReport const expectationReport{
-            .info = make_common_expectation_info(),
+            .target = make_common_target_report<void()>(),
             .controlReport = reporting::state_applicable{1, 1, 0},
             .requirementDescriptions = {{"expect: Invalid"}}
         };
@@ -90,7 +91,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     SECTION("When inapplicable matches are reported, UnmatchedCallT is thrown.")
     {
         ExpectationReport const expectationReport{
-            .info = make_common_expectation_info(),
+            .target = make_common_target_report<void()>(),
             .controlReport = reporting::state_inapplicable{1, 1, 1},
             .requirementDescriptions = {{"expect: Valid"}}
         };
@@ -115,7 +116,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     SECTION("When match is reported, nothing is done.")
     {
         ExpectationReport const expectationReport{
-            .info = make_common_expectation_info(),
+            .target = make_common_target_report<void()>(),
             .controlReport = reporting::state_applicable{1, 1, 0},
             .requirementDescriptions = {{"expect: Valid"}}
         };
@@ -133,7 +134,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     SECTION("When unfulfilled expectation is reported.")
     {
         static ExpectationReport const expectationReport{
-            .info = make_common_expectation_info(),
+            .target = make_common_target_report<void()>(),
             .controlReport = reporting::state_applicable{1, 1, 0}
         };
 
@@ -229,10 +230,15 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     SECTION("When unhandled exception is reported, nothing is done.")
     {
+        ExpectationReport const expectationReport{
+            .target = make_common_target_report<void()>(),
+            .controlReport = reporting::state_applicable{1, 1, 0}
+        };
+
         REQUIRE_NOTHROW(
             reporter.report_unhandled_exception(
                 callReport,
-                {},
+                expectationReport,
                 std::make_exception_ptr(std::runtime_error{"Test"})));
 
         CHECKED_IF(out)

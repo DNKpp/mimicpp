@@ -524,11 +524,12 @@ namespace mimicpp
         reporting::ExpectationReport report() const override
         {
             return reporting::ExpectationReport{
-                .info = m_Info,
+                .from = m_From,
+                .target = m_Target,
                 .controlReport = m_ControlPolicy.state(),
                 .finalizerDescription = std::nullopt,
                 .requirementDescriptions = std::apply(
-                    [&](const auto&... policies) {
+                    [&](auto const&... policies) {
                         return std::vector<std::optional<StringT>>{
                             policies.describe()...};
                     },
@@ -597,7 +598,7 @@ namespace mimicpp
         [[nodiscard]]
         constexpr std::source_location const& from() const noexcept override
         {
-            return m_Info.sourceLocation;
+            return *m_From;
         }
 
         /**

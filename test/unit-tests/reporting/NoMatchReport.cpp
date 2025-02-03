@@ -12,7 +12,9 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::NoMatchReport const report{
-        .expectationReport = {.info = {std::source_location::current(), "Test"}},
+        .expectationReport = {
+                              .from = {},
+                              .target = {"Test", reporting::TypeReport::make<void()>()}},
         .requirementOutcomes = {{true}}};
 
     SECTION("Compares equal, when both sides are equal.")
@@ -28,7 +30,7 @@ TEST_CASE(
     SECTION("Compares unequal, when expectation reports differ.")
     {
         reporting::NoMatchReport other{report};
-        other.expectationReport.info = {std::source_location::current(), "Test2"};
+        other.expectationReport.from = {};
 
         REQUIRE_FALSE(other == report);
         REQUIRE_FALSE(report == other);

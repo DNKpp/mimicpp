@@ -29,6 +29,15 @@ namespace
 
         return stacktrace;
     }
+
+    template <typename Signature>
+    [[nodiscard]]
+    reporting::TargetReport make_common_target_report(StringT name = "Mock-Name")
+    {
+        return reporting::TargetReport{
+            .name = std::move(name),
+            .overloadReport = reporting::TypeReport::make<Signature>()};
+    }
 }
 
 TEST_CASE(
@@ -45,7 +54,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
@@ -84,7 +93,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {{"expect: some requirement"}}
@@ -115,7 +124,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt
     };
@@ -147,7 +156,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt
     };
@@ -189,7 +198,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport1{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonInapplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
@@ -199,7 +208,7 @@ TEST_CASE(
     };
 
     reporting::ExpectationReport const expectationReport2{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name2"},
+        .target = make_common_target_report<void()>("Mock-Name2"),
         .controlReport = commonSaturatedState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {{"expect: test"}}
@@ -243,7 +252,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonSaturatedState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {{"expect: some requirement"}}
@@ -277,7 +286,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonSaturatedState,
         .finalizerDescription = std::nullopt
     };
@@ -311,7 +320,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonInapplicableState,
         .finalizerDescription = std::nullopt
     };
@@ -350,7 +359,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport1{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
@@ -364,7 +373,7 @@ TEST_CASE(
         .outcomes = {{false, true, false, false, true}}};
 
     reporting::ExpectationReport const expectationReport2{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name2"},
+        .target = make_common_target_report<void()>("Mock-Name2"),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
@@ -417,7 +426,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
@@ -461,7 +470,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .requirementDescriptions = {{"expect: violation"}}
     };
@@ -524,7 +533,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .requirementDescriptions = {{"expect: violation"}}
     };
@@ -574,7 +583,7 @@ TEST_CASE(
     }));
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = state
     };
 
@@ -604,7 +613,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt
     };
@@ -664,7 +673,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .info = {.sourceLocation = std::source_location::current(), .mockName = "Mock-Name"},
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt
     };

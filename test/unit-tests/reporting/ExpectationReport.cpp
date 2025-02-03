@@ -25,40 +25,40 @@ TEST_CASE(
 
     SECTION("Compare equal, when all members are equal.")
     {
-        REQUIRE(first == second);
-        REQUIRE(second == first);
-        REQUIRE_FALSE(first != second);
-        REQUIRE_FALSE(second != first);
+        CHECK(first == second);
+        CHECK(second == first);
+        CHECK_FALSE(first != second);
+        CHECK_FALSE(second != first);
     }
 
     SECTION("Compare not equal, when min differs.")
     {
         second.min = GENERATE(std::numeric_limits<int>::min(), 0, 42, 44, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when max differs.")
     {
         second.max = GENERATE(std::numeric_limits<int>::min(), 0, 43, 45, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when count differs.")
     {
         second.count = GENERATE(std::numeric_limits<int>::min(), 0, 41, 43, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when sequenceRatings differs.")
@@ -74,10 +74,10 @@ TEST_CASE(
                 sequence::rating{1339, sequence::Tag{1340}},
                 sequence::rating{1337, sequence::Tag{1338}}}));
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when inapplicableSequences differs.")
@@ -90,10 +90,10 @@ TEST_CASE(
                 sequence::Tag{1342},
                 sequence::Tag{1341}}));
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 }
 
@@ -114,40 +114,40 @@ TEST_CASE(
 
     SECTION("Compare equal, when all members are equal.")
     {
-        REQUIRE(first == second);
-        REQUIRE(second == first);
-        REQUIRE_FALSE(first != second);
-        REQUIRE_FALSE(second != first);
+        CHECK(first == second);
+        CHECK(second == first);
+        CHECK_FALSE(first != second);
+        CHECK_FALSE(second != first);
     }
 
     SECTION("Compare not equal, when min differs.")
     {
         second.min = GENERATE(std::numeric_limits<int>::min(), 0, 42, 44, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when max differs.")
     {
         second.max = GENERATE(std::numeric_limits<int>::min(), 0, 43, 45, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when count differs.")
     {
         second.count = GENERATE(std::numeric_limits<int>::min(), 0, 41, 43, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when sequenceRatings differs.")
@@ -163,10 +163,10 @@ TEST_CASE(
                 sequence::rating{1339, sequence::Tag{1340}},
                 sequence::rating{1337, sequence::Tag{1338}}}));
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 }
 
@@ -187,40 +187,40 @@ TEST_CASE(
 
     SECTION("Compare equal, when all members are equal.")
     {
-        REQUIRE(first == second);
-        REQUIRE(second == first);
-        REQUIRE_FALSE(first != second);
-        REQUIRE_FALSE(second != first);
+        CHECK(first == second);
+        CHECK(second == first);
+        CHECK_FALSE(first != second);
+        CHECK_FALSE(second != first);
     }
 
     SECTION("Compare not equal, when min differs.")
     {
         second.min = GENERATE(std::numeric_limits<int>::min(), 0, 42, 44, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when max differs.")
     {
         second.max = GENERATE(std::numeric_limits<int>::min(), 0, 43, 45, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when count differs.")
     {
         second.count = GENERATE(std::numeric_limits<int>::min(), 0, 41, 43, std::numeric_limits<int>::max());
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("Compare not equal, when inapplicableSequences differs.")
@@ -233,10 +233,10 @@ TEST_CASE(
                 sequence::Tag{1338},
                 sequence::Tag{1337}}));
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 }
 
@@ -245,9 +245,8 @@ TEST_CASE(
     "[reporting]")
 {
     const reporting::ExpectationReport first{
-        .info = detail::expectation_info{
-                                         .sourceLocation = std::source_location::current(),
-                                         .mockName = "Mock-Name"},
+        .from = {},
+        .target = {"Mock-Name", reporting::TypeReport::make<void()>()},
         .controlReport = reporting::state_applicable{0, 1, 0},
         .finalizerDescription = "finalizer description",
         .requirementDescriptions = {"first expectation description"}
@@ -257,21 +256,32 @@ TEST_CASE(
     {
         const reporting::ExpectationReport second{first};
 
-        REQUIRE(first == second);
-        REQUIRE(second == first);
-        REQUIRE_FALSE(first != second);
-        REQUIRE_FALSE(second != first);
+        CHECK(first == second);
+        CHECK(second == first);
+        CHECK_FALSE(first != second);
+        CHECK_FALSE(second != first);
     }
 
-    SECTION("When expectation_info differs, reports do not compare equal.")
+    SECTION("When SourceLocation differs, reports do not compare equal.")
     {
         reporting::ExpectationReport second{first};
-        second.info.mockName = "other mock-name";
+        second.from = {};
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
+    }
+
+    SECTION("When TargetReport differs, reports do not compare equal.")
+    {
+        reporting::ExpectationReport second{first};
+        second.target.name = "other mock-name";
+
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("When finalizer description differs, reports do not compare equal.")
@@ -282,10 +292,10 @@ TEST_CASE(
             std::nullopt,
             "other finalizer description");
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("When times description differs, reports do not compare equal.")
@@ -297,10 +307,10 @@ TEST_CASE(
             reporting::state_inapplicable{0, 2, 0, {}, std::vector<sequence::Tag>{1337}},
             reporting::state_saturated{1, 1, 2});
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 
     SECTION("When expectation descriptions differ, reports do not compare equal.")
@@ -311,10 +321,10 @@ TEST_CASE(
             (std::vector<std::optional<StringT>>{"other expectation description"}),
             (std::vector<std::optional<StringT>>{"expectation description", "other expectation description"}));
 
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
+        CHECK_FALSE(first == second);
+        CHECK_FALSE(second == first);
+        CHECK(first != second);
+        CHECK(second != first);
     }
 }
 
@@ -329,10 +339,10 @@ TEST_CASE(
     {
         reporting::RequirementOutcomes const other = outcomes;
 
-        REQUIRE(other == outcomes);
-        REQUIRE(outcomes == other);
-        REQUIRE_FALSE(other != outcomes);
-        REQUIRE_FALSE(outcomes != other);
+        CHECK(other == outcomes);
+        CHECK(outcomes == other);
+        CHECK_FALSE(other != outcomes);
+        CHECK_FALSE(outcomes != other);
     }
 
     SECTION("Compares unequal, when both sides have different sizes.")
@@ -343,10 +353,10 @@ TEST_CASE(
                 std::vector{true, false},
                 std::vector{false, true})};
 
-        REQUIRE_FALSE(other == outcomes);
-        REQUIRE_FALSE(outcomes == other);
-        REQUIRE(other != outcomes);
-        REQUIRE(outcomes != other);
+        CHECK_FALSE(other == outcomes);
+        CHECK_FALSE(outcomes == other);
+        CHECK(other != outcomes);
+        CHECK(outcomes != other);
     }
 
     SECTION("Compares unequal, when both sides have same sizes but different elements.")
@@ -354,9 +364,9 @@ TEST_CASE(
         reporting::RequirementOutcomes other{
             .outcomes = {false}};
 
-        REQUIRE_FALSE(other == outcomes);
-        REQUIRE_FALSE(outcomes == other);
-        REQUIRE(other != outcomes);
-        REQUIRE(outcomes != other);
+        CHECK_FALSE(other == outcomes);
+        CHECK_FALSE(outcomes == other);
+        CHECK(other != outcomes);
+        CHECK(outcomes != other);
     }
 }

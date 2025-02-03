@@ -94,7 +94,7 @@ public:
     struct unhandled_exception_info
     {
         CallReport call;
-        mimicpp::reporting::ExpectationReport expectation{};
+        mimicpp::reporting::ExpectationReport expectation;
         std::exception_ptr exception;
     };
 

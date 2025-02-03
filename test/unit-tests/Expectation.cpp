@@ -47,15 +47,6 @@ namespace
 
     template <typename Signature>
     [[nodiscard]]
-    detail::expectation_info make_common_expectation_info(const std::source_location& loc = std::source_location::current())
-    {
-        return detail::expectation_info{
-            .sourceLocation = loc,
-            .mockName = "Mock-Name"};
-    }
-
-    template <typename Signature>
-    [[nodiscard]]
     reporting::TargetReport make_common_target_report()
     {
         return reporting::TargetReport{
@@ -89,7 +80,7 @@ TEST_CASE(
     SECTION("When expectation is unfulfilled, it is reported.")
     {
         reporting::ExpectationReport const expReport{
-            .info = make_common_expectation_info<void()>(),
+            .target = make_common_target_report<void()>(),
             .controlReport = commonUnsatisfiedState};
 
         REQUIRE_CALL(*expectation, is_satisfied())
@@ -137,6 +128,8 @@ TEST_CASE(
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any,
         .fromSourceLocation = std::source_location::current()};
+    reporting::ExpectationReport const expectationReport{
+        .target = make_common_target_report<void()>()};
 
     SECTION("If a full match is found.")
     {
@@ -167,7 +160,7 @@ TEST_CASE(
         REQUIRE_CALL(*expectations[1], is_applicable())
             .RETURN(true);
         REQUIRE_CALL(*expectations[1], report())
-            .RETURN(reporting::ExpectationReport{});
+            .RETURN(expectationReport);
 
         REQUIRE_NOTHROW(storage.handle_call(call));
         REQUIRE_THAT(
@@ -204,7 +197,7 @@ TEST_CASE(
         REQUIRE_CALL(*expectations[2], is_applicable())
             .RETURN(false);
         REQUIRE_CALL(*expectations[2], report())
-            .RETURN(reporting::ExpectationReport{});
+            .RETURN(expectationReport);
 
         REQUIRE_THROWS_AS(
             storage.handle_call(call),
@@ -241,13 +234,13 @@ TEST_CASE(
             .RETURN(commonNonMatchingOutcome);
 
         REQUIRE_CALL(*expectations[3], report())
-            .RETURN(reporting::ExpectationReport{});
+            .RETURN(expectationReport);
         REQUIRE_CALL(*expectations[2], report())
-            .RETURN(reporting::ExpectationReport{});
+            .RETURN(expectationReport);
         REQUIRE_CALL(*expectations[1], report())
-            .RETURN(reporting::ExpectationReport{});
+            .RETURN(expectationReport);
         REQUIRE_CALL(*expectations[0], report())
-            .RETURN(reporting::ExpectationReport{});
+            .RETURN(expectationReport);
 
         REQUIRE_THROWS_AS(
             storage.handle_call(call),
@@ -292,11 +285,11 @@ TEST_CASE(
     };
 
     reporting::ExpectationReport const throwingReport{
-        .info = make_common_expectation_info<void()>(),
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState};
 
     reporting::ExpectationReport const otherReport{
-        .info = make_common_expectation_info<void()>(),
+        .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState};
 
     auto const matches = [&](const auto& info) {
@@ -389,18 +382,18 @@ TEST_CASE(
     using ControlPolicyT = ControlPolicyFake;
     using FinalizerT = FinalizerFake<void()>;
 
-    detail::expectation_info const info = make_common_expectation_info<void()>();
-
+    util::SourceLocation const from{};
+    reporting::TargetReport const target = make_common_target_report<void()>();
     BasicExpectation<void(), ControlPolicyT, FinalizerT> expectation{
+        from,
+        target,
         {},
-        make_common_target_report<void()>(),
-        info,
         ControlPolicyT{},
         FinalizerT{}};
 
-    REQUIRE(mimicpp::is_same_source_location(info.sourceLocation, expectation.from()));
+    REQUIRE(mimicpp::is_same_source_location(*from, expectation.from()));
     REQUIRE_THAT(
-        info.mockName,
+        target.name,
         Catch::Matchers::Equals(expectation.mock_name()));
 }
 
@@ -425,17 +418,17 @@ TEST_CASE(
 
     SECTION("expectation_infos are gathered.")
     {
-        detail::expectation_info const info = make_common_expectation_info<void()>();
+        reporting::TargetReport const target = make_common_target_report<void()>();
 
         BasicExpectation<SignatureT, ControlPolicyFake, FinalizerT> expectation{
             {},
-            make_common_target_report<SignatureT>(),
-            info,
+            target,
+            {},
             ControlPolicyFake{},
             FinalizerT{}};
 
         reporting::ExpectationReport const report = expectation.report();
-        REQUIRE(info == report.info);
+        REQUIRE(target == report.target);
     }
 
     SECTION("With no other expectation policies.")
@@ -740,9 +733,28 @@ TEST_CASE(
 
     using FinalizerPolicyT = FinalizerFake<void()>;
 
-    SECTION("expectation_infos are gathered.")
+    SECTION("SourceLocation is gathered.")
     {
-        detail::expectation_info const info = make_common_expectation_info<void()>();
+        util::SourceLocation const loc{};
+
+        BasicExpectation<
+            void(),
+            ControlPolicyFake,
+            FinalizerPolicyT>
+            expectation{
+                loc,
+                make_common_target_report<void()>(),
+                {},
+                ControlPolicyFake{},
+                FinalizerPolicyT{}};
+
+        reporting::ExpectationReport const report = expectation.report();
+        REQUIRE(loc == report.from);
+    }
+
+    SECTION("reporting::TargetReport is gathered.")
+    {
+        reporting::TargetReport const target = make_common_target_report<void()>();
 
         BasicExpectation<
             void(),
@@ -750,13 +762,13 @@ TEST_CASE(
             FinalizerPolicyT>
             expectation{
                 {},
-                make_common_target_report<void()>(),
-                info,
+                target,
+                {},
                 ControlPolicyFake{},
                 FinalizerPolicyT{}};
 
         reporting::ExpectationReport const report = expectation.report();
-        REQUIRE(info == report.info);
+        REQUIRE(target == report.target);
     }
 
     SECTION("Finalizer policy has no description.")
