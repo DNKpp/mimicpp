@@ -9,7 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 
 #include <concepts>
 #include <functional>
@@ -193,7 +193,7 @@ namespace mimicpp
      * \brief Primary template, yielding an empty string.
      * \tparam Char The char-type.
      */
-    template <satisfies<is_character> Char>
+    template <util::satisfies<is_character> Char>
     [[maybe_unused]]
     inline constexpr StringViewT string_literal_prefix{};
 
@@ -364,7 +364,7 @@ namespace mimicpp
      * \tparam Char The character type.
      * \ingroup TYPE_TRAITS_STRING_CASE_FOLD_CONVERTER
      */
-    template <satisfies<is_character> Char>
+    template <util::satisfies<is_character> Char>
     struct string_case_fold_converter;
 
     /**

@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 
 #include <array>
 #include <cassert>
@@ -19,25 +20,6 @@
 
 namespace mimicpp
 {
-    template <typename From, typename To>
-    concept explicitly_convertible_to =
-        requires {
-            static_cast<To>(std::declval<From>());
-        };
-
-    template <typename From, typename To>
-    concept nothrow_explicitly_convertible_to =
-        explicitly_convertible_to<From, To>
-        && requires {
-               { static_cast<To>(std::declval<From>()) } noexcept;
-           };
-
-    template <typename T, typename... Others>
-    concept same_as_any = (... || std::same_as<T, Others>);
-
-    template <typename T, template <typename> typename Trait>
-    concept satisfies = Trait<T>::value;
-
     [[nodiscard]]
     constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
     {
@@ -142,7 +124,7 @@ namespace mimicpp::detail
         Others...>
     {
         using current_t = std::conditional_t<
-            same_as_any<First, Uniques...>,
+            util::same_as_any<First, Uniques...>,
             type_list<Uniques...>,
             type_list<Uniques..., First>>;
 

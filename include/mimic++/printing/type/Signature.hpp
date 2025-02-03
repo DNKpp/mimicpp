@@ -10,10 +10,10 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 
 #include <algorithm>
 #include <functional>
@@ -38,7 +38,7 @@ namespace mimicpp::printing::detail::type
         return out;
     }
 
-    template <satisfies<std::is_function> Signature>
+    template <util::satisfies<std::is_function> Signature>
     struct signature_type_printer<Signature>
     {
         template <print_iterator OutIter>

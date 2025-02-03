@@ -11,6 +11,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 
 #include <concepts>
 #include <memory>
@@ -418,7 +419,7 @@ namespace mimicpp
             BasicWatched& operator=(BasicWatched&&) = default;
         };
 
-        template <satisfies<std::has_virtual_destructor> Base, typename... Watchers>
+        template <util::satisfies<std::has_virtual_destructor> Base, typename... Watchers>
         class BasicWatched<Base, Watchers...>
             : public CombinedWatchers<Base, Watchers...>,
               public Base

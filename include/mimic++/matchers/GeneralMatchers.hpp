@@ -13,6 +13,7 @@
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 
 #include <functional>
 #include <tuple>
@@ -364,7 +365,7 @@ namespace mimicpp::matches
      * \param instance The instance to be compared to.
      * \snippet Requirements.cpp matcher instance
      */
-    template <satisfies<std::is_lvalue_reference> T>
+    template <util::satisfies<std::is_lvalue_reference> T>
     [[nodiscard]]
     constexpr auto instance(T&& instance) // NOLINT(cppcoreguidelines-missing-std-forward)
     {

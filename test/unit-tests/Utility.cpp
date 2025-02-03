@@ -11,32 +11,6 @@
 using namespace mimicpp;
 
 TEMPLATE_TEST_CASE_SIG(
-    "satisfies determines, whether T satisfies the given trait.",
-    "[utility]",
-    ((bool expected, typename T, template <typename> typename Trait), expected, T, Trait),
-    (false, int, std::is_floating_point),
-    (false, int&, std::is_integral),
-    (true, int, std::is_integral))
-{
-    STATIC_REQUIRE(expected == satisfies<T, Trait>);
-}
-
-TEMPLATE_TEST_CASE_SIG(
-    "same_as_any determines, whether T is the same as any other given type.",
-    "[utility]",
-    ((bool expected, typename T, typename... Others), expected, T, Others...),
-    (false, int),
-    (false, int, int&),
-    (false, int, int&, int&),
-    (false, int, int&, double, float),
-    (true, int, int),
-    (true, int, int&, int),
-    (true, int, double, int, int&))
-{
-    STATIC_REQUIRE(expected == same_as_any<T, Others...>);
-}
-
-TEMPLATE_TEST_CASE_SIG(
     "type_list::size holds the amount of arguments.",
     "[utility]",
     ((std::size_t expected, typename... Args), expected, Args...),

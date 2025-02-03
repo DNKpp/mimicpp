@@ -9,8 +9,8 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/policies/ArgumentList.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 
 #include <concepts>
 #include <functional>
@@ -34,14 +34,14 @@ namespace mimicpp::expectation_policies
 
         template <typename Return, typename... Args>
             requires std::invocable<Action&, const call::Info<Return, Args...>&>
-                  && explicitly_convertible_to<
+                  && util::explicitly_convertible_to<
                          std::invoke_result_t<Action&, const call::Info<Return, Args...>&>,
                          Return>
         [[nodiscard]]
         constexpr Return finalize_call([[maybe_unused]] const call::Info<Return, Args...>& call)
             noexcept(
                 std::is_nothrow_invocable_v<Action&, const call::Info<Return, Args...>&>
-                && nothrow_explicitly_convertible_to<std::invoke_result_t<Action&, const call::Info<Return, Args...>&>, Return>)
+                && util::nothrow_explicitly_convertible_to<std::invoke_result_t<Action&, const call::Info<Return, Args...>&>, Return>)
         {
             return static_cast<Return>(
                 std::invoke(m_Action, call));

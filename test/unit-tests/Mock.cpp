@@ -437,7 +437,7 @@ namespace
         reporting::TypeReport m_SignatureReport;
     };
 
-    template <satisfies<std::is_function> Signature>
+    template <util::satisfies<std::is_function> Signature>
     auto MatchesOverloadTarget()
     {
         return OverloadTargetMatcher{reporting::TypeReport::make<Signature>()};
