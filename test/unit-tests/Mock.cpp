@@ -407,6 +407,43 @@ TEMPLATE_TEST_CASE_SIG(
 #endif
 }
 
+namespace
+{
+    class OverloadTargetMatcher
+        : public Catch::Matchers::MatcherGenericBase
+    {
+    public:
+        [[nodiscard]]
+        OverloadTargetMatcher(reporting::TypeReport&& report)
+            : m_SignatureReport{std::move(report)}
+        {
+        }
+
+        [[nodiscard, maybe_unused]]
+        bool match(std::tuple<reporting::CallReport, reporting::ExpectationReport> const& entry) const
+        {
+            auto const& [callReport, expectationReport] = entry;
+            return callReport.target.overloadReport == m_SignatureReport
+                && expectationReport.target.overloadReport == m_SignatureReport;
+        }
+
+        [[nodiscard]]
+        std::string describe() const override
+        {
+            return "Overload signature is: " + m_SignatureReport.name();
+        }
+
+    private:
+        reporting::TypeReport m_SignatureReport;
+    };
+
+    template <satisfies<std::is_function> Signature>
+    auto MatchesOverloadTarget()
+    {
+        return OverloadTargetMatcher{reporting::TypeReport::make<Signature>()};
+    }
+}
+
 TEST_CASE(
     "Mutable Mock specialization supports expectations.",
     "[mock]")
@@ -423,6 +460,9 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void()>());
     }
 
     SECTION("With int() signature.")
@@ -435,6 +475,9 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int()>());
     }
 }
 
@@ -454,6 +497,9 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void() const>());
     }
 
     SECTION("With int() signature.")
@@ -466,6 +512,9 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int() const>());
     }
 }
 
@@ -485,6 +534,9 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void()&>());
     }
 
     SECTION("With int() signature.")
@@ -497,6 +549,9 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int()&>());
     }
 }
 
@@ -516,6 +571,9 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void() const&>());
     }
 
     SECTION("With int() signature.")
@@ -528,6 +586,9 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int() const&>());
     }
 }
 
@@ -547,6 +608,9 @@ TEST_CASE(
         std::move(mock)();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void() &&>());
     }
 
     SECTION("With int() signature.")
@@ -559,6 +623,9 @@ TEST_CASE(
 
         CHECK(42 == std::move(mock)());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int() &&>());
     }
 }
 
@@ -578,6 +645,9 @@ TEST_CASE(
         std::move(mock)();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void() const&&>());
     }
 
     SECTION("With int() signature.")
@@ -590,6 +660,9 @@ TEST_CASE(
 
         CHECK(42 == std::move(mock)());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int() const&&>());
     }
 }
 
@@ -609,6 +682,9 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void() noexcept>());
     }
 
     SECTION("With int() signature.")
@@ -621,6 +697,9 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int() noexcept>());
     }
 }
 
@@ -640,6 +719,9 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void() const noexcept>());
     }
 
     SECTION("With int() signature.")
@@ -652,6 +734,9 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int() const noexcept>());
     }
 }
 
@@ -671,6 +756,9 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget < void() & noexcept > ());
     }
 
     SECTION("With int() signature.")
@@ -683,6 +771,9 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget < int() & noexcept > ());
     }
 }
 
@@ -702,6 +793,9 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget < void() const& noexcept > ());
     }
 
     SECTION("With int() signature.")
@@ -714,6 +808,9 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget < int() const& noexcept > ());
     }
 }
 
@@ -733,6 +830,9 @@ TEST_CASE(
         std::move(mock)();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget < void() && noexcept > ());
     }
 
     SECTION("With int() signature.")
@@ -745,6 +845,9 @@ TEST_CASE(
 
         CHECK(42 == std::move(mock)());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget < int() && noexcept > ());
     }
 }
 
@@ -764,6 +867,9 @@ TEST_CASE(
         std::move(mock)();
 
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget < void() const&& noexcept > ());
     }
 
     SECTION("With int() signature.")
@@ -776,6 +882,9 @@ TEST_CASE(
 
         CHECK(42 == std::move(mock)());
         CHECK(expectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget < int() const&& noexcept > ());
     }
 }
 
@@ -800,12 +909,18 @@ TEST_CASE(
         mock();
 
         CHECK(expectation.is_satisfied());
-        CHECK(!constExpectation.is_satisfied());
+        CHECK_FALSE(constExpectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<void()>());
 
         std::as_const(mock)();
 
         CHECK(expectation.is_satisfied());
         CHECK(constExpectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().back(),
+            MatchesOverloadTarget<void() const>());
     }
 
     SECTION("With int() signature.")
@@ -824,11 +939,17 @@ TEST_CASE(
 
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
-        CHECK(!constExpectation.is_satisfied());
+        CHECK_FALSE(constExpectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().front(),
+            MatchesOverloadTarget<int()>());
 
         CHECK(1337 == std::as_const(mock)());
         CHECK(expectation.is_satisfied());
         CHECK(constExpectation.is_satisfied());
+        CHECK_THAT(
+            reporter.full_match_reports().back(),
+            MatchesOverloadTarget<int() const>());
     }
 }
 
