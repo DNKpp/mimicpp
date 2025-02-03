@@ -38,8 +38,8 @@ namespace
         MAKE_CONST_MOCK0(report, ExpectationReport(), override);
         MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept override);
         MAKE_CONST_MOCK0(is_applicable, bool(), noexcept override);
-        MAKE_CONST_MOCK0(from, const std::source_location&(), noexcept override);
-        MAKE_CONST_MOCK0(mock_name, const mimicpp::StringT&(), noexcept override);
+        MAKE_CONST_MOCK0(from, util::SourceLocation const&(), noexcept override);
+        MAKE_CONST_MOCK0(mock_name, StringT const&(), noexcept override);
         MAKE_CONST_MOCK1(matches, RequirementOutcomes(const CallInfoT&), override);
         MAKE_MOCK1(consume, void(const CallInfoT&), override);
         MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
@@ -391,7 +391,7 @@ TEST_CASE(
         ControlPolicyT{},
         FinalizerT{}};
 
-    REQUIRE(mimicpp::is_same_source_location(*from, expectation.from()));
+    REQUIRE(from == expectation.from());
     REQUIRE_THAT(
         target.name,
         Catch::Matchers::Equals(expectation.mock_name()));
@@ -916,13 +916,10 @@ TEST_CASE(
 
     SECTION("When calling from()")
     {
-        auto const loc = std::source_location::current();
+        util::SourceLocation const loc{};
         REQUIRE_CALL(*innerExpectation, from())
             .RETURN(loc);
-        REQUIRE(
-            mimicpp::is_same_source_location(
-                loc,
-                std::as_const(expectation)->from()));
+        REQUIRE(loc == std::as_const(expectation)->from());
     }
 
     SECTION("When calling mock_name()")

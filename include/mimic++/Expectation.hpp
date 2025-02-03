@@ -231,7 +231,7 @@ namespace mimicpp
          * \return Immutable reference to the source-location.
          */
         [[nodiscard]]
-        virtual constexpr std::source_location const& from() const noexcept = 0;
+        virtual constexpr util::SourceLocation const& from() const noexcept = 0;
 
         /**
          * \brief Returns the name of the related mock.
@@ -596,9 +596,9 @@ namespace mimicpp
          * \copydoc Expectation::from
          */
         [[nodiscard]]
-        constexpr std::source_location const& from() const noexcept override
+        constexpr util::SourceLocation const& from() const noexcept override
         {
-            return *m_From;
+            return m_From;
         }
 
         /**
@@ -655,9 +655,9 @@ namespace mimicpp
             virtual bool is_applicable() const = 0;
 
             [[nodiscard]]
-            virtual const std::source_location& from() const noexcept = 0;
+            virtual util::SourceLocation const& from() const noexcept = 0;
             [[nodiscard]]
-            virtual const StringT& mock_name() const noexcept = 0;
+            virtual StringT const& mock_name() const noexcept = 0;
 
         protected:
             Concept() = default;
@@ -702,13 +702,13 @@ namespace mimicpp
             }
 
             [[nodiscard]]
-            const std::source_location& from() const noexcept override
+            util::SourceLocation const& from() const noexcept override
             {
                 return m_Expectation->from();
             }
 
             [[nodiscard]]
-            const StringT& mock_name() const noexcept override
+            StringT const& mock_name() const noexcept override
             {
                 return m_Expectation->mock_name();
             }
@@ -809,7 +809,7 @@ namespace mimicpp
          * \return The stored source-location.
          */
         [[nodiscard]]
-        const std::source_location& from() const noexcept
+        util::SourceLocation const& from() const noexcept
         {
             return m_Inner->from();
         }
@@ -819,7 +819,7 @@ namespace mimicpp
          * \return The stored mock-name.
          */
         [[nodiscard]]
-        const StringT& mock_name() const noexcept
+        StringT const& mock_name() const noexcept
         {
             return m_Inner->mock_name();
         }
