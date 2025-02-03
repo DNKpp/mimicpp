@@ -35,6 +35,7 @@ namespace mimicpp::detail
     template <typename Return, typename... Params, typename Signature>
     [[nodiscard]]
     std::optional<reporting::RequirementOutcomes> determine_requirement_outcomes(
+        reporting::TargetReport const& target,
         call::Info<Return, Params...> const& call,
         Expectation<Signature> const& expectation) noexcept
     {
@@ -45,7 +46,7 @@ namespace mimicpp::detail
         catch (...)
         {
             reporting::detail::report_unhandled_exception(
-                reporting::make_call_report(call),
+                reporting::make_call_report(target, call),
                 expectation.report(),
                 std::current_exception());
         }
@@ -354,7 +355,7 @@ namespace mimicpp
             std::vector<std::tuple<ExpectationT*, reporting::RequirementOutcomes>> noMatches{};
 
             std::scoped_lock const lock{m_ExpectationsMx};
-            evaluate_expectations(call, matches, inapplicableMatches, noMatches);
+            evaluate_expectations(target, call, matches, inapplicableMatches, noMatches);
 
             if (!std::ranges::empty(matches))
             {
@@ -371,7 +372,7 @@ namespace mimicpp
                 // in cases of a throwing finalizer, we might introduce bugs. At least there are some tests, which
                 // will fail if done wrong.
                 reporting::detail::report_full_match(
-                    reporting::make_call_report(call),
+                    reporting::make_call_report(std::move(target), call),
                     std::move(report));
                 expectation.consume(call);
                 return expectation.finalize_call(call);
@@ -380,12 +381,12 @@ namespace mimicpp
             if (!std::ranges::empty(inapplicableMatches))
             {
                 reporting::detail::report_inapplicable_matches(
-                    reporting::make_call_report(std::move(call)),
+                    reporting::make_call_report(std::move(target), std::move(call)),
                     detail::gather_expectation_reports(inapplicableMatches));
             }
 
             reporting::detail::report_no_matches(
-                reporting::make_call_report(std::move(call)),
+                reporting::make_call_report(std::move(target), std::move(call)),
                 detail::make_no_match_reports(std::move(noMatches)));
         }
 
@@ -394,6 +395,7 @@ namespace mimicpp
         std::mutex m_ExpectationsMx{};
 
         void evaluate_expectations(
+            reporting::TargetReport const& target,
             CallInfoT const& call,
             std::vector<ExpectationT*>& matches,
             std::vector<ExpectationT*>& inapplicableMatches,
@@ -401,7 +403,7 @@ namespace mimicpp
         {
             for (auto const& exp : m_Expectations | std::views::reverse)
             {
-                if (std::optional outcomes = detail::determine_requirement_outcomes(call, *exp))
+                if (std::optional outcomes = detail::determine_requirement_outcomes(target, call, *exp))
                 {
                     if (std::ranges::any_of(outcomes->outcomes, [](auto const& el) { return el == false; }))
                     {

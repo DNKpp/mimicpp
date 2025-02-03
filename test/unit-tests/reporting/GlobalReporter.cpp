@@ -61,14 +61,12 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     auto& reporter = dynamic_cast<ReporterMock&>(*reporting::detail::get_reporter());
 
     CallReport const callReport{
+        .target = {"Mock-Name", TypeReport::make<void()>()},
         .returnTypeInfo = TypeReport::make<void>(),
         .fromLoc = std::source_location::current()};
 
     ExpectationReport const expectationReport{
-        .target = {
-                   .name = "Mock-Name",
-                   .overloadReport = TypeReport::make<void()>()}
-    };
+        .target = callReport.target};
 
     SECTION("When report_no_matches() is called.")
     {

@@ -45,6 +45,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void(int, std::string)>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
             {{reporting::TypeReport::make<int>(), "1337"},
@@ -54,7 +55,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
+        .target = make_common_target_report<void(int, std::string)>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
@@ -86,6 +87,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -117,6 +119,7 @@ TEST_CASE(
     "[reporting][detail]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -148,6 +151,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -189,6 +193,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void(int, std::string)>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
             {{reporting::TypeReport::make<int>(), "1337"},
@@ -198,7 +203,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport1{
-        .target = make_common_target_report<void()>(),
+        .target = make_common_target_report<void(int, std::string)>(),
         .controlReport = commonInapplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
@@ -208,7 +213,7 @@ TEST_CASE(
     };
 
     reporting::ExpectationReport const expectationReport2{
-        .target = make_common_target_report<void()>("Mock-Name2"),
+        .target = make_common_target_report<void(int, std::string)>("Mock-Name2"),
         .controlReport = commonSaturatedState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {{"expect: test"}}
@@ -245,6 +250,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -279,6 +285,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -312,6 +319,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -350,6 +358,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void(int, std::string)>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
             {{reporting::TypeReport::make<int>(), "1337"},
@@ -359,7 +368,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport1{
-        .target = make_common_target_report<void()>(),
+        .target = make_common_target_report<void(int, std::string)>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
@@ -419,6 +428,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -463,6 +473,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -500,6 +511,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -525,6 +537,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),
@@ -604,6 +617,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void(int, std::string)>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
             {{reporting::TypeReport::make<int>(), "1337"},
@@ -613,7 +627,7 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
+        .target = make_common_target_report<void(int, std::string)>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt
     };
@@ -666,6 +680,7 @@ TEST_CASE(
     "[reporting]")
 {
     reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromLoc = std::source_location::current(),

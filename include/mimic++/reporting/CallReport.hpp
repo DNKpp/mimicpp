@@ -12,6 +12,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
@@ -48,6 +49,7 @@ namespace mimicpp::reporting
             friend bool operator==(const Arg&, const Arg&) = default;
         };
 
+        TargetReport target;
         TypeReport returnTypeInfo;
         std::vector<Arg> argDetails{};
         util::SourceLocation fromLoc{};
@@ -63,15 +65,17 @@ namespace mimicpp::reporting
      * \brief Generates the call report for a given call info.
      * \tparam Return The function return type.
      * \tparam Params The function parameter types.
+     * \param target The mock-target report.
      * \param callInfo The call info.
      * \return The call report.
      * \relatesalso call::Info
      */
     template <typename Return, typename... Params>
     [[nodiscard]]
-    CallReport make_call_report(call::Info<Return, Params...> callInfo)
+    CallReport make_call_report(TargetReport target, call::Info<Return, Params...> callInfo)
     {
         return CallReport{
+            .target = std::move(target),
             .returnTypeInfo = TypeReport::make<Return>(),
             .argDetails = std::apply(
                 [](auto&... args) {

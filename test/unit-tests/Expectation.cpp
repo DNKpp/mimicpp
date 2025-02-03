@@ -292,14 +292,14 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState};
 
-    auto const matches = [&](const auto& info) {
+    auto const matches = [&](auto const& info) {
         try
         {
             std::rethrow_exception(info.exception);
         }
-        catch (const Exception&)
+        catch (Exception const&)
         {
-            return info.call == reporting::make_call_report(call)
+            return info.call == reporting::make_call_report(make_common_target_report<void()>(), call)
                 && info.expectation == throwingReport;
         }
         catch (...)
