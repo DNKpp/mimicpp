@@ -472,8 +472,6 @@ namespace mimicpp
     class BasicExpectation final
         : public Expectation<Signature>
     {
-        using expectation_info = detail::expectation_info;
-
     public:
         using ControlPolicyT = ControlPolicy;
         using FinalizerT = FinalizePolicy;
@@ -500,7 +498,6 @@ namespace mimicpp
         constexpr explicit BasicExpectation(
             util::SourceLocation from,
             reporting::TargetReport target,
-            expectation_info info,
             ControlPolicyArg&& controlArg,
             FinalizerArg&& finalizerArg,
             PolicyArgs&&... args)
@@ -510,7 +507,6 @@ namespace mimicpp
                 && (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
             : m_From{std::move(from)},
               m_Target{std::move(target)},
-              m_Info{std::move(info)},
               m_ControlPolicy{std::forward<ControlPolicyArg>(controlArg)},
               m_Policies{std::forward<PolicyArgs>(args)...},
               m_Finalizer{std::forward<FinalizerArg>(finalizerArg)}
@@ -613,7 +609,6 @@ namespace mimicpp
     private:
         util::SourceLocation m_From;
         reporting::TargetReport m_Target;
-        expectation_info m_Info;
         ControlPolicyT m_ControlPolicy;
         PolicyListT m_Policies;
         [[no_unique_address]] FinalizerT m_Finalizer{};

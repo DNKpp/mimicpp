@@ -177,9 +177,6 @@ namespace mimicpp
                         return std::make_unique<ExpectationT>(
                             util::SourceLocation{sourceLocation},
                             std::move(m_TargetReport),
-                            detail::expectation_info{
-                                .sourceLocation = sourceLocation,
-                                .mockName = m_TargetReport.name},
                             std::move(controlPolicy),
                             std::move(m_FinalizePolicy),
                             std::move(policies)...);

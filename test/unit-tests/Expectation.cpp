@@ -387,7 +387,6 @@ TEST_CASE(
     BasicExpectation<void(), ControlPolicyT, FinalizerT> expectation{
         from,
         target,
-        {},
         ControlPolicyT{},
         FinalizerT{}};
 
@@ -423,7 +422,6 @@ TEST_CASE(
         BasicExpectation<SignatureT, ControlPolicyFake, FinalizerT> expectation{
             {},
             target,
-            {},
             ControlPolicyFake{},
             FinalizerT{}};
 
@@ -436,7 +434,6 @@ TEST_CASE(
         BasicExpectation<SignatureT, ControlPolicyT, FinalizerT> expectation{
             {},
             make_common_target_report<SignatureT>(),
-            {},
             std::ref(times),
             FinalizerT{}};
 
@@ -500,7 +497,6 @@ TEST_CASE(
         BasicExpectation<SignatureT, ControlPolicyT, FinalizerT, PolicyRefT> expectation{
             {},
             make_common_target_report<SignatureT>(),
-            {},
             std::ref(times),
             FinalizerT{},
             std::ref(policy)};
@@ -580,7 +576,6 @@ TEMPLATE_TEST_CASE(
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
             {},
             make_common_target_report<TestType>(),
-            {},
             ControlPolicyFake{
              .isSatisfied = true,
              .stateData = commonApplicableState},
@@ -601,7 +596,6 @@ TEMPLATE_TEST_CASE(
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
             {},
             make_common_target_report<TestType>(),
-            {},
             ControlPolicyFake{
              .isSatisfied = true,
              .stateData = commonApplicableState},
@@ -648,7 +642,6 @@ TEMPLATE_TEST_CASE(
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
             {},
             make_common_target_report<TestType>(),
-            {},
             ControlPolicyFake{
              .isSatisfied = true,
              .stateData = commonApplicableState},
@@ -744,7 +737,6 @@ TEST_CASE(
             expectation{
                 loc,
                 make_common_target_report<void()>(),
-                {},
                 ControlPolicyFake{},
                 FinalizerPolicyT{}};
 
@@ -763,7 +755,6 @@ TEST_CASE(
             expectation{
                 {},
                 target,
-                {},
                 ControlPolicyFake{},
                 FinalizerPolicyT{}};
 
@@ -788,7 +779,6 @@ TEST_CASE(
             expectation{
                 {},
                 make_common_target_report<void()>(),
-                {},
                 ControlT{std::ref(controlPolicy)},
                 FinalizerPolicyT{}};
 
@@ -820,7 +810,6 @@ TEST_CASE(
             expectation{
                 {},
                 make_common_target_report<void()>(),
-                {},
                 ControlPolicyFake{},
                 FinalizerPolicyT{},
                 PolicyT{std::ref(policy)}};
@@ -860,7 +849,6 @@ TEMPLATE_TEST_CASE(
     BasicExpectation<SignatureT, ControlPolicyFake, FinalizerRefT> expectation{
         {},
         make_common_target_report<SignatureT>(),
-        {},
         ControlPolicyFake{},
         std::ref(finalizer)};
 
