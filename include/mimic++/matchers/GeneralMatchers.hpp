@@ -10,7 +10,9 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/matchers/Common.hpp"
+#include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
+#include "mimic++/printing/StatePrinter.hpp"
 
 #include <functional>
 #include <tuple>

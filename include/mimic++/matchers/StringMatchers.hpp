@@ -9,6 +9,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/String.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
+#include "mimic++/printing/StatePrinter.hpp"
 
 #include <algorithm>
 #include <concepts>
