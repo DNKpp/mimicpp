@@ -4,7 +4,6 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Utility.hpp"
-#include "mimic++/Printer.hpp"
 
 #include <cstdint>
 #include <tuple>

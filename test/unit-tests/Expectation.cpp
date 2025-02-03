@@ -5,7 +5,7 @@
 
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
-#include "mimic++/Printer.hpp"
+#include "mimic++/Printing.hpp"
 #include "mimic++/Utility.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 

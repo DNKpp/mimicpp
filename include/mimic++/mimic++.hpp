@@ -19,7 +19,7 @@
 #include "mimic++/InterfaceMock.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/ObjectWatcher.hpp"
-#include "mimic++/Printer.hpp"
+#include "mimic++/Printing.hpp"
 #include "mimic++/Reporting.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/String.hpp"

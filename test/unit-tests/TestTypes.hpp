@@ -6,7 +6,6 @@
 #pragma once
 
 #include "mimic++/Call.hpp"
-#include "mimic++/Printer.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 
 #include <array>
