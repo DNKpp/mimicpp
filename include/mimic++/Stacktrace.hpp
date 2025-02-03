@@ -12,6 +12,7 @@
 #include "mimic++/Utility.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/utilities/AlwaysFalse.hpp"
 
 #include <algorithm>
 #include <any>
@@ -336,7 +337,7 @@ namespace mimicpp::stacktrace::detail::current_hook
     constexpr auto current([[maybe_unused]] const priority_tag<0>, [[maybe_unused]] const std::size_t skip)
     {
         static_assert(
-            always_false<Traits<void>>{},
+            util::always_false<Traits<void>>{},
             "mimic++ does not have a registered stacktrace-backend.");
     }
 

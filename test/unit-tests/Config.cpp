@@ -8,28 +8,29 @@
 // ReSharper disable CppUnusedIncludeDirective
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/InterfaceMock.hpp"
+#include "mimic++/utilities/AlwaysFalse.hpp"
 // ReSharper restore CppUnusedIncludeDirective
 
 #ifdef MOCK_METHOD
-	static_assert(
-		mimicpp::always_false<>::value,
-		"MOCK_METHOD must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "MOCK_METHOD must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
 #endif
 
 #ifdef MOCK_OVERLOADED_METHOD
-	static_assert(
-		mimicpp::always_false<>::value,
-		"MOCK_OVERLOADED_METHOD must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "MOCK_OVERLOADED_METHOD must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
 #endif
 
 #ifdef ADD_OVERLOAD
-	static_assert(
-		mimicpp::always_false<>::value,
-		"ADD_OVERLOAD must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "ADD_OVERLOAD must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
 #endif
 
 #ifdef SCOPED_EXP
-	static_assert(
-		mimicpp::always_false<>::value,
-		"SCOPED_EXP must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "SCOPED_EXP must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
 #endif

@@ -18,12 +18,6 @@
 
 namespace mimicpp
 {
-    template <typename...>
-    struct always_false
-        : public std::bool_constant<false>
-    {
-    };
-
     template <std::size_t priority>
     struct priority_tag
         /** \cond Help doxygen with recursion.*/
