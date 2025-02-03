@@ -5,6 +5,7 @@
 
 #include "mimic++/Sequence.hpp"
 #include "mimic++/Expectation.hpp"
+#include "mimic++/utilities/C++23Backports.hpp"
 
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
@@ -262,7 +263,7 @@ TEST_CASE(
     const sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}> sequence{};
     const sequence::Tag tag = sequence.tag();
 
-    REQUIRE(to_underlying(tag) == std::bit_cast<std::ptrdiff_t>(std::addressof(sequence)));
+    REQUIRE(util::to_underlying(tag) == std::bit_cast<std::ptrdiff_t>(std::addressof(sequence)));
 }
 
 TEST_CASE(

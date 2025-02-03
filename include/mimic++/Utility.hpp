@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/utilities/C++23Backports.hpp"
 
 #include <array>
 #include <cassert>
@@ -34,27 +35,19 @@ namespace mimicpp
     template <typename T, typename... Others>
     concept same_as_any = (... || std::same_as<T, Others>);
 
-    template <typename T>
-        requires std::is_enum_v<T>
-    [[nodiscard]]
-    constexpr std::underlying_type_t<T> to_underlying(const T value) noexcept
-    {
-        return static_cast<std::underlying_type_t<T>>(value);
-    }
-
     template <typename T, template <typename> typename Trait>
     concept satisfies = Trait<T>::value;
 
     [[nodiscard]]
     constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
     {
-        return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
+        return std::cmp_not_equal(0, util::to_underlying(lhs) & util::to_underlying(rhs));
     }
 
     [[nodiscard]]
     constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept
     {
-        return std::cmp_not_equal(0, to_underlying(lhs) & to_underlying(rhs));
+        return std::cmp_not_equal(0, util::to_underlying(lhs) & util::to_underlying(rhs));
     }
 
     template <typename... Args>

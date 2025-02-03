@@ -10,6 +10,7 @@
 
 #include "mimic++/Config.hpp"
 
+#include <type_traits>
 #include <version>
 
 // GCOVR_EXCL_START
@@ -45,9 +46,19 @@ namespace mimicpp::util
         __builtin_unreachable();
     #endif
     }
-
-#endif
 }
+#endif
 // GCOVR_EXCL_STOP
+
+namespace mimicpp::util
+{
+    template <typename T>
+        requires std::is_enum_v<T>
+    [[nodiscard]]
+    constexpr std::underlying_type_t<T> to_underlying(T const value) noexcept
+    {
+        return static_cast<std::underlying_type_t<T>>(value);
+    }
+}
 
 #endif

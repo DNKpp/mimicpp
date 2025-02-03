@@ -12,6 +12,7 @@
 #include "mimic++/Utility.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
+#include "mimic++/utilities/C++23Backports.hpp"
 
 #include <algorithm>
 #include <array>
@@ -134,9 +135,9 @@ namespace mimicpp::sequence
             constexpr void set_satisfied(const IdT id) noexcept
             {
                 assert(is_valid(id));
-                assert(m_Cursor <= to_underlying(id));
+                assert(m_Cursor <= util::to_underlying(id));
 
-                auto& element = m_Entries[to_underlying(id)];
+                auto& element = m_Entries[util::to_underlying(id)];
                 assert(element == State::unsatisfied);
                 element = State::satisfied;
             }
@@ -144,7 +145,7 @@ namespace mimicpp::sequence
             constexpr void set_saturated(const IdT id) noexcept
             {
                 assert(is_valid(id));
-                const auto index = to_underlying(id);
+                const auto index = util::to_underlying(id);
                 assert(m_Cursor <= index);
 
                 auto& element = m_Entries[index];
@@ -159,7 +160,7 @@ namespace mimicpp::sequence
             {
                 assert(is_valid(id));
 
-                const int index = to_underlying(id);
+                const int index = util::to_underlying(id);
                 const auto state = m_Entries[index];
                 return m_Cursor <= index
                     && std::ranges::all_of(
@@ -177,7 +178,7 @@ namespace mimicpp::sequence
             {
                 assert(is_consumable(id));
 
-                m_Cursor = to_underlying(id);
+                m_Cursor = util::to_underlying(id);
             }
 
             [[nodiscard]]
@@ -215,8 +216,8 @@ namespace mimicpp::sequence
             [[nodiscard]]
             constexpr bool is_valid(const IdT id) const noexcept
             {
-                return 0 <= to_underlying(id)
-                    && std::cmp_less(to_underlying(id), m_Entries.size());
+                return 0 <= util::to_underlying(id)
+                    && std::cmp_less(util::to_underlying(id), m_Entries.size());
             }
         };
 
@@ -226,7 +227,7 @@ namespace mimicpp::sequence
             [[nodiscard]]
             constexpr int operator()(const auto id, const int cursor) const noexcept
             {
-                const auto index = to_underlying(id);
+                const auto index = util::to_underlying(id);
                 assert(std::cmp_less_equal(cursor, index));
 
                 return std::numeric_limits<int>::max()
@@ -240,7 +241,7 @@ namespace mimicpp::sequence
             [[nodiscard]]
             constexpr int operator()(const auto id, const int cursor) const noexcept
             {
-                const auto index = to_underlying(id);
+                const auto index = util::to_underlying(id);
                 assert(std::cmp_less_equal(cursor, index));
 
                 return static_cast<int>(index) - cursor;

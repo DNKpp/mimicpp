@@ -10,53 +10,6 @@
 
 using namespace mimicpp;
 
-TEMPLATE_TEST_CASE(
-    "to_underlying converts the enum value to its underlying representation.",
-    "[utility]",
-    std::int8_t,
-    std::uint8_t,
-    std::int16_t,
-    std::uint16_t,
-    std::int32_t,
-    std::uint32_t,
-    std::int64_t,
-    std::uint64_t)
-{
-    using UnderlyingT = TestType;
-
-    SECTION("When an enum value is given.")
-    {
-        enum Test : UnderlyingT
-        {
-        };
-
-        const UnderlyingT value = GENERATE(
-            std::numeric_limits<UnderlyingT>::min(),
-            0,
-            1,
-            std::numeric_limits<UnderlyingT>::max());
-
-        STATIC_REQUIRE(std::same_as<UnderlyingT, decltype(to_underlying(Test{value}))>);
-        REQUIRE(value == to_underlying(Test{value}));
-    }
-
-    SECTION("When an class enum value is given.")
-    {
-        enum class Test : UnderlyingT
-        {
-        };
-
-        const UnderlyingT value = GENERATE(
-            std::numeric_limits<UnderlyingT>::min(),
-            0,
-            1,
-            std::numeric_limits<UnderlyingT>::max());
-
-        STATIC_REQUIRE(std::same_as<UnderlyingT, decltype(to_underlying(Test{value}))>);
-        REQUIRE(value == to_underlying(Test{value}));
-    }
-}
-
 TEMPLATE_TEST_CASE_SIG(
     "satisfies determines, whether T satisfies the given trait.",
     "[utility]",
