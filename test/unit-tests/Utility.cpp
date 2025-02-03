@@ -227,7 +227,7 @@ TEST_CASE(
         }
     }
 
-    SECTION("It keeps the existing elemens as they are.")
+    SECTION("It keeps the existing elements as they are.")
     {
         std::string arg{"Hello, World"};
 
@@ -265,48 +265,5 @@ TEST_CASE(
             STATIC_REQUIRE(std::same_as<const std::tuple<const std::string&&>, decltype(result)>);
             REQUIRE(&arg == &std::get<0>(result));
         }
-    }
-}
-
-TEST_CASE(
-    "detail::expectation_info is equality-comparable.",
-    "[utility]")
-{
-    using namespace mimicpp;
-
-    const detail::expectation_info first{
-        .sourceLocation = std::source_location::current(),
-        .mockName = "MyMock"};
-
-    SECTION("When both sides are equal, they compare equal.")
-    {
-        const detail::expectation_info second{first};
-
-        REQUIRE(first == second);
-        REQUIRE(second == first);
-        REQUIRE_FALSE(first != second);
-        REQUIRE_FALSE(second != first);
-    }
-
-    SECTION("When mock-name differs, reports do not compare equal.")
-    {
-        detail::expectation_info second{first};
-        second.mockName = "Other Mock-Name";
-
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
-    }
-
-    SECTION("When source-location differs, reports do not compare equal.")
-    {
-        detail::expectation_info second{first};
-        second.sourceLocation = std::source_location::current();
-
-        REQUIRE_FALSE(first == second);
-        REQUIRE_FALSE(second == first);
-        REQUIRE(first != second);
-        REQUIRE(second != first);
     }
 }

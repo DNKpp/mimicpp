@@ -242,19 +242,6 @@ namespace mimicpp::detail
                 [](auto&&... elements) { return std::make_tuple(std::move(elements)...); },
                 std::array<FillElement, n - sizeof...(Elements)>{}));
     }
-
-    struct expectation_info
-    {
-        std::source_location sourceLocation = std::source_location::current();
-        StringT mockName{};
-
-        [[nodiscard]]
-        friend bool operator==(const expectation_info& lhs, const expectation_info& rhs)
-        {
-            return lhs.mockName == rhs.mockName
-                && is_same_source_location(lhs.sourceLocation, rhs.sourceLocation);
-        }
-    };
 }
 
 #endif
