@@ -182,10 +182,7 @@ namespace mimicpp::reporting::detail
         std::span<std::optional<StringT> const> const descriptions,
         StringViewT const linePrefix)
     {
-        if (descriptions.empty())
-        {
-            return out;
-        }
+        assert(!descriptions.empty());
 
         out = std::ranges::copy(linePrefix, std::move(out)).out;
         out = format::format_to(std::move(out), "Due to Violation(s):\n");
