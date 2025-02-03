@@ -9,7 +9,6 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/DefaultReporter.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
@@ -24,11 +23,17 @@
 namespace mimicpp::reporting::detail
 {
     [[nodiscard]]
-    inline std::unique_ptr<IReporter>& get_reporter() noexcept
+    inline std::atomic<std::shared_ptr<IReporter>>& access_reporter() noexcept
     {
-        static std::unique_ptr<IReporter> reporter{
-            std::make_unique<DefaultReporter>(std::cerr)};
+        static std::atomic<std::shared_ptr<IReporter>> reporter{
+            std::make_shared<DefaultReporter>(std::cerr)};
         return reporter;
+    }
+
+    [[nodiscard]]
+    inline std::shared_ptr<IReporter> get_reporter() noexcept
+    {
+        return access_reporter().load();
     }
 
     [[noreturn]]
@@ -117,8 +122,8 @@ namespace mimicpp::reporting
         requires std::constructible_from<T, Args...>
     void install_reporter(Args&&... args)
     {
-        detail::get_reporter() = std::make_unique<T>(
-            std::forward<Args>(args)...);
+        detail::access_reporter().store(
+            std::make_shared<T>(std::forward<Args>(args)...));
     }
 
     namespace detail
