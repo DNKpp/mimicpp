@@ -10,8 +10,8 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Mock.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/utilities/TypeList.hpp"
 
 #include <type_traits>
 #include <utility>
@@ -337,11 +337,11 @@ namespace mimicpp
  * \param bound_data Unused.
  * \param param_type The type of the parameter. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type)              \
-    [&]<typename... Type>([[maybe_unused]] const ::mimicpp::type_list<Type...>) noexcept { \
-        return ::std::forward_as_tuple(                                                    \
-            ::std::forward<Type>(arg_##sequence)...);                                      \
-    }(::mimicpp::type_list<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
+#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type)                    \
+    [&]<typename... Type>([[maybe_unused]] const ::mimicpp::util::type_list<Type...>) noexcept { \
+        return ::std::forward_as_tuple(                                                          \
+            ::std::forward<Type>(arg_##sequence)...);                                            \
+    }(::mimicpp::util::type_list<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
 
 /**
  * \brief Creates forwarding ``std::tuple``s for each given argument (not enclosed by parentheses).
@@ -451,7 +451,7 @@ namespace mimicpp::detail
             ValueCategory::rvalue == signature_ref_qualification_v<Signature>,
             Mock&&,
             Mock&>;
-        const auto forward_apply = [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>)
+        const auto forward_apply = [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const)
             -> signature_return_type_t<Signature> {
             return static_cast<mock_ref_t>(mock)(
                 std::forward<Args>(std::get<indices>(args))...);

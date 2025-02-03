@@ -13,6 +13,7 @@
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
+#include "mimic++/utilities/TypeList.hpp"
 
 #include <algorithm>
 #include <concepts>
@@ -55,7 +56,7 @@ namespace mimicpp::printing::detail::type
 
     template <typename Type, template <typename...> typename Template, typename... LeadingArgs>
         requires requires { typename Template<LeadingArgs...>; }
-    struct is_default_arg_for<Type, Template, type_list<LeadingArgs...>>
+    struct is_default_arg_for<Type, Template, util::type_list<LeadingArgs...>>
         : public std::bool_constant<
               std::same_as<
                   Template<LeadingArgs...>,
@@ -68,14 +69,14 @@ namespace mimicpp::printing::detail::type
 
     template <typename List>
     struct type_list_pop_back_if_can
-        : public type_list_pop_back<List>
+        : public util::type_list_pop_back<List>
     {
     };
 
     template <>
-    struct type_list_pop_back_if_can<type_list<>>
+    struct type_list_pop_back_if_can<util::type_list<>>
     {
-        using type = type_list<>;
+        using type = util::type_list<>;
     };
 
     template <
@@ -108,7 +109,7 @@ namespace mimicpp::printing::detail::type
         constexpr OutIter operator()(OutIter out) const
         {
             using MinimalArgList = typename drop_default_args_for<Template, ArgList>::type;
-            using Type = type_list_populate_t<Template, MinimalArgList>;
+            using Type = util::type_list_populate_t<Template, MinimalArgList>;
 
             out = pretty_template_name<Type>(std::move(out));
             out = format::format_to(std::move(out), "<");
@@ -122,7 +123,7 @@ namespace mimicpp::printing::detail::type
     template <template <typename...> typename Template, typename... Ts>
     struct template_type_printer<Template<Ts...>>
         : public basic_template_type_printer<
-              template_type_name_generator_fn<Template, type_list<Ts...>>>
+              template_type_name_generator_fn<Template, util::type_list<Ts...>>>
     {
     };
 
@@ -145,7 +146,7 @@ namespace mimicpp::printing::detail::type
             typename Template<Ts...>::value_type;
         }
         && is_pmr_allocator<typename Template<Ts...>::allocator_type>::value
-        && default_arg_for<std::allocator<typename Template<Ts...>::value_type>, Template, type_list_pop_back_t<type_list<Ts...>>>;
+        && default_arg_for<std::allocator<typename Template<Ts...>::value_type>, Template, util::type_list_pop_back_t<util::type_list<Ts...>>>;
 
     static constexpr StringViewT stdPrefix{"std::"};
 
@@ -161,7 +162,7 @@ namespace mimicpp::printing::detail::type
                     std::invoke(
                         template_type_name_generator_fn<
                             Template,
-                            type_list_pop_back_t<ArgList>>{},
+                            util::type_list_pop_back_t<ArgList>>{},
                         std::ostreambuf_iterator{stream});
                     return std::move(stream).str();
                 });
@@ -193,7 +194,7 @@ namespace mimicpp::printing::detail::type
         requires std_pmr_container<Template, Ts...>
     struct template_type_printer<Template<Ts...>>
         : public basic_template_type_printer<
-              potential_pmr_container_type_name_generator_fn<Template, type_list<Ts...>>>
+              potential_pmr_container_type_name_generator_fn<Template, util::type_list<Ts...>>>
     {
     };
 

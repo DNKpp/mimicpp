@@ -14,6 +14,7 @@
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
 #include "mimic++/utilities/Concepts.hpp"
+#include "mimic++/utilities/TypeList.hpp"
 
 #include <algorithm>
 #include <functional>
@@ -23,12 +24,12 @@
 namespace mimicpp::printing::detail::type
 {
     template <print_iterator OutIter, typename... Ts>
-    constexpr OutIter print_separated(OutIter out, StringViewT const separator, type_list<Ts...> const ts)
+    constexpr OutIter print_separated(OutIter out, StringViewT const separator, util::type_list<Ts...> const ts)
     {
         if constexpr (0u < sizeof...(Ts))
         {
             std::invoke(
-                [&]<typename First, typename... Others>([[maybe_unused]] type_list<First, Others...> const) {
+                [&]<typename First, typename... Others>([[maybe_unused]] util::type_list<First, Others...> const) {
                     out = mimicpp::print_type<First>(std::move(out));
                     ((out = mimicpp::print_type<Others>(std::ranges::copy(separator, std::move(out)).out)), ...);
                 },

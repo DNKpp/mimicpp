@@ -661,20 +661,20 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void, std::greater),
     (true, std::allocator<int>, std::vector, int))
 {
-    STATIC_REQUIRE(expected == printing::detail::type::default_arg_for<DefaultArg, Template, type_list<LeadingArgs...>>);
+    STATIC_REQUIRE(expected == printing::detail::type::default_arg_for<DefaultArg, Template, util::type_list<LeadingArgs...>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
     "detail::drop_default_args drops all arguments until the first non default arg is found (beginning at the end).",
     "[print][detail]",
     ((auto dummy, typename Expected, template <typename...> typename Template, typename... Args), dummy, Expected, Template, Args...),
-    (std::ignore, type_list<>, std::greater, void),
-    (std::ignore, type_list<int>, std::greater, int),
-    (std::ignore, type_list<float, double>, std::tuple, float, double),
-    (std::ignore, type_list<int>, std::vector, int, std::allocator<int>),
-    (std::ignore, type_list<int, std::pmr::polymorphic_allocator<int>>, std::vector, int, std::pmr::polymorphic_allocator<int>))
+    (std::ignore, util::type_list<>, std::greater, void),
+    (std::ignore, util::type_list<int>, std::greater, int),
+    (std::ignore, util::type_list<float, double>, std::tuple, float, double),
+    (std::ignore, util::type_list<int>, std::vector, int, std::allocator<int>),
+    (std::ignore, util::type_list<int, std::pmr::polymorphic_allocator<int>>, std::vector, int, std::pmr::polymorphic_allocator<int>))
 {
-    STATIC_REQUIRE(std::same_as<Expected, typename printing::detail::type::drop_default_args_for<Template, type_list<Args...>>::type>);
+    STATIC_REQUIRE(std::same_as<Expected, typename printing::detail::type::drop_default_args_for<Template, util::type_list<Args...>>::type>);
 }
 
 TEST_CASE(

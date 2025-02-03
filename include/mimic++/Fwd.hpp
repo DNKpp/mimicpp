@@ -36,13 +36,6 @@ namespace mimicpp
     };
 
     /**
-     * \brief A very basic type-list template.
-     * \tparam Args The types.
-     */
-    template <typename... Args>
-    struct type_list;
-
-    /**
      * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_ADD_NOEXCEPT
      * \tparam Signature A function signature.

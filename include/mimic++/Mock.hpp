@@ -14,10 +14,10 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
+#include "mimic++/utilities/TypeList.hpp"
 
 namespace mimicpp
 {
@@ -41,7 +41,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::any,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -62,7 +62,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::any,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -83,7 +83,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::lvalue,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -104,7 +104,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::lvalue,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -125,7 +125,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::rvalue,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -146,7 +146,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::rvalue,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         constexpr signature_return_type_t<Signature> operator()(
@@ -175,7 +175,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::any,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -194,7 +194,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::any,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -213,7 +213,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::lvalue,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -232,7 +232,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::lvalue,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -251,7 +251,7 @@ namespace mimicpp::detail
         Signature,
         Constness::non_const,
         ValueCategory::rvalue,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -270,7 +270,7 @@ namespace mimicpp::detail
         Signature,
         Constness::as_const,
         ValueCategory::rvalue,
-        type_list<Params...>>
+        util::type_list<Params...>>
     {
     public:
         template <typename... Args>
@@ -290,13 +290,13 @@ namespace mimicpp::detail
     class BasicMock;
 
     template <typename Signature, typename... Params>
-    class BasicMock<Signature, type_list<Params...>>
+    class BasicMock<Signature, util::type_list<Params...>>
         : public MockFrontend<
               // MockFrontend doesn't need to know about the call-convention, thus remove it
-              BasicMock<Signature, type_list<Params...>>,
+              BasicMock<Signature, util::type_list<Params...>>,
               signature_remove_call_convention_t<Signature>>,
           public call_interface_t<
-              BasicMock<Signature, type_list<Params...>>,
+              BasicMock<Signature, util::type_list<Params...>>,
               Signature>
     {
         using SignatureT = signature_remove_call_convention_t<Signature>;
@@ -361,7 +361,7 @@ namespace mimicpp::detail
     struct expectation_collection_factory;
 
     template <typename... UniqueSignatures>
-    struct expectation_collection_factory<type_list<UniqueSignatures...>>
+    struct expectation_collection_factory<util::type_list<UniqueSignatures...>>
     {
         [[nodiscard]]
         static auto make()
@@ -380,7 +380,7 @@ namespace mimicpp::detail
         printing::detail::type::print_separated(
             std::ostreambuf_iterator{out},
             ", ",
-            type_list<Signatures...>{});
+            util::type_list<Signatures...>{});
         out << ">";
 
         return std::move(out).str();
@@ -479,7 +479,7 @@ namespace mimicpp
         explicit Mock(MockSettings settings)
             : Mock{
                   detail::expectation_collection_factory<
-                      detail::unique_list_t<
+                      util::detail::unique_list_t<
                           signature_decay_t<FirstSignature>,
                           signature_decay_t<OtherSignatures>...>>::make(),
                   complete_settings(std::move(settings))}

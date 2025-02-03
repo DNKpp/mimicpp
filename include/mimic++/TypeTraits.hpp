@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "Fwd.hpp"
+#include "mimic++/Fwd.hpp"
+#include "mimic++/utilities/TypeList.hpp"
 
 #include <concepts>
 #include <cstddef>
@@ -1148,7 +1149,7 @@ namespace mimicpp
     template <typename Return, typename... Params>
     struct signature_param_list<Return(Params...)>
     {
-        using type = type_list<Params...>;
+        using type = util::type_list<Params...>;
     };
 
     /**
