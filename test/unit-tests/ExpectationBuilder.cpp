@@ -20,6 +20,7 @@ namespace
         expectation_policies::InitFinalize>;
 
     template <typename Signature>
+    [[nodiscard]]
     constexpr auto make_builder(
         std::shared_ptr<ExpectationCollection<Signature>> collection)
     {
@@ -30,6 +31,15 @@ namespace
             sequence::detail::Config<>{},
             expectation_policies::InitFinalize{},
             std::tuple{}};
+    }
+
+    template <typename Signature>
+    [[nodiscard]]
+    reporting::TargetReport make_common_target_report()
+    {
+        return reporting::TargetReport{
+            .name = "Mock-Name",
+            .overloadReport = reporting::TypeReport::make<Signature>()};
     }
 }
 
@@ -64,7 +74,7 @@ TEST_CASE(
         const ScopedExpectation expectation = make_builder(collection);
 
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(call));
+        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
         REQUIRE(expectation.is_satisfied());
     }
 
@@ -100,7 +110,7 @@ TEST_CASE(
                                            && expect::in_sequence(sequence);
 
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(call));
+        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
         REQUIRE(expectation.is_satisfied());
     }
 
@@ -111,9 +121,9 @@ TEST_CASE(
                                            && expect::in_sequence(sequence);
 
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(call));
+        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(call));
+        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
         REQUIRE(expectation.is_satisfied());
     }
 
@@ -125,7 +135,7 @@ TEST_CASE(
                                            && expect::in_sequence(secondSequence);
 
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(call));
+        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
         REQUIRE(expectation.is_satisfied());
     }
 }
@@ -163,7 +173,7 @@ TEST_CASE(
         ScopedExpectation expectation = make_builder(collection);
 
         REQUIRE_NOTHROW(expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(call));
+        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
     }
 
     SECTION("Or exchange it once.")
@@ -181,7 +191,7 @@ TEST_CASE(
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation);
 
         REQUIRE_NOTHROW(expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(call));
+        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
     }
 }
 
@@ -215,7 +225,7 @@ TEST_CASE(
         .RETURN(0);
 
     REQUIRE_NOTHROW(expectation.is_satisfied());
-    REQUIRE_NOTHROW(collection->handle_call(call));
+    REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
 }
 
 TEST_CASE(

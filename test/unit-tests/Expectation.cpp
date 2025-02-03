@@ -162,7 +162,7 @@ TEST_CASE(
         REQUIRE_CALL(*expectations[1], report())
             .RETURN(expectationReport);
 
-        REQUIRE_NOTHROW(storage.handle_call(call));
+        REQUIRE_NOTHROW(storage.handle_call(make_common_target_report<void()>(), call));
         REQUIRE_THAT(
             reporter.no_match_reports(),
             Catch::Matchers::IsEmpty());
@@ -200,7 +200,7 @@ TEST_CASE(
             .RETURN(expectationReport);
 
         REQUIRE_THROWS_AS(
-            storage.handle_call(call),
+            storage.handle_call(make_common_target_report<void()>(), call),
             NonApplicableMatchError);
         REQUIRE_THAT(
             reporter.no_match_reports(),
@@ -243,7 +243,7 @@ TEST_CASE(
             .RETURN(expectationReport);
 
         REQUIRE_THROWS_AS(
-            storage.handle_call(call),
+            storage.handle_call(make_common_target_report<void()>(), call),
             NoMatchError);
         REQUIRE_THAT(
             reporter.no_match_reports(),
@@ -322,7 +322,7 @@ TEST_CASE(
             .RETURN(otherReport);
         REQUIRE_CALL(*otherExpectation, consume(_));
         REQUIRE_CALL(*otherExpectation, finalize_call(_));
-        REQUIRE_NOTHROW(storage.handle_call(call));
+        REQUIRE_NOTHROW(storage.handle_call(make_common_target_report<void()>(), call));
 
         CHECK_THAT(
             reporter.full_match_reports(),
@@ -1031,7 +1031,7 @@ TEST_CASE(
                               && expect::in_sequence(sequence)
                               && finally::returns(1337);
 
-        REQUIRE(1337 == collection->handle_call(call));
+        REQUIRE(1337 == collection->handle_call(make_common_target_report<void()>(), call));
     }
 
     SECTION("LazySequence prefers older expectations.")
@@ -1048,6 +1048,6 @@ TEST_CASE(
                               && expect::in_sequence(sequence)
                               && finally::returns(1337);
 
-        REQUIRE(42 == collection->handle_call(call));
+        REQUIRE(42 == collection->handle_call(make_common_target_report<void()>(), call));
     }
 }

@@ -338,6 +338,7 @@ namespace mimicpp
 
         /**
          * \brief Handles the incoming call.
+         * \param target The mock-target, which received the call.
          * \param call The call to be handled.
          * \return Returns an appropriate result from the matched expectation.
          * \details This function queries all stored expectations, whether they accept the call.
@@ -346,7 +347,7 @@ namespace mimicpp
          * If matches are possible, but all expectations are saturated, an "inapplicable match"-report is emitted.
          */
         [[nodiscard]]
-        ReturnT handle_call(CallInfoT call)
+        ReturnT handle_call(reporting::TargetReport target, CallInfoT call)
         {
             std::vector<ExpectationT*> matches{};
             std::vector<ExpectationT*> inapplicableMatches{};
