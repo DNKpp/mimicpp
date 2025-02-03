@@ -11,6 +11,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/Utility.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
 
 #include <type_traits>
 #include <utility>
@@ -248,11 +249,13 @@ namespace mimicpp::detail
     inline constexpr std::size_t interfaceMockStacktraceSkip{3u};
 
     [[nodiscard]]
-    StringT generate_interface_mock_name([[maybe_unused]] const auto& self, const StringViewT functionName)
+    StringT generate_interface_mock_name([[maybe_unused]] auto const& self, StringViewT const functionName)
     {
-        StringStreamT out{};
-        out << typeid(std::remove_cvref_t<decltype(self)>).name() << "::" << functionName;
-        return std::move(out).str();
+        StringStreamT ss{};
+        mimicpp::print_type<std::remove_cvref_t<decltype(self)>>(std::ostreambuf_iterator{ss});
+        ss << "::" << functionName;
+
+        return std::move(ss).str();
     }
 }
 
