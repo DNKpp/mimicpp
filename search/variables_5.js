@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['finalizerdescription_0',['finalizerDescription',['../dd/d62/classmimicpp_1_1_expectation_report.html#a4170deeff1bba26b0357f710e1378cb1',1,'mimicpp::ExpectationReport']]],
-  ['finalizereport_1',['finalizeReport',['../db/d11/classmimicpp_1_1_match_report.html#a96bc13493c977acf05ecf6eb216d212a',1,'mimicpp::MatchReport']]],
-  ['for_5fbase_5fv_2',['for_base_v',['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#gace3dbca1a90cde9b3d2e145819615a75',1,'mimicpp']]],
-  ['fromcategory_3',['fromCategory',['../d4/d44/classmimicpp_1_1call_1_1_info.html#a153d607922dd5ca195dc8daa23587776',1,'mimicpp::call::Info::fromCategory'],['../dc/dd0/classmimicpp_1_1_call_report.html#ad0af98e56cddb30e0074ff8dc8fd54ee',1,'mimicpp::CallReport::fromCategory']]],
-  ['fromconstness_4',['fromConstness',['../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3',1,'mimicpp::call::Info::fromConstness'],['../dc/dd0/classmimicpp_1_1_call_report.html#a804aea975ce3fd4f4348b4cc1f51f333',1,'mimicpp::CallReport::fromConstness']]],
-  ['fromloc_5',['fromLoc',['../dc/dd0/classmimicpp_1_1_call_report.html#aeb9ed8b5928e4a5673abb5e7e34978de',1,'mimicpp::CallReport']]],
-  ['fromsourcelocation_6',['fromSourceLocation',['../d4/d44/classmimicpp_1_1call_1_1_info.html#ab13116b95585c94b57e7cbd330c122a7',1,'mimicpp::call::Info']]]
+  ['inapplicablesequences_0',['inapplicableSequences',['../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a6614458d4d81edf472cc9cd11120199a',1,'mimicpp::reporting::state_inapplicable']]],
+  ['is_5fcharacter_5fv_1',['is_character_v',['../dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html#ga88d25d2fd5d4f51c8a9d81bdfb57bcb2',1,'mimicpp']]],
+  ['is_5foverload_5fset_5fv_2',['is_overload_set_v',['../df/dc6/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d___s_e_t.html#ga39bc4106334393c907fb7c716490135c',1,'mimicpp']]],
+  ['is_5foverloadable_5fwith_5fv_3',['is_overloadable_with_v',['../d1/d9e/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d_a_b_l_e___w_i_t_h.html#ga444a530890b564007a9d8f9b5d035785',1,'mimicpp']]]
 ];

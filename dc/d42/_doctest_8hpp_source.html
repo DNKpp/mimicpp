@@ -110,73 +110,74 @@ $(function(){initNavTree('dc/d42/_doctest_8hpp_source.html','../../'); initResiz
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#if __has_include(&quot;mimic++/Reporter.hpp&quot;)</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">    #include &quot;<a class="code" href="../../da/dd9/_reporter_8hpp.html">mimic++/Reporter.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#elif not defined(MIMICPP_VERSION)</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">    #error &quot;It appears that the test-adapter is not included in the mimic++ project or package.&quot; \</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">        &quot;If you plan to use it alongside the mimic++-amalgamated header, please ensure to include the adapter-header afterwards.&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#if __has_include(&lt;doctest/doctest.h&gt;)</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    #include &lt;doctest/doctest.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">    #error &quot;Unable to find Doctest includes.&quot;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">namespace </span>mimicpp::detail::doctest</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>{</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">using namespace </span>::doctest;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    [[noreturn]]</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> send_fail(<span class="keyword">const</span> <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> msg)</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        DOCTEST_FAIL(msg);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <a class="code hl_function" href="../../d1/d11/namespacemimicpp.html#a4020ddef344a068c5d7beea28cd4e5df">unreachable</a>();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    }</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> send_success(<span class="keyword">const</span> <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> msg)</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    {</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        DOCTEST_REQUIRE_MESSAGE(<span class="keyword">true</span>, msg);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    }</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> send_warning(<span class="keyword">const</span> <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> msg)</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        DOCTEST_MESSAGE(msg);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    }</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>}</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>{</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="comment">// GCOVR_EXCL_START</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga858ff9942a3a1336b76a511608b567db">   58</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga858ff9942a3a1336b76a511608b567db">DoctestReporterT</a> = <a class="code hl_class" href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">BasicReporter</a>&lt;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        &amp;detail::doctest::send_success,</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        &amp;detail::doctest::send_warning,</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        &amp;detail::doctest::send_fail&gt;;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="comment">// GCOVR_EXCL_STOP</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">namespace </span>mimicpp::detail::doctest</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>{</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    [[maybe_unused]]</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">inline</span> <span class="keyword">const</span> ReporterInstaller&lt;DoctestReporterT&gt; installer{};</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>}</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="a_reporter_8hpp_html"><div class="ttname"><a href="../../da/dd9/_reporter_8hpp.html">Reporter.hpp</a></div></div>
-<div class="ttc" id="aclassmimicpp_1_1_basic_reporter_html"><div class="ttname"><a href="../../d4/d56/classmimicpp_1_1_basic_reporter.html">mimicpp::BasicReporter</a></div><div class="ttdoc">A reporter, which creates text messages and reports them via the provided callbacks.</div><div class="ttdef"><b>Definition</b> Reporter.hpp:356</div></div>
-<div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s_html_ga858ff9942a3a1336b76a511608b567db"><div class="ttname"><a href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga858ff9942a3a1336b76a511608b567db">mimicpp::DoctestReporterT</a></div><div class="ttdeci">BasicReporter&lt; &amp;detail::doctest::send_success, &amp;detail::doctest::send_warning, &amp;detail::doctest::send_fail &gt; DoctestReporterT</div><div class="ttdoc">Reporter for the integration into Doctest.</div><div class="ttdef"><b>Definition</b> Doctest.hpp:58</div></div>
-<div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:25</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a4020ddef344a068c5d7beea28cd4e5df"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a4020ddef344a068c5d7beea28cd4e5df">mimicpp::unreachable</a></div><div class="ttdeci">void unreachable()</div><div class="ttdoc">Invokes undefined behavior.</div><div class="ttdef"><b>Definition</b> Utility.hpp:93</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:343</div></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#if __has_include(&quot;mimic++/Reporting.hpp&quot;)</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">    #include &quot;<a class="code" href="../../d7/deb/_reporting_8hpp.html">mimic++/Reporting.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">    #include &quot;mimic++/Utility.hpp&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#elif not defined(MIMICPP_VERSION)</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">    #error &quot;It appears that the test-adapter is not included in the mimic++ project or package.&quot; \</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">        &quot;If you plan to use it alongside the mimic++-amalgamated header, please ensure to include the adapter-header afterwards.&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#if __has_include(&lt;doctest/doctest.h&gt;)</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">    #include &lt;doctest/doctest.h&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">    #error &quot;Unable to find Doctest includes.&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span>mimicpp::reporting::detail::doctest</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">using namespace </span>::doctest;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    [[noreturn]]</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> send_fail(<a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> <span class="keyword">const</span> msg)</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        DOCTEST_FAIL(msg);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <a class="code hl_function" href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">unreachable</a>();</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> send_success(<a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> <span class="keyword">const</span> msg)</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        DOCTEST_REQUIRE_MESSAGE(<span class="keyword">true</span>, msg);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    }</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> send_warning(<a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> <span class="keyword">const</span> msg)</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    {</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        DOCTEST_MESSAGE(msg);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    }</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>}</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d6/d48/namespacemimicpp_1_1reporting.html">mimicpp::reporting</a></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>{</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="comment">// GCOVR_EXCL_START</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga8ef20c643725738016314f855cc453fa">   59</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga8ef20c643725738016314f855cc453fa">DoctestReporterT</a> = <a class="code hl_class" href="../../d5/db8/classmimicpp_1_1reporting_1_1_basic_reporter.html">BasicReporter</a>&lt;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        &amp;detail::doctest::send_success,</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        &amp;detail::doctest::send_warning,</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        &amp;detail::doctest::send_fail&gt;;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// GCOVR_EXCL_STOP</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">namespace </span>mimicpp::reporting::detail::doctest</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>{</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    [[maybe_unused]]</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">inline</span> ReporterInstaller&lt;DoctestReporterT&gt; <span class="keyword">const</span> installer{};</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>}</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a_reporting_8hpp_html"><div class="ttname"><a href="../../d7/deb/_reporting_8hpp.html">Reporting.hpp</a></div></div>
+<div class="ttc" id="aclassmimicpp_1_1reporting_1_1_basic_reporter_html"><div class="ttname"><a href="../../d5/db8/classmimicpp_1_1reporting_1_1_basic_reporter.html">mimicpp::reporting::BasicReporter</a></div><div class="ttdoc">A reporter, which creates text messages and reports them via the provided callbacks.</div><div class="ttdef"><b>Definition</b> BasicReporter.hpp:37</div></div>
+<div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s_html_ga8ef20c643725738016314f855cc453fa"><div class="ttname"><a href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga8ef20c643725738016314f855cc453fa">mimicpp::reporting::DoctestReporterT</a></div><div class="ttdeci">BasicReporter&lt; &amp;detail::doctest::send_success, &amp;detail::doctest::send_warning, &amp;detail::doctest::send_fail &gt; DoctestReporterT</div><div class="ttdoc">Reporter for the integration into Doctest.</div><div class="ttdef"><b>Definition</b> Doctest.hpp:59</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1reporting_html"><div class="ttname"><a href="../../d6/d48/namespacemimicpp_1_1reporting.html">mimicpp::reporting</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:26</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1util_html_ac58fced4701bdff093838ed1807e8836"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">mimicpp::util::unreachable</a></div><div class="ttdeci">void unreachable()</div><div class="ttdoc">Invokes undefined behavior.</div><div class="ttdef"><b>Definition</b> C++23Backports.hpp:36</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:325</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_fea71f381ece93f367616978be34972a.html">adapters</a></li><li class="navelem"><a class="el" href="../../dc/d42/_doctest_8hpp.html">Doctest.hpp</a></li>
-    <li class="footer">Generated on Tue Jan 28 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Feb 3 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

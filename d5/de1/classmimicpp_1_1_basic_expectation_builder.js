@@ -4,7 +4,7 @@ var classmimicpp_1_1_basic_expectation_builder =
     [ "ReturnT", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a97aabdc22c19b11b1ce31bf7c7526ab6", null ],
     [ "StorageT", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e58b0aaa6d8d3389e2134dec6e8b47c", null ],
     [ "~BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#ac21118a6f294d01b1ed2fa9cf347cf72", null ],
-    [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a756da2f2bfcf5eead1ed2bcd3627f928", null ],
+    [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445", null ],
     [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a99b43a6ad6e94ecdb44e3c4a43c90363", null ],
     [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1972372a9dee2539cc9f1c63beb3c6c6", null ],
     [ "finalize", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0cd1928fa4daf48cb38496d6b02da4d6", null ],

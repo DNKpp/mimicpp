@@ -108,64 +108,64 @@ $(function(){initNavTree('d6/dac/_regex_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifndef MIMICPP_UTILITIES_REGEX_HPP</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#define MIMICPP_UTILITIES_REGEX_HPP</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;regex&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;string_view&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>{</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="../../d1/d11/namespacemimicpp.html#a4929f2e21c361f9c029eef2891d6b6d6">   15</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#a4929f2e21c361f9c029eef2891d6b6d6">RegexT</a> = std::regex;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>}</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="../../d8/da3/namespacemimicpp_1_1util.html">   18</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Char, <span class="keyword">typename</span> CharTraits, <span class="keyword">typename</span> Allocator, <span class="keyword">typename</span> RegexTraits&gt;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00022" data-start="{" data-end="}">
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="../../d8/da3/namespacemimicpp_1_1util.html#a43ff969ddb5219a3edb50a474348a52a">   22</a></span>    <span class="keyword">constexpr</span> std::basic_string&lt;Char, CharTraits, Allocator&gt; <a class="code hl_function" href="../../d8/da3/namespacemimicpp_1_1util.html#a43ff969ddb5219a3edb50a474348a52a">regex_replace_all</a>(</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        std::basic_string&lt;Char, CharTraits, Allocator&gt; str,</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        std::basic_regex&lt;Char, RegexTraits&gt; <span class="keyword">const</span>&amp; regex,</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        std::basic_string_view&lt;Char, CharTraits&gt; <span class="keyword">const</span> fmt)</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keyword">using </span>match_result_t = std::match_results&lt;typename std::basic_string&lt;Char, CharTraits, Allocator&gt;::const_iterator&gt;;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="comment">// just advance by one, so that we can find matches which involves the replaced fmt</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        <span class="comment">// like: `&gt; &gt; &gt;` with regex `&gt; &gt;` and fmt = `&gt;&gt;`</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="comment">//      =&gt; `&gt;&gt; &gt;` =&gt; `&gt;&gt;&gt;`</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="comment">// When fmt is empty, we need a step size of 0.</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keyword">auto</span> <span class="keyword">const</span> advanceStep = <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(!fmt.empty());</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">auto</span> processedIter = str.cbegin();</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        match_result_t match{};</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keywordflow">while</span> (std::regex_search(processedIter, str.cend(), match, regex))</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            <span class="keyword">auto</span> <span class="keyword">const</span> matchBegin = match[0].first;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keyword">auto</span> <span class="keyword">const</span> matchEnd = match[0].second;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keyword">auto</span> <span class="keyword">const</span> nextIndex = std::distance(str.cbegin(), matchBegin + advanceStep);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            str.replace(matchBegin, matchEnd, fmt);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            processedIter = str.cbegin() + nextIndex;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        }</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">return</span> str;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;regex&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;string_view&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>{</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="../../d1/d11/namespacemimicpp.html#a4929f2e21c361f9c029eef2891d6b6d6">   17</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#a4929f2e21c361f9c029eef2891d6b6d6">RegexT</a> = std::regex;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>}</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Char, <span class="keyword">typename</span> CharTraits, <span class="keyword">typename</span> Allocator, <span class="keyword">typename</span> RegexTraits&gt;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="../../d8/da3/namespacemimicpp_1_1util.html#a43ff969ddb5219a3edb50a474348a52a">   24</a></span>    <span class="keyword">constexpr</span> std::basic_string&lt;Char, CharTraits, Allocator&gt; <a class="code hl_function" href="../../d8/da3/namespacemimicpp_1_1util.html#a43ff969ddb5219a3edb50a474348a52a">regex_replace_all</a>(</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        std::basic_string&lt;Char, CharTraits, Allocator&gt; str,</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        std::basic_regex&lt;Char, RegexTraits&gt; <span class="keyword">const</span>&amp; regex,</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        std::basic_string_view&lt;Char, CharTraits&gt; <span class="keyword">const</span> fmt)</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">using </span>match_result_t = std::match_results&lt;typename std::basic_string&lt;Char, CharTraits, Allocator&gt;::const_iterator&gt;;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="comment">// just advance by one, so that we can find matches which involves the replaced fmt</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        <span class="comment">// like: `&gt; &gt; &gt;` with regex `&gt; &gt;` and fmt = `&gt;&gt;`</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="comment">//      =&gt; `&gt;&gt; &gt;` =&gt; `&gt;&gt;&gt;`</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="comment">// When fmt is empty, we need a step size of 0.</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="keyword">auto</span> <span class="keyword">const</span> advanceStep = <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(!fmt.empty());</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="keyword">auto</span> processedIter = str.cbegin();</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        match_result_t match{};</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordflow">while</span> (std::regex_search(processedIter, str.cend(), match, regex))</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keyword">auto</span> <span class="keyword">const</span> matchBegin = match[0].first;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keyword">auto</span> <span class="keyword">const</span> matchEnd = match[0].second;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <span class="keyword">auto</span> <span class="keyword">const</span> nextIndex = std::distance(str.cbegin(), matchBegin + advanceStep);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            str.replace(matchBegin, matchEnd, fmt);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            processedIter = str.cbegin() + nextIndex;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        }</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keywordflow">return</span> str;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    }</div>
 </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
-</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Regex.hpp:19</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1util_html_a43ff969ddb5219a3edb50a474348a52a"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#a43ff969ddb5219a3edb50a474348a52a">mimicpp::util::regex_replace_all</a></div><div class="ttdeci">constexpr std::basic_string&lt; Char, CharTraits, Allocator &gt; regex_replace_all(std::basic_string&lt; Char, CharTraits, Allocator &gt; str, std::basic_regex&lt; Char, RegexTraits &gt; const &amp;regex, std::basic_string_view&lt; Char, CharTraits &gt; const fmt)</div><div class="ttdef"><b>Definition</b> Regex.hpp:22</div></div>
-<div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:25</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a4929f2e21c361f9c029eef2891d6b6d6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a4929f2e21c361f9c029eef2891d6b6d6">mimicpp::RegexT</a></div><div class="ttdeci">std::regex RegexT</div><div class="ttdef"><b>Definition</b> Regex.hpp:15</div></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Algorithm.hpp:18</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1util_html_a43ff969ddb5219a3edb50a474348a52a"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#a43ff969ddb5219a3edb50a474348a52a">mimicpp::util::regex_replace_all</a></div><div class="ttdeci">constexpr std::basic_string&lt; Char, CharTraits, Allocator &gt; regex_replace_all(std::basic_string&lt; Char, CharTraits, Allocator &gt; str, std::basic_regex&lt; Char, RegexTraits &gt; const &amp;regex, std::basic_string_view&lt; Char, CharTraits &gt; const fmt)</div><div class="ttdef"><b>Definition</b> Regex.hpp:24</div></div>
+<div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:26</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a4929f2e21c361f9c029eef2891d6b6d6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a4929f2e21c361f9c029eef2891d6b6d6">mimicpp::RegexT</a></div><div class="ttdeci">std::regex RegexT</div><div class="ttdef"><b>Definition</b> Regex.hpp:17</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_2f75f8b84a1b0b31df547365a4a1eaf8.html">utilities</a></li><li class="navelem"><a class="el" href="../../d6/dac/_regex_8hpp.html">Regex.hpp</a></li>
-    <li class="footer">Generated on Tue Jan 28 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Feb 3 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

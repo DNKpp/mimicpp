@@ -111,9 +111,9 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/dde/_fwd_8hpp.html">mimic++/Fwd.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/d2c/_utility_8hpp.html">mimic++/Utility.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/dec/_format_8hpp.html">mimic++/printing/Format.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d52/printing_2_fwd_8hpp.html">mimic++/printing/Fwd.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/dec/_format_8hpp.html">mimic++/printing/Format.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d52/printing_2_fwd_8hpp.html">mimic++/printing/Fwd.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d65/_priority_tag_8hpp.html">mimic++/utilities/PriorityTag.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;iterator&gt;</span></div>
@@ -127,7 +127,7 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keyword">typename</span> T,</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        printer_for&lt;OutIter, T&gt; Printer = custom::Printer&lt;std::remove_const_t&lt;T&gt;&gt;&gt;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">constexpr</span> OutIter <a class="code hl_variable" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        [[maybe_unused]] priority_tag&lt;4&gt; <span class="keyword">const</span>,</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        [[maybe_unused]] util::priority_tag&lt;4&gt; <span class="keyword">const</span>,</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        OutIter out,</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        T&amp; value)</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    {</div>
@@ -141,7 +141,7 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keyword">typename</span> T,</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        printer_for&lt;OutIter, T&gt; Printer = state::common_type_printer&lt;std::remove_const_t&lt;T&gt;&gt;&gt;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">constexpr</span> OutIter <a class="code hl_variable" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        [[maybe_unused]] priority_tag&lt;3&gt; <span class="keyword">const</span>,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        [[maybe_unused]] util::priority_tag&lt;3&gt; <span class="keyword">const</span>,</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        OutIter out,</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        T&amp; value)</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    {</div>
@@ -155,7 +155,7 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keyword">typename</span> T,</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        printer_for&lt;OutIter, T&gt; Printer = state::cxx23_backport_printer&lt;std::remove_const_t&lt;T&gt;&gt;&gt;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">constexpr</span> OutIter <a class="code hl_variable" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        [[maybe_unused]] priority_tag&lt;2&gt; <span class="keyword">const</span>,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        [[maybe_unused]] util::priority_tag&lt;2&gt; <span class="keyword">const</span>,</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        OutIter out,</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        T&amp; value)</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {</div>
@@ -166,7 +166,7 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">template</span> &lt;pr<span class="keywordtype">int</span>_iterator OutIter, format::detail::formattable&lt;CharT&gt; T&gt;</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    OutIter <a class="code hl_variable" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        [[maybe_unused]] priority_tag&lt;1&gt; <span class="keyword">const</span>,</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        [[maybe_unused]] util::priority_tag&lt;1&gt; <span class="keyword">const</span>,</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        OutIter out,</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        T&amp; value)</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    {</div>
@@ -178,7 +178,7 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">template</span> &lt;pr<span class="keywordtype">int</span>_iterator OutIter&gt;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    OutIter <a class="code hl_variable" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        [[maybe_unused]] priority_tag&lt;0&gt; <span class="keyword">const</span>,</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        [[maybe_unused]] util::priority_tag&lt;0&gt; <span class="keyword">const</span>,</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        OutIter out,</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keyword">auto</span>&amp;)</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    {</div>
@@ -187,7 +187,7 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            <span class="stringliteral">&quot;{{?}}&quot;</span>);</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    }</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">constexpr</span> priority_tag&lt;4&gt; maxStatePrinterTag{};</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keyword">constexpr</span> util::priority_tag&lt;4&gt; maxStatePrinterTag{};</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/ddf/namespacemimicpp_1_1printing.html">mimicpp::printing</a></div>
@@ -239,15 +239,15 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_format_8hpp_html"><div class="ttname"><a href="../../d5/dec/_format_8hpp.html">Format.hpp</a></div></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
-<div class="ttc" id="a_utility_8hpp_html"><div class="ttname"><a href="../../d4/d2c/_utility_8hpp.html">Utility.hpp</a></div></div>
+<div class="ttc" id="a_priority_tag_8hpp_html"><div class="ttname"><a href="../../d8/d65/_priority_tag_8hpp.html">PriorityTag.hpp</a></div></div>
 <div class="ttc" id="aclassmimicpp_1_1printing_1_1_print_fn_html"><div class="ttname"><a href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html">mimicpp::printing::PrintFn</a></div><div class="ttdef"><b>Definition</b> Print.hpp:94</div></div>
 <div class="ttc" id="aclassmimicpp_1_1printing_1_1_print_fn_html_a471eaf9537dd8dd4ae883018f1738101"><div class="ttname"><a href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html#a471eaf9537dd8dd4ae883018f1738101">mimicpp::printing::PrintFn::operator()</a></div><div class="ttdeci">constexpr OutIter operator()(OutIter out, auto &amp;&amp;value) const</div><div class="ttdef"><b>Definition</b> Print.hpp:97</div></div>
 <div class="ttc" id="aclassmimicpp_1_1printing_1_1_print_fn_html_aba3bc704857356b02057ebb71216ba8c"><div class="ttname"><a href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html#aba3bc704857356b02057ebb71216ba8c">mimicpp::printing::PrintFn::operator()</a></div><div class="ttdeci">StringT operator()(auto &amp;&amp;value) const</div><div class="ttdef"><b>Definition</b> Print.hpp:113</div></div>
 <div class="ttc" id="agroup___p_r_i_n_t_i_n_g___s_t_a_t_e_html_ga4dbd7a323f25eecf13e0b10059f52ea9"><div class="ttname"><a href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">mimicpp::print</a></div><div class="ttdeci">constexpr printing::PrintFn print</div><div class="ttdoc">Functional object, converting the given object to its textual representation.</div><div class="ttdef"><b>Definition</b> Print.hpp:180</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_html"><div class="ttname"><a href="../../d8/ddf/namespacemimicpp_1_1printing.html">mimicpp::printing</a></div><div class="ttdef"><b>Definition</b> Fwd.hpp:29</div></div>
-<div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:25</div></div>
+<div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:26</div></div>
 <div class="ttc" id="anamespacemimicpp_html_a6b761dc4fb4f361e95dd3ec37da4a8a8"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8">mimicpp::StringStreamT</a></div><div class="ttdeci">std::basic_ostringstream&lt; CharT, CharTraitsT &gt; StringStreamT</div><div class="ttdef"><b>Definition</b> Format.hpp:33</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:342</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:324</div></div>
 <div class="ttc" id="aprinting_2_fwd_8hpp_html"><div class="ttname"><a href="../../de/d52/printing_2_fwd_8hpp.html">Fwd.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -255,7 +255,7 @@ $(function(){initNavTree('da/d76/_print_8hpp_source.html','../../'); initResizab
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_092aa99ea44c2ea5c05e2b02d3022b6c.html">printing</a></li><li class="navelem"><a class="el" href="../../dir_4553e22d3617b98ba370154df220a736.html">state</a></li><li class="navelem"><a class="el" href="../../da/d76/_print_8hpp.html">Print.hpp</a></li>
-    <li class="footer">Generated on Tue Jan 28 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Feb 3 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

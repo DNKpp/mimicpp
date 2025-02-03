@@ -107,18 +107,18 @@ $(function(){initNavTree('df/d23/conceptmimicpp_1_1matcher__for.html','../../');
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for</a> =  std::same_as&lt;T, std::remove_cvref_t&lt;T&gt;&gt;</div>
 <div class="line">                       &amp;&amp; std::is_move_constructible_v&lt;T&gt;</div>
 <div class="line">                       &amp;&amp; std::destructible&lt;T&gt;</div>
-<div class="line">                       &amp;&amp; <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; matcher, First&amp; first, Others&amp;... others) {</div>
+<div class="line">                       &amp;&amp; <span class="keyword">requires</span>(T <span class="keyword">const</span>&amp; matcher, First&amp; first, Others&amp;... others) {</div>
 <div class="line">                              { detail::matches_hook::matches(matcher, first, others...) } -&gt; std::convertible_to&lt;bool&gt;;</div>
 <div class="line">                              { detail::describe_hook::describe(matcher) } -&gt; std::convertible_to&lt;StringViewT&gt;;</div>
 <div class="line">                          }</div>
-<div class="ttc" id="aconceptmimicpp_1_1matcher__for_html"><div class="ttname"><a href="../../df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for</a></div><div class="ttdef"><b>Definition</b> Common.hpp:107</div></div>
+<div class="ttc" id="aconceptmimicpp_1_1matcher__for_html"><div class="ttname"><a href="../../df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for</a></div><div class="ttdef"><b>Definition</b> Common.hpp:106</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../df/d23/conceptmimicpp_1_1matcher__for.html">matcher_for</a></li>
-    <li class="footer">Generated on Tue Jan 28 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Feb 3 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
