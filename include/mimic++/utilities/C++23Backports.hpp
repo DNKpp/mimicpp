@@ -10,6 +10,7 @@
 
 #include "mimic++/Config.hpp"
 
+#include <cassert>
 #include <type_traits>
 #include <version>
 
