@@ -593,16 +593,27 @@ TEST_CASE(
     static constexpr auto maxSize = std::numeric_limits<int>::max();
     auto [expectedTimesText, expectedDiff, state] = GENERATE(
         (table<std::string, int, reporting::control_state_t>)({
-            {           "exactly once", 1,         reporting::state_applicable{.min = 1, .max = 1, .count = 0}},
-            {          "exactly twice", 2,         reporting::state_applicable{.min = 2, .max = 2, .count = 0}},
-            {       "exactly 42 times", 5,      reporting::state_applicable{.min = 42, .max = 42, .count = 37}},
+            {           "exactly once", 1,                                                           reporting::state_applicable{.min = 1, .max = 1, .count = 0}},
+            {          "exactly twice", 2,                                                           reporting::state_applicable{.min = 2, .max = 2, .count = 0}},
+            {       "exactly 42 times", 5,                                                        reporting::state_applicable{.min = 42, .max = 42, .count = 37}},
 
-            {  "between 1 and 2 times", 1,         reporting::state_applicable{.min = 1, .max = 2, .count = 0}},
-            {"between 42 and 47 times", 5,      reporting::state_applicable{.min = 42, .max = 47, .count = 37}},
+            {  "between 1 and 2 times", 1,                                                           reporting::state_applicable{.min = 1, .max = 2, .count = 0}},
+            {"between 42 and 47 times", 5,                                                        reporting::state_applicable{.min = 42, .max = 47, .count = 37}},
 
-            {          "at least once", 1,   reporting::state_applicable{.min = 1, .max = maxSize, .count = 0}},
-            {         "at least twice", 2,   reporting::state_applicable{.min = 2, .max = maxSize, .count = 0}},
-            {      "at least 42 times", 5, reporting::state_applicable{.min = 42, .max = maxSize, .count = 37}}
+            {          "at least once", 1,                                                     reporting::state_applicable{.min = 1, .max = maxSize, .count = 0}},
+            {         "at least twice", 2,                                                     reporting::state_applicable{.min = 2, .max = maxSize, .count = 0}},
+            {      "at least 42 times", 5,                                                   reporting::state_applicable{.min = 42, .max = maxSize, .count = 37}},
+
+            {           "exactly once", 1,         reporting::state_inapplicable{.min = 1, .max = 1, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
+            {          "exactly twice", 2,         reporting::state_inapplicable{.min = 2, .max = 2, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
+            {       "exactly 42 times", 5,      reporting::state_inapplicable{.min = 42, .max = 42, .count = 37, .inapplicableSequences = {sequence::Tag{1337}}}},
+
+            {  "between 1 and 2 times", 1,         reporting::state_inapplicable{.min = 1, .max = 2, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
+            {"between 42 and 47 times", 5,      reporting::state_inapplicable{.min = 42, .max = 47, .count = 37, .inapplicableSequences = {sequence::Tag{1337}}}},
+
+            {          "at least once", 1,   reporting::state_inapplicable{.min = 1, .max = maxSize, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
+            {         "at least twice", 2,   reporting::state_inapplicable{.min = 2, .max = maxSize, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
+            {      "at least 42 times", 5, reporting::state_inapplicable{.min = 42, .max = maxSize, .count = 37, .inapplicableSequences = {sequence::Tag{1337}}}}
     }));
 
     reporting::ExpectationReport const expectationReport{
