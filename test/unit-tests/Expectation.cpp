@@ -385,6 +385,7 @@ TEST_CASE(
         .mockName = "MyMock"};
 
     BasicExpectation<void(), ControlPolicyT, FinalizerT> expectation{
+        {},
         info,
         ControlPolicyT{},
         FinalizerT{}};
@@ -421,6 +422,7 @@ TEST_CASE(
             .mockName = "MyMock"};
 
         BasicExpectation<SignatureT, ControlPolicyFake, FinalizerT> expectation{
+            {},
             info,
             ControlPolicyFake{},
             FinalizerT{}};
@@ -432,6 +434,7 @@ TEST_CASE(
     SECTION("With no other expectation policies.")
     {
         BasicExpectation<SignatureT, ControlPolicyT, FinalizerT> expectation{
+            {},
             {},
             std::ref(times),
             FinalizerT{}};
@@ -494,6 +497,7 @@ TEST_CASE(
     {
         PolicyMockT policy{};
         BasicExpectation<SignatureT, ControlPolicyT, FinalizerT, PolicyRefT> expectation{
+            {},
             {},
             std::ref(times),
             FinalizerT{},
@@ -573,6 +577,7 @@ TEMPLATE_TEST_CASE(
     {
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
             {},
+            {},
             ControlPolicyFake{
              .isSatisfied = true,
              .stateData = commonApplicableState},
@@ -591,6 +596,7 @@ TEMPLATE_TEST_CASE(
     {
         PolicyMockT policy{};
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
+            {},
             {},
             ControlPolicyFake{
              .isSatisfied = true,
@@ -636,6 +642,7 @@ TEMPLATE_TEST_CASE(
         PolicyMockT policy1{};
         PolicyMockT policy2{};
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
+            {},
             {},
             ControlPolicyFake{
              .isSatisfied = true,
@@ -732,6 +739,7 @@ TEST_CASE(
             ControlPolicyFake,
             FinalizerPolicyT>
             expectation{
+                {},
                 info,
                 ControlPolicyFake{},
                 FinalizerPolicyT{}};
@@ -755,6 +763,7 @@ TEST_CASE(
             ControlT,
             FinalizerPolicyT>
             expectation{
+                {},
                 {},
                 ControlT{std::ref(controlPolicy)},
                 FinalizerPolicyT{}};
@@ -785,6 +794,7 @@ TEST_CASE(
             FinalizerPolicyT,
             PolicyT>
             expectation{
+                {},
                 {},
                 ControlPolicyFake{},
                 FinalizerPolicyT{},
@@ -823,6 +833,7 @@ TEMPLATE_TEST_CASE(
 
     FinalizerT finalizer{};
     BasicExpectation<SignatureT, ControlPolicyFake, FinalizerRefT> expectation{
+        {},
         {},
         ControlPolicyFake{},
         std::ref(finalizer)};

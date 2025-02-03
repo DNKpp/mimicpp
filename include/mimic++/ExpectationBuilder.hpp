@@ -16,6 +16,7 @@
 #include "mimic++/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 namespace mimicpp
 {
@@ -152,7 +153,7 @@ namespace mimicpp
         }
 
         [[nodiscard]]
-        ScopedExpectation finalize(const std::source_location& sourceLocation) &&
+        ScopedExpectation finalize(std::source_location const& sourceLocation) &&
         {
             static_assert(
                 finalize_policy_for<FinalizePolicy, Signature>,
@@ -173,6 +174,7 @@ namespace mimicpp
                             Policies...>;
 
                         return std::make_unique<ExpectationT>(
+                            util::SourceLocation{sourceLocation},
                             detail::expectation_info{
                                 .sourceLocation = sourceLocation,
                                 .mockName = std::move(m_MockName)},

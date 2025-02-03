@@ -6,6 +6,9 @@
 #ifndef MIMICPP_UTILITIES_SOURCE_LOCATION_HPP
 #define MIMICPP_UTILITIES_SOURCE_LOCATION_HPP
 
+#include "mimic++/printing/Fwd.hpp"
+#include "mimic++/printing/state/Print.hpp"
+
 #include <cstring>
 #include <source_location>
 #include <utility>
@@ -52,5 +55,15 @@ namespace mimicpp::util
         std::source_location m_SourceLocation;
     };
 }
+
+template <>
+struct mimicpp::printing::detail::state::common_type_printer<mimicpp::util::SourceLocation>
+{
+    template <print_iterator OutIter>
+    static OutIter print(OutIter out, util::SourceLocation const& loc)
+    {
+        return mimicpp::print(std::move(out), *loc);
+    }
+};
 
 #endif

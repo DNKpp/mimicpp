@@ -15,6 +15,7 @@
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -484,6 +485,7 @@ namespace mimicpp
          * \tparam ControlPolicyArg The control-policy constructor argument types.
          * \tparam FinalizerArg The finalize-policy constructor argument types.
          * \tparam PolicyArgs The expectation-policies constructor argument types.
+         * \param from The source-location, where this expectation was created.
          * \param info General infos about the expectation.
          * \param controlArg The control-policy constructor argument.
          * \param finalizerArg The finalize-policy constructor argument.
@@ -494,6 +496,7 @@ namespace mimicpp
                       && std::constructible_from<FinalizerT, FinalizerArg>
                       && std::constructible_from<PolicyListT, PolicyArgs...>
         constexpr explicit BasicExpectation(
+            util::SourceLocation from,
             expectation_info info,
             ControlPolicyArg&& controlArg,
             FinalizerArg&& finalizerArg,
@@ -502,7 +505,8 @@ namespace mimicpp
                 std::is_nothrow_constructible_v<ControlPolicyT, ControlPolicyArg>
                 && std::is_nothrow_constructible_v<FinalizerT, FinalizerArg>
                 && (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
-            : m_Info{std::move(info)},
+            : m_From{std::move(from)},
+              m_Info{std::move(info)},
               m_ControlPolicy{std::forward<ControlPolicyArg>(controlArg)},
               m_Policies{std::forward<PolicyArgs>(args)...},
               m_Finalizer{std::forward<FinalizerArg>(finalizerArg)}
@@ -602,6 +606,7 @@ namespace mimicpp
         }
 
     private:
+        util::SourceLocation m_From;
         expectation_info m_Info;
         ControlPolicyT m_ControlPolicy;
         PolicyListT m_Policies;
