@@ -45,12 +45,22 @@ namespace
         MAKE_MOCK1(finalize_call, void(const CallInfoT&), override);
     };
 
+    template <typename Signature>
     [[nodiscard]]
     detail::expectation_info make_common_expectation_info(const std::source_location& loc = std::source_location::current())
     {
         return detail::expectation_info{
             .sourceLocation = loc,
             .mockName = "Mock-Name"};
+    }
+
+    template <typename Signature>
+    [[nodiscard]]
+    reporting::TargetReport make_common_target_report()
+    {
+        return reporting::TargetReport{
+            .name = "Mock-Name",
+            .overloadReport = reporting::TypeReport::make<Signature>()};
     }
 }
 
@@ -79,7 +89,7 @@ TEST_CASE(
     SECTION("When expectation is unfulfilled, it is reported.")
     {
         reporting::ExpectationReport const expReport{
-            .info = make_common_expectation_info(),
+            .info = make_common_expectation_info<void()>(),
             .controlReport = commonUnsatisfiedState};
 
         REQUIRE_CALL(*expectation, is_satisfied())
@@ -282,11 +292,11 @@ TEST_CASE(
     };
 
     reporting::ExpectationReport const throwingReport{
-        .info = make_common_expectation_info(),
+        .info = make_common_expectation_info<void()>(),
         .controlReport = commonApplicableState};
 
     reporting::ExpectationReport const otherReport{
-        .info = make_common_expectation_info(),
+        .info = make_common_expectation_info<void()>(),
         .controlReport = commonApplicableState};
 
     auto const matches = [&](const auto& info) {
@@ -373,18 +383,17 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEST_CASE(
-    "mimicpp::BasicExpectation stores detail::expectation_info.",
+    "mimicpp::BasicExpectation stores general infos.",
     "[expectation]")
 {
     using ControlPolicyT = ControlPolicyFake;
     using FinalizerT = FinalizerFake<void()>;
 
-    detail::expectation_info const info{
-        .sourceLocation = std::source_location::current(),
-        .mockName = "MyMock"};
+    detail::expectation_info const info = make_common_expectation_info<void()>();
 
     BasicExpectation<void(), ControlPolicyT, FinalizerT> expectation{
         {},
+        make_common_target_report<void()>(),
         info,
         ControlPolicyT{},
         FinalizerT{}};
@@ -416,12 +425,11 @@ TEST_CASE(
 
     SECTION("expectation_infos are gathered.")
     {
-        detail::expectation_info const info{
-            .sourceLocation = std::source_location::current(),
-            .mockName = "MyMock"};
+        detail::expectation_info const info = make_common_expectation_info<void()>();
 
         BasicExpectation<SignatureT, ControlPolicyFake, FinalizerT> expectation{
             {},
+            make_common_target_report<SignatureT>(),
             info,
             ControlPolicyFake{},
             FinalizerT{}};
@@ -434,6 +442,7 @@ TEST_CASE(
     {
         BasicExpectation<SignatureT, ControlPolicyT, FinalizerT> expectation{
             {},
+            make_common_target_report<SignatureT>(),
             {},
             std::ref(times),
             FinalizerT{}};
@@ -497,6 +506,7 @@ TEST_CASE(
         PolicyMockT policy{};
         BasicExpectation<SignatureT, ControlPolicyT, FinalizerT, PolicyRefT> expectation{
             {},
+            make_common_target_report<SignatureT>(),
             {},
             std::ref(times),
             FinalizerT{},
@@ -576,6 +586,7 @@ TEMPLATE_TEST_CASE(
     {
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT> expectation{
             {},
+            make_common_target_report<TestType>(),
             {},
             ControlPolicyFake{
              .isSatisfied = true,
@@ -596,6 +607,7 @@ TEMPLATE_TEST_CASE(
         PolicyMockT policy{};
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT> expectation{
             {},
+            make_common_target_report<TestType>(),
             {},
             ControlPolicyFake{
              .isSatisfied = true,
@@ -642,6 +654,7 @@ TEMPLATE_TEST_CASE(
         PolicyMockT policy2{};
         BasicExpectation<TestType, ControlPolicyFake, FinalizerT, PolicyRefT, PolicyRefT> expectation{
             {},
+            make_common_target_report<TestType>(),
             {},
             ControlPolicyFake{
              .isSatisfied = true,
@@ -729,9 +742,7 @@ TEST_CASE(
 
     SECTION("expectation_infos are gathered.")
     {
-        detail::expectation_info const info{
-            .sourceLocation = std::source_location::current(),
-            .mockName = "MyMock"};
+        detail::expectation_info const info = make_common_expectation_info<void()>();
 
         BasicExpectation<
             void(),
@@ -739,6 +750,7 @@ TEST_CASE(
             FinalizerPolicyT>
             expectation{
                 {},
+                make_common_target_report<void()>(),
                 info,
                 ControlPolicyFake{},
                 FinalizerPolicyT{}};
@@ -763,6 +775,7 @@ TEST_CASE(
             FinalizerPolicyT>
             expectation{
                 {},
+                make_common_target_report<void()>(),
                 {},
                 ControlT{std::ref(controlPolicy)},
                 FinalizerPolicyT{}};
@@ -794,6 +807,7 @@ TEST_CASE(
             PolicyT>
             expectation{
                 {},
+                make_common_target_report<void()>(),
                 {},
                 ControlPolicyFake{},
                 FinalizerPolicyT{},
@@ -833,6 +847,7 @@ TEMPLATE_TEST_CASE(
     FinalizerT finalizer{};
     BasicExpectation<SignatureT, ControlPolicyFake, FinalizerRefT> expectation{
         {},
+        make_common_target_report<SignatureT>(),
         {},
         ControlPolicyFake{},
         std::ref(finalizer)};

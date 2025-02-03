@@ -15,6 +15,7 @@
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
+#include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
 #include <algorithm>
@@ -230,14 +231,14 @@ namespace mimicpp
          * \return Immutable reference to the source-location.
          */
         [[nodiscard]]
-        virtual constexpr const std::source_location& from() const noexcept = 0;
+        virtual constexpr std::source_location const& from() const noexcept = 0;
 
         /**
          * \brief Returns the name of the related mock.
          * \return Immutable reference to the mock-name.
          */
         [[nodiscard]]
-        virtual constexpr const StringT& mock_name() const noexcept = 0;
+        virtual constexpr StringT const& mock_name() const noexcept = 0;
     };
 
     /**
@@ -486,6 +487,7 @@ namespace mimicpp
          * \tparam FinalizerArg The finalize-policy constructor argument types.
          * \tparam PolicyArgs The expectation-policies constructor argument types.
          * \param from The source-location, where this expectation was created.
+         * \param target Information about the target-mock.
          * \param info General infos about the expectation.
          * \param controlArg The control-policy constructor argument.
          * \param finalizerArg The finalize-policy constructor argument.
@@ -497,6 +499,7 @@ namespace mimicpp
                       && std::constructible_from<PolicyListT, PolicyArgs...>
         constexpr explicit BasicExpectation(
             util::SourceLocation from,
+            reporting::TargetReport target,
             expectation_info info,
             ControlPolicyArg&& controlArg,
             FinalizerArg&& finalizerArg,
@@ -506,6 +509,7 @@ namespace mimicpp
                 && std::is_nothrow_constructible_v<FinalizerT, FinalizerArg>
                 && (std::is_nothrow_constructible_v<Policies, PolicyArgs> && ...))
             : m_From{std::move(from)},
+              m_Target{std::move(target)},
               m_Info{std::move(info)},
               m_ControlPolicy{std::forward<ControlPolicyArg>(controlArg)},
               m_Policies{std::forward<PolicyArgs>(args)...},
@@ -591,7 +595,7 @@ namespace mimicpp
          * \copydoc Expectation::from
          */
         [[nodiscard]]
-        constexpr const std::source_location& from() const noexcept override
+        constexpr std::source_location const& from() const noexcept override
         {
             return m_Info.sourceLocation;
         }
@@ -600,13 +604,14 @@ namespace mimicpp
          * \copydoc Expectation::mock_name
          */
         [[nodiscard]]
-        constexpr const StringT& mock_name() const noexcept override
+        constexpr StringT const& mock_name() const noexcept override
         {
-            return m_Info.mockName;
+            return m_Target.name;
         }
 
     private:
         util::SourceLocation m_From;
+        reporting::TargetReport m_Target;
         expectation_info m_Info;
         ControlPolicyT m_ControlPolicy;
         PolicyListT m_Policies;
