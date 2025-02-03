@@ -17,6 +17,7 @@
 #include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
+#include "mimic++/utilities/PriorityTag.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
 namespace mimicpp
@@ -201,7 +202,7 @@ namespace mimicpp::detail
             std::remove_cvref_t<Arg>,
             Param>
     [[nodiscard]]
-    constexpr auto make_arg_matcher(Arg&& arg, [[maybe_unused]] const priority_tag<2>)
+    constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<2> const, Arg&& arg)
     {
         return std::forward<Arg>(arg);
     }
@@ -212,27 +213,24 @@ namespace mimicpp::detail
     template <string Param, string Arg>
         requires(!std::is_pointer_v<std::remove_reference_t<Param>>)
              || (!std::is_pointer_v<std::remove_reference_t<Arg>>)
-    [[nodiscard]]
-    constexpr auto make_arg_matcher(Arg&& arg, [[maybe_unused]] const priority_tag<1>)
+    [[nodiscard]] constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<1> const, Arg&& arg)
     {
         return matches::str::eq(std::forward<Arg>(arg));
     }
 
     template <typename Param, std::equality_comparable_with<Param> Arg>
     [[nodiscard]]
-    constexpr auto make_arg_matcher(Arg&& arg, [[maybe_unused]] const priority_tag<0>)
+    constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<0> const, Arg&& arg)
     {
         return matches::eq(std::forward<Arg>(arg));
     }
 
-    constexpr priority_tag<2> max_make_arg_matcher_tag{};
+    constexpr util::priority_tag<2> max_make_arg_matcher_tag{};
 
     template <typename Arg, typename Target>
     concept requirement_for = requires {
         {
-            detail::make_arg_matcher<Target, Arg>(
-                std::declval<Arg>(),
-                max_make_arg_matcher_tag)
+            detail::make_arg_matcher<Target, Arg>(max_make_arg_matcher_tag, std::declval<Arg>())
         } -> matcher_for<Target>;
     };
 
@@ -246,9 +244,7 @@ namespace mimicpp::detail
     constexpr auto make_arg_policy(Arg&& arg)
     {
         return expect::arg<index>(
-            detail::make_arg_matcher<Param, Arg>(
-                std::forward<Arg>(arg),
-                max_make_arg_matcher_tag));
+            detail::make_arg_matcher<Param, Arg>(max_make_arg_matcher_tag, std::forward<Arg>(arg)));
     }
 
     template <typename Signature, typename Builder, std::size_t... indices, typename... Args>

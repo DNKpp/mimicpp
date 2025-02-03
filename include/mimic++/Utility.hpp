@@ -18,19 +18,6 @@
 
 namespace mimicpp
 {
-    template <std::size_t priority>
-    struct priority_tag
-        /** \cond Help doxygen with recursion.*/
-        : public priority_tag<priority - 1>
-    /** \endcond */
-    {
-    };
-
-    template <>
-    struct priority_tag<0>
-    {
-    };
-
     template <typename From, typename To>
     concept explicitly_convertible_to =
         requires {

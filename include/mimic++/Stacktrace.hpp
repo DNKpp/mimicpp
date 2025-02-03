@@ -13,6 +13,7 @@
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/utilities/AlwaysFalse.hpp"
+#include "mimic++/utilities/PriorityTag.hpp"
 
 #include <algorithm>
 #include <any>
@@ -317,7 +318,7 @@ namespace mimicpp::stacktrace::detail::current_hook
         template <typename> typename Traits,
         existing_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
     [[nodiscard]]
-    constexpr auto current([[maybe_unused]] const priority_tag<2>, const std::size_t skip)
+    constexpr auto current([[maybe_unused]] util::priority_tag<2> const, std::size_t const skip)
     {
         return Traits<
             typename FindBackendT::type>::current(skip + 1u);
@@ -327,27 +328,27 @@ namespace mimicpp::stacktrace::detail::current_hook
         template <typename> typename Traits,
         existing_backend<Traits> FindBackendT = find_backend>
     [[nodiscard]]
-    constexpr auto current([[maybe_unused]] const priority_tag<1>, const std::size_t skip)
+    constexpr auto current([[maybe_unused]] util::priority_tag<1> const, std::size_t const skip)
     {
         return Traits<
             typename FindBackendT::type>::current(skip + 1u);
     }
 
     template <template <typename> typename Traits>
-    constexpr auto current([[maybe_unused]] const priority_tag<0>, [[maybe_unused]] const std::size_t skip)
+    constexpr auto current([[maybe_unused]] util::priority_tag<0> const, [[maybe_unused]] std::size_t const skip)
     {
         static_assert(
             util::always_false<Traits<void>>{},
             "mimic++ does not have a registered stacktrace-backend.");
     }
 
-    constexpr priority_tag<2> maxTag;
+    constexpr util::priority_tag<2> maxTag{};
 
     struct current_fn
     {
         template <typename... Canary, template <typename> typename Traits = backend_traits>
         [[nodiscard]]
-        Stacktrace operator()(const std::size_t skip) const
+        Stacktrace operator()(std::size_t const skip) const
         {
             return Stacktrace{
                 current_hook::current<Traits>(maxTag, skip + 1u)};

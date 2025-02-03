@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
+#include "mimic++/utilities/PriorityTag.hpp"
 
 #include <algorithm>
 #include <concepts>
@@ -130,31 +130,31 @@ namespace mimicpp::printing::detail::type
                                };
 
     template <typename T, print_iterator OutIter, type_printer_for<T, OutIter> Printer = mimicpp::custom::TypePrinter<T>>
-    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<4u>, OutIter out)
+    constexpr OutIter print_type_to([[maybe_unused]] util::priority_tag<4u> const, OutIter out)
     {
         return Printer::print(std::move(out));
     }
 
     template <typename T, print_iterator OutIter, type_printer_for<T, OutIter> Printer = common_type_printer<T>>
-    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<3u>, OutIter out)
+    constexpr OutIter print_type_to([[maybe_unused]] util::priority_tag<3u> const, OutIter out)
     {
         return Printer::print(std::move(out));
     }
 
     template <typename T, print_iterator OutIter, type_printer_for<T, OutIter> Printer = signature_type_printer<T>>
-    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<2u>, OutIter out)
+    constexpr OutIter print_type_to([[maybe_unused]] util::priority_tag<2u> const, OutIter out)
     {
         return Printer::print(std::move(out));
     }
 
     template <typename T, print_iterator OutIter, type_printer_for<T, OutIter> Printer = template_type_printer<T>>
-    constexpr OutIter print_type_to([[maybe_unused]] const priority_tag<1u>, OutIter out)
+    constexpr OutIter print_type_to([[maybe_unused]] util::priority_tag<1u> const, OutIter out)
     {
         return Printer::print(std::move(out));
     }
 
     template <typename T, print_iterator OutIter>
-    OutIter print_type_to([[maybe_unused]] const priority_tag<0u>, OutIter out)
+    OutIter print_type_to([[maybe_unused]] util::priority_tag<0u> const, OutIter out)
     {
         return std::ranges::copy(
                    detail::prettify_type_name(detail::type_name<T>()),
@@ -162,7 +162,7 @@ namespace mimicpp::printing::detail::type
             .out;
     }
 
-    constexpr priority_tag<4u> maxPrintTypePriority{};
+    constexpr util::priority_tag<4u> maxPrintTypePriority{};
 
     template <typename T>
     struct print_type_helper

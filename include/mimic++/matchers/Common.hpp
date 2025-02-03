@@ -9,7 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
+#include "mimic++/utilities/PriorityTag.hpp"
 
 #include <concepts>
 #include <type_traits>
@@ -25,8 +25,8 @@ namespace mimicpp::detail::matches_hook
     template <typename Matcher, typename T, typename... Others>
     [[nodiscard]]
     constexpr bool matches_impl(
-        [[maybe_unused]] const priority_tag<1>,
-        const Matcher& matcher,
+        [[maybe_unused]] util::priority_tag<1> const,
+        Matcher const& matcher,
         T& target,
         Others&... others)
         requires requires {
@@ -41,8 +41,8 @@ namespace mimicpp::detail::matches_hook
     template <typename Matcher, typename T, typename... Others>
     [[nodiscard]]
     constexpr bool matches_impl(
-        [[maybe_unused]] const priority_tag<0>,
-        const Matcher& matcher,
+        [[maybe_unused]] util::priority_tag<0> const,
+        Matcher const& matcher,
         T& target,
         Others&... others)
         requires requires { { matcher.matches(target, others...) } -> std::convertible_to<bool>; }
@@ -50,10 +50,10 @@ namespace mimicpp::detail::matches_hook
         return matcher.matches(target, others...);
     }
 
-    constexpr priority_tag<1> maxTag;
+    constexpr util::priority_tag<1> maxTag{};
 
     constexpr auto matches = []<typename Matcher, typename T, typename... Others>(
-                                 const Matcher& matcher,
+                                 Matcher const& matcher,
                                  T& target,
                                  Others&... others)
         requires requires {
@@ -70,8 +70,8 @@ namespace mimicpp::detail::describe_hook
     template <typename Matcher>
     [[nodiscard]]
     constexpr decltype(auto) describe_impl(
-        const Matcher& matcher,
-        [[maybe_unused]] const priority_tag<1>)
+        [[maybe_unused]] util::priority_tag<1> const,
+        Matcher const& matcher)
         requires requires {
             {
                 custom::matcher_traits<Matcher>{}.describe(matcher)
@@ -84,19 +84,19 @@ namespace mimicpp::detail::describe_hook
     template <typename Matcher>
     [[nodiscard]]
     constexpr decltype(auto) describe_impl(
-        const Matcher& matcher,
-        [[maybe_unused]] const priority_tag<0>)
+        [[maybe_unused]] util::priority_tag<0> const,
+        Matcher const& matcher)
         requires requires { { matcher.describe() } -> std::convertible_to<StringViewT>; }
     {
         return matcher.describe();
     }
 
-    constexpr priority_tag<1> maxTag;
+    constexpr util::priority_tag<1> maxTag{};
 
-    constexpr auto describe = []<typename Matcher>(const Matcher& matcher) -> decltype(auto)
-        requires requires { { describe_impl(matcher, maxTag) } -> std::convertible_to<StringViewT>; }
+    constexpr auto describe = []<typename Matcher>(Matcher const& matcher) -> decltype(auto)
+        requires requires { { describe_impl(maxTag, matcher) } -> std::convertible_to<StringViewT>; }
     {
-        return describe_impl(matcher, maxTag);
+        return describe_impl(maxTag, matcher);
     };
 }
 
@@ -106,7 +106,7 @@ namespace mimicpp
     concept matcher_for = std::same_as<T, std::remove_cvref_t<T>>
                        && std::is_move_constructible_v<T>
                        && std::destructible<T>
-                       && requires(const T& matcher, First& first, Others&... others) {
+                       && requires(T const& matcher, First& first, Others&... others) {
                               { detail::matches_hook::matches(matcher, first, others...) } -> std::convertible_to<bool>;
                               { detail::describe_hook::describe(matcher) } -> std::convertible_to<StringViewT>;
                           };

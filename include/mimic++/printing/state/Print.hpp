@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Utility.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
+#include "mimic++/utilities/PriorityTag.hpp"
 
 #include <functional>
 #include <iterator>
@@ -25,7 +25,7 @@ namespace mimicpp::printing::detail::state
         typename T,
         printer_for<OutIter, T> Printer = custom::Printer<std::remove_const_t<T>>>
     constexpr OutIter print(
-        [[maybe_unused]] priority_tag<4> const,
+        [[maybe_unused]] util::priority_tag<4> const,
         OutIter out,
         T& value)
     {
@@ -39,7 +39,7 @@ namespace mimicpp::printing::detail::state
         typename T,
         printer_for<OutIter, T> Printer = state::common_type_printer<std::remove_const_t<T>>>
     constexpr OutIter print(
-        [[maybe_unused]] priority_tag<3> const,
+        [[maybe_unused]] util::priority_tag<3> const,
         OutIter out,
         T& value)
     {
@@ -53,7 +53,7 @@ namespace mimicpp::printing::detail::state
         typename T,
         printer_for<OutIter, T> Printer = state::cxx23_backport_printer<std::remove_const_t<T>>>
     constexpr OutIter print(
-        [[maybe_unused]] priority_tag<2> const,
+        [[maybe_unused]] util::priority_tag<2> const,
         OutIter out,
         T& value)
     {
@@ -64,7 +64,7 @@ namespace mimicpp::printing::detail::state
 
     template <print_iterator OutIter, format::detail::formattable<CharT> T>
     OutIter print(
-        [[maybe_unused]] priority_tag<1> const,
+        [[maybe_unused]] util::priority_tag<1> const,
         OutIter out,
         T& value)
     {
@@ -76,7 +76,7 @@ namespace mimicpp::printing::detail::state
 
     template <print_iterator OutIter>
     OutIter print(
-        [[maybe_unused]] priority_tag<0> const,
+        [[maybe_unused]] util::priority_tag<0> const,
         OutIter out,
         auto&)
     {
@@ -85,7 +85,7 @@ namespace mimicpp::printing::detail::state
             "{{?}}");
     }
 
-    constexpr priority_tag<4> maxStatePrinterTag{};
+    constexpr util::priority_tag<4> maxStatePrinterTag{};
 }
 
 namespace mimicpp::printing
