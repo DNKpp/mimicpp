@@ -12,10 +12,7 @@
 
 #include <array>
 #include <cassert>
-#include <optional>
 #include <ranges>
-#include <source_location>
-#include <string_view>
 #include <tuple>
 #include <utility>
 
@@ -39,17 +36,6 @@ namespace mimicpp
     struct priority_tag<0>
     {
     };
-
-    [[nodiscard]]
-    constexpr bool is_same_source_location(
-        const std::source_location& lhs,
-        const std::source_location& rhs) noexcept
-    {
-        return std::string_view{lhs.file_name()} == std::string_view{rhs.file_name()}
-            && std::string_view{lhs.function_name()} == std::string_view{rhs.function_name()}
-            && lhs.line() == rhs.line()
-            && lhs.column() == rhs.column();
-    }
 
     template <typename From, typename To>
     concept explicitly_convertible_to =
