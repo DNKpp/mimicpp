@@ -33,21 +33,4 @@ namespace mimicpp
     }
 }
 
-namespace mimicpp::detail
-{
-    template <std::default_initializable FillElement, std::size_t n, typename... Elements>
-        requires(sizeof...(Elements) <= n)
-    [[nodiscard]]
-    constexpr auto expand_tuple(std::tuple<Elements...>&& tuple)
-    {
-        // prior to c++23, tuple_cat does not officially support tuple-like types,
-        // thus we transform the generated array manually
-        return std::tuple_cat(
-            std::move(tuple),
-            std::apply(
-                [](auto&&... elements) { return std::make_tuple(std::move(elements)...); },
-                std::array<FillElement, n - sizeof...(Elements)>{}));
-    }
-}
-
 #endif

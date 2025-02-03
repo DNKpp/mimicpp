@@ -10,6 +10,7 @@
 
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/policies/ArgumentList.hpp"
+#include "mimic++/utilities/TypeList.hpp"
 
 #include <concepts>
 // ReSharper disable once CppUnusedIncludeDirective
@@ -235,7 +236,7 @@ namespace mimicpp::expect
 
         return detail::make_args_policy<first, others...>(
             std::forward<Matcher>(matcher),
-            mimicpp::detail::expand_tuple<std::identity, 1u + sizeof...(others)>(
+            util::detail::expand_tuple<std::identity, 1u + sizeof...(others)>(
                 std::forward_as_tuple(std::forward<Projections>(projections)...)));
     }
 
