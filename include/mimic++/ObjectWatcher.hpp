@@ -10,7 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Mock.hpp"
-#include "mimic++/Printer.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
 
 #include <concepts>
 #include <memory>

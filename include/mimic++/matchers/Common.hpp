@@ -9,7 +9,6 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Printer.hpp"
 #include "mimic++/Utility.hpp"
 
 #include <concepts>
