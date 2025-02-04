@@ -166,7 +166,7 @@ var searchData=
   ['stacktrace_163',['Stacktrace',['../db/d18/classmimicpp_1_1_stacktrace.html',1,'mimicpp::Stacktrace'],['../db/d18/classmimicpp_1_1_stacktrace.html#a183ad8b1325f69bdf161aa618b2da5a9',1,'mimicpp::Stacktrace::Stacktrace(Inner &amp;&amp;inner)'],['../db/d18/classmimicpp_1_1_stacktrace.html#a0f3863795c2ac1268d2f7ac2941f6190',1,'mimicpp::Stacktrace::Stacktrace(const Stacktrace &amp;)=default'],['../db/d18/classmimicpp_1_1_stacktrace.html#a12cf057633250d1f4463e97cdd0869b0',1,'mimicpp::Stacktrace::Stacktrace(Stacktrace &amp;&amp;)=default']]],
   ['stacktrace_164',['stacktrace',['../d4/d44/classmimicpp_1_1call_1_1_info.html#a7008c600682cac5a597ada6b0c90bb64',1,'mimicpp::call::Info::stacktrace'],['../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a8aa826da79f09845a9f14acc7abd4558',1,'mimicpp::reporting::CallReport::stacktrace'],['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html',1,'stacktrace']]],
   ['stacktrace_20backend_165',['Enable experimental cpptrace stacktrace-backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md44',1,'']]],
-  ['stacktrace_20backends_166',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md24',1,'']]],
+  ['stacktrace_20backends_166',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md25',1,'']]],
   ['stacktrace_20support_167',['Enable experimental stacktrace support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md41',1,'']]],
   ['stacktrace_2ehpp_168',['Stacktrace.hpp',['../de/df5/_stacktrace_8hpp.html',1,'']]],
   ['stacktraceskip_169',['stacktraceSkip',['../d4/d24/classmimicpp_1_1_mock_settings.html#ac9d3f340f01d5355c32befcf8dc843b7',1,'mimicpp::MockSettings']]],
@@ -220,5 +220,5 @@ var searchData=
   ['strip_5fparens_217',['strip_parens',['../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html',1,'']]],
   ['support_218',['support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md41',1,'Enable experimental stacktrace support'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md38',1,'Enable experimental string-matcher unicode support']]],
   ['support_20for_20case_20insensitive_20matching_219',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md26',1,'']]],
-  ['support_20for_20printing_220',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]]
+  ['support_20for_20printing_220',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]]
 ];
