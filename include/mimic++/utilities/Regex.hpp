@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
+
 #include <regex>
 #include <string>
 #include <string_view>
@@ -15,6 +17,8 @@
 namespace mimicpp
 {
     using RegexT = std::regex;
+    using SMatchT = std::smatch;
+    using SVMatchT = std::match_results<StringViewT::const_iterator>;
 }
 
 namespace mimicpp::util
