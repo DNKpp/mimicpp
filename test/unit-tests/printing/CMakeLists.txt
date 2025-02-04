@@ -9,5 +9,6 @@ target_sources(${TARGET_NAME}
     "Format.cpp"
     "PathPrinter.cpp"
     "StatePrinter.cpp"
+    "TypePostProcessing.cpp"
     "TypePrinter.cpp"
 )
