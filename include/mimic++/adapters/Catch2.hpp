@@ -10,7 +10,7 @@
 
 #if __has_include("mimic++/Reporting.hpp")
     #include "mimic++/Reporting.hpp"
-    #include "mimic++/Utility.hpp"
+    #include "mimic++/utilities/C++23Backports.hpp"
 #elif not defined(MIMICPP_VERSION)
     #error "It appears that the test-adapter is not included in the mimic++ project or package." \
         "If you plan to use it alongside the mimic++-amalgamated header, please ensure to include the adapter-header afterwards."
@@ -33,7 +33,7 @@ namespace mimicpp::reporting::detail::catch2
         FAIL(msg);
 #endif
 
-        unreachable();
+        util::unreachable();
     }
 
     inline void send_success(StringViewT const msg)
