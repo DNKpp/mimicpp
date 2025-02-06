@@ -138,27 +138,21 @@ namespace mimicpp::printing::type::detail
         static RegexT const regularScope{R"(\w+::)"};
         static RegexT const lambdaScope{
             "`"
-            R"((?:public: ))"   // lambda::operator() is always publicly available
-            R"((?:__\w+ ))"     // call-convention
             R"(<lambda_(\d+)>)" // lambda-identifier
             R"(::operator\(\))" // operator()
             R"(\((.*?)\))"      // arg-list
             R"(((?:const)?))"   // const (optional)
-            R"((?: __\w+)?)"    // __ptr64 (optional)
-            "'::"               //
+            R"(\s*'::)"         //
         };
 
         static RegexT const functionScope{
             "`"
-            R"((?:(?:public|private|protected): )?)" // access specifier (optional)
-            "(?:static )?"                           // static (optional)
-            R"((?:__\w+ ))"                          // call-convention
-            R"((operator.+?|\w+))"                   // function-name
-            R"(\((.*?)\))"                           // arg-list
-            R"(((?:const)?))"                        // const (optional)
-            R"((?: __\w+)?)"                         // __ptr64 (optional)
-            R"((&{0,2}))"                            // ref specifier
-            R"(\s*'::)"                              //
+            R"((?:\w+\s+)?)"       // return type (optional)
+            R"((operator.+?|\w+))" // function-name
+            R"(\((.*?)\))"         // arg-list
+            R"(((?:const)?))"      // const (optional)
+            R"(\s*(&{0,2}))"       // ref specifier
+            R"(\s*'::)"            //
         };
 
         if (scope.ends_with(anonymousNamespaceToken))
@@ -210,6 +204,16 @@ namespace mimicpp::printing::type::detail
     {
         static RegexT const omitClassStructEnum{R"(\b(class|struct|enum)\s+)"};
         name = std::regex_replace(name, omitClassStructEnum, "");
+
+        static RegexT const omitAccessSpecifiers{R"(\b(?:public|private|protected):\s+)"};
+        name = std::regex_replace(name, omitAccessSpecifiers, "");
+
+        static RegexT const omitStaticSpecifier{R"(\bstatic\s+)"};
+        name = std::regex_replace(name, omitStaticSpecifier, "");
+
+        // something like call-convention and __ptr64
+        static RegexT const omitImplementationSpecifiers{R"(\b__\w+\b\s*)"};
+        name = std::regex_replace(name, omitImplementationSpecifiers, "");
 
         return name;
     }
