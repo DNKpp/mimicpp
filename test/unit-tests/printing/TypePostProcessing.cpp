@@ -214,7 +214,8 @@ TEST_CASE(
                     std::move(ss).str(),
                     Catch::Matchers::Matches(
                         R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::)"
-                        R"(\(lambda#\d+::operator\(\)\(\) const\)::)"
+                        R"(lambda#\d+::)"
+                        R"(\(operator\(\)\(\) const\)::)"
                         "my_type"));
             });
     }
@@ -286,7 +287,8 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\(anon ns\)::)"
-                R"(\(lambda#\d+::operator\(\)\(\) const\)::)"
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\(\) const\)::)"
                 "my_type"));
     }
 
@@ -302,7 +304,8 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\(anon ns\)::)"
-                R"(\(lambda#\d+::operator\(\)\(\)\)::)"
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\(\)\)::)"
                 "my_type"));
     }
 
@@ -319,7 +322,8 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\(anon ns\)::)"
-                R"(\(lambda#\d+::operator\(\)\(\) const\)::)"
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\(\) const\)::)"
                 "my_type"));
     }
 
@@ -335,7 +339,8 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\(anon ns\)::)"
-                R"((\(lambda#\d+::operator\(\)\(\) const\)::){2})"
+                R"((lambda#\d+::)"
+                R"(\(operator\(\)\(\) const\)::){2})"
                 "my_type"));
     }
 

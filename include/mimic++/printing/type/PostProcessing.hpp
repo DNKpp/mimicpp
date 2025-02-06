@@ -68,27 +68,13 @@ namespace mimicpp::printing::type::detail
     template <print_iterator OutIter>
     constexpr OutIter prettify_lambda_scope(OutIter out, auto const& matches)
     {
-        assert(matches.size() == 4 && "Regex out-of-sync.");
+        assert(matches.size() == 2 && "Regex out-of-sync.");
 
         auto const& lambdaId = matches[1];
-        auto const& paramList = matches[2];
-        auto const& lambdaSpecs = matches[3];
 
-        out = format::format_to(std::move(out), "(lambda#");
+        out = format::format_to(std::move(out), "lambda#");
         out = std::ranges::copy(lambdaId.first, lambdaId.second, std::move(out)).out;
-        out = format::format_to(std::move(out), "::operator()(");
-        if (paramList != "void")
-        {
-            out = std::ranges::copy(paramList.first, paramList.second, std::move(out)).out;
-        }
-        out = format::format_to(std::move(out), ")");
-
-        if (0 != lambdaSpecs.length())
-        {
-            out = format::format_to(std::move(out), " ");
-            out = std::ranges::copy(lambdaSpecs.first, lambdaSpecs.second, std::move(out)).out;
-        }
-        out = format::format_to(std::move(out), ")::");
+        out = format::format_to(std::move(out), "::");
 
         return out;
     }
@@ -136,15 +122,7 @@ namespace mimicpp::printing::type::detail
         constexpr StringViewT anonymousNamespaceToken{"`anonymous namespace'::"};
         static RegexT const virtualScope{"`\\d+'::"};
         static RegexT const regularScope{R"(\w+::)"};
-        static RegexT const lambdaScope{
-            "`"
-            R"(<lambda_(\d+)>)" // lambda-identifier
-            R"(::operator\(\))" // operator()
-            R"(\((.*?)\))"      // arg-list
-            R"(((?:const)?))"   // const (optional)
-            R"(\s*'::)"         //
-        };
-
+        static RegexT const lambdaScope{R"(<lambda_(\d+)>::)"};
         static RegexT const functionScope{
             "`"
             R"((?:\w+\s+)?)"       // return type (optional)
@@ -180,19 +158,19 @@ namespace mimicpp::printing::type::detail
                 matches[0].length()};
         }
 
-        if (std::regex_search(fullName.cbegin(), fullName.cend(), matches, lambdaScope))
+        if (std::regex_search(scope.cbegin(), scope.cend(), matches, lambdaScope))
         {
             return std::tuple{
                 prettify_lambda_scope(std::move(out), matches),
-                std::ranges::distance(fullName.cbegin(), matches[0].first),
+                std::ranges::distance(scope.cbegin(), matches[0].first),
                 matches[0].length()};
         }
 
-        if (std::regex_search(fullName.cbegin(), fullName.cend(), matches, functionScope))
+        if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionScope))
         {
             return std::tuple{
                 prettify_function_scope(std::move(out), matches),
-                std::ranges::distance(fullName.cbegin(), matches[0].first),
+                std::ranges::distance(scope.cbegin(), matches[0].first),
                 matches[0].length()};
         }
 
