@@ -1,0 +1,264 @@
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef MIMICPP_PRINTING_TYPE_POST_PROCESSING_HPP
+#define MIMICPP_PRINTING_TYPE_POST_PROCESSING_HPP
+
+#pragma once
+
+#include "mimic++/Config.hpp"
+#include "mimic++/Fwd.hpp"
+#include "mimic++/printing/Format.hpp"
+#include "mimic++/utilities/C++23Backports.hpp"
+
+#include <cassert>
+#include <iterator>
+#include <ranges>
+#include <tuple>
+
+#ifdef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+
+namespace mimicpp::printing::detail
+{
+}
+
+#else
+
+    #include "mimic++/utilities/Regex.hpp"
+
+    #if MIMICPP_DETAIL_IS_GCC \
+        || MIMICPP_DETAIL_IS_CLANG
+
+    #else
+
+namespace mimicpp::printing::type::detail
+{
+    [[nodiscard]]
+    inline StringT handle_lambda(SMatchT const& matches)
+    {
+        assert(matches.size() == 6 && "Regex out-of-sync.");
+
+        StringStreamT ss{};
+
+        auto const& scope = matches[1];
+        auto const& lambdaId = matches[2];
+        auto const& paramList = matches[3];
+        auto const& lambdaSpecs = matches[4];
+        auto const& typeIdentifier = matches[5];
+
+        ss << "(" << scope << "lambda#" << lambdaId << "::operator()(";
+
+        if (paramList != "void")
+        {
+            ss << paramList;
+        }
+        ss << ")";
+
+        if (0 != lambdaSpecs.length())
+        {
+            ss << " " << lambdaSpecs;
+        }
+        ss << ")::" << typeIdentifier;
+
+        return std::move(ss).str();
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_lambda_scope(OutIter out, auto const& matches)
+    {
+        assert(matches.size() == 4 && "Regex out-of-sync.");
+
+        auto const& lambdaId = matches[1];
+        auto const& paramList = matches[2];
+        auto const& lambdaSpecs = matches[3];
+
+        out = format::format_to(std::move(out), "(lambda#");
+        out = std::ranges::copy(lambdaId.first, lambdaId.second, std::move(out)).out;
+        out = format::format_to(std::move(out), "::operator()(");
+        if (paramList != "void")
+        {
+            out = std::ranges::copy(paramList.first, paramList.second, std::move(out)).out;
+        }
+        out = format::format_to(std::move(out), ")");
+
+        if (0 != lambdaSpecs.length())
+        {
+            out = format::format_to(std::move(out), " ");
+            out = std::ranges::copy(lambdaSpecs.first, lambdaSpecs.second, std::move(out)).out;
+        }
+        out = format::format_to(std::move(out), ")::");
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_function_scope(OutIter out, auto const& matches)
+    {
+        assert(matches.size() == 5 && "Regex out-of-sync.");
+
+        auto const& functionName = matches[1];
+        auto const& paramList = matches[2];
+        auto const& specs = matches[3];
+        auto const& refSpecs = matches[4];
+
+        out = format::format_to(std::move(out), "(");
+        out = std::ranges::copy(functionName.first, functionName.second, std::move(out)).out;
+        out = format::format_to(std::move(out), "(");
+        if (paramList != "void")
+        {
+            out = std::ranges::copy(paramList.first, paramList.second, std::move(out)).out;
+        }
+        out = format::format_to(std::move(out), ")");
+
+        if (0 != specs.length())
+        {
+            out = format::format_to(std::move(out), " ");
+            out = std::ranges::copy(specs.first, specs.second, std::move(out)).out;
+        }
+
+        if (0 != refSpecs.length())
+        {
+            out = format::format_to(std::move(out), " ");
+            out = std::ranges::copy(refSpecs.first, refSpecs.second, std::move(out)).out;
+        }
+        out = format::format_to(std::move(out), ")::");
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
+    constexpr std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope, StringViewT const fullName)
+    {
+        assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
+
+        constexpr StringViewT anonymousNamespaceToken{"`anonymous namespace'::"};
+        static RegexT const virtualScope{"`\\d+'::"};
+        static RegexT const regularScope{R"(\w+::)"};
+        static RegexT const lambdaScope{
+            "`"
+            R"((?:public: ))"   // lambda::operator() is always publicly available
+            R"((?:__\w+ ))"     // call-convention
+            R"(<lambda_(\d+)>)" // lambda-identifier
+            R"(::operator\(\))" // operator()
+            R"(\((.*?)\))"      // arg-list
+            R"(((?:const)?))"   // const (optional)
+            R"((?: __\w+)?)"    // __ptr64 (optional)
+            "'::"               //
+        };
+
+        static RegexT const functionScope{
+            "`"
+            R"((?:(?:public|private|protected): )?)" // access specifier (optional)
+            "(?:static )?"                           // static (optional)
+            R"((?:__\w+ ))"                          // call-convention
+            R"((operator.+?|\w+))"                   // function-name
+            R"(\((.*?)\))"                           // arg-list
+            R"(((?:const)?))"                        // const (optional)
+            R"((?: __\w+)?)"                         // __ptr64 (optional)
+            R"((&{0,2}))"                            // ref specifier
+            R"(\s*'::)"                              //
+        };
+
+        if (scope.ends_with(anonymousNamespaceToken))
+        {
+            return std::tuple{
+                format::format_to(std::move(out), "(anon ns)::"),
+                scope.size() - anonymousNamespaceToken.size(),
+                anonymousNamespaceToken.size()};
+        }
+
+        SVMatchT matches{};
+        if (std::regex_search(scope.cbegin(), scope.cend(), matches, virtualScope))
+        {
+            return std::tuple{
+                std::move(out),
+                std::ranges::distance(scope.cbegin(), matches[0].first),
+                matches[0].length()};
+        }
+
+        if (std::regex_search(scope.cbegin(), scope.cend(), matches, regularScope))
+        {
+            return std::tuple{
+                std::ranges::copy(matches[0].first, matches[0].second, std::move(out)).out,
+                std::ranges::distance(scope.cbegin(), matches[0].first),
+                matches[0].length()};
+        }
+
+        if (std::regex_search(fullName.cbegin(), fullName.cend(), matches, lambdaScope))
+        {
+            return std::tuple{
+                prettify_lambda_scope(std::move(out), matches),
+                std::ranges::distance(fullName.cbegin(), matches[0].first),
+                matches[0].length()};
+        }
+
+        if (std::regex_search(fullName.cbegin(), fullName.cend(), matches, functionScope))
+        {
+            return std::tuple{
+                prettify_function_scope(std::move(out), matches),
+                std::ranges::distance(fullName.cbegin(), matches[0].first),
+                matches[0].length()};
+        }
+
+        util::unreachable();
+    }
+
+    [[nodiscard]]
+    inline StringT apply_general_prettification(StringT name)
+    {
+        static RegexT const omitClassStructEnum{R"(\b(class|struct|enum)\s+)"};
+        name = std::regex_replace(name, omitClassStructEnum, "");
+
+        return name;
+    }
+}
+
+    #endif
+
+namespace mimicpp::printing::type::detail
+{
+    constexpr StringViewT scopeToken{"::"};
+
+    template <typename OutIter>
+    constexpr OutIter prettify_scopes(OutIter out, StringT name)
+    {
+        while (auto const firstScopeDelimiter = std::ranges::search(name, scopeToken))
+        {
+            std::size_t index{};
+            std::size_t count{};
+            std::tie(out, index, count) = consume_next_scope(
+                out,
+                StringViewT{name.cbegin(), firstScopeDelimiter.end()},
+                name);
+            name.erase(index, count);
+        }
+
+        return out;
+    }
+
+    template <typename OutIter>
+    constexpr OutIter prettify_identifier(OutIter out, StringT name)
+    {
+        name = apply_general_prettification(std::move(name));
+
+        if (auto const lastMatch = std::ranges::search(name | std::views::reverse, detail::scopeToken))
+        {
+            std::size_t const splitIndex = std::ranges::distance(name.cbegin(), lastMatch.begin().base());
+            StringT topLevelIdentifier = name.substr(splitIndex);
+
+            // includes last ::
+            name.erase(splitIndex);
+            out = prettify_scopes(std::move(out), std::move(name));
+
+            name = std::move(topLevelIdentifier);
+        }
+
+        return std::ranges::copy(name, std::move(out)).out;
+    }
+}
+
+#endif
+
+#endif
