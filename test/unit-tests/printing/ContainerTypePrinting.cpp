@@ -55,7 +55,7 @@ TEST_CASE(
 {
     REQUIRE_THAT(
         (print_type<custom_vector<int, std::pmr::polymorphic_allocator<int>>>()),
-        Catch::Matchers::Equals("custom_vector<int, std::pmr::polymorphic_allocator<int>>"));
+        Catch::Matchers::Equals("(anon ns)::custom_vector<int, std::pmr::polymorphic_allocator<int>>"));
 }
 
 TEST_CASE(
@@ -98,13 +98,15 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::vector<int, custom_allocator<int>>>()),
-            Catch::Matchers::Equals("std::vector<int, custom_allocator<int>>"));
+            Catch::Matchers::Equals("std::vector<int, (anon ns)::custom_allocator<int>>"));
         REQUIRE_THAT(
             (print_type<std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>>()),
-            Catch::Matchers::Equals("std::vector<std::vector<int, custom_allocator<int>>, custom_allocator<std::vector<int, custom_allocator<int>>>>"));
+            Catch::Matchers::Equals("std::vector<"
+                                    "std::vector<int, (anon ns)::custom_allocator<int>>, "
+                                    "(anon ns)::custom_allocator<std::vector<int, (anon ns)::custom_allocator<int>>>>"));
         REQUIRE_THAT(
             (print_type<std::vector<std::vector<int>, custom_allocator<std::vector<int>>>>()),
-            Catch::Matchers::Equals("std::vector<std::vector<int>, custom_allocator<std::vector<int>>>"));
+            Catch::Matchers::Equals("std::vector<std::vector<int>, (anon ns)::custom_allocator<std::vector<int>>>"));
     }
 }
 
@@ -148,13 +150,16 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::deque<int, custom_allocator<int>>>()),
-            Catch::Matchers::Equals("std::deque<int, custom_allocator<int>>"));
+            Catch::Matchers::Equals("std::deque<int, (anon ns)::custom_allocator<int>>"));
         REQUIRE_THAT(
             (print_type<std::deque<std::deque<int, custom_allocator<int>>, custom_allocator<std::deque<int, custom_allocator<int>>>>>()),
-            Catch::Matchers::Equals("std::deque<std::deque<int, custom_allocator<int>>, custom_allocator<std::deque<int, custom_allocator<int>>>>"));
+            Catch::Matchers::Equals(
+                "std::deque<"
+                "std::deque<int, (anon ns)::custom_allocator<int>>, "
+                "(anon ns)::custom_allocator<std::deque<int, (anon ns)::custom_allocator<int>>>>"));
         REQUIRE_THAT(
             (print_type<std::deque<std::deque<int>, custom_allocator<std::deque<int>>>>()),
-            Catch::Matchers::Equals("std::deque<std::deque<int>, custom_allocator<std::deque<int>>>"));
+            Catch::Matchers::Equals("std::deque<std::deque<int>, (anon ns)::custom_allocator<std::deque<int>>>"));
     }
 }
 
@@ -198,13 +203,16 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::list<int, custom_allocator<int>>>()),
-            Catch::Matchers::Equals("std::list<int, custom_allocator<int>>"));
+            Catch::Matchers::Equals("std::list<int, (anon ns)::custom_allocator<int>>"));
         REQUIRE_THAT(
             (print_type<std::list<std::list<int, custom_allocator<int>>, custom_allocator<std::list<int, custom_allocator<int>>>>>()),
-            Catch::Matchers::Equals("std::list<std::list<int, custom_allocator<int>>, custom_allocator<std::list<int, custom_allocator<int>>>>"));
+            Catch::Matchers::Equals(
+                "std::list<"
+                "std::list<int, (anon ns)::custom_allocator<int>>, "
+                "(anon ns)::custom_allocator<std::list<int, (anon ns)::custom_allocator<int>>>>"));
         REQUIRE_THAT(
             (print_type<std::list<std::list<int>, custom_allocator<std::list<int>>>>()),
-            Catch::Matchers::Equals("std::list<std::list<int>, custom_allocator<std::list<int>>>"));
+            Catch::Matchers::Equals("std::list<std::list<int>, (anon ns)::custom_allocator<std::list<int>>>"));
     }
 }
 
@@ -248,14 +256,16 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::forward_list<int, custom_allocator<int>>>()),
-            Catch::Matchers::Equals("std::forward_list<int, custom_allocator<int>>"));
+            Catch::Matchers::Equals("std::forward_list<int, (anon ns)::custom_allocator<int>>"));
         REQUIRE_THAT(
             (print_type<std::forward_list<std::forward_list<int, custom_allocator<int>>, custom_allocator<std::forward_list<int, custom_allocator<int>>>>>()),
             Catch::Matchers::Equals(
-                "std::forward_list<std::forward_list<int, custom_allocator<int>>, custom_allocator<std::forward_list<int, custom_allocator<int>>>>"));
+                "std::forward_list<"
+                "std::forward_list<int, (anon ns)::custom_allocator<int>>, "
+                "(anon ns)::custom_allocator<std::forward_list<int, (anon ns)::custom_allocator<int>>>>"));
         REQUIRE_THAT(
             (print_type<std::forward_list<std::forward_list<int>, custom_allocator<std::forward_list<int>>>>()),
-            Catch::Matchers::Equals("std::forward_list<std::forward_list<int>, custom_allocator<std::forward_list<int>>>"));
+            Catch::Matchers::Equals("std::forward_list<std::forward_list<int>, (anon ns)::custom_allocator<std::forward_list<int>>>"));
     }
 }
 
@@ -334,13 +344,13 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::set<int, custom_compare>>()),
-                Catch::Matchers::Equals("std::set<int, custom_compare>"));
+                Catch::Matchers::Equals("std::set<int, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::set<std::string, custom_compare>>()),
-                Catch::Matchers::Equals("std::set<std::string, custom_compare>"));
+                Catch::Matchers::Equals("std::set<std::string, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::set<std::tuple<int, int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::set<std::tuple<int, int>, custom_compare>"));
+                Catch::Matchers::Equals("std::set<std::tuple<int, int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -360,13 +370,13 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::set<int, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::set<int, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::set<int, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::set<std::string, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::set<std::string, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::set<std::string, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::set<std::tuple<int, int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::set<std::tuple<int, int>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::set<std::tuple<int, int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -374,13 +384,13 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::set<int, custom_compare, custom_allocator<int>>>()),
-            Catch::Matchers::Equals("std::set<int, custom_compare, custom_allocator<int>>"));
+            Catch::Matchers::Equals("std::set<int, (anon ns)::custom_compare, (anon ns)::custom_allocator<int>>"));
         REQUIRE_THAT(
             (print_type<std::set<std::string, custom_compare, custom_allocator<std::string>>>()),
-            Catch::Matchers::Equals("std::set<std::string, custom_compare, custom_allocator<std::string>>"));
+            Catch::Matchers::Equals("std::set<std::string, (anon ns)::custom_compare, (anon ns)::custom_allocator<std::string>>"));
         REQUIRE_THAT(
             (print_type<std::set<std::tuple<int, int>, custom_compare, custom_allocator<std::tuple<int, int>>>>()),
-            Catch::Matchers::Equals("std::set<std::tuple<int, int>, custom_compare, custom_allocator<std::tuple<int, int>>>"));
+            Catch::Matchers::Equals("std::set<std::tuple<int, int>, (anon ns)::custom_compare, (anon ns)::custom_allocator<std::tuple<int, int>>>"));
     }
 }
 
@@ -404,13 +414,13 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::multiset<int, custom_compare>>()),
-                Catch::Matchers::Equals("std::multiset<int, custom_compare>"));
+                Catch::Matchers::Equals("std::multiset<int, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::multiset<std::string, custom_compare>>()),
-                Catch::Matchers::Equals("std::multiset<std::string, custom_compare>"));
+                Catch::Matchers::Equals("std::multiset<std::string, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::multiset<std::tuple<int, int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::multiset<std::tuple<int, int>, custom_compare>"));
+                Catch::Matchers::Equals("std::multiset<std::tuple<int, int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -430,13 +440,13 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::multiset<int, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::multiset<int, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::multiset<int, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::multiset<std::string, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::multiset<std::string, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::multiset<std::string, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::multiset<std::tuple<int, int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::multiset<std::tuple<int, int>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::multiset<std::tuple<int, int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -444,13 +454,13 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::multiset<int, custom_compare, custom_allocator<int>>>()),
-            Catch::Matchers::Equals("std::multiset<int, custom_compare, custom_allocator<int>>"));
+            Catch::Matchers::Equals("std::multiset<int, (anon ns)::custom_compare, (anon ns)::custom_allocator<int>>"));
         REQUIRE_THAT(
             (print_type<std::multiset<std::string, custom_compare, custom_allocator<std::string>>>()),
-            Catch::Matchers::Equals("std::multiset<std::string, custom_compare, custom_allocator<std::string>>"));
+            Catch::Matchers::Equals("std::multiset<std::string, (anon ns)::custom_compare, (anon ns)::custom_allocator<std::string>>"));
         REQUIRE_THAT(
             (print_type<std::multiset<std::tuple<int, int>, custom_compare, custom_allocator<std::tuple<int, int>>>>()),
-            Catch::Matchers::Equals("std::multiset<std::tuple<int, int>, custom_compare, custom_allocator<std::tuple<int, int>>>"));
+            Catch::Matchers::Equals("std::multiset<std::tuple<int, int>, (anon ns)::custom_compare, (anon ns)::custom_allocator<std::tuple<int, int>>>"));
     }
 }
 
@@ -474,14 +484,14 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::unordered_set<std::string, custom_hash<std::string>>>()),
-                Catch::Matchers::Equals("std::unordered_set<std::string, custom_hash<std::string>>"));
+                Catch::Matchers::Equals("std::unordered_set<std::string, (anon ns)::custom_hash<std::string>>"));
         }
 
         SECTION("With alternative compare.")
         {
             REQUIRE_THAT(
                 (print_type<std::unordered_set<std::string, custom_hash<std::string>, custom_compare>>()),
-                Catch::Matchers::Equals("std::unordered_set<std::string, custom_hash<std::string>, custom_compare>"));
+                Catch::Matchers::Equals("std::unordered_set<std::string, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -501,14 +511,14 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_set<std::string, custom_hash<std::string>>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_set<std::string, custom_hash<std::string>>"));
+                Catch::Matchers::Equals("std::pmr::unordered_set<std::string, (anon ns)::custom_hash<std::string>>"));
         }
 
         SECTION("With alternative compare.")
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_set<std::string, custom_hash<std::string>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_set<std::string, custom_hash<std::string>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::unordered_set<std::string, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -516,25 +526,25 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::unordered_set<int, custom_hash<int>, custom_compare, custom_allocator<int>>>()),
-            Catch::Matchers::Equals("std::unordered_set<int, custom_hash<int>, custom_compare, custom_allocator<int>>"));
+            Catch::Matchers::Equals("std::unordered_set<int, (anon ns)::custom_hash<int>, (anon ns)::custom_compare, (anon ns)::custom_allocator<int>>"));
         REQUIRE_THAT(
             (print_type<
                 std::unordered_set<std::string, custom_hash<std::string>, custom_compare, custom_allocator<std::string>>>()),
             Catch::Matchers::Equals(
-                "std::unordered_set<std::string, custom_hash<std::string>, custom_compare, custom_allocator<std::string>>"));
+                "std::unordered_set<std::string, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare, (anon ns)::custom_allocator<std::string>>"));
         REQUIRE_THAT(
             (print_type<
                 std::unordered_set<
-                std::optional<std::string>,
-                custom_hash<std::optional<std::string>>,
-                custom_compare,
-                custom_allocator<std::optional<std::string>>>>()),
+                    std::optional<std::string>,
+                    custom_hash<std::optional<std::string>>,
+                    custom_compare,
+                    custom_allocator<std::optional<std::string>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_set<"
                 "std::optional<std::string>, "
-                "custom_hash<std::optional<std::string>>, "
-                "custom_compare, "
-                "custom_allocator<std::optional<std::string>>>"));
+                "(anon ns)::custom_hash<std::optional<std::string>>, "
+                "(anon ns)::custom_compare, "
+                "(anon ns)::custom_allocator<std::optional<std::string>>>"));
     }
 }
 
@@ -558,14 +568,14 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::unordered_multiset<std::string, custom_hash<std::string>>>()),
-                Catch::Matchers::Equals("std::unordered_multiset<std::string, custom_hash<std::string>>"));
+                Catch::Matchers::Equals("std::unordered_multiset<std::string, (anon ns)::custom_hash<std::string>>"));
         }
 
         SECTION("With alternative compare.")
         {
             REQUIRE_THAT(
                 (print_type<std::unordered_multiset<std::string, custom_hash<std::string>, custom_compare>>()),
-                Catch::Matchers::Equals("std::unordered_multiset<std::string, custom_hash<std::string>, custom_compare>"));
+                Catch::Matchers::Equals("std::unordered_multiset<std::string, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -585,14 +595,14 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_multiset<std::string, custom_hash<std::string>>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_multiset<std::string, custom_hash<std::string>>"));
+                Catch::Matchers::Equals("std::pmr::unordered_multiset<std::string, (anon ns)::custom_hash<std::string>>"));
         }
 
         SECTION("With alternative compare.")
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_multiset<std::string, custom_hash<std::string>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_multiset<std::string, custom_hash<std::string>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::unordered_multiset<std::string, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -600,25 +610,25 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::unordered_multiset<int, custom_hash<int>, custom_compare, custom_allocator<int>>>()),
-            Catch::Matchers::Equals("std::unordered_multiset<int, custom_hash<int>, custom_compare, custom_allocator<int>>"));
+            Catch::Matchers::Equals("std::unordered_multiset<int, (anon ns)::custom_hash<int>, (anon ns)::custom_compare, (anon ns)::custom_allocator<int>>"));
         REQUIRE_THAT(
             (print_type<
                 std::unordered_multiset<std::string, custom_hash<std::string>, custom_compare, custom_allocator<std::string>>>()),
             Catch::Matchers::Equals(
-                "std::unordered_multiset<std::string, custom_hash<std::string>, custom_compare, custom_allocator<std::string>>"));
+                "std::unordered_multiset<std::string, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare, (anon ns)::custom_allocator<std::string>>"));
         REQUIRE_THAT(
             (print_type<
                 std::unordered_multiset<
-                std::optional<std::string>,
-                custom_hash<std::optional<std::string>>,
-                custom_compare,
-                custom_allocator<std::optional<std::string>>>>()),
+                    std::optional<std::string>,
+                    custom_hash<std::optional<std::string>>,
+                    custom_compare,
+                    custom_allocator<std::optional<std::string>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_multiset<"
                 "std::optional<std::string>, "
-                "custom_hash<std::optional<std::string>>, "
-                "custom_compare, "
-                "custom_allocator<std::optional<std::string>>>"));
+                "(anon ns)::custom_hash<std::optional<std::string>>, "
+                "(anon ns)::custom_compare, "
+                "(anon ns)::custom_allocator<std::optional<std::string>>>"));
     }
 }
 
@@ -639,10 +649,10 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::map<std::string, int, custom_compare>>()),
-                Catch::Matchers::Equals("std::map<std::string, int, custom_compare>"));
+                Catch::Matchers::Equals("std::map<std::string, int, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::map<int, std::tuple<int, int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::map<int, std::tuple<int, int>, custom_compare>"));
+                Catch::Matchers::Equals("std::map<int, std::tuple<int, int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -659,10 +669,10 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::map<std::string, int, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::map<std::string, int, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::map<std::string, int, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::map<int, std::tuple<int, int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::map<int, std::tuple<int, int>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::map<int, std::tuple<int, int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -670,10 +680,15 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::map<std::string, int, custom_compare, custom_allocator<std::pair<std::string const, int>>>>()),
-            Catch::Matchers::Equals("std::map<std::string, int, custom_compare, custom_allocator<std::pair<std::string const, int>>>"));
+            Catch::Matchers::Equals("std::map<std::string, int, (anon ns)::custom_compare, (anon ns)::custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
             (print_type<std::map<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
-            Catch::Matchers::Equals("std::map<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
+            Catch::Matchers::Equals(
+                "std::map<"
+                "int, "
+                "std::tuple<int, int>, "
+                "(anon ns)::custom_compare, "
+                "(anon ns)::custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
     }
 }
 
@@ -694,10 +709,10 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::multimap<std::string, int, custom_compare>>()),
-                Catch::Matchers::Equals("std::multimap<std::string, int, custom_compare>"));
+                Catch::Matchers::Equals("std::multimap<std::string, int, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::multimap<int, std::tuple<int, int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::multimap<int, std::tuple<int, int>, custom_compare>"));
+                Catch::Matchers::Equals("std::multimap<int, std::tuple<int, int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -714,10 +729,10 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::multimap<std::string, int, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::multimap<std::string, int, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::multimap<std::string, int, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::multimap<int, std::tuple<int, int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::multimap<int, std::tuple<int, int>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::multimap<int, std::tuple<int, int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -725,10 +740,15 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::multimap<std::string, int, custom_compare, custom_allocator<std::pair<std::string const, int>>>>()),
-            Catch::Matchers::Equals("std::multimap<std::string, int, custom_compare, custom_allocator<std::pair<std::string const, int>>>"));
+            Catch::Matchers::Equals("std::multimap<std::string, int, (anon ns)::custom_compare, (anon ns)::custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
             (print_type<std::multimap<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
-            Catch::Matchers::Equals("std::multimap<int, std::tuple<int, int>, custom_compare, custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
+            Catch::Matchers::Equals(
+                "std::multimap<"
+                "int, "
+                "std::tuple<int, int>, "
+                "(anon ns)::custom_compare, "
+                "(anon ns)::custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
     }
 }
 
@@ -749,20 +769,20 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::unordered_map<std::string, int, custom_hash<std::string>>>()),
-                Catch::Matchers::Equals("std::unordered_map<std::string, int, custom_hash<std::string>>"));
+                Catch::Matchers::Equals("std::unordered_map<std::string, int, (anon ns)::custom_hash<std::string>>"));
             REQUIRE_THAT(
                 (print_type<std::unordered_map<int, std::tuple<int, int>, custom_hash<int>>>()),
-                Catch::Matchers::Equals("std::unordered_map<int, std::tuple<int, int>, custom_hash<int>>"));
+                Catch::Matchers::Equals("std::unordered_map<int, std::tuple<int, int>, (anon ns)::custom_hash<int>>"));
         }
 
         SECTION("With alternative compare.")
         {
             REQUIRE_THAT(
                 (print_type<std::unordered_map<std::string, int, custom_hash<std::string>, custom_compare>>()),
-                Catch::Matchers::Equals("std::unordered_map<std::string, int, custom_hash<std::string>, custom_compare>"));
+                Catch::Matchers::Equals("std::unordered_map<std::string, int, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::unordered_map<int, std::tuple<int, int>, custom_hash<int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::unordered_map<int, std::tuple<int, int>, custom_hash<int>, custom_compare>"));
+                Catch::Matchers::Equals("std::unordered_map<int, std::tuple<int, int>, (anon ns)::custom_hash<int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -779,20 +799,20 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_map<std::string, int, custom_hash<std::string>>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_map<std::string, int, custom_hash<std::string>>"));
+                Catch::Matchers::Equals("std::pmr::unordered_map<std::string, int, (anon ns)::custom_hash<std::string>>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_map<int, std::tuple<int, int>, custom_hash<int>>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_map<int, std::tuple<int, int>, custom_hash<int>>"));
+                Catch::Matchers::Equals("std::pmr::unordered_map<int, std::tuple<int, int>, (anon ns)::custom_hash<int>>"));
         }
 
         SECTION("With alternative compare.")
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_map<std::string, int, custom_hash<std::string>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_map<std::string, int, custom_hash<std::string>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::unordered_map<std::string, int, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_map<int, std::tuple<int, int>, custom_hash<int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_map<int, std::tuple<int, int>, custom_hash<int>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::unordered_map<int, std::tuple<int, int>, (anon ns)::custom_hash<int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -800,32 +820,32 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::unordered_map<
-                std::string,
-                int,
-                custom_hash<std::string>,
-                custom_compare,
-                custom_allocator<std::pair<const std::string, int>>>>()),
+                 std::string,
+                 int,
+                 custom_hash<std::string>,
+                 custom_compare,
+                 custom_allocator<std::pair<const std::string, int>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_map<"
                 "std::string, "
                 "int, "
-                "custom_hash<std::string>, "
-                "custom_compare, "
-                "custom_allocator<std::pair<std::string const, int>>>"));
+                "(anon ns)::custom_hash<std::string>, "
+                "(anon ns)::custom_compare, "
+                "(anon ns)::custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
             (print_type<std::unordered_map<
-                int,
-                std::tuple<int, int>,
-                custom_hash<int>,
-                custom_compare,
-                custom_allocator<std::pair<const int, std::tuple<int, int>>>>>()),
+                 int,
+                 std::tuple<int, int>,
+                 custom_hash<int>,
+                 custom_compare,
+                 custom_allocator<std::pair<const int, std::tuple<int, int>>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_map<"
                 "int, "
                 "std::tuple<int, int>, "
-                "custom_hash<int>, "
-                "custom_compare, "
-                "custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
+                "(anon ns)::custom_hash<int>, "
+                "(anon ns)::custom_compare, "
+                "(anon ns)::custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
     }
 }
 
@@ -846,20 +866,20 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::unordered_multimap<std::string, int, custom_hash<std::string>>>()),
-                Catch::Matchers::Equals("std::unordered_multimap<std::string, int, custom_hash<std::string>>"));
+                Catch::Matchers::Equals("std::unordered_multimap<std::string, int, (anon ns)::custom_hash<std::string>>"));
             REQUIRE_THAT(
                 (print_type<std::unordered_multimap<int, std::tuple<int, int>, custom_hash<int>>>()),
-                Catch::Matchers::Equals("std::unordered_multimap<int, std::tuple<int, int>, custom_hash<int>>"));
+                Catch::Matchers::Equals("std::unordered_multimap<int, std::tuple<int, int>, (anon ns)::custom_hash<int>>"));
         }
 
         SECTION("With alternative compare.")
         {
             REQUIRE_THAT(
                 (print_type<std::unordered_multimap<std::string, int, custom_hash<std::string>, custom_compare>>()),
-                Catch::Matchers::Equals("std::unordered_multimap<std::string, int, custom_hash<std::string>, custom_compare>"));
+                Catch::Matchers::Equals("std::unordered_multimap<std::string, int, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::unordered_multimap<int, std::tuple<int, int>, custom_hash<int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::unordered_multimap<int, std::tuple<int, int>, custom_hash<int>, custom_compare>"));
+                Catch::Matchers::Equals("std::unordered_multimap<int, std::tuple<int, int>, (anon ns)::custom_hash<int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -876,20 +896,20 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_multimap<std::string, int, custom_hash<std::string>>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_multimap<std::string, int, custom_hash<std::string>>"));
+                Catch::Matchers::Equals("std::pmr::unordered_multimap<std::string, int, (anon ns)::custom_hash<std::string>>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_multimap<int, std::tuple<int, int>, custom_hash<int>>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_multimap<int, std::tuple<int, int>, custom_hash<int>>"));
+                Catch::Matchers::Equals("std::pmr::unordered_multimap<int, std::tuple<int, int>, (anon ns)::custom_hash<int>>"));
         }
 
         SECTION("With alternative compare.")
         {
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_multimap<std::string, int, custom_hash<std::string>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_multimap<std::string, int, custom_hash<std::string>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::unordered_multimap<std::string, int, (anon ns)::custom_hash<std::string>, (anon ns)::custom_compare>"));
             REQUIRE_THAT(
                 (print_type<std::pmr::unordered_multimap<int, std::tuple<int, int>, custom_hash<int>, custom_compare>>()),
-                Catch::Matchers::Equals("std::pmr::unordered_multimap<int, std::tuple<int, int>, custom_hash<int>, custom_compare>"));
+                Catch::Matchers::Equals("std::pmr::unordered_multimap<int, std::tuple<int, int>, (anon ns)::custom_hash<int>, (anon ns)::custom_compare>"));
         }
     }
 
@@ -897,32 +917,32 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::unordered_multimap<
-                std::string,
-                int,
-                custom_hash<std::string>,
-                custom_compare,
-                custom_allocator<std::pair<std::string const, int>>>>()),
+                 std::string,
+                 int,
+                 custom_hash<std::string>,
+                 custom_compare,
+                 custom_allocator<std::pair<std::string const, int>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_multimap<"
                 "std::string, "
                 "int, "
-                "custom_hash<std::string>, "
-                "custom_compare, "
-                "custom_allocator<std::pair<std::string const, int>>>"));
+                "(anon ns)::custom_hash<std::string>, "
+                "(anon ns)::custom_compare, "
+                "(anon ns)::custom_allocator<std::pair<std::string const, int>>>"));
         REQUIRE_THAT(
             (print_type<std::unordered_multimap<
-                int,
-                std::tuple<int, int>,
-                custom_hash<int>,
-                custom_compare,
-                custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
+                 int,
+                 std::tuple<int, int>,
+                 custom_hash<int>,
+                 custom_compare,
+                 custom_allocator<std::pair<int const, std::tuple<int, int>>>>>()),
             Catch::Matchers::Equals(
                 "std::unordered_multimap<"
                 "int, "
                 "std::tuple<int, int>, "
-                "custom_hash<int>, "
-                "custom_compare, "
-                "custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
+                "(anon ns)::custom_hash<int>, "
+                "(anon ns)::custom_compare, "
+                "(anon ns)::custom_allocator<std::pair<int const, std::tuple<int, int>>>>"));
     }
 }
 
@@ -1040,16 +1060,20 @@ TEST_CASE(
     {
         REQUIRE_THAT(
             (print_type<std::priority_queue<int, std::vector<int>, custom_compare>>()),
-            Catch::Matchers::Equals("std::priority_queue<int, std::vector<int>, custom_compare>"));
+            Catch::Matchers::Equals("std::priority_queue<int, std::vector<int>, (anon ns)::custom_compare>"));
         REQUIRE_THAT(
             (print_type<std::priority_queue<std::priority_queue<int>, std::vector<std::priority_queue<int>>, custom_compare>>()),
-            Catch::Matchers::Equals("std::priority_queue<std::priority_queue<int>, std::vector<std::priority_queue<int>>, custom_compare>"));
+            Catch::Matchers::Equals("std::priority_queue<std::priority_queue<int>, std::vector<std::priority_queue<int>>, (anon ns)::custom_compare>"));
         REQUIRE_THAT(
             (print_type<std::priority_queue<std::string, std::vector<std::string>, custom_compare>>()),
-            Catch::Matchers::Equals("std::priority_queue<std::string, std::vector<std::string>, custom_compare>"));
+            Catch::Matchers::Equals("std::priority_queue<std::string, std::vector<std::string>, (anon ns)::custom_compare>"));
         REQUIRE_THAT(
             (print_type<std::priority_queue<std::priority_queue<std::string>, std::vector<std::priority_queue<std::string>>, custom_compare>>()),
-            Catch::Matchers::Equals("std::priority_queue<std::priority_queue<std::string>, std::vector<std::priority_queue<std::string>>, custom_compare>"));
+            Catch::Matchers::Equals(
+                "std::priority_queue<"
+                "std::priority_queue<std::string>, "
+                "std::vector<std::priority_queue<std::string>>, "
+                "(anon ns)::custom_compare>"));
     }
 }
 

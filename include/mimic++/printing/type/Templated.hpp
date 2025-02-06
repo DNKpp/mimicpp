@@ -27,14 +27,14 @@ namespace mimicpp::printing::detail::type
 #ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 
     template <typename T, print_iterator OutIter>
-    OutIter pretty_template_name(OutIter out)
+    constexpr OutIter pretty_template_name(OutIter out)
     {
-        auto const name = detail::prettify_type_name(detail::type_name<T>());
-        return std::ranges::copy(
-                   name.cbegin(),
-                   std::ranges::find(name, '<'),
-                   std::move(out))
-            .out;
+        StringT name = type_name<T>();
+        auto const iter = std::ranges::find(name, '<');
+        assert(iter != name.cend() && "Given name is not a template.");
+        name.erase(iter, name.end());
+
+        return printing::type::detail::prettify_identifier(std::move(out), std::move(name));
     }
 
     template <typename NameGenerator>

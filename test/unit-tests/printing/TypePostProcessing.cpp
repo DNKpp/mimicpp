@@ -174,7 +174,7 @@ namespace
 }
 
 TEST_CASE(
-    "printing::detail::prettify_identifier type-names enhances appearance.",
+    "printing::detail::prettify_identifier enhances names appearance.",
     "[print][detail]")
 {
     StringStreamT ss{};

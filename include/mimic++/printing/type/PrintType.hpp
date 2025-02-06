@@ -11,9 +11,11 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
+#include "mimic++/printing/type/PostProcessing.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <concepts>
 #include <functional>
 #include <iterator>
@@ -156,10 +158,9 @@ namespace mimicpp::printing::detail::type
     template <typename T, print_iterator OutIter>
     OutIter print_type_to([[maybe_unused]] util::priority_tag<0u> const, OutIter out)
     {
-        return std::ranges::copy(
-                   detail::prettify_type_name(detail::type_name<T>()),
-                   std::move(out))
-            .out;
+        return printing::type::detail::prettify_identifier(
+            std::move(out),
+            detail::type_name<T>());
     }
 
     constexpr util::priority_tag<4u> maxPrintTypePriority{};
