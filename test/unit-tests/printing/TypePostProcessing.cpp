@@ -135,7 +135,7 @@ namespace
         return my_type{};
     };
 
-    auto my_typeMutableLambda = []() mutable {
+    [[maybe_unused]] auto my_typeMutableLambda = []() mutable {
         struct my_type
         {
         };
@@ -163,7 +163,7 @@ namespace
         return inner();
     };
 
-    auto my_typeFreeFunction()
+    [[maybe_unused]] auto my_typeFreeFunction()
     {
         struct my_type
         {
@@ -235,7 +235,7 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\(anon ns\)::)"
-                R"((?:my_typeMutableLambda::)?)" // gcc and clang produce this extra scope
+                R"((?:my_typeMutableLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\(\)\)::)"
                 "my_type"));
@@ -254,7 +254,7 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\(anon ns\)::)"
-                R"((?:my_typeNoexceptLambda::)?)" // gcc and clang produce this extra scope
+                R"((?:my_typeNoexceptLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\(\) const\)::)"
                 "my_type"));
@@ -272,7 +272,7 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\(anon ns\)::)"
-                R"((?:my_typeNestedLambda::)?)" // gcc and clang produce this extra scope
+                R"((?:my_typeNestedLambda::)?)" // gcc produces this extra scope
                 R"((lambda#\d+::)"
                 R"(\(operator\(\)\(\) const\)::){2})"
                 "my_type"));

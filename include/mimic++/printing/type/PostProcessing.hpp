@@ -101,7 +101,14 @@ namespace mimicpp::printing::type::detail
         assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
 
         constexpr StringViewT anonymousNamespaceToken{"(anonymous namespace)::"};
-        static RegexT const lambdaScope{R"(\{lambda\(\)#(\d+)\}::)"};
+        static RegexT const lambdaScope{
+        #if MIMICPP_DETAIL_IS_GCC
+            R"(\{lambda\(\)#(\d+)\}::)"
+        #else
+            // clang uses `$_N` and `{lambda()#N\}`
+            R"((?:\$_|\{lambda\(\)#)(\d+)\}?::)"
+        #endif
+        };
         static RegexT const functionScope{
             R"(^(?:\w+\s+)?)"      // return type (optional)
             R"((operator.+?|\w+))" // function-name
@@ -129,7 +136,7 @@ namespace mimicpp::printing::type::detail
                 anonymousNamespaceToken.size()};
         }
 
-        if (std::regex_search(scope.cbegin(), scope.cend(), matches, lambdaScope))
+        if (std::regex_match(scope.cbegin(), scope.cend(), matches, lambdaScope))
         {
             return std::tuple{
                 prettify_lambda_scope(std::move(out), matches),
