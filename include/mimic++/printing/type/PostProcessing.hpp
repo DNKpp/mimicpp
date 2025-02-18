@@ -176,7 +176,7 @@ namespace mimicpp::printing::type::detail
         static RegexT const regularScope{R"(\w+::)"};
         static RegexT const lambdaScope{R"(<lambda_(\d+)>::)"};
         static RegexT const functionScope{
-            "`"
+            "^`"
             R"((?:\w+\s+)?)"       // return type (optional)
             R"((operator.+?|\w+))" // function-name
             R"(\((.*?)\))"         // arg-list
