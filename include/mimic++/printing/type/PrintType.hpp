@@ -23,85 +23,34 @@
 #include <typeinfo>
 #include <utility>
 
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#if not MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING \
+    && (MIMICPP_DETAIL_IS_GCC                       \
+        || MIMICPP_DETAIL_IS_CLANG)
 
-    #include "mimic++/utilities/Regex.hpp"
-
-    #if MIMICPP_DETAIL_IS_GCC \
-        || MIMICPP_DETAIL_IS_CLANG
-
-        #include <cstdlib>
-        #include <cxxabi.h>
-        #include <memory>
+    #include <cstdlib>
+    #include <cxxabi.h>
+    #include <memory>
 
 namespace mimicpp::printing::detail
 {
     template <typename T>
     StringT type_name()
     {
-        StringT name{typeid(T).name()};
+        auto* const rawName = typeid(T).name();
 
         // see: https://gcc.gnu.org/onlinedocs/libstdc++/manual/ext_demangling.html
         int status{};
         using free_deleter_t = decltype([](char* c) noexcept { std::free(c); });
         std::unique_ptr<char, free_deleter_t> const demangledName{
-            abi::__cxa_demangle(name.data(), nullptr, nullptr, &status)};
+            abi::__cxa_demangle(rawName, nullptr, nullptr, &status)};
         if (0 == status)
         {
-            name.assign(demangledName.get());
+            return {demangledName.get()};
         }
 
-        return name;
-    }
-
-    inline StringT prettify_type_name(StringT name)
-    {
-        static const RegexT unifyClosingAngleBrackets{R"(\>\s*\>)"};
-        name = util::regex_replace_all(std::move(name), unifyClosingAngleBrackets, StringViewT{">>"});
-
-        #if MIMICPP_DETAIL_USES_LIBCXX
-        static const RegexT handleStdNamespace{"std::__1::"};
-        #else
-        static const RegexT handleStdNamespace{"std::__cxx11::"};
-        #endif
-        name = std::regex_replace(name, handleStdNamespace, "std::");
-
-        static const RegexT omitAnonymousNamespace{R"(\(anonymous namespace\)::)"};
-        name = std::regex_replace(name, omitAnonymousNamespace, "");
-
-        return name;
+        return {rawName};
     }
 }
-
-    #else
-
-namespace mimicpp::printing::detail
-{
-    template <typename T>
-    StringT type_name()
-    {
-        return typeid(T).name();
-    }
-
-    inline StringT prettify_type_name(StringT name)
-    {
-        static const RegexT unifyClosingAngleBrackets{R"(\>\s*\>)"};
-        name = util::regex_replace_all(std::move(name), unifyClosingAngleBrackets, StringViewT{">>"});
-
-        static const RegexT unifyComma{R"(\s*,\s*)"};
-        name = std::regex_replace(name, unifyComma, ", ");
-
-        static const RegexT omitClassStructEnum{R"(\b(class|struct|enum)\s+)"};
-        name = std::regex_replace(name, omitClassStructEnum, "");
-
-        static const RegexT omitAnonymousNamespace{"`anonymous namespace'::"};
-        name = std::regex_replace(name, omitAnonymousNamespace, "");
-
-        return name;
-    }
-}
-
-    #endif
 
 #else
 
@@ -111,12 +60,6 @@ namespace mimicpp::printing::detail
     StringT type_name()
     {
         return typeid(T).name();
-    }
-
-    [[nodiscard]]
-    inline StringT prettify_type_name(StringT name) noexcept
-    {
-        return name;
     }
 }
 
