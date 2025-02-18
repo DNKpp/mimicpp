@@ -856,82 +856,83 @@ TEMPLATE_TEST_CASE_SIG(
     (true, const void*, const float*))
 {
     using enum mimicpp::Constness;
+    using mimicpp::signature_const_qualification;
 
     SECTION("Variadic c++ function.")
     {
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args...)>::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification<Return(Args...)>::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args...)>);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args...)&>::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification<Return(Args...)&>::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args...)&>);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args...) &&>::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification<Return(Args...) &&>::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args...) &&>);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args...) noexcept>::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification<Return(Args...) noexcept>::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args...) noexcept>);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification < Return(Args...) & noexcept > ::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification < Return(Args...) & noexcept > ::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v < Return(Args...) & noexcept >);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification < Return(Args...) && noexcept > ::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification < Return(Args...) && noexcept > ::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v < Return(Args...) && noexcept >);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args...) const>::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification<Return(Args...) const>::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args...) const>);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args...) const&>::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification<Return(Args...) const&>::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args...) const&>);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args...) const&&>::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification<Return(Args...) const&&>::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args...) const&&>);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args...) const noexcept>::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification<Return(Args...) const noexcept>::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args...) const noexcept>);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification < Return(Args...) const& noexcept > ::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification < Return(Args...) const& noexcept > ::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v < Return(Args...) const& noexcept >);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification < Return(Args...) const&& noexcept > ::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification < Return(Args...) const&& noexcept > ::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v < Return(Args...) const&& noexcept >);
     }
 
     SECTION("Function with c-ellipsis.")
     {
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args..., ...)>::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification<Return(Args..., ...)>::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args..., ...)>);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args..., ...)&>::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification<Return(Args..., ...)&>::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args..., ...)&>);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args..., ...) &&>::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification<Return(Args..., ...) &&>::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) &&>);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification<Return(Args..., ...) noexcept>::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification<Return(Args..., ...) noexcept>::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) noexcept>);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification < Return(Args..., ...) & noexcept > ::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification < Return(Args..., ...) & noexcept > ::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v < Return(Args..., ...) & noexcept >);
 
-        STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification < Return(Args..., ...) && noexcept > ::value);
+        STATIC_REQUIRE(non_const == signature_const_qualification < Return(Args..., ...) && noexcept > ::value);
         STATIC_REQUIRE(non_const == mimicpp::signature_const_qualification_v < Return(Args..., ...) && noexcept >);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args..., ...) const>::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification<Return(Args..., ...) const>::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) const>);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args..., ...) const&>::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification<Return(Args..., ...) const&>::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) const&>);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args..., ...) const&&>::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification<Return(Args..., ...) const&&>::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) const&&>);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification<Return(Args..., ...) const noexcept>::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification<Return(Args..., ...) const noexcept>::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v<Return(Args..., ...) const noexcept>);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification < Return(Args..., ...) const& noexcept > ::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification < Return(Args..., ...) const& noexcept > ::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v < Return(Args..., ...) const& noexcept >);
 
-        STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification < Return(Args..., ...) const&& noexcept > ::value);
+        STATIC_REQUIRE(as_const == signature_const_qualification < Return(Args..., ...) const&& noexcept > ::value);
         STATIC_REQUIRE(as_const == mimicpp::signature_const_qualification_v < Return(Args..., ...) const&& noexcept >);
     }
 }
@@ -1021,82 +1022,83 @@ TEMPLATE_TEST_CASE_SIG(
     (true, const void*, const float*))
 {
     using enum mimicpp::ValueCategory;
+    using mimicpp::signature_ref_qualification;
 
     SECTION("Variadic c++ function.")
     {
-        STATIC_REQUIRE(any == mimicpp::signature_ref_qualification<Return(Args...)>::value);
+        STATIC_REQUIRE(any == signature_ref_qualification<Return(Args...)>::value);
         STATIC_REQUIRE(any == mimicpp::signature_ref_qualification_v<Return(Args...)>);
 
-        STATIC_REQUIRE(any == mimicpp::signature_ref_qualification<Return(Args...) const>::value);
+        STATIC_REQUIRE(any == signature_ref_qualification<Return(Args...) const>::value);
         STATIC_REQUIRE(any == mimicpp::signature_ref_qualification_v<Return(Args...) const>);
 
-        STATIC_REQUIRE(any == mimicpp::signature_ref_qualification<Return(Args...) noexcept>::value);
+        STATIC_REQUIRE(any == signature_ref_qualification<Return(Args...) noexcept>::value);
         STATIC_REQUIRE(any == mimicpp::signature_ref_qualification_v<Return(Args...) noexcept>);
 
-        STATIC_REQUIRE(any == mimicpp::signature_ref_qualification<Return(Args...) const noexcept>::value);
+        STATIC_REQUIRE(any == signature_ref_qualification<Return(Args...) const noexcept>::value);
         STATIC_REQUIRE(any == mimicpp::signature_ref_qualification_v<Return(Args...) const noexcept>);
 
-        STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification<Return(Args...)&>::value);
+        STATIC_REQUIRE(lvalue == signature_ref_qualification<Return(Args...)&>::value);
         STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification_v<Return(Args...)&>);
 
-        STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification<Return(Args...) const&>::value);
+        STATIC_REQUIRE(lvalue == signature_ref_qualification<Return(Args...) const&>::value);
         STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification_v<Return(Args...) const&>);
 
-        STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification < Return(Args...) & noexcept > ::value);
+        STATIC_REQUIRE(lvalue == signature_ref_qualification < Return(Args...) & noexcept > ::value);
         STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification_v < Return(Args...) & noexcept >);
 
-        STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification < Return(Args...) const& noexcept > ::value);
+        STATIC_REQUIRE(lvalue == signature_ref_qualification < Return(Args...) const& noexcept > ::value);
         STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification_v < Return(Args...) const& noexcept >);
 
-        STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification<Return(Args...) &&>::value);
+        STATIC_REQUIRE(rvalue == signature_ref_qualification<Return(Args...) &&>::value);
         STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification_v<Return(Args...) &&>);
 
-        STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification < Return(Args...) && noexcept > ::value);
+        STATIC_REQUIRE(rvalue == signature_ref_qualification < Return(Args...) && noexcept > ::value);
         STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification_v < Return(Args...) && noexcept >);
 
-        STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification<Return(Args...) const&&>::value);
+        STATIC_REQUIRE(rvalue == signature_ref_qualification<Return(Args...) const&&>::value);
         STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification_v<Return(Args...) const&&>);
 
-        STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification < Return(Args...) const&& noexcept > ::value);
+        STATIC_REQUIRE(rvalue == signature_ref_qualification < Return(Args...) const&& noexcept > ::value);
         STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification_v < Return(Args...) const&& noexcept >);
     }
 
     SECTION("Function with c-ellipsis.")
     {
-        STATIC_REQUIRE(any == mimicpp::signature_ref_qualification<Return(Args..., ...)>::value);
+        STATIC_REQUIRE(any == signature_ref_qualification<Return(Args..., ...)>::value);
         STATIC_REQUIRE(any == mimicpp::signature_ref_qualification_v<Return(Args..., ...)>);
 
-        STATIC_REQUIRE(any == mimicpp::signature_ref_qualification<Return(Args..., ...) const>::value);
+        STATIC_REQUIRE(any == signature_ref_qualification<Return(Args..., ...) const>::value);
         STATIC_REQUIRE(any == mimicpp::signature_ref_qualification_v<Return(Args..., ...) const>);
 
-        STATIC_REQUIRE(any == mimicpp::signature_ref_qualification<Return(Args..., ...) noexcept>::value);
+        STATIC_REQUIRE(any == signature_ref_qualification<Return(Args..., ...) noexcept>::value);
         STATIC_REQUIRE(any == mimicpp::signature_ref_qualification_v<Return(Args..., ...) noexcept>);
 
-        STATIC_REQUIRE(any == mimicpp::signature_ref_qualification<Return(Args..., ...) const noexcept>::value);
+        STATIC_REQUIRE(any == signature_ref_qualification<Return(Args..., ...) const noexcept>::value);
         STATIC_REQUIRE(any == mimicpp::signature_ref_qualification_v<Return(Args..., ...) const noexcept>);
 
-        STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification<Return(Args..., ...)&>::value);
+        STATIC_REQUIRE(lvalue == signature_ref_qualification<Return(Args..., ...)&>::value);
         STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification_v<Return(Args..., ...)&>);
 
-        STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification<Return(Args..., ...) const&>::value);
+        STATIC_REQUIRE(lvalue == signature_ref_qualification<Return(Args..., ...) const&>::value);
         STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification_v<Return(Args..., ...) const&>);
 
-        STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification < Return(Args..., ...) const& noexcept > ::value);
+        STATIC_REQUIRE(lvalue == signature_ref_qualification < Return(Args..., ...) const& noexcept > ::value);
         STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification_v < Return(Args..., ...) const& noexcept >);
 
-        STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification < Return(Args..., ...) & noexcept > ::value);
+        STATIC_REQUIRE(lvalue == signature_ref_qualification < Return(Args..., ...) & noexcept > ::value);
         STATIC_REQUIRE(lvalue == mimicpp::signature_ref_qualification_v < Return(Args..., ...) & noexcept >);
 
-        STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification < Return(Args..., ...) && noexcept > ::value);
+        STATIC_REQUIRE(rvalue == signature_ref_qualification < Return(Args..., ...) && noexcept > ::value);
         STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification_v < Return(Args..., ...) && noexcept >);
 
-        STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification<Return(Args..., ...) &&>::value);
+        STATIC_REQUIRE(rvalue == signature_ref_qualification<Return(Args..., ...) &&>::value);
         STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification_v<Return(Args..., ...) &&>);
 
-        STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification<Return(Args..., ...) const&&>::value);
+        STATIC_REQUIRE(rvalue == signature_ref_qualification<Return(Args..., ...) const&&>::value);
         STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification_v<Return(Args..., ...) const&&>);
 
-        STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification < Return(Args..., ...) const&& noexcept > ::value);
+        STATIC_REQUIRE(rvalue == signature_ref_qualification < Return(Args..., ...) const&& noexcept > ::value);
         STATIC_REQUIRE(rvalue == mimicpp::signature_ref_qualification_v < Return(Args..., ...) const&& noexcept >);
     }
 }
@@ -1185,81 +1187,83 @@ TEMPLATE_TEST_CASE_SIG(
     (true, const void*, float*),
     (true, const void*, const float*))
 {
+    using mimicpp::signature_is_noexcept;
+
     SECTION("Variadic c++ function.")
     {
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args...)>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args...)>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args...)>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args...) const>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args...) const>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args...) const>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args...)&>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args...)&>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args...)&>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args...) const&>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args...) const&>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args...) const&>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args...) &&>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args...) &&>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args...) &&>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args...) const&&>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args...) const&&>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args...) const&&>);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept<Return(Args...) noexcept>::value);
+        STATIC_REQUIRE(signature_is_noexcept<Return(Args...) noexcept>::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v<Return(Args...) noexcept>);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept<Return(Args...) const noexcept>::value);
+        STATIC_REQUIRE(signature_is_noexcept<Return(Args...) const noexcept>::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v<Return(Args...) const noexcept>);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept < Return(Args...) & noexcept > ::value);
+        STATIC_REQUIRE(signature_is_noexcept < Return(Args...) & noexcept > ::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v < Return(Args...) & noexcept >);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept < Return(Args...) const& noexcept > ::value);
+        STATIC_REQUIRE(signature_is_noexcept < Return(Args...) const& noexcept > ::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v < Return(Args...) const& noexcept >);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept < Return(Args...) && noexcept > ::value);
+        STATIC_REQUIRE(signature_is_noexcept < Return(Args...) && noexcept > ::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v < Return(Args...) && noexcept >);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept < Return(Args...) const&& noexcept > ::value);
+        STATIC_REQUIRE(signature_is_noexcept < Return(Args...) const&& noexcept > ::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v < Return(Args...) const&& noexcept >);
     }
 
     SECTION("Function with c-ellipsis.")
     {
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args..., ...)>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args..., ...)>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args..., ...)>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args..., ...) const>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args..., ...) const>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args..., ...) const>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args..., ...)&>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args..., ...)&>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args..., ...)&>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args..., ...) const&>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args..., ...) const&>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args..., ...) const&>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args..., ...) &&>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args..., ...) &&>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args..., ...) &&>);
 
-        STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept<Return(Args..., ...) const&&>::value);
+        STATIC_REQUIRE_FALSE(signature_is_noexcept<Return(Args..., ...) const&&>::value);
         STATIC_REQUIRE_FALSE(mimicpp::signature_is_noexcept_v<Return(Args..., ...) const&&>);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept<Return(Args..., ...) noexcept>::value);
+        STATIC_REQUIRE(signature_is_noexcept<Return(Args..., ...) noexcept>::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v<Return(Args..., ...) noexcept>);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept<Return(Args..., ...) const noexcept>::value);
+        STATIC_REQUIRE(signature_is_noexcept<Return(Args..., ...) const noexcept>::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v<Return(Args..., ...) const noexcept>);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept < Return(Args..., ...) & noexcept > ::value);
+        STATIC_REQUIRE(signature_is_noexcept < Return(Args..., ...) & noexcept > ::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v < Return(Args..., ...) & noexcept >);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept < Return(Args..., ...) const& noexcept > ::value);
+        STATIC_REQUIRE(signature_is_noexcept < Return(Args..., ...) const& noexcept > ::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v < Return(Args..., ...) const& noexcept >);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept < Return(Args..., ...) && noexcept > ::value);
+        STATIC_REQUIRE(signature_is_noexcept < Return(Args..., ...) && noexcept > ::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v < Return(Args..., ...) && noexcept >);
 
-        STATIC_REQUIRE(mimicpp::signature_is_noexcept < Return(Args..., ...) const&& noexcept > ::value);
+        STATIC_REQUIRE(signature_is_noexcept < Return(Args..., ...) const&& noexcept > ::value);
         STATIC_REQUIRE(mimicpp::signature_is_noexcept_v < Return(Args..., ...) const&& noexcept >);
     }
 }

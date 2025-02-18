@@ -442,29 +442,29 @@ struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::NullBackend>
     }
 
     [[nodiscard]]
-    static constexpr std::size_t size([[maybe_unused]] const NullBackend& backend) noexcept
+    static constexpr std::size_t size([[maybe_unused]] const NullBackend& stacktrace) noexcept
     {
         return 0u;
     }
 
     [[nodiscard]]
-    static constexpr bool empty([[maybe_unused]] const NullBackend& backend) noexcept
+    static constexpr bool empty([[maybe_unused]] const NullBackend& stacktrace) noexcept
     {
         return true;
     }
 
-    static std::string description([[maybe_unused]] const NullBackend& backend, [[maybe_unused]] const std::size_t at)
+    static std::string description([[maybe_unused]] const NullBackend& stacktrace, [[maybe_unused]] const std::size_t at)
     {
         raise_unsupported_operation();
     }
 
-    static std::string source_file([[maybe_unused]] const NullBackend& backend, [[maybe_unused]] const std::size_t at)
+    static std::string source_file([[maybe_unused]] const NullBackend& stacktrace, [[maybe_unused]] const std::size_t at)
     {
         raise_unsupported_operation();
     }
 
     [[nodiscard]]
-    static std::size_t source_line([[maybe_unused]] const NullBackend& backend, [[maybe_unused]] const std::size_t at)
+    static std::size_t source_line([[maybe_unused]] const NullBackend& stacktrace, [[maybe_unused]] const std::size_t at)
     {
         raise_unsupported_operation();
     }
@@ -546,39 +546,39 @@ struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::CpptraceBackend>
     }
 
     [[nodiscard]]
-    static std::size_t size(const CpptraceBackend& backend)
+    static std::size_t size(const CpptraceBackend& stacktrace)
     {
-        return backend.data().frames.size();
+        return stacktrace.data().frames.size();
     }
 
     [[nodiscard]]
-    static bool empty(const CpptraceBackend& backend)
+    static bool empty(const CpptraceBackend& stacktrace)
     {
-        return backend.data().empty();
+        return stacktrace.data().empty();
     }
 
     [[nodiscard]]
-    static std::string description(const CpptraceBackend& backend, const std::size_t at)
+    static std::string description(const CpptraceBackend& stacktrace, const std::size_t at)
     {
-        return frame(backend, at).symbol;
+        return frame(stacktrace, at).symbol;
     }
 
     [[nodiscard]]
-    static std::string source_file(const CpptraceBackend& backend, const std::size_t at)
+    static std::string source_file(const CpptraceBackend& stacktrace, const std::size_t at)
     {
-        return frame(backend, at).filename;
+        return frame(stacktrace, at).filename;
     }
 
     [[nodiscard]]
-    static std::size_t source_line(const CpptraceBackend& backend, const std::size_t at)
+    static std::size_t source_line(const CpptraceBackend& stacktrace, const std::size_t at)
     {
-        return frame(backend, at).line.value_or(0u);
+        return frame(stacktrace, at).line.value_or(0u);
     }
 
     [[nodiscard]]
-    static const cpptrace::stacktrace_frame& frame(const CpptraceBackend& backend, const std::size_t at)
+    static const cpptrace::stacktrace_frame& frame(const CpptraceBackend& stacktrace, const std::size_t at)
     {
-        return backend.data().frames.at(at);
+        return stacktrace.data().frames.at(at);
     }
 };
 
