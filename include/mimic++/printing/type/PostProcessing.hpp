@@ -27,13 +27,6 @@ namespace mimicpp::printing::detail
 
 #else
 
-    #include "mimic++/utilities/Regex.hpp"
-
-    #if MIMICPP_DETAIL_IS_GCC \
-        || MIMICPP_DETAIL_IS_CLANG
-
-    #else
-
 namespace mimicpp::printing::type::detail
 {
     template <print_iterator OutIter>
@@ -96,7 +89,83 @@ namespace mimicpp::printing::type::detail
 
         return out;
     }
+}
 
+    #if MIMICPP_DETAIL_IS_GCC \
+        || MIMICPP_DETAIL_IS_CLANG
+namespace mimicpp::printing::type::detail
+{
+    template <print_iterator OutIter>
+    std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope, StringViewT const fullName)
+    {
+        assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
+
+        constexpr StringViewT anonymousNamespaceToken{"(anonymous namespace)::"};
+        static RegexT const lambdaScope{R"(\{lambda\(\)#(\d+)\}::)"};
+        static RegexT const functionScope{
+            R"(^(?:\w+\s+)?)"      // return type (optional)
+            R"((operator.+?|\w+))" // function-name
+            R"(\((.*?)\)\s*)"      // arg-list
+            R"(((?:const)?))"      // const (optional)
+            R"(\s*(&{0,2}))"       // ref specifier
+            R"(::)"                //
+        };
+
+        SVMatchT matches{};
+        // Apply on the full-name, because otherwise fun(std::string will result in std::fun(string
+        if (std::regex_search(fullName.cbegin(), fullName.cend(), matches, functionScope))
+        {
+            return std::tuple{
+                prettify_function_scope(std::move(out), matches),
+                std::ranges::distance(fullName.cbegin(), matches[0].first),
+                matches[0].length()};
+        }
+
+        if (scope.ends_with(anonymousNamespaceToken))
+        {
+            return std::tuple{
+                format::format_to(std::move(out), "(anon ns)::"),
+                scope.size() - anonymousNamespaceToken.size(),
+                anonymousNamespaceToken.size()};
+        }
+
+        if (std::regex_search(scope.cbegin(), scope.cend(), matches, lambdaScope))
+        {
+            return std::tuple{
+                prettify_lambda_scope(std::move(out), matches),
+                std::ranges::distance(scope.cbegin(), matches[0].first),
+                matches[0].length()};
+        }
+
+        // Probably a regular c++-scope
+        return std::tuple{
+            std::ranges::copy(scope, std::move(out)).out,
+            0u,
+            scope.size()};
+    }
+
+    [[nodiscard]]
+    inline StringT apply_general_prettification(StringT name)
+    {
+        static const RegexT unifyClosingAngleBrackets{R"(\s*>)"};
+        name = std::regex_replace(name, unifyClosingAngleBrackets, ">");
+
+        static const RegexT stdImplNamespace{
+        #if MIMICPP_DETAIL_USES_LIBCXX
+            "std::__1::"
+        #else
+            "std::__cxx11::"
+        #endif
+        };
+        name = std::regex_replace(name, stdImplNamespace, "std::");
+
+        return name;
+    }
+}
+    #else
+
+namespace mimicpp::printing::type::detail
+{
     template <print_iterator OutIter>
     constexpr std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope, StringViewT const fullName)
     {
