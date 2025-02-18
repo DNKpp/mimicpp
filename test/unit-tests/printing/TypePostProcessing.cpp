@@ -241,7 +241,7 @@ TEST_CASE(
                     Catch::Matchers::Matches(
                         R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::)"
                         "outer::"
-                        R"(\(operator\(\)\(std::basic_string_stream&\) const\)::)"
+                        R"(\(operator\(\)\(std::basic_ostringstream<.+?>&\) const\)::)"
                         "my_type"));
             }
         };

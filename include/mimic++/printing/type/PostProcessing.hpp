@@ -133,6 +133,16 @@ namespace mimicpp::printing::type::detail
             R"(\s*'::)"            //
         };
 
+        SVMatchT matches{};
+        // Apply on the full-name, because otherwise fun(std::string will result in std::fun(string
+        if (std::regex_search(fullName.cbegin(), fullName.cend(), matches, functionScope))
+        {
+            return std::tuple{
+                prettify_function_scope(std::move(out), matches),
+                std::ranges::distance(fullName.cbegin(), matches[0].first),
+                matches[0].length()};
+        }
+
         if (scope.ends_with(anonymousNamespaceToken))
         {
             return std::tuple{
@@ -141,7 +151,6 @@ namespace mimicpp::printing::type::detail
                 anonymousNamespaceToken.size()};
         }
 
-        SVMatchT matches{};
         if (std::regex_search(scope.cbegin(), scope.cend(), matches, virtualScope))
         {
             return std::tuple{
@@ -166,14 +175,6 @@ namespace mimicpp::printing::type::detail
                 matches[0].length()};
         }
 
-        if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionScope))
-        {
-            return std::tuple{
-                prettify_function_scope(std::move(out), matches),
-                std::ranges::distance(scope.cbegin(), matches[0].first),
-                matches[0].length()};
-        }
-
         util::unreachable();
     }
 
@@ -190,7 +191,7 @@ namespace mimicpp::printing::type::detail
         name = std::regex_replace(name, omitStaticSpecifier, "");
 
         // something like call-convention and __ptr64
-        static RegexT const omitImplementationSpecifiers{R"(\b__\w+\b\s*)"};
+        static RegexT const omitImplementationSpecifiers{R"(\s+__\w+\b)"};
         name = std::regex_replace(name, omitImplementationSpecifiers, "");
 
         return name;
