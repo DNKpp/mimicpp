@@ -12,6 +12,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
+#include "mimic++/utilities/Regex.hpp"
 
 #include <cassert>
 #include <iterator>
@@ -35,36 +36,6 @@ namespace mimicpp::printing::detail
 
 namespace mimicpp::printing::type::detail
 {
-    [[nodiscard]]
-    inline StringT handle_lambda(SMatchT const& matches)
-    {
-        assert(matches.size() == 6 && "Regex out-of-sync.");
-
-        StringStreamT ss{};
-
-        auto const& scope = matches[1];
-        auto const& lambdaId = matches[2];
-        auto const& paramList = matches[3];
-        auto const& lambdaSpecs = matches[4];
-        auto const& typeIdentifier = matches[5];
-
-        ss << "(" << scope << "lambda#" << lambdaId << "::operator()(";
-
-        if (paramList != "void")
-        {
-            ss << paramList;
-        }
-        ss << ")";
-
-        if (0 != lambdaSpecs.length())
-        {
-            ss << " " << lambdaSpecs;
-        }
-        ss << ")::" << typeIdentifier;
-
-        return std::move(ss).str();
-    }
-
     template <print_iterator OutIter>
     constexpr OutIter prettify_lambda_scope(OutIter out, auto const& matches)
     {
@@ -75,6 +46,21 @@ namespace mimicpp::printing::type::detail
         out = format::format_to(std::move(out), "lambda#");
         out = std::ranges::copy(lambdaId.first, lambdaId.second, std::move(out)).out;
         out = format::format_to(std::move(out), "::");
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_param_list(OutIter out, StringViewT const paramList)
+    {
+        if (paramList.starts_with("void"))
+        {
+            return out;
+        }
+
+        // This is just a very basic approach. To make it correct, we would have to parse all params separately
+        // and of course distinguish between templates and scoped identifiers. Probably not worth the effort.
+        out = std::ranges::copy(paramList, std::move(out)).out;
 
         return out;
     }
@@ -92,10 +78,7 @@ namespace mimicpp::printing::type::detail
         out = format::format_to(std::move(out), "(");
         out = std::ranges::copy(functionName.first, functionName.second, std::move(out)).out;
         out = format::format_to(std::move(out), "(");
-        if (paramList != "void")
-        {
-            out = std::ranges::copy(paramList.first, paramList.second, std::move(out)).out;
-        }
+        out = prettify_param_list(std::move(out), StringViewT{paramList.first, paramList.second});
         out = format::format_to(std::move(out), ")");
 
         if (0 != specs.length())
@@ -189,6 +172,12 @@ namespace mimicpp::printing::type::detail
 
         static RegexT const omitStaticSpecifier{R"(\bstatic\s+)"};
         name = std::regex_replace(name, omitStaticSpecifier, "");
+
+        static RegexT const unifyComma{R"(\s*,\s*)"};
+        name = std::regex_replace(name, unifyComma, ", ");
+
+        static RegexT const unifyClosingAngles{R"(\s*>)"};
+        name = std::regex_replace(name, unifyClosingAngles, ">");
 
         // something like call-convention and __ptr64
         static RegexT const omitImplementationSpecifiers{R"(\s+__\w+\b)"};

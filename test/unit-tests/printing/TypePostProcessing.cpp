@@ -179,76 +179,6 @@ TEST_CASE(
 {
     StringStreamT ss{};
 
-    SECTION("When local type is queried inside the current scope.")
-    {
-        struct my_type
-        {
-        };
-
-        StringT const rawName = printing::detail::type_name<my_type>();
-        CAPTURE(rawName);
-
-        printing::type::detail::prettify_identifier(
-            std::ostreambuf_iterator{ss},
-            rawName);
-        REQUIRE_THAT(
-            std::move(ss).str(),
-            Catch::Matchers::Matches(R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::my_type)"));
-    }
-
-    SECTION("When local type is queried inside a lambda.")
-    {
-        std::invoke(
-            [&] {
-                struct my_type
-                {
-                };
-
-                StringT const rawName = printing::detail::type_name<my_type>();
-                CAPTURE(rawName);
-
-                printing::type::detail::prettify_identifier(
-                    std::ostreambuf_iterator{ss},
-                    rawName);
-                REQUIRE_THAT(
-                    std::move(ss).str(),
-                    Catch::Matchers::Matches(
-                        R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::)"
-                        R"(lambda#\d+::)"
-                        R"(\(operator\(\)\(\) const\)::)"
-                        "my_type"));
-            });
-    }
-
-    SECTION("When local type is queried inside a member-function.")
-    {
-        struct outer
-        {
-            void operator()(StringStreamT& _ss) const
-            {
-                struct my_type
-                {
-                };
-
-                StringT const rawName = printing::detail::type_name<my_type>();
-                CAPTURE(rawName);
-
-                printing::type::detail::prettify_identifier(
-                    std::ostreambuf_iterator{_ss},
-                    rawName);
-                REQUIRE_THAT(
-                    std::move(_ss).str(),
-                    Catch::Matchers::Matches(
-                        R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::)"
-                        "outer::"
-                        R"(\(operator\(\)\(std::basic_ostringstream<.+?>&\) const\)::)"
-                        "my_type"));
-            }
-        };
-
-        outer{}(ss);
-    }
-
     SECTION("When type-name in anonymous-namespace is given.")
     {
         StringT const rawName = printing::detail::type_name<my_type>();
@@ -529,6 +459,118 @@ TEST_CASE(
                 "outer_type::"
                 R"(\(operator\+\(int\)\)::)"
                 "my_type"));
+    }
+}
+
+TEST_CASE(
+    "printing::detail::prettify_identifier enhances local type-names appearance.",
+    "[print][detail]")
+{
+    StringStreamT ss{};
+
+    SECTION("When local type is queried inside the current scope.")
+    {
+        struct my_type
+        {
+        };
+
+        StringT const rawName = printing::detail::type_name<my_type>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::my_type)"));
+    }
+
+    SECTION("When local type is queried inside a lambda.")
+    {
+        std::invoke(
+            [&] {
+                struct my_type
+                {
+                };
+
+                StringT const rawName = printing::detail::type_name<my_type>();
+                CAPTURE(rawName);
+
+                printing::type::detail::prettify_identifier(
+                    std::ostreambuf_iterator{ss},
+                    rawName);
+                REQUIRE_THAT(
+                    std::move(ss).str(),
+                    Catch::Matchers::Matches(
+                        R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::)"
+                        R"(lambda#\d+::)"
+                        R"(\(operator\(\)\(\) const\)::)"
+                        "my_type"));
+            });
+    }
+
+    SECTION("When local type is queried inside a member-function.")
+    {
+        struct outer
+        {
+            void operator()(StringStreamT& _ss) const
+            {
+                struct my_type
+                {
+                };
+
+                StringT const rawName = printing::detail::type_name<my_type>();
+                CAPTURE(rawName);
+
+                printing::type::detail::prettify_identifier(
+                    std::ostreambuf_iterator{_ss},
+                    rawName);
+                REQUIRE_THAT(
+                    std::move(_ss).str(),
+                    Catch::Matchers::Matches(
+                        R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::)"
+                        "outer::"
+                        R"(\(operator\(\)\(std::basic_ostringstream<.+?>\s?&\) const\)::)"
+                        "my_type"));
+            }
+        };
+
+        outer{}(ss);
+    }
+
+    SECTION("When local type is queried inside a lambda with higher arity.")
+    {
+        int d1{};
+        int d2[1]{};
+        int* ptr = &d1;
+        std::invoke(
+            [](
+                StringStreamT* _ss,
+                [[maybe_unused]] int&& ref,
+                [[maybe_unused]] int (&arrRef)[1],
+                [[maybe_unused]] int*& ptrRef) {
+                struct my_type
+                {
+                };
+
+                StringT const rawName = printing::detail::type_name<my_type>();
+                CAPTURE(rawName);
+
+                printing::type::detail::prettify_identifier(
+                    std::ostreambuf_iterator{*_ss},
+                    rawName);
+                REQUIRE_THAT(
+                    std::move(*_ss).str(),
+                    !Catch::Matchers::Matches(
+                        R"(\(CATCH2_INTERNAL_TEST_\d+\(\)\)::)"
+                        R"(lambda#\d+::)"
+                        R"(\(operator\(\)\(std::basic_ostringstream<.+?>\s?\*, int\s?&&, int\s?\(&\)\[1\], int\s?\*\s?&\) const\)::)"
+                        "my_type"));
+            },
+            &ss,
+            std::move(d1),
+            d2,
+            ptr);
     }
 }
 
