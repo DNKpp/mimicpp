@@ -21,8 +21,15 @@
 
 #ifdef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 
-namespace mimicpp::printing::detail
+namespace mimicpp::printing::type::detail
 {
+    template <typename OutIter>
+    constexpr OutIter prettify_identifier(OutIter out, StringT name)
+    {
+        out = std::ranges::copy(name, std::move(out)).out;
+
+        return out;
+    }
 }
 
 #else

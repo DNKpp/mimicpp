@@ -7,6 +7,8 @@
 
 using namespace mimicpp;
 
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+
 namespace
 {
     template <typename T>
@@ -626,3 +628,5 @@ TEST_CASE(
             Catch::Matchers::Matches(R"(\(anon ns\)::\w+::my_template)"));
     }
 }*/
+
+#endif
