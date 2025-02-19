@@ -567,7 +567,7 @@ TEST_CASE(
                     rawName);
                 REQUIRE_THAT(
                     std::move(*_ss).str(),
-                    !Catch::Matchers::Matches(
+                    Catch::Matchers::Matches(
                         R"(\(CATCH2_INTERNAL_TEST_\d+\)::)"
                         R"(lambda#\d+::)"
                         R"(\(operator\(\)\)::)"
