@@ -77,15 +77,6 @@ namespace mimicpp::printing::type::detail
     {
         assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
 
-        constexpr StringViewT anonymousNamespaceToken{"(anonymous namespace)::"};
-        static RegexT const lambdaScope{
-        #if MIMICPP_DETAIL_IS_GCC
-            R"(\{lambda\(\)#(\d+)\}::)"
-        #else
-            // clang uses `$_N` and `{lambda()#N\}`
-            R"((?:\$_|\{lambda\(\)#)(\d+)\}?::)"
-        #endif
-        };
         static RegexT const functionScope{
             R"(^(?:\w+\s+)?)"      // return type (optional)
             R"((operator.+?|\w+))" // function-name
@@ -105,6 +96,7 @@ namespace mimicpp::printing::type::detail
                 matches[0].length()};
         }
 
+        constexpr StringViewT anonymousNamespaceToken{"(anonymous namespace)::"};
         if (scope.ends_with(anonymousNamespaceToken))
         {
             return std::tuple{
@@ -113,6 +105,31 @@ namespace mimicpp::printing::type::detail
                 anonymousNamespaceToken.size()};
         }
 
+        // clang sometimes also uses `$_N` for lambdas
+        #if MIMICPP_DETAIL_IS_CLANG
+        static const RegexT lambda2Scope{R"(\$_(\d+)::)"};
+        if (std::regex_match(scope.cbegin(), scope.cend(), matches, lambda2Scope))
+        {
+            return std::tuple{
+                prettify_lambda_scope(std::move(out), matches),
+                std::ranges::distance(scope.cbegin(), matches[0].first),
+                matches[0].length()};
+        }
+        #endif
+
+        // libc++ sometimes also uses `'lambda'()` for lambdas
+        #if MIMICPP_DETAIL_USES_LIBCXX
+        constexpr StringViewT libcxxLambdaToken{"'lambda'()::"};
+        if (scope.ends_with(libcxxLambdaToken))
+        {
+            return std::tuple{
+                format::format_to(std::move(out), "lambda#1::"),
+                scope.size() - libcxxLambdaToken.size(),
+                libcxxLambdaToken.size()};
+        }
+        #endif
+
+        static RegexT const lambdaScope{R"(\{lambda\(\)#(\d+)\}::)"};
         if (std::regex_match(scope.cbegin(), scope.cend(), matches, lambdaScope))
         {
             return std::tuple{
