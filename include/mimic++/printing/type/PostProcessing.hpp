@@ -51,47 +51,17 @@ namespace mimicpp::printing::type::detail
     }
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify_param_list(OutIter out, StringViewT const paramList)
-    {
-        if (paramList.starts_with("void"))
-        {
-            return out;
-        }
-
-        // This is just a very basic approach. To make it correct, we would have to parse all params separately
-        // and of course distinguish between templates and scoped identifiers. Probably not worth the effort.
-        out = std::ranges::copy(paramList, std::move(out)).out;
-
-        return out;
-    }
-
-    template <print_iterator OutIter>
     constexpr OutIter prettify_function_scope(OutIter out, auto const& matches)
     {
         assert(matches.size() == 5 && "Regex out-of-sync.");
 
         auto const& functionName = matches[1];
-        auto const& paramList = matches[2];
-        auto const& specs = matches[3];
-        auto const& refSpecs = matches[4];
+        [[maybe_unused]] auto const& paramList = matches[2];
+        [[maybe_unused]] auto const& specs = matches[3];
+        [[maybe_unused]] auto const& refSpecs = matches[4];
 
         out = format::format_to(std::move(out), "(");
         out = std::ranges::copy(functionName.first, functionName.second, std::move(out)).out;
-        out = format::format_to(std::move(out), "(");
-        out = prettify_param_list(std::move(out), StringViewT{paramList.first, paramList.second});
-        out = format::format_to(std::move(out), ")");
-
-        if (0 != specs.length())
-        {
-            out = format::format_to(std::move(out), " ");
-            out = std::ranges::copy(specs.first, specs.second, std::move(out)).out;
-        }
-
-        if (0 != refSpecs.length())
-        {
-            out = format::format_to(std::move(out), " ");
-            out = std::ranges::copy(refSpecs.first, refSpecs.second, std::move(out)).out;
-        }
         out = format::format_to(std::move(out), ")::");
 
         return out;
