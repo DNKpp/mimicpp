@@ -97,7 +97,7 @@ namespace mimicpp::printing::type::detail
         }
 
         constexpr StringViewT anonymousNamespaceToken{"(anonymous namespace)::"};
-        if (scope.ends_with(anonymousNamespaceToken))
+        if (scope == anonymousNamespaceToken)
         {
             return std::tuple{
                 format::format_to(std::move(out), "(anon ns)::"),
@@ -120,7 +120,7 @@ namespace mimicpp::printing::type::detail
         // libc++ sometimes also uses `'lambda'()` for lambdas
         #if MIMICPP_DETAIL_USES_LIBCXX
         constexpr StringViewT libcxxLambdaToken{"'lambda'()::"};
-        if (scope.ends_with(libcxxLambdaToken))
+        if (scope == libcxxLambdaToken)
         {
             return std::tuple{
                 format::format_to(std::move(out), "lambda#1::"),
@@ -146,10 +146,51 @@ namespace mimicpp::printing::type::detail
     }
 
     [[nodiscard]]
+    inline StringT unify_lambda_scopes(StringT name)
+    {
+        static RegexT lambdaEndRegex{R"(\)#\d+}::)"};
+
+        StringViewT pending{name};
+
+        SVMatchT matches{};
+        while (std::regex_search(pending.cbegin(), pending.cend(), matches, lambdaEndRegex))
+        {
+            StringViewT lambdaEnd{matches[0].first, matches[0].second};
+            StringViewT suffix{lambdaEnd.end(), pending.end()};
+
+            constexpr StringViewT lambdaBeginToken{"{lambda("};
+            StringViewT lambdaContent{pending.data(), lambdaEnd.data()};
+            auto const lambdaBegin = std::ranges::search(lambdaContent, lambdaBeginToken);
+            assert(lambdaBegin && "No lambda-begin found.");
+            lambdaContent.remove_prefix(lambdaBegin.size() + std::ranges::distance(lambdaContent.data(), lambdaBegin.data()));
+
+            // find the actual corresponding lambda end
+            while (auto otherLambdaBegin = std::ranges::search(lambdaContent, lambdaBeginToken))
+            {
+                lambdaContent = StringViewT{otherLambdaBegin.end(), lambdaContent.end()};
+                std::regex_search(suffix.data(), matches, lambdaEndRegex);
+                assert(!matches.empty() && "Invalid range.");
+                lambdaEnd = StringViewT{matches[0].first, matches[0].second};
+                suffix = StringViewT{lambdaEnd.end(), suffix.end()};
+            }
+
+            auto const begin = lambdaBegin.data() + lambdaBegin.size();
+            auto const index = std::ranges::distance(name.data(), begin);
+            auto const count = std::ranges::distance(begin, lambdaEnd.data());
+            name.erase(index, count);
+            pending = StringViewT{begin + lambdaEnd.size(), name.data() + name.size()};
+        }
+
+        return name;
+    }
+
+    [[nodiscard]]
     inline StringT apply_general_prettification(StringT name)
     {
-        static const RegexT unifyClosingAngleBrackets{R"(\s*>)"};
+        static const RegexT unifyClosingAngleBrackets{R"(\s+>)"};
         name = std::regex_replace(name, unifyClosingAngleBrackets, ">");
+
+        name = unify_lambda_scopes(std::move(name));
 
         static const RegexT stdImplNamespace{
         #if MIMICPP_DETAIL_USES_LIBCXX

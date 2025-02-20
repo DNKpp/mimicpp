@@ -578,6 +578,41 @@ TEST_CASE(
             d2,
             ptr);
     }
+
+    SECTION("When local type is queried inside a nested-lambda with higher arity.")
+    {
+        std::invoke(
+            [](StringStreamT* _ss) {
+                struct other_type
+                {
+                };
+
+                std::invoke(
+                    [&]([[maybe_unused]] other_type const& dummy) {
+                        struct my_type
+                        {
+                        };
+
+                        StringT const rawName = printing::detail::type_name<my_type>();
+                        CAPTURE(rawName);
+
+                        printing::type::detail::prettify_identifier(
+                            std::ostreambuf_iterator{*_ss},
+                            rawName);
+                        REQUIRE_THAT(
+                            std::move(*_ss).str(),
+                            Catch::Matchers::Matches(
+                                R"(\(CATCH2_INTERNAL_TEST_\d+\)::)"
+                                R"(lambda#\d+::)"
+                                R"(\(operator\(\)\)::)"
+                                R"(lambda#\d+::)"
+                                R"(\(operator\(\)\)::)"
+                                "my_type"));
+                    },
+                    other_type{});
+            },
+            &ss);
+    }
 }
 
 /*TEST_CASE(
