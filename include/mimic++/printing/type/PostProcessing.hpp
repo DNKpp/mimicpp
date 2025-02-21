@@ -51,20 +51,37 @@ namespace mimicpp::printing::type::detail
     }
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify_function_scope(OutIter out, auto const& matches)
+    [[nodiscard]]
+    std::tuple<OutIter, std::size_t> prettify_function_scope(OutIter out, auto const& matches, StringViewT const fullName)
     {
-        assert(matches.size() == 5 && "Regex out-of-sync.");
+        assert(matches.size() == 2 && "Regex out-of-sync.");
 
-        auto const& functionName = matches[1];
-        [[maybe_unused]] auto const& paramList = matches[2];
-        [[maybe_unused]] auto const& specs = matches[3];
-        [[maybe_unused]] auto const& refSpecs = matches[4];
+        static RegexT const openingParens{R"(\()"};
+        static RegexT const closingParens{R"(\))"};
 
-        out = format::format_to(std::move(out), "(");
-        out = std::ranges::copy(functionName.first, functionName.second, std::move(out)).out;
-        out = format::format_to(std::move(out), ")::");
+        StringViewT const functionName{matches[1].first, matches[1].second};
+        StringViewT const prefix{matches[0].first, matches[0].second};
+        auto const closing = util::regex_find_corresponding_suffix(
+            StringViewT{prefix.end(), fullName.end()},
+            openingParens,
+            closingParens);
+        assert(!closing.empty() && "No corresponding function-suffix found.");
 
-        return out;
+        static RegexT const functionSuffixRegex{
+            R"(^\)\s*)"     // )
+            R"((?:const)?)" // const (optional)
+            R"(\s*&{0,2})"  // ref specifier
+            R"(::)"         //
+        };
+
+        SVMatchT suffixMatches{};
+        std::regex_search(closing.cbegin(), fullName.cend(), suffixMatches, functionSuffixRegex);
+        assert(!suffixMatches.empty() && "No function suffix found.");
+        StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
+
+        return {
+            format::format_to(std::move(out), "({})::", functionName),
+            static_cast<std::size_t>(std::ranges::distance(fullName.begin(), suffix.end()))};
     }
 }
 
@@ -77,23 +94,21 @@ namespace mimicpp::printing::type::detail
     {
         assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
 
-        static RegexT const functionScope{
-            R"(^(?:\w+\s+)?)"      // return type (optional)
-            R"((operator.+?|\w+))" // function-name
-            R"(\((.*?)\)\s*)"      // arg-list
-            R"(((?:const)?))"      // const (optional)
-            R"(\s*(&{0,2}))"       // ref specifier
-            R"(::)"                //
+        static RegexT const functionScopePrefix{
+            R"(^(?:\w+\s+)?)"        // return type (optional)
+            R"((operator.+?|\w+)\()" // function-name + (
         };
 
         SVMatchT matches{};
         // Apply on the full-name, because otherwise fun(std::string will result in std::fun(string
-        if (std::regex_search(fullName.cbegin(), fullName.cend(), matches, functionScope))
+        if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionScopePrefix))
         {
-            return std::tuple{
-                prettify_function_scope(std::move(out), matches),
-                std::ranges::distance(fullName.cbegin(), matches[0].first),
-                matches[0].length()};
+            std::size_t count{};
+            std::tie(out, count) = prettify_function_scope(
+                std::move(out),
+                matches,
+                fullName);
+            return std::tuple{std::move(out), 0u, count};
         }
 
         constexpr StringViewT anonymousNamespaceToken{"(anonymous namespace)::"};
