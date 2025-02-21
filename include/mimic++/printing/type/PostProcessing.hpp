@@ -148,37 +148,25 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline StringT unify_lambda_scopes(StringT name)
     {
-        static RegexT lambdaEndRegex{R"(\)#\d+}::)"};
+        static RegexT lambdaBeginRegex{R"(\{lambda\()"};
+        static RegexT lambdaEndRegex{R"(\)#\d+\}::)"};
 
         StringViewT pending{name};
-
         SVMatchT matches{};
-        while (std::regex_search(pending.cbegin(), pending.cend(), matches, lambdaEndRegex))
+        while (std::regex_search(pending.cbegin(), pending.cend(), matches, lambdaBeginRegex))
         {
-            StringViewT lambdaEnd{matches[0].first, matches[0].second};
-            StringViewT suffix{lambdaEnd.end(), pending.end()};
+            StringViewT prefix{matches[0].first, matches[0].second};
+            auto const suffix = util::regex_find_corresponding_suffix(
+                StringViewT{prefix.end(), pending.end()},
+                lambdaBeginRegex,
+                lambdaEndRegex);
+            assert(!suffix.empty() && "No corresponding lambda-end found.");
 
-            constexpr StringViewT lambdaBeginToken{"{lambda("};
-            StringViewT lambdaContent{pending.data(), lambdaEnd.data()};
-            auto const lambdaBegin = std::ranges::search(lambdaContent, lambdaBeginToken);
-            assert(lambdaBegin && "No lambda-begin found.");
-            lambdaContent.remove_prefix(lambdaBegin.size() + std::ranges::distance(lambdaContent.data(), lambdaBegin.data()));
-
-            // find the actual corresponding lambda end
-            while (auto otherLambdaBegin = std::ranges::search(lambdaContent, lambdaBeginToken))
-            {
-                lambdaContent = StringViewT{otherLambdaBegin.end(), lambdaContent.end()};
-                std::regex_search(suffix.data(), matches, lambdaEndRegex);
-                assert(!matches.empty() && "Invalid range.");
-                lambdaEnd = StringViewT{matches[0].first, matches[0].second};
-                suffix = StringViewT{lambdaEnd.end(), suffix.end()};
-            }
-
-            auto const begin = lambdaBegin.data() + lambdaBegin.size();
+            auto const begin = prefix.data() + prefix.size();
             auto const index = std::ranges::distance(name.data(), begin);
-            auto const count = std::ranges::distance(begin, lambdaEnd.data());
+            auto const count = std::ranges::distance(begin, suffix.data());
             name.erase(index, count);
-            pending = StringViewT{begin + lambdaEnd.size(), name.data() + name.size()};
+            pending = StringViewT{begin + suffix.size(), name.data() + name.size()};
         }
 
         return name;
