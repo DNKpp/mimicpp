@@ -70,12 +70,12 @@ namespace mimicpp::util
         }
 
         view_t suffix{matches[0].first, matches[0].second};
-        view_t content{str.cbegin(), suffix.cbegin()};
-        str = view_t{suffix.cend(), str.cend()};
+        view_t content{str.data(), suffix.data()};
+        str = view_t{suffix.data() + suffix.size(), str.data() + str.size()};
 
         while (std::regex_search(content.cbegin(), content.cend(), matches, prefixRegex))
         {
-            content = view_t{matches[0].second, content.data() + content.size()};
+            content = view_t{matches[0].second, content.cend()};
 
             if (!std::regex_search(str.cbegin(), str.cend(), matches, suffixRegex))
             {
@@ -83,8 +83,8 @@ namespace mimicpp::util
             }
 
             suffix = view_t{matches[0].first, matches[0].second};
-            content = view_t{content.cbegin(), suffix.cbegin()};
-            str = view_t{suffix.cend(), str.cend()};
+            content = view_t{content.data(), suffix.data()};
+            str = view_t{suffix.data() + suffix.size(), str.data() + str.size()};
         }
 
         return suffix;
