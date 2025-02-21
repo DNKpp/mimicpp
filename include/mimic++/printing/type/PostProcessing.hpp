@@ -302,6 +302,11 @@ namespace mimicpp::printing::type::detail
         static RegexT const omitAccessSpecifiers{R"(\b(?:public|private|protected):\s+)"};
         name = std::regex_replace(name, omitAccessSpecifiers, "");
 
+        #if MIMICPP_DETAIL_IS_CLANG_CL
+        static RegexT const omitAutoTokens{R"(<auto>\s*)"};
+        name = std::regex_replace(name, omitAutoTokens, "");
+        #endif
+
         static RegexT const omitStaticSpecifier{R"(\bstatic\s+)"};
         name = std::regex_replace(name, omitStaticSpecifier, "");
 
