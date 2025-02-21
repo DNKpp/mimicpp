@@ -217,7 +217,7 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type::detail
 {
     template <print_iterator OutIter>
-    constexpr std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope, StringViewT const fullName)
+    std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope, StringViewT const fullName)
     {
         assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
 
