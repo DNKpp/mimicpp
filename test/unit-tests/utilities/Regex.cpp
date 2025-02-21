@@ -43,3 +43,86 @@ TEST_CASE(
             Catch::Matchers::Equals(" >>>>> "));
     }
 }
+
+TEST_CASE(
+    "util::regex_find_corresponding_suffix returns empty string-view, when no corresponding suffix can be found.",
+    "[util]")
+{
+    SECTION("When string is empty.")
+    {
+        auto const suffix = util::regex_find_corresponding_suffix(
+            std::string_view{},
+            std::regex{R"(\()"},
+            std::regex{R"(\))"});
+
+        CHECK_THAT(
+            suffix,
+            Catch::Matchers::IsEmpty());
+    }
+
+    SECTION("When string does not contain suffix-pattern.")
+    {
+        auto const str = GENERATE(
+            as<std::string_view>{},
+            "a",
+            "(",
+            "a(",
+            "a(b",
+            "abc");
+        CAPTURE(str);
+
+        auto const suffix = util::regex_find_corresponding_suffix(
+            str,
+            std::regex{R"(\()"},
+            std::regex{R"(\))"});
+
+        CHECK_THAT(
+            suffix,
+            Catch::Matchers::IsEmpty());
+    }
+
+    SECTION("When string contains at least as many prefix-patterns as suffix-patterns.")
+    {
+        auto const str = GENERATE(
+            as<std::string_view>{},
+            "()",
+            "()(",
+            "((()))",
+            "(())() ()",
+            "abc()d(ef)");
+        CAPTURE(str);
+
+        auto const suffix = util::regex_find_corresponding_suffix(
+            str,
+            std::regex{R"(\()"},
+            std::regex{R"(\))"});
+
+        CHECK_THAT(
+            suffix,
+            Catch::Matchers::IsEmpty());
+    }
+}
+
+TEST_CASE(
+    "util::regex_find_corresponding_suffix returns the suffix.",
+    "[util]")
+{
+    auto [expectedIndex, str] = GENERATE(
+        (table<std::size_t, std::string_view>)({
+            {0,          ")"},
+            {0,        ")()"},
+            {7, "(abc)de)()"},
+            {4,      "(()))"}
+    }));
+    CAPTURE(str, expectedIndex);
+
+    auto const suffix = util::regex_find_corresponding_suffix(
+        str,
+        std::regex{R"(\()"},
+        std::regex{R"(\))"});
+
+    CHECK_THAT(
+        std::string{suffix},
+        Catch::Matchers::Equals(")"));
+    CHECK(std::cmp_equal(expectedIndex, suffix.data() - str.data()));
+}
