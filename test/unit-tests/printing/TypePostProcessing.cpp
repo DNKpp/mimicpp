@@ -11,11 +11,6 @@ using namespace mimicpp;
 
 namespace
 {
-    template <typename T>
-    struct my_template
-    {
-    };
-
     struct outer_type
     {
         template <typename T>
@@ -553,7 +548,7 @@ TEST_CASE(
             [](
                 StringStreamT* _ss,
                 [[maybe_unused]] int&& ref,
-                [[maybe_unused]] int (&arrRef)[1],
+                [[maybe_unused]] int(&arrRef)[1],
                 [[maybe_unused]] int*& ptrRef) {
                 struct my_type
                 {
@@ -615,22 +610,149 @@ TEST_CASE(
     }
 }
 
-/*TEST_CASE(
-    "printing::detail::prettify_template_name type-names, enhances templated appearance.",
+TEST_CASE(
+    "printing::type::detail::prettify_identifier type-names enhances function type-names appearance.",
     "[print][detail]")
 {
-    SECTION("When arbitrary template name is given.")
+    StringStreamT ss{};
+
+    SECTION("When function-local type is returned.")
     {
-        StringT const rawName = printing::detail::type_name<std::vector<int>>();
+        using return_t = decltype(my_typeLambda());
+        StringT const rawName = printing::detail::type_name<return_t()>();
         CAPTURE(rawName);
 
-        StringT const finalName = printing::detail::prettify_template_name(rawName);
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
         REQUIRE_THAT(
-            finalName,
-            Catch::Matchers::Equals("std::vector"));
+            ss.str(),
+            Catch::Matchers::Matches(
+                R"(\(anon ns\)::)"
+                R"((?:my_typeLambda::)?)" // gcc produces this extra scope
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\)::)"
+                "my_type"
+                R"(\s*\(\))"));
     }
 
-    SECTION("When template name in anonymous-namespace is given.")
+    SECTION("When function-local type is parameter.")
+    {
+        using param_t = decltype(my_typeLambda());
+        StringT const rawName = printing::detail::type_name<void(param_t)>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                R"(void\s*\()"
+                R"(\(anon ns\)::)"
+                R"((?:my_typeLambda::)?)" // gcc produces this extra scope
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\)::)"
+                "my_type"
+                R"(\))"));
+    }
+}
+
+TEST_CASE(
+    "printing::type::detail::prettify_identifier type-names enhances function-pointer type-names appearance.",
+    "[print][detail]")
+{
+    StringStreamT ss{};
+
+    SECTION("When function-local type is returned.")
+    {
+        using return_t = decltype(my_typeLambda());
+        StringT const rawName = printing::detail::type_name<return_t (*)()>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                R"(\(anon ns\)::)"
+                R"((?:my_typeLambda::)?)" // gcc produces this extra scope
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\)::)"
+                "my_type"
+                R"(\s*\(\*\)\(\))"));
+    }
+
+    SECTION("When function-local type is parameter.")
+    {
+        using param_t = decltype(my_typeLambda());
+        StringT const rawName = printing::detail::type_name<void (*)(param_t)>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                R"(void\s*\(\*\)\()"
+                R"(\(anon ns\)::)"
+                R"((?:my_typeLambda::)?)" // gcc produces this extra scope
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\)::)"
+                "my_type"
+                R"(\))"));
+    }
+}
+
+namespace
+{
+    template <typename... Ts>
+    struct my_template
+    {
+    };
+}
+
+TEST_CASE(
+    "printing::type::detail::prettify_identifier type-names enhances template-dependant type-names appearance.",
+    "[print][detail]")
+{
+    StringStreamT ss{};
+
+    SECTION("When arbitrary template name is given.")
+    {
+        using type_t = decltype(my_typeLambda());
+        StringT const rawName = printing::detail::type_name<my_template<type_t&, type_t const&&>>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                R"(\(anon ns\)::)"
+                R"(my_template<)"
+                R"(\(anon ns\)::)"
+                R"((?:my_typeLambda::)?)" // gcc produces this extra scope
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\)::)"
+                R"(my_type\s*&)"
+                R"(,\s*)"
+                R"(\(anon ns\)::)"
+                R"((?:my_typeLambda::)?)" // gcc produces this extra scope
+                R"(lambda#\d+::)"
+                R"(\(operator\(\)\)::)"
+                R"(my_type\s+const\s*&&)"
+                ">"));
+    }
+
+    /*SECTION("When template name in anonymous-namespace is given.")
     {
         StringT const rawName = printing::detail::type_name<my_template<int>>();
         CAPTURE(rawName);
@@ -661,7 +783,7 @@ TEST_CASE(
         REQUIRE_THAT(
             finalName,
             Catch::Matchers::Matches(R"(\(anon ns\)::\w+::my_template)"));
-    }
-}*/
+    }*/
+}
 
 #endif
