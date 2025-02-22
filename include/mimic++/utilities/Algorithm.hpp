@@ -74,25 +74,27 @@ namespace mimicpp::util
         return {std::move(midpoint), std::ranges::end(targetRange)};
     }
 
-    template <typename Char, typename CharTraits>
+    template <std::ranges::borrowed_range Range>
     [[nodiscard]]
-    constexpr typename std::basic_string_view<Char, CharTraits>::const_iterator find_closing_token(
-        std::basic_string_view<Char, CharTraits> str,
-        Char const openingToken,
-        Char const closingToken)
+    constexpr std::ranges::borrowed_iterator_t<Range> find_closing_token(
+        Range&& str,
+        std::ranges::range_value_t<Range> const& openingToken,
+        std::ranges::range_value_t<Range> const& closingToken)
     {
+        auto const begin = std::ranges::begin(str);
+        auto const end = std::ranges::end(str);
         auto closingIter = std::ranges::find(str, closingToken);
-        if (closingIter == str.cend())
+        if (closingIter == end)
         {
             return closingIter;
         }
 
-        for (auto openingIter = std::ranges::find(str.cbegin(), closingIter, openingToken);
+        for (auto openingIter = std::ranges::find(begin, closingIter, openingToken);
              openingIter != closingIter
-             && closingIter != str.cend();
+             && closingIter != end;
              openingIter = std::ranges::find(openingIter + 1, closingIter, openingToken))
         {
-            closingIter = std::ranges::find(closingIter + 1, str.cend(), closingToken);
+            closingIter = std::ranges::find(closingIter + 1, end, closingToken);
         }
 
         return closingIter;
@@ -115,10 +117,11 @@ namespace mimicpp::util
         };
 
         int openScopes{};
-        auto begin = str.cbegin();
+        auto begin = std::ranges::begin(str);
+        auto const end = std::ranges::end(str);
         for (auto commaIter = std::ranges::find(str, ',');
-             commaIter != str.cend();
-             commaIter = std::ranges::find(commaIter + 1, str.cend(), ','))
+             commaIter != end;
+             commaIter = std::ranges::find(commaIter + 1, end, ','))
         {
             std::ranges::subrange const part{begin, commaIter};
 
@@ -133,7 +136,7 @@ namespace mimicpp::util
             begin = commaIter + 1;
         }
 
-        return str.cend();
+        return end;
     }
 }
 
