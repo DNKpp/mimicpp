@@ -100,7 +100,7 @@ namespace mimicpp::printing::type::detail
 
         StringViewT const functionName{matches[1].first, matches[1].second};
         StringViewT const prefix{matches[0].first, matches[0].second};
-        StringViewT rest{matches[0].second, fullName.data() + fullName.size()};
+        StringViewT rest{prefix.data() + prefix.size(), fullName.data() + fullName.size()};
         auto const closingIter = util::find_closing_token(rest, '(', ')');
         assert(closingIter != rest.cend() && "No corresponding closing-token found.");
 
@@ -264,13 +264,13 @@ namespace mimicpp::printing::type::detail
     {
         assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
 
+        SVMatchT matches{};
+
         static RegexT const functionScopePrefix{
             "`"
             R"((?:\w+\s+)?)"         // return type (optional)
             R"((operator.+?|\w+)\()" // function-name + (
         };
-
-        SVMatchT matches{};
         if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionScopePrefix))
         {
             static RegexT const functionSuffixRegex{
