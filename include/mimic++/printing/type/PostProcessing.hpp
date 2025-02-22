@@ -11,6 +11,7 @@
 #include "mimic++/Config.hpp"
 #include "mimic++/Fwd.hpp"
 #include "mimic++/printing/Format.hpp"
+#include "mimic++/utilities/Algorithm.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 #include "mimic++/utilities/Regex.hpp"
 
@@ -60,19 +61,14 @@ namespace mimicpp::printing::type::detail
     {
         assert(matches.size() == 2 && "Regex out-of-sync.");
 
-        static RegexT const openingParens{R"(\()"};
-        static RegexT const closingParens{R"(\))"};
-
         StringViewT const functionName{matches[1].first, matches[1].second};
         StringViewT const prefix{matches[0].first, matches[0].second};
-        auto const closing = util::regex_find_corresponding_suffix(
-            StringViewT{prefix.data() + prefix.size(), fullName.data() + fullName.size()},
-            openingParens,
-            closingParens);
-        assert(!closing.empty() && "No corresponding function-suffix found.");
+        StringViewT rest{matches[0].second, fullName.data() + fullName.size()};
+        auto const closingIter = util::find_closing_token(rest, '(', ')');
+        assert(closingIter != rest.cend() && "No corresponding closing-token found.");
 
         SVMatchT suffixMatches{};
-        StringViewT const rest{closing.data(), fullName.data() + fullName.size()};
+        rest = StringViewT{closingIter, rest.cend()};
         std::regex_search(rest.cbegin(), rest.cend(), suffixMatches, functionSuffixRegex);
         assert(!suffixMatches.empty() && "No function suffix found.");
         StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
