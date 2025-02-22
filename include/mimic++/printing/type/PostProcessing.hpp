@@ -74,14 +74,19 @@ namespace mimicpp::printing::type::detail
         StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
 
         out = std::ranges::copy(StringViewT{"lambda#"}, std::move(out)).out;
-        if (0 != suffixMatches[1].length())
-        {
-            out = std::ranges::copy(suffixMatches[1].first, suffixMatches[1].second, std::move(out)).out;
-        }
-        else // no number set?, just default to 1
-        {
-            out = std::ranges::copy(StringViewT{"1"}, std::move(out)).out;
-        }
+
+        StringViewT const lambdaNo = std::invoke([&] {
+    #if MIMICPP_DETAIL_USES_LIBCXX
+            // no number set?, just default to 1
+            if (0 == suffixMatches[1].length())
+            {
+                return StringViewT{"1"};
+            }
+    #endif
+
+            return StringViewT{suffixMatches[1].first, suffixMatches[1].second};
+        });
+        out = std::ranges::copy(lambdaNo, std::move(out)).out;
 
         return {
             std::ranges::copy(StringViewT{"::"}, std::move(out)).out,
