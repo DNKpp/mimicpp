@@ -211,33 +211,6 @@ namespace mimicpp::printing::type::detail
     }
 
     [[nodiscard]]
-    inline StringT unify_lambda_scopes(StringT name)
-    {
-        static RegexT lambdaBeginRegex{R"(\{lambda\()"};
-        static RegexT lambdaEndRegex{R"(\)#\d+\}::)"};
-
-        StringViewT pending{name};
-        SVMatchT matches{};
-        while (std::regex_search(pending.cbegin(), pending.cend(), matches, lambdaBeginRegex))
-        {
-            StringViewT prefix{matches[0].first, matches[0].second};
-            auto const suffix = util::regex_find_corresponding_suffix(
-                StringViewT{prefix.end(), pending.end()},
-                lambdaBeginRegex,
-                lambdaEndRegex);
-            assert(!suffix.empty() && "No corresponding lambda-end found.");
-
-            auto const begin = prefix.data() + prefix.size();
-            auto const index = std::ranges::distance(name.data(), begin);
-            auto const count = std::ranges::distance(begin, suffix.data());
-            name.erase(index, count);
-            pending = StringViewT{begin + suffix.size(), name.data() + name.size()};
-        }
-
-        return name;
-    }
-
-    [[nodiscard]]
     inline StringT apply_general_prettification(StringT name)
     {
         static const RegexT unifyClosingAngleBrackets{R"(\s+>)"};
