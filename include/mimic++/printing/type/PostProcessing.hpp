@@ -37,6 +37,8 @@ namespace mimicpp::printing::type::detail
 
 namespace mimicpp::printing::type::detail
 {
+    constexpr StringViewT anonymousNamespaceTargetScopeText{"(anon ns)::"};
+
     template <print_iterator OutIter>
     constexpr OutIter prettify_lambda_scope(OutIter out, auto const& matches)
     {
@@ -132,15 +134,6 @@ namespace mimicpp::printing::type::detail
 
         SVMatchT matches{};
 
-        constexpr StringViewT anonymousNamespaceToken{"(anonymous namespace)::"};
-        if (scope == anonymousNamespaceToken)
-        {
-            return std::tuple{
-                format::format_to(std::move(out), "(anon ns)::"),
-                scope.size() - anonymousNamespaceToken.size(),
-                anonymousNamespaceToken.size()};
-        }
-
         // libc++ sometimes also uses `'lambda'()` for lambdas
         #if MIMICPP_DETAIL_USES_LIBCXX
         if (constexpr StringViewT libcxxLambdaScopePrefix{"'lambda'("};
@@ -221,6 +214,9 @@ namespace mimicpp::printing::type::detail
         static const RegexT unifyClosingAngleBrackets{R"(\s+>)"};
         name = std::regex_replace(name, unifyClosingAngleBrackets, ">");
 
+        static const RegexT terseAnonymousNamespace{R"(\(anonymous namespace\)::)"};
+        name = std::regex_replace(name, terseAnonymousNamespace, anonymousNamespaceTargetScopeText.data());
+
         static const RegexT stdImplNamespace{
         #if MIMICPP_DETAIL_USES_LIBCXX
             "std::__1::"
@@ -270,13 +266,13 @@ namespace mimicpp::printing::type::detail
                 count};
         }
 
-        constexpr StringViewT anonymousNamespaceToken{"`anonymous namespace'::"};
-        if (scope.ends_with(anonymousNamespaceToken))
+        // the anonymous namespace was already simplified, so just print it as-is
+        if (scope.ends_with(anonymousNamespaceTargetScopeText))
         {
             return std::tuple{
-                format::format_to(std::move(out), "(anon ns)::"),
-                scope.size() - anonymousNamespaceToken.size(),
-                anonymousNamespaceToken.size()};
+                std::ranges::copy(anonymousNamespaceTargetScopeText, std::move(out)).out,
+                scope.size() - anonymousNamespaceTargetScopeText.size(),
+                anonymousNamespaceTargetScopeText.size()};
         }
 
         static RegexT const virtualScope{"`\\d+'::$"};
@@ -322,6 +318,9 @@ namespace mimicpp::printing::type::detail
 
         static RegexT const omitAccessSpecifiers{R"(\b(?:public|private|protected):\s+)"};
         name = std::regex_replace(name, omitAccessSpecifiers, "");
+
+        static const RegexT terseAnonymousNamespace{"`anonymous namespace'::"};
+        name = std::regex_replace(name, terseAnonymousNamespace, anonymousNamespaceTargetScopeText.data());
 
         #if MIMICPP_DETAIL_IS_CLANG_CL
         static RegexT const omitAutoTokens{R"(<auto>\s*)"};
