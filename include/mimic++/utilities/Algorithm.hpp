@@ -97,6 +97,44 @@ namespace mimicpp::util
 
         return closingIter;
     }
+
+    template <std::ranges::borrowed_range Range>
+    [[nodiscard]]
+    constexpr std::ranges::borrowed_iterator_t<Range> find_next_comma(Range&& str)
+    {
+        constexpr std::array opening{'<', '(', '[', '{'};
+        constexpr std::array closing{'>', ')', ']', '}'};
+        constexpr auto countAllOf = [](auto const& source, auto const& collection) {
+            int count{};
+            for (auto const c : collection)
+            {
+                count += std::ranges::count(source, c);
+            }
+
+            return count;
+        };
+
+        int openScopes{};
+        auto begin = str.cbegin();
+        for (auto commaIter = std::ranges::find(str, ',');
+             commaIter != str.cend();
+             commaIter = std::ranges::find(commaIter + 1, str.cend(), ','))
+        {
+            std::ranges::subrange const part{begin, commaIter};
+
+            openScopes += countAllOf(part, opening)
+                        - countAllOf(part, closing);
+            assert(0 <= openScopes && "More scopes closed than opened.");
+            if (0 == openScopes)
+            {
+                return commaIter;
+            }
+
+            begin = commaIter + 1;
+        }
+
+        return str.cend();
+    }
 }
 
 #endif

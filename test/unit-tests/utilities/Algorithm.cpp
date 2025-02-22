@@ -178,3 +178,41 @@ TEST_CASE(
     CHECK(iter == str.cbegin() + expectedIndex);
     CHECK(')' == *iter);
 }
+
+TEST_CASE(
+    "util::find_next_comma returns the iterator to the next comma.",
+    "[util][util::find_next_comma]")
+{
+    auto [expectedIndex, str] = GENERATE(
+        (table<std::size_t, std::string_view>)({
+            { 0,                  ","},
+            { 1,                 " ,"},
+            { 5,          "(abc), ()"},
+            {13, "(, {}<,>) [,], abc"}
+    }));
+    CAPTURE(str, expectedIndex);
+
+    auto const iter = util::find_next_comma(str);
+
+    CHECK(iter == str.cbegin() + expectedIndex);
+    CHECK(',' == *iter);
+}
+
+TEST_CASE(
+    "util::find_next_comma returns end-iterator, when no next comma exists.",
+    "[util][util::find_next_comma]")
+{
+    auto const str = GENERATE(
+        as<std::string_view>{},
+        "",
+        "abc",
+        "{,}",
+        "(,)",
+        "[,]",
+        "<,>");
+    CAPTURE(str);
+
+    auto const iter = util::find_next_comma(str);
+
+    CHECK(iter == str.cend());
+}
