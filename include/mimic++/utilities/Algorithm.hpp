@@ -72,6 +72,30 @@ namespace mimicpp::util
 
         return {std::move(midpoint), std::ranges::end(targetRange)};
     }
+
+    template <typename Char, typename CharTraits>
+    [[nodiscard]]
+    constexpr typename std::basic_string_view<Char, CharTraits>::const_iterator find_closing_token(
+        std::basic_string_view<Char, CharTraits> str,
+        Char const openingToken,
+        Char const closingToken)
+    {
+        auto closingIter = std::ranges::find(str, closingToken);
+        if (closingIter == str.cend())
+        {
+            return closingIter;
+        }
+
+        for (auto openingIter = std::ranges::find(str.cbegin(), closingIter, openingToken);
+             openingIter != closingIter
+             && closingIter != str.cend();
+             openingIter = std::ranges::find(openingIter + 1, closingIter, openingToken))
+        {
+            closingIter = std::ranges::find(closingIter + 1, str.cend(), closingToken);
+        }
+
+        return closingIter;
+    }
 }
 
 #endif

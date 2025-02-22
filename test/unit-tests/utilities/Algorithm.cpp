@@ -113,3 +113,68 @@ TEST_CASE(
         control,
         Catch::Matchers::UnorderedRangeEquals(std::vector{1, 2, 3}));
 }
+
+TEST_CASE(
+    "util::find_closing_token returns end iterator, when no corresponding closing-token can be found.",
+    "[util][util::find_closing_token]")
+{
+    SECTION("When string is empty.")
+    {
+        constexpr std::string_view str{};
+
+        auto const iter = util::find_closing_token(str, '(', ')');
+
+        CHECK(iter == str.cend());
+    }
+
+    SECTION("When string does not contain suffix-pattern.")
+    {
+        auto const str = GENERATE(
+            as<std::string_view>{},
+            "a",
+            "(",
+            "a(",
+            "a(b",
+            "abc");
+        CAPTURE(str);
+
+        auto const iter = util::find_closing_token(str, '(', ')');
+
+        CHECK(iter == str.cend());
+    }
+
+    SECTION("When string contains at least as many prefix-patterns as suffix-patterns.")
+    {
+        auto const str = GENERATE(
+            as<std::string_view>{},
+            "()",
+            "()(",
+            "((()))",
+            "(())() ()",
+            "abc()d(ef)");
+        CAPTURE(str);
+
+        auto const iter = util::find_closing_token(str, '(', ')');
+
+        CHECK(iter == str.cend());
+    }
+}
+
+TEST_CASE(
+    "util::find_closing_token returns the iterator to the closing-token.",
+    "[util][util::find_closing_token]")
+{
+    auto [expectedIndex, str] = GENERATE(
+        (table<std::size_t, std::string_view>)({
+            {0,          ")"},
+            {0,        ")()"},
+            {7, "(abc)de)()"},
+            {4,      "(()))"}
+    }));
+    CAPTURE(str, expectedIndex);
+
+    auto const iter = util::find_closing_token(str, '(', ')');
+
+    CHECK(iter == str.cbegin() + expectedIndex);
+    CHECK(')' == *iter);
+}
