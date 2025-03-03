@@ -742,7 +742,7 @@ TEST_CASE(
 
     SECTION("When template-dependant name is given.")
     {
-        StringT const rawName = printing::detail::type_name<my_template<int>::my_type>();
+        StringT const rawName = printing::detail::type_name<my_template<int, std::string const&&>::my_type>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -750,7 +750,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Equals("(anon ns)::my_template<int>::my_type"));
+            Catch::Matchers::Equals("(anon ns)::my_template::my_type"));
     }
 
     SECTION("When arbitrary template name is given.")

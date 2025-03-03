@@ -121,6 +121,27 @@ namespace mimicpp::printing::type::detail
             format::format_to(std::move(out), "({})::", functionName),
             static_cast<std::size_t>(std::ranges::distance(prefix.data(), suffix.data() + suffix.size()))};
     }
+
+    template <print_iterator OutIter>
+    [[nodiscard]]
+    OutIter prettify_template_scope(
+        OutIter out,
+        StringViewT const scope,
+        StringViewT const templateScopeSuffix)
+    {
+        auto reversedName = scope | std::views::reverse;
+        auto const iter = util::find_closing_token(
+            reversedName | std::views::drop(templateScopeSuffix.size()),
+            '>',
+            '<');
+        assert(iter != reversedName.end() && "No template begin found.");
+        out = format::format_to(
+            std::move(out),
+            "{}::",
+            StringViewT{scope.cbegin(), iter.base() - 1});
+
+        return out;
+    }
 }
 
     #if MIMICPP_DETAIL_IS_GCC \
@@ -133,6 +154,15 @@ namespace mimicpp::printing::type::detail
         assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
 
         SVMatchT matches{};
+
+        if (constexpr StringViewT templateScopeSuffix{">::"};
+            scope.ends_with(templateScopeSuffix))
+        {
+            return std::tuple{
+                prettify_template_scope(std::move(out), scope, templateScopeSuffix),
+                0u,
+                scope.size()};
+        }
 
         // libc++ sometimes also uses `'lambda'()` for lambdas
         #if MIMICPP_DETAIL_USES_LIBCXX
@@ -348,18 +378,25 @@ namespace mimicpp::printing::type::detail
 
 namespace mimicpp::printing::type::detail
 {
-    constexpr StringViewT scopeToken{"::"};
+    constexpr StringViewT scopeDelimiter{"::"};
+    constexpr StringViewT argumentDelimiter{","};
+    constexpr std::array openingBrackets{'<', '(', '[', '{'};
+    constexpr std::array closingBrackets{'>', ')', ']', '}'};
 
     template <typename OutIter>
     constexpr OutIter prettify_scopes(OutIter out, StringT name)
     {
-        while (auto const firstScopeDelimiter = std::ranges::search(name, scopeToken))
+        while (auto const match = util::find_next_unwrapped_token(
+                   name,
+                   scopeDelimiter,
+                   openingBrackets,
+                   closingBrackets))
         {
             std::size_t index{};
             std::size_t count{};
             std::tie(out, index, count) = consume_next_scope(
                 out,
-                StringViewT{name.cbegin(), firstScopeDelimiter.end()},
+                StringViewT{name.cbegin(), match.end()},
                 name);
             name.erase(index, count);
         }
@@ -414,9 +451,13 @@ namespace mimicpp::printing::type::detail
         std::tie(name, specialTypeInfo) = detect_special_type_info(std::move(name));
 
         if (auto reversedName = name | std::views::reverse;
-            auto const lastMatch = std::ranges::search(reversedName, scopeToken))
+            auto const lastScopeMatch = util::find_next_unwrapped_token(
+                reversedName,
+                scopeDelimiter,
+                closingBrackets,
+                openingBrackets))
         {
-            std::size_t const splitIndex = std::ranges::distance(name.cbegin(), lastMatch.begin().base());
+            std::size_t const splitIndex = std::ranges::distance(name.cbegin(), lastScopeMatch.begin().base());
             StringT topLevelIdentifier = name.substr(splitIndex);
 
             // includes last ::
@@ -442,11 +483,14 @@ namespace mimicpp::printing::type::detail
                     out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
                 }
 
-                auto const commaIter = util::find_next_comma(pendingArgList);
-                StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), commaIter});
+                auto const tokenDelimiter = util::find_next_unwrapped_token(
+                    pendingArgList,
+                    argumentDelimiter,
+                    openingBrackets,
+                    closingBrackets);
+                StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
                 out = prettify_identifier(std::move(out), StringT{arg});
-                pendingArgList = StringViewT{commaIter, pendingArgList.end()}
-                               | std::views::drop(1);
+                pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
             }
 
             out = std::ranges::copy(std::views::single(scopeEnd), std::move(out)).out;
