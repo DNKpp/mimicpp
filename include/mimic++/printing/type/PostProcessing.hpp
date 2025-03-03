@@ -470,9 +470,11 @@ namespace mimicpp::printing::type::detail
                               | std::views::drop(matches[0].length());
             auto const iter = util::find_closing_token(reversedName, ')', '(');
             assert(iter != reversedName.end() && "No function begin found.");
+
+            StringViewT const argList{iter.base(), name.end() - matches[0].length()};
             std::tuple info{
                 "(",
-                StringT{     iter.base(), name.end() - matches[0].length()},
+                StringT{argList == "void" ? "" : argList},
                 StringT{matches[0].first,                matches[0].second}
             };
             name.erase(iter.base() - 1, name.cend());
@@ -519,26 +521,23 @@ namespace mimicpp::printing::type::detail
             auto const& [scopeBegin, argList, scopeEnd] = *specialTypeInfo;
             out = std::ranges::copy(scopeBegin, std::move(out)).out;
 
-            if (argList != "void")
+            bool isFirst{true};
+            StringViewT pendingArgList{argList};
+            while (!pendingArgList.empty())
             {
-                bool isFirst{true};
-                StringViewT pendingArgList{argList};
-                while (!pendingArgList.empty())
+                if (!std::exchange(isFirst, false))
                 {
-                    if (!std::exchange(isFirst, false))
-                    {
-                        out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
-                    }
-
-                    auto const tokenDelimiter = util::find_next_unwrapped_token(
-                        pendingArgList,
-                        argumentDelimiter,
-                        openingBrackets,
-                        closingBrackets);
-                    StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
-                    out = prettify_identifier(std::move(out), StringT{arg});
-                    pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
+                    out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
                 }
+
+                auto const tokenDelimiter = util::find_next_unwrapped_token(
+                    pendingArgList,
+                    argumentDelimiter,
+                    openingBrackets,
+                    closingBrackets);
+                StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
+                out = prettify_identifier(std::move(out), StringT{arg});
+                pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
             }
 
             out = std::ranges::copy(scopeEnd, std::move(out)).out;
