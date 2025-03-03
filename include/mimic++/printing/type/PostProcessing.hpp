@@ -15,6 +15,7 @@
 #include "mimic++/utilities/C++23Backports.hpp"
 #include "mimic++/utilities/Regex.hpp"
 
+#include <array>
 #include <cassert>
 #include <iterator>
 #include <ranges>
