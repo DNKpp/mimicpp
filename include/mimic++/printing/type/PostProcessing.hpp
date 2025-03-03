@@ -238,26 +238,32 @@ namespace mimicpp::printing::type::detail
         }
         #endif
 
-        static RegexT const functionScopePrefix{
-            R"(^(?:\w+\s+)?)"        // return type (optional)
-            R"((operator.+?|\w+)\()" // function-name + (
-        };
-        if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionScopePrefix))
+        static const RegexT functionSuffix{
+            R"(\))"
+            R"(\s*(?:const)?)"
+            R"(\s*(?:volatile)?)"
+            R"(\s*&{0,2})"
+            R"(\s*::$)"};
+        if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionSuffix))
         {
-            static RegexT const functionSuffixRegex{
-                R"(^\)\s*)"     // )
-                R"((?:const)?)" // const (optional)
-                R"(\s*&{0,2})"  // ref specifier
-                R"(::)"         //
+            static RegexT const functionScopePrefix{
+                R"(^(?:\w+\s+)?)"        // return type (optional)
+                R"((operator.+?|\w+)\()" // function-name + (
             };
+            StringViewT const rest{scope.cbegin(), matches[0].first};
+            SVMatchT prefixMatches{};
+            std::regex_search(rest.cbegin(), rest.cend(), prefixMatches, functionScopePrefix);
+            assert(!prefixMatches.empty() && "No corresponding function prefix found.");
 
             std::size_t count{};
             std::tie(out, count) = prettify_function_scope(
                 std::move(out),
-                functionSuffixRegex,
-                matches,
-                fullName);
-            return std::tuple{std::move(out), 0u, count};
+                prefixMatches,
+                matches);
+            return std::tuple{
+                std::move(out),
+                std::ranges::distance(rest.cbegin(), prefixMatches[0].first),
+                count};
         }
 
         // Probably a regular c++-scope
