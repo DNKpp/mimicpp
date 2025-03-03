@@ -180,9 +180,11 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "util::find_next_comma returns the iterator to the next comma.",
-    "[util][util::find_next_comma]")
+    "util::find_next_unwrapped_token returns a subrange to the next token.",
+    "[util][util::find_next_unwrapped_token]")
 {
+    constexpr std::array openingBrackets{'<', '(', '[', '{'};
+    constexpr std::array closingBrackets{'>', ')', ']', '}'};
     auto [expectedIndex, str] = GENERATE(
         (table<std::size_t, std::string_view>)({
             { 0,                  ","},
@@ -192,16 +194,19 @@ TEST_CASE(
     }));
     CAPTURE(str, expectedIndex);
 
-    auto const iter = util::find_next_comma(str);
+    auto const token = util::find_next_unwrapped_token(str, ",", openingBrackets, closingBrackets);
 
-    CHECK(iter == str.cbegin() + expectedIndex);
-    CHECK(',' == *iter);
+    CHECK(token.begin() == str.cbegin() + expectedIndex);
+    CHECK(token.end() == str.cbegin() + expectedIndex + 1);
+    CHECK(',' == *token.begin());
 }
 
 TEST_CASE(
-    "util::find_next_comma returns end-iterator, when no next comma exists.",
-    "[util][util::find_next_comma]")
+    "util::find_next_unwrapped_token returns {end, end}, if no next unwrapped token exists.",
+    "[util][util::find_next_unwrapped_token]")
 {
+    constexpr std::array openingBrackets{'<', '(', '[', '{'};
+    constexpr std::array closingBrackets{'>', ')', ']', '}'};
     auto const str = GENERATE(
         as<std::string_view>{},
         "",
@@ -212,7 +217,8 @@ TEST_CASE(
         "<,>");
     CAPTURE(str);
 
-    auto const iter = util::find_next_comma(str);
+    auto const token = util::find_next_unwrapped_token(str, ",", openingBrackets, closingBrackets);
 
-    CHECK(iter == str.cend());
+    CHECK(token.begin() == str.cend());
+    CHECK(token.end() == str.cend());
 }
