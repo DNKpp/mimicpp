@@ -109,8 +109,9 @@ namespace mimicpp::util
         std::ranges::forward_range auto&& opening,
         std::ranges::forward_range auto&& closing)
     {
+        using count_t = std::ranges::range_difference_t<Range>;
         constexpr auto countAllOf = [](auto const& source, auto const& collection) {
-            int count{};
+            count_t count{};
             for (auto const c : collection)
             {
                 count += std::ranges::count(source, c);
@@ -119,7 +120,7 @@ namespace mimicpp::util
             return count;
         };
 
-        int openScopes{};
+        count_t openScopes{};
         std::ranges::borrowed_subrange_t<Range> pending{str};
         while (auto const match = std::ranges::search(pending, token))
         {
