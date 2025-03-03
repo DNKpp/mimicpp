@@ -127,10 +127,8 @@ namespace mimicpp::printing::type::detail
     }
 
     template <print_iterator OutIter>
-    std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope, StringViewT const fullName)
+    std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope)
     {
-        assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
-
         SVMatchT matches{};
 
         // the anonymous namespace was already prettified, so just print it as-is
@@ -250,10 +248,8 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type::detail
 {
     template <print_iterator OutIter>
-    std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope, StringViewT const fullName)
+    std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope)
     {
-        assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
-
         SVMatchT matches{};
 
         // the anonymous namespace was already prettified, so just print it as-is
@@ -392,8 +388,7 @@ namespace mimicpp::printing::type::detail
             std::size_t count{};
             std::tie(out, index, count) = consume_next_scope(
                 out,
-                StringViewT{name.cbegin(), match.end()},
-                name);
+                StringViewT{name.cbegin(), match.end()});
             name.erase(index, count);
         }
 
