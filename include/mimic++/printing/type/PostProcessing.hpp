@@ -124,6 +124,25 @@ namespace mimicpp::printing::type::detail
 
     template <print_iterator OutIter>
     [[nodiscard]]
+    std::tuple<OutIter, std::size_t> prettify_function_scope(
+        OutIter out,
+        auto const& prefixMatches,
+        auto const& suffixMatches)
+    {
+        assert(prefixMatches.size() == 2 && "Regex out-of-sync.");
+        assert(suffixMatches.size() == 1 && "Regex out-of-sync.");
+
+        StringViewT const functionName{prefixMatches[1].first, prefixMatches[1].second};
+        StringViewT const prefix{prefixMatches[0].first, prefixMatches[0].second};
+        StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
+
+        return {
+            format::format_to(std::move(out), "({})::", functionName),
+            static_cast<std::size_t>(std::ranges::distance(prefix.data(), suffix.data() + suffix.size()))};
+    }
+
+    template <print_iterator OutIter>
+    [[nodiscard]]
     OutIter prettify_template_scope(
         OutIter out,
         StringViewT const scope,
@@ -270,33 +289,7 @@ namespace mimicpp::printing::type::detail
 
         SVMatchT matches{};
 
-        static RegexT const functionScopePrefix{
-            "`"
-            R"((?:\w+\s+)?)"         // return type (optional)
-            R"((operator.+?|\w+)\()" // function-name + (
-        };
-        if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionScopePrefix))
-        {
-            static RegexT const functionSuffixRegex{
-                R"(^\)\s*)"     // )
-                R"((?:const)?)" // const (optional)
-                R"(\s*&{0,2})"  // ref specifier
-                R"(\s*'::)"     //
-            };
-
-            std::size_t count{};
-            std::tie(out, count) = prettify_function_scope(
-                std::move(out),
-                functionSuffixRegex,
-                matches,
-                fullName);
-            return std::tuple{
-                std::move(out),
-                std::ranges::distance(scope.cbegin(), matches[0].first),
-                count};
-        }
-
-        // the anonymous namespace was already simplified, so just print it as-is
+        // the anonymous namespace was already prettified, so just print it as-is
         if (scope.ends_with(anonymousNamespaceTargetScopeText))
         {
             return std::tuple{
@@ -305,17 +298,18 @@ namespace mimicpp::printing::type::detail
                 anonymousNamespaceTargetScopeText.size()};
         }
 
-        static RegexT const virtualScope{"`\\d+'::$"};
-        if (std::regex_search(scope.cbegin(), scope.cend(), matches, virtualScope))
+        if (constexpr StringViewT templateScopeSuffix{">::"};
+            scope.ends_with(templateScopeSuffix))
         {
             return std::tuple{
-                std::move(out),
-                std::ranges::distance(scope.cbegin(), matches[0].first),
-                matches[0].length()};
+                prettify_template_scope(std::move(out), scope, templateScopeSuffix),
+                0u,
+                scope.size()};
         }
 
-        static RegexT const regularScope{R"(\w+::$)"};
-        if (std::regex_search(scope.cbegin(), scope.cend(), matches, regularScope))
+        // was already prettified, thus return as-is
+        if (static RegexT const lambdaScope{R"(lambda#\d+::$)"};
+            std::regex_search(scope.cbegin(), scope.cend(), matches, lambdaScope))
         {
             return std::tuple{
                 std::ranges::copy(matches[0].first, matches[0].second, std::move(out)).out,
@@ -323,13 +317,42 @@ namespace mimicpp::printing::type::detail
                 matches[0].length()};
         }
 
-        static RegexT const lambdaScope{R"(<lambda_(\d+)>::$)"};
-        if (std::regex_search(scope.cbegin(), scope.cend(), matches, lambdaScope))
+        if (static RegexT const regularScope{R"(\w+::$)"};
+            std::regex_search(scope.cbegin(), scope.cend(), matches, regularScope))
         {
             return std::tuple{
-                prettify_lambda_scope(std::move(out), matches),
+                std::ranges::copy(matches[0].first, matches[0].second, std::move(out)).out,
                 std::ranges::distance(scope.cbegin(), matches[0].first),
                 matches[0].length()};
+        }
+
+        static const RegexT functionSuffix{
+            R"(\))"
+            R"(\s*(?:const)?)"
+            R"(\s*(?:volatile)?)"
+            R"(\s*&{0,2})"
+            R"(\s*'::$)"};
+        if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionSuffix))
+        {
+            static RegexT const functionScopePrefix{
+                "`"
+                R"((?:\w+\s+)?)"         // return type (optional)
+                R"((operator.+?|\w+)\()" // function-name + (
+            };
+            StringViewT const rest{scope.cbegin(), matches[0].first};
+            SVMatchT prefixMatches{};
+            std::regex_search(rest.cbegin(), rest.cend(), prefixMatches, functionScopePrefix);
+            assert(!prefixMatches.empty() && "No corresponding function prefix found.");
+
+            std::size_t count{};
+            std::tie(out, count) = prettify_function_scope(
+                std::move(out),
+                prefixMatches,
+                matches);
+            return std::tuple{
+                std::move(out),
+                std::ranges::distance(rest.cbegin(), prefixMatches[0].first),
+                count};
         }
 
         // unknown scope. Ideally, this should never be used, but we leave it here as a fallback.
@@ -351,6 +374,12 @@ namespace mimicpp::printing::type::detail
 
         static const RegexT terseAnonymousNamespace{"`anonymous namespace'::"};
         name = std::regex_replace(name, terseAnonymousNamespace, anonymousNamespaceTargetScopeText.data());
+
+        static const RegexT omitVirtualNamespace{R"(`\d+'::)"};
+        name = std::regex_replace(name, omitVirtualNamespace, "");
+
+        static const RegexT prettifyLambda{R"(<lambda_(\d+)>)"};
+        name = std::regex_replace(name, prettifyLambda, "lambda#$1");
 
         #if MIMICPP_DETAIL_IS_CLANG_CL
         static RegexT const omitAutoTokens{R"(<auto>\s*)"};
@@ -439,8 +468,8 @@ namespace mimicpp::printing::type::detail
 
         static const RegexT functionSuffix{
             R"(\))"
-            R"(\s*(const)?)"
-            R"(\s*(volatile)?)"
+            R"(\s*(?:const)?)"
+            R"(\s*(?:volatile)?)"
             R"(\s*&{0,2})"
             R"(\s*$)"};
         if (SMatchT matches{};
@@ -501,23 +530,26 @@ namespace mimicpp::printing::type::detail
             auto const& [scopeBegin, argList, scopeEnd] = *specialTypeInfo;
             out = std::ranges::copy(scopeBegin, std::move(out)).out;
 
-            bool isFirst{true};
-            StringViewT pendingArgList{argList};
-            while (!pendingArgList.empty())
+            if (argList != "void")
             {
-                if (!std::exchange(isFirst, false))
+                bool isFirst{true};
+                StringViewT pendingArgList{argList};
+                while (!pendingArgList.empty())
                 {
-                    out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
-                }
+                    if (!std::exchange(isFirst, false))
+                    {
+                        out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
+                    }
 
-                auto const tokenDelimiter = util::find_next_unwrapped_token(
-                    pendingArgList,
-                    argumentDelimiter,
-                    openingBrackets,
-                    closingBrackets);
-                StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
-                out = prettify_identifier(std::move(out), StringT{arg});
-                pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
+                    auto const tokenDelimiter = util::find_next_unwrapped_token(
+                        pendingArgList,
+                        argumentDelimiter,
+                        openingBrackets,
+                        closingBrackets);
+                    StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
+                    out = prettify_identifier(std::move(out), StringT{arg});
+                    pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
+                }
             }
 
             out = std::ranges::copy(scopeEnd, std::move(out)).out;

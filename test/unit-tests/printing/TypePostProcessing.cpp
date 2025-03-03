@@ -202,6 +202,21 @@ TEST_CASE(
             Catch::Matchers::Equals("(anon ns)::outer_type::my_type"));
     }
 
+    SECTION("When lambda is given.")
+    {
+        StringT const rawName = printing::detail::type_name<decltype(my_typeLambda)>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(
+                R"(\(anon ns\)::)"
+                R"(lambda#\d+)"));
+    }
+
     SECTION("When lambda-local type-name is given.")
     {
         StringT const rawName = printing::detail::type_name<decltype(my_typeLambda())>();
