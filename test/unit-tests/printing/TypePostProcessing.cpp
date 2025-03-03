@@ -214,6 +214,23 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\(anon ns\)::)"
+                R"((?:my_typeLambda::)?)" // gcc produces this extra scope
+                R"(lambda#\d+)"));
+    }
+
+    SECTION("When lambda with params is given.")
+    {
+        [[maybe_unused]] constexpr auto lambda = [](std::string const&) {};
+        StringT const rawName = printing::detail::type_name<decltype(lambda)>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(
+                R"(\(CATCH2_INTERNAL_TEST_\d+\)::)"
                 R"(lambda#\d+)"));
     }
 

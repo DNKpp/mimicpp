@@ -482,6 +482,32 @@ namespace mimicpp::printing::type::detail
                 std::move(info)};
         }
 
+    #if MIMICPP_DETAIL_IS_GCC
+
+        static RegexT lambdaSuffixRegex{R"(#(\d+)}$)"};
+        // it's a lambda
+        if (SMatchT matches{};
+            std::regex_search(name, matches, lambdaSuffixRegex))
+        {
+            auto reversedName = name
+                              | std::views::reverse
+                              | std::views::drop(matches[0].length());
+            auto const iter = util::find_closing_token(reversedName, '}', '{');
+            assert(iter != reversedName.end() && "No lambda begin found.");
+
+            std::tuple info{
+                format::format("lambda#{}", StringViewT{matches[1].first, matches[1].second}),
+                "",
+                ""};
+            name.erase(iter.base() - 1, name.cend());
+
+            return {
+                std::move(name),
+                std::move(info)};
+        }
+
+    #endif
+
         static const RegexT functionSuffix{
             R"(\))"
             R"(\s*(?:const)?)"
