@@ -100,33 +100,6 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     std::tuple<OutIter, std::size_t> prettify_function_scope(
         OutIter out,
-        RegexT const& functionSuffixRegex,
-        auto const& matches,
-        StringViewT const fullName)
-    {
-        assert(matches.size() == 2 && "Regex out-of-sync.");
-
-        StringViewT const functionName{matches[1].first, matches[1].second};
-        StringViewT const prefix{matches[0].first, matches[0].second};
-        StringViewT rest{prefix.data() + prefix.size(), fullName.data() + fullName.size()};
-        auto const closingIter = util::find_closing_token(rest, '(', ')');
-        assert(closingIter != rest.cend() && "No corresponding closing-token found.");
-
-        SVMatchT suffixMatches{};
-        rest = StringViewT{closingIter, rest.cend()};
-        std::regex_search(rest.cbegin(), rest.cend(), suffixMatches, functionSuffixRegex);
-        assert(!suffixMatches.empty() && "No function suffix found.");
-        StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
-
-        return {
-            format::format_to(std::move(out), "({})::", functionName),
-            static_cast<std::size_t>(std::ranges::distance(prefix.data(), suffix.data() + suffix.size()))};
-    }
-
-    template <print_iterator OutIter>
-    [[nodiscard]]
-    std::tuple<OutIter, std::size_t> prettify_function_scope(
-        OutIter out,
         auto const& prefixMatches,
         auto const& suffixMatches)
     {
