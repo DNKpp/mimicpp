@@ -18,6 +18,7 @@
 #include <array>
 #include <cassert>
 #include <iterator>
+#include <optional>
 #include <ranges>
 #include <tuple>
 
