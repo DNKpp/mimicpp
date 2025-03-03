@@ -367,12 +367,54 @@ namespace mimicpp::printing::type::detail
         return out;
     }
 
+    [[nodiscard]]
+    inline StringViewT trimmed(StringViewT const str)
+    {
+        constexpr auto is_space = [](CharT const c) {
+            return static_cast<bool>(std::isspace(static_cast<int>(c)));
+        };
+
+        return StringViewT{
+            std::ranges::find_if_not(str, is_space),
+            std::ranges::find_if_not(str | std::views::reverse, is_space).base()};
+    }
+
+    [[nodiscard]]
+    inline std::tuple<StringT, std::optional<std::tuple<char, StringT, char>>> detect_special_type_info(StringT name)
+    {
+        // it's a template type
+        if (name.back() == '>')
+        {
+            auto reversedName = name | std::views::reverse;
+            auto const iter = util::find_closing_token(reversedName | std::views::drop(1), '>', '<');
+            assert(iter != reversedName.end() && "No template begin found.");
+            std::tuple info{
+                '<',
+                StringT{iter.base(), name.end() - 1},
+                '>'
+            };
+            name.erase(iter.base() - 1, name.cend());
+
+            return {
+                std::move(name),
+                std::move(info)};
+        }
+
+        return {
+            std::move(name),
+            std::nullopt};
+    }
+
     template <typename OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name)
     {
         name = apply_general_prettification(std::move(name));
 
-        if (auto const lastMatch = std::ranges::search(name | std::views::reverse, detail::scopeToken))
+        std::optional<std::tuple<char, StringT, char>> specialTypeInfo{};
+        std::tie(name, specialTypeInfo) = detect_special_type_info(std::move(name));
+
+        if (auto reversedName = name | std::views::reverse;
+            auto const lastMatch = std::ranges::search(reversedName, scopeToken))
         {
             std::size_t const splitIndex = std::ranges::distance(name.cbegin(), lastMatch.begin().base());
             StringT topLevelIdentifier = name.substr(splitIndex);
@@ -384,7 +426,33 @@ namespace mimicpp::printing::type::detail
             name = std::move(topLevelIdentifier);
         }
 
-        return std::ranges::copy(name, std::move(out)).out;
+        out = std::ranges::copy(name, std::move(out)).out;
+
+        if (specialTypeInfo)
+        {
+            auto const& [scopeBegin, argList, scopeEnd] = *specialTypeInfo;
+            out = std::ranges::copy(std::views::single(scopeBegin), std::move(out)).out;
+
+            bool isFirst{true};
+            StringViewT pendingArgList{argList};
+            while (!pendingArgList.empty())
+            {
+                if (!std::exchange(isFirst, false))
+                {
+                    out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
+                }
+
+                auto const commaIter = util::find_next_comma(pendingArgList);
+                StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), commaIter});
+                out = prettify_identifier(std::move(out), StringT{arg});
+                pendingArgList = StringViewT{commaIter, pendingArgList.end()}
+                               | std::views::drop(1);
+            }
+
+            out = std::ranges::copy(std::views::single(scopeEnd), std::move(out)).out;
+        }
+
+        return out;
     }
 }
 

@@ -715,19 +715,48 @@ namespace
     template <typename... Ts>
     struct my_template
     {
+        struct my_type
+        {
+        };
     };
 }
 
 TEST_CASE(
-    "printing::type::detail::prettify_identifier type-names enhances template-dependant type-names appearance.",
+    "printing::type::detail::prettify_identifier enhances template type-names appearance.",
     "[print][detail]")
 {
     StringStreamT ss{};
 
+    SECTION("When template name in anonymous-namespace is given.")
+    {
+        StringT const rawName = printing::detail::type_name<my_template<int>>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Equals("(anon ns)::my_template<int>"));
+    }
+
+    SECTION("When template-dependant name is given.")
+    {
+        StringT const rawName = printing::detail::type_name<my_template<int>::my_type>();
+        CAPTURE(rawName);
+
+        printing::type::detail::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Equals("(anon ns)::my_template<int>::my_type"));
+    }
+
     SECTION("When arbitrary template name is given.")
     {
         using type_t = decltype(my_typeLambda());
-        StringT const rawName = printing::detail::type_name<my_template<type_t&, type_t const&&>>();
+        StringT const rawName = printing::detail::type_name<my_template<type_t&, std::string const&&>>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -744,46 +773,9 @@ TEST_CASE(
                 R"(\(operator\(\)\)::)"
                 R"(my_type\s*&)"
                 R"(,\s*)"
-                R"(\(anon ns\)::)"
-                R"((?:my_typeLambda::)?)" // gcc produces this extra scope
-                R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
-                R"(my_type\s+const\s*&&)"
+                R"(std::basic_string<char, std::char_traits<char>, std::allocator<char>> const\s*&&)"
                 ">"));
     }
-
-    /*SECTION("When template name in anonymous-namespace is given.")
-    {
-        StringT const rawName = printing::detail::type_name<my_template<int>>();
-        CAPTURE(rawName);
-
-        StringT const finalName = printing::detail::prettify_template_name(rawName);
-        REQUIRE_THAT(
-            finalName,
-            Catch::Matchers::Equals("(anon ns)::my_template"));
-    }
-
-    SECTION("When nested template name is given.")
-    {
-        StringT const rawName = printing::detail::type_name<outer_type::my_template<int>>();
-        CAPTURE(rawName);
-
-        StringT const finalName = printing::detail::prettify_template_name(rawName);
-        REQUIRE_THAT(
-            finalName,
-            Catch::Matchers::Equals("(anon ns)::outer_type::my_template"));
-    }
-
-    SECTION("When function-local template name is given.")
-    {
-        StringT const rawName = printing::detail::type_name<decltype(testLambda<int>())>();
-        CAPTURE(rawName);
-
-        StringT const finalName = printing::detail::prettify_template_name(rawName);
-        REQUIRE_THAT(
-            finalName,
-            Catch::Matchers::Matches(R"(\(anon ns\)::\w+::my_template)"));
-    }*/
 }
 
 #endif
