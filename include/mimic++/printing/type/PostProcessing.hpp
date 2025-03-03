@@ -198,15 +198,15 @@ namespace mimicpp::printing::type::detail
         if (constexpr StringViewT libcxxLambdaScopePrefix{"'lambda'("};
             scope.starts_with(libcxxLambdaScopePrefix))
         {
-            // use a fake group for the lambda no
+            // use a fake group for the lambda number
             static RegexT lambdaEndRegex{R"(\)()::)"};
 
             std::size_t count{};
             std::tie(out, count) = prettify_lambda_scope(
                 std::move(out),
                 lambdaEndRegex,
-                StringViewT{fullName.cbegin(), fullName.cbegin() + libcxxLambdaScopePrefix.size()},
-                fullName);
+                StringViewT{scope.cbegin(), scope.cbegin() + libcxxLambdaScopePrefix.size()},
+                scope);
             return std::tuple{std::move(out), 0u, count};
         }
         // while libstdc++ sometimes uses `{lambda()#N}`
@@ -220,8 +220,8 @@ namespace mimicpp::printing::type::detail
             std::tie(out, count) = prettify_lambda_scope(
                 std::move(out),
                 lambdaEndRegex,
-                StringViewT{fullName.cbegin(), fullName.cbegin() + lambdaScopePrefix.size()},
-                fullName);
+                StringViewT{scope.cbegin(), scope.cbegin() + lambdaScopePrefix.size()},
+                scope);
             return std::tuple{std::move(out), 0u, count};
         }
         #endif
