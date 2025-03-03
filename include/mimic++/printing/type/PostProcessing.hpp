@@ -226,18 +226,6 @@ namespace mimicpp::printing::type::detail
         }
         #endif
 
-        // clang sometimes also uses `$_N` for lambdas
-        #if MIMICPP_DETAIL_IS_CLANG
-        static const RegexT lambda2Scope{R"(\$_(\d+)::)"};
-        if (std::regex_match(scope.cbegin(), scope.cend(), matches, lambda2Scope))
-        {
-            return std::tuple{
-                prettify_lambda_scope(std::move(out), matches),
-                std::ranges::distance(scope.cbegin(), matches[0].first),
-                matches[0].length()};
-        }
-        #endif
-
         static const RegexT functionSuffix{
             R"(\))"
             R"(\s*(?:const)?)"
@@ -281,6 +269,11 @@ namespace mimicpp::printing::type::detail
 
         static const RegexT terseAnonymousNamespace{R"(\(anonymous namespace\)::)"};
         name = std::regex_replace(name, terseAnonymousNamespace, anonymousNamespaceTargetScopeText.data());
+
+        #if MIMICPP_DETAIL_IS_CLANG
+        static const RegexT prettifyTerseLambdas{R"(\$_(\d+))"};
+        name = std::regex_replace(name, prettifyTerseLambdas, "lambda#$1");
+        #endif
 
         static const RegexT stdImplNamespace{
         #if MIMICPP_DETAIL_USES_LIBCXX
