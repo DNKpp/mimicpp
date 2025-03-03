@@ -175,6 +175,15 @@ namespace mimicpp::printing::type::detail
 
         SVMatchT matches{};
 
+        // the anonymous namespace was already prettified, so just print it as-is
+        if (scope == anonymousNamespaceTargetScopeText)
+        {
+            return std::tuple{
+                std::ranges::copy(scope, std::move(out)).out,
+                0,
+                scope.size()};
+        }
+
         if (constexpr StringViewT templateScopeSuffix{">::"};
             scope.ends_with(templateScopeSuffix))
         {
