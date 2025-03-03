@@ -465,11 +465,10 @@ namespace mimicpp::printing::type::detail
         if (SMatchT matches{};
             std::regex_search(name, matches, functionSuffix))
         {
-            auto reversedName = name | std::views::reverse;
-            auto const iter = util::find_closing_token(
-                reversedName | std::views::drop(matches[0].length()),
-                ')',
-                '(');
+            auto reversedName = name
+                              | std::views::reverse
+                              | std::views::drop(matches[0].length());
+            auto const iter = util::find_closing_token(reversedName, ')', '(');
             assert(iter != reversedName.end() && "No function begin found.");
             std::tuple info{
                 "(",
