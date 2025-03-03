@@ -402,7 +402,7 @@ namespace mimicpp::printing::type::detail
             return static_cast<bool>(std::isspace(static_cast<int>(c)));
         };
 
-        return StringViewT{
+        return {
             std::ranges::find_if_not(str, is_space),
             std::ranges::find_if_not(str | std::views::reverse, is_space).base()};
     }
