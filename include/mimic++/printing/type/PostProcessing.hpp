@@ -67,11 +67,10 @@ namespace mimicpp::printing::type::detail
         StringViewT const scope,
         StringViewT const templateScopeSuffix)
     {
-        auto reversedName = scope | std::views::reverse;
-        auto const iter = util::find_closing_token(
-            reversedName | std::views::drop(templateScopeSuffix.size()),
-            '>',
-            '<');
+        auto reversedName = scope
+                          | std::views::reverse
+                          | std::views::drop(templateScopeSuffix.size());
+        auto const iter = util::find_closing_token(reversedName, '>', '<');
         assert(iter != reversedName.end() && "No template begin found.");
         out = format::format_to(
             std::move(out),
