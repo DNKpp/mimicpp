@@ -41,62 +41,6 @@ namespace mimicpp::printing::type::detail
     constexpr StringViewT anonymousNamespaceTargetScopeText{"(anon ns)::"};
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify_lambda_scope(OutIter out, auto const& matches)
-    {
-        assert(matches.size() == 2 && "Regex out-of-sync.");
-
-        auto const& lambdaId = matches[1];
-
-        out = format::format_to(std::move(out), "lambda#");
-        out = std::ranges::copy(lambdaId.first, lambdaId.second, std::move(out)).out;
-        out = format::format_to(std::move(out), "::");
-
-        return out;
-    }
-
-    template <print_iterator OutIter>
-    [[nodiscard]]
-    std::tuple<OutIter, std::size_t> prettify_lambda_scope(
-        OutIter out,
-        RegexT const& suffixRegex,
-        StringViewT const prefix,
-        StringViewT const fullName)
-    {
-        assert(fullName.data() <= prefix.data() && "Prefix must be part of fullName.");
-        assert(prefix.data() + prefix.size() <= fullName.data() + fullName.size() && "Prefix must be part of fullName.");
-
-        StringViewT rest{prefix.data() + prefix.size(), fullName.data() + fullName.size()};
-        auto const closingIter = util::find_closing_token(rest, '(', ')');
-        assert(closingIter != rest.cend() && "No corresponding closing-token found.");
-
-        SVMatchT suffixMatches{};
-        rest = StringViewT{closingIter, rest.cend()};
-        std::regex_search(rest.cbegin(), rest.cend(), suffixMatches, suffixRegex);
-        assert(!suffixMatches.empty() && "No function suffix found.");
-        assert(suffixMatches.size() == 2 && "Regex out-of-sync.");
-        StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
-
-        out = std::ranges::copy(StringViewT{"lambda#"}, std::move(out)).out;
-
-        StringViewT const lambdaNo = std::invoke([&] {
-    #if MIMICPP_DETAIL_USES_LIBCXX
-            // no number set?, just default to 1
-            if (0 == suffixMatches[1].length())
-            {
-                return StringViewT{"1"};
-            }
-    #endif
-
-            return StringViewT{suffixMatches[1].first, suffixMatches[1].second};
-        });
-        out = std::ranges::copy(lambdaNo, std::move(out)).out;
-
-        return {
-            std::ranges::copy(StringViewT{"::"}, std::move(out)).out,
-            static_cast<std::size_t>(std::ranges::distance(prefix.data(), suffix.data() + suffix.size()))};
-    }
-
-    template <print_iterator OutIter>
     [[nodiscard]]
     std::tuple<OutIter, std::size_t> prettify_function_scope(
         OutIter out,
@@ -142,6 +86,47 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type::detail
 {
     template <print_iterator OutIter>
+    [[nodiscard]]
+    std::tuple<OutIter, std::size_t> prettify_lambda_scope(
+        OutIter out,
+        RegexT const& suffixRegex,
+        StringViewT const prefix,
+        StringViewT const scope)
+    {
+        assert(scope.data() == prefix.data() && "Prefix and scope must be aligned.");
+
+        StringViewT rest{prefix.data() + prefix.size(), scope.data() + scope.size()};
+        auto const closingIter = util::find_closing_token(rest, '(', ')');
+        assert(closingIter != rest.cend() && "No corresponding closing-token found.");
+
+        SVMatchT suffixMatches{};
+        rest = StringViewT{closingIter, rest.cend()};
+        std::regex_search(rest.cbegin(), rest.cend(), suffixMatches, suffixRegex);
+        assert(!suffixMatches.empty() && "No function suffix found.");
+        assert(suffixMatches.size() == 2 && "Regex out-of-sync.");
+        StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
+
+        out = std::ranges::copy(StringViewT{"lambda#"}, std::move(out)).out;
+
+        StringViewT const lambdaNo = std::invoke([&] {
+        #if MIMICPP_DETAIL_USES_LIBCXX
+            // no number set?, just default to 1
+            if (0 == suffixMatches[1].length())
+            {
+                return StringViewT{"1"};
+            }
+        #endif
+
+            return StringViewT{suffixMatches[1].first, suffixMatches[1].second};
+        });
+        out = std::ranges::copy(lambdaNo, std::move(out)).out;
+
+        return {
+            std::ranges::copy(StringViewT{"::"}, std::move(out)).out,
+            static_cast<std::size_t>(std::ranges::distance(prefix.data(), suffix.data() + suffix.size()))};
+    }
+
+    template <print_iterator OutIter>
     std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope, StringViewT const fullName)
     {
         assert(scope.data() == fullName.data() && "Scope and fullName are not aligned.");
@@ -172,7 +157,7 @@ namespace mimicpp::printing::type::detail
             scope.starts_with(libcxxLambdaScopePrefix))
         {
             // use a fake group for the lambda number
-            static RegexT lambdaEndRegex{R"(\)()::)"};
+            static RegexT lambdaEndRegex{R"(\)()::$)"};
 
             std::size_t count{};
             std::tie(out, count) = prettify_lambda_scope(
@@ -187,7 +172,7 @@ namespace mimicpp::printing::type::detail
         if (constexpr StringViewT lambdaScopePrefix{"{lambda("};
             scope.starts_with(lambdaScopePrefix))
         {
-            static RegexT lambdaEndRegex{R"(\)#(\d+)\}::)"};
+            static RegexT lambdaEndRegex{R"(\)#(\d+)\}::$)"};
 
             std::size_t count{};
             std::tie(out, count) = prettify_lambda_scope(
