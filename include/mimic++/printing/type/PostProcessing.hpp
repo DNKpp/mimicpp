@@ -417,7 +417,7 @@ namespace mimicpp::printing::type::detail
     }
 
     [[nodiscard]]
-    inline std::tuple<StringT, std::optional<std::tuple<char, StringT, char>>> detect_special_type_info(StringT name)
+    inline std::tuple<StringT, std::optional<std::tuple<StringT, StringT, StringT>>> detect_special_type_info(StringT name)
     {
         // it's a template type
         if (name.back() == '>')
@@ -426,9 +426,36 @@ namespace mimicpp::printing::type::detail
             auto const iter = util::find_closing_token(reversedName | std::views::drop(1), '>', '<');
             assert(iter != reversedName.end() && "No template begin found.");
             std::tuple info{
-                '<',
+                "<",
                 StringT{iter.base(), name.end() - 1},
-                '>'
+                ">"
+            };
+            name.erase(iter.base() - 1, name.cend());
+
+            return {
+                std::move(name),
+                std::move(info)};
+        }
+
+        static const RegexT functionSuffix{
+            R"(\))"
+            R"(\s*(const)?)"
+            R"(\s*(volatile)?)"
+            R"(\s*&{0,2})"
+            R"(\s*$)"};
+        if (SMatchT matches{};
+            std::regex_search(name, matches, functionSuffix))
+        {
+            auto reversedName = name | std::views::reverse;
+            auto const iter = util::find_closing_token(
+                reversedName | std::views::drop(matches[0].length()),
+                ')',
+                '(');
+            assert(iter != reversedName.end() && "No function begin found.");
+            std::tuple info{
+                "(",
+                StringT{     iter.base(), name.end() - matches[0].length()},
+                StringT{matches[0].first,                matches[0].second}
             };
             name.erase(iter.base() - 1, name.cend());
 
@@ -447,7 +474,7 @@ namespace mimicpp::printing::type::detail
     {
         name = apply_general_prettification(std::move(name));
 
-        std::optional<std::tuple<char, StringT, char>> specialTypeInfo{};
+        std::optional<std::tuple<StringT, StringT, StringT>> specialTypeInfo{};
         std::tie(name, specialTypeInfo) = detect_special_type_info(std::move(name));
 
         if (auto reversedName = name | std::views::reverse;
@@ -472,7 +499,7 @@ namespace mimicpp::printing::type::detail
         if (specialTypeInfo)
         {
             auto const& [scopeBegin, argList, scopeEnd] = *specialTypeInfo;
-            out = std::ranges::copy(std::views::single(scopeBegin), std::move(out)).out;
+            out = std::ranges::copy(scopeBegin, std::move(out)).out;
 
             bool isFirst{true};
             StringViewT pendingArgList{argList};
@@ -493,7 +520,7 @@ namespace mimicpp::printing::type::detail
                 pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
             }
 
-            out = std::ranges::copy(std::views::single(scopeEnd), std::move(out)).out;
+            out = std::ranges::copy(scopeEnd, std::move(out)).out;
         }
 
         return out;
