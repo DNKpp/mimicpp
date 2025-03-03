@@ -414,8 +414,10 @@ namespace mimicpp::printing::type::detail
         // it's a template type
         if (name.back() == '>')
         {
-            auto reversedName = name | std::views::reverse;
-            auto const iter = util::find_closing_token(reversedName | std::views::drop(1), '>', '<');
+            auto reversedName = name
+                              | std::views::reverse
+                              | std::views::drop(1);
+            auto const iter = util::find_closing_token(reversedName, '>', '<');
             assert(iter != reversedName.end() && "No template begin found.");
             std::tuple info{
                 "<",
