@@ -102,7 +102,9 @@ namespace mimicpp::util
 
     template <std::ranges::borrowed_range Range>
     [[nodiscard]]
-    constexpr std::ranges::borrowed_iterator_t<Range> find_next_comma(Range&& str)
+    constexpr std::ranges::borrowed_iterator_t<Range> find_next_unwrapped_token(
+        Range&& str,
+        std::basic_string_view<std::ranges::range_value_t<Range>> const token)
     {
         constexpr std::array opening{'<', '(', '[', '{'};
         constexpr std::array closing{'>', ')', ']', '}'};
@@ -117,26 +119,30 @@ namespace mimicpp::util
         };
 
         int openScopes{};
-        auto begin = std::ranges::begin(str);
+        auto first = std::ranges::begin(str);
         auto const end = std::ranges::end(str);
-        for (auto commaIter = std::ranges::find(str, ',');
-             commaIter != end;
-             commaIter = std::ranges::find(commaIter + 1, end, ','))
+        while (auto match = std::ranges::search(std::ranges::subrange{first, end}, token))
         {
-            std::ranges::subrange const part{begin, commaIter};
-
+            std::ranges::subrange const part{first, match.begin()};
             openScopes += countAllOf(part, opening)
                         - countAllOf(part, closing);
             assert(0 <= openScopes && "More scopes closed than opened.");
             if (0 == openScopes)
             {
-                return commaIter;
+                return match.begin();
             }
 
-            begin = commaIter + 1;
+            first = match.end();
         }
 
         return end;
+    }
+
+    template <std::ranges::borrowed_range Range>
+    [[nodiscard]]
+    constexpr std::ranges::borrowed_iterator_t<Range> find_next_comma(Range&& str)
+    {
+        return find_next_unwrapped_token(std::forward<Range>(str), ",");
     }
 }
 
