@@ -34,39 +34,20 @@ target_include_directories(${TARGET_NAME}
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
-target_compile_options(${TARGET_NAME}
-    PRIVATE
-    # some test files exceed some limits
-    # see: https://learn.microsoft.com/en-us/cpp/error-messages/compiler-errors-1/fatal-error-c1128?view=msvc-170
-    "$<$<CXX_COMPILER_ID:MSVC>:/bigobj>"
-    "$<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus>"
-)
-
-target_compile_definitions(${TARGET_NAME}
-    PUBLIC
-    "LIBASSERT_BREAK_ON_FAIL"
-)
-
-include(EnableAdditionalTestFlags)
-include(EnableWarnings)
-include(LinkStdStacktrace)
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
 find_package(libassert REQUIRED)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
-    mimicpp::internal::additional-test-flags
-    mimicpp::internal::warnings
-    mimicpp::internal::link-std-stacktrace
+    mimicpp::test::basics
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil
-    libassert::assert
 )
 
 target_precompile_headers(${TARGET_NAME}
     PRIVATE
-    "../TestAssert.hpp"
+    <TestAssert.hpp>
     <catch2/catch_all.hpp>
     <catch2/trompeloeil.hpp>
 )
