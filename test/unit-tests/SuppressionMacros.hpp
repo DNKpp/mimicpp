@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "mimic++/Config.hpp"
+#include "mimic++/config/Config.hpp"
 
 #if MIMICPP_DETAIL_IS_MSVC
 

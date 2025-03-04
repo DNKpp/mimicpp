@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "mimic++/Config.hpp"
+#include "mimic++/config/Config.hpp"
 
 #include <cassert>
 #include <type_traits>

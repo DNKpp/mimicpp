@@ -6,7 +6,6 @@
 set(TARGET_NAME mimicpp-tests)
 
 add_executable(${TARGET_NAME}
-    "Config.cpp"
     "Expectation.cpp"
     "ExpectationBuilder.cpp"
     "InterfaceMock.cpp"
@@ -20,6 +19,7 @@ add_executable(${TARGET_NAME}
 )
 
 add_subdirectory(call-conventions)
+add_subdirectory(config)
 add_subdirectory(matchers)
 add_subdirectory(policies)
 add_subdirectory(printing)

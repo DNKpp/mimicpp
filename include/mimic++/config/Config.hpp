@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_CONFIG_HPP
-#define MIMICPP_CONFIG_HPP
+#ifndef MIMICPP_CONFIG_CONFIG_HPP
+#define MIMICPP_CONFIG_CONFIG_HPP
 
 #pragma once
 

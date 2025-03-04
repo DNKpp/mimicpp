@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "mimic++/Config.hpp"
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 
