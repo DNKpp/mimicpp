@@ -31,7 +31,7 @@
     #include <cxxabi.h>
     #include <memory>
 
-namespace mimicpp::printing::type::detail
+namespace mimicpp::printing::type
 {
     template <typename T>
     StringT type_name()
@@ -54,7 +54,7 @@ namespace mimicpp::printing::type::detail
 
 #else
 
-namespace mimicpp::printing::type::detail
+namespace mimicpp::printing::type
 {
     template <typename T>
     StringT type_name()
@@ -103,7 +103,7 @@ namespace mimicpp::printing::type::detail
     {
         return printing::type::detail::prettify_identifier(
             std::move(out),
-            detail::type_name<T>());
+            type::type_name<T>());
     }
 
     constexpr util::priority_tag<4u> maxPrintTypePriority{};
