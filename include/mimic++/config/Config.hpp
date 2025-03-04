@@ -39,4 +39,8 @@
     #endif
 #endif
 
+#ifndef MIMICPP_ASSERT
+    #define MIMICPP_ASSERT(condition, msg) (void(0))
+#endif
+
 #endif
