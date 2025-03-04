@@ -104,14 +104,16 @@ $(function(){initNavTree('dc/d83/_algorithm_8hpp.html','../../'); initResizable(
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;cassert&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;iterator&gt;</code><br />
 <code>#include &lt;ranges&gt;</code><br />
+<code>#include &lt;string_view&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Algorithm.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d7/dbe/_algorithm_8hpp__incl.svg" width="432" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d7/dbe/_algorithm_8hpp__incl.svg" width="631" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -135,6 +137,14 @@ requires std::ranges::sized_range&lt;Target&gt; &amp;&amp; std::ranges::sized_ra
 <tr class="memitem:a1cacfa68d0494f3efdf72b945dfe65ca"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::ranges::borrowed_subrange_t&lt; Target &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html#a1cacfa68d0494f3efdf72b945dfe65ca">mimicpp::util::partition_by</a> (Target &amp;&amp;targetRange, Control &amp;&amp;controlRange, Predicate predicate, Projection projection={})</td></tr>
 <tr class="memdesc:a1cacfa68d0494f3efdf72b945dfe65ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Partitions the target range by the predicate results on the control range.  <br /></td></tr>
 <tr class="separator:a1cacfa68d0494f3efdf72b945dfe65ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a775d0ca317345e92231ec716a81ca921" id="r_a775d0ca317345e92231ec716a81ca921"><td class="memTemplParams" colspan="2">template&lt;std::ranges::borrowed_range Range&gt; </td></tr>
+<tr class="memitem:a775d0ca317345e92231ec716a81ca921"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::ranges::borrowed_iterator_t&lt; Range &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html#a775d0ca317345e92231ec716a81ca921">mimicpp::util::find_closing_token</a> (Range &amp;&amp;str, std::ranges::range_value_t&lt; Range &gt; const &amp;openingToken, std::ranges::range_value_t&lt; Range &gt; const &amp;closingToken)</td></tr>
+<tr class="memdesc:a775d0ca317345e92231ec716a81ca921"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the next closing token in the given string.  <br /></td></tr>
+<tr class="separator:a775d0ca317345e92231ec716a81ca921"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9543460b0c98427b3cf3b46f5b5aaad" id="r_ad9543460b0c98427b3cf3b46f5b5aaad"><td class="memTemplParams" colspan="2">template&lt;std::ranges::borrowed_range Range&gt; </td></tr>
+<tr class="memitem:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::ranges::borrowed_subrange_t&lt; Range &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html#ad9543460b0c98427b3cf3b46f5b5aaad">mimicpp::util::find_next_unwrapped_token</a> (Range &amp;&amp;str, std::string_view const token, std::ranges::forward_range auto &amp;&amp;opening, std::ranges::forward_range auto &amp;&amp;closing)</td></tr>
+<tr class="memdesc:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the next unwrapped token in the given string.  <br /></td></tr>
+<tr class="separator:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -142,7 +152,7 @@ requires std::ranges::sized_range&lt;Target&gt; &amp;&amp; std::ranges::sized_ra
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_2f75f8b84a1b0b31df547365a4a1eaf8.html">utilities</a></li><li class="navelem"><a class="el" href="../../dc/d83/_algorithm_8hpp.html">Algorithm.hpp</a></li>
-    <li class="footer">Generated on Tue Feb 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Mar 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

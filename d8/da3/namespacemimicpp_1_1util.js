@@ -16,8 +16,9 @@ var namespacemimicpp_1_1util =
     [ "type_list_pop_back_t", "d8/da3/namespacemimicpp_1_1util.html#ade36f86aac332827425e8d069c0e6586", null ],
     [ "type_list_populate_t", "d8/da3/namespacemimicpp_1_1util.html#ac33626f0a0b03836340f5fb0efd4847c", null ],
     [ "type_list_reverse_t", "d8/da3/namespacemimicpp_1_1util.html#a9e7b756bc206828739845da4bcd8f2a0", null ],
+    [ "find_closing_token", "d8/da3/namespacemimicpp_1_1util.html#a775d0ca317345e92231ec716a81ca921", null ],
+    [ "find_next_unwrapped_token", "d8/da3/namespacemimicpp_1_1util.html#ad9543460b0c98427b3cf3b46f5b5aaad", null ],
     [ "partition_by", "d8/da3/namespacemimicpp_1_1util.html#a1cacfa68d0494f3efdf72b945dfe65ca", null ],
-    [ "regex_replace_all", "d8/da3/namespacemimicpp_1_1util.html#a43ff969ddb5219a3edb50a474348a52a", null ],
     [ "to_underlying", "d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9", null ],
     [ "unreachable", "d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836", null ]
 ];

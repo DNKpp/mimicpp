@@ -159,6 +159,14 @@ requires std::ranges::sized_range&lt;Target&gt; &amp;&amp; std::ranges::sized_ra
 <tr class="memitem:a1cacfa68d0494f3efdf72b945dfe65ca"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::ranges::borrowed_subrange_t&lt; Target &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1cacfa68d0494f3efdf72b945dfe65ca">partition_by</a> (Target &amp;&amp;targetRange, Control &amp;&amp;controlRange, Predicate predicate, Projection projection={})</td></tr>
 <tr class="memdesc:a1cacfa68d0494f3efdf72b945dfe65ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Partitions the target range by the predicate results on the control range.  <br /></td></tr>
 <tr class="separator:a1cacfa68d0494f3efdf72b945dfe65ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a775d0ca317345e92231ec716a81ca921" id="r_a775d0ca317345e92231ec716a81ca921"><td class="memTemplParams" colspan="2">template&lt;std::ranges::borrowed_range Range&gt; </td></tr>
+<tr class="memitem:a775d0ca317345e92231ec716a81ca921"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::ranges::borrowed_iterator_t&lt; Range &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a775d0ca317345e92231ec716a81ca921">find_closing_token</a> (Range &amp;&amp;str, std::ranges::range_value_t&lt; Range &gt; const &amp;openingToken, std::ranges::range_value_t&lt; Range &gt; const &amp;closingToken)</td></tr>
+<tr class="memdesc:a775d0ca317345e92231ec716a81ca921"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the next closing token in the given string.  <br /></td></tr>
+<tr class="separator:a775d0ca317345e92231ec716a81ca921"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9543460b0c98427b3cf3b46f5b5aaad" id="r_ad9543460b0c98427b3cf3b46f5b5aaad"><td class="memTemplParams" colspan="2">template&lt;std::ranges::borrowed_range Range&gt; </td></tr>
+<tr class="memitem:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::ranges::borrowed_subrange_t&lt; Range &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ad9543460b0c98427b3cf3b46f5b5aaad">find_next_unwrapped_token</a> (Range &amp;&amp;str, std::string_view const token, std::ranges::forward_range auto &amp;&amp;opening, std::ranges::forward_range auto &amp;&amp;closing)</td></tr>
+<tr class="memdesc:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the next unwrapped token in the given string.  <br /></td></tr>
+<tr class="separator:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac58fced4701bdff093838ed1807e8836" id="r_ac58fced4701bdff093838ed1807e8836"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac58fced4701bdff093838ed1807e8836">unreachable</a> ()</td></tr>
 <tr class="memdesc:ac58fced4701bdff093838ed1807e8836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invokes undefined behavior.  <br /></td></tr>
 <tr class="separator:ac58fced4701bdff093838ed1807e8836"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,9 +174,6 @@ requires std::ranges::sized_range&lt;Target&gt; &amp;&amp; std::ranges::sized_ra
 requires std::is_enum_v&lt;T&gt;</td></tr>
 <tr class="memitem:aa8fe6ff3a0ec4c237cd98f2e295af8a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::underlying_type_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa8fe6ff3a0ec4c237cd98f2e295af8a9">to_underlying</a> (T const value) noexcept</td></tr>
 <tr class="separator:aa8fe6ff3a0ec4c237cd98f2e295af8a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43ff969ddb5219a3edb50a474348a52a" id="r_a43ff969ddb5219a3edb50a474348a52a"><td class="memTemplParams" colspan="2">template&lt;typename Char, typename CharTraits, typename Allocator, typename RegexTraits&gt; </td></tr>
-<tr class="memitem:a43ff969ddb5219a3edb50a474348a52a"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::basic_string&lt; Char, CharTraits, Allocator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a43ff969ddb5219a3edb50a474348a52a">regex_replace_all</a> (std::basic_string&lt; Char, CharTraits, Allocator &gt; str, std::basic_regex&lt; Char, RegexTraits &gt; const &amp;regex, std::basic_string_view&lt; Char, CharTraits &gt; const fmt)</td></tr>
-<tr class="separator:a43ff969ddb5219a3edb50a474348a52a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="ade36f86aac332827425e8d069c0e6586" name="ade36f86aac332827425e8d069c0e6586"></a>
@@ -220,6 +225,125 @@ template&lt;typename TypeList&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="a775d0ca317345e92231ec716a81ca921" name="a775d0ca317345e92231ec716a81ca921"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a775d0ca317345e92231ec716a81ca921">&#9670;&#160;</a></span>find_closing_token()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::ranges::borrowed_range Range&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ranges::borrowed_iterator_t&lt; Range &gt; mimicpp::util::find_closing_token </td>
+          <td>(</td>
+          <td class="paramtype">Range &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ranges::range_value_t&lt; Range &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>openingToken</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ranges::range_value_t&lt; Range &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>closingToken</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finds the next closing token in the given string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Range</td><td>The string type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>The string to operate on. </td></tr>
+    <tr><td class="paramname">openingToken</td><td>The symmetrical opening token. </td></tr>
+    <tr><td class="paramname">closingToken</td><td>The symmetrical closing token. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns the iterator to the next closing token, or <code>std::ranges::end(str)</code> if no such token exist.</dd></dl>
+<p>This algorithm determines the first closing-token, for which no corresponding opening-token where found. E.g. for the input <code>())</code> an iterator to the second <code>)</code> will be returned. </p><dl class="section note"><dt>Note</dt><dd>The algorithm assumes, that the corresponding opening-token is not part of the string. </dd></dl>
+
+</div>
+</div>
+<a id="ad9543460b0c98427b3cf3b46f5b5aaad" name="ad9543460b0c98427b3cf3b46f5b5aaad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9543460b0c98427b3cf3b46f5b5aaad">&#9670;&#160;</a></span>find_next_unwrapped_token()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::ranges::borrowed_range Range&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ranges::borrowed_subrange_t&lt; Range &gt; mimicpp::util::find_next_unwrapped_token </td>
+          <td>(</td>
+          <td class="paramtype">Range &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string_view const</td>          <td class="paramname"><span class="paramname"><em>token</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ranges::forward_range auto &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>opening</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ranges::forward_range auto &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>closing</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finds the next unwrapped token in the given string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Range</td><td>The string type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>The string to operate on. </td></tr>
+    <tr><td class="paramname">token</td><td>The token to be found. </td></tr>
+    <tr><td class="paramname">opening</td><td>Character-range, which will be treated as wrapping start. </td></tr>
+    <tr><td class="paramname">closing</td><td>Character-range, which will be treated as wrapping end. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns a subview to the next unwrapped token, or <code>std::ranges::borrowed_subrange_t&lt;Range&gt;{std::ranges::end(str),std::ranges::end(str)}</code> if no such token exist.</dd></dl>
+<p>This algorithm determines the first unwrapped token. Unwrapped means, that the token does not appear between elements of the opening- and closing-character-range. E.g. the input <code>&lt;t&gt;t</code> will return the second <code>t</code> when <code>&lt;</code> and <code>&gt;</code> are part of the opening- and closing-range. </p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/da3/namespacemimicpp_1_1util_ad9543460b0c98427b3cf3b46f5b5aaad_icgraph.svg" width="366" height="76"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a1cacfa68d0494f3efdf72b945dfe65ca" name="a1cacfa68d0494f3efdf72b945dfe65ca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1cacfa68d0494f3efdf72b945dfe65ca">&#9670;&#160;</a></span>partition_by()</h2>
 
@@ -291,42 +415,6 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a43ff969ddb5219a3edb50a474348a52a" name="a43ff969ddb5219a3edb50a474348a52a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a43ff969ddb5219a3edb50a474348a52a">&#9670;&#160;</a></span>regex_replace_all()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Char, typename CharTraits, typename Allocator, typename RegexTraits&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::basic_string&lt; Char, CharTraits, Allocator &gt; mimicpp::util::regex_replace_all </td>
-          <td>(</td>
-          <td class="paramtype">std::basic_string&lt; Char, CharTraits, Allocator &gt;</td>          <td class="paramname"><span class="paramname"><em>str</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::basic_regex&lt; Char, RegexTraits &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>regex</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::basic_string_view&lt; Char, CharTraits &gt; const</td>          <td class="paramname"><span class="paramname"><em>fmt</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="aa8fe6ff3a0ec4c237cd98f2e295af8a9" name="aa8fe6ff3a0ec4c237cd98f2e295af8a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa8fe6ff3a0ec4c237cd98f2e295af8a9">&#9670;&#160;</a></span>to_underlying()</h2>
 
@@ -390,7 +478,7 @@ requires std::is_enum_v&lt;T&gt;</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">util</a></li>
-    <li class="footer">Generated on Tue Feb 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Mar 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

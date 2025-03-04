@@ -99,6 +99,7 @@ $(function(){initNavTree('df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html','../../
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">object-type stringification<div class="ingroups"><a class="el" href="../../d7/d26/group___p_r_i_n_t_i_n_g.html">printing</a></div></div></div>
 </div><!--header-->
@@ -117,6 +118,17 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html">mimicpp::custom::TypePrinter&lt; typename &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">User may add specializations that will be utilized during <code>type_print</code> calls.  <a href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:gae6a9ffb6738e44a4f1447fe01174996b" id="r_gae6a9ffb6738e44a4f1447fe01174996b"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:gae6a9ffb6738e44a4f1447fe01174996b"><td class="memTemplItemLeft" align="right" valign="top">constexpr OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gae6a9ffb6738e44a4f1447fe01174996b">mimicpp::printing::type::prettify_identifier</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
+<tr class="memdesc:gae6a9ffb6738e44a4f1447fe01174996b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a demangled name.  <br /></td></tr>
+<tr class="separator:gae6a9ffb6738e44a4f1447fe01174996b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450" id="r_ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga18ad74efa55d75d3db296d3ec7d7d450">mimicpp::printing::type::type_name</a> ()</td></tr>
+<tr class="memdesc:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the (potentially demangled) name.  <br /></td></tr>
+<tr class="separator:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -165,7 +177,101 @@ Customize type-stringification</h3>
 <div class="line">    REQUIRE_THAT(</div>
 <div class="line">        qualifiedName,</div>
 <div class="line">        Catch::Matchers::Equals(<span class="stringliteral">&quot;This-Is-My-Mighty-Type* const&amp;&amp;&quot;</span>));</div>
-</div><!-- fragment --> <h2 class="groupheader">Variable Documentation</h2>
+</div><!-- fragment --> <h2 class="groupheader">Function Documentation</h2>
+<a id="gae6a9ffb6738e44a4f1447fe01174996b" name="gae6a9ffb6738e44a4f1447fe01174996b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae6a9ffb6738e44a4f1447fe01174996b">&#9670;&#160;</a></span>prettify_identifier()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;print_iterator OutIter&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">OutIter mimicpp::printing::type::prettify_identifier </td>
+          <td>(</td>
+          <td class="paramtype">OutIter</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Prettifies a demangled name. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">OutIter</td><td>The print-iterator type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out</td><td>The print iterator. </td></tr>
+    <tr><td class="paramname">name</td><td>The demangled name to be prettified. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current print iterator.</dd></dl>
+<p>This function formats a type or template name for better readability. The primary strategy is to minimize unnecessary details while retaining essential information. Although this may introduce some ambiguity, it is generally more beneficial to provide an approximate name.</p>
+<p>For example, when a template-dependent type is provided, the template arguments are omitted: <code>std::vector&lt;int, std::allocator&gt;::iterator</code> =&gt; <code>std::vector::iterator</code></p>
+<dl class="section attention"><dt>Attention</dt><dd>Providing a mangled name will result in unexpected behavior. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>When <code>MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING</code> is enabled, this function simply outputs the provided name without any modifications. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e_gae6a9ffb6738e44a4f1447fe01174996b_cgraph.svg" width="366" height="76"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e_gae6a9ffb6738e44a4f1447fe01174996b_icgraph.svg" width="156" height="76"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="ga18ad74efa55d75d3db296d3ec7d7d450" name="ga18ad74efa55d75d3db296d3ec7d7d450"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga18ad74efa55d75d3db296d3ec7d7d450">&#9670;&#160;</a></span>type_name()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> mimicpp::printing::type::type_name </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the (potentially demangled) name. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The desired type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The (potentially demangled) name.</dd></dl>
+<p>This function serves as a wrapper for typeid(T).name().</p><ul>
+<li>On MSVC, this function returns the demangled name directly.</li>
+<li>However, on GCC and Clang, the behavior differs. If <code>MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING</code> is disabled, it further demangles the name using <code>abi::__cxa_demangle</code>. </li>
+</ul>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
 <a id="gade385e24aa5d66a888de57611065a490" name="gade385e24aa5d66a888de57611065a490"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gade385e24aa5d66a888de57611065a490">&#9670;&#160;</a></span>print_type</h2>
 
@@ -197,7 +303,7 @@ template&lt;typename T&gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Feb 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Mar 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

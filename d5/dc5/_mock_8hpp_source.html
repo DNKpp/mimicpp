@@ -481,7 +481,7 @@ $(function(){initNavTree('d5/dc5/_mock_8hpp_source.html','../../'); initResizabl
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    {</div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8">StringStreamT</a> out{};</div>
 <div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>        out &lt;&lt; <span class="stringliteral">&quot;Mock&lt;&quot;</span>;</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        printing::detail::type::print_separated(</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>        printing::type::detail::print_separated(</div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>            std::ostreambuf_iterator{out},</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            <span class="stringliteral">&quot;, &quot;</span>,</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>            util::type_list&lt;Signatures...&gt;{});</div>
@@ -604,7 +604,7 @@ $(function(){initNavTree('d5/dc5/_mock_8hpp_source.html','../../'); initResizabl
 <div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n_html_ga3f94935150946f4d048fa0511c07e6a7"><div class="ttname"><a href="../../d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7">mimicpp::signature_remove_call_convention_t</a></div><div class="ttdeci">typename signature_remove_call_convention&lt; Signature &gt;::type signature_remove_call_convention_t</div><div class="ttdoc">Convenience alias, exposing the type member alias of the actual type-trait.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:84</div></div>
 <div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_t_u_r_n___t_y_p_e_html_gab7dbe7ae4fb93753e7e24603b98f9c5c"><div class="ttname"><a href="../../d0/d3b/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_t_u_r_n___t_y_p_e.html#gab7dbe7ae4fb93753e7e24603b98f9c5c">mimicpp::signature_return_type_t</a></div><div class="ttdeci">typename signature_return_type&lt; Signature &gt;::type signature_return_type_t</div><div class="ttdoc">Convenience alias, exposing the type member alias of the actual type-trait.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:164</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1call_html_a904a8502dffb5e669557ce1a8c4b05eb"><div class="ttname"><a href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">mimicpp::call::info_for_signature_t</a></div><div class="ttdeci">typename info_for_signature&lt; Signature &gt;::type info_for_signature_t</div><div class="ttdef"><b>Definition</b> Call.hpp:43</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Algorithm.hpp:18</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Algorithm.hpp:20</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:26</div></div>
 <div class="ttc" id="anamespacemimicpp_html_a6076e747dc4e61ff337a809d19f4824a"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">mimicpp::ValueCategory</a></div><div class="ttdeci">ValueCategory</div><div class="ttdef"><b>Definition</b> Fwd.hpp:32</div></div>
 <div class="ttc" id="anamespacemimicpp_html_a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec">mimicpp::ValueCategory::any</a></div><div class="ttdeci">@ any</div><div class="ttdef"><b>Definition</b> Fwd.hpp:35</div></div>
@@ -621,7 +621,7 @@ $(function(){initNavTree('d5/dc5/_mock_8hpp_source.html','../../'); initResizabl
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d5/dc5/_mock_8hpp.html">Mock.hpp</a></li>
-    <li class="footer">Generated on Tue Feb 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Mar 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

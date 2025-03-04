@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>mimic++: mimic++/utilities/Regex.hpp File Reference</title>
+<title>mimic++: mimic++/printing/type/PostProcessing.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function(){initNavTree('d6/dac/_regex_8hpp.html','../../'); initResizable(true); });
+$(function(){initNavTree('db/d1c/_post_processing_8hpp.html','../../'); initResizable(true); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -101,50 +101,65 @@ $(function(){initNavTree('d6/dac/_regex_8hpp.html','../../'); initResizable(true
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">Regex.hpp File Reference</div></div>
+  <div class="headertitle"><div class="title">PostProcessing.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;regex&gt;</code><br />
-<code>#include &lt;string&gt;</code><br />
-<code>#include &lt;string_view&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d8/dd2/_config_8hpp_source.html">mimic++/Config.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d5/dec/_format_8hpp_source.html">mimic++/printing/Format.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dc/d83/_algorithm_8hpp_source.html">mimic++/utilities/Algorithm.hpp</a>&quot;</code><br />
+<code>#include &lt;array&gt;</code><br />
+<code>#include &lt;cassert&gt;</code><br />
+<code>#include &lt;iterator&gt;</code><br />
+<code>#include &lt;optional&gt;</code><br />
+<code>#include &lt;ranges&gt;</code><br />
+<code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;regex&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for Regex.hpp:</div>
+Include dependency graph for PostProcessing.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../db/dc8/_regex_8hpp__incl.svg" width="252" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d3/d45/_post_processing_8hpp__incl.svg" width="100%" height="560"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../db/d07/_regex_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="../../d5/d7b/_post_processing_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div>
-<p><a href="../../d6/dac/_regex_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="../../db/d1c/_post_processing_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/ddf/namespacemimicpp_1_1printing.html">mimicpp::printing</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html">mimicpp::printing::type</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a4929f2e21c361f9c029eef2891d6b6d6" id="r_a4929f2e21c361f9c029eef2891d6b6d6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a4929f2e21c361f9c029eef2891d6b6d6">mimicpp::RegexT</a> = std::regex</td></tr>
 <tr class="separator:a4929f2e21c361f9c029eef2891d6b6d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e7c53aaaf3eab1e870bd353bbb5fd0f" id="r_a5e7c53aaaf3eab1e870bd353bbb5fd0f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a5e7c53aaaf3eab1e870bd353bbb5fd0f">mimicpp::SMatchT</a> = std::smatch</td></tr>
+<tr class="separator:a5e7c53aaaf3eab1e870bd353bbb5fd0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77903fa9566b1dd9ee216502a2518d94" id="r_a77903fa9566b1dd9ee216502a2518d94"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d11/namespacemimicpp.html#a77903fa9566b1dd9ee216502a2518d94">mimicpp::SVMatchT</a> = std::match_results&lt;StringViewT::const_iterator&gt;</td></tr>
+<tr class="separator:a77903fa9566b1dd9ee216502a2518d94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a43ff969ddb5219a3edb50a474348a52a" id="r_a43ff969ddb5219a3edb50a474348a52a"><td class="memTemplParams" colspan="2">template&lt;typename Char, typename CharTraits, typename Allocator, typename RegexTraits&gt; </td></tr>
-<tr class="memitem:a43ff969ddb5219a3edb50a474348a52a"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::basic_string&lt; Char, CharTraits, Allocator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html#a43ff969ddb5219a3edb50a474348a52a">mimicpp::util::regex_replace_all</a> (std::basic_string&lt; Char, CharTraits, Allocator &gt; str, std::basic_regex&lt; Char, RegexTraits &gt; const &amp;regex, std::basic_string_view&lt; Char, CharTraits &gt; const fmt)</td></tr>
-<tr class="separator:a43ff969ddb5219a3edb50a474348a52a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae6a9ffb6738e44a4f1447fe01174996b" id="r_gae6a9ffb6738e44a4f1447fe01174996b"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:gae6a9ffb6738e44a4f1447fe01174996b"><td class="memTemplItemLeft" align="right" valign="top">constexpr OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#gae6a9ffb6738e44a4f1447fe01174996b">mimicpp::printing::type::prettify_identifier</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
+<tr class="memdesc:gae6a9ffb6738e44a4f1447fe01174996b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a demangled name.  <br /></td></tr>
+<tr class="separator:gae6a9ffb6738e44a4f1447fe01174996b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_2f75f8b84a1b0b31df547365a4a1eaf8.html">utilities</a></li><li class="navelem"><a class="el" href="../../d6/dac/_regex_8hpp.html">Regex.hpp</a></li>
-    <li class="footer">Generated on Tue Feb 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_092aa99ea44c2ea5c05e2b02d3022b6c.html">printing</a></li><li class="navelem"><a class="el" href="../../dir_f6af1113142479a5fa0447ddd9471db7.html">type</a></li><li class="navelem"><a class="el" href="../../db/d1c/_post_processing_8hpp.html">PostProcessing.hpp</a></li>
+    <li class="footer">Generated on Tue Mar 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
