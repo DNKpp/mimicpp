@@ -117,7 +117,7 @@ namespace mimicpp::printing::type::detail
     template <typename T, print_iterator OutIter>
     OutIter print_type_to([[maybe_unused]] util::priority_tag<0u> const, OutIter out)
     {
-        return printing::type::detail::prettify_identifier(
+        return type::prettify_identifier(
             std::move(out),
             type::type_name<T>());
     }

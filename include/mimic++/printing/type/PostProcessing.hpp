@@ -20,7 +20,7 @@
 #include <ranges>
 #include <tuple>
 
-namespace mimicpp::printing::type::detail
+namespace mimicpp::printing::type
 {
     /**
      * \brief Prettifies a demangled name.
@@ -47,7 +47,7 @@ namespace mimicpp::printing::type::detail
 
 #ifdef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 
-namespace mimicpp::printing::type::detail
+namespace mimicpp::printing::type
 {
     template <print_iterator OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name)
@@ -520,28 +520,31 @@ namespace mimicpp::printing::type::detail
             std::move(name),
             std::nullopt};
     }
+}
 
+namespace mimicpp::printing::type
+{
     template <print_iterator OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name)
     {
-        name = apply_general_prettification(std::move(name));
+        name = detail::apply_general_prettification(std::move(name));
 
         std::optional<std::tuple<StringT, StringT, StringT>> specialTypeInfo{};
-        std::tie(name, specialTypeInfo) = detect_special_type_info(std::move(name));
+        std::tie(name, specialTypeInfo) = detail::detect_special_type_info(std::move(name));
 
         if (auto reversedName = name | std::views::reverse;
             auto const lastScopeMatch = util::find_next_unwrapped_token(
                 reversedName,
-                scopeDelimiter,
-                closingBrackets,
-                openingBrackets))
+                detail::scopeDelimiter,
+                detail::closingBrackets,
+                detail::openingBrackets))
         {
             std::size_t const splitIndex = std::ranges::distance(name.cbegin(), lastScopeMatch.begin().base());
             StringT topLevelIdentifier = name.substr(splitIndex);
 
             // includes last ::
             name.erase(splitIndex);
-            out = prettify_scopes(std::move(out), std::move(name));
+            out = detail::prettify_scopes(std::move(out), std::move(name));
 
             name = std::move(topLevelIdentifier);
         }
@@ -564,11 +567,11 @@ namespace mimicpp::printing::type::detail
 
                 auto const tokenDelimiter = util::find_next_unwrapped_token(
                     pendingArgList,
-                    argumentDelimiter,
-                    openingBrackets,
-                    closingBrackets);
-                StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
-                out = prettify_identifier(std::move(out), StringT{arg});
+                    detail::argumentDelimiter,
+                    detail::openingBrackets,
+                    detail::closingBrackets);
+                StringViewT const arg = detail::trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
+                out = type::prettify_identifier(std::move(out), StringT{arg});
                 pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
             }
 

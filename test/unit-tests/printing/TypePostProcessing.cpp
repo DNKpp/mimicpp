@@ -172,7 +172,7 @@ namespace
 
 TEST_CASE(
     "printing::detail::prettify_identifier enhances names appearance.",
-    "[print][detail]")
+    "[print]")
 {
     StringStreamT ss{};
 
@@ -181,7 +181,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<my_type>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -194,7 +194,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<outer_type::my_type>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -207,7 +207,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(my_typeLambda)>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -224,7 +224,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(lambda)>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -239,7 +239,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(my_typeLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -257,7 +257,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(my_typeMutableLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -276,7 +276,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(my_typeNoexceptLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -294,7 +294,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(my_typeNestedLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -312,7 +312,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(my_typeFreeFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -328,7 +328,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -346,7 +346,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeNoexceptFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -363,7 +363,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeConstFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -380,7 +380,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(outer_type::my_typeStaticFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -397,7 +397,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(std::declval<outer_type&>().my_typeLvalueFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -414,7 +414,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(std::declval<outer_type const&>().my_typeConstLvalueFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -431,7 +431,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeRvalueFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -448,7 +448,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(std::declval<outer_type const&&>().my_typeConstRvalueFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -465,7 +465,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeIndirectlyPrivateFunction())>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -482,7 +482,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(outer_type{}.operator+(42))>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -497,7 +497,7 @@ TEST_CASE(
 
 TEST_CASE(
     "printing::detail::prettify_identifier enhances local type-names appearance.",
-    "[print][detail]")
+    "[print]")
 {
     StringStreamT ss{};
 
@@ -510,7 +510,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<my_type>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -529,7 +529,7 @@ TEST_CASE(
                 StringT const rawName = printing::type::type_name<my_type>();
                 CAPTURE(rawName);
 
-                printing::type::detail::prettify_identifier(
+                printing::type::prettify_identifier(
                     std::ostreambuf_iterator{ss},
                     rawName);
                 REQUIRE_THAT(
@@ -555,7 +555,7 @@ TEST_CASE(
                 StringT const rawName = printing::type::type_name<my_type>();
                 CAPTURE(rawName);
 
-                printing::type::detail::prettify_identifier(
+                printing::type::prettify_identifier(
                     std::ostreambuf_iterator{_ss},
                     rawName);
                 REQUIRE_THAT(
@@ -589,7 +589,7 @@ TEST_CASE(
                 StringT const rawName = printing::type::type_name<my_type>();
                 CAPTURE(rawName);
 
-                printing::type::detail::prettify_identifier(
+                printing::type::prettify_identifier(
                     std::ostreambuf_iterator{*_ss},
                     rawName);
                 REQUIRE_THAT(
@@ -623,7 +623,7 @@ TEST_CASE(
                         StringT const rawName = printing::type::type_name<my_type>();
                         CAPTURE(rawName);
 
-                        printing::type::detail::prettify_identifier(
+                        printing::type::prettify_identifier(
                             std::ostreambuf_iterator{*_ss},
                             rawName);
                         REQUIRE_THAT(
@@ -644,7 +644,7 @@ TEST_CASE(
 
 TEST_CASE(
     "printing::type::detail::prettify_identifier type-names enhances function type-names appearance.",
-    "[print][detail]")
+    "[print]")
 {
     StringStreamT ss{};
 
@@ -654,7 +654,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<return_t()>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
 
@@ -675,7 +675,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<void(param_t)>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
 
@@ -694,7 +694,7 @@ TEST_CASE(
 
 TEST_CASE(
     "printing::type::detail::prettify_identifier type-names enhances function-pointer type-names appearance.",
-    "[print][detail]")
+    "[print]")
 {
     StringStreamT ss{};
 
@@ -704,7 +704,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<return_t (*)()>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
 
@@ -725,7 +725,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<void (*)(param_t)>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
 
@@ -755,7 +755,7 @@ namespace
 
 TEST_CASE(
     "printing::type::detail::prettify_identifier enhances template type-names appearance.",
-    "[print][detail]")
+    "[print]")
 {
     StringStreamT ss{};
 
@@ -764,7 +764,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<my_template<int>>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -777,7 +777,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<my_template<int, std::string const&&>::my_type>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
@@ -791,7 +791,7 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<my_template<type_t&, std::string const&&>>();
         CAPTURE(rawName);
 
-        printing::type::detail::prettify_identifier(
+        printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(

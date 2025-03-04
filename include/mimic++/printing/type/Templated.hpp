@@ -34,7 +34,7 @@ namespace mimicpp::printing::type::detail
         assert(iter != name.cend() && "Given name is not a template.");
         name.erase(iter, name.end());
 
-        return printing::type::detail::prettify_identifier(std::move(out), std::move(name));
+        return type::prettify_identifier(std::move(out), std::move(name));
     }
 
     template <typename NameGenerator>
