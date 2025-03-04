@@ -757,6 +757,20 @@ namespace
         {
             return std::source_location::current();
         }
+
+        auto bar(my_type const&, std::source_location* outLoc)
+        {
+            if (outLoc)
+            {
+                *outLoc = std::source_location::current();
+            }
+
+            struct bar_type
+            {
+            };
+
+            return bar_type{};
+        }
     };
 }
 
@@ -792,10 +806,9 @@ TEST_CASE(
             Catch::Matchers::Equals("{anon-ns}::my_template::my_type"));
     }
 
-    SECTION("When template-dependant function-pointer is given.")
+    SECTION("When template-dependant member-function-pointer is given.")
     {
-        using type_t = decltype(my_typeLambda());
-        StringT const rawName = printing::type::type_name<decltype(&my_template<type_t>::foo)>();
+        StringT const rawName = printing::type::type_name<decltype(&my_template<my_template<>>::foo)>();
         CAPTURE(rawName);
 
         printing::type::prettify_identifier(
@@ -805,11 +818,27 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Equals(
                 "std::source_location " // return type
-                "{anon-ns}::my_template::* "
+                "({anon-ns}::my_template::*)"
                 "({anon-ns}::my_template::my_type const&)"));
     }
 
-    SECTION("When template-dependant function is given.")
+    SECTION("When template-dependant member-function-pointer, returning local type, is given.")
+    {
+        StringT const rawName = printing::type::type_name<decltype(&my_template<my_template<>>::bar)>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Equals(
+                "{anon-ns}::my_template::{bar}::bar_type " // return type
+                "({anon-ns}::my_template::*)"
+                "({anon-ns}::my_template::my_type const&, std::source_location*)"));
+    }
+
+    /*SECTION("When template-dependant function is given.")
     {
         using type_t = decltype(my_typeLambda());
         auto const loc = my_template<type_t>{}.foo({});
@@ -825,6 +854,7 @@ TEST_CASE(
                 "std::source_location " // return type
                 "{anon-ns}::my_template::foo"
                 "({anon-ns}::my_template::my_type const&)"));
+    }*/
 
     SECTION("When arbitrary template name is given.")
     {
