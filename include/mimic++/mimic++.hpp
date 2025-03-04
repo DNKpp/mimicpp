@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/config/Config.hpp"
+#include "mimic++/config/Version.hpp"
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Version.hpp"
 
 #include "mimic++/Call.hpp"
 #include "mimic++/CallConvention.hpp"
