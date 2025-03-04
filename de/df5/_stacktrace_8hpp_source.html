@@ -111,14 +111,14 @@ $(function(){initNavTree('de/df5/_stacktrace_8hpp_source.html','../../'); initRe
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/dde/_fwd_8hpp.html">mimic++/Fwd.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d4b/_path_printer_8hpp.html">mimic++/printing/PathPrinter.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d62/_state_printer_8hpp.html">mimic++/printing/StatePrinter.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/dec/_always_false_8hpp.html">mimic++/utilities/AlwaysFalse.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d65/_priority_tag_8hpp.html">mimic++/utilities/PriorityTag.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;any&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d4b/_path_printer_8hpp.html">mimic++/printing/PathPrinter.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d62/_state_printer_8hpp.html">mimic++/printing/StatePrinter.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/dec/_always_false_8hpp.html">mimic++/utilities/AlwaysFalse.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d65/_priority_tag_8hpp.html">mimic++/utilities/PriorityTag.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;any&gt;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="comment">// ReSharper disable once CppUnusedIncludeDirective</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;functional&gt;</span> <span class="comment">// std::invoke</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &lt;ranges&gt;</span></div>
@@ -379,7 +379,7 @@ $(function(){initNavTree('de/df5/_stacktrace_8hpp_source.html','../../'); initRe
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    <span class="keyword">template</span> &lt;pr<span class="keywordtype">int</span>_iterator OutIter&gt;</div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    OutIter print_entry(OutIter out, Stacktrace <span class="keyword">const</span>&amp; stacktrace, std::size_t <span class="keyword">const</span> index)</div>
 <div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    {</div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        assert(index &lt; stacktrace.size() &amp;&amp; <span class="stringliteral">&quot;Index out of bounds.&quot;</span>);</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(index &lt; stacktrace.size(), <span class="stringliteral">&quot;Index out of bounds.&quot;</span>);</div>
 <div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        out = format::format_to(std::move(out), <span class="stringliteral">&quot;`&quot;</span>);</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>        out = <a class="code hl_variable" href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">print_path</a>(std::move(out), stacktrace.source_file(index));</div>
@@ -685,6 +685,8 @@ $(function(){initNavTree('de/df5/_stacktrace_8hpp_source.html','../../'); initRe
 <div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span> </div>
 <div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_always_false_8hpp_html"><div class="ttname"><a href="../../dc/dec/_always_false_8hpp.html">AlwaysFalse.hpp</a></div></div>
+<div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
+<div class="ttc" id="a_config_8hpp_html_a97ed0cb4a7de0573de2b684047cadc9f"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a></div><div class="ttdeci">#define MIMICPP_ASSERT(condition, msg)</div><div class="ttdef"><b>Definition</b> Config.hpp:43</div></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_path_printer_8hpp_html"><div class="ttname"><a href="../../de/d4b/_path_printer_8hpp.html">PathPrinter.hpp</a></div></div>
 <div class="ttc" id="a_priority_tag_8hpp_html"><div class="ttname"><a href="../../d8/d65/_priority_tag_8hpp.html">PriorityTag.hpp</a></div></div>

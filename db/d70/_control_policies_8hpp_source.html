@@ -112,9 +112,9 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/dde/_fwd_8hpp.html">mimic++/Fwd.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/de4/_sequence_8hpp.html">mimic++/Sequence.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d76/_expectation_report_8hpp.html">mimic++/reporting/ExpectationReport.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d76/_expectation_report_8hpp.html">mimic++/reporting/ExpectationReport.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;limits&gt;</span></div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
@@ -307,7 +307,7 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div class="foldopen" id="foldopen00196" data-start="{" data-end="}">
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87">  196</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87">consume</a>() noexcept</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        {</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            assert(<a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">is_applicable</a>());</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(<a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">is_applicable</a>(), <span class="stringliteral">&quot;Policy is inapplicable.&quot;</span>);</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            std::apply(</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
@@ -443,6 +443,8 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>}</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
 <div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
+<div class="ttc" id="a_config_8hpp_html_a97ed0cb4a7de0573de2b684047cadc9f"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a></div><div class="ttdeci">#define MIMICPP_ASSERT(condition, msg)</div><div class="ttdef"><b>Definition</b> Config.hpp:43</div></div>
 <div class="ttc" id="a_expectation_report_8hpp_html"><div class="ttname"><a href="../../dd/d76/_expectation_report_8hpp.html">ExpectationReport.hpp</a></div></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_sequence_8hpp_html"><div class="ttname"><a href="../../d8/de4/_sequence_8hpp.html">Sequence.hpp</a></div></div>

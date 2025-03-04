@@ -112,62 +112,62 @@ $(function(){initNavTree('d7/d59/utilities_2_c_09_0923_backports_8hpp_source.htm
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;version&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="comment">// GCOVR_EXCL_START</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#ifdef __cpp_lib_unreachable</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">    #include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>{</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">using </span>std::unreachable;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>}</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    [[noreturn]]</div>
-<div class="foldopen" id="foldopen00037" data-start="{" data-end="}">
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">   37</a></span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">unreachable</a>()</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        assert(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Uses compiler specific extensions if possible.</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// Even if no extension is used, undefined behavior is still raised by</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// an empty function body and the noreturn attribute.</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">    #if MIMICPP_DETAIL_IS_MSVC </span><span class="comment">// MSVC</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        __assume(<span class="keyword">false</span>);</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">    #else                      </span><span class="comment">// GCC, Clang</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        __builtin_unreachable();</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;version&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="comment">// GCOVR_EXCL_START</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifdef __cpp_lib_unreachable</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    #include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>{</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">using </span>std::unreachable;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>}</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    [[noreturn]]</div>
+<div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">   36</a></span>    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">unreachable</a>()</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(<span class="keyword">false</span>, <span class="stringliteral">&quot;Reached the unreachable.&quot;</span>);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="comment">// Uses compiler specific extensions if possible.</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="comment">// Even if no extension is used, undefined behavior is still raised by</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="comment">// an empty function body and the noreturn attribute.</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">    #if MIMICPP_DETAIL_IS_MSVC </span><span class="comment">// MSVC</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        __assume(<span class="keyword">false</span>);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">    #else                      </span><span class="comment">// GCC, Clang</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        __builtin_unreachable();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
 </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>}</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span><span class="comment">// GCOVR_EXCL_STOP</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>{</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keyword">requires</span> std::is_enum_v&lt;T&gt;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00059" data-start="{" data-end="}">
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="../../d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9">   59</a></span>    <span class="keyword">constexpr</span> std::underlying_type_t&lt;T&gt; <a class="code hl_function" href="../../d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9">to_underlying</a>(T <span class="keyword">const</span> value) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::underlying_type_t&lt;T&gt;<span class="keyword">&gt;</span>(value);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="comment">// GCOVR_EXCL_STOP</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>{</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="keyword">requires</span> std::is_enum_v&lt;T&gt;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00058" data-start="{" data-end="}">
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="../../d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9">   58</a></span>    <span class="keyword">constexpr</span> std::underlying_type_t&lt;T&gt; <a class="code hl_function" href="../../d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9">to_underlying</a>(T <span class="keyword">const</span> value) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::underlying_type_t&lt;T&gt;<span class="keyword">&gt;</span>(value);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    }</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>}</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
-<div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Algorithm.hpp:20</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1util_html_aa8fe6ff3a0ec4c237cd98f2e295af8a9"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9">mimicpp::util::to_underlying</a></div><div class="ttdeci">constexpr std::underlying_type_t&lt; T &gt; to_underlying(T const value) noexcept</div><div class="ttdef"><b>Definition</b> C++23Backports.hpp:59</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1util_html_ac58fced4701bdff093838ed1807e8836"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">mimicpp::util::unreachable</a></div><div class="ttdeci">void unreachable()</div><div class="ttdoc">Invokes undefined behavior.</div><div class="ttdef"><b>Definition</b> C++23Backports.hpp:37</div></div>
+<div class="ttc" id="a_config_8hpp_html_a97ed0cb4a7de0573de2b684047cadc9f"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a></div><div class="ttdeci">#define MIMICPP_ASSERT(condition, msg)</div><div class="ttdef"><b>Definition</b> Config.hpp:43</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Algorithm.hpp:21</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1util_html_aa8fe6ff3a0ec4c237cd98f2e295af8a9"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9">mimicpp::util::to_underlying</a></div><div class="ttdeci">constexpr std::underlying_type_t&lt; T &gt; to_underlying(T const value) noexcept</div><div class="ttdef"><b>Definition</b> C++23Backports.hpp:58</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1util_html_ac58fced4701bdff093838ed1807e8836"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">mimicpp::util::unreachable</a></div><div class="ttdeci">void unreachable()</div><div class="ttdoc">Invokes undefined behavior.</div><div class="ttdef"><b>Definition</b> C++23Backports.hpp:36</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

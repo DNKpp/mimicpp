@@ -6,7 +6,7 @@ var searchData=
   ['object_5fwatcher_5ffor_3',['object_watcher_for',['../db/db6/conceptmimicpp_1_1object__watcher__for.html',1,'mimicpp']]],
   ['objectwatcher_2ehpp_4',['ObjectWatcher.hpp',['../d5/d92/_object_watcher_8hpp.html',1,'']]],
   ['of_20contents_5',['Table of Contents',['../index.html#autotoc_md47',1,'']]],
-  ['on_20sequences_20with_20times_6',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md21',1,'']]],
+  ['on_20sequences_20with_20times_6',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md22',1,'']]],
   ['once_7',['once',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf',1,'mimicpp::expect']]],
   ['operator_8',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
   ['operator_21_9',['operator!',['../dc/d5e/classmimicpp_1_1_predicate_matcher.html#a5ffccf95fc8bf19699ba9a5419699ef0',1,'mimicpp::PredicateMatcher::operator!() const &amp;'],['../dc/d5e/classmimicpp_1_1_predicate_matcher.html#a7593a5bff76d08d5c35e14e629ca22a6',1,'mimicpp::PredicateMatcher::operator!() &amp;&amp;']]],

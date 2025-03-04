@@ -197,6 +197,7 @@ var NAVTREEINDEX2 =
 "d8/dce/namespacemimicpp_1_1sequence.html#ade137497ede2a9436dd532cf2e95fec8":[2,0,0,9,2],
 "d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673":[2,0,0,9,1],
 "d8/dd2/_config_8hpp.html":[5,0,1,1,0],
+"d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f":[5,0,1,1,0,0],
 "d8/dd2/_config_8hpp_source.html":[5,0,1,1,0],
 "d8/ddf/namespacemimicpp_1_1printing.html":[2,0,0,7],
 "d8/de4/_sequence_8hpp.html":[5,0,1,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX2 =
 "da/d3b/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_08_01const_01_6noexcept_01_4.html":[1,9,13,16],
 "da/d3b/structmimicpp_1_1signature__remove__const__qualifier_3_01_return_07_params_8_8_8_08_01const_01_6noexcept_01_4.html#aed17ffb8ac8916214fdc1e4eab89baaa":[1,9,13,16,0],
 "da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html":[1,9,5,1],
-"da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html#a0f54c01510f88e759532968e5af6ccbc":[1,9,5,1,0],
-"da/d45/classmimicpp_1_1_relocation_watcher.html":[1,4,3]
+"da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html#a0f54c01510f88e759532968e5af6ccbc":[1,9,5,1,0]
 };

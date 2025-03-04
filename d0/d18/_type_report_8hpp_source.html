@@ -111,9 +111,9 @@ $(function(){initNavTree('d0/d18/_type_report_8hpp_source.html','../../'); initR
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/dde/_fwd_8hpp.html">mimic++/Fwd.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/d35/_type_printer_8hpp.html">mimic++/printing/TypePrinter.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/d35/_type_printer_8hpp.html">mimic++/printing/TypePrinter.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d6/d48/namespacemimicpp_1_1reporting.html">mimicpp::reporting</a></div>
@@ -158,13 +158,15 @@ $(function(){initNavTree('d0/d18/_type_report_8hpp_source.html','../../'); initR
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="keyword">explicit</span> <span class="keyword">constexpr</span> TypeReport(make_name_fn <span class="keyword">const</span> makeFn) noexcept</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            : m_MakeNameFn{makeFn}</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            assert(m_MakeNameFn &amp;&amp; <span class="stringliteral">&quot;Null make-function is not allowed.&quot;</span>);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(m_MakeNameFn, <span class="stringliteral">&quot;Null make-function is not allowed.&quot;</span>);</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        }</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    };</div>
 </div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>}</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
+<div class="ttc" id="a_config_8hpp_html_a97ed0cb4a7de0573de2b684047cadc9f"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a></div><div class="ttdeci">#define MIMICPP_ASSERT(condition, msg)</div><div class="ttdef"><b>Definition</b> Config.hpp:43</div></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_type_printer_8hpp_html"><div class="ttname"><a href="../../d6/d35/_type_printer_8hpp.html">TypePrinter.hpp</a></div></div>
 <div class="ttc" id="aclassmimicpp_1_1reporting_1_1_type_report_html_a62c1008b5079336358a44bb83f35b7af"><div class="ttname"><a href="../../de/d89/classmimicpp_1_1reporting_1_1_type_report.html#a62c1008b5079336358a44bb83f35b7af">mimicpp::reporting::TypeReport::make</a></div><div class="ttdeci">static constexpr TypeReport make() noexcept</div><div class="ttdef"><b>Definition</b> TypeReport.hpp:37</div></div>
