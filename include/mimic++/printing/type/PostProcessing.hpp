@@ -13,7 +13,6 @@
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
-#include "mimic++/utilities/Regex.hpp"
 
 #include <array>
 #include <cassert>
@@ -36,6 +35,15 @@ namespace mimicpp::printing::type::detail
 }
 
 #else
+
+    #include <regex>
+
+namespace mimicpp
+{
+    using RegexT = std::regex;
+    using SMatchT = std::smatch;
+    using SVMatchT = std::match_results<StringViewT::const_iterator>;
+}
 
 namespace mimicpp::printing::type::detail
 {

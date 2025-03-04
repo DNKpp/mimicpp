@@ -8,7 +8,6 @@ target_sources(${TARGET_NAME}
     "Algorithm.cpp"
     "Concepts.cpp"
     "C++23Backports.cpp"
-    "Regex.cpp"
     "SourceLocation.cpp"
     "TypeList.cpp"
 )
