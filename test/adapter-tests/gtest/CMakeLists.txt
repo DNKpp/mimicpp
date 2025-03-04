@@ -21,13 +21,10 @@ CPMAddPackage(
 						"gtest_force_shared_crt ON"
 )
 
-include(EnableAdditionalTestFlags)
-include(EnableWarnings)
 target_link_libraries(${TARGET_NAME}
 	PRIVATE
 	mimicpp::mimicpp
-	mimicpp::internal::additional-test-flags
-	mimicpp::internal::warnings
+	mimicpp::test::basics
 	GTest::gtest_main
 )
 
