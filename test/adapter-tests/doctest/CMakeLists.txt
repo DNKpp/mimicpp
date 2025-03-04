@@ -11,14 +11,11 @@ add_executable(${TARGET_NAME}
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
-include(EnableAdditionalTestFlags)
-include(EnableWarnings)
 CPMAddPackage("gh:doctest/doctest@2.4.11")
 target_link_libraries(${TARGET_NAME}
 	PRIVATE
 	mimicpp::mimicpp
-	mimicpp::internal::additional-test-flags
-	mimicpp::internal::warnings
+	mimicpp::test::basics
 	doctest::doctest
 )
 
