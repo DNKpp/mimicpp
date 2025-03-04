@@ -230,23 +230,23 @@ TEST_CASE(
         {
             REQUIRE_THAT(
                 (print_type<std::unique_ptr<int, custom_deleter<int>>>()),
-                Catch::Matchers::Equals("std::unique_ptr<int, (anon ns)::custom_deleter<int>>"));
+                Catch::Matchers::Equals("std::unique_ptr<int, {anon-ns}::custom_deleter<int>>"));
             REQUIRE_THAT(
                 (print_type<std::unique_ptr<std::unique_ptr<int, custom_deleter<int>>, custom_deleter<std::unique_ptr<int, custom_deleter<int>>>>>()),
                 Catch::Matchers::Equals(
                     "std::unique_ptr<"
-                    "std::unique_ptr<int, (anon ns)::custom_deleter<int>>, "
-                    "(anon ns)::custom_deleter<std::unique_ptr<int, (anon ns)::custom_deleter<int>>>>"));
+                    "std::unique_ptr<int, {anon-ns}::custom_deleter<int>>, "
+                    "{anon-ns}::custom_deleter<std::unique_ptr<int, {anon-ns}::custom_deleter<int>>>>"));
             REQUIRE_THAT(
                 (print_type<std::unique_ptr<std::unique_ptr<int>, custom_deleter<std::unique_ptr<int>>>>()),
-                Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>, (anon ns)::custom_deleter<std::unique_ptr<int>>>"));
+                Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>, {anon-ns}::custom_deleter<std::unique_ptr<int>>>"));
 
             REQUIRE_THAT(
                 (print_type<std::unique_ptr<int[], custom_deleter<int[]>>>()),
-                Catch::Matchers::Equals("std::unique_ptr<int[], (anon ns)::custom_deleter<int[]>>"));
+                Catch::Matchers::Equals("std::unique_ptr<int[], {anon-ns}::custom_deleter<int[]>>"));
             REQUIRE_THAT(
                 (print_type<std::unique_ptr<std::unique_ptr<int>[], custom_deleter<std::unique_ptr<int>[]>>>()),
-                Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>[], (anon ns)::custom_deleter<std::unique_ptr<int>[]>>"));
+                Catch::Matchers::Equals("std::unique_ptr<std::unique_ptr<int>[], {anon-ns}::custom_deleter<std::unique_ptr<int>[]>>"));
         }
     }
 
@@ -358,11 +358,11 @@ TEMPLATE_TEST_CASE_SIG(
     (FixedString{"std::vector<std::vector<int>> volatile*"}, std::vector<std::vector<int>> volatile*),
     (FixedString{"std::vector<std::vector<int>> const volatile*"}, std::vector<std::vector<int>> const volatile*),
 
-    (FixedString{"(anon ns)::my_type"}, my_type),
-    (FixedString{"(anon ns)::my_type*"}, my_type*),
-    (FixedString{"(anon ns)::my_type const*"}, my_type const*),
-    (FixedString{"(anon ns)::my_type volatile*"}, my_type volatile*),
-    (FixedString{"(anon ns)::my_type const volatile*"}, my_type const volatile*),
+    (FixedString{"{anon-ns}::my_type"}, my_type),
+    (FixedString{"{anon-ns}::my_type*"}, my_type*),
+    (FixedString{"{anon-ns}::my_type const*"}, my_type const*),
+    (FixedString{"{anon-ns}::my_type volatile*"}, my_type volatile*),
+    (FixedString{"{anon-ns}::my_type const volatile*"}, my_type const volatile*),
 
     (FixedString{"user::my_custom_type"}, my_custom_type<42>),
     (FixedString{"user::my_custom_type*"}, my_custom_type<42>*),
@@ -686,7 +686,7 @@ TEST_CASE(
 {
     REQUIRE_THAT(
         print_type<my_type>(),
-        Catch::Matchers::Equals("(anon ns)::my_type"));
+        Catch::Matchers::Equals("{anon-ns}::my_type"));
 }
 
 namespace
@@ -706,10 +706,10 @@ TEST_CASE(
 {
     REQUIRE_THAT(
         print_type<MyEnum>(),
-        Catch::Matchers::Equals("(anon ns)::MyEnum"));
+        Catch::Matchers::Equals("{anon-ns}::MyEnum"));
     REQUIRE_THAT(
         print_type<MyEnumClass>(),
-        Catch::Matchers::Equals("(anon ns)::MyEnumClass"));
+        Catch::Matchers::Equals("{anon-ns}::MyEnumClass"));
 }
 
 #endif
@@ -731,7 +731,7 @@ TEMPLATE_TEST_CASE_SIG(
     (FixedString{"void()"}, void),
     (FixedString{"std::string&(float const&&, char*)"}, std::string&, float const&&, char*),
     (
-        FixedString{"std::optional<std::vector<int, (anon ns)::custom_allocator<int>>>(std::string&&, std::tuple<std::vector<int>> const*)"},
+        FixedString{"std::optional<std::vector<int, {anon-ns}::custom_allocator<int>>>(std::string&&, std::tuple<std::vector<int>> const*)"},
         (std::optional<std::vector<int, custom_allocator<int>>>, std::string&&, std::tuple<std::vector<int>> const*)))
 #else
 TEMPLATE_TEST_CASE_SIG(
