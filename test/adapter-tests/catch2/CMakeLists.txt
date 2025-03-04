@@ -11,14 +11,11 @@ add_executable(${TARGET_NAME}
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
-include(EnableAdditionalTestFlags)
-include(EnableWarnings)
 find_package(Catch2 REQUIRED)
 target_link_libraries(${TARGET_NAME}
 	PRIVATE
 	mimicpp::mimicpp
-	mimicpp::internal::additional-test-flags
-	mimicpp::internal::warnings
+	mimicpp::test::basics
 	Catch2::Catch2WithMain
 )
 

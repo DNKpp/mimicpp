@@ -3,10 +3,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "catch2/catch_test_macros.hpp"
+#include <TestAssert.hpp>
+
 #include "mimic++/Mock.hpp"
 #include "mimic++/adapters/Catch2.hpp"
 
+#include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <catch2/reporters/catch_reporter_event_listener.hpp>
 #include <catch2/reporters/catch_reporter_registrars.hpp>
