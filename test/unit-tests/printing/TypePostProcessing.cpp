@@ -5,6 +5,8 @@
 
 #include "mimic++/printing/TypePrinter.hpp"
 
+#include <source_location>
+
 using namespace mimicpp;
 
 #ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
@@ -750,6 +752,11 @@ namespace
         struct my_type
         {
         };
+
+        std::source_location foo(my_type const&)
+        {
+            return std::source_location::current();
+        }
     };
 }
 
@@ -783,6 +790,41 @@ TEST_CASE(
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Equals("(anon ns)::my_template::my_type"));
+    }
+
+    SECTION("When template-dependant function-pointer is given.")
+    {
+        using type_t = decltype(my_typeLambda());
+        StringT const rawName = printing::type::type_name<decltype(&my_template<type_t>::foo)>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Equals(
+                "std::source_location " // return type
+                "(anon ns)::my_template::* "
+                "((anon ns)::my_template::my_type const&)"));
+    }
+
+    SECTION("When template-dependant function is given.")
+    {
+        using type_t = decltype(my_typeLambda());
+        auto const loc = my_template<type_t>{}.foo({});
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Equals(
+                "std::source_location " // return type
+                "(anon ns)::my_template::foo"
+                "((anon ns)::my_template::my_type const&)"));
     }
 
     SECTION("When arbitrary template name is given.")
