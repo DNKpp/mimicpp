@@ -8,13 +8,14 @@
 
 #pragma once
 
+#include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/reporting/NoMatchReport.hpp"
 #include "mimic++/reporting/StringifyReports.hpp"
 
-#include <cassert>
 #include <cstddef>
 #include <exception>
 #include <ostream>
@@ -111,7 +112,7 @@ namespace mimicpp::reporting
             [[maybe_unused]] CallReport const call,
             [[maybe_unused]] ExpectationReport const expectationReport) noexcept override
         {
-            assert(std::holds_alternative<state_applicable>(expectationReport.controlReport) && "Report denotes inapplicable expectation.");
+            MIMICPP_ASSERT(std::holds_alternative<state_applicable>(expectationReport.controlReport), "Report denotes inapplicable expectation.");
         }
 
         void report_unfulfilled_expectation(ExpectationReport expectationReport) override

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/utilities/AlwaysFalse.hpp"
@@ -16,7 +17,6 @@
 
 #include <algorithm>
 #include <any>
-#include <cassert>
 // ReSharper disable once CppUnusedIncludeDirective
 #include <functional> // std::invoke
 #include <ranges>
@@ -381,7 +381,7 @@ namespace mimicpp::stacktrace::detail
     template <print_iterator OutIter>
     OutIter print_entry(OutIter out, Stacktrace const& stacktrace, std::size_t const index)
     {
-        assert(index < stacktrace.size() && "Index out of bounds.");
+        MIMICPP_ASSERT(index < stacktrace.size(), "Index out of bounds.");
 
         out = format::format_to(std::move(out), "`");
         out = print_path(std::move(out), stacktrace.source_file(index));

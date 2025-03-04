@@ -9,8 +9,10 @@
 #pragma once
 
 #include "mimic++/Call.hpp"
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/TypeTraits.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
@@ -18,7 +20,6 @@
 #include "mimic++/utilities/SourceLocation.hpp"
 
 #include <algorithm>
-#include <cassert>
 #include <concepts>
 #include <functional>
 #include <memory>
@@ -307,9 +308,7 @@ namespace mimicpp
         {
             const std::scoped_lock lock{m_ExpectationsMx};
 
-            assert(
-                std::ranges::find(m_Expectations, expectation) == std::ranges::end(m_Expectations)
-                && "Expectation already belongs to this storage.");
+            MIMICPP_ASSERT(std::ranges::find(m_Expectations, expectation) == std::ranges::end(m_Expectations), "Expectation already belongs to this storage.");
 
             m_Expectations.emplace_back(std::move(expectation));
         }
@@ -326,7 +325,7 @@ namespace mimicpp
             const std::scoped_lock lock{m_ExpectationsMx};
 
             auto iter = std::ranges::find(m_Expectations, expectation);
-            assert(iter != std::ranges::end(m_Expectations) && "Expectation does not belong to this storage.");
+            MIMICPP_ASSERT(iter != std::ranges::end(m_Expectations), "Expectation does not belong to this storage.");
             m_Expectations.erase(iter);
 
             if (!expectation->is_satisfied())
@@ -359,9 +358,9 @@ namespace mimicpp
             if (!std::ranges::empty(matches))
             {
                 std::vector reports = detail::gather_expectation_reports(matches);
-                assert(matches.size() == reports.size() && "Size mismatch.");
+                MIMICPP_ASSERT(matches.size() == reports.size(), "Size mismatch.");
                 auto const bestIndex = detail::find_best_match(reports);
-                assert(0 <= bestIndex && bestIndex < std::ssize(reports) && "Invalid index.");
+                MIMICPP_ASSERT(0 <= bestIndex && bestIndex < std::ssize(reports), "Invalid index.");
 
                 auto& report = reports[bestIndex];
                 auto& expectation = *matches[bestIndex];
@@ -679,8 +678,8 @@ namespace mimicpp
                 : m_Storage{std::move(storage)},
                   m_Expectation{std::move(expectation)}
             {
-                assert(m_Storage && "Storage is nullptr.");
-                assert(m_Expectation && "Expectation is nullptr.");
+                MIMICPP_ASSERT(m_Storage, "Storage is nullptr.");
+                MIMICPP_ASSERT(m_Expectation, "Expectation is nullptr.");
 
                 m_Storage->push(m_Expectation);
             }

@@ -8,8 +8,9 @@
 
 #pragma once
 
+#include "mimic++/config/Config.hpp"
+
 #include <algorithm>
-#include <cassert>
 #include <functional>
 #include <iterator>
 #include <ranges>
@@ -57,7 +58,7 @@ namespace mimicpp::util
         Predicate predicate,
         Projection projection = {})
     {
-        assert(std::ranges::size(targetRange) == std::ranges::size(controlRange) && "Size mismatch.");
+        MIMICPP_ASSERT(std::ranges::size(targetRange) == std::ranges::size(controlRange), "Size mismatch.");
 
         auto const targetBegin = std::ranges::begin(targetRange);
         auto const controlBegin = std::ranges::begin(controlRange);
@@ -153,7 +154,7 @@ namespace mimicpp::util
             std::ranges::subrange const part{pending.begin(), match.begin()};
             openScopes += countAllOf(part, opening)
                         - countAllOf(part, closing);
-            assert(0 <= openScopes && "More scopes closed than opened.");
+            MIMICPP_ASSERT(0 <= openScopes, "More scopes closed than opened.");
             if (0 == openScopes)
             {
                 return match;

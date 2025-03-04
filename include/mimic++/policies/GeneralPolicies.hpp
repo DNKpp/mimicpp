@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 
-#include <cassert>
 #include <iterator>
 
 namespace mimicpp::detail
@@ -58,7 +58,7 @@ namespace mimicpp::expectation_policies
         template <typename Return, typename... Args>
         static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
         {
-            assert(mimicpp::detail::is_matching(info.fromCategory, expected) && "Call does not match.");
+            MIMICPP_ASSERT(mimicpp::detail::is_matching(info.fromCategory, expected), "Call does not match.");
         }
 
         [[nodiscard]]
@@ -91,7 +91,7 @@ namespace mimicpp::expectation_policies
         template <typename Return, typename... Args>
         static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
         {
-            assert(mimicpp::detail::is_matching(info.fromConstness, constness) && "Call does not match.");
+            MIMICPP_ASSERT(mimicpp::detail::is_matching(info.fromConstness, constness), "Call does not match.");
         }
 
         [[nodiscard]]

@@ -9,13 +9,13 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
 #include <algorithm>
 #include <array>
-#include <cassert>
 #include <functional>
 #include <span>
 #include <tuple>
@@ -118,7 +118,7 @@ namespace mimicpp::sequence
             [[nodiscard]]
             constexpr std::optional<int> priority_of(const IdT id) const noexcept
             {
-                assert(is_valid(id));
+                MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
 
                 if (is_consumable(id))
                 {
@@ -133,31 +133,29 @@ namespace mimicpp::sequence
 
             constexpr void set_satisfied(const IdT id) noexcept
             {
-                assert(is_valid(id));
-                assert(m_Cursor <= util::to_underlying(id));
+                MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
+                MIMICPP_ASSERT(m_Cursor <= util::to_underlying(id), "Invalid state.");
 
                 auto& element = m_Entries[util::to_underlying(id)];
-                assert(element == State::unsatisfied);
+                MIMICPP_ASSERT(element == State::unsatisfied, "Element is in unexpected state.");
                 element = State::satisfied;
             }
 
             constexpr void set_saturated(const IdT id) noexcept
             {
-                assert(is_valid(id));
+                MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
                 const auto index = util::to_underlying(id);
-                assert(m_Cursor <= index);
+                MIMICPP_ASSERT(m_Cursor <= index, "Invalid state.");
 
                 auto& element = m_Entries[index];
-                assert(
-                    element == State::unsatisfied
-                    || element == State::satisfied);
+                MIMICPP_ASSERT(element == State::unsatisfied || element == State::satisfied, "Element is in unexpected state.");
                 element = State::saturated;
             }
 
             [[nodiscard]]
             constexpr bool is_consumable(const IdT id) const noexcept
             {
-                assert(is_valid(id));
+                MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
 
                 const int index = util::to_underlying(id);
                 const auto state = m_Entries[index];
@@ -175,7 +173,7 @@ namespace mimicpp::sequence
 
             constexpr void consume(const IdT id) noexcept
             {
-                assert(is_consumable(id));
+                MIMICPP_ASSERT(is_consumable(id), "Sequence is not in consumable state.");
 
                 m_Cursor = util::to_underlying(id);
             }
@@ -227,7 +225,7 @@ namespace mimicpp::sequence
             constexpr int operator()(const auto id, const int cursor) const noexcept
             {
                 const auto index = util::to_underlying(id);
-                assert(std::cmp_less_equal(cursor, index));
+                MIMICPP_ASSERT(std::cmp_less_equal(cursor, index), "Invalid state.");
 
                 return std::numeric_limits<int>::max()
                      - (static_cast<int>(index) - cursor);
@@ -241,7 +239,7 @@ namespace mimicpp::sequence
             constexpr int operator()(const auto id, const int cursor) const noexcept
             {
                 const auto index = util::to_underlying(id);
-                assert(std::cmp_less_equal(cursor, index));
+                MIMICPP_ASSERT(std::cmp_less_equal(cursor, index), "Invalid state.");
 
                 return static_cast<int>(index) - cursor;
             }

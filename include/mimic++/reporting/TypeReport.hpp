@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 
-#include <cassert>
 #include <functional>
 
 namespace mimicpp::reporting
@@ -54,7 +54,7 @@ namespace mimicpp::reporting
         explicit constexpr TypeReport(make_name_fn const makeFn) noexcept
             : m_MakeNameFn{makeFn}
         {
-            assert(m_MakeNameFn && "Null make-function is not allowed.");
+            MIMICPP_ASSERT(m_MakeNameFn, "Null make-function is not allowed.");
         }
     };
 }

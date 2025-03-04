@@ -14,7 +14,6 @@
 #include "mimic++/utilities/Algorithm.hpp"
 
 #include <array>
-#include <cassert>
 #include <iterator>
 #include <optional>
 #include <ranges>
@@ -80,8 +79,8 @@ namespace mimicpp::printing::type::detail
         auto const& prefixMatches,
         auto const& suffixMatches)
     {
-        assert(prefixMatches.size() == 2 && "Regex out-of-sync.");
-        assert(suffixMatches.size() == 1 && "Regex out-of-sync.");
+        MIMICPP_ASSERT(prefixMatches.size() == 2, "Regex out-of-sync.");
+        MIMICPP_ASSERT(suffixMatches.size() == 1, "Regex out-of-sync.");
 
         StringViewT const functionName{prefixMatches[1].first, prefixMatches[1].second};
         StringViewT const prefix{prefixMatches[0].first, prefixMatches[0].second};
@@ -103,7 +102,7 @@ namespace mimicpp::printing::type::detail
                           | std::views::reverse
                           | std::views::drop(templateScopeSuffix.size());
         auto const iter = util::find_closing_token(reversedName, '>', '<');
-        assert(iter != reversedName.end() && "No template begin found.");
+        MIMICPP_ASSERT(iter != reversedName.end(), "No template begin found.");
         out = format::format_to(
             std::move(out),
             "{}::",
@@ -125,17 +124,17 @@ namespace mimicpp::printing::type::detail
         StringViewT const prefix,
         StringViewT const scope)
     {
-        assert(scope.data() == prefix.data() && "Prefix and scope must be aligned.");
+        MIMICPP_ASSERT(scope.data() == prefix.data(), "Prefix and scope must be aligned.");
 
         StringViewT rest{prefix.data() + prefix.size(), scope.data() + scope.size()};
         auto const closingIter = util::find_closing_token(rest, '(', ')');
-        assert(closingIter != rest.cend() && "No corresponding closing-token found.");
+        MIMICPP_ASSERT(closingIter != rest.cend(), "No corresponding closing-token found.");
 
         SVMatchT suffixMatches{};
         rest = StringViewT{closingIter, rest.cend()};
         std::regex_search(rest.cbegin(), rest.cend(), suffixMatches, suffixRegex);
-        assert(!suffixMatches.empty() && "No function suffix found.");
-        assert(suffixMatches.size() == 2 && "Regex out-of-sync.");
+        MIMICPP_ASSERT(!suffixMatches.empty(), "No function suffix found.");
+        MIMICPP_ASSERT(suffixMatches.size() == 2, "Regex out-of-sync.");
         StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
 
         out = std::ranges::copy(StringViewT{"lambda#"}, std::move(out)).out;
@@ -229,7 +228,7 @@ namespace mimicpp::printing::type::detail
             StringViewT const rest{scope.cbegin(), matches[0].first};
             SVMatchT prefixMatches{};
             std::regex_search(rest.cbegin(), rest.cend(), prefixMatches, functionScopePrefix);
-            assert(!prefixMatches.empty() && "No corresponding function prefix found.");
+            MIMICPP_ASSERT(!prefixMatches.empty(), "No corresponding function prefix found.");
 
             std::size_t count{};
             std::tie(out, count) = prettify_function_scope(
@@ -337,7 +336,7 @@ namespace mimicpp::printing::type::detail
             StringViewT const rest{scope.cbegin(), matches[0].first};
             SVMatchT prefixMatches{};
             std::regex_search(rest.cbegin(), rest.cend(), prefixMatches, functionScopePrefix);
-            assert(!prefixMatches.empty() && "No corresponding function prefix found.");
+            MIMICPP_ASSERT(!prefixMatches.empty(), "No corresponding function prefix found.");
 
             std::size_t count{};
             std::tie(out, count) = prettify_function_scope(
@@ -449,7 +448,7 @@ namespace mimicpp::printing::type::detail
                               | std::views::reverse
                               | std::views::drop(1);
             auto const iter = util::find_closing_token(reversedName, '>', '<');
-            assert(iter != reversedName.end() && "No template begin found.");
+            MIMICPP_ASSERT(iter != reversedName.end(), "No template begin found.");
             std::tuple info{
                 "<",
                 StringT{iter.base(), name.end() - 1},
@@ -473,7 +472,7 @@ namespace mimicpp::printing::type::detail
                               | std::views::reverse
                               | std::views::drop(matches[0].length());
             auto const iter = util::find_closing_token(reversedName, '}', '{');
-            assert(iter != reversedName.end() && "No lambda begin found.");
+            MIMICPP_ASSERT(iter != reversedName.end(), "No lambda begin found.");
 
             std::tuple info{
                 format::format("lambda#{}", StringViewT{matches[1].first, matches[1].second}),
@@ -501,7 +500,7 @@ namespace mimicpp::printing::type::detail
                               | std::views::reverse
                               | std::views::drop(matches[0].length());
             auto const iter = util::find_closing_token(reversedName, ')', '(');
-            assert(iter != reversedName.end() && "No function begin found.");
+            MIMICPP_ASSERT(iter != reversedName.end(), "No function begin found.");
 
             StringViewT const argList{iter.base(), name.end() - matches[0].length()};
             std::tuple info{

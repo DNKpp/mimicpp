@@ -10,7 +10,6 @@
 
 #include "mimic++/config/Config.hpp"
 
-#include <cassert>
 #include <type_traits>
 #include <version>
 
@@ -36,7 +35,7 @@ namespace mimicpp::util
     [[noreturn]]
     inline void unreachable()
     {
-        assert(false);
+        MIMICPP_ASSERT(false, "Reached the unreachable.");
 
     // Uses compiler specific extensions if possible.
     // Even if no extension is used, undefined behavior is still raised by

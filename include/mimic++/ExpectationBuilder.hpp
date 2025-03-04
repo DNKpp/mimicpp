@@ -9,7 +9,9 @@
 #pragma once
 
 #include "mimic++/Expectation.hpp"
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Sequence.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 #include "mimic++/matchers/StringMatchers.hpp"
@@ -55,7 +57,7 @@ namespace mimicpp
               m_FinalizePolicy{std::forward<FinalizePolicyArg>(finalizePolicyArg)},
               m_ExpectationPolicies{std::forward<PolicyListArg>(policyListArg)}
         {
-            assert(m_Storage && "Storage is nullptr.");
+            MIMICPP_ASSERT(m_Storage, "Storage is nullptr.");
         }
 
         BasicExpectationBuilder(const BasicExpectationBuilder&) = delete;

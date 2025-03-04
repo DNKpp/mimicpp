@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
@@ -19,7 +20,6 @@
 #include "mimic++/utilities/C++23Backports.hpp"
 
 #include <algorithm>
-#include <cassert>
 #include <iterator>
 #include <optional>
 #include <span>
@@ -183,7 +183,7 @@ namespace mimicpp::reporting::detail
         std::span<std::optional<StringT> const> const descriptions,
         StringViewT const linePrefix)
     {
-        assert(!descriptions.empty());
+        MIMICPP_ASSERT(!descriptions.empty(), "Zero requirements can never be violated.");
 
         out = std::ranges::copy(linePrefix, std::move(out)).out;
         out = format::format_to(std::move(out), "Due to Violation(s):\n");
@@ -250,7 +250,7 @@ namespace mimicpp::reporting::detail
         static OutIter stringify_times_state(OutIter out, int const current, int const min, int const max)
         {
             const auto verbalizeValue = [](OutIter o, int const value) {
-                assert(0 < value && "Invalid value.");
+                MIMICPP_ASSERT(0 < value, "Invalid value.");
 
                 switch (value)
                 {
@@ -260,7 +260,7 @@ namespace mimicpp::reporting::detail
                 }
             };
 
-            assert(current < min && "State doesn't denote an unsatisfied state.");
+            MIMICPP_ASSERT(current < min, "State doesn't denote an unsatisfied state.");
 
             out = format::format_to(std::move(out), "matching ");
 
@@ -298,7 +298,7 @@ namespace mimicpp::reporting
     [[nodiscard]]
     inline StringT stringify_full_match(CallReport const& call, ExpectationReport expectation)
     {
-        assert(std::holds_alternative<state_applicable>(expectation.controlReport) && "Report denotes inapplicable expectation.");
+        MIMICPP_ASSERT(std::holds_alternative<state_applicable>(expectation.controlReport), "Report denotes inapplicable expectation.");
 
         StringStreamT ss{};
         ss << "Matched ";
@@ -332,7 +332,7 @@ namespace mimicpp::reporting
     [[nodiscard]]
     inline StringT stringify_inapplicable_matches(CallReport const& call, std::span<ExpectationReport> expectations)
     {
-        assert(!expectations.empty() && "No expectations given.");
+        MIMICPP_ASSERT(!expectations.empty(), "No expectations given.");
 
         StringStreamT ss{};
 
@@ -397,7 +397,7 @@ namespace mimicpp::reporting
                     expReport.requirementDescriptions,
                     outcomes.outcomes,
                     std::bind_front(std::equal_to{}, true));
-                assert(!violations.empty() && "Zero violations do not denote a no-match.");
+                MIMICPP_ASSERT(!violations.empty(), "Zero violations do not denote a no-match.");
                 std::ranges::sort(violations);
                 detail::stringify_expectation_report_requirement_violations(
                     std::ostreambuf_iterator{ss},

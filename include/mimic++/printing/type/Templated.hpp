@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
@@ -31,7 +32,7 @@ namespace mimicpp::printing::type::detail
     {
         StringT name = type_name<T>();
         auto const iter = std::ranges::find(name, '<');
-        assert(iter != name.cend() && "Given name is not a template.");
+        MIMICPP_ASSERT(iter != name.cend(), "Given name is not a template.");
         name.erase(iter, name.end());
 
         return type::prettify_identifier(std::move(out), std::move(name));

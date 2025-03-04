@@ -10,9 +10,9 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Sequence.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 
-#include <cassert>
 #include <limits>
 #include <memory>
 #include <optional>
@@ -195,7 +195,7 @@ namespace mimicpp
 
         constexpr void consume() noexcept
         {
-            assert(is_applicable());
+            MIMICPP_ASSERT(is_applicable(), "Policy is inapplicable.");
 
             std::apply(
                 [](auto&... entries) noexcept {

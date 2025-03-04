@@ -14,6 +14,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
@@ -317,7 +318,7 @@ namespace mimicpp::detail
             : m_Expectations{std::move(collection)},
               m_Settings{std::move(settings)}
         {
-            assert(m_Settings.name && "Empty mock-name.");
+            MIMICPP_ASSERT(m_Settings.name, "Empty mock-name.");
 
             m_Settings.stacktraceSkip += 2u; // skips the operator() and the handle_call from the stacktrace
         }
