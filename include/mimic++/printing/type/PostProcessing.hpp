@@ -70,7 +70,7 @@ namespace mimicpp
 
 namespace mimicpp::printing::type::detail
 {
-    constexpr StringViewT anonymousNamespaceTargetScopeText{"(anon ns)::"};
+    constexpr StringViewT anonymousNamespaceTargetScopeText{"{anon-ns}::"};
 
     template <print_iterator OutIter>
     [[nodiscard]]
@@ -161,15 +161,6 @@ namespace mimicpp::printing::type::detail
     std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope)
     {
         SVMatchT matches{};
-
-        // the anonymous namespace was already prettified, so just print it as-is
-        if (scope == anonymousNamespaceTargetScopeText)
-        {
-            return std::tuple{
-                std::ranges::copy(scope, std::move(out)).out,
-                0,
-                scope.size()};
-        }
 
         if (constexpr StringViewT templateScopeSuffix{">::"};
             scope.ends_with(templateScopeSuffix))

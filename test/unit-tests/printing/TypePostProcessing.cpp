@@ -188,7 +188,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Equals("(anon ns)::my_type"));
+            Catch::Matchers::Equals("{anon-ns}::my_type"));
     }
 
     SECTION("When nested type-name is given.")
@@ -201,7 +201,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Equals("(anon ns)::outer_type::my_type"));
+            Catch::Matchers::Equals("{anon-ns}::outer_type::my_type"));
     }
 
     SECTION("When lambda is given.")
@@ -215,7 +215,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+)"));
     }
@@ -247,7 +247,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc and clang produce this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\)::)"
@@ -265,7 +265,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeMutableLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\)::)"
@@ -284,7 +284,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeNoexceptLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\)::)"
@@ -302,7 +302,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeNestedLambda::)?)" // gcc produces this extra scope
                 R"((lambda#\d+::)"
                 R"(\(operator\(\)\)::){2})"
@@ -320,7 +320,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"(\(my_typeFreeFunction\)::)"
                 "my_type"));
     }
@@ -336,7 +336,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typeFunction\)::)"
                 "my_type"));
@@ -354,7 +354,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typeNoexceptFunction\)::)"
                 "my_type"));
@@ -371,7 +371,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typeConstFunction\)::)"
                 "my_type"));
@@ -388,7 +388,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typeStaticFunction\)::)"
                 "my_type"));
@@ -405,7 +405,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typeLvalueFunction\)::)"
                 "my_type"));
@@ -422,7 +422,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typeConstLvalueFunction\)::)"
                 "my_type"));
@@ -439,7 +439,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typeRvalueFunction\)::)"
                 "my_type"));
@@ -456,7 +456,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typeConstRvalueFunction\)::)"
                 "my_type"));
@@ -473,7 +473,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(my_typePrivateFunction\)::)"
                 "my_type"));
@@ -490,7 +490,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 "outer_type::"
                 R"(\(operator\+\)::)"
                 "my_type"));
@@ -663,7 +663,7 @@ TEST_CASE(
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\)::)"
@@ -685,7 +685,7 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 R"(void\s*\()"
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\)::)"
@@ -713,7 +713,7 @@ TEST_CASE(
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\)::)"
@@ -735,7 +735,7 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 R"(void\s*\(\*\)\()"
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\)::)"
@@ -776,7 +776,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Equals("(anon ns)::my_template<int>"));
+            Catch::Matchers::Equals("{anon-ns}::my_template<int>"));
     }
 
     SECTION("When template-dependant name is given.")
@@ -789,7 +789,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Equals("(anon ns)::my_template::my_type"));
+            Catch::Matchers::Equals("{anon-ns}::my_template::my_type"));
     }
 
     SECTION("When template-dependant function-pointer is given.")
@@ -805,8 +805,8 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Equals(
                 "std::source_location " // return type
-                "(anon ns)::my_template::* "
-                "((anon ns)::my_template::my_type const&)"));
+                "{anon-ns}::my_template::* "
+                "({anon-ns}::my_template::my_type const&)"));
     }
 
     SECTION("When template-dependant function is given.")
@@ -823,9 +823,8 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Equals(
                 "std::source_location " // return type
-                "(anon ns)::my_template::foo"
-                "((anon ns)::my_template::my_type const&)"));
-    }
+                "{anon-ns}::my_template::foo"
+                "({anon-ns}::my_template::my_type const&)"));
 
     SECTION("When arbitrary template name is given.")
     {
@@ -839,9 +838,9 @@ TEST_CASE(
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"(my_template<)"
-                R"(\(anon ns\)::)"
+                R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
                 R"(\(operator\(\)\)::)"
