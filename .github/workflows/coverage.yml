@@ -70,7 +70,7 @@ jobs:
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
           gcovr -j4 -v \
               --filter "include/mimic++" \
-              --exclude-lines-by-pattern "(\s*assert\(|\s*unreachable\(\);)" \
+              --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|unreachable)\(" \
               --exclude-unreachable-branches \
               --exclude-function-lines \
               --exclude-noncode-lines \
