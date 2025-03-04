@@ -56,10 +56,9 @@ namespace mimicpp::printing::type::detail
     template <typename Type, template <typename...> typename Template, typename... LeadingArgs>
         requires requires { typename Template<LeadingArgs...>; }
     struct is_default_arg_for<Type, Template, util::type_list<LeadingArgs...>>
-        : public std::bool_constant<
-              std::same_as<
-                  Template<LeadingArgs...>,
-                  Template<LeadingArgs..., Type>>>
+        : public std::is_same<
+              Template<LeadingArgs...>,
+              Template<LeadingArgs..., Type>>
     {
     };
 
