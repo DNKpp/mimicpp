@@ -498,7 +498,7 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline std::tuple<StringT, std::optional<special_type_info::template_t>> detect_template_type_info(StringT name)
     {
-        if (name.back() == '>')
+        if (name.ends_with('>'))
         {
             auto reversedName = name
                               | std::views::reverse
