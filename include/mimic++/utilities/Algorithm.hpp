@@ -75,6 +75,18 @@ namespace mimicpp::util
         return {std::move(midpoint), std::ranges::end(targetRange)};
     }
 
+    /**
+     * \brief Finds the next closing token in the given string.
+     * \tparam Range The string type.
+     * \param str The string to operate on.
+     * \param openingToken The symmetrical opening token.
+     * \param closingToken The symmetrical closing token.
+     * \return Returns the iterator to the next closing token, or `std::ranges::end(str)` if no such token exist.
+     *
+     * \details This algorithm determines the first closing-token, for which no corresponding opening-token where found.
+     * E.g. for the input `())` an iterator to the second `)` will be returned.
+     * \note The algorithm assumes, that the corresponding opening-token is not part of the string.
+     */
     template <std::ranges::borrowed_range Range>
     [[nodiscard]]
     constexpr std::ranges::borrowed_iterator_t<Range> find_closing_token(
@@ -101,6 +113,20 @@ namespace mimicpp::util
         return closingIter;
     }
 
+    /**
+     * \brief Finds the next unwrapped token in the given string.
+     * \tparam Range The string type.
+     * \param str The string to operate on.
+     * \param token The token to be found.
+     * \param opening Character-range, which will be treated as wrapping start.
+     * \param closing Character-range, which will be treated as wrapping end.
+     * \return Returns a subview to the next unwrapped token,
+     * or `std::ranges::borrowed_subrange_t<Range>{std::ranges::end(str),std::ranges::end(str)}` if no such token exist.
+     *
+     * \details This algorithm determines the first unwrapped token.
+     * Unwrapped means, that the token does not appear between elements of the opening- and closing-character-range.
+     * E.g. the input `<t>t` will return the second `t` when `<` and `>` are part of the opening- and closing-range.
+     */
     template <std::ranges::borrowed_range Range>
     [[nodiscard]]
     constexpr std::ranges::borrowed_subrange_t<Range> find_next_unwrapped_token(
