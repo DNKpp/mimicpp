@@ -3,6 +3,7 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
+add_subdirectory("test-basics")
 add_subdirectory("unit-tests")
 add_subdirectory("custom-stacktrace-tests")
 
