@@ -25,13 +25,10 @@ CPMAddPackage(
 	SYSTEM				YES
 )
 
-include(EnableAdditionalTestFlags)
-include(EnableWarnings)
 target_link_libraries(${TARGET_NAME}
 	PRIVATE
 	mimicpp::mimicpp
-	mimicpp::internal::additional-test-flags
-	mimicpp::internal::warnings
+	mimicpp::test::basics
 	Boost::unit_test_framework
 )
 
