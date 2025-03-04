@@ -32,17 +32,20 @@ endif ()
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
-include(EnableAdditionalTestFlags)
-include(EnableWarnings)
-include(LinkStdStacktrace)
 find_package(Catch2 REQUIRED)
+find_package(trompeloeil REQUIRED)
+find_package(libassert REQUIRED)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
-    mimicpp::internal::additional-test-flags
-    mimicpp::internal::warnings
-    mimicpp::internal::link-std-stacktrace
+    mimicpp::test::basics
     Catch2::Catch2WithMain
+)
+
+target_precompile_headers(${TARGET_NAME}
+    PRIVATE
+    <TestAssert.hpp>
+    <catch2/catch_all.hpp>
 )
 
 catch_discover_tests(${TARGET_NAME})
