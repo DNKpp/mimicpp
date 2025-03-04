@@ -52,43 +52,6 @@ namespace mimicpp::util
 
         return str;
     }
-
-    template <typename Char, typename CharTraits, typename RegexTraits>
-    [[nodiscard]]
-    constexpr std::basic_string_view<Char, CharTraits> regex_find_corresponding_suffix(
-        std::basic_string_view<Char, CharTraits> str,
-        std::basic_regex<Char, RegexTraits> const& prefixRegex,
-        std::basic_regex<Char, RegexTraits> const& suffixRegex)
-    {
-        using view_t = std::basic_string_view<Char, CharTraits>;
-        using match_result_t = std::match_results<typename view_t::const_iterator>;
-
-        match_result_t matches{};
-        if (!std::regex_search(str.cbegin(), str.cend(), matches, suffixRegex))
-        {
-            return {};
-        }
-
-        view_t suffix{matches[0].first, matches[0].second};
-        view_t content{str.data(), suffix.data()};
-        str = view_t{suffix.data() + suffix.size(), str.data() + str.size()};
-
-        while (std::regex_search(content.cbegin(), content.cend(), matches, prefixRegex))
-        {
-            content = view_t{matches[0].second, content.cend()};
-
-            if (!std::regex_search(str.cbegin(), str.cend(), matches, suffixRegex))
-            {
-                return {};
-            }
-
-            suffix = view_t{matches[0].first, matches[0].second};
-            content = view_t{content.data(), suffix.data()};
-            str = view_t{suffix.data() + suffix.size(), str.data() + str.size()};
-        }
-
-        return suffix;
-    }
 }
 
 #endif
