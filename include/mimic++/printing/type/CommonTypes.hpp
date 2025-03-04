@@ -15,7 +15,7 @@
 // ReSharper disable once CppUnusedIncludeDirective
 #include <string_view> // false-positive
 
-namespace mimicpp::printing::detail::type
+namespace mimicpp::printing::type::detail
 {
     // general types
     template <>

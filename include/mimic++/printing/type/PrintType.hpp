@@ -31,7 +31,7 @@
     #include <cxxabi.h>
     #include <memory>
 
-namespace mimicpp::printing::detail
+namespace mimicpp::printing::type::detail
 {
     template <typename T>
     StringT type_name()
@@ -54,7 +54,7 @@ namespace mimicpp::printing::detail
 
 #else
 
-namespace mimicpp::printing::detail
+namespace mimicpp::printing::type::detail
 {
     template <typename T>
     StringT type_name()
@@ -65,7 +65,7 @@ namespace mimicpp::printing::detail
 
 #endif
 
-namespace mimicpp::printing::detail::type
+namespace mimicpp::printing::type::detail
 {
     template <typename Printer, typename T, typename OutIter>
     concept type_printer_for = print_iterator<OutIter>
@@ -253,7 +253,7 @@ namespace mimicpp::printing
         template <print_iterator OutIter>
         constexpr OutIter operator()(OutIter out) const
         {
-            return detail::type::print_type_helper<T>{}(std::move(out));
+            return type::detail::print_type_helper<T>{}(std::move(out));
         }
 
         [[nodiscard]]

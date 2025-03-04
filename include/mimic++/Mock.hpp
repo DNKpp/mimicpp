@@ -377,7 +377,7 @@ namespace mimicpp::detail
     {
         StringStreamT out{};
         out << "Mock<";
-        printing::detail::type::print_separated(
+        printing::type::detail::print_separated(
             std::ostreambuf_iterator{out},
             ", ",
             util::type_list<Signatures...>{});

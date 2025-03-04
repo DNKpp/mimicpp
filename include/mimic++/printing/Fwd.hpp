@@ -48,7 +48,7 @@ namespace mimicpp::printing::detail::state
     struct unknown_type_printer;
 }
 
-namespace mimicpp::printing::detail::type
+namespace mimicpp::printing::type::detail
 {
     template <typename T>
     struct common_type_printer;

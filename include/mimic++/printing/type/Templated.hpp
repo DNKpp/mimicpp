@@ -22,7 +22,7 @@
 #include <type_traits>
 #include <utility>
 
-namespace mimicpp::printing::detail::type
+namespace mimicpp::printing::type::detail
 {
 #ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 

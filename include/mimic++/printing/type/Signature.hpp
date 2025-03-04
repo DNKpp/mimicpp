@@ -21,7 +21,7 @@
 #include <iterator>
 #include <type_traits>
 
-namespace mimicpp::printing::detail::type
+namespace mimicpp::printing::type::detail
 {
     template <print_iterator OutIter, typename... Ts>
     constexpr OutIter print_separated(OutIter out, StringViewT const separator, util::type_list<Ts...> const ts)

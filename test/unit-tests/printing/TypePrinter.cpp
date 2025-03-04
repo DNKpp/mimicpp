@@ -664,7 +664,7 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void, std::greater),
     (true, std::allocator<int>, std::vector, int))
 {
-    STATIC_REQUIRE(expected == printing::detail::type::default_arg_for<DefaultArg, Template, util::type_list<LeadingArgs...>>);
+    STATIC_REQUIRE(expected == printing::type::detail::default_arg_for<DefaultArg, Template, util::type_list<LeadingArgs...>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -677,7 +677,7 @@ TEMPLATE_TEST_CASE_SIG(
     (std::ignore, util::type_list<int>, std::vector, int, std::allocator<int>),
     (std::ignore, util::type_list<int, std::pmr::polymorphic_allocator<int>>, std::vector, int, std::pmr::polymorphic_allocator<int>))
 {
-    STATIC_REQUIRE(std::same_as<Expected, typename printing::detail::type::drop_default_args_for<Template, util::type_list<Args...>>::type>);
+    STATIC_REQUIRE(std::same_as<Expected, typename printing::type::detail::drop_default_args_for<Template, util::type_list<Args...>>::type>);
 }
 
 TEST_CASE(

@@ -12,7 +12,6 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
-#include "mimic++/utilities/C++23Backports.hpp"
 
 #include <array>
 #include <cassert>

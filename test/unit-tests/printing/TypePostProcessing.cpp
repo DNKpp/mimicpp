@@ -178,7 +178,7 @@ TEST_CASE(
 
     SECTION("When type-name in anonymous-namespace is given.")
     {
-        StringT const rawName = printing::detail::type_name<my_type>();
+        StringT const rawName = printing::type::detail::type_name<my_type>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -191,7 +191,7 @@ TEST_CASE(
 
     SECTION("When nested type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<outer_type::my_type>();
+        StringT const rawName = printing::type::detail::type_name<outer_type::my_type>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -204,7 +204,7 @@ TEST_CASE(
 
     SECTION("When lambda is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(my_typeLambda)>();
+        StringT const rawName = printing::type::detail::type_name<decltype(my_typeLambda)>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -221,7 +221,7 @@ TEST_CASE(
     SECTION("When lambda with params is given.")
     {
         [[maybe_unused]] constexpr auto lambda = [](std::string const&) {};
-        StringT const rawName = printing::detail::type_name<decltype(lambda)>();
+        StringT const rawName = printing::type::detail::type_name<decltype(lambda)>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -236,7 +236,7 @@ TEST_CASE(
 
     SECTION("When lambda-local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(my_typeLambda())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(my_typeLambda())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -254,7 +254,7 @@ TEST_CASE(
 
     SECTION("When mutable lambda-local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(my_typeMutableLambda())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(my_typeMutableLambda())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -273,7 +273,7 @@ TEST_CASE(
     SECTION("When noexcept lambda-local type-name is given.")
     {
         // noexcept doesn't seem to be part of the spec list
-        StringT const rawName = printing::detail::type_name<decltype(my_typeNoexceptLambda())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(my_typeNoexceptLambda())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -291,7 +291,7 @@ TEST_CASE(
 
     SECTION("When nested lambda-local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(my_typeNestedLambda())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(my_typeNestedLambda())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -309,7 +309,7 @@ TEST_CASE(
 
     SECTION("When free-function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(my_typeFreeFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(my_typeFreeFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -325,7 +325,7 @@ TEST_CASE(
 
     SECTION("When public function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(outer_type{}.my_typeFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(outer_type{}.my_typeFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -343,7 +343,7 @@ TEST_CASE(
     SECTION("When public noexcept function local type-name is given.")
     {
         // noexcept has no effect
-        StringT const rawName = printing::detail::type_name<decltype(outer_type{}.my_typeNoexceptFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(outer_type{}.my_typeNoexceptFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -360,7 +360,7 @@ TEST_CASE(
 
     SECTION("When public const-function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(outer_type{}.my_typeConstFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(outer_type{}.my_typeConstFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -377,7 +377,7 @@ TEST_CASE(
 
     SECTION("When public static-function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(outer_type::my_typeStaticFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(outer_type::my_typeStaticFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -394,7 +394,7 @@ TEST_CASE(
 
     SECTION("When public lvalue-function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(std::declval<outer_type&>().my_typeLvalueFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(std::declval<outer_type&>().my_typeLvalueFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -411,7 +411,7 @@ TEST_CASE(
 
     SECTION("When public const lvalue-function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(std::declval<outer_type const&>().my_typeConstLvalueFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(std::declval<outer_type const&>().my_typeConstLvalueFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -428,7 +428,7 @@ TEST_CASE(
 
     SECTION("When public rvalue-function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(outer_type{}.my_typeRvalueFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(outer_type{}.my_typeRvalueFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -445,7 +445,7 @@ TEST_CASE(
 
     SECTION("When public const rvalue-function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(std::declval<outer_type const&&>().my_typeConstRvalueFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(std::declval<outer_type const&&>().my_typeConstRvalueFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -462,7 +462,7 @@ TEST_CASE(
 
     SECTION("When private function local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(outer_type{}.my_typeIndirectlyPrivateFunction())>();
+        StringT const rawName = printing::type::detail::type_name<decltype(outer_type{}.my_typeIndirectlyPrivateFunction())>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -479,7 +479,7 @@ TEST_CASE(
 
     SECTION("When public operator local type-name is given.")
     {
-        StringT const rawName = printing::detail::type_name<decltype(outer_type{}.operator+(42))>();
+        StringT const rawName = printing::type::detail::type_name<decltype(outer_type{}.operator+(42))>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -507,7 +507,7 @@ TEST_CASE(
         {
         };
 
-        StringT const rawName = printing::detail::type_name<my_type>();
+        StringT const rawName = printing::type::detail::type_name<my_type>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -526,7 +526,7 @@ TEST_CASE(
                 {
                 };
 
-                StringT const rawName = printing::detail::type_name<my_type>();
+                StringT const rawName = printing::type::detail::type_name<my_type>();
                 CAPTURE(rawName);
 
                 printing::type::detail::prettify_identifier(
@@ -552,7 +552,7 @@ TEST_CASE(
                 {
                 };
 
-                StringT const rawName = printing::detail::type_name<my_type>();
+                StringT const rawName = printing::type::detail::type_name<my_type>();
                 CAPTURE(rawName);
 
                 printing::type::detail::prettify_identifier(
@@ -586,7 +586,7 @@ TEST_CASE(
                 {
                 };
 
-                StringT const rawName = printing::detail::type_name<my_type>();
+                StringT const rawName = printing::type::detail::type_name<my_type>();
                 CAPTURE(rawName);
 
                 printing::type::detail::prettify_identifier(
@@ -620,7 +620,7 @@ TEST_CASE(
                         {
                         };
 
-                        StringT const rawName = printing::detail::type_name<my_type>();
+                        StringT const rawName = printing::type::detail::type_name<my_type>();
                         CAPTURE(rawName);
 
                         printing::type::detail::prettify_identifier(
@@ -651,7 +651,7 @@ TEST_CASE(
     SECTION("When function-local type is returned.")
     {
         using return_t = decltype(my_typeLambda());
-        StringT const rawName = printing::detail::type_name<return_t()>();
+        StringT const rawName = printing::type::detail::type_name<return_t()>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -672,7 +672,7 @@ TEST_CASE(
     SECTION("When function-local type is parameter.")
     {
         using param_t = decltype(my_typeLambda());
-        StringT const rawName = printing::detail::type_name<void(param_t)>();
+        StringT const rawName = printing::type::detail::type_name<void(param_t)>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -701,7 +701,7 @@ TEST_CASE(
     SECTION("When function-local type is returned.")
     {
         using return_t = decltype(my_typeLambda());
-        StringT const rawName = printing::detail::type_name<return_t (*)()>();
+        StringT const rawName = printing::type::detail::type_name<return_t (*)()>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -722,7 +722,7 @@ TEST_CASE(
     SECTION("When function-local type is parameter.")
     {
         using param_t = decltype(my_typeLambda());
-        StringT const rawName = printing::detail::type_name<void (*)(param_t)>();
+        StringT const rawName = printing::type::detail::type_name<void (*)(param_t)>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -761,7 +761,7 @@ TEST_CASE(
 
     SECTION("When template name in anonymous-namespace is given.")
     {
-        StringT const rawName = printing::detail::type_name<my_template<int>>();
+        StringT const rawName = printing::type::detail::type_name<my_template<int>>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -774,7 +774,7 @@ TEST_CASE(
 
     SECTION("When template-dependant name is given.")
     {
-        StringT const rawName = printing::detail::type_name<my_template<int, std::string const&&>::my_type>();
+        StringT const rawName = printing::type::detail::type_name<my_template<int, std::string const&&>::my_type>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
@@ -788,7 +788,7 @@ TEST_CASE(
     SECTION("When arbitrary template name is given.")
     {
         using type_t = decltype(my_typeLambda());
-        StringT const rawName = printing::detail::type_name<my_template<type_t&, std::string const&&>>();
+        StringT const rawName = printing::type::detail::type_name<my_template<type_t&, std::string const&&>>();
         CAPTURE(rawName);
 
         printing::type::detail::prettify_identifier(
