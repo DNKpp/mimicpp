@@ -417,22 +417,87 @@ namespace mimicpp::printing::type::detail
         return out;
     }
 
+    constexpr auto is_space = [](CharT const c) {
+        return static_cast<bool>(std::isspace(static_cast<int>(c)));
+    };
+
     [[nodiscard]]
     inline StringViewT trimmed(StringViewT const str)
     {
-        constexpr auto is_space = [](CharT const c) {
-            return static_cast<bool>(std::isspace(static_cast<int>(c)));
-        };
-
         return {
             std::ranges::find_if_not(str, is_space),
             std::ranges::find_if_not(str | std::views::reverse, is_space).base()};
     }
 
-    [[nodiscard]]
-    inline std::tuple<StringT, std::optional<std::tuple<StringT, StringT, StringT>>> detect_special_type_info(StringT name)
+    struct special_type_info
     {
-        // it's a template type
+        struct function_t
+        {
+            StringT returnType;
+            StringT argList;
+            StringT specifiers;
+        };
+
+        std::optional<function_t> functionInfo{};
+
+        struct template_t
+        {
+            StringT argList;
+        };
+
+        std::optional<template_t> templateInfo{};
+    };
+
+    [[nodiscard]]
+    inline std::tuple<StringT, std::optional<special_type_info::function_t>> detect_function_type_info(StringT name)
+    {
+        static const RegexT functionSuffix{
+            R"(\))"
+            R"(((?:\s*\w+\b)*)"
+            R"(\s*&{0,2}))"
+            R"(\s*$)"};
+        if (SMatchT matches{};
+            std::regex_search(name, matches, functionSuffix))
+        {
+            special_type_info::function_t functionInfo{};
+            auto& [returnType, argList, specs] = functionInfo;
+
+            specs.assign(matches[1].first, matches[1].second);
+
+            auto reversedName = name
+                              | std::views::reverse
+                              | std::views::drop(matches[0].length());
+            auto const argListBeginIter = util::find_closing_token(reversedName, ')', '(');
+            MIMICPP_ASSERT(argListBeginIter != reversedName.end(), "No function begin found.");
+            if (StringViewT const args{argListBeginIter.base(), matches[0].first};
+                args != "void")
+            {
+                argList.assign(args.cbegin(), args.cend());
+            }
+
+            auto const returnTypeDelimiter = util::find_next_unwrapped_token(
+                std::ranges::subrange{argListBeginIter + 1, reversedName.end()},
+                " ",
+                closingBrackets,
+                openingBrackets);
+            DEBUG_ASSERT(returnTypeDelimiter, "No return-type found.");
+            returnType.assign(reversedName.end().base(), returnTypeDelimiter.end().base());
+
+            name = StringT{returnTypeDelimiter.begin().base(), argListBeginIter.base() - 1};
+
+            return {
+                std::move(name),
+                std::move(functionInfo)};
+        }
+
+        return {
+            std::move(name),
+            std::nullopt};
+    }
+
+    [[nodiscard]]
+    inline std::tuple<StringT, std::optional<special_type_info::template_t>> detect_template_type_info(StringT name)
+    {
         if (name.back() == '>')
         {
             auto reversedName = name
@@ -440,11 +505,10 @@ namespace mimicpp::printing::type::detail
                               | std::views::drop(1);
             auto const iter = util::find_closing_token(reversedName, '>', '<');
             MIMICPP_ASSERT(iter != reversedName.end(), "No template begin found.");
-            std::tuple info{
-                "<",
-                StringT{iter.base(), name.end() - 1},
-                ">"
+            special_type_info::template_t info{
+                {iter.base(), name.end() - 1}
             };
+
             name.erase(iter.base() - 1, name.cend());
 
             return {
@@ -452,6 +516,14 @@ namespace mimicpp::printing::type::detail
                 std::move(info)};
         }
 
+        return {
+            std::move(name),
+            std::nullopt};
+    }
+
+    [[nodiscard]]
+    inline std::tuple<StringT, special_type_info> detect_special_type_info(StringT name)
+    {
     #if MIMICPP_DETAIL_IS_GCC
 
         static RegexT lambdaSuffixRegex{R"(#(\d+)}$)"};
@@ -465,50 +537,49 @@ namespace mimicpp::printing::type::detail
             auto const iter = util::find_closing_token(reversedName, '}', '{');
             MIMICPP_ASSERT(iter != reversedName.end(), "No lambda begin found.");
 
-            std::tuple info{
-                format::format("lambda#{}", StringViewT{matches[1].first, matches[1].second}),
-                "",
-                ""};
-            name.erase(iter.base() - 1, name.cend());
+            auto outIter = std::ranges::copy(StringViewT{"lambda#"}, iter.base() - 1).out;
+            outIter = std::ranges::copy(matches[1].first, matches[1].second, outIter).out;
+            name.erase(outIter, name.cend());
 
             return {
                 std::move(name),
-                std::move(info)};
+                {}};
         }
 
     #endif
 
-        static const RegexT functionSuffix{
-            R"(\))"
-            R"(\s*(?:const)?)"
-            R"(\s*(?:volatile)?)"
-            R"(\s*&{0,2})"
-            R"(\s*$)"};
-        if (SMatchT matches{};
-            std::regex_search(name, matches, functionSuffix))
-        {
-            auto reversedName = name
-                              | std::views::reverse
-                              | std::views::drop(matches[0].length());
-            auto const iter = util::find_closing_token(reversedName, ')', '(');
-            MIMICPP_ASSERT(iter != reversedName.end(), "No function begin found.");
-
-            StringViewT const argList{iter.base(), name.end() - matches[0].length()};
-            std::tuple info{
-                "(",
-                StringT{argList == "void" ? "" : argList},
-                StringT{matches[0].first,                matches[0].second}
-            };
-            name.erase(iter.base() - 1, name.cend());
-
-            return {
-                std::move(name),
-                std::move(info)};
-        }
+        special_type_info info{};
+        std::tie(name, info.functionInfo) = detect_function_type_info(std::move(name));
+        std::tie(name, info.templateInfo) = detect_template_type_info(std::move(name));
 
         return {
             std::move(name),
-            std::nullopt};
+            std::move(info)};
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_arg_list(OutIter out, StringViewT const argList)
+    {
+        bool isFirst{true};
+        StringViewT pendingArgList{argList};
+        while (!pendingArgList.empty())
+        {
+            if (!std::exchange(isFirst, false))
+            {
+                out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
+            }
+
+            auto const tokenDelimiter = util::find_next_unwrapped_token(
+                pendingArgList,
+                argumentDelimiter,
+                openingBrackets,
+                closingBrackets);
+            StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
+            out = type::prettify_identifier(std::move(out), StringT{arg});
+            pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
+        }
+
+        return out;
     }
 }
 
@@ -519,8 +590,26 @@ namespace mimicpp::printing::type
     {
         name = detail::apply_general_prettification(std::move(name));
 
-        std::optional<std::tuple<StringT, StringT, StringT>> specialTypeInfo{};
+        detail::special_type_info specialTypeInfo{};
         std::tie(name, specialTypeInfo) = detail::detect_special_type_info(std::move(name));
+
+        if (specialTypeInfo.functionInfo)
+        {
+            out = type::prettify_identifier(
+                std::move(out),
+                std::move(specialTypeInfo.functionInfo->returnType));
+            out = format::format_to(std::move(out), " ");
+        }
+
+        // maybe (member-)function pointer
+        bool const isParensWrapped = name.starts_with("(")
+                                  && name.ends_with(")");
+        if (isParensWrapped)
+        {
+            out = format::format_to(std::move(out), "(");
+            name.pop_back();
+            name.erase(0, 1);
+        }
 
         if (auto reversedName = name | std::views::reverse;
             auto const lastScopeMatch = util::find_next_unwrapped_token(
@@ -541,31 +630,26 @@ namespace mimicpp::printing::type
 
         out = std::ranges::copy(name, std::move(out)).out;
 
-        if (specialTypeInfo)
+        if (isParensWrapped)
         {
-            auto const& [scopeBegin, argList, scopeEnd] = *specialTypeInfo;
-            out = std::ranges::copy(scopeBegin, std::move(out)).out;
+            out = format::format_to(std::move(out), ")");
+        }
 
-            bool isFirst{true};
-            StringViewT pendingArgList{argList};
-            while (!pendingArgList.empty())
-            {
-                if (!std::exchange(isFirst, false))
-                {
-                    out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
-                }
+        if (specialTypeInfo.templateInfo)
+        {
+            out = format::format_to(std::move(out), "<");
+            out = detail::prettify_arg_list(std::move(out), specialTypeInfo.templateInfo->argList);
+            out = format::format_to(std::move(out), ">");
+        }
 
-                auto const tokenDelimiter = util::find_next_unwrapped_token(
-                    pendingArgList,
-                    detail::argumentDelimiter,
-                    detail::openingBrackets,
-                    detail::closingBrackets);
-                StringViewT const arg = detail::trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
-                out = type::prettify_identifier(std::move(out), StringT{arg});
-                pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
-            }
+        if (specialTypeInfo.functionInfo)
+        {
+            auto const& [ret, args, specs] = *specialTypeInfo.functionInfo;
 
-            out = std::ranges::copy(scopeEnd, std::move(out)).out;
+            out = format::format_to(std::move(out), "(");
+            out = detail::prettify_arg_list(std::move(out), args);
+            out = format::format_to(std::move(out), ")");
+            out = std::ranges::copy(specs, std::move(out)).out;
         }
 
         return out;
