@@ -7,8 +7,6 @@
 #include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/policies/SideEffectPolicies.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 TEST_CASE(
     "Watched<T, LifetimeWatcher> reports violations during destruction.",
     "[example][example::watched][example::watched::life-time]")

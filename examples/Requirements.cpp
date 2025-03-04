@@ -6,8 +6,6 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/matchers/RangeMatchers.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 #include <string>
 
 TEST_CASE(

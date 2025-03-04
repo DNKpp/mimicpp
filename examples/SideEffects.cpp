@@ -6,8 +6,6 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/policies/SideEffectPolicies.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 TEST_CASE(
     "Side-effects can execute arbitrary actions.",
     "[example][example::side-effect]")

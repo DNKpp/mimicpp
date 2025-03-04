@@ -6,8 +6,6 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/Sequence.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 TEST_CASE(
     "Sequences allow strong ordering between two or more expectations.",
     "[example][example::sequence]")

@@ -6,8 +6,6 @@
 #include "mimic++/CallConvention.hpp"
 #include "mimic++/InterfaceMock.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 //! [register __stdcall]
 MIMICPP_REGISTER_CALL_CONVENTION(__stdcall, detail::stdcall_convention);
 

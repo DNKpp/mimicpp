@@ -5,8 +5,6 @@
 
 #include "mimic++/Mock.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 TEST_CASE(
     "once() requires the expectation to be matched exactly once.",
     "[example][example::times]")

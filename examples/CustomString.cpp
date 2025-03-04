@@ -6,8 +6,6 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/String.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 namespace
 {
     //! [MyString]

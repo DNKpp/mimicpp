@@ -6,8 +6,6 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 namespace
 {
     //! [stack concept]

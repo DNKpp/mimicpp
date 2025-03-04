@@ -6,8 +6,6 @@
 #include "mimic++/InterfaceMock.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
-#include <catch2/catch_test_macros.hpp>
-
 TEST_CASE(
     "Mocking interface methods by hand.",
     "[example][example::mock][example::mock::interface]")
