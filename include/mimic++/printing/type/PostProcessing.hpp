@@ -20,11 +20,36 @@
 #include <ranges>
 #include <tuple>
 
+namespace mimicpp::printing::type::detail
+{
+    /**
+     * \brief Prettifies a demangled name.
+     * \ingroup PRINTING_TYPE
+     * \tparam OutIter The print-iterator type.
+     * \param out The print iterator.
+     * \param name The demangled name to be prettified.
+     * \return The current print iterator.
+     *
+     * \details This function formats a type or template name for better readability.
+     * The primary strategy is to minimize unnecessary details while retaining essential information.
+     * Although this may introduce some ambiguity, it is generally more beneficial to provide an approximate name.
+     *
+     * For example, when a template-dependent type is provided, the template arguments are omitted:
+     * `std::vector<int, std::allocator>::iterator` => `std::vector::iterator`
+     *
+     * \attention Providing a mangled name will result in unexpected behavior.
+     * \note When `MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING` is enabled,
+     * this function simply outputs the provided name without any modifications.
+     */
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_identifier(OutIter out, StringT name);
+}
+
 #ifdef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
 
 namespace mimicpp::printing::type::detail
 {
-    template <typename OutIter>
+    template <print_iterator OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name)
     {
         out = std::ranges::copy(name, std::move(out)).out;
@@ -496,7 +521,7 @@ namespace mimicpp::printing::type::detail
             std::nullopt};
     }
 
-    template <typename OutIter>
+    template <print_iterator OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name)
     {
         name = apply_general_prettification(std::move(name));
