@@ -232,7 +232,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\(CATCH2_INTERNAL_TEST_\d+\)::)"
+                R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
                 R"(lambda#\d+)"));
     }
 
@@ -250,7 +250,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc and clang produce this extra scope
                 R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
+                R"(\{operator\(\)\}::)"
                 "my_type"));
     }
 
@@ -268,7 +268,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeMutableLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
+                R"(\{operator\(\)\}::)"
                 "my_type"));
     }
 
@@ -287,7 +287,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeNoexceptLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
+                R"(\{operator\(\)\}::)"
                 "my_type"));
     }
 
@@ -305,7 +305,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeNestedLambda::)?)" // gcc produces this extra scope
                 R"((lambda#\d+::)"
-                R"(\(operator\(\)\)::){2})"
+                R"(\{operator\(\)\}::){2})"
                 "my_type"));
     }
 
@@ -321,7 +321,7 @@ TEST_CASE(
             std::move(ss).str(),
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
-                R"(\(my_typeFreeFunction\)::)"
+                R"(\{my_typeFreeFunction\}::)"
                 "my_type"));
     }
 
@@ -338,7 +338,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typeFunction\)::)"
+                R"(\{my_typeFunction\}::)"
                 "my_type"));
     }
 
@@ -356,7 +356,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typeNoexceptFunction\)::)"
+                R"(\{my_typeNoexceptFunction\}::)"
                 "my_type"));
     }
 
@@ -373,7 +373,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typeConstFunction\)::)"
+                R"(\{my_typeConstFunction\}::)"
                 "my_type"));
     }
 
@@ -390,7 +390,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typeStaticFunction\)::)"
+                R"(\{my_typeStaticFunction\}::)"
                 "my_type"));
     }
 
@@ -407,7 +407,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typeLvalueFunction\)::)"
+                R"(\{my_typeLvalueFunction\}::)"
                 "my_type"));
     }
 
@@ -424,7 +424,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typeConstLvalueFunction\)::)"
+                R"(\{my_typeConstLvalueFunction\}::)"
                 "my_type"));
     }
 
@@ -441,7 +441,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typeRvalueFunction\)::)"
+                R"(\{my_typeRvalueFunction\}::)"
                 "my_type"));
     }
 
@@ -458,7 +458,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typeConstRvalueFunction\)::)"
+                R"(\{my_typeConstRvalueFunction\}::)"
                 "my_type"));
     }
 
@@ -475,7 +475,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(my_typePrivateFunction\)::)"
+                R"(\{my_typePrivateFunction\}::)"
                 "my_type"));
     }
 
@@ -492,7 +492,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 "outer_type::"
-                R"(\(operator\+\)::)"
+                R"(\{operator\+\}::)"
                 "my_type"));
     }
 }
@@ -517,7 +517,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(R"(\(CATCH2_INTERNAL_TEST_\d+\)::my_type)"));
+            Catch::Matchers::Matches(R"(\{CATCH2_INTERNAL_TEST_\d+\}::my_type)"));
     }
 
     SECTION("When local type is queried inside a lambda.")
@@ -537,9 +537,9 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(ss).str(),
                     Catch::Matchers::Matches(
-                        R"(\(CATCH2_INTERNAL_TEST_\d+\)::)"
+                        R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
                         R"(lambda#\d+::)"
-                        R"(\(operator\(\)\)::)"
+                        R"(\{operator\(\)\}::)"
                         "my_type"));
             });
     }
@@ -563,9 +563,9 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(_ss).str(),
                     Catch::Matchers::Matches(
-                        R"(\(CATCH2_INTERNAL_TEST_\d+\)::)"
+                        R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
                         "outer::"
-                        R"(\(operator\(\)\)::)"
+                        R"(\{operator\(\)\}::)"
                         "my_type"));
             }
         };
@@ -597,9 +597,9 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(*_ss).str(),
                     Catch::Matchers::Matches(
-                        R"(\(CATCH2_INTERNAL_TEST_\d+\)::)"
+                        R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
                         R"(lambda#\d+::)"
-                        R"(\(operator\(\)\)::)"
+                        R"(\{operator\(\)\}::)"
                         "my_type"));
             },
             &ss,
@@ -631,11 +631,11 @@ TEST_CASE(
                         REQUIRE_THAT(
                             std::move(*_ss).str(),
                             Catch::Matchers::Matches(
-                                R"(\(CATCH2_INTERNAL_TEST_\d+\)::)"
+                                R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
                                 R"(lambda#\d+::)"
-                                R"(\(operator\(\)\)::)"
+                                R"(\{operator\(\)\}::)"
                                 R"(lambda#\d+::)"
-                                R"(\(operator\(\)\)::)"
+                                R"(\{operator\(\)\}::)"
                                 "my_type"));
                     },
                     other_type{});
@@ -666,7 +666,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
+                R"(\{operator\(\)\}::)"
                 "my_type"
                 R"(\s*\(\))"));
     }
@@ -688,7 +688,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
+                R"(\{operator\(\)\}::)"
                 "my_type"
                 R"(\))"));
     }
@@ -716,7 +716,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
+                R"(\{operator\(\)\}::)"
                 "my_type"
                 R"(\s*\(\*\)\(\))"));
     }
@@ -738,7 +738,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
+                R"(\{operator\(\)\}::)"
                 "my_type"
                 R"(\))"));
     }
@@ -843,7 +843,7 @@ TEST_CASE(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 R"(lambda#\d+::)"
-                R"(\(operator\(\)\)::)"
+                R"(\{operator\(\)\}::)"
                 R"(my_type\s*&)"
                 R"(,\s*)"
                 R"(std::basic_string<char, std::char_traits<char>, std::allocator<char>> const\s*&&)"

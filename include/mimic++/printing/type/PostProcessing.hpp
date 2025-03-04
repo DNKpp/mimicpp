@@ -87,7 +87,7 @@ namespace mimicpp::printing::type::detail
         StringViewT const suffix{suffixMatches[0].first, suffixMatches[0].second};
 
         return {
-            format::format_to(std::move(out), "({})::", functionName),
+            format::format_to(std::move(out), "{{{}}}::", functionName),
             static_cast<std::size_t>(std::ranges::distance(prefix.data(), suffix.data() + suffix.size()))};
     }
 
