@@ -1,6 +1,7 @@
 var dir_d1aac795712c1a80b032d3d2760385d8 =
 [
     [ "adapters", "dir_fea71f381ece93f367616978be34972a.html", "dir_fea71f381ece93f367616978be34972a" ],
+    [ "config", "dir_08ebf9492445e058b0ba4156a3978cfb.html", "dir_08ebf9492445e058b0ba4156a3978cfb" ],
     [ "matchers", "dir_c8613b7c6812845d24ae03bf6f0c949e.html", "dir_c8613b7c6812845d24ae03bf6f0c949e" ],
     [ "policies", "dir_6ddbcebc0798903b88ee4423bc0f1618.html", "dir_6ddbcebc0798903b88ee4423bc0f1618" ],
     [ "printing", "dir_092aa99ea44c2ea5c05e2b02d3022b6c.html", "dir_092aa99ea44c2ea5c05e2b02d3022b6c" ],
@@ -8,7 +9,6 @@ var dir_d1aac795712c1a80b032d3d2760385d8 =
     [ "utilities", "dir_2f75f8b84a1b0b31df547365a4a1eaf8.html", "dir_2f75f8b84a1b0b31df547365a4a1eaf8" ],
     [ "Call.hpp", "dc/d44/_call_8hpp.html", "dc/d44/_call_8hpp" ],
     [ "CallConvention.hpp", "d7/ded/_call_convention_8hpp.html", "d7/ded/_call_convention_8hpp" ],
-    [ "Config.hpp", "d8/dd2/_config_8hpp.html", null ],
     [ "Expectation.hpp", "d5/d8a/_expectation_8hpp.html", null ],
     [ "ExpectationBuilder.hpp", "d2/d4f/_expectation_builder_8hpp.html", "d2/d4f/_expectation_builder_8hpp" ],
     [ "Fwd.hpp", "df/dde/_fwd_8hpp.html", "df/dde/_fwd_8hpp" ],
@@ -22,6 +22,5 @@ var dir_d1aac795712c1a80b032d3d2760385d8 =
     [ "Stacktrace.hpp", "de/df5/_stacktrace_8hpp.html", "de/df5/_stacktrace_8hpp" ],
     [ "String.hpp", "d9/dc5/_string_8hpp.html", "d9/dc5/_string_8hpp" ],
     [ "TypeTraits.hpp", "d8/d32/_type_traits_8hpp.html", "d8/d32/_type_traits_8hpp" ],
-    [ "Utilities.hpp", "dc/d54/_utilities_8hpp.html", null ],
-    [ "Version.hpp", "d7/d67/_version_8hpp.html", "d7/d67/_version_8hpp" ]
+    [ "Utilities.hpp", "dc/d54/_utilities_8hpp.html", null ]
 ];
