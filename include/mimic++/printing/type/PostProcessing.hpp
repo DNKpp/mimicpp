@@ -336,7 +336,7 @@ namespace mimicpp::printing::type::detail
             R"(\s*(?:const)?)"
             R"(\s*(?:volatile)?)"
             R"(\s*&{0,2})"
-            R"(\s*'::$)"};
+            R"('::$)"};
         if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionSuffix))
         {
             static RegexT const functionScopePrefix{
@@ -394,15 +394,21 @@ namespace mimicpp::printing::type::detail
         static RegexT const omitStaticSpecifier{R"(\bstatic\s+)"};
         name = std::regex_replace(name, omitStaticSpecifier, "");
 
-        static RegexT const unifyComma{R"(\s*,\s*)"};
-        name = std::regex_replace(name, unifyComma, ", ");
-
-        static RegexT const unifyClosingAngles{R"(\s*>)"};
-        name = std::regex_replace(name, unifyClosingAngles, ">");
-
         // something like call-convention and __ptr64
         static RegexT const omitImplementationSpecifiers{R"(\b__\w+\b\s*)"};
         name = std::regex_replace(name, omitImplementationSpecifiers, "");
+
+        static RegexT const unifySpecialBegins{R"(`\s+)"};
+        name = std::regex_replace(name, unifySpecialBegins, "`");
+
+        static RegexT const unifySpecialEnds{R"(\s+')"};
+        name = std::regex_replace(name, unifySpecialEnds, "'");
+
+        static RegexT const unifyComma{R"(\s*,\s*)"};
+        name = std::regex_replace(name, unifyComma, ", ");
+
+        static RegexT const unifyClosingAngles{R"(\s+>)"};
+        name = std::regex_replace(name, unifyClosingAngles, ">");
 
         return name;
     }
