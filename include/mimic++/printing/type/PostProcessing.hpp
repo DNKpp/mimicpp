@@ -581,27 +581,11 @@ namespace mimicpp::printing::type::detail
 
         return out;
     }
-}
 
-namespace mimicpp::printing::type
-{
     template <print_iterator OutIter>
-    constexpr OutIter prettify_identifier(OutIter out, StringT name)
+    constexpr OutIter handle_identifier(OutIter out, StringT name)
     {
-        name = detail::apply_general_prettification(std::move(name));
-
-        detail::special_type_info specialTypeInfo{};
-        std::tie(name, specialTypeInfo) = detail::detect_special_type_info(std::move(name));
-
-        if (specialTypeInfo.functionInfo)
-        {
-            out = type::prettify_identifier(
-                std::move(out),
-                std::move(specialTypeInfo.functionInfo->returnType));
-            out = format::format_to(std::move(out), " ");
-        }
-
-        // maybe (member-)function pointer
+        // maybe (member-)function pointer?
         bool const isParensWrapped = name.starts_with("(")
                                   && name.ends_with(")");
         if (isParensWrapped)
@@ -634,6 +618,30 @@ namespace mimicpp::printing::type
         {
             out = format::format_to(std::move(out), ")");
         }
+
+        return out;
+    }
+}
+
+namespace mimicpp::printing::type
+{
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_identifier(OutIter out, StringT name)
+    {
+        name = detail::apply_general_prettification(std::move(name));
+
+        detail::special_type_info specialTypeInfo{};
+        std::tie(name, specialTypeInfo) = detail::detect_special_type_info(std::move(name));
+
+        if (specialTypeInfo.functionInfo)
+        {
+            out = type::prettify_identifier(
+                std::move(out),
+                std::move(specialTypeInfo.functionInfo->returnType));
+            out = format::format_to(std::move(out), " ");
+        }
+
+        out = detail::handle_identifier(std::move(out), std::move(name));
 
         if (specialTypeInfo.templateInfo)
         {
