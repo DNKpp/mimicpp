@@ -480,7 +480,7 @@ namespace mimicpp::printing::type::detail
                 " ",
                 closingBrackets,
                 openingBrackets);
-            DEBUG_ASSERT(returnTypeDelimiter, "No return-type found.");
+            MIMICPP_ASSERT(returnTypeDelimiter, "No return-type found.");
             returnType.assign(reversedName.end().base(), returnTypeDelimiter.end().base());
 
             name = StringT{returnTypeDelimiter.begin().base(), argListBeginIter.base() - 1};
