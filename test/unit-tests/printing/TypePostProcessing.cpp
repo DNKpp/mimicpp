@@ -162,6 +162,20 @@ namespace
         return inner();
     };
 
+    constexpr auto my_typeNestedLambda2 = [] {
+        [[maybe_unused]] constexpr auto dummy = [] {};
+        [[maybe_unused]] constexpr auto dummy2 = [] {};
+
+        constexpr auto inner = [] {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        };
+        return inner();
+    };
+
     [[maybe_unused]] auto my_typeFreeFunction()
     {
         struct my_type
@@ -304,6 +318,24 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeNestedLambda::)?)" // gcc produces this extra scope
+                R"((lambda#\d+::)"
+                R"(\{operator\(\)\}::){2})"
+                "my_type"));
+    }
+
+    SECTION("When nested lambda-local type-name is given (more inner lambdas).")
+    {
+        StringT const rawName = printing::type::type_name<decltype(my_typeNestedLambda2())>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(
+                R"(\{anon-ns\}::)"
+                R"((?:my_typeNestedLambda2::)?)" // gcc produces this extra scope
                 R"((lambda#\d+::)"
                 R"(\{operator\(\)\}::){2})"
                 "my_type"));
