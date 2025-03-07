@@ -71,6 +71,23 @@ namespace mimicpp
 namespace mimicpp::printing::type::detail
 {
     constexpr StringViewT anonymousNamespaceTargetScopeText{"{anon-ns}::"};
+    constexpr StringViewT scopeDelimiter{"::"};
+    constexpr StringViewT argumentDelimiter{","};
+    constexpr std::array openingBrackets{'<', '(', '[', '{'};
+    constexpr std::array closingBrackets{'>', ')', ']', '}'};
+
+    // see: https://en.cppreference.com/w/cpp/string/byte/isspace
+    constexpr auto is_space = [](char const c) noexcept {
+        return static_cast<bool>(std::isspace(static_cast<unsigned char>(c)));
+    };
+
+    [[nodiscard]]
+    inline StringViewT trimmed(StringViewT const str)
+    {
+        return {
+            std::ranges::find_if_not(str, is_space),
+            std::ranges::find_if_not(str | std::views::reverse, is_space).base()};
+    }
 
     template <print_iterator OutIter>
     [[nodiscard]]
@@ -392,11 +409,6 @@ namespace mimicpp::printing::type::detail
 
 namespace mimicpp::printing::type::detail
 {
-    constexpr StringViewT scopeDelimiter{"::"};
-    constexpr StringViewT argumentDelimiter{","};
-    constexpr std::array openingBrackets{'<', '(', '[', '{'};
-    constexpr std::array closingBrackets{'>', ')', ']', '}'};
-
     template <typename OutIter>
     constexpr OutIter prettify_scopes(OutIter out, StringT name)
     {
@@ -415,18 +427,6 @@ namespace mimicpp::printing::type::detail
         }
 
         return out;
-    }
-
-    constexpr auto is_space = [](CharT const c) {
-        return static_cast<bool>(std::isspace(static_cast<int>(c)));
-    };
-
-    [[nodiscard]]
-    inline StringViewT trimmed(StringViewT const str)
-    {
-        return {
-            std::ranges::find_if_not(str, is_space),
-            std::ranges::find_if_not(str | std::views::reverse, is_space).base()};
     }
 
     struct special_type_info
