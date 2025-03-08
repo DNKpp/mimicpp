@@ -232,8 +232,8 @@ namespace mimicpp::printing::type::detail
      */
     constexpr StringT::const_iterator simplify_special_function_scope(StringT& name, StringT::const_iterator const wrapBegin)
     {
-        constexpr std::array opening{'`', '<', '(', '{'};
-        constexpr std::array closing{'\'', '>', ')', '}'};
+        constexpr std::array opening{'`', '<', '(', '{', '['};
+        constexpr std::array closing{'\'', '>', ')', '}', ']'};
 
         auto const wrapEnd = util::find_closing_token(
             std::ranges::subrange{wrapBegin + 1, name.cend()},
@@ -333,6 +333,9 @@ namespace mimicpp::printing::type::detail
 
 namespace mimicpp::printing::type::detail
 {
+    template <print_iterator OutIter>
+    constexpr OutIter prettify(OutIter out, StringViewT name);
+
     template <print_iterator OutIter>
     constexpr OutIter prettify_function_identifier(OutIter out, [[maybe_unused]] StringViewT const scope, StringViewT identifier)
     {
@@ -480,7 +483,7 @@ namespace mimicpp::printing::type::detail
                 openingBrackets,
                 closingBrackets);
             StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
-            out = type::prettify_identifier(std::move(out), StringT{arg});
+            out = detail::prettify(std::move(out), arg);
             pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
         }
 
@@ -527,6 +530,39 @@ namespace mimicpp::printing::type::detail
 
         return out;
     }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify(OutIter out, StringViewT name)
+    {
+        const auto [functionInfo, templateInfo] = detect_special_type_info(name);
+
+        if (functionInfo)
+        {
+            out = detail::prettify(std::move(out), functionInfo->returnType);
+            out = format::format_to(std::move(out), " ");
+        }
+
+        out = detail::handle_identifier(std::move(out), name);
+
+        if (templateInfo)
+        {
+            out = format::format_to(std::move(out), "<");
+            out = detail::prettify_arg_list(std::move(out), templateInfo->argList);
+            out = format::format_to(std::move(out), ">");
+        }
+
+        if (functionInfo)
+        {
+            auto const& [ret, args, specs] = *functionInfo;
+
+            out = format::format_to(std::move(out), "(");
+            out = detail::prettify_arg_list(std::move(out), args);
+            out = format::format_to(std::move(out), ")");
+            out = std::ranges::copy(specs, std::move(out)).out;
+        }
+
+        return out;
+    }
 }
 
 namespace mimicpp::printing::type
@@ -536,37 +572,7 @@ namespace mimicpp::printing::type
     {
         name = detail::apply_general_prettification(std::move(name));
 
-        StringViewT identifier{name};
-        auto const specialTypeInfo = detail::detect_special_type_info(identifier);
-
-        if (specialTypeInfo.functionInfo)
-        {
-            out = type::prettify_identifier(
-                std::move(out),
-                StringT{specialTypeInfo.functionInfo->returnType});
-            out = format::format_to(std::move(out), " ");
-        }
-
-        out = detail::handle_identifier(std::move(out), identifier);
-
-        if (specialTypeInfo.templateInfo)
-        {
-            out = format::format_to(std::move(out), "<");
-            out = detail::prettify_arg_list(std::move(out), specialTypeInfo.templateInfo->argList);
-            out = format::format_to(std::move(out), ">");
-        }
-
-        if (specialTypeInfo.functionInfo)
-        {
-            auto const& [ret, args, specs] = *specialTypeInfo.functionInfo;
-
-            out = format::format_to(std::move(out), "(");
-            out = detail::prettify_arg_list(std::move(out), args);
-            out = format::format_to(std::move(out), ")");
-            out = std::ranges::copy(specs, std::move(out)).out;
-        }
-
-        return out;
+        return detail::prettify(std::move(out), name);
     }
 }
 
