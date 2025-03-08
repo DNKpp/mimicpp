@@ -326,7 +326,7 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type::detail
 {
     template <print_iterator OutIter>
-    OutIter prettify_function_identifier(OutIter out, StringViewT const scope, StringViewT identifier)
+    OutIter prettify_function_identifier(OutIter out, [[maybe_unused]] StringViewT const scope, StringViewT identifier)
     {
     #if MIMICPP_DETAIL_USES_LIBCXX
 
