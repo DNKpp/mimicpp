@@ -445,7 +445,7 @@ namespace mimicpp::printing::type::detail
             MIMICPP_ASSERT(iter != reversedName.end(), "No template begin found.");
             StringViewT const args = trimmed({iter.base(), name.end() - 1});
 
-            name = StringViewT{name.cbegin(), iter.base()};
+            name = StringViewT{name.cbegin(), iter.base() - 1};
 
             return special_type_info::template_t{
                 .argList = args};
