@@ -326,6 +326,82 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type::detail
 {
     template <print_iterator OutIter>
+    OutIter prettify_function_identifier(OutIter out, StringViewT const scope, StringViewT identifier)
+    {
+    #if MIMICPP_DETAIL_USES_LIBCXX
+
+        // these lambdas sometimes have and sometimes have not an id.
+        constexpr StringViewT libcxxLambdaPrefix{"'lambda"};
+        constexpr StringViewT libcxxLambdaSuffix{"'"};
+        if (identifier.starts_with(libcxxLambdaPrefix)
+            && identifier.ends_with(libcxxLambdaSuffix))
+        {
+            StringViewT id{
+                identifier.begin() + std::ranges::ssize(libcxxLambdaPrefix),
+                identifier.end() - std::ranges::ssize(libcxxLambdaSuffix)};
+            // no number assigned, just assign 0
+            if (id.empty())
+            {
+                id = "0";
+            }
+
+            return format::format_to(std::move(out), "lambda#{}::", id);
+        }
+
+    #elif MIMICPP_DETAIL_IS_GCC \
+        || MIMICPP_DETAIL_IS_CLANG
+
+        constexpr StringViewT libstdcxxLambdaPrefix{"{lambda"};
+        constexpr StringViewT libstdcxxLambdaSuffix{"}"};
+
+        if (identifier == libstdcxxLambdaPrefix
+            && scope.ends_with(libstdcxxLambdaSuffix))
+        {
+            StringViewT const id{
+                std::ranges::find(scope | std::views::reverse, '#').base(),
+                scope.cend() - 1};
+
+            return format::format_to(std::move(out), "lambda#{}::", id);
+        }
+
+    #endif
+
+        // When `operator` is given, then actually `operator()` were used.
+        if (identifier == "operator")
+        {
+            identifier = "operator()";
+        }
+
+        return format::format_to(std::move(out), "{{{}}}::", identifier);
+    }
+
+    template <print_iterator OutIter>
+    OutIter prettify_scope(OutIter out, StringViewT const scope)
+    {
+        if (scope.ends_with('>'))
+        {
+            StringViewT const identifier{
+                scope.cbegin(),
+                std::ranges::find(scope, '<')};
+
+            return format::format_to(std::move(out), "{}::", identifier);
+        }
+
+        if (auto const parensBegin = std::ranges::find(scope, '(');
+            parensBegin != scope.cend())
+        {
+            StringViewT const identifier{scope.cbegin(), parensBegin};
+
+            return prettify_function_identifier(std::move(out), scope, identifier);
+        }
+
+        // probably regular scope
+        out = format::format_to(std::move(out), "{}::", scope);
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
     OutIter handle_scope(OutIter out, StringViewT const scope)
     {
         if (scope.ends_with(templateScopeSuffix))
@@ -605,7 +681,7 @@ namespace mimicpp::printing::type::detail
      * \brief Removes all nested template and function details
      */
     #if MIMICPP_DETAIL_IS_MSVC \
-    || MIMICPP_DETAIL_IS_CLANG_CL
+        || MIMICPP_DETAIL_IS_CLANG_CL
 
     /**
      * \brief Erases the arg list, return type, ``` and `'` pair, and all specifiers, but keeps the `()` as a marker for later steps.
@@ -713,7 +789,7 @@ namespace mimicpp::printing::type::detail
     #endif
 
     template <print_iterator OutIter>
-    constexpr OutIter handle_identifier(OutIter out, StringT name)
+    constexpr OutIter handle_identifier(OutIter out, StringViewT name)
     {
         // maybe (member-)function pointer?
         bool const isParensWrapped = name.starts_with("(")
@@ -721,27 +797,19 @@ namespace mimicpp::printing::type::detail
         if (isParensWrapped)
         {
             out = format::format_to(std::move(out), "(");
-            name.pop_back();
-            name.erase(0, 1);
+            name.remove_prefix(1u);
+            name.remove_suffix(1u);
         }
 
-        if (auto reversedName = name | std::views::reverse;
-            auto const lastScopeMatch = util::find_next_unwrapped_token(
-                reversedName,
-                scopeDelimiter,
-                closingBrackets,
-                openingBrackets))
+        while (auto const nextDelimiter = util::find_next_unwrapped_token(
+                   name,
+                   scopeDelimiter,
+                   openingBrackets,
+                   closingBrackets))
         {
-            std::size_t const splitIndex = std::ranges::distance(name.cbegin(), lastScopeMatch.begin().base());
-            StringT topLevelIdentifier = name.substr(splitIndex);
-
-            // includes last ::
-            name.erase(splitIndex);
-            out = prettify_scopes(
-                std::move(out),
-                simplify_scopes(std::move(name)));
-
-            name = std::move(topLevelIdentifier);
+            StringViewT const scope{name.cbegin(), nextDelimiter.begin()};
+            out = prettify_scope(std::move(out), scope);
+            name.remove_prefix(scope.size() + nextDelimiter.size());
         }
 
         out = std::ranges::copy(name, std::move(out)).out;
