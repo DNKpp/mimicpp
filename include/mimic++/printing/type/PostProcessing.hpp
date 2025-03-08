@@ -230,9 +230,10 @@ namespace mimicpp::printing::type::detail
 
         auto contentBegin = std::ranges::find_if_not(wrapBegin + 1, name.cend(), is_space);
         auto contentEnd = std::ranges::find_if_not(
-            std::make_reverse_iterator(wrapEnd),
-            std::make_reverse_iterator(contentBegin),
-            is_space).base();
+                              std::make_reverse_iterator(wrapEnd),
+                              std::make_reverse_iterator(contentBegin),
+                              is_space)
+                              .base();
         // If a delimiter is found, it may split the `identifier(...)...` part and the return type (which we want to remove).
         if (auto const delimiter = util::find_next_unwrapped_token(
                 std::ranges::subrange{contentBegin, contentEnd},
@@ -264,8 +265,8 @@ namespace mimicpp::printing::type::detail
     constexpr StringT simplify_special_functions(StringT name)
     {
         for (auto iter = std::ranges::find(std::as_const(name), '`');
-            iter != name.cend();
-            iter = std::ranges::find(iter, name.cend(), '`'))
+             iter != name.cend();
+             iter = std::ranges::find(iter, name.cend(), '`'))
         {
             iter = simplify_special_function_scope(name, iter);
         }
