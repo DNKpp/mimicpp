@@ -112,6 +112,89 @@ namespace mimicpp::printing::type::detail
         || MIMICPP_DETAIL_IS_CLANG
 namespace mimicpp::printing::type::detail
 {
+        #if MIMICPP_DETAIL_USES_LIBCXX
+
+    constexpr StringT unify_lambdas(StringT name)
+    {
+        constexpr StringViewT lambdaPrefix{"\'lambda"};
+
+        auto first = name.cbegin();
+        while (auto const match = std::ranges::search(
+                   first,
+                   name.cend(),
+                   lambdaPrefix.cbegin(),
+                   lambdaPrefix.cend()))
+        {
+            // These lambdas sometimes have and sometimes have not an id.
+            // If not, just use `0`.
+            StringViewT id{
+                match.end(),
+                std::ranges::find_if_not(match.end(), name.cend(), is_digit)};
+            if (id.empty())
+            {
+                id = "0";
+            }
+
+            auto const parensBegin = std::ranges::find(match.end(), name.cend(), '(');
+            MIMICPP_ASSERT(parensBegin != name.cend(), "No begin-parenthesis found.");
+            auto const parensEnd = util::find_closing_token(
+                std::ranges::subrange{parensBegin + 1, name.cend()},
+                '(',
+                ')');
+            MIMICPP_ASSERT(parensBegin != name.cend(), "No end-parenthesis found.");
+
+            StringT lambda{"lambda#"};
+            lambda += id;
+
+            // as we just (slightly) shrink the string, `match` stays valid.
+            name.replace(match.begin(), parensEnd + 1, lambda);
+
+            first = match.begin() + std::ranges::ssize(lambda);
+        }
+
+        return name;
+    }
+
+        #else
+
+    constexpr StringT unify_lambdas(StringT name)
+    {
+        constexpr StringViewT lambdaPrefix{"{lambda("};
+
+        auto first = name.cbegin();
+        while (auto const match = std::ranges::search(
+                   first,
+                   name.cend(),
+                   lambdaPrefix.cbegin(),
+                   lambdaPrefix.cend()))
+        {
+            auto const braceEnd = util::find_closing_token(
+                std::ranges::subrange{match.end(), name.cend()},
+                '{',
+                '}');
+            MIMICPP_ASSERT(braceEnd != name.cend(), "No corresponding end found.");
+            StringViewT const id{
+                std::ranges::find(
+                    std::make_reverse_iterator(braceEnd),
+                    std::make_reverse_iterator(match.end()),
+                    '#')
+                    .base(),
+                braceEnd};
+
+            StringT lambda{"lambda#"};
+            lambda += id;
+
+            // as we just (slightly) shrink the string, `match` stays valid.
+            name.replace(match.begin(), braceEnd + 1, lambda);
+
+            first = match.begin() + std::ranges::ssize(lambda);
+        }
+
+        return name;
+    }
+
+        #endif
+
     [[nodiscard]]
     inline StringT apply_general_prettification(StringT name)
     {
@@ -120,6 +203,8 @@ namespace mimicpp::printing::type::detail
 
         static const RegexT terseAnonymousNamespace{R"(\(anonymous namespace\)::)"};
         name = std::regex_replace(name, terseAnonymousNamespace, anonymousNamespaceTargetScopeText.data());
+
+        name = unify_lambdas(std::move(name));
 
         #if MIMICPP_DETAIL_IS_CLANG
         static const RegexT prettifyTerseLambdas{R"(\$_(\d+))"};
@@ -249,46 +334,8 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type::detail
 {
     template <print_iterator OutIter>
-    OutIter prettify_function_identifier(OutIter out, [[maybe_unused]] StringViewT const scope, StringViewT identifier)
+    constexpr OutIter prettify_function_identifier(OutIter out, [[maybe_unused]] StringViewT const scope, StringViewT identifier)
     {
-    #if MIMICPP_DETAIL_USES_LIBCXX
-
-        // these lambdas sometimes have and sometimes have not an id.
-        constexpr StringViewT libcxxLambdaPrefix{"'lambda"};
-        constexpr StringViewT libcxxLambdaSuffix{"'"};
-        if (identifier.starts_with(libcxxLambdaPrefix)
-            && identifier.ends_with(libcxxLambdaSuffix))
-        {
-            StringViewT id{
-                identifier.begin() + std::ranges::ssize(libcxxLambdaPrefix),
-                identifier.end() - std::ranges::ssize(libcxxLambdaSuffix)};
-            // no number assigned, just assign 0
-            if (id.empty())
-            {
-                id = "0";
-            }
-
-            return format::format_to(std::move(out), "lambda#{}::", id);
-        }
-
-    #elif MIMICPP_DETAIL_IS_GCC \
-        || MIMICPP_DETAIL_IS_CLANG
-
-        constexpr StringViewT libstdcxxLambdaPrefix{"{lambda"};
-        constexpr StringViewT libstdcxxLambdaSuffix{"}"};
-
-        if (identifier == libstdcxxLambdaPrefix
-            && scope.ends_with(libstdcxxLambdaSuffix))
-        {
-            StringViewT const id{
-                std::ranges::find(scope | std::views::reverse, '#').base(),
-                scope.cend() - 1};
-
-            return format::format_to(std::move(out), "lambda#{}::", id);
-        }
-
-    #endif
-
         // When `operator` is given, then actually `operator()` were used.
         if (identifier == "operator")
         {
@@ -299,7 +346,7 @@ namespace mimicpp::printing::type::detail
     }
 
     template <print_iterator OutIter>
-    OutIter prettify_scope(OutIter out, StringViewT const scope)
+    constexpr OutIter prettify_scope(OutIter out, StringViewT const scope)
     {
         if (scope.ends_with('>'))
         {
@@ -387,7 +434,7 @@ namespace mimicpp::printing::type::detail
     }
 
     [[nodiscard]]
-    inline std::optional<special_type_info::template_t> detect_template_type_info(StringViewT& name)
+    constexpr std::optional<special_type_info::template_t> detect_template_type_info(StringViewT& name)
     {
         if (name.ends_with('>'))
         {
@@ -443,30 +490,6 @@ namespace mimicpp::printing::type::detail
     template <print_iterator OutIter>
     constexpr OutIter prettify_top_level_identifier(OutIter out, StringViewT const identifier)
     {
-        /*#if MIMICPP_DETAIL_IS_GCC
-
-            static RegexT lambdaSuffixRegex{R"(#(\d+)}$)"};
-            // it's a lambda
-            if (SVMatchT matches{};
-                std::regex_search(name, matches, lambdaSuffixRegex))
-            {
-                auto reversedName = name
-                                  | std::views::reverse
-                                  | std::views::drop(matches[0].length());
-                auto const iter = util::find_closing_token(reversedName, '}', '{');
-                MIMICPP_ASSERT(iter != reversedName.end(), "No lambda begin found.");
-
-                auto outIter = std::ranges::copy(StringViewT{"lambda#"}, iter.base() - 1).out;
-                outIter = std::ranges::copy(matches[1].first, matches[1].second, outIter).out;
-                name.erase(outIter, name.cend());
-
-                return {
-                    std::move(name),
-                    {}};
-            }
-
-        #endif*/
-
         out = std::ranges::copy(identifier, std::move(out)).out;
 
         return out;
