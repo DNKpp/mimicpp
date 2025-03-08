@@ -402,10 +402,16 @@ namespace mimicpp::printing::type::detail
             auto const argListBeginIter = util::find_closing_token(reversedName, ')', '(');
             MIMICPP_ASSERT(argListBeginIter != reversedName.end(), "No function begin found.");
             StringViewT args = trimmed({argListBeginIter.base(), matches[0].first});
+
+    #if MIMICPP_DETAIL_IS_MSVC \
+        || MIMICPP_DETAIL_IS_CLANG_CL
+
             if (args == "void")
             {
                 args = {};
             }
+
+    #endif
 
             auto const returnTypeDelimiter = util::find_next_unwrapped_token(
                 std::ranges::subrange{argListBeginIter + 1, reversedName.end()},
