@@ -239,26 +239,6 @@ namespace mimicpp::printing::type::detail
             static_cast<std::size_t>(std::ranges::distance(prefix.data(), suffix.data() + suffix.size()))};
     }
 
-    template <print_iterator OutIter>
-    OutIter consume_scope(OutIter out, StringViewT const scope)
-    {
-
-        if (scope.ends_with(templateScopeSuffix))
-        {
-            return prettify_template_scope(std::move(out), scope);
-        }
-
-        if (scope.ends_with(functionScopeSuffix))
-        {
-            return prettify_function_scope(std::move(out), scope);
-        }
-
-        // Probably a regular c++-scope
-        out = std::ranges::copy(scope, std::move(out)).out;
-
-        return out;
-    }
-
     [[nodiscard]]
     inline StringT apply_general_prettification(StringT name)
     {
@@ -289,85 +269,6 @@ namespace mimicpp::printing::type::detail
 
 namespace mimicpp::printing::type::detail
 {
-    template <print_iterator OutIter>
-    std::tuple<OutIter, std::size_t, std::size_t> consume_next_scope(OutIter out, StringViewT const scope)
-    {
-        SVMatchT matches{};
-
-        // the anonymous namespace was already prettified, so just print it as-is
-        if (scope.ends_with(anonymousNamespaceTargetScopeText))
-        {
-            return std::tuple{
-                std::ranges::copy(anonymousNamespaceTargetScopeText, std::move(out)).out,
-                scope.size() - anonymousNamespaceTargetScopeText.size(),
-                anonymousNamespaceTargetScopeText.size()};
-        }
-
-        if (constexpr StringViewT templateScopeSuffix{">::"};
-            scope.ends_with(templateScopeSuffix))
-        {
-            return std::tuple{
-                prettify_template_scope(std::move(out), scope, templateScopeSuffix),
-                0u,
-                scope.size()};
-        }
-
-        // was already prettified, thus return as-is
-        if (static RegexT const lambdaScope{R"(lambda#\d+::$)"};
-            std::regex_search(scope.cbegin(), scope.cend(), matches, lambdaScope))
-        {
-            return std::tuple{
-                std::ranges::copy(matches[0].first, matches[0].second, std::move(out)).out,
-                std::ranges::distance(scope.cbegin(), matches[0].first),
-                matches[0].length()};
-        }
-
-        if (static RegexT const regularScope{R"(\w+::$)"};
-            std::regex_search(scope.cbegin(), scope.cend(), matches, regularScope))
-        {
-            return std::tuple{
-                std::ranges::copy(matches[0].first, matches[0].second, std::move(out)).out,
-                std::ranges::distance(scope.cbegin(), matches[0].first),
-                matches[0].length()};
-        }
-
-        static const RegexT functionSuffix{
-            R"(\))"
-            R"(\s*(?:const)?)"
-            R"(\s*(?:volatile)?)"
-            R"(\s*&{0,2})"
-            R"('::$)"};
-        if (std::regex_search(scope.cbegin(), scope.cend(), matches, functionSuffix))
-        {
-            static RegexT const functionScopePrefix{
-                "`"
-                R"((?:\w+\s+)?)"         // return type (optional)
-                R"((operator.+?|\w+)\()" // function-name + (
-            };
-            StringViewT const rest{scope.cbegin(), matches[0].first};
-            SVMatchT prefixMatches{};
-            std::regex_search(rest.cbegin(), rest.cend(), prefixMatches, functionScopePrefix);
-            MIMICPP_ASSERT(!prefixMatches.empty(), "No corresponding function prefix found.");
-
-            std::size_t count{};
-            std::tie(out, count) = prettify_function_scope(
-                std::move(out),
-                prefixMatches,
-                matches);
-            return std::tuple{
-                std::move(out),
-                std::ranges::distance(rest.cbegin(), prefixMatches[0].first),
-                count};
-        }
-
-        // unknown scope. Ideally, this should never be used, but we leave it here as a fallback.
-        // Output will probably quite odd.
-        return std::tuple{
-            std::ranges::copy(scope, std::move(out)).out,
-            0u,
-            scope.size()};
-    }
-
     [[nodiscard]]
     inline StringT apply_general_prettification(StringT name)
     {
@@ -410,6 +311,12 @@ namespace mimicpp::printing::type::detail
         static RegexT const unifyClosingAngles{R"(\s+>)"};
         name = std::regex_replace(name, unifyClosingAngles, ">");
 
+        static RegexT const unifyAnd{R"(\s+&)"};
+        name = std::regex_replace(name, unifyAnd, "&");
+
+        static RegexT const unifyStar{R"(\s+\*)"};
+        name = std::regex_replace(name, unifyStar, "*");
+
         return name;
     }
 }
@@ -418,13 +325,36 @@ namespace mimicpp::printing::type::detail
 
 namespace mimicpp::printing::type::detail
 {
+    template <print_iterator OutIter>
+    OutIter handle_scope(OutIter out, StringViewT const scope)
+    {
+        if (scope.ends_with(templateScopeSuffix))
+        {
+            return prettify_template_scope(std::move(out), scope);
+        }
+
+        if (scope.ends_with(functionScopeSuffix))
+        {
+            return prettify_function_scope(std::move(out), scope);
+        }
+
+        // Probably a regular c++-scope
+        out = std::ranges::copy(scope, std::move(out)).out;
+
+        return out;
+    }
+
     template <typename OutIter>
     constexpr OutIter prettify_scopes(OutIter out, StringViewT const name)
     {
         auto first = name.cbegin();
-        while (auto const match = std::ranges::search(first, name.cend(), scopeDelimiter.cbegin(), scopeDelimiter.cend()))
+        while (auto const match = std::ranges::search(
+                   first,
+                   name.cend(),
+                   scopeDelimiter.cbegin(),
+                   scopeDelimiter.cend()))
         {
-            out = consume_scope(std::move(out), StringViewT{first, match.end()});
+            out = handle_scope(std::move(out), StringViewT{first, match.end()});
             first = match.end();
         }
 
@@ -454,7 +384,7 @@ namespace mimicpp::printing::type::detail
     inline std::tuple<StringT, std::optional<special_type_info::function_t>> detect_function_type_info(StringT name)
     {
         static const RegexT functionSuffix{
-            R"(\))"
+            R"(\)\s*)"
             R"(((?:\s*\w+\b)*)"
             R"(\s*&{0,2}))"
             R"(\s*$)"};
@@ -674,6 +604,85 @@ namespace mimicpp::printing::type::detail
     /**
      * \brief Removes all nested template and function details
      */
+    #if MIMICPP_DETAIL_IS_MSVC \
+    || MIMICPP_DETAIL_IS_CLANG_CL
+
+    /**
+     * \brief Erases the arg list, return type, ``` and `'` pair, and all specifiers, but keeps the `()` as a marker for later steps.
+     */
+    constexpr StringT::const_iterator simplify_special_function_scope(StringT& name, StringT::const_iterator const wrapBegin)
+    {
+        constexpr std::array opening{'`', '<', '(', '{'};
+        constexpr std::array closing{'\'', '>', ')', '}'};
+
+        auto const wrapEnd = util::find_closing_token(
+            std::ranges::subrange{wrapBegin + 1, name.cend()},
+            '`',
+            '\'');
+        MIMICPP_ASSERT(wrapEnd != name.cend(), "No corresponding end found.");
+
+        auto contentBegin = wrapBegin + 1;
+        // If a delimiter is found, it may split the `identifier(...)...` part and the return type (which we want to remove).
+        if (auto const delimiter = util::find_next_unwrapped_token(
+                std::ranges::subrange{contentBegin, wrapEnd},
+                " ",
+                opening,
+                closing))
+        {
+            auto const potentialNewContentBegin = std::ranges::find_if_not(delimiter.end(), wrapEnd, is_space);
+
+            // Is it actually a return-type (so, it's before `(`) or a specified (and thus after `)`)?
+            // If it's a specifier, the range will never contain a pair of `()`, so let's detect it here.
+            if (wrapEnd != std::ranges::find(potentialNewContentBegin, wrapEnd, '('))
+            {
+                contentBegin = potentialNewContentBegin;
+            }
+        }
+
+        StringT::const_iterator const to = std::ranges::copy(
+                                               contentBegin,
+                                               wrapEnd,
+                                               name.begin() + std::ranges::distance(name.cbegin(), wrapBegin))
+                                               .out;
+        name.erase(to, wrapEnd + 1);
+
+        // return the current position, as we may have copied another special scope to the beginning
+        return wrapBegin;
+    }
+
+    constexpr StringT simplify_scopes(StringT name)
+    {
+        constexpr std::array beginTokens{'<', '(', '`'};
+
+        for (auto iter = std::ranges::find_first_of(std::as_const(name), beginTokens);
+             iter != name.cend();
+             iter = std::ranges::find_first_of(iter, name.cend(), beginTokens.cbegin(), beginTokens.cend()))
+        {
+            switch (*iter)
+            {
+            case '(':
+                iter = simplify_function_scope(name, iter);
+                break;
+
+            case '<':
+                iter = simplify_template_scope(name, iter);
+                break;
+
+            case '`':
+                iter = simplify_special_function_scope(name, iter);
+                break;
+
+                // GCOVR_EXCL_START
+            default:
+                util::unreachable();
+                // GCOVR_EXCL_STOP
+            }
+        }
+
+        return name;
+    }
+    #else
+
     constexpr StringT simplify_scopes(StringT name)
     {
         constexpr std::array beginTokens{'<', '('};
@@ -692,45 +701,16 @@ namespace mimicpp::printing::type::detail
                 iter = simplify_template_scope(name, iter);
                 break;
 
+                // GCOVR_EXCL_START
             default:
                 util::unreachable();
+                // GCOVR_EXCL_STOP
             }
         }
-
-    #if MIMICPP_DETAIL_IS_MSVC \
-        || MIMICPP_DETAIL_IS_CLANG_CL
-
-        constexpr auto openingToken = '`';
-        constexpr auto closingToken = '\'';
-        for (auto iter = std::ranges::find(name, openingToken);
-             iter != name.cend();
-             iter = std::ranges::find(name, openingToken))
-        {
-            auto const last = util::find_closing_token(
-                std::ranges::subrange{iter + 1, name.cend()},
-                openingToken,
-                closingToken);
-            MIMICPP_ASSERT(last != name.cend(), "No corresponding end found.");
-
-            // Let's erase the closing token now. `last` will still be a valid iterator.
-            name.erase(last);
-
-            // If a whitespace exists, then the first part denotes the return type, which will be erased.
-            if (auto const whitespaceIter = std::ranges::find_if(iter + 1, last, is_space);
-                whitespaceIter != last)
-            {
-                name.erase(iter, whitespaceIter + 1);
-            }
-            else
-            {
-                name.erase(iter);
-            }
-        }
-
-    #endif
-
         return name;
     }
+
+    #endif
 
     template <print_iterator OutIter>
     constexpr OutIter handle_identifier(OutIter out, StringT name)
