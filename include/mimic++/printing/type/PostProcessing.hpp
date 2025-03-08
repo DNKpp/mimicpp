@@ -269,6 +269,65 @@ namespace mimicpp::printing::type::detail
 
 namespace mimicpp::printing::type::detail
 {
+    /**
+     * \brief Erases the arg list, return type, ``` and `'` pair, and all specifiers, but keeps the `()` as a marker for later steps.
+     */
+    constexpr StringT::const_iterator simplify_special_function_scope(StringT& name, StringT::const_iterator const wrapBegin)
+    {
+        constexpr std::array opening{'`', '<', '(', '{'};
+        constexpr std::array closing{'\'', '>', ')', '}'};
+
+        auto const wrapEnd = util::find_closing_token(
+            std::ranges::subrange{wrapBegin + 1, name.cend()},
+            '`',
+            '\'');
+        MIMICPP_ASSERT(wrapEnd != name.cend(), "No corresponding end found.");
+
+        auto contentBegin = std::ranges::find_if_not(wrapBegin + 1, name.cend(), is_space);
+        auto contentEnd = std::ranges::find_if_not(
+            std::make_reverse_iterator(wrapEnd),
+            std::make_reverse_iterator(contentBegin),
+            is_space).base();
+        // If a delimiter is found, it may split the `identifier(...)...` part and the return type (which we want to remove).
+        if (auto const delimiter = util::find_next_unwrapped_token(
+                std::ranges::subrange{contentBegin, contentEnd},
+                " ",
+                opening,
+                closing))
+        {
+            auto const potentialNewContentBegin = std::ranges::find_if_not(delimiter.end(), contentEnd, is_space);
+
+            // Is it actually a return-type (so, it's before `(`) or a specified (and thus after `)`)?
+            // If it's a specifier, the range will never contain a pair of `()`, so let's detect it here.
+            if (contentEnd != std::ranges::find(potentialNewContentBegin, contentEnd, '('))
+            {
+                contentBegin = potentialNewContentBegin;
+            }
+        }
+
+        StringT::const_iterator const to = std::ranges::copy(
+                                               contentBegin,
+                                               contentEnd,
+                                               name.begin() + std::ranges::distance(name.cbegin(), wrapBegin))
+                                               .out;
+        name.erase(to, wrapEnd + 1);
+
+        // return the current position, as we may have copied another special scope to the beginning
+        return wrapBegin;
+    }
+
+    constexpr StringT simplify_special_functions(StringT name)
+    {
+        for (auto iter = std::ranges::find(std::as_const(name), '`');
+            iter != name.cend();
+            iter = std::ranges::find(iter, name.cend(), '`'))
+        {
+            iter = simplify_special_function_scope(name, iter);
+        }
+
+        return name;
+    }
+
     [[nodiscard]]
     inline StringT apply_general_prettification(StringT name)
     {
@@ -287,11 +346,6 @@ namespace mimicpp::printing::type::detail
         static const RegexT prettifyLambda{R"(<lambda_(\d+)>)"};
         name = std::regex_replace(name, prettifyLambda, "lambda#$1");
 
-        #if MIMICPP_DETAIL_IS_CLANG_CL
-        static RegexT const omitAutoTokens{R"(<auto>\s*)"};
-        name = std::regex_replace(name, omitAutoTokens, "");
-        #endif
-
         static RegexT const omitStaticSpecifier{R"(\bstatic\s+)"};
         name = std::regex_replace(name, omitStaticSpecifier, "");
 
@@ -299,11 +353,7 @@ namespace mimicpp::printing::type::detail
         static RegexT const omitImplementationSpecifiers{R"(\b__\w+\b\s*)"};
         name = std::regex_replace(name, omitImplementationSpecifiers, "");
 
-        static RegexT const unifySpecialBegins{R"(`\s+)"};
-        name = std::regex_replace(name, unifySpecialBegins, "`");
-
-        static RegexT const unifySpecialEnds{R"(\s+')"};
-        name = std::regex_replace(name, unifySpecialEnds, "'");
+        name = simplify_special_functions(std::move(name));
 
         static RegexT const unifyComma{R"(\s*,\s*)"};
         name = std::regex_replace(name, unifyComma, ", ");
@@ -682,49 +732,6 @@ namespace mimicpp::printing::type::detail
      */
     #if MIMICPP_DETAIL_IS_MSVC \
         || MIMICPP_DETAIL_IS_CLANG_CL
-
-    /**
-     * \brief Erases the arg list, return type, ``` and `'` pair, and all specifiers, but keeps the `()` as a marker for later steps.
-     */
-    constexpr StringT::const_iterator simplify_special_function_scope(StringT& name, StringT::const_iterator const wrapBegin)
-    {
-        constexpr std::array opening{'`', '<', '(', '{'};
-        constexpr std::array closing{'\'', '>', ')', '}'};
-
-        auto const wrapEnd = util::find_closing_token(
-            std::ranges::subrange{wrapBegin + 1, name.cend()},
-            '`',
-            '\'');
-        MIMICPP_ASSERT(wrapEnd != name.cend(), "No corresponding end found.");
-
-        auto contentBegin = wrapBegin + 1;
-        // If a delimiter is found, it may split the `identifier(...)...` part and the return type (which we want to remove).
-        if (auto const delimiter = util::find_next_unwrapped_token(
-                std::ranges::subrange{contentBegin, wrapEnd},
-                " ",
-                opening,
-                closing))
-        {
-            auto const potentialNewContentBegin = std::ranges::find_if_not(delimiter.end(), wrapEnd, is_space);
-
-            // Is it actually a return-type (so, it's before `(`) or a specified (and thus after `)`)?
-            // If it's a specifier, the range will never contain a pair of `()`, so let's detect it here.
-            if (wrapEnd != std::ranges::find(potentialNewContentBegin, wrapEnd, '('))
-            {
-                contentBegin = potentialNewContentBegin;
-            }
-        }
-
-        StringT::const_iterator const to = std::ranges::copy(
-                                               contentBegin,
-                                               wrapEnd,
-                                               name.begin() + std::ranges::distance(name.cbegin(), wrapBegin))
-                                               .out;
-        name.erase(to, wrapEnd + 1);
-
-        // return the current position, as we may have copied another special scope to the beginning
-        return wrapBegin;
-    }
 
     constexpr StringT simplify_scopes(StringT name)
     {
