@@ -76,15 +76,19 @@ namespace mimicpp::printing::type::detail
     constexpr std::array openingBrackets{'<', '(', '[', '{'};
     constexpr std::array closingBrackets{'>', ')', ']', '}'};
 
+    // GCOVR_EXCL_START
+
     // see: https://en.cppreference.com/w/cpp/string/byte/isspace
     constexpr auto is_space = [](char const c) noexcept {
         return static_cast<bool>(std::isspace(static_cast<unsigned char>(c)));
     };
 
-    // see: https://en.cppreference.com/w/cpp/string/byte/isalpha
+    // see: https://en.cppreference.com/w/cpp/string/byte/isdigit
     constexpr auto is_digit = [](char const c) noexcept {
         return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
     };
+
+    // GCOVR_EXCL_STOP
 
     [[nodiscard]]
     constexpr StringViewT trimmed(StringViewT const str)
@@ -155,10 +159,8 @@ namespace mimicpp::printing::type::detail
                    lambdaPrefix.cbegin(),
                    lambdaPrefix.cend()))
         {
-            auto const braceEnd = util::find_closing_token(
-                std::ranges::subrange{match.end(), name.cend()},
-                '{',
-                '}');
+            std::ranges::subrange const rest{match.end(), name.cend()};
+            auto const braceEnd = util::find_closing_token(rest, '{', '}');
             MIMICPP_ASSERT(braceEnd != name.cend(), "No corresponding end found.");
             StringViewT const id{
                 std::ranges::find(
