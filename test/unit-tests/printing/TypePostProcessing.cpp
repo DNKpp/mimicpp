@@ -846,12 +846,23 @@ TEST_CASE(
         printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
+
+        StringT const argListPattern =
+    #if MIMICPP_DETAIL_IS_MSVC // it seems msvc applies an address instead of anonymous-namespace
+            R"(A0x\w+::my_template::my_type const&)";
+    #else
+            R"(\{anon-ns\}::my_template::my_type const&)";
+    #endif
+        StringT const pattern =
+            "std::source_location " // return type
+            R"(\(\{anon-ns\}::my_template::\*\))"
+            R"(\()"
+            + argListPattern
+            + R"(\))";
+
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Equals(
-                "std::source_location " // return type
-                "({anon-ns}::my_template::*)"
-                "({anon-ns}::my_template::my_type const&)"));
+            Catch::Matchers::Matches(pattern));
     }
 
     SECTION("When template-dependant member-function-pointer, returning local type, is given.")
@@ -859,15 +870,31 @@ TEST_CASE(
         StringT const rawName = printing::type::type_name<decltype(&my_template<my_template<>>::bar)>();
         CAPTURE(rawName);
 
+        StringT const returnPattern =
+    #if MIMICPP_DETAIL_IS_MSVC // it seems msvc applies an address instead of anonymous-namespace
+            R"(A0x\w+::my_template::\{bar\}::bar_type)";
+    #else
+            R"(\{anon-ns\}::my_template::\{bar\}::bar_type)";
+    #endif
+        StringT const argListPattern =
+    #if MIMICPP_DETAIL_IS_MSVC // it seems msvc applies an address instead of anonymous-namespace
+            R"(A0x\w+::my_template::my_type const&, std::source_location\*)";
+    #else
+            R"(\{anon-ns\}::my_template::my_type const&, std::source_location\*)";
+    #endif
+        StringT const pattern =
+            returnPattern
+            + R"( \(\{anon-ns\}::my_template::\*\))"
+              R"(\()"
+            + argListPattern
+            + R"(\))";
+
         printing::type::prettify_identifier(
             std::ostreambuf_iterator{ss},
             rawName);
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Equals(
-                "{anon-ns}::my_template::{bar}::bar_type " // return type
-                "({anon-ns}::my_template::*)"
-                "({anon-ns}::my_template::my_type const&, std::source_location*)"));
+            Catch::Matchers::Matches(pattern));
     }
 
     /*SECTION("When template-dependant function is given.")
