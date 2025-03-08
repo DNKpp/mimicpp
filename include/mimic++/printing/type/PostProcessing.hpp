@@ -82,25 +82,12 @@ namespace mimicpp::printing::type::detail
     };
 
     // see: https://en.cppreference.com/w/cpp/string/byte/isalpha
-    constexpr auto is_alpha = [](char const c) noexcept {
-        return static_cast<bool>(std::isalpha(static_cast<unsigned char>(c)));
-    };
-
-    // see: https://en.cppreference.com/w/cpp/string/byte/isalpha
     constexpr auto is_digit = [](char const c) noexcept {
         return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
     };
 
-    // see: https://eel.is/c++draft/lex.name#nt:identifier
-    // This is just an approximation, as we do not care for the `identifier-start`
-    constexpr auto is_identifier_element = [](char const c) noexcept {
-        return is_alpha(c)
-            || is_digit(c)
-            || c == '_';
-    };
-
     [[nodiscard]]
-    inline StringViewT trimmed(StringViewT const str)
+    constexpr StringViewT trimmed(StringViewT const str)
     {
         return {
             std::ranges::find_if_not(str, is_space),
