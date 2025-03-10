@@ -109,6 +109,8 @@ namespace mimicpp::printing::type::detail
     {
         constexpr StringViewT lambdaPrefix{"\'lambda"};
 
+
+
         auto first = name.cbegin();
         while (auto const match = std::ranges::search(
                    first,
@@ -148,36 +150,73 @@ namespace mimicpp::printing::type::detail
 
         #else
 
-    constexpr StringT unify_lambdas(StringT name)
+    constexpr StringT unify_lambdas_type1(StringT name)
     {
+        // `{lambda(...)#id}` => `lambda#id(...)`
+
         constexpr StringViewT lambdaPrefix{"{lambda("};
 
-        auto first = name.cbegin();
+        auto first = name.begin();
         while (auto const match = std::ranges::search(
                    first,
-                   name.cend(),
+                   name.end(),
                    lambdaPrefix.cbegin(),
                    lambdaPrefix.cend()))
         {
             std::ranges::subrange const rest{match.end(), name.cend()};
             auto const braceEnd = util::find_closing_token(rest, '{', '}');
             MIMICPP_ASSERT(braceEnd != name.cend(), "No corresponding end found.");
-            StringViewT const id{
-                std::ranges::find(
-                    std::make_reverse_iterator(braceEnd),
-                    std::make_reverse_iterator(match.end()),
-                    '#')
-                    .base(),
-                braceEnd};
 
-            StringT lambda{"lambda#"};
-            lambda += id;
+            auto const idToken = util::find_next_unwrapped_token(
+                std::ranges::subrange{match.end() - 1, braceEnd},
+                StringViewT{"#"},
+                openingBrackets,
+                closingBrackets);
+            auto const idLength = std::ranges::distance(idToken.begin(), braceEnd);
 
-            // as we just (slightly) shrink the string, `match` stays valid.
-            name.replace(match.begin(), braceEnd + 1, lambda);
+            // bring id in front of `(...)`
+            std::ranges::rotate(match.end() - 1, idToken.begin(), braceEnd);
+            auto const newEnd = std::shift_left(match.begin(), braceEnd, 1);
 
-            first = match.begin() + std::ranges::ssize(lambda);
+            name.erase(newEnd, braceEnd + 1);
+
+            first = match.end() - 2 + idLength; // points to `(`
         }
+
+        return name;
+    }
+
+    constexpr StringT unify_lambdas_type2(StringT name)
+    {
+        // `<lambda(...)>` => `lambda(...)`
+
+        constexpr StringViewT lambdaPrefix{"<lambda("};
+
+        auto first = name.begin();
+        while (auto const match = std::ranges::search(
+                   first,
+                   name.end(),
+                   lambdaPrefix.cbegin(),
+                   lambdaPrefix.cend()))
+        {
+            std::ranges::subrange const rest{match.end(), name.end()};
+            auto const angleEnd = util::find_closing_token(rest, '<', '>');
+            MIMICPP_ASSERT(angleEnd != name.cend(), "No corresponding end found.");
+
+            auto const newEnd = std::shift_left(match.begin(), angleEnd, 1);
+
+            name.erase(newEnd, angleEnd + 1);
+
+            first = match.end() - 2; // points to `(`
+        }
+
+        return name;
+    }
+
+    constexpr StringT unify_lambdas(StringT name)
+    {
+        name = unify_lambdas_type1(std::move(name));
+        name = unify_lambdas_type2(std::move(name));
 
         return name;
     }
@@ -463,6 +502,7 @@ namespace mimicpp::printing::type::detail
             else
             {
                 returnType = "auto";
+                name = StringViewT{name.cbegin(), argListBeginIter.base() - 1};
             }
 
             return special_type_info::function_t{
