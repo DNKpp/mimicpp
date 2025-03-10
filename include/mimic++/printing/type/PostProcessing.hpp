@@ -223,6 +223,9 @@ namespace mimicpp::printing::type::detail
         static const RegexT omitTemplateInfo{R"(\s*\[.+?\]$)"};
         name = std::regex_replace(name, omitTemplateInfo, "");
 
+        static const RegexT omitConstexpr{R"(\bconstexpr\s+)"};
+        name = std::regex_replace(name, omitConstexpr, "");
+
         static const RegexT unifyClosingAngleBrackets{R"(\s+>)"};
         name = std::regex_replace(name, unifyClosingAngleBrackets, ">");
 
