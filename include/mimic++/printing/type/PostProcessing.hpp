@@ -366,22 +366,25 @@ namespace mimicpp::printing::type::detail
     {
         if (scope.ends_with('>'))
         {
-            StringViewT const identifier{
-                scope.cbegin(),
-                std::ranges::find(scope, '<')};
-
-            return format::format_to(std::move(out), "{}::", identifier);
+            // if identifier is empty, the whole `<...>` is probably just a placeholder.
+            if (StringViewT const identifier = trimmed(
+                    {scope.cbegin(), std::ranges::find(scope, '<')});
+                !identifier.empty())
+            {
+                return format::format_to(std::move(out), "{}::", identifier);
+            }
         }
-
-        if (auto const parensBegin = std::ranges::find(scope, '(');
-            parensBegin != scope.cend())
+        else if (auto const parensBegin = std::ranges::find(scope, '(');
+                 parensBegin != scope.cend())
         {
-            StringViewT const identifier{scope.cbegin(), parensBegin};
-
-            return prettify_function_identifier(std::move(out), scope, identifier);
+            // if identifier is empty, the whole `(...)` is probably just a placeholder.
+            if (StringViewT const identifier{scope.cbegin(), parensBegin};
+                !identifier.empty())
+            {
+                return prettify_function_identifier(std::move(out), scope, identifier);
+            }
         }
 
-        // probably regular scope
         out = format::format_to(std::move(out), "{}::", scope);
 
         return out;
@@ -424,6 +427,15 @@ namespace mimicpp::printing::type::detail
                               | std::views::drop(matches[0].length());
             auto const argListBeginIter = util::find_closing_token(reversedName, ')', '(');
             MIMICPP_ASSERT(argListBeginIter != reversedName.end(), "No function begin found.");
+
+            // If no actual identifier is contained, it can not be a function and is thus probably a placeholder.
+            if (StringViewT const rest = trimmed({name.cbegin(), argListBeginIter.base() - 1});
+                rest.empty()
+                || rest.ends_with("::"))
+            {
+                return std::nullopt;
+            }
+
             StringViewT args = trimmed({argListBeginIter.base(), matches[0].first});
 
     #if MIMICPP_DETAIL_IS_MSVC \
@@ -474,7 +486,15 @@ namespace mimicpp::printing::type::detail
             MIMICPP_ASSERT(iter != reversedName.end(), "No template begin found.");
             StringViewT const args = trimmed({iter.base(), name.end() - 1});
 
-            name = StringViewT{name.cbegin(), iter.base() - 1};
+            // If no actual identifier is contained, it can not be a template and is thus probably a placeholder.
+            StringViewT const rest = trimmed({name.cbegin(), iter.base() - 1});
+            if (rest.empty()
+                || rest.ends_with("::"))
+            {
+                return std::nullopt;
+            }
+
+            name = rest;
 
             return special_type_info::template_t{
                 .argList = args};
@@ -542,7 +562,7 @@ namespace mimicpp::printing::type::detail
                    openingBrackets,
                    closingBrackets))
         {
-            StringViewT const scope{name.cbegin(), nextDelimiter.begin()};
+            StringViewT const scope = trimmed({name.cbegin(), nextDelimiter.begin()});
             out = prettify_scope(std::move(out), scope);
             name.remove_prefix(scope.size() + nextDelimiter.size());
         }
