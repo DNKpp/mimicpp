@@ -834,7 +834,7 @@ namespace
         {
         };
 
-        std::source_location foo(my_type const&)
+        std::source_location foo(my_type)
         {
             return std::source_location::current();
         }
@@ -900,7 +900,7 @@ TEST_CASE(
     #if MIMICPP_DETAIL_IS_MSVC // it seems msvc applies an address instead of anonymous-namespace
             R"(A0x\w+::my_template::my_type const&)";
     #else
-            R"(\{anon-ns\}::my_template::my_type const&)";
+            R"(\{anon-ns\}::my_template::my_type)";
     #endif
         StringT const pattern =
             "std::source_location " // return type
@@ -1157,7 +1157,7 @@ TEST_CASE(
     SECTION("When template-dependant function is given.")
     {
         using type_t = decltype(my_typeLambda());
-        auto const loc = my_template<type_t>{}.foo({});
+        auto const loc = my_template<type_t, int>{}.foo({});
         CAPTURE(loc.function_name());
 
         printing::type::prettify_identifier(
@@ -1166,10 +1166,10 @@ TEST_CASE(
 
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Equals(
+            Catch::Matchers::Matches(
                 "std::source_location " // return type
-                "{anon-ns}::my_template::foo"
-                "({anon-ns}::my_template::my_type const&)"));
+                R"(\{anon-ns\}::my_template::foo)"
+                R"(\((\{anon-ns\}::my_template::)?my_type\))"));
     }
 }
 
