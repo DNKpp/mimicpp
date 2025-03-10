@@ -413,15 +413,22 @@ namespace mimicpp::printing::type::detail
 
     #endif
 
-            auto const returnTypeDelimiter = util::find_next_unwrapped_token(
-                std::ranges::subrange{argListBeginIter + 1, reversedName.end()},
-                " ",
-                closingBrackets,
-                openingBrackets);
-            MIMICPP_ASSERT(returnTypeDelimiter, "No return-type found.");
-            StringViewT const returnType = trimmed({reversedName.end().base(), returnTypeDelimiter.end().base()});
-
-            name = StringViewT{returnTypeDelimiter.begin().base(), argListBeginIter.base() - 1};
+            // If a whitespace exists before `(`, it's probably the return type.
+            // If it's not there, just use `auto`.
+            StringViewT returnType{};
+            if (auto const returnTypeDelimiter = util::find_next_unwrapped_token(
+                    std::ranges::subrange{argListBeginIter + 1, reversedName.end()},
+                    " ",
+                    closingBrackets,
+                    openingBrackets))
+            {
+                returnType = trimmed({reversedName.end().base(), returnTypeDelimiter.end().base()});
+                name = StringViewT{returnTypeDelimiter.begin().base(), argListBeginIter.base() - 1};
+            }
+            else
+            {
+                returnType = "auto";
+            }
 
             return special_type_info::function_t{
                 .returnType = returnType,
