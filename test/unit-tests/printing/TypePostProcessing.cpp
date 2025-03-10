@@ -290,9 +290,10 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
+                R"((auto )?)"
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+))"));
+                R"((\{anon-type#\d+\}|lambda(#?\d+)?\(\)))"));
     }
 
     SECTION("When lambda with params is given.")
@@ -307,7 +308,9 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                testCaseScopePattern + R"((\{anon-type#\d+\}|lambda#\d+))"));
+                R"((auto )?)"
+                + testCaseScopePattern
+                + R"((\{anon-type#\d+\}|lambda(#?\d+)?\(std::.+?\)))"));
     }
 
     SECTION("When lambda-local type-name is given.")
