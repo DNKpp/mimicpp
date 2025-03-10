@@ -187,7 +187,7 @@ namespace
 }
 
 TEST_CASE(
-    "printing::detail::prettify_identifier enhances names appearance.",
+    "printing::type::prettify_identifier enhances names appearance.",
     "[print]")
 {
     StringStreamT ss{};
@@ -530,7 +530,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "printing::detail::prettify_identifier enhances local type-names appearance.",
+    "printing::type::prettify_identifier enhances local type-names appearance.",
     "[print]")
 {
     StringStreamT ss{};
@@ -677,7 +677,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "printing::type::detail::prettify_identifier type-names enhances function type-names appearance.",
+    "printing::type::prettify_identifier type-names enhances function type-names appearance.",
     "[print]")
 {
     StringStreamT ss{};
@@ -727,7 +727,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "printing::type::detail::prettify_identifier type-names enhances function-pointer type-names appearance.",
+    "printing::type::prettify_identifier type-names enhances function-pointer type-names appearance.",
     "[print]")
 {
     StringStreamT ss{};
@@ -807,7 +807,7 @@ namespace
 }
 
 TEST_CASE(
-    "printing::type::detail::prettify_identifier enhances template type-names appearance.",
+    "printing::type::prettify_identifier enhances template type-names appearance.",
     "[print]")
 {
     StringStreamT ss{};
@@ -897,24 +897,6 @@ TEST_CASE(
             Catch::Matchers::Matches(pattern));
     }
 
-    /*SECTION("When template-dependant function is given.")
-    {
-        using type_t = decltype(my_typeLambda());
-        auto const loc = my_template<type_t>{}.foo({});
-        CAPTURE(loc.function_name());
-
-        printing::type::prettify_identifier(
-            std::ostreambuf_iterator{ss},
-            loc.function_name());
-
-        REQUIRE_THAT(
-            ss.str(),
-            Catch::Matchers::Equals(
-                "std::source_location " // return type
-                "{anon-ns}::my_template::foo"
-                "({anon-ns}::my_template::my_type const&)"));
-    }*/
-
     SECTION("When arbitrary template name is given.")
     {
         using type_t = decltype(my_typeLambda());
@@ -937,6 +919,198 @@ TEST_CASE(
                 R"(,\s*)"
                 R"(std::basic_string<char, std::char_traits<char>, std::allocator<char>> const\s*&&)"
                 ">"));
+    }
+}
+
+constexpr auto type_post_processing_lambda_loc = [] {
+    return std::source_location::current();
+};
+
+constexpr auto type_post_processing_nested_lambda_loc = [] {
+    return [] {
+        return std::source_location::current();
+    }();
+};
+
+namespace
+{
+    [[nodiscard]]
+    constexpr std::source_location loc_fun()
+    {
+        [[maybe_unused]] constexpr auto dummy = [] {};
+        [[maybe_unused]] constexpr auto dummy2 = [] {};
+        constexpr auto inner = [] {
+            return std::source_location::current();
+        };
+        [[maybe_unused]] constexpr auto dummy3 = [] {};
+
+        return inner();
+    }
+
+    [[nodiscard]]
+    constexpr std::source_location loc_anon_lambda_fun()
+    {
+        return [] {
+            return std::source_location::current();
+        }();
+    }
+}
+
+TEST_CASE(
+    "printing::type::prettify_identifier enhances std::source_location::function_name appearance.",
+    "[print]")
+{
+    StringStreamT ss{};
+
+    SECTION("When general function is given.")
+    {
+        constexpr auto loc = std::source_location::current();
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(R"(void CATCH2_INTERNAL_TEST_\d+\(\))"));
+    }
+
+    SECTION("When lambda is given.")
+    {
+        constexpr auto loc = type_post_processing_lambda_loc();
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                "std::source_location " // return type
+                R"(lambda#1)"
+                R"(\(\))"));
+    }
+
+    SECTION("When nested lambda is given.")
+    {
+        constexpr auto loc = type_post_processing_nested_lambda_loc();
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                "std::source_location " // return type
+                R"(lambda#1)"
+                R"(\(\))"));
+    }
+
+    SECTION("When function-local function is given.")
+    {
+        constexpr auto loc = loc_fun();
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                "std::source_location " // return type
+                R"(\{anon-ns\}::\{loc_func\}::lambda#1)"
+                R"(\(\))"));
+    }
+
+    SECTION("When function-local anon-struct is given.")
+    {
+        struct
+        {
+            constexpr std::source_location operator()() const
+            {
+                return std::source_location::current();
+            }
+        } constexpr obj{};
+
+        constexpr auto loc = obj();
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                "std::source_location " // return type
+                R"(CATCH2_INTERNAL_TEST_\d+\::\{anon-class\}::operator())"
+                R"(\(\))"));
+    }
+
+    SECTION("When function-local anon-class is given.")
+    {
+        class
+        {
+        public:
+            constexpr std::source_location operator()() const
+            {
+                return std::source_location::current();
+            }
+        } constexpr obj{};
+
+        constexpr auto loc = obj();
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                "std::source_location " // return type
+                R"(CATCH2_INTERNAL_TEST_\d+\::\{anon-class\}::operator())"
+                R"(\(\))"));
+    }
+
+    SECTION("When function-local anon-lambda is given.")
+    {
+        constexpr auto loc = loc_anon_lambda_fun();
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                "std::source_location " // return type
+                R"(\{anon-ns\}::\{loc_anon_lambda_fun\}::lambda#1)"
+                R"(\(\))"));
+    }
+
+    SECTION("When template-dependant function is given.")
+    {
+        using type_t = decltype(my_typeLambda());
+        auto const loc = my_template<type_t>{}.foo({});
+        CAPTURE(loc.function_name());
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            loc.function_name());
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Equals(
+                "std::source_location " // return type
+                "{anon-ns}::my_template::foo"
+                "({anon-ns}::my_template::my_type const&)"));
     }
 }
 
