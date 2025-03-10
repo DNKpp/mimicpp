@@ -187,11 +187,11 @@ namespace
 
     const StringT topLevelLambdaPattern =
         R"((\{anon-(?:class|struct|type)(#\d+)?\}::operator\(\))"
-        R"(|lambda(#\d+)?))";
+        R"(|lambda(#?\d+)?))";
 
     const StringT lambdaScopePattern =
         R"((\{anon-(?:class|struct|type)(#\d+)?\}::\{operator\(\)\}::)"
-        R"(|\{lambda(#\d+)?\}::(\{operator\(\)\}::)?))";
+        R"(|\{lambda(#?\d+)?\}::(\{operator\(\)\}::)?))";
 }
 
 TEST_CASE(
