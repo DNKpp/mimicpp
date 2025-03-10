@@ -205,6 +205,57 @@ TEST_CASE(
             Catch::Matchers::Equals("{anon-ns}::my_type"));
     }
 
+    SECTION("When anon-class is given.")
+    {
+        class
+        {
+        } constexpr anon_class{};
+
+        StringT const rawName = printing::type::type_name<decltype(anon_class)>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(R"(\{CATCH2_INTERNAL_TEST_\d+\}::\{anon-class\})"));
+    }
+
+    SECTION("When anon-struct is given.")
+    {
+        class
+        {
+        } constexpr anon_struct{};
+
+        StringT const rawName = printing::type::type_name<decltype(anon_struct)>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(R"(\{CATCH2_INTERNAL_TEST_\d+\}::\{anon-struct\})"));
+    }
+
+    SECTION("When anon-enum is given.")
+    {
+        enum
+        {
+        } constexpr anon_enum{};
+
+        StringT const rawName = printing::type::type_name<decltype(anon_enum)>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(R"(\{CATCH2_INTERNAL_TEST_\d+\}::\{anon-struct\})"));
+    }
+
     SECTION("When nested type-name is given.")
     {
         StringT const rawName = printing::type::type_name<outer_type::my_type>();
