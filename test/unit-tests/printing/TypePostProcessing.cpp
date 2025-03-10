@@ -192,6 +192,8 @@ namespace
     const StringT lambdaScopePattern =
         R"((\{anon-(?:class|struct|type)(#\d+)?\}::\{operator\(\)\}::)"
         R"(|\{lambda(#?\d+)?\}::(\{operator\(\)\}::)?))";
+
+    const StringT testCaseScopePattern = R"(\{CATCH2_INTERNAL_TEST_\d+\}::)";
 }
 
 TEST_CASE(
@@ -227,7 +229,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(R"(\{CATCH2_INTERNAL_TEST_\d+\}::\{anon-type#\d+\})"));
+            Catch::Matchers::Matches(testCaseScopePattern + R"(\{anon-type#\d+\})"));
     }
 
     SECTION("When anon-struct is given.")
@@ -244,7 +246,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(R"(\{CATCH2_INTERNAL_TEST_\d+\}::\{anon-type#\d+\})"));
+            Catch::Matchers::Matches(testCaseScopePattern + R"(\{anon-type#\d+\})"));
     }
 
     SECTION("When anon-enum is given.")
@@ -261,7 +263,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(R"(\{CATCH2_INTERNAL_TEST_\d+\}::\{anon-type#\d+\})"));
+            Catch::Matchers::Matches(testCaseScopePattern + R"(\{anon-type#\d+\})"));
     }
 
     SECTION("When nested type-name is given.")
@@ -305,8 +307,7 @@ TEST_CASE(
         REQUIRE_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(
-                R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
-                R"((\{anon-type#\d+\}|lambda#\d+))"));
+                testCaseScopePattern + R"((\{anon-type#\d+\}|lambda#\d+))"));
     }
 
     SECTION("When lambda-local type-name is given.")
@@ -322,9 +323,8 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc and clang produce this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::)"
-                "my_type"));
+                + lambdaScopePattern
+                + "my_type"));
     }
 
     SECTION("When mutable lambda-local type-name is given.")
@@ -340,9 +340,8 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeMutableLambda::)?)" // gcc produces this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::)"
-                "my_type"));
+                + lambdaScopePattern
+                + "my_type"));
     }
 
     SECTION("When noexcept lambda-local type-name is given.")
@@ -359,9 +358,8 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeNoexceptLambda::)?)" // gcc produces this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::)"
-                "my_type"));
+                + lambdaScopePattern
+                + "my_type"));
     }
 
     SECTION("When nested lambda-local type-name is given.")
@@ -608,7 +606,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(R"(\{CATCH2_INTERNAL_TEST_\d+\}::my_type)"));
+            Catch::Matchers::Matches(testCaseScopePattern + R"(my_type)"));
     }
 
     SECTION("When local type is queried inside a lambda.")
@@ -628,10 +626,9 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(ss).str(),
                     Catch::Matchers::Matches(
-                        R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
-                        R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                        R"(\{operator\(\)\}::)"
-                        "my_type"));
+                        testCaseScopePattern
+                        + lambdaScopePattern
+                        + "my_type"));
             });
     }
 
@@ -654,10 +651,10 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(_ss).str(),
                     Catch::Matchers::Matches(
-                        R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
-                        "outer::"
-                        R"(\{operator\(\)\}::)"
-                        "my_type"));
+                        testCaseScopePattern
+                        + "outer::"
+                          R"(\{operator\(\)\}::)"
+                          "my_type"));
             }
         };
 
@@ -688,10 +685,9 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(*_ss).str(),
                     Catch::Matchers::Matches(
-                        R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
-                        R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                        R"(\{operator\(\)\}::)"
-                        "my_type"));
+                        testCaseScopePattern
+                        + lambdaScopePattern
+                        + "my_type"));
             },
             &ss,
             std::move(d1),
@@ -722,7 +718,7 @@ TEST_CASE(
                         REQUIRE_THAT(
                             std::move(*_ss).str(),
                             Catch::Matchers::Matches(
-                                R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
+                                testCaseScopePattern
                                 + lambdaScopePattern
                                 + lambdaScopePattern
                                 + "my_type"));
@@ -754,10 +750,9 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::)"
-                "my_type"
-                R"(\s*\(\))"));
+                + lambdaScopePattern
+                + "my_type"
+                  R"(\s*\(\))"));
     }
 
     SECTION("When function-local type is parameter.")
@@ -776,10 +771,9 @@ TEST_CASE(
                 R"(void\s*\()"
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::)"
-                "my_type"
-                R"(\))"));
+                + lambdaScopePattern
+                + "my_type"
+                  R"(\))"));
     }
 }
 
@@ -804,10 +798,9 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::)"
-                "my_type"
-                R"(\s*\(\*\)\(\))"));
+                + lambdaScopePattern
+                + "my_type"
+                  R"(\s*\(\*\)\(\))"));
     }
 
     SECTION("When function-local type is parameter.")
@@ -826,10 +819,9 @@ TEST_CASE(
                 R"(void\s*\(\*\)\()"
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::)"
-                "my_type"
-                R"(\))"));
+                + lambdaScopePattern
+                + "my_type"
+                  R"(\))"));
     }
 }
 
@@ -970,12 +962,11 @@ TEST_CASE(
                 R"(my_template<)"
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeLambda::)?)" // gcc produces this extra scope
-                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::)"
-                R"(my_type\s*&)"
-                R"(,\s*)"
-                R"(std::basic_string<char, std::char_traits<char>, std::allocator<char>> const\s*&&)"
-                ">"));
+                + lambdaScopePattern
+                + R"(my_type\s*&)"
+                  R"(,\s*)"
+                  R"(std::basic_string<char, std::char_traits<char>, std::allocator<char>> const\s*&&)"
+                  ">"));
     }
 }
 
@@ -1110,10 +1101,10 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 StringT{"std::source_location "}
-                + R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
+                + testCaseScopePattern
                 + R"(\{anon-struct(#\d+)?\}::)"
-                + R"(operator\(\))"
-                + R"(\(\)const)"));
+                  R"(operator\(\))"
+                  R"(\(\)const)"));
     }
 
     SECTION("When function-local anon-class is given.")
@@ -1138,10 +1129,10 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 StringT{"std::source_location "}
-                + R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
+                + testCaseScopePattern
                 + R"(\{anon-class(#\d+)?\}::)"
-                + R"(operator\(\))"
-                + R"(\(\)const)"));
+                  R"(operator\(\))"
+                  R"(\(\)const)"));
     }
 
     SECTION("When function-local anon-lambda is given.")
