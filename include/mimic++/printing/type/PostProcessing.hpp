@@ -190,14 +190,21 @@ namespace mimicpp::printing::type::detail
         static const RegexT unifyClosingAngleBrackets{R"(\s+>)"};
         name = std::regex_replace(name, unifyClosingAngleBrackets, ">");
 
-        static const RegexT terseAnonymousNamespace{R"(\(anonymous namespace\)::)"};
-        name = std::regex_replace(name, terseAnonymousNamespace, anonymousNamespaceTargetScopeText.data());
+        // `{anonymous}` is emitted by source_location::function_name
+        static const RegexT unifyAnonymousNamespace{R"((\{anonymous\}|\(anonymous namespace\))::)"};
+        name = std::regex_replace(name, unifyAnonymousNamespace, anonymousNamespaceTargetScopeText.data());
 
         name = unify_lambdas(std::move(name));
 
         #if MIMICPP_DETAIL_IS_CLANG
         static const RegexT prettifyTerseLambdas{R"(\$_(\d+))"};
         name = std::regex_replace(name, prettifyTerseLambdas, "lambda#$1");
+
+        static const RegexT prettifyAnonClass{R"(\(anonymous class\)::)"};
+        name = std::regex_replace(name, prettifyAnonClass, "{anon-class}::");
+
+        static const RegexT prettifyAnonStruct{R"(\(anonymous struct\)::)"};
+        name = std::regex_replace(name, prettifyAnonStruct, "{anon-struct}::");
         #endif
 
         static const RegexT stdImplNamespace{
