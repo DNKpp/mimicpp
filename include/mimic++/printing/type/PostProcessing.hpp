@@ -107,42 +107,35 @@ namespace mimicpp::printing::type::detail
 
     constexpr StringT unify_lambdas(StringT name)
     {
+        // `'lambda'(...)` => `lambda(...)`
+
         constexpr StringViewT lambdaPrefix{"\'lambda"};
 
-
-
-        auto first = name.cbegin();
+        auto first = name.begin();
         while (auto const match = std::ranges::search(
                    first,
-                   name.cend(),
+                   name.end(),
                    lambdaPrefix.cbegin(),
                    lambdaPrefix.cend()))
         {
             // These lambdas sometimes have and sometimes have not an id.
-            // If not, just use `0`.
-            StringViewT id{
-                match.end(),
-                std::ranges::find_if_not(match.end(), name.cend(), is_digit)};
-            if (id.empty())
-            {
-                id = "0";
-            }
+            auto const newParensBegin = std::shift_left(
+                match.begin(),
+                std::ranges::find_if_not(match.end(), name.cend(), is_digit),
+                1);
 
-            auto const parensBegin = std::ranges::find(match.end(), name.cend(), '(');
+            auto const parensBegin = std::ranges::find(newParensBegin, name.cend(), '(');
             MIMICPP_ASSERT(parensBegin != name.cend(), "No begin-parenthesis found.");
             auto const parensEnd = util::find_closing_token(
                 std::ranges::subrange{parensBegin + 1, name.cend()},
                 '(',
                 ')');
-            MIMICPP_ASSERT(parensBegin != name.cend(), "No end-parenthesis found.");
+            MIMICPP_ASSERT(parensEnd != name.cend(), "No end-parenthesis found.");
 
-            StringT lambda{"lambda#"};
-            lambda += id;
+            auto const newEnd = std::shift_left(newParensBegin, parensEnd + 1, 2);
+            name.erase(newEnd, parensEnd + 1);
 
-            // as we just (slightly) shrink the string, `match` stays valid.
-            name.replace(match.begin(), parensEnd + 1, lambda);
-
-            first = match.begin() + std::ranges::ssize(lambda);
+            first = newParensBegin;
         }
 
         return name;
