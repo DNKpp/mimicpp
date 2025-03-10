@@ -196,16 +196,32 @@ namespace mimicpp::printing::type::detail
 
         name = unify_lambdas(std::move(name));
 
+        static const RegexT prettifyAnonTypes{
         #if MIMICPP_DETAIL_IS_CLANG
-        static const RegexT prettifyTerseLambdas{R"(\$_(\d+))"};
-        name = std::regex_replace(name, prettifyTerseLambdas, "lambda#$1");
-
-        static const RegexT prettifyAnonClass{R"(\(anonymous class\)::)"};
-        name = std::regex_replace(name, prettifyAnonClass, "{anon-class}::");
-
-        static const RegexT prettifyAnonStruct{R"(\(anonymous struct\)::)"};
-        name = std::regex_replace(name, prettifyAnonStruct, "{anon-struct}::");
+            R"(\$_(\d+))"
+        #else
+            R"(\{unnamed type#(\d+)\})"
         #endif
+        };
+        name = std::regex_replace(name, prettifyAnonTypes, "{anon-type#$1}");
+
+        static const RegexT prettifyAnonClass{
+        #if MIMICPP_DETAIL_IS_CLANG
+            R"(\(anonymous class\))"
+        #else
+            R"(<unnamed class>)"
+        #endif
+        };
+        name = std::regex_replace(name, prettifyAnonClass, "{anon-class}");
+
+        static const RegexT prettifyAnonStruct{
+        #if MIMICPP_DETAIL_IS_CLANG
+            R"(\(anonymous struct\))"
+        #else
+            R"(<unnamed struct>)"
+        #endif
+        };
+        name = std::regex_replace(name, prettifyAnonStruct, "{anon-struct}");
 
         static const RegexT stdImplNamespace{
         #if MIMICPP_DETAIL_USES_LIBCXX
