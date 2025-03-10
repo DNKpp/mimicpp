@@ -184,6 +184,14 @@ namespace
 
         return my_type{};
     }
+
+    const StringT topLevelLambdaPattern =
+        R"((\{anon-(?:class|struct|type)(#\d+)?\}::operator\(\))"
+        R"(|lambda(#\d+)?))";
+
+    const StringT lambdaScopePattern =
+        R"((\{anon-(?:class|struct|type)(#\d+)?\}::\{operator\(\)\}::)"
+        R"(|\{lambda(#\d+)?\}::(\{operator\(\)\}::)?))";
 }
 
 TEST_CASE(
@@ -369,9 +377,9 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeNestedLambda::)?)" // gcc produces this extra scope
-                R"(((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::){2})"
-                "my_type"));
+                + lambdaScopePattern
+                + lambdaScopePattern
+                + "my_type"));
     }
 
     SECTION("When nested lambda-local type-name is given (more inner lambdas).")
@@ -387,9 +395,9 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 R"(\{anon-ns\}::)"
                 R"((?:my_typeNestedLambda2::)?)" // gcc produces this extra scope
-                R"(((\{anon-type#\d+\}|lambda#\d+)::)"
-                R"(\{operator\(\)\}::){2})"
-                "my_type"));
+                + lambdaScopePattern
+                + lambdaScopePattern
+                + "my_type"));
     }
 
     SECTION("When free-function local type-name is given.")
@@ -715,11 +723,9 @@ TEST_CASE(
                             std::move(*_ss).str(),
                             Catch::Matchers::Matches(
                                 R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
-                                R"((\{anon-type#\d+\}|lambda#\d+)::)"
-                                R"(\{operator\(\)\}::)"
-                                R"(lambda#\d+::)"
-                                R"(\{operator\(\)\}::)"
-                                "my_type"));
+                                + lambdaScopePattern
+                                + lambdaScopePattern
+                                + "my_type"));
                     },
                     other_type{});
             },
@@ -1036,12 +1042,13 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
+        StringT const returnPattern = "(auto|std::source_location) ";
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                "std::source_location " // return type
-                R"(lambda#1)"
-                R"(\(\))"));
+                returnPattern
+                + topLevelLambdaPattern
+                + R"(\(\)(const)?)"));
     }
 
     SECTION("When nested lambda is given.")
@@ -1053,12 +1060,14 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
+        StringT const returnPattern = "(auto|std::source_location) ";
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                "std::source_location " // return type
-                R"(lambda#1)"
-                R"(\(\))"));
+                returnPattern
+                + lambdaScopePattern
+                + topLevelLambdaPattern
+                + R"(\(\)(const)?)"));
     }
 
     SECTION("When function-local function is given.")
@@ -1070,12 +1079,14 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
+        StringT const returnPattern = "(auto|std::source_location) ";
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                "std::source_location " // return type
-                R"(\{anon-ns\}::\{loc_func\}::lambda#1)"
-                R"(\(\))"));
+                returnPattern
+                + R"(\{anon-ns\}::\{loc_fun\}::)"
+                + topLevelLambdaPattern
+                + R"(\(\)(const)?)"));
     }
 
     SECTION("When function-local anon-struct is given.")
@@ -1098,9 +1109,11 @@ TEST_CASE(
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                "std::source_location " // return type
-                R"(CATCH2_INTERNAL_TEST_\d+\::\{anon-class\}::operator())"
-                R"(\(\))"));
+                StringT{"std::source_location "}
+                + R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
+                + R"(\{anon-struct(#\d+)?\}::)"
+                + R"(operator\(\))"
+                + R"(\(\)const)"));
     }
 
     SECTION("When function-local anon-class is given.")
@@ -1124,9 +1137,11 @@ TEST_CASE(
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                "std::source_location " // return type
-                R"(CATCH2_INTERNAL_TEST_\d+\::\{anon-class\}::operator())"
-                R"(\(\))"));
+                StringT{"std::source_location "}
+                + R"(\{CATCH2_INTERNAL_TEST_\d+\}::)"
+                + R"(\{anon-class(#\d+)?\}::)"
+                + R"(operator\(\))"
+                + R"(\(\)const)"));
     }
 
     SECTION("When function-local anon-lambda is given.")
@@ -1138,12 +1153,14 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
+        StringT const returnPattern = "(auto|std::source_location) ";
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                "std::source_location " // return type
-                R"(\{anon-ns\}::\{loc_anon_lambda_fun\}::lambda#1)"
-                R"(\(\))"));
+                returnPattern
+                + R"(\{anon-ns\}::\{loc_anon_lambda_fun\}::)"
+                + topLevelLambdaPattern
+                + R"(\(\)(const)?)"));
     }
 
     SECTION("When template-dependant function is given.")
