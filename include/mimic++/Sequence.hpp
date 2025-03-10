@@ -395,9 +395,7 @@ namespace mimicpp::sequence::detail
             if (const auto iter = std::ranges::find(rhs, lhsTag, &rating::tag);
                 iter != std::ranges::end(rhs))
             {
-                rating += lhsPriority < iter->priority
-                            ? -1
-                            : 1;
+                rating += lhsPriority < iter->priority ? -1 : 1;
             }
             else
             {
