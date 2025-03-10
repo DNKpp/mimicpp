@@ -219,6 +219,10 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline StringT apply_general_prettification(StringT name)
     {
+        // removes something like `[Ts = <int>]` from the back
+        static const RegexT omitTemplateInfo{R"(\s*\[.+?\]$)"};
+        name = std::regex_replace(name, omitTemplateInfo, "");
+
         static const RegexT unifyClosingAngleBrackets{R"(\s+>)"};
         name = std::regex_replace(name, unifyClosingAngleBrackets, ">");
 
