@@ -151,14 +151,17 @@ namespace mimicpp::util
         std::ranges::borrowed_subrange_t<Range> pending{str};
         while (auto const match = std::ranges::search(pending, token))
         {
-            std::ranges::subrange const part{pending.begin(), match.begin()};
-            openScopes += countAllOf(part, opening)
-                        - countAllOf(part, closing);
+            // It's important to count the matched part, because the token may also be part of either the opening-
+            // or closing-collection. But count the match part with the opening collection after the test.
+            openScopes += countAllOf(std::ranges::subrange{pending.begin(), match.begin()}, opening);
+            openScopes -= countAllOf(std::ranges::subrange{pending.begin(), match.end()}, closing);
             MIMICPP_ASSERT(0 <= openScopes, "More scopes closed than opened.");
             if (0 == openScopes)
             {
                 return match;
             }
+
+            openScopes += countAllOf(match, opening);
 
             pending = {match.end(), pending.end()};
         }
