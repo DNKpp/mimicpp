@@ -90,13 +90,173 @@ namespace mimicpp::printing::type::detail
 
     // GCOVR_EXCL_STOP
 
+    template <std::random_access_iterator Iter>
+        requires std::constructible_from<StringViewT, Iter, Iter>
+    [[nodiscard]]
+    constexpr StringViewT trimmed(Iter const begin, Iter const end)
+    {
+        auto const trimmedBegin = std::ranges::find_if_not(begin, end, is_space);
+        auto const trimmedEnd = std::ranges::find_if_not(
+            std::make_reverse_iterator(end),
+            std::make_reverse_iterator(trimmedBegin),
+            is_space);
+        return StringViewT{trimmedBegin, trimmedEnd.base()};
+    }
+
     [[nodiscard]]
     constexpr StringViewT trimmed(StringViewT const str)
     {
-        return {
-            std::ranges::find_if_not(str, is_space),
-            std::ranges::find_if_not(str | std::views::reverse, is_space).base()};
+        return trimmed(str.cbegin(), str.cend());
     }
+
+    struct function_info
+    {
+        StringViewT returnType{};
+        StringViewT argList{};
+        StringViewT specs{};
+    };
+
+    struct template_info
+    {
+        StringViewT argList{};
+    };
+
+    struct scope_info
+    {
+        StringViewT identifier{};
+        std::optional<function_info> functionInfo{};
+        std::optional<template_info> templateInfo{};
+    };
+
+    [[nodiscard]]
+    constexpr std::optional<function_info> detect_function_scope_info(StringViewT& name)
+    {
+        MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
+
+        auto reversedName = name
+                          | std::views::reverse;
+        auto const parensEnd = util::find_next_unwrapped_token(
+            reversedName,
+            ")",
+            closingBrackets,
+            openingBrackets);
+        if (!parensEnd)
+        {
+            return std::nullopt;
+        }
+
+        auto const parensBegin = util::find_closing_token(
+            std::ranges::subrange{parensEnd.end(), reversedName.end()},
+            ')',
+            '(');
+        if (parensBegin == reversedName.end())
+        {
+            return std::nullopt;
+        }
+
+        // If no actual identifier is contained, it can not be a function and is thus probably a placeholder.
+        StringViewT const rest = trimmed(name.cbegin(), parensBegin.base() - 1);
+        if (rest.empty())
+        {
+            return std::nullopt;
+        }
+
+        function_info info{
+            .argList = trimmed(parensBegin.base(), parensEnd.end().base()),
+            .specs = trimmed(parensEnd.begin().base(), name.end())};
+
+        name = rest;
+
+        // If a whitespace exists before `(`, it's probably the return type.
+        if (auto const returnTypeDelimiter = util::find_next_unwrapped_token(
+                std::ranges::subrange{parensBegin + 1, reversedName.end()},
+                " ",
+                closingBrackets,
+                openingBrackets))
+        {
+            info.returnType = trimmed(name.begin(), returnTypeDelimiter.end().base());
+            name = StringViewT{returnTypeDelimiter.begin().base(), name.end()};
+        }
+
+        return info;
+    }
+
+    [[nodiscard]]
+    constexpr std::optional<template_info> detect_template_scope_info(StringViewT& name)
+    {
+        MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
+
+        if (name.ends_with('>'))
+        {
+            auto reversedName = name
+                              | std::views::reverse
+                              | std::views::drop(1);
+            auto const angleBegin = util::find_closing_token(reversedName, '>', '<');
+            if (angleBegin == reversedName.end())
+            {
+                return std::nullopt;
+            }
+
+            // If no actual identifier is contained, it can not be a template and is thus probably a placeholder.
+            StringViewT const rest = trimmed(name.cbegin(), angleBegin.base() - 1);
+            if (rest.empty())
+            {
+                return std::nullopt;
+            }
+
+            StringViewT const args = trimmed(angleBegin.base(), name.end() - 1);
+            name = rest;
+
+            return template_info{
+                .argList = args};
+        }
+
+        return std::nullopt;
+    }
+
+    [[nodiscard]]
+    constexpr scope_info gather_scope_info(StringViewT scope)
+    {
+        scope_info info{};
+        info.functionInfo = detect_function_scope_info(scope);
+        info.templateInfo = detect_template_scope_info(scope);
+
+        info.identifier = scope;
+
+        return info;
+    }
+
+    class ScopeIterator
+    {
+    public:
+        [[nodiscard]]
+        explicit constexpr ScopeIterator(StringViewT content) noexcept
+            : m_Pending{std::move(content)}
+        {
+        }
+
+        [[nodiscard]]
+        std::optional<scope_info> operator()()
+        {
+            if (m_Pending.empty())
+            {
+                return std::nullopt;
+            }
+
+            auto const delimiter = util::find_next_unwrapped_token(
+                m_Pending,
+                scopeDelimiter,
+                openingBrackets,
+                closingBrackets);
+            StringViewT const scope{m_Pending.cbegin(), delimiter.begin()};
+            m_Pending = StringViewT{delimiter.end(), m_Pending.end()};
+
+            return gather_scope_info(scope);
+        }
+
+    private:
+        StringViewT m_Pending;
+    };
 }
 
     #if MIMICPP_DETAIL_IS_GCC \
@@ -215,6 +375,14 @@ namespace mimicpp::printing::type::detail
     }
 
         #endif
+
+    [[nodiscard]]
+    constexpr StringT apply_basic_transformations(StringT name)
+    {
+        name = unify_lambdas(std::move(name));
+
+        return name;
+    }
 
     [[nodiscard]]
     inline StringT apply_general_prettification(StringT name)
