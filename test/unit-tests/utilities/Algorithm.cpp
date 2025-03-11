@@ -202,6 +202,32 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "util::find_next_unwrapped_token can handle tokens, which are part of either collection.",
+    "[util][util::find_next_unwrapped_token]")
+{
+    constexpr std::array openingBrackets{'<', '(', '[', '{'};
+    constexpr std::array closingBrackets{'>', ')', ']', '}'};
+    auto [expectedIndex, token, str] = GENERATE(
+        (table<std::size_t, std::string_view, std::string_view>)({
+            { 0, "(",                    "()"},
+            { 1, ")",                    "()"},
+            { 1, "(",        " (, [(abc)] ) "},
+            {12, ")",        " (, [(abc)] ) "},
+            {15, "<", "(, {}<,>) [,], <> abc"},
+            {16, ">", "(, {}<,>) [,], <> abc"}
+    }));
+    CAPTURE(str, token, expectedIndex);
+
+    auto const match = util::find_next_unwrapped_token(str, token, openingBrackets, closingBrackets);
+
+    CHECK(match.begin() == str.cbegin() + expectedIndex);
+    CHECK(match.end() == str.cbegin() + expectedIndex + 1);
+    CHECK_THAT(
+        (std::string{match.begin(), match.end()}),
+        Catch::Matchers::Equals(std::string{token}));
+}
+
+TEST_CASE(
     "util::find_next_unwrapped_token returns {end, end}, if no next unwrapped token exists.",
     "[util][util::find_next_unwrapped_token]")
 {
