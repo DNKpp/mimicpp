@@ -8,6 +8,8 @@ name: coverage
 env:
   COBERTURA_REPORT: cobertura.xml
   COVERALLS_REPORT: coveralls.json
+  JSON_REPORT: report.json
+  JSON_SUMMARY: summary.json
   HTML_REPORT_DIR: html/
   COVERAGE_ARTIFACT_NAME: coverage-report
 
@@ -81,7 +83,9 @@ jobs:
               --txt \
               --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
               --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
-              --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
+              --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty \
+              --json-summary ${{env.JSON_SUMMARY}} --json-summary-pretty \
+              --json ${{env.JSON_REPORT}} -- json-pretty
 
       - name: Upload gcov coverage report artifacts
         uses: actions/upload-artifact@v4
@@ -97,6 +101,8 @@ jobs:
           path: |
             ${{env.COBERTURA_REPORT}}
             ${{env.COVERALLS_REPORT}}
+            ${{env.JSON_REPORT}}
+            ${{env.JSON_SUMMARY}}
             ${{env.HTML_REPORT_DIR}}
           if-no-files-found: error
 
