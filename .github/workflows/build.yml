@@ -376,9 +376,7 @@ jobs:
         if: ${{ steps.config-basic.outcome == 'success' }}
         shell: bash
         run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
+          cmake --build build -j ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run Basic Framework tests
         if: ${{ steps.config-basic.outcome == 'success' }}
@@ -388,7 +386,7 @@ jobs:
         run: |
           ctest --test-dir build \
               -C ${{ matrix.build_mode }} \
-              -j5
+              -j
       #
       #################################
 
@@ -406,9 +404,7 @@ jobs:
       - name: Build with fmt formatting-backend
         shell: bash
         run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
+          cmake --build build -j ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with fmt formatting-backend
         shell: bash
@@ -417,7 +413,7 @@ jobs:
         run: |
           ctest --test-dir build \
               -C ${{ matrix.build_mode }} \
-              -j5
+              -j
       #
       #################################
 
@@ -436,9 +432,7 @@ jobs:
       - name: Build with minimal pretty type-printing
         shell: bash
         run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
+          cmake --build build -j ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with minimal pretty type-printing
         shell: bash
@@ -447,7 +441,7 @@ jobs:
         run: |
           ctest --test-dir build \
               -C ${{ matrix.build_mode }} \
-              -j5
+              -j
       #
       #################################
 
@@ -466,9 +460,7 @@ jobs:
       - name: Build with unicode string-matchers
         shell: bash
         run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
+          cmake --build build -j ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests unicode string-matchers
         shell: bash
@@ -477,7 +469,7 @@ jobs:
         run: |
           ctest --test-dir build \
               -C ${{ matrix.build_mode }} \
-              -j5
+              -j
       #
       #################################
 
@@ -499,9 +491,7 @@ jobs:
         if: ${{ steps.config-cxx23-stacktrace.outcome == 'success' }}
         shell: bash
         run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
+          cmake --build build -j ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with std::stacktrace backend
         if: ${{ steps.config-cxx23-stacktrace.outcome == 'success' }}
@@ -511,7 +501,7 @@ jobs:
         run: |
           ctest --test-dir build \
               -C ${{ matrix.build_mode }} \
-              -j5
+              -j
 
       # cpptrace
       - name: Configure with cpptrace backend
@@ -528,9 +518,7 @@ jobs:
       - name: Build with cpptrace backend
         shell: bash
         run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
+          cmake --build build -j ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with cpptrace backend
         shell: bash
@@ -539,7 +527,7 @@ jobs:
         run: |
           ctest --test-dir build \
               -C ${{ matrix.build_mode }} \
-              -j5
+              -j
       #
       #################################
 
@@ -564,9 +552,7 @@ jobs:
         if: ${{ steps.config-adapter-test.outcome == 'success' }}
         shell: bash
         run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
+          cmake --build build -j ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run adapter tests
         if: ${{ steps.config-adapter-test.outcome == 'success' }}
@@ -576,6 +562,6 @@ jobs:
         run: |
           ctest --test-dir build/test/adapter-tests \
               -C ${{ matrix.build_mode }} \
-              -j5
+              -j
       #
       #################################

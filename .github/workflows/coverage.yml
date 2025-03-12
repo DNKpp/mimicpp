@@ -55,7 +55,7 @@ jobs:
 
       - name: Build
         run: |
-          cmake --build build -j5
+          cmake --build build -j
 
       - name: Run tests
         shell: bash
@@ -64,7 +64,7 @@ jobs:
         run: |
           ctest --test-dir build \
               -C Debug \
-              -j4
+              -j
 
       - name: Run gcovr
         run: |
