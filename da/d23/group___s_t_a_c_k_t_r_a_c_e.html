@@ -139,7 +139,7 @@ Variables</h2></td></tr>
 </ul>
 </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd>The built-in backend-priority is skipped if a non-debug build-mode is detected (i.e. when <code>NDEBUG</code> is defined), because neither <code>std::stacktrace</code> nor <code>cpptrace</code> do provide correct information. In this case the <code><a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html" title="The fallback stacktrace-backend.">stacktrace::NullBackend</a></code> is chosen as the active stacktrace-backend.</dd></dl>
-<h3><a class="anchor" id="autotoc_md22"></a>
+<h3><a class="anchor" id="autotoc_md24"></a>
 Custom Stacktrace Backends</h3>
 <p>In any case, users can define <code>mimicpp::custom::find_stacktrace_backend</code> to enable their own stacktrace-backend, which will then be preferred over any other stacktrace-backend (even for non-debug builds). That type must contain at least a <code>type</code> member-alias, which denotes the desired stacktrace-backend implementation.</p>
 <div class="fragment"><div class="line"><span class="keyword">struct </span>mimicpp::custom::find_stacktrace_backend</div>
