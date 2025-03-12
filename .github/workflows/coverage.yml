@@ -85,7 +85,7 @@ jobs:
               --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
               --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty \
               --json-summary ${{env.JSON_SUMMARY}} --json-summary-pretty \
-              --json ${{env.JSON_REPORT}} -- json-pretty
+              --json ${{env.JSON_REPORT}} --json-pretty
 
       - name: Upload gcov coverage report artifacts
         uses: actions/upload-artifact@v4
