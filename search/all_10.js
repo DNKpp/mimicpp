@@ -21,7 +21,7 @@ var searchData=
   ['printer_18',['Printer',['../da/d68/classmimicpp_1_1custom_1_1_printer.html',1,'mimicpp::custom']]],
   ['printer_5ffor_19',['printer_for',['../de/dfc/conceptmimicpp_1_1printer__for.html',1,'mimicpp']]],
   ['printfn_20',['PrintFn',['../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html',1,'mimicpp::printing']]],
-  ['printing_21',['printing',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'Minimal pretty type-printing'],['../d7/d26/group___p_r_i_n_t_i_n_g.html',1,'printing'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md18',1,'String printing'],['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'Support for printing']]],
+  ['printing_21',['printing',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'Minimal pretty type-printing'],['../d7/d26/group___p_r_i_n_t_i_n_g.html',1,'printing'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md18',1,'String printing'],['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'Support for printing']]],
   ['printing_2ehpp_22',['Printing.hpp',['../db/d15/_printing_8hpp.html',1,'']]],
   ['printings_20or_20print_20custom_20types_23',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
   ['printtype_2ehpp_24',['PrintType.hpp',['../da/db0/_print_type_8hpp.html',1,'']]],

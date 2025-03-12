@@ -200,7 +200,7 @@ Functions</h2></td></tr>
 <h1><a class="anchor" id="autotoc_md20"></a>
 Thread-Safety</h1>
 <p>Sequences are not thread-safe and are never intended to be. If one attempts to enforce a strong ordering between multiple threads without any explicit synchronisation, that attempt is doomed to fail.</p>
-<h1><a class="anchor" id="autotoc_md22"></a>
+<h1><a class="anchor" id="autotoc_md21"></a>
 A word on sequences with times</h1>
 <p>Sequences and times are fully compatible, but can quickly lead to very hard to understand flows. In general, when mixing sequences with exact times (like <a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695" title="Specifies a times policy with both limits set to 2.">expect::twice</a>) it will just work. But when users are defining very permissive expectations combined with ranging times (like binary <a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515" title="Specifies a times policy with a limit range.">expect::times</a>), that may lead to surprising behaviour.</p>
 <p>Imagine a Sequence with two expectations; the first one with <code>min = 0</code> and <code>max = 1</code> and the second one with arbitrary limits. When a new call matches both expectations, which one should be preferred?</p>
@@ -408,7 +408,7 @@ template&lt;typename FirstId, auto firstPriorityStrategy, typename SecondId, aut
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Mar 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Wed Mar 12 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
