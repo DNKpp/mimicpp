@@ -7,6 +7,8 @@
 
 #include <source_location>
 
+#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+
 using namespace mimicpp;
 
 namespace
@@ -949,3 +951,5 @@ TEST_CASE(
         }
     }
 }
+
+#endif
