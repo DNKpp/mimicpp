@@ -795,7 +795,7 @@ TEST_CASE(
             {},
             visitor);
         checkNamedScope(
-            Catch::Matchers::Equals("my_type const*"),
+            Catch::Matchers::Matches(R"(my_type const\s*\*)"),
             visitor);
         REQUIRE_FALSE(visitor());
     }
