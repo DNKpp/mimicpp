@@ -70,7 +70,7 @@ jobs:
         run: |
           # circumvent "fatal: detected dubious ownership in repository" error
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-          gcovr -j4 -v \
+          gcovr -v \
               --filter "include/mimic++" \
               --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|unreachable)\(" \
               --exclude-unreachable-branches \
