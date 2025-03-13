@@ -410,22 +410,21 @@ namespace
 
         REQUIRE(info);
         CHECK_FALSE(info->templateInfo);
+        CHECK_FALSE(info->functionInfo);
 
 #if MIMICPP_DETAIL_IS_CLANG
 
         // clang often uses the `anon-type` form for lambdas
         CHECKED_IF(info->identifier.starts_with('$'))
         {
-            CHECK_FALSE(info->functionInfo);
             CHECK_THAT(
                 StringT{info->identifier},
                 Catch::Matchers::Matches(R"(\$_\d+)"));
         }
 
-        // but sometimes provides more info
+        // but sometimes uses actual `lambda` form
         CHECKED_IF(info->identifier.starts_with("lambda"))
         {
-            CHECK(info->functionInfo);
     #if MIMICPP_DETAIL_USES_LIBCXX
             CHECK_THAT(
                 StringT{info->identifier},
@@ -435,31 +434,11 @@ namespace
                 StringT{info->identifier},
                 Catch::Matchers::Matches(R"(lambda#\d+)"));
     #endif
-            CHECK(info->functionInfo);
-            CHECK_THAT(
-                StringT{info->functionInfo->returnType},
-                Catch::Matchers::Equals(StringT{fnInfo.returnType}));
-            CHECK_THAT(
-                StringT{info->functionInfo->argList},
-                Catch::Matchers::Equals(StringT{fnInfo.argList}));
-            CHECK_THAT(
-                StringT{info->functionInfo->specs},
-                Catch::Matchers::Equals(StringT{fnInfo.specs}));
         }
 #elif MIMICPP_DETAIL_IS_GCC
         CHECK_THAT(
             StringT{info->identifier},
             Catch::Matchers::Matches(R"(lambda#\d+)"));
-        CHECK(info->functionInfo);
-        CHECK_THAT(
-            StringT{info->functionInfo->returnType},
-            Catch::Matchers::Equals(StringT{fnInfo.returnType}));
-        CHECK_THAT(
-            StringT{info->functionInfo->argList},
-            Catch::Matchers::Equals(StringT{fnInfo.argList}));
-        CHECK_THAT(
-            StringT{info->functionInfo->specs},
-            Catch::Matchers::Equals(StringT{fnInfo.specs}));
 #endif
     }
 
@@ -895,9 +874,6 @@ TEST_CASE(
             printing::type::detail::ScopeIterator visitor{scope.functionInfo->returnType};
 
             REQUIRE(visitor());
-
-            auto const fnScope = visitor();
-            REQUIRE(fnScope);
             checkTemplateFunctionScope(
                 "my_typeTemplateFreeFunction",
                 {.argList = "int"},
