@@ -74,8 +74,15 @@ namespace mimicpp::printing::type::detail
     constexpr StringViewT anonymousNamespaceTargetScopeText{"{anon-ns}"};
     constexpr StringViewT scopeDelimiter{"::"};
     constexpr StringViewT argumentDelimiter{","};
+
+    #if MIMICPP_DETAIL_IS_MSVC \
+        || MIMICPP_DETAIL_IS_CLANG_CL
+    constexpr std::array openingBrackets{'<', '(', '[', '{', '`'};
+    constexpr std::array closingBrackets{'>', ')', ']', '}', '\''};
+    #else
     constexpr std::array openingBrackets{'<', '(', '[', '{'};
     constexpr std::array closingBrackets{'>', ')', ']', '}'};
+    #endif
 
     // GCOVR_EXCL_START
 
@@ -173,6 +180,10 @@ namespace mimicpp::printing::type::detail
         function_info info{
             .argList = trimmed(parensBegin.base(), parensEnd.end().base()),
             .specs = trimmed(parensEnd.begin().base(), name.end())};
+        if (info.argList == "void")
+        {
+            info.argList = {};
+        }
 
         name = rest;
 
@@ -268,7 +279,7 @@ namespace mimicpp::printing::type::detail
                 scopeDelimiter,
                 openingBrackets,
                 closingBrackets);
-            StringViewT const scope{m_Pending.cbegin(), delimiter.begin()};
+            StringViewT const scope = trimmed(m_Pending.cbegin(), delimiter.begin());
             m_Pending = StringViewT{delimiter.end(), m_Pending.end()};
 
             return gather_scope_info(scope);
@@ -470,44 +481,45 @@ namespace mimicpp::printing::type::detail
      */
     constexpr StringT::const_iterator simplify_special_function_scope(StringT& name, StringT::const_iterator const wrapBegin)
     {
-        constexpr std::array opening{'`', '<', '(', '{', '['};
-        constexpr std::array closing{'\'', '>', ')', '}', ']'};
+        // `\`ret fn(...) specs'` => `fn(...) specs`
 
+        auto const contentBegin = std::ranges::find_if_not(wrapBegin + 1, name.cend(), is_space);
         auto const wrapEnd = util::find_closing_token(
-            std::ranges::subrange{wrapBegin + 1, name.cend()},
+            std::ranges::subrange{contentBegin, name.cend()},
             '`',
             '\'');
         MIMICPP_ASSERT(wrapEnd != name.cend(), "No corresponding end found.");
 
-        auto contentBegin = std::ranges::find_if_not(wrapBegin + 1, name.cend(), is_space);
-        auto contentEnd = std::ranges::find_if_not(
-                              std::make_reverse_iterator(wrapEnd),
-                              std::make_reverse_iterator(contentBegin),
-                              is_space)
-                              .base();
-        // If a delimiter is found, it may split the `identifier(...)...` part and the return type (which we want to remove).
-        if (auto const delimiter = util::find_next_unwrapped_token(
-                std::ranges::subrange{contentBegin, contentEnd},
-                " ",
-                opening,
-                closing))
+        auto const parensEnd = util::find_next_unwrapped_token(
+            std::ranges::subrange{
+                std::make_reverse_iterator(wrapEnd),
+                std::make_reverse_iterator(contentBegin)},
+            ")",
+            closingBrackets,
+            openingBrackets);
+        auto const parensBegin = util::find_closing_token(
+            std::ranges::subrange{parensEnd.end(), std::make_reverse_iterator(contentBegin)},
+            ')',
+            '(');
+        if (!parensEnd
+            || parensBegin.base() == contentBegin)
         {
-            auto const potentialNewContentBegin = std::ranges::find_if_not(delimiter.end(), contentEnd, is_space);
-
-            // Is it actually a return-type (so, it's before `(`) or a specified (and thus after `)`)?
-            // If it's a specifier, the range will never contain a pair of `()`, so let's detect it here.
-            if (contentEnd != std::ranges::find(potentialNewContentBegin, contentEnd, '('))
-            {
-                contentBegin = potentialNewContentBegin;
-            }
+            return wrapEnd + 1;
         }
 
-        StringT::const_iterator const to = std::ranges::copy(
-                                               contentBegin,
-                                               contentEnd,
-                                               name.begin() + std::ranges::distance(name.cbegin(), wrapBegin))
-                                               .out;
-        name.erase(to, wrapEnd + 1);
+        // The return type seems optional. So, if not delimiter can be found it may still be a function.
+        auto const delimiter = util::find_next_unwrapped_token(
+            std::ranges::subrange{parensBegin + 1, std::make_reverse_iterator(contentBegin)},
+            " ",
+            closingBrackets,
+            openingBrackets);
+        auto const end = std::ranges::copy(
+                             delimiter.begin().base(),
+                             wrapEnd,
+                             name.begin() + std::ranges::distance(name.cbegin(), wrapBegin))
+                             .out;
+
+        name.erase(end, wrapEnd + 1);
 
         // return the current position, as we may have copied another special scope to the beginning
         return wrapBegin;
@@ -528,6 +540,19 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline StringT apply_basic_transformations(StringT name)
     {
+        static RegexT const omitClassStructEnum{R"(\b(class|struct|enum)\s+)"};
+        name = std::regex_replace(name, omitClassStructEnum, "");
+
+        static RegexT const omitAccessSpecifiers{R"(\b(?:public|private|protected):\s+)"};
+        name = std::regex_replace(name, omitAccessSpecifiers, "");
+
+        static const RegexT omitVirtualNamespace{R"(`\d+'::)"};
+        name = std::regex_replace(name, omitVirtualNamespace, "");
+
+        // something like call-convention and __ptr64
+        static RegexT const omitImplementationSpecifiers{R"(\b__\w+\b\s*)"};
+        name = std::regex_replace(name, omitImplementationSpecifiers, "");
+
         static const RegexT prettifyLambda{R"(<lambda_(\d+)>)"};
         name = std::regex_replace(name, prettifyLambda, "lambda#$1");
 
@@ -787,7 +812,8 @@ namespace mimicpp::printing::type::detail
     inline auto& alias_map()
     {
         static const std::unordered_map<StringViewT, StringViewT> aliases{
-            {"(anonymous namespace)", anonymousNamespaceTargetScopeText}
+            {"(anonymous namespace)", anonymousNamespaceTargetScopeText},
+            {"`anonymous namespace'", anonymousNamespaceTargetScopeText}
         };
 
         return aliases;
@@ -898,7 +924,7 @@ namespace mimicpp::printing::type
     {
         name = detail::apply_basic_transformations(std::move(name));
 
-        return detail::prettify(std::move(out), name);
+        return detail::prettify(std::move(out), detail::trimmed(name));
     }
 }
 
