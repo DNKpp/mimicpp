@@ -18,6 +18,7 @@
 #include <optional>
 #include <ranges>
 #include <tuple>
+#include <unordered_set>
 
 namespace mimicpp::printing::type
 {
@@ -70,7 +71,7 @@ namespace mimicpp
 
 namespace mimicpp::printing::type::detail
 {
-    constexpr StringViewT anonymousNamespaceTargetScopeText{"{anon-ns}::"};
+    constexpr StringViewT anonymousNamespaceTargetScopeText{"{anon-ns}"};
     constexpr StringViewT scopeDelimiter{"::"};
     constexpr StringViewT argumentDelimiter{","};
     constexpr std::array openingBrackets{'<', '(', '[', '{'};
@@ -119,6 +120,7 @@ namespace mimicpp::printing::type::detail
     struct template_info
     {
         StringViewT argList{};
+        StringViewT specs{};
     };
 
     struct scope_info
@@ -133,14 +135,16 @@ namespace mimicpp::printing::type::detail
     {
         MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
 
-        auto reversedName = name
-                          | std::views::reverse;
+        auto reversedName = name | std::views::reverse;
         auto const parensEnd = util::find_next_unwrapped_token(
             reversedName,
             ")",
             closingBrackets,
             openingBrackets);
-        if (!parensEnd)
+
+        // if no `)` is found, or between `)` and name-end a `::` is found, it's not a function.
+        if (!parensEnd
+            || std::ranges::search(parensEnd.begin().base(), name.cend(), scopeDelimiter.cbegin(), scopeDelimiter.cend()))
         {
             return std::nullopt;
         }
@@ -155,7 +159,12 @@ namespace mimicpp::printing::type::detail
         }
 
         // If no actual identifier is contained, it can not be a function and is thus probably a placeholder.
-        StringViewT const rest = trimmed(name.cbegin(), parensBegin.base() - 1);
+        // Do not trim here, as this will otherwise lead to indistinguishable symbols.
+        // Consider the function-type `r()`; Compilers will generate the name `r ()` for this (note the additional ws).
+        // Due to reasons, some compilers will also generate `i()` (and thus omit the return-type)
+        // for functions with complex return types. The delimiting ws is the only assumption we have.
+        // Due to this, an empty identifier is valid.
+        StringViewT const rest{name.cbegin(), parensBegin.base() - 1};
         if (rest.empty())
         {
             return std::nullopt;
@@ -186,32 +195,43 @@ namespace mimicpp::printing::type::detail
     {
         MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
 
-        if (name.ends_with('>'))
+        auto reversedName = name | std::views::reverse;
+        auto const angleEnd = util::find_next_unwrapped_token(
+            reversedName,
+            ">",
+            closingBrackets,
+            openingBrackets);
+
+        // if no `>` is found, or between `>` and name-end a `::` is found, it's not a template.
+        if (!angleEnd
+            || std::ranges::search(angleEnd.begin().base(), name.cend(), scopeDelimiter.cbegin(), scopeDelimiter.cend()))
         {
-            auto reversedName = name
-                              | std::views::reverse
-                              | std::views::drop(1);
-            auto const angleBegin = util::find_closing_token(reversedName, '>', '<');
-            if (angleBegin == reversedName.end())
-            {
-                return std::nullopt;
-            }
-
-            // If no actual identifier is contained, it can not be a template and is thus probably a placeholder.
-            StringViewT const rest = trimmed(name.cbegin(), angleBegin.base() - 1);
-            if (rest.empty())
-            {
-                return std::nullopt;
-            }
-
-            StringViewT const args = trimmed(angleBegin.base(), name.end() - 1);
-            name = rest;
-
-            return template_info{
-                .argList = args};
+            return std::nullopt;
         }
 
-        return std::nullopt;
+        auto const angleBegin = util::find_closing_token(
+            std::ranges::subrange{angleEnd.end(), reversedName.end()},
+            '>',
+            '<');
+        if (angleBegin == reversedName.end())
+        {
+            return std::nullopt;
+        }
+
+        // If no actual identifier is contained, it can not be a template and is thus probably a placeholder.
+        StringViewT const rest = trimmed(name.cbegin(), angleBegin.base() - 1);
+        if (rest.empty())
+        {
+            return std::nullopt;
+        }
+
+        StringViewT const specs = trimmed(angleEnd.begin().base(), name.cend());
+        StringViewT const args = trimmed(angleBegin.base(), angleEnd.end().base());
+        name = rest;
+
+        return template_info{
+            .argList = args,
+            .specs = specs};
     }
 
     [[nodiscard]]
@@ -267,7 +287,8 @@ namespace mimicpp::printing::type::detail
 
     constexpr StringT unify_lambdas(StringT name)
     {
-        // `'lambda'(...)` => `lambda(...)`
+        // `'lambda'(...)` => `lambda`
+        // or `'lambdaid'(...) => 'lambdaid'
 
         constexpr StringViewT lambdaPrefix{"\'lambda"};
 
@@ -279,12 +300,12 @@ namespace mimicpp::printing::type::detail
                    lambdaPrefix.cend()))
         {
             // These lambdas sometimes have and sometimes have not an id.
-            auto const newParensBegin = std::shift_left(
+            auto const newEnd = std::shift_left(
                 match.begin(),
                 std::ranges::find_if_not(match.end(), name.cend(), is_digit),
                 1);
 
-            auto const parensBegin = std::ranges::find(newParensBegin, name.cend(), '(');
+            auto const parensBegin = std::ranges::find(newEnd, name.cend(), '(');
             MIMICPP_ASSERT(parensBegin != name.cend(), "No begin-parenthesis found.");
             auto const parensEnd = util::find_closing_token(
                 std::ranges::subrange{parensBegin + 1, name.cend()},
@@ -292,10 +313,9 @@ namespace mimicpp::printing::type::detail
                 ')');
             MIMICPP_ASSERT(parensEnd != name.cend(), "No end-parenthesis found.");
 
-            auto const newEnd = std::shift_left(newParensBegin, parensEnd + 1, 2);
             name.erase(newEnd, parensEnd + 1);
 
-            first = newParensBegin;
+            first = newEnd;
         }
 
         return name;
@@ -305,7 +325,7 @@ namespace mimicpp::printing::type::detail
 
     constexpr StringT unify_lambdas_type1(StringT name)
     {
-        // `{lambda(...)#id}` => `lambda#id(...)`
+        // `{lambda(...)#id}` => `lambda#id`
 
         constexpr StringViewT lambdaPrefix{"{lambda("};
 
@@ -325,15 +345,14 @@ namespace mimicpp::printing::type::detail
                 StringViewT{"#"},
                 openingBrackets,
                 closingBrackets);
-            auto const idLength = std::ranges::distance(idToken.begin(), braceEnd);
 
-            // bring id in front of `(...)`
-            std::ranges::rotate(match.end() - 1, idToken.begin(), braceEnd);
-            auto const newEnd = std::shift_left(match.begin(), braceEnd, 1);
+            // Bring `lambda#id`to the front.
+            auto newEnd = std::shift_left(match.begin(), match.end() - 1, 1);
+            newEnd = std::ranges::copy(idToken.begin(), braceEnd, newEnd).out;
 
             name.erase(newEnd, braceEnd + 1);
 
-            first = match.end() - 2 + idLength; // points to `(`
+            first = newEnd;
         }
 
         return name;
@@ -728,7 +747,7 @@ namespace mimicpp::printing::type::detail
         {
             if (!std::exchange(isFirst, false))
             {
-                out = std::ranges::copy(StringViewT{", "}, std::move(out)).out;
+                out = format::format_to(std::move(out), ", ");
             }
 
             auto const tokenDelimiter = util::find_next_unwrapped_token(
@@ -736,8 +755,9 @@ namespace mimicpp::printing::type::detail
                 argumentDelimiter,
                 openingBrackets,
                 closingBrackets);
-            StringViewT const arg = trimmed(StringViewT{pendingArgList.begin(), tokenDelimiter.begin()});
-            out = detail::prettify(std::move(out), arg);
+            out = detail::prettify(
+                std::move(out),
+                trimmed(pendingArgList.begin(), tokenDelimiter.begin()));
             pendingArgList = StringViewT{tokenDelimiter.end(), pendingArgList.end()};
         }
 
@@ -752,57 +772,98 @@ namespace mimicpp::printing::type::detail
         return out;
     }
 
-    template <print_iterator OutIter>
-    constexpr OutIter handle_identifier(OutIter out, StringViewT name)
+    [[nodiscard]]
+    inline auto& alias_map()
     {
-        // maybe (member-)function pointer?
-        bool const isParensWrapped = name.starts_with("(")
-                                  && name.ends_with(")");
-        if (isParensWrapped)
+        static const std::unordered_map<StringViewT, StringViewT> aliases{
+            {"(anonymous namespace)", anonymousNamespaceTargetScopeText}
+        };
+
+        return aliases;
+    }
+
+    [[nodiscard]]
+    inline auto& omit_set()
+    {
+        static const std::unordered_set<StringViewT> aliases{
+            "__cxx11",
+            "__1"};
+
+        return aliases;
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter handle_scope(OutIter out, scope_info const& scope)
+    {
+        auto const& aliases = alias_map();
+        auto const& identifier = scope.identifier;
+
+        // detect member function pointer.
+        if (identifier.ends_with("::*)")
+            && identifier.starts_with("("))
         {
             out = format::format_to(std::move(out), "(");
-            name = name.substr(1u, name.size() - 2u);
-        }
-
-        while (auto const nextDelimiter = util::find_next_unwrapped_token(
-                   name,
-                   scopeDelimiter,
-                   openingBrackets,
-                   closingBrackets))
-        {
-            StringViewT const scope = trimmed({name.cbegin(), nextDelimiter.begin()});
-            out = prettify_scope(std::move(out), scope);
-            name.remove_prefix(scope.size() + nextDelimiter.size());
-        }
-
-        out = detail::prettify_top_level_identifier(std::move(out), name);
-
-        if (isParensWrapped)
-        {
+            out = detail::prettify(
+                std::move(out),
+                StringViewT{identifier.cbegin() + 1, identifier.cend() - 1});
             out = format::format_to(std::move(out), ")");
+        }
+        else if (auto const iter = aliases.find(scope.identifier);
+                 iter != aliases.cend())
+        {
+            out = std::ranges::copy(iter->second, std::move(out)).out;
+        }
+        else
+        {
+            out = std::ranges::copy(scope.identifier, std::move(out)).out;
         }
 
         return out;
     }
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify(OutIter out, StringViewT name)
+    constexpr OutIter handle_identifier(OutIter out, StringViewT const name)
     {
-        const auto [functionInfo, templateInfo] = detect_special_type_info(name);
+        auto const& omits = omit_set();
 
-        if (functionInfo)
+        ScopeIterator iter{name};
+        bool isFirst{true};
+        while (auto const scopeInfo = iter())
+        {
+            if (!omits.contains(scopeInfo->identifier))
+            {
+                if (!std::exchange(isFirst, false))
+                {
+                    out = std::ranges::copy(scopeDelimiter, std::move(out)).out;
+                }
+
+                out = handle_scope(std::move(out), *scopeInfo);
+            }
+        }
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify(OutIter out, StringViewT const name)
+    {
+        auto&& [identifier, functionInfo, templateInfo] = gather_scope_info(name);
+
+        if (functionInfo
+            && !functionInfo->returnType.empty())
         {
             out = detail::prettify(std::move(out), functionInfo->returnType);
             out = format::format_to(std::move(out), " ");
         }
 
-        out = detail::handle_identifier(std::move(out), name);
+        out = detail::handle_identifier(std::move(out), identifier);
 
         if (templateInfo)
         {
             out = format::format_to(std::move(out), "<");
             out = detail::prettify_arg_list(std::move(out), templateInfo->argList);
             out = format::format_to(std::move(out), ">");
+            out = std::ranges::copy(templateInfo->specs, std::move(out)).out;
         }
 
         if (functionInfo)
@@ -824,7 +885,7 @@ namespace mimicpp::printing::type
     template <print_iterator OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name)
     {
-        name = detail::apply_general_prettification(std::move(name));
+        name = detail::apply_basic_transformations(std::move(name));
 
         return detail::prettify(std::move(out), name);
     }
