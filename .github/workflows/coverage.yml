@@ -31,6 +31,13 @@ jobs:
       - name: Install gcovr
         run: |
           python -m pip install gcovr
+
+      - name: Print versions
+        run: |
+          cmake --version
+          gcc --version
+          g++ --version
+          gcov --version
           gcovr --version
 
       - name: Configure
