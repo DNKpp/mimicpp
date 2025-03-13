@@ -183,8 +183,8 @@ namespace mimicpp::printing::type::detail
                 closingBrackets,
                 openingBrackets))
         {
-            info.returnType = trimmed(name.begin(), returnTypeDelimiter.end().base());
-            name = StringViewT{returnTypeDelimiter.begin().base(), name.end()};
+            info.returnType = trimmed(reversedName.end().base(), returnTypeDelimiter.end().base());
+            name.remove_prefix(reversedName.end() - returnTypeDelimiter.begin());
         }
 
         return info;
@@ -219,13 +219,13 @@ namespace mimicpp::printing::type::detail
         }
 
         // If no actual identifier is contained, it can not be a template and is thus probably a placeholder.
-        StringViewT const rest = trimmed(name.cbegin(), angleBegin.base() - 1);
+        StringViewT const rest = trimmed(reversedName.end().base(), angleBegin.base() - 1);
         if (rest.empty())
         {
             return std::nullopt;
         }
 
-        StringViewT const specs = trimmed(angleEnd.begin().base(), name.cend());
+        StringViewT const specs = trimmed(angleEnd.begin().base(), reversedName.begin().base());
         StringViewT const args = trimmed(angleBegin.base(), angleEnd.end().base());
         name = rest;
 
@@ -521,6 +521,17 @@ namespace mimicpp::printing::type::detail
         {
             iter = simplify_special_function_scope(name, iter);
         }
+
+        return name;
+    }
+
+    [[nodiscard]]
+    inline StringT apply_basic_transformations(StringT name)
+    {
+        static const RegexT prettifyLambda{R"(<lambda_(\d+)>)"};
+        name = std::regex_replace(name, prettifyLambda, "lambda#$1");
+
+        name = simplify_special_functions(std::move(name));
 
         return name;
     }
