@@ -337,9 +337,11 @@ namespace
         return inner(42, 4.2f);
     };
 
-    void checkNamedScope(auto const& nameMatcher, auto& visitor)
+    void checkNamedScope(
+        printing::type::detail::ScopeIterator& iter,
+        auto const& nameMatcher)
     {
-        auto const scope = visitor();
+        auto const scope = iter();
         REQUIRE(scope);
         REQUIRE_FALSE(scope->templateInfo);
         REQUIRE_FALSE(scope->functionInfo);
@@ -349,72 +351,93 @@ namespace
             nameMatcher);
     }
 
-    void checkFunctionScope(
-        StringT const& expectedName,
-        printing::type::detail::function_info const& fnInfo,
-        auto& visitor)
+    template <
+        typename ReturnTypeMatcher = Catch::Matchers::IsEmptyMatcher,
+        typename ArgListMatcher = Catch::Matchers::IsEmptyMatcher,
+        typename SpecsMatcher = Catch::Matchers::IsEmptyMatcher>
+    struct function_info_matchers
     {
-        auto const fnScope = visitor();
+        ReturnTypeMatcher returnTypeMatcher{};
+        ArgListMatcher argListMatcher{};
+        SpecsMatcher specsMatcher{};
+    };
+
+    template <
+        typename ArgListMatcher = Catch::Matchers::IsEmptyMatcher,
+        typename SpecsMatcher = Catch::Matchers::IsEmptyMatcher>
+    struct template_info_matchers
+    {
+        ArgListMatcher argListMatcher{};
+        SpecsMatcher specsMatcher{};
+    };
+
+    void checkFunctionScope(
+        printing::type::detail::ScopeIterator& iter,
+        auto const& nameMatcher,
+        auto const& infoMatchers = template_info_matchers{})
+    {
+        auto const fnScope = iter();
         REQUIRE(fnScope);
 
         CHECK_FALSE(fnScope->templateInfo);
         CHECK_THAT(
             StringT{fnScope->identifier},
-            Catch::Matchers::Equals(expectedName));
+            nameMatcher);
 
         REQUIRE(fnScope->functionInfo);
         CHECK_THAT(
             StringT{fnScope->functionInfo->returnType},
-            Catch::Matchers::Equals(StringT{fnInfo.returnType}));
+            infoMatchers.returnTypeMatcher);
         CHECK_THAT(
             StringT{fnScope->functionInfo->argList},
-            Catch::Matchers::Equals(StringT{fnInfo.argList}));
+            infoMatchers.argListMatcher);
         CHECK_THAT(
             StringT{fnScope->functionInfo->specs},
-            Catch::Matchers::Equals(StringT{fnInfo.specs}));
+            infoMatchers.specsMatcher);
     }
 
     void checkTemplateFunctionScope(
-        StringT const& expectedName,
-        printing::type::detail::template_info const& templateInfo,
-        printing::type::detail::function_info const& fnInfo,
-        auto& visitor)
+        printing::type::detail::ScopeIterator& iter,
+        auto const& nameMatcher,
+        auto const& templateInfoMatchers,
+        auto const& functionInfoMatchers)
     {
-        auto const fnScope = visitor();
+        auto const fnScope = iter();
         REQUIRE(fnScope);
 
         CHECK_THAT(
             StringT{fnScope->identifier},
-            Catch::Matchers::Equals(expectedName));
+            nameMatcher);
 
         REQUIRE(fnScope->functionInfo);
         CHECK_THAT(
             StringT{fnScope->functionInfo->returnType},
-            Catch::Matchers::Equals(StringT{fnInfo.returnType}));
+            functionInfoMatchers.returnTypeMatcher);
         CHECK_THAT(
             StringT{fnScope->functionInfo->argList},
-            Catch::Matchers::Equals(StringT{fnInfo.argList}));
+            functionInfoMatchers.argListMatcher);
         CHECK_THAT(
             StringT{fnScope->functionInfo->specs},
-            Catch::Matchers::Equals(StringT{fnInfo.specs}));
+            functionInfoMatchers.specsMatcher);
 
         REQUIRE(fnScope->templateInfo);
         CHECK_THAT(
             StringT{fnScope->templateInfo->argList},
-            Catch::Matchers::Equals(StringT{templateInfo.argList}));
+            templateInfoMatchers.argListMatcher);
+        CHECK_THAT(
+            StringT{fnScope->templateInfo->specs},
+            templateInfoMatchers.specsMatcher);
     }
 
-    void checkLambdaScope(
-        [[maybe_unused]] printing::type::detail::function_info const& fnInfo,
-        auto& visitor)
+    void checkLambdaScope(printing::type::detail::ScopeIterator& iter)
     {
-        auto const info = visitor();
+        auto const info = iter();
 
         REQUIRE(info);
         CHECK_FALSE(info->templateInfo);
         CHECK_FALSE(info->functionInfo);
 
-#if MIMICPP_DETAIL_IS_CLANG
+    #if MIMICPP_DETAIL_IS_CLANG
 
         // clang often uses the `anon-type` form for lambdas
         CHECKED_IF(info->identifier.starts_with('$'))
@@ -427,28 +450,28 @@ namespace
         // but sometimes uses actual `lambda` form
         CHECKED_IF(info->identifier.starts_with("lambda"))
         {
-    #if MIMICPP_DETAIL_USES_LIBCXX
+        #if MIMICPP_DETAIL_USES_LIBCXX
             CHECK_THAT(
                 StringT{info->identifier},
                 Catch::Matchers::Equals("lambda"));
-    #else
+        #else
             CHECK_THAT(
                 StringT{info->identifier},
                 Catch::Matchers::Matches(R"(lambda#\d+)"));
-    #endif
+        #endif
         }
-#elif MIMICPP_DETAIL_IS_GCC
+    #elif MIMICPP_DETAIL_IS_GCC
         CHECK_THAT(
             StringT{info->identifier},
             Catch::Matchers::Matches(R"(lambda#\d+)"));
-#endif
+    #endif
     }
 
     void checkLambdaName(
         [[maybe_unused]] StringT const& expectedName,
-        [[maybe_unused]] auto& visitor)
+        [[maybe_unused]] auto& iter)
     {
-#if MIMICPP_DETAIL_IS_GCC
+    #if MIMICPP_DETAIL_IS_GCC
         auto const nameScope = visitor();
         CHECK(nameScope);
         CHECK_FALSE(nameScope->functionInfo);
@@ -456,17 +479,15 @@ namespace
         CHECK_THAT(
             StringT{nameScope->identifier},
             Catch::Matchers::Equals(expectedName));
-#endif
+    #endif
     }
 
-    void checkLambdaCallScope(printing::type::detail::function_info const& fnInfo, auto& visitor)
+    void checkLambdaCallScope(
+        printing::type::detail::ScopeIterator& iter,
+        auto const& infoMatchers)
     {
-        checkLambdaScope(
-            {.returnType = {},
-             .argList = fnInfo.argList,
-             .specs = {}},
-            visitor);
-        checkFunctionScope("operator()", fnInfo, visitor);
+        checkLambdaScope(iter);
+        checkFunctionScope(iter, Catch::Matchers::Equals("operator()"), infoMatchers);
     }
 }
 
@@ -479,12 +500,12 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeLambda)>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeLambda", visitor);
-        checkLambdaScope({}, visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeLambda", iter);
+        checkLambdaScope(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When unary lambda is given.")
@@ -492,12 +513,12 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeUnaryLambda)>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeUnaryLambda", visitor);
-        checkLambdaScope({.argList = "int"}, visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeUnaryLambda", iter);
+        checkLambdaScope(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When binary lambda is given.")
@@ -505,12 +526,12 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeBinaryLambda)>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeBinaryLambda", visitor);
-        checkLambdaScope({.argList = "int, float"}, visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeBinaryLambda", iter);
+        checkLambdaScope(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When mutable lambda is given.")
@@ -518,12 +539,12 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeMutableLambda)>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeMutableLambda", visitor);
-        checkLambdaScope({}, visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeMutableLambda", iter);
+        checkLambdaScope(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When noexcept lambda is given.")
@@ -531,12 +552,12 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeNoexceptLambda)>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeNoexceptLambda", visitor);
-        checkLambdaScope({}, visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeNoexceptLambda", iter);
+        checkLambdaScope(iter);
+        REQUIRE_FALSE(iter());
     }
 }
 
@@ -564,13 +585,15 @@ TEST_CASE(
         }));
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName(expectedLambdaName, visitor);
-        checkLambdaCallScope({.specs = "const"}, visitor);
+        REQUIRE(iter());
+        checkLambdaName(expectedLambdaName, iter);
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
 
-        auto const topLevelScope = visitor();
+        auto const topLevelScope = iter();
         CHECK(topLevelScope);
         CHECK_FALSE(topLevelScope->functionInfo);
         CHECK_FALSE(topLevelScope->templateInfo);
@@ -578,7 +601,7 @@ TEST_CASE(
             topLevelScope->identifier,
             !Catch::Matchers::IsEmpty());
 
-        REQUIRE_FALSE(visitor());
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When immutable lambda is given.")
@@ -586,13 +609,15 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeLambda", visitor);
-        checkLambdaCallScope({.specs = "const"}, visitor);
-        checkTopLevel(visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeLambda", iter);
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+        checkTopLevel(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When unary lambda is given.")
@@ -600,13 +625,17 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeUnaryLambda(42))>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeUnaryLambda", visitor);
-        checkLambdaCallScope({.argList = "int", .specs = "const"}, visitor);
-        checkTopLevel(visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeUnaryLambda", iter);
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{
+                .argListMatcher = Catch::Matchers::Equals("int"),
+                .specsMatcher = Catch::Matchers::Equals("const")});
+        checkTopLevel(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When binary lambda is given.")
@@ -614,13 +643,17 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeBinaryLambda(42, 4.2f))>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeBinaryLambda", visitor);
-        checkLambdaCallScope({.argList = "int, float", .specs = "const"}, visitor);
-        checkTopLevel(visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeBinaryLambda", iter);
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{
+                .argListMatcher = Catch::Matchers::Matches(R"(int,\s?float)"),
+                .specsMatcher = Catch::Matchers::Equals("const")});
+        checkTopLevel(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When mutable lambda is given.")
@@ -628,13 +661,13 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeMutableLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeMutableLambda", visitor);
-        checkLambdaCallScope({}, visitor);
-        checkTopLevel(visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeMutableLambda", iter);
+        checkLambdaCallScope(iter, function_info_matchers{});
+        checkTopLevel(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When noexcept lambda is given.")
@@ -642,13 +675,15 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeNoexceptLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeNoexceptLambda", visitor);
-        checkLambdaCallScope({.specs = "const"}, visitor);
-        checkTopLevel(visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeNoexceptLambda", iter);
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+        checkTopLevel(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When nested lambda is given.")
@@ -656,14 +691,18 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeNestedLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeNestedLambda", visitor);
-        checkLambdaCallScope({.specs = "const"}, visitor);
-        checkLambdaCallScope({.specs = "const"}, visitor);
-        checkTopLevel(visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeNestedLambda", iter);
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+        checkTopLevel(iter);
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When complex nested lambda is given.")
@@ -671,14 +710,20 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeComplexNestedLambda())>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkLambdaName("my_typeComplexNestedLambda", visitor);
-        checkLambdaCallScope({.specs = "const"}, visitor);
-        checkLambdaCallScope({.argList = "int, float", .specs = "const"}, visitor);
-        checkTopLevel(visitor);
-        REQUIRE_FALSE(visitor());
+        REQUIRE(iter());
+        checkLambdaName("my_typeComplexNestedLambda", iter);
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+        checkLambdaCallScope(
+            iter,
+            function_info_matchers{
+                .argListMatcher = Catch::Matchers::Matches(R"(int,\s?float)"),
+                .specsMatcher = Catch::Matchers::Equals("const")});
+        checkTopLevel(iter);
+        REQUIRE_FALSE(iter());
     }
 }
 
@@ -754,14 +799,17 @@ TEST_CASE(
         }));
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkFunctionScope(expectedFunctionName, {}, visitor);
+        REQUIRE(iter());
+        checkFunctionScope(
+            iter,
+            Catch::Matchers::Equals(expectedFunctionName),
+            function_info_matchers{});
         checkNamedScope(
-            !Catch::Matchers::IsEmpty(),
-            visitor);
-        REQUIRE_FALSE(visitor());
+            iter,
+            !Catch::Matchers::IsEmpty());
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When named function-local type is given.")
@@ -773,14 +821,17 @@ TEST_CASE(
         }));
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
-        checkFunctionScope(expectedFunctionName, {}, visitor);
+        REQUIRE(iter());
+        checkFunctionScope(
+            iter,
+            Catch::Matchers::Equals(expectedFunctionName),
+            function_info_matchers{});
         checkNamedScope(
-            Catch::Matchers::Equals("my_type"),
-            visitor);
-        REQUIRE_FALSE(visitor());
+            iter,
+            Catch::Matchers::Equals("my_type"));
+        REQUIRE_FALSE(iter());
     }
 
     SECTION("When named template-function-local type is given.")
@@ -788,18 +839,18 @@ TEST_CASE(
         StringT const rawName = name_of<decltype(my_typeTemplateFreeFunction<int>())>();
         CAPTURE(rawName);
 
-        printing::type::detail::ScopeIterator visitor{rawName};
+        printing::type::detail::ScopeIterator iter{rawName};
 
-        REQUIRE(visitor());
+        REQUIRE(iter());
         checkTemplateFunctionScope(
-            "my_typeTemplateFreeFunction",
-            {.argList = "int"},
-            {},
-            visitor);
+            iter,
+            Catch::Matchers::Equals("my_typeTemplateFreeFunction"),
+            template_info_matchers{.argListMatcher = Catch::Matchers::Equals("int")},
+            function_info_matchers{});
         checkNamedScope(
-            Catch::Matchers::Matches(R"(my_type const\s*\*)"),
-            visitor);
-        REQUIRE_FALSE(visitor());
+            iter,
+            Catch::Matchers::Matches(R"(my_type const\s*\*)"));
+        REQUIRE_FALSE(iter());
     }
 }
 
@@ -824,24 +875,27 @@ TEST_CASE(
 
         SECTION("When visiting identifier.")
         {
-            printing::type::detail::ScopeIterator visitor{scope.identifier};
+            printing::type::detail::ScopeIterator iter{scope.identifier};
 
             checkNamedScope(
-                Catch::Matchers::Equals("(*)"),
-                visitor);
-            REQUIRE_FALSE(visitor());
+                iter,
+                Catch::Matchers::Equals("(*)"));
+            REQUIRE_FALSE(iter());
         }
 
         SECTION("When visiting return-type.")
         {
-            printing::type::detail::ScopeIterator visitor{scope.functionInfo->returnType};
+            printing::type::detail::ScopeIterator iter{scope.functionInfo->returnType};
 
-            REQUIRE(visitor());
-            checkFunctionScope("my_typeFreeFunction", {}, visitor);
+            REQUIRE(iter());
+            checkFunctionScope(
+                iter,
+                Catch::Matchers::Equals("my_typeFreeFunction"),
+                function_info_matchers{});
             checkNamedScope(
-                Catch::Matchers::Equals("my_type"),
-                visitor);
-            REQUIRE_FALSE(visitor());
+                iter,
+                Catch::Matchers::Equals("my_type"));
+            REQUIRE_FALSE(iter());
         }
     }
 
@@ -863,28 +917,28 @@ TEST_CASE(
 
         SECTION("When visiting identifier.")
         {
-            printing::type::detail::ScopeIterator visitor{scope.identifier};
+            printing::type::detail::ScopeIterator iter{scope.identifier};
 
             checkNamedScope(
-                Catch::Matchers::Equals("(*)"),
-                visitor);
-            REQUIRE_FALSE(visitor());
+                iter,
+                Catch::Matchers::Equals("(*)"));
+            REQUIRE_FALSE(iter());
         }
 
         SECTION("When visiting return-type.")
         {
-            printing::type::detail::ScopeIterator visitor{scope.functionInfo->returnType};
+            printing::type::detail::ScopeIterator iter{scope.functionInfo->returnType};
 
-            REQUIRE(visitor());
+            REQUIRE(iter());
             checkTemplateFunctionScope(
-                "my_typeTemplateFreeFunction",
-                {.argList = "int"},
-                {},
-                visitor);
+                iter,
+                Catch::Matchers::Equals("my_typeTemplateFreeFunction"),
+                template_info_matchers{.argListMatcher = Catch::Matchers::Equals("int")},
+                function_info_matchers{});
             checkNamedScope(
-                Catch::Matchers::Equals("my_type const*"),
-                visitor);
-            REQUIRE_FALSE(visitor());
+                iter,
+                Catch::Matchers::Matches(R"(my_type const\s*\*)"));
+            REQUIRE_FALSE(iter());
         }
     }
 
@@ -907,21 +961,21 @@ TEST_CASE(
 
         SECTION("When visiting identifier.")
         {
-            printing::type::detail::ScopeIterator visitor{scope.identifier};
+            printing::type::detail::ScopeIterator iter{scope.identifier};
 
             checkNamedScope(
-                Catch::Matchers::Equals("(*)"),
-                visitor);
-            REQUIRE_FALSE(visitor());
+                iter,
+                Catch::Matchers::Equals("(*)"));
+            REQUIRE_FALSE(iter());
         }
 
         SECTION("When visiting return-type.")
         {
-            printing::type::detail::ScopeIterator visitor{scope.functionInfo->returnType};
+            printing::type::detail::ScopeIterator iter{scope.functionInfo->returnType};
 
-            REQUIRE(visitor());
+            REQUIRE(iter());
 
-            auto const fnScope = visitor();
+            auto const fnScope = iter();
             REQUIRE(fnScope);
             CHECK_THAT(
                 StringT{fnScope->identifier},
@@ -939,15 +993,32 @@ TEST_CASE(
                 Catch::Matchers::IsEmpty());
 
             REQUIRE(fnScope->templateInfo);
-            CHECK_THAT(
-                StringT{fnScope->templateInfo->argList},
-                Catch::Matchers::EndsWith("my_typeTemplateFreeFunction<int>()::my_type const* (*)()"));
+
+            SECTION("When visiting the template argument.")
+            {
+                CAPTURE(fnScope->templateInfo->argList);
+                auto const argScope = printing::type::detail::gather_scope_info(fnScope->templateInfo->argList);
+                REQUIRE_FALSE(argScope.templateInfo);
+                REQUIRE(argScope.functionInfo);
+                CHECK_THAT(
+                    argScope.functionInfo->argList,
+                    Catch::Matchers::IsEmpty());
+                CHECK_THAT(
+                    argScope.functionInfo->specs,
+                    Catch::Matchers::IsEmpty());
+                CHECK_THAT(
+                    StringT{argScope.functionInfo->returnType},
+                    Catch::Matchers::EndsWith("::my_type const *")
+                        || Catch::Matchers::EndsWith("::my_type const*"));
+                CHECK_THAT(
+                    StringT{argScope.identifier},
+                    Catch::Matchers::Equals("(*)"));
+            }
 
             checkNamedScope(
-                Catch::Matchers::Equals("my_type const*"),
-                visitor);
-
-            REQUIRE_FALSE(visitor());
+                iter,
+                Catch::Matchers::Matches(R"(my_type const\s*\*)"));
+            REQUIRE_FALSE(iter());
         }
     }
 }
