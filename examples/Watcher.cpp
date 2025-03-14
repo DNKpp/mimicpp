@@ -62,7 +62,7 @@ TEST_CASE(
         // but in this example we fake that by simply moving it below our expectation.
         auto moved = std::move(source); // note: source is now a "moved-from"-object, which doesn't report any violations
 
-        mimicpp::Watched other{source}; // now create a "copy" of source
+        mimicpp::Watched other{moved}; // now create a "copy" of source
 
         // other is a new instance without an existing destruction-expectation,
         // because the copy-constructor doesn't semantically copy anything.
