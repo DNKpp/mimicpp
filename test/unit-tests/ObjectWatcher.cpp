@@ -715,7 +715,7 @@ TEST_CASE(
                 && Catch::Matchers::EndsWith("my_base"));
     }
 
-    SECTION("Copy constructed.")
+    SECTION("Copy assigned.")
     {
         RelocationWatcher inner{};
         inner = watcher.value();

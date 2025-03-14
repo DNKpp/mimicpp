@@ -109,7 +109,7 @@ TEST_CASE(
                 other{}; // now create another watched object
 
             // other will be destructed, but there is no existing destruction-expectation
-            other = source; // a no-match will be reported immediately
+            other = moved; // a no-match will be reported immediately
         };
 
         // Depending on the active reporter, this may either raise an exception or terminate the program.
@@ -147,7 +147,7 @@ TEST_CASE(
                 mimicpp::LifetimeWatcher>
                 other{};                        // now create another watched object
             SCOPED_EXP other.expect_destruct(); // setting it up accordingly
-            other = source;                     // other will be destructed and the expectation from the line above fulfilled
+            other = moved;                      // other will be destructed and the expectation from the line above fulfilled
 
             // other is now a new instance without an existing destruction-expectation,
             // because the copy-operator doesn't semantically copy anything.
