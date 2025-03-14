@@ -591,7 +591,11 @@ TEST_CASE(
         checkLambdaName(expectedLambdaName, iter);
         checkLambdaCallScope(
             iter,
-            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .specsMatcher = Catch::Matchers::Equals("const")});
 
         auto const topLevelScope = iter();
         CHECK(topLevelScope);
@@ -615,7 +619,11 @@ TEST_CASE(
         checkLambdaName("my_typeLambda", iter);
         checkLambdaCallScope(
             iter,
-            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .specsMatcher = Catch::Matchers::Equals("const")});
         checkTopLevel(iter);
         REQUIRE_FALSE(iter());
     }
@@ -631,7 +639,10 @@ TEST_CASE(
         checkLambdaName("my_typeUnaryLambda", iter);
         checkLambdaCallScope(
             iter,
-            function_info_matchers{
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
                 .argListMatcher = Catch::Matchers::Equals("int"),
                 .specsMatcher = Catch::Matchers::Equals("const")});
         checkTopLevel(iter);
@@ -649,7 +660,10 @@ TEST_CASE(
         checkLambdaName("my_typeBinaryLambda", iter);
         checkLambdaCallScope(
             iter,
-            function_info_matchers{
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::RegexMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
                 .argListMatcher = Catch::Matchers::Matches(R"(int,\s?float)"),
                 .specsMatcher = Catch::Matchers::Equals("const")});
         checkTopLevel(iter);
@@ -681,7 +695,11 @@ TEST_CASE(
         checkLambdaName("my_typeNoexceptLambda", iter);
         checkLambdaCallScope(
             iter,
-            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .specsMatcher = Catch::Matchers::Equals("const")});
         checkTopLevel(iter);
         REQUIRE_FALSE(iter());
     }
@@ -697,10 +715,18 @@ TEST_CASE(
         checkLambdaName("my_typeNestedLambda", iter);
         checkLambdaCallScope(
             iter,
-            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .specsMatcher = Catch::Matchers::Equals("const")});
         checkLambdaCallScope(
             iter,
-            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .specsMatcher = Catch::Matchers::Equals("const")});
         checkTopLevel(iter);
         REQUIRE_FALSE(iter());
     }
@@ -716,10 +742,17 @@ TEST_CASE(
         checkLambdaName("my_typeComplexNestedLambda", iter);
         checkLambdaCallScope(
             iter,
-            function_info_matchers{.specsMatcher = Catch::Matchers::Equals("const")});
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .specsMatcher = Catch::Matchers::Equals("const")});
         checkLambdaCallScope(
             iter,
-            function_info_matchers{
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::RegexMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
                 .argListMatcher = Catch::Matchers::Matches(R"(int,\s?float)"),
                 .specsMatcher = Catch::Matchers::Equals("const")});
         checkTopLevel(iter);
@@ -845,7 +878,11 @@ TEST_CASE(
         checkTemplateFunctionScope(
             iter,
             Catch::Matchers::Equals("my_typeTemplateFreeFunction"),
-            template_info_matchers{.argListMatcher = Catch::Matchers::Equals("int")},
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher,
+                Catch::Matchers::IsEmptyMatcher>{
+                .argListMatcher = Catch::Matchers::Equals("int")},
             function_info_matchers{});
         checkNamedScope(
             iter,
@@ -933,7 +970,11 @@ TEST_CASE(
             checkTemplateFunctionScope(
                 iter,
                 Catch::Matchers::Equals("my_typeTemplateFreeFunction"),
-                template_info_matchers{.argListMatcher = Catch::Matchers::Equals("int")},
+                function_info_matchers<
+                    Catch::Matchers::IsEmptyMatcher,
+                    Catch::Matchers::StringEqualsMatcher,
+                    Catch::Matchers::IsEmptyMatcher>{
+                    .argListMatcher = Catch::Matchers::Equals("int")},
                 function_info_matchers{});
             checkNamedScope(
                 iter,
