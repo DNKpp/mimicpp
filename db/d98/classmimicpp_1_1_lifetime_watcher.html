@@ -487,7 +487,7 @@ Here is the call graph for this function:</div>
 <div class="line">                other{}; <span class="comment">// now create another watched object</span></div>
 <div class="line"> </div>
 <div class="line">            <span class="comment">// other will be destructed, but there is no existing destruction-expectation</span></div>
-<div class="line">            other = source; <span class="comment">// a no-match will be reported immediately</span></div>
+<div class="line">            other = moved; <span class="comment">// a no-match will be reported immediately</span></div>
 <div class="line">        };</div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">// Depending on the active reporter, this may either raise an exception or terminate the program.</span></div>
@@ -521,7 +521,7 @@ As this actually destructs a <code><a class="el" href="../../db/d98/classmimicpp
 <div class="line">                <a class="code hl_class" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">mimicpp::LifetimeWatcher</a>&gt;</div>
 <div class="line">                other{};                        <span class="comment">// now create another watched object</span></div>
 <div class="line">            <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> other.expect_destruct(); <span class="comment">// setting it up accordingly</span></div>
-<div class="line">            other = source;                     <span class="comment">// other will be destructed and the expectation from the line above fulfilled</span></div>
+<div class="line">            other = moved;                      <span class="comment">// other will be destructed and the expectation from the line above fulfilled</span></div>
 <div class="line"> </div>
 <div class="line">            <span class="comment">// other is now a new instance without an existing destruction-expectation,</span></div>
 <div class="line">            <span class="comment">// because the copy-operator doesn&#39;t semantically copy anything.</span></div>

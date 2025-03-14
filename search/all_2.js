@@ -14,7 +14,7 @@ var searchData=
   ['and_20assignment_20operator_11',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
   ['and_20char_20types_12',['Bring your own string- and char-types',['../index.html#autotoc_md59',1,'']]],
   ['and_20mostly_20macro_20free_20mocking_20framework_13',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
-  ['and_20related_20strings_14',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
+  ['and_20related_20strings_14',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['and_20variadic_20templates_15',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
   ['any_16',['any',['../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any'],['../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any']]],
   ['any_5felement_17',['any_element',['../de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#gaaaaf2818ccdc5527192543d2e3a1e996',1,'mimicpp::matches::range']]],
