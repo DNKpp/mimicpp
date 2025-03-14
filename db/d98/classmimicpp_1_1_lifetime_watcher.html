@@ -337,7 +337,7 @@ Here is the call graph for this function:</div>
 <div class="line">        <span class="comment">// but in this example we fake that by simply moving it below our expectation.</span></div>
 <div class="line">        <span class="keyword">auto</span> moved = std::move(source); <span class="comment">// note: source is now a &quot;moved-from&quot;-object, which doesn&#39;t report any violations</span></div>
 <div class="line"> </div>
-<div class="line">        <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a> other{source}; <span class="comment">// now create a &quot;copy&quot; of source</span></div>
+<div class="line">        <a class="code hl_class" href="../../d3/d5d/classmimicpp_1_1_watched.html">mimicpp::Watched</a> other{moved}; <span class="comment">// now create a &quot;copy&quot; of source</span></div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">// other is a new instance without an existing destruction-expectation,</span></div>
 <div class="line">        <span class="comment">// because the copy-constructor doesn&#39;t semantically copy anything.</span></div>
