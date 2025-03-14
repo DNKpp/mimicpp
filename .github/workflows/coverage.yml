@@ -31,6 +31,13 @@ jobs:
       - name: Install gcovr
         run: |
           python -m pip install gcovr
+
+      - name: Print versions
+        run: |
+          cmake --version
+          gcc --version
+          g++ --version
+          gcov --version
           gcovr --version
 
       - name: Configure
@@ -70,7 +77,7 @@ jobs:
         run: |
           # circumvent "fatal: detected dubious ownership in repository" error
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-          gcovr -j4 -v \
+          gcovr --verbose \
               --filter "include/mimic++" \
               --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|unreachable)\(" \
               --exclude-unreachable-branches \
@@ -83,9 +90,16 @@ jobs:
               --txt \
               --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
               --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
-              --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty \
               --json-summary ${{env.JSON_SUMMARY}} --json-summary-pretty \
               --json ${{env.JSON_REPORT}} --json-pretty
+
+      # Gathering the coveralls.json in one go with all the other reports results in inconsistent reports.
+      # see: https://github.com/gcovr/gcovr/issues/1074
+      - name: Create coveralls report
+        run: |
+          gcovr --verbose \
+              --add-tracefile ${{env.JSON_REPORT}} \
+              --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
 
       - name: Upload gcov coverage report artifacts
         uses: actions/upload-artifact@v4
