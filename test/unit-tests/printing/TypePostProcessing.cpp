@@ -191,7 +191,7 @@ namespace
     StringT const lambdaScopePattern = topLevelLambdaPattern + "::";
 
     StringT const anonNsScopePattern = R"(\{anon-ns\}::)";
-    StringT const anonTypePattern = R"((\$_\d+|\{unnamed type#\d+\}))";
+    StringT const anonTypePattern = R"((\$_\d+|\{unnamed type#\d+\}|<unnamed-type-anon_(class|struct|enum)>))";
     StringT const testCaseScopePattern = R"(CATCH2_INTERNAL_TEST_\d+::)";
     StringT const callOpScopePattern = R"(operator\(\)::)";
 }
@@ -913,7 +913,7 @@ TEST_CASE(
 
         StringT const argListPattern =
     #if MIMICPP_DETAIL_IS_MSVC // it seems msvc applies an address instead of anonymous-namespace
-            R"(A0x\w+::my_template::my_type const&)";
+            R"(A0x\w+::my_template::my_type)";
     #else
             anonNsScopePattern + R"(my_template::my_type)";
     #endif
@@ -938,7 +938,7 @@ TEST_CASE(
 
         StringT const returnPattern =
     #if MIMICPP_DETAIL_IS_MSVC // it seems msvc applies an address instead of anonymous-namespace
-            R"(A0x\w+::my_template::\{bar\}::bar_type)";
+            R"(A0x\w+::my_template::bar::bar_type)";
     #else
             anonNsScopePattern + R"(my_template::bar::bar_type)";
     #endif
