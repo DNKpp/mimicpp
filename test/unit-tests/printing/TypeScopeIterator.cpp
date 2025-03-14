@@ -472,7 +472,7 @@ namespace
         [[maybe_unused]] auto& iter)
     {
     #if MIMICPP_DETAIL_IS_GCC
-        auto const nameScope = visitor();
+        auto const nameScope = iter();
         CHECK(nameScope);
         CHECK_FALSE(nameScope->functionInfo);
         CHECK_FALSE(nameScope->templateInfo);
