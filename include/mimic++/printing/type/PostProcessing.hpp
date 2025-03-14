@@ -807,6 +807,39 @@ namespace mimicpp::printing::type::detail
     }
 
     template <print_iterator OutIter>
+    constexpr OutIter prettify_specs(OutIter out, StringViewT const specs)
+    {
+        if (StringViewT::npos != specs.find("const"))
+        {
+            out = format::format_to(std::move(out), " const");
+        }
+
+        if (StringViewT::npos != specs.find("volatile"))
+        {
+            out = format::format_to(std::move(out), " volatile");
+        }
+
+        if (auto const i = specs.find("&");
+            StringViewT::npos != i)
+        {
+            out = format::format_to(std::move(out), "&");
+
+            if (i + 1 < specs.size()
+                && specs[i + 1] == '&')
+            {
+                out = format::format_to(std::move(out), "&");
+            }
+        }
+
+        out = std::ranges::fill_n(
+            std::move(out),
+            std::ranges::count(specs, '*'),
+            '*');
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
     constexpr OutIter prettify_top_level_identifier(OutIter out, StringViewT const identifier)
     {
         out = std::ranges::copy(identifier, std::move(out)).out;
@@ -903,10 +936,12 @@ namespace mimicpp::printing::type::detail
 
         if (templateInfo)
         {
+            auto const& [args, specs] = *templateInfo;
+
             out = format::format_to(std::move(out), "<");
-            out = detail::prettify_arg_list(std::move(out), templateInfo->argList);
+            out = detail::prettify_arg_list(std::move(out), args);
             out = format::format_to(std::move(out), ">");
-            out = std::ranges::copy(templateInfo->specs, std::move(out)).out;
+            out = prettify_specs(std::move(out), specs);
         }
 
         if (functionInfo)
@@ -916,7 +951,7 @@ namespace mimicpp::printing::type::detail
             out = format::format_to(std::move(out), "(");
             out = detail::prettify_arg_list(std::move(out), args);
             out = format::format_to(std::move(out), ")");
-            out = std::ranges::copy(specs, std::move(out)).out;
+            out = prettify_specs(std::move(out), specs);
         }
 
         return out;
