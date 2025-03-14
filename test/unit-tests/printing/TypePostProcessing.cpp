@@ -994,6 +994,211 @@ TEST_CASE(
     }
 }
 
+namespace
+{
+    class special_operators
+    {
+    public:
+        [[nodiscard]]
+        auto operator<(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        [[nodiscard]]
+        auto operator<=(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        [[nodiscard]]
+        auto operator>(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        [[nodiscard]]
+        auto operator>=(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        [[nodiscard]]
+        auto operator<(std::string) const noexcept
+        {
+            struct my_type
+            {
+                [[nodiscard]]
+                auto operator>=(int) const noexcept
+                {
+                    struct my_type
+                    {
+                    };
+
+                    return my_type{};
+                }
+            };
+
+            return my_type{}.operator>=(42);
+        }
+
+        [[nodiscard]]
+        auto operator<=(std::string) const noexcept
+        {
+            struct my_type
+            {
+                [[nodiscard]]
+                auto operator>(int) const noexcept
+                {
+                    struct my_type
+                    {
+                    };
+
+                    return my_type{};
+                }
+            };
+
+            return my_type{}.operator>(42);
+        }
+
+        [[nodiscard]]
+        auto operator>(std::string) const noexcept
+        {
+            struct my_type
+            {
+                [[nodiscard]]
+                auto operator<=(int) const noexcept
+                {
+                    struct my_type
+                    {
+                    };
+
+                    return my_type{};
+                }
+            };
+
+            return my_type{}.operator<=(42);
+        }
+
+        [[nodiscard]]
+        auto operator>=(std::string) const noexcept
+        {
+            struct my_type
+            {
+                [[nodiscard]]
+                auto operator<(int) const noexcept
+                {
+                    struct my_type
+                    {
+                    };
+
+                    return my_type{};
+                }
+            };
+
+            return my_type{}.operator<(42);
+        }
+
+        [[nodiscard]]
+        auto operator<=>(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+    };
+}
+
+TEST_CASE(
+    "printing::type::prettify_identifier supports operator<, <=, >, >= and <=>.",
+    "[print][detail]")
+{
+    StringStreamT ss{};
+
+    SECTION("When ordering operator is used.")
+    {
+        auto const [expectedFunctionName, rawName] = GENERATE(
+            (table<StringT, StringT>)({
+                { R"(operator<)",  printing::type::type_name<decltype(special_operators{}.operator<(42))>()},
+                {R"(operator<=)", printing::type::type_name<decltype(special_operators{}.operator<=(42))>()},
+                { R"(operator>)",  printing::type::type_name<decltype(special_operators{}.operator>(42))>()},
+                {R"(operator>=)", printing::type::type_name<decltype(special_operators{}.operator>=(42))>()}
+        }));
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                anonNsScopePattern
+                + R"(special_operators::)"
+                + expectedFunctionName
+                + "::my_type"));
+    }
+
+    SECTION("When nested ordering operator is used.")
+    {
+        auto const [expectedFunctionName, expectedNestedFunctionName, rawName] = GENERATE(
+            (table<StringT, StringT, StringT>)({
+                { R"(operator<)", R"(operator>=)",  printing::type::type_name<decltype(special_operators{}.operator<(""))>()},
+                {R"(operator<=)",  R"(operator>)", printing::type::type_name<decltype(special_operators{}.operator<=(""))>()},
+                { R"(operator>)", R"(operator<=)",  printing::type::type_name<decltype(special_operators{}.operator>(""))>()},
+                {R"(operator>=)",  R"(operator<)", printing::type::type_name<decltype(special_operators{}.operator>=(""))>()}
+        }));
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                anonNsScopePattern
+                + R"(special_operators::)"
+                + expectedFunctionName
+                + "::my_type::"
+                + expectedNestedFunctionName
+                + "::my_type"));
+    }
+
+    SECTION("When spaceship-operator is used.")
+    {
+        StringT const rawName = printing::type::type_name<decltype(special_operators{}.operator<=>(42))>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_identifier(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                anonNsScopePattern
+                + "special_operators::"
+                + "operator<=>::"
+                + "my_type"));
+    }
+}
+
 /*
 constexpr auto type_post_processing_lambda_loc = [] {
     return std::source_location::current();

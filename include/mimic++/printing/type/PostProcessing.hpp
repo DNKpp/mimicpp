@@ -294,6 +294,27 @@ namespace mimicpp::printing::type::detail
     private:
         StringViewT m_Pending;
     };
+
+    [[nodiscard]]
+    inline StringT transform_ordering_operators(StringT name)
+    {
+        static RegexT const transformOpSpaceship{R"(\boperator\s?<=>)"};
+        name = std::regex_replace(name, transformOpSpaceship, "operator-spaceship");
+
+        static RegexT const transformOpLessEq{R"(\boperator\s?<=)"};
+        name = std::regex_replace(name, transformOpLessEq, "operator-le");
+
+        static RegexT const transformOpLess{R"(\boperator\s?<)"};
+        name = std::regex_replace(name, transformOpLess, "operator-lt");
+
+        static RegexT const transformOpGreaterEq{R"(\boperator\s?>=)"};
+        name = std::regex_replace(name, transformOpGreaterEq, "operator-ge");
+
+        static RegexT const transformOpGreater{R"(\boperator\s?>)"};
+        name = std::regex_replace(name, transformOpGreater, "operator-gt");
+
+        return name;
+    }
 }
 
     #if MIMICPP_DETAIL_IS_GCC \
@@ -413,8 +434,9 @@ namespace mimicpp::printing::type::detail
         #endif
 
     [[nodiscard]]
-    constexpr StringT apply_basic_transformations(StringT name)
+    inline StringT apply_basic_transformations(StringT name)
     {
+        name = transform_ordering_operators(std::move(name));
         name = unify_lambdas(std::move(name));
 
         return name;
@@ -488,6 +510,8 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline StringT apply_basic_transformations(StringT name)
     {
+        name = transform_ordering_operators(std::move(name));
+
         static RegexT const omitClassStructEnum{R"(\b(class|struct|enum)\s+)"};
         name = std::regex_replace(name, omitClassStructEnum, "");
 
@@ -593,7 +617,12 @@ namespace mimicpp::printing::type::detail
     {
         static const std::unordered_map<StringViewT, StringViewT> aliases{
             {"(anonymous namespace)", anonymousNamespaceTargetScopeText},
-            {"`anonymous namespace'", anonymousNamespaceTargetScopeText}
+            {"`anonymous namespace'", anonymousNamespaceTargetScopeText},
+            {          "operator-lt",                       "operator<"},
+            {          "operator-le",                      "operator<="},
+            {          "operator-gt",                       "operator>"},
+            {          "operator-ge",                      "operator>="},
+            {   "operator-spaceship",                     "operator<=>"},
         };
 
         return aliases;
