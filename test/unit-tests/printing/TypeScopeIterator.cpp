@@ -1064,4 +1064,256 @@ TEST_CASE(
     }
 }
 
+namespace
+{
+    class special_operators
+    {
+    public:
+        [[nodiscard]]
+        auto operator<(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        [[nodiscard]]
+        auto operator<=(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        [[nodiscard]]
+        auto operator>(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        [[nodiscard]]
+        auto operator>=(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        [[nodiscard]]
+        auto operator<(std::string) const noexcept
+        {
+            struct my_type
+            {
+                [[nodiscard]]
+                auto operator>=(int) const noexcept
+                {
+                    struct my_type
+                    {
+                    };
+
+                    return my_type{};
+                }
+            };
+
+            return my_type{}.operator>=(42);
+        }
+
+        [[nodiscard]]
+        auto operator<=(std::string) const noexcept
+        {
+            struct my_type
+            {
+                [[nodiscard]]
+                auto operator>(int) const noexcept
+                {
+                    struct my_type
+                    {
+                    };
+
+                    return my_type{};
+                }
+            };
+
+            return my_type{}.operator>(42);
+        }
+
+        [[nodiscard]]
+        auto operator>(std::string) const noexcept
+        {
+            struct my_type
+            {
+                [[nodiscard]]
+                auto operator<=(int) const noexcept
+                {
+                    struct my_type
+                    {
+                    };
+
+                    return my_type{};
+                }
+            };
+
+            return my_type{}.operator<=(42);
+        }
+
+        [[nodiscard]]
+        auto operator>=(std::string) const noexcept
+        {
+            struct my_type
+            {
+                [[nodiscard]]
+                auto operator<(int) const noexcept
+                {
+                    struct my_type
+                    {
+                    };
+
+                    return my_type{};
+                }
+            };
+
+            return my_type{}.operator<(42);
+        }
+
+        [[nodiscard]]
+        auto operator<=>(int) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+    };
+}
+
+TEST_CASE(
+    "printing::type::detail::ScopeIterator supports operator<, <=, >, >= and <=>.",
+    "[print][detail]")
+{
+    SECTION("When ordering operator is used.")
+    {
+        auto const [expectedFunctionName, rawName] = GENERATE(
+            (table<StringT, StringT>)({
+                {R"(operator-lt)",  name_of<decltype(special_operators{}.operator<(42))>()},
+                {R"(operator-le)", name_of<decltype(special_operators{}.operator<=(42))>()},
+                {R"(operator-gt)",  name_of<decltype(special_operators{}.operator>(42))>()},
+                {R"(operator-ge)", name_of<decltype(special_operators{}.operator>=(42))>()}
+        }));
+        CAPTURE(rawName);
+
+        auto const scope = printing::type::detail::gather_scope_info(rawName);
+        REQUIRE_FALSE(scope.templateInfo);
+        REQUIRE_FALSE(scope.functionInfo);
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+
+        REQUIRE(iter());
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("special_operators"));
+        checkFunctionScope(
+            iter,
+            Catch::Matchers::Equals(expectedFunctionName),
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .argListMatcher = Catch::Matchers::Equals("int"),
+                .specsMatcher = Catch::Matchers::Equals("const")});
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_type"));
+        REQUIRE_FALSE(iter());
+    }
+
+    SECTION("When nested ordering operator is used.")
+    {
+        auto const [expectedFunctionName, expectedNestedFunctionName, rawName] = GENERATE(
+            (table<StringT, StringT, StringT>)({
+                {R"(operator-lt)", R"(operator-ge)",  name_of<decltype(special_operators{}.operator<(""))>()},
+                {R"(operator-le)", R"(operator-gt)", name_of<decltype(special_operators{}.operator<=(""))>()},
+                {R"(operator-gt)", R"(operator-le)",  name_of<decltype(special_operators{}.operator>(""))>()},
+                {R"(operator-ge)", R"(operator-lt)", name_of<decltype(special_operators{}.operator>=(""))>()}
+        }));
+        CAPTURE(rawName);
+
+        auto const scope = printing::type::detail::gather_scope_info(rawName);
+        REQUIRE_FALSE(scope.templateInfo);
+        REQUIRE_FALSE(scope.functionInfo);
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+
+        REQUIRE(iter());
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("special_operators"));
+        checkFunctionScope(
+            iter,
+            Catch::Matchers::Equals(expectedFunctionName),
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringContainsMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .argListMatcher = Catch::Matchers::ContainsSubstring("basic_string<"),
+                .specsMatcher = Catch::Matchers::Equals("const")});
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_type"));
+        checkFunctionScope(
+            iter,
+            Catch::Matchers::Equals(expectedNestedFunctionName),
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .argListMatcher = Catch::Matchers::Equals("int"),
+                .specsMatcher = Catch::Matchers::Equals("const")});
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_type"));
+        REQUIRE_FALSE(iter());
+    }
+
+    SECTION("When spaceship-operator is used.")
+    {
+        StringT const rawName = name_of<decltype(special_operators{}.operator<=>(42))>();
+        CAPTURE(rawName);
+
+        auto const scope = printing::type::detail::gather_scope_info(rawName);
+        REQUIRE_FALSE(scope.templateInfo);
+        REQUIRE_FALSE(scope.functionInfo);
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+
+        REQUIRE(iter());
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("special_operators"));
+        checkFunctionScope(
+            iter,
+            Catch::Matchers::Equals("operator-spaceship"),
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .argListMatcher = Catch::Matchers::Equals("int"),
+                .specsMatcher = Catch::Matchers::Equals("const")});
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_type"));
+        REQUIRE_FALSE(iter());
+    }
+}
+
 #endif
