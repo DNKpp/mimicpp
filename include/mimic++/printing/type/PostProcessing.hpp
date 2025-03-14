@@ -229,16 +229,22 @@ namespace mimicpp::printing::type::detail
             return std::nullopt;
         }
 
-        // If no actual identifier is contained, it can not be a template and is thus probably a placeholder.
-        StringViewT const rest = trimmed(reversedName.end().base(), angleBegin.base() - 1);
-        if (rest.empty())
+        StringViewT const identifier = trimmed(reversedName.end().base(), angleBegin.base() - 1);
+        auto const delimiter = util::find_next_unwrapped_token(
+            identifier | std::views::reverse,
+            detail::scopeDelimiter,
+            closingBrackets,
+            openingBrackets);
+        // If no actual top-level-identifier is contained, it can not be a template and is thus probably a placeholder.
+        StringViewT const topLevelIdentifier = trimmed(delimiter.begin().base(), identifier.cend());
+        if (topLevelIdentifier.empty())
         {
             return std::nullopt;
         }
 
         StringViewT const specs = trimmed(angleEnd.begin().base(), reversedName.begin().base());
         StringViewT const args = trimmed(angleBegin.base(), angleEnd.end().base());
-        name = rest;
+        name = identifier;
 
         return template_info{
             .argList = args,
