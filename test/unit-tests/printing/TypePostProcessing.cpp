@@ -938,16 +938,20 @@ TEST_CASE(
 
         StringT const returnPattern =
     #if MIMICPP_DETAIL_IS_MSVC // it seems msvc applies an address instead of anonymous-namespace
-            R"(A0x\w+::my_template::bar::bar_type)";
+            R"(A0x\w+::)"
     #else
-            anonNsScopePattern + R"(my_template::bar::bar_type)";
+            anonNsScopePattern +
     #endif
+            R"(my_template::bar::bar_type)";
+
         StringT const argListPattern =
     #if MIMICPP_DETAIL_IS_MSVC // it seems msvc applies an address instead of anonymous-namespace
-            R"(A0x\w+::my_template::my_type const&, std::source_location\*)";
+            R"(A0x\w+::)"
     #else
-            anonNsScopePattern + R"(my_template::my_type const&, std::source_location\*)";
+            anonNsScopePattern +
     #endif
+            R"(my_template::my_type const\s?&, std::source_location\s?\*)";
+
         StringT const pattern =
             returnPattern
             + R"( \()"
@@ -983,9 +987,9 @@ TEST_CASE(
                 + R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 + lambdaScopePattern
                 + callOpScopePattern
-                + R"(my_type\s*&)"
-                  R"(,\s*)"
-                  R"(std::basic_string<char, std::char_traits<char>, std::allocator<char>>const&&)"
+                + R"(my_type\s?&)"
+                  R"(,\s?)"
+                  R"(std::basic_string<char, std::char_traits<char>, std::allocator<char>>\s?const\s?&&)"
                   ">"));
     }
 }
