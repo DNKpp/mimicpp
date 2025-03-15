@@ -88,11 +88,6 @@ namespace mimicpp::printing::type::detail
         return static_cast<bool>(std::isspace(static_cast<unsigned char>(c)));
     };
 
-    // see: https://en.cppreference.com/w/cpp/string/byte/isdigit
-    constexpr auto is_digit = [](char const c) noexcept {
-        return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
-    };
-
     template <std::random_access_iterator Iter>
         requires std::constructible_from<StringViewT, Iter, Iter>
     [[nodiscard]]
@@ -328,6 +323,11 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type::detail
 {
         #if MIMICPP_DETAIL_USES_LIBCXX
+
+    // see: https://en.cppreference.com/w/cpp/string/byte/isdigit
+    constexpr auto is_digit = [](char const c) noexcept {
+        return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
+    };
 
     constexpr StringT unify_lambdas(StringT name)
     {
@@ -618,8 +618,9 @@ namespace mimicpp::printing::type::detail
         static const std::unordered_map<StringViewT, StringViewT> aliases{
             {"(anonymous namespace)", anonymousNamespaceTargetScopeText},
             {"`anonymous namespace'", anonymousNamespaceTargetScopeText},
+            {  "anonymous namespace", anonymousNamespaceTargetScopeText},
             {          "{anonymous}", anonymousNamespaceTargetScopeText},
-            {"`anonymous-namespace'", anonymousNamespaceTargetScopeText},
+            {  "anonymous-namespace", anonymousNamespaceTargetScopeText},
             {          "operator-lt",                       "operator<"},
             {          "operator-le",                      "operator<="},
             {          "operator-gt",                       "operator>"},
@@ -647,6 +648,14 @@ namespace mimicpp::printing::type::detail
                 StringViewT{identifier.cbegin() + 1, identifier.cend() - 1});
             out = format::format_to(std::move(out), ")");
         }
+    #if MIMICPP_DETAIL_IS_MSVC
+        else if (identifier.starts_with('`') && identifier.ends_with('\''))
+        {
+            out = detail::prettify(
+                std::move(out),
+                StringViewT{identifier.cbegin() + 1, identifier.cend() - 1});
+        }
+    #endif
         else if (auto const iter = aliases.find(scope.identifier);
                  iter != aliases.cend())
         {
