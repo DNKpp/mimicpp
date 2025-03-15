@@ -308,6 +308,26 @@ namespace mimicpp::printing::type::detail
 
         return name;
     }
+
+    [[nodiscard]]
+    inline StringT remove_template_details(StringT name)
+    {
+        if (name.ends_with(']'))
+        {
+            auto rest = name | std::views::reverse | std::views::drop(1);
+            if (auto const closingIter = util::find_closing_token(
+                    rest,
+                    ']',
+                    '[');
+                closingIter != rest.end())
+            {
+                auto const end = std::ranges::find_if_not(closingIter + 1, rest.end(), is_space);
+                name.erase(end.base(), name.end());
+            }
+        }
+
+        return name;
+    }
 }
 
     #if MIMICPP_DETAIL_IS_GCC \
@@ -391,7 +411,7 @@ namespace mimicpp::printing::type::detail
 
     constexpr StringT unify_lambdas_type2(StringT name)
     {
-        // `<lambda(...)>` => `lambda(...)`
+        // `<lambda(...)>` => `lambda`
 
         constexpr StringViewT lambdaPrefix{"<lambda("};
 
@@ -406,11 +426,11 @@ namespace mimicpp::printing::type::detail
             auto const angleEnd = util::find_closing_token(rest, '<', '>');
             MIMICPP_ASSERT(angleEnd != name.cend(), "No corresponding end found.");
 
-            auto const newEnd = std::shift_left(match.begin(), angleEnd, 1);
+            auto const newEnd = std::shift_left(match.begin(), match.end() - 1, 1);
 
             name.erase(newEnd, angleEnd + 1);
 
-            first = match.end() - 2; // points to `(`
+            first = newEnd;
         }
 
         return name;
@@ -429,6 +449,14 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline StringT apply_basic_transformations(StringT name)
     {
+        name = remove_template_details(std::move(name));
+
+        if (constexpr StringViewT constexprToken{"constexpr "};
+            name.starts_with(constexprToken))
+        {
+            name.erase(0, constexprToken.size());
+        }
+
         static const RegexT unifyStdImplNamespace{
         #if MIMICPP_DETAIL_USES_LIBCXX
             "std::__1::"
@@ -512,6 +540,8 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline StringT apply_basic_transformations(StringT name)
     {
+        name = remove_template_details(std::move(name));
+
         name = transform_special_operators(std::move(name));
 
         static RegexT const omitClassStructEnum{R"(\b(class|struct|enum)\s+)"};
@@ -595,6 +625,7 @@ namespace mimicpp::printing::type::detail
         static const std::unordered_map<StringViewT, StringViewT> aliases{
             {"(anonymous namespace)", anonymousNamespaceTargetScopeText},
             {"`anonymous namespace'", anonymousNamespaceTargetScopeText},
+            {          "{anonymous}", anonymousNamespaceTargetScopeText},
             {          "operator-lt",                       "operator<"},
             {          "operator-le",                      "operator<="},
             {          "operator-gt",                       "operator>"},
