@@ -15,6 +15,7 @@
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/state/Print.hpp"
+#include "mimic++/printing/type/PostProcessing.hpp"
 #include "mimic++/utilities/C++23Backports.hpp" // unreachable
 
 #include <algorithm>
@@ -40,11 +41,14 @@ namespace mimicpp::printing::detail::state
             out = print_path(std::move(out), loc.file_name());
             out = format::format_to(std::move(out), "`");
 
-            return format::format_to(
+            out = format::format_to(
                 std::move(out),
-                "#L{}, `{}`",
-                loc.line(),
-                loc.function_name());
+                "#L{}, `",
+                loc.line());
+            out = type::prettify_identifier(std::move(out), loc.function_name());
+            out = format::format_to(std::move(out), "`");
+
+            return out;
         }
     };
 
@@ -210,7 +214,8 @@ namespace mimicpp::printing::detail::state
                 {
                 case ValueCategory::lvalue: return {"lvalue"};
                 case ValueCategory::rvalue: return {"rvalue"};
-                case ValueCategory::any:    return {"any"};
+                case ValueCategory::any:
+                    return {"any"};
                     // GCOVR_EXCL_START
                 default:
                     util::unreachable();
@@ -233,7 +238,8 @@ namespace mimicpp::printing::detail::state
                 {
                 case Constness::non_const: return {"mutable"};
                 case Constness::as_const:  return {"const"};
-                case Constness::any:       return {"any"};
+                case Constness::any:
+                    return {"any"};
                     // GCOVR_EXCL_START
                 default:
                     util::unreachable();
