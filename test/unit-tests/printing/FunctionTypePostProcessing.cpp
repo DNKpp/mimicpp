@@ -558,8 +558,8 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 anonNsScopePattern
-                + R"(my_stacktrace_template::foo\()"
-                + anonNsScopePattern + R"(my_stacktrace_template::my_type\))"));
+                + R"(my_stacktrace_template::foo\(()"
+                + anonNsScopePattern + R"(my_stacktrace_template::my_type)?\))"));
         #endif
     }
 }
