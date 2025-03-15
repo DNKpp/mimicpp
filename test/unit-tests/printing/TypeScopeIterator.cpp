@@ -341,6 +341,8 @@ namespace
         printing::type::detail::ScopeIterator& iter,
         auto const& nameMatcher)
     {
+        CAPTURE(iter.pending());
+
         auto const scope = iter();
         REQUIRE(scope);
         REQUIRE_FALSE(scope->templateInfo);
@@ -376,6 +378,8 @@ namespace
         auto const& nameMatcher,
         auto const& infoMatchers = template_info_matchers{})
     {
+        CAPTURE(iter.pending());
+
         auto const fnScope = iter();
         REQUIRE(fnScope);
 
@@ -402,6 +406,8 @@ namespace
         auto const& templateInfoMatchers,
         auto const& functionInfoMatchers)
     {
+        CAPTURE(iter.pending());
+
         auto const fnScope = iter();
         REQUIRE(fnScope);
 
@@ -431,6 +437,8 @@ namespace
 
     void checkLambdaScope(printing::type::detail::ScopeIterator& iter)
     {
+        CAPTURE(iter.pending());
+
         auto const info = iter();
 
         REQUIRE(info);
@@ -471,6 +479,8 @@ namespace
         [[maybe_unused]] StringT const& expectedName,
         [[maybe_unused]] auto& iter)
     {
+        CAPTURE(iter.pending());
+
     #if MIMICPP_DETAIL_IS_GCC
         auto const nameScope = iter();
         CHECK(nameScope);
@@ -487,7 +497,7 @@ namespace
         auto const& infoMatchers)
     {
         checkLambdaScope(iter);
-        checkFunctionScope(iter, Catch::Matchers::Equals("operator()"), infoMatchers);
+        checkFunctionScope(iter, Catch::Matchers::Equals("operator-invoke"), infoMatchers);
     }
 }
 
@@ -548,6 +558,93 @@ TEST_CASE(
         checkNamedScope(
             iter,
             Catch::Matchers::Equals(placeholderName));
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_type"));
+        REQUIRE_FALSE(iter());
+    }
+}
+
+TEST_CASE(
+    "printing::type::detail::ScopeIterator supports operator().",
+    "[print][detail]")
+{
+    SECTION("When given standalone.")
+    {
+        StringT const name = printing::type::detail::apply_basic_transformations(
+            "return operator()() const&");
+
+        auto const scope = printing::type::detail::gather_scope_info(name);
+        REQUIRE_FALSE(scope.templateInfo);
+        REQUIRE(scope.functionInfo);
+
+        CHECK_THAT(
+            StringT{scope.functionInfo->returnType},
+            Catch::Matchers::Equals("return"));
+        CHECK_THAT(
+            scope.functionInfo->argList,
+            Catch::Matchers::IsEmpty());
+        CHECK_THAT(
+            StringT{scope.functionInfo->specs},
+            Catch::Matchers::Equals("const&"));
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("operator-invoke"));
+        REQUIRE_FALSE(iter());
+    }
+
+    SECTION("When given as top-level.")
+    {
+        StringT const name = printing::type::detail::apply_basic_transformations(
+            "return my_ns::operator()() const&");
+
+        auto const scope = printing::type::detail::gather_scope_info(name);
+        REQUIRE_FALSE(scope.templateInfo);
+        REQUIRE(scope.functionInfo);
+
+        CHECK_THAT(
+            StringT{scope.functionInfo->returnType},
+            Catch::Matchers::Equals("return"));
+        CHECK_THAT(
+            scope.functionInfo->argList,
+            Catch::Matchers::IsEmpty());
+        CHECK_THAT(
+            StringT{scope.functionInfo->specs},
+            Catch::Matchers::Equals("const&"));
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_ns"));
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("operator-invoke"));
+        REQUIRE_FALSE(iter());
+    }
+
+    SECTION("When an identifier contains a operator().")
+    {
+        StringT const name = printing::type::detail::apply_basic_transformations(
+            "my_ns::operator()() const&::my_type");
+
+        auto const scope = printing::type::detail::gather_scope_info(name);
+        REQUIRE_FALSE(scope.templateInfo);
+        REQUIRE_FALSE(scope.functionInfo);
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_ns"));
+        checkFunctionScope(
+            iter,
+            Catch::Matchers::Equals("operator-invoke"),
+            function_info_matchers<
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::IsEmptyMatcher,
+                Catch::Matchers::StringEqualsMatcher>{
+                .specsMatcher = Catch::Matchers::Equals("const&")});
         checkNamedScope(
             iter,
             Catch::Matchers::Equals("my_type"));

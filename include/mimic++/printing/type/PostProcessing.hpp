@@ -257,6 +257,12 @@ namespace mimicpp::printing::type::detail
         }
 
         [[nodiscard]]
+        constexpr StringViewT pending() const noexcept
+        {
+            return m_Pending;
+        }
+
+        [[nodiscard]]
         std::optional<scope_info> operator()()
         {
             if (m_Pending.empty())
@@ -280,7 +286,7 @@ namespace mimicpp::printing::type::detail
     };
 
     [[nodiscard]]
-    inline StringT transform_ordering_operators(StringT name)
+    inline StringT transform_special_operators(StringT name)
     {
         static RegexT const transformOpSpaceship{R"(\boperator\s?<=>)"};
         name = std::regex_replace(name, transformOpSpaceship, "operator-spaceship");
@@ -296,6 +302,9 @@ namespace mimicpp::printing::type::detail
 
         static RegexT const transformOpGreater{R"(\boperator\s?>)"};
         name = std::regex_replace(name, transformOpGreater, "operator-gt");
+
+        static RegexT const transformOpInvoke{R"(\boperator\s?\(\))"};
+        name = std::regex_replace(name, transformOpInvoke, "operator-invoke");
 
         return name;
     }
@@ -429,7 +438,7 @@ namespace mimicpp::printing::type::detail
         };
         name = std::regex_replace(name, unifyStdImplNamespace, "std::");
 
-        name = transform_ordering_operators(std::move(name));
+        name = transform_special_operators(std::move(name));
         name = unify_lambdas(std::move(name));
 
         return name;
@@ -503,7 +512,7 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline StringT apply_basic_transformations(StringT name)
     {
-        name = transform_ordering_operators(std::move(name));
+        name = transform_special_operators(std::move(name));
 
         static RegexT const omitClassStructEnum{R"(\b(class|struct|enum)\s+)"};
         name = std::regex_replace(name, omitClassStructEnum, "");
@@ -591,6 +600,7 @@ namespace mimicpp::printing::type::detail
             {          "operator-gt",                       "operator>"},
             {          "operator-ge",                      "operator>="},
             {   "operator-spaceship",                     "operator<=>"},
+            {      "operator-invoke",                      "operator()"}
         };
 
         return aliases;
