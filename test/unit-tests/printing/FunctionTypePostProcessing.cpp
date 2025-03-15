@@ -81,7 +81,7 @@ namespace
     };
 
     StringT const topLevelLambdaPattern =
-        R"((\$_\d+|lambda#\d+|\(anonymous class\)))";
+        R"((\$_\d+|lambda(#\d+)?|\(anonymous class\)))";
 
     StringT const lambdaCallOpPattern = topLevelLambdaPattern + R"(::(operator)?\(\))";
 
