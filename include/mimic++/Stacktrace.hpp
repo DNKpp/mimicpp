@@ -12,6 +12,7 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/utilities/AlwaysFalse.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 
@@ -388,9 +389,10 @@ namespace mimicpp::stacktrace::detail
         out = format::format_to(std::move(out), "`");
         out = format::format_to(
             std::move(out),
-            "#L{}, `{}`",
-            stacktrace.source_line(index),
-            stacktrace.description(index));
+            "#L{}, `",
+            stacktrace.source_line(index));
+        out = printing::type::prettify_identifier(std::move(out), stacktrace.description(index));
+        out = format::format_to(std::move(out), "`");
 
         return out;
     }
