@@ -18,7 +18,6 @@
 #include <optional>
 #include <ranges>
 #include <tuple>
-#include <unordered_set>
 
 namespace mimicpp::printing::type
 {
@@ -436,6 +435,15 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline StringT apply_basic_transformations(StringT name)
     {
+        static const RegexT unifyStdImplNamespace{
+        #if MIMICPP_DETAIL_USES_LIBCXX
+            "std::__1::"
+        #else
+            "std::__cxx11::"
+        #endif
+        };
+        name = std::regex_replace(name, unifyStdImplNamespace, "std::");
+
         name = transform_ordering_operators(std::move(name));
         name = unify_lambdas(std::move(name));
 
@@ -628,16 +636,6 @@ namespace mimicpp::printing::type::detail
         return aliases;
     }
 
-    [[nodiscard]]
-    inline auto& omit_set()
-    {
-        static const std::unordered_set<StringViewT> aliases{
-            "__cxx11",
-            "__1"};
-
-        return aliases;
-    }
-
     template <print_iterator OutIter>
     constexpr OutIter handle_scope(OutIter out, scope_info const& scope)
     {
@@ -670,21 +668,16 @@ namespace mimicpp::printing::type::detail
     template <print_iterator OutIter>
     constexpr OutIter handle_identifier(OutIter out, StringViewT const name)
     {
-        auto const& omits = omit_set();
-
         ScopeIterator iter{name};
         bool isFirst{true};
         while (auto const scopeInfo = iter())
         {
-            if (!omits.contains(scopeInfo->identifier))
+            if (!std::exchange(isFirst, false))
             {
-                if (!std::exchange(isFirst, false))
-                {
-                    out = std::ranges::copy(scopeDelimiter, std::move(out)).out;
-                }
-
-                out = handle_scope(std::move(out), *scopeInfo);
+                out = std::ranges::copy(scopeDelimiter, std::move(out)).out;
             }
+
+            out = handle_scope(std::move(out), *scopeInfo);
         }
 
         return out;
