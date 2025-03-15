@@ -165,7 +165,7 @@ namespace mimicpp::printing::type::detail
         // If no `opening closing` range could be found or the identifier between `scopeDelimiter opening` is empty,
         // it's not what we are looking for.
         if (openingIter == delimiterMatch.begin()
-            || std::ranges::empty(trimmed(reversedName.end().base(), openingIter.base() - 1)))
+            || std::ranges::empty(trimmed(delimiterMatch.begin().base(), openingIter.base() - 1)))
         {
             return {name.cend(), name.cend()};
         }

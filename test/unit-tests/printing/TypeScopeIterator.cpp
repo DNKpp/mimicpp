@@ -492,6 +492,70 @@ namespace
 }
 
 TEST_CASE(
+    "printing::type::detail::ScopeIterator does not treat placeholders as templates or functions.",
+    "[print][detail]")
+{
+    StringT const placeholderName = GENERATE(
+        "<placeholder>",
+        "(placeholder)",
+        "`placeholder'");
+
+    SECTION("When a standalone placeholder is given.")
+    {
+        StringT const name = placeholderName;
+
+        auto const scope = printing::type::detail::gather_scope_info(name);
+        REQUIRE_FALSE(scope.functionInfo);
+        REQUIRE_FALSE(scope.templateInfo);
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals(placeholderName));
+        REQUIRE_FALSE(iter());
+    }
+
+    SECTION("When top-level placeholder is given.")
+    {
+        StringT const name = "my_ns::" + placeholderName;
+
+        auto const scope = printing::type::detail::gather_scope_info(name);
+        REQUIRE_FALSE(scope.functionInfo);
+        REQUIRE_FALSE(scope.templateInfo);
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_ns"));
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals(placeholderName));
+        REQUIRE_FALSE(iter());
+    }
+
+    SECTION("When an identifier contains a placeholder.")
+    {
+        StringT const name = "my_ns::" + placeholderName + "::my_type";
+
+        auto const scope = printing::type::detail::gather_scope_info(name);
+        REQUIRE_FALSE(scope.functionInfo);
+        REQUIRE_FALSE(scope.templateInfo);
+
+        printing::type::detail::ScopeIterator iter{scope.identifier};
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_ns"));
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals(placeholderName));
+        checkNamedScope(
+            iter,
+            Catch::Matchers::Equals("my_type"));
+        REQUIRE_FALSE(iter());
+    }
+}
+
+TEST_CASE(
     "printing::type::detail::ScopeIterator supports all kinds of lambdas.",
     "[print][detail]")
 {
