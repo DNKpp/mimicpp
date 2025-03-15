@@ -137,64 +137,78 @@ namespace mimicpp::printing::type::detail
     };
 
     [[nodiscard]]
+    constexpr std::ranges::borrowed_subrange_t<StringViewT> detect_last_enclosed(
+        StringViewT const& name,
+        StringViewT const opening,
+        StringViewT const closing)
+    {
+        MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
+        MIMICPP_ASSERT(1u == opening.size(), "Opening token must have a size of one.");
+        MIMICPP_ASSERT(1u == closing.size(), "Closing token must have a size of one.");
+
+        auto reversedName = name | std::views::reverse;
+
+        auto const delimiterMatch = util::find_next_unwrapped_token(
+            reversedName,
+            scopeDelimiter,
+            closingBrackets,
+            openingBrackets);
+        auto const closingMatch = util::find_next_unwrapped_token(
+            std::ranges::subrange{reversedName.begin(), delimiterMatch.begin()},
+            closing,
+            closingBrackets,
+            openingBrackets);
+        auto const openingIter = util::find_closing_token(
+            std::ranges::subrange{closingMatch.end(), delimiterMatch.begin()},
+            closing.front(),
+            opening.front());
+        // If no `opening closing` range could be found or the identifier between `scopeDelimiter opening` is empty,
+        // it's not what we are looking for.
+        if (openingIter == delimiterMatch.begin()
+            || std::ranges::empty(trimmed(reversedName.end().base(), openingIter.base() - 1)))
+        {
+            return {name.cend(), name.cend()};
+        }
+
+        return {openingIter.base() - 1, closingMatch.begin().base()};
+    }
+
+    [[nodiscard]]
     constexpr std::optional<function_info> detect_function_scope_info(StringViewT& name)
     {
         MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
 
-        auto reversedName = name | std::views::reverse;
-        auto const parensEnd = util::find_next_unwrapped_token(
-            reversedName,
-            ")",
-            closingBrackets,
-            openingBrackets);
-
-        // if no `)` is found, or between `)` and name-end a `::` is found, it's not a function.
-        if (!parensEnd
-            || std::ranges::search(parensEnd.begin().base(), name.cend(), scopeDelimiter.cbegin(), scopeDelimiter.cend()))
+        auto const enclosedMatch = detect_last_enclosed(name, "(", ")");
+        if (enclosedMatch.empty())
         {
             return std::nullopt;
         }
-
-        auto const parensBegin = util::find_closing_token(
-            std::ranges::subrange{parensEnd.end(), reversedName.end()},
-            ')',
-            '(');
-        if (parensBegin == reversedName.end())
-        {
-            return std::nullopt;
-        }
-
-        // If no actual identifier is contained, it can not be a function and is thus probably a placeholder.
-        // Do not trim here, as this will otherwise lead to indistinguishable symbols.
-        // Consider the function-type `r()`; Compilers will generate the name `r ()` for this (note the additional ws).
-        // Due to reasons, some compilers will also generate `i()` (and thus omit the return-type)
-        // for functions with complex return types. The delimiting ws is the only assumption we have.
-        // Due to this, an empty identifier is valid.
-        StringViewT const rest{name.cbegin(), parensBegin.base() - 1};
-        if (rest.empty())
-        {
-            return std::nullopt;
-        }
+        MIMICPP_ASSERT(enclosedMatch.front() == '(' && enclosedMatch.back() == ')', "Unexpected result.");
 
         function_info info{
-            .argList = trimmed(parensBegin.base(), parensEnd.end().base()),
-            .specs = trimmed(parensEnd.begin().base(), name.end())};
+            .argList = trimmed(enclosedMatch.begin() + 1, enclosedMatch.end() - 1),
+            .specs = trimmed(enclosedMatch.end(), name.end())};
         if (info.argList == "void")
         {
             info.argList = {};
         }
 
-        name = rest;
+        // Do not trim here, as this will otherwise lead to indistinguishable symbols.
+        // Consider the function-type `r()`; Compilers will generate the name `r ()` for this (note the additional ws).
+        // Due to reasons, some compilers will also generate `i()` (and thus omit the return-type)
+        // for functions with complex return types. The delimiting ws is the only assumption we have.
+        // Due to this, an empty identifier is valid.
+        name = {name.cbegin(), enclosedMatch.begin()};
 
         // If a whitespace exists before `(`, it's probably the return type.
         if (auto const returnTypeDelimiter = util::find_next_unwrapped_token(
-                std::ranges::subrange{parensBegin + 1, reversedName.end()},
+                name | std::views::reverse,
                 " ",
                 closingBrackets,
                 openingBrackets))
         {
-            info.returnType = trimmed(reversedName.end().base(), returnTypeDelimiter.end().base());
-            name.remove_prefix(reversedName.end() - returnTypeDelimiter.begin());
+            info.returnType = trimmed(name.cbegin(), returnTypeDelimiter.end().base());
+            name = {returnTypeDelimiter.begin().base(), name.cend()};
         }
 
         return info;
@@ -205,45 +219,16 @@ namespace mimicpp::printing::type::detail
     {
         MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
 
-        auto reversedName = name | std::views::reverse;
-        auto const angleEnd = util::find_next_unwrapped_token(
-            reversedName,
-            ">",
-            closingBrackets,
-            openingBrackets);
-
-        // if no `>` is found, or between `>` and name-end a `::` is found, it's not a template.
-        if (!angleEnd
-            || std::ranges::search(angleEnd.begin().base(), name.cend(), scopeDelimiter.cbegin(), scopeDelimiter.cend()))
+        auto const enclosedMatch = detect_last_enclosed(name, "<", ">");
+        if (enclosedMatch.empty())
         {
             return std::nullopt;
         }
+        MIMICPP_ASSERT(enclosedMatch.front() == '<' && enclosedMatch.back() == '>', "Unexpected result.");
 
-        auto const angleBegin = util::find_closing_token(
-            std::ranges::subrange{angleEnd.end(), reversedName.end()},
-            '>',
-            '<');
-        if (angleBegin == reversedName.end())
-        {
-            return std::nullopt;
-        }
-
-        StringViewT const identifier = trimmed(reversedName.end().base(), angleBegin.base() - 1);
-        auto const delimiter = util::find_next_unwrapped_token(
-            identifier | std::views::reverse,
-            detail::scopeDelimiter,
-            closingBrackets,
-            openingBrackets);
-        // If no actual top-level-identifier is contained, it can not be a template and is thus probably a placeholder.
-        StringViewT const topLevelIdentifier = trimmed(delimiter.begin().base(), identifier.cend());
-        if (topLevelIdentifier.empty())
-        {
-            return std::nullopt;
-        }
-
-        StringViewT const specs = trimmed(angleEnd.begin().base(), reversedName.begin().base());
-        StringViewT const args = trimmed(angleBegin.base(), angleEnd.end().base());
-        name = identifier;
+        StringViewT const specs = trimmed(enclosedMatch.end(), name.cend());
+        StringViewT const args = trimmed(enclosedMatch.begin() + 1, enclosedMatch.end() - 1);
+        name = trimmed(name.cbegin(), enclosedMatch.begin());
 
         return template_info{
             .argList = args,
