@@ -83,10 +83,10 @@ namespace
     StringT const topLevelLambdaPattern =
         R"((\$_\d+|lambda#\d+|\(anonymous class\)))";
 
-    StringT const lambdaCallOpPattern = topLevelLambdaPattern + R"(::operator\(\))";
+    StringT const lambdaCallOpPattern = topLevelLambdaPattern + R"(::(operator)?\(\))";
 
     StringT const anonNsScopePattern = R"(\{anon-ns\}::)";
-    StringT const anonTypePattern = R"((\$_\d+|<unnamed (class|struct|enum)>|\(anonymous (class|struct|enum)\)))";
+    StringT const anonTypePattern = R"((\$_\d+|<unnamed-(tag|type-obj)>|<unnamed (class|struct|enum)>|\(anonymous (class|struct|enum)\)))";
     StringT const testCasePattern = R"(CATCH2_INTERNAL_TEST_\d+)";
     StringT const locReturnPattern = "(auto|std::source_location) ";
 }
@@ -155,7 +155,7 @@ TEST_CASE(
                 + lambdaCallOpPattern
                 + "::"
                 + lambdaCallOpPattern
-                + R"(\(\)(const)?)"));
+                + R"(\(\)(\s?const)?)"));
     #endif
     }
 
@@ -380,7 +380,7 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 lambdaCallOpPattern
-                + R"(\(\)\s?const)"));
+                + R"(\(\)(\s?const)?)"));
         #endif
     }
 
@@ -407,9 +407,10 @@ TEST_CASE(
                 // Todo: This results in the wrong output, but I'm tired of getting this work, so I'll accept it for now.
                 // The first `...::operator()()` is falsely recognized as a return type, because the trailing `const`
                 // is separated by a whitespace. That's in fact a general problem of the parsing process.
-                + R"(\(\)\s?const::)" // << this is wrong!
+                + R"((\(\)(\s?const)?)?)" // << this is wrong!
+                  "::"
                 + lambdaCallOpPattern
-                + R"(\(\)\s?const)"));
+                + R"(\(\)(\s?const)?)"));
         #endif
     }
 
@@ -435,7 +436,7 @@ TEST_CASE(
                 anonNsScopePattern
                 + "stacktrace_fun::"
                 + lambdaCallOpPattern
-                + R"(\(\)\s?const)"));
+                + R"(\(\)(\s?const)?)"));
         #endif
     }
 
@@ -469,8 +470,8 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 testCasePattern
                 + "::"
-                + lambdaCallOpPattern
-                + R"(\(\)\s?const)"));
+                + anonTypePattern
+                + R"(::operator\(\)\(\)(\s?const)?)"));
         #endif
     }
 
@@ -505,8 +506,8 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 testCasePattern
                 + "::"
-                + lambdaCallOpPattern
-                + R"(\(\)\s?const)"));
+                + anonTypePattern
+                + R"(::operator\(\)\(\)(\s?const)?)"));
         #endif
     }
 
@@ -532,7 +533,7 @@ TEST_CASE(
                 anonNsScopePattern
                 + "stacktrace_anon_lambda_fun::"
                 + lambdaCallOpPattern
-                + R"(\(\)\s?const)"));
+                + R"(\(\)(\s?const)?)"));
         #endif
     }
 
