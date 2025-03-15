@@ -1129,7 +1129,7 @@ namespace
 
 TEST_CASE(
     "printing::type::prettify_identifier supports operator<, <=, >, >= and <=>.",
-    "[print][detail]")
+    "[print]")
 {
     StringStreamT ss{};
 
@@ -1197,6 +1197,22 @@ TEST_CASE(
                 + "operator<=>::"
                 + "my_type"));
     }
+}
+
+TEST_CASE(
+    "printing::type::prettify_identifier omits function args with just `void` content.",
+    "[print]")
+{
+    StringT const name = "return my_function<void>(void)";
+
+    StringStreamT ss{};
+    printing::type::prettify_identifier(
+        std::ostreambuf_iterator{ss},
+        name);
+
+    REQUIRE_THAT(
+        ss.str(),
+        Catch::Matchers::Equals(+"return my_function<void>()"));
 }
 
 /*
