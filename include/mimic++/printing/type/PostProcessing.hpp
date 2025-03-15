@@ -83,8 +83,6 @@ namespace mimicpp::printing::type::detail
     constexpr std::array closingBrackets{'>', ')', ']', '}'};
     #endif
 
-    // GCOVR_EXCL_START
-
     // see: https://en.cppreference.com/w/cpp/string/byte/isspace
     constexpr auto is_space = [](char const c) noexcept {
         return static_cast<bool>(std::isspace(static_cast<unsigned char>(c)));
@@ -94,8 +92,6 @@ namespace mimicpp::printing::type::detail
     constexpr auto is_digit = [](char const c) noexcept {
         return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
     };
-
-    // GCOVR_EXCL_STOP
 
     template <std::random_access_iterator Iter>
         requires std::constructible_from<StringViewT, Iter, Iter>
@@ -315,10 +311,7 @@ namespace mimicpp::printing::type::detail
         if (name.ends_with(']'))
         {
             auto rest = name | std::views::reverse | std::views::drop(1);
-            if (auto const closingIter = util::find_closing_token(
-                    rest,
-                    ']',
-                    '[');
+            if (auto const closingIter = util::find_closing_token(rest, ']', '[');
                 closingIter != rest.end())
             {
                 auto const end = std::ranges::find_if_not(closingIter + 1, rest.end(), is_space);

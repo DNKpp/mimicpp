@@ -9,7 +9,7 @@ target_sources(${TARGET_NAME}
     "Format.cpp"
     "PathPrinter.cpp"
     "StatePrinter.cpp"
-    "SourceLocationPostProcessing.cpp"
+    "FunctionTypePostProcessing.cpp"
     "TypeScopeIterator.cpp"
     "TypePostProcessing.cpp"
     "TypePrinter.cpp"
