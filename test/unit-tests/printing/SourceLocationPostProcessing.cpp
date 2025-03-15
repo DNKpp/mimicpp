@@ -80,12 +80,12 @@ namespace
     };
 
     StringT const topLevelLambdaPattern =
-        R"((\(anonymous class\)))";
+        R"((lambda#\d+|\(anonymous class\)))";
 
-    StringT const lambdaCallOpPattern = topLevelLambdaPattern + R"(::operator\(\))";
+    StringT const lambdaCallOpPattern = topLevelLambdaPattern + R"(::(\(\)|operator\(\)))";
 
     StringT const anonNsScopePattern = R"(\{anon-ns\}::)";
-    StringT const anonTypePattern = R"((<unnamed (class|struct|enum)>|\(anonymous (class|struct|enum)\)))";
+    StringT const anonTypePattern = R"((<unnamed-tag>|<unnamed (class|struct|enum)>|\(anonymous (class|struct|enum)\)))";
     StringT const testCasePattern = R"(CATCH2_INTERNAL_TEST_\d+)";
     StringT const locReturnPattern = "(auto|std::source_location) ";
 }

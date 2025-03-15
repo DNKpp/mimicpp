@@ -626,6 +626,7 @@ namespace mimicpp::printing::type::detail
             {"(anonymous namespace)", anonymousNamespaceTargetScopeText},
             {"`anonymous namespace'", anonymousNamespaceTargetScopeText},
             {          "{anonymous}", anonymousNamespaceTargetScopeText},
+            {"`anonymous-namespace'", anonymousNamespaceTargetScopeText},
             {          "operator-lt",                       "operator<"},
             {          "operator-le",                      "operator<="},
             {          "operator-gt",                       "operator>"},
