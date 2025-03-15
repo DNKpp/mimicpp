@@ -617,10 +617,10 @@ namespace mimicpp::printing::type::detail
     {
         static const std::unordered_map<StringViewT, StringViewT> aliases{
             {"(anonymous namespace)", anonymousNamespaceTargetScopeText},
-            {"`anonymous namespace'", anonymousNamespaceTargetScopeText},
-            {  "anonymous namespace", anonymousNamespaceTargetScopeText},
             {          "{anonymous}", anonymousNamespaceTargetScopeText},
+            {"`anonymous namespace'", anonymousNamespaceTargetScopeText},
             {  "anonymous-namespace", anonymousNamespaceTargetScopeText},
+            {  "anonymous namespace", anonymousNamespaceTargetScopeText},
             {          "operator-lt",                       "operator<"},
             {          "operator-le",                      "operator<="},
             {          "operator-gt",                       "operator>"},
