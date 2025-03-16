@@ -62,21 +62,22 @@
   * [Core Design](#core-design)
   * [Examples](#examples)
   * [Portability](#portability)
-  * [Special Acknowledgement](#special-acknowledgement)
-* [Customizability](#customizability)
+* [Features & Customizability](#features--customizability)
   * [Stringification](#stringification)
   * [Matchers](#matchers)
   * [Policies](#policies)
   * [Bring your own string- and char-types](#bring-your-own-string--and-char-types)
   * [Call-Conventions](#call-conventions)
 * [Integration](#integration)
-    * [CMake](#cmake)
-    * [Packaging Tools](#packaging-tools)
-    * [Single-Header](#single-header)
+  * [Portability](#portability)
+  * [CMake](#cmake)
+  * [Packaging Tools](#packaging-tools)
+  * [Single-Header](#single-header)
   * [Test Framework](#test-framework)
-* [Documentation](#documentation)
+  * [Documentation](#documentation)
 * [Testing](#testing)
 * [Known Issues](#known-issues)
+* [Special Acknowledgement](#special-acknowledgement)
 
 ---
 
@@ -111,6 +112,61 @@ This tracking mechanism helps developers quickly identify issues in their tests,
 accurately represented and maintained.
 
 In essence, Mocks and Expectations work hand in hand to facilitate effective testing.
+
+### Quick Demo
+
+A robust mocking framework must effectively notify users of errors by providing all relevant details — without
+overwhelming them with excessive verbosity.
+
+Significant effort has been invested in ensuring that error messages, particularly type information, are clear,
+well-structured, and easy to interpret.
+
+Consider the following example where a user creates a Mock object without setting up any expectations, and then proceeds
+to call it:
+
+```cpp
+mimicpp::Mock<void()> mock{}; // Create a mock without setting up any expectations.
+mock();                       // Since no expectation was set up, this call is unmatched.
+```
+
+The framework will generate the following output:
+
+```
+Unmatched Call originated from `path/to/source.cpp`#L1337, `test_function()`
+  On Target `Mock<void()>` used Overload `void()`
+No Expectations available!
+
+Stacktrace:
+#0 `path/to/source.cpp`#L1337, `test_function()`
+// ...
+```
+
+In another scenario, when an expectation has been defined but the incoming call fails to meet any of the set criteria,
+it is crucial to clearly indicate where the mismatch occurred.
+For instance, in the example below the framework expects a call with the argument 42, but receives 1337 instead:
+
+```cpp
+mimicpp::Mock<void(int)> mock{};  // Create a mock that expects an int argument.
+SCOPED_EXP mock.expect_call(42);  // Set up an expectation: the mock should be called with the integer 42.
+mock(1337);                       // Call the mock with an incorrect argument (1337 instead of 42).
+```
+
+This will produce the following detailed output:
+
+```
+Unmatched Call originated from `path/to/source.cpp`#L42, `test_function2()`
+  On Target `Mock<void(int)>` used Overload `void(int)`
+  Where:
+    arg[0] => int: 1337
+1 non-matching Expectation(s):
+  #1 Expectation defined at `path/to/source.cpp`#L24, `test_function2()`
+  Due to Violation(s):
+    - expect: arg[0] == 42
+
+Stacktrace:
+#0 `path/to/source.cpp`#L42, `test_function2()`
+// ...
+```
 
 ### Examples
 
@@ -324,47 +380,14 @@ TEST_CASE("LifetimeWatcher and RelocationWatcher can trace the lifetime and relo
 
 </details>
 
-### Portability
-
-``mimic++`` is designed to work with any C++20 conforming compiler, independent of the underlying platform or
-architecture.
-This is achieved by consistently adhering to the language standards,
-which is continuously verified through an extensive CI/CD workflow that tracks numerous configurations.
-
-In fact, ``mimic++`` is known to work on Windows, Ubuntu, and macOS with both ``x86_64`` and ``x86_32`` architectures.
-For a more comprehensive overview, please refer to the [Testing](#testing) section.
-
-### Special Acknowledgement
-
-This framework is heavily inspired by the well-known [trompeloeil](https://github.com/rollbear/trompeloeil), which I
-have personally used for several years.
-While it is definitely a solid choice, it can sometimes feel a bit dated,
-and some macros may not work well with formatting tools and similar utilities.
-If you need a pre-C++20 mocking framework, I highly recommend giving it a try.
-
-Fun fact: ``mimic++`` uses ``trompeloeil`` for its own test suite :D
-
 ---
 
-## Customizability
+## Features & Customizability
 
 A framework should be a versatile tool that can be utilized in various ways and tailored to meet specific needs.
 For this reason, ``mimic++`` offers a range of customization options.
 For example, users can create their own expectation policies and integrate them seamlessly without modifying any line of
 the ``mimic++`` codebase.
-
-### Stringification
-
-``mimic++`` cannot provide stringification for every type, but having a proper textual representation of an object can
-be very useful when a test fails.
-``mimic++`` will use ``std::format`` (or [fmt](https://github.com/fmtlib/fmt)) for types that are formattable, but
-sometimes that may not meet users' needs,
-as they might prefer an alternative stringification specifically for testing purposes.
-
-To address this, users can add their own specializations of the ``mimicpp::custom::Printer`` type, allowing them to
-specify how a given type should be printed.
-Custom specializations will always take precedence over any pre-existing printing methods, enabling users to override
-the stringification of internal report types as well.
 
 ### Matchers
 
@@ -386,6 +409,19 @@ throwing an exception).
 These policies can implement arbitrary logic, so feel free to experiment.
 There is no base type requirement; they simply need to satisfy either the ``mimicpp::expectation_policy_for``,
 ``mimicpp::control_policy``, or ``mimicpp::finalize_policy_for``.
+
+### Stringification
+
+``mimic++`` cannot provide stringification for every type, but having a proper textual representation of an object can
+be very useful when a test fails.
+``mimic++`` will use ``std::format`` (or [fmt](https://github.com/fmtlib/fmt)) for types that are formattable, but
+sometimes that may not meet users' needs,
+as they might prefer an alternative stringification specifically for testing purposes.
+
+To address this, users can add their own specializations of the ``mimicpp::custom::Printer`` type, allowing them to
+specify how a given type should be printed.
+Custom specializations will always take precedence over any pre-existing printing methods, enabling users to override
+the stringification of internal report types as well.
 
 ### Bring your own string- and char-types
 
@@ -410,27 +446,20 @@ framework compatible with any call convention they require.
 
 ---
 
-## Documentation
-
-The documentation is generated using Doxygen.
-Users can generate it locally by enabling both the ``MIMICPP_CONFIGURE_DOXYGEN`` and ``MIMICPP_ENABLE_GENERATE_DOCS``
-CMake options,
-and then manually building the target ``mimicpp-generate-docs``.
-
-The documentation for the **main** branch is always available on GitHub Pages.
-For the **development** branch, it is also available on the **dev-gh-pages** branch, but unfortunately, it is not
-directly viewable in the browser.
-
-Each release includes the generated documentation as an attachment.
-
----
-
 ## Integration
 
 ``mimic++`` is a header-only library, allowing users to easily access all features by simply including the
 ``mimic++/mimic++.hpp`` header.
-Of course, users can also take a more granular approach and include only what is necessary.
-The choice is yours.
+
+### Portability
+
+``mimic++`` is designed to work with any C++20 conforming compiler, independent of the underlying platform or
+architecture.
+This is achieved by consistently adhering to the language standards,
+which is continuously verified through an extensive CI/CD workflow that tracks numerous configurations.
+
+In fact, ``mimic++`` is known to work on Windows, Ubuntu, and macOS with both ``x86_64`` and ``x86_32`` architectures.
+For a more comprehensive overview, please refer to the [Testing](#testing) section.
 
 ### CMake
 
@@ -451,8 +480,8 @@ include(FetchContent)
 
 FetchContent_Declare(
     mimicpp
+        VERSION 5 # or GIT_TAG <commit_hash> 
     GIT_REPOSITORY https://github.com/DNKpp/mimicpp
-        VERSION 5 # or GIT_TAG <commit_hash>
 )
 
 FetchContent_MakeAvailable(mimicpp)
@@ -472,8 +501,8 @@ CPMAddPackage("gh:DNKpp/mimicpp@5") # or gh:DNKpp/mimicpp#<commit_hash>
 ### Packaging Tools
 
 * [vcpkg](https://github.com/Microsoft/vcpkg) - The Microsoft VC++ Packaging Tool.
-  Thanks to contributions from community members, ``mimic++`` also has a **vcpkg port**, which can be found here:
-  [![Vcpkg port](https://img.shields.io/vcpkg/v/mimicpp)](https://vcpkg.link/ports/mimicpp)
+  Thanks to contributions from community members, ``mimic++`` also has a **vcpkg port**, which can be found
+  [here](https://vcpkg.link/ports/mimicpp).
 
 ### Single-Header
 
@@ -500,6 +529,19 @@ Official adapters exist for the following frameworks:
 * [Catch2](https://github.com/catchorg) (tested with v3.7.1)
 * [Doctest](https://github.com/doctest/doctest) (tested with v2.4.11)
 * [GTest](https://github.com/google/googletest) (tested with v1.15.2)
+
+### Documentation
+
+The documentation is generated using Doxygen.
+Users can generate it locally by enabling both the ``MIMICPP_CONFIGURE_DOXYGEN`` and ``MIMICPP_ENABLE_GENERATE_DOCS``
+CMake options,
+and then manually building the target ``mimicpp-generate-docs``.
+
+The documentation for the **main** branch is always available on GitHub Pages.
+For the **development** branch, it is also available on the **dev-gh-pages** branch, but unfortunately, it is not
+directly viewable in the browser.
+
+Each release includes the generated documentation as an attachment.
 
 ---
 
@@ -591,3 +633,13 @@ Unfortunately this can not solved easily by this framework - sorry for that.
 
 Clang-17 and Clang-19 do not suffer from this issue.
 For more information have a look [here](https://github.com/llvm/llvm-project/issues/106428).
+
+## Special Acknowledgement
+
+This framework is heavily inspired by the well-known [trompeloeil](https://github.com/rollbear/trompeloeil), which I
+have personally used for several years.
+While it is definitely a solid choice, it can sometimes feel a bit dated,
+and some macros may not work well with formatting tools and similar utilities.
+If you need a pre-C++20 mocking framework, I highly recommend giving it a try.
+
+Fun fact: ``mimic++`` uses ``trompeloeil`` for its own test suite :D
