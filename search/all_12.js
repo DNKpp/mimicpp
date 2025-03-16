@@ -167,7 +167,7 @@ var searchData=
   ['stacktrace_164',['Stacktrace',['../db/d18/classmimicpp_1_1_stacktrace.html',1,'mimicpp::Stacktrace'],['../db/d18/classmimicpp_1_1_stacktrace.html#a183ad8b1325f69bdf161aa618b2da5a9',1,'mimicpp::Stacktrace::Stacktrace(Inner &amp;&amp;inner)'],['../db/d18/classmimicpp_1_1_stacktrace.html#a0f3863795c2ac1268d2f7ac2941f6190',1,'mimicpp::Stacktrace::Stacktrace(const Stacktrace &amp;)=default'],['../db/d18/classmimicpp_1_1_stacktrace.html#a12cf057633250d1f4463e97cdd0869b0',1,'mimicpp::Stacktrace::Stacktrace(Stacktrace &amp;&amp;)=default']]],
   ['stacktrace_165',['stacktrace',['../d4/d44/classmimicpp_1_1call_1_1_info.html#a7008c600682cac5a597ada6b0c90bb64',1,'mimicpp::call::Info::stacktrace'],['../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a8aa826da79f09845a9f14acc7abd4558',1,'mimicpp::reporting::CallReport::stacktrace'],['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html',1,'stacktrace']]],
   ['stacktrace_20backend_166',['Enable experimental cpptrace stacktrace-backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md44',1,'']]],
-  ['stacktrace_20backends_167',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md23',1,'']]],
+  ['stacktrace_20backends_167',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md26',1,'']]],
   ['stacktrace_20support_168',['Enable experimental stacktrace support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md41',1,'']]],
   ['stacktrace_2ehpp_169',['Stacktrace.hpp',['../de/df5/_stacktrace_8hpp.html',1,'']]],
   ['stacktraceskip_170',['stacktraceSkip',['../d4/d24/classmimicpp_1_1_mock_settings.html#ac9d3f340f01d5355c32befcf8dc843b7',1,'mimicpp::MockSettings']]],
@@ -212,7 +212,7 @@ var searchData=
   ['stringify_5funhandled_5fexception_209',['stringify_unhandled_exception',['../d6/d48/namespacemimicpp_1_1reporting.html#a31f05e9181e8ca535aaed2884ab8edaa',1,'mimicpp::reporting']]],
   ['stringifyreports_2ehpp_210',['StringifyReports.hpp',['../d9/d70/_stringify_reports_8hpp.html',1,'']]],
   ['stringmatchers_2ehpp_211',['StringMatchers.hpp',['../d2/d56/_string_matchers_8hpp.html',1,'']]],
-  ['strings_212',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
+  ['strings_212',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['strings_20with_20common_20char_20type_213',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['strings_20with_20other_20character_20types_214',['Strings with other character-types',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
   ['stringstreamt_215',['StringStreamT',['../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8',1,'mimicpp']]],
@@ -220,7 +220,7 @@ var searchData=
   ['stringviewt_217',['StringViewT',['../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6',1,'mimicpp']]],
   ['strip_5fparens_218',['strip_parens',['../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html',1,'']]],
   ['support_219',['support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md41',1,'Enable experimental stacktrace support'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md38',1,'Enable experimental string-matcher unicode support']]],
-  ['support_20for_20case_20insensitive_20matching_220',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md26',1,'']]],
-  ['support_20for_20printing_221',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
+  ['support_20for_20case_20insensitive_20matching_220',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
+  ['support_20for_20printing_221',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
   ['svmatcht_222',['SVMatchT',['../d1/d11/namespacemimicpp.html#a77903fa9566b1dd9ee216502a2518d94',1,'mimicpp']]]
 ];
