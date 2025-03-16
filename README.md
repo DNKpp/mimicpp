@@ -1,22 +1,58 @@
 # mimic++, a modern and (mostly) macro free mocking framework
 
-> #### Quality Badges
->
-> [![CodeQL](https://github.com/DNKpp/mimicpp/actions/workflows/codeql.yml/badge.svg)](https://github.com/DNKpp/mimicpp/actions/workflows/codeql.yml)
-> [![codecov](https://codecov.io/gh/DNKpp/mimicpp/graph/badge.svg?token=T9EpgyuyUi)](https://codecov.io/gh/DNKpp/mimicpp)
-> [![Coverage Status](https://coveralls.io/repos/github/DNKpp/mimicpp/badge.svg)](https://coveralls.io/github/DNKpp/mimicpp)
-> [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b852271c6e8742fe8a1667e679dc422b)](https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-> [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/b852271c6e8742fe8a1667e679dc422b)](https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
+<div style="border: 2px solid #4285F4; padding: 1em; border-radius: 8px; margin: 1em 0;">
+  <h3 style="margin-top: 0;">Quality Badges</h3>
+  <div style="display: flex; flex-direction: row; gap: 8px;">
+    <a href="https://github.com/DNKpp/mimicpp/actions/workflows/codeql.yml">
+      <img src="https://github.com/DNKpp/mimicpp/actions/workflows/codeql.yml/badge.svg" alt="CodeQL">
+    </a>
+    <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
+      <img src="https://app.codacy.com/project/badge/Grade/b852271c6e8742fe8a1667e679dc422b" alt="Codacy Badge">
+    </a>
+    <a href="https://app.codacy.com/gh/DNKpp/mimicpp/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage">
+      <img src="https://app.codacy.com/project/badge/Coverage/b852271c6e8742fe8a1667e679dc422b" alt="Codacy Coverage">
+    </a>
+    <a href="https://codecov.io/gh/DNKpp/mimicpp">
+      <img src="https://codecov.io/gh/DNKpp/mimicpp/graph/badge.svg?token=T9EpgyuyUi" alt="codecov">
+    </a>
+    <a href="https://coveralls.io/github/DNKpp/mimicpp">
+      <img src="https://coveralls.io/repos/github/DNKpp/mimicpp/badge.svg" alt="Coverage Status">
+    </a>
+  </div>
+</div>
 
-> #### Developer Badges
->
-> [![Try on Compiler Explorer](
-> https://img.shields.io/badge/-Compiler%20Explorer-brightgreen?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAACXBIWXMAAACwAAAAsAEUaqtpAAABSElEQVQokYVTsU7DMBB9QMTCEJbOMLB5oF0tRfUPIPIJZctYJkZYu3WMxNL+ARUfQKpImcPgDYnsXWBgYQl61TkYyxI3Wef37j3fnQ/6vkcsikY9AbiWq0mpbevDBmLRqDEAA4CEHMADgFRwrwDmch6X2i73RCFVHvC/WCeCMAFpC2AFoPPu5x4md4rnAN4luS61nYWSgauNU8ydkr0bLTMYAoIYtWqxM4LtEumeERDtfUjlMDrp7L67iddyyJtOvUIu2rquVn4iiVSOKXYhiMSJWLwUJZLuQ2CWmVldV4MT11UmXgB8fr0dX3WP6VHMiVrscim6Da2mJxffzwSU2v6xWzSKmzQ4cUTOaCBTvWgU14xkzjhckKm/q3wnrRAcAhksxMZNAdxEf0fRKI6E8zqT1C0X28ccRpqAUltW5pu4sxv5Mb8B4AciE3bHMxz/+gAAAABJRU5ErkJggg==&labelColor=2C3239&style=flat&label=Try+it+on&color=30C452)
-> ](https://godbolt.org/z/63nhG1Mx3)
-> [![Vcpkg port](https://img.shields.io/vcpkg/v/mimicpp)](https://vcpkg.link/ports/mimicpp)
->
-> [![Documentation](https://img.shields.io/badge/Read_the_docs_on-github.io-teal?style=flat)](https://dnkpp.github.io/mimicpp/)
->
+<div style="border: 2px solid #9B59B6; padding: 1em; border-radius: 8px; margin: 1em 0;">
+  <h3 style="margin-top: 0;">User Badges</h3>
+  <!-- Outer container for vertical spacing -->
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <!-- Row 1: Compiler Explorer and vcpkg badges -->
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+      <a href="https://godbolt.org/z/63nhG1Mx3">
+        <img alt="Try it on Compiler Explorer" src="https://img.shields.io/badge/try%20it-On%20Compiler%20Explorer-brightgreen?style=flat&logo=compilerexplorer">
+      </a>
+      <a href="https://vcpkg.link/ports/mimicpp">
+        <img alt="Vcpkg port" src="https://img.shields.io/vcpkg/v/mimicpp">
+      </a>
+    </div>
+    <!-- Row 2: Ask Question and Discord badges -->
+    <div style="display: flex; gap: 18px; flex-wrap: wrap;">
+      <a href="https://discord.gg/Gcay9n444E">
+        <img alt="Join Community" src="https://img.shields.io/badge/join__-Community%20Discord-%235865F2?style=flat&logo=discord&logoColor=%235865F2">
+      </a>
+      <a href="https://github.com/DNKpp/mimicpp/discussions/new?category=q-a">
+        <img alt="Ask Question" src="https://img.shields.io/badge/ask-On%20Github-%23009999?style=flat&logo=github">
+      </a>
+    </div>
+    <!-- Row 3: Documentation badge -->
+    <div>
+      <a href="https://dnkpp.github.io/mimicpp/">
+        <img alt="Documentation" src="https://img.shields.io/badge/read_-Online%20Documentation-%239B59B6?style=flat&logo=readme&logoColor=silver">
+      </a>
+    </div>
+  </div>
+</div>
+
+
 
 ---
 
