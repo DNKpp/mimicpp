@@ -40,7 +40,7 @@ if (NOT TARGET enable-config-options)
 			message(STATUS "${MESSAGE_PREFIX} No installed {fmt}-package found. Fetching via cpm.")
 
 			include(get_cpm)
-			CPMAddPackage("gh:fmtlib/fmt#11.0.2")
+			CPMAddPackage("gh:fmtlib/fmt#11.1.4")
 		endif()
 
 		find_package(fmt REQUIRED)
