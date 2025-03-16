@@ -423,7 +423,7 @@ jobs:
 
       #################################
       # Feature: experimental pretty type-printing
-      - name: Configure with minimal pretty type-printing
+      - name: Configure with experimental pretty type-printing
         shell: bash
         run: |
           cmake \
@@ -433,14 +433,14 @@ jobs:
               -D MIMICPP_CONFIG_USE_FMT=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=YES
 
-      - name: Build with minimal pretty type-printing
+      - name: Build with experimental pretty type-printing
         shell: bash
         run: |
           cmake --build build \
               -j5 \
               ${{ env.CMAKE_BUILD_EXTRA }}
 
-      - name: Run tests with minimal pretty type-printing
+      - name: Run tests with experimental pretty type-printing
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
