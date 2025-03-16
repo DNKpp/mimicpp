@@ -168,7 +168,7 @@ TEST_CASE(
             Catch::Matchers::Equals("std::u32string_view"));
     }
 
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
     SECTION("std optional types")
     {
@@ -329,7 +329,7 @@ namespace
     FixedString(CharT const (&)[N]) -> FixedString<N - 1>;
 }
 
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 TEMPLATE_TEST_CASE_SIG(
     "print_type supports all type qualifications.",
     "[print]",
@@ -651,7 +651,7 @@ TEMPLATE_TEST_CASE_SIG(
     }
 }
 
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
 TEMPLATE_TEST_CASE_SIG(
     "detail::default_arg_for determines, whether the type is default argument for the template.",
@@ -723,7 +723,7 @@ namespace
     };
 }
 
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 TEMPLATE_TEST_CASE_SIG(
     "Signatures are printed nicely.",
     "[print]",

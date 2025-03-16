@@ -33,15 +33,14 @@ namespace mimicpp::printing::type
      * \details This function serves as a wrapper for typeid(T).name().
      * - On MSVC, this function returns the demangled name directly.
      * - However, on GCC and Clang, the behavior differs.
-     * If `MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING` is disabled, it further demangles the name using `abi::__cxa_demangle`.
+     * When `MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES` is enabled, it further demangles the name using `abi::__cxa_demangle`.
      */
     template <typename T>
     StringT type_name();
 }
 
-#if not MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING \
-    && (MIMICPP_DETAIL_IS_GCC                       \
-        || MIMICPP_DETAIL_IS_CLANG)
+#if defined(MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES) \
+    && (MIMICPP_DETAIL_IS_GCC || MIMICPP_DETAIL_IS_CLANG)
 
     #include <cstdlib>
     #include <cxxabi.h>

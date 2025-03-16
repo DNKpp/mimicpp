@@ -25,7 +25,7 @@
 
 namespace mimicpp::printing::type::detail
 {
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
     template <typename T, print_iterator OutIter>
     constexpr OutIter pretty_template_name(OutIter out)

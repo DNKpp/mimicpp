@@ -37,14 +37,14 @@ namespace mimicpp::printing::type
      * `std::vector<int, std::allocator>::iterator` => `std::vector::iterator`
      *
      * \attention Providing a mangled name will result in unexpected behavior.
-     * \note When `MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING` is enabled,
+     * \note When `MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES` is disabled,
      * this function simply outputs the provided name without any modifications.
      */
     template <print_iterator OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name);
 }
 
-#ifdef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifndef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
 namespace mimicpp::printing::type
 {

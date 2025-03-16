@@ -21,7 +21,7 @@
 
 using namespace mimicpp;
 
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
 namespace
 {

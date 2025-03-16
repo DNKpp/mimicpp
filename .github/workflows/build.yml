@@ -248,7 +248,7 @@ jobs:
                                           -D CMAKE_VERBOSE_MAKEFILE=YES \
                                           -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
                                           -D MIMICPP_ENABLE_ADAPTER_TESTS=OFF \
-                                          -D MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING=OFF \
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
@@ -422,7 +422,7 @@ jobs:
       #################################
 
       #################################
-      # Feature: minimal pretty type-printing
+      # Feature: experimental pretty type-printing
       - name: Configure with minimal pretty type-printing
         shell: bash
         run: |
@@ -431,7 +431,7 @@ jobs:
               -B build \
               ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
-              -D MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING=YES
+              -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=YES
 
       - name: Build with minimal pretty type-printing
         shell: bash
@@ -493,6 +493,7 @@ jobs:
               -B build \
               ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES
 
       - name: Build with std::stacktrace backend
@@ -522,6 +523,7 @@ jobs:
               -B build \
               ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
 

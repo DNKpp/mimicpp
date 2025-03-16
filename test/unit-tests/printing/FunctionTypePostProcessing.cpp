@@ -10,7 +10,7 @@
 
 using namespace mimicpp;
 
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
 constexpr auto type_post_processing_lambda_loc = [] {
     return std::source_location::current();

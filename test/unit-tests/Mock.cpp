@@ -1083,7 +1083,7 @@ TEST_CASE(
 
         SECTION("When multiple signatures are given.")
         {
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
             Mock<void(), void(std::vector<int>*) const, float(std::string const&&, int) & noexcept> mock{};
             ScopedExpectation const expectation = mock.expect_call()
                                               and expect::never();

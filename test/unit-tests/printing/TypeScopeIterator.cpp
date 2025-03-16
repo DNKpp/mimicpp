@@ -7,7 +7,7 @@
 
 #include <source_location>
 
-#ifndef MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
 using namespace mimicpp;
 
