@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['table_20of_20contents_0',['Table of Contents',['../index.html#autotoc_md48',1,'']]],
+  ['table_20of_20contents_0',['Table of Contents',['../index.html#autotoc_md50',1,'']]],
   ['tag_1',['Tag',['../d8/dce/namespacemimicpp_1_1sequence.html#ade137497ede2a9436dd532cf2e95fec8',1,'mimicpp::sequence']]],
   ['tag_2',['tag',['../de/d81/structmimicpp_1_1sequence_1_1rating.html#a6f87b0812185f39e0b38c0ef64640076',1,'mimicpp::sequence::rating']]],
   ['tag_5ft_3',['tag_t',['../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#addddf8af9c1dca219b021607824b0775',1,'mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;']]],
@@ -9,16 +9,16 @@ var searchData=
   ['targetreport_2ehpp_6',['TargetReport.hpp',['../d8/d4c/_target_report_8hpp.html',1,'']]],
   ['templated_2ehpp_7',['Templated.hpp',['../da/deb/_templated_8hpp.html',1,'']]],
   ['templates_8',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
-  ['test_20framework_9',['Test Framework',['../index.html#autotoc_md67',1,'']]],
+  ['test_20framework_9',['Test Framework',['../index.html#autotoc_md69',1,'']]],
   ['test_20framework_20adapters_10',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
-  ['testing_11',['Testing',['../index.html#autotoc_md70',1,'']]],
+  ['testing_11',['Testing',['../index.html#autotoc_md72',1,'']]],
   ['this_20feature_20experimental_12',['this feature experimental',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md34',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md37',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md40',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md46',1,'Why is this feature experimental?']]],
   ['thread_20safety_13',['Thread-Safety',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md20',1,'']]],
   ['throws_14',['Throws',['../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html',1,'mimicpp::expectation_policies::Throws&lt; Exception &gt;'],['../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html#a62d215740e01c6d31848df90575679d8',1,'mimicpp::expectation_policies::Throws::Throws()']]],
   ['throws_15',['throws',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gab4f67d2c48ef5ebaf25e31e2ac59c5c1',1,'mimicpp::finally']]],
   ['times_16',['times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md21',1,'A word on sequences with times'],['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515',1,'mimicpp::expect::times(const int min, const int max)'],['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga6eccb8b974b7fbfb7f4c4354f61097c5',1,'mimicpp::expect::times(const int exactly)'],['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html',1,'times']]],
   ['to_5funderlying_17',['to_underlying',['../d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9',1,'mimicpp::util']]],
-  ['tools_18',['Packaging Tools',['../index.html#autotoc_md65',1,'']]],
+  ['tools_18',['Packaging Tools',['../index.html#autotoc_md67',1,'']]],
   ['traits_19',['type-traits',['../d9/d02/group___t_y_p_e___t_r_a_i_t_s.html',1,'']]],
   ['tt_20as_20formatting_20backend_20',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md31',1,'']]],
   ['tt_20fmt_20tt_20as_20formatting_20backend_21',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md31',1,'']]],
@@ -46,7 +46,7 @@ var searchData=
   ['typeprinter_2ehpp_43',['TypePrinter.hpp',['../d6/d35/_type_printer_8hpp.html',1,'']]],
   ['typereport_44',['TypeReport',['../de/d89/classmimicpp_1_1reporting_1_1_type_report.html',1,'mimicpp::reporting']]],
   ['typereport_2ehpp_45',['TypeReport.hpp',['../d0/d18/_type_report_8hpp.html',1,'']]],
-  ['types_46',['types',['../index.html#autotoc_md59',1,'Bring your own string- and char-types'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'Override existing printings or print custom types'],['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'Strings with other character-types']]],
+  ['types_46',['types',['../index.html#autotoc_md61',1,'Bring your own string- and char-types'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'Override existing printings or print custom types'],['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'Strings with other character-types']]],
   ['types_20and_20related_20strings_47',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['typetraits_2ehpp_48',['TypeTraits.hpp',['../d8/d32/_type_traits_8hpp.html',1,'']]]
 ];

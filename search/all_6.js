@@ -15,7 +15,7 @@ var searchData=
   ['error_3c_20callreport_20_3e_12',['Error&lt; CallReport &gt;',['../dd/d2e/classmimicpp_1_1reporting_1_1_error.html',1,'mimicpp::reporting']]],
   ['error_3c_20expectationreport_20_3e_13',['Error&lt; ExpectationReport &gt;',['../dd/d2e/classmimicpp_1_1reporting_1_1_error.html',1,'mimicpp::reporting']]],
   ['example_14',['Example',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md3',1,'']]],
-  ['examples_15',['Examples',['../index.html#autotoc_md53',1,'']]],
+  ['examples_15',['Examples',['../index.html#autotoc_md55',1,'']]],
   ['existing_20printings_20or_20print_20custom_20types_16',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
   ['expect_5fdestruct_17',['expect_destruct',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#ac451f8b6b44b9a684ca4aa40fb5809a8',1,'mimicpp::LifetimeWatcher']]],
   ['expect_5frelocate_18',['expect_relocate',['../da/d45/classmimicpp_1_1_relocation_watcher.html#a1ab88c2edc2f770ea8c9d1e8c0ca62a2',1,'mimicpp::RelocationWatcher']]],

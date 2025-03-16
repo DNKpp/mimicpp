@@ -5,7 +5,7 @@ var searchData=
   ['object_20watching_2',['object-watching',['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html',1,'']]],
   ['object_5fwatcher_5ffor_3',['object_watcher_for',['../db/db6/conceptmimicpp_1_1object__watcher__for.html',1,'mimicpp']]],
   ['objectwatcher_2ehpp_4',['ObjectWatcher.hpp',['../d5/d92/_object_watcher_8hpp.html',1,'']]],
-  ['of_20contents_5',['Table of Contents',['../index.html#autotoc_md48',1,'']]],
+  ['of_20contents_5',['Table of Contents',['../index.html#autotoc_md50',1,'']]],
   ['on_20sequences_20with_20times_6',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md21',1,'']]],
   ['once_7',['once',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf',1,'mimicpp::expect']]],
   ['operator_8',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
@@ -22,5 +22,5 @@ var searchData=
   ['outcomes_19',['outcomes',['../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#a4b8f1904f9c77fd148fed62a62ba0772',1,'mimicpp::reporting::RequirementOutcomes']]],
   ['overloadreport_20',['overloadReport',['../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8192c831aed792ce4b8b6af8b01d17a3',1,'mimicpp::reporting::TargetReport']]],
   ['override_20existing_20printings_20or_20print_20custom_20types_21',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
-  ['own_20string_20and_20char_20types_22',['Bring your own string- and char-types',['../index.html#autotoc_md59',1,'']]]
+  ['own_20string_20and_20char_20types_22',['Bring your own string- and char-types',['../index.html#autotoc_md61',1,'']]]
 ];

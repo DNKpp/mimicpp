@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['quick_20demo_0',['Quick Demo',['../index.html#autotoc_md52',1,'']]]
+  ['quality_0',['✅ Quality',['../index.html#autotoc_md47',1,'']]],
+  ['quick_20demo_1',['Quick Demo',['../index.html#autotoc_md54',1,'']]]
 ];

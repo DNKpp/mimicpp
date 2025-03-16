@@ -2,7 +2,7 @@ var searchData=
 [
   ['a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['a_20word_20on_20sequences_20with_20times_1',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md21',1,'']]],
-  ['acknowledgement_2',['Special Acknowledgement',['../index.html#autotoc_md75',1,'']]],
+  ['acknowledgement_2',['Special Acknowledgement',['../index.html#autotoc_md77',1,'']]],
   ['adapters_3',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['add_5fcall_5fconvention_5ft_4',['add_call_convention_t',['../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#a8aaaa02958d794699258c27f8bf468dd',1,'mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;']]],
   ['add_5foverload_5',['ADD_OVERLOAD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098',1,'InterfaceMock.hpp']]],
@@ -12,7 +12,7 @@ var searchData=
   ['alwaysfalse_2ehpp_9',['AlwaysFalse.hpp',['../dc/dec/_always_false_8hpp.html',1,'']]],
   ['an_20experimental_20feature_10',['Why is it an experimental feature?',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md43',1,'']]],
   ['and_20assignment_20operator_11',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
-  ['and_20char_20types_12',['Bring your own string- and char-types',['../index.html#autotoc_md59',1,'']]],
+  ['and_20char_20types_12',['Bring your own string- and char-types',['../index.html#autotoc_md61',1,'']]],
   ['and_20mostly_20macro_20free_20mocking_20framework_13',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['and_20related_20strings_14',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['and_20variadic_20templates_15',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
