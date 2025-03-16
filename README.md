@@ -60,6 +60,7 @@
 
 * [Introduction](#introduction)
   * [Core Design](#core-design)
+  * [Quick Demo](#quick-demo)
   * [Examples](#examples)
   * [Portability](#portability)
 * [Features & Customizability](#features--customizability)
@@ -633,6 +634,8 @@ Unfortunately this can not solved easily by this framework - sorry for that.
 
 Clang-17 and Clang-19 do not suffer from this issue.
 For more information have a look [here](https://github.com/llvm/llvm-project/issues/106428).
+
+---
 
 ## Special Acknowledgement
 
