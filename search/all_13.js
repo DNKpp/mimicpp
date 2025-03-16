@@ -162,7 +162,7 @@ var searchData=
   ['source_5fline_5ffn_159',['source_line_fn',['../db/d18/classmimicpp_1_1_stacktrace.html#acc8a7c0f7debad972cc870808bc94075',1,'mimicpp::Stacktrace']]],
   ['sourcelocation_160',['SourceLocation',['../db/df5/classmimicpp_1_1util_1_1_source_location.html',1,'mimicpp::util']]],
   ['sourcelocation_2ehpp_161',['SourceLocation.hpp',['../d3/d15/_source_location_8hpp.html',1,'']]],
-  ['special_20acknowledgement_162',['Special Acknowledgement',['../index.html#autotoc_md74',1,'']]],
+  ['special_20acknowledgement_162',['Special Acknowledgement',['../index.html#autotoc_md75',1,'']]],
   ['stacktrace_163',['Stacktrace',['../db/d18/classmimicpp_1_1_stacktrace.html',1,'mimicpp::Stacktrace'],['../db/d18/classmimicpp_1_1_stacktrace.html#a183ad8b1325f69bdf161aa618b2da5a9',1,'mimicpp::Stacktrace::Stacktrace(Inner &amp;&amp;inner)'],['../db/d18/classmimicpp_1_1_stacktrace.html#a0f3863795c2ac1268d2f7ac2941f6190',1,'mimicpp::Stacktrace::Stacktrace(const Stacktrace &amp;)=default'],['../db/d18/classmimicpp_1_1_stacktrace.html#a12cf057633250d1f4463e97cdd0869b0',1,'mimicpp::Stacktrace::Stacktrace(Stacktrace &amp;&amp;)=default']]],
   ['stacktrace_164',['stacktrace',['../d4/d44/classmimicpp_1_1call_1_1_info.html#a7008c600682cac5a597ada6b0c90bb64',1,'mimicpp::call::Info::stacktrace'],['../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a8aa826da79f09845a9f14acc7abd4558',1,'mimicpp::reporting::CallReport::stacktrace'],['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html',1,'stacktrace']]],
   ['stacktrace_20backend_165',['Enable experimental cpptrace stacktrace-backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md42',1,'']]],

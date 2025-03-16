@@ -1,7 +1,7 @@
 var searchData=
 [
   ['macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
-  ['macros_1',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md28',1,'']]],
+  ['macros_1',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md29',1,'']]],
   ['make_2',['make',['../de/d89/classmimicpp_1_1reporting_1_1_type_report.html#a62c1008b5079336358a44bb83f35b7af',1,'mimicpp::reporting::TypeReport']]],
   ['make_5fcall_5freport_3',['make_call_report',['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga0057b25e1863ab7956d2ecbaade46326',1,'mimicpp::reporting::CallReport::make_call_report()'],['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga0057b25e1863ab7956d2ecbaade46326',1,'mimicpp::reporting::make_call_report(TargetReport target, call::Info&lt; Return, Params... &gt; callInfo)'],['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga0057b25e1863ab7956d2ecbaade46326',1,'mimicpp::reporting::make_call_report(TargetReport target, call::Info&lt; Return, Params... &gt; callInfo)']]],
   ['make_5fmethod_5foverrides_4',['make_method_overrides',['../db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html',1,'']]],
@@ -11,7 +11,7 @@ var searchData=
   ['matcher_8',['Custom Matcher',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md2',1,'']]],
   ['matcher_9',['matcher',['../d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html#a482fdfa38f20ed2c377cd2e18f8af2b4',1,'mimicpp::expectation_policies::matcher_matches_fn']]],
   ['matcher_20integration_10',['Experimental Matcher integration',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md0',1,'']]],
-  ['matcher_20integration_11',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'']]],
+  ['matcher_20integration_11',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'']]],
   ['matcher_20unicode_20support_12',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md36',1,'']]],
   ['matcher_5ffor_13',['matcher_for',['../df/d23/conceptmimicpp_1_1matcher__for.html',1,'mimicpp']]],
   ['matcher_5fmatches_5ffn_14',['matcher_matches_fn',['../d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html',1,'mimicpp::expectation_policies']]],

@@ -109,6 +109,7 @@ Table of Contents</h1>
 <ul>
 <li>Introduction<ul>
 <li>Core Design</li>
+<li>Quick Demo</li>
 <li>Examples</li>
 <li>Portability</li>
 </ul>
@@ -537,7 +538,8 @@ Clang-18.1 + libc++</h2>
 <p>Date: 25.09.2024</p>
 <p>This combination introduced a regression regarding the <code>std::invocable</code> concept and a default parameter of type <code>std::source_location</code>. On this version, all invocable checks will fail, but the <code>std::is_invocable</code> trait still works as expected. Unfortunately this can not solved easily by this framework - sorry for that.</p>
 <p>Clang-17 and Clang-19 do not suffer from this issue. For more information have a look <a href="https://github.com/llvm/llvm-project/issues/106428">here</a>.</p>
-<h1><a class="anchor" id="autotoc_md74"></a>
+<hr  />
+<h1><a class="anchor" id="autotoc_md75"></a>
 Special Acknowledgement</h1>
 <p>This framework is heavily inspired by the well-known <a href="https://github.com/rollbear/trompeloeil">trompeloeil</a>, which I have personally used for several years. While it is definitely a solid choice, it can sometimes feel a bit dated, and some macros may not work well with formatting tools and similar utilities. If you need a pre-C++20 mocking framework, I highly recommend giving it a try.</p>
 <p>Fun fact: <code>mimic++</code> uses <code>trompeloeil</code> for its own test suite :D </p>

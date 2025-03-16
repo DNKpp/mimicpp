@@ -19,7 +19,7 @@ var searchData=
   ['case_5ffoldable_5fstring_16',['case_foldable_string',['../d0/d48/conceptmimicpp_1_1case__foldable__string.html',1,'mimicpp']]],
   ['case_5finsensitive_17',['case_insensitive',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga7211982f3a8ff2ab2165d7803edc9ac8',1,'mimicpp']]],
   ['case_5finsensitive_5ft_18',['case_insensitive_t',['../d2/dd4/structmimicpp_1_1case__insensitive__t.html',1,'mimicpp']]],
-  ['catch2_20matcher_20integration_19',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'']]],
+  ['catch2_20matcher_20integration_19',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'']]],
   ['catch2_2ehpp_20',['Catch2.hpp',['../d3/d04/_catch2_8hpp.html',1,'']]],
   ['catch2reportert_21',['Catch2ReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gafdc92bf0fd579b44a68e2eb42d89f078',1,'mimicpp::reporting']]],
   ['category_22',['Category',['../d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html',1,'mimicpp::expectation_policies']]],

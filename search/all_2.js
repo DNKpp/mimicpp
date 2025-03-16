@@ -2,7 +2,7 @@ var searchData=
 [
   ['a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html',1,'']]],
   ['a_20word_20on_20sequences_20with_20times_1',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md21',1,'']]],
-  ['acknowledgement_2',['Special Acknowledgement',['../index.html#autotoc_md74',1,'']]],
+  ['acknowledgement_2',['Special Acknowledgement',['../index.html#autotoc_md75',1,'']]],
   ['adapters_3',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['add_5fcall_5fconvention_5ft_4',['add_call_convention_t',['../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#a8aaaa02958d794699258c27f8bf468dd',1,'mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;']]],
   ['add_5foverload_5',['ADD_OVERLOAD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098',1,'InterfaceMock.hpp']]],
@@ -32,7 +32,7 @@ var searchData=
   ['argsrequirement_29',['ArgsRequirement',['../d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html',1,'mimicpp::expectation_policies::ArgsRequirement&lt; Matcher, MatchesStrategy, DescribeStrategy &gt;'],['../d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html#a3068cd8cc16c7c1bb907424161c83ac1',1,'mimicpp::expectation_policies::ArgsRequirement::ArgsRequirement()']]],
   ['argumentlist_2ehpp_30',['ArgumentList.hpp',['../d2/dfd/_argument_list_8hpp.html',1,'']]],
   ['arguments_31',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md1',1,'']]],
-  ['as_20formatting_20backend_32',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'']]],
+  ['as_20formatting_20backend_32',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md31',1,'']]],
   ['as_5fconst_33',['as_const',['../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a7d8fbf6968b41f059fd98dfa87dc47c2',1,'mimicpp']]],
   ['assignment_20operator_34',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
   ['at_5fleast_35',['at_least',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gaa44f54d8e8a587300db34bd55efdace4',1,'mimicpp::expect']]],

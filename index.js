@@ -25,5 +25,5 @@ var index =
     [ "Known Issues", "index.html#autotoc_md72", [
       [ "Clang-18.1 + libc++", "index.html#autotoc_md73", null ]
     ] ],
-    [ "Special Acknowledgement", "index.html#autotoc_md74", null ]
+    [ "Special Acknowledgement", "index.html#autotoc_md75", null ]
 ];
