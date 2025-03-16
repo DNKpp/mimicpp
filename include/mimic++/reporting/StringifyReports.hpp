@@ -20,6 +20,7 @@
 #include "mimic++/utilities/C++23Backports.hpp"
 
 #include <algorithm>
+#include <exception>
 #include <iterator>
 #include <optional>
 #include <span>
