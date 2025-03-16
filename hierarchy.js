@@ -254,9 +254,6 @@ var hierarchy =
       [ "mimicpp::signature_param_type< index, Return(Params...)>", "d0/d24/structmimicpp_1_1signature__param__type_3_01index_00_01_return_07_params_8_8_8_08_4.html", null ]
     ] ],
     [ "mimicpp::util::type_list< Args >", "dc/d9e/structmimicpp_1_1util_1_1type__list.html", null ],
-    [ "mimicpp::util::detail::type_list_pop_back< type_list<>, List >", null, [
-      [ "mimicpp::util::type_list_pop_back< List >", "dc/d8d/structmimicpp_1_1util_1_1type__list__pop__back.html", null ]
-    ] ],
     [ "mimicpp::util::detail::type_list_pop_back< type_list<>, TypeList >", null, [
       [ "mimicpp::util::type_list_pop_back< TypeList >", "dc/d8d/structmimicpp_1_1util_1_1type__list__pop__back.html", null ]
     ] ],

@@ -225,7 +225,7 @@ template&lt;print_iterator OutIter&gt; </div>
 <p>This function formats a type or template name for better readability. The primary strategy is to minimize unnecessary details while retaining essential information. Although this may introduce some ambiguity, it is generally more beneficial to provide an approximate name.</p>
 <p>For example, when a template-dependent type is provided, the template arguments are omitted: <code>std::vector&lt;int, std::allocator&gt;::iterator</code> =&gt; <code>std::vector::iterator</code></p>
 <dl class="section attention"><dt>Attention</dt><dd>Providing a mangled name will result in unexpected behavior. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>When <code>MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING</code> is enabled, this function simply outputs the provided name without any modifications. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>When <code>MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES</code> is disabled, this function simply outputs the provided name without any modifications. </dd></dl>
 
 </div>
 </div>
@@ -256,7 +256,7 @@ template&lt;typename T&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>The (potentially demangled) name.</dd></dl>
 <p>This function serves as a wrapper for typeid(T).name().</p><ul>
 <li>On MSVC, this function returns the demangled name directly.</li>
-<li>However, on GCC and Clang, the behavior differs. If <code>MIMICPP_CONFIG_MINIMAL_PRETTY_TYPE_PRINTING</code> is disabled, it further demangles the name using <code>abi::__cxa_demangle</code>. </li>
+<li>However, on GCC and Clang, the behavior differs. When <code>MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES</code> is enabled, it further demangles the name using <code>abi::__cxa_demangle</code>. </li>
 </ul>
 
 </div>

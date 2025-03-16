@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['backend_0',['backend',['../d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html',1,'mimicpp::stacktrace'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md44',1,'Enable experimental cpptrace stacktrace-backend'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend']]],
+  ['backend_0',['backend',['../d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html',1,'mimicpp::stacktrace'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md42',1,'Enable experimental cpptrace stacktrace-backend'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend']]],
   ['backend_5ftraits_1',['backend_traits',['../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html',1,'mimicpp::stacktrace']]],
   ['backend_5ftraits_3c_20mimicpp_3a_3astacktrace_3a_3anullbackend_20_3e_2',['backend_traits&lt; mimicpp::stacktrace::NullBackend &gt;',['../d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html',1,'mimicpp::stacktrace']]],
   ['backends_3',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md26',1,'']]],
