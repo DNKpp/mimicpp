@@ -293,140 +293,142 @@ $(function(){initNavTree('d9/dd5/_general_matchers_8hpp_source.html','../../'); 
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html">  189</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html">WildcardMatcher</a></div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    {</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    <span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00192" data-start="{" data-end="}">
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno"><a class="line" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc">  192</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc">matches</a>([[maybe_unused]] <span class="keyword">auto</span>&amp;&amp; target) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        {</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        }</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00193" data-start="{" data-end="}">
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc">  193</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc">matches</a>([[maybe_unused]] <span class="keyword">auto</span>&amp;&amp; target) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        {</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        }</div>
 </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="foldopen" id="foldopen00197" data-start="{" data-end="}">
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno"><a class="line" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#aa705931636d906bbec4d900e41ee7984">  197</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> <a class="code hl_function" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#aa705931636d906bbec4d900e41ee7984">describe</a>() noexcept</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>            <span class="keywordflow">return</span> <span class="stringliteral">&quot;has no constraints&quot;</span>;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        }</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00199" data-start="{" data-end="}">
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a650fb20b5ba02c58f8e54b3f6b1e0b77">  199</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> std::nullopt_t <a class="code hl_function" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a650fb20b5ba02c58f8e54b3f6b1e0b77">describe</a>() noexcept</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        {</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        }</div>
 </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>    };</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    };</div>
 </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>}</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>{</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">  242</a></span>    [[maybe_unused]] <span class="keyword">inline</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html">WildcardMatcher</a> <a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">_</a>{};</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00251" data-start="{" data-end="}">
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">  251</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">eq</a>(T&amp;&amp; value)</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    {</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            std::equal_to{},</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            <span class="stringliteral">&quot;== {}&quot;</span>,</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            <span class="stringliteral">&quot;!= {}&quot;</span>,</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    }</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>}</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>{</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">  244</a></span>    [[maybe_unused]] <span class="keyword">inline</span> <span class="keyword">constexpr</span> <a class="code hl_class" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html">WildcardMatcher</a> <a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">_</a>{};</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00253" data-start="{" data-end="}">
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">  253</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">eq</a>(T&amp;&amp; value)</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    {</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            std::equal_to{},</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            <span class="stringliteral">&quot;== {}&quot;</span>,</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            <span class="stringliteral">&quot;!= {}&quot;</span>,</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    }</div>
 </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span></div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00267" data-start="{" data-end="}">
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0">  267</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0">ne</a>(T&amp;&amp; value)</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    {</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            std::not_equal_to{},</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>            <span class="stringliteral">&quot;!= {}&quot;</span>,</div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            <span class="stringliteral">&quot;== {}&quot;</span>,</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    }</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00269" data-start="{" data-end="}">
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0">  269</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0">ne</a>(T&amp;&amp; value)</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    {</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            std::not_equal_to{},</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>            <span class="stringliteral">&quot;!= {}&quot;</span>,</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            <span class="stringliteral">&quot;== {}&quot;</span>,</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    }</div>
 </div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span></div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00283" data-start="{" data-end="}">
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga242b5abc5a65421f91a90575acbceb66">  283</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga242b5abc5a65421f91a90575acbceb66">lt</a>(T&amp;&amp; value)</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    {</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>            std::less{},</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>            <span class="stringliteral">&quot;&lt; {}&quot;</span>,</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            <span class="stringliteral">&quot;&gt;= {}&quot;</span>,</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    }</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span></div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00285" data-start="{" data-end="}">
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga242b5abc5a65421f91a90575acbceb66">  285</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga242b5abc5a65421f91a90575acbceb66">lt</a>(T&amp;&amp; value)</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    {</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>            std::less{},</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            <span class="stringliteral">&quot;&lt; {}&quot;</span>,</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>            <span class="stringliteral">&quot;&gt;= {}&quot;</span>,</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    }</div>
 </div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00299" data-start="{" data-end="}">
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a">  299</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a">le</a>(T&amp;&amp; value)</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    {</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>            std::less_equal{},</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>            <span class="stringliteral">&quot;&lt;= {}&quot;</span>,</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            <span class="stringliteral">&quot;&gt; {}&quot;</span>,</div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    }</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00301" data-start="{" data-end="}">
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a">  301</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a">le</a>(T&amp;&amp; value)</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    {</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            std::less_equal{},</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>            <span class="stringliteral">&quot;&lt;= {}&quot;</span>,</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>            <span class="stringliteral">&quot;&gt; {}&quot;</span>,</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>    }</div>
 </div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span></div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00315" data-start="{" data-end="}">
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaafc5970f07ac2c69f82167ae2189596e">  315</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaafc5970f07ac2c69f82167ae2189596e">gt</a>(T&amp;&amp; value)</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    {</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>            std::greater{},</div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>            <span class="stringliteral">&quot;&gt; {}&quot;</span>,</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            <span class="stringliteral">&quot;&lt;= {}&quot;</span>,</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>    }</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span></div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00317" data-start="{" data-end="}">
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaafc5970f07ac2c69f82167ae2189596e">  317</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaafc5970f07ac2c69f82167ae2189596e">gt</a>(T&amp;&amp; value)</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    {</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            std::greater{},</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            <span class="stringliteral">&quot;&gt; {}&quot;</span>,</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            <span class="stringliteral">&quot;&lt;= {}&quot;</span>,</div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    }</div>
 </div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span></div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00331" data-start="{" data-end="}">
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gac2b140b5f668cbac26e13144adce8114">  331</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gac2b140b5f668cbac26e13144adce8114">ge</a>(T&amp;&amp; value)</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    {</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>            std::greater_equal{},</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            <span class="stringliteral">&quot;&gt;= {}&quot;</span>,</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            <span class="stringliteral">&quot;&lt; {}&quot;</span>,</div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>    }</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00333" data-start="{" data-end="}">
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gac2b140b5f668cbac26e13144adce8114">  333</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gac2b140b5f668cbac26e13144adce8114">ge</a>(T&amp;&amp; value)</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>    {</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            std::greater_equal{},</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            <span class="stringliteral">&quot;&gt;= {}&quot;</span>,</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            <span class="stringliteral">&quot;&lt; {}&quot;</span>,</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            std::make_tuple(std::forward&lt;T&gt;(value))};</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    }</div>
 </div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span></div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> UnaryPredicate&gt;</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00350" data-start="{" data-end="}">
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">  350</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">predicate</a>(</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        UnaryPredicate&amp;&amp; <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">predicate</a>,</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> description = <span class="stringliteral">&quot;passes predicate&quot;</span>,</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> invertedDescription = <span class="stringliteral">&quot;fails predicate&quot;</span>)</div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    {</div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            std::forward&lt;UnaryPredicate&gt;(<a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">predicate</a>),</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            std::move(description),</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            std::move(invertedDescription),</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        };</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    }</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span></div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> UnaryPredicate&gt;</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00352" data-start="{" data-end="}">
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">  352</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">predicate</a>(</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        UnaryPredicate&amp;&amp; <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">predicate</a>,</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> description = <span class="stringliteral">&quot;passes predicate&quot;</span>,</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> invertedDescription = <span class="stringliteral">&quot;fails predicate&quot;</span>)</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    {</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            std::forward&lt;UnaryPredicate&gt;(<a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">predicate</a>),</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            std::move(description),</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>            std::move(invertedDescription),</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>        };</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    }</div>
 </div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span></div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>    <span class="keyword">template</span> &lt;util::satisfies&lt;std::is_lvalue_reference&gt; T&gt;</div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00370" data-start="{" data-end="}">
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">  370</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">instance</a>(T&amp;&amp; <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">instance</a>) <span class="comment">// NOLINT(cppcoreguidelines-missing-std-forward)</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    {</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>            [](<span class="keyword">const</span> std::remove_cvref_t&lt;T&gt;&amp; target, <span class="keyword">const</span> <span class="keyword">auto</span>* instancePtr) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>                <span class="keywordflow">return</span> std::addressof(target) == instancePtr;</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>            },</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>            <span class="stringliteral">&quot;is instance at {}&quot;</span>,</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>            <span class="stringliteral">&quot;is not instance at {}&quot;</span>,</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>            std::make_tuple(std::addressof(<a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">instance</a>))};</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>    }</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>    <span class="keyword">template</span> &lt;util::satisfies&lt;std::is_lvalue_reference&gt; T&gt;</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00372" data-start="{" data-end="}">
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno"><a class="line" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">  372</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">instance</a>(T&amp;&amp; <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">instance</a>) <span class="comment">// NOLINT(cppcoreguidelines-missing-std-forward)</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    {</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">PredicateMatcher</a>{</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>            [](<span class="keyword">const</span> std::remove_cvref_t&lt;T&gt;&amp; target, <span class="keyword">const</span> <span class="keyword">auto</span>* instancePtr) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>                <span class="keywordflow">return</span> std::addressof(target) == instancePtr;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>            },</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>            <span class="stringliteral">&quot;is instance at {}&quot;</span>,</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            <span class="stringliteral">&quot;is not instance at {}&quot;</span>,</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            std::make_tuple(std::addressof(<a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">instance</a>))};</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    }</div>
 </div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>}</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span></div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>}</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_common_8hpp_html"><div class="ttname"><a href="../../d3/d58/_common_8hpp.html">Common.hpp</a></div></div>
 <div class="ttc" id="a_concepts_8hpp_html"><div class="ttname"><a href="../../d9/db9/_concepts_8hpp.html">Concepts.hpp</a></div></div>
 <div class="ttc" id="a_format_8hpp_html"><div class="ttname"><a href="../../d5/dec/_format_8hpp.html">Format.hpp</a></div></div>
@@ -439,17 +441,17 @@ $(function(){initNavTree('d9/dd5/_general_matchers_8hpp_source.html','../../'); 
 <div class="ttc" id="aclassmimicpp_1_1_predicate_matcher_html_aa7ebcc6b34cf12c55177b6e5f4f9766d"><div class="ttname"><a href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html#aa7ebcc6b34cf12c55177b6e5f4f9766d">mimicpp::PredicateMatcher::describe</a></div><div class="ttdeci">constexpr StringT describe() const</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:124</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_predicate_matcher_html_acc8b06d41f4cceb5eb2e33eca039fe16"><div class="ttname"><a href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html#acc8b06d41f4cceb5eb2e33eca039fe16">mimicpp::PredicateMatcher::PredicateMatcher</a></div><div class="ttdeci">constexpr PredicateMatcher(Predicate predicate, StringViewT fmt, StringViewT invertedFmt, std::tuple&lt; AdditionalArgs... &gt; additionalArgs={}) noexcept(std::is_nothrow_move_constructible_v&lt; Predicate &gt; &amp;&amp;(... &amp;&amp;std::is_nothrow_move_constructible_v&lt; AdditionalArgs &gt;))</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:80</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_wildcard_matcher_html"><div class="ttname"><a href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html">mimicpp::WildcardMatcher</a></div><div class="ttdoc">Matcher, which never fails.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:190</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_wildcard_matcher_html_a571616d6f4b1cba443c870143b7f6bcc"><div class="ttname"><a href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc">mimicpp::WildcardMatcher::matches</a></div><div class="ttdeci">static constexpr bool matches(auto &amp;&amp;target) noexcept</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:192</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_wildcard_matcher_html_aa705931636d906bbec4d900e41ee7984"><div class="ttname"><a href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#aa705931636d906bbec4d900e41ee7984">mimicpp::WildcardMatcher::describe</a></div><div class="ttdeci">static constexpr StringViewT describe() noexcept</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:197</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_ga242b5abc5a65421f91a90575acbceb66"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga242b5abc5a65421f91a90575acbceb66">mimicpp::matches::lt</a></div><div class="ttdeci">constexpr auto lt(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target is less than the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:283</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_ga369aedf4edb7313cf70f7ac78ec233f9"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">mimicpp::matches::instance</a></div><div class="ttdeci">constexpr auto instance(T &amp;&amp;instance)</div><div class="ttdoc">Tests, whether the target is the expected instance.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:370</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_ga4a114a648ee1923e852dc3677038ad9a"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a">mimicpp::matches::le</a></div><div class="ttdeci">constexpr auto le(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target is less than or equal to the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:299</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaa74e274d126775d36dd9ebfd5879b61e"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a></div><div class="ttdeci">constexpr WildcardMatcher _</div><div class="ttdoc">The wildcard matcher, always matching.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:242</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaae47b82f14695a5e774ad398df069825"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">mimicpp::matches::eq</a></div><div class="ttdeci">constexpr auto eq(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target compares equal to the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:251</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaafc5970f07ac2c69f82167ae2189596e"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaafc5970f07ac2c69f82167ae2189596e">mimicpp::matches::gt</a></div><div class="ttdeci">constexpr auto gt(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target is greater than the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:315</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaba69db0df12ff432cee8242275310a9c"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">mimicpp::matches::predicate</a></div><div class="ttdeci">constexpr auto predicate(UnaryPredicate &amp;&amp;predicate, StringViewT description=&quot;passes predicate&quot;, StringViewT invertedDescription=&quot;fails predicate&quot;)</div><div class="ttdoc">Tests, whether the target fulfills the given predicate.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:350</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gac2b140b5f668cbac26e13144adce8114"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gac2b140b5f668cbac26e13144adce8114">mimicpp::matches::ge</a></div><div class="ttdeci">constexpr auto ge(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target is greater than or equal to the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:331</div></div>
-<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaf71aaa68ad1bea169500e80263d51db0"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0">mimicpp::matches::ne</a></div><div class="ttdeci">constexpr auto ne(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target compares not equal to the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:267</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_wildcard_matcher_html_a571616d6f4b1cba443c870143b7f6bcc"><div class="ttname"><a href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc">mimicpp::WildcardMatcher::matches</a></div><div class="ttdeci">static constexpr bool matches(auto &amp;&amp;target) noexcept</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:193</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_wildcard_matcher_html_a650fb20b5ba02c58f8e54b3f6b1e0b77"><div class="ttname"><a href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#a650fb20b5ba02c58f8e54b3f6b1e0b77">mimicpp::WildcardMatcher::describe</a></div><div class="ttdeci">static constexpr std::nullopt_t describe() noexcept</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:199</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_ga242b5abc5a65421f91a90575acbceb66"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga242b5abc5a65421f91a90575acbceb66">mimicpp::matches::lt</a></div><div class="ttdeci">constexpr auto lt(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target is less than the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:285</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_ga369aedf4edb7313cf70f7ac78ec233f9"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">mimicpp::matches::instance</a></div><div class="ttdeci">constexpr auto instance(T &amp;&amp;instance)</div><div class="ttdoc">Tests, whether the target is the expected instance.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:372</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_ga4a114a648ee1923e852dc3677038ad9a"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a">mimicpp::matches::le</a></div><div class="ttdeci">constexpr auto le(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target is less than or equal to the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:301</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaa74e274d126775d36dd9ebfd5879b61e"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a></div><div class="ttdeci">constexpr WildcardMatcher _</div><div class="ttdoc">The wildcard matcher, always matching.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:244</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaae47b82f14695a5e774ad398df069825"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">mimicpp::matches::eq</a></div><div class="ttdeci">constexpr auto eq(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target compares equal to the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:253</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaafc5970f07ac2c69f82167ae2189596e"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaafc5970f07ac2c69f82167ae2189596e">mimicpp::matches::gt</a></div><div class="ttdeci">constexpr auto gt(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target is greater than the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:317</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaba69db0df12ff432cee8242275310a9c"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c">mimicpp::matches::predicate</a></div><div class="ttdeci">constexpr auto predicate(UnaryPredicate &amp;&amp;predicate, StringViewT description=&quot;passes predicate&quot;, StringViewT invertedDescription=&quot;fails predicate&quot;)</div><div class="ttdoc">Tests, whether the target fulfills the given predicate.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:352</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gac2b140b5f668cbac26e13144adce8114"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gac2b140b5f668cbac26e13144adce8114">mimicpp::matches::ge</a></div><div class="ttdeci">constexpr auto ge(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target is greater than or equal to the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:333</div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaf71aaa68ad1bea169500e80263d51db0"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0">mimicpp::matches::ne</a></div><div class="ttdeci">constexpr auto ne(T &amp;&amp;value)</div><div class="ttdoc">Tests, whether the target compares not equal to the expected value.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:269</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1matches_html"><div class="ttname"><a href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a></div><div class="ttdef"><b>Definition</b> FloatingPointMatchers.hpp:22</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:26</div></div>
 <div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:325</div></div>

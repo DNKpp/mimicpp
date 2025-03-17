@@ -10,7 +10,7 @@ var group___m_a_t_c_h_e_r_s =
       [ "operator!", "dc/d5e/classmimicpp_1_1_predicate_matcher.html#a5ffccf95fc8bf19699ba9a5419699ef0", null ]
     ] ],
     [ "mimicpp::WildcardMatcher", "db/de6/classmimicpp_1_1_wildcard_matcher.html", [
-      [ "describe", "db/de6/classmimicpp_1_1_wildcard_matcher.html#aa705931636d906bbec4d900e41ee7984", null ],
+      [ "describe", "db/de6/classmimicpp_1_1_wildcard_matcher.html#a650fb20b5ba02c58f8e54b3f6b1e0b77", null ],
       [ "matches", "db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc", null ]
     ] ],
     [ "mimicpp::matches::approx_abs", "d4/d14/group___m_a_t_c_h_e_r_s.html#ga5ad9dad2daac36bba4d44337b7833c31", null ],
