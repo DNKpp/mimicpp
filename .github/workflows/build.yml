@@ -79,6 +79,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "19"
             libcxx: true
+            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -87,6 +88,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "19"
             libcxx: false
+            asan: true
 
           - prefix: "Linux"
             suffix: "/libc++"
@@ -96,6 +98,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "18"
             libcxx: true
+            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -104,6 +107,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "18"
             libcxx: false
+            asan: true
 
           - prefix: "Linux"
             suffix: "/libc++"
@@ -113,6 +117,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "17"
             libcxx: true
+            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -121,6 +126,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "17"
             libcxx: false
+            asan: true
 
           - prefix: "Linux"
             suffix: "/libc++"
@@ -131,6 +137,7 @@ jobs:
             compiler_version: "16"
             only_fmt: true
             libcxx: true
+            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -140,6 +147,7 @@ jobs:
             compiler_version: "16"
             only_fmt: true
             libcxx: false
+            asan: true
 
           # gcc
           - prefix: "Linux"
@@ -149,6 +157,8 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "14"
             libcxx: false
+            asan: true
+
           - prefix: "Linux"
             os: "ubuntu-latest"
             container:
@@ -156,6 +166,7 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "13"
             libcxx: false
+            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -165,6 +176,7 @@ jobs:
             compiler_version: "12"
             only_fmt: true
             libcxx: false
+            asan: true
 
           # msvc
           - prefix: "Windows 2022"
@@ -193,19 +205,22 @@ jobs:
             compiler_name: "AppleClang"
             compiler_version: "18"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+            asan: true
 
           - prefix: "macOS"
             os: "macos-latest"
             compiler_name: "AppleClang"
             compiler_version: "17"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++"
+            asan: true
 
           - prefix: "macOS"
             os: "macos-latest"
             compiler_name: "AppleClang"
             compiler_version: "16"
-            only_fmt: true
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
+            only_fmt: true
+            asan: true
 
         exclude:
           # This combination results in a compile error in ranges header.
