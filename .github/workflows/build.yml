@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           echo "ARCHITECTURES=\"64bit\"" >> $GITHUB_ENV
-          echo "BUILD_MODES=\"Debug\", \"Release\"" >> $GITHUB_ENV
+          echo "BUILD_MODES=\"Debug\"" >> $GITHUB_ENV
           echo "CXX_VERSIONS=20" >> $GITHUB_ENV
 
       # if it's a PR from development or the main branch in general, add release-mode, c++23 and 32bit
@@ -72,6 +72,7 @@ jobs:
         config:
           # clang
           - prefix: "Linux"
+            suffix: "ASan"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/clang:19"
@@ -147,6 +148,7 @@ jobs:
 
           # gcc
           - prefix: "Linux"
+            suffix: "ASan"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/gcc:14"
