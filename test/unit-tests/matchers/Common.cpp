@@ -48,6 +48,12 @@ namespace
 
         MAKE_CONST_MOCK0(my_describe, StringViewT());
     };
+
+    class CommonNullDescribeMatcher
+    {
+        MAKE_CONST_MOCK1(matches, bool(const int&));
+        MAKE_CONST_MOCK0(describe, std::nullopt_t());
+    };
 }
 
 template <>
@@ -238,8 +244,9 @@ TEST_CASE(
             REQUIRE_CALL(matcher, describe())
                 .RETURN(result);
 
+            auto const description = detail::describe_hook::describe(matcher);
             REQUIRE_THAT(
-                StringT{detail::describe_hook::describe(matcher)},
+                StringT{description},
                 Matches::Equals(StringT{result}));
         }
 
@@ -249,8 +256,9 @@ TEST_CASE(
             REQUIRE_CALL(matcher, describe())
                 .RETURN(result);
 
+            auto const description = detail::describe_hook::describe(matcher);
             REQUIRE_THAT(
-                StringT{detail::describe_hook::describe(matcher)},
+                StringT{description},
                 Matches::Equals(StringT{result}));
         }
     }
@@ -263,8 +271,9 @@ TEST_CASE(
             REQUIRE_CALL(matcher, my_describe())
                 .RETURN(result);
 
+            auto const description = detail::describe_hook::describe(matcher);
             REQUIRE_THAT(
-                StringT{detail::describe_hook::describe(matcher)},
+                StringT{description},
                 Matches::Equals(StringT{result}));
         }
 
@@ -274,25 +283,37 @@ TEST_CASE(
             REQUIRE_CALL(matcher, my_describe())
                 .RETURN(result);
 
+            auto const description = detail::describe_hook::describe(matcher);
             REQUIRE_THAT(
-                StringT{detail::describe_hook::describe(matcher)},
+                StringT{description},
                 Matches::Equals(StringT{result}));
         }
+    }
+
+    SECTION("When matcher doesn't have a description.")
+    {
+        CommonNullDescribeMatcher matcher{};
+        REQUIRE_CALL(matcher, describe())
+            .RETURN(std::nullopt);
+
+        auto const description = detail::describe_hook::describe(matcher);
+        REQUIRE(std::optional<StringT>{} == description);
     }
 }
 
 TEMPLATE_TEST_CASE_SIG(
     "Given types satisfy mimicpp::matcher_for concept.",
     "[matcher]",
-    ((bool dummy, typename Matcher, typename First, typename... Others), dummy, Matcher, First, Others...),
-    (true, CommonMatcher, int),
-    (true, CustomMatcher, int),
-    (true, Mixed1Matcher, int),
-    (true, Mixed2Matcher, int),
-    (true, CommonVariadicMatcher, int, double),
-    (true, CommonVariadicMatcher, int, double, std::string),
-    (true, CustomVariadicMatcher, int, double),
-    (true, CustomVariadicMatcher, int, double, std::string))
+    ((auto dummy, typename Matcher, typename First, typename... Others), dummy, Matcher, First, Others...),
+    (std::ignore, CommonMatcher, int),
+    (std::ignore, CustomMatcher, int),
+    (std::ignore, Mixed1Matcher, int),
+    (std::ignore, Mixed2Matcher, int),
+    (std::ignore, CommonNullDescribeMatcher, int),
+    (std::ignore, CommonVariadicMatcher, int, double),
+    (std::ignore, CommonVariadicMatcher, int, double, std::string),
+    (std::ignore, CustomVariadicMatcher, int, double),
+    (std::ignore, CustomVariadicMatcher, int, double, std::string))
 {
     STATIC_REQUIRE(matcher_for<Matcher, First, Others...>);
     STATIC_REQUIRE(matcher_for<Matcher, const First, const Others...>);
