@@ -87,12 +87,14 @@ namespace mimicpp::expectation_policies
     class Constness
     {
     public:
+        [[nodiscard]]
         static constexpr bool is_satisfied() noexcept
         {
             return true;
         }
 
         template <typename Return, typename... Args>
+        [[nodiscard]]
         static constexpr bool matches(const call::Info<Return, Args...>& info) noexcept
         {
             return mimicpp::detail::is_matching(info.fromConstness, constness);
@@ -105,14 +107,21 @@ namespace mimicpp::expectation_policies
         }
 
         [[nodiscard]]
-        static StringT describe()
+        static auto describe()
         {
-            StringStreamT stream{};
-            stream << "expect: from ";
-            mimicpp::print(std::ostreambuf_iterator{stream}, constness);
-            stream << " qualified overload";
+            if constexpr (mimicpp::Constness::any != constness)
+            {
+                StringStreamT stream{};
+                stream << "expect: from ";
+                mimicpp::print(std::ostreambuf_iterator{stream}, constness);
+                stream << " qualified overload";
 
-            return std::move(stream).str();
+                return std::move(stream).str();
+            }
+            else
+            {
+                return std::nullopt;
+            }
         }
     };
 }

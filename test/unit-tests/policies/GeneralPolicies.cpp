@@ -129,9 +129,18 @@ TEMPLATE_TEST_CASE_SIG(
 
     SECTION("Policy description.")
     {
-        REQUIRE_THAT(
-            policy.describe(),
-            Catch::Matchers::Equals(StringT{"expect: from "} + print(constness) + " qualified overload"));
+        std::optional<StringT> const description = policy.describe();
+        if constexpr (Constness::any == constness)
+        {
+            REQUIRE_FALSE(description);
+        }
+        else
+        {
+            REQUIRE(description);
+            REQUIRE_THAT(
+                *description,
+                Catch::Matchers::Equals(StringT{"expect: from "} + print(constness) + " qualified overload"));
+        }
     }
 
     const CallInfoT call{
