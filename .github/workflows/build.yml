@@ -72,6 +72,14 @@ jobs:
         config:
           # clang
           - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:19"
+            compiler_name: "clang"
+            compiler_version: "19"
+            asan: true
+
+          - prefix: "Linux"
             suffix: "/libc++"
             os: "ubuntu-latest"
             container:
@@ -79,7 +87,6 @@ jobs:
             compiler_name: "clang"
             compiler_version: "19"
             libcxx: true
-            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -87,8 +94,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:19"
             compiler_name: "clang"
             compiler_version: "19"
-            libcxx: false
-            asan: true
 
           - prefix: "Linux"
             suffix: "/libc++"
@@ -98,7 +103,6 @@ jobs:
             compiler_name: "clang"
             compiler_version: "18"
             libcxx: true
-            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -106,8 +110,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:18"
             compiler_name: "clang"
             compiler_version: "18"
-            libcxx: false
-            asan: true
 
           - prefix: "Linux"
             suffix: "/libc++"
@@ -117,7 +119,6 @@ jobs:
             compiler_name: "clang"
             compiler_version: "17"
             libcxx: true
-            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -125,8 +126,6 @@ jobs:
               image: "ghcr.io/dnkpp/clang:17"
             compiler_name: "clang"
             compiler_version: "17"
-            libcxx: false
-            asan: true
 
           - prefix: "Linux"
             suffix: "/libc++"
@@ -137,7 +136,6 @@ jobs:
             compiler_version: "16"
             only_fmt: true
             libcxx: true
-            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -146,8 +144,6 @@ jobs:
             compiler_name: "clang"
             compiler_version: "16"
             only_fmt: true
-            libcxx: false
-            asan: true
 
           # gcc
           - prefix: "Linux"
@@ -156,8 +152,14 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:14"
             compiler_name: "gcc"
             compiler_version: "14"
-            libcxx: false
             asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:14"
+            compiler_name: "gcc"
+            compiler_version: "14"
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -165,8 +167,6 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:13"
             compiler_name: "gcc"
             compiler_version: "13"
-            libcxx: false
-            asan: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -175,8 +175,6 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "12"
             only_fmt: true
-            libcxx: false
-            asan: true
 
           # msvc
           - prefix: "Windows 2022"
@@ -233,6 +231,10 @@ jobs:
           - architecture: "32bit"
             config:
               prefix: "macOS"
+          # run asan only in debug mode
+          - build_mode: "Release"
+            config:
+              asan: true
 
     steps:
       - name: Checkout code
@@ -347,22 +349,15 @@ jobs:
             libc++abi-${{ matrix.config.compiler_version }}-dev:i386
 
       - name: Enable Address and Undefined Sanitizer
-        if: ${{ matrix.config.asan == true }}
+        if: ${{ matrix.config.asan }}
         shell: bash
         run: |
           # ASan has some serious trouble with libc++ exception mechanism
           # see: https://github.com/llvm/llvm-project/issues/59432
-          if [[ "${{ matrix.config.libcxx }}" ]]; then
-            echo "ASAN_OPTIONS=$(echo ${ASAN_OPTIONS}:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
-          fi
-          
-          # see: https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html#index-fsanitize_003dbuiltin
-          # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105562
-          if [[ "${{ matrix.config.compiler_name }}" == 'gcc' ]]; then
-            ADDITIONAL_CXXFLAGS="-g -fno-omit-frame-pointer -fno-optimize-sibling-calls -fno-ipa-icf"
-          fi
-          
-          echo "CXXFLAGS=$(echo ${CXXFLAGS} ${ADDITIONAL_CXXFLAGS})" >> $GITHUB_ENV
+          #if [[ "${{ matrix.config.libcxx }}" ]]; then
+          #  echo "ASAN_OPTIONS=$(echo ${ASAN_OPTIONS}:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
+          #fi
+
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DSANITIZE_ADDRESS=YES -DSANITIZE_UNDEFINED=YES)" >> $GITHUB_ENV
 
       #################################
