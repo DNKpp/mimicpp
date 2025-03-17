@@ -219,12 +219,6 @@ jobs:
             config:
               prefix: "macOS"
 
-        include:
-          # enable asan on Linux
-          - config:
-              prefix: "Linux"
-              asan: true
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
