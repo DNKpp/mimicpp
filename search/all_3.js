@@ -12,8 +12,9 @@ var searchData=
   ['basicreporter_3c_20_26detail_3a_3acatch2_3a_3asend_5fsuccess_2c_20_26detail_3a_3acatch2_3a_3asend_5fwarning_2c_20_26detail_3a_3acatch2_3a_3asend_5ffail_20_3e_9',['BasicReporter&lt; &amp;detail::catch2::send_success, &amp;detail::catch2::send_warning, &amp;detail::catch2::send_fail &gt;',['../d5/db8/classmimicpp_1_1reporting_1_1_basic_reporter.html',1,'mimicpp::reporting']]],
   ['basicreporter_3c_20_26detail_3a_3adoctest_3a_3asend_5fsuccess_2c_20_26detail_3a_3adoctest_3a_3asend_5fwarning_2c_20_26detail_3a_3adoctest_3a_3asend_5ffail_20_3e_10',['BasicReporter&lt; &amp;detail::doctest::send_success, &amp;detail::doctest::send_warning, &amp;detail::doctest::send_fail &gt;',['../d5/db8/classmimicpp_1_1reporting_1_1_basic_reporter.html',1,'mimicpp::reporting']]],
   ['basicreporter_3c_20_26detail_3a_3agtest_3a_3asend_5fsuccess_2c_20_26detail_3a_3agtest_3a_3asend_5fwarning_2c_20_26detail_3a_3agtest_3a_3asend_5ffail_20_3e_11',['BasicReporter&lt; &amp;detail::gtest::send_success, &amp;detail::gtest::send_warning, &amp;detail::gtest::send_fail &gt;',['../d5/db8/classmimicpp_1_1reporting_1_1_basic_reporter.html',1,'mimicpp::reporting']]],
-  ['boosttest_2ehpp_12',['BoostTest.hpp',['../d9/d42/_boost_test_8hpp.html',1,'']]],
-  ['boosttestreportert_13',['BoostTestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaa1a2d936b0a089d8b4e19f75eb6b8bbc',1,'mimicpp::reporting']]],
-  ['bring_20your_20own_20string_20and_20char_20types_14',['Bring your own string- and char-types',['../index.html#autotoc_md61',1,'']]],
-  ['byte_20string_15',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md6',1,'']]]
+  ['boolean_5ftestable_12',['boolean_testable',['../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html',1,'mimicpp::util']]],
+  ['boosttest_2ehpp_13',['BoostTest.hpp',['../d9/d42/_boost_test_8hpp.html',1,'']]],
+  ['boosttestreportert_14',['BoostTestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaa1a2d936b0a089d8b4e19f75eb6b8bbc',1,'mimicpp::reporting']]],
+  ['bring_20your_20own_20string_20and_20char_20types_15',['Bring your own string- and char-types',['../index.html#autotoc_md61',1,'']]],
+  ['byte_20string_16',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md6',1,'']]]
 ];

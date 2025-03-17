@@ -8,7 +8,9 @@ var concepts =
         [ "explicitly_convertible_to", "d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertible__to.html", null ],
         [ "nothrow_explicitly_convertible_to", "db/d6a/conceptmimicpp_1_1util_1_1nothrow__explicitly__convertible__to.html", null ],
         [ "same_as_any", "d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html", null ],
-        [ "satisfies", "dc/d18/conceptmimicpp_1_1util_1_1satisfies.html", null ]
+        [ "satisfies", "dc/d18/conceptmimicpp_1_1util_1_1satisfies.html", null ],
+        [ "boolean_testable", "d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html", null ],
+        [ "weakly_equality_comparable_with", "d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html", null ]
       ] ],
       [ "expectation_policy_for", "dd/d1d/conceptmimicpp_1_1expectation__policy__for.html", null ],
       [ "finalize_policy_for", "d9/d64/conceptmimicpp_1_1finalize__policy__for.html", null ],

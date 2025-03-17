@@ -137,13 +137,37 @@ $(function(){initNavTree('d9/db9/_concepts_8hpp_source.html','../../'); initResi
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt; <span class="keyword">typename</span> Trait&gt;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="../../dc/d18/conceptmimicpp_1_1util_1_1satisfies.html">   33</a></span>    <span class="keyword">concept </span><a class="code hl_concept" href="../../dc/d18/conceptmimicpp_1_1util_1_1satisfies.html">satisfies</a> = Trait&lt;T&gt;::value;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="comment">// see: https://en.cppreference.com/w/cpp/concepts/boolean-testable</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> B&gt;</div>
+<div class="foldopen" id="foldopen00037" data-start="{" data-end="}">
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">   37</a></span>    <span class="keyword">concept </span><a class="code hl_concept" href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">boolean_testable</a> =</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        std::convertible_to&lt;B, bool&gt;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        &amp;&amp; <span class="keyword">requires</span>(B&amp;&amp; b) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>               { !std::forward&lt;B&gt;(b) } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>           };</div>
+</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="comment">// see: https://en.cppreference.com/w/cpp/concepts/equality_comparable</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U&gt;</div>
+<div class="foldopen" id="foldopen00045" data-start="{" data-end="}">
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="../../d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html">   45</a></span>    <span class="keyword">concept </span><a class="code hl_concept" href="../../d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html">weakly_equality_comparable_with</a> =</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        <span class="keyword">requires</span>(std::remove_reference_t&lt;T&gt; <span class="keyword">const</span>&amp; t, std::remove_reference_t&lt;U&gt; <span class="keyword">const</span>&amp; u) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            { t == u } -&gt; <a class="code hl_concept" href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">boolean_testable</a>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            { t != u } -&gt; <a class="code hl_concept" href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">boolean_testable</a>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            { u == t } -&gt; <a class="code hl_concept" href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">boolean_testable</a>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            { u != t } -&gt; <a class="code hl_concept" href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">boolean_testable</a>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        };</div>
+</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>}</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aconceptmimicpp_1_1util_1_1boolean__testable_html"><div class="ttname"><a href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">mimicpp::util::boolean_testable</a></div><div class="ttdef"><b>Definition</b> Concepts.hpp:37</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1explicitly__convertible__to_html"><div class="ttname"><a href="../../d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertible__to.html">mimicpp::util::explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Concepts.hpp:17</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1nothrow__explicitly__convertible__to_html"><div class="ttname"><a href="../../db/d6a/conceptmimicpp_1_1util_1_1nothrow__explicitly__convertible__to.html">mimicpp::util::nothrow_explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Concepts.hpp:23</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1same__as__any_html"><div class="ttname"><a href="../../d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html">mimicpp::util::same_as_any</a></div><div class="ttdef"><b>Definition</b> Concepts.hpp:30</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1satisfies_html"><div class="ttname"><a href="../../dc/d18/conceptmimicpp_1_1util_1_1satisfies.html">mimicpp::util::satisfies</a></div><div class="ttdef"><b>Definition</b> Concepts.hpp:33</div></div>
+<div class="ttc" id="aconceptmimicpp_1_1util_1_1weakly__equality__comparable__with_html"><div class="ttname"><a href="../../d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html">mimicpp::util::weakly_equality_comparable_with</a></div><div class="ttdef"><b>Definition</b> Concepts.hpp:45</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Algorithm.hpp:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

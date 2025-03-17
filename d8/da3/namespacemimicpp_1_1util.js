@@ -13,6 +13,8 @@ var namespacemimicpp_1_1util =
     [ "nothrow_explicitly_convertible_to", "db/d6a/conceptmimicpp_1_1util_1_1nothrow__explicitly__convertible__to.html", null ],
     [ "same_as_any", "d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html", null ],
     [ "satisfies", "dc/d18/conceptmimicpp_1_1util_1_1satisfies.html", null ],
+    [ "boolean_testable", "d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html", null ],
+    [ "weakly_equality_comparable_with", "d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html", null ],
     [ "type_list_pop_back_t", "d8/da3/namespacemimicpp_1_1util.html#ade36f86aac332827425e8d069c0e6586", null ],
     [ "type_list_populate_t", "d8/da3/namespacemimicpp_1_1util.html#ac33626f0a0b03836340f5fb0efd4847c", null ],
     [ "type_list_reverse_t", "d8/da3/namespacemimicpp_1_1util.html#a9e7b756bc206828739845da4bcd8f2a0", null ],
