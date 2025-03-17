@@ -484,7 +484,7 @@ static_assert(
     "stacktrace::NullBackend does not satisfy the stacktrace::backend concept");
 
 #if defined(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE) \
-    && not defined(NDEBUG)
+    && !defined(NDEBUG)
 
     #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
@@ -664,7 +664,7 @@ static_assert(
 
 // This is enabled as fallback solution, when neither std::stacktrace nor cpptrace is available,
 // or MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE simply not defined.
-#if not MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+#if !MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
 struct mimicpp::stacktrace::find_backend
 {
