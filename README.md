@@ -3,7 +3,7 @@
 ### ✅ Quality
 
 <p align="center">
-  ░▒▒▓▓██&nbsp;&nbsp;&nbsp;&nbsp;
+  ░▒▒▓▓██&nbsp;&nbsp;&nbsp;
   <a href="https://github.com/DNKpp/mimicpp/actions/workflows/codeql.yml">
     <img src="https://github.com/DNKpp/mimicpp/actions/workflows/codeql.yml/badge.svg" alt="CodeQL">
   </a>
@@ -23,7 +23,7 @@
   <a href="https://coveralls.io/github/DNKpp/mimicpp">
     <img src="https://coveralls.io/repos/github/DNKpp/mimicpp/badge.svg" alt="Coveralls">
   </a>
-  &nbsp;&nbsp;&nbsp;&nbsp;██▓▓▒▒░
+  &nbsp;&nbsp;&nbsp;██▓▓▒▒░
 </p>
 
 ### 🔗 Developer Hub
