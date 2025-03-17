@@ -152,9 +152,10 @@ it is crucial to clearly indicate where the mismatch occurred.
 For instance, in the example below the framework expects a call with the argument 42, but receives 1337 instead:
 
 ```cpp
-mimicpp::Mock<void(int)> mock{};  // Create a mock that expects an int argument.
-SCOPED_EXP mock.expect_call(42);  // Set up an expectation: the mock should be called with the integer 42.
-mock(1337);                       // Call the mock with an incorrect argument (1337 instead of 42).
+mimicpp::Mock<void(int, std::optional<int>)> mock{}; // Create a mock that expects `int` and `std::optional<int>` as argument.
+// Set up an expectation:
+SCOPED_EXP mock.expect_call(42, std::nullopt);       // The mock should be called with `42` and `nullopt`.
+mock(1337, std::nullopt);                            // Call the mock with an incorrect argument (`1337` instead of `42`).
 ```
 
 This will produce the following detailed output:
@@ -163,11 +164,14 @@ This will produce the following detailed output:
 Unmatched Call originated from `path/to/source.cpp`#L42, `test_function2()`
   On Target `Mock<void(int)>` used Overload `void(int)`
   Where:
-    arg[0] => int: 1337
+      arg[0] => int: 1337
+      arg[1] => std::optional<int>: nullopt
 1 non-matching Expectation(s):
   #1 Expectation defined at `path/to/source.cpp`#L24, `test_function2()`
   Due to Violation(s):
     - expect: arg[0] == 42
+  With Adherence(s):
+    + expect: arg[1] == nullopt
 
 Stacktrace:
 #0 `path/to/source.cpp`#L42, `test_function2()`
