@@ -189,14 +189,16 @@ namespace mimicpp
     class WildcardMatcher
     {
     public:
-        static constexpr bool matches([[maybe_unused]] auto&& target) noexcept
+        [[nodiscard]]
+        static consteval bool matches([[maybe_unused]] auto&& target) noexcept
         {
             return true;
         }
 
-        static constexpr StringViewT describe() noexcept
+        [[nodiscard]]
+        static consteval std::nullopt_t describe() noexcept
         {
-            return "has no constraints";
+            return std::nullopt;
         }
     };
 }

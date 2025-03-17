@@ -192,13 +192,13 @@ TEST_CASE(
 
     using AnyT = std::remove_cvref_t<decltype(matches::_)>;
     STATIC_REQUIRE(matcher_for<AnyT, int>);
-    STATIC_REQUIRE(matcher_for<AnyT, const std::string&>);
+    STATIC_REQUIRE(matcher_for<AnyT, std::string const&>);
 
     constexpr int value{42};
     REQUIRE(matches::_.matches(value));
-    REQUIRE_THAT(
-        StringT{matches::_.describe()},
-        Matches::Equals("has no constraints"));
+
+    std::optional<StringT> const description = matches::_.describe();
+    REQUIRE_FALSE(description);
 }
 
 TEST_CASE(
