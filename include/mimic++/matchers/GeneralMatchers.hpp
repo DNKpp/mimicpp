@@ -190,13 +190,13 @@ namespace mimicpp
     {
     public:
         [[nodiscard]]
-        static consteval bool matches([[maybe_unused]] auto&& target) noexcept
+        static constexpr bool matches([[maybe_unused]] auto&& target) noexcept
         {
             return true;
         }
 
         [[nodiscard]]
-        static consteval std::nullopt_t describe() noexcept
+        static constexpr std::nullopt_t describe() noexcept
         {
             return std::nullopt;
         }
