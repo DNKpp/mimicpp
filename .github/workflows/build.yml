@@ -354,7 +354,7 @@ jobs:
           # see: https://github.com/llvm/llvm-project/issues/59432
           if [[ "${{ matrix.config.libcxx }}" ]]; then
             echo "ASAN_OPTIONS=$(echo ${ASAN_OPTIONS}:alloc_dealloc_mismatch=0)" >> $GITHUB_ENV
-          else
+          fi
           
           # see: https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html#index-fsanitize_003dbuiltin
           # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105562
