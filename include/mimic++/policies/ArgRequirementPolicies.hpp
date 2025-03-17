@@ -10,6 +10,7 @@
 
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/policies/ArgumentList.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
 #include <concepts>
@@ -25,7 +26,7 @@ namespace mimicpp::expectation_policies
     struct matcher_matches_fn
     {
     public:
-        const Matcher& matcher;
+        Matcher const& matcher;
 
         template <typename... Args>
             requires std::invocable<
@@ -39,7 +40,7 @@ namespace mimicpp::expectation_policies
             noexcept(
                 std::is_nothrow_invocable_v<
                     decltype(detail::matches_hook::matches),
-                    const Matcher&,
+                    Matcher const&,
                     Args&...>)
         {
             return detail::matches_hook::matches(matcher, args...);
@@ -72,10 +73,10 @@ namespace mimicpp::expectation_policies
         }
 
         template <typename Return, typename... Args>
-            requires std::is_invocable_r_v<bool, const MatchesStrategy&, matcher_matches_fn<Matcher>, const call::Info<Return, Args...>&>
+            requires std::is_invocable_r_v<bool, MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>
         [[nodiscard]]
         constexpr bool matches(const call::Info<Return, Args...>& info) const
-            noexcept(std::is_nothrow_invocable_v<const MatchesStrategy&, matcher_matches_fn<Matcher>, const call::Info<Return, Args...>&>)
+            noexcept(std::is_nothrow_invocable_v<MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>)
         {
             return std::invoke(
                 m_MatchesStrategy,
@@ -84,16 +85,28 @@ namespace mimicpp::expectation_policies
         }
 
         template <typename Return, typename... Args>
-        static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
+        static constexpr void consume([[maybe_unused]] call::Info<Return, Args...> const& info) noexcept
         {
         }
 
         [[nodiscard]]
-        StringT describe() const
+        std::optional<StringT> describe() const
         {
-            return std::invoke(
-                m_DescribeStrategy,
-                detail::describe_hook::describe(m_Matcher));
+            [[maybe_unused]] auto const description = detail::describe_hook::describe(m_Matcher);
+
+            if constexpr (util::boolean_testable<decltype(description)>)
+            {
+                if (description)
+                {
+                    return std::invoke(m_DescribeStrategy, *description);
+                }
+            }
+            else if constexpr (std::convertible_to<decltype(description), StringViewT>)
+            {
+                return std::invoke(m_DescribeStrategy, description);
+            }
+
+            return std::nullopt;
         }
 
     private:
@@ -111,7 +124,7 @@ namespace mimicpp::expect
         struct arg_requirement_describer
         {
             [[nodiscard]]
-            StringT operator()(const StringViewT matcherDescription) const
+            StringT operator()(StringViewT const matcherDescription) const
             {
                 StringStreamT out{};
                 out << "expect: arg[" << index;
@@ -124,7 +137,7 @@ namespace mimicpp::expect
         struct all_args_requirement_describer
         {
             [[nodiscard]]
-            StringT operator()(const StringViewT matcherDescription) const
+            StringT operator()(StringViewT const matcherDescription) const
             {
                 StringStreamT out{};
                 out << "expect: arg[all] " << matcherDescription;

@@ -17,6 +17,7 @@
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
 #include <algorithm>
@@ -428,8 +429,8 @@ namespace mimicpp
                                   && std::is_destructible_v<T>
                                   && std::same_as<T, std::remove_cvref_t<T>>
                                   && requires(T& policy, const call::info_for_signature_t<Signature>& info) {
-                                         { std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
-                                         { std::as_const(policy).matches(info) } -> std::convertible_to<bool>;
+                                         { std::as_const(policy).is_satisfied() } noexcept -> util::boolean_testable;
+                                         { std::as_const(policy).matches(info) } -> util::boolean_testable;
                                          { std::as_const(policy).describe() } -> std::convertible_to<std::optional<StringT>>;
                                          { policy.consume(info) };
                                      };
@@ -453,7 +454,7 @@ namespace mimicpp
                           && std::is_destructible_v<T>
                           && std::same_as<T, std::remove_cvref_t<T>>
                           && requires(T& policy) {
-                                 { std::as_const(policy).is_satisfied() } noexcept -> std::convertible_to<bool>;
+                                 { std::as_const(policy).is_satisfied() } noexcept -> util::boolean_testable;
                                  { std::as_const(policy).state() } -> std::convertible_to<reporting::control_state_t>;
                                  policy.consume();
                              };

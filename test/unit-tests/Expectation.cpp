@@ -825,6 +825,54 @@ TEST_CASE(
             *report.requirementDescriptions.front(),
             Matches::Equals("expectation description"));
     }
+
+    SECTION("Expectation policies without a description are supported.")
+    {
+        struct Policy
+        {
+            [[nodiscard]]
+            static constexpr bool is_satisfied() noexcept
+            {
+                return true;
+            }
+
+            [[nodiscard]]
+            static constexpr bool matches([[maybe_unused]] call::info_for_signature_t<void()> const& call) noexcept
+            {
+                return true;
+            }
+
+            [[nodiscard]]
+            static constexpr std::nullopt_t describe() noexcept
+            {
+                return std::nullopt;
+            }
+
+            static constexpr void consume([[maybe_unused]] call::info_for_signature_t<void()> const& call) noexcept
+            {
+            }
+        };
+
+        static_assert(expectation_policy_for<Policy, void()>);
+
+        BasicExpectation<
+            void(),
+            ControlPolicyFake,
+            FinalizerPolicyT,
+            Policy>
+            expectation{
+                {},
+                make_common_target_report<void()>(),
+                ControlPolicyFake{},
+                FinalizerPolicyT{},
+                Policy{}};
+
+        reporting::ExpectationReport const report = expectation.report();
+        REQUIRE_THAT(
+            report.requirementDescriptions,
+            Matches::SizeIs(1));
+        REQUIRE_FALSE(report.requirementDescriptions.front());
+    }
 }
 
 TEMPLATE_TEST_CASE(

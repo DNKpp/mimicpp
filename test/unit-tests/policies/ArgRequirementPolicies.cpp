@@ -24,8 +24,9 @@ TEST_CASE(
     SECTION("When single index is given.")
     {
         constexpr expect::detail::arg_requirement_describer<42> describer{};
+        auto const description = describer(matcherDescription);
         REQUIRE_THAT(
-            describer(matcherDescription),
+            description,
             Catch::Matchers::Equals("expect: arg[42] " + matcherDescription));
     }
 
@@ -105,8 +106,10 @@ TEST_CASE(
         REQUIRE_CALL(describeStrategy, Invoke("matcher description"))
             .RETURN("expect that: matcher description");
 
+        auto const description = policy.describe();
+        REQUIRE(description);
         REQUIRE_THAT(
-            policy.describe(),
+            *description,
             Catch::Matchers::Equals("expect that: matcher description"));
     }
 
@@ -122,6 +125,53 @@ TEST_CASE(
 
         REQUIRE(expected == std::as_const(policy).matches(info));
     }
+}
+
+TEST_CASE(
+    "expectation_policies::ArgsRequirement supports matchers without description.",
+    "[expectation][expectation::policy]")
+{
+    using SignatureT = void(int);
+    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    int arg0{42};
+    const CallInfoT info{
+        .args = {arg0},
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers))};
+
+    using DescriberStrategyT = InvocableMock<StringT, StringViewT>;
+
+    struct Matcher
+    {
+        [[nodiscard]]
+        static constexpr bool matches([[maybe_unused]] int& arg) noexcept
+        {
+            return true;
+        }
+
+        [[nodiscard]]
+        static constexpr std::nullopt_t describe() noexcept
+        {
+            return std::nullopt;
+        }
+    };
+
+    STATIC_CHECK(matcher_for<Matcher, int&>);
+
+    using MatchesStrategyT = InvocableMock<
+        bool,
+        expectation_policies::matcher_matches_fn<Matcher>,
+        const CallInfoT&>;
+
+    MatchesStrategyT matchesStrategy{};
+    DescriberStrategyT describeStrategy{};
+    expectation_policies::ArgsRequirement policy{
+        Matcher{},
+        std::ref(matchesStrategy),
+        std::ref(describeStrategy)};
+
+    auto const description = policy.describe();
+    REQUIRE_FALSE(description);
 }
 
 namespace
@@ -212,8 +262,10 @@ TEST_CASE(
         REQUIRE_CALL(matcher, describe())
             .RETURN("matcher description");
 
+        auto const description = policy.describe();
+        REQUIRE(description);
         REQUIRE_THAT(
-            policy.describe(),
+            *description,
             Catch::Matchers::Equals("expect: arg[0] matcher description"));
     }
 
@@ -304,8 +356,10 @@ TEST_CASE(
         SCOPED_EXP std::as_const(matcher).describe.expect_call()
             and finally::returns<std::string>("matcher description");
 
+        auto const description = policy.describe();
+        REQUIRE(description);
         REQUIRE_THAT(
-            policy.describe(),
+            *description,
             Catch::Matchers::Equals("expect: arg[all] matcher description"));
     }
 
