@@ -31,6 +31,14 @@ namespace mimicpp::util
 
     template <typename T, template <typename> typename Trait>
     concept satisfies = Trait<T>::value;
+
+    // see: https://en.cppreference.com/w/cpp/concepts/boolean-testable
+    template <typename B>
+    concept boolean_testable =
+        std::convertible_to<B, bool>
+        && requires(B&& b) {
+               { !std::forward<B>(b) } -> std::convertible_to<bool>;
+           };
 }
 
 #endif
