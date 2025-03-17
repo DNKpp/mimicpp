@@ -100,13 +100,17 @@ namespace mimicpp::expectation_policies
                 {
                     return std::invoke(m_DescribeStrategy, *description);
                 }
+
+                return std::nullopt;
             }
             else if constexpr (std::convertible_to<decltype(description), StringViewT>)
             {
                 return std::invoke(m_DescribeStrategy, description);
             }
-
-            return std::nullopt;
+            else
+            {
+                return std::nullopt;
+            }
         }
 
     private:
