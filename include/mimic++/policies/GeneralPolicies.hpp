@@ -11,6 +11,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/utilities/C++23Backports.hpp"
 
 #include <iterator>
 
@@ -44,12 +45,14 @@ namespace mimicpp::expectation_policies
     class Category
     {
     public:
+        [[nodiscard]]
         static constexpr bool is_satisfied() noexcept
         {
             return true;
         }
 
         template <typename Return, typename... Args>
+        [[nodiscard]]
         static constexpr bool matches(const call::Info<Return, Args...>& info) noexcept
         {
             return mimicpp::detail::is_matching(info.fromCategory, expected);
@@ -62,14 +65,21 @@ namespace mimicpp::expectation_policies
         }
 
         [[nodiscard]]
-        static StringT describe()
+        static auto describe()
         {
-            StringStreamT stream{};
-            stream << "expect: from ";
-            mimicpp::print(std::ostreambuf_iterator{stream}, expected);
-            stream << " category overload";
+            if constexpr (ValueCategory::any != expected)
+            {
+                StringStreamT stream{};
+                stream << "expect: from ";
+                mimicpp::print(std::ostreambuf_iterator{stream}, expected);
+                stream << " category overload";
 
-            return std::move(stream).str();
+                return std::move(stream).str();
+            }
+            else
+            {
+                return std::nullopt;
+            }
         }
     };
 

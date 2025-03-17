@@ -68,9 +68,18 @@ TEMPLATE_TEST_CASE_SIG(
 
     SECTION("Policy description.")
     {
-        REQUIRE_THAT(
-            policy.describe(),
-            Catch::Matchers::Equals(StringT{"expect: from "} + print(category) + " category overload"));
+        std::optional<StringT> const description = policy.describe();
+        if constexpr (ValueCategory::any == category)
+        {
+            REQUIRE_FALSE(description);
+        }
+        else
+        {
+            REQUIRE(description);
+            REQUIRE_THAT(
+                *description,
+                Catch::Matchers::Equals(StringT{"expect: from "} + print(category) + " category overload"));
+        }
     }
 
     const CallInfoT call{
