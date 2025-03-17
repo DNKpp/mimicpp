@@ -15,23 +15,6 @@ namespace
 
     [[maybe_unused]] constexpr std::string_view stacktraceToken{"Stacktrace:\n"};
 
-    [[nodiscard, maybe_unused]]
-    Stacktrace make_shallow_stacktrace()
-    {
-        Stacktrace stacktrace = stacktrace::current();
-        REQUIRE(!stacktrace.empty());
-
-        // When evaluating the stacktrace via regex, this will fail on msvc, because the regex-state becomes too big.
-        // So, we limit the stacktrace here, to have a manageable size.
-        constexpr std::size_t maxLength{6u};
-        const auto size = std::min(maxLength, stacktrace.size());
-        const auto skip = stacktrace.size() - size;
-        stacktrace = stacktrace::current(skip);
-        REQUIRE(size == stacktrace.size());
-
-        return stacktrace;
-    }
-
     template <typename Signature>
     [[nodiscard]]
     reporting::TargetReport make_common_target_report(StringT name = "Mock-Name")
@@ -156,7 +139,7 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .stacktrace = make_shallow_stacktrace(),
+        .stacktrace = stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -179,8 +162,8 @@ TEST_CASE(
 
     std::string const stacktraceRegex =
         R"(Stacktrace:
-#0 `.+`#L\d+, `.+`
-(?:#\d+ `.*`#L\d+, `.*`\n)*)";
+#0 `.*StringifyReports.cpp`#L\d+, `.+`
+(?:#\d+ `.*`#L\d+, `.*`\n){4})";
     CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
@@ -322,7 +305,7 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .stacktrace = make_shallow_stacktrace(),
+        .stacktrace = stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -343,8 +326,8 @@ TEST_CASE(
 
     std::string const stacktraceRegex =
         R"(Stacktrace:
-#0 `.+`#L\d+, `.+`
-(?:#\d+ `.*`#L\d+, `.*`\n)*)";
+#0 `.*StringifyReports.cpp`#L\d+, `.+`
+(?:#\d+ `.*`#L\d+, `.*`\n){4})";
     CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
@@ -539,7 +522,7 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .stacktrace = make_shallow_stacktrace(),
+        .stacktrace = stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -565,8 +548,8 @@ TEST_CASE(
 
     std::string const stacktraceRegex =
         R"(Stacktrace:
-#0 `.+`#L\d+, `.+`
-(?:#\d+ `.*`#L\d+, `.*`\n)*)";
+#0 `.*StringifyReports.cpp`#L\d+, `.+`
+(?:#\d+ `.*`#L\d+, `.*`\n){4})";
     CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
@@ -730,7 +713,7 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .stacktrace = make_shallow_stacktrace(),
+        .stacktrace = stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -752,8 +735,8 @@ TEST_CASE(
 
     std::string const stacktraceRegex =
         R"(Stacktrace:
-#0 `.+`#L\d+, `.+`
-(?:#\d+ `.*`#L\d+, `.*`\n)*)";
+#0 `.*StringifyReports.cpp`#L\d+, `.+`
+(?:#\d+ `.*`#L\d+, `.*`\n){4})";
     CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
