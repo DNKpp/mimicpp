@@ -20,6 +20,7 @@
 #include <any>
 // ReSharper disable once CppUnusedIncludeDirective
 #include <functional> // std::invoke
+#include <limits>
 #include <ranges>
 #include <stdexcept>
 #include <type_traits>
@@ -74,12 +75,13 @@ namespace mimicpp::stacktrace
      * template <>
      * struct mimicpp::stacktrace::backend_traits<MyStacktraceBackend>
      * {
-     *    static MyStacktraceBackend current(const std::size_t skip);
-     *    static std::size_t size(const MyStacktraceBackend& backend);
-     *    static bool empty(const MyStacktraceBackend& backend);
-     *    static std::string description(const MyStacktraceBackend& backend, const std::size_t index);
-     *    static std::string source_file(const MyStacktraceBackend& backend, const std::size_t index);
-     *    static std::size_t source_line(const MyStacktraceBackend& backend, const std::size_t index);
+     *    static MyStacktraceBackend current(std::size_t skip);
+     *    static MyStacktraceBackend current(std::size_t skip, std::size_t max);
+     *    static std::size_t size(MyStacktraceBackend const& backend);
+     *    static bool empty(MyStacktraceBackend const& backend);
+     *    static std::string description(MyStacktraceBackend const& backend, std::size_t index);
+     *    static std::string source_file(MyStacktraceBackend const& backend, std::size_t index);
+     *    static std::size_t source_line(MyStacktraceBackend const& backend, std::size_t index);
      * };
      * ```
      * \note The ``index`` param denotes the index of the selected stacktrace-entry.
@@ -109,6 +111,7 @@ namespace mimicpp::stacktrace
         std::copyable<T>
         && requires(backend_traits<std::remove_cvref_t<T>> traits, const std::remove_cvref_t<T>& backend, const std::size_t value) {
                { decltype(traits)::current(value) } -> std::convertible_to<std::remove_cvref_t<T>>;
+               { decltype(traits)::current(value, value) } -> std::convertible_to<std::remove_cvref_t<T>>;
                { decltype(traits)::size(backend) } -> std::convertible_to<std::size_t>;
                { decltype(traits)::empty(backend) } -> std::convertible_to<bool>;
                { decltype(traits)::description(backend, value) } -> std::convertible_to<std::string>;
@@ -311,6 +314,10 @@ namespace mimicpp::stacktrace::detail::current_hook
     concept existing_backend = requires {
         {
             Traits<
+                typename FindBackend::type>::current(std::size_t{}, std::size_t{})
+        } -> backend;
+        {
+            Traits<
                 typename FindBackend::type>::current(std::size_t{})
         } -> backend;
     };
@@ -319,8 +326,45 @@ namespace mimicpp::stacktrace::detail::current_hook
         template <typename> typename Traits,
         existing_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
     [[nodiscard]]
+    constexpr auto current([[maybe_unused]] util::priority_tag<2> const, std::size_t const skip, std::size_t const max)
+    {
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
+
+        return Traits<
+            typename FindBackendT::type>::current(skip + 1u, max);
+    }
+
+    template <
+        template <typename> typename Traits,
+        existing_backend<Traits> FindBackendT = find_backend>
+    [[nodiscard]]
+    constexpr auto current([[maybe_unused]] util::priority_tag<1> const, std::size_t const skip, std::size_t const max)
+    {
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
+
+        return Traits<
+            typename FindBackendT::type>::current(skip + 1u, max);
+    }
+
+    template <template <typename> typename Traits>
+    constexpr auto current(
+        [[maybe_unused]] util::priority_tag<0> const,
+        [[maybe_unused]] std::size_t const skip,
+        [[maybe_unused]] std::size_t const max)
+    {
+        static_assert(
+            util::always_false<Traits<void>>{},
+            "mimic++ does not have a registered stacktrace-backend.");
+    }
+
+    template <
+        template <typename> typename Traits,
+        existing_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
+    [[nodiscard]]
     constexpr auto current([[maybe_unused]] util::priority_tag<2> const, std::size_t const skip)
     {
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
+
         return Traits<
             typename FindBackendT::type>::current(skip + 1u);
     }
@@ -331,12 +375,16 @@ namespace mimicpp::stacktrace::detail::current_hook
     [[nodiscard]]
     constexpr auto current([[maybe_unused]] util::priority_tag<1> const, std::size_t const skip)
     {
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
+
         return Traits<
             typename FindBackendT::type>::current(skip + 1u);
     }
 
     template <template <typename> typename Traits>
-    constexpr auto current([[maybe_unused]] util::priority_tag<0> const, [[maybe_unused]] std::size_t const skip)
+    constexpr auto current(
+        [[maybe_unused]] util::priority_tag<0> const,
+        [[maybe_unused]] std::size_t const skip)
     {
         static_assert(
             util::always_false<Traits<void>>{},
@@ -349,8 +397,20 @@ namespace mimicpp::stacktrace::detail::current_hook
     {
         template <typename... Canary, template <typename> typename Traits = backend_traits>
         [[nodiscard]]
+        Stacktrace operator()(std::size_t const skip, std::size_t const max) const
+        {
+            MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
+
+            return Stacktrace{
+                current_hook::current<Traits>(maxTag, skip + 1u, max)};
+        }
+
+        template <typename... Canary, template <typename> typename Traits = backend_traits>
+        [[nodiscard]]
         Stacktrace operator()(std::size_t const skip) const
         {
+            MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
+
             return Stacktrace{
                 current_hook::current<Traits>(maxTag, skip + 1u)};
         }
@@ -438,7 +498,13 @@ template <>
 struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::NullBackend>
 {
     [[nodiscard]]
-    static NullBackend current([[maybe_unused]] const std::size_t skip) noexcept
+    static constexpr NullBackend current([[maybe_unused]] std::size_t const skip, [[maybe_unused]] std::size_t const max) noexcept
+    {
+        return NullBackend{};
+    }
+
+    [[nodiscard]]
+    static constexpr NullBackend current([[maybe_unused]] std::size_t const skip) noexcept
     {
         return NullBackend{};
     }
@@ -542,43 +608,53 @@ template <>
 struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::CpptraceBackend>
 {
     [[nodiscard]]
-    static CpptraceBackend current(const std::size_t skip)
+    static CpptraceBackend current(std::size_t const skip, std::size_t const max) noexcept
     {
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
+
+        return CpptraceBackend{cpptrace::generate_raw_trace(skip + 1, max)};
+    }
+
+    [[nodiscard]]
+    static CpptraceBackend current(std::size_t const skip)
+    {
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
+
         return CpptraceBackend{cpptrace::generate_raw_trace(skip + 1)};
     }
 
     [[nodiscard]]
-    static std::size_t size(const CpptraceBackend& stacktrace)
+    static std::size_t size(CpptraceBackend const& stacktrace)
     {
         return stacktrace.data().frames.size();
     }
 
     [[nodiscard]]
-    static bool empty(const CpptraceBackend& stacktrace)
+    static bool empty(CpptraceBackend const& stacktrace)
     {
         return stacktrace.data().empty();
     }
 
     [[nodiscard]]
-    static std::string description(const CpptraceBackend& stacktrace, const std::size_t at)
+    static std::string description(CpptraceBackend const& stacktrace, std::size_t const at)
     {
         return frame(stacktrace, at).symbol;
     }
 
     [[nodiscard]]
-    static std::string source_file(const CpptraceBackend& stacktrace, const std::size_t at)
+    static std::string source_file(CpptraceBackend const& stacktrace, std::size_t const at)
     {
         return frame(stacktrace, at).filename;
     }
 
     [[nodiscard]]
-    static std::size_t source_line(const CpptraceBackend& stacktrace, const std::size_t at)
+    static std::size_t source_line(CpptraceBackend const& stacktrace, std::size_t const at)
     {
         return frame(stacktrace, at).line.value_or(0u);
     }
 
     [[nodiscard]]
-    static const cpptrace::stacktrace_frame& frame(const CpptraceBackend& stacktrace, const std::size_t at)
+    static const cpptrace::stacktrace_frame& frame(CpptraceBackend const& stacktrace, std::size_t const at)
     {
         return stacktrace.data().frames.at(at);
     }
@@ -605,43 +681,53 @@ struct mimicpp::stacktrace::backend_traits<std::basic_stacktrace<Allocator>>
     using BackendT = std::basic_stacktrace<Allocator>;
 
     [[nodiscard]]
-    static BackendT current(const std::size_t skip)
+    static BackendT current(std::size_t const skip, std::size_t const max) noexcept
     {
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
+
+        return BackendT::current(skip + 1, max);
+    }
+
+    [[nodiscard]]
+    static BackendT current(std::size_t const skip) noexcept
+    {
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
+
         return BackendT::current(skip + 1);
     }
 
     [[nodiscard]]
-    static std::size_t size(const BackendT& backend)
+    static std::size_t size(BackendT const& backend) noexcept
     {
         return backend.size();
     }
 
     [[nodiscard]]
-    static bool empty(const BackendT& backend)
+    static bool empty(BackendT const& backend) noexcept
     {
         return backend.empty();
     }
 
     [[nodiscard]]
-    static std::string description(const BackendT& backend, const std::size_t at)
+    static std::string description(BackendT const& backend, std::size_t const at)
     {
         return entry(backend, at).description();
     }
 
     [[nodiscard]]
-    static std::string source_file(const BackendT& backend, const std::size_t at)
+    static std::string source_file(BackendT const& backend, std::size_t const at)
     {
         return entry(backend, at).source_file();
     }
 
     [[nodiscard]]
-    static std::size_t source_line(const BackendT& backend, const std::size_t at)
+    static std::size_t source_line(BackendT const& backend, std::size_t const at)
     {
         return entry(backend, at).source_line();
     }
 
     [[nodiscard]]
-    static const std::stacktrace_entry& entry(const BackendT& backend, const std::size_t at)
+    static std::stacktrace_entry const& entry(BackendT const& backend, std::size_t const at)
     {
         return backend.at(at);
     }

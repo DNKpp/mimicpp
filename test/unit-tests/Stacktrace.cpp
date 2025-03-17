@@ -78,65 +78,110 @@ TEST_CASE(
     REQUIRE(std::cmp_less(line, after.line()));
 }
 
+namespace
+{
+    void compare_traces(std::size_t const fullSkip, std::size_t const otherSkip, Stacktrace const& full, Stacktrace const& other)
+    {
+        CAPTURE(fullSkip, otherSkip);
+        REQUIRE(fullSkip < full.size());
+        REQUIRE(otherSkip < other.size());
+        REQUIRE(other.size() - otherSkip <= full.size() - fullSkip);
+
+        for (auto const i : std::views::iota(0u, other.size() - otherSkip))
+        {
+            CAPTURE(i);
+            CHECK_THAT(
+                full.description(i + fullSkip),
+                Catch::Matchers::Equals(other.description(i + otherSkip)));
+            CHECK_THAT(
+                full.source_file(i + fullSkip),
+                Catch::Matchers::Equals(other.source_file(i + otherSkip)));
+            CHECK(full.source_line(i + fullSkip) == other.source_line(i + otherSkip));
+        }
+    };
+}
+
 TEST_CASE(
     "stacktrace::current supports skipping of the top elements.",
     "[stacktrace]")
 {
-    const Stacktrace full = stacktrace::current();
-    CHECK(!full.empty());
-
-    const auto compare = [&](const std::size_t skip, const Stacktrace& other) {
-        return std::ranges::all_of(
-            std::views::iota(0u, other.size()),
-            [&](const std::size_t i) {
-                return full.description(i + skip) == other.description(i)
-                    && full.source_file(i + skip) == other.source_file(i)
-                    && full.source_line(i + skip) == other.source_line(i);
-            });
-    };
+    Stacktrace const full = stacktrace::current();
+    REQUIRE(!full.empty());
 
     SECTION("When skip == 0")
     {
-        const Stacktrace other = stacktrace::current();
+        Stacktrace const other = stacktrace::current();
         CHECK(full.size() == other.size());
 
-        REQUIRE( // everything except the top element must be equal
-            std::ranges::all_of(
-                std::views::iota(1u, other.size()),
-                [&](const std::size_t i) {
-                    return full.description(i) == other.description(i)
-                        && full.source_file(i) == other.source_file(i)
-                        && full.source_line(i) == other.source_line(i);
-                }));
-        // of the top elements description may differ
-        REQUIRE_THAT(
+        // everything except the top element must be equal
+        compare_traces(1u, 1u, full, other);
+        // description of the top elements description may differ
+        CHECK_THAT(
             other.source_file(0),
             Catch::Matchers::Equals(full.source_file(0)));
-        REQUIRE(full.source_line(0) < other.source_line(0));
+        CHECK(full.source_line(0) < other.source_line(0));
     }
 
     SECTION("When skip == 1.")
     {
-        const Stacktrace partial = stacktrace::current(1);
+        Stacktrace const partial = stacktrace::current(1);
         CHECK(!partial.empty());
         CHECK(full.size() == partial.size() + 1u);
 
-        REQUIRE(compare(1u, partial));
+        compare_traces(1u, 0u, full, partial);
     }
 
     SECTION("When skip == 2.")
     {
-        const Stacktrace partial = stacktrace::current(2);
+        Stacktrace const partial = stacktrace::current(2);
         CHECK(!partial.empty());
         CHECK(full.size() == partial.size() + 2u);
 
-        REQUIRE(compare(2u, partial));
+        compare_traces(2u, 0u, full, partial);
     }
 
     SECTION("When skip is very high.")
     {
-        const Stacktrace partial = stacktrace::current(1337);
+        Stacktrace const partial = stacktrace::current(1337);
         REQUIRE(partial.empty());
+    }
+}
+
+TEST_CASE(
+    "stacktrace::current supports setting a maximum depth.",
+    "[stacktrace]")
+{
+    Stacktrace const full = stacktrace::current();
+    REQUIRE(!full.empty());
+
+    SECTION("When max == 0")
+    {
+        Stacktrace const other = stacktrace::current(0u, 0u);
+        CHECK(other.empty());
+    }
+
+    SECTION("When max == 1.")
+    {
+        Stacktrace const partial = stacktrace::current(1u, 1u);
+        CHECK(!partial.empty());
+        CHECK(1u == partial.size());
+
+        compare_traces(1u, 0u, full, partial);
+    }
+
+    SECTION("When max == 2.")
+    {
+        Stacktrace const partial = stacktrace::current(1u, 2u);
+        CHECK(!partial.empty());
+        CHECK(2u == partial.size());
+
+        compare_traces(1u, 0u, full, partial);
+    }
+
+    SECTION("When max is very high.")
+    {
+        Stacktrace const partial = stacktrace::current(1u, 1337);
+        REQUIRE(full.size() == partial.size() + 1u);
     }
 }
 

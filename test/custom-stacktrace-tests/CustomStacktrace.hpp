@@ -39,39 +39,45 @@ struct mimicpp::stacktrace::backend_traits<CustomBackend>
     using BackendT = CustomBackend;
 
     inline static InvocableMock<CustomBackend, std::size_t> currentMock{};
+    inline static InvocableMock<CustomBackend, std::size_t, std::size_t> currentMaxMock{};
 
     [[nodiscard]]
-    static BackendT current(const std::size_t skip)
+    static BackendT current(std::size_t const skip, std::size_t const max)
     {
-        return currentMock.Invoke(skip);
+        return currentMaxMock.Invoke(skip, max);
     }
 
     [[nodiscard]]
-    static std::size_t size(const BackendT& backend)
+    static BackendT current(std::size_t const skip)
+    {
+        return currentMock.Invoke(skip);
+    }
+    [[nodiscard]]
+    static std::size_t size(BackendT const& backend)
     {
         return backend.inner->sizeMock.Invoke();
     }
 
     [[nodiscard]]
-    static bool empty(const BackendT& backend)
+    static bool empty(BackendT const& backend)
     {
         return backend.inner->emptyMock.Invoke();
     }
 
     [[nodiscard]]
-    static std::string description(const BackendT& backend, const std::size_t at)
+    static std::string description(BackendT const& backend, std::size_t const at)
     {
         return backend.inner->descriptionMock.Invoke(at);
     }
 
     [[nodiscard]]
-    static std::string source_file(const BackendT& backend, const std::size_t at)
+    static std::string source_file(BackendT const& backend, std::size_t const at)
     {
         return backend.inner->sourceMock.Invoke(at);
     }
 
     [[nodiscard]]
-    static std::size_t source_line(const BackendT& backend, const std::size_t at)
+    static std::size_t source_line(BackendT const& backend, std::size_t const at)
     {
         return backend.inner->lineMock.Invoke(at);
     }

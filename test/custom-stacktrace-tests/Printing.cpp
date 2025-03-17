@@ -43,12 +43,12 @@ TEST_CASE(
         REQUIRE_CALL(inner->lineMock, Invoke(0u))
             .RETURN(1337u);
         REQUIRE_CALL(inner->descriptionMock, Invoke(0u))
-            .RETURN("Hello, World!");
+            .RETURN("test()");
 
         const auto text = mimicpp::print(stacktrace);
         REQUIRE_THAT(
             text,
-            Catch::Matchers::Equals("#0 `test.cpp`#L1337, `Hello, World!`\n"));
+            Catch::Matchers::Equals("#0 `test.cpp`#L1337, `test()`\n"));
     }
 
     SECTION("When stacktrace contains multiple entries.")
@@ -63,19 +63,19 @@ TEST_CASE(
         REQUIRE_CALL(inner->lineMock, Invoke(0u))
             .RETURN(42u);
         REQUIRE_CALL(inner->descriptionMock, Invoke(0u))
-            .RETURN("Hello, mimic++!");
+            .RETURN("test_42()");
         REQUIRE_CALL(inner->sourceMock, Invoke(1u))
             .RETURN("test.cpp");
         REQUIRE_CALL(inner->lineMock, Invoke(1u))
             .RETURN(1337u);
         REQUIRE_CALL(inner->descriptionMock, Invoke(1u))
-            .RETURN("Hello, World!");
+            .RETURN("test()");
 
         const auto text = mimicpp::print(stacktrace);
         REQUIRE_THAT(
             text,
             Catch::Matchers::Equals(
-                "#0 `other-test.cpp`#L42, `Hello, mimic++!`\n"
-                "#1 `test.cpp`#L1337, `Hello, World!`\n"));
+                "#0 `other-test.cpp`#L42, `test_42()`\n"
+                "#1 `test.cpp`#L1337, `test()`\n"));
     }
 }
