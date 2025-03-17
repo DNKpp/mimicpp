@@ -88,6 +88,16 @@ namespace mimicpp::printing::type::detail
         return static_cast<bool>(std::isspace(static_cast<unsigned char>(c)));
     };
 
+    // see: https://en.cppreference.com/w/cpp/string/byte/isdigit
+    constexpr auto is_digit = [](char const c) noexcept {
+        return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
+    };
+
+    // see: https://en.cppreference.com/w/cpp/string/byte/isxdigit
+    constexpr auto is_hex_digit = [](char const c) noexcept {
+        return static_cast<bool>(std::isxdigit(static_cast<unsigned char>(c)));
+    };
+
     template <std::random_access_iterator Iter>
         requires std::constructible_from<StringViewT, Iter, Iter>
     [[nodiscard]]
@@ -301,7 +311,7 @@ namespace mimicpp::printing::type::detail
     }
 
     [[nodiscard]]
-    inline StringT remove_template_details(StringT name)
+    constexpr StringT remove_template_details(StringT name)
     {
         if (name.ends_with(']'))
         {
@@ -323,11 +333,6 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type::detail
 {
         #if MIMICPP_DETAIL_USES_LIBCXX
-
-    // see: https://en.cppreference.com/w/cpp/string/byte/isdigit
-    constexpr auto is_digit = [](char const c) noexcept {
-        return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
-    };
 
     constexpr StringT unify_lambdas(StringT name)
     {
@@ -530,10 +535,64 @@ namespace mimicpp::printing::type::detail
         return name;
     }
 
+        #if MIMICPP_DETAIL_IS_32BIT
+
+    [[nodiscard]]
+    constexpr StringT remove_prefix_scope(StringT name)
+    {
+        MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
+
+        // msvc with c++23 and Win32 seems to prefix some symbols with prefix, followed by a single `!`.
+        // E.g. `mimicpp_tests!`
+
+        if (auto const iter = std::ranges::find(name, '!');
+            iter != name.cend())
+        {
+            // Make sure it's not `operator!`
+            if (!trimmed(name.begin(), iter).ends_with("operator"))
+            {
+                name.erase(name.cbegin(), iter + 1);
+            }
+        }
+
+        return name;
+    }
+
+    [[nodiscard]]
+    constexpr StringT remove_function_suffix(StringT name)
+    {
+        MIMICPP_ASSERT(!name.starts_with(' ') && !name.ends_with(' '), "Name is not trimmed.");
+
+        // msvc with c++23 and Win32 seems to suffix top-level functions with `+0x0123`
+
+        auto reversedName = name | std::views::reverse;
+        if (auto const iter = std::ranges::find_if_not(reversedName, is_hex_digit);
+            iter != reversedName.begin())
+        {
+            constexpr StringViewT token{"+0x"};
+            if (StringViewT const rest{name.cbegin(), iter.base()};
+                rest.ends_with(token))
+            {
+                name.erase(
+                   iter.base() - std::ranges::ssize(token),
+                   name.cend());
+            }
+        }
+
+        return name;
+    }
+
+        #endif
+
     [[nodiscard]]
     inline StringT apply_basic_transformations(StringT name)
     {
         name = remove_template_details(std::move(name));
+
+        #if MIMICPP_DETAIL_IS_32BIT
+        name = remove_prefix_scope(std::move(name));
+        name = remove_function_suffix(std::move(name));
+        #endif
 
         name = transform_special_operators(std::move(name));
 

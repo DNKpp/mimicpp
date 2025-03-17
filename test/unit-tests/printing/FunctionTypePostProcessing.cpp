@@ -380,7 +380,7 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 lambdaCallOpPattern
-                + R"(\(\)(\s?const)?)"));
+                + R"((\(\)(\s?const)?)?)"));
         #endif
     }
 
@@ -410,7 +410,7 @@ TEST_CASE(
                 + R"((\(\)(\s?const)?)?)" // << this is wrong!
                   "::"
                 + lambdaCallOpPattern
-                + R"(\(\)(\s?const)?)"));
+                + R"((\(\)(\s?const)?)?)"));
         #endif
     }
 
@@ -436,7 +436,7 @@ TEST_CASE(
                 anonNsScopePattern
                 + "stacktrace_fun::"
                 + lambdaCallOpPattern
-                + R"(\(\)(\s?const)?)"));
+                + R"((\(\)(\s?const)?)?)"));
         #endif
     }
 
@@ -471,7 +471,8 @@ TEST_CASE(
                 testCasePattern
                 + "::"
                 + anonTypePattern
-                + R"(::operator\(\)\(\)(\s?const)?)"));
+                + R"(::operator\(\))"
+                R"((\(\)(\s?const)?)?)"));
         #endif
     }
 
@@ -507,7 +508,8 @@ TEST_CASE(
                 testCasePattern
                 + "::"
                 + anonTypePattern
-                + R"(::operator\(\)\(\)(\s?const)?)"));
+                + R"(::operator\(\))"
+                R"((\(\)(\s?const)?)?)"));
         #endif
     }
 
@@ -533,7 +535,7 @@ TEST_CASE(
                 anonNsScopePattern
                 + "stacktrace_anon_lambda_fun::"
                 + lambdaCallOpPattern
-                + R"(\(\)(\s?const)?)"));
+                + R"((\(\)(\s?const)?)?)"));
         #endif
     }
 
@@ -558,8 +560,8 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 anonNsScopePattern
-                + R"(my_stacktrace_template::foo\(()"
-                + anonNsScopePattern + R"(my_stacktrace_template::my_type)?\))"));
+                + R"(my_stacktrace_template::foo(\(()"
+                + anonNsScopePattern + R"(my_stacktrace_template::my_type)?\))?)"));
         #endif
     }
 }
