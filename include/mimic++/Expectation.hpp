@@ -431,7 +431,7 @@ namespace mimicpp
                                   && requires(T& policy, const call::info_for_signature_t<Signature>& info) {
                                          { std::as_const(policy).is_satisfied() } noexcept -> util::boolean_testable;
                                          { std::as_const(policy).matches(info) } -> util::boolean_testable;
-                                         { std::as_const(policy).describe() } -> std::convertible_to<std::optional<StringT>>;
+                                         { std::as_const(policy).describe() } -> util::explicitly_convertible_to<std::optional<StringT>>;
                                          { policy.consume(info) };
                                      };
 
@@ -528,7 +528,7 @@ namespace mimicpp
                 .requirementDescriptions = std::apply(
                     [&](auto const&... policies) {
                         return std::vector<std::optional<StringT>>{
-                            policies.describe()...};
+                            std::optional<StringT>{policies.describe()}...};
                     },
                     m_Policies)};
         }
