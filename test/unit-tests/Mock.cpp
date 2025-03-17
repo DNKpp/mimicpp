@@ -1023,6 +1023,13 @@ TEST_CASE(
         mock(1337);
     }
 
+    SECTION("For arguments, which support operator== but do not satisfy std::equality_comparable_with.")
+    {
+        Mock<void(std::optional<int>)> mock{};
+        SCOPED_EXP mock.expect_call(std::nullopt);
+        mock({});
+    }
+
     SECTION("For strings.")
     {
         Mock<void(const char*)> mock{};

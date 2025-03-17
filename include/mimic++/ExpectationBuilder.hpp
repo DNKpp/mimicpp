@@ -19,6 +19,7 @@
 #include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
@@ -220,7 +221,7 @@ namespace mimicpp::detail
         return matches::str::eq(std::forward<Arg>(arg));
     }
 
-    template <typename Param, std::equality_comparable_with<Param> Arg>
+    template <typename Param, util::weakly_equality_comparable_with<Param> Arg>
     [[nodiscard]]
     constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<0> const, Arg&& arg)
     {
