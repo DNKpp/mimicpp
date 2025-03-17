@@ -149,12 +149,13 @@ Custom Stacktrace Backends</h3>
 </div><!-- fragment --><p> Additionally, a specialization for the <code><a class="el" href="../../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html" title="Trait type for stacktrace backends.">stacktrace::backend_traits</a></code> template must be added, which defines at least the following functions: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
 <div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="../../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html">mimicpp::stacktrace::backend_traits</a>&lt;MyStacktraceBackend&gt;</div>
 <div class="line">{</div>
-<div class="line">   <span class="keyword">static</span> MyStacktraceBackend current(<span class="keyword">const</span> std::size_t skip);</div>
-<div class="line">   <span class="keyword">static</span> std::size_t size(<span class="keyword">const</span> MyStacktraceBackend&amp; backend);</div>
-<div class="line">   <span class="keyword">static</span> <span class="keywordtype">bool</span> empty(<span class="keyword">const</span> MyStacktraceBackend&amp; backend);</div>
-<div class="line">   <span class="keyword">static</span> std::string description(<span class="keyword">const</span> MyStacktraceBackend&amp; backend, <span class="keyword">const</span> std::size_t index);</div>
-<div class="line">   <span class="keyword">static</span> std::string source_file(<span class="keyword">const</span> MyStacktraceBackend&amp; backend, <span class="keyword">const</span> std::size_t index);</div>
-<div class="line">   <span class="keyword">static</span> std::size_t source_line(<span class="keyword">const</span> MyStacktraceBackend&amp; backend, <span class="keyword">const</span> std::size_t index);</div>
+<div class="line">   <span class="keyword">static</span> MyStacktraceBackend current(std::size_t skip);</div>
+<div class="line">   <span class="keyword">static</span> MyStacktraceBackend current(std::size_t skip, std::size_t max);</div>
+<div class="line">   <span class="keyword">static</span> std::size_t size(MyStacktraceBackend <span class="keyword">const</span>&amp; backend);</div>
+<div class="line">   <span class="keyword">static</span> <span class="keywordtype">bool</span> empty(MyStacktraceBackend <span class="keyword">const</span>&amp; backend);</div>
+<div class="line">   <span class="keyword">static</span> std::string description(MyStacktraceBackend <span class="keyword">const</span>&amp; backend, std::size_t index);</div>
+<div class="line">   <span class="keyword">static</span> std::string source_file(MyStacktraceBackend <span class="keyword">const</span>&amp; backend, std::size_t index);</div>
+<div class="line">   <span class="keyword">static</span> std::size_t source_line(MyStacktraceBackend <span class="keyword">const</span>&amp; backend, std::size_t index);</div>
 <div class="line">};</div>
 <div class="ttc" id="astructmimicpp_1_1stacktrace_1_1backend__traits_html"><div class="ttname"><a href="../../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html">mimicpp::stacktrace::backend_traits</a></div><div class="ttdoc">Trait type for stacktrace backends.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:370</div></div>
 </div><!-- fragment --> <dl class="section note"><dt>Note</dt><dd>The <code>index</code> param denotes the index of the selected stacktrace-entry. </dd></dl>

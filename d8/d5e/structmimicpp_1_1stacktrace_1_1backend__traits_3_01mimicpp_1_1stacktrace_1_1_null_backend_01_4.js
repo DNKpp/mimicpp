@@ -1,6 +1,7 @@
 var structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4 =
 [
-    [ "current", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html#ac1b4466faaceaa39f08e31fa86a20871", null ],
+    [ "current", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html#a9469cdaaf62ff9830c426de3f92da73b", null ],
+    [ "current", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html#a4b11a163951d3162b837d86c626103a6", null ],
     [ "description", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html#adbbf80cba7d4a04aad3401c6c0215fa6", null ],
     [ "empty", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html#a410f25cb65ea3368aa41942d7ca96ab3", null ],
     [ "size", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html#a7e4c7d3e0911a24ad398c4fa8f669d39", null ],

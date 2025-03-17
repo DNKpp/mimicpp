@@ -118,8 +118,10 @@ Collaboration diagram for mimicpp::stacktrace::backend_traits&lt; mimicpp::stack
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:ac1b4466faaceaa39f08e31fa86a20871" id="r_ac1b4466faaceaa39f08e31fa86a20871"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">NullBackend</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1b4466faaceaa39f08e31fa86a20871">current</a> (const std::size_t skip) noexcept</td></tr>
-<tr class="separator:ac1b4466faaceaa39f08e31fa86a20871"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b11a163951d3162b837d86c626103a6" id="r_a4b11a163951d3162b837d86c626103a6"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">NullBackend</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b11a163951d3162b837d86c626103a6">current</a> (std::size_t const skip, std::size_t const max) noexcept</td></tr>
+<tr class="separator:a4b11a163951d3162b837d86c626103a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9469cdaaf62ff9830c426de3f92da73b" id="r_a9469cdaaf62ff9830c426de3f92da73b"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">NullBackend</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9469cdaaf62ff9830c426de3f92da73b">current</a> (std::size_t const skip) noexcept</td></tr>
+<tr class="separator:a9469cdaaf62ff9830c426de3f92da73b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e4c7d3e0911a24ad398c4fa8f669d39" id="r_a7e4c7d3e0911a24ad398c4fa8f669d39"><td class="memItemLeft" align="right" valign="top">static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e4c7d3e0911a24ad398c4fa8f669d39">size</a> (const <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">NullBackend</a> &amp;stacktrace) noexcept</td></tr>
 <tr class="separator:a7e4c7d3e0911a24ad398c4fa8f669d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a410f25cb65ea3368aa41942d7ca96ab3" id="r_a410f25cb65ea3368aa41942d7ca96ab3"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a410f25cb65ea3368aa41942d7ca96ab3">empty</a> (const <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">NullBackend</a> &amp;stacktrace) noexcept</td></tr>
@@ -132,8 +134,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="separator:a654f5b953067c1f9704461adb2e3fb14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac1b4466faaceaa39f08e31fa86a20871" name="ac1b4466faaceaa39f08e31fa86a20871"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1b4466faaceaa39f08e31fa86a20871">&#9670;&#160;</a></span>current()</h2>
+<a id="a9469cdaaf62ff9830c426de3f92da73b" name="a9469cdaaf62ff9830c426de3f92da73b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9469cdaaf62ff9830c426de3f92da73b">&#9670;&#160;</a></span>current() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -142,15 +144,44 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">NullBackend</a> <a class="el" href="../../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html">mimicpp::stacktrace::backend_traits</a>&lt; <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">mimicpp::stacktrace::NullBackend</a> &gt;::current </td>
+          <td class="memname">static constexpr <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">NullBackend</a> <a class="el" href="../../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html">mimicpp::stacktrace::backend_traits</a>&lt; <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">mimicpp::stacktrace::NullBackend</a> &gt;::current </td>
           <td>(</td>
-          <td class="paramtype">const std::size_t</td>          <td class="paramname"><span class="paramname"><em>skip</em></span></td><td>)</td>
+          <td class="paramtype">std::size_t const</td>          <td class="paramname"><span class="paramname"><em>skip</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4b11a163951d3162b837d86c626103a6" name="a4b11a163951d3162b837d86c626103a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b11a163951d3162b837d86c626103a6">&#9670;&#160;</a></span>current() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static constexpr <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">NullBackend</a> <a class="el" href="../../da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html">mimicpp::stacktrace::backend_traits</a>&lt; <a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">mimicpp::stacktrace::NullBackend</a> &gt;::current </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t const</td>          <td class="paramname"><span class="paramname"><em>skip</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::size_t const</td>          <td class="paramname"><span class="paramname"><em>max</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
