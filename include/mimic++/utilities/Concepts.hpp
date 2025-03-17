@@ -39,6 +39,16 @@ namespace mimicpp::util
         && requires(B&& b) {
                { !std::forward<B>(b) } -> std::convertible_to<bool>;
            };
+
+    // see: https://en.cppreference.com/w/cpp/concepts/equality_comparable
+    template <typename T, typename U>
+    concept weakly_equality_comparable_with =
+        requires(std::remove_reference_t<T> const& t, std::remove_reference_t<U> const& u) {
+            { t == u } -> boolean_testable;
+            { t != u } -> boolean_testable;
+            { u == t } -> boolean_testable;
+            { u != t } -> boolean_testable;
+        };
 }
 
 #endif
