@@ -7,9 +7,10 @@ target_sources(${TARGET_NAME}
     PRIVATE
     "ContainerTypePrinting.cpp"
     "Format.cpp"
+    "FunctionTypePostProcessing.cpp"
     "PathPrinter.cpp"
     "StatePrinter.cpp"
-    "FunctionTypePostProcessing.cpp"
+    "ScopeNavigator.cpp"
     "TypeScopeIterator.cpp"
     "TypePostProcessing.cpp"
     "TypePrinter.cpp"
