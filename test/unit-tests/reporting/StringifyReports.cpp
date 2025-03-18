@@ -406,6 +406,52 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "reporting::stringify_no_matches filters reports from inapplicable expectations.",
+    "[reporting]")
+{
+    reporting::CallReport const callReport{
+        .target = make_common_target_report<void()>(),
+        .returnTypeInfo = reporting::TypeReport::make<void>(),
+        .argDetails = {},
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+
+    reporting::ExpectationReport const expectationReport1{
+        .target = make_common_target_report<void()>(),
+        .controlReport = GENERATE(commonInapplicableState, commonSaturatedState),
+        .finalizerDescription = std::nullopt,
+        .requirementDescriptions = {{"expect: violation1"}}};
+    reporting::RequirementOutcomes const outcomes1{
+        .outcomes = {false}};
+
+    reporting::ExpectationReport const expectationReport2{
+        .target = make_common_target_report<void()>(),
+        .controlReport = commonApplicableState,
+        .finalizerDescription = std::nullopt,
+        .requirementDescriptions = {{"expect: violation2"}}};
+    reporting::RequirementOutcomes const outcomes2{
+        .outcomes = {false}};
+
+    std::vector noMatchReports{
+        reporting::NoMatchReport{expectationReport1, outcomes1},
+        reporting::NoMatchReport{expectationReport2, outcomes2}
+    };
+    auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
+
+    std::string const regex =
+        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+	On Target `Mock-Name` used Overload `void\(\)`
+1 applicable non-matching Expectation\(s\):
+	#1 Expectation defined at `.+`#L\d+, `.+`
+	Due to Violation\(s\):
+	  \- expect: violation2
+)";
+    CHECK_THAT(
+        text,
+        Catch::Matchers::Matches(regex));
+}
+
+TEST_CASE(
     "reporting::stringify_no_matches omits \"Where\"-Section, when no arguments exist.",
     "[reporting]")
 {

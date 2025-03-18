@@ -380,8 +380,8 @@ namespace mimicpp::reporting
         detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
-        std::vector<NoMatchReport const*> applicableReports{};
-        for (auto const& noMatch : noMatchReports)
+        std::vector<NoMatchReport*> applicableReports{};
+        for (auto& noMatch : noMatchReports)
         {
             if (std::holds_alternative<state_applicable>(noMatch.expectationReport.controlReport))
             {
@@ -398,8 +398,10 @@ namespace mimicpp::reporting
             ss << applicableReports.size() << " applicable non-matching Expectation(s):";
 
             for (int i{};
-                 auto& [expReport, outcomes] : noMatchReports)
+                 auto* report : applicableReports)
             {
+                auto& [expReport, outcomes] = *report;
+
                 ss << "\n\t#" << ++i << " ";
                 detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
 
