@@ -386,7 +386,7 @@ TEST_CASE(
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
-2 non-matching Expectation\(s\):
+2 applicable non-matching Expectation\(s\):
 	#1 Expectation defined at `.+`#L\d+, `.+`
 	Due to Violation\(s\):
 	  \- expect: arg\[0\] > 0
@@ -438,7 +438,7 @@ TEST_CASE(
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
-1 non-matching Expectation\(s\):
+1 applicable non-matching Expectation\(s\):
 	#1 Expectation defined at `.+`#L\d+, `.+`
 	Due to Violation\(s\):
 	  \- expect: violation
@@ -478,7 +478,7 @@ TEST_CASE(
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
-1 non-matching Expectation\(s\):
+1 applicable non-matching Expectation\(s\):
 	#1 Expectation defined at `.+`#L\d+, `.+`
 	Due to Violation\(s\):
 	  \- expect: violation
@@ -489,7 +489,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "reporting::stringify_no_matches has special treatment, when no expectations exist.",
+    "reporting::stringify_no_matches has special treatment, when no applicable expectations exist.",
     "[reporting]")
 {
     reporting::CallReport const callReport{
@@ -500,12 +500,43 @@ TEST_CASE(
         .fromConstness = Constness::any};
 
     std::vector<reporting::NoMatchReport> noMatchReports{};
+
+    SECTION("When no reports are contained.")
+    {
+    }
+
+    SECTION("When inapplicable match reports are contained.")
+    {
+        reporting::ExpectationReport const expectationReport{
+            .target = make_common_target_report<void()>(),
+            .controlReport = commonInapplicableState,
+            .requirementDescriptions = {{"expect: violation"}}};
+
+        reporting::RequirementOutcomes const outcomes{
+            .outcomes = {false}};
+
+        noMatchReports.emplace_back(expectationReport, outcomes);
+    }
+
+    SECTION("When saturated match reports are contained.")
+    {
+        reporting::ExpectationReport const expectationReport{
+            .target = make_common_target_report<void()>(),
+            .controlReport = commonSaturatedState,
+            .requirementDescriptions = {{"expect: violation"}}};
+
+        reporting::RequirementOutcomes const outcomes{
+            .outcomes = {false}};
+
+        noMatchReports.emplace_back(expectationReport, outcomes);
+    }
+
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
         R"(Unmatched Call originated from `.+`#L\d+, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
-No Expectations available!
+No applicable Expectations available!
 )";
     CHECK_THAT(
         text,

@@ -81,7 +81,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
             REQUIRE_THAT(
                 out->str(),
                 Matches::StartsWith("Unmatched Call originated from ")
-                    && Matches::ContainsSubstring("1 non-matching Expectation(s):\n")
+                    && Matches::ContainsSubstring("1 applicable non-matching Expectation(s):\n")
                     && Matches::ContainsSubstring("#1 Expectation defined at ")
                     && Matches::ContainsSubstring("Due to Violation(s):\n")
                     && Matches::ContainsSubstring("  - expect: Invalid")

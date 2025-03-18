@@ -151,13 +151,13 @@ TEST_CASE(
             REQUIRE_THAT(
                 g_FailMessage.value(),
                 matches::StartsWith("Unmatched Call originated from ")
-                    && matches::ContainsSubstring("No Expectations available!"));
+                    && matches::ContainsSubstring("No applicable Expectations available!"));
         }
 
         SECTION("When non matching expectation exists.")
         {
             SCOPED_EXP mock.expect_call(42)
-                && expect::never();
+                && expect::at_most(1u);
 
             REQUIRE_THROWS_AS(
                 mock(1337),
@@ -166,7 +166,7 @@ TEST_CASE(
             REQUIRE_THAT(
                 g_FailMessage.value(),
                 matches::StartsWith("Unmatched Call originated from ")
-                    && matches::ContainsSubstring("1 non-matching Expectation(s):\n")
+                    && matches::ContainsSubstring("1 applicable non-matching Expectation(s):\n")
                     && matches::ContainsSubstring("#1 Expectation defined at ")
                     && matches::ContainsSubstring("Due to Violation(s):\n"));
         }

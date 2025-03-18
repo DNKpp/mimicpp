@@ -380,13 +380,22 @@ namespace mimicpp::reporting
         detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
-        if (noMatchReports.empty())
+        std::vector<NoMatchReport const*> applicableReports{};
+        for (auto const& noMatch : noMatchReports)
         {
-            ss << "No Expectations available!\n";
+            if (std::holds_alternative<state_applicable>(noMatch.expectationReport.controlReport))
+            {
+                applicableReports.emplace_back(&noMatch);
+            }
+        }
+
+        if (applicableReports.empty())
+        {
+            ss << "No applicable Expectations available!\n";
         }
         else
         {
-            ss << noMatchReports.size() << " non-matching Expectation(s):";
+            ss << applicableReports.size() << " applicable non-matching Expectation(s):";
 
             for (int i{};
                  auto& [expReport, outcomes] : noMatchReports)
