@@ -22,6 +22,7 @@
 #include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/Printing.hpp"
 #include "mimic++/Reporting.hpp"
+#include "mimic++/ScopedSequence.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp"
