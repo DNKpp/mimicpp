@@ -750,12 +750,12 @@ namespace mimicpp
          * \param loc The source-location.
          */
         template <typename T>
-            requires requires(const std::source_location& loc) {
+            requires requires(util::SourceLocation loc) {
                 { std::declval<T&&>().finalize(loc) } -> std::convertible_to<ScopedExpectation>;
             }
         [[nodiscard]]
-        explicit(false) constexpr ScopedExpectation(T&& object, const std::source_location& loc = std::source_location::current())
-            : ScopedExpectation{std::forward<T>(object).finalize(loc)}
+        explicit(false) constexpr ScopedExpectation(T&& object, util::SourceLocation loc = {})
+            : ScopedExpectation{std::forward<T>(object).finalize(std::move(loc))}
         {
         }
 
