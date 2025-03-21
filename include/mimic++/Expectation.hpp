@@ -717,9 +717,9 @@ namespace mimicpp
     public:
         /**
          * \brief Removes the owned expectation from the ExpectationCollection and checks, whether it's satisfied.
-         * \throws In cases of an unsatisfied expectation, the destructor is expected to throw of terminate otherwise.
+         * \throws In cases of an unsatisfied expectation, the destructor is expected to throw or terminate otherwise.
          */
-        ~ScopedExpectation() noexcept(false) // NOLINT(modernize-use-equals-default)
+        ~ScopedExpectation() noexcept(false)
         {
             // we must call the dtor manually here, because std::unique_ptr's dtor mustn't throw.
             delete m_Inner.release(); // NOLINT(*-uniqueptr-delete-release)
@@ -762,12 +762,12 @@ namespace mimicpp
         /**
          * \brief Deleted copy-constructor.
          */
-        ScopedExpectation(const ScopedExpectation&) = delete;
+        ScopedExpectation(ScopedExpectation const&) = delete;
 
         /**
          * \brief Deleted copy-assignment-operator.
          */
-        ScopedExpectation& operator=(const ScopedExpectation&) = delete;
+        ScopedExpectation& operator=(ScopedExpectation const&) = delete;
 
         /**
          * \brief Defaulted move-constructor.

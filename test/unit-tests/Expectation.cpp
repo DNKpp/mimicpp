@@ -913,6 +913,10 @@ TEST_CASE("ScopedExpectation is a non-copyable, but movable type.")
 {
     STATIC_REQUIRE(!std::is_copy_constructible_v<mimicpp::ScopedExpectation>);
     STATIC_REQUIRE(!std::is_copy_assignable_v<mimicpp::ScopedExpectation>);
+
+    STATIC_REQUIRE(!std::is_nothrow_destructible_v<mimicpp::ScopedExpectation>);
+    STATIC_REQUIRE(!std::is_default_constructible_v<mimicpp::ScopedExpectation>);
+
     STATIC_REQUIRE(std::is_move_constructible_v<mimicpp::ScopedExpectation>);
     STATIC_REQUIRE(std::is_move_assignable_v<mimicpp::ScopedExpectation>);
 }
