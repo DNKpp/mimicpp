@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Mock.hpp"
+#include "mimic++/ScopedSequence.hpp"
 #include "mimic++/Sequence.hpp"
 
 TEST_CASE(
@@ -150,4 +151,24 @@ TEST_CASE(
     mock(); // matches (2)
             // no further call possible, because that would be out of sequence and will lead to an inapplicable match report!
             //! [greedy]
+}
+
+TEST_CASE(
+    "ScopedSequences simplify sequence setup.",
+    "[example][example::sequence]")
+{
+    //! [scoped]
+    using mimicpp::matches::_;
+    namespace expect = mimicpp::expect;
+
+    mimicpp::Mock<void()> mock{};
+
+    mimicpp::ScopedSequence sequence{};
+    sequence += mock.expect_call() // (1)
+            and expect::at_most(1);
+    sequence += mock.expect_call(); // (2)
+
+    mock(); // matches (1)
+    mock(); // matches (2)
+    //! [scoped]
 }

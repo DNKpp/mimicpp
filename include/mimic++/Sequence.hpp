@@ -44,9 +44,13 @@ namespace mimicpp::sequence
      * Sequences can also enforce orders on expectations, which refer to different mocks.
      * \snippet Sequences.cpp sequence multiple mocks
      *
-     * Sequenced and non-sequenced expectations may be arbitrarily mixed; even if this can be very difficult to trace, by
-     * simply reviewing the code.
+     * Sequenced and non-sequenced expectations may be arbitrarily mixed; even if this can be very difficult to trace,
+     * by simply reviewing the code.
      * \snippet Sequences.cpp sequence mixed
+     *
+     * `ScopedSequence` simplifies the setup of sequences. This is actually equivalent to the previously demonstrated
+     * `LazySequence` example.
+     * \snippet Sequences.cpp scoped
      *
      * It's totally fine to attach expectations to sequences, which are already queried for matches. Sequences do not have
      * to be setup in one go.
