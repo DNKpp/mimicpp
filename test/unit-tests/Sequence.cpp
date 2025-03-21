@@ -42,8 +42,9 @@ TEMPLATE_TEST_CASE(
 
     STATIC_REQUIRE(!std::is_copy_constructible_v<TestType>);
     STATIC_REQUIRE(!std::is_copy_assignable_v<TestType>);
-    STATIC_REQUIRE(!std::is_move_constructible_v<TestType>);
-    STATIC_REQUIRE(!std::is_move_assignable_v<TestType>);
+
+    STATIC_REQUIRE(std::is_move_constructible_v<TestType>);
+    STATIC_REQUIRE(std::is_move_assignable_v<TestType>);
 }
 
 TEST_CASE(

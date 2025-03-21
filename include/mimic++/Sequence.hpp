@@ -254,15 +254,17 @@ namespace mimicpp::sequence
         public:
             using SequenceT = BasicSequence<Id, priorityStrategy>;
 
+            BasicSequenceInterface(const BasicSequenceInterface&) = delete;
+            BasicSequenceInterface& operator=(const BasicSequenceInterface&) = delete;
+
             ~BasicSequenceInterface() = default;
 
             [[nodiscard]]
             BasicSequenceInterface() = default;
 
-            BasicSequenceInterface(const BasicSequenceInterface&) = delete;
-            BasicSequenceInterface& operator=(const BasicSequenceInterface&) = delete;
-            BasicSequenceInterface(BasicSequenceInterface&&) = delete;
-            BasicSequenceInterface& operator=(BasicSequenceInterface&&) = delete;
+            [[nodiscard]]
+            BasicSequenceInterface(BasicSequenceInterface&&) = default;
+            BasicSequenceInterface& operator=(BasicSequenceInterface&&) = default;
 
             [[nodiscard]]
             constexpr Tag tag() const noexcept
