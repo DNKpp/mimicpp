@@ -27,6 +27,9 @@ var hierarchy =
     [ "mimicpp::sequence::detail::BasicSequenceInterface< sequence::Id, sequence::detail::LazyStrategy{}>", null, [
       [ "mimicpp::LazySequence", "db/d46/classmimicpp_1_1_lazy_sequence.html", null ]
     ] ],
+    [ "mimicpp::sequence::detail::BasicSequenceInterface< sequence::Id, Strategy >", null, [
+      [ "mimicpp::BasicScopedSequence< Strategy >", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html", null ]
+    ] ],
     [ "std::bool_constant", null, [
       [ "mimicpp::signature_is_noexcept< Signature >", "d9/d28/structmimicpp_1_1signature__is__noexcept.html", null ],
       [ "mimicpp::util::always_false<... >", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ]

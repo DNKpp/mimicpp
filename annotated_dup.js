@@ -62,6 +62,7 @@ var annotated_dup =
       ] ],
       [ "BasicExpectation", "d3/d4a/classmimicpp_1_1_basic_expectation.html", "d3/d4a/classmimicpp_1_1_basic_expectation" ],
       [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html", "d5/de1/classmimicpp_1_1_basic_expectation_builder" ],
+      [ "BasicScopedSequence", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html", "d2/d48/classmimicpp_1_1_basic_scoped_sequence" ],
       [ "call_convention_traits", "d3/db5/structmimicpp_1_1call__convention__traits.html", null ],
       [ "call_convention_traits< detail::default_call_convention >", "d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html", "d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4" ],
       [ "case_insensitive_t", "d2/dd4/structmimicpp_1_1case__insensitive__t.html", null ],

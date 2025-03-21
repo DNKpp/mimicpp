@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['finalize_0',['finalize',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0cd1928fa4daf48cb38496d6b02da4d6',1,'mimicpp::BasicExpectationBuilder']]],
+  ['finalize_0',['finalize',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0ff3086cd59e7cb50332d378d4580808',1,'mimicpp::BasicExpectationBuilder']]],
   ['finalize_5fcall_1',['finalize_call',['../d3/d1c/classmimicpp_1_1_expectation.html#ad37db14b76d614af34a80397ccc6ffc1',1,'mimicpp::Expectation::finalize_call()'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a76f17839b261d2635a537d95e266e0f2',1,'mimicpp::BasicExpectation::finalize_call()'],['../dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html#ae195645853a2e24c9827fe2665be4807',1,'mimicpp::expectation_policies::ReturnsResultOf::finalize_call()'],['../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html#a3a753d9c68ff93c16898b7b4600d044e',1,'mimicpp::expectation_policies::Throws::finalize_call()'],['../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html#aa309cf22f6a191101d4f6d5e64c8c9da',1,'mimicpp::expectation_policies::InitFinalize::finalize_call()']]],
   ['find_5fclosing_5ftoken_2',['find_closing_token',['../d8/da3/namespacemimicpp_1_1util.html#a775d0ca317345e92231ec716a81ca921',1,'mimicpp::util']]],
   ['find_5fnext_5funwrapped_5ftoken_3',['find_next_unwrapped_token',['../d8/da3/namespacemimicpp_1_1util.html#ad9543460b0c98427b3cf3b46f5b5aaad',1,'mimicpp::util']]],

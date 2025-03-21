@@ -18,6 +18,7 @@ var dir_d1aac795712c1a80b032d3d2760385d8 =
     [ "ObjectWatcher.hpp", "d5/d92/_object_watcher_8hpp.html", "d5/d92/_object_watcher_8hpp" ],
     [ "Printing.hpp", "db/d15/_printing_8hpp.html", null ],
     [ "Reporting.hpp", "d7/deb/_reporting_8hpp.html", null ],
+    [ "ScopedSequence.hpp", "db/d83/_scoped_sequence_8hpp.html", "db/d83/_scoped_sequence_8hpp" ],
     [ "Sequence.hpp", "d8/de4/_sequence_8hpp.html", "d8/de4/_sequence_8hpp" ],
     [ "Stacktrace.hpp", "de/df5/_stacktrace_8hpp.html", "de/df5/_stacktrace_8hpp" ],
     [ "String.hpp", "d9/dc5/_string_8hpp.html", "d9/dc5/_string_8hpp" ],

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['policylistt_0',['PolicyListT',['../d3/d4a/classmimicpp_1_1_basic_expectation.html#af12ea9bb928ea78efeec1075533854a1',1,'mimicpp::BasicExpectation::PolicyListT'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a61ddae5a025434b5abbafa19252920f9',1,'mimicpp::BasicExpectationBuilder::PolicyListT']]]
+  ['lazyscopedsequence_0',['LazyScopedSequence',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga9efea600d953c01de2d99d7d144264e4',1,'mimicpp']]]
 ];

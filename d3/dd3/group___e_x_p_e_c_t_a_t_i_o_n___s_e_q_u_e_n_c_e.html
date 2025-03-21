@@ -115,6 +115,9 @@ Collaboration diagram for sequence:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">mimicpp::BasicScopedSequence&lt; Strategy &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A sequence type that verifies its owned expectations during destruction.  <a href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">mimicpp::LazySequence</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The lazy sequence interface.  <a href="../../db/d46/classmimicpp_1_1_lazy_sequence.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,6 +127,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:gaf9c4e7108a57906787965591f6064d82" id="r_gaf9c4e7108a57906787965591f6064d82"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf9c4e7108a57906787965591f6064d82">mimicpp::GreedyScopedSequence</a> = <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a>&lt;sequence::detail::GreedyStrategy{}&gt;</td></tr>
+<tr class="memdesc:gaf9c4e7108a57906787965591f6064d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">The scoped-sequence type with greedy strategy.  <br /></td></tr>
+<tr class="separator:gaf9c4e7108a57906787965591f6064d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9efea600d953c01de2d99d7d144264e4" id="r_ga9efea600d953c01de2d99d7d144264e4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9efea600d953c01de2d99d7d144264e4">mimicpp::LazyScopedSequence</a> = <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a>&lt;sequence::detail::LazyStrategy{}&gt;</td></tr>
+<tr class="memdesc:ga9efea600d953c01de2d99d7d144264e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The scoped-sequence type with lazy strategy.  <br /></td></tr>
+<tr class="separator:ga9efea600d953c01de2d99d7d144264e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf7c9e177bed083aa4c61b13b78d4be0f" id="r_gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf7c9e177bed083aa4c61b13b78d4be0f">mimicpp::ScopedSequence</a> = <a class="el" href="#ga9efea600d953c01de2d99d7d144264e4">LazyScopedSequence</a></td></tr>
+<tr class="memdesc:gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default scoped-sequence type (lazy strategy).  <br /></td></tr>
+<tr class="separator:gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf6777ae3a4ea46f945ad2e998885a07c" id="r_gaf6777ae3a4ea46f945ad2e998885a07c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> = <a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">LazySequence</a></td></tr>
 <tr class="memdesc:gaf6777ae3a4ea46f945ad2e998885a07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default sequence type (<a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html" title="The lazy sequence interface.">LazySequence</a>).  <br /></td></tr>
 <tr class="separator:gaf6777ae3a4ea46f945ad2e998885a07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -196,6 +208,18 @@ Functions</h2></td></tr>
 <div class="line">    mock(1337); <span class="comment">// matches (3), because it&#39;s &quot;younger&quot; than (2). So, the first element of the sequence got matched.</span></div>
 <div class="line">    mock(42);   <span class="comment">// matches (5). The sequence is now fulfilled.</span></div>
 <div class="line">    mock(1337); <span class="comment">// finally matches (2)</span></div>
+</div><!-- fragment --><p><code><a class="el" href="#gaf7c9e177bed083aa4c61b13b78d4be0f" title="The default scoped-sequence type (lazy strategy).">ScopedSequence</a></code> simplifies the setup of sequences. This is actually equivalent to the previously demonstrated <code><a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html" title="The lazy sequence interface.">LazySequence</a></code> example. </p><div class="fragment"><div class="line">    <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a>;</div>
+<div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void()&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_typedef" href="#gaf7c9e177bed083aa4c61b13b78d4be0f">mimicpp::ScopedSequence</a> sequence{};</div>
+<div class="line">    sequence += mock.expect_call() <span class="comment">// (1)</span></div>
+<div class="line">            and expect::at_most(1);</div>
+<div class="line">    sequence += mock.expect_call(); <span class="comment">// (2)</span></div>
+<div class="line"> </div>
+<div class="line">    mock(); <span class="comment">// matches (1)</span></div>
+<div class="line">    mock(); <span class="comment">// matches (2)</span></div>
 </div><!-- fragment --><p>It's totally fine to attach expectations to sequences, which are already queried for matches. Sequences do not have to be setup in one go.</p>
 <h1><a class="anchor" id="autotoc_md20"></a>
 Thread-Safety</h1>
@@ -237,6 +261,54 @@ A word on sequences with times</h1>
 <div class="line">    mock(); <span class="comment">// matches (2)</span></div>
 <div class="line">            <span class="comment">// no further call possible, because that would be out of sequence and will lead to an inapplicable match report!</span></div>
 </div><!-- fragment --> <h2 class="groupheader">Typedef Documentation</h2>
+<a id="gaf9c4e7108a57906787965591f6064d82" name="gaf9c4e7108a57906787965591f6064d82"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf9c4e7108a57906787965591f6064d82">&#9670;&#160;</a></span>GreedyScopedSequence</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#gaf9c4e7108a57906787965591f6064d82">mimicpp::GreedyScopedSequence</a> = <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a>&lt;sequence::detail::GreedyStrategy{}&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The scoped-sequence type with greedy strategy. </p>
+
+</div>
+</div>
+<a id="ga9efea600d953c01de2d99d7d144264e4" name="ga9efea600d953c01de2d99d7d144264e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9efea600d953c01de2d99d7d144264e4">&#9670;&#160;</a></span>LazyScopedSequence</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ga9efea600d953c01de2d99d7d144264e4">mimicpp::LazyScopedSequence</a> = <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a>&lt;sequence::detail::LazyStrategy{}&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The scoped-sequence type with lazy strategy. </p>
+
+</div>
+</div>
+<a id="gaf7c9e177bed083aa4c61b13b78d4be0f" name="gaf7c9e177bed083aa4c61b13b78d4be0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf7c9e177bed083aa4c61b13b78d4be0f">&#9670;&#160;</a></span>ScopedSequence</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#gaf7c9e177bed083aa4c61b13b78d4be0f">mimicpp::ScopedSequence</a> = <a class="el" href="#ga9efea600d953c01de2d99d7d144264e4">LazyScopedSequence</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The default scoped-sequence type (lazy strategy). </p>
+
+</div>
+</div>
 <a id="gaf6777ae3a4ea46f945ad2e998885a07c" name="gaf6777ae3a4ea46f945ad2e998885a07c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaf6777ae3a4ea46f945ad2e998885a07c">&#9670;&#160;</a></span>SequenceT</h2>
 
@@ -408,7 +480,7 @@ template&lt;typename FirstId, auto firstPriorityStrategy, typename SecondId, aut
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue Mar 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Mar 21 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

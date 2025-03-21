@@ -144,6 +144,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A sequence type that verifies its owned expectations during destruction.  <a href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/db5/structmimicpp_1_1call__convention__traits.html">call_convention_traits</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Primary template, purposely undefined.  <a href="../../d3/db5/structmimicpp_1_1call__convention__traits.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -605,6 +608,15 @@ Typedefs</h2></td></tr>
 <tr class="separator:afa212d98f2d4a7016c05d3e9171431c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b761dc4fb4f361e95dd3ec37da4a8a8" id="r_a6b761dc4fb4f361e95dd3ec37da4a8a8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b761dc4fb4f361e95dd3ec37da4a8a8">StringStreamT</a> = std::basic_ostringstream&lt;<a class="el" href="#a3cca43cdbdd561d88dddf4ceec9839fc">CharT</a>, <a class="el" href="#a460564a0d4038b990b5938ab0ab2b4ad">CharTraitsT</a>&gt;</td></tr>
 <tr class="separator:a6b761dc4fb4f361e95dd3ec37da4a8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf9c4e7108a57906787965591f6064d82" id="r_gaf9c4e7108a57906787965591f6064d82"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf9c4e7108a57906787965591f6064d82">GreedyScopedSequence</a> = <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a>&lt;sequence::detail::GreedyStrategy{}&gt;</td></tr>
+<tr class="memdesc:gaf9c4e7108a57906787965591f6064d82"><td class="mdescLeft">&#160;</td><td class="mdescRight">The scoped-sequence type with greedy strategy.  <br /></td></tr>
+<tr class="separator:gaf9c4e7108a57906787965591f6064d82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9efea600d953c01de2d99d7d144264e4" id="r_ga9efea600d953c01de2d99d7d144264e4"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga9efea600d953c01de2d99d7d144264e4">LazyScopedSequence</a> = <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a>&lt;sequence::detail::LazyStrategy{}&gt;</td></tr>
+<tr class="memdesc:ga9efea600d953c01de2d99d7d144264e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The scoped-sequence type with lazy strategy.  <br /></td></tr>
+<tr class="separator:ga9efea600d953c01de2d99d7d144264e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf7c9e177bed083aa4c61b13b78d4be0f" id="r_gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf7c9e177bed083aa4c61b13b78d4be0f">ScopedSequence</a> = <a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga9efea600d953c01de2d99d7d144264e4">LazyScopedSequence</a></td></tr>
+<tr class="memdesc:gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default scoped-sequence type (lazy strategy).  <br /></td></tr>
+<tr class="separator:gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf6777ae3a4ea46f945ad2e998885a07c" id="r_gaf6777ae3a4ea46f945ad2e998885a07c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf6777ae3a4ea46f945ad2e998885a07c">SequenceT</a> = <a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">LazySequence</a></td></tr>
 <tr class="memdesc:gaf6777ae3a4ea46f945ad2e998885a07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default sequence type (<a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html" title="The lazy sequence interface.">LazySequence</a>).  <br /></td></tr>
 <tr class="separator:gaf6777ae3a4ea46f945ad2e998885a07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -828,7 +840,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li>
-    <li class="footer">Generated on Tue Mar 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Mar 21 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
