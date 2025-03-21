@@ -48,6 +48,7 @@ target_link_libraries(${TARGET_NAME}
 
 target_precompile_headers(${TARGET_NAME}
     PRIVATE
+    "Catch2FallbackStringifier.hpp"
     <TestAssert.hpp>
     <catch2/catch_all.hpp>
     <catch2/trompeloeil.hpp>
