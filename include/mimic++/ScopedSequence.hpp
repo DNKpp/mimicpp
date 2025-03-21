@@ -14,9 +14,9 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
+#include <deque>
 #include <functional>
 #include <utility>
-#include <vector>
 
 namespace mimicpp::sequence::detail
 {
@@ -87,6 +87,8 @@ namespace mimicpp
      * the last created expectation (due to the stack’s order) would typically be reported.
      *
      * Nevertheless, all standard sequence rules also apply.
+     *
+     * \snippet Sequences.cpp scoped
      */
     template <auto Strategy>
     class BasicScopedSequence
@@ -105,9 +107,16 @@ namespace mimicpp
         BasicScopedSequence& operator=(BasicScopedSequence const&) = delete;
 
         /**
-         * \brief Defaulted, but possibly throwing, destructor.
+         * \brief Possibly throwing destructor, checking the owned expectations in order of construction.
          */
-        ~BasicScopedSequence() noexcept(false) = default;
+        ~BasicScopedSequence() noexcept(false)
+        {
+            auto expectations = std::exchange(m_Expectations, {});
+            while (!expectations.empty())
+            {
+                expectations.pop_front();
+            }
+        }
 
         /**
          * \brief Default default-constructor.
@@ -149,13 +158,13 @@ namespace mimicpp
          * and not every expectation that is currently queued in the sequence (i.e. by manually using `expect::in_sequence`).
          */
         [[nodiscard]]
-        std::vector<ScopedExpectation> const& expectations() const noexcept
+        std::deque<ScopedExpectation> const& expectations() const noexcept
         {
             return m_Expectations;
         }
 
     private:
-        std::vector<ScopedExpectation> m_Expectations{};
+        std::deque<ScopedExpectation> m_Expectations{};
     };
 
     /**
