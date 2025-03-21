@@ -13,6 +13,7 @@ add_executable(${TARGET_NAME}
     "Mock.cpp"
     "ObjectWatcher.cpp"
     "Sequence.cpp"
+    "ScopedSequence.cpp"
     "Stacktrace.cpp"
     "String.cpp"
     "TypeTraits.cpp"
