@@ -299,3 +299,58 @@ TEST_CASE(
             Catch::Matchers::RangeEquals(std::vector{"foo", "foo-bar", "foofoo"}));
     }
 }
+
+TEST_CASE(
+    "util::concat_arrays concatenates an arbitrary amount of arrays.",
+    "[util][util::concat_arrays]")
+{
+    SECTION("Single array is supported.")
+    {
+        constexpr std::array source{42, 1337};
+
+        constexpr auto result = util::concat_arrays(source);
+        STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
+
+        CHECK_THAT(
+            result,
+            Catch::Matchers::RangeEquals(source));
+    }
+
+    SECTION("Two arrays are supported.")
+    {
+        constexpr std::array first{42, 1337};
+        constexpr std::array second{-42, -1337, 42};
+
+        constexpr auto result = util::concat_arrays(first, second);
+        STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
+
+        CHECK_THAT(
+            result,
+            Catch::Matchers::RangeEquals(std::array{42, 1337, -42, -1337, 42}));
+    }
+
+    SECTION("Arbitrary amount of arrays are supported.")
+    {
+        constexpr std::array first{42, 1337};
+        constexpr std::array second{-42, -1337, 42};
+
+        constexpr auto result = util::concat_arrays(first, second, first);
+        STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
+
+        CHECK_THAT(
+            result,
+            Catch::Matchers::RangeEquals(std::array{42, 1337, -42, -1337, 42, 42, 1337}));
+    }
+
+    SECTION("Empty arrays are supported.")
+    {
+        constexpr std::array<int, 0> source{};
+
+        constexpr auto result = util::concat_arrays(source, source);
+        STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
+
+        CHECK_THAT(
+            result,
+            Catch::Matchers::IsEmpty());
+    }
+}
