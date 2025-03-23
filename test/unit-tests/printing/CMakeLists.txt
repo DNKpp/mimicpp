@@ -13,4 +13,5 @@ target_sources(${TARGET_NAME}
     "TypeScopeIterator.cpp"
     "TypePostProcessing.cpp"
     "TypePrinter.cpp"
+    "TypeNameLexer.cpp"
 )
