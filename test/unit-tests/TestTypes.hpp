@@ -456,9 +456,13 @@ public:
             && m_Value == std::get<Value>(other);
     }
 
+    [[nodiscard]]
     std::string describe() const override
     {
-        return std::string{"Variant state equals: "} + Catch::Detail::stringify(m_Value);
+        return std::string{"Variant state equals: "}
+             + mimicpp::print_type<Value>()
+             + ": "
+             + Catch::Detail::stringify(m_Value);
     }
 
 private:
