@@ -9,7 +9,7 @@ using namespace mimicpp;
 
 TEST_CASE(
     "util::partition_by on empty ranges has no effect.",
-    "[util][util::partition_by]")
+    "[util][util::algorithm]")
 {
     std::vector<std::string> target{};
     std::vector<int> control{};
@@ -28,7 +28,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::partition_by supports ranges with just one element.",
-    "[util][util::partition_by]")
+    "[util][util::algorithm]")
 {
     std::vector<std::string> target{"Hello, World!"};
     std::vector control{42};
@@ -59,7 +59,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::partition_by supports ranges with multiple elements.",
-    "[util][util::partition_by]")
+    "[util][util::algorithm]")
 {
     std::vector<std::string> target{"Test1", "Test2", "Test3"};
     std::vector control{1, 2, 3};
@@ -116,7 +116,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::find_closing_token returns end iterator, when no corresponding closing-token can be found.",
-    "[util][util::find_closing_token]")
+    "[util][util::algorithm]")
 {
     SECTION("When string is empty.")
     {
@@ -162,7 +162,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::find_closing_token returns the iterator to the closing-token.",
-    "[util][util::find_closing_token]")
+    "[util][util::algorithm]")
 {
     auto [expectedIndex, str] = GENERATE(
         (table<std::size_t, std::string_view>)({
@@ -181,7 +181,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::find_next_unwrapped_token returns a subrange to the next token.",
-    "[util][util::find_next_unwrapped_token]")
+    "[util][util::algorithm]")
 {
     constexpr std::array openingBrackets{'<', '(', '[', '{'};
     constexpr std::array closingBrackets{'>', ')', ']', '}'};
@@ -203,7 +203,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::find_next_unwrapped_token can handle tokens, which are part of either collection.",
-    "[util][util::find_next_unwrapped_token]")
+    "[util][util::algorithm]")
 {
     constexpr std::array openingBrackets{'<', '(', '[', '{'};
     constexpr std::array closingBrackets{'>', ')', ']', '}'};
@@ -229,7 +229,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::find_next_unwrapped_token returns {end, end}, if no next unwrapped token exists.",
-    "[util][util::find_next_unwrapped_token]")
+    "[util][util::algorithm]")
 {
     constexpr std::array openingBrackets{'<', '(', '[', '{'};
     constexpr std::array closingBrackets{'>', ')', ']', '}'};
@@ -251,7 +251,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::prefix_range returns the subrange to the elements, which have the given prefix.",
-    "[util][util::prefix_range]")
+    "[util][util::algorithm]")
 {
     SECTION("Empty collection is supported.")
     {
@@ -302,7 +302,7 @@ TEST_CASE(
 
 TEST_CASE(
     "util::concat_arrays concatenates an arbitrary amount of arrays.",
-    "[util][util::concat_arrays]")
+    "[util][util::algorithm]")
 {
     SECTION("Single array is supported.")
     {
@@ -352,5 +352,70 @@ TEST_CASE(
         CHECK_THAT(
             result,
             Catch::Matchers::IsEmpty());
+    }
+}
+
+TEST_CASE(
+    "util::binary_find finds the required element in the container.",
+    "[util][util::algorithm]")
+{
+    SECTION("When container contains just a single element.")
+    {
+        std::vector const collection = {42};
+
+        auto const result = util::binary_find(collection, 42);
+
+        CHECK(result == collection.cbegin());
+    }
+
+    SECTION("When value is first element.")
+    {
+        std::vector const collection = {42, 1337, 1338};
+
+        auto const result = util::binary_find(collection, 42);
+
+        CHECK(result == collection.cbegin());
+    }
+
+    SECTION("When value is last element.")
+    {
+        std::vector const collection = {42, 1337, 1338};
+
+        auto const result = util::binary_find(collection, 1338);
+
+        CHECK(result == collection.cbegin() + 2);
+    }
+
+    SECTION("When value is somewhere in the middle.")
+    {
+        std::vector const collection = {42, 1337, 1338};
+
+        auto const result = util::binary_find(collection, 1337);
+
+        CHECK(result == collection.cbegin() + 1);
+    }
+}
+
+TEST_CASE(
+    "util::binary_find returns end-iterator, when element is not contained.",
+    "[util][util::algorithm]")
+{
+    SECTION("When container is empty.")
+    {
+        std::vector<int> const collection{};
+
+        auto const result = util::binary_find(collection, 42);
+
+        CHECK(result == collection.cend());
+    }
+
+    SECTION("When container is not empty, but value is not contained.")
+    {
+        std::vector const collection = {42, 1337, 1338};
+        auto const value = GENERATE(-1, 0, 43, 1336, 1339);
+
+        auto const result = util::binary_find(collection, value);
+
+        CHECK(result == collection.cend());
     }
 }
