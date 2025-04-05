@@ -42,55 +42,6 @@ namespace mimicpp::printing::type::lexing
         return static_cast<bool>(std::isxdigit(static_cast<unsigned char>(c)));
     };
 
-    struct space
-    {
-        [[nodiscard]]
-        bool operator==(space const&) const = default;
-    };
-
-    struct keyword
-    {
-        StringViewT content;
-
-        [[nodiscard]]
-        bool operator==(keyword const&) const = default;
-    };
-
-    struct operator_or_punctuator
-    {
-        StringViewT content;
-
-        [[nodiscard]]
-        bool operator==(operator_or_punctuator const&) const = default;
-    };
-
-    struct identifier
-    {
-        StringViewT content;
-
-        [[nodiscard]]
-        bool operator==(identifier const&) const = default;
-    };
-
-    struct end
-    {
-        [[nodiscard]]
-        bool operator==(end const&) const = default;
-    };
-
-    using token_class = std::variant<
-        end,
-        space,
-        keyword,
-        operator_or_punctuator,
-        identifier>;
-
-    struct token
-    {
-        StringViewT content;
-        token_class classification;
-    };
-
     namespace texts
     {
         // just list the noteworthy ones here
@@ -102,7 +53,7 @@ namespace mimicpp::printing::type::lexing
         constexpr std::array assignment = std::to_array<StringViewT>({"=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="});
         constexpr std::array incOrDec = std::to_array<StringViewT>({"++", "--"});
         constexpr std::array arithmetic = std::to_array<StringViewT>({"+", "-", "*", "/", "%"});
-        constexpr std::array bitArithmetic = std::to_array<StringViewT>({"~", "&", "|", "^"});
+        constexpr std::array bitArithmetic = std::to_array<StringViewT>({"~", "&", "|", "^", "<<", ">>"});
         constexpr std::array logical = std::to_array<StringViewT>({"!", "&&", "||"});
         constexpr std::array access = std::to_array<StringViewT>({".", ".*", "->", "->*"});
         constexpr std::array specialAngles = std::to_array<StringViewT>({"<:", ":>", "<%", "%>"});
@@ -140,6 +91,95 @@ namespace mimicpp::printing::type::lexing
 
             return collection;
         });
+
+    struct space
+    {
+        [[nodiscard]]
+        bool operator==(space const&) const = default;
+    };
+
+    struct keyword
+    {
+    public:
+        static constexpr auto& textCollection = keywordCollection;
+
+        [[nodiscard]]
+        explicit constexpr keyword(StringViewT const& text) noexcept
+            : keyword{
+                  std::ranges::distance(
+                      textCollection.cbegin(),
+                      util::binary_find(textCollection, text))}
+        {
+        }
+
+        [[nodiscard]]
+        explicit constexpr keyword(std::ptrdiff_t const keywordIndex) noexcept
+            : m_KeywordIndex{keywordIndex}
+        {
+            MIMICPP_ASSERT(0 <= m_KeywordIndex && m_KeywordIndex < std::ranges::ssize(textCollection), "Invalid keyword.");
+        }
+
+        [[nodiscard]]
+        bool operator==(keyword const&) const = default;
+
+    private:
+        std::ptrdiff_t m_KeywordIndex;
+    };
+
+    struct operator_or_punctuator
+    {
+    public:
+        static constexpr auto& textCollection = operatorOrPunctuatorCollection;
+
+        [[nodiscard]]
+        explicit constexpr operator_or_punctuator(StringViewT const& text) noexcept
+            : operator_or_punctuator{
+                  std::ranges::distance(
+                      textCollection.cbegin(),
+                      util::binary_find(textCollection, text))}
+        {
+        }
+
+        [[nodiscard]]
+        explicit constexpr operator_or_punctuator(std::ptrdiff_t const textIndex) noexcept
+            : m_TextIndex{textIndex}
+        {
+            MIMICPP_ASSERT(0 <= m_TextIndex && m_TextIndex < std::ranges::ssize(textCollection), "Invalid operator or punctuator.");
+        }
+
+        [[nodiscard]]
+        bool operator==(operator_or_punctuator const&) const = default;
+
+    private:
+        std::ptrdiff_t m_TextIndex;
+    };
+
+    struct identifier
+    {
+        StringViewT content;
+
+        [[nodiscard]]
+        bool operator==(identifier const&) const = default;
+    };
+
+    struct end
+    {
+        [[nodiscard]]
+        bool operator==(end const&) const = default;
+    };
+
+    using token_class = std::variant<
+        end,
+        space,
+        keyword,
+        operator_or_punctuator,
+        identifier>;
+
+    struct token
+    {
+        StringViewT content;
+        token_class classification;
+    };
 
     class NameLexer
     {
@@ -199,19 +239,17 @@ namespace mimicpp::printing::type::lexing
                     operatorOrPunctuatorCollection,
                     m_Text.substr(0u, 1u)))
             {
-                StringViewT const content = next_as_op_or_punctuator(options);
-                return token{
-                    .content = content,
-                    .classification = operator_or_punctuator{.content = content}};
+                return next_as_op_or_punctuator(options);
             }
 
             StringViewT const content = next_as_identifier();
             // As we do not perform any prefix-checks, we need to check now whether the token actually denotes a keyword.
-            if (std::ranges::binary_search(keywordCollection, content))
+            if (auto const iter = util::binary_find(keywordCollection, content);
+                iter != keywordCollection.cend())
             {
                 return token{
                     .content = content,
-                    .classification = keyword{.content = content}};
+                    .classification = keyword{std::ranges::distance(keywordCollection.begin(), iter)}};
             }
 
             return token{
@@ -234,7 +272,7 @@ namespace mimicpp::printing::type::lexing
          * \details Performs longest-prefix matching.
          */
         [[nodiscard]]
-        constexpr StringViewT next_as_op_or_punctuator(std::span<StringViewT const> options) noexcept
+        constexpr token next_as_op_or_punctuator(std::span<StringViewT const> options) noexcept
         {
             MIMICPP_ASSERT(m_Text.substr(0u, 1u) == options.front(), "Assumption does not hold.");
 
@@ -267,10 +305,13 @@ namespace mimicpp::printing::type::lexing
             MIMICPP_ASSERT(!options.empty(), "Invalid state.");
             MIMICPP_ASSERT(lastMatch, "Invalid state.");
 
+            auto const index = std::ranges::distance(operatorOrPunctuatorCollection.data(), lastMatch);
             StringViewT const content{m_Text.substr(0u, lastMatch->size())};
             m_Text.remove_prefix(lastMatch->size());
 
-            return content;
+            return token{
+                .content = content,
+                .classification = operator_or_punctuator{index}};
         }
 
         /**
