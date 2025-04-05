@@ -44,8 +44,6 @@ namespace mimicpp::printing::type::lexing
 
     struct space
     {
-        StringViewT content;
-
         [[nodiscard]]
         bool operator==(space const&) const = default;
     };
@@ -56,22 +54,6 @@ namespace mimicpp::printing::type::lexing
 
         [[nodiscard]]
         bool operator==(keyword const&) const = default;
-    };
-
-    struct comma
-    {
-        StringViewT content;
-
-        [[nodiscard]]
-        bool operator==(comma const&) const = default;
-    };
-
-    struct scope_resolution
-    {
-        StringViewT content;
-
-        [[nodiscard]]
-        bool operator==(scope_resolution const&) const = default;
     };
 
     struct operator_or_punctuator
@@ -96,14 +78,18 @@ namespace mimicpp::printing::type::lexing
         bool operator==(end const&) const = default;
     };
 
-    using token = std::variant<
+    using token_class = std::variant<
         end,
         space,
         keyword,
-        comma,
-        scope_resolution,
         operator_or_punctuator,
         identifier>;
+
+    struct token
+    {
+        StringViewT content;
+        token_class classification;
+    };
 
     namespace texts
     {
@@ -186,7 +172,10 @@ namespace mimicpp::printing::type::lexing
         {
             if (m_Text.empty())
             {
-                return end{};
+                return token{
+                    .content = {m_Text.cend(), m_Text.cend()},
+                    .classification = end{}
+                };
             }
 
             if (is_space(m_Text.front()))
@@ -195,10 +184,12 @@ namespace mimicpp::printing::type::lexing
                 // carry no meaningful semantic value beyond delimitation.
                 // Although single spaces may sometimes influence the result and sometimes not,
                 // complicating the overall process, we filter out all non-single whitespace characters here.
-                if (auto const token = next_as_space();
-                    token.content == " ")
+                if (StringViewT const content = next_as_space();
+                    " " == content)
                 {
-                    return space{.content = token.content};
+                    return token{
+                        .content = content,
+                        .classification = space{}};
                 }
 
                 return find_next();
@@ -208,40 +199,34 @@ namespace mimicpp::printing::type::lexing
                     operatorOrPunctuatorCollection,
                     m_Text.substr(0u, 1u)))
             {
-                auto const token = next_as_op_or_punctuator(options);
-                if (auto const content = token.content;
-                    content == ",")
-                {
-                    return comma{.content = content};
-                }
-                else if (content == "::")
-                {
-                    return scope_resolution{.content = content};
-                }
-
-                return token;
+                StringViewT const content = next_as_op_or_punctuator(options);
+                return token{
+                    .content = content,
+                    .classification = operator_or_punctuator{.content = content}};
             }
 
-            auto const token = next_as_identifier();
+            StringViewT const content = next_as_identifier();
             // As we do not perform any prefix-checks, we need to check now whether the token actually denotes a keyword.
-            if (std::ranges::binary_search(keywordCollection, token.content))
+            if (std::ranges::binary_search(keywordCollection, content))
             {
-                return keyword{.content = token.content};
+                return token{
+                    .content = content,
+                    .classification = keyword{.content = content}};
             }
 
-            return token;
+            return token{
+                .content = content,
+                .classification = identifier{.content = content}};
         }
 
         [[nodiscard]]
-        constexpr space next_as_space() noexcept
+        constexpr StringViewT next_as_space() noexcept
         {
             auto const end = std::ranges::find_if_not(m_Text.cbegin() + 1, m_Text.cend(), is_space);
-            space const token{
-                .content = {m_Text.cbegin(), end}
-            };
+            StringViewT const content{m_Text.cbegin(), end};
             m_Text = StringViewT{end, m_Text.cend()};
 
-            return token;
+            return content;
         }
 
         /**
@@ -249,7 +234,7 @@ namespace mimicpp::printing::type::lexing
          * \details Performs longest-prefix matching.
          */
         [[nodiscard]]
-        constexpr operator_or_punctuator next_as_op_or_punctuator(std::span<StringViewT const> options) noexcept
+        constexpr StringViewT next_as_op_or_punctuator(std::span<StringViewT const> options) noexcept
         {
             MIMICPP_ASSERT(m_Text.substr(0u, 1u) == options.front(), "Assumption does not hold.");
 
@@ -282,10 +267,10 @@ namespace mimicpp::printing::type::lexing
             MIMICPP_ASSERT(!options.empty(), "Invalid state.");
             MIMICPP_ASSERT(lastMatch, "Invalid state.");
 
-            operator_or_punctuator const token{.content = m_Text.substr(0u, lastMatch->size())};
+            StringViewT const content{m_Text.substr(0u, lastMatch->size())};
             m_Text.remove_prefix(lastMatch->size());
 
-            return token;
+            return content;
         }
 
         /**
@@ -299,7 +284,7 @@ namespace mimicpp::printing::type::lexing
          * here. Just treat everything else as identifier and let the parser do the rest.
          */
         [[nodiscard]]
-        constexpr identifier next_as_identifier() noexcept
+        constexpr StringViewT next_as_identifier() noexcept
         {
             auto const last = std::ranges::find_if_not(
                 m_Text.cbegin() + 1,
@@ -309,12 +294,10 @@ namespace mimicpp::printing::type::lexing
                         && !std::ranges::binary_search(operatorOrPunctuatorCollection, StringViewT{&c, 1u});
                 });
 
-            identifier const token{
-                .content = {m_Text.cbegin(), last}
-            };
+            StringViewT const content{m_Text.cbegin(), last};
             m_Text = {last, m_Text.cend()};
 
-            return token;
+            return content;
         }
     };
 }

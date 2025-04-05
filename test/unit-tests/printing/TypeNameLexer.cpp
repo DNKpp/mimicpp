@@ -11,11 +11,69 @@ using namespace mimicpp;
 
 namespace
 {
-    template <typename Value>
-    [[nodiscard]]
-    constexpr auto matches_token(Value token)
+    template <std::equality_comparable TokenClass>
+        requires std::constructible_from<printing::type::lexing::token, StringViewT, TokenClass>
+    class TokenMatcher final
+        : public Catch::Matchers::MatcherGenericBase
     {
-        return VariantEqualsMatcher<Value>{std::move(token)};
+    public:
+        [[nodiscard]]
+        explicit constexpr TokenMatcher(TokenClass tokenClass)
+            : m_ClassMatcher{std::move(tokenClass)}
+        {
+        }
+
+        [[nodiscard]]
+        explicit constexpr TokenMatcher(StringViewT content, TokenClass tokenClass)
+            : m_ClassMatcher{std::move(tokenClass)},
+              m_Content{std::move(content)}
+        {
+        }
+
+        [[nodiscard]]
+        constexpr bool match(printing::type::lexing::token const& token) const
+        {
+            return m_ClassMatcher.match(token.classification)
+                && (!m_Content || token.content == m_Content.value());
+        }
+
+        [[nodiscard]]
+        std::string describe() const override
+        {
+            std::string description = std::string{"Lexing-Token equals class: "}
+                                    + mimicpp::print_type<TokenClass>();
+            if (m_Content)
+            {
+                description += " and contains content: '";
+                description.append(*m_Content);
+                description += "'";
+            }
+
+            return description;
+        }
+
+    private:
+        VariantEqualsMatcher<TokenClass> m_ClassMatcher;
+        std::optional<StringViewT> m_Content{};
+    };
+
+    template <typename TokenClass>
+    [[nodiscard]]
+    constexpr auto matches_class(TokenClass token)
+    {
+        return TokenMatcher<TokenClass>{std::move(token)};
+    }
+
+    template <typename TokenClass>
+    [[nodiscard]]
+    constexpr auto matches_token(StringViewT const& content, TokenClass token)
+    {
+        return TokenMatcher<TokenClass>{content, std::move(token)};
+    }
+
+    constexpr auto matches_end_token()
+    {
+        return matches_token("", printing::type::lexing::end{});
     }
 }
 
@@ -30,31 +88,30 @@ TEST_CASE(
         NameLexer lexer{""};
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Single spaces are detected.")
     {
-        auto const expectedToken = matches_token(space{" "});
         NameLexer lexer{" "};
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            expectedToken);
+            matches_token(" ", space{}));
 
         CHECK_THAT(
             lexer.next(),
-            expectedToken);
+            matches_token(" ", space{}));
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Multiple spaces or any non-standard space is ignored.")
@@ -71,14 +128,14 @@ TEST_CASE(
         NameLexer lexer{input};
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
-    SECTION("Comma is detected.")
+    /*SECTION("Comma is detected.")
     {
         auto const expectedToken = matches_token(comma{","});
 
@@ -92,11 +149,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Scope-resolution is detected.")
@@ -113,19 +170,19 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
-    }
+            matches_end_token());
+    }*/
 
     SECTION("Common brace-likes are detected.")
     {
         StringViewT const input = GENERATE(from_range(texts::braceLikes));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -137,11 +194,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Common comparison-operators are detected.")
@@ -149,7 +206,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(texts::comparison));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -161,11 +218,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Common assignment-operators are detected.")
@@ -173,7 +230,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(texts::assignment));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -185,11 +242,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Common increment- and decrement-operators are detected.")
@@ -197,7 +254,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(texts::incOrDec));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -209,11 +266,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Common arithmetic-operators are detected.")
@@ -221,7 +278,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(texts::arithmetic));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -233,11 +290,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Common bit-arithmetic-operators are detected.")
@@ -245,7 +302,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(texts::bitArithmetic));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -257,11 +314,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Common logical-operators are detected.")
@@ -269,7 +326,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(texts::logical));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -281,11 +338,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Common access-operators are detected.")
@@ -293,7 +350,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(texts::access));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -305,11 +362,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Common special angles are detected.")
@@ -317,7 +374,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(texts::specialAngles));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(operator_or_punctuator{input});
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -329,11 +386,35 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
+    }
+
+    SECTION("All other operators or punctuators are detected.")
+    {
+        StringViewT const input = GENERATE(from_range(texts::rest));
+        CAPTURE(input);
+
+        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
+
+        NameLexer lexer{input};
+        CHECK_THAT(
+            std::as_const(lexer).peek(),
+            expectedToken);
+
+        CHECK_THAT(
+            lexer.next(),
+            expectedToken);
+        CHECK_THAT(
+            std::as_const(lexer).peek(),
+            matches_end_token());
+
+        CHECK_THAT(
+            lexer.next(),
+            matches_end_token());
     }
 
     SECTION("Keywords are detected.")
@@ -341,7 +422,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(keywordCollection));
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(keyword{input});
+        auto const expectedToken = matches_token(input, keyword{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -353,19 +434,19 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
-    SECTION("Arbitrary Keywords are detected.")
+    SECTION("Arbitrary identifiers are detected.")
     {
         StringViewT const input = GENERATE("foo", "_123", "foo456", "const_", "_const");
         CAPTURE(input);
 
-        auto const expectedToken = matches_token(identifier{input});
+        auto const expectedToken = matches_token(input, identifier{input});
 
         NameLexer lexer{input};
         CHECK_THAT(
@@ -377,11 +458,11 @@ TEST_CASE(
             expectedToken);
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 }
 
@@ -391,7 +472,7 @@ TEST_CASE(
 {
     using namespace printing::type::lexing;
 
-    SECTION("space + identifier.")
+    SECTION("tab + identifier.")
     {
         constexpr StringViewT input = "\ttest";
         CAPTURE(input);
@@ -399,18 +480,18 @@ TEST_CASE(
         NameLexer lexer{input};
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(identifier{"test"}));
+            matches_class(identifier{"test"}));
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(identifier{"test"}));
+            matches_class(identifier{"test"}));
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("Operator + operator.")
@@ -421,25 +502,25 @@ TEST_CASE(
         NameLexer lexer{input};
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(operator_or_punctuator{"++"}));
+            matches_class(operator_or_punctuator{"++"}));
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(operator_or_punctuator{"++"}));
+            matches_class(operator_or_punctuator{"++"}));
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(operator_or_punctuator{"--"}));
+            matches_class(operator_or_punctuator{"--"}));
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(operator_or_punctuator{"--"}));
+            matches_class(operator_or_punctuator{"--"}));
         CHECK_THAT(
             std::as_const(lexer).peek(),
-            matches_token(end{}));
+            matches_end_token());
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 
     SECTION("keyword + space + identifier + operator + operator + space + keyword + operator.")
@@ -448,13 +529,13 @@ TEST_CASE(
         CAPTURE(input);
 
         std::tuple const sequence = {
-            matches_token(keyword{"const"}),
-            matches_token(identifier{"foo123"}),
-            matches_token(operator_or_punctuator{"["}),
-            matches_token(operator_or_punctuator{"]"}),
-            matches_token(space{" "}),
-            matches_token(keyword{"volatile"}),
-            matches_token(operator_or_punctuator{"&&"})};
+            matches_class(keyword{"const"}),
+            matches_class(identifier{"foo123"}),
+            matches_class(operator_or_punctuator{"["}),
+            matches_class(operator_or_punctuator{"]"}),
+            matches_class(space{}),
+            matches_class(keyword{"volatile"}),
+            matches_class(operator_or_punctuator{"&&"})};
 
         NameLexer lexer{input};
 
@@ -477,6 +558,6 @@ TEST_CASE(
 
         CHECK_THAT(
             lexer.next(),
-            matches_token(end{}));
+            matches_end_token());
     }
 }
