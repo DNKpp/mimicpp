@@ -114,6 +114,8 @@ namespace mimicpp
             auto expectations = std::exchange(m_Expectations, {});
             while (!expectations.empty())
             {
+                // Prevent the `pop_front() noexcept` from raising an exception and thus terminating.
+                auto const expectation = std::move(expectations.front());
                 expectations.pop_front();
             }
         }
