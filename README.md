@@ -67,7 +67,6 @@ Quick access to **documentation, package managers, and community support**.
   * [Core Design](#core-design)
   * [Quick Demo](#quick-demo)
   * [Examples](#examples)
-  * [Portability](#portability)
 * [Features & Customizability](#features--customizability)
   * [Stringification](#stringification)
   * [Matchers](#matchers)
