@@ -8,6 +8,7 @@ target_sources(${TARGET_NAME}
     "ContainerTypePrinting.cpp"
     "Format.cpp"
     "FunctionTypePostProcessing.cpp"
+    "NameParser.cpp"
     "PathPrinter.cpp"
     "StatePrinter.cpp"
     "ScopeNavigator.cpp"

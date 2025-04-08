@@ -11,7 +11,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/type/NameLexer.hpp"
-#include "mimic++/utilities/Overloaded.hpp"
+#include "mimic++/utilities/Algorithm.hpp"
 
 #include <functional>
 #include <utility>
@@ -19,31 +19,14 @@
 
 namespace mimicpp::printing::type::parsing
 {
-    struct scope_resolution
+    enum class token : std::uint8_t
     {
-        [[nodiscard]]
-        bool operator==(scope_resolution const&) const = default;
+        scope,
+        scopeResolution,
+        prefixSpec,
+        arg,
+        open
     };
-
-    struct arg_seperator
-    {
-        [[nodiscard]]
-        bool operator==(arg_seperator const&) const = default;
-    };
-
-    struct identifier
-    {
-        bool isOperator{false};
-        StringViewT content{};
-
-        [[nodiscard]]
-        bool operator==(identifier const&) const = default;
-    };
-
-    using token = std::variant<
-        identifier,
-        arg_seperator,
-        scope_resolution>;
 
     template <typename T>
     concept parser_visitor = std::movable<T>
@@ -51,8 +34,16 @@ namespace mimicpp::printing::type::parsing
                                  visitor.begin();
                                  visitor.end();
 
+                                 visitor.begin_template();
+                                 visitor.end_template();
+
+                                 visitor.begin_function();
+                                 visitor.end_function();
+
                                  visitor.push_identifier(content);
                                  visitor.push_scope();
+                                 visitor.push_argument();
+                                 visitor.push_spec(content);
 
                                  visitor.begin_operator_identifier();
                                  visitor.end_operator_identifier();
@@ -82,13 +73,15 @@ namespace mimicpp::printing::type::parsing
                     next.classification);
             }
 
+            consume_prefix_spec_if_can();
             visitor().end();
         }
 
     private:
         Visitor m_Visitor;
         lexing::NameLexer m_Lexer;
-        std::stack<token> m_TokenStack{};
+        std::vector<lexing::keyword> m_PrefixSpecs{};
+        std::deque<token> m_TokenStack{};
 
         [[nodiscard]]
         constexpr auto& visitor() noexcept
@@ -101,30 +94,178 @@ namespace mimicpp::printing::type::parsing
             util::unreachable();
         }
 
-        constexpr void handle_lexer_token(lexing::keyword const& token)
-        {
-            if (constexpr lexing::keyword operatorToken{"operator"};
-                operatorToken == token)
-            {
-                handle_operator_token();
-            }
-        }
-
         static constexpr void handle_lexer_token([[maybe_unused]] lexing::space const& token) noexcept
         {
         }
 
-        constexpr void handle_lexer_token([[maybe_unused]] lexing::identifier const& token)
+        void reduce_as_scope()
         {
-            visitor().push_identifier(token.content);
+            if (!m_TokenStack.empty()
+                && token::scopeResolution == m_TokenStack.back())
+            {
+                m_TokenStack.pop_back();
+
+                if (!m_TokenStack.empty()
+                    && token::scope == m_TokenStack.back())
+                {
+                    m_TokenStack.pop_back();
+                }
+            }
+
+            m_TokenStack.emplace_back(token::scope);
         }
 
-        constexpr void handle_lexer_token([[maybe_unused]] lexing::operator_or_punctuator const& token)
+        void handle_lexer_token(lexing::identifier const& token)
         {
-            if (static constexpr lexing::operator_or_punctuator scopeResolution{"::"};
+            visitor().push_identifier(token.content);
+            reduce_as_scope();
+        }
+
+        constexpr void pop_until_open_token()
+        {
+            bool finished = false;
+            while (!finished)
+            {
+                MIMICPP_ASSERT(!m_TokenStack.empty(), "Stack already depleted.");
+
+                finished = token::open == m_TokenStack.back();
+                m_TokenStack.pop_back();
+            }
+        }
+
+        [[nodiscard]]
+        constexpr bool is_prefix_spec() const noexcept
+        {
+            return m_TokenStack.empty()
+                || token::scope != m_TokenStack.back();
+        }
+
+        void push_prefix_spec(lexing::keyword const& spec)
+        {
+            m_TokenStack.emplace_back(token::prefixSpec);
+            m_PrefixSpecs.emplace_back(spec);
+        }
+
+        void consume_prefix_spec_if_can()
+        {
+            if (m_TokenStack.size() < 2u
+                || token::scope != m_TokenStack.back())
+            {
+                return;
+            }
+
+            m_TokenStack.pop_back();
+
+            // Find all prefix specs and apply in correct order.
+            if (auto const iter = std::ranges::find_if_not(
+                    m_TokenStack | std::views::reverse,
+                    std::bind_front(std::equal_to{}, token::prefixSpec));
+                iter != m_TokenStack.crbegin())
+            {
+                auto const count = std::ranges::distance(m_TokenStack.crbegin(), iter);
+                MIMICPP_ASSERT(0 <= count && std::cmp_less_equal(count, m_PrefixSpecs.size()), "Out of sync.");
+
+                for (auto const& spec : m_PrefixSpecs
+                                            | std::views::reverse
+                                            | std::views::take(count)
+                                            | std::views::reverse)
+                {
+                    visitor().push_spec(spec.text());
+                }
+                m_PrefixSpecs.erase(m_PrefixSpecs.cend() - count, m_PrefixSpecs.cend());
+                m_TokenStack.erase(iter.base(), m_TokenStack.cend());
+            }
+
+            m_TokenStack.emplace_back(token::scope);
+        }
+
+        constexpr void reduce_as_arg()
+        {
+            consume_prefix_spec_if_can();
+
+            MIMICPP_ASSERT(!m_TokenStack.empty(), "Stack already depleted.");
+            MIMICPP_ASSERT(token::scope == m_TokenStack.back(), "Unexpected token.");
+
+            m_TokenStack.pop_back();
+            m_TokenStack.emplace_back(token::arg);
+        }
+
+        constexpr void handle_lexer_token(lexing::operator_or_punctuator const& token)
+        {
+            constexpr lexing::operator_or_punctuator pointer{"*"};
+            constexpr lexing::operator_or_punctuator lvalueRef{"&"};
+            constexpr lexing::operator_or_punctuator rvalueRef{"&&"};
+
+            if (constexpr lexing::operator_or_punctuator scopeResolution{"::"};
                 scopeResolution == token)
             {
                 visitor().push_scope();
+                m_TokenStack.emplace_back(token::scopeResolution);
+            }
+            else if (constexpr lexing::operator_or_punctuator templateBegin{"<"};
+                     templateBegin == token)
+            {
+                m_TokenStack.emplace_back(token::open);
+                visitor().begin_template();
+            }
+            else if (constexpr lexing::operator_or_punctuator templateEnd{">"};
+                     templateEnd == token)
+            {
+                consume_prefix_spec_if_can();
+                pop_until_open_token();
+                visitor().end_template();
+            }
+            else if (constexpr lexing::operator_or_punctuator functionBegin{"("};
+                     functionBegin == token)
+            {
+                m_TokenStack.emplace_back(token::open);
+                visitor().begin_function();
+            }
+            else if (constexpr lexing::operator_or_punctuator functionEnd{")"};
+                     functionEnd == token)
+            {
+                visitor().end_function();
+                pop_until_open_token();
+            }
+            else if (constexpr lexing::operator_or_punctuator commaSeparator{","};
+                     commaSeparator == token)
+            {
+                reduce_as_arg();
+                visitor().push_argument();
+            }
+            else if (std::ranges::contains(std::array{pointer, lvalueRef, rvalueRef}, token))
+            {
+                consume_prefix_spec_if_can();
+                visitor().push_spec(token.text());
+            }
+        }
+
+        constexpr void handle_lexer_token(lexing::keyword const& token)
+        {
+            constexpr lexing::keyword constKeyword{"const"};
+            constexpr lexing::keyword volatileKeyword{"volatile"};
+
+            if (constexpr lexing::keyword operatorKeyword{"operator"};
+                operatorKeyword == token)
+            {
+                handle_operator_token();
+            }
+            else if (constexpr lexing::keyword noexceptKeyword{"noexcept"};
+                     noexceptKeyword == token)
+            {
+                visitor().push_spec("noexcept");
+            }
+            else if (constKeyword == token || volatileKeyword == token)
+            {
+                if (is_prefix_spec())
+                {
+                    push_prefix_spec(token);
+                }
+                else
+                {
+                    consume_prefix_spec_if_can();
+                    visitor().push_spec(token.text());
+                }
             }
         }
 
@@ -150,16 +291,16 @@ namespace mimicpp::printing::type::parsing
                     visitor().push_identifier(content);
                 };
 
-                if (static constexpr lexing::operator_or_punctuator openingParens{"("};
+                if (constexpr lexing::operator_or_punctuator openingParens{"("};
                     openingParens == *operatorToken)
                 {
-                    static constexpr lexing::operator_or_punctuator closingOp{")"};
+                    constexpr lexing::operator_or_punctuator closingOp{")"};
                     finishMultiOpOperator(closingOp);
                 }
-                else if (static constexpr lexing::operator_or_punctuator openingSquareParens{"["};
+                else if (constexpr lexing::operator_or_punctuator openingSquareParens{"["};
                          openingSquareParens == *operatorToken)
                 {
-                    static constexpr lexing::operator_or_punctuator closingOp{"]"};
+                    constexpr lexing::operator_or_punctuator closingOp{"]"};
                     finishMultiOpOperator(closingOp);
                 }
                 else
@@ -168,6 +309,7 @@ namespace mimicpp::printing::type::parsing
                 }
 
                 visitor().end_operator_identifier();
+                reduce_as_scope();
             }
         }
     };

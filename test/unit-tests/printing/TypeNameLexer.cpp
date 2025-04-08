@@ -71,7 +71,8 @@ namespace
         return TokenMatcher<TokenClass>{content, std::move(token)};
     }
 
-    constexpr auto matches_end_token()
+    [[nodiscard]]
+    auto matches_end_token()
     {
         return matches_token("", printing::type::lexing::end{});
     }
@@ -134,48 +135,6 @@ TEST_CASE(
             lexer.next(),
             matches_end_token());
     }
-
-    /*SECTION("Comma is detected.")
-    {
-        auto const expectedToken = matches_token(comma{","});
-
-        NameLexer lexer{","};
-        CHECK_THAT(
-            std::as_const(lexer).peek(),
-            expectedToken);
-
-        CHECK_THAT(
-            lexer.next(),
-            expectedToken);
-        CHECK_THAT(
-            std::as_const(lexer).peek(),
-            matches_end_token());
-
-        CHECK_THAT(
-            lexer.next(),
-            matches_end_token());
-    }
-
-    SECTION("Scope-resolution is detected.")
-    {
-        auto const expectedToken = matches_token(scope_resolution{"::"});
-
-        NameLexer lexer{"::"};
-        CHECK_THAT(
-            std::as_const(lexer).peek(),
-            expectedToken);
-
-        CHECK_THAT(
-            lexer.next(),
-            expectedToken);
-        CHECK_THAT(
-            std::as_const(lexer).peek(),
-            matches_end_token());
-
-        CHECK_THAT(
-            lexer.next(),
-            matches_end_token());
-    }*/
 
     SECTION("Common brace-likes are detected.")
     {
