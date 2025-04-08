@@ -419,3 +419,35 @@ TEST_CASE(
         CHECK(result == collection.cend());
     }
 }
+
+TEST_CASE(
+    "util::contains determines, whether the specified value is contained.",
+    "[util][util::algorithm]")
+{
+    SECTION("When container is empty.")
+    {
+        std::vector<int> const collection{};
+
+        CHECK(!util::contains(collection, 42));
+    }
+
+    SECTION("When container contains just a single element.")
+    {
+        std::vector const collection = {42};
+
+        CHECK(util::contains(collection, 42));
+        CHECK(!util::contains(collection, 41));
+    }
+
+    SECTION("When container contains multiple elements.")
+    {
+        std::vector const collection = {42, 1337, 1338};
+
+        CHECK(util::contains(collection, 42));
+        CHECK(util::contains(collection, 1337));
+        CHECK(util::contains(collection, 1338));
+
+        CHECK(!util::contains(collection, 41));
+        CHECK(!util::contains(collection, 1339));
+    }
+}
