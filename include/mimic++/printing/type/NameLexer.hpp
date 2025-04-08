@@ -120,6 +120,12 @@ namespace mimicpp::printing::type::lexing
         }
 
         [[nodiscard]]
+        constexpr StringViewT text() const noexcept
+        {
+            return textCollection[m_KeywordIndex];
+        }
+
+        [[nodiscard]]
         bool operator==(keyword const&) const = default;
 
     private:
@@ -145,6 +151,12 @@ namespace mimicpp::printing::type::lexing
             : m_TextIndex{textIndex}
         {
             MIMICPP_ASSERT(0 <= m_TextIndex && m_TextIndex < std::ranges::ssize(textCollection), "Invalid operator or punctuator.");
+        }
+
+        [[nodiscard]]
+        constexpr StringViewT text() const noexcept
+        {
+            return textCollection[m_TextIndex];
         }
 
         [[nodiscard]]
