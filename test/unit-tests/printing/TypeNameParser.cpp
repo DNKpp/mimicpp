@@ -20,8 +20,10 @@ namespace
         Mock<void()> end_template{{.name = "VisitorMock::end_template"}};
 
         Mock<void()> end_return_type{{.name = "VisitorMock::end_return_type"}};
+
         Mock<void()> open_parenthesis{{.name = "VisitorMock::open_parenthesis"}};
         Mock<void()> end_function{{.name = "VisitorMock::end_function"}};
+        Mock<void()> end_function_ptr{{.name = "VisitorMock::end_function_ptr"}};
 
         Mock<void(StringViewT)> push_spec{{.name = "VisitorMock::push_spec"}};
 
@@ -423,10 +425,162 @@ TEST_CASE(
 
     sequence += visitor.begin.expect_call();
 
-    SECTION("When function pointer with return type is given.")
+    SECTION("When function pointer without arguments is given.")
     {
         StringT const input = "const std::string* volatile& (*)()";
         CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.push_spec.expect_call("volatile");
+        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.end_function_ptr.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When noexcept function pointer without arguments is given.")
+    {
+        StringT const input = "void (*)()noexcept";
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.end_function_ptr.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.push_spec.expect_call("noexcept");
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function pointer-ref without arguments is given.")
+    {
+        StringT const input = "void (*&)()noexcept";
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.end_function_ptr.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.push_spec.expect_call("noexcept");
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function pointer with arguments is given.")
+    {
+        StringT const input = "void (*)(const std::string&&, const int)";
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.end_function_ptr.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+
+        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.push_spec.expect_call("&&");
+        sequence += visitor.push_argument.expect_call();
+
+        sequence += visitor.push_identifier.expect_call("int");
+        sequence += visitor.push_spec.expect_call("const");
+
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When member function pointer without arguments is given.")
+    {
+        StringT const input = "void (foo::bar::*)()";
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_identifier.expect_call("bar");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.end_function_ptr.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When member function pointer with qualifications is given.")
+    {
+        StringT const spec = GENERATE("const", "volatile", "noexcept", "&", "&&");
+        StringT const input = "void (foo::bar::*)()" + spec;
+        CAPTURE(input, spec);
+
+        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_identifier.expect_call("bar");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.end_function_ptr.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.push_spec.expect_call(spec);
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
     }
 }
 

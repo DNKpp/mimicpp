@@ -39,6 +39,7 @@ namespace mimicpp::printing::type::parsing
 
                                  visitor.open_parenthesis();
                                  visitor.end_function();
+                                 visitor.end_function_ptr();
 
                                  visitor.push_identifier(content);
                                  visitor.push_scope();
@@ -248,9 +249,21 @@ namespace mimicpp::printing::type::parsing
             else if (constexpr lexing::operator_or_punctuator functionEnd{")"};
                      functionEnd == token)
             {
-                consume_prefix_spec_if_can();
-                pop_until_open_token();
-                visitor().end_function();
+                // `)(` looks like a function pointer.
+                if (auto const* nextToken = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                    nextToken
+                    && functionBegin == *nextToken)
+                {
+                    pop_until_open_token();
+                    m_TokenStack.emplace_back(token::scope);
+                    visitor().end_function_ptr();
+                }
+                else
+                {
+                    consume_prefix_spec_if_can();
+                    pop_until_open_token();
+                    visitor().end_function();
+                }
             }
             else if (constexpr lexing::operator_or_punctuator commaSeparator{","};
                      commaSeparator == token)
