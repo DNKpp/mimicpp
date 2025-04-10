@@ -19,8 +19,10 @@ namespace
         Mock<void()> begin_template{{.name = "VisitorMock::begin_template"}};
         Mock<void()> end_template{{.name = "VisitorMock::end_template"}};
 
+        Mock<void()> end_return_type{{.name = "VisitorMock::end_return_type"}};
         Mock<void()> begin_function{{.name = "VisitorMock::begin_function"}};
         Mock<void()> end_function{{.name = "VisitorMock::end_function"}};
+
         Mock<void(StringViewT)> push_spec{{.name = "VisitorMock::push_spec"}};
 
         Mock<void(StringViewT)> push_identifier{{.name = "VisitorMock::push_identifier"}};
@@ -253,7 +255,163 @@ TEST_CASE(
     "parsing::NameParser detects functions.",
     "[print][print::type]")
 {
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
 
+    sequence += visitor.begin.expect_call();
+
+    SECTION("When function identifier with 0 args but without return type is given.")
+    {
+        StringViewT const input{"foo()"};
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with 0 args and return type is given.")
+    {
+        StringViewT const input{"void foo()"};
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with single arg and return type is given.")
+    {
+        StringViewT const input{"float foo(const std::string)"};
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("float");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.push_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with multiple args and return type is given.")
+    {
+        StringViewT const input{"float foo(const std::string&&, const int)"};
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("float");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.push_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.push_spec.expect_call("&&");
+        sequence += visitor.push_argument.expect_call();
+
+        sequence += visitor.push_identifier.expect_call("int");
+        sequence += visitor.push_spec.expect_call("const");
+
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with return type and specs is given.")
+    {
+        StringT const spec = GENERATE("const", "volatile", "noexcept", "&", "&&");
+        StringT const input = "float foo()" + spec;
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("float");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.push_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.push_spec.expect_call(spec);
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with more complex return type is given.")
+    {
+        StringT const input = "const std::string* volatile& foo()";
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.push_spec.expect_call("volatile");
+        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.push_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function type is given.")
+    {
+        StringT const input = "const std::string* volatile& ()";
+        CAPTURE(input);
+
+        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.push_scope.expect_call();
+        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.push_spec.expect_call("volatile");
+        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
 }
 
 TEST_CASE(

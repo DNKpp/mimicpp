@@ -94,21 +94,45 @@ namespace mimicpp::printing::type::parsing
             util::unreachable();
         }
 
-        static constexpr void handle_lexer_token([[maybe_unused]] lexing::space const& token) noexcept
+        constexpr void handle_lexer_token([[maybe_unused]] lexing::space const& token) noexcept
         {
+            // Function types are given in form `ret ()` (note the whitespace).
+            // That's the only assumption we have when distinguishing `foo()`.
+            if (!m_TokenStack.empty()
+                && token::scope == m_TokenStack.back())
+            {
+                constexpr lexing::operator_or_punctuator openParensToken{"("};
+                if (auto const* nextToken = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                    nextToken
+                    && openParensToken == *nextToken)
+                {
+                    consume_prefix_spec_if_can();
+                    m_TokenStack.pop_back();
+                    visitor().end_return_type();
+                }
+            }
         }
 
         void reduce_as_scope()
         {
-            if (!m_TokenStack.empty()
-                && token::scopeResolution == m_TokenStack.back())
+            if (!m_TokenStack.empty())
             {
-                m_TokenStack.pop_back();
-
-                if (!m_TokenStack.empty()
-                    && token::scope == m_TokenStack.back())
+                if (token::scopeResolution == m_TokenStack.back())
                 {
                     m_TokenStack.pop_back();
+
+                    if (!m_TokenStack.empty()
+                        && token::scope == m_TokenStack.back())
+                    {
+                        m_TokenStack.pop_back();
+                    }
+                }
+                // The only reason, why there may be two consecutive scopes is, that it's a function with return type.
+                else if (token::scope == m_TokenStack.back())
+                {
+                    consume_prefix_spec_if_can();
+                    m_TokenStack.pop_back();
+                    visitor().end_return_type();
                 }
             }
 
@@ -117,8 +141,8 @@ namespace mimicpp::printing::type::parsing
 
         void handle_lexer_token(lexing::identifier const& token)
         {
-            visitor().push_identifier(token.content);
             reduce_as_scope();
+            visitor().push_identifier(token.content);
         }
 
         constexpr void pop_until_open_token()
@@ -224,8 +248,9 @@ namespace mimicpp::printing::type::parsing
             else if (constexpr lexing::operator_or_punctuator functionEnd{")"};
                      functionEnd == token)
             {
-                visitor().end_function();
+                consume_prefix_spec_if_can();
                 pop_until_open_token();
+                visitor().end_function();
             }
             else if (constexpr lexing::operator_or_punctuator commaSeparator{","};
                      commaSeparator == token)
