@@ -20,7 +20,7 @@ namespace
         Mock<void()> end_template{{.name = "VisitorMock::end_template"}};
 
         Mock<void()> end_return_type{{.name = "VisitorMock::end_return_type"}};
-        Mock<void()> begin_function{{.name = "VisitorMock::begin_function"}};
+        Mock<void()> open_parenthesis{{.name = "VisitorMock::open_parenthesis"}};
         Mock<void()> end_function{{.name = "VisitorMock::end_function"}};
 
         Mock<void(StringViewT)> push_spec{{.name = "VisitorMock::push_spec"}};
@@ -266,7 +266,7 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.push_identifier.expect_call("foo");
-        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
 
@@ -283,7 +283,7 @@ TEST_CASE(
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.push_identifier.expect_call("foo");
-        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
 
@@ -301,7 +301,7 @@ TEST_CASE(
 
         sequence += visitor.push_identifier.expect_call("foo");
 
-        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
@@ -324,7 +324,7 @@ TEST_CASE(
 
         sequence += visitor.push_identifier.expect_call("foo");
 
-        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
@@ -354,7 +354,7 @@ TEST_CASE(
 
         sequence += visitor.push_identifier.expect_call("foo");
 
-        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
 
         sequence += visitor.push_spec.expect_call(spec);
@@ -381,7 +381,7 @@ TEST_CASE(
 
         sequence += visitor.push_identifier.expect_call("foo");
 
-        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
 
         sequence += visitor.end.expect_call();
@@ -404,13 +404,29 @@ TEST_CASE(
         sequence += visitor.push_spec.expect_call("&");
         sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
 
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser();
+    }
+}
+
+TEST_CASE(
+    "parsing::NameParser detects function pointers.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+
+    SECTION("When function pointer with return type is given.")
+    {
+        StringT const input = "const std::string* volatile& (*)()";
+        CAPTURE(input);
     }
 }
 

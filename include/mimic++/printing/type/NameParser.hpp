@@ -37,7 +37,7 @@ namespace mimicpp::printing::type::parsing
                                  visitor.begin_template();
                                  visitor.end_template();
 
-                                 visitor.begin_function();
+                                 visitor.open_parenthesis();
                                  visitor.end_function();
 
                                  visitor.push_identifier(content);
@@ -97,7 +97,7 @@ namespace mimicpp::printing::type::parsing
         constexpr void handle_lexer_token([[maybe_unused]] lexing::space const& token) noexcept
         {
             // Function types are given in form `ret ()` (note the whitespace).
-            // That's the only assumption we have when distinguishing `foo()`.
+            // That's the only assumption we have when distinguishing from `foo()`.
             if (!m_TokenStack.empty()
                 && token::scope == m_TokenStack.back())
             {
@@ -243,7 +243,7 @@ namespace mimicpp::printing::type::parsing
                      functionBegin == token)
             {
                 m_TokenStack.emplace_back(token::open);
-                visitor().begin_function();
+                visitor().open_parenthesis();
             }
             else if (constexpr lexing::operator_or_punctuator functionEnd{")"};
                      functionEnd == token)
