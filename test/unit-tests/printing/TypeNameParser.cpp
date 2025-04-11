@@ -886,12 +886,12 @@ TEST_CASE(
 
     SECTION("When deeply nested function local type is given.")
     {
-        constexpr StringViewT input{"foo(int volatile, std::string const&) const &&::bar(std::string const&, int volatile) noexcept::my_type"};
+        constexpr StringViewT input{"foo<int volatile, std::string const&>() const &&::bar(std::string const&, int volatile) noexcept::my_type"};
         CAPTURE(input);
 
         sequence += visitor.add_identifier.expect_call("foo");
 
-        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.begin_template.expect_call();
 
         sequence += visitor.add_identifier.expect_call("int");
         sequence += visitor.add_volatile.expect_call();
@@ -903,6 +903,9 @@ TEST_CASE(
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_lvalue_ref.expect_call();
 
+        sequence += visitor.end_template.expect_call();
+
+        sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_rvalue_ref.expect_call();
