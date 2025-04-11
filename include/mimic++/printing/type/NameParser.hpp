@@ -67,7 +67,7 @@ namespace mimicpp::printing::type::parsing
         {
             MIMICPP_ASSERT(1u == m_Specs.size(), "Out of sync.");
 
-            finalized_current_specs();
+            finalize_current_specs();
             visitor().end();
         }
 
@@ -107,7 +107,7 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void add_ptr()
         {
-            finalized_current_specs();
+            finalize_current_specs();
             m_Specs.emplace();
             m_IsPrefixMode = false;
 
@@ -139,7 +139,7 @@ namespace mimicpp::printing::type::parsing
             m_Specs.emplace(
                 specs{},
                 std::exchange(m_Specs.top().second, {}));
-            finalized_current_specs();
+            finalize_current_specs();
             m_IsPrefixMode = false;
 
             visitor().add_scope();
@@ -147,7 +147,7 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void add_argument()
         {
-            finalized_current_specs();
+            finalize_current_specs();
             m_IsPrefixMode = true;
             m_Specs.emplace();
 
@@ -164,7 +164,7 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void end_template()
         {
-            finalized_current_specs();
+            finalize_current_specs();
             m_IsPrefixMode = false;
 
             visitor().end_template();
@@ -172,7 +172,7 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void end_return_type()
         {
-            finalized_current_specs();
+            finalize_current_specs();
             m_Specs.emplace();
 
             visitor().end_return_type();
@@ -188,7 +188,7 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void end_function()
         {
-            finalized_current_specs();
+            finalize_current_specs();
             m_IsPrefixMode = false;
 
             visitor().end_function();
@@ -196,7 +196,7 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void end_function_ptr()
         {
-            finalized_current_specs();
+            finalize_current_specs();
             m_IsPrefixMode = false;
 
             visitor().end_function_ptr();
@@ -246,7 +246,7 @@ namespace mimicpp::printing::type::parsing
             return static_cast<std::unwrap_reference_t<Visitor>&>(m_Visitor);
         }
 
-        void finalized_current_specs()
+        void finalize_current_specs()
         {
             MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
 
