@@ -18,14 +18,6 @@
 
 namespace mimicpp::printing::type::parsing
 {
-    enum class token : std::uint8_t
-    {
-        scope,
-        scopeResolution,
-        arg,
-        open
-    };
-
     template <typename T>
     concept parser_visitor = std::movable<T>
                           && requires(std::unwrap_reference_t<T> visitor, StringViewT content) {
@@ -240,6 +232,13 @@ namespace mimicpp::printing::type::parsing
         }
     };
 
+    enum class token : std::uint8_t
+    {
+        name,
+        scopeResolution,
+        open
+    };
+
     template <parser_visitor Visitor>
     class NameParser
     {
@@ -288,7 +287,7 @@ namespace mimicpp::printing::type::parsing
             // Function types are given in form `ret ()` (note the whitespace).
             // That's the only assumption we have when distinguishing from `foo()`.
             if (!m_TokenStack.empty()
-                && token::scope == m_TokenStack.back())
+                && token::name == m_TokenStack.back())
             {
                 constexpr lexing::operator_or_punctuator openParensToken{"("};
                 if (auto const* nextToken = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
@@ -301,7 +300,7 @@ namespace mimicpp::printing::type::parsing
             }
         }
 
-        void reduce_as_scope()
+        void reduce_as_name()
         {
             if (!m_TokenStack.empty())
             {
@@ -310,25 +309,25 @@ namespace mimicpp::printing::type::parsing
                     m_TokenStack.pop_back();
 
                     if (!m_TokenStack.empty()
-                        && token::scope == m_TokenStack.back())
+                        && token::name == m_TokenStack.back())
                     {
                         m_TokenStack.pop_back();
                     }
                 }
-                // The only reason, why there may be two consecutive scopes is, that it's a function with return type.
-                else if (token::scope == m_TokenStack.back())
+                // The only reason, why there may be two consecutive names is, that it's a function with return type.
+                else if (token::name == m_TokenStack.back())
                 {
                     m_TokenStack.pop_back();
                     visitor().end_return_type();
                 }
             }
 
-            m_TokenStack.emplace_back(token::scope);
+            m_TokenStack.emplace_back(token::name);
         }
 
         void handle_lexer_token(lexing::identifier const& token)
         {
-            reduce_as_scope();
+            reduce_as_name();
             visitor().add_identifier(token.content);
         }
 
@@ -342,15 +341,6 @@ namespace mimicpp::printing::type::parsing
                 finished = token::open == m_TokenStack.back();
                 m_TokenStack.pop_back();
             }
-        }
-
-        constexpr void reduce_as_arg()
-        {
-            MIMICPP_ASSERT(!m_TokenStack.empty(), "Stack already depleted.");
-            MIMICPP_ASSERT(token::scope == m_TokenStack.back(), "Unexpected token.");
-
-            m_TokenStack.pop_back();
-            m_TokenStack.emplace_back(token::arg);
         }
 
         constexpr void handle_lexer_token(lexing::operator_or_punctuator const& token)
@@ -388,7 +378,7 @@ namespace mimicpp::printing::type::parsing
                     && functionBegin == *nextToken)
                 {
                     pop_until_open_token();
-                    m_TokenStack.emplace_back(token::scope);
+                    m_TokenStack.emplace_back(token::name);
                     visitor().end_function_ptr();
                 }
                 else
@@ -400,7 +390,6 @@ namespace mimicpp::printing::type::parsing
             else if (constexpr lexing::operator_or_punctuator commaSeparator{","};
                      commaSeparator == token)
             {
-                reduce_as_arg();
                 visitor().add_argument();
             }
             else if (constexpr lexing::operator_or_punctuator pointer{"*"};
@@ -484,7 +473,7 @@ namespace mimicpp::printing::type::parsing
                 }
 
                 visitor().end_operator_identifier();
-                reduce_as_scope();
+                reduce_as_name();
             }
         }
     };
