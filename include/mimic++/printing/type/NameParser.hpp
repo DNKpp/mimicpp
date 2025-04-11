@@ -344,7 +344,6 @@ namespace mimicpp::printing::type::parsing
                     nextToken
                     && openParensToken == *nextToken)
                 {
-                    m_TokenStack.pop_back();
                     visitor().end_return_type();
                 }
             }
@@ -393,39 +392,89 @@ namespace mimicpp::printing::type::parsing
             }
         }
 
+        void handle_placeholder(lexing::operator_or_punctuator const& token, lexing::operator_or_punctuator const& expectedEnd)
+        {
+            StringViewT content{
+                m_Lexer.peek().content.data() - token.text().size(),
+                token.text().size()};
+
+            // It should never ever reach the end token, but leave it here to prevent an infinite loop in production.
+            for (lexing::token next = m_Lexer.next();
+                 !std::holds_alternative<lexing::end>(next.classification);
+                 next = m_Lexer.next())
+            {
+                content = StringViewT{content.data(), next.content.data() + next.content.size()};
+
+                if (auto const* op = std::get_if<lexing::operator_or_punctuator>(&next.classification);
+                    op
+                    && expectedEnd == *op)
+                {
+                    break;
+                }
+            }
+
+            reduce_as_name();
+            visitor().add_identifier(content);
+        }
+
         constexpr void handle_lexer_token(lexing::operator_or_punctuator const& token)
         {
+            constexpr lexing::operator_or_punctuator openingParens{"("};
+            constexpr lexing::operator_or_punctuator closingParens{")"};
+            constexpr lexing::operator_or_punctuator openingAngle{"<"};
+            constexpr lexing::operator_or_punctuator closingAngle{">"};
+            constexpr lexing::operator_or_punctuator openingCurly{"{"};
+            constexpr lexing::operator_or_punctuator closingCurly{"}"};
+            constexpr lexing::operator_or_punctuator backtick{"`"};
+            constexpr lexing::operator_or_punctuator singleQuote{"'"};
+
             if (constexpr lexing::operator_or_punctuator scopeResolution{"::"};
                 scopeResolution == token)
             {
                 visitor().add_scope();
                 m_TokenStack.emplace_back(token::scopeResolution);
             }
-            else if (constexpr lexing::operator_or_punctuator templateBegin{"<"};
-                     templateBegin == token)
+            else if (openingAngle == token)
             {
-                m_TokenStack.emplace_back(token::open);
-                visitor().begin_template();
+                // To be a valid template, the `<` token must be prefixed with an actual name.
+                if (!m_TokenStack.empty()
+                    && token::name == m_TokenStack.back())
+                {
+                    m_TokenStack.emplace_back(token::open);
+                    visitor().begin_template();
+                }
+                else
+                {
+                    handle_placeholder(token, closingAngle);
+                }
             }
-            else if (constexpr lexing::operator_or_punctuator templateEnd{">"};
-                     templateEnd == token)
+            else if (closingAngle == token)
             {
                 pop_until_open_token();
                 visitor().end_template();
             }
-            else if (constexpr lexing::operator_or_punctuator functionBegin{"("};
-                     functionBegin == token)
+            else if (openingParens == token)
             {
-                m_TokenStack.emplace_back(token::open);
-                visitor().open_parenthesis();
+                // To be a valid function, the `(` token must be prefixed with an actual name or a return type
+                // (both are marked as `name` on the token-stack).
+                // Function pointers are always prefixed with the return type.
+                if (!m_TokenStack.empty()
+                    && token::name == m_TokenStack.back())
+                {
+                    m_TokenStack.emplace_back(token::open);
+                    visitor().open_parenthesis();
+                }
+                else
+                {
+                    handle_placeholder(token, closingParens);
+                }
             }
-            else if (constexpr lexing::operator_or_punctuator functionEnd{")"};
-                     functionEnd == token)
+            else if (closingParens == token)
             {
                 // `)(` looks like a function pointer.
                 if (auto const* nextToken = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
                     nextToken
-                    && functionBegin == *nextToken)
+                    && openingParens == *nextToken)
                 {
                     pop_until_open_token();
                     m_TokenStack.emplace_back(token::name);
@@ -436,6 +485,14 @@ namespace mimicpp::printing::type::parsing
                     pop_until_open_token();
                     visitor().end_function();
                 }
+            }
+            else if (openingCurly == token)
+            {
+                handle_placeholder(token, closingCurly);
+            }
+            else if (backtick == token)
+            {
+                handle_placeholder(token, singleQuote);
             }
             else if (constexpr lexing::operator_or_punctuator commaSeparator{","};
                      commaSeparator == token)

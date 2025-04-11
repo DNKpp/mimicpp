@@ -223,6 +223,64 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "parsing::NameParser detects placeholders.",
+    "[print][print::type]")
+{
+    static constexpr std::array placeholderCollection = std::to_array<StringViewT>(
+        {"{place holder}", "(place holder)", "<place holder>", "`place holder'"});
+
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+
+    SECTION("Plain placeholders are detected.")
+    {
+        StringViewT const input = GENERATE(from_range(placeholderCollection));
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call(input);
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Qualified placeholders are detected.")
+    {
+        StringViewT const placeholder = GENERATE(from_range(placeholderCollection));
+        StringT const input = "volatile " + StringT{placeholder} + " const&";
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Scoped placeholders are detected.")
+    {
+        StringViewT const placeholder = GENERATE(from_range(placeholderCollection));
+        StringT const input = "foo::" + StringT{placeholder} + "::my_type";
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("my_type");
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}
+
+TEST_CASE(
     "parsing::NameParser detects templates.",
     "[print][print::type]")
 {
