@@ -73,6 +73,7 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void add_identifier(StringViewT const content)
         {
+            m_IsPrefixMode = false;
             visitor().add_identifier(content);
         }
 
@@ -80,65 +81,92 @@ namespace mimicpp::printing::type::parsing
         {
             MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
 
-            m_Specs.top().isConst = true;
+            auto& current = m_IsPrefixMode
+                              ? m_Specs.top().first
+                              : m_Specs.top().second;
+            current.isConst = true;
         }
 
         constexpr void add_volatile()
         {
             MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
 
-            m_Specs.top().isVolatile = true;
+            auto& current = m_IsPrefixMode
+                              ? m_Specs.top().first
+                              : m_Specs.top().second;
+            current.isVolatile = true;
         }
 
         constexpr void add_noexcept()
         {
             MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+            MIMICPP_ASSERT(!m_IsPrefixMode, "Invalid state.");
 
-            m_Specs.top().isNoexcept = true;
+            m_Specs.top().second.isNoexcept = true;
         }
 
         constexpr void add_ptr()
         {
             finalized_current_specs();
             m_Specs.emplace();
+            m_IsPrefixMode = false;
+
             visitor().add_ptr();
         }
 
         constexpr void add_lvalue_ref()
         {
             MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+            MIMICPP_ASSERT(!m_IsPrefixMode, "Invalid state.");
 
-            m_Specs.top().isLValueRef = true;
+            m_Specs.top().second.isLValueRef = true;
         }
 
         constexpr void add_rvalue_ref()
         {
             MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+            MIMICPP_ASSERT(!m_IsPrefixMode, "Invalid state.");
 
-            m_Specs.top().isRValueRef = true;
+            m_Specs.top().second.isRValueRef = true;
         }
 
         constexpr void add_scope()
         {
+            MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+
+            // A scoped identifier can never be cv prefixed, so any collected prefix must be from higher scope.
+            // But we need to handle suffix-specs, so let's just add a temporary spec-layer.
+            m_Specs.emplace(
+                specs{},
+                std::exchange(m_Specs.top().second, {}));
+            finalized_current_specs();
+            m_IsPrefixMode = false;
+
             visitor().add_scope();
         }
 
         constexpr void add_argument()
         {
             finalized_current_specs();
+            m_IsPrefixMode = true;
             m_Specs.emplace();
+
             visitor().add_argument();
         }
 
         constexpr void begin_template()
         {
+            m_IsPrefixMode = true;
             m_Specs.emplace();
+
             visitor().begin_template();
         }
 
         constexpr void end_template()
         {
             finalized_current_specs();
+            m_IsPrefixMode = false;
+
             visitor().end_template();
         }
 
@@ -146,24 +174,31 @@ namespace mimicpp::printing::type::parsing
         {
             finalized_current_specs();
             m_Specs.emplace();
+
             visitor().end_return_type();
         }
 
         constexpr void open_parenthesis()
         {
+            m_IsPrefixMode = true;
             m_Specs.emplace();
+
             visitor().open_parenthesis();
         }
 
         constexpr void end_function()
         {
             finalized_current_specs();
+            m_IsPrefixMode = false;
+
             visitor().end_function();
         }
 
         constexpr void end_function_ptr()
         {
             finalized_current_specs();
+            m_IsPrefixMode = false;
+
             visitor().end_function_ptr();
         }
 
@@ -187,9 +222,23 @@ namespace mimicpp::printing::type::parsing
             bool isNoexcept{false};
             bool isLValueRef{false};
             bool isRValueRef{false};
+
+            [[nodiscard]]
+            static specs merge(specs const& prefix, specs suffix) noexcept
+            {
+                MIMICPP_ASSERT(!prefix.isNoexcept, "Invalid prefix.");
+                MIMICPP_ASSERT(!prefix.isLValueRef, "Invalid prefix.");
+                MIMICPP_ASSERT(!prefix.isRValueRef, "Invalid prefix.");
+
+                suffix.isConst = prefix.isConst || suffix.isConst;
+                suffix.isVolatile = prefix.isVolatile || suffix.isVolatile;
+
+                return suffix;
+            }
         };
 
-        std::stack<specs> m_Specs{};
+        bool m_IsPrefixMode{true};
+        std::stack<std::pair<specs, specs>> m_Specs{};
 
         [[nodiscard]]
         constexpr auto& visitor() noexcept
@@ -201,7 +250,7 @@ namespace mimicpp::printing::type::parsing
         {
             MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
 
-            auto const specs = m_Specs.top();
+            auto const specs = specs::merge(m_Specs.top().first, m_Specs.top().second);
             m_Specs.pop();
 
             MIMICPP_ASSERT(!(specs.isLValueRef && specs.isRValueRef), "Both reference types detected.");
@@ -236,6 +285,7 @@ namespace mimicpp::printing::type::parsing
     {
         name,
         scopeResolution,
+        argSeparator,
         open
     };
 
@@ -390,6 +440,7 @@ namespace mimicpp::printing::type::parsing
             else if (constexpr lexing::operator_or_punctuator commaSeparator{","};
                      commaSeparator == token)
             {
+                m_TokenStack.emplace_back(token::argSeparator);
                 visitor().add_argument();
             }
             else if (constexpr lexing::operator_or_punctuator pointer{"*"};

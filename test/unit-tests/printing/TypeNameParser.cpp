@@ -776,3 +776,161 @@ TEST_CASE(
         }
     }
 }
+
+TEST_CASE(
+    "parsing::NameParser handles arbitrarily scoped identifiers.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+
+    SECTION("When function local type is given.")
+    {
+        constexpr StringViewT input{"foo(std::string const&, int volatile) noexcept::my_type"};
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.open_parenthesis.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.add_argument.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.add_volatile.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.add_noexcept.expect_call();
+
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When qualified function local type is given.")
+    {
+        constexpr StringViewT input{"volatile foo(std::string const&, int volatile) noexcept::my_type const&"};
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.open_parenthesis.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.add_argument.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.add_volatile.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.add_noexcept.expect_call();
+
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("my_type");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When nested function local type is given.")
+    {
+        constexpr StringViewT input{"foo::bar(std::string const&, int volatile) noexcept::my_type"};
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("bar");
+
+        sequence += visitor.open_parenthesis.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.add_argument.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.add_volatile.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.add_noexcept.expect_call();
+
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When deeply nested function local type is given.")
+    {
+        constexpr StringViewT input{"foo(int volatile, std::string const&) const &&::bar(std::string const&, int volatile) noexcept::my_type"};
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.open_parenthesis.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_argument.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_rvalue_ref.expect_call();
+
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("bar");
+
+        sequence += visitor.open_parenthesis.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.add_argument.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.add_volatile.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.add_noexcept.expect_call();
+
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}
