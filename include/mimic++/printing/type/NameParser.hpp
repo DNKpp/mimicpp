@@ -36,7 +36,7 @@ namespace mimicpp::printing::type::parsing
 
                                  visitor.push_identifier(content);
                                  visitor.add_scope();
-                                 visitor.push_argument();
+                                 visitor.add_argument();
 
                                  visitor.add_const();
                                  visitor.add_volatile();
@@ -281,7 +281,7 @@ namespace mimicpp::printing::type::parsing
                      commaSeparator == token)
             {
                 reduce_as_arg();
-                visitor().push_argument();
+                visitor().add_argument();
             }
             else if (constexpr lexing::operator_or_punctuator pointer{"*"};
                      pointer == token)

@@ -34,7 +34,7 @@ namespace
 
         Mock<void(StringViewT)> push_identifier{{.name = "VisitorMock::push_identifier"}};
         Mock<void()> add_scope{{.name = "VisitorMock::add_scope"}};
-        Mock<void()> push_argument{{.name = "VisitorMock::push_argument"}};
+        Mock<void()> add_argument{{.name = "VisitorMock::add_argument"}};
 
         Mock<void()> begin_operator_identifier{{.name = "VisitorMock::begin_operator_identifier"}};
         Mock<void()> end_operator_identifier{{.name = "VisitorMock::end_operator_identifier"}};
@@ -254,7 +254,7 @@ TEST_CASE(
 
         sequence += visitor.begin_template.expect_call();
         sequence += visitor.push_identifier.expect_call("int");
-        sequence += visitor.push_argument.expect_call();
+        sequence += visitor.add_argument.expect_call();
 
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
@@ -279,7 +279,7 @@ TEST_CASE(
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_volatile.expect_call();
         sequence += visitor.add_lvalue_ref.expect_call();
-        sequence += visitor.push_argument.expect_call();
+        sequence += visitor.add_argument.expect_call();
 
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
@@ -373,7 +373,7 @@ TEST_CASE(
         sequence += visitor.push_identifier.expect_call("string");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_rvalue_ref.expect_call();
-        sequence += visitor.push_argument.expect_call();
+        sequence += visitor.add_argument.expect_call();
 
         sequence += visitor.push_identifier.expect_call("int");
         sequence += visitor.add_const.expect_call();
@@ -559,7 +559,7 @@ TEST_CASE(
         sequence += visitor.push_identifier.expect_call("string");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_rvalue_ref.expect_call();
-        sequence += visitor.push_argument.expect_call();
+        sequence += visitor.add_argument.expect_call();
 
         sequence += visitor.push_identifier.expect_call("int");
         sequence += visitor.add_const.expect_call();
@@ -765,7 +765,7 @@ TEST_CASE(
 
             sequence += visitor.begin_template.expect_call();
             sequence += visitor.push_identifier.expect_call("int");
-            sequence += visitor.push_argument.expect_call();
+            sequence += visitor.add_argument.expect_call();
             sequence += visitor.push_identifier.expect_call("float");
             sequence += visitor.end_template.expect_call();
 
