@@ -534,7 +534,7 @@ For more details, please refer to the reporting section in the documentation.
 
 Official adapters exist for the following frameworks:
 
-* [Boost.Test](https://github.com/boostorg/test) (tested with v1.85.0)
+* [Boost.Test](https://github.com/boostorg/test) (tested with v1.88.0)
 * [Catch2](https://github.com/catchorg) (tested with v3.7.1)
 * [Doctest](https://github.com/doctest/doctest) (tested with v2.4.11)
 * [GTest](https://github.com/google/googletest) (tested with v1.15.2)
