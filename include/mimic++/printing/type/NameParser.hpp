@@ -11,7 +11,6 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/type/NameLexer.hpp"
-#include "mimic++/utilities/Algorithm.hpp"
 
 #include <functional>
 #include <utility>
@@ -23,7 +22,6 @@ namespace mimicpp::printing::type::parsing
     {
         scope,
         scopeResolution,
-        prefixSpec,
         arg,
         open
     };
@@ -48,6 +46,7 @@ namespace mimicpp::printing::type::parsing
                                  visitor.begin_template();
                                  visitor.end_template();
 
+                                 visitor.end_return_type();
                                  visitor.open_parenthesis();
                                  visitor.end_function();
                                  visitor.end_function_ptr();
@@ -55,6 +54,191 @@ namespace mimicpp::printing::type::parsing
                                  visitor.begin_operator_identifier();
                                  visitor.end_operator_identifier();
                              };
+
+    template <parser_visitor Visitor>
+    class SpecNormalizerVisitor
+    {
+    public:
+        [[nodiscard]]
+        explicit SpecNormalizerVisitor(Visitor visitor) noexcept(std::is_nothrow_move_constructible_v<Visitor>)
+            : m_Visitor{std::move(visitor)}
+        {
+        }
+
+        constexpr void begin()
+        {
+            m_Specs.emplace();
+            visitor().begin();
+        }
+
+        constexpr void end()
+        {
+            MIMICPP_ASSERT(1u == m_Specs.size(), "Out of sync.");
+
+            finalized_current_specs();
+            visitor().end();
+        }
+
+        constexpr void add_identifier(StringViewT const content)
+        {
+            visitor().add_identifier(content);
+        }
+
+        constexpr void add_const()
+        {
+            MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+
+            m_Specs.top().isConst = true;
+        }
+
+        constexpr void add_volatile()
+        {
+            MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+
+            m_Specs.top().isVolatile = true;
+        }
+
+        constexpr void add_noexcept()
+        {
+            MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+
+            m_Specs.top().isNoexcept = true;
+        }
+
+        constexpr void add_ptr()
+        {
+            finalized_current_specs();
+            m_Specs.emplace();
+            visitor().add_ptr();
+        }
+
+        constexpr void add_lvalue_ref()
+        {
+            MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+
+            m_Specs.top().isLValueRef = true;
+        }
+
+        constexpr void add_rvalue_ref()
+        {
+            MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+
+            m_Specs.top().isRValueRef = true;
+        }
+
+        constexpr void add_scope()
+        {
+            visitor().add_scope();
+        }
+
+        constexpr void add_argument()
+        {
+            finalized_current_specs();
+            m_Specs.emplace();
+            visitor().add_argument();
+        }
+
+        constexpr void begin_template()
+        {
+            m_Specs.emplace();
+            visitor().begin_template();
+        }
+
+        constexpr void end_template()
+        {
+            finalized_current_specs();
+            visitor().end_template();
+        }
+
+        constexpr void end_return_type()
+        {
+            finalized_current_specs();
+            m_Specs.emplace();
+            visitor().end_return_type();
+        }
+
+        constexpr void open_parenthesis()
+        {
+            m_Specs.emplace();
+            visitor().open_parenthesis();
+        }
+
+        constexpr void end_function()
+        {
+            finalized_current_specs();
+            visitor().end_function();
+        }
+
+        constexpr void end_function_ptr()
+        {
+            finalized_current_specs();
+            visitor().end_function_ptr();
+        }
+
+        constexpr void begin_operator_identifier()
+        {
+            visitor().begin_operator_identifier();
+        }
+
+        constexpr void end_operator_identifier()
+        {
+            visitor().end_operator_identifier();
+        }
+
+    private:
+        Visitor m_Visitor;
+
+        struct specs
+        {
+            bool isConst{false};
+            bool isVolatile{false};
+            bool isNoexcept{false};
+            bool isLValueRef{false};
+            bool isRValueRef{false};
+        };
+
+        std::stack<specs> m_Specs{};
+
+        [[nodiscard]]
+        constexpr auto& visitor() noexcept
+        {
+            return static_cast<std::unwrap_reference_t<Visitor>&>(m_Visitor);
+        }
+
+        void finalized_current_specs()
+        {
+            MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
+
+            auto const specs = m_Specs.top();
+            m_Specs.pop();
+
+            MIMICPP_ASSERT(!(specs.isLValueRef && specs.isRValueRef), "Both reference types detected.");
+
+            if (specs.isConst)
+            {
+                visitor().add_const();
+            }
+
+            if (specs.isVolatile)
+            {
+                visitor().add_volatile();
+            }
+
+            if (specs.isLValueRef)
+            {
+                visitor().add_lvalue_ref();
+            }
+            else if (specs.isRValueRef)
+            {
+                visitor().add_rvalue_ref();
+            }
+
+            if (specs.isNoexcept)
+            {
+                visitor().add_noexcept();
+            }
+        }
+    };
 
     template <parser_visitor Visitor>
     class NameParser
@@ -80,20 +264,18 @@ namespace mimicpp::printing::type::parsing
                     next.classification);
             }
 
-            consume_prefix_spec_if_can();
             visitor().end();
         }
 
     private:
-        Visitor m_Visitor;
+        SpecNormalizerVisitor<Visitor> m_Visitor;
         lexing::NameLexer m_Lexer;
-        std::vector<lexing::keyword> m_PrefixSpecs{};
         std::deque<token> m_TokenStack{};
 
         [[nodiscard]]
         constexpr auto& visitor() noexcept
         {
-            return static_cast<std::unwrap_reference_t<Visitor>&>(m_Visitor);
+            return m_Visitor;
         }
 
         static constexpr void handle_lexer_token([[maybe_unused]] lexing::end const& token) noexcept
@@ -113,7 +295,6 @@ namespace mimicpp::printing::type::parsing
                     nextToken
                     && openParensToken == *nextToken)
                 {
-                    consume_prefix_spec_if_can();
                     m_TokenStack.pop_back();
                     visitor().end_return_type();
                 }
@@ -137,7 +318,6 @@ namespace mimicpp::printing::type::parsing
                 // The only reason, why there may be two consecutive scopes is, that it's a function with return type.
                 else if (token::scope == m_TokenStack.back())
                 {
-                    consume_prefix_spec_if_can();
                     m_TokenStack.pop_back();
                     visitor().end_return_type();
                 }
@@ -164,66 +344,8 @@ namespace mimicpp::printing::type::parsing
             }
         }
 
-        [[nodiscard]]
-        constexpr bool is_prefix_spec() const noexcept
-        {
-            return m_TokenStack.empty()
-                || token::scope != m_TokenStack.back();
-        }
-
-        void push_prefix_spec(lexing::keyword const& spec)
-        {
-            m_TokenStack.emplace_back(token::prefixSpec);
-            m_PrefixSpecs.emplace_back(spec);
-        }
-
-        void consume_prefix_spec_if_can()
-        {
-            if (m_TokenStack.size() < 2u
-                || token::scope != m_TokenStack.back())
-            {
-                return;
-            }
-
-            m_TokenStack.pop_back();
-
-            // Find all prefix specs and apply in correct order.
-            if (auto const iter = std::ranges::find_if_not(
-                    m_TokenStack | std::views::reverse,
-                    std::bind_front(std::equal_to{}, token::prefixSpec));
-                iter != m_TokenStack.crbegin())
-            {
-                auto const count = std::ranges::distance(m_TokenStack.crbegin(), iter);
-                MIMICPP_ASSERT(0 <= count && std::cmp_less_equal(count, m_PrefixSpecs.size()), "Out of sync.");
-
-                for (auto const& spec : m_PrefixSpecs
-                                            | std::views::reverse
-                                            | std::views::take(count)
-                                            | std::views::reverse)
-                {
-                    if (constexpr lexing::keyword constKeyword{"const"};
-                        constKeyword == spec)
-                    {
-                        visitor().add_const();
-                    }
-                    else if (constexpr lexing::keyword volatileKeyword{"volatile"};
-                             volatileKeyword == spec)
-                    {
-                        visitor().add_volatile();
-                    }
-                }
-
-                m_PrefixSpecs.erase(m_PrefixSpecs.cend() - count, m_PrefixSpecs.cend());
-                m_TokenStack.erase(iter.base(), m_TokenStack.cend());
-            }
-
-            m_TokenStack.emplace_back(token::scope);
-        }
-
         constexpr void reduce_as_arg()
         {
-            consume_prefix_spec_if_can();
-
             MIMICPP_ASSERT(!m_TokenStack.empty(), "Stack already depleted.");
             MIMICPP_ASSERT(token::scope == m_TokenStack.back(), "Unexpected token.");
 
@@ -248,7 +370,6 @@ namespace mimicpp::printing::type::parsing
             else if (constexpr lexing::operator_or_punctuator templateEnd{">"};
                      templateEnd == token)
             {
-                consume_prefix_spec_if_can();
                 pop_until_open_token();
                 visitor().end_template();
             }
@@ -272,7 +393,6 @@ namespace mimicpp::printing::type::parsing
                 }
                 else
                 {
-                    consume_prefix_spec_if_can();
                     pop_until_open_token();
                     visitor().end_function();
                 }
@@ -286,19 +406,16 @@ namespace mimicpp::printing::type::parsing
             else if (constexpr lexing::operator_or_punctuator pointer{"*"};
                      pointer == token)
             {
-                consume_prefix_spec_if_can();
                 visitor().add_ptr();
             }
             else if (constexpr lexing::operator_or_punctuator lvalueRef{"&"};
                      lvalueRef == token)
             {
-                consume_prefix_spec_if_can();
                 visitor().add_lvalue_ref();
             }
             else if (constexpr lexing::operator_or_punctuator rvalueRef{"&&"};
                      rvalueRef == token)
             {
-                consume_prefix_spec_if_can();
                 visitor().add_rvalue_ref();
             }
         }
@@ -313,28 +430,12 @@ namespace mimicpp::printing::type::parsing
             else if (constexpr lexing::keyword constKeyword{"const"};
                      constKeyword == token)
             {
-                if (is_prefix_spec())
-                {
-                    push_prefix_spec(token);
-                }
-                else
-                {
-                    consume_prefix_spec_if_can();
-                    visitor().add_const();
-                }
+                visitor().add_const();
             }
             else if (constexpr lexing::keyword volatileKeyword{"volatile"};
                      volatileKeyword == token)
             {
-                if (is_prefix_spec())
-                {
-                    push_prefix_spec(token);
-                }
-                else
-                {
-                    consume_prefix_spec_if_can();
-                    visitor().add_volatile();
-                }
+                visitor().add_volatile();
             }
             else if (constexpr lexing::keyword noexceptKeyword{"noexcept"};
                      noexceptKeyword == token)

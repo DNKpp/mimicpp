@@ -206,7 +206,7 @@ TEST_CASE(
 
     SECTION("Coming all together")
     {
-        StringT const input{"const foo volatile * const&"};
+        StringT const input{"volatile foo const * const&"};
         CAPTURE(input);
 
         sequence += visitor.add_identifier.expect_call("foo");
