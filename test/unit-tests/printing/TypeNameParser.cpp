@@ -32,7 +32,7 @@ namespace
         Mock<void()> add_lvalue_ref{{.name = "VisitorMock::add_lvalue_ref"}};
         Mock<void()> add_rvalue_ref{{.name = "VisitorMock::add_rvalue_ref"}};
 
-        Mock<void(StringViewT)> push_identifier{{.name = "VisitorMock::push_identifier"}};
+        Mock<void(StringViewT)> add_identifier{{.name = "VisitorMock::add_identifier"}};
         Mock<void()> add_scope{{.name = "VisitorMock::add_scope"}};
         Mock<void()> add_argument{{.name = "VisitorMock::add_argument"}};
 
@@ -93,7 +93,7 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(identifiers));
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call(input);
+        sequence += visitor.add_identifier.expect_call(input);
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -109,11 +109,11 @@ TEST_CASE(
         StringT const input = StringT{firstScope} + "::" + StringT{secondScope} + "::" + StringT{thirdScope};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call(firstScope);
+        sequence += visitor.add_identifier.expect_call(firstScope);
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call(secondScope);
+        sequence += visitor.add_identifier.expect_call(secondScope);
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call(thirdScope);
+        sequence += visitor.add_identifier.expect_call(thirdScope);
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -127,7 +127,7 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call(scope);
+        sequence += visitor.add_identifier.expect_call(scope);
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -150,7 +150,7 @@ TEST_CASE(
         StringT const input{spec + " foo"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.expect_spec_call(spec);
         sequence += visitor.end.expect_call();
 
@@ -165,7 +165,7 @@ TEST_CASE(
         StringT const input{spec + " foo " + indirection};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.expect_spec_call(spec);
         sequence += visitor.expect_spec_call(indirection);
         sequence += visitor.end.expect_call();
@@ -180,7 +180,7 @@ TEST_CASE(
         StringT const input{"foo " + spec};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.expect_spec_call(spec);
         sequence += visitor.end.expect_call();
 
@@ -195,7 +195,7 @@ TEST_CASE(
         StringT const input{"foo " + spec + indirection};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.expect_spec_call(spec);
         sequence += visitor.expect_spec_call(indirection);
         sequence += visitor.end.expect_call();
@@ -209,7 +209,7 @@ TEST_CASE(
         StringT const input{"const foo volatile * const&"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_volatile.expect_call();
         sequence += visitor.add_ptr.expect_call();
@@ -236,7 +236,7 @@ TEST_CASE(
         StringViewT const input{"foo<>"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.begin_template.expect_call();
         sequence += visitor.end_template.expect_call();
         sequence += visitor.end.expect_call();
@@ -250,15 +250,15 @@ TEST_CASE(
         StringViewT const input{"foo<int, std::string>"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
 
         sequence += visitor.begin_template.expect_call();
-        sequence += visitor.push_identifier.expect_call("int");
+        sequence += visitor.add_identifier.expect_call("int");
         sequence += visitor.add_argument.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.add_identifier.expect_call("string");
 
         sequence += visitor.end_template.expect_call();
         sequence += visitor.end.expect_call();
@@ -272,18 +272,18 @@ TEST_CASE(
         StringViewT const input{"foo<const int volatile&, const std::string>"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
 
         sequence += visitor.begin_template.expect_call();
-        sequence += visitor.push_identifier.expect_call("int");
+        sequence += visitor.add_identifier.expect_call("int");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_volatile.expect_call();
         sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.add_argument.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.add_identifier.expect_call("string");
         sequence += visitor.add_const.expect_call();
 
         sequence += visitor.end_template.expect_call();
@@ -308,7 +308,7 @@ TEST_CASE(
         StringViewT const input{"foo()"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -322,10 +322,10 @@ TEST_CASE(
         StringViewT const input{"void foo()"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.add_identifier.expect_call("void");
         sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -339,15 +339,15 @@ TEST_CASE(
         StringViewT const input{"float foo(const std::string)"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("float");
+        sequence += visitor.add_identifier.expect_call("float");
         sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.add_identifier.expect_call("string");
         sequence += visitor.expect_spec_call("const");
         sequence += visitor.end_function.expect_call();
 
@@ -362,20 +362,20 @@ TEST_CASE(
         StringViewT const input{"float foo(const std::string&&, const int)"};
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("float");
+        sequence += visitor.add_identifier.expect_call("float");
         sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.add_identifier.expect_call("string");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_rvalue_ref.expect_call();
         sequence += visitor.add_argument.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("int");
+        sequence += visitor.add_identifier.expect_call("int");
         sequence += visitor.add_const.expect_call();
 
         sequence += visitor.end_function.expect_call();
@@ -392,10 +392,10 @@ TEST_CASE(
         StringT const input = "float foo()" + spec;
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("float");
+        sequence += visitor.add_identifier.expect_call("float");
         sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
 
         sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
@@ -413,16 +413,16 @@ TEST_CASE(
         StringT const input = "const std::string* volatile& foo()";
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.add_identifier.expect_call("string");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.add_volatile.expect_call();
         sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
 
         sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
@@ -438,9 +438,9 @@ TEST_CASE(
         StringT const input = "const std::string* volatile& ()";
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.add_identifier.expect_call("string");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.add_volatile.expect_call();
@@ -471,9 +471,9 @@ TEST_CASE(
         StringT const input = "const std::string* volatile& (*)()";
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.add_identifier.expect_call("string");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.add_volatile.expect_call();
@@ -498,7 +498,7 @@ TEST_CASE(
         StringT const input = "void (*)()noexcept";
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.add_identifier.expect_call("void");
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
@@ -521,7 +521,7 @@ TEST_CASE(
         StringT const input = "void (*&)()noexcept";
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.add_identifier.expect_call("void");
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
@@ -545,7 +545,7 @@ TEST_CASE(
         StringT const input = "void (*)(const std::string&&, const int)";
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.add_identifier.expect_call("void");
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
@@ -554,14 +554,14 @@ TEST_CASE(
 
         sequence += visitor.open_parenthesis.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("std");
+        sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("string");
+        sequence += visitor.add_identifier.expect_call("string");
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_rvalue_ref.expect_call();
         sequence += visitor.add_argument.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("int");
+        sequence += visitor.add_identifier.expect_call("int");
         sequence += visitor.add_const.expect_call();
 
         sequence += visitor.end_function.expect_call();
@@ -577,13 +577,13 @@ TEST_CASE(
         StringT const input = "void (foo::bar::*)()";
         CAPTURE(input);
 
-        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.add_identifier.expect_call("void");
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("bar");
+        sequence += visitor.add_identifier.expect_call("bar");
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
@@ -603,13 +603,13 @@ TEST_CASE(
         StringT const input = "void (foo::bar::*)()" + spec;
         CAPTURE(input, spec);
 
-        sequence += visitor.push_identifier.expect_call("void");
+        sequence += visitor.add_identifier.expect_call("void");
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.add_scope.expect_call();
-        sequence += visitor.push_identifier.expect_call("bar");
+        sequence += visitor.add_identifier.expect_call("bar");
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
@@ -682,7 +682,7 @@ TEST_CASE(
         sequence += visitor.begin.expect_call();
 
         sequence += visitor.begin_operator_identifier.expect_call();
-        sequence += visitor.push_identifier.expect_call(operatorText);
+        sequence += visitor.add_identifier.expect_call(operatorText);
         sequence += visitor.end_operator_identifier.expect_call();
         sequence += visitor.end.expect_call();
 
@@ -698,7 +698,7 @@ TEST_CASE(
         sequence += visitor.begin.expect_call();
 
         sequence += visitor.begin_operator_identifier.expect_call();
-        sequence += visitor.push_identifier.expect_call(operatorText);
+        sequence += visitor.add_identifier.expect_call(operatorText);
         sequence += visitor.end_operator_identifier.expect_call();
         sequence += visitor.end.expect_call();
 
@@ -713,10 +713,10 @@ TEST_CASE(
 
         sequence += visitor.begin.expect_call();
 
-        sequence += visitor.push_identifier.expect_call("foo");
+        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.begin_operator_identifier.expect_call();
-        sequence += visitor.push_identifier.expect_call(operatorText);
+        sequence += visitor.add_identifier.expect_call(operatorText);
         sequence += visitor.end_operator_identifier.expect_call();
         sequence += visitor.end.expect_call();
 
@@ -736,7 +736,7 @@ TEST_CASE(
             sequence += visitor.begin.expect_call();
 
             sequence += visitor.begin_operator_identifier.expect_call();
-            sequence += visitor.push_identifier.expect_call(operatorText);
+            sequence += visitor.add_identifier.expect_call(operatorText);
             sequence += visitor.end_operator_identifier.expect_call();
             sequence += visitor.begin_template.expect_call();
             sequence += visitor.end_template.expect_call();
@@ -760,13 +760,13 @@ TEST_CASE(
             sequence += visitor.begin.expect_call();
 
             sequence += visitor.begin_operator_identifier.expect_call();
-            sequence += visitor.push_identifier.expect_call(operatorText);
+            sequence += visitor.add_identifier.expect_call(operatorText);
             sequence += visitor.end_operator_identifier.expect_call();
 
             sequence += visitor.begin_template.expect_call();
-            sequence += visitor.push_identifier.expect_call("int");
+            sequence += visitor.add_identifier.expect_call("int");
             sequence += visitor.add_argument.expect_call();
-            sequence += visitor.push_identifier.expect_call("float");
+            sequence += visitor.add_identifier.expect_call("float");
             sequence += visitor.end_template.expect_call();
 
             sequence += visitor.end.expect_call();

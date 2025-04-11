@@ -34,7 +34,7 @@ namespace mimicpp::printing::type::parsing
                                  visitor.begin();
                                  visitor.end();
 
-                                 visitor.push_identifier(content);
+                                 visitor.add_identifier(content);
                                  visitor.add_scope();
                                  visitor.add_argument();
 
@@ -149,7 +149,7 @@ namespace mimicpp::printing::type::parsing
         void handle_lexer_token(lexing::identifier const& token)
         {
             reduce_as_scope();
-            visitor().push_identifier(token.content);
+            visitor().add_identifier(token.content);
         }
 
         constexpr void pop_until_open_token()
@@ -362,7 +362,7 @@ namespace mimicpp::printing::type::parsing
                     StringViewT const content{
                         next.content.data(),
                         next.content.size() + closingContent.size()};
-                    visitor().push_identifier(content);
+                    visitor().add_identifier(content);
                 };
 
                 if (constexpr lexing::operator_or_punctuator openingParens{"("};
@@ -379,7 +379,7 @@ namespace mimicpp::printing::type::parsing
                 }
                 else
                 {
-                    visitor().push_identifier(next.content);
+                    visitor().add_identifier(next.content);
                 }
 
                 visitor().end_operator_identifier();
