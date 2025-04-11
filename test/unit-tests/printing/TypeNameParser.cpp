@@ -25,7 +25,12 @@ namespace
         Mock<void()> end_function{{.name = "VisitorMock::end_function"}};
         Mock<void()> end_function_ptr{{.name = "VisitorMock::end_function_ptr"}};
 
-        Mock<void(StringViewT)> push_spec{{.name = "VisitorMock::push_spec"}};
+        Mock<void()> add_const{{.name = "VisitorMock::add_const"}};
+        Mock<void()> add_volatile{{.name = "VisitorMock::add_volatile"}};
+        Mock<void()> add_noexcept{{.name = "VisitorMock::add_noexcept"}};
+        Mock<void()> add_ptr{{.name = "VisitorMock::add_ptr"}};
+        Mock<void()> add_lvalue_ref{{.name = "VisitorMock::add_lvalue_ref"}};
+        Mock<void()> add_rvalue_ref{{.name = "VisitorMock::add_rvalue_ref"}};
 
         Mock<void(StringViewT)> push_identifier{{.name = "VisitorMock::push_identifier"}};
         Mock<void()> push_scope{{.name = "VisitorMock::push_scope"}};
@@ -33,6 +38,42 @@ namespace
 
         Mock<void()> begin_operator_identifier{{.name = "VisitorMock::begin_operator_identifier"}};
         Mock<void()> end_operator_identifier{{.name = "VisitorMock::end_operator_identifier"}};
+
+        [[nodiscard]]
+        auto expect_spec_call(StringViewT const content)
+        {
+            if ("const" == content)
+            {
+                return add_const.expect_call();
+            }
+
+            if ("volatile" == content)
+            {
+                return add_volatile.expect_call();
+            }
+
+            if ("noexcept" == content)
+            {
+                return add_noexcept.expect_call();
+            }
+
+            if ("*" == content)
+            {
+                return add_ptr.expect_call();
+            }
+
+            if ("&" == content)
+            {
+                return add_lvalue_ref.expect_call();
+            }
+
+            if ("&&" == content)
+            {
+                return add_rvalue_ref.expect_call();
+            }
+
+            util::unreachable();
+        }
     };
 }
 
@@ -110,7 +151,7 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.push_identifier.expect_call("foo");
-        sequence += visitor.push_spec.expect_call(spec);
+        sequence += visitor.expect_spec_call(spec);
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -125,8 +166,8 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.push_identifier.expect_call("foo");
-        sequence += visitor.push_spec.expect_call(spec);
-        sequence += visitor.push_spec.expect_call(indirection);
+        sequence += visitor.expect_spec_call(spec);
+        sequence += visitor.expect_spec_call(indirection);
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -140,7 +181,7 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.push_identifier.expect_call("foo");
-        sequence += visitor.push_spec.expect_call(spec);
+        sequence += visitor.expect_spec_call(spec);
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -155,8 +196,8 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.push_identifier.expect_call("foo");
-        sequence += visitor.push_spec.expect_call(spec);
-        sequence += visitor.push_spec.expect_call(indirection);
+        sequence += visitor.expect_spec_call(spec);
+        sequence += visitor.expect_spec_call(indirection);
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -169,11 +210,11 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.push_identifier.expect_call("foo");
-        sequence += visitor.push_spec.expect_call("const");
-        sequence += visitor.push_spec.expect_call("volatile");
-        sequence += visitor.push_spec.expect_call("*");
-        sequence += visitor.push_spec.expect_call("const");
-        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -235,15 +276,15 @@ TEST_CASE(
 
         sequence += visitor.begin_template.expect_call();
         sequence += visitor.push_identifier.expect_call("int");
-        sequence += visitor.push_spec.expect_call("const");
-        sequence += visitor.push_spec.expect_call("volatile");
-        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.push_argument.expect_call();
 
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
-        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.add_const.expect_call();
 
         sequence += visitor.end_template.expect_call();
         sequence += visitor.end.expect_call();
@@ -307,7 +348,7 @@ TEST_CASE(
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
-        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.expect_spec_call("const");
         sequence += visitor.end_function.expect_call();
 
         sequence += visitor.end.expect_call();
@@ -330,12 +371,12 @@ TEST_CASE(
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
-        sequence += visitor.push_spec.expect_call("const");
-        sequence += visitor.push_spec.expect_call("&&");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_rvalue_ref.expect_call();
         sequence += visitor.push_argument.expect_call();
 
         sequence += visitor.push_identifier.expect_call("int");
-        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.add_const.expect_call();
 
         sequence += visitor.end_function.expect_call();
 
@@ -359,7 +400,7 @@ TEST_CASE(
         sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
 
-        sequence += visitor.push_spec.expect_call(spec);
+        sequence += visitor.expect_spec_call(spec);
 
         sequence += visitor.end.expect_call();
 
@@ -375,10 +416,10 @@ TEST_CASE(
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
-        sequence += visitor.push_spec.expect_call("const");
-        sequence += visitor.push_spec.expect_call("*");
-        sequence += visitor.push_spec.expect_call("volatile");
-        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.push_identifier.expect_call("foo");
@@ -400,10 +441,10 @@ TEST_CASE(
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
-        sequence += visitor.push_spec.expect_call("const");
-        sequence += visitor.push_spec.expect_call("*");
-        sequence += visitor.push_spec.expect_call("volatile");
-        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
@@ -433,14 +474,14 @@ TEST_CASE(
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
-        sequence += visitor.push_spec.expect_call("const");
-        sequence += visitor.push_spec.expect_call("*");
-        sequence += visitor.push_spec.expect_call("volatile");
-        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
@@ -461,13 +502,13 @@ TEST_CASE(
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
 
-        sequence += visitor.push_spec.expect_call("noexcept");
+        sequence += visitor.add_noexcept.expect_call();
 
         sequence += visitor.end.expect_call();
 
@@ -484,14 +525,14 @@ TEST_CASE(
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.push_spec.expect_call("*");
-        sequence += visitor.push_spec.expect_call("&");
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
 
-        sequence += visitor.push_spec.expect_call("noexcept");
+        sequence += visitor.add_noexcept.expect_call();
 
         sequence += visitor.end.expect_call();
 
@@ -508,7 +549,7 @@ TEST_CASE(
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
@@ -516,12 +557,12 @@ TEST_CASE(
         sequence += visitor.push_identifier.expect_call("std");
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("string");
-        sequence += visitor.push_spec.expect_call("const");
-        sequence += visitor.push_spec.expect_call("&&");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_rvalue_ref.expect_call();
         sequence += visitor.push_argument.expect_call();
 
         sequence += visitor.push_identifier.expect_call("int");
-        sequence += visitor.push_spec.expect_call("const");
+        sequence += visitor.add_const.expect_call();
 
         sequence += visitor.end_function.expect_call();
 
@@ -544,7 +585,7 @@ TEST_CASE(
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("bar");
         sequence += visitor.push_scope.expect_call();
-        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
@@ -570,12 +611,12 @@ TEST_CASE(
         sequence += visitor.push_scope.expect_call();
         sequence += visitor.push_identifier.expect_call("bar");
         sequence += visitor.push_scope.expect_call();
-        sequence += visitor.push_spec.expect_call("*");
+        sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.push_spec.expect_call(spec);
+        sequence += visitor.expect_spec_call(spec);
 
         sequence += visitor.end.expect_call();
 

@@ -34,17 +34,23 @@ namespace mimicpp::printing::type::parsing
                                  visitor.begin();
                                  visitor.end();
 
+                                 visitor.push_identifier(content);
+                                 visitor.push_scope();
+                                 visitor.push_argument();
+
+                                 visitor.add_const();
+                                 visitor.add_volatile();
+                                 visitor.add_noexcept();
+                                 visitor.add_ptr();
+                                 visitor.add_lvalue_ref();
+                                 visitor.add_rvalue_ref();
+
                                  visitor.begin_template();
                                  visitor.end_template();
 
                                  visitor.open_parenthesis();
                                  visitor.end_function();
                                  visitor.end_function_ptr();
-
-                                 visitor.push_identifier(content);
-                                 visitor.push_scope();
-                                 visitor.push_argument();
-                                 visitor.push_spec(content);
 
                                  visitor.begin_operator_identifier();
                                  visitor.end_operator_identifier();
@@ -55,7 +61,7 @@ namespace mimicpp::printing::type::parsing
     {
     public:
         [[nodiscard]]
-        explicit NameParser(Visitor visitor, StringViewT content) noexcept
+        explicit NameParser(Visitor visitor, StringViewT content) noexcept(std::is_nothrow_move_constructible_v<Visitor>)
             : m_Visitor{std::move(visitor)},
               m_Lexer{std::move(content)}
         {
@@ -195,8 +201,18 @@ namespace mimicpp::printing::type::parsing
                                             | std::views::take(count)
                                             | std::views::reverse)
                 {
-                    visitor().push_spec(spec.text());
+                    if (constexpr lexing::keyword constKeyword{"const"};
+                        constKeyword == spec)
+                    {
+                        visitor().add_const();
+                    }
+                    else if (constexpr lexing::keyword volatileKeyword{"volatile"};
+                             volatileKeyword == spec)
+                    {
+                        visitor().add_volatile();
+                    }
                 }
+
                 m_PrefixSpecs.erase(m_PrefixSpecs.cend() - count, m_PrefixSpecs.cend());
                 m_TokenStack.erase(iter.base(), m_TokenStack.cend());
             }
@@ -217,10 +233,6 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void handle_lexer_token(lexing::operator_or_punctuator const& token)
         {
-            constexpr lexing::operator_or_punctuator pointer{"*"};
-            constexpr lexing::operator_or_punctuator lvalueRef{"&"};
-            constexpr lexing::operator_or_punctuator rvalueRef{"&&"};
-
             if (constexpr lexing::operator_or_punctuator scopeResolution{"::"};
                 scopeResolution == token)
             {
@@ -271,29 +283,35 @@ namespace mimicpp::printing::type::parsing
                 reduce_as_arg();
                 visitor().push_argument();
             }
-            else if (std::ranges::contains(std::array{pointer, lvalueRef, rvalueRef}, token))
+            else if (constexpr lexing::operator_or_punctuator pointer{"*"};
+                     pointer == token)
             {
                 consume_prefix_spec_if_can();
-                visitor().push_spec(token.text());
+                visitor().add_ptr();
+            }
+            else if (constexpr lexing::operator_or_punctuator lvalueRef{"&"};
+                     lvalueRef == token)
+            {
+                consume_prefix_spec_if_can();
+                visitor().add_lvalue_ref();
+            }
+            else if (constexpr lexing::operator_or_punctuator rvalueRef{"&&"};
+                     rvalueRef == token)
+            {
+                consume_prefix_spec_if_can();
+                visitor().add_rvalue_ref();
             }
         }
 
         constexpr void handle_lexer_token(lexing::keyword const& token)
         {
-            constexpr lexing::keyword constKeyword{"const"};
-            constexpr lexing::keyword volatileKeyword{"volatile"};
-
             if (constexpr lexing::keyword operatorKeyword{"operator"};
                 operatorKeyword == token)
             {
                 handle_operator_token();
             }
-            else if (constexpr lexing::keyword noexceptKeyword{"noexcept"};
-                     noexceptKeyword == token)
-            {
-                visitor().push_spec("noexcept");
-            }
-            else if (constKeyword == token || volatileKeyword == token)
+            else if (constexpr lexing::keyword constKeyword{"const"};
+                     constKeyword == token)
             {
                 if (is_prefix_spec())
                 {
@@ -302,8 +320,26 @@ namespace mimicpp::printing::type::parsing
                 else
                 {
                     consume_prefix_spec_if_can();
-                    visitor().push_spec(token.text());
+                    visitor().add_const();
                 }
+            }
+            else if (constexpr lexing::keyword volatileKeyword{"volatile"};
+                     volatileKeyword == token)
+            {
+                if (is_prefix_spec())
+                {
+                    push_prefix_spec(token);
+                }
+                else
+                {
+                    consume_prefix_spec_if_can();
+                    visitor().add_volatile();
+                }
+            }
+            else if (constexpr lexing::keyword noexceptKeyword{"noexcept"};
+                     noexceptKeyword == token)
+            {
+                visitor().add_noexcept();
             }
         }
 
