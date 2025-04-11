@@ -134,7 +134,7 @@ namespace mimicpp::printing::type::parsing
         {
             MIMICPP_ASSERT(!m_Specs.empty(), "Invalid state.");
 
-            // A scoped identifier can never be cv prefixed, so any collected prefix must be from higher scope.
+            // A scope identifier can never be cv prefixed, so any collected prefix must be from higher layer.
             // But we need to handle suffix-specs, so let's just add a temporary spec-layer.
             m_Specs.emplace(
                 specs{},
