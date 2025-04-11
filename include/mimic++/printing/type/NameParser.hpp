@@ -35,7 +35,7 @@ namespace mimicpp::printing::type::parsing
                                  visitor.end();
 
                                  visitor.push_identifier(content);
-                                 visitor.push_scope();
+                                 visitor.add_scope();
                                  visitor.push_argument();
 
                                  visitor.add_const();
@@ -236,7 +236,7 @@ namespace mimicpp::printing::type::parsing
             if (constexpr lexing::operator_or_punctuator scopeResolution{"::"};
                 scopeResolution == token)
             {
-                visitor().push_scope();
+                visitor().add_scope();
                 m_TokenStack.emplace_back(token::scopeResolution);
             }
             else if (constexpr lexing::operator_or_punctuator templateBegin{"<"};
