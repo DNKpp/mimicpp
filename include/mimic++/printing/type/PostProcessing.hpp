@@ -11,6 +11,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
+// #include "mimic++/printing/type/NameParser.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 
 #include <array>
@@ -787,8 +788,260 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type
 {
     template <print_iterator OutIter>
+    class PrintVisitor
+    {
+    public:
+        [[nodiscard]]
+        explicit PrintVisitor(OutIter out) noexcept(std::is_nothrow_move_constructible_v<OutIter>)
+            : m_Out{std::move(out)}
+        {
+        }
+
+        [[nodiscard]]
+        constexpr OutIter out() const noexcept
+        {
+            return m_Out;
+        }
+
+        constexpr void begin()
+        {
+        }
+
+        constexpr void end()
+        {
+            MIMICPP_ASSERT(m_ContextStack.empty(), "Invalid state.");
+            MIMICPP_ASSERT(0 == m_Depth, "Unbalanced depth.");
+
+            flush_buffer();
+        }
+
+        [[nodiscard]]
+        static constexpr bool is_ignorable_identifier(StringViewT const content) noexcept
+        {
+            if (content == "__cxx11")
+            {
+                return true;
+            }
+
+            if (content.starts_with('`')
+                && content.ends_with('\'')
+                && std::ranges::all_of(content.cbegin() + 1, content.cend() - 1, detail::is_digit))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        constexpr void add_identifier(StringViewT content)
+        {
+            if (is_ignorable_identifier(content))
+            {
+                m_IgnoreNextScopeResolution = true;
+                return;
+            }
+
+            auto const& aliases = detail::alias_map();
+            if (auto const iter = aliases.find(content);
+                iter != aliases.cend())
+            {
+                content = iter->second;
+            }
+
+            print(content);
+        }
+
+        constexpr void add_const()
+        {
+            print(" const");
+        }
+
+        constexpr void add_volatile()
+        {
+            print(" volatile");
+        }
+
+        constexpr void add_noexcept()
+        {
+            print(" noexcept");
+        }
+
+        constexpr void add_ptr()
+        {
+            print("*");
+        }
+
+        constexpr void add_lvalue_ref()
+        {
+            print("&");
+        }
+
+        constexpr void add_rvalue_ref()
+        {
+            print("&&");
+        }
+
+        constexpr void add_argument()
+        {
+            print(", ");
+        }
+
+        constexpr void add_scope()
+        {
+            if (!std::exchange(m_IgnoreNextScopeResolution, false))
+            {
+                if (0 == m_Depth)
+                {
+                    clear_buffer();
+                }
+
+                print("::");
+            }
+        }
+
+        constexpr void begin_template()
+        {
+            if (1 == ++m_Depth)
+            {
+                MIMICPP_ASSERT(!m_BufferContext, "Invalid state.");
+                m_BufferContext = buffer_context::templated;
+                print("<");
+            }
+        }
+
+        constexpr void end_template()
+        {
+            MIMICPP_ASSERT(0 < m_Depth, "Unbalanced depth.");
+            if (0 == --m_Depth)
+            {
+                MIMICPP_ASSERT(m_BufferContext && buffer_context::templated == *m_BufferContext, "Invalid state.");
+                print(">");
+            }
+        }
+
+        constexpr void end_return_type()
+        {
+            if (0 == m_Depth)
+            {
+                flush_buffer();
+            }
+
+            print(" ");
+        }
+
+        constexpr void open_parenthesis()
+        {
+            if (1 == ++m_Depth)
+            {
+                MIMICPP_ASSERT(!m_BufferContext, "Invalid state.");
+                m_BufferContext = buffer_context::parens;
+                print("(");
+            }
+        }
+
+        constexpr void end_function()
+        {
+            MIMICPP_ASSERT(0 < m_Depth, "Unbalanced depth.");
+            if (0 == --m_Depth)
+            {
+                MIMICPP_ASSERT(m_BufferContext && buffer_context::parens == *m_BufferContext, "Invalid state.");
+                print(")");
+            }
+        }
+
+        constexpr void end_function_ptr()
+        {
+            MIMICPP_ASSERT(0 < m_Depth, "Unbalanced depth.");
+            if (0 == --m_Depth)
+            {
+                MIMICPP_ASSERT(m_BufferContext && buffer_context::parens == *m_BufferContext, "Invalid state.");
+                flush_buffer();
+                print(")");
+            }
+        }
+
+        constexpr void begin_operator_identifier()
+        {
+            print("operator");
+        }
+
+        constexpr void end_operator_identifier()
+        {
+        }
+
+    private:
+        OutIter m_Out;
+
+        bool m_IgnoreNextScopeResolution{false};
+
+        enum class buffer_context
+        {
+            parens,
+            templated
+        };
+        std::optional<buffer_context> m_BufferContext{};
+        int m_Depth{0};
+        std::deque<StringViewT> m_Buffer{};
+
+        constexpr void print(StringViewT const text)
+        {
+            if (!m_BufferContext)
+            {
+                m_Out = std::ranges::copy(text, std::move(m_Out)).out;
+            }
+            else if (m_Depth <= 1u)
+            {
+                m_Buffer.emplace_back(text);
+            }
+        }
+
+        void clear_buffer_if_can() noexcept
+        {
+            /*if (m_ContextStack.empty())
+            {
+                m_Buffer.clear();
+            }*/
+        }
+
+        void flush_buffer_if_can()
+        {
+            /*if (m_ContextStack.empty())
+            {
+                for (auto const& text : m_Buffer)
+                {
+                    m_Out = std::ranges::copy(text, std::move(m_Out)).out;
+                }
+
+                m_Buffer.clear();
+            }*/
+        }
+
+        void clear_buffer()
+        {
+            m_BufferContext.reset();
+            m_Buffer.clear();
+        }
+
+        void flush_buffer()
+        {
+            for (auto const& text : m_Buffer)
+            {
+                m_Out = std::ranges::copy(text, std::move(m_Out)).out;
+            }
+
+            clear_buffer();
+        }
+    };
+
+    template <print_iterator OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name)
     {
+        /*PrintVisitor visitor{std::move(out)};
+        parsing::NameParser parser{std::ref(visitor), name};
+        parser();
+
+        return visitor.out();*/
+
         name = detail::apply_basic_transformations(std::move(name));
 
         return detail::prettify(std::move(out), detail::trimmed(name));
