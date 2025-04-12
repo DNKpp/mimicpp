@@ -179,11 +179,16 @@ TEST_CASE(
         StringT const input{spec + " foo"};
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
         sequence += visitor.expect_spec_call(spec);
+        sequence += visitor.end_type.expect_call();
+
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -194,12 +199,17 @@ TEST_CASE(
         StringT const input{spec + " foo " + indirection};
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
         sequence += visitor.expect_spec_call(spec);
         sequence += visitor.expect_spec_call(indirection);
+        sequence += visitor.end_type.expect_call();
+
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -209,11 +219,16 @@ TEST_CASE(
         StringT const input{"foo " + spec};
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
         sequence += visitor.expect_spec_call(spec);
+        sequence += visitor.end_type.expect_call();
+
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -224,12 +239,17 @@ TEST_CASE(
         StringT const input{"foo " + spec + indirection};
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
         sequence += visitor.expect_spec_call(spec);
         sequence += visitor.expect_spec_call(indirection);
+        sequence += visitor.end_type.expect_call();
+
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -238,15 +258,22 @@ TEST_CASE(
         StringT const input{"volatile foo const * const&"};
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
+
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_volatile.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 }
