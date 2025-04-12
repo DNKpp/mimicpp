@@ -1083,4 +1083,28 @@ TEST_CASE(
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser();
     }
+
+    SECTION("When decorated function local type is given.")
+    {
+        StringViewT const visibility = GENERATE("public", "private", "protected");
+        StringViewT const typeClass = GENERATE("struct", "class", "enum");
+        StringT const input = StringT{typeClass} + " `" + StringT{visibility} + ": void __cdecl foo() __ptr64'::my_type";
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call("void");
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
 }

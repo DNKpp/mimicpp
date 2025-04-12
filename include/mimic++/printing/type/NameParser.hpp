@@ -543,10 +543,41 @@ namespace mimicpp::printing::type::parsing
             m_TokenStack.emplace_back(token::name);
         }
 
+        [[nodiscard]]
+        bool keep_reserved_identifier() const noexcept
+        {
+            if (!m_TokenStack.empty()
+                && token::scopeResolution != m_TokenStack.back())
+            {
+                return false;
+            }
+
+            auto const& next = m_Lexer.peek().classification;
+            if (std::holds_alternative<lexing::end>(next))
+            {
+                return true;
+            }
+
+            if (auto const* op = std::get_if<lexing::operator_or_punctuator>(&next))
+            {
+                return openingAngle == *op
+                    || openingParens == *op
+                    || scopeResolution == *op;
+            }
+
+            return false;
+        }
+
         void handle_lexer_token(lexing::identifier const& token)
         {
-            reduce_as_name();
-            visitor().add_identifier(token.content);
+            // Some environments add many reserved symbols (e.g. `__cdecl`). We want to filter out most of these,
+            // but keep those, which are actual function-names.
+            if (!token.content.starts_with("__")
+                || keep_reserved_identifier())
+            {
+                reduce_as_name();
+                visitor().add_identifier(token.content);
+            }
         }
 
         constexpr void pop_until_open_token()
