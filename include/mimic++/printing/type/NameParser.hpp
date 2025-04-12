@@ -458,6 +458,26 @@ namespace mimicpp::printing::type::parsing
         }
 
     private:
+        static constexpr lexing::operator_or_punctuator openingParens{"("};
+        static constexpr lexing::operator_or_punctuator closingParens{")"};
+        static constexpr lexing::operator_or_punctuator openingAngle{"<"};
+        static constexpr lexing::operator_or_punctuator closingAngle{">"};
+        static constexpr lexing::operator_or_punctuator openingCurly{"{"};
+        static constexpr lexing::operator_or_punctuator closingCurly{"}"};
+        static constexpr lexing::operator_or_punctuator openingSquare{"["};
+        static constexpr lexing::operator_or_punctuator closingSquare{"]"};
+        static constexpr lexing::operator_or_punctuator backtick{"`"};
+        static constexpr lexing::operator_or_punctuator singleQuote{"'"};
+        static constexpr lexing::operator_or_punctuator scopeResolution{"::"};
+        static constexpr lexing::operator_or_punctuator commaSeparator{","};
+        static constexpr lexing::operator_or_punctuator pointer{"*"};
+        static constexpr lexing::operator_or_punctuator lvalueRef{"&"};
+        static constexpr lexing::operator_or_punctuator rvalueRef{"&&"};
+        static constexpr lexing::keyword operatorKeyword{"operator"};
+        static constexpr lexing::keyword constKeyword{"const"};
+        static constexpr lexing::keyword volatileKeyword{"volatile"};
+        static constexpr lexing::keyword noexceptKeyword{"noexcept"};
+
         SpecNormalizerVisitor<Visitor> m_Visitor;
         LexerTokenLinearizer m_Lexer;
         std::deque<token> m_TokenStack{};
@@ -480,10 +500,9 @@ namespace mimicpp::printing::type::parsing
             if (!m_TokenStack.empty()
                 && token::name == m_TokenStack.back())
             {
-                constexpr lexing::operator_or_punctuator openParensToken{"("};
                 if (auto const* nextToken = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
                     nextToken
-                    && openParensToken == *nextToken)
+                    && openingParens == *nextToken)
                 {
                     visitor().end_return_type();
                 }
@@ -560,17 +579,7 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void handle_lexer_token(lexing::operator_or_punctuator const& token)
         {
-            constexpr lexing::operator_or_punctuator openingParens{"("};
-            constexpr lexing::operator_or_punctuator closingParens{")"};
-            constexpr lexing::operator_or_punctuator openingAngle{"<"};
-            constexpr lexing::operator_or_punctuator closingAngle{">"};
-            constexpr lexing::operator_or_punctuator openingCurly{"{"};
-            constexpr lexing::operator_or_punctuator closingCurly{"}"};
-            constexpr lexing::operator_or_punctuator backtick{"`"};
-            constexpr lexing::operator_or_punctuator singleQuote{"'"};
-
-            if (constexpr lexing::operator_or_punctuator scopeResolution{"::"};
-                scopeResolution == token)
+            if (scopeResolution == token)
             {
                 visitor().add_scope();
                 m_TokenStack.emplace_back(token::scopeResolution);
@@ -635,24 +644,21 @@ namespace mimicpp::printing::type::parsing
             {
                 handle_placeholder(token, singleQuote);
             }
-            else if (constexpr lexing::operator_or_punctuator commaSeparator{","};
-                     commaSeparator == token)
+            else if (commaSeparator == token)
             {
                 m_TokenStack.emplace_back(token::argSeparator);
                 visitor().add_argument();
             }
-            else if (constexpr lexing::operator_or_punctuator pointer{"*"};
-                     pointer == token)
+
+            else if (pointer == token)
             {
                 visitor().add_ptr();
             }
-            else if (constexpr lexing::operator_or_punctuator lvalueRef{"&"};
-                     lvalueRef == token)
+            else if (lvalueRef == token)
             {
                 visitor().add_lvalue_ref();
             }
-            else if (constexpr lexing::operator_or_punctuator rvalueRef{"&&"};
-                     rvalueRef == token)
+            else if (rvalueRef == token)
             {
                 visitor().add_rvalue_ref();
             }
@@ -660,23 +666,19 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void handle_lexer_token(lexing::keyword const& token)
         {
-            if (constexpr lexing::keyword operatorKeyword{"operator"};
-                operatorKeyword == token)
+            if (operatorKeyword == token)
             {
                 handle_operator_token();
             }
-            else if (constexpr lexing::keyword constKeyword{"const"};
-                     constKeyword == token)
+            else if (constKeyword == token)
             {
                 visitor().add_const();
             }
-            else if (constexpr lexing::keyword volatileKeyword{"volatile"};
-                     volatileKeyword == token)
+            else if (volatileKeyword == token)
             {
                 visitor().add_volatile();
             }
-            else if (constexpr lexing::keyword noexceptKeyword{"noexcept"};
-                     noexceptKeyword == token)
+            else if (noexceptKeyword == token)
             {
                 visitor().add_noexcept();
             }
@@ -704,17 +706,13 @@ namespace mimicpp::printing::type::parsing
                     visitor().add_identifier(content);
                 };
 
-                if (constexpr lexing::operator_or_punctuator openingParens{"("};
-                    openingParens == *operatorToken)
+                if (openingParens == *operatorToken)
                 {
-                    constexpr lexing::operator_or_punctuator closingOp{")"};
-                    finishMultiOpOperator(closingOp);
+                    finishMultiOpOperator(closingParens);
                 }
-                else if (constexpr lexing::operator_or_punctuator openingSquareParens{"["};
-                         openingSquareParens == *operatorToken)
+                else if (openingSquare == *operatorToken)
                 {
-                    constexpr lexing::operator_or_punctuator closingOp{"]"};
-                    finishMultiOpOperator(closingOp);
+                    finishMultiOpOperator(closingSquare);
                 }
                 else
                 {
