@@ -11,11 +11,13 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/type/NameLexer.hpp"
+#include "mimic++/printing/type/NamerParser2.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
 #include <concepts>
 #include <deque>
 #include <functional>
+#include <numeric>
 #include <stack>
 #include <type_traits>
 #include <utility>

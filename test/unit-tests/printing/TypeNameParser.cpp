@@ -16,14 +16,9 @@ namespace
         Mock<void()> begin{{.name = "VisitorMock::begin"}};
         Mock<void()> end{{.name = "VisitorMock::end"}};
 
-        Mock<void()> begin_template{{.name = "VisitorMock::begin_template"}};
-        Mock<void()> end_template{{.name = "VisitorMock::end_template"}};
-
-        Mock<void()> end_return_type{{.name = "VisitorMock::end_return_type"}};
-
-        Mock<void()> open_parenthesis{{.name = "VisitorMock::open_parenthesis"}};
-        Mock<void()> end_function{{.name = "VisitorMock::end_function"}};
-        Mock<void()> end_function_ptr{{.name = "VisitorMock::end_function_ptr"}};
+        Mock<void(StringViewT)> add_identifier{{.name = "VisitorMock::add_identifier"}};
+        Mock<void()> add_scope{{.name = "VisitorMock::add_scope"}};
+        Mock<void()> add_argument{{.name = "VisitorMock::add_argument"}};
 
         Mock<void()> add_const{{.name = "VisitorMock::add_const"}};
         Mock<void()> add_volatile{{.name = "VisitorMock::add_volatile"}};
@@ -32,9 +27,27 @@ namespace
         Mock<void()> add_lvalue_ref{{.name = "VisitorMock::add_lvalue_ref"}};
         Mock<void()> add_rvalue_ref{{.name = "VisitorMock::add_rvalue_ref"}};
 
-        Mock<void(StringViewT)> add_identifier{{.name = "VisitorMock::add_identifier"}};
-        Mock<void()> add_scope{{.name = "VisitorMock::add_scope"}};
-        Mock<void()> add_argument{{.name = "VisitorMock::add_argument"}};
+        Mock<void()> begin_name{{.name = "VisitorMock::begin_name"}};
+        Mock<void()> end_name{{.name = "VisitorMock::end_name"}};
+
+        Mock<void()> begin_type{{.name = "VisitorMock::begin_type"}};
+        Mock<void()> end_type{{.name = "VisitorMock::end_type"}};
+
+        Mock<void()> begin_template{{.name = "VisitorMock::begin_template"}};
+        Mock<void()> end_template{{.name = "VisitorMock::end_template"}};
+
+        Mock<void()> open_parenthesis{{.name = "VisitorMock::open_parenthesis"}};
+        Mock<void()> close_parenthesis{{.name = "VisitorMock::close_parenthesis"}};
+
+        Mock<void()> begin_function{{.name = "VisitorMock::begin_function"}};
+        Mock<void()> end_function{{.name = "VisitorMock::end_function"}};
+        Mock<void()> begin_return_type{{.name = "VisitorMock::begin_return_type"}};
+        Mock<void()> end_return_type{{.name = "VisitorMock::end_return_type"}};
+
+        Mock<void()> begin_args{{.name = "VisitorMock::begin_args"}};
+        Mock<void()> end_args{{.name = "VisitorMock::end_args"}};
+
+        Mock<void()> end_function_ptr{{.name = "VisitorMock::end_function_ptr"}};
 
         Mock<void()> begin_operator_identifier{{.name = "VisitorMock::begin_operator_identifier"}};
         Mock<void()> end_operator_identifier{{.name = "VisitorMock::end_operator_identifier"}};
@@ -93,10 +106,15 @@ TEST_CASE(
         StringViewT const input = GENERATE(from_range(identifiers));
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call(input);
+        sequence += visitor.end_name.expect_call();
+        sequence += visitor.end_type.expect_call();
+
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -109,14 +127,21 @@ TEST_CASE(
         StringT const input = StringT{firstScope} + "::" + StringT{secondScope} + "::" + StringT{thirdScope};
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
+
         sequence += visitor.add_identifier.expect_call(firstScope);
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.add_identifier.expect_call(secondScope);
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.add_identifier.expect_call(thirdScope);
+
+        sequence += visitor.end_name.expect_call();
+        sequence += visitor.end_type.expect_call();
+
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -126,11 +151,15 @@ TEST_CASE(
         StringT const input = "::" + StringT{scope};
         CAPTURE(input);
 
-        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call(scope);
+        sequence += visitor.end_name.expect_call();
+        sequence += visitor.end_type.expect_call();
+
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 }
