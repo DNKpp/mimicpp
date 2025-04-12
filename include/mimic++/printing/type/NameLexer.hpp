@@ -45,7 +45,7 @@ namespace mimicpp::printing::type::lexing
     namespace texts
     {
         // just list the noteworthy ones here
-        constexpr std::array keywords = std::to_array<StringViewT>({"const", "constexpr", "volatile", "noexcept", "operator"});
+        constexpr std::array keywords = std::to_array<StringViewT>({"const", "constexpr", "volatile", "noexcept", "operator", "public", "protected", "private", "struct", "class", "enum", "union"});
         constexpr std::array digraphs = std::to_array<StringViewT>({"and", "or", "xor", "not", "bitand", "bitor", "compl", "and_eq", "or_eq", "xor_eq", "not_eq"});
 
         constexpr std::array braceLikes = std::to_array<StringViewT>({"{", "}", "[", "]", "(", ")", "`", "'"});
