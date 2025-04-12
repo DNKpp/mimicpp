@@ -71,6 +71,38 @@ namespace mimicpp::printing::type::parsing2
         {
         };
 
+        class OpenParens
+        {
+        };
+
+        class CloseParens
+        {
+        };
+
+        class OpenAngle
+        {
+        };
+
+        class CloseAngle
+        {
+        };
+
+        class OpenCurly
+        {
+        };
+
+        class CloseCurly
+        {
+        };
+
+        class OpenSquare
+        {
+        };
+
+        class CloseSquare
+        {
+        };
+
         using Scope = action_fn;
 
         class Name
@@ -176,10 +208,13 @@ namespace mimicpp::printing::type::parsing2
             }
         };
 
+        class Template;
+
         class Type
         {
         public:
-            Name name{};
+            Name name;
+            std::shared_ptr<Template> templateInfo{};
             Specs specs{};
 
             template <parser_visitor Visitor>
@@ -190,6 +225,10 @@ namespace mimicpp::printing::type::parsing2
                 inner.begin_type();
 
                 std::invoke(name, visitor);
+                if (templateInfo)
+                {
+                    std::invoke(*templateInfo, visitor);
+                }
                 std::invoke(specs, visitor);
 
                 inner.end_type();
@@ -204,16 +243,59 @@ namespace mimicpp::printing::type::parsing2
             template <parser_visitor Visitor>
             void operator()(Visitor& visitor) const
             {
+                MIMICPP_ASSERT(!types.empty(), "Empty arg-list must be omitted.");
+
                 auto& inner = unwrap_visitor(visitor);
 
                 inner.begin_args();
 
+                bool isFirst{true};
                 for (auto const& type : types)
                 {
+                    if (!std::exchange(isFirst, false))
+                    {
+                        inner.add_argument();
+                    }
+
                     std::invoke(type, visitor);
                 }
 
                 inner.end_args();
+            }
+        };
+
+        class Template
+        {
+        public:
+            std::optional<ArgList> argList{};
+
+            template <parser_visitor Visitor>
+            void operator()(Visitor& visitor) const
+            {
+                auto& inner = unwrap_visitor(visitor);
+
+                inner.begin_template();
+                if (argList)
+                {
+                    std::invoke(*argList, visitor);
+                }
+                inner.end_template();
+            }
+        };
+
+        class FunctionArgs
+        {
+        public:
+            ArgList argList{};
+
+            template <parser_visitor Visitor>
+            void operator()(Visitor& visitor) const
+            {
+                auto& inner = unwrap_visitor(visitor);
+
+                inner.open_parenthesis();
+                std::invoke(argList, visitor);
+                inner.close_parenthesis();
             }
         };
 
@@ -222,7 +304,7 @@ namespace mimicpp::printing::type::parsing2
         public:
             Type returnType{};
             Name name{};
-            ArgList argList{};
+            FunctionArgs args{};
             Specs specs{};
 
             template <parser_visitor Visitor>
@@ -237,11 +319,7 @@ namespace mimicpp::printing::type::parsing2
                 inner.end_return_type();
 
                 std::invoke(name, visitor);
-
-                inner.open_parenthesis();
-                std::invoke(argList, visitor);
-                inner.close_parenthesis();
-
+                std::invoke(args, visitor);
                 std::invoke(specs, visitor);
 
                 inner.end_function();
@@ -252,30 +330,57 @@ namespace mimicpp::printing::type::parsing2
     using Token = std::variant<
         token::ArgSeparator,
         token::ScopeResolution,
+
+        token::OpenParens,
+        token::CloseParens,
+        token::OpenAngle,
+        token::CloseAngle,
+        token::OpenCurly,
+        token::CloseCurly,
+        token::OpenSquare,
+        token::CloseSquare,
+
         token::Name,
         token::ArgList,
+        token::Template,
+        token::FunctionArgs,
         token::Specs,
         token::Type,
         token::Function>;
 
-    template <typename Last, typename... Others>
+    namespace detail
+    {
+        template <typename Last, typename... Others>
+        [[nodiscard]]
+        constexpr std::size_t determine_longest_suffix(
+            [[maybe_unused]] util::type_list<Last, Others...> const types,
+            std::span<Token const> const tokenStack)
+        {
+            if (tokenStack.empty()
+                || !std::holds_alternative<Last>(tokenStack.back()))
+            {
+                return 0u;
+            }
+
+            int recursiveCount{};
+            if constexpr (0u < sizeof...(Others))
+            {
+                recursiveCount = determine_longest_suffix(
+                    util::type_list<Others...>{},
+                    tokenStack.first(tokenStack.size() - 1));
+            }
+
+            return 1u + recursiveCount;
+        }
+    }
+
+    template <typename First, typename... Others>
     [[nodiscard]]
     constexpr std::size_t determine_longest_suffix(std::span<Token const> const tokenStack)
     {
-        if (tokenStack.empty()
-            || !std::holds_alternative<Last>(tokenStack.back()))
-        {
-            return 0u;
-        }
+        using types = util::type_list<First, Others...>;
 
-        if constexpr (0u < sizeof...(Others))
-        {
-            return 1u + determine_longest_suffix<Others...>(tokenStack.first(tokenStack.size() - 1));
-        }
-        else
-        {
-            return 1u;
-        }
+        return detail::determine_longest_suffix(util::type_list_reverse_t<types>{}, tokenStack);
     }
 
     template <parser_visitor Visitor>
@@ -362,17 +467,102 @@ namespace mimicpp::printing::type::parsing2
         {
         }
 
+        bool try_reduce_as_template()
+        {
+            if (4u == determine_longest_suffix<token::Name, token::OpenAngle, token::ArgList, token::CloseAngle>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+
+                token::Template newTemplate{
+                    .argList = std::get<token::ArgList>(std::move(m_TokenStack.back()))};
+                MIMICPP_ASSERT(!newTemplate.argList->types.empty(), "Empty arg-list must be omitted.");
+                m_TokenStack.pop_back();
+                m_TokenStack.pop_back();
+
+                m_TokenStack.emplace_back(std::move(newTemplate));
+
+                return true;
+            }
+
+            if (3u == determine_longest_suffix<token::Name, token::OpenAngle, token::CloseAngle>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+                m_TokenStack.pop_back();
+
+                m_TokenStack.emplace_back(token::Template{});
+
+                return true;
+            }
+
+            return false;
+        }
+
+        bool try_reduce_as_function_args()
+        {
+            if (3u == determine_longest_suffix<token::OpenParens, token::ArgList, token::CloseParens>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+
+                token::FunctionArgs newFunctionArgs{
+                    .argList = std::get<token::ArgList>(std::move(m_TokenStack.back()))};
+                m_TokenStack.pop_back();
+                m_TokenStack.pop_back();
+
+                m_TokenStack.emplace_back(std::move(newFunctionArgs));
+
+                return true;
+            }
+
+            return false;
+        }
+
+        bool try_reduce_as_arg_list()
+        {
+            if (0u < determine_longest_suffix<token::ArgList, token::ArgSeparator, token::Type>(m_TokenStack))
+            {
+                auto type = std::get<token::Type>(std::move(m_TokenStack.back()));
+                m_TokenStack.pop_back();
+
+                if (2u == determine_longest_suffix<token::ArgList, token::ArgSeparator>(m_TokenStack))
+                {
+                    m_TokenStack.pop_back();
+                    std::get<token::ArgList>(m_TokenStack.back())
+                        .types
+                        .emplace_back(std::move(type));
+                }
+                else
+                {
+                    m_TokenStack.emplace_back(
+                        std::in_place_type<token::ArgList>,
+                        std::vector{std::move(type)});
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         bool try_reduce_as_type()
         {
             token::Specs specs{};
-            if (2u == determine_longest_suffix<token::Specs, token::Name>(m_TokenStack))
+            if (2u == determine_longest_suffix<token::Name, token::Specs>(m_TokenStack)
+                || 3u == determine_longest_suffix<token::Name, token::Template, token::Specs>(m_TokenStack))
             {
                 specs = std::get<token::Specs>(std::move(m_TokenStack.back()));
                 m_TokenStack.pop_back();
             }
-            else if (0u == determine_longest_suffix<token::Name>(m_TokenStack))
+            else if (1u > determine_longest_suffix<token::Name>(m_TokenStack) && 2u > determine_longest_suffix<token::Name, token::Template>(m_TokenStack))
             {
                 return false;
+            }
+
+            std::shared_ptr<token::Template> templateInfo{};
+            if (1u == determine_longest_suffix<token::Template>(m_TokenStack))
+            {
+                templateInfo = std::make_shared<token::Template>(
+                    std::get<token::Template>(std::move(m_TokenStack.back())));
+                m_TokenStack.pop_back();
             }
 
             auto name = std::get<token::Name>(std::move(m_TokenStack.back()));
@@ -389,6 +579,7 @@ namespace mimicpp::printing::type::parsing2
             m_TokenStack.emplace_back(
                 token::Type{
                     .name = std::move(name),
+                    .templateInfo = std::move(templateInfo),
                     .specs = std::move(specs)});
 
             return true;
@@ -401,7 +592,7 @@ namespace mimicpp::printing::type::parsing2
 
         void reduce_as_name(token::Scope scope)
         {
-            switch (determine_longest_suffix<token::ScopeResolution, token::Name>(m_TokenStack))
+            switch (determine_longest_suffix<token::Name, token::ScopeResolution>(m_TokenStack))
             {
             case 2:
                 m_TokenStack.pop_back();
@@ -464,6 +655,13 @@ namespace mimicpp::printing::type::parsing2
             {
                 m_TokenStack.emplace_back(token::ScopeResolution{});
             }
+            else if (commaSeparator == token)
+            {
+                try_reduce_as_type()
+                    && try_reduce_as_arg_list();
+
+                m_TokenStack.emplace_back(token::ArgSeparator{});
+            }
             else if (lvalueRef == token)
             {
                 reduce_as_specs({.isLValueRef = true});
@@ -475,6 +673,44 @@ namespace mimicpp::printing::type::parsing2
             else if (pointer == token)
             {
                 reduce_as_specs_layer();
+            }
+            else if (openingParens == token)
+            {
+                m_TokenStack.emplace_back(token::OpenParens{});
+            }
+            else if (closingParens == token)
+            {
+                m_TokenStack.emplace_back(token::CloseParens{});
+
+                try_reduce_as_function_args();
+            }
+            else if (openingAngle == token)
+            {
+                m_TokenStack.emplace_back(token::OpenAngle{});
+            }
+            else if (closingAngle == token)
+            {
+                try_reduce_as_type()
+                    && try_reduce_as_arg_list();
+
+                m_TokenStack.emplace_back(token::CloseAngle{});
+                try_reduce_as_template();
+            }
+            else if (openingCurly == token)
+            {
+                m_TokenStack.emplace_back(token::OpenCurly{});
+            }
+            else if (closingCurly == token)
+            {
+                m_TokenStack.emplace_back(token::CloseCurly{});
+            }
+            else if (openingSquare == token)
+            {
+                m_TokenStack.emplace_back(token::OpenSquare{});
+            }
+            else if (closingSquare == token)
+            {
+                m_TokenStack.emplace_back(token::CloseSquare{});
             }
         }
 
