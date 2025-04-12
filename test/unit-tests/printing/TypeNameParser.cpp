@@ -1029,7 +1029,8 @@ TEST_CASE(
 
     SECTION("Deeply nested function local type is given.")
     {
-        constexpr StringViewT input{"`ret2 `ret1 `ret0 inner::fn0(int const)'::middle::fn1()const'::outer::fn2()const &'::my_type"};
+        constexpr StringViewT input{
+            "`ret2 `ret1 `ret0 inner::fn0(int const)'::`my_placeholder'::middle::fn1()const'::outer::fn2()const &'::my_type"};
         CAPTURE(input);
 
         sequence += visitor.add_identifier.expect_call("ret0");
@@ -1046,6 +1047,9 @@ TEST_CASE(
         sequence += visitor.end_function.expect_call();
         sequence += visitor.add_scope.expect_call();
         // end `inner::fn(int const)`
+
+        sequence += visitor.add_identifier.expect_call("`my_placeholder'");
+        sequence += visitor.add_scope.expect_call();
 
         sequence += visitor.add_identifier.expect_call("ret1");
         sequence += visitor.end_return_type.expect_call();
@@ -1070,7 +1074,7 @@ TEST_CASE(
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.add_scope.expect_call();
-        // end `middle::fn1()const`
+        // end `outer::fn2()const`
 
         sequence += visitor.add_identifier.expect_call("my_type");
 

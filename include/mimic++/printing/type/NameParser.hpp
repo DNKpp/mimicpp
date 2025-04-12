@@ -319,6 +319,7 @@ namespace mimicpp::printing::type::parsing
     private:
         static constexpr lexing::operator_or_punctuator backtick{"`"};
         static constexpr lexing::operator_or_punctuator singleQuote{"'"};
+        static constexpr lexing::operator_or_punctuator scopeResolution{"::"};
 
         lexing::NameLexer m_Lexer;
         lexing::token m_Next;
@@ -398,6 +399,14 @@ namespace mimicpp::printing::type::parsing
             {
                 layer.pop_front();
                 layer.pop_back();
+            }
+
+            // The trailing `::` must be the suffix of the current scope, so that the linearizing process is correct.
+            if (auto const* nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                nextOp
+                && scopeResolution == *nextOp)
+            {
+                layer.emplace_back(m_Lexer.next());
             }
         }
 
