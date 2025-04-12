@@ -12,9 +12,14 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/type/NameLexer.hpp"
 
+#include <concepts>
+#include <deque>
 #include <functional>
+#include <stack>
+#include <type_traits>
 #include <utility>
 #include <variant>
+#include <vector>
 
 namespace mimicpp::printing::type::parsing
 {
@@ -289,6 +294,142 @@ namespace mimicpp::printing::type::parsing
         open
     };
 
+    class LexerTokenLinearizer
+    {
+    public:
+        [[nodiscard]]
+        explicit constexpr LexerTokenLinearizer(StringViewT text) noexcept
+            : m_Lexer{std::move(text)}
+        {
+            m_Next = find_next();
+        }
+
+        [[nodiscard]]
+        lexing::token next()
+        {
+            return std::exchange(m_Next, find_next());
+        }
+
+        [[nodiscard]]
+        constexpr lexing::token const& peek() const noexcept
+        {
+            return m_Next;
+        }
+
+    private:
+        static constexpr lexing::operator_or_punctuator backtick{"`"};
+        static constexpr lexing::operator_or_punctuator singleQuote{"'"};
+
+        lexing::NameLexer m_Lexer;
+        lexing::token m_Next;
+
+        std::stack<std::deque<lexing::token>> m_BufferedTokens{};
+
+        [[nodiscard]]
+        lexing::token find_next()
+        {
+            if (!m_BufferedTokens.empty())
+            {
+                auto& layer = m_BufferedTokens.top();
+                MIMICPP_ASSERT(!layer.empty(), "Empty buffer layer.");
+                auto next = std::move(layer.front());
+                if (1u == layer.size())
+                {
+                    m_BufferedTokens.pop();
+
+                    // When there is still a layer present, we need to search for the next single-quote token
+                    // and thus finalize that layer (or start another nested one).
+                    if (!m_BufferedTokens.empty())
+                    {
+                        buffer_tokens();
+                    }
+                }
+                else
+                {
+                    layer.pop_front();
+                }
+
+                return next;
+            }
+
+            auto next = m_Lexer.next();
+
+            // If a backtick is detected, we need to push that token into the buffer first, so `buffer_tokens` runs correctly.
+            if (auto const* nextClass = std::get_if<lexing::operator_or_punctuator>(&next.classification);
+                nextClass
+                && backtick == *nextClass)
+            {
+                m_BufferedTokens.emplace().emplace_back(std::move(next));
+                buffer_tokens();
+
+                return find_next();
+            }
+
+            return next;
+        }
+
+        void buffer_tokens()
+        {
+            MIMICPP_ASSERT(!m_BufferedTokens.empty(), "Empty token-buffer.");
+
+            while (std::visit(
+                [&](auto const& next) { return shall_continue(next); },
+                m_Lexer.peek().classification))
+            {
+                m_BufferedTokens.top().emplace_back(m_Lexer.next());
+            }
+
+            m_BufferedTokens.top().emplace_back(m_Lexer.next());
+
+            // We need to make a decision here. The newly gathered layer denotes either a function (with or without return type)
+            // or a placeholder like. A placeholder can only be a simple combination of identifier and space.
+            auto& layer = m_BufferedTokens.top();
+            bool const isPlaceholder = std::ranges::all_of(
+                layer.cbegin() + 1,
+                layer.cend() - 1,
+                [](lexing::token_class const& classification) noexcept {
+                    return std::holds_alternative<lexing::space>(classification)
+                        || std::holds_alternative<lexing::identifier>(classification);
+                },
+                &lexing::token::classification);
+
+            // If it's not a placeholder just omit the opening and closing token, so the parser does not get confused.
+            if (!isPlaceholder)
+            {
+                layer.pop_front();
+                layer.pop_back();
+            }
+        }
+
+        [[nodiscard]]
+        static constexpr bool shall_continue([[maybe_unused]] lexing::end const& token) noexcept
+        {
+            return false;
+        }
+
+        [[nodiscard]]
+        bool shall_continue(lexing::operator_or_punctuator const& token)
+        {
+            if (singleQuote == token)
+            {
+                return false;
+            }
+
+            if (backtick == token)
+            {
+                m_BufferedTokens.emplace();
+            }
+
+            return true;
+        }
+
+        [[nodiscard]]
+        static constexpr bool shall_continue([[maybe_unused]] auto const& token) noexcept
+        {
+            return true;
+        }
+    };
+
     template <parser_visitor Visitor>
     class NameParser
     {
@@ -318,7 +459,7 @@ namespace mimicpp::printing::type::parsing
 
     private:
         SpecNormalizerVisitor<Visitor> m_Visitor;
-        lexing::NameLexer m_Lexer;
+        LexerTokenLinearizer m_Lexer;
         std::deque<token> m_TokenStack{};
 
         [[nodiscard]]
