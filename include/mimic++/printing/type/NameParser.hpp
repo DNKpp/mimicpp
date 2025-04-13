@@ -301,7 +301,7 @@ namespace mimicpp::printing::type::parsing
     {
     public:
         [[nodiscard]]
-        explicit constexpr LexerTokenLinearizer(StringViewT text) noexcept
+        explicit LexerTokenLinearizer(StringViewT text) noexcept
             : m_Lexer{std::move(text)}
         {
             m_Next = find_next();
