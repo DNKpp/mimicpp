@@ -41,6 +41,8 @@ namespace mimicpp::printing::type::parsing2
 
                                  visitor.begin_function();
                                  visitor.end_function();
+                                 visitor.begin_function_ptr();
+                                 visitor.end_function_ptr();
                                  visitor.begin_return_type();
                                  visitor.end_return_type();
                                  visitor.begin_args();
@@ -164,6 +166,12 @@ namespace mimicpp::printing::type::parsing2
 
             std::vector<Layer> layers{1u};
 
+            [[nodiscard]]
+            constexpr bool has_ptr() const noexcept
+            {
+                return 1u < layers.size();
+            }
+
             template <parser_visitor Visitor>
             void operator()(Visitor& visitor) const
             {
@@ -283,11 +291,37 @@ namespace mimicpp::printing::type::parsing2
             }
         };
 
+        class FunctionPtr
+        {
+        public:
+            std::vector<Scope> scopes{};
+            Specs specs;
+
+            template <parser_visitor Visitor>
+            void operator()(Visitor& visitor) const
+            {
+                auto& inner = unwrap_visitor(visitor);
+
+                inner.begin_function_ptr();
+
+                for (auto const& scope : scopes)
+                {
+                    std::invoke(scope);
+                    visitor.add_scope();
+                }
+
+                MIMICPP_ASSERT(specs.has_ptr(), "Invalid specs.");
+                std::invoke(specs, visitor);
+
+                inner.end_function_ptr();
+            }
+        };
+
         class Function
         {
         public:
             std::shared_ptr<Type> returnType{};
-            std::optional<Name> name{};
+            std::variant<std::monostate, Name, FunctionPtr> description{};
             std::optional<Template> templateInfo{};
             FunctionArgs args{};
             Specs specs{};
@@ -306,10 +340,9 @@ namespace mimicpp::printing::type::parsing2
                     inner.end_return_type();
                 }
 
-                if (name)
-                {
-                    std::invoke(*name, visitor);
-                }
+                std::visit(
+                    [&](auto const& desc) { handle_description(visitor, desc); },
+                    description);
 
                 if (templateInfo)
                 {
@@ -320,6 +353,18 @@ namespace mimicpp::printing::type::parsing2
                 std::invoke(specs, visitor);
 
                 inner.end_function();
+            }
+
+        private:
+            template <parser_visitor Visitor>
+            static constexpr void handle_description([[maybe_unused]] Visitor& visitor, [[maybe_unused]] std::monostate const state)
+            {
+            }
+
+            template <parser_visitor Visitor, typename Description>
+            static constexpr void handle_description(Visitor& visitor, Description const& description)
+            {
+                std::invoke(description, visitor);
             }
         };
 
@@ -387,6 +432,7 @@ namespace mimicpp::printing::type::parsing2
         token::ArgList,
         token::Template,
         token::FunctionArgs,
+        token::FunctionPtr,
         token::Specs,
         token::Type>;
 
@@ -627,7 +673,12 @@ namespace mimicpp::printing::type::parsing2
 
             if (1u == determine_longest_suffix<token::Name>(pendingStack))
             {
-                functionInfo.name = std::get<token::Name>(std::move(pendingStack.back()));
+                functionInfo.description = std::get<token::Name>(std::move(pendingStack.back()));
+                pendingStack = pendingStack.first(pendingStack.size() - 1u);
+            }
+            else if (1u == determine_longest_suffix<token::FunctionPtr>(pendingStack))
+            {
+                functionInfo.description = std::get<token::FunctionPtr>(std::move(pendingStack.back()));
                 pendingStack = pendingStack.first(pendingStack.size() - 1u);
             }
 
@@ -782,6 +833,52 @@ namespace mimicpp::printing::type::parsing2
             }
         }
 
+        bool try_reduce_as_member_function_ptr()
+        {
+            if (5u == determine_longest_suffix<token::OpenParens, token::Name, token::ScopeResolution, token::Specs, token::CloseParens>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+                auto specs = extract_top_as<token::Specs>();
+                MIMICPP_ASSERT(specs.has_ptr(), "Invalid specs.");
+                m_TokenStack.pop_back();
+                auto name = extract_top_as<token::Name>();
+                m_TokenStack.pop_back();
+
+                m_TokenStack.emplace_back(
+                    token::FunctionPtr{
+                        .scopes = std::move(name).scopes,
+                        .specs = std::move(specs)});
+
+                return true;
+            }
+
+            return false;
+        }
+
+        bool try_reduce_as_free_function_ptr()
+        {
+            if (3u == determine_longest_suffix<token::OpenParens, token::Specs, token::CloseParens>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+                auto specs = extract_top_as<token::Specs>();
+                MIMICPP_ASSERT(specs.has_ptr(), "Invalid specs.");
+                m_TokenStack.pop_back();
+
+                m_TokenStack.emplace_back(
+                    token::FunctionPtr{.specs = std::move(specs)});
+
+                return true;
+            }
+
+            return false;
+        }
+
+        bool try_reduce_as_function_ptr()
+        {
+            return try_reduce_as_free_function_ptr()
+                || try_reduce_as_member_function_ptr();
+        }
+
         constexpr void handle_lexer_token(lexing::operator_or_punctuator const& token)
         {
             if (scopeResolution == token)
@@ -817,8 +914,15 @@ namespace mimicpp::printing::type::parsing2
                     && try_reduce_as_arg_list();
 
                 m_TokenStack.emplace_back(token::CloseParens{});
-                try_reduce_as_function_args()
-                    && try_reduce_as_function_args();
+
+                if (auto const* op = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                    !op
+                    || openingParens != *op
+                    || !try_reduce_as_function_ptr())
+                {
+                    try_reduce_as_function_args()
+                        && try_reduce_as_function_args();
+                }
             }
             else if (openingAngle == token)
             {
