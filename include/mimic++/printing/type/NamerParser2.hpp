@@ -208,13 +208,61 @@ namespace mimicpp::printing::type::parsing2
             }
         };
 
-        class Template;
+        class Type;
+
+        class ArgList
+        {
+        public:
+            std::vector<Type> types;
+
+            ~ArgList() noexcept;
+            ArgList();
+            ArgList(ArgList const&);
+            ArgList& operator=(ArgList const&);
+            ArgList(ArgList&&) noexcept;
+            ArgList& operator=(ArgList&&) noexcept;
+
+            template <parser_visitor Visitor>
+            void operator()(Visitor& visitor) const;
+        };
+
+        class Template
+        {
+        public:
+            ArgList argList{};
+
+            template <parser_visitor Visitor>
+            void operator()(Visitor& visitor) const
+            {
+                auto& inner = unwrap_visitor(visitor);
+
+                inner.begin_template();
+                std::invoke(argList, visitor);
+                inner.end_template();
+            }
+        };
+
+        class FunctionArgs
+        {
+        public:
+            ArgList argList{};
+
+            template <parser_visitor Visitor>
+            void operator()(Visitor& visitor) const
+            {
+                auto& inner = unwrap_visitor(visitor);
+
+                inner.open_parenthesis();
+                std::invoke(argList, visitor);
+                inner.close_parenthesis();
+            }
+        };
 
         class Type
         {
         public:
             Name name;
-            std::shared_ptr<Template> templateInfo{};
+            std::optional<Template> templateInfo{};
             Specs specs{};
 
             template <parser_visitor Visitor>
@@ -235,16 +283,18 @@ namespace mimicpp::printing::type::parsing2
             }
         };
 
-        class ArgList
+        inline ArgList::~ArgList() noexcept = default;
+        inline ArgList::ArgList() = default;
+        inline ArgList::ArgList(ArgList const&) = default;
+        inline ArgList& ArgList::operator=(ArgList const&) = default;
+        inline ArgList::ArgList(ArgList&&) noexcept = default;
+        inline ArgList& ArgList::operator=(ArgList&&) noexcept = default;
+
+        template <parser_visitor Visitor>
+        void ArgList::operator()(Visitor& visitor) const
         {
-        public:
-            std::vector<Type> types{};
-
-            template <parser_visitor Visitor>
-            void operator()(Visitor& visitor) const
+            if (!types.empty())
             {
-                MIMICPP_ASSERT(!types.empty(), "Empty arg-list must be omitted.");
-
                 auto& inner = unwrap_visitor(visitor);
 
                 inner.begin_args();
@@ -262,45 +312,7 @@ namespace mimicpp::printing::type::parsing2
 
                 inner.end_args();
             }
-        };
-
-        class Template
-        {
-        public:
-            std::optional<ArgList> argList{};
-
-            template <parser_visitor Visitor>
-            void operator()(Visitor& visitor) const
-            {
-                auto& inner = unwrap_visitor(visitor);
-
-                inner.begin_template();
-                if (argList)
-                {
-                    std::invoke(*argList, visitor);
-                }
-                inner.end_template();
-            }
-        };
-
-        class FunctionArgs
-        {
-        public:
-            std::optional<ArgList> argList{};
-
-            template <parser_visitor Visitor>
-            void operator()(Visitor& visitor) const
-            {
-                auto& inner = unwrap_visitor(visitor);
-
-                inner.open_parenthesis();
-                if (argList)
-                {
-                    std::invoke(*argList, visitor);
-                }
-                inner.close_parenthesis();
-            }
-        };
+        }
 
         class Function
         {
@@ -507,9 +519,9 @@ namespace mimicpp::printing::type::parsing2
                 }
                 else
                 {
-                    m_TokenStack.emplace_back(
-                        std::in_place_type<token::ArgList>,
-                        std::vector{std::move(type)});
+                    token::ArgList argList{};
+                    argList.types.emplace_back(std::move(type));
+                    m_TokenStack.emplace_back(std::move(argList));
                 }
 
                 return true;
@@ -526,7 +538,7 @@ namespace mimicpp::printing::type::parsing2
 
                 token::Template newTemplate{
                     .argList = extract_top_as<token::ArgList>()};
-                MIMICPP_ASSERT(!newTemplate.argList->types.empty(), "Empty arg-list must be omitted.");
+                MIMICPP_ASSERT(!newTemplate.argList.types.empty(), "Empty arg-list must be omitted.");
                 m_TokenStack.pop_back();
 
                 m_TokenStack.emplace_back(std::move(newTemplate));
@@ -555,6 +567,7 @@ namespace mimicpp::printing::type::parsing2
 
                 token::FunctionArgs newFunctionArgs{
                     .argList = extract_top_as<token::ArgList>()};
+                MIMICPP_ASSERT(!newFunctionArgs.argList.types.empty(), "Empty arg-list must be omitted.");
                 m_TokenStack.pop_back();
 
                 m_TokenStack.emplace_back(std::move(newFunctionArgs));
@@ -637,11 +650,10 @@ namespace mimicpp::printing::type::parsing2
                 return false;
             }
 
-            std::shared_ptr<token::Template> templateInfo{};
+            std::optional<token::Template> templateInfo{};
             if (1u == determine_longest_suffix<token::Template>(m_TokenStack))
             {
-                templateInfo = std::make_shared<token::Template>(
-                    extract_top_as<token::Template>());
+                templateInfo = extract_top_as<token::Template>();
             }
 
             auto name = extract_top_as<token::Name>();
