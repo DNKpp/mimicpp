@@ -286,7 +286,7 @@ namespace mimicpp::printing::type::parsing2
         class FunctionArgs
         {
         public:
-            ArgList argList{};
+            std::optional<ArgList> argList{};
 
             template <parser_visitor Visitor>
             void operator()(Visitor& visitor) const
@@ -294,7 +294,10 @@ namespace mimicpp::printing::type::parsing2
                 auto& inner = unwrap_visitor(visitor);
 
                 inner.open_parenthesis();
-                std::invoke(argList, visitor);
+                if (argList)
+                {
+                    std::invoke(*argList, visitor);
+                }
                 inner.close_parenthesis();
             }
         };
@@ -302,8 +305,9 @@ namespace mimicpp::printing::type::parsing2
         class Function
         {
         public:
-            Type returnType{};
-            Name name{};
+            std::optional<Type> returnType{};
+            std::optional<Name> name{};
+            std::optional<Template> templateInfo{};
             FunctionArgs args{};
             Specs specs{};
 
@@ -314,11 +318,23 @@ namespace mimicpp::printing::type::parsing2
 
                 inner.begin_function();
 
-                inner.begin_return_type();
-                std::invoke(returnType, visitor);
-                inner.end_return_type();
+                if (returnType)
+                {
+                    inner.begin_return_type();
+                    std::invoke(*returnType, visitor);
+                    inner.end_return_type();
+                }
 
-                std::invoke(name, visitor);
+                if (name)
+                {
+                    std::invoke(*name, visitor);
+                }
+
+                if (templateInfo)
+                {
+                    std::invoke(*templateInfo, visitor);
+                }
+
                 std::invoke(args, visitor);
                 std::invoke(specs, visitor);
 
@@ -476,8 +492,30 @@ namespace mimicpp::printing::type::parsing2
             util::unreachable();
         }
 
-        constexpr void handle_lexer_token([[maybe_unused]] lexing::space const& token) noexcept
+        bool try_reduce_as_arg_list()
         {
+            if (0u < determine_longest_suffix<token::ArgList, token::ArgSeparator, token::Type>(m_TokenStack))
+            {
+                auto type = extract_top_as<token::Type>();
+
+                if (2u == determine_longest_suffix<token::ArgList, token::ArgSeparator>(m_TokenStack))
+                {
+                    m_TokenStack.pop_back();
+                    std::get<token::ArgList>(m_TokenStack.back())
+                        .types
+                        .emplace_back(std::move(type));
+                }
+                else
+                {
+                    m_TokenStack.emplace_back(
+                        std::in_place_type<token::ArgList>,
+                        std::vector{std::move(type)});
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         bool try_reduce_as_template()
@@ -524,33 +562,66 @@ namespace mimicpp::printing::type::parsing2
                 return true;
             }
 
-            return false;
-        }
-
-        bool try_reduce_as_arg_list()
-        {
-            if (0u < determine_longest_suffix<token::ArgList, token::ArgSeparator, token::Type>(m_TokenStack))
+            if (2u == determine_longest_suffix<token::OpenParens, token::CloseParens>(m_TokenStack))
             {
-                auto type = extract_top_as<token::Type>();
+                m_TokenStack.pop_back();
+                m_TokenStack.pop_back();
 
-                if (2u == determine_longest_suffix<token::ArgList, token::ArgSeparator>(m_TokenStack))
-                {
-                    m_TokenStack.pop_back();
-                    std::get<token::ArgList>(m_TokenStack.back())
-                        .types
-                        .emplace_back(std::move(type));
-                }
-                else
-                {
-                    m_TokenStack.emplace_back(
-                        std::in_place_type<token::ArgList>,
-                        std::vector{std::move(type)});
-                }
+                m_TokenStack.emplace_back(token::FunctionArgs{});
 
                 return true;
             }
 
             return false;
+        }
+
+        bool try_reduce_as_function()
+        {
+            std::span pendingStack{m_TokenStack};
+
+            token::Specs* specs{};
+            if (1u == determine_longest_suffix<token::Specs>(pendingStack))
+            {
+                specs = &std::get<token::Specs>(pendingStack.back());
+                pendingStack = pendingStack.first(pendingStack.size() - 1u);
+            }
+
+            if (0u == determine_longest_suffix<token::FunctionArgs>(pendingStack))
+            {
+                return false;
+            }
+
+            token::Function functionInfo{
+                .args = std::get<token::FunctionArgs>(std::move(pendingStack.back()))};
+            pendingStack = pendingStack.first(pendingStack.size() - 1u);
+
+            if (specs)
+            {
+                functionInfo.specs = std::move(*specs);
+            }
+
+            if (1u == determine_longest_suffix<token::Template>(pendingStack))
+            {
+                functionInfo.templateInfo = std::get<token::Template>(std::move(pendingStack.back()));
+                pendingStack = pendingStack.first(pendingStack.size() - 1u);
+            }
+
+            if (1u == determine_longest_suffix<token::Name>(pendingStack))
+            {
+                functionInfo.name = std::get<token::Name>(std::move(pendingStack.back()));
+                pendingStack = pendingStack.first(pendingStack.size() - 1u);
+            }
+
+            if (1u == determine_longest_suffix<token::Type>(pendingStack))
+            {
+                functionInfo.returnType = std::get<token::Type>(std::move(pendingStack.back()));
+                pendingStack = pendingStack.first(pendingStack.size() - 1u);
+            }
+
+            m_TokenStack.resize(pendingStack.size());
+            m_TokenStack.emplace_back(std::move(functionInfo));
+
+            return true;
         }
 
         bool try_reduce_as_type()
@@ -594,11 +665,17 @@ namespace mimicpp::printing::type::parsing2
 
         void reduce_as_end_state()
         {
-            try_reduce_as_type();
+            try_reduce_as_function()
+                || try_reduce_as_type();
         }
 
         void reduce_as_name(token::Scope scope)
         {
+            // Finalize already gathered type info, when possible.
+            // This will be required, when we already parsed the return-type of a function and now start processing
+            // it's name.
+            try_reduce_as_type();
+
             switch (determine_longest_suffix<token::Name, token::ScopeResolution>(m_TokenStack))
             {
             case 2:
@@ -616,6 +693,19 @@ namespace mimicpp::printing::type::parsing2
             default:
                 m_TokenStack.emplace_back(token::Name{{std::move(scope)}});
                 break;
+            }
+        }
+
+        constexpr void handle_lexer_token([[maybe_unused]] lexing::space const& token) noexcept
+        {
+            // When we receive a space before a `(` token, it may mean, that we already processed a return-type of a
+            // function type.
+            // => `ret ()`
+            if (auto const* op = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                op
+                && openingParens == *op)
+            {
+                try_reduce_as_type();
             }
         }
 
@@ -687,9 +777,12 @@ namespace mimicpp::printing::type::parsing2
             }
             else if (closingParens == token)
             {
-                m_TokenStack.emplace_back(token::CloseParens{});
+                try_reduce_as_type()
+                    && try_reduce_as_arg_list();
 
-                try_reduce_as_function_args();
+                m_TokenStack.emplace_back(token::CloseParens{});
+                try_reduce_as_function_args()
+                    && try_reduce_as_function_args();
             }
             else if (openingAngle == token)
             {

@@ -478,18 +478,24 @@ TEST_CASE(
     ScopedSequence sequence{};
 
     sequence += visitor.begin.expect_call();
+    sequence += visitor.begin_function.expect_call();
 
     SECTION("When function identifier with 0 args but without return type is given.")
     {
         StringViewT const input{"foo()"};
         CAPTURE(input);
 
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
+
         sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.close_parenthesis.expect_call();
+
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -498,15 +504,25 @@ TEST_CASE(
         StringViewT const input{"void foo()"};
         CAPTURE(input);
 
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("void");
+        sequence += visitor.end_name.expect_call();
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
+
         sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.close_parenthesis.expect_call();
+
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -515,21 +531,37 @@ TEST_CASE(
         StringViewT const input{"float foo(const std::string)"};
         CAPTURE(input);
 
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("float");
+        sequence += visitor.end_name.expect_call();
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.begin_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.add_identifier.expect_call("string");
-        sequence += visitor.expect_spec_call("const");
-        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_name.expect_call();
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.end_type.expect_call();
 
+        sequence += visitor.end_args.expect_call();
+        sequence += visitor.close_parenthesis.expect_call();
+
+        sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -538,49 +570,77 @@ TEST_CASE(
         StringViewT const input{"float foo(const std::string&&, const int)"};
         CAPTURE(input);
 
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("float");
+        sequence += visitor.end_name.expect_call();
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
+        sequence += visitor.begin_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.end_name.expect_call();
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_rvalue_ref.expect_call();
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.add_argument.expect_call();
 
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.end_name.expect_call();
         sequence += visitor.add_const.expect_call();
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end_args.expect_call();
+        sequence += visitor.close_parenthesis.expect_call();
 
         sequence += visitor.end_function.expect_call();
-
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
     SECTION("When function identifier with return type and specs is given.")
     {
         StringT const spec = GENERATE("const", "volatile", "noexcept", "&", "&&");
-        StringT const input = "float foo()" + spec;
+        StringT const specSpace = GENERATE(" ", "");
+        StringT const input = "float foo()" + specSpace + spec;
         CAPTURE(input);
 
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("float");
+        sequence += visitor.end_name.expect_call();
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.end_function.expect_call();
+        sequence += visitor.close_parenthesis.expect_call();
 
         sequence += visitor.expect_spec_call(spec);
 
+        sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -589,23 +649,34 @@ TEST_CASE(
         StringT const input = "const std::string* volatile& foo()";
         CAPTURE(input);
 
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.end_name.expect_call();
+
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.add_volatile.expect_call();
         sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_name.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.end_function.expect_call();
+        sequence += visitor.close_parenthesis.expect_call();
 
+        sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 
@@ -614,21 +685,30 @@ TEST_CASE(
         StringT const input = "const std::string* volatile& ()";
         CAPTURE(input);
 
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("std");
         sequence += visitor.add_scope.expect_call();
         sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.end_name.expect_call();
+
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.add_volatile.expect_call();
         sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.end_function.expect_call();
+        sequence += visitor.close_parenthesis.expect_call();
 
+        sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
 
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
 }
