@@ -458,6 +458,19 @@ namespace mimicpp::printing::type::parsing2
             return unwrap_visitor(m_Visitor);
         }
 
+        template <typename T>
+        [[nodiscard]]
+        constexpr T extract_top_as() noexcept(std::is_nothrow_move_constructible_v<T>)
+        {
+            MIMICPP_ASSERT(!m_TokenStack.empty(), "Stack is depleted.");
+            MIMICPP_ASSERT(std::holds_alternative<T>(m_TokenStack.back()), "Back does not match T.");
+
+            T token = std::get<T>(std::move(m_TokenStack.back()));
+            m_TokenStack.pop_back();
+
+            return token;
+        }
+
         static constexpr void handle_lexer_token([[maybe_unused]] lexing::end const& token) noexcept
         {
             util::unreachable();
@@ -474,9 +487,8 @@ namespace mimicpp::printing::type::parsing2
                 m_TokenStack.pop_back();
 
                 token::Template newTemplate{
-                    .argList = std::get<token::ArgList>(std::move(m_TokenStack.back()))};
+                    .argList = extract_top_as<token::ArgList>()};
                 MIMICPP_ASSERT(!newTemplate.argList->types.empty(), "Empty arg-list must be omitted.");
-                m_TokenStack.pop_back();
                 m_TokenStack.pop_back();
 
                 m_TokenStack.emplace_back(std::move(newTemplate));
@@ -504,8 +516,7 @@ namespace mimicpp::printing::type::parsing2
                 m_TokenStack.pop_back();
 
                 token::FunctionArgs newFunctionArgs{
-                    .argList = std::get<token::ArgList>(std::move(m_TokenStack.back()))};
-                m_TokenStack.pop_back();
+                    .argList = extract_top_as<token::ArgList>()};
                 m_TokenStack.pop_back();
 
                 m_TokenStack.emplace_back(std::move(newFunctionArgs));
@@ -520,8 +531,7 @@ namespace mimicpp::printing::type::parsing2
         {
             if (0u < determine_longest_suffix<token::ArgList, token::ArgSeparator, token::Type>(m_TokenStack))
             {
-                auto type = std::get<token::Type>(std::move(m_TokenStack.back()));
-                m_TokenStack.pop_back();
+                auto type = extract_top_as<token::Type>();
 
                 if (2u == determine_longest_suffix<token::ArgList, token::ArgSeparator>(m_TokenStack))
                 {
@@ -549,8 +559,7 @@ namespace mimicpp::printing::type::parsing2
             if (2u == determine_longest_suffix<token::Name, token::Specs>(m_TokenStack)
                 || 3u == determine_longest_suffix<token::Name, token::Template, token::Specs>(m_TokenStack))
             {
-                specs = std::get<token::Specs>(std::move(m_TokenStack.back()));
-                m_TokenStack.pop_back();
+                specs = extract_top_as<token::Specs>();
             }
             else if (1u > determine_longest_suffix<token::Name>(m_TokenStack) && 2u > determine_longest_suffix<token::Name, token::Template>(m_TokenStack))
             {
@@ -561,12 +570,10 @@ namespace mimicpp::printing::type::parsing2
             if (1u == determine_longest_suffix<token::Template>(m_TokenStack))
             {
                 templateInfo = std::make_shared<token::Template>(
-                    std::get<token::Template>(std::move(m_TokenStack.back())));
-                m_TokenStack.pop_back();
+                    extract_top_as<token::Template>());
             }
 
-            auto name = std::get<token::Name>(std::move(m_TokenStack.back()));
-            m_TokenStack.pop_back();
+            auto name = extract_top_as<token::Name>();
 
             if (1u == determine_longest_suffix<token::Specs>(m_TokenStack))
             {
@@ -728,10 +735,6 @@ namespace mimicpp::printing::type::parsing2
             {
                 reduce_as_specs({.isNoexcept = true});
             }
-        }
-
-        constexpr void handle_operator_token()
-        {
         }
     };
 }
