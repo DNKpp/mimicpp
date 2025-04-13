@@ -258,7 +258,7 @@ namespace mimicpp::printing::type::parsing2
             }
         };
 
-        class Type
+        class RegularType
         {
         public:
             Name name;
@@ -283,41 +283,10 @@ namespace mimicpp::printing::type::parsing2
             }
         };
 
-        inline ArgList::~ArgList() noexcept = default;
-        inline ArgList::ArgList() = default;
-        inline ArgList::ArgList(ArgList const&) = default;
-        inline ArgList& ArgList::operator=(ArgList const&) = default;
-        inline ArgList::ArgList(ArgList&&) noexcept = default;
-        inline ArgList& ArgList::operator=(ArgList&&) noexcept = default;
-
-        template <parser_visitor Visitor>
-        void ArgList::operator()(Visitor& visitor) const
-        {
-            if (!types.empty())
-            {
-                auto& inner = unwrap_visitor(visitor);
-
-                inner.begin_args();
-
-                bool isFirst{true};
-                for (auto const& type : types)
-                {
-                    if (!std::exchange(isFirst, false))
-                    {
-                        inner.add_argument();
-                    }
-
-                    std::invoke(type, visitor);
-                }
-
-                inner.end_args();
-            }
-        }
-
         class Function
         {
         public:
-            std::optional<Type> returnType{};
+            std::shared_ptr<Type> returnType{};
             std::optional<Name> name{};
             std::optional<Template> templateInfo{};
             FunctionArgs args{};
@@ -353,6 +322,52 @@ namespace mimicpp::printing::type::parsing2
                 inner.end_function();
             }
         };
+
+        class Type
+        {
+        public:
+            using State = std::variant<RegularType, Function>;
+            State m_State;
+
+            template <parser_visitor Visitor>
+            void operator()(Visitor& visitor) const
+            {
+                std::visit(
+                    [&](auto const& inner) { std::invoke(inner, visitor); },
+                    m_State);
+            }
+        };
+
+        inline ArgList::~ArgList() noexcept = default;
+        inline ArgList::ArgList() = default;
+        inline ArgList::ArgList(ArgList const&) = default;
+        inline ArgList& ArgList::operator=(ArgList const&) = default;
+        inline ArgList::ArgList(ArgList&&) noexcept = default;
+        inline ArgList& ArgList::operator=(ArgList&&) noexcept = default;
+
+        template <parser_visitor Visitor>
+        void ArgList::operator()(Visitor& visitor) const
+        {
+            if (!types.empty())
+            {
+                auto& inner = unwrap_visitor(visitor);
+
+                inner.begin_args();
+
+                bool isFirst{true};
+                for (auto const& type : types)
+                {
+                    if (!std::exchange(isFirst, false))
+                    {
+                        inner.add_argument();
+                    }
+
+                    std::invoke(type, visitor);
+                }
+
+                inner.end_args();
+            }
+        }
     }
 
     using Token = std::variant<
@@ -373,8 +388,7 @@ namespace mimicpp::printing::type::parsing2
         token::Template,
         token::FunctionArgs,
         token::Specs,
-        token::Type,
-        token::Function>;
+        token::Type>;
 
     namespace detail
     {
@@ -435,21 +449,13 @@ namespace mimicpp::printing::type::parsing2
                     next.classification);
             }
 
-            reduce_as_end_state();
+            try_reduce_as_type();
 
             MIMICPP_ASSERT(1u == m_TokenStack.size(), "A single end-state is required.");
-            if (auto const* type = std::get_if<token::Type>(&m_TokenStack.back()))
-            {
-                std::invoke(*type, visitor());
-            }
-            else if (auto const* function = std::get_if<token::Function>(&m_TokenStack.back()))
-            {
-                std::invoke(*function, visitor());
-            }
-            else
-            {
-                util::unreachable();
-            }
+            MIMICPP_ASSERT(std::holds_alternative<token::Type>(m_TokenStack.back()), "Only token::Type is allowed as end-state.");
+            std::invoke(
+                std::get<token::Type>(m_TokenStack.back()),
+                visitor());
 
             visitor().end();
         }
@@ -627,58 +633,76 @@ namespace mimicpp::printing::type::parsing2
 
             if (1u == determine_longest_suffix<token::Type>(pendingStack))
             {
-                functionInfo.returnType = std::get<token::Type>(std::move(pendingStack.back()));
+                functionInfo.returnType = std::make_shared<token::Type>(
+                    std::get<token::Type>(std::move(pendingStack.back())));
                 pendingStack = pendingStack.first(pendingStack.size() - 1u);
             }
 
             m_TokenStack.resize(pendingStack.size());
-            m_TokenStack.emplace_back(std::move(functionInfo));
+            m_TokenStack.emplace_back(
+                std::in_place_type<token::Type>,
+                std::move(functionInfo));
+
+            return true;
+        }
+
+        bool try_reduce_as_regular_type()
+        {
+            std::span pendingStack{m_TokenStack};
+
+            token::Specs* specs{};
+            if (1u == determine_longest_suffix<token::Specs>(pendingStack))
+            {
+                specs = &std::get<token::Specs>(pendingStack.back());
+                pendingStack = pendingStack.first(pendingStack.size() - 1u);
+            }
+
+            token::Template* templateInfo{};
+            if (1u == determine_longest_suffix<token::Template>(pendingStack))
+            {
+                templateInfo = &std::get<token::Template>(pendingStack.back());
+                pendingStack = pendingStack.first(pendingStack.size() - 1u);
+            }
+
+            if (0u == determine_longest_suffix<token::Name>(pendingStack))
+            {
+                return false;
+            }
+
+            token::RegularType type{
+                .name = std::get<token::Name>(std::move(pendingStack.back()))};
+            pendingStack = pendingStack.first(pendingStack.size() - 1u);
+
+            if (specs)
+            {
+                type.specs = std::move(*specs);
+            }
+
+            if (templateInfo)
+            {
+                type.templateInfo = std::move(*templateInfo);
+            }
+
+            if (1u == determine_longest_suffix<token::Specs>(pendingStack))
+            {
+                auto const& prefixSpecs = std::get<token::Specs>(pendingStack.back());
+                MIMICPP_ASSERT(1u == prefixSpecs.layers.size(), "Invalid state.");
+                type.specs.layers.front().merge(prefixSpecs.layers.front());
+                pendingStack = pendingStack.first(pendingStack.size() - 1u);
+            }
+
+            m_TokenStack.resize(pendingStack.size());
+            m_TokenStack.emplace_back(
+                std::in_place_type<token::Type>,
+                std::move(type));
 
             return true;
         }
 
         bool try_reduce_as_type()
         {
-            token::Specs specs{};
-            if (2u == determine_longest_suffix<token::Name, token::Specs>(m_TokenStack)
-                || 3u == determine_longest_suffix<token::Name, token::Template, token::Specs>(m_TokenStack))
-            {
-                specs = extract_top_as<token::Specs>();
-            }
-            else if (1u > determine_longest_suffix<token::Name>(m_TokenStack) && 2u > determine_longest_suffix<token::Name, token::Template>(m_TokenStack))
-            {
-                return false;
-            }
-
-            std::optional<token::Template> templateInfo{};
-            if (1u == determine_longest_suffix<token::Template>(m_TokenStack))
-            {
-                templateInfo = extract_top_as<token::Template>();
-            }
-
-            auto name = extract_top_as<token::Name>();
-
-            if (1u == determine_longest_suffix<token::Specs>(m_TokenStack))
-            {
-                auto const& prefixSpecs = std::get<token::Specs>(m_TokenStack.back());
-                MIMICPP_ASSERT(1u == prefixSpecs.layers.size(), "Invalid state.");
-                specs.layers.front().merge(prefixSpecs.layers.front());
-                m_TokenStack.pop_back();
-            }
-
-            m_TokenStack.emplace_back(
-                token::Type{
-                    .name = std::move(name),
-                    .templateInfo = std::move(templateInfo),
-                    .specs = std::move(specs)});
-
-            return true;
-        }
-
-        void reduce_as_end_state()
-        {
-            try_reduce_as_function()
-                || try_reduce_as_type();
+            return try_reduce_as_function()
+                || try_reduce_as_regular_type();
         }
 
         void reduce_as_name(token::Scope scope)
