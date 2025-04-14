@@ -71,7 +71,8 @@ namespace
         return TokenMatcher<TokenClass>{content, std::move(token)};
     }
 
-    constexpr auto matches_end_token()
+    [[nodiscard]]
+    auto matches_end_token()
     {
         return matches_token("", printing::type::lexing::end{});
     }
