@@ -14,4 +14,5 @@ target_sources(${TARGET_NAME}
     "TypePostProcessing.cpp"
     "TypePrinter.cpp"
     "TypeNameLexer.cpp"
+    "TypeNameParser.cpp"
 )
