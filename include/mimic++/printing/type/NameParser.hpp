@@ -29,6 +29,13 @@ namespace mimicpp::printing::type::parsing
                                  visitor.add_identifier(content);
                                  visitor.add_scope();
 
+                                 visitor.add_const();
+                                 visitor.add_volatile();
+                                 visitor.add_noexcept();
+                                 visitor.add_ptr();
+                                 visitor.add_lvalue_ref();
+                                 visitor.add_rvalue_ref();
+
                                  visitor.begin_name();
                                  visitor.end_name();
 
@@ -53,7 +60,7 @@ namespace mimicpp::printing::type::parsing
             StringViewT content{};
 
             template <parser_visitor Visitor>
-            void operator()(Visitor& visitor) const
+            constexpr void operator()(Visitor& visitor) const
             {
                 MIMICPP_ASSERT(!content.empty(), "Empty identifier is not allowed.");
 
@@ -69,7 +76,7 @@ namespace mimicpp::printing::type::parsing
             std::vector<Identifier> scopes{};
 
             template <parser_visitor Visitor>
-            void operator()(Visitor& visitor) const
+            constexpr void operator()(Visitor& visitor) const
             {
                 MIMICPP_ASSERT(!scopes.empty(), "Empty scope-sequence is not allowed.");
 
@@ -83,14 +90,102 @@ namespace mimicpp::printing::type::parsing
             }
         };
 
+        class Specs
+        {
+        public:
+            struct Layer
+            {
+                bool isConst{false};
+                bool isVolatile{false};
+                bool isNoexcept{false};
+                bool isLValueRef{false};
+                bool isRValueRef{false};
+
+                constexpr void merge(Layer const& others) noexcept
+                {
+                    MIMICPP_ASSERT(!(isConst && others.isConst), "Merging same specs.");
+                    MIMICPP_ASSERT(!(isVolatile && others.isVolatile), "Merging same specs.");
+                    MIMICPP_ASSERT(!(isNoexcept && others.isNoexcept), "Merging same specs.");
+                    MIMICPP_ASSERT(!(isLValueRef && others.isLValueRef), "Merging same specs.");
+                    MIMICPP_ASSERT(!(isRValueRef && others.isRValueRef), "Merging same specs.");
+
+                    MIMICPP_ASSERT(!(isLValueRef && others.isRValueRef), "Both reference types detected.");
+                    MIMICPP_ASSERT(!(isRValueRef && others.isLValueRef), "Both reference types detected.");
+
+                    isConst = isConst || others.isConst;
+                    isVolatile = isVolatile || others.isVolatile;
+                    isNoexcept = isNoexcept || others.isNoexcept;
+                    isLValueRef = isLValueRef || others.isLValueRef;
+                    isRValueRef = isRValueRef || others.isRValueRef;
+                }
+
+                template <parser_visitor Visitor>
+                constexpr void operator()(Visitor& visitor) const
+                {
+                    auto& inner = unwrap_visitor(visitor);
+
+                    MIMICPP_ASSERT(!(isLValueRef && isRValueRef), "Both reference types detected.");
+
+                    if (isConst)
+                    {
+                        inner.add_const();
+                    }
+
+                    if (isVolatile)
+                    {
+                        inner.add_volatile();
+                    }
+
+                    if (isLValueRef)
+                    {
+                        inner.add_lvalue_ref();
+                    }
+                    else if (isRValueRef)
+                    {
+                        inner.add_rvalue_ref();
+                    }
+
+                    if (isNoexcept)
+                    {
+                        inner.add_noexcept();
+                    }
+                }
+            };
+
+            std::vector<Layer> layers{1u};
+
+            [[nodiscard]]
+            constexpr bool has_ptr() const noexcept
+            {
+                return 1u < layers.size();
+            }
+
+            template <parser_visitor Visitor>
+            constexpr void operator()(Visitor& visitor) const
+            {
+                MIMICPP_ASSERT(!layers.empty(), "Invalid state.");
+
+                auto& unwrapped = unwrap_visitor(visitor);
+
+                std::invoke(layers.front(), unwrapped);
+
+                for (auto const& layer : layers | std::views::drop(1u))
+                {
+                    unwrapped.add_ptr();
+                    std::invoke(layer, unwrapped);
+                }
+            }
+        };
+
         class Type
         {
         public:
             std::optional<ScopeSequence> scopes{};
             Identifier identifier;
+            Specs specs{};
 
             template <parser_visitor Visitor>
-            void operator()(Visitor& visitor) const
+            constexpr void operator()(Visitor& visitor) const
             {
                 auto& unwrapped = unwrap_visitor(visitor);
 
@@ -105,6 +200,7 @@ namespace mimicpp::printing::type::parsing
                 std::invoke(identifier, unwrapped);
 
                 unwrapped.end_name();
+                std::invoke(specs, unwrapped);
                 unwrapped.end_type();
             }
         };
@@ -113,6 +209,7 @@ namespace mimicpp::printing::type::parsing
     using Token = std::variant<
         token::Identifier,
         token::ScopeSequence,
+        token::Specs,
         token::Type>;
     using TokenStack = std::vector<Token>;
 
@@ -127,7 +224,7 @@ namespace mimicpp::printing::type::parsing
         [[nodiscard]]
         constexpr bool is_suffix_of(
             [[maybe_unused]] util::type_list<Last, Others...> const types,
-            std::span<Token const> const tokenStack)
+            std::span<Token const> const tokenStack) noexcept
         {
             if (tokenStack.empty()
                 || !std::holds_alternative<Last>(tokenStack.back()))
@@ -186,6 +283,12 @@ namespace mimicpp::printing::type::parsing
         }
     }
 
+    constexpr void remove_suffix(std::span<Token>& tokenStack, std::size_t const count) noexcept
+    {
+        MIMICPP_ASSERT(count <= tokenStack.size(), "Count exceeds stack size.");
+        tokenStack = tokenStack.first(tokenStack.size() - count);
+    }
+
     namespace token
     {
         inline bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
@@ -215,30 +318,81 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_type(TokenStack& tokenStack)
         {
-            if (std::optional suffix = match_suffix<ScopeSequence, Identifier>(tokenStack))
+            std::span pendingTokens{tokenStack};
+
+            Specs* suffixSpecs{};
+            if (auto* specs = match_suffix<Specs>(pendingTokens))
             {
-                auto& [scopeSeq, id] = *suffix;
-
-                Type newType{
-                    .scopes = std::move(scopeSeq),
-                    .identifier = std::move(id)};
-                tokenStack.resize(tokenStack.size() - 2u);
-                tokenStack.emplace_back(std::move(newType));
-
-                return true;
+                suffixSpecs = specs;
+                remove_suffix(pendingTokens, 1u);
             }
 
-            if (auto* identifier = match_suffix<Identifier>(tokenStack))
+            if (!is_suffix_of<Identifier>(pendingTokens))
             {
-                Type newType{
-                    .identifier = {std::move(*identifier)}};
-                tokenStack.pop_back();
-                tokenStack.emplace_back(std::move(newType));
-
-                return true;
+                return false;
             }
 
-            return false;
+            Type newType{
+                .identifier = std::move(std::get<Identifier>(pendingTokens.back()))};
+            remove_suffix(pendingTokens, 1u);
+
+            if (suffixSpecs)
+            {
+                newType.specs = std::move(*suffixSpecs);
+            }
+
+            if (auto* seq = match_suffix<ScopeSequence>(pendingTokens))
+            {
+                newType.scopes = std::move(*seq);
+                remove_suffix(pendingTokens, 1u);
+            }
+
+            if (auto* prefixSpecs = match_suffix<Specs>(pendingTokens))
+            {
+                auto& layers = prefixSpecs->layers;
+                MIMICPP_ASSERT(1u == layers.size(), "Prefix specs can not have more than one layer.");
+                auto& specs = layers.front();
+                MIMICPP_ASSERT(!specs.isLValueRef && !specs.isRValueRef && !specs.isNoexcept, "Invalid prefix specs.");
+                newType.specs.layers.front().merge(specs);
+                remove_suffix(pendingTokens, 1u);
+            }
+
+            tokenStack.resize(pendingTokens.size());
+            tokenStack.emplace_back(std::move(newType));
+
+            return true;
+        }
+
+        inline void add_specs(Specs::Layer newSpecs, TokenStack& tokenStack)
+        {
+            if (auto* specs = match_suffix<Specs>(tokenStack))
+            {
+                auto& layers = specs->layers;
+                MIMICPP_ASSERT(!layers.empty(), "Invalid specs state.");
+                layers.back().merge(newSpecs);
+            }
+            else
+            {
+                tokenStack.emplace_back(
+                    Specs{.layers = {std::move(newSpecs)}});
+            }
+        }
+
+        inline void add_specs_layer(TokenStack& tokenStack)
+        {
+            if (auto* specs = match_suffix<Specs>(tokenStack))
+            {
+                auto& layers = specs->layers;
+                MIMICPP_ASSERT(!layers.empty(), "Invalid specs state.");
+                layers.emplace_back();
+            }
+            else
+            {
+                tokenStack.emplace_back(
+                    Specs{
+                        .layers = {2u, Specs::Layer{}}
+                });
+            }
         }
     }
 
@@ -324,8 +478,20 @@ namespace mimicpp::printing::type::parsing
                 token::Identifier{.content = identifier.content});
         }
 
-        constexpr void handle_lexer_token([[maybe_unused]] lexing::keyword const& keyword)
+        constexpr void handle_lexer_token(lexing::keyword const& keyword)
         {
+            if (constKeyword == keyword)
+            {
+                token::add_specs({.isConst = true}, m_TokenStack);
+            }
+            else if (volatileKeyword == keyword)
+            {
+                token::add_specs({.isVolatile = true}, m_TokenStack);
+            }
+            else if (noexceptKeyword == keyword)
+            {
+                token::add_specs({.isNoexcept = true}, m_TokenStack);
+            }
         }
 
         constexpr void handle_lexer_token(lexing::operator_or_punctuator const& token)
@@ -333,6 +499,18 @@ namespace mimicpp::printing::type::parsing
             if (scopeResolution == token)
             {
                 token::try_reduce_as_scope_sequence(m_TokenStack);
+            }
+            else if (lvalueRef == token)
+            {
+                token::add_specs({.isLValueRef = true}, m_TokenStack);
+            }
+            else if (rvalueRef == token)
+            {
+                token::add_specs({.isRValueRef = true}, m_TokenStack);
+            }
+            else if (pointer == token)
+            {
+                token::add_specs_layer(m_TokenStack);
             }
         }
     };
