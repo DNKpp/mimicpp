@@ -33,13 +33,8 @@ namespace mimicpp::printing::type::parsing2
                                  visitor.begin_type();
                                  visitor.end_type();
 
-                                 visitor.begin_template();
-                                 visitor.end_template();
-                                 visitor.begin_args();
-                                 visitor.end_args();
-
-                                 visitor.open_parenthesis();
-                                 visitor.close_parenthesis();
+                                 visitor.begin_template_args();
+                                 visitor.end_template_args();
 
                                  visitor.begin_function();
                                  visitor.end_function();
@@ -236,7 +231,7 @@ namespace mimicpp::printing::type::parsing2
             void operator()(Visitor& visitor) const;
         };
 
-        class Template
+        class TemplateArgs
         {
         public:
             ArgList argList{};
@@ -246,14 +241,9 @@ namespace mimicpp::printing::type::parsing2
             {
                 auto& inner = unwrap_visitor(visitor);
 
-                inner.begin_template();
-                if (!argList.types.empty())
-                {
-                    inner.begin_args();
-                    std::invoke(argList, visitor);
-                    inner.end_args();
-                }
-                inner.end_template();
+                inner.begin_template_args();
+                std::invoke(argList, visitor);
+                inner.end_template_args();
             }
         };
 
@@ -277,7 +267,7 @@ namespace mimicpp::printing::type::parsing2
         {
         public:
             Name name;
-            std::optional<Template> templateInfo{};
+            std::optional<TemplateArgs> templateArgs{};
             Specs specs{};
 
             template <parser_visitor Visitor>
@@ -288,9 +278,9 @@ namespace mimicpp::printing::type::parsing2
                 inner.begin_type();
 
                 std::invoke(name, visitor);
-                if (templateInfo)
+                if (templateArgs)
                 {
-                    std::invoke(*templateInfo, visitor);
+                    std::invoke(*templateArgs, visitor);
                 }
                 std::invoke(specs, visitor);
 
@@ -329,7 +319,7 @@ namespace mimicpp::printing::type::parsing2
         public:
             std::shared_ptr<Type> returnType{};
             std::variant<std::monostate, Name, FunctionPtr> description{};
-            std::optional<Template> templateInfo{};
+            std::optional<TemplateArgs> templateArgs{};
             FunctionArgs args{};
             Specs specs{};
 
@@ -351,9 +341,9 @@ namespace mimicpp::printing::type::parsing2
                     [&](auto const& desc) { handle_description(visitor, desc); },
                     description);
 
-                if (templateInfo)
+                if (templateArgs)
                 {
-                    std::invoke(*templateInfo, visitor);
+                    std::invoke(*templateArgs, visitor);
                 }
 
                 std::invoke(args, visitor);
@@ -430,7 +420,7 @@ namespace mimicpp::printing::type::parsing2
 
         token::Name,
         token::ArgList,
-        token::Template,
+        token::TemplateArgs,
         token::FunctionArgs,
         token::FunctionPtr,
         token::Specs,
@@ -588,7 +578,7 @@ namespace mimicpp::printing::type::parsing2
             {
                 m_TokenStack.pop_back();
 
-                token::Template newTemplate{
+                token::TemplateArgs newTemplate{
                     .argList = extract_top_as<token::ArgList>()};
                 MIMICPP_ASSERT(!newTemplate.argList.types.empty(), "Empty arg-list must be omitted.");
                 m_TokenStack.pop_back();
@@ -603,7 +593,7 @@ namespace mimicpp::printing::type::parsing2
                 m_TokenStack.pop_back();
                 m_TokenStack.pop_back();
 
-                m_TokenStack.emplace_back(token::Template{});
+                m_TokenStack.emplace_back(token::TemplateArgs{});
 
                 return true;
             }
@@ -665,9 +655,9 @@ namespace mimicpp::printing::type::parsing2
                 functionInfo.specs = std::move(*specs);
             }
 
-            if (1u == determine_longest_suffix<token::Template>(pendingStack))
+            if (1u == determine_longest_suffix<token::TemplateArgs>(pendingStack))
             {
-                functionInfo.templateInfo = std::get<token::Template>(std::move(pendingStack.back()));
+                functionInfo.templateArgs = std::get<token::TemplateArgs>(std::move(pendingStack.back()));
                 pendingStack = pendingStack.first(pendingStack.size() - 1u);
             }
 
@@ -708,10 +698,10 @@ namespace mimicpp::printing::type::parsing2
                 pendingStack = pendingStack.first(pendingStack.size() - 1u);
             }
 
-            token::Template* templateInfo{};
-            if (1u == determine_longest_suffix<token::Template>(pendingStack))
+            token::TemplateArgs* templateInfo{};
+            if (1u == determine_longest_suffix<token::TemplateArgs>(pendingStack))
             {
-                templateInfo = &std::get<token::Template>(pendingStack.back());
+                templateInfo = &std::get<token::TemplateArgs>(pendingStack.back());
                 pendingStack = pendingStack.first(pendingStack.size() - 1u);
             }
 
@@ -731,7 +721,7 @@ namespace mimicpp::printing::type::parsing2
 
             if (templateInfo)
             {
-                type.templateInfo = std::move(*templateInfo);
+                type.templateArgs = std::move(*templateInfo);
             }
 
             if (1u == determine_longest_suffix<token::Specs>(pendingStack))
