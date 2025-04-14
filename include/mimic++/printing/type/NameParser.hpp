@@ -273,10 +273,13 @@ namespace mimicpp::printing::type::parsing
             {
                 auto const suffix = tokenStack.last(1u + sizeof...(Others));
 
-                std::size_t i{0u};
-                result = std::tie(
-                    std::get<Leading>(suffix[0u]),
-                    std::get<Others>(suffix[++i])...);
+                result = std::invoke(
+                    [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) noexcept {
+                        return std::tie(
+                            std::get<Leading>(suffix[0u]),
+                            std::get<Others>(suffix[1u + indices])...);
+                    },
+                    std::index_sequence_for<Others...>{});
             }
 
             return result;
