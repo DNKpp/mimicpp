@@ -35,6 +35,8 @@ namespace mimicpp::printing::type::parsing2
 
                                  visitor.begin_template();
                                  visitor.end_template();
+                                 visitor.begin_args();
+                                 visitor.end_args();
 
                                  visitor.open_parenthesis();
                                  visitor.close_parenthesis();
@@ -43,10 +45,10 @@ namespace mimicpp::printing::type::parsing2
                                  visitor.end_function();
                                  visitor.begin_function_ptr();
                                  visitor.end_function_ptr();
+                                 visitor.begin_function_args();
+                                 visitor.end_function_args();
                                  visitor.begin_return_type();
                                  visitor.end_return_type();
-                                 visitor.begin_args();
-                                 visitor.end_args();
 
                                  visitor.begin_operator_identifier();
                                  visitor.end_operator_identifier();
@@ -245,7 +247,12 @@ namespace mimicpp::printing::type::parsing2
                 auto& inner = unwrap_visitor(visitor);
 
                 inner.begin_template();
-                std::invoke(argList, visitor);
+                if (!argList.types.empty())
+                {
+                    inner.begin_args();
+                    std::invoke(argList, visitor);
+                    inner.end_args();
+                }
                 inner.end_template();
             }
         };
@@ -260,9 +267,9 @@ namespace mimicpp::printing::type::parsing2
             {
                 auto& inner = unwrap_visitor(visitor);
 
-                inner.open_parenthesis();
+                inner.begin_function_args();
                 std::invoke(argList, visitor);
-                inner.close_parenthesis();
+                inner.end_function_args();
             }
         };
 
@@ -397,20 +404,13 @@ namespace mimicpp::printing::type::parsing2
             {
                 auto& inner = unwrap_visitor(visitor);
 
-                inner.begin_args();
+                std::invoke(types.front(), visitor);
 
-                bool isFirst{true};
-                for (auto const& type : types)
+                for (auto const& type : types | std::views::drop(1))
                 {
-                    if (!std::exchange(isFirst, false))
-                    {
-                        inner.add_argument();
-                    }
-
+                    inner.add_argument();
                     std::invoke(type, visitor);
                 }
-
-                inner.end_args();
             }
         }
     }

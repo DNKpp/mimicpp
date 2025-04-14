@@ -35,6 +35,8 @@ namespace
 
         Mock<void()> begin_template{{.name = "VisitorMock::begin_template"}};
         Mock<void()> end_template{{.name = "VisitorMock::end_template"}};
+        Mock<void()> begin_args{{.name = "VisitorMock::begin_args"}};
+        Mock<void()> end_args{{.name = "VisitorMock::end_args"}};
 
         Mock<void()> open_parenthesis{{.name = "VisitorMock::open_parenthesis"}};
         Mock<void()> close_parenthesis{{.name = "VisitorMock::close_parenthesis"}};
@@ -43,11 +45,10 @@ namespace
         Mock<void()> end_function{{.name = "VisitorMock::end_function"}};
         Mock<void()> begin_function_ptr{{.name = "VisitorMock::begin_function_ptr"}};
         Mock<void()> end_function_ptr{{.name = "VisitorMock::end_function_ptr"}};
+        Mock<void()> begin_function_args{{.name = "VisitorMock::begin_function_args"}};
+        Mock<void()> end_function_args{{.name = "VisitorMock::end_function_args"}};
         Mock<void()> begin_return_type{{.name = "VisitorMock::begin_return_type"}};
         Mock<void()> end_return_type{{.name = "VisitorMock::end_return_type"}};
-
-        Mock<void()> begin_args{{.name = "VisitorMock::begin_args"}};
-        Mock<void()> end_args{{.name = "VisitorMock::end_args"}};
 
         Mock<void()> begin_operator_identifier{{.name = "VisitorMock::begin_operator_identifier"}};
         Mock<void()> end_operator_identifier{{.name = "VisitorMock::end_operator_identifier"}};
@@ -535,8 +536,8 @@ TEST_CASE(
         sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.end_name.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -562,8 +563,8 @@ TEST_CASE(
         sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.end_name.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -589,8 +590,7 @@ TEST_CASE(
         sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.end_name.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.begin_args.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
 
         sequence += visitor.begin_type.expect_call();
         sequence += visitor.begin_name.expect_call();
@@ -601,8 +601,7 @@ TEST_CASE(
         sequence += visitor.add_const.expect_call();
         sequence += visitor.end_type.expect_call();
 
-        sequence += visitor.end_args.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -628,8 +627,7 @@ TEST_CASE(
         sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.end_name.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.begin_args.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
 
         sequence += visitor.begin_type.expect_call();
         sequence += visitor.begin_name.expect_call();
@@ -649,8 +647,7 @@ TEST_CASE(
         sequence += visitor.add_const.expect_call();
         sequence += visitor.end_type.expect_call();
 
-        sequence += visitor.end_args.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -678,8 +675,8 @@ TEST_CASE(
         sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.end_name.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.expect_spec_call(spec);
 
@@ -716,8 +713,8 @@ TEST_CASE(
         sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.end_name.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -748,8 +745,8 @@ TEST_CASE(
         sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -757,6 +754,11 @@ TEST_CASE(
         printing::type::parsing2::NameParser parser{std::ref(visitor), input};
         parser();
     }
+
+    /*SECTION("When function is just a scope.")
+    {
+        StringT const input = "void foo()::bar::fun()";
+    }*/
 }
 
 TEST_CASE(
@@ -795,8 +797,8 @@ TEST_CASE(
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -822,8 +824,8 @@ TEST_CASE(
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.add_noexcept.expect_call();
 
@@ -852,8 +854,8 @@ TEST_CASE(
         sequence += visitor.add_lvalue_ref.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.add_noexcept.expect_call();
 
@@ -881,8 +883,7 @@ TEST_CASE(
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.begin_args.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
 
         sequence += visitor.begin_type.expect_call();
         sequence += visitor.begin_name.expect_call();
@@ -902,8 +903,7 @@ TEST_CASE(
         sequence += visitor.add_const.expect_call();
         sequence += visitor.end_type.expect_call();
 
-        sequence += visitor.end_args.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -933,8 +933,8 @@ TEST_CASE(
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
         sequence += visitor.end.expect_call();
@@ -965,8 +965,8 @@ TEST_CASE(
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
 
-        sequence += visitor.open_parenthesis.expect_call();
-        sequence += visitor.close_parenthesis.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.expect_spec_call(spec);
 
