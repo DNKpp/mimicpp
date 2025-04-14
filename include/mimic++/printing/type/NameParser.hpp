@@ -437,7 +437,7 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
-        inline bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
+        constexpr bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
         {
             if (std::optional suffix = match_suffix<ScopeSequence, Identifier>(tokenStack))
             {
@@ -462,7 +462,7 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
-        inline bool try_reduce_as_type(TokenStack& tokenStack)
+        constexpr bool try_reduce_as_type(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
 
@@ -509,7 +509,7 @@ namespace mimicpp::printing::type::parsing
             return true;
         }
 
-        inline void add_specs(Specs::Layer newSpecs, TokenStack& tokenStack)
+        constexpr void add_specs(Specs::Layer newSpecs, TokenStack& tokenStack)
         {
             if (auto* specs = match_suffix<Specs>(tokenStack))
             {
@@ -524,7 +524,7 @@ namespace mimicpp::printing::type::parsing
             }
         }
 
-        inline void add_specs_layer(TokenStack& tokenStack)
+        constexpr void add_specs_layer(TokenStack& tokenStack)
         {
             if (auto* specs = match_suffix<Specs>(tokenStack))
             {
@@ -547,13 +547,13 @@ namespace mimicpp::printing::type::parsing
     {
     public:
         [[nodiscard]]
-        explicit NameParser(Visitor visitor, StringViewT content) noexcept(std::is_nothrow_move_constructible_v<Visitor>)
+        explicit constexpr NameParser(Visitor visitor, StringViewT content) noexcept(std::is_nothrow_move_constructible_v<Visitor>)
             : m_Visitor{std::move(visitor)},
               m_Lexer{std::move(content)}
         {
         }
 
-        void operator()()
+        constexpr void operator()()
         {
             visitor().begin();
 
