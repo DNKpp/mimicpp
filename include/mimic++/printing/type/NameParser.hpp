@@ -147,7 +147,7 @@ namespace mimicpp::printing::type::parsing
     }
 
     template <token_type First, token_type... Others>
-    constexpr bool is_suffix_of(std::span<Token const> const tokenStack)
+    constexpr bool is_suffix_of(std::span<Token const> const tokenStack) noexcept
     {
         using types = util::type_list<First, Others...>;
 
@@ -155,21 +155,35 @@ namespace mimicpp::printing::type::parsing
             && detail::is_suffix_of(util::type_list_reverse_t<types>{}, tokenStack);
     }
 
-    template <token_type First, token_type... Others>
+    template <token_type Leading, token_type... Others>
     [[nodiscard]]
-    constexpr std::optional<std::tuple<First&, Others&...>> match_suffix(std::span<Token> const tokenStack)
+    constexpr auto match_suffix(std::span<Token> const tokenStack) noexcept
     {
-        if (is_suffix_of<First, Others...>(tokenStack))
+        if constexpr (0u == sizeof...(Others))
         {
-            auto const suffix = tokenStack.last(1u + sizeof...(Others));
+            Leading* result{};
+            if (is_suffix_of<Leading>(tokenStack))
+            {
+                result = &std::get<Leading>(tokenStack.back());
+            }
 
-            std::size_t i{0u};
-            return std::tie(
-                std::get<First>(suffix[0u]),
-                std::get<Others>(suffix[++i])...);
+            return result;
         }
+        else
+        {
+            std::optional<std::tuple<Leading&, Others&...>> result{};
+            if (is_suffix_of<Leading, Others...>(tokenStack))
+            {
+                auto const suffix = tokenStack.last(1u + sizeof...(Others));
 
-        return std::nullopt;
+                std::size_t i{0u};
+                result = std::tie(
+                    std::get<Leading>(suffix[0u]),
+                    std::get<Others>(suffix[++i])...);
+            }
+
+            return result;
+        }
     }
 
     namespace token
@@ -186,10 +200,10 @@ namespace mimicpp::printing::type::parsing
                 return true;
             }
 
-            if (std::optional suffix = match_suffix<Identifier>(tokenStack))
+            if (auto* identifier = match_suffix<Identifier>(tokenStack))
             {
                 ScopeSequence seq{
-                    .scopes = {std::move(std::get<0>(*suffix))}};
+                    .scopes = {std::move(*identifier)}};
                 tokenStack.pop_back();
                 tokenStack.emplace_back(std::move(seq));
 
@@ -214,10 +228,10 @@ namespace mimicpp::printing::type::parsing
                 return true;
             }
 
-            if (std::optional suffix = match_suffix<Identifier>(tokenStack))
+            if (auto* identifier = match_suffix<Identifier>(tokenStack))
             {
                 Type newType{
-                    .identifier = {std::move(std::get<0>(*suffix))}};
+                    .identifier = {std::move(*identifier)}};
                 tokenStack.pop_back();
                 tokenStack.emplace_back(std::move(newType));
 
