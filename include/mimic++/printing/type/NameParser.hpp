@@ -27,7 +27,7 @@ namespace mimicpp::printing::type::parsing
                                  visitor.end();
 
                                  visitor.add_identifier(content);
-                                 visitor.add_scope();
+                                 visitor.add_arg();
 
                                  visitor.add_const();
                                  visitor.add_volatile();
@@ -36,11 +36,14 @@ namespace mimicpp::printing::type::parsing
                                  visitor.add_lvalue_ref();
                                  visitor.add_rvalue_ref();
 
-                                 visitor.begin_name();
-                                 visitor.end_name();
+                                 visitor.begin_scope();
+                                 visitor.end_scope();
 
                                  visitor.begin_type();
                                  visitor.end_type();
+
+                                 visitor.begin_template_args();
+                                 visitor.end_template_args();
                              };
 
     template <parser_visitor Visitor>
@@ -54,10 +57,50 @@ namespace mimicpp::printing::type::parsing
 
     namespace token
     {
+        class Type;
+
+        class ArgSeparator
+        {
+        };
+
+        class OpeningAngle
+        {
+        };
+
+        class ClosingAngle
+        {
+        };
+
+        class ArgSequence
+        {
+        public:
+            std::vector<Type> types;
+
+            constexpr ~ArgSequence() noexcept;
+            constexpr ArgSequence();
+            constexpr ArgSequence(ArgSequence const&);
+            constexpr ArgSequence& operator=(ArgSequence const&);
+            constexpr ArgSequence(ArgSequence&&) noexcept;
+            constexpr ArgSequence& operator=(ArgSequence&&) noexcept;
+
+            template <parser_visitor Visitor>
+            constexpr void operator()(Visitor& visitor) const;
+
+            template <parser_visitor Visitor>
+            constexpr void handle_as_template_args(Visitor& visitor) const;
+        };
+
         class Identifier
         {
         public:
             StringViewT content{};
+            std::optional<ArgSequence> templateArgs{};
+
+            [[nodiscard]]
+            constexpr bool is_template() const noexcept
+            {
+                return templateArgs.has_value();
+            }
 
             template <parser_visitor Visitor>
             constexpr void operator()(Visitor& visitor) const
@@ -67,6 +110,11 @@ namespace mimicpp::printing::type::parsing
                 auto& unwrapped = unwrap_visitor(visitor);
 
                 unwrapped.add_identifier(content);
+
+                if (templateArgs)
+                {
+                    templateArgs->handle_as_template_args(unwrapped);
+                }
             }
         };
 
@@ -84,8 +132,9 @@ namespace mimicpp::printing::type::parsing
 
                 for (auto const& id : scopes)
                 {
+                    unwrapped.begin_scope();
                     std::invoke(id, unwrapped);
-                    unwrapped.add_scope();
+                    unwrapped.end_scope();
                 }
             }
         };
@@ -190,7 +239,6 @@ namespace mimicpp::printing::type::parsing
                 auto& unwrapped = unwrap_visitor(visitor);
 
                 unwrapped.begin_type();
-                unwrapped.begin_name();
 
                 if (scopes)
                 {
@@ -198,17 +246,54 @@ namespace mimicpp::printing::type::parsing
                 }
 
                 std::invoke(identifier, unwrapped);
-
-                unwrapped.end_name();
                 std::invoke(specs, unwrapped);
                 unwrapped.end_type();
             }
         };
+
+        constexpr ArgSequence::~ArgSequence() noexcept = default;
+        constexpr ArgSequence::ArgSequence() = default;
+        constexpr ArgSequence::ArgSequence(ArgSequence const&) = default;
+        constexpr ArgSequence& ArgSequence::operator=(ArgSequence const&) = default;
+        constexpr ArgSequence::ArgSequence(ArgSequence&&) noexcept = default;
+        constexpr ArgSequence& ArgSequence::operator=(ArgSequence&&) noexcept = default;
+
+        template <parser_visitor Visitor>
+        constexpr void ArgSequence::operator()(Visitor& visitor) const
+        {
+            if (!types.empty())
+            {
+                auto& unwrapped = unwrap_visitor(visitor);
+
+                std::invoke(types.front(), unwrapped);
+
+                for (auto const& type : types | std::views::drop(1))
+                {
+                    unwrapped.add_arg();
+                    std::invoke(type, unwrapped);
+                }
+            }
+        }
+
+        template <parser_visitor Visitor>
+        constexpr void ArgSequence::handle_as_template_args(Visitor& visitor) const
+        {
+            auto& unwrapped = unwrap_visitor(visitor);
+
+            unwrapped.begin_template_args();
+            std::invoke(*this, unwrapped);
+            unwrapped.end_template_args();
+        }
     }
 
     using Token = std::variant<
+        token::ArgSeparator,
+        token::OpeningAngle,
+        token::ClosingAngle,
+
         token::Identifier,
         token::ScopeSequence,
+        token::ArgSequence,
         token::Specs,
         token::Type>;
     using TokenStack = std::vector<Token>;
@@ -294,6 +379,64 @@ namespace mimicpp::printing::type::parsing
 
     namespace token
     {
+        constexpr bool try_reduce_as_arg_sequence(TokenStack& tokenStack)
+        {
+            if (std::optional suffix = match_suffix<ArgSequence, ArgSeparator, Type>(tokenStack))
+            {
+                auto& [seq, sep, type] = *suffix;
+
+                seq.types.emplace_back(std::move(type));
+                tokenStack.resize(tokenStack.size() - 2u);
+
+                return true;
+            }
+
+            if (auto* type = match_suffix<Type>(tokenStack))
+            {
+                ArgSequence seq{};
+                seq.types.emplace_back(std::move(*type));
+                tokenStack.pop_back();
+                tokenStack.emplace_back(std::move(seq));
+
+                return true;
+            }
+
+            return false;
+        }
+
+        constexpr bool try_reduce_as_template_identifier(TokenStack& tokenStack)
+        {
+            if (std::optional suffix = match_suffix<Identifier, OpeningAngle, ArgSequence, ClosingAngle>(tokenStack))
+            {
+                auto& [id, opening, args, closing] = *suffix;
+                if (id.is_template())
+                {
+                    return false;
+                }
+
+                id.templateArgs = std::move(args);
+                tokenStack.resize(tokenStack.size() - 3u);
+
+                return true;
+            }
+
+            if (std::optional suffix = match_suffix<Identifier, OpeningAngle, ClosingAngle>(tokenStack))
+            {
+                auto& [id, opening, closing] = *suffix;
+                if (id.is_template())
+                {
+                    return false;
+                }
+
+                id.templateArgs.emplace();
+                tokenStack.resize(tokenStack.size() - 2u);
+
+                return true;
+            }
+
+            return false;
+        }
+
         inline bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
         {
             if (std::optional suffix = match_suffix<ScopeSequence, Identifier>(tokenStack))
@@ -503,6 +646,13 @@ namespace mimicpp::printing::type::parsing
             {
                 token::try_reduce_as_scope_sequence(m_TokenStack);
             }
+            else if (commaSeparator == token)
+            {
+                token::try_reduce_as_type(m_TokenStack)
+                    && token::try_reduce_as_arg_sequence(m_TokenStack);
+
+                m_TokenStack.emplace_back(token::ArgSeparator{});
+            }
             else if (lvalueRef == token)
             {
                 token::add_specs({.isLValueRef = true}, m_TokenStack);
@@ -514,6 +664,18 @@ namespace mimicpp::printing::type::parsing
             else if (pointer == token)
             {
                 token::add_specs_layer(m_TokenStack);
+            }
+            else if (openingAngle == token)
+            {
+                m_TokenStack.emplace_back(token::OpeningAngle{});
+            }
+            else if (closingAngle == token)
+            {
+                token::try_reduce_as_type(m_TokenStack)
+                    && token::try_reduce_as_arg_sequence(m_TokenStack);
+
+                m_TokenStack.emplace_back(token::ClosingAngle{});
+                token::try_reduce_as_template_identifier(m_TokenStack);
             }
         }
     };

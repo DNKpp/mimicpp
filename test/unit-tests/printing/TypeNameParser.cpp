@@ -17,13 +17,16 @@ namespace
         Mock<void()> end{{.name = "VisitorMock::end"}};
 
         Mock<void(StringViewT)> add_identifier{{.name = "VisitorMock::add_identifier"}};
-        Mock<void()> add_scope{{.name = "VisitorMock::add_scope"}};
+        Mock<void()> add_arg{{.name = "VisitorMock::add_arg"}};
 
-        Mock<void()> begin_name{{.name = "VisitorMock::begin_name"}};
-        Mock<void()> end_name{{.name = "VisitorMock::end_name"}};
+        Mock<void()> begin_scope{{.name = "VisitorMock::begin_scope"}};
+        Mock<void()> end_scope{{.name = "VisitorMock::end_scope"}};
 
         Mock<void()> begin_type{{.name = "VisitorMock::begin_type"}};
         Mock<void()> end_type{{.name = "VisitorMock::end_type"}};
+
+        Mock<void()> begin_template_args{{.name = "VisitorMock::begin_template_args"}};
+        Mock<void()> end_template_args{{.name = "VisitorMock::end_template_args"}};
 
         Mock<void()> add_const{{.name = "VisitorMock::add_const"}};
         Mock<void()> add_volatile{{.name = "VisitorMock::add_volatile"}};
@@ -87,9 +90,7 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
-        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call(input);
-        sequence += visitor.end_name.expect_call();
         sequence += visitor.end_type.expect_call();
 
         sequence += visitor.end.expect_call();
@@ -108,17 +109,18 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
-        sequence += visitor.begin_name.expect_call();
 
+        sequence += visitor.begin_scope.expect_call();
         sequence += visitor.add_identifier.expect_call(firstScope);
-        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
         sequence += visitor.add_identifier.expect_call(secondScope);
-        sequence += visitor.add_scope.expect_call();
+        sequence += visitor.end_scope.expect_call();
+
         sequence += visitor.add_identifier.expect_call(thirdScope);
 
-        sequence += visitor.end_name.expect_call();
         sequence += visitor.end_type.expect_call();
-
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -132,9 +134,7 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
-        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call(scope);
-        sequence += visitor.end_name.expect_call();
         sequence += visitor.end_type.expect_call();
 
         sequence += visitor.end.expect_call();
@@ -160,12 +160,11 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
-        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
-        sequence += visitor.end_name.expect_call();
-        sequence += visitor.expect_spec_call(spec);
-        sequence += visitor.end_type.expect_call();
 
+        sequence += visitor.expect_spec_call(spec);
+
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -180,13 +179,12 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
-        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
-        sequence += visitor.end_name.expect_call();
+
         sequence += visitor.expect_spec_call(spec);
         sequence += visitor.expect_spec_call(indirection);
-        sequence += visitor.end_type.expect_call();
 
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -200,12 +198,11 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
-        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
-        sequence += visitor.end_name.expect_call();
-        sequence += visitor.expect_spec_call(spec);
-        sequence += visitor.end_type.expect_call();
 
+        sequence += visitor.expect_spec_call(spec);
+
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -220,13 +217,12 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
-        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
-        sequence += visitor.end_name.expect_call();
+
         sequence += visitor.expect_spec_call(spec);
         sequence += visitor.expect_spec_call(indirection);
-        sequence += visitor.end_type.expect_call();
 
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -239,9 +235,7 @@ TEST_CASE(
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
-        sequence += visitor.begin_name.expect_call();
         sequence += visitor.add_identifier.expect_call("foo");
-        sequence += visitor.end_name.expect_call();
 
         sequence += visitor.add_const.expect_call();
         sequence += visitor.add_volatile.expect_call();
@@ -253,7 +247,182 @@ TEST_CASE(
         sequence += visitor.add_lvalue_ref.expect_call();
 
         sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
 
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}
+
+TEST_CASE(
+    "parsing::NameParser detects templates.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+
+    SECTION("When templated identifier with 0 args is given.")
+    {
+        StringViewT const input{"foo<>"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When qualified templated identifier is given.")
+    {
+        StringViewT const input{"volatile foo<> const&"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When templated identifier with multiple args is given.")
+    {
+        StringViewT const input{"foo<int, std::string>"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.add_arg.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.end_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When templated identifier with multiple args with specs is given.")
+    {
+        StringViewT const input{"foo<const int volatile&, const std::string>"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.add_arg.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.end_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When templated identifier has templated arg.")
+    {
+        StringViewT const input{"foo<const bar<int*> volatile&>"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("bar");
+
+        {
+            sequence += visitor.begin_template_args.expect_call();
+
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("int");
+            sequence += visitor.add_ptr.expect_call();
+            sequence += visitor.end_type.expect_call();
+
+            sequence += visitor.end_template_args.expect_call();
+        }
+
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When template is part of a scope.")
+    {
+        StringViewT const input{"foo<>::bar"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("bar");
+
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
