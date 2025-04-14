@@ -28,6 +28,13 @@ namespace
         Mock<void()> begin_template_args{{.name = "VisitorMock::begin_template_args"}};
         Mock<void()> end_template_args{{.name = "VisitorMock::end_template_args"}};
 
+        Mock<void()> begin_function{{.name = "VisitorMock::begin_function"}};
+        Mock<void()> end_function{{.name = "VisitorMock::end_function"}};
+        Mock<void()> begin_return_type{{.name = "VisitorMock::begin_return_type"}};
+        Mock<void()> end_return_type{{.name = "VisitorMock::end_return_type"}};
+        Mock<void()> begin_function_args{{.name = "VisitorMock::begin_function_args"}};
+        Mock<void()> end_function_args{{.name = "VisitorMock::end_function_args"}};
+
         Mock<void()> add_const{{.name = "VisitorMock::add_const"}};
         Mock<void()> add_volatile{{.name = "VisitorMock::add_volatile"}};
         Mock<void()> add_noexcept{{.name = "VisitorMock::add_noexcept"}};
@@ -428,4 +435,411 @@ TEST_CASE(
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser();
     }
+}
+
+TEST_CASE(
+    "parsing::NameParser detects named functions.",
+    "[print][print::type]")
+{
+    StringT const spec = GENERATE("", "const", "volatile", "noexcept", "&", "&&");
+    StringT const specSpace = GENERATE("", " ");
+    StringT const suffix = specSpace + spec;
+
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+    sequence += visitor.begin_type.expect_call();
+    sequence += visitor.begin_function.expect_call();
+
+    SECTION("When function identifier with 0 args is given.")
+    {
+        StringT const returnType = GENERATE("", "void");
+        StringT const prefix = returnType + (returnType.empty() ? "" : " ");
+        StringT const input = prefix + "foo()" + suffix;
+        CAPTURE(input);
+
+        CHECKED_IF(!returnType.empty())
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call(returnType);
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When templated function identifier is given.")
+    {
+        StringT const returnType = GENERATE("", "void");
+        StringT const prefix = returnType + (returnType.empty() ? "" : " ");
+        StringT const input = prefix + "foo<int>()" + suffix;
+        CAPTURE(input);
+
+        CHECKED_IF(!returnType.empty())
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call(returnType);
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with single arg is given.")
+    {
+        StringT const returnType = GENERATE("", "void");
+        StringT const prefix = returnType + (returnType.empty() ? "" : " ");
+        StringT const input = prefix + "foo(const std::string)" + suffix;
+        CAPTURE(input);
+
+        CHECKED_IF(!returnType.empty())
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call(returnType);
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.end_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with templated arg is given.")
+    {
+        StringT const returnType = GENERATE("", "void");
+        StringT const prefix = returnType + (returnType.empty() ? "" : " ");
+        StringT const input = prefix + "foo(volatile bar<int> const&)" + suffix;
+        CAPTURE(input);
+
+        CHECKED_IF(!returnType.empty())
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call(returnType);
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("bar");
+
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with multiple args is given.")
+    {
+        StringT const returnType = GENERATE("", "void");
+        StringT const prefix = returnType + (returnType.empty() ? "" : " ");
+        StringT const input = prefix + "foo(const char&&, const int)" + suffix;
+        CAPTURE(input);
+
+        CHECKED_IF(!returnType.empty())
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call(returnType);
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("char");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_rvalue_ref.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.add_arg.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function is a scope.")
+    {
+        StringT const returnType = GENERATE("", "void");
+        StringT const prefix = returnType + (returnType.empty() ? "" : " ");
+        StringT const templateExpr = GENERATE("", "<>");
+        StringT const scopeSpec = GENERATE("", "const", "volatile", "&", "&&", "noexcept");
+        StringT const input = prefix + "foo" + templateExpr + "()" + scopeSpec + "::bar::fun()" + suffix;
+        CAPTURE(input);
+
+        CHECKED_IF(!returnType.empty())
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call(returnType);
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        {
+            sequence += visitor.begin_scope.expect_call();
+            sequence += visitor.begin_function.expect_call();
+            sequence += visitor.add_identifier.expect_call("foo");
+
+            CHECKED_IF(!templateExpr.empty())
+            {
+                sequence += visitor.begin_template_args.expect_call();
+                sequence += visitor.end_template_args.expect_call();
+            }
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            CHECKED_IF(!scopeSpec.empty())
+            {
+                sequence += visitor.expect_spec_call(scopeSpec);
+            }
+
+            sequence += visitor.end_function.expect_call();
+            sequence += visitor.end_scope.expect_call();
+        }
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("bar");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("fun");
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with qualified return type is given.")
+    {
+        StringT const input = "const std::string* volatile& foo()" + suffix;
+        CAPTURE(input);
+
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("std");
+        sequence += visitor.end_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("string");
+
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When function identifier with templated return type is given.")
+    {
+        StringT const input = "bar<int>& foo()" + suffix;
+        CAPTURE(input);
+
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("bar");
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("int");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}
+
+TEST_CASE(
+    "parsing::NameParser detects function types.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    StringT const spec = GENERATE("", "const", "volatile", "noexcept", "&", "&&");
+    StringT const specSpace = GENERATE("", " ");
+    StringT const suffix = specSpace + spec;
+    StringViewT const input = "foo ()" + suffix;
+    CAPTURE(input);
+
+    sequence += visitor.begin.expect_call();
+    sequence += visitor.begin_type.expect_call();
+    sequence += visitor.begin_function.expect_call();
+
+    sequence += visitor.begin_return_type.expect_call();
+    sequence += visitor.begin_type.expect_call();
+    sequence += visitor.add_identifier.expect_call("foo");
+    sequence += visitor.end_type.expect_call();
+    sequence += visitor.end_return_type.expect_call();
+
+    sequence += visitor.begin_function_args.expect_call();
+    sequence += visitor.end_function_args.expect_call();
+
+    CHECKED_IF(!spec.empty())
+    {
+        sequence += visitor.expect_spec_call(spec);
+    }
+
+    sequence += visitor.end_function.expect_call();
+    sequence += visitor.end_type.expect_call();
+    sequence += visitor.end.expect_call();
+
+    printing::type::parsing::NameParser parser{std::ref(visitor), input};
+    parser();
 }
