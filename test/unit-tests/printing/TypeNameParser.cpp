@@ -815,31 +815,65 @@ TEST_CASE(
     StringT const spec = GENERATE("", "const", "volatile", "noexcept", "&", "&&");
     StringT const specSpace = GENERATE("", " ");
     StringT const suffix = specSpace + spec;
-    StringViewT const input = "foo ()" + suffix;
-    CAPTURE(input);
 
     sequence += visitor.begin.expect_call();
     sequence += visitor.begin_type.expect_call();
     sequence += visitor.begin_function.expect_call();
 
-    sequence += visitor.begin_return_type.expect_call();
-    sequence += visitor.begin_type.expect_call();
-    sequence += visitor.add_identifier.expect_call("foo");
-    sequence += visitor.end_type.expect_call();
-    sequence += visitor.end_return_type.expect_call();
-
-    sequence += visitor.begin_function_args.expect_call();
-    sequence += visitor.end_function_args.expect_call();
-
-    CHECKED_IF(!spec.empty())
+    SECTION("When function has an unqualified return-type.")
     {
-        sequence += visitor.expect_spec_call(spec);
+        StringT const input = "foo ()" + suffix;
+        CAPTURE(input);
+
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
     }
 
-    sequence += visitor.end_function.expect_call();
-    sequence += visitor.end_type.expect_call();
-    sequence += visitor.end.expect_call();
+    SECTION("When function has a qualified return-type.")
+    {
+        StringT const input = "volatile foo const& ()" + suffix;
+        CAPTURE(input);
 
-    printing::type::parsing::NameParser parser{std::ref(visitor), input};
-    parser();
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        CHECKED_IF(!spec.empty())
+        {
+            sequence += visitor.expect_spec_call(spec);
+        }
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
 }

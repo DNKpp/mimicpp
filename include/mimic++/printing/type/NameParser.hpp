@@ -66,6 +66,10 @@ namespace mimicpp::printing::type::parsing
     {
         class Type;
 
+        class Space
+        {
+        };
+
         class ArgSeparator
         {
         };
@@ -417,6 +421,7 @@ namespace mimicpp::printing::type::parsing
     }
 
     using Token = std::variant<
+        token::Space,
         token::ArgSeparator,
         token::OpeningAngle,
         token::ClosingAngle,
@@ -513,6 +518,14 @@ namespace mimicpp::printing::type::parsing
     namespace token
     {
         bool try_reduce_as_type(TokenStack& tokenStack);
+
+        constexpr void ignore_space(std::span<Token>& tokenStack) noexcept
+        {
+            if (is_suffix_of<Space>(tokenStack))
+            {
+                remove_suffix(tokenStack, 1u);
+            }
+        }
 
         constexpr bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
         {
@@ -615,6 +628,7 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
+            ignore_space(pendingTokens);
             if (!is_suffix_of<Identifier>(pendingTokens))
             {
                 return false;
@@ -655,24 +669,26 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_function_type(TokenStack& tokenStack)
         {
-            if (auto* funIdentifier = match_suffix<FunctionIdentifier>(tokenStack))
+            std::span pendingTokens{tokenStack};
+            if (auto* funIdentifier = match_suffix<FunctionIdentifier>(pendingTokens))
             {
                 FunctionType funType{
                     .identifier = std::move(*funIdentifier)};
-                tokenStack.pop_back();
+                remove_suffix(pendingTokens, 1u);
 
-                if (auto* scopes = match_suffix<ScopeSequence>(tokenStack))
+                if (auto* scopes = match_suffix<ScopeSequence>(pendingTokens))
                 {
                     funType.scopes = std::move(*scopes);
-                    tokenStack.pop_back();
+                    remove_suffix(pendingTokens, 1u);
                 }
 
-                if (auto* returnType = match_suffix<Type>(tokenStack))
+                if (auto* returnType = match_suffix<Type>(pendingTokens))
                 {
                     funType.returnType = std::make_shared<Type>(std::move(*returnType));
-                    tokenStack.pop_back();
+                    remove_suffix(pendingTokens, 1u);
                 }
 
+                tokenStack.resize(pendingTokens.size());
                 tokenStack.emplace_back(
                     std::in_place_type<Type>,
                     std::move(funType));
@@ -855,6 +871,13 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void handle_lexer_token([[maybe_unused]] lexing::space const& space)
         {
+            // In some cases, a space after an identifier carries semantic meaning.
+            // I.e. consider these two type-names: `void ()` and `foo()`,
+            // where the former is a type returning void and the latter is a function named `foo`.
+            if (is_suffix_of<token::Identifier>(m_TokenStack))
+            {
+                m_TokenStack.emplace_back(token::Space{});
+            }
         }
 
         constexpr void handle_lexer_token(lexing::identifier const& identifier)
