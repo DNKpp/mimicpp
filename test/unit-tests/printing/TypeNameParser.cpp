@@ -877,3 +877,197 @@ TEST_CASE(
         parser();
     }
 }
+
+TEST_CASE(
+    "parsing::NameParser detects placeholders.",
+    "[print][print::type]")
+{
+    StringT const placeholder = GENERATE(
+        "{placeholder}",
+        "{place holder}",
+        "{place-holder}",
+        /*"(placeholder)",
+        "(place holder)",
+        "(place-holder)",*/
+        "<place holder>",
+        "<placeholder>",
+        "<place-holder>",
+        "`placeholder'",
+        "`place holder'",
+        "`place-holder'");
+
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+
+    SECTION("Plain placeholders are detected.")
+    {
+        StringViewT const input = placeholder;
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(input);
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Templated placeholders are detected.")
+    {
+        StringT const input = placeholder + "<>";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(placeholder);
+
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Qualified placeholders are detected.")
+    {
+        StringT const input = "volatile " + placeholder + " const&";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Scoped placeholders are detected.")
+    {
+        StringT const input = "foo::" + placeholder + "::my_type";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Placeholder return types are detected.")
+    {
+        StringT const input = placeholder + " foo()";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_function.expect_call();
+
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Functions with placeholder names are detected.")
+    {
+        StringT const returnType = GENERATE("", "void");
+        StringT const prefix = returnType + (returnType.empty() ? "" : " ");
+        StringT const input = prefix + placeholder + "()";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_function.expect_call();
+
+        CHECKED_IF(!returnType.empty())
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call(returnType);
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Functions with placeholder scoped names are detected.")
+    {
+        StringT const returnType = GENERATE("", "void");
+        StringT const prefix = returnType + (returnType.empty() ? "" : " ");
+        StringT const input = prefix + placeholder + "::foo()";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.begin_function.expect_call();
+
+        CHECKED_IF(!returnType.empty())
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call(returnType);
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}
