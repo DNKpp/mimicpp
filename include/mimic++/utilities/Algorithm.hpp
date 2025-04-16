@@ -20,6 +20,7 @@
 #include <string_view>
 #include <tuple>
 #include <utility>
+#include <type_traits>
 
 namespace mimicpp::util
 {
@@ -237,8 +238,10 @@ namespace mimicpp::util
      */
     template <std::copyable T, std::size_t firstN, typename... Others>
         requires(... && std::same_as<T, std::ranges::range_value_t<Others>>)
+             // Not how I would like to formulate that constraint, but msvc does not accept it otherwise.
+             && (... && (0u <= std::tuple_size_v<Others>))
     [[nodiscard]]
-    constexpr std::array<T, (firstN + ... + std::tuple_size_v<Others>)> concat_arrays(std::array<T, firstN> const& first, Others const&... others)
+    constexpr auto concat_arrays(std::array<T, firstN> const& first, Others const&... others)
     {
         if constexpr (0u == sizeof...(Others))
         {

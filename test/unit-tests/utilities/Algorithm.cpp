@@ -255,7 +255,7 @@ TEST_CASE(
 {
     SECTION("Empty collection is supported.")
     {
-        constexpr std::vector<std::string> collection{};
+        std::vector<std::string> const collection{};
 
         auto const result = util::prefix_range(collection, StringViewT{"foo"});
 
