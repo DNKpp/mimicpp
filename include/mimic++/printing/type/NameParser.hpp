@@ -555,8 +555,10 @@ namespace mimicpp::printing::type::parsing
                     util::type_list<Others...>{},
                     tokenStack.first(tokenStack.size() - 1));
             }
-
-            return true;
+            else
+            {
+                return true;
+            }
         }
     }
 
