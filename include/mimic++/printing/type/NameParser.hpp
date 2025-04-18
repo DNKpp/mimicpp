@@ -1029,6 +1029,8 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_type(TokenStack& tokenStack)
         {
+            token::try_reduce_as_function_context(tokenStack);
+
             return try_reduce_as_function_ptr_type(tokenStack)
                 || try_reduce_as_regular_type(tokenStack);
         }
@@ -1324,8 +1326,6 @@ namespace mimicpp::printing::type::parsing
             }
             else if (closingParens == token)
             {
-                token::try_reduce_as_function_context(m_TokenStack);
-
                 token::try_reduce_as_type(m_TokenStack)
                     && token::try_reduce_as_arg_sequence(m_TokenStack);
 

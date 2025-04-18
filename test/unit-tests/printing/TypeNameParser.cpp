@@ -1388,6 +1388,7 @@ TEST_CASE(
             sequence += visitor.end_function_ptr.expect_call();
             sequence += visitor.begin_function_args.expect_call();
             sequence += visitor.end_function_args.expect_call();
+
             sequence += visitor.end_type.expect_call();
         }
 
@@ -1409,15 +1410,23 @@ TEST_CASE(
 
         sequence += visitor.begin_template_args.expect_call();
 
-        sequence += visitor.begin_return_type.expect_call();
-        sequence += visitor.add_identifier.expect_call("void");
-        sequence += visitor.end_return_type.expect_call();
+        {
+            sequence += visitor.begin_type.expect_call();
 
-        sequence += visitor.begin_function_ptr.expect_call();
-        sequence += visitor.add_ptr.expect_call();
-        sequence += visitor.end_function_ptr.expect_call();
-        sequence += visitor.begin_function_args.expect_call();
-        sequence += visitor.end_function_args.expect_call();
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("void");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+
+            sequence += visitor.begin_function_ptr.expect_call();
+            sequence += visitor.add_ptr.expect_call();
+            sequence += visitor.end_function_ptr.expect_call();
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.end_type.expect_call();
+        }
 
         sequence += visitor.end_template_args.expect_call();
 
