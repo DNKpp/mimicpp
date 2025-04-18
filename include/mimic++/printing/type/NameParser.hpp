@@ -53,6 +53,9 @@ namespace mimicpp::printing::type::parsing
                                  visitor.end_return_type();
                                  visitor.begin_function_args();
                                  visitor.end_function_args();
+
+                                 visitor.begin_function_ptr();
+                                 visitor.end_function_ptr();
                              };
 
     template <parser_visitor Visitor>
@@ -369,10 +372,54 @@ namespace mimicpp::printing::type::parsing
             }
         };
 
+        class FunctionPtr
+        {
+        public:
+            std::optional<ScopeSequence> scopes{};
+            Specs specs{};
+            std::shared_ptr<Type> nested{};
+
+            template <parser_visitor Visitor>
+            constexpr void operator()(Visitor& visitor) const
+            {
+                auto& unwrapped = unwrap_visitor(visitor);
+
+                unwrapped.begin_function_ptr();
+                if (scopes)
+                {
+                    std::invoke(*scopes, unwrapped);
+                }
+
+                std::invoke(specs, unwrapped);
+                unwrapped.end_function_ptr();
+            }
+        };
+
+        class FunctionPtrType
+        {
+        public:
+            std::shared_ptr<Type> returnType{};
+            FunctionPtr ptr{};
+            FunctionContext context{};
+
+            template <parser_visitor Visitor>
+            constexpr void operator()(Visitor& visitor) const
+            {
+                auto& unwrapped = unwrap_visitor(visitor);
+
+                unwrapped.begin_return_type();
+                std::invoke(*returnType, visitor);
+                unwrapped.end_return_type();
+
+                std::invoke(ptr, unwrapped);
+                std::invoke(context, unwrapped);
+            }
+        };
+
         class Type
         {
         public:
-            using State = std::variant<RegularType>;
+            using State = std::variant<RegularType, FunctionPtrType>;
             State m_State;
 
             template <parser_visitor Visitor>
@@ -521,6 +568,7 @@ namespace mimicpp::printing::type::parsing
         token::ArgSequence,
         token::FunctionArgs,
         token::FunctionContext,
+        token::FunctionPtr,
         token::Specs,
         token::Type,
         token::End>;
@@ -856,6 +904,67 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
+        inline bool try_reduce_as_function_ptr(TokenStack& tokenStack)
+        {
+            std::span pendingTokens{tokenStack};
+            if (std::optional suffix = match_suffix<Specs, ClosingParens>(pendingTokens))
+            {
+                remove_suffix(pendingTokens, 2u);
+                auto& [specs, closing] = *suffix;
+                if (!specs.has_ptr())
+                {
+                    return false;
+                }
+
+                ScopeSequence* scopeSeq = match_suffix<ScopeSequence>(pendingTokens);
+                if (match_suffix<ScopeSequence>(pendingTokens))
+                {
+                    remove_suffix(pendingTokens, 1u);
+                }
+
+                if (!is_suffix_of<OpeningParens>(pendingTokens))
+                {
+                    return false;
+                }
+                remove_suffix(pendingTokens, 1u);
+
+                FunctionPtr funPtr{.specs = std::move(specs)};
+                if (scopeSeq)
+                {
+                    funPtr.scopes = std::move(*scopeSeq);
+                }
+
+                tokenStack.resize(pendingTokens.size());
+                tokenStack.emplace_back(std::move(funPtr));
+
+                return true;
+            }
+
+            return false;
+        }
+
+        inline bool try_reduce_as_function_ptr_type(TokenStack& tokenStack)
+        {
+            std::span pendingTokens{tokenStack};
+            if (std::optional suffix = match_suffix<Type, Space, FunctionPtr, FunctionContext>(tokenStack))
+            {
+                auto& [returnType, space, ptr, ctx] = *suffix;
+
+                ignore_space(pendingTokens);
+                FunctionPtrType ptrType{
+                    .returnType = std::make_shared<Type>(std::move(returnType)),
+                    .ptr = std::move(ptr),
+                    .context = std::move(ctx)};
+
+                tokenStack.resize(tokenStack.size() - 3);
+                tokenStack.back().emplace<Type>(std::move(ptrType));
+
+                return true;
+            }
+
+            return false;
+        }
+
         constexpr bool try_reduce_as_regular_type(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
@@ -867,7 +976,6 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
-            // ignore_space(pendingTokens);
             if (!is_suffix_of<Identifier>(pendingTokens))
             {
                 return false;
@@ -910,7 +1018,8 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_type(TokenStack& tokenStack)
         {
-            return try_reduce_as_regular_type(tokenStack);
+            return try_reduce_as_function_ptr_type(tokenStack)
+                || try_reduce_as_regular_type(tokenStack);
         }
 
         inline bool try_reduce_as_function(TokenStack& tokenStack)
@@ -1040,9 +1149,10 @@ namespace mimicpp::printing::type::parsing
     {
     public:
         [[nodiscard]]
-        explicit constexpr NameParser(Visitor visitor, StringViewT content) noexcept(std::is_nothrow_move_constructible_v<Visitor>)
+        explicit constexpr NameParser(Visitor visitor, StringViewT const& content) noexcept(std::is_nothrow_move_constructible_v<Visitor>)
             : m_Visitor{std::move(visitor)},
-              m_Lexer{std::move(content)}
+              m_Content{content},
+              m_Lexer{content}
         {
         }
 
@@ -1094,6 +1204,7 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::keyword noexceptKeyword{"noexcept"};
 
         Visitor m_Visitor;
+        StringViewT m_Content;
         lexing::NameLexer m_Lexer;
 
         std::vector<Token> m_TokenStack{};
@@ -1210,6 +1321,7 @@ namespace mimicpp::printing::type::parsing
                     content);
 
                 token::try_reduce_as_function_args(m_TokenStack)
+                    || token::try_reduce_as_function_ptr(m_TokenStack)
                     || token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningParens, token::ClosingParens>(m_TokenStack);
             }
             else if (openingCurly == token)
