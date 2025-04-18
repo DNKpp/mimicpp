@@ -274,10 +274,9 @@ namespace mimicpp::printing::type::parsing
             }
         };
 
-        class FunctionIdentifier
+        class FunctionContext
         {
         public:
-            Identifier identifier;
             FunctionArgs args{};
             Specs specs{};
 
@@ -286,9 +285,24 @@ namespace mimicpp::printing::type::parsing
             {
                 auto& unwrapped = unwrap_visitor(visitor);
 
-                std::invoke(identifier, unwrapped);
                 std::invoke(args, unwrapped);
                 std::invoke(specs, unwrapped);
+            }
+        };
+
+        class FunctionIdentifier
+        {
+        public:
+            Identifier identifier;
+            FunctionContext context{};
+
+            template <parser_visitor Visitor>
+            constexpr void operator()(Visitor& visitor) const
+            {
+                auto& unwrapped = unwrap_visitor(visitor);
+
+                std::invoke(identifier, unwrapped);
+                std::invoke(context, unwrapped);
             }
         };
 
@@ -411,9 +425,8 @@ namespace mimicpp::printing::type::parsing
         class FunctionType
         {
         public:
-            std::shared_ptr<Type> returnType{};
-            FunctionArgs args{};
-            Specs specs{};
+            Type returnType{};
+            FunctionContext context{};
 
             template <parser_visitor Visitor>
             void operator()(Visitor& visitor) const
@@ -423,15 +436,11 @@ namespace mimicpp::printing::type::parsing
                 unwrapped.begin_type();
                 unwrapped.begin_function();
 
-                if (returnType)
-                {
-                    unwrapped.begin_return_type();
-                    std::invoke(*returnType, visitor);
-                    unwrapped.end_return_type();
-                }
+                unwrapped.begin_return_type();
+                std::invoke(returnType, visitor);
+                unwrapped.end_return_type();
 
-                std::invoke(args, unwrapped);
-                std::invoke(specs, unwrapped);
+                std::invoke(context, unwrapped);
 
                 unwrapped.end_function();
                 unwrapped.end_type();
@@ -509,6 +518,7 @@ namespace mimicpp::printing::type::parsing
         token::ScopeSequence,
         token::ArgSequence,
         token::FunctionArgs,
+        token::FunctionContext,
         token::Specs,
         token::Type,
         token::End>;
@@ -730,7 +740,7 @@ namespace mimicpp::printing::type::parsing
             return true;
         }
 
-        constexpr bool try_reduce_as_function_identifier(TokenStack& tokenStack)
+        constexpr bool try_reduce_as_function_context(TokenStack& tokenStack)
         {
             std::span pendingStack{tokenStack};
 
@@ -741,27 +751,43 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingStack, 1u);
             }
 
-            std::optional tokens = match_suffix<Identifier, FunctionArgs>(pendingStack);
-            if (!tokens)
+            if (auto* funArgs = match_suffix<FunctionArgs>(pendingStack))
             {
-                return false;
+                remove_suffix(pendingStack, 1u);
+
+                FunctionContext funContext{
+                    .args = std::move(*funArgs)};
+
+                if (funSpecs)
+                {
+                    funContext.specs = std::move(*funSpecs);
+                }
+
+                tokenStack.resize(pendingStack.size());
+                tokenStack.emplace_back(std::move(funContext));
+
+                return true;
             }
-            remove_suffix(pendingStack, 2u);
 
-            auto& [identifier, funArgs] = *tokens;
-            FunctionIdentifier funIdentifier{
-                .identifier = std::move(identifier),
-                .args = std::move(funArgs)};
+            return false;
+        }
 
-            if (funSpecs)
+        constexpr bool try_reduce_as_function_identifier(TokenStack& tokenStack)
+        {
+            if (std::optional suffix = match_suffix<Identifier, FunctionContext>(tokenStack))
             {
-                funIdentifier.specs = std::move(*funSpecs);
+                auto& [identifier, funCtx] = *suffix;
+                FunctionIdentifier funIdentifier{
+                    .identifier = std::move(identifier),
+                    .context = std::move(funCtx)};
+
+                tokenStack.pop_back();
+                tokenStack.back() = std::move(funIdentifier);
+
+                return true;
             }
 
-            tokenStack.resize(pendingStack.size());
-            tokenStack.emplace_back(std::move(funIdentifier));
-
-            return true;
+            return false;
         }
 
         [[nodiscard]]
@@ -930,54 +956,29 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
-        inline bool try_reduce_as_function_type(TokenStack& tokenStack)
+        constexpr bool try_reduce_as_function_type(TokenStack& tokenStack)
         {
-            std::span pendingStack{tokenStack};
-
-            Specs* funSpecs{};
-            if (auto* specs = match_suffix<Specs>(pendingStack))
-            {
-                funSpecs = specs;
-                remove_suffix(pendingStack, 1u);
-            }
-
-            FunctionArgs* funArgs = match_suffix<FunctionArgs>(pendingStack);
-            if (!funArgs)
-            {
-                return false;
-            }
-            remove_suffix(pendingStack, 1u);
-
             // The space is required, because the return type will always be spaced away from the parens.
-            if (!is_suffix_of<Type, Space>(pendingStack))
+            if (std::optional suffix = match_suffix<Type, Space, FunctionContext>(tokenStack))
             {
-                return false;
-            }
-            // Remove just the space, as we need to consume the type next.
-            remove_suffix(pendingStack, 1u);
+                auto& [returnType, space, funCtx] = *suffix;
+                FunctionType funType{
+                    .returnType = std::move(returnType),
+                    .context = std::move(funCtx)};
 
-            FunctionType funType{
-                .returnType = std::make_shared<Type>(
-                    std::get<Type>(
-                        std::move(pendingStack.back()))),
-                .args = std::move(*funArgs)};
-            remove_suffix(pendingStack, 1u);
+                tokenStack.resize(tokenStack.size() - 2);
+                tokenStack.back().emplace<End>(std::move(funType));
 
-            if (funSpecs)
-            {
-                funType.specs = std::move(*funSpecs);
+                return true;
             }
 
-            tokenStack.resize(pendingStack.size());
-            tokenStack.emplace_back(
-                std::in_place_type<End>,
-                std::move(funType));
-
-            return true;
+            return false;
         }
 
         inline bool try_reduce_as_end(TokenStack& tokenStack)
         {
+            try_reduce_as_function_context(tokenStack);
+
             if (is_suffix_of<FunctionIdentifier>(tokenStack)
                 || try_reduce_as_function_identifier(tokenStack))
             {
@@ -1135,7 +1136,8 @@ namespace mimicpp::printing::type::parsing
         {
             if (scopeResolution == token)
             {
-                token::try_reduce_as_function_identifier(m_TokenStack);
+                token::try_reduce_as_function_context(m_TokenStack)
+                    && token::try_reduce_as_function_identifier(m_TokenStack);
                 token::try_reduce_as_scope_sequence(m_TokenStack);
             }
             else if (commaSeparator == token)
