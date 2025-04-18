@@ -239,24 +239,10 @@ namespace mimicpp::printing::type::parsing
             StringViewT content{};
             std::optional<ArgSequence> templateArgs{};
 
-            struct FunctionInfo
-            {
-                ArgSequence args;
-                Specs specs{};
-            };
-
-            std::optional<FunctionInfo> functionInfo{};
-
             [[nodiscard]]
             constexpr bool is_template() const noexcept
             {
                 return templateArgs.has_value();
-            }
-
-            [[nodiscard]]
-            constexpr bool is_function() const noexcept
-            {
-                return functionInfo.has_value();
             }
 
             template <parser_visitor Visitor>
@@ -271,12 +257,6 @@ namespace mimicpp::printing::type::parsing
                 if (templateArgs)
                 {
                     templateArgs->handle_as_template_args(unwrapped);
-                }
-
-                if (functionInfo)
-                {
-                    functionInfo->args.handle_as_function_args(unwrapped);
-                    std::invoke(functionInfo->specs, unwrapped);
                 }
             }
         };
