@@ -228,9 +228,22 @@ namespace mimicpp::printing::type::parsing
 
             template <parser_visitor Visitor>
             constexpr void handle_as_template_args(Visitor& visitor) const;
+        };
+
+        class FunctionArgs
+        {
+        public:
+            ArgSequence args{};
 
             template <parser_visitor Visitor>
-            constexpr void handle_as_function_args(Visitor& visitor) const;
+            constexpr void operator()(Visitor& visitor) const
+            {
+                auto& unwrapped = unwrap_visitor(visitor);
+
+                unwrapped.begin_function_args();
+                std::invoke(args, unwrapped);
+                unwrapped.end_function_args();
+            }
         };
 
         class Identifier
@@ -265,7 +278,7 @@ namespace mimicpp::printing::type::parsing
         {
         public:
             Identifier identifier;
-            ArgSequence args{};
+            FunctionArgs args{};
             Specs specs{};
 
             template <parser_visitor Visitor>
@@ -274,7 +287,7 @@ namespace mimicpp::printing::type::parsing
                 auto& unwrapped = unwrap_visitor(visitor);
 
                 std::invoke(identifier, unwrapped);
-                args.handle_as_function_args(unwrapped);
+                std::invoke(args, unwrapped);
                 std::invoke(specs, unwrapped);
             }
         };
@@ -395,21 +408,11 @@ namespace mimicpp::printing::type::parsing
             unwrapped.end_template_args();
         }
 
-        template <parser_visitor Visitor>
-        constexpr void ArgSequence::handle_as_function_args(Visitor& visitor) const
-        {
-            auto& unwrapped = unwrap_visitor(visitor);
-
-            unwrapped.begin_function_args();
-            std::invoke(*this, unwrapped);
-            unwrapped.end_function_args();
-        }
-
         class FunctionType
         {
         public:
             std::shared_ptr<Type> returnType{};
-            ArgSequence args{};
+            FunctionArgs args{};
             Specs specs{};
 
             template <parser_visitor Visitor>
@@ -427,7 +430,7 @@ namespace mimicpp::printing::type::parsing
                     unwrapped.end_return_type();
                 }
 
-                args.handle_as_function_args(unwrapped);
+                std::invoke(args, unwrapped);
                 std::invoke(specs, unwrapped);
 
                 unwrapped.end_function();
@@ -505,6 +508,7 @@ namespace mimicpp::printing::type::parsing
         token::FunctionIdentifier,
         token::ScopeSequence,
         token::ArgSequence,
+        token::FunctionArgs,
         token::Specs,
         token::Type,
         token::End>;
@@ -693,6 +697,39 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
+        constexpr bool try_reduce_as_function_args(TokenStack& tokenStack)
+        {
+            std::span pendingTokens{tokenStack};
+            if (!is_suffix_of<ClosingParens>(pendingTokens))
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
+
+            auto* args = match_suffix<ArgSequence>(pendingTokens);
+            if (args)
+            {
+                remove_suffix(pendingTokens, 1u);
+            }
+
+            if (!is_suffix_of<OpeningParens>(pendingTokens))
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
+
+            FunctionArgs funArgs{};
+            if (args)
+            {
+                funArgs.args = std::move(*args);
+            }
+
+            tokenStack.resize(pendingTokens.size());
+            tokenStack.emplace_back(std::move(funArgs));
+
+            return true;
+        }
+
         constexpr bool try_reduce_as_function_identifier(TokenStack& tokenStack)
         {
             std::span pendingStack{tokenStack};
@@ -704,38 +741,21 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingStack, 1u);
             }
 
-            if (!is_suffix_of<ClosingParens>(pendingStack))
+            std::optional tokens = match_suffix<Identifier, FunctionArgs>(pendingStack);
+            if (!tokens)
             {
                 return false;
             }
-            remove_suffix(pendingStack, 1u);
+            remove_suffix(pendingStack, 2u);
 
-            ArgSequence* funArgs{};
-            if (auto* args = match_suffix<ArgSequence>(pendingStack))
-            {
-                funArgs = args;
-                remove_suffix(pendingStack, 1u);
-            }
-
-            if (!is_suffix_of<Identifier, OpeningParens>(pendingStack))
-            {
-                return false;
-            }
-            // Remove only OpeningParens, because the Identifier is consumed next.
-            remove_suffix(pendingStack, 1u);
-
+            auto& [identifier, funArgs] = *tokens;
             FunctionIdentifier funIdentifier{
-                .identifier = std::get<Identifier>(std::move(pendingStack.back()))};
-            remove_suffix(pendingStack, 1u);
+                .identifier = std::move(identifier),
+                .args = std::move(funArgs)};
 
             if (funSpecs)
             {
                 funIdentifier.specs = std::move(*funSpecs);
-            }
-
-            if (funArgs)
-            {
-                funIdentifier.args = std::move(*funArgs);
             }
 
             tokenStack.resize(pendingStack.size());
@@ -921,41 +941,31 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingStack, 1u);
             }
 
-            if (!is_suffix_of<ClosingParens>(pendingStack))
+            FunctionArgs* funArgs = match_suffix<FunctionArgs>(pendingStack);
+            if (!funArgs)
             {
                 return false;
             }
             remove_suffix(pendingStack, 1u);
 
-            ArgSequence* funArgs{};
-            if (auto* args = match_suffix<ArgSequence>(pendingStack))
-            {
-                funArgs = args;
-                remove_suffix(pendingStack, 1u);
-            }
-
             // The space is required, because the return type will always be spaced away from the parens.
-            if (!is_suffix_of<Type, Space, OpeningParens>(pendingStack))
+            if (!is_suffix_of<Type, Space>(pendingStack))
             {
                 return false;
             }
-            // Remove just the space and opening-parens, as we need to consume the type next.
-            remove_suffix(pendingStack, 2u);
+            // Remove just the space, as we need to consume the type next.
+            remove_suffix(pendingStack, 1u);
 
             FunctionType funType{
                 .returnType = std::make_shared<Type>(
                     std::get<Type>(
-                        std::move(pendingStack.back())))};
+                        std::move(pendingStack.back()))),
+                .args = std::move(*funArgs)};
             remove_suffix(pendingStack, 1u);
 
             if (funSpecs)
             {
                 funType.specs = std::move(*funSpecs);
-            }
-
-            if (funArgs)
-            {
-                funType.args = std::move(*funArgs);
             }
 
             tokenStack.resize(pendingStack.size());
@@ -1188,6 +1198,9 @@ namespace mimicpp::printing::type::parsing
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::ClosingParens>,
                     content);
+
+                token::try_reduce_as_function_args(m_TokenStack)
+                    || token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningParens, token::ClosingParens>(m_TokenStack);
             }
             else if (openingCurly == token)
             {

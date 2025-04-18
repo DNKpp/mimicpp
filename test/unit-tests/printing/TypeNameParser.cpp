@@ -886,9 +886,9 @@ TEST_CASE(
         "{placeholder}",
         "{place holder}",
         "{place-holder}",
-        /*"(placeholder)",
+        //"(placeholder)", this will never be supported as we can not reliably distinguish that from FunctionArgs
         "(place holder)",
-        "(place-holder)",*/
+        "(place-holder)",
         "<place holder>",
         "<placeholder>",
         "<place-holder>",
