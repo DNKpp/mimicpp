@@ -13,6 +13,8 @@ namespace
 {
     struct VisitorMock
     {
+        Mock<void(StringViewT)> unrecognized{{.name = "VisitorMock::unrecognized"}};
+
         Mock<void()> begin{{.name = "VisitorMock::begin"}};
         Mock<void()> end{{.name = "VisitorMock::end"}};
 
@@ -78,6 +80,20 @@ namespace
             util::unreachable();
         }
     };
+}
+
+TEST_CASE(
+    "parsing::NameParser rejects unrecognizable input.",
+    "[print][print::type]")
+{
+    StringViewT constexpr input{"Hello, World!"};
+
+    VisitorMock visitor{};
+
+    SCOPED_EXP visitor.unrecognized.expect_call("Hello, World!");
+
+    printing::type::parsing::NameParser parser{std::ref(visitor), input};
+    parser();
 }
 
 TEST_CASE(

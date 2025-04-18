@@ -23,6 +23,8 @@ namespace mimicpp::printing::type::parsing
     template <typename T>
     concept parser_visitor = std::movable<T>
                           && requires(std::unwrap_reference_t<T> visitor, StringViewT content) {
+                                 visitor.unrecognized(content);
+
                                  visitor.begin();
                                  visitor.end();
 
@@ -1057,11 +1059,17 @@ namespace mimicpp::printing::type::parsing
 
             try_reduce_as_end(m_TokenStack);
 
-            MIMICPP_ASSERT(1u == m_TokenStack.size(), "A single end-state is required.");
-            MIMICPP_ASSERT(std::holds_alternative<token::End>(m_TokenStack.back()), "Only token::End is allowed as end-state.");
-            std::invoke(
-                std::get<token::End>(m_TokenStack.back()),
-                m_Visitor);
+            if (1u == m_TokenStack.size()
+                && std::holds_alternative<token::End>(m_TokenStack.back()))
+            {
+                std::invoke(
+                    std::get<token::End>(m_TokenStack.back()),
+                    m_Visitor);
+            }
+            else
+            {
+                unwrap_visitor(m_Visitor).unrecognized(m_Content);
+            }
         }
 
     private:
