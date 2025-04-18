@@ -306,9 +306,9 @@ TEST_CASE(
 {
     SECTION("Single array is supported.")
     {
-        constexpr std::array source{42, 1337};
+        std::array const source{42, 1337};
 
-        constexpr auto result = util::concat_arrays(source);
+        auto const result = util::concat_arrays(source);
         STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
 
         CHECK_THAT(
@@ -318,8 +318,8 @@ TEST_CASE(
 
     SECTION("Two arrays are supported.")
     {
-        constexpr std::array first{42, 1337};
-        constexpr std::array second{-42, -1337, 42};
+        std::array const first{42, 1337};
+        std::array const second{-42, -1337, 42};
 
         auto const result = util::concat_arrays(first, second);
         STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
@@ -331,8 +331,8 @@ TEST_CASE(
 
     SECTION("Arbitrary amount of arrays are supported.")
     {
-        constexpr std::array first{42, 1337};
-        constexpr std::array second{-42, -1337, 42};
+        std::array const first{42, 1337};
+        std::array const second{-42, -1337, 42};
 
         auto const result = util::concat_arrays(first, second, first);
         STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
@@ -344,7 +344,7 @@ TEST_CASE(
 
     SECTION("Empty arrays are supported.")
     {
-        constexpr std::array<int, 0> source{};
+        std::array<int, 0> const source{};
 
         auto const result = util::concat_arrays(source, source);
         STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
