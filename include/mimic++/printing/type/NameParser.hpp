@@ -607,7 +607,7 @@ namespace mimicpp::printing::type::parsing
             }
         }
 
-        constexpr bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
+        inline bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
         {
             ScopeSequence::Scope scope{};
             if (auto* identifier = match_suffix<Identifier>(tokenStack))
