@@ -377,7 +377,7 @@ namespace mimicpp::printing::type::parsing
         public:
             std::optional<ScopeSequence> scopes{};
             Specs specs{};
-            std::shared_ptr<Type> nested{};
+            std::shared_ptr<FunctionPtr> nested{};
 
             template <parser_visitor Visitor>
             constexpr void operator()(Visitor& visitor) const
@@ -907,50 +907,61 @@ namespace mimicpp::printing::type::parsing
         inline bool try_reduce_as_function_ptr(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
-            if (std::optional suffix = match_suffix<Specs, ClosingParens>(pendingTokens))
+            if (!is_suffix_of<ClosingParens>(pendingTokens))
             {
-                remove_suffix(pendingTokens, 2u);
-                auto& [specs, closing] = *suffix;
-                if (!specs.has_ptr())
-                {
-                    return false;
-                }
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
 
-                ScopeSequence* scopeSeq = match_suffix<ScopeSequence>(pendingTokens);
-                if (match_suffix<ScopeSequence>(pendingTokens))
-                {
-                    remove_suffix(pendingTokens, 1u);
-                }
-
-                if (!is_suffix_of<OpeningParens>(pendingTokens))
-                {
-                    return false;
-                }
+            auto* nestedFunPtr = match_suffix<FunctionPtr>(pendingTokens);
+            if (nestedFunPtr)
+            {
                 remove_suffix(pendingTokens, 1u);
-
-                FunctionPtr funPtr{.specs = std::move(specs)};
-                if (scopeSeq)
-                {
-                    funPtr.scopes = std::move(*scopeSeq);
-                }
-
-                tokenStack.resize(pendingTokens.size());
-                tokenStack.emplace_back(std::move(funPtr));
-
-                return true;
             }
 
-            return false;
+            auto* specs = match_suffix<Specs>(pendingTokens);
+            if (!specs
+                || !specs->has_ptr())
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
+
+            ScopeSequence* scopeSeq = match_suffix<ScopeSequence>(pendingTokens);
+            if (match_suffix<ScopeSequence>(pendingTokens))
+            {
+                remove_suffix(pendingTokens, 1u);
+            }
+
+            if (!is_suffix_of<OpeningParens>(pendingTokens))
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
+
+            FunctionPtr funPtr{.specs = std::move(*specs)};
+            if (scopeSeq)
+            {
+                funPtr.scopes = std::move(*scopeSeq);
+            }
+
+            if (nestedFunPtr)
+            {
+                funPtr.nested = std::make_shared<FunctionPtr>(std::move(*nestedFunPtr));
+            }
+
+            tokenStack.resize(pendingTokens.size());
+            tokenStack.emplace_back(std::move(funPtr));
+
+            return true;
         }
 
         inline bool try_reduce_as_function_ptr_type(TokenStack& tokenStack)
         {
-            std::span pendingTokens{tokenStack};
             if (std::optional suffix = match_suffix<Type, Space, FunctionPtr, FunctionContext>(tokenStack))
             {
                 auto& [returnType, space, ptr, ctx] = *suffix;
 
-                ignore_space(pendingTokens);
                 FunctionPtrType ptrType{
                     .returnType = std::make_shared<Type>(std::move(returnType)),
                     .ptr = std::move(ptr),
@@ -1313,6 +1324,8 @@ namespace mimicpp::printing::type::parsing
             }
             else if (closingParens == token)
             {
+                token::try_reduce_as_function_context(m_TokenStack);
+
                 token::try_reduce_as_type(m_TokenStack)
                     && token::try_reduce_as_arg_sequence(m_TokenStack);
 

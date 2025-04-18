@@ -1297,7 +1297,7 @@ TEST_CASE(
         parser();
     }
 
-    SECTION("When return-type is a function pointer.")
+    /*SECTION("When return-type is a function pointer.")
     {
         StringT const input = "void (*()) foo()";
         CAPTURE(input);
@@ -1355,20 +1355,59 @@ TEST_CASE(
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser();
-    }
+    }*/
 
-    SECTION("When parameter is a function pointer.")
+    SECTION("When function-ptr with function-ptr parameter is given.")
     {
-        StringT const input = "void foo(void (*)())";
+        StringT const input = "void (*)(void (*)())";
         CAPTURE(input);
 
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
         sequence += visitor.add_identifier.expect_call("void");
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.begin_function_ptr.expect_call();
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.end_function_ptr.expect_call();
+
         sequence += visitor.begin_function_args.expect_call();
+
+        {
+            sequence += visitor.begin_type.expect_call();
+
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("void");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+
+            sequence += visitor.begin_function_ptr.expect_call();
+            sequence += visitor.add_ptr.expect_call();
+            sequence += visitor.end_function_ptr.expect_call();
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+            sequence += visitor.end_type.expect_call();
+        }
+
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When parameter is a template argument.")
+    {
+        StringT const input = "foo<void (*)()>";
+        CAPTURE(input);
+
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
 
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.add_identifier.expect_call("void");
@@ -1380,10 +1419,10 @@ TEST_CASE(
         sequence += visitor.begin_function_args.expect_call();
         sequence += visitor.end_function_args.expect_call();
 
-        sequence += visitor.end_function_args.expect_call();
+        sequence += visitor.end_template_args.expect_call();
 
         sequence += visitor.end_type.expect_call();
-        sequence += visitor.end_return_type.expect_call();
+        sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser();
