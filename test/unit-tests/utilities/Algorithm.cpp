@@ -321,7 +321,7 @@ TEST_CASE(
         constexpr std::array first{42, 1337};
         constexpr std::array second{-42, -1337, 42};
 
-        constexpr auto result = util::concat_arrays(first, second);
+        auto const result = util::concat_arrays(first, second);
         STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
 
         CHECK_THAT(
@@ -334,7 +334,7 @@ TEST_CASE(
         constexpr std::array first{42, 1337};
         constexpr std::array second{-42, -1337, 42};
 
-        constexpr auto result = util::concat_arrays(first, second, first);
+        auto const result = util::concat_arrays(first, second, first);
         STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
 
         CHECK_THAT(
@@ -346,7 +346,7 @@ TEST_CASE(
     {
         constexpr std::array<int, 0> source{};
 
-        constexpr auto result = util::concat_arrays(source, source);
+        auto const result = util::concat_arrays(source, source);
         STATIC_CHECK(std::same_as<int, std::ranges::range_value_t<decltype(result)>>);
 
         CHECK_THAT(
