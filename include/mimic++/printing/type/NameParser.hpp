@@ -1137,7 +1137,7 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
-        constexpr bool try_reduce_as_function_type(TokenStack& tokenStack)
+        inline bool try_reduce_as_function_type(TokenStack& tokenStack)
         {
             // The space is required, because the return type will always be spaced away from the parens.
             if (std::optional suffix = match_suffix<Type, Space, FunctionContext>(tokenStack))
