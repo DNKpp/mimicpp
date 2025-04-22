@@ -377,12 +377,34 @@ namespace mimicpp::printing::type::parsing
         public:
             std::optional<ScopeSequence> scopes{};
             Specs specs{};
-            std::shared_ptr<FunctionPtr> nested{};
+
+            struct NestedInfo
+            {
+                std::shared_ptr<FunctionPtr> ptr{};
+                FunctionContext ctx{};
+            };
+
+            std::optional<NestedInfo> nested{};
+        };
+
+        class FunctionPtrType
+        {
+        public:
+            std::shared_ptr<Type> returnType{};
+            std::optional<ScopeSequence> scopes{};
+            Specs specs{};
+            FunctionContext context{};
 
             template <parser_visitor Visitor>
             constexpr void operator()(Visitor& visitor) const
             {
+                MIMICPP_ASSERT(returnType, "Return type is mandatory for function-ptrs.");
+
                 auto& unwrapped = unwrap_visitor(visitor);
+
+                unwrapped.begin_return_type();
+                std::invoke(*returnType, visitor);
+                unwrapped.end_return_type();
 
                 unwrapped.begin_function_ptr();
                 if (scopes)
@@ -392,26 +414,7 @@ namespace mimicpp::printing::type::parsing
 
                 std::invoke(specs, unwrapped);
                 unwrapped.end_function_ptr();
-            }
-        };
 
-        class FunctionPtrType
-        {
-        public:
-            std::shared_ptr<Type> returnType{};
-            FunctionPtr ptr{};
-            FunctionContext context{};
-
-            template <parser_visitor Visitor>
-            constexpr void operator()(Visitor& visitor) const
-            {
-                auto& unwrapped = unwrap_visitor(visitor);
-
-                unwrapped.begin_return_type();
-                std::invoke(*returnType, visitor);
-                unwrapped.end_return_type();
-
-                std::invoke(ptr, unwrapped);
                 std::invoke(context, unwrapped);
             }
         };
@@ -913,10 +916,17 @@ namespace mimicpp::printing::type::parsing
             }
             remove_suffix(pendingTokens, 1u);
 
-            auto* nestedFunPtr = match_suffix<FunctionPtr>(pendingTokens);
-            if (nestedFunPtr)
+            auto* nestedFunCtx = match_suffix<FunctionContext>(pendingTokens);
+            FunctionPtr* nestedFunPtr{};
+            if (nestedFunCtx)
             {
                 remove_suffix(pendingTokens, 1u);
+
+                if (auto* ptr = match_suffix<FunctionPtr>(pendingTokens))
+                {
+                    nestedFunPtr = ptr;
+                    remove_suffix(pendingTokens, 1u);
+                }
             }
 
             auto* specs = match_suffix<Specs>(pendingTokens);
@@ -927,7 +937,7 @@ namespace mimicpp::printing::type::parsing
             }
             remove_suffix(pendingTokens, 1u);
 
-            ScopeSequence* scopeSeq = match_suffix<ScopeSequence>(pendingTokens);
+            auto* scopeSeq = match_suffix<ScopeSequence>(pendingTokens);
             if (match_suffix<ScopeSequence>(pendingTokens))
             {
                 remove_suffix(pendingTokens, 1u);
@@ -945,9 +955,17 @@ namespace mimicpp::printing::type::parsing
                 funPtr.scopes = std::move(*scopeSeq);
             }
 
-            if (nestedFunPtr)
+            if (nestedFunCtx)
             {
-                funPtr.nested = std::make_shared<FunctionPtr>(std::move(*nestedFunPtr));
+                FunctionPtr::NestedInfo nested{
+                    .ctx = std::move(*nestedFunCtx)};
+
+                if (nestedFunPtr)
+                {
+                    nested.ptr = std::make_shared<FunctionPtr>(std::move(*nestedFunPtr));
+                }
+
+                funPtr.nested = std::move(nested);
             }
 
             tokenStack.resize(pendingTokens.size());
@@ -956,24 +974,63 @@ namespace mimicpp::printing::type::parsing
             return true;
         }
 
+        namespace detail
+        {
+            void handled_nested_function_ptr(TokenStack& tokenStack, FunctionPtr::NestedInfo info);
+        }
+
         inline bool try_reduce_as_function_ptr_type(TokenStack& tokenStack)
         {
             if (std::optional suffix = match_suffix<Type, Space, FunctionPtr, FunctionContext>(tokenStack))
             {
                 auto& [returnType, space, ptr, ctx] = *suffix;
 
+                std::optional nestedInfo = std::move(ptr.nested);
                 FunctionPtrType ptrType{
                     .returnType = std::make_shared<Type>(std::move(returnType)),
-                    .ptr = std::move(ptr),
+                    .scopes = std::move(ptr.scopes),
+                    .specs = std::move(ptr.specs),
                     .context = std::move(ctx)};
 
                 tokenStack.resize(tokenStack.size() - 3);
                 tokenStack.back().emplace<Type>(std::move(ptrType));
 
+                // We got something like `ret (*(outer-args))(args)` or `ret (*(*)(outer-args))(args)`, where the currently
+                // processed function-ptr is actually the return-type of the inner function(-ptr).
+                // This may nested in an arbitrary depth!
+                if (nestedInfo)
+                {
+                    detail::handled_nested_function_ptr(tokenStack, *std::move(nestedInfo));
+                }
+
                 return true;
             }
 
             return false;
+        }
+
+        namespace detail
+        {
+            inline void handled_nested_function_ptr(TokenStack& tokenStack, FunctionPtr::NestedInfo info)
+            {
+                auto& [ptr, ctx] = info;
+
+                // We need to insert an extra space, to follow the general syntax constraints.
+                tokenStack.emplace_back(Space{});
+
+                bool const isFunPtr{ptr};
+                if (ptr)
+                {
+                    tokenStack.emplace_back(std::move(*ptr));
+                }
+
+                tokenStack.emplace_back(std::move(ctx));
+
+                if (isFunPtr)
+                {
+                    try_reduce_as_function_ptr_type(tokenStack);
+                }
+            }
         }
 
         constexpr bool try_reduce_as_regular_type(TokenStack& tokenStack)
@@ -1109,19 +1166,21 @@ namespace mimicpp::printing::type::parsing
                 return try_reduce_as_function(tokenStack);
             }
 
-            if (try_reduce_as_function_type(tokenStack))
-            {
-                return true;
-            }
-
             if (is_suffix_of<Type>(tokenStack)
                 || try_reduce_as_type(tokenStack))
             {
-                auto type = std::get<Type>(std::move(tokenStack.back()));
-                tokenStack.back().emplace<End>(std::move(type));
+                // Do to some function-ptr reductions, there may be no actual `type`-token present.
+                // If not, it's probably a function-type.
+                if (auto* type = std::get_if<Type>(&tokenStack.back()))
+                {
+                    tokenStack.back().emplace<End>(
+                        std::exchange(*type, {}));
+
+                    return true;
+                }
             }
 
-            return false;
+            return try_reduce_as_function_type(tokenStack);
         }
 
         constexpr void add_specs(Specs::Layer newSpecs, TokenStack& tokenStack)

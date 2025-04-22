@@ -1297,31 +1297,46 @@ TEST_CASE(
         parser();
     }
 
-    /*SECTION("When return-type is a function pointer.")
+    SECTION("When return-type is a function pointer.")
     {
-        StringT const input = "void (*()) foo()";
+        StringT const input = "void (*(float))(int)";
         CAPTURE(input);
 
-        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_function.expect_call();
+
+        { // handles the `void (*)(int)` return-type.
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("void");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+
+            sequence += visitor.begin_function_ptr.expect_call();
+            sequence += visitor.add_ptr.expect_call();
+            sequence += visitor.end_function_ptr.expect_call();
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("int");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.begin_function_args.expect_call();
         sequence += visitor.begin_type.expect_call();
-
-        sequence += visitor.begin_return_type.expect_call();
-        sequence += visitor.add_identifier.expect_call("void");
-        sequence += visitor.end_return_type.expect_call();
-
-        sequence += visitor.begin_function_ptr.expect_call();
-        sequence += visitor.add_ptr.expect_call();
-        sequence += visitor.end_function_ptr.expect_call();
-        sequence += visitor.begin_function_args.expect_call();
-        sequence += visitor.end_function_args.expect_call();
+        sequence += visitor.add_identifier.expect_call("float");
         sequence += visitor.end_type.expect_call();
-        sequence += visitor.end_return_type.expect_call();
-
-        sequence += visitor.add_identifier.expect_call("foo");
-        sequence += visitor.begin_function_args.expect_call();
         sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
         sequence += visitor.end_type.expect_call();
-        sequence += visitor.end_return_type.expect_call();
+        sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser();
@@ -1329,33 +1344,49 @@ TEST_CASE(
 
     SECTION("When Function-Ptr with a function-ptr return-type is given.")
     {
-        StringT const input = "void (* (*)(float))(int)";
+        StringT const input = "void (*(*)(float))(int)";
         CAPTURE(input);
 
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
 
-        sequence += visitor.begin_return_type.expect_call();
-        sequence += visitor.add_identifier.expect_call("void");
+        { // Handles the `void (*)(float)` return-type
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("void");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+
+            sequence += visitor.begin_function_ptr.expect_call();
+            sequence += visitor.add_ptr.expect_call();
+            sequence += visitor.end_function_ptr.expect_call();
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("int");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+        }
+
+        sequence += visitor.end_type.expect_call();
         sequence += visitor.end_return_type.expect_call();
 
         sequence += visitor.begin_function_ptr.expect_call();
         sequence += visitor.add_ptr.expect_call();
         sequence += visitor.end_function_ptr.expect_call();
-        sequence += visitor.begin_function_args.expect_call();
-        sequence += visitor.end_function_args.expect_call();
-        sequence += visitor.end_type.expect_call();
-        sequence += visitor.end_return_type.expect_call();
 
-        sequence += visitor.add_identifier.expect_call("foo");
         sequence += visitor.begin_function_args.expect_call();
-        sequence += visitor.end_function_args.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("float");
         sequence += visitor.end_type.expect_call();
-        sequence += visitor.end_return_type.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser();
-    }*/
+    }
 
     SECTION("When function-ptr with function-ptr parameter is given.")
     {
