@@ -891,15 +891,19 @@ TEST_CASE(
 {
     StringT const placeholder = GENERATE(
         "{placeholder}",
+        "{__placeholder}",
         "{place holder}",
         "{place-holder}",
         //"(placeholder)", this will never be supported as we can not reliably distinguish that from FunctionArgs
+        //"(__placeholder)",
         "(place holder)",
         "(place-holder)",
-        "<place holder>",
         "<placeholder>",
+        "<__placeholder>",
+        "<place holder>",
         "<place-holder>",
         "`placeholder'",
+        "`__placeholder'",
         "`place holder'",
         "`place-holder'");
 
