@@ -1825,3 +1825,69 @@ TEST_CASE(
         parser();
     }
 }
+
+TEST_CASE(
+    "parsing::NameParser keeps meaningful reserved identifiers.",
+    "[print][print::type]")
+{
+    StringT const identifier = "__identifier";
+
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+
+    SECTION("Just a single identifier.")
+    {
+        StringT const input = identifier;
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(identifier);
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), identifier};
+        parser();
+    }
+
+    SECTION("As function name.")
+    {
+        StringT const input = identifier + "()";
+        CAPTURE(input);
+
+        sequence += visitor.begin_function.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(identifier);
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("As template.")
+    {
+        StringT const input = identifier + "<>";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(identifier);
+
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}

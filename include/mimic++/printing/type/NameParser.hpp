@@ -1325,7 +1325,8 @@ namespace mimicpp::printing::type::parsing
         constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, lexing::identifier const& identifier)
         {
             // Some environments add many reserved symbols (e.g. `__cdecl`). We want to filter out most of these,
-            // but keep those, which are actual function-names.
+            // but keep those, which are actual names.
+            // Note: Currently reserved identifiers are only accepted if they are top-level or (template-)functions.
             if (!identifier.content.starts_with("__")
                 || keep_reserved_identifier())
             {
