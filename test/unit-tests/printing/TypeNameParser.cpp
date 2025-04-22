@@ -1466,3 +1466,183 @@ TEST_CASE(
         parser();
     }
 }
+
+TEST_CASE(
+    "parsing::NameParser handles arbitrarily scoped identifiers.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    auto expect_args = [&] {
+        {
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.begin_scope.expect_call();
+            sequence += visitor.add_identifier.expect_call("std");
+            sequence += visitor.end_scope.expect_call();
+            sequence += visitor.add_identifier.expect_call("string");
+            sequence += visitor.add_const.expect_call();
+            sequence += visitor.add_lvalue_ref.expect_call();
+            sequence += visitor.end_type.expect_call();
+
+            sequence += visitor.add_arg.expect_call();
+
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("int");
+            sequence += visitor.add_volatile.expect_call();
+            sequence += visitor.end_type.expect_call();
+        }
+    };
+
+    sequence += visitor.begin.expect_call();
+    sequence += visitor.begin_type.expect_call();
+
+    SECTION("When function local type is given.")
+    {
+        constexpr StringViewT input{"foo(std::string const&, int volatile) noexcept::my_type"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function_args.expect_call();
+        expect_args();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.add_noexcept.expect_call();
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When qualified function local type is given.")
+    {
+        constexpr StringViewT input{"volatile foo(std::string const&, int volatile) noexcept::my_type const&"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_function_args.expect_call();
+        expect_args();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.add_noexcept.expect_call();
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("my_type");
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When nested function local type is given.")
+    {
+        constexpr StringViewT input{"foo::bar(std::string const&, int volatile) noexcept::my_type"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.begin_function.expect_call();
+        sequence += visitor.add_identifier.expect_call("bar");
+
+        sequence += visitor.begin_function_args.expect_call();
+        expect_args();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.add_noexcept.expect_call();
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When deeply nested function local type is given.")
+    {
+        constexpr StringViewT input{"foo<int volatile, std::string const&>() const &&::bar(std::string const&, int volatile) noexcept::my_type"};
+        CAPTURE(input);
+
+        { // foo<int volatile, std::string const&>() const &&
+            sequence += visitor.begin_scope.expect_call();
+            sequence += visitor.begin_function.expect_call();
+            sequence += visitor.add_identifier.expect_call("foo");
+
+            sequence += visitor.begin_template_args.expect_call();
+
+            {
+                sequence += visitor.begin_type.expect_call();
+                sequence += visitor.add_identifier.expect_call("int");
+                sequence += visitor.add_volatile.expect_call();
+                sequence += visitor.end_type.expect_call();
+
+                sequence += visitor.add_arg.expect_call();
+
+                sequence += visitor.begin_type.expect_call();
+                sequence += visitor.begin_scope.expect_call();
+                sequence += visitor.add_identifier.expect_call("std");
+                sequence += visitor.end_scope.expect_call();
+                sequence += visitor.add_identifier.expect_call("string");
+                sequence += visitor.add_const.expect_call();
+                sequence += visitor.add_lvalue_ref.expect_call();
+                sequence += visitor.end_type.expect_call();
+            }
+
+            sequence += visitor.end_template_args.expect_call();
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.add_const.expect_call();
+            sequence += visitor.add_rvalue_ref.expect_call();
+            sequence += visitor.end_function.expect_call();
+            sequence += visitor.end_scope.expect_call();
+        }
+
+        { // bar(std::string const&, int volatile) noexcept
+            sequence += visitor.begin_scope.expect_call();
+            sequence += visitor.begin_function.expect_call();
+            sequence += visitor.add_identifier.expect_call("bar");
+
+            sequence += visitor.begin_function_args.expect_call();
+            expect_args();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.add_noexcept.expect_call();
+            sequence += visitor.end_function.expect_call();
+            sequence += visitor.end_scope.expect_call();
+        }
+
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}
