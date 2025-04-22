@@ -1646,3 +1646,178 @@ TEST_CASE(
         parser();
     }
 }
+
+TEST_CASE(
+    "parsing::NameParser handles msvc-like function scopes.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+    sequence += visitor.begin_type.expect_call();
+
+    SECTION("When function local type is given.")
+    {
+        constexpr StringViewT input{"`void foo()'::my_type"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_scope.expect_call();
+        {
+            sequence += visitor.begin_function.expect_call();
+
+            /*sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("void");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();*/
+
+            sequence += visitor.add_identifier.expect_call("foo");
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.end_function.expect_call();
+        }
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("Deeply nested function local type is given.")
+    {
+        constexpr StringViewT input{
+            "`ret2 `ret1 `ret0 inner::fn0(int const)'::`my_placeholder'::middle::fn1()const'::outer::fn2()const &'::my_type"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("inner");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        { // ``ret0 fn0(int const)'`
+            sequence += visitor.begin_function.expect_call();
+
+            /*sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("ret0");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();*/
+
+            sequence += visitor.add_identifier.expect_call("fn0");
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("int");
+            sequence += visitor.add_const.expect_call();
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.end_function.expect_call();
+        }
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("`my_placeholder'");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("middle");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        { // ``ret1 fn1()const'`
+            sequence += visitor.begin_function.expect_call();
+
+            /*sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("ret1");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();*/
+
+            sequence += visitor.add_identifier.expect_call("fn1");
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+            sequence += visitor.add_const.expect_call();
+
+            sequence += visitor.end_function.expect_call();
+        }
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("outer");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        { // ``ret2 fn2()const'`
+            sequence += visitor.begin_function.expect_call();
+
+            /*sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("ret2");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();*/
+
+            sequence += visitor.add_identifier.expect_call("fn2");
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+            sequence += visitor.add_const.expect_call();
+            sequence += visitor.add_lvalue_ref.expect_call();
+
+            sequence += visitor.end_function.expect_call();
+        }
+        sequence += visitor.end_scope.expect_call();
+        // end `outer::fn2()const`
+
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When decorated function local type is given.")
+    {
+        StringViewT const visibility = GENERATE("public", "private", "protected");
+        StringViewT const typeClass = GENERATE("struct", "class", "enum");
+        StringT const input = StringT{typeClass} + " `" + StringT{visibility} + ": void __cdecl foo() __ptr64'::my_type";
+        CAPTURE(input);
+
+        sequence += visitor.begin_scope.expect_call();
+        {
+            sequence += visitor.begin_function.expect_call();
+
+            /*sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+            sequence += visitor.add_identifier.expect_call("void");
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();*/
+
+            sequence += visitor.add_identifier.expect_call("foo");
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.end_function.expect_call();
+        }
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("my_type");
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}

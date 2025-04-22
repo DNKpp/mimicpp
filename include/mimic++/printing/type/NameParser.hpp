@@ -1297,10 +1297,41 @@ namespace mimicpp::printing::type::parsing
             }
         }
 
+        [[nodiscard]]
+        constexpr bool keep_reserved_identifier() const noexcept
+        {
+            if (!m_TokenStack.empty()
+                && !is_suffix_of<token::ScopeSequence>(m_TokenStack))
+            {
+                return false;
+            }
+
+            auto const& next = m_Lexer.peek().classification;
+            if (std::holds_alternative<lexing::end>(next))
+            {
+                return true;
+            }
+
+            if (auto const* op = std::get_if<lexing::operator_or_punctuator>(&next))
+            {
+                return openingAngle == *op
+                    || openingParens == *op
+                    || scopeResolution == *op;
+            }
+
+            return false;
+        }
+
         constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, lexing::identifier const& identifier)
         {
-            m_TokenStack.emplace_back(
-                token::Identifier{.content = identifier.content});
+            // Some environments add many reserved symbols (e.g. `__cdecl`). We want to filter out most of these,
+            // but keep those, which are actual function-names.
+            if (!identifier.content.starts_with("__")
+                || keep_reserved_identifier())
+            {
+                m_TokenStack.emplace_back(
+                    token::Identifier{.content = identifier.content});
+            }
         }
 
         constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, lexing::keyword const& keyword)
@@ -1413,10 +1444,63 @@ namespace mimicpp::printing::type::parsing
             }
             else if (singleQuote == token)
             {
-                m_TokenStack.emplace_back(
-                    std::in_place_type<token::ClosingSingleQuote>,
-                    content);
-                token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningBacktick, token::ClosingSingleQuote>(m_TokenStack);
+                if (token::try_reduce_as_function_context(m_TokenStack)
+                    && token::try_reduce_as_function_identifier(m_TokenStack))
+                {
+                    unwrap_msvc_like_function();
+                }
+                else
+                {
+                    m_TokenStack.emplace_back(
+                        std::in_place_type<token::ClosingSingleQuote>,
+                        content);
+                    token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningBacktick, token::ClosingSingleQuote>(m_TokenStack);
+                }
+            }
+        }
+
+        void unwrap_msvc_like_function()
+        {
+            MIMICPP_ASSERT(is_suffix_of<token::FunctionIdentifier>(m_TokenStack), "Invalid state.");
+
+            auto funIdentifier = std::get<token::FunctionIdentifier>(m_TokenStack.back());
+            m_TokenStack.pop_back();
+
+            token::ScopeSequence scopes{};
+            if (auto* scopeSeq = match_suffix<token::ScopeSequence>(m_TokenStack))
+            {
+                scopes = std::move(*scopeSeq);
+                m_TokenStack.pop_back();
+            }
+
+            scopes.scopes.emplace_back(std::move(funIdentifier));
+
+            if (is_suffix_of<token::Space>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+            }
+
+            // Ignore return-types.
+            if (is_suffix_of<token::Type>(m_TokenStack)
+                || token::try_reduce_as_type(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+            }
+
+            MIMICPP_ASSERT(match_suffix<token::OpeningBacktick>(m_TokenStack), "Invalid state.");
+            m_TokenStack.pop_back();
+
+            if (auto* targetScopes = match_suffix<token::ScopeSequence>(m_TokenStack))
+            {
+                auto& target = targetScopes->scopes;
+                target.insert(
+                    target.cend(),
+                    std::make_move_iterator(scopes.scopes.begin()),
+                    std::make_move_iterator(scopes.scopes.end()));
+            }
+            else
+            {
+                m_TokenStack.emplace_back(std::move(scopes));
             }
         }
     };
