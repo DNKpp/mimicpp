@@ -879,7 +879,7 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
-        constexpr bool try_reduce_as_function_identifier(TokenStack& tokenStack)
+        inline bool try_reduce_as_function_identifier(TokenStack& tokenStack)
         {
             if (std::optional suffix = match_suffix<Identifier, FunctionContext>(tokenStack))
             {
@@ -1087,7 +1087,7 @@ namespace mimicpp::printing::type::parsing
             }
         }
 
-        constexpr bool try_reduce_as_regular_type(TokenStack& tokenStack)
+        inline bool try_reduce_as_regular_type(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
 
