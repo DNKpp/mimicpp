@@ -485,7 +485,6 @@ namespace mimicpp::printing::type::parsing
             {
                 auto& unwrapped = unwrap_visitor(visitor);
 
-                unwrapped.begin_type();
                 unwrapped.begin_function();
 
                 unwrapped.begin_return_type();
@@ -495,7 +494,6 @@ namespace mimicpp::printing::type::parsing
                 std::invoke(context, unwrapped);
 
                 unwrapped.end_function();
-                unwrapped.end_type();
             }
         };
 
@@ -511,7 +509,6 @@ namespace mimicpp::printing::type::parsing
             {
                 auto& unwrapped = unwrap_visitor(visitor);
 
-                unwrapped.begin_type();
                 unwrapped.begin_function();
 
                 if (returnType)
@@ -529,7 +526,6 @@ namespace mimicpp::printing::type::parsing
                 std::invoke(identifier, unwrapped);
 
                 unwrapped.end_function();
-                unwrapped.end_type();
             }
         };
 

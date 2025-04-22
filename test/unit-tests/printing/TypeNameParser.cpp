@@ -468,7 +468,6 @@ TEST_CASE(
     ScopedSequence sequence{};
 
     sequence += visitor.begin.expect_call();
-    sequence += visitor.begin_type.expect_call();
     sequence += visitor.begin_function.expect_call();
 
     SECTION("When function identifier with 0 args is given.")
@@ -498,7 +497,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -538,7 +536,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -581,7 +578,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -630,7 +626,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -677,7 +672,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -740,7 +734,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -779,7 +772,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -816,7 +808,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -836,7 +827,6 @@ TEST_CASE(
     StringT const suffix = specSpace + spec;
 
     sequence += visitor.begin.expect_call();
-    sequence += visitor.begin_type.expect_call();
     sequence += visitor.begin_function.expect_call();
 
     SECTION("When function has an unqualified return-type.")
@@ -859,7 +849,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -889,7 +878,6 @@ TEST_CASE(
         }
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -1003,7 +991,6 @@ TEST_CASE(
         StringT const input = placeholder + " foo()";
         CAPTURE(input);
 
-        sequence += visitor.begin_type.expect_call();
         sequence += visitor.begin_function.expect_call();
 
         sequence += visitor.begin_return_type.expect_call();
@@ -1017,7 +1004,6 @@ TEST_CASE(
         sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -1031,7 +1017,6 @@ TEST_CASE(
         StringT const input = prefix + placeholder + "()";
         CAPTURE(input);
 
-        sequence += visitor.begin_type.expect_call();
         sequence += visitor.begin_function.expect_call();
 
         CHECKED_IF(!returnType.empty())
@@ -1048,7 +1033,6 @@ TEST_CASE(
         sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -1062,7 +1046,6 @@ TEST_CASE(
         StringT const input = prefix + placeholder + "::foo()";
         CAPTURE(input);
 
-        sequence += visitor.begin_type.expect_call();
         sequence += visitor.begin_function.expect_call();
 
         CHECKED_IF(!returnType.empty())
@@ -1083,7 +1066,6 @@ TEST_CASE(
         sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -1099,12 +1081,13 @@ TEST_CASE(
     ScopedSequence sequence{};
 
     sequence += visitor.begin.expect_call();
-    sequence += visitor.begin_type.expect_call();
 
     SECTION("When function pointer without arguments is given.")
     {
         StringT const input = "const std::string* volatile& (*)()";
         CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
 
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
@@ -1141,6 +1124,8 @@ TEST_CASE(
         StringT const input = "void (*)()noexcept";
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
         sequence += visitor.add_identifier.expect_call("void");
@@ -1167,6 +1152,8 @@ TEST_CASE(
     {
         StringT const input = "void (*&)()noexcept";
         CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
 
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
@@ -1195,6 +1182,8 @@ TEST_CASE(
     {
         StringT const input = "void (*)(const std::string&&, const int)";
         CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
 
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
@@ -1237,6 +1226,8 @@ TEST_CASE(
         StringT const input = "void (foo::bar::*)()";
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
         sequence += visitor.add_identifier.expect_call("void");
@@ -1268,6 +1259,8 @@ TEST_CASE(
         StringT const spec = GENERATE("const", "volatile", "noexcept", "&", "&&");
         StringT const input = "void (foo::bar::*)()" + spec;
         CAPTURE(input, spec);
+
+        sequence += visitor.begin_type.expect_call();
 
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
@@ -1335,7 +1328,6 @@ TEST_CASE(
         sequence += visitor.end_function_args.expect_call();
 
         sequence += visitor.end_function.expect_call();
-        sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
@@ -1346,6 +1338,8 @@ TEST_CASE(
     {
         StringT const input = "void (*(*)(float))(int)";
         CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
 
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
@@ -1393,6 +1387,8 @@ TEST_CASE(
         StringT const input = "void (*)(void (*)())";
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+
         sequence += visitor.begin_return_type.expect_call();
         sequence += visitor.begin_type.expect_call();
         sequence += visitor.add_identifier.expect_call("void");
@@ -1436,6 +1432,8 @@ TEST_CASE(
     {
         StringT const input = "foo<void (*)()>";
         CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
 
         sequence += visitor.add_identifier.expect_call("foo");
 
