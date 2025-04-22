@@ -40,6 +40,9 @@ namespace
         Mock<void()> begin_function_ptr{{.name = "VisitorMock::begin_function_ptr"}};
         Mock<void()> end_function_ptr{{.name = "VisitorMock::end_function_ptr"}};
 
+        Mock<void()> begin_operator_identifier{{.name = "VisitorMock::begin_operator_identifier"}};
+        Mock<void()> end_operator_identifier{{.name = "VisitorMock::end_operator_identifier"}};
+
         Mock<void()> add_const{{.name = "VisitorMock::add_const"}};
         Mock<void()> add_volatile{{.name = "VisitorMock::add_volatile"}};
         Mock<void()> add_noexcept{{.name = "VisitorMock::add_noexcept"}};
@@ -1883,6 +1886,146 @@ TEST_CASE(
 
         sequence += visitor.begin_template_args.expect_call();
         sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}
+
+TEST_CASE(
+    "parsing::NameParser detects operators as identifiers.",
+    "[print][print::type]")
+{
+    // see: https://en.cppreference.com/w/cpp/language/operators
+    StringViewT const operatorSymbol = GENERATE(
+        "+",
+        "-",
+        "*",
+        "/",
+        "%",
+        "^",
+        "&",
+        "|",
+        "~",
+        "!",
+        "=",
+        "<",
+        ">",
+        "+=",
+        "-=",
+        "*=",
+        "/=",
+        "%=",
+        "^=",
+        "&=",
+        "|=",
+        "<<",
+        ">>",
+        "<<=",
+        ">>=",
+        "==",
+        "!=",
+        "<=",
+        ">=",
+        "<=>",
+        "&&",
+        "||",
+        "++",
+        "--",
+        ",",
+        "->*",
+        "->",
+        "()",
+        "[]");
+
+    StringT const spacing = GENERATE("", " ");
+
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    SECTION("When operator + symbol form a function.")
+    {
+        StringT const input = StringT{"operator"} + spacing + StringT{operatorSymbol} + "()";
+        CAPTURE(input);
+
+        sequence += visitor.begin.expect_call();
+        sequence += visitor.begin_function.expect_call();
+
+        sequence += visitor.begin_operator_identifier.expect_call();
+        sequence += visitor.add_identifier.expect_call(operatorSymbol);
+        sequence += visitor.end_operator_identifier.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When templated operator is given.")
+    {
+        StringT const templateSpacing = GENERATE("", " ");
+        StringT const input = StringT{"operator"} + spacing + StringT{operatorSymbol} + templateSpacing + "<>" + "()";
+        CAPTURE(input);
+
+        // operator<<> is no valid syntax (fortunately)
+        CHECKED_IF((operatorSymbol != "<" || !templateSpacing.empty()))
+        {
+            sequence += visitor.begin.expect_call();
+            sequence += visitor.begin_function.expect_call();
+
+            sequence += visitor.begin_operator_identifier.expect_call();
+            sequence += visitor.add_identifier.expect_call(operatorSymbol);
+            sequence += visitor.end_operator_identifier.expect_call();
+
+            sequence += visitor.begin_template_args.expect_call();
+            sequence += visitor.end_template_args.expect_call();
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.end_function.expect_call();
+            sequence += visitor.end.expect_call();
+
+            printing::type::parsing::NameParser parser{std::ref(visitor), input};
+            parser();
+        }
+    }
+
+    SECTION("When operator is scope.")
+    {
+        StringT const input = "foo::" + StringT{"operator"} + spacing + StringT{operatorSymbol} + "()::my_type";
+        CAPTURE(input);
+
+        sequence += visitor.begin.expect_call();
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        {
+            sequence += visitor.begin_function.expect_call();
+
+            sequence += visitor.begin_operator_identifier.expect_call();
+            sequence += visitor.add_identifier.expect_call(operatorSymbol);
+            sequence += visitor.end_operator_identifier.expect_call();
+
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+
+            sequence += visitor.end_function.expect_call();
+        }
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("my_type");
 
         sequence += visitor.end_type.expect_call();
         sequence += visitor.end.expect_call();

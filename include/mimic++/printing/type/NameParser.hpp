@@ -56,6 +56,9 @@ namespace mimicpp::printing::type::parsing
 
                                  visitor.begin_function_ptr();
                                  visitor.end_function_ptr();
+
+                                 visitor.begin_operator_identifier();
+                                 visitor.end_operator_identifier();
                              };
 
     template <parser_visitor Visitor>
@@ -254,7 +257,13 @@ namespace mimicpp::printing::type::parsing
         class Identifier
         {
         public:
-            StringViewT content{};
+            struct OperatorInfo
+            {
+                StringViewT symbol{};
+            };
+
+            using Content = std::variant<StringViewT, OperatorInfo>;
+            Content content{};
             std::optional<ArgSequence> templateArgs{};
 
             [[nodiscard]]
@@ -266,16 +275,35 @@ namespace mimicpp::printing::type::parsing
             template <parser_visitor Visitor>
             constexpr void operator()(Visitor& visitor) const
             {
-                MIMICPP_ASSERT(!content.empty(), "Empty identifier is not allowed.");
-
                 auto& unwrapped = unwrap_visitor(visitor);
 
-                unwrapped.add_identifier(content);
+                std::visit(
+                    [&](auto const& inner) { handle_content(unwrapped, inner); },
+                    content);
 
                 if (templateArgs)
                 {
                     templateArgs->handle_as_template_args(unwrapped);
                 }
+            }
+
+        public:
+            template <parser_visitor Visitor>
+            static constexpr void handle_content(Visitor& visitor, StringViewT const& content)
+            {
+                MIMICPP_ASSERT(!content.empty(), "Empty identifier is not allowed.");
+
+                visitor.add_identifier(content);
+            }
+
+            template <parser_visitor Visitor>
+            static constexpr void handle_content(Visitor& visitor, OperatorInfo const& content)
+            {
+                MIMICPP_ASSERT(!content.symbol.empty(), "Empty symbol is not allowed.");
+
+                visitor.begin_operator_identifier();
+                visitor.add_identifier(content.symbol);
+                visitor.end_operator_identifier();
             }
         };
 
@@ -725,35 +753,43 @@ namespace mimicpp::printing::type::parsing
 
         constexpr bool try_reduce_as_template_identifier(TokenStack& tokenStack)
         {
-            if (std::optional suffix = match_suffix<Identifier, OpeningAngle, ArgSequence, ClosingAngle>(tokenStack))
+            std::span pendingTokens{tokenStack};
+            if (!is_suffix_of<ClosingAngle>(pendingTokens))
             {
-                auto& [id, opening, args, closing] = *suffix;
-                if (id.is_template())
-                {
-                    return false;
-                }
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
 
-                id.templateArgs = std::move(args);
-                tokenStack.resize(tokenStack.size() - 3u);
-
-                return true;
+            auto* args = match_suffix<ArgSequence>(pendingTokens);
+            if (args)
+            {
+                remove_suffix(pendingTokens, 1u);
             }
 
-            if (std::optional suffix = match_suffix<Identifier, OpeningAngle, ClosingAngle>(tokenStack))
+            if (!is_suffix_of<OpeningAngle>(pendingTokens))
             {
-                auto& [id, opening, closing] = *suffix;
-                if (id.is_template())
-                {
-                    return false;
-                }
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
 
-                id.templateArgs.emplace();
-                tokenStack.resize(tokenStack.size() - 2u);
-
-                return true;
+            auto* id = match_suffix<Identifier>(pendingTokens);
+            if (!id
+                || id->is_template())
+            {
+                return false;
             }
 
-            return false;
+            if (args)
+            {
+                id->templateArgs = std::move(*args);
+            }
+            else
+            {
+                id->templateArgs.emplace();
+            }
+            tokenStack.resize(pendingTokens.size());
+
+            return true;
         }
 
         constexpr bool try_reduce_as_function_args(TokenStack& tokenStack)
@@ -1349,6 +1385,60 @@ namespace mimicpp::printing::type::parsing
             {
                 token::add_specs({.isNoexcept = true}, m_TokenStack);
             }
+            else if (operatorKeyword == keyword)
+            {
+                process_simple_operator();
+            }
+        }
+
+        constexpr bool process_simple_operator()
+        {
+            if (std::holds_alternative<lexing::space>(m_Lexer.peek().classification))
+            {
+                std::ignore = m_Lexer.next();
+            }
+
+            auto const next = m_Lexer.peek();
+            if (auto const* operatorToken = std::get_if<lexing::operator_or_punctuator>(&next.classification))
+            {
+                std::ignore = m_Lexer.next();
+
+                auto const finishMultiOpOperator = [&, this](lexing::operator_or_punctuator const& expectedClosingOp) {
+                    auto const [closingContent, classification] = m_Lexer.next();
+                    MIMICPP_ASSERT(lexing::token_class{expectedClosingOp} == classification, "Invalid input.");
+
+                    StringViewT const content{
+                        next.content.data(),
+                        next.content.size() + closingContent.size()};
+                    m_TokenStack.emplace_back(
+                        token::Identifier{
+                            .content = token::Identifier::OperatorInfo{.symbol = content}});
+                };
+
+                if (openingParens == *operatorToken)
+                {
+                    finishMultiOpOperator(closingParens);
+                }
+                else if (openingSquare == *operatorToken)
+                {
+                    finishMultiOpOperator(closingSquare);
+                }
+                else
+                {
+                    m_TokenStack.emplace_back(
+                        token::Identifier{
+                            .content = token::Identifier::OperatorInfo{.symbol = next.content}});
+                }
+
+                if (std::holds_alternative<lexing::space>(m_Lexer.peek().classification))
+                {
+                    std::ignore = m_Lexer.next();
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         constexpr void handle_lexer_token(StringViewT const content, lexing::operator_or_punctuator const& token)
