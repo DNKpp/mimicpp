@@ -579,6 +579,7 @@ namespace mimicpp::printing::type::parsing
 
     using Token = std::variant<
         token::Space,
+        token::OperatorKeyword,
         token::ArgSeparator,
         token::OpeningAngle,
         token::ClosingAngle,
@@ -1306,6 +1307,9 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::keyword constKeyword{"const"};
         static constexpr lexing::keyword volatileKeyword{"volatile"};
         static constexpr lexing::keyword noexceptKeyword{"noexcept"};
+        static constexpr lexing::keyword coAwaitKeyword{"co_await"};
+        static constexpr lexing::keyword newKeyword{"new"};
+        static constexpr lexing::keyword deleteKeyword{"delete"};
 
         Visitor m_Visitor;
         StringViewT m_Content;
@@ -1393,13 +1397,18 @@ namespace mimicpp::printing::type::parsing
 
         constexpr bool process_simple_operator()
         {
-            if (std::holds_alternative<lexing::space>(m_Lexer.peek().classification))
-            {
-                std::ignore = m_Lexer.next();
-            }
+            auto dropSpaceInput = [this] {
+                if (std::holds_alternative<lexing::space>(m_Lexer.peek().classification))
+                {
+                    std::ignore = m_Lexer.next();
+                }
+            };
 
-            auto const next = m_Lexer.peek();
-            if (auto const* operatorToken = std::get_if<lexing::operator_or_punctuator>(&next.classification))
+            dropSpaceInput();
+
+            // As we assume valid input, we do not have to check for the actual symbol.
+            if (auto const next = m_Lexer.peek();
+                auto const* operatorToken = std::get_if<lexing::operator_or_punctuator>(&next.classification))
             {
                 std::ignore = m_Lexer.next();
 
@@ -1430,10 +1439,41 @@ namespace mimicpp::printing::type::parsing
                             .content = token::Identifier::OperatorInfo{.symbol = next.content}});
                 }
 
-                if (std::holds_alternative<lexing::space>(m_Lexer.peek().classification))
+                dropSpaceInput();
+
+                return true;
+            }
+            else if (auto const* keywordToken = std::get_if<lexing::keyword>(&next.classification))
+            {
+                std::ignore = m_Lexer.next();
+
+                StringViewT content = next.content;
+
+                if (newKeyword == *keywordToken || deleteKeyword == *keywordToken)
                 {
-                    std::ignore = m_Lexer.next();
+                    dropSpaceInput();
+
+                    if (auto* opAfter = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                        opAfter
+                        && openingSquare == *opAfter)
+                    {
+                        // Strip `[]` or `[ ]` from the input.
+                        std::ignore = m_Lexer.next();
+                        dropSpaceInput();
+                        auto const closing = m_Lexer.next();
+                        MIMICPP_ASSERT(closingSquare == std::get<lexing::operator_or_punctuator>(closing.classification), "Invalid input.");
+
+                        content = StringViewT{
+                            next.content.data(),
+                            closing.content.data() + closing.content.size()};
+                    }
                 }
+
+                m_TokenStack.emplace_back(
+                    token::Identifier{
+                        .content = token::Identifier::OperatorInfo{.symbol = content}});
+
+                dropSpaceInput();
 
                 return true;
             }

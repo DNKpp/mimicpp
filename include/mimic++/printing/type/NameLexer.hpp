@@ -48,6 +48,7 @@ namespace mimicpp::printing::type::lexing
         constexpr std::array visibilityKeywords = std::to_array<StringViewT>({"public", "protected", "private"});
         constexpr std::array specKeywords = std::to_array<StringViewT>({"const", "constexpr", "volatile", "noexcept"});
         constexpr std::array contextKeywords = std::to_array<StringViewT>({"operator", "struct", "class", "enum"});
+        constexpr std::array otherKeywords = std::to_array<StringViewT>({"new", "delete", "co_await"});
         constexpr std::array digraphs = std::to_array<StringViewT>({"and", "or", "xor", "not", "bitand", "bitor", "compl", "and_eq", "or_eq", "xor_eq", "not_eq"});
 
         constexpr std::array braceLikes = std::to_array<StringViewT>({"{", "}", "[", "]", "(", ")", "`", "'"});
@@ -68,6 +69,7 @@ namespace mimicpp::printing::type::lexing
                 texts::visibilityKeywords,
                 texts::specKeywords,
                 texts::contextKeywords,
+                texts::otherKeywords,
                 texts::digraphs);
 
             std::ranges::sort(collection);
