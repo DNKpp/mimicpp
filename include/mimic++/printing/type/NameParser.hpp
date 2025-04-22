@@ -78,6 +78,10 @@ namespace mimicpp::printing::type::parsing
         {
         };
 
+        class OperatorKeyword
+        {
+        };
+
         class ArgSeparator
         {
         public:
@@ -259,7 +263,8 @@ namespace mimicpp::printing::type::parsing
         public:
             struct OperatorInfo
             {
-                StringViewT symbol{};
+                using Symbol = std::variant<StringViewT, std::shared_ptr<Type>>;
+                Symbol symbol{};
             };
 
             using Content = std::variant<StringViewT, OperatorInfo>;
@@ -299,11 +304,27 @@ namespace mimicpp::printing::type::parsing
             template <parser_visitor Visitor>
             static constexpr void handle_content(Visitor& visitor, OperatorInfo const& content)
             {
-                MIMICPP_ASSERT(!content.symbol.empty(), "Empty symbol is not allowed.");
-
                 visitor.begin_operator_identifier();
-                visitor.add_identifier(content.symbol);
+                std::visit(
+                    [&](auto const& symbol) { handle_op_symbol(visitor, symbol); },
+                    content.symbol);
                 visitor.end_operator_identifier();
+            }
+
+            template <parser_visitor Visitor>
+            static constexpr void handle_op_symbol(Visitor& visitor, StringViewT const& symbol)
+            {
+                MIMICPP_ASSERT(!symbol.empty(), "Empty symbol is not allowed.");
+
+                visitor.add_identifier(symbol);
+            }
+
+            template <parser_visitor Visitor>
+            static constexpr void handle_op_symbol(Visitor& visitor, std::shared_ptr<Type> const& type)
+            {
+                MIMICPP_ASSERT(type, "Empty type-symbol is not allowed.");
+
+                std::invoke(*type, visitor);
             }
         };
 
@@ -1170,6 +1191,25 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
+        inline void reduce_as_conversion_operator_function_identifier(TokenStack& tokenStack)
+        {
+            MIMICPP_ASSERT(is_suffix_of<FunctionContext>(tokenStack), "Invalid state");
+            auto funCtx = std::get<FunctionContext>(std::move(tokenStack.back()));
+            tokenStack.pop_back();
+
+            try_reduce_as_type(tokenStack);
+            MIMICPP_ASSERT(is_suffix_of<Type>(tokenStack), "Invalid state");
+            auto targetType = std::make_shared<Type>(
+                std::get<Type>(std::move(tokenStack.back())));
+            tokenStack.pop_back();
+
+            MIMICPP_ASSERT(is_suffix_of<OperatorKeyword>(tokenStack), "Invalid state");
+            tokenStack.back().emplace<Identifier>(
+                Identifier::OperatorInfo{.symbol = std::move(targetType)});
+            tokenStack.emplace_back(std::move(funCtx));
+            try_reduce_as_function_identifier(tokenStack);
+        }
+
         inline bool try_reduce_as_function_type(TokenStack& tokenStack)
         {
             // The space is required, because the return type will always be spaced away from the parens.
@@ -1189,9 +1229,16 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
-        inline bool try_reduce_as_end(TokenStack& tokenStack)
+        inline bool try_reduce_as_end(TokenStack& tokenStack, bool const expectsConversionOperator)
         {
             try_reduce_as_function_context(tokenStack);
+
+            if (expectsConversionOperator)
+            {
+                reduce_as_conversion_operator_function_identifier(tokenStack);
+
+                return try_reduce_as_function(tokenStack);
+            }
 
             if (is_suffix_of<FunctionIdentifier>(tokenStack)
                 || try_reduce_as_function_identifier(tokenStack))
@@ -1272,7 +1319,7 @@ namespace mimicpp::printing::type::parsing
                     next.classification);
             }
 
-            try_reduce_as_end(m_TokenStack);
+            try_reduce_as_end(m_TokenStack, m_HasConversionOperator);
 
             if (1u == m_TokenStack.size()
                 && std::holds_alternative<token::End>(m_TokenStack.back()))
@@ -1314,6 +1361,7 @@ namespace mimicpp::printing::type::parsing
         Visitor m_Visitor;
         StringViewT m_Content;
         lexing::NameLexer m_Lexer;
+        bool m_HasConversionOperator{false};
 
         std::vector<Token> m_TokenStack{};
 
@@ -1389,9 +1437,13 @@ namespace mimicpp::printing::type::parsing
             {
                 token::add_specs({.isNoexcept = true}, m_TokenStack);
             }
-            else if (operatorKeyword == keyword)
+            else if (operatorKeyword == keyword && !process_simple_operator())
             {
-                process_simple_operator();
+                // Conversion operators can not be part of a scope, thus they can not appear multiple times in a single type-name.
+                MIMICPP_ASSERT(!m_HasConversionOperator, "Multiple conversion operators detected.");
+
+                m_TokenStack.emplace_back(token::OperatorKeyword{});
+                m_HasConversionOperator = true;
             }
         }
 
@@ -1443,7 +1495,9 @@ namespace mimicpp::printing::type::parsing
 
                 return true;
             }
-            else if (auto const* keywordToken = std::get_if<lexing::keyword>(&next.classification))
+            else if (auto const* keywordToken = std::get_if<lexing::keyword>(&next.classification);
+                     keywordToken
+                     && util::contains(std::array{newKeyword, deleteKeyword, coAwaitKeyword}, *keywordToken))
             {
                 std::ignore = m_Lexer.next();
 

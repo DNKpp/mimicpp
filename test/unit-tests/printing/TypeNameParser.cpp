@@ -2045,3 +2045,78 @@ TEST_CASE(
         parser();
     }
 }
+
+TEST_CASE(
+    "parsing::NameParser detects conversion operators.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    SECTION("When converting to simple type-name.")
+    {
+        StringT const input = "operator bool()";
+        CAPTURE(input);
+
+        sequence += visitor.begin.expect_call();
+        sequence += visitor.begin_function.expect_call();
+
+        sequence += visitor.begin_operator_identifier.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("bool");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_operator_identifier.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When converting to complex type-name.")
+    {
+        StringT const input = "operator volatile foo::bar()::my_type const&()";
+        CAPTURE(input);
+
+        sequence += visitor.begin.expect_call();
+        sequence += visitor.begin_function.expect_call();
+
+        sequence += visitor.begin_operator_identifier.expect_call();
+        {
+            sequence += visitor.begin_type.expect_call();
+
+            sequence += visitor.begin_scope.expect_call();
+            sequence += visitor.add_identifier.expect_call("foo");
+            sequence += visitor.end_scope.expect_call();
+
+            sequence += visitor.begin_scope.expect_call();
+            sequence += visitor.begin_function.expect_call();
+            sequence += visitor.add_identifier.expect_call("bar");
+            sequence += visitor.begin_function_args.expect_call();
+            sequence += visitor.end_function_args.expect_call();
+            sequence += visitor.end_function.expect_call();
+            sequence += visitor.end_scope.expect_call();
+
+            sequence += visitor.add_identifier.expect_call("my_type");
+            sequence += visitor.add_const.expect_call();
+            sequence += visitor.add_volatile.expect_call();
+            sequence += visitor.add_lvalue_ref.expect_call();
+
+            sequence += visitor.end_type.expect_call();
+        }
+        sequence += visitor.end_operator_identifier.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+}
