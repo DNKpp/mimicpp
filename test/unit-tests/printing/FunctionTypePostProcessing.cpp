@@ -210,7 +210,7 @@ TEST_CASE(
                 + anonTypePattern
                 + "::"
                   R"(operator\(\))"
-                  R"(\(\)const)"));
+                  R"(\(\)\s?const)"));
     }
 
     SECTION("When function-local anon-class is given.")
@@ -240,7 +240,7 @@ TEST_CASE(
                 + anonTypePattern
                 + "::"
                   R"(operator\(\))"
-                  R"(\(\)const)"));
+                  R"(\(\)\s?const)"));
     }
 
     SECTION("When function-local anon-lambda is given.")

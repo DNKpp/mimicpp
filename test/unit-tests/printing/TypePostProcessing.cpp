@@ -989,7 +989,7 @@ TEST_CASE(
                 + callOpScopePattern
                 + R"(my_type\s?&)"
                   R"(,\s?)"
-                  R"(std::basic_string<char, std::char_traits<char>, std::allocator<char>>\s?const\s?&&)"
+                  R"(std::basic_string const\s?&&)"
                   ">"));
     }
 }

@@ -11,6 +11,8 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
+#include "mimic++/printing/type/NameParser.hpp"
+#include "mimic++/printing/type/NamePrintVisitor.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 
 #include <array>
@@ -574,8 +576,8 @@ namespace mimicpp::printing::type::detail
                 rest.ends_with(token))
             {
                 name.erase(
-                   iter.base() - std::ranges::ssize(token),
-                   name.cend());
+                    iter.base() - std::ranges::ssize(token),
+                    name.cend());
             }
         }
 
@@ -674,18 +676,11 @@ namespace mimicpp::printing::type::detail
     [[nodiscard]]
     inline auto& alias_map()
     {
-        static const std::unordered_map<StringViewT, StringViewT> aliases{
+        static std::unordered_map<StringViewT, StringViewT> const aliases{
             {"(anonymous namespace)", anonymousNamespaceTargetScopeText},
             {          "{anonymous}", anonymousNamespaceTargetScopeText},
             {"`anonymous namespace'", anonymousNamespaceTargetScopeText},
-            {  "anonymous-namespace", anonymousNamespaceTargetScopeText},
-            {  "anonymous namespace", anonymousNamespaceTargetScopeText},
-            {          "operator-lt",                       "operator<"},
-            {          "operator-le",                      "operator<="},
-            {          "operator-gt",                       "operator>"},
-            {          "operator-ge",                      "operator>="},
-            {   "operator-spaceship",                     "operator<=>"},
-            {      "operator-invoke",                      "operator()"}
+            {           "<lambda()>",                          "lambda"}
         };
 
         return aliases;
@@ -789,9 +784,15 @@ namespace mimicpp::printing::type
     template <print_iterator OutIter>
     constexpr OutIter prettify_identifier(OutIter out, StringT name)
     {
-        name = detail::apply_basic_transformations(std::move(name));
+        name = detail::remove_template_details(std::move(name));
 
-        return detail::prettify(std::move(out), detail::trimmed(name));
+        static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
+
+        PrintVisitor visitor{std::move(out)};
+        parsing::NameParser parser{std::ref(visitor), name};
+        parser();
+
+        return visitor.out();
     }
 }
 
