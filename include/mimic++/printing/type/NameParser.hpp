@@ -278,6 +278,15 @@ namespace mimicpp::printing::type::parsing
                 return templateArgs.has_value();
             }
 
+            [[nodiscard]]
+            constexpr bool is_void() const noexcept
+            {
+                auto const* id = std::get_if<StringViewT>(&content);
+
+                return id
+                    && "void" == *id;
+            }
+
             template <parser_visitor Visitor>
             constexpr void operator()(Visitor& visitor) const
             {
@@ -473,7 +482,16 @@ namespace mimicpp::printing::type::parsing
         {
         public:
             using State = std::variant<RegularType, FunctionPtrType>;
-            State m_State;
+            State state;
+
+            [[nodiscard]]
+            constexpr bool is_void() const noexcept
+            {
+                auto const* const regularType = std::get_if<RegularType>(&state);
+
+                return regularType
+                    && regularType->identifier.is_void();
+            }
 
             template <parser_visitor Visitor>
             void operator()(Visitor& visitor) const
@@ -484,7 +502,7 @@ namespace mimicpp::printing::type::parsing
 
                 std::visit(
                     [&](auto const& inner) { std::invoke(inner, unwrapped); },
-                    m_State);
+                    state);
 
                 unwrapped.end_type();
             }
@@ -839,7 +857,12 @@ namespace mimicpp::printing::type::parsing
             FunctionArgs funArgs{};
             if (args)
             {
-                funArgs.args = std::move(*args);
+                // We omit function args with only `void`.
+                if (1u != args->types.size()
+                    || !args->types.front().is_void())
+                {
+                    funArgs.args = std::move(*args);
+                }
             }
 
             tokenStack.resize(pendingTokens.size());
