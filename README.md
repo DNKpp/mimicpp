@@ -1,3 +1,5 @@
+![logo](https://github.com/user-attachments/assets/312220b7-c966-484f-b531-13721db998de)
+
 # mimic++, a modern and (mostly) macro free mocking framework
 
 ### ✅ Quality
