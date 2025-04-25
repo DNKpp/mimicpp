@@ -109,6 +109,16 @@ namespace mimicpp::printing::type
                 return;
             }
 
+            // Lambdas can have the for `'lambda\\d*'`. Just print everything between ''.
+            if (constexpr StringViewT lambdaPrefix{"'lambda"};
+                content.starts_with(lambdaPrefix)
+                && content.ends_with('\''))
+            {
+                print(content.substr(1u, content.size() - 2u));
+
+                return;
+            }
+
             if (ignored_identifiers().contains(content))
             {
                 m_IgnoreNextScopeResolution = true;
