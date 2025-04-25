@@ -93,21 +93,30 @@ namespace
         "{place holder}",
         "{place-holder}",
         "{anon class}",
+
         //"(placeholder)", this will never be supported as we can not reliably distinguish that from FunctionArgs
         //"(__placeholder)",
         "(place holder)",
         "(place-holder)",
         "(anon class)",
+
         "<placeholder>",
         "<__placeholder>",
         "<place holder>",
         "<place-holder>",
         "<anon class>",
+
         "`placeholder'",
         "`__placeholder'",
         "`place holder'",
         "`place-holder'",
         "`anon class'",
+
+        "'placeholder'",
+        "'__placeholder'",
+        "'place holder'",
+        "'place-holder'",
+        "'anon class'",
     });
 }
 

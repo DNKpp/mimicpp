@@ -1421,7 +1421,7 @@ namespace mimicpp::printing::type::parsing
             // In fact keep all spaces directly before all opening tokens.
             if (auto const* nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
                 nextOp
-                && util::contains(std::array{openingParens, openingAngle, openingCurly, openingSquare, backtick}, *nextOp))
+                && util::contains(std::array{openingParens, openingAngle, openingCurly, openingSquare, backtick, singleQuote}, *nextOp))
             {
                 token::try_reduce_as_type(m_TokenStack);
                 m_TokenStack.emplace_back(token::Space{});
@@ -1689,7 +1689,9 @@ namespace mimicpp::printing::type::parsing
                     m_TokenStack.emplace_back(
                         std::in_place_type<token::ClosingSingleQuote>,
                         content);
-                    token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningBacktick, token::ClosingSingleQuote>(m_TokenStack);
+                    // Well, some environments wrap in `' (like msvc) and some wrap in '' (libc++).
+                    token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningBacktick, token::ClosingSingleQuote>(m_TokenStack)
+                        || token::try_reduce_as_placeholder_identifier_wrapped<token::ClosingSingleQuote, token::ClosingSingleQuote>(m_TokenStack);
                 }
             }
             // The current parsing process will never receive an `<<` or `>>` without a preceding `operator` keyword.
