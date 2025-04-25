@@ -137,6 +137,12 @@ namespace mimicpp::printing::type::parsing
             StringViewT content;
         };
 
+        class TypeContext
+        {
+        public:
+            StringViewT content;
+        };
+
         class Specs
         {
         public:
@@ -629,6 +635,7 @@ namespace mimicpp::printing::type::parsing
         token::ClosingCurly,
         token::OpeningBacktick,
         token::ClosingSingleQuote,
+        token::TypeContext,
 
         token::Identifier,
         token::FunctionIdentifier,
@@ -1154,6 +1161,12 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
+            // Ignore something like `class` or `struct` directly in front of a type.
+            if (is_suffix_of<TypeContext>(pendingTokens))
+            {
+                remove_suffix(pendingTokens, 1u);
+            }
+
             tokenStack.resize(pendingTokens.size());
             tokenStack.emplace_back(
                 std::in_place_type<Type>,
@@ -1374,6 +1387,7 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::operator_or_punctuator pointer{"*"};
         static constexpr lexing::operator_or_punctuator lvalueRef{"&"};
         static constexpr lexing::operator_or_punctuator rvalueRef{"&&"};
+        static constexpr lexing::operator_or_punctuator colon{":"};
         static constexpr lexing::keyword operatorKeyword{"operator"};
         static constexpr lexing::keyword constKeyword{"const"};
         static constexpr lexing::keyword volatileKeyword{"volatile"};
@@ -1381,6 +1395,9 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::keyword coAwaitKeyword{"co_await"};
         static constexpr lexing::keyword newKeyword{"new"};
         static constexpr lexing::keyword deleteKeyword{"delete"};
+        static constexpr lexing::keyword classKeyword{"class"};
+        static constexpr lexing::keyword structKeyword{"struct"};
+        static constexpr lexing::keyword enumKeyword{"enum"};
 
         Visitor m_Visitor;
         StringViewT m_Content;
@@ -1468,6 +1485,13 @@ namespace mimicpp::printing::type::parsing
 
                 m_TokenStack.emplace_back(token::OperatorKeyword{});
                 m_HasConversionOperator = true;
+            }
+            else if (constexpr std::array collection{classKeyword, structKeyword, enumKeyword};
+                     util::contains(collection, keyword))
+            {
+                // This token is needed, so we do not accidentally treat e.g. `(anonymous class)` as function args,
+                // because otherwise there would just be the `anonymous` identifier left.
+                m_TokenStack.emplace_back(token::TypeContext{.content = content});
             }
         }
 

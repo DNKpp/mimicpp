@@ -86,6 +86,29 @@ namespace
             util::unreachable();
         }
     };
+
+    constexpr std::array placeholderCollection = std::to_array<StringViewT>({
+        "{placeholder}",
+        "{__placeholder}",
+        "{place holder}",
+        "{place-holder}",
+        "{anon class}",
+        //"(placeholder)", this will never be supported as we can not reliably distinguish that from FunctionArgs
+        //"(__placeholder)",
+        "(place holder)",
+        "(place-holder)",
+        "(anon class)",
+        "<placeholder>",
+        "<__placeholder>",
+        "<place holder>",
+        "<place-holder>",
+        "<anon class>",
+        "`placeholder'",
+        "`__placeholder'",
+        "`place holder'",
+        "`place-holder'",
+        "`anon class'",
+    });
 }
 
 TEST_CASE(
@@ -892,23 +915,7 @@ TEST_CASE(
     "parsing::NameParser detects placeholders.",
     "[print][print::type]")
 {
-    StringT const placeholder = GENERATE(
-        "{placeholder}",
-        "{__placeholder}",
-        "{place holder}",
-        "{place-holder}",
-        //"(placeholder)", this will never be supported as we can not reliably distinguish that from FunctionArgs
-        //"(__placeholder)",
-        "(place holder)",
-        "(place-holder)",
-        "<placeholder>",
-        "<__placeholder>",
-        "<place holder>",
-        "<place-holder>",
-        "`placeholder'",
-        "`__placeholder'",
-        "`place holder'",
-        "`place-holder'");
+    StringT const placeholder{GENERATE(from_range(placeholderCollection))};
 
     VisitorMock visitor{};
     ScopedSequence sequence{};
