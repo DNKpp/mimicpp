@@ -130,7 +130,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 locReturnPattern
                 + lambdaCallOpPattern
-                + R"(\(\)(const)?)"));
+                + R"(\(\)(\s?const)?)"));
     #endif
     }
 
@@ -180,7 +180,7 @@ TEST_CASE(
                 + anonNsScopePattern
                 + "loc_fun::"
                 + lambdaCallOpPattern
-                + R"(\(\)(const)?)"));
+                + R"(\(\)(\s?const)?)"));
     #endif
     }
 
@@ -264,7 +264,7 @@ TEST_CASE(
                 + anonNsScopePattern
                 + "loc_anon_lambda_fun::"
                 + lambdaCallOpPattern
-                + R"(\(\)(const)?)"));
+                + R"(\(\)(\s?const)?)"));
     #endif
     }
 
