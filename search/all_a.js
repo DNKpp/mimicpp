@@ -16,15 +16,15 @@ var searchData=
   ['install_5freporter_13',['install_reporter',['../dd/d4f/group___r_e_p_o_r_t_i_n_g.html#gacc0d9f819eebe61a00d604e2457536a1',1,'mimicpp::reporting']]],
   ['instance_14',['instance',['../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9',1,'mimicpp::matches']]],
   ['integration_15',['Integration',['../index.html#autotoc_md64',1,'']]],
-  ['integration_16',['integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Enable experimental catch2-matcher integration'],['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md0',1,'Experimental Matcher integration']]],
+  ['integration_16',['integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'Enable experimental catch2-matcher integration'],['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md0',1,'Experimental Matcher integration']]],
   ['interfacemock_2ehpp_17',['InterfaceMock.hpp',['../d9/dc3/_interface_mock_8hpp.html',1,'']]],
   ['interfaces_18',['interfaces',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html',1,'']]],
   ['introduction_19',['Introduction',['../index.html#autotoc_md52',1,'']]],
   ['invoke_20',['invoke',['../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga96fbf72e7ef44a73904c3503a383cda4',1,'mimicpp::then']]],
   ['ireporter_21',['IReporter',['../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html',1,'mimicpp::reporting::IReporter'],['../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#a940feef3a613ea2343509a9023017012',1,'mimicpp::reporting::IReporter::IReporter()=default'],['../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#ac65b6bb2311108274ecdd782bf30726e',1,'mimicpp::reporting::IReporter::IReporter(const IReporter &amp;)=default'],['../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#ae7e85b5cac06162bc369b8d9d93d0a4f',1,'mimicpp::reporting::IReporter::IReporter(IReporter &amp;&amp;)=default']]],
   ['ireporter_2ehpp_22',['IReporter.hpp',['../d8/d48/_i_reporter_8hpp.html',1,'']]],
-  ['is_20it_20an_20experimental_20feature_23',['Why is it an experimental feature?',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md43',1,'']]],
-  ['is_20this_20feature_20experimental_24',['is this feature experimental',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md34',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md37',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md40',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md46',1,'Why is this feature experimental?']]],
+  ['is_20it_20an_20experimental_20feature_23',['Why is it an experimental feature?',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md42',1,'']]],
+  ['is_20this_20feature_20experimental_24',['is this feature experimental',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md36',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md45',1,'Why is this feature experimental?']]],
   ['is_5fapplicable_25',['is_applicable',['../d3/d1c/classmimicpp_1_1_expectation.html#a57cf8b9836f261e12230cc47201dcc92',1,'mimicpp::Expectation::is_applicable()'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#abe240fbb603cf49f0286e6e76f95fa7f',1,'mimicpp::BasicExpectation::is_applicable()'],['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#abf1278354f38d295249299c5efe7f5e2',1,'mimicpp::ScopedExpectation::is_applicable()'],['../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867',1,'mimicpp::ControlPolicy::is_applicable()']]],
   ['is_5fcharacter_26',['is_character',['../d2/d73/structmimicpp_1_1is__character.html',1,'mimicpp::is_character&lt; T &gt;'],['../dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html',1,'is_character']]],
   ['is_5fcharacter_3c_20char_20_3e_27',['is_character&lt; char &gt;',['../d2/dad/structmimicpp_1_1is__character_3_01char_01_4.html',1,'mimicpp']]],
@@ -45,5 +45,5 @@ var searchData=
   ['is_5fsaturated_42',['is_saturated',['../dc/db2/classmimicpp_1_1_control_policy.html#ab1649a77ea47e1f4651c8c9eed3fecd0',1,'mimicpp::ControlPolicy']]],
   ['is_5fsorted_43',['is_sorted',['../de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#gacad6ed764831afec6ecf3668beebee4f',1,'mimicpp::matches::range']]],
   ['issues_44',['Known Issues',['../index.html#autotoc_md74',1,'']]],
-  ['it_20an_20experimental_20feature_45',['Why is it an experimental feature?',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md43',1,'']]]
+  ['it_20an_20experimental_20feature_45',['Why is it an experimental feature?',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md42',1,'']]]
 ];
