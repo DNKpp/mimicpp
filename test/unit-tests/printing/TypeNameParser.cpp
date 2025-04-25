@@ -333,6 +333,28 @@ TEST_CASE(
         parser();
     }
 
+    SECTION("When templated identifier with placeholder arg is given.")
+    {
+        StringT const placeholder{GENERATE(from_range(placeholderCollection))};
+        StringT const input = "foo<" + placeholder + ">";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
     SECTION("When qualified templated identifier is given.")
     {
         StringViewT const input{"volatile foo<> const&"};
@@ -422,6 +444,31 @@ TEST_CASE(
     }
 
     SECTION("When templated identifier has templated arg.")
+    {
+        StringViewT const input{"foo<bar<>>"};
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("bar");
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
+    }
+
+    SECTION("When templated identifier has qualified templated arg.")
     {
         StringViewT const input{"foo<const bar<int*> volatile&>"};
         CAPTURE(input);

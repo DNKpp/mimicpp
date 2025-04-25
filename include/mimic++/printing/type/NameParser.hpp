@@ -1388,6 +1388,8 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::operator_or_punctuator lvalueRef{"&"};
         static constexpr lexing::operator_or_punctuator rvalueRef{"&&"};
         static constexpr lexing::operator_or_punctuator colon{":"};
+        static constexpr lexing::operator_or_punctuator leftShift{"<<"};
+        static constexpr lexing::operator_or_punctuator rightShift{">>"};
         static constexpr lexing::keyword operatorKeyword{"operator"};
         static constexpr lexing::keyword constKeyword{"const"};
         static constexpr lexing::keyword volatileKeyword{"volatile"};
@@ -1689,6 +1691,19 @@ namespace mimicpp::printing::type::parsing
                         content);
                     token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningBacktick, token::ClosingSingleQuote>(m_TokenStack);
                 }
+            }
+            // The current parsing process will never receive an `<<` or `>>` without a preceding `operator` keyword.
+            // As the current `operator` parsing currently consumes the next op-symbol, we will never reach this point
+            // with an actual left or right-shift. So, to make that easier, just split them.
+            else if (leftShift == token)
+            {
+                handle_lexer_token(content.substr(0, 1u), openingAngle);
+                handle_lexer_token(content.substr(1u, 1u), openingAngle);
+            }
+            else if (rightShift == token)
+            {
+                handle_lexer_token(content.substr(0, 1u), closingAngle);
+                handle_lexer_token(content.substr(1u, 1u), closingAngle);
             }
         }
 
