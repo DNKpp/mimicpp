@@ -308,6 +308,10 @@ namespace mimicpp::printing::type::parsing
             {
                 token::try_reduce_as_function_context(m_TokenStack)
                     && token::try_reduce_as_function_identifier(m_TokenStack);
+
+                m_TokenStack.emplace_back(
+                    std::in_place_type<token::ScopeResolution>,
+                    content);
                 token::try_reduce_as_scope_sequence(m_TokenStack);
             }
             else if (commaSeparator == token)
@@ -442,8 +446,6 @@ namespace mimicpp::printing::type::parsing
                 m_TokenStack.pop_back();
             }
 
-            scopes.scopes.emplace_back(std::move(funIdentifier));
-
             if (is_suffix_of<token::Space>(m_TokenStack))
             {
                 m_TokenStack.pop_back();
@@ -471,6 +473,8 @@ namespace mimicpp::printing::type::parsing
             {
                 m_TokenStack.emplace_back(std::move(scopes));
             }
+
+            m_TokenStack.emplace_back(std::move(funIdentifier));
         }
     };
 }

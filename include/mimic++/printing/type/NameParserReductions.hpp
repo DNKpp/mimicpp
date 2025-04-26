@@ -108,12 +108,19 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
         {
+            std::span pendingTokens{tokenStack};
+            if (!is_suffix_of<ScopeResolution>(pendingTokens))
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
+
             ScopeSequence::Scope scope{};
-            if (auto* identifier = match_suffix<Identifier>(tokenStack))
+            if (auto* identifier = match_suffix<Identifier>(pendingTokens))
             {
                 scope = std::move(*identifier);
             }
-            else if (auto* funIdentifier = match_suffix<FunctionIdentifier>(tokenStack))
+            else if (auto* funIdentifier = match_suffix<FunctionIdentifier>(pendingTokens))
             {
                 scope = std::move(*funIdentifier);
             }
@@ -122,7 +129,8 @@ namespace mimicpp::printing::type::parsing
                 return false;
             }
 
-            tokenStack.pop_back();
+            remove_suffix(pendingTokens, 1u);
+            tokenStack.resize(pendingTokens.size());
 
             if (auto* sequence = match_suffix<ScopeSequence>(tokenStack))
             {
@@ -224,6 +232,13 @@ namespace mimicpp::printing::type::parsing
                 return false;
             }
             remove_suffix(pendingTokens, 1u);
+
+            // There can never be valid function-args in form of `::()`, thus reject it.
+            if (is_suffix_of<ScopeResolution>(pendingTokens)
+                || is_suffix_of<ScopeSequence>(pendingTokens))
+            {
+                return false;
+            }
 
             FunctionArgs funArgs{};
             if (args)

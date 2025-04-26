@@ -85,6 +85,12 @@ namespace mimicpp::printing::type::parsing::token
     {
     };
 
+    class ScopeResolution
+    {
+    public:
+        StringViewT content;
+    };
+
     class ArgSeparator
     {
     public:
@@ -631,6 +637,7 @@ namespace mimicpp::printing::type::parsing
     using Token = std::variant<
         token::Space,
         token::OperatorKeyword,
+        token::ScopeResolution,
         token::ArgSeparator,
         token::OpeningAngle,
         token::ClosingAngle,

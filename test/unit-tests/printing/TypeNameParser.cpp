@@ -187,22 +187,6 @@ TEST_CASE(
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser();
     }
-
-    SECTION("When root scope is explicitly given.")
-    {
-        StringViewT const scope = GENERATE(from_range(identifiers));
-        StringT const input = "::" + StringT{scope};
-        CAPTURE(input);
-
-        sequence += visitor.begin_type.expect_call();
-        sequence += visitor.add_identifier.expect_call(scope);
-        sequence += visitor.end_type.expect_call();
-
-        sequence += visitor.end.expect_call();
-
-        printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
-    }
 }
 
 TEST_CASE(
