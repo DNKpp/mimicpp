@@ -520,3 +520,15 @@ TEST_CASE(
             matches_end_token());
     }
 }
+
+TEST_CASE(
+    "lexing::operator_or_punctuator::text yields the token text.",
+    "[print][print::type]")
+{
+    StringT const tokenText{GENERATE(from_range(printing::type::lexing::operatorOrPunctuatorCollection))};
+    printing::type::lexing::operator_or_punctuator const token{tokenText};
+
+    CHECK_THAT(
+        StringT{token.text()},
+        Catch::Matchers::Equals(tokenText));
+}
