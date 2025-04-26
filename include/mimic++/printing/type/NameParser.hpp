@@ -397,6 +397,11 @@ namespace mimicpp::printing::type::parsing
                 {
                     unwrap_msvc_like_function();
                 }
+                // Something like `id1::id2 should become id1::id2, so just remove the leading backtick.
+                else if (is_suffix_of<token::OpeningBacktick, token::ScopeSequence, token::Identifier>(m_TokenStack))
+                {
+                    m_TokenStack.erase(m_TokenStack.cend() - 3u);
+                }
                 else
                 {
                     m_TokenStack.emplace_back(
