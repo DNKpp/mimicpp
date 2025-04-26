@@ -29,6 +29,7 @@ namespace mimicpp::printing::type
             {"(anonymous namespace)", "{anon-ns}"},
             {          "{anonymous}", "{anon-ns}"},
             {"`anonymous namespace'", "{anon-ns}"},
+            {"`anonymous-namespace'", "{anon-ns}"},
             {           "<lambda()>",    "lambda"}
         };
 
