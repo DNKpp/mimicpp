@@ -276,14 +276,19 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_function_identifier(TokenStack& tokenStack)
         {
-            if (std::optional suffix = match_suffix<Identifier, FunctionContext>(tokenStack))
+            std::span pendingStack{tokenStack};
+            ignore_space(pendingStack);
+
+            if (std::optional suffix = match_suffix<Identifier, FunctionContext>(pendingStack))
             {
+                remove_suffix(pendingStack, 2u);
+
                 auto& [identifier, funCtx] = *suffix;
                 FunctionIdentifier funIdentifier{
                     .identifier = std::move(identifier),
                     .context = std::move(funCtx)};
 
-                tokenStack.pop_back();
+                tokenStack.resize(pendingStack.size() + 1u);
                 tokenStack.back() = std::move(funIdentifier);
 
                 return true;

@@ -392,8 +392,9 @@ namespace mimicpp::printing::type::parsing
             }
             else if (singleQuote == token)
             {
-                if (token::try_reduce_as_function_context(m_TokenStack)
-                    && token::try_reduce_as_function_identifier(m_TokenStack))
+                token::try_reduce_as_function_context(m_TokenStack);
+
+                if (token::try_reduce_as_function_identifier(m_TokenStack))
                 {
                     unwrap_msvc_like_function();
                 }

@@ -1721,6 +1721,7 @@ TEST_CASE(
     "parsing::NameParser handles msvc-like function scopes.",
     "[print][print::type]")
 {
+    StringT const spacing = GENERATE("", " ");
     VisitorMock visitor{};
     ScopedSequence sequence{};
 
@@ -1729,7 +1730,7 @@ TEST_CASE(
 
     SECTION("When function local type is given.")
     {
-        constexpr StringViewT input{"`void foo()'::my_type"};
+        StringT const input{"`void foo()" + spacing + "'::my_type"};
         CAPTURE(input);
 
         sequence += visitor.begin_scope.expect_call();
@@ -1762,8 +1763,8 @@ TEST_CASE(
 
     SECTION("Deeply nested function local type is given.")
     {
-        constexpr StringViewT input{
-            "`ret2 `ret1 `ret0 inner::fn0(int const)'::`my_placeholder'::middle::fn1()const'::outer::fn2()const &'::my_type"};
+        StringT const input{
+            "`ret2 `ret1 `ret0 inner::fn0(int const)'::`my_placeholder'::middle::fn1()const'::outer::fn2()const &" + spacing + "'::my_type"};
         CAPTURE(input);
 
         sequence += visitor.begin_scope.expect_call();
@@ -1860,7 +1861,7 @@ TEST_CASE(
     {
         StringViewT const visibility = GENERATE("public", "private", "protected");
         StringViewT const typeClass = GENERATE("struct", "class", "enum");
-        StringT const input = StringT{typeClass} + " `" + StringT{visibility} + ": void __cdecl foo() __ptr64'::my_type";
+        StringT const input = StringT{typeClass} + " `" + StringT{visibility} + ": void __cdecl foo() __ptr64" + spacing + "'::my_type";
         CAPTURE(input);
 
         sequence += visitor.begin_scope.expect_call();
