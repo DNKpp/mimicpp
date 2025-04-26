@@ -119,6 +119,24 @@ namespace mimicpp::printing::type
                 return;
             }
 
+            // Msvc yields lambdas in form of `<lambda_\d+>`
+            if (constexpr StringViewT lambdaPrefix{"<lambda_"};
+                content.starts_with(lambdaPrefix)
+                && content.ends_with('>'))
+            {
+                print("lambda");
+
+                auto const numberBegin = content.cbegin() + lambdaPrefix.size();
+                if (auto const numberEnd = std::ranges::find_if_not(numberBegin, content.cend() - 1u, lexing::is_digit);
+                    numberBegin != numberEnd)
+                {
+                    print("#");
+                    print({numberBegin, numberEnd});
+                }
+
+                return;
+            }
+
             // msvc injects `\d+' as auxiliar namespaces. Ignore them.
             if (content.starts_with('`')
                 && content.ends_with('\'')
