@@ -493,10 +493,10 @@ namespace mimicpp::printing::type::parsing
             if (auto* prefixSpecs = match_suffix<Specs>(pendingTokens))
             {
                 auto& layers = prefixSpecs->layers;
+                MIMICPP_ASSERT(token::Specs::Refness::none == prefixSpecs->refness && !prefixSpecs->isNoexcept, "Invalid prefix specs.");
                 MIMICPP_ASSERT(1u == layers.size(), "Prefix specs can not have more than one layer.");
-                auto& specs = layers.front();
-                MIMICPP_ASSERT(!specs.isLValueRef && !specs.isRValueRef && !specs.isNoexcept, "Invalid prefix specs.");
-                newType.specs.layers.front().merge(specs);
+
+                newType.specs.layers.front().merge(layers.front());
                 remove_suffix(pendingTokens, 1u);
             }
 
