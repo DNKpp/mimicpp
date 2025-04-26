@@ -173,38 +173,35 @@ namespace mimicpp::printing::type::parsing
         [[nodiscard]]
         constexpr bool keep_reserved_identifier() const noexcept
         {
-            if (!m_TokenStack.empty()
-                && !is_suffix_of<token::ScopeSequence>(m_TokenStack))
+            if (m_TokenStack.empty()
+                || is_suffix_of<token::ScopeSequence>(m_TokenStack))
             {
-                return false;
-            }
+                auto const& next = m_Lexer.peek().classification;
+                if (std::holds_alternative<lexing::end>(next))
+                {
+                    return true;
+                }
 
-            auto const& next = m_Lexer.peek().classification;
-            if (std::holds_alternative<lexing::end>(next))
-            {
-                return true;
-            }
-
-            if (auto const* op = std::get_if<lexing::operator_or_punctuator>(&next))
-            {
-                return openingAngle == *op
-                    || openingParens == *op
-                    || scopeResolution == *op;
+                if (auto const* op = std::get_if<lexing::operator_or_punctuator>(&next))
+                {
+                    return openingAngle == *op
+                        || openingParens == *op
+                        || scopeResolution == *op;
+                }
             }
 
             return false;
         }
 
-        constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, lexing::identifier const& identifier)
+        constexpr void handle_lexer_token(StringViewT const content, lexing::identifier const& identifier)
         {
             // Some environments add many reserved symbols (e.g. `__cdecl`). We want to filter out most of these,
             // but keep those, which are actual names.
-            // Note: Currently reserved identifiers are only accepted if they are top-level or (template-)functions.
-            if (!identifier.content.starts_with("__")
+            if (!content.starts_with("__")
                 || keep_reserved_identifier())
             {
                 m_TokenStack.emplace_back(
-                    token::Identifier{.content = identifier.content});
+                   token::Identifier{.content = identifier.content});
             }
         }
 
