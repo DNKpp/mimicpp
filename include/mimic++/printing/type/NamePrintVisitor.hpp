@@ -28,8 +28,8 @@ namespace mimicpp::printing::type
         static std::unordered_map<StringViewT, StringViewT> const aliases{
             {"(anonymous namespace)", "{anon-ns}"},
             {          "{anonymous}", "{anon-ns}"},
-            {"`anonymous namespace'", "{anon-ns}"},
-            {"`anonymous-namespace'", "{anon-ns}"},
+            {"anonymous namespace", "{anon-ns}"},
+            {"anonymous-namespace", "{anon-ns}"},
             {           "<lambda()>",    "lambda"}
         };
 
@@ -138,14 +138,18 @@ namespace mimicpp::printing::type
                 return;
             }
 
-            // msvc injects `\d+' as auxiliar namespaces. Ignore them.
             if (content.starts_with('`')
-                && content.ends_with('\'')
-                && std::ranges::all_of(content.substr(1u, content.size() - 2u), lexing::is_digit))
+                && content.ends_with('\''))
             {
-                m_IgnoreNextScopeResolution = true;
+                // msvc injects `\d+' as auxiliar namespaces. Ignore them.
+                if (std::ranges::all_of(content.substr(1u, content.size() - 2u), lexing::is_digit))
+                {
+                    m_IgnoreNextScopeResolution = true;
 
-                return;
+                    return;
+                }
+
+                content = content.substr(1u, content.size() - 2u);
             }
 
             if (ignored_identifiers().contains(content))
