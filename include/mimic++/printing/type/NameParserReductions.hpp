@@ -388,6 +388,8 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
+            ignore_space(pendingTokens);
+
             if (!is_suffix_of<OpeningParens>(pendingTokens))
             {
                 return false;
