@@ -2048,28 +2048,24 @@ TEST_CASE(
         StringT const input = StringT{"operator"} + spacing + StringT{operatorSymbol} + templateSpacing + "<>" + "()";
         CAPTURE(input);
 
-        // operator<<> is no valid syntax (fortunately)
-        CHECKED_IF((operatorSymbol != "<" || !templateSpacing.empty()))
-        {
-            sequence += visitor.begin.expect_call();
-            sequence += visitor.begin_function.expect_call();
+        sequence += visitor.begin.expect_call();
+        sequence += visitor.begin_function.expect_call();
 
-            sequence += visitor.begin_operator_identifier.expect_call();
-            sequence += visitor.add_identifier.expect_call(operatorSymbol);
-            sequence += visitor.end_operator_identifier.expect_call();
+        sequence += visitor.begin_operator_identifier.expect_call();
+        sequence += visitor.add_identifier.expect_call(operatorSymbol);
+        sequence += visitor.end_operator_identifier.expect_call();
 
-            sequence += visitor.begin_template_args.expect_call();
-            sequence += visitor.end_template_args.expect_call();
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.end_template_args.expect_call();
 
-            sequence += visitor.begin_function_args.expect_call();
-            sequence += visitor.end_function_args.expect_call();
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
 
-            sequence += visitor.end_function.expect_call();
-            sequence += visitor.end.expect_call();
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end.expect_call();
 
-            printing::type::parsing::NameParser parser{std::ref(visitor), input};
-            parser();
-        }
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser();
     }
 
     SECTION("When operator is scope.")

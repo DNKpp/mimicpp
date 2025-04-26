@@ -1534,6 +1534,31 @@ namespace mimicpp::printing::type::parsing
                 {
                     finishMultiOpOperator(closingSquare);
                 }
+                // `operator <` and `operator <<` needs to be handled carefully, as it may come in as a template:
+                // `operator<<>` is actually `operator< <>`.
+                // Note: No tested c++ compiler actually allows `operator<<>`, but some environments still procude this.
+                else if (leftShift == *operatorToken)
+                {
+                    dropSpaceInput();
+
+                    if (auto const* nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                        nextOp
+                        // When next token starts a function or template, we know it's actually `operator <<`.
+                        && (openingParens == *nextOp || openingAngle == *nextOp))
+                    {
+                        m_TokenStack.emplace_back(
+                            token::Identifier{
+                                .content = token::Identifier::OperatorInfo{.symbol = next.content}});
+                    }
+                    // looks like an `operator< <>`, so just treat both `<` separately.
+                    else
+                    {
+                        m_TokenStack.emplace_back(
+                            token::Identifier{
+                                .content = token::Identifier::OperatorInfo{.symbol = next.content.substr(0u, 1u)}});
+                        handle_lexer_token(next.content.substr(1u, 1u), openingAngle);
+                    }
+                }
                 else
                 {
                     m_TokenStack.emplace_back(
