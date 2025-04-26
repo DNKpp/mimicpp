@@ -532,3 +532,15 @@ TEST_CASE(
         StringT{token.text()},
         Catch::Matchers::Equals(tokenText));
 }
+
+TEST_CASE(
+    "lexing::keyword::text yields the token text.",
+    "[print][print::type]")
+{
+    StringT const tokenText{GENERATE(from_range(printing::type::lexing::keywordCollection))};
+    printing::type::lexing::keyword const token{tokenText};
+
+    CHECK_THAT(
+        StringT{token.text()},
+        Catch::Matchers::Equals(tokenText));
+}
