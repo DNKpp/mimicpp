@@ -63,6 +63,10 @@ namespace mimicpp::printing::type::lexing
         constexpr std::array rest = std::to_array<StringViewT>({"::", ";", ",", ":", "...", "?"});
     }
 
+    // GCOVR_EXCL_START
+
+    // These functions are only executed at compile-time and thus be reported as uncovered.
+
     constexpr std::array keywordCollection = std::invoke(
         [] {
             std::array collection = util::concat_arrays(
@@ -97,6 +101,8 @@ namespace mimicpp::printing::type::lexing
 
             return collection;
         });
+
+    // GCOVR_EXCL_STOP
 
     struct space
     {
