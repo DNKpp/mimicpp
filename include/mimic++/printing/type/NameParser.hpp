@@ -968,31 +968,6 @@ namespace mimicpp::printing::type::parsing
             return true;
         }
 
-        constexpr bool try_reduce_as_placeholder_identifier(TokenStack& tokenStack)
-        {
-            if (is_suffix_of<ClosingParens>(tokenStack))
-            {
-                return try_reduce_as_placeholder_identifier_wrapped<OpeningParens, ClosingParens>(tokenStack);
-            }
-
-            if (is_suffix_of<ClosingAngle>(tokenStack))
-            {
-                return try_reduce_as_placeholder_identifier_wrapped<OpeningAngle, ClosingAngle>(tokenStack);
-            }
-
-            if (is_suffix_of<ClosingSingleQuote>(tokenStack))
-            {
-                return try_reduce_as_placeholder_identifier_wrapped<OpeningBacktick, ClosingSingleQuote>(tokenStack);
-            }
-
-            if (is_suffix_of<ClosingCurly>(tokenStack))
-            {
-                return try_reduce_as_placeholder_identifier_wrapped<OpeningCurly, ClosingCurly>(tokenStack);
-            }
-
-            return false;
-        }
-
         inline bool try_reduce_as_function_ptr(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
@@ -1659,10 +1634,6 @@ namespace mimicpp::printing::type::parsing
             }
             else if (openingAngle == token)
             {
-                // Handle something like `{...}<Args>`.
-                //                             ^
-                token::try_reduce_as_placeholder_identifier(m_TokenStack);
-
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::OpeningAngle>,
                     content);
@@ -1680,10 +1651,6 @@ namespace mimicpp::printing::type::parsing
             }
             else if (openingParens == token)
             {
-                // Handle something like `void {...}(Args)`.
-                //                                  ^
-                token::try_reduce_as_placeholder_identifier(m_TokenStack);
-
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::OpeningParens>,
                     content);
