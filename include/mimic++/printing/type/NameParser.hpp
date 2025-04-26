@@ -150,34 +150,20 @@ namespace mimicpp::printing::type::parsing
             {
                 bool isConst{false};
                 bool isVolatile{false};
-                bool isNoexcept{false};
-                bool isLValueRef{false};
-                bool isRValueRef{false};
 
                 constexpr void merge(Layer const& others) noexcept
                 {
                     MIMICPP_ASSERT(!(isConst && others.isConst), "Merging same specs.");
                     MIMICPP_ASSERT(!(isVolatile && others.isVolatile), "Merging same specs.");
-                    MIMICPP_ASSERT(!(isNoexcept && others.isNoexcept), "Merging same specs.");
-                    MIMICPP_ASSERT(!(isLValueRef && others.isLValueRef), "Merging same specs.");
-                    MIMICPP_ASSERT(!(isRValueRef && others.isRValueRef), "Merging same specs.");
-
-                    MIMICPP_ASSERT(!(isLValueRef && others.isRValueRef), "Both reference types detected.");
-                    MIMICPP_ASSERT(!(isRValueRef && others.isLValueRef), "Both reference types detected.");
 
                     isConst = isConst || others.isConst;
                     isVolatile = isVolatile || others.isVolatile;
-                    isNoexcept = isNoexcept || others.isNoexcept;
-                    isLValueRef = isLValueRef || others.isLValueRef;
-                    isRValueRef = isRValueRef || others.isRValueRef;
                 }
 
                 template <parser_visitor Visitor>
                 constexpr void operator()(Visitor& visitor) const
                 {
                     auto& inner = unwrap_visitor(visitor);
-
-                    MIMICPP_ASSERT(!(isLValueRef && isRValueRef), "Both reference types detected.");
 
                     if (isConst)
                     {
@@ -188,24 +174,20 @@ namespace mimicpp::printing::type::parsing
                     {
                         inner.add_volatile();
                     }
-
-                    if (isLValueRef)
-                    {
-                        inner.add_lvalue_ref();
-                    }
-                    else if (isRValueRef)
-                    {
-                        inner.add_rvalue_ref();
-                    }
-
-                    if (isNoexcept)
-                    {
-                        inner.add_noexcept();
-                    }
                 }
             };
 
             std::vector<Layer> layers{1u};
+
+            enum Refness : std::uint8_t
+            {
+                none,
+                lvalue,
+                rvalue
+            };
+
+            Refness refness{none};
+            bool isNoexcept{false};
 
             [[nodiscard]]
             constexpr bool has_ptr() const noexcept
@@ -226,6 +208,25 @@ namespace mimicpp::printing::type::parsing
                 {
                     unwrapped.add_ptr();
                     std::invoke(layer, unwrapped);
+                }
+
+                switch (refness)
+                {
+                case lvalue:
+                    unwrapped.add_lvalue_ref();
+                    break;
+
+                case rvalue:
+                    unwrapped.add_rvalue_ref();
+                    break;
+
+                case none: [[fallthrough]];
+                default:   break;
+                }
+
+                if (isNoexcept)
+                {
+                    unwrapped.add_noexcept();
                 }
             }
         };
@@ -1300,6 +1301,17 @@ namespace mimicpp::printing::type::parsing
             return try_reduce_as_function_type(tokenStack);
         }
 
+        [[nodiscard]]
+        constexpr Specs& get_or_emplace_specs(TokenStack& tokenStack)
+        {
+            if (auto* specs = match_suffix<Specs>(tokenStack))
+            {
+                return *specs;
+            }
+
+            return std::get<Specs>(tokenStack.emplace_back(Specs{}));
+        }
+
         constexpr void add_specs(Specs::Layer newSpecs, TokenStack& tokenStack)
         {
             if (auto* specs = match_suffix<Specs>(tokenStack))
@@ -1478,7 +1490,9 @@ namespace mimicpp::printing::type::parsing
             }
             else if (noexceptKeyword == keyword)
             {
-                token::add_specs({.isNoexcept = true}, m_TokenStack);
+                auto& specs = token::get_or_emplace_specs(m_TokenStack);
+                MIMICPP_ASSERT(!specs.isNoexcept, "Specs already is a noexcept.");
+                specs.isNoexcept = true;
             }
             else if (operatorKeyword == keyword && !process_simple_operator())
             {
@@ -1629,11 +1643,15 @@ namespace mimicpp::printing::type::parsing
             }
             else if (lvalueRef == token)
             {
-                token::add_specs({.isLValueRef = true}, m_TokenStack);
+                auto& specs = token::get_or_emplace_specs(m_TokenStack);
+                MIMICPP_ASSERT(token::Specs::Refness::none == specs.refness, "Specs already is a reference.");
+                specs.refness = token::Specs::Refness::lvalue;
             }
             else if (rvalueRef == token)
             {
-                token::add_specs({.isRValueRef = true}, m_TokenStack);
+                auto& specs = token::get_or_emplace_specs(m_TokenStack);
+                MIMICPP_ASSERT(token::Specs::Refness::none == specs.refness, "Specs already is a reference.");
+                specs.refness = token::Specs::Refness::rvalue;
             }
             else if (pointer == token)
             {
