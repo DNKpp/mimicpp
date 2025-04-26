@@ -119,6 +119,16 @@ namespace mimicpp::printing::type
                 return;
             }
 
+            // msvc injects `\d+' as auxiliar namespaces. Ignore them.
+            if (content.starts_with('`')
+                && content.ends_with('\'')
+                && std::ranges::all_of(content.substr(1u, content.size() - 2u), lexing::is_digit))
+            {
+                m_IgnoreNextScopeResolution = true;
+
+                return;
+            }
+
             if (ignored_identifiers().contains(content))
             {
                 m_IgnoreNextScopeResolution = true;
