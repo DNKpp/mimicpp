@@ -421,6 +421,25 @@ namespace mimicpp::printing::type::parsing
             return true;
         }
 
+        inline bool try_reduce_as_function_type(TokenStack& tokenStack)
+        {
+            // The space is required, because the return type will always be spaced away from the parens.
+            if (std::optional suffix = match_suffix<Type, Space, FunctionContext>(tokenStack))
+            {
+                auto& [returnType, space, funCtx] = *suffix;
+                FunctionType funType{
+                    .returnType = std::make_shared<Type>(std::move(returnType)),
+                    .context = std::move(funCtx)};
+
+                tokenStack.resize(tokenStack.size() - 2u);
+                tokenStack.back().emplace<Type>(std::move(funType));
+
+                return true;
+            }
+
+            return false;
+        }
+
         namespace detail
         {
             void handled_nested_function_ptr(TokenStack& tokenStack, FunctionPtr::NestedInfo info);
@@ -476,6 +495,10 @@ namespace mimicpp::printing::type::parsing
                 if (isFunPtr)
                 {
                     try_reduce_as_function_ptr_type(tokenStack);
+                }
+                else
+                {
+                    try_reduce_as_function_type(tokenStack);
                 }
             }
         }
@@ -542,6 +565,7 @@ namespace mimicpp::printing::type::parsing
             token::try_reduce_as_function_context(tokenStack);
 
             return try_reduce_as_function_ptr_type(tokenStack)
+                || try_reduce_as_function_type(tokenStack)
                 || try_reduce_as_regular_type(tokenStack);
         }
 
@@ -609,25 +633,6 @@ namespace mimicpp::printing::type::parsing
             try_reduce_as_function_identifier(tokenStack);
         }
 
-        inline bool try_reduce_as_function_type(TokenStack& tokenStack)
-        {
-            // The space is required, because the return type will always be spaced away from the parens.
-            if (std::optional suffix = match_suffix<Type, Space, FunctionContext>(tokenStack))
-            {
-                auto& [returnType, space, funCtx] = *suffix;
-                FunctionType funType{
-                    .returnType = std::move(returnType),
-                    .context = std::move(funCtx)};
-
-                tokenStack.resize(tokenStack.size() - 2);
-                tokenStack.back().emplace<End>(std::move(funType));
-
-                return true;
-            }
-
-            return false;
-        }
-
         inline bool try_reduce_as_end(TokenStack& tokenStack, bool const expectsConversionOperator)
         {
             try_reduce_as_function_context(tokenStack);
@@ -648,18 +653,13 @@ namespace mimicpp::printing::type::parsing
             if (is_suffix_of<Type>(tokenStack)
                 || try_reduce_as_type(tokenStack))
             {
-                // Do to some function-ptr reductions, there may be no actual `type`-token present.
-                // If not, it's probably a function-type.
-                if (auto* type = std::get_if<Type>(&tokenStack.back()))
-                {
-                    tokenStack.back().emplace<End>(
-                        std::exchange(*type, {}));
+                MIMICPP_ASSERT(is_suffix_of<Type>(tokenStack), "Invalid state.");
 
-                    return true;
-                }
+                tokenStack.back().emplace<End>(
+                    std::exchange(std::get<Type>(tokenStack.back()), {}));
             }
 
-            return try_reduce_as_function_type(tokenStack);
+            return false;
         }
 
         [[nodiscard]]

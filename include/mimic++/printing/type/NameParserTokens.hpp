@@ -74,7 +74,6 @@ namespace mimicpp::printing::type::parsing
 
 namespace mimicpp::printing::type::parsing::token
 {
-
     class Type;
 
     class Space
@@ -436,6 +435,8 @@ namespace mimicpp::printing::type::parsing::token
         {
             auto& unwrapped = unwrap_visitor(visitor);
 
+            unwrapped.begin_type();
+
             if (scopes)
             {
                 std::invoke(*scopes, unwrapped);
@@ -443,6 +444,33 @@ namespace mimicpp::printing::type::parsing::token
 
             std::invoke(identifier, unwrapped);
             std::invoke(specs, unwrapped);
+
+            unwrapped.end_type();
+        }
+    };
+
+    class FunctionType
+    {
+    public:
+        std::shared_ptr<Type> returnType{};
+        FunctionContext context{};
+
+        template <parser_visitor Visitor>
+        void operator()(Visitor& visitor) const
+        {
+            MIMICPP_ASSERT(returnType, "Return type is mandatory for function-types.");
+
+            auto& unwrapped = unwrap_visitor(visitor);
+
+            unwrapped.begin_function();
+
+            unwrapped.begin_return_type();
+            std::invoke(*returnType, visitor);
+            unwrapped.end_return_type();
+
+            std::invoke(context, unwrapped);
+
+            unwrapped.end_function();
         }
     };
 
@@ -476,6 +504,8 @@ namespace mimicpp::printing::type::parsing::token
 
             auto& unwrapped = unwrap_visitor(visitor);
 
+            unwrapped.begin_type();
+
             unwrapped.begin_return_type();
             std::invoke(*returnType, visitor);
             unwrapped.end_return_type();
@@ -490,13 +520,15 @@ namespace mimicpp::printing::type::parsing::token
             unwrapped.end_function_ptr();
 
             std::invoke(context, unwrapped);
+
+            unwrapped.end_type();
         }
     };
 
     class Type
     {
     public:
-        using State = std::variant<RegularType, FunctionPtrType>;
+        using State = std::variant<RegularType, FunctionType, FunctionPtrType>;
         State state;
 
         [[nodiscard]]
@@ -513,13 +545,9 @@ namespace mimicpp::printing::type::parsing::token
         {
             auto& unwrapped = unwrap_visitor(visitor);
 
-            unwrapped.begin_type();
-
             std::visit(
                 [&](auto const& inner) { std::invoke(inner, unwrapped); },
                 state);
-
-            unwrapped.end_type();
         }
     };
 
@@ -557,29 +585,6 @@ namespace mimicpp::printing::type::parsing::token
         unwrapped.end_template_args();
     }
 
-    class FunctionType
-    {
-    public:
-        Type returnType{};
-        FunctionContext context{};
-
-        template <parser_visitor Visitor>
-        void operator()(Visitor& visitor) const
-        {
-            auto& unwrapped = unwrap_visitor(visitor);
-
-            unwrapped.begin_function();
-
-            unwrapped.begin_return_type();
-            std::invoke(returnType, visitor);
-            unwrapped.end_return_type();
-
-            std::invoke(context, unwrapped);
-
-            unwrapped.end_function();
-        }
-    };
-
     class Function
     {
     public:
@@ -615,7 +620,7 @@ namespace mimicpp::printing::type::parsing::token
     class End
     {
     public:
-        using State = std::variant<Type, FunctionType, Function>;
+        using State = std::variant<Type, Function>;
         State state{};
 
         template <parser_visitor Visitor>
