@@ -634,44 +634,17 @@ namespace mimicpp::printing::type::parsing
         [[nodiscard]]
         constexpr Specs& get_or_emplace_specs(TokenStack& tokenStack)
         {
+            if (is_suffix_of<Space>(tokenStack))
+            {
+                tokenStack.pop_back();
+            }
+
             if (auto* specs = match_suffix<Specs>(tokenStack))
             {
                 return *specs;
             }
 
             return std::get<Specs>(tokenStack.emplace_back(Specs{}));
-        }
-
-        constexpr void add_specs(Specs::Layer newSpecs, TokenStack& tokenStack)
-        {
-            if (auto* specs = match_suffix<Specs>(tokenStack))
-            {
-                auto& layers = specs->layers;
-                MIMICPP_ASSERT(!layers.empty(), "Invalid specs state.");
-                layers.back().merge(newSpecs);
-            }
-            else
-            {
-                tokenStack.emplace_back(
-                    Specs{.layers = {std::move(newSpecs)}});
-            }
-        }
-
-        constexpr void add_specs_layer(TokenStack& tokenStack)
-        {
-            if (auto* specs = match_suffix<Specs>(tokenStack))
-            {
-                auto& layers = specs->layers;
-                MIMICPP_ASSERT(!layers.empty(), "Invalid specs state.");
-                layers.emplace_back();
-            }
-            else
-            {
-                tokenStack.emplace_back(
-                    Specs{
-                        .layers = {2u, Specs::Layer{}}
-                });
-            }
         }
     }
 }

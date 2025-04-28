@@ -209,11 +209,19 @@ namespace mimicpp::printing::type::parsing
         {
             if (constKeyword == keyword)
             {
-                token::add_specs({.isConst = true}, m_TokenStack);
+                auto& specs = token::get_or_emplace_specs(m_TokenStack);
+                MIMICPP_ASSERT(!specs.layers.empty(), "Zero spec layers detected.");
+                auto& top = specs.layers.back();
+                MIMICPP_ASSERT(!top.isConst, "Specs is already const.");
+                top.isConst = true;
             }
             else if (volatileKeyword == keyword)
             {
-                token::add_specs({.isVolatile = true}, m_TokenStack);
+                auto& specs = token::get_or_emplace_specs(m_TokenStack);
+                MIMICPP_ASSERT(!specs.layers.empty(), "Zero spec layers detected.");
+                auto& top = specs.layers.back();
+                MIMICPP_ASSERT(!top.isConst, "Specs is already volatile.");
+                top.isVolatile = true;
             }
             else if (noexceptKeyword == keyword)
             {
@@ -386,7 +394,8 @@ namespace mimicpp::printing::type::parsing
             }
             else if (pointer == token)
             {
-                token::add_specs_layer(m_TokenStack);
+                auto& specs = token::get_or_emplace_specs(m_TokenStack);
+                specs.layers.emplace_back();
             }
             else if (openingAngle == token)
             {
