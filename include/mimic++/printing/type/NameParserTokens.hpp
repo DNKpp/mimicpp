@@ -76,10 +76,6 @@ namespace mimicpp::printing::type::parsing::token
 {
     class Type;
 
-    class Space
-    {
-    };
-
     class OperatorKeyword
     {
     };
@@ -648,7 +644,6 @@ namespace mimicpp::printing::type::parsing::token
 namespace mimicpp::printing::type::parsing
 {
     using Token = std::variant<
-        token::Space,
         token::OperatorKeyword,
         token::ScopeResolution,
         token::ArgSeparator,

@@ -98,14 +98,6 @@ namespace mimicpp::printing::type::parsing
     {
         bool try_reduce_as_type(TokenStack& tokenStack);
 
-        constexpr void ignore_space(std::span<Token>& tokenStack) noexcept
-        {
-            if (is_suffix_of<Space>(tokenStack))
-            {
-                remove_suffix(tokenStack, 1u);
-            }
-        }
-
         inline bool try_reduce_as_scope_sequence(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
@@ -266,7 +258,6 @@ namespace mimicpp::printing::type::parsing
         {
             std::span pendingStack{tokenStack};
 
-            ignore_space(pendingStack);
             Specs* funSpecs{};
             if (auto* specs = match_suffix<Specs>(pendingStack))
             {
@@ -274,7 +265,6 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingStack, 1u);
             }
 
-            ignore_space(pendingStack);
             if (auto* funArgs = match_suffix<FunctionArgs>(pendingStack))
             {
                 remove_suffix(pendingStack, 1u);
@@ -299,8 +289,6 @@ namespace mimicpp::printing::type::parsing
         inline bool try_reduce_as_function_identifier(TokenStack& tokenStack)
         {
             std::span pendingStack{tokenStack};
-            ignore_space(pendingStack);
-
             if (std::optional suffix = match_suffix<Identifier, FunctionContext>(pendingStack))
             {
                 remove_suffix(pendingStack, 2u);
@@ -323,9 +311,9 @@ namespace mimicpp::printing::type::parsing
         constexpr bool is_identifier_prefix(std::span<Token const> const tokenStack) noexcept
         {
             return tokenStack.empty()
-                || is_suffix_of<Space>(tokenStack)
                 || is_suffix_of<ScopeSequence>(tokenStack)
                 || is_suffix_of<Specs>(tokenStack)
+                || is_suffix_of<Type>(tokenStack)
                 || is_suffix_of<OpeningAngle>(tokenStack)
                 || is_suffix_of<OpeningParens>(tokenStack)
                 || is_suffix_of<OpeningBacktick>(tokenStack);
@@ -395,8 +383,6 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
-            ignore_space(pendingTokens);
-
             if (!is_suffix_of<OpeningParens>(pendingTokens))
             {
                 return false;
@@ -431,14 +417,14 @@ namespace mimicpp::printing::type::parsing
         inline bool try_reduce_as_function_type(TokenStack& tokenStack)
         {
             // The space is required, because the return type will always be spaced away from the parens.
-            if (std::optional suffix = match_suffix<Type, Space, FunctionContext>(tokenStack))
+            if (std::optional suffix = match_suffix<Type, FunctionContext>(tokenStack))
             {
-                auto& [returnType, space, funCtx] = *suffix;
+                auto& [returnType, funCtx] = *suffix;
                 FunctionType funType{
                     .returnType = std::make_shared<Type>(std::move(returnType)),
                     .context = std::move(funCtx)};
 
-                tokenStack.resize(tokenStack.size() - 2u);
+                tokenStack.pop_back();
                 tokenStack.back().emplace<Type>(std::move(funType));
 
                 return true;
@@ -454,9 +440,9 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_function_ptr_type(TokenStack& tokenStack)
         {
-            if (std::optional suffix = match_suffix<Type, Space, FunctionPtr, FunctionContext>(tokenStack))
+            if (std::optional suffix = match_suffix<Type, FunctionPtr, FunctionContext>(tokenStack))
             {
-                auto& [returnType, space, ptr, ctx] = *suffix;
+                auto& [returnType, ptr, ctx] = *suffix;
 
                 std::optional nestedInfo = std::move(ptr.nested);
                 FunctionPtrType ptrType{
@@ -465,7 +451,7 @@ namespace mimicpp::printing::type::parsing
                     .specs = std::move(ptr.specs),
                     .context = std::move(ctx)};
 
-                tokenStack.resize(tokenStack.size() - 3);
+                tokenStack.resize(tokenStack.size() - 2u);
                 tokenStack.back().emplace<Type>(std::move(ptrType));
 
                 // We got something like `ret (*(outer-args))(args)` or `ret (*(*)(outer-args))(args)`, where the currently
@@ -487,9 +473,6 @@ namespace mimicpp::printing::type::parsing
             inline void handled_nested_function_ptr(TokenStack& tokenStack, FunctionPtr::NestedInfo info)
             {
                 auto& [ptr, ctx] = info;
-
-                // We need to insert an extra space, to follow the general syntax constraints.
-                tokenStack.emplace_back(Space{});
 
                 bool const isFunPtr{ptr};
                 if (ptr)
@@ -513,8 +496,6 @@ namespace mimicpp::printing::type::parsing
         inline bool try_reduce_as_regular_type(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
-
-            ignore_space(pendingTokens);
             if (!is_suffix_of<Identifier>(pendingTokens))
             {
                 return false;
@@ -530,8 +511,6 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
-            // When ScopeSequence or Identifier starts with a placeholder-like, there will be an additional space-token.
-            ignore_space(pendingTokens);
             if (auto* prefixSpecs = match_suffix<Specs>(pendingTokens))
             {
                 auto& layers = prefixSpecs->layers;
@@ -580,8 +559,6 @@ namespace mimicpp::printing::type::parsing
                     remove_suffix(pendingTokens, 1u);
                 }
 
-                // When ScopeSequence or Identifier starts with a placeholder-like, there will be an additional space-token.
-                ignore_space(pendingTokens);
                 if (auto* returnType = match_suffix<Type>(pendingTokens))
                 {
                     function.returnType = std::make_shared<Type>(std::move(*returnType));
@@ -638,27 +615,17 @@ namespace mimicpp::printing::type::parsing
                 return std::get<Type>(tokenStack.back()).specs();
             }
 
-            std::span pendingTokens{tokenStack};
-            ignore_space(pendingTokens);
-
-            Specs* specs = match_suffix<Specs>(pendingTokens);
-            if (!specs)
+            if (auto* specs = match_suffix<Specs>(tokenStack))
             {
-                if (auto* const type = match_suffix<Type>(pendingTokens))
-                {
-                    specs = &type->specs();
-                }
-            }
-
-            if (specs)
-            {
-                // Drop trailing space if necessary.
-                tokenStack.resize(pendingTokens.size());
-
                 return *specs;
             }
 
-            // No specs found yet? Assume prefix specs and leave possibly existing space untouched.
+            if (auto* const type = match_suffix<Type>(tokenStack))
+            {
+                return type->specs();
+            }
+
+            // No specs found yet? Assume prefix specs.
             return std::get<Specs>(tokenStack.emplace_back(Specs{}));
         }
     }

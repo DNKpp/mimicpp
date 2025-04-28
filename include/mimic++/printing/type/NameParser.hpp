@@ -150,14 +150,6 @@ namespace mimicpp::printing::type::parsing
             unwrapped.unrecognized(m_Content);
         }
 
-        constexpr void pop_space() noexcept
-        {
-            if (is_suffix_of<token::Space>(m_TokenStack))
-            {
-                m_TokenStack.pop_back();
-            }
-        }
-
         static constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, [[maybe_unused]] lexing::end const& end)
         {
             util::unreachable();
@@ -169,24 +161,9 @@ namespace mimicpp::printing::type::parsing
             // For example, consider the type names `void ()` and `foo()`:
             // - `void ()` represents a function type returning `void`.
             // - `foo()` represents a function named `foo`.
-            // Since reliably identifying all cases where the space is meaningful is very difficult,
-            // we instead focus on safely filtering out cases where we are certain the space has no special meaning.
-            if (!m_TokenStack.empty())
+            if (is_suffix_of<token::Identifier>(m_TokenStack))
             {
-                if (auto const& prev = m_TokenStack.back();
-                    !std::holds_alternative<token::ArgSeparator>(prev)
-                    && !std::holds_alternative<token::OpeningBacktick>(prev)
-                    && !std::holds_alternative<token::OpeningParens>(prev)
-                    && !std::holds_alternative<token::OpeningAngle>(prev)
-                    && !std::holds_alternative<token::OperatorKeyword>(prev))
-                {
-                    if (std::holds_alternative<token::Identifier>(prev))
-                    {
-                        token::try_reduce_as_type(m_TokenStack);
-                    }
-
-                    m_TokenStack.emplace_back(token::Space{});
-                }
+                token::try_reduce_as_type(m_TokenStack);
             }
         }
 
@@ -399,7 +376,6 @@ namespace mimicpp::printing::type::parsing
             }
             else if (closingAngle == token)
             {
-                pop_space();
                 if (is_suffix_of<token::Type>(m_TokenStack)
                     || token::try_reduce_as_type(m_TokenStack))
                 {
@@ -414,25 +390,12 @@ namespace mimicpp::printing::type::parsing
             }
             else if (openingParens == token)
             {
-                // Return types are generally separated by a space from function arguments.
-                // Try to reduce to a type, but preserve the space at its original position.
-                // Note: we take special care not to accidentally reduce the actual function identifier.
-                // This is why we specifically check for the presence of the space.
-                if (is_suffix_of<token::Space>(m_TokenStack))
-                {
-                    if (token::try_reduce_as_type(m_TokenStack))
-                    {
-                        m_TokenStack.emplace_back(token::Space{});
-                    }
-                }
-
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::OpeningParens>,
                     content);
             }
             else if (closingParens == token)
             {
-                pop_space();
                 if (is_suffix_of<token::Type>(m_TokenStack)
                     || token::try_reduce_as_type(m_TokenStack))
                 {
@@ -515,11 +478,6 @@ namespace mimicpp::printing::type::parsing
             if (auto* scopeSeq = match_suffix<token::ScopeSequence>(m_TokenStack))
             {
                 scopes = std::move(*scopeSeq);
-                m_TokenStack.pop_back();
-            }
-
-            if (is_suffix_of<token::Space>(m_TokenStack))
-            {
                 m_TokenStack.pop_back();
             }
 
