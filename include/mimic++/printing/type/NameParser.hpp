@@ -190,39 +190,10 @@ namespace mimicpp::printing::type::parsing
             }
         }
 
-        [[nodiscard]]
-        constexpr bool keep_reserved_identifier() const noexcept
+        constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, lexing::identifier const& identifier)
         {
-            if (m_TokenStack.empty()
-                || is_suffix_of<token::ScopeSequence>(m_TokenStack))
-            {
-                auto const& next = m_Lexer.peek().classification;
-                if (std::holds_alternative<lexing::end>(next))
-                {
-                    return true;
-                }
-
-                if (auto const* op = std::get_if<lexing::operator_or_punctuator>(&next))
-                {
-                    return openingAngle == *op
-                        || openingParens == *op
-                        || scopeResolution == *op;
-                }
-            }
-
-            return false;
-        }
-
-        constexpr void handle_lexer_token(StringViewT const content, lexing::identifier const& identifier)
-        {
-            // Some environments add many reserved symbols (e.g. `__cdecl`). We want to filter out most of these,
-            // but keep those, which are actual names.
-            if (!content.starts_with("__")
-                || keep_reserved_identifier())
-            {
-                m_TokenStack.emplace_back(
-                   token::Identifier{.content = identifier.content});
-            }
+            m_TokenStack.emplace_back(
+                token::Identifier{.content = identifier.content});
         }
 
         constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, lexing::keyword const& keyword)
