@@ -148,21 +148,26 @@ namespace mimicpp::printing::type::parsing
 
         constexpr bool try_reduce_as_arg_sequence(TokenStack& tokenStack)
         {
-            if (std::optional suffix = match_suffix<ArgSequence, ArgSeparator, Type>(tokenStack))
+            std::span pendingTokens{tokenStack};
+            if (std::optional suffix = match_suffix<ArgSequence, ArgSeparator, Type>(pendingTokens))
             {
+                // Keep ArgSequence
+                remove_suffix(pendingTokens, 2u);
                 auto& [seq, sep, type] = *suffix;
 
                 seq.types.emplace_back(std::move(type));
-                tokenStack.resize(tokenStack.size() - 2u);
+                tokenStack.resize(pendingTokens.size());
 
                 return true;
             }
 
-            if (auto* type = match_suffix<Type>(tokenStack))
+            if (auto* type = match_suffix<Type>(pendingTokens))
             {
+                remove_suffix(pendingTokens, 1u);
+
                 ArgSequence seq{};
                 seq.types.emplace_back(std::move(*type));
-                tokenStack.pop_back();
+                tokenStack.resize(pendingTokens.size());
                 tokenStack.emplace_back(std::move(seq));
 
                 return true;
@@ -510,14 +515,6 @@ namespace mimicpp::printing::type::parsing
             std::span pendingTokens{tokenStack};
 
             ignore_space(pendingTokens);
-            Specs* suffixSpecs{};
-            if (auto* specs = match_suffix<Specs>(pendingTokens))
-            {
-                suffixSpecs = specs;
-                remove_suffix(pendingTokens, 1u);
-            }
-
-            ignore_space(pendingTokens);
             if (!is_suffix_of<Identifier>(pendingTokens))
             {
                 return false;
@@ -526,11 +523,6 @@ namespace mimicpp::printing::type::parsing
             RegularType newType{
                 .identifier = std::move(std::get<Identifier>(pendingTokens.back()))};
             remove_suffix(pendingTokens, 1u);
-
-            if (suffixSpecs)
-            {
-                newType.specs = std::move(*suffixSpecs);
-            }
 
             if (auto* seq = match_suffix<ScopeSequence>(pendingTokens))
             {
@@ -546,7 +538,7 @@ namespace mimicpp::printing::type::parsing
                 MIMICPP_ASSERT(token::Specs::Refness::none == prefixSpecs->refness && !prefixSpecs->isNoexcept, "Invalid prefix specs.");
                 MIMICPP_ASSERT(1u == layers.size(), "Prefix specs can not have more than one layer.");
 
-                newType.specs.layers.front().merge(layers.front());
+                newType.specs = std::move(*prefixSpecs);
                 remove_suffix(pendingTokens, 1u);
             }
 
@@ -638,16 +630,35 @@ namespace mimicpp::printing::type::parsing
         [[nodiscard]]
         constexpr Specs& get_or_emplace_specs(TokenStack& tokenStack)
         {
-            if (is_suffix_of<Space>(tokenStack))
+            // We probably got something like `type&` and need to reduce that identifier to an actual `Type` token.
+            if (is_suffix_of<Identifier>(tokenStack))
             {
-                tokenStack.pop_back();
+                try_reduce_as_type(tokenStack);
+
+                return std::get<Type>(tokenStack.back()).specs();
             }
 
-            if (auto* specs = match_suffix<Specs>(tokenStack))
+            std::span pendingTokens{tokenStack};
+            ignore_space(pendingTokens);
+
+            Specs* specs = match_suffix<Specs>(pendingTokens);
+            if (!specs)
             {
+                if (auto* const type = match_suffix<Type>(pendingTokens))
+                {
+                    specs = &type->specs();
+                }
+            }
+
+            if (specs)
+            {
+                // Drop trailing space if necessary.
+                tokenStack.resize(pendingTokens.size());
+
                 return *specs;
             }
 
+            // No specs found yet? Assume prefix specs and leave possibly existing space untouched.
             return std::get<Specs>(tokenStack.emplace_back(Specs{}));
         }
     }

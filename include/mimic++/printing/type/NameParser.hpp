@@ -150,6 +150,14 @@ namespace mimicpp::printing::type::parsing
             unwrapped.unrecognized(m_Content);
         }
 
+        constexpr void pop_space() noexcept
+        {
+            if (is_suffix_of<token::Space>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+            }
+        }
+
         static constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, [[maybe_unused]] lexing::end const& end)
         {
             util::unreachable();
@@ -172,6 +180,11 @@ namespace mimicpp::printing::type::parsing
                     && !std::holds_alternative<token::OpeningAngle>(prev)
                     && !std::holds_alternative<token::OperatorKeyword>(prev))
                 {
+                    if (std::holds_alternative<token::Identifier>(prev))
+                    {
+                        token::try_reduce_as_type(m_TokenStack);
+                    }
+
                     m_TokenStack.emplace_back(token::Space{});
                 }
             }
@@ -380,8 +393,11 @@ namespace mimicpp::printing::type::parsing
             }
             else if (commaSeparator == token)
             {
-                token::try_reduce_as_type(m_TokenStack)
-                    && token::try_reduce_as_arg_sequence(m_TokenStack);
+                if (is_suffix_of<token::Type>(m_TokenStack)
+                    || token::try_reduce_as_type(m_TokenStack))
+                {
+                    token::try_reduce_as_arg_sequence(m_TokenStack);
+                }
 
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::ArgSeparator>,
@@ -412,8 +428,12 @@ namespace mimicpp::printing::type::parsing
             }
             else if (closingAngle == token)
             {
-                token::try_reduce_as_type(m_TokenStack)
-                    && token::try_reduce_as_arg_sequence(m_TokenStack);
+                pop_space();
+                if (is_suffix_of<token::Type>(m_TokenStack)
+                    || token::try_reduce_as_type(m_TokenStack))
+                {
+                    token::try_reduce_as_arg_sequence(m_TokenStack);
+                }
 
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::ClosingAngle>,
@@ -441,8 +461,12 @@ namespace mimicpp::printing::type::parsing
             }
             else if (closingParens == token)
             {
-                token::try_reduce_as_type(m_TokenStack)
-                    && token::try_reduce_as_arg_sequence(m_TokenStack);
+                pop_space();
+                if (is_suffix_of<token::Type>(m_TokenStack)
+                    || token::try_reduce_as_type(m_TokenStack))
+                {
+                    token::try_reduce_as_arg_sequence(m_TokenStack);
+                }
 
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::ClosingParens>,

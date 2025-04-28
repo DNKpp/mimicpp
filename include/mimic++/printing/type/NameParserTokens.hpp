@@ -540,6 +540,14 @@ namespace mimicpp::printing::type::parsing::token
                 && regularType->identifier.is_void();
         }
 
+        [[nodiscard]]
+        constexpr Specs& specs() noexcept
+        {
+            return std::visit(
+                [&](auto& inner) noexcept -> Specs& { return specs(inner); },
+                state);
+        }
+
         template <parser_visitor Visitor>
         void operator()(Visitor& visitor) const
         {
@@ -548,6 +556,25 @@ namespace mimicpp::printing::type::parsing::token
             std::visit(
                 [&](auto const& inner) { std::invoke(inner, unwrapped); },
                 state);
+        }
+
+    private:
+        [[nodiscard]]
+        static constexpr Specs& specs(RegularType& type) noexcept
+        {
+            return type.specs;
+        }
+
+        [[nodiscard]]
+        static constexpr Specs& specs(FunctionType& type) noexcept
+        {
+            return type.context.specs;
+        }
+
+        [[nodiscard]]
+        static constexpr Specs& specs(FunctionPtrType& type) noexcept
+        {
+            return type.specs;
         }
     };
 
