@@ -604,9 +604,7 @@ namespace mimicpp::printing::type::parsing
                     tokenStack.pop_back();
                 }
 
-                tokenStack.emplace_back(
-                    std::in_place_type<End>,
-                    std::move(function));
+                tokenStack.emplace_back(std::move(function));
 
                 return true;
             }
@@ -631,35 +629,6 @@ namespace mimicpp::printing::type::parsing
                 Identifier::OperatorInfo{.symbol = std::move(targetType)});
             tokenStack.emplace_back(std::move(funCtx));
             try_reduce_as_function_identifier(tokenStack);
-        }
-
-        inline bool try_reduce_as_end(TokenStack& tokenStack, bool const expectsConversionOperator)
-        {
-            try_reduce_as_function_context(tokenStack);
-
-            if (expectsConversionOperator)
-            {
-                reduce_as_conversion_operator_function_identifier(tokenStack);
-
-                return try_reduce_as_function(tokenStack);
-            }
-
-            if (is_suffix_of<FunctionIdentifier>(tokenStack)
-                || try_reduce_as_function_identifier(tokenStack))
-            {
-                return try_reduce_as_function(tokenStack);
-            }
-
-            if (is_suffix_of<Type>(tokenStack)
-                || try_reduce_as_type(tokenStack))
-            {
-                MIMICPP_ASSERT(is_suffix_of<Type>(tokenStack), "Invalid state.");
-
-                tokenStack.back().emplace<End>(
-                    std::exchange(std::get<Type>(tokenStack.back()), {}));
-            }
-
-            return false;
         }
 
         [[nodiscard]]

@@ -131,7 +131,15 @@ TEST_CASE(
     SCOPED_EXP visitor.unrecognized.expect_call("Hello, World!");
 
     printing::type::parsing::NameParser parser{std::ref(visitor), input};
-    parser();
+    SECTION("When parsing type.")
+    {
+        parser.parse_type();
+    }
+
+    SECTION("When parsing function.")
+    {
+        parser.parse_function();
+    }
 }
 
 TEST_CASE(
@@ -157,7 +165,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When multiple scopes are given.")
@@ -185,7 +193,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -213,7 +221,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When given before the actual identifier with ref/pointer.")
@@ -233,7 +241,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When given after the actual identifier.")
@@ -251,7 +259,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When given after the actual identifier with ref/pointer.")
@@ -271,7 +279,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("Coming all together")
@@ -295,7 +303,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -323,7 +331,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When templated identifier with placeholder arg is given.")
@@ -345,7 +353,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When qualified templated identifier is given.")
@@ -367,7 +375,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When templated identifier with multiple args is given.")
@@ -398,7 +406,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When templated identifier with multiple args with specs is given.")
@@ -433,7 +441,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When templated identifier has templated arg.")
@@ -458,7 +466,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When templated identifier has qualified templated arg.")
@@ -496,7 +504,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When template is part of a scope.")
@@ -518,7 +526,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -566,7 +574,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When templated function identifier is given.")
@@ -605,7 +613,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When function identifier with single arg is given.")
@@ -647,7 +655,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When function identifier with templated arg is given.")
@@ -695,7 +703,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When function identifier with multiple args is given.")
@@ -741,7 +749,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When function is a scope.")
@@ -803,7 +811,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When function identifier with qualified return type is given.")
@@ -841,7 +849,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When function identifier with templated return type is given.")
@@ -877,7 +885,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 }
 
@@ -919,7 +927,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When function has a qualified return-type.")
@@ -950,7 +958,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When function is template argument.")
@@ -988,7 +996,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -1016,7 +1024,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("Templated placeholders are detected.")
@@ -1035,7 +1043,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("Qualified placeholders are detected.")
@@ -1054,7 +1062,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("Scoped placeholders are detected.")
@@ -1078,7 +1086,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("Placeholder return types are detected.")
@@ -1102,7 +1110,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("Functions with placeholder names are detected.")
@@ -1131,7 +1139,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("Functions with placeholder scoped names are detected.")
@@ -1164,7 +1172,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 }
 
@@ -1211,7 +1219,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When noexcept function pointer without arguments is given.")
@@ -1240,7 +1248,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When function pointer-ref without arguments is given.")
@@ -1270,7 +1278,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When function pointer with arguments is given.")
@@ -1313,7 +1321,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When member function pointer without arguments is given.")
@@ -1346,7 +1354,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When member function pointer with qualifications is given.")
@@ -1382,7 +1390,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When return-type is a function pointer.")
@@ -1426,7 +1434,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When Function-Ptr with a function-ptr return-type is given.")
@@ -1474,7 +1482,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When function-ptr with function-ptr parameter is given.")
@@ -1520,7 +1528,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When parameter is a template argument.")
@@ -1558,7 +1566,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -1615,7 +1623,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When qualified function local type is given.")
@@ -1644,7 +1652,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When nested function local type is given.")
@@ -1674,7 +1682,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When deeply nested function local type is given.")
@@ -1738,7 +1746,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -1783,7 +1791,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("Deeply nested function local type is given.")
@@ -1879,7 +1887,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("When decorated function local type is given.")
@@ -1914,7 +1922,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -1942,7 +1950,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), identifier};
-        parser();
+        parser.parse_type();
     }
 
     SECTION("As function name.")
@@ -1961,7 +1969,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("As template.")
@@ -1980,7 +1988,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -2065,7 +2073,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When templated operator is given.")
@@ -2091,7 +2099,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When operator is scope.")
@@ -2127,7 +2135,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_type();
     }
 }
 
@@ -2159,7 +2167,7 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 
     SECTION("When converting to complex type-name.")
@@ -2202,6 +2210,6 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
-        parser();
+        parser.parse_function();
     }
 }

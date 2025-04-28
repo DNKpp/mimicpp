@@ -35,29 +35,41 @@ namespace mimicpp::printing::type::parsing
         {
         }
 
-        constexpr void operator()()
+        constexpr void parse_type()
         {
-            for (lexing::token next = m_Lexer.next();
-                 !std::holds_alternative<lexing::end>(next.classification);
-                 next = m_Lexer.next())
+            parse();
+            token::try_reduce_as_type(m_TokenStack);
+            if (!finalize<token::Type>())
             {
-                std::visit(
-                    [&](auto const& tokenClass) { handle_lexer_token(next.content, tokenClass); },
-                    next.classification);
+                emit_unrecognized();
             }
+        }
 
-            try_reduce_as_end(m_TokenStack, m_HasConversionOperator);
+        constexpr void parse_function()
+        {
+            parse();
+            token::try_reduce_as_function_context(m_TokenStack);
 
-            if (1u == m_TokenStack.size()
-                && std::holds_alternative<token::End>(m_TokenStack.back()))
+            if (m_HasConversionOperator)
             {
-                std::invoke(
-                    std::get<token::End>(m_TokenStack.back()),
-                    m_Visitor);
+                token::reduce_as_conversion_operator_function_identifier(m_TokenStack);
             }
             else
             {
-                unwrap_visitor(m_Visitor).unrecognized(m_Content);
+                is_suffix_of<token::FunctionIdentifier>(m_TokenStack)
+                    || token::try_reduce_as_function_identifier(m_TokenStack);
+            }
+
+            token::try_reduce_as_function(m_TokenStack);
+            if (!finalize<token::Function>())
+            {
+                // Well, this is a workaround to circumvent issues with lambdas on some environments.
+                // gcc produces lambdas in form `<lambda()>` which are not recognized as actual functions.
+                token::try_reduce_as_type(m_TokenStack);
+                if (!finalize<token::Type>())
+                {
+                    emit_unrecognized();
+                }
             }
         }
 
@@ -97,6 +109,46 @@ namespace mimicpp::printing::type::parsing
         bool m_HasConversionOperator{false};
 
         std::vector<Token> m_TokenStack{};
+
+        constexpr void parse()
+        {
+            for (lexing::token next = m_Lexer.next();
+                 !std::holds_alternative<lexing::end>(next.classification);
+                 next = m_Lexer.next())
+            {
+                std::visit(
+                    [&](auto const& tokenClass) { handle_lexer_token(next.content, tokenClass); },
+                    next.classification);
+            }
+        }
+
+        template <token_type EndToken>
+        constexpr bool finalize()
+        {
+            auto& unwrapped = unwrap_visitor(m_Visitor);
+
+            if (1u == m_TokenStack.size())
+            {
+                if (auto const* const end = std::get_if<EndToken>(&m_TokenStack.back()))
+                {
+                    unwrapped.begin();
+                    std::invoke(
+                        std::get<EndToken>(m_TokenStack.back()),
+                        m_Visitor);
+                    unwrapped.end();
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        constexpr void emit_unrecognized()
+        {
+            auto& unwrapped = unwrap_visitor(m_Visitor);
+            unwrapped.unrecognized(m_Content);
+        }
 
         static constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, [[maybe_unused]] lexing::end const& end)
         {

@@ -616,25 +616,6 @@ namespace mimicpp::printing::type::parsing::token
             unwrapped.end_function();
         }
     };
-
-    class End
-    {
-    public:
-        using State = std::variant<Type, Function>;
-        State state{};
-
-        template <parser_visitor Visitor>
-        constexpr void operator()(Visitor& visitor) const
-        {
-            auto& unwrapped = unwrap_visitor(visitor);
-
-            unwrapped.begin();
-            std::visit(
-                [&](auto const& s) { std::invoke(s, unwrapped); },
-                state);
-            unwrapped.end();
-        }
-    };
 }
 
 namespace mimicpp::printing::type::parsing
@@ -663,7 +644,7 @@ namespace mimicpp::printing::type::parsing
         token::FunctionPtr,
         token::Specs,
         token::Type,
-        token::End>;
+        token::Function>;
     using TokenStack = std::vector<Token>;
 
     template <typename T>
