@@ -1046,7 +1046,43 @@ TEST_CASE(
         parser.parse_type();
     }
 
-    SECTION("Qualified placeholders are detected.")
+    SECTION("Prefix qualified placeholders are detected.")
+    {
+        StringT const spec = GENERATE("const", "volatile");
+        StringT const input = spec + " " + placeholder;
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.expect_spec_call(spec);
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("Suffix qualified placeholders are detected.")
+    {
+        StringT const spec = GENERATE("const", "volatile", "&", "&&", "*");
+        StringT const input = placeholder + " " + spec;
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(placeholder);
+        sequence += visitor.expect_spec_call(spec);
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("Fully qualified placeholders are detected.")
     {
         StringT const input = "volatile " + placeholder + " const&";
         CAPTURE(input);
@@ -1950,6 +1986,61 @@ TEST_CASE(
         sequence += visitor.end.expect_call();
 
         printing::type::parsing::NameParser parser{std::ref(visitor), identifier};
+        parser.parse_type();
+    }
+
+    SECTION("Prefix qualified identifiers.")
+    {
+        StringT const spec = GENERATE("const", "volatile");
+        StringT const input = spec + " " + identifier;
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(identifier);
+        sequence += visitor.expect_spec_call(spec);
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("Suffix qualified identifiers.")
+    {
+        StringT const spec = GENERATE("const", "volatile", "&", "&&", "*");
+        StringT const input = identifier + " " + spec;
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(identifier);
+        sequence += visitor.expect_spec_call(spec);
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("Fully qualified identifiers.")
+    {
+        StringT const input = "volatile " + identifier + " const&";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.add_identifier.expect_call(identifier);
+        sequence += visitor.add_const.expect_call();
+        sequence += visitor.add_volatile.expect_call();
+        sequence += visitor.add_lvalue_ref.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser.parse_type();
     }
 
