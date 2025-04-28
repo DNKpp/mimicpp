@@ -45,7 +45,7 @@ namespace mimicpp::printing::detail::state
                 std::move(out),
                 "#L{}, `",
                 loc.line());
-            out = type::prettify_identifier(std::move(out), loc.function_name());
+            out = type::prettify_function(std::move(out), loc.function_name());
             out = format::format_to(std::move(out), "`");
 
             return out;

@@ -451,7 +451,7 @@ namespace mimicpp::stacktrace::detail
             std::move(out),
             "#L{}, `",
             stacktrace.source_line(index));
-        out = printing::type::prettify_identifier(std::move(out), stacktrace.description(index));
+        out = printing::type::prettify_function(std::move(out), stacktrace.description(index));
         out = format::format_to(std::move(out), "`");
 
         return out;

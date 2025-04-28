@@ -92,7 +92,7 @@ namespace
 }
 
 TEST_CASE(
-    "printing::type::prettify_identifier enhances std::source_location::function_name appearance.",
+    "printing::type::prettify_function enhances std::source_location::function_name appearance.",
     "[print]")
 {
     StringStreamT ss{};
@@ -102,7 +102,7 @@ TEST_CASE(
         constexpr auto loc = std::source_location::current();
         CAPTURE(loc.function_name());
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
@@ -116,7 +116,7 @@ TEST_CASE(
         constexpr auto loc = type_post_processing_lambda_loc();
         CAPTURE(loc.function_name());
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
@@ -139,7 +139,7 @@ TEST_CASE(
         constexpr auto loc = type_post_processing_nested_lambda_loc();
         CAPTURE(loc.function_name());
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
@@ -164,7 +164,7 @@ TEST_CASE(
         constexpr auto loc = loc_fun();
         CAPTURE(loc.function_name());
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
@@ -197,7 +197,7 @@ TEST_CASE(
         constexpr auto loc = obj();
         CAPTURE(loc.function_name());
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
@@ -227,7 +227,7 @@ TEST_CASE(
         constexpr auto loc = obj();
         CAPTURE(loc.function_name());
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
@@ -248,7 +248,7 @@ TEST_CASE(
         constexpr auto loc = loc_anon_lambda_fun();
         CAPTURE(loc.function_name());
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
@@ -274,7 +274,7 @@ TEST_CASE(
         auto const loc = my_template<type_t, int>{}.foo({});
         CAPTURE(loc.function_name());
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
@@ -339,7 +339,7 @@ namespace
 }
 
 TEST_CASE(
-    "printing::type::prettify_identifier enhances Stacktrace::description appearance.",
+    "printing::type::prettify_function enhances Stacktrace::description appearance.",
     "[print]")
 {
     StringStreamT ss{};
@@ -351,7 +351,7 @@ TEST_CASE(
         StringT const name = trace.description(0u);
         CAPTURE(name);
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             name);
 
@@ -367,7 +367,7 @@ TEST_CASE(
         StringT const name = trace.description(0u);
         CAPTURE(name);
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             name);
 
@@ -391,7 +391,7 @@ TEST_CASE(
         StringT const name = trace.description(0u);
         CAPTURE(name);
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             name);
 
@@ -421,7 +421,7 @@ TEST_CASE(
         StringT const name = trace.description(0u);
         CAPTURE(name);
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             name);
 
@@ -456,7 +456,7 @@ TEST_CASE(
         StringT const name = trace.description(0u);
         CAPTURE(name);
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             name);
 
@@ -493,7 +493,7 @@ TEST_CASE(
         StringT const name = trace.description(0u);
         CAPTURE(name);
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             name);
 
@@ -520,7 +520,7 @@ TEST_CASE(
         StringT const name = trace.description(0u);
         CAPTURE(name);
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             name);
 
@@ -547,7 +547,7 @@ TEST_CASE(
         StringT const name = trace.description(0u);
         CAPTURE(name);
 
-        printing::type::prettify_identifier(
+        printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
             name);
 

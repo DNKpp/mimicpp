@@ -43,7 +43,7 @@ namespace mimicpp::printing::type
      * this function simply outputs the provided name without any modifications.
      */
     template <print_iterator OutIter>
-    constexpr OutIter prettify_identifier(OutIter out, StringT name);
+    constexpr OutIter prettify_type(OutIter out, StringT name);
 }
 
 #ifndef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
@@ -782,7 +782,19 @@ namespace mimicpp::printing::type::detail
 namespace mimicpp::printing::type
 {
     template <print_iterator OutIter>
-    constexpr OutIter prettify_identifier(OutIter out, StringT name)
+    constexpr OutIter prettify_type(OutIter out, StringT name)
+    {
+        static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
+
+        PrintVisitor visitor{std::move(out)};
+        parsing::NameParser parser{std::ref(visitor), name};
+        parser.parse_type();
+
+        return visitor.out();
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_function(OutIter out, StringT name)
     {
         name = detail::remove_template_details(std::move(name));
 
@@ -790,7 +802,7 @@ namespace mimicpp::printing::type
 
         PrintVisitor visitor{std::move(out)};
         parsing::NameParser parser{std::ref(visitor), name};
-        parser();
+        parser.parse_function();
 
         return visitor.out();
     }
