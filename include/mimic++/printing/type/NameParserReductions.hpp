@@ -464,29 +464,45 @@ namespace mimicpp::printing::type::parsing
         inline bool try_reduce_as_regular_type(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
-            if (!is_suffix_of<Identifier>(pendingTokens))
+            auto* const identifier = match_suffix<Identifier>(pendingTokens);
+            if (!identifier)
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
+
+            auto* const scopes = match_suffix<ScopeSequence>(pendingTokens);
+            if (scopes)
+            {
+                remove_suffix(pendingTokens, 1u);
+            }
+
+            auto* const prefixSpecs = match_suffix<Specs>(pendingTokens);
+            if (prefixSpecs)
+            {
+                [[maybe_unused]] auto& layers = prefixSpecs->layers;
+                MIMICPP_ASSERT(token::Specs::Refness::none == prefixSpecs->refness && !prefixSpecs->isNoexcept, "Invalid prefix specs.");
+                MIMICPP_ASSERT(1u == layers.size(), "Prefix specs can not have more than one layer.");
+
+                remove_suffix(pendingTokens, 1u);
+            }
+
+            // We do never allow two or more adjacent `Type` tokens, as there is literally no case where this would make sense.
+            if (is_suffix_of<Type>(pendingTokens)
+                || is_suffix_of<FunctionContext>(pendingTokens))
             {
                 return false;
             }
 
-            RegularType newType{
-                .identifier = std::move(std::get<Identifier>(pendingTokens.back()))};
-            remove_suffix(pendingTokens, 1u);
-
-            if (auto* seq = match_suffix<ScopeSequence>(pendingTokens))
+            RegularType newType{.identifier = std::move(*identifier)};
+            if (prefixSpecs)
             {
-                newType.scopes = std::move(*seq);
-                remove_suffix(pendingTokens, 1u);
+                newType.specs = std::move(*prefixSpecs);
             }
 
-            if (auto* prefixSpecs = match_suffix<Specs>(pendingTokens))
+            if (scopes)
             {
-                auto& layers = prefixSpecs->layers;
-                MIMICPP_ASSERT(token::Specs::Refness::none == prefixSpecs->refness && !prefixSpecs->isNoexcept, "Invalid prefix specs.");
-                MIMICPP_ASSERT(1u == layers.size(), "Prefix specs can not have more than one layer.");
-
-                newType.specs = std::move(*prefixSpecs);
-                remove_suffix(pendingTokens, 1u);
+                newType.scopes = std::move(*scopes);
             }
 
             // Ignore something like `class` or `struct` directly in front of a type.
