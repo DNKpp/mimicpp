@@ -157,16 +157,23 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, [[maybe_unused]] lexing::space const& space)
         {
-            // In some cases, a space after an identifier carries semantic meaning.
-            // I.e. consider these two type-names: `void ()` and `foo()`,
-            // where the former is a type returning `void` and the latter is a function named `foo`.
-            // In fact keep all spaces directly before all opening tokens.
-            if (auto const* nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
-                nextOp
-                && util::contains(std::array{openingParens, openingAngle, openingCurly, openingSquare, backtick, singleQuote}, *nextOp))
+            // In certain cases, a space after an identifier has semantic significance.
+            // For example, consider the type names `void ()` and `foo()`:
+            // - `void ()` represents a function type returning `void`.
+            // - `foo()` represents a function named `foo`.
+            // Since reliably identifying all cases where the space is meaningful is very difficult,
+            // we instead focus on safely filtering out cases where we are certain the space has no special meaning.
+            if (!m_TokenStack.empty())
             {
-                token::try_reduce_as_type(m_TokenStack);
-                m_TokenStack.emplace_back(token::Space{});
+                if (auto const& prev = m_TokenStack.back();
+                    !std::holds_alternative<token::ArgSeparator>(prev)
+                    && !std::holds_alternative<token::OpeningBacktick>(prev)
+                    && !std::holds_alternative<token::OpeningParens>(prev)
+                    && !std::holds_alternative<token::OpeningAngle>(prev)
+                    && !std::holds_alternative<token::OperatorKeyword>(prev))
+                {
+                    m_TokenStack.emplace_back(token::Space{});
+                }
             }
         }
 
@@ -416,6 +423,18 @@ namespace mimicpp::printing::type::parsing
             }
             else if (openingParens == token)
             {
+                // Return types are generally separated by a space from function arguments.
+                // Try to reduce to a type, but preserve the space at its original position.
+                // Note: we take special care not to accidentally reduce the actual function identifier.
+                // This is why we specifically check for the presence of the space.
+                if (is_suffix_of<token::Space>(m_TokenStack))
+                {
+                    if (token::try_reduce_as_type(m_TokenStack))
+                    {
+                        m_TokenStack.emplace_back(token::Space{});
+                    }
+                }
+
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::OpeningParens>,
                     content);

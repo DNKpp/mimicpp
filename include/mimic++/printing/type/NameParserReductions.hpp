@@ -261,6 +261,7 @@ namespace mimicpp::printing::type::parsing
         {
             std::span pendingStack{tokenStack};
 
+            ignore_space(pendingStack);
             Specs* funSpecs{};
             if (auto* specs = match_suffix<Specs>(pendingStack))
             {
@@ -268,6 +269,7 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingStack, 1u);
             }
 
+            ignore_space(pendingStack);
             if (auto* funArgs = match_suffix<FunctionArgs>(pendingStack))
             {
                 remove_suffix(pendingStack, 1u);
@@ -507,6 +509,7 @@ namespace mimicpp::printing::type::parsing
         {
             std::span pendingTokens{tokenStack};
 
+            ignore_space(pendingTokens);
             Specs* suffixSpecs{};
             if (auto* specs = match_suffix<Specs>(pendingTokens))
             {
@@ -514,6 +517,7 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
+            ignore_space(pendingTokens);
             if (!is_suffix_of<Identifier>(pendingTokens))
             {
                 return false;
