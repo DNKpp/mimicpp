@@ -253,22 +253,6 @@ namespace mimicpp::printing::type::parsing::token
         constexpr void handle_as_template_args(Visitor& visitor) const;
     };
 
-    class FunctionArgs
-    {
-    public:
-        ArgSequence args{};
-
-        template <parser_visitor Visitor>
-        constexpr void operator()(Visitor& visitor) const
-        {
-            auto& unwrapped = unwrap_visitor(visitor);
-
-            unwrapped.begin_function_args();
-            std::invoke(args, unwrapped);
-            unwrapped.end_function_args();
-        }
-    };
-
     class Identifier
     {
     public:
@@ -351,7 +335,7 @@ namespace mimicpp::printing::type::parsing::token
     class FunctionContext
     {
     public:
-        FunctionArgs args{};
+        ArgSequence args{};
         Specs specs{};
 
         template <parser_visitor Visitor>
@@ -359,7 +343,9 @@ namespace mimicpp::printing::type::parsing::token
         {
             auto& unwrapped = unwrap_visitor(visitor);
 
+            unwrapped.begin_function_args();
             std::invoke(args, unwrapped);
+            unwrapped.end_function_args();
             std::invoke(specs, unwrapped);
         }
     };
@@ -661,7 +647,6 @@ namespace mimicpp::printing::type::parsing
         token::FunctionIdentifier,
         token::ScopeSequence,
         token::ArgSequence,
-        token::FunctionArgs,
         token::FunctionContext,
         token::FunctionPtr,
         token::Specs,

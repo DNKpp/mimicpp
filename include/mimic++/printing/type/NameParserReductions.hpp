@@ -209,7 +209,7 @@ namespace mimicpp::printing::type::parsing
             return true;
         }
 
-        constexpr bool try_reduce_as_function_args(TokenStack& tokenStack)
+        constexpr bool try_reduce_as_function_context(TokenStack& tokenStack)
         {
             std::span pendingTokens{tokenStack};
             if (!is_suffix_of<ClosingParens>(pendingTokens))
@@ -237,53 +237,21 @@ namespace mimicpp::printing::type::parsing
                 return false;
             }
 
-            FunctionArgs funArgs{};
+            FunctionContext funCtx{};
             if (args)
             {
                 // We omit function args with only `void`.
                 if (1u != args->types.size()
                     || !args->types.front().is_void())
                 {
-                    funArgs.args = std::move(*args);
+                    funCtx.args = std::move(*args);
                 }
             }
 
             tokenStack.resize(pendingTokens.size());
-            tokenStack.emplace_back(std::move(funArgs));
+            tokenStack.emplace_back(std::move(funCtx));
 
             return true;
-        }
-
-        constexpr bool try_reduce_as_function_context(TokenStack& tokenStack)
-        {
-            std::span pendingStack{tokenStack};
-
-            Specs* funSpecs{};
-            if (auto* specs = match_suffix<Specs>(pendingStack))
-            {
-                funSpecs = specs;
-                remove_suffix(pendingStack, 1u);
-            }
-
-            if (auto* funArgs = match_suffix<FunctionArgs>(pendingStack))
-            {
-                remove_suffix(pendingStack, 1u);
-
-                FunctionContext funContext{
-                    .args = std::move(*funArgs)};
-
-                if (funSpecs)
-                {
-                    funContext.specs = std::move(*funSpecs);
-                }
-
-                tokenStack.resize(pendingStack.size());
-                tokenStack.emplace_back(std::move(funContext));
-
-                return true;
-            }
-
-            return false;
         }
 
         inline bool try_reduce_as_function_identifier(TokenStack& tokenStack)
@@ -537,8 +505,6 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_type(TokenStack& tokenStack)
         {
-            token::try_reduce_as_function_context(tokenStack);
-
             return try_reduce_as_function_ptr_type(tokenStack)
                 || try_reduce_as_function_type(tokenStack)
                 || try_reduce_as_regular_type(tokenStack);
@@ -615,14 +581,19 @@ namespace mimicpp::printing::type::parsing
                 return std::get<Type>(tokenStack.back()).specs();
             }
 
-            if (auto* specs = match_suffix<Specs>(tokenStack))
-            {
-                return *specs;
-            }
-
             if (auto* const type = match_suffix<Type>(tokenStack))
             {
                 return type->specs();
+            }
+
+            if (auto* const ctx = match_suffix<FunctionContext>(tokenStack))
+            {
+                return ctx->specs;
+            }
+
+            if (auto* specs = match_suffix<Specs>(tokenStack))
+            {
+                return *specs;
             }
 
             // No specs found yet? Assume prefix specs.

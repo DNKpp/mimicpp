@@ -48,7 +48,6 @@ namespace mimicpp::printing::type::parsing
         constexpr void parse_function()
         {
             parse();
-            token::try_reduce_as_function_context(m_TokenStack);
 
             if (m_HasConversionOperator)
             {
@@ -331,8 +330,7 @@ namespace mimicpp::printing::type::parsing
         {
             if (scopeResolution == token)
             {
-                token::try_reduce_as_function_context(m_TokenStack)
-                    && token::try_reduce_as_function_identifier(m_TokenStack);
+                token::try_reduce_as_function_identifier(m_TokenStack);
 
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::ScopeResolution>,
@@ -406,7 +404,7 @@ namespace mimicpp::printing::type::parsing
                     std::in_place_type<token::ClosingParens>,
                     content);
 
-                token::try_reduce_as_function_args(m_TokenStack)
+                token::try_reduce_as_function_context(m_TokenStack)
                     || token::try_reduce_as_function_ptr(m_TokenStack)
                     || token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningParens, token::ClosingParens>(m_TokenStack);
             }
@@ -431,8 +429,6 @@ namespace mimicpp::printing::type::parsing
             }
             else if (singleQuote == token)
             {
-                token::try_reduce_as_function_context(m_TokenStack);
-
                 if (token::try_reduce_as_function_identifier(m_TokenStack))
                 {
                     unwrap_msvc_like_function();
