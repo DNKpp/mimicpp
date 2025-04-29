@@ -524,6 +524,16 @@ namespace mimicpp::printing::type::parsing
             }
             remove_suffix(pendingTokens, 1u);
 
+            // There may be the case, where we already reduced a Type but additionally got something like `__ptr64`.
+            // E.g. `int& __ptr64`. Remove that trailing identifier and treat it as a successful reduction.
+            if (identifier->is_reserved()
+                && is_suffix_of<Type>(pendingTokens))
+            {
+                tokenStack.pop_back();
+
+                return true;
+            }
+
             auto* const scopes = match_suffix<ScopeSequence>(pendingTokens);
             if (scopes)
             {
@@ -635,11 +645,17 @@ namespace mimicpp::printing::type::parsing
         [[nodiscard]]
         constexpr Specs& get_or_emplace_specs(TokenStack& tokenStack)
         {
-            // We probably got something like `type&` and need to reduce that identifier to an actual `Type` token.
-            if (is_suffix_of<Identifier>(tokenStack)
-                && try_reduce_as_type(tokenStack))
+            // Maybe wo got something like `type&` and need to reduce that identifier to an actual `Type` token.
+            if (is_suffix_of<Identifier>(tokenStack))
             {
-                return std::get<Type>(tokenStack.back()).specs();
+                if (try_reduce_as_type(tokenStack))
+                {
+                    return std::get<Type>(tokenStack.back()).specs();
+                }
+
+                // The reduction failed, so it's something like `__ptr64` and should be ignored.
+                MIMICPP_ASSERT(std::get<Identifier>(tokenStack.back()).is_reserved(), "Unexpected token.");
+                tokenStack.pop_back();
             }
 
             if (auto* const type = match_suffix<Type>(tokenStack))
