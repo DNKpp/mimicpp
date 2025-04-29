@@ -276,6 +276,9 @@ namespace mimicpp::printing::type::parsing
         {
             std::span pendingStack{tokenStack};
 
+            // There may be a space, when the function is wrapped inside single-quotes.
+            ignore_space(pendingStack);
+
             // Ignore something like `__ptr64` on msvc.
             ignore_reserved_identifier(pendingStack);
 

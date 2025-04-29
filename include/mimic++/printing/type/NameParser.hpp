@@ -167,7 +167,7 @@ namespace mimicpp::printing::type::parsing
             // - `foo()` represents a function named `foo`.
             if (auto const* const nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
                 nextOp
-                && util::contains(std::array{openingAngle, openingParens}, *nextOp))
+                && util::contains(std::array{openingAngle, openingParens, openingCurly, singleQuote, backtick}, *nextOp))
             {
                 m_TokenStack.emplace_back(token::Space{});
             }
@@ -500,6 +500,12 @@ namespace mimicpp::printing::type::parsing
 
             MIMICPP_ASSERT(match_suffix<token::OpeningBacktick>(m_TokenStack), "Invalid state.");
             m_TokenStack.pop_back();
+
+            // As we gather spaces in front of backticks, there may be a space here, too.
+            if (is_suffix_of<token::Space>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
+            }
 
             if (auto* targetScopes = match_suffix<token::ScopeSequence>(m_TokenStack))
             {
