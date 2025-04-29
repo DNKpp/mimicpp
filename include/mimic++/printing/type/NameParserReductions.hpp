@@ -94,6 +94,14 @@ namespace mimicpp::printing::type::parsing
         tokenStack = tokenStack.first(tokenStack.size() - count);
     }
 
+    constexpr void ignore_space(std::span<Token>& tokenStack) noexcept
+    {
+        if (is_suffix_of<token::Space>(tokenStack))
+        {
+            remove_suffix(tokenStack, 1u);
+        }
+    }
+
     constexpr void ignore_reserved_identifier(std::span<Token>& tokenStack) noexcept
     {
         if (auto const* const id = match_suffix<token::Identifier>(tokenStack);
@@ -293,6 +301,7 @@ namespace mimicpp::printing::type::parsing
         constexpr bool is_identifier_prefix(std::span<Token const> const tokenStack) noexcept
         {
             return tokenStack.empty()
+                || is_suffix_of<Space>(tokenStack)
                 || is_suffix_of<ScopeSequence>(tokenStack)
                 || is_suffix_of<Specs>(tokenStack)
                 || is_suffix_of<Type>(tokenStack)
@@ -323,8 +332,46 @@ namespace mimicpp::printing::type::parsing
             StringViewT const content{opening.content.data(), contentLength};
 
             pendingTokens = std::span{pendingTokens.begin(), openingIter.base() - 1};
-            tokenStack.resize(pendingTokens.size());
-            tokenStack.emplace_back(Identifier{.content = content});
+
+            // There may be a space in front of the placeholder, which isn't necessary.
+            ignore_space(pendingTokens);
+
+            tokenStack.resize(pendingTokens.size() + 1u);
+            tokenStack.back() = Identifier{.content = content};
+
+            return true;
+        }
+
+        inline bool try_reduce_as_function_type(TokenStack& tokenStack)
+        {
+            std::span pendingTokens{tokenStack};
+
+            // The return type is always delimited by space from the arg-list.
+            std::optional suffix = match_suffix<Space, FunctionContext>(pendingTokens);
+            if (!suffix)
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 2u);
+
+            // Ignore call-convention.
+            ignore_reserved_identifier(pendingTokens);
+
+            auto* const returnType = match_suffix<Type>(pendingTokens);
+            if (!returnType)
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
+
+            auto& [space, ctx] = *suffix;
+            FunctionType funType{
+                .returnType = std::make_shared<Type>(std::move(*returnType)),
+                .context = std::move(ctx)};
+
+            tokenStack.resize(
+                std::exchange(pendingTokens, {}).size() + 1u);
+            tokenStack.back().emplace<Type>(std::move(funType));
 
             return true;
         }
@@ -399,38 +446,6 @@ namespace mimicpp::printing::type::parsing
             return true;
         }
 
-        inline bool try_reduce_as_function_type(TokenStack& tokenStack)
-        {
-            std::span pendingTokens{tokenStack};
-
-            auto* const funCtx = match_suffix<FunctionContext>(pendingTokens);
-            if (!funCtx)
-            {
-                return false;
-            }
-            remove_suffix(pendingTokens, 1u);
-
-            // Ignore call-convention.
-            ignore_reserved_identifier(pendingTokens);
-
-            auto* const returnType = match_suffix<Type>(pendingTokens);
-            if (!returnType)
-            {
-                return false;
-            }
-            remove_suffix(pendingTokens, 1u);
-
-            FunctionType funType{
-                .returnType = std::make_shared<Type>(std::move(*returnType)),
-                .context = std::move(*funCtx)};
-
-            tokenStack.resize(
-                std::exchange(pendingTokens, {}).size() + 1u);
-            tokenStack.back().emplace<Type>(std::move(funType));
-
-            return true;
-        }
-
         namespace detail
         {
             void handled_nested_function_ptr(TokenStack& tokenStack, FunctionPtr::NestedInfo info);
@@ -438,9 +453,10 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_function_ptr_type(TokenStack& tokenStack)
         {
-            if (std::optional suffix = match_suffix<Type, FunctionPtr, FunctionContext>(tokenStack))
+            // The return type is always delimited by space from the spec part.
+            if (std::optional suffix = match_suffix<Type, Space, FunctionPtr, FunctionContext>(tokenStack))
             {
-                auto& [returnType, ptr, ctx] = *suffix;
+                auto& [returnType, space, ptr, ctx] = *suffix;
 
                 std::optional nestedInfo = std::move(ptr.nested);
                 FunctionPtrType ptrType{
@@ -449,7 +465,7 @@ namespace mimicpp::printing::type::parsing
                     .specs = std::move(ptr.specs),
                     .context = std::move(ctx)};
 
-                tokenStack.resize(tokenStack.size() - 2u);
+                tokenStack.resize(tokenStack.size() - 3u);
                 tokenStack.back().emplace<Type>(std::move(ptrType));
 
                 // We got something like `ret (*(outer-args))(args)` or `ret (*(*)(outer-args))(args)`, where the currently
@@ -471,6 +487,9 @@ namespace mimicpp::printing::type::parsing
             inline void handled_nested_function_ptr(TokenStack& tokenStack, FunctionPtr::NestedInfo info)
             {
                 auto& [ptr, ctx] = info;
+
+                // We need to insert an extra space, to follow the general syntax constraints.
+                tokenStack.emplace_back(Space{});
 
                 bool const isFunPtr{ptr};
                 if (ptr)

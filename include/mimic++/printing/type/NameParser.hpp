@@ -156,13 +156,20 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, [[maybe_unused]] lexing::space const& space)
         {
+            if (is_suffix_of<token::Identifier>(m_TokenStack))
+            {
+                token::try_reduce_as_type(m_TokenStack);
+            }
+
             // In certain cases, a space after an identifier has semantic significance.
             // For example, consider the type names `void ()` and `foo()`:
             // - `void ()` represents a function type returning `void`.
             // - `foo()` represents a function named `foo`.
-            if (is_suffix_of<token::Identifier>(m_TokenStack))
+            if (auto const* const nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                nextOp
+                && util::contains(std::array{openingAngle, openingParens}, *nextOp))
             {
-                token::try_reduce_as_type(m_TokenStack);
+                m_TokenStack.emplace_back(token::Space{});
             }
         }
 
