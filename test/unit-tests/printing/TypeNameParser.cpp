@@ -1795,12 +1795,13 @@ TEST_CASE(
     ScopedSequence sequence{};
 
     sequence += visitor.begin.expect_call();
-    sequence += visitor.begin_type.expect_call();
 
     SECTION("When function local type is given.")
     {
         StringT const input{"`void foo()" + spacing + "'::my_type"};
         CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
 
         sequence += visitor.begin_scope.expect_call();
         {
@@ -1835,6 +1836,8 @@ TEST_CASE(
         StringT const input{
             "`ret2 `ret1 `ret0 inner::fn0(int const)'::`my_placeholder'::middle::fn1()const'::outer::fn2()const &" + spacing + "'::my_type"};
         CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
 
         sequence += visitor.begin_scope.expect_call();
         sequence += visitor.add_identifier.expect_call("inner");
@@ -1933,6 +1936,8 @@ TEST_CASE(
         StringT const input = StringT{typeClass} + " `" + StringT{visibility} + ": void __cdecl foo() __ptr64" + spacing + "'::my_type";
         CAPTURE(input);
 
+        sequence += visitor.begin_type.expect_call();
+
         sequence += visitor.begin_scope.expect_call();
         {
             sequence += visitor.begin_function.expect_call();
@@ -1959,6 +1964,47 @@ TEST_CASE(
 
         printing::type::parsing::NameParser parser{std::ref(visitor), input};
         parser.parse_type();
+    }
+
+    SECTION("When decorated lambda is given.")
+    {
+        StringT const input = "struct std::source_location __cdecl <lambda_11>::operator ()(void) const";
+        CAPTURE(input);
+
+        sequence += visitor.begin_function.expect_call();
+
+        {
+            sequence += visitor.begin_return_type.expect_call();
+            sequence += visitor.begin_type.expect_call();
+
+            sequence += visitor.begin_scope.expect_call();
+            sequence += visitor.add_identifier.expect_call("std");
+            sequence += visitor.end_scope.expect_call();
+
+            sequence += visitor.add_identifier.expect_call("source_location");
+
+            sequence += visitor.end_type.expect_call();
+            sequence += visitor.end_return_type.expect_call();
+        }
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("<lambda_11>");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.begin_operator_identifier.expect_call();
+        sequence += visitor.add_identifier.expect_call("()");
+        sequence += visitor.end_operator_identifier.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.add_const.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_function();
     }
 }
 
