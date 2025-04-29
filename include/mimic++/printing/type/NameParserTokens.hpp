@@ -275,10 +275,19 @@ namespace mimicpp::printing::type::parsing::token
         [[nodiscard]]
         constexpr bool is_void() const noexcept
         {
-            auto const* id = std::get_if<StringViewT>(&content);
+            auto const* const id = std::get_if<StringViewT>(&content);
 
             return id
                 && "void" == *id;
+        }
+
+        [[nodiscard]]
+        constexpr bool is_reserved() const noexcept
+        {
+            auto const* const id = std::get_if<StringViewT>(&content);
+
+            return id
+                && id->starts_with("__");
         }
 
         template <parser_visitor Visitor>

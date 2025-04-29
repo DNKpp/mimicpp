@@ -477,9 +477,16 @@ namespace mimicpp::printing::type::parsing
                 m_TokenStack.pop_back();
             }
 
+            // Ignore call-convention.
+            if (auto const* const id = match_suffix<token::Identifier>(m_TokenStack);
+                id
+                && id->is_reserved())
+            {
+                m_TokenStack.pop_back();
+            }
+
             // Ignore return-types.
-            if (is_suffix_of<token::Type>(m_TokenStack)
-                || token::try_reduce_as_type(m_TokenStack))
+            if (is_suffix_of<token::Type>(m_TokenStack))
             {
                 m_TokenStack.pop_back();
             }

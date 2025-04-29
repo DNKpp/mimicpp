@@ -94,6 +94,16 @@ namespace mimicpp::printing::type::parsing
         tokenStack = tokenStack.first(tokenStack.size() - count);
     }
 
+    constexpr void ignore_reserved_identifier(std::span<Token>& tokenStack) noexcept
+    {
+        if (auto const* const id = match_suffix<token::Identifier>(tokenStack);
+            id
+            && id->is_reserved())
+        {
+            remove_suffix(tokenStack, 1u);
+        }
+    }
+
     namespace token
     {
         bool try_reduce_as_type(TokenStack& tokenStack);
@@ -257,6 +267,10 @@ namespace mimicpp::printing::type::parsing
         inline bool try_reduce_as_function_identifier(TokenStack& tokenStack)
         {
             std::span pendingStack{tokenStack};
+
+            // Ignore something like `__ptr64` on msvc.
+            ignore_reserved_identifier(pendingStack);
+
             if (std::optional suffix = match_suffix<Identifier, FunctionContext>(pendingStack))
             {
                 remove_suffix(pendingStack, 2u);
@@ -351,6 +365,9 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
+            // Ignore call-convention.
+            ignore_reserved_identifier(pendingTokens);
+
             if (!is_suffix_of<OpeningParens>(pendingTokens))
             {
                 return false;
@@ -384,21 +401,34 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_function_type(TokenStack& tokenStack)
         {
-            // The space is required, because the return type will always be spaced away from the parens.
-            if (std::optional suffix = match_suffix<Type, FunctionContext>(tokenStack))
+            std::span pendingTokens{tokenStack};
+
+            auto* const funCtx = match_suffix<FunctionContext>(pendingTokens);
+            if (!funCtx)
             {
-                auto& [returnType, funCtx] = *suffix;
-                FunctionType funType{
-                    .returnType = std::make_shared<Type>(std::move(returnType)),
-                    .context = std::move(funCtx)};
-
-                tokenStack.pop_back();
-                tokenStack.back().emplace<Type>(std::move(funType));
-
-                return true;
+                return false;
             }
+            remove_suffix(pendingTokens, 1u);
 
-            return false;
+            // Ignore call-convention.
+            ignore_reserved_identifier(pendingTokens);
+
+            auto* const returnType = match_suffix<Type>(pendingTokens);
+            if (!returnType)
+            {
+                return false;
+            }
+            remove_suffix(pendingTokens, 1u);
+
+            FunctionType funType{
+                .returnType = std::make_shared<Type>(std::move(*returnType)),
+                .context = std::move(*funCtx)};
+
+            tokenStack.resize(
+                std::exchange(pendingTokens, {}).size() + 1u);
+            tokenStack.back().emplace<Type>(std::move(funType));
+
+            return true;
         }
 
         namespace detail
@@ -541,6 +571,9 @@ namespace mimicpp::printing::type::parsing
                     remove_suffix(pendingTokens, 1u);
                 }
 
+                // Ignore call-convention.
+                ignore_reserved_identifier(pendingTokens);
+
                 if (auto* returnType = match_suffix<Type>(pendingTokens))
                 {
                     function.returnType = std::make_shared<Type>(std::move(*returnType));
@@ -549,16 +582,6 @@ namespace mimicpp::printing::type::parsing
 
                 tokenStack.resize(
                     std::exchange(pendingTokens, {}).size());
-
-                // There may be something similar to a return type in front, which hasn't been reduced yet.
-                if (!function.returnType
-                    && try_reduce_as_type(tokenStack))
-                {
-                    function.returnType = std::make_shared<Type>(
-                        std::get<Type>(std::move(tokenStack.back())));
-                    tokenStack.pop_back();
-                }
-
                 tokenStack.emplace_back(std::move(function));
 
                 return true;
@@ -590,10 +613,9 @@ namespace mimicpp::printing::type::parsing
         constexpr Specs& get_or_emplace_specs(TokenStack& tokenStack)
         {
             // We probably got something like `type&` and need to reduce that identifier to an actual `Type` token.
-            if (is_suffix_of<Identifier>(tokenStack))
+            if (is_suffix_of<Identifier>(tokenStack)
+                && try_reduce_as_type(tokenStack))
             {
-                try_reduce_as_type(tokenStack);
-
                 return std::get<Type>(tokenStack.back()).specs();
             }
 
