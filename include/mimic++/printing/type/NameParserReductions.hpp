@@ -305,6 +305,7 @@ namespace mimicpp::printing::type::parsing
                 || is_suffix_of<ScopeSequence>(tokenStack)
                 || is_suffix_of<Specs>(tokenStack)
                 || is_suffix_of<Type>(tokenStack)
+                || is_suffix_of<TypeContext>(tokenStack)
                 || is_suffix_of<OpeningAngle>(tokenStack)
                 || is_suffix_of<OpeningParens>(tokenStack)
                 || is_suffix_of<OpeningBacktick>(tokenStack);
