@@ -51,7 +51,15 @@ namespace mimicpp::printing::type
 namespace mimicpp::printing::type
 {
     template <print_iterator OutIter>
-    constexpr OutIter prettify_identifier(OutIter out, StringT name)
+    constexpr OutIter prettify_type(OutIter out, StringT name)
+    {
+        out = std::ranges::copy(name, std::move(out)).out;
+
+        return out;
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_function(OutIter out, StringT name)
     {
         out = std::ranges::copy(name, std::move(out)).out;
 
