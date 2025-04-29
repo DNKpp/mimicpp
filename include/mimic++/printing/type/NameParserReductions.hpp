@@ -350,13 +350,29 @@ namespace mimicpp::printing::type::parsing
         {
             std::span pendingTokens{tokenStack};
 
-            // The return type is always delimited by space from the arg-list.
-            std::optional suffix = match_suffix<Space, FunctionContext>(pendingTokens);
-            if (!suffix)
+            auto* const ctx = match_suffix<FunctionContext>(pendingTokens);
+            if (!ctx)
             {
                 return false;
             }
-            remove_suffix(pendingTokens, 2u);
+            remove_suffix(pendingTokens, 1u);
+
+            // The return type is always delimited by space from the arg-list.
+            if (!is_suffix_of<Space>(pendingTokens))
+            {
+                // Well, of course there is an exception to the "always".
+                // There is that case on msvc, where it does not add that space between the function-args and the call-convention.
+                // E.g. `void __cdecl()`.
+                // But, as we can be pretty sure from the context, that the identifier can never be the function name, accept it
+                // as valid delimiter.
+                if (auto const* const id = match_suffix<Identifier>(pendingTokens);
+                    !id
+                    || !id->is_reserved())
+                {
+                    return false;
+                }
+            }
+            remove_suffix(pendingTokens, 1u);
 
             // Ignore call-convention.
             ignore_reserved_identifier(pendingTokens);
@@ -368,10 +384,9 @@ namespace mimicpp::printing::type::parsing
             }
             remove_suffix(pendingTokens, 1u);
 
-            auto& [space, ctx] = *suffix;
             FunctionType funType{
                 .returnType = std::make_shared<Type>(std::move(*returnType)),
-                .context = std::move(ctx)};
+                .context = std::move(*ctx)};
 
             tokenStack.resize(
                 std::exchange(pendingTokens, {}).size() + 1u);
@@ -416,8 +431,16 @@ namespace mimicpp::printing::type::parsing
                 remove_suffix(pendingTokens, 1u);
             }
 
-            // Ignore call-convention.
-            ignore_reserved_identifier(pendingTokens);
+            // Ignore call-convention, which is already reduced to a type.
+            if (auto const* const type = match_suffix<Type>(pendingTokens))
+            {
+                if (auto const* const id = std::get_if<RegularType>(&type->state);
+                    id
+                    && id->identifier.is_reserved())
+                {
+                    remove_suffix(pendingTokens, 1u);
+                }
+            }
 
             if (!is_suffix_of<OpeningParens>(pendingTokens))
             {
@@ -457,9 +480,15 @@ namespace mimicpp::printing::type::parsing
 
         inline bool try_reduce_as_function_ptr_type(TokenStack& tokenStack)
         {
+            std::span pendingTokens{tokenStack};
+
+            // Ignore something like `__ptr64`.
+            ignore_reserved_identifier(pendingTokens);
+
             // The return type is always delimited by space from the spec part.
-            if (std::optional suffix = match_suffix<Type, Space, FunctionPtr, FunctionContext>(tokenStack))
+            if (std::optional suffix = match_suffix<Type, Space, FunctionPtr, FunctionContext>(pendingTokens))
             {
+                remove_suffix(pendingTokens, 4u);
                 auto& [returnType, space, ptr, ctx] = *suffix;
 
                 std::optional nestedInfo = std::move(ptr.nested);
@@ -469,7 +498,8 @@ namespace mimicpp::printing::type::parsing
                     .specs = std::move(ptr.specs),
                     .context = std::move(ctx)};
 
-                tokenStack.resize(tokenStack.size() - 3u);
+                tokenStack.resize(
+                    std::exchange(pendingTokens, {}).size() + 1u);
                 tokenStack.back().emplace<Type>(std::move(ptrType));
 
                 // We got something like `ret (*(outer-args))(args)` or `ret (*(*)(outer-args))(args)`, where the currently
