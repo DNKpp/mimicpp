@@ -401,11 +401,11 @@ namespace mimicpp::printing::type::parsing
             }
             else if (closingParens == token)
             {
-                bool const isNextOpeningParens = std::invoke(
-                    [this] {
-                        auto const* const nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
-                        return nextOp && openingParens == *nextOp;
-                    });
+                bool isNextOpeningParens{false};
+                if (auto const* const nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification))
+                {
+                    isNextOpeningParens = openingParens == *nextOp;
+                }
 
                 // There can be no `(` directly after function-args, thus do not perform any reduction if such a token is found.
                 // This helps when function-ptrs are given, so that we do not accidentally reduce something like `(__cdecl*)` as function-args.
