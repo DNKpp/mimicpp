@@ -1798,7 +1798,7 @@ TEST_CASE(
 
     SECTION("When scoped identifier is given, it's unwrapped.")
     {
-        StringT const input = spacing + "`foo::bar'";
+        StringT const input = "`foo::bar'";
 
         sequence += visitor.begin_type.expect_call();
 
