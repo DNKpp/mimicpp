@@ -1787,7 +1787,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "parsing::NameParser handles msvc-like function scopes.",
+    "parsing::NameParser handles msvc-like wrapped scopes.",
     "[print][print::type]")
 {
     StringT const spacing = GENERATE("", " ");
@@ -1795,6 +1795,25 @@ TEST_CASE(
     ScopedSequence sequence{};
 
     sequence += visitor.begin.expect_call();
+
+    SECTION("When scoped identifier is given, it's unwrapped.")
+    {
+        StringT const input = spacing + "`foo::bar'";
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_scope.expect_call();
+
+        sequence += visitor.add_identifier.expect_call("bar");
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
 
     SECTION("When function local type is given.")
     {
