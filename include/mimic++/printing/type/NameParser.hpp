@@ -401,19 +401,34 @@ namespace mimicpp::printing::type::parsing
             }
             else if (closingParens == token)
             {
-                if (is_suffix_of<token::Type>(m_TokenStack)
-                    || token::try_reduce_as_type(m_TokenStack))
+                bool const isNextOpeningParens = std::invoke(
+                    [this] {
+                        auto const* const nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                        return nextOp && openingParens == *nextOp;
+                    });
+
+                // There can be no `(` directly after function-args, thus do not perform any reduction if such a token is found.
+                // This helps when function-ptrs are given, so that we do not accidentally reduce something like `(__cdecl*)` as function-args.
+                if (!isNextOpeningParens)
                 {
-                    token::try_reduce_as_arg_sequence(m_TokenStack);
+                    if (is_suffix_of<token::Type>(m_TokenStack)
+                        || token::try_reduce_as_type(m_TokenStack))
+                    {
+                        token::try_reduce_as_arg_sequence(m_TokenStack);
+                    }
                 }
 
                 m_TokenStack.emplace_back(
                     std::in_place_type<token::ClosingParens>,
                     content);
 
-                token::try_reduce_as_function_context(m_TokenStack)
-                    || token::try_reduce_as_function_ptr(m_TokenStack)
-                    || token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningParens, token::ClosingParens>(m_TokenStack);
+                if (bool const result = isNextOpeningParens
+                     ? token::try_reduce_as_function_ptr(m_TokenStack)
+                     : token::try_reduce_as_function_context(m_TokenStack);
+                     !result)
+                {
+                    token::try_reduce_as_placeholder_identifier_wrapped<token::OpeningParens, token::ClosingParens>(m_TokenStack);
+                }
             }
             else if (openingCurly == token)
             {

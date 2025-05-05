@@ -418,28 +418,49 @@ namespace mimicpp::printing::type::parsing
             }
 
             auto* specs = match_suffix<Specs>(pendingTokens);
-            if (!specs
-                || !specs->has_ptr())
-            {
-                return false;
-            }
-            remove_suffix(pendingTokens, 1u);
-
-            auto* scopeSeq = match_suffix<ScopeSequence>(pendingTokens);
-            if (match_suffix<ScopeSequence>(pendingTokens))
+            ScopeSequence* scopeSeq{};
+            if (specs && specs->has_ptr())
             {
                 remove_suffix(pendingTokens, 1u);
-            }
 
-            // Ignore call-convention, which is already reduced to a type.
-            if (auto const* const type = match_suffix<Type>(pendingTokens))
-            {
-                if (auto const* const id = std::get_if<RegularType>(&type->state);
-                    id
-                    && id->identifier.is_reserved())
+                if (auto* const seq = match_suffix<ScopeSequence>(pendingTokens))
                 {
+                    scopeSeq = seq;
                     remove_suffix(pendingTokens, 1u);
                 }
+
+                // Ignore call-convention, which may have already been reduced to a type.
+                if (auto const* const type = match_suffix<Type>(pendingTokens))
+                {
+                    if (auto const* const regular = std::get_if<RegularType>(&type->state);
+                        regular
+                        && regular->identifier.is_reserved())
+                    {
+                        remove_suffix(pendingTokens, 1u);
+                    }
+                }
+            }
+            else
+            {
+                RegularType* regular{};
+                if (auto* const type = match_suffix<Type>(pendingTokens))
+                {
+                    regular = std::get_if<RegularType>(&type->state);
+                }
+
+                // Unfortunately msvc produces something like `(__cdecl*)` for the function-ptr part.
+                // There is no way to reliably detect whether denotes a function-ptr or argument-list.
+                // So we have to make sure, that the reduction is only called in the right places.
+                // Then we can extract the info from that type.
+                if (!regular
+                    || !regular->identifier.is_reserved()
+                    || !regular->specs.has_ptr())
+                {
+                    return false;
+                }
+
+                specs = &regular->specs;
+                remove_suffix(pendingTokens, 1u);
             }
 
             if (!is_suffix_of<OpeningParens>(pendingTokens))
