@@ -887,6 +887,37 @@ TEST_CASE(
                 + "my_type"
                   R"(\))"));
     }
+
+    SECTION("When function-ptr is returned.")
+    {
+        using ret_t = void (*)();
+        StringT const rawName = printing::type::type_name<ret_t()>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Equals("void (*)() ()"));
+    }
+
+    SECTION("When function-ptr, which returns a function-ptr, is returned.")
+    {
+        using ret1_t = void (*)();
+        using ret2_t = ret1_t (*)();
+        StringT const rawName = printing::type::type_name<ret2_t()>();
+        CAPTURE(rawName);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Equals("void (*)() (*)() ()"));
+    }
 }
 
 namespace
