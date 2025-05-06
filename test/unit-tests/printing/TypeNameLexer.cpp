@@ -98,6 +98,25 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "printing::type::lexing::is_digit determines, whether the given character is a digit.",
+    "[print][print::type]")
+{
+    SECTION("When a digit is given, returns true.")
+    {
+        char const input = GENERATE('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+
+        CHECK(printing::type::lexing::is_digit(input));
+    }
+
+    SECTION("When no space is given, returns false.")
+    {
+        char const input = GENERATE('a', 'B', '_', '-', ' ');
+
+        CHECK(!printing::type::lexing::is_digit(input));
+    }
+}
+
+TEST_CASE(
     "printing::type::lexing::NameLexer extracts tokens from given input.",
     "[print][print::type]")
 {
