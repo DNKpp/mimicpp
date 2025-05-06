@@ -1736,6 +1736,73 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "parsing::NameParser handles decorated function-ptrs.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+
+    SECTION("When function-ptr is given.")
+    {
+        StringT const input = "void (__cdecl*)()";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("void");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.begin_function_ptr.expect_call();
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.end_function_ptr.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("When member function-ptr is given.")
+    {
+        StringT const input = "void (__cdecl foo::*)()";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("void");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.begin_function_ptr.expect_call();
+        sequence += visitor.begin_scope.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+        sequence += visitor.end_scope.expect_call();
+        sequence += visitor.add_ptr.expect_call();
+        sequence += visitor.end_function_ptr.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+}
+
+TEST_CASE(
     "parsing::NameParser handles arbitrarily scoped identifiers.",
     "[print][print::type]")
 {
