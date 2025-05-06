@@ -417,6 +417,8 @@ namespace mimicpp::printing::type::parsing
                 }
             }
 
+            ignore_space(pendingTokens);
+
             auto* specs = match_suffix<Specs>(pendingTokens);
             ScopeSequence* scopeSeq{};
             if (specs && specs->has_ptr())

@@ -840,7 +840,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "printing::type::prettify_type type-names enhances function-pointer type-names appearance.",
+    "printing::type::prettify_type enhances function-pointer type-names appearance.",
     "[print]")
 {
     StringStreamT ss{};
