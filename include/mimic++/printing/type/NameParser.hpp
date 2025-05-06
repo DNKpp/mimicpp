@@ -116,6 +116,7 @@ namespace mimicpp::printing::type::parsing
             lexing::keyword{"double"},
             lexing::keyword{"float"},
             lexing::keyword{"int"},
+            lexing::keyword{"__int64"},
             lexing::keyword{"long"},
             lexing::keyword{"short"},
             lexing::keyword{"signed"},
@@ -177,16 +178,23 @@ namespace mimicpp::printing::type::parsing
             util::unreachable();
         }
 
+        [[nodiscard]]
+        constexpr bool merge_with_next_token() const noexcept
+        {
+            auto const* const keyword = peek_if<lexing::keyword>();
+
+            return keyword
+                && util::contains(typeKeywordCollection, *keyword);
+        }
+
         constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, [[maybe_unused]] lexing::space const& space)
         {
             if (auto* const id = match_suffix<token::Identifier>(m_TokenStack))
             {
                 // See, whether we need to merge the current builtin identifier with another one.
                 // E.g. `long long` or `unsigned int`.
-                if (auto const* const nextKeyword = peek_if<lexing::keyword>();
-                    nextKeyword
-                    && id->is_builtin()
-                    && util::contains(typeKeywordCollection, *nextKeyword))
+                if (id->is_builtin()
+                    && merge_with_next_token())
                 {
                     auto& curContent = std::get<StringViewT>(id->content);
                     auto const [nextContent, _] = m_Lexer.next();

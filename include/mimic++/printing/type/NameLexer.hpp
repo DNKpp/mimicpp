@@ -40,7 +40,8 @@ namespace mimicpp::printing::type::lexing
         constexpr std::array specKeywords = std::to_array<StringViewT>({"const", "constexpr", "volatile", "noexcept", "static"});
         constexpr std::array contextKeywords = std::to_array<StringViewT>({"operator", "struct", "class", "enum"});
         constexpr std::array typeKeywords = std::to_array<StringViewT>(
-            {"auto", "void", "bool", "char", "char8_t", "char16_t", "char32_t", "wchar_t", "double", "float", "int", "long", "short", "signed", "unsigned"});
+            // The `__int64` keyword is used by msvc as an alias for `long long`.
+            {"auto", "void", "bool", "char", "char8_t", "char16_t", "char32_t", "wchar_t", "double", "float", "int", "long", "__int64", "short", "signed", "unsigned"});
         constexpr std::array otherKeywords = std::to_array<StringViewT>({"new", "delete", "co_await"});
         constexpr std::array digraphs = std::to_array<StringViewT>({"and", "or", "xor", "not", "bitand", "bitor", "compl", "and_eq", "or_eq", "xor_eq", "not_eq"});
 
