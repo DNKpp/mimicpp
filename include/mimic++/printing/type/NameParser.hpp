@@ -109,6 +109,12 @@ namespace mimicpp::printing::type::parsing
 
         std::vector<Token> m_TokenStack{};
 
+        template <typename LexerTokenClass>
+        constexpr LexerTokenClass const* peek_if() const noexcept
+        {
+            return std::get_if<LexerTokenClass>(&m_Lexer.peek().classification);
+        }
+
         constexpr void parse()
         {
             for (lexing::token next = m_Lexer.next();
@@ -163,7 +169,7 @@ namespace mimicpp::printing::type::parsing
             // For example, consider the type names `void ()` and `foo()`:
             // - `void ()` represents a function type returning `void`.
             // - `foo()` represents a function named `foo`.
-            if (auto const* const nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+            if (auto const* const nextOp = peek_if<lexing::operator_or_punctuator>();
                 nextOp
                 && util::contains(std::array{openingAngle, openingParens, openingCurly, singleQuote, backtick}, *nextOp))
             {
@@ -262,7 +268,7 @@ namespace mimicpp::printing::type::parsing
                 {
                     dropSpaceInput();
 
-                    if (auto const* nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                    if (auto const* const nextOp = peek_if<lexing::operator_or_punctuator>();
                         nextOp
                         // When next token starts a function or template, we know it's actually `operator <<`.
                         && (openingParens == *nextOp || openingAngle == *nextOp))
@@ -303,7 +309,7 @@ namespace mimicpp::printing::type::parsing
                 {
                     dropSpaceInput();
 
-                    if (auto* opAfter = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification);
+                    if (auto const* const opAfter = peek_if<lexing::operator_or_punctuator>();
                         opAfter
                         && openingSquare == *opAfter)
                     {
@@ -400,9 +406,9 @@ namespace mimicpp::printing::type::parsing
             else if (closingParens == token)
             {
                 bool isNextOpeningParens{false};
-                if (auto const* const nextOp = std::get_if<lexing::operator_or_punctuator>(&m_Lexer.peek().classification))
+                if (auto const* const nextOp = peek_if<lexing::operator_or_punctuator>())
                 {
-                    isNextOpeningParens = openingParens == *nextOp;
+                    isNextOpeningParens = (openingParens == *nextOp);
                 }
 
                 // There can be no `(` directly after function-args, thus do not perform any reduction if such a token is found.
