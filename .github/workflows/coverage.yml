@@ -16,8 +16,14 @@ env:
 on:
   push:
     branches: [ main, development ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
   pull_request:
     branches: [ main, development ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
 
 jobs:
   create-coverage-report:
