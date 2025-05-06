@@ -611,9 +611,11 @@ supported.
 | clang-17 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | clang-18 |   x    |   x    |     x     |   *    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | clang-19 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| clang-20 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | gcc-12   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace    |
 | gcc-13   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | gcc-14   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| gcc-15   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
 
 Note: ``libc++`` doesn't support ``std::stacktrace`` yet.
 
