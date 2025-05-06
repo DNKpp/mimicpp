@@ -158,15 +158,6 @@ namespace mimicpp::printing::type::parsing::token
             bool isConst{false};
             bool isVolatile{false};
 
-            constexpr void merge(Layer const& others) noexcept
-            {
-                MIMICPP_ASSERT(!(isConst && others.isConst), "Merging same specs.");
-                MIMICPP_ASSERT(!(isVolatile && others.isVolatile), "Merging same specs.");
-
-                isConst = isConst || others.isConst;
-                isVolatile = isVolatile || others.isVolatile;
-            }
-
             template <parser_visitor Visitor>
             constexpr void operator()(Visitor& visitor) const
             {
