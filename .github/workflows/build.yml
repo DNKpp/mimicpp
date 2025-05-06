@@ -151,10 +151,17 @@ jobs:
             suffix: "ASan"
             os: "ubuntu-latest"
             container:
-              image: "ghcr.io/dnkpp/gcc:14"
+              image: "ghcr.io/dnkpp/gcc:15"
             compiler_name: "gcc"
-            compiler_version: "14"
+            compiler_version: "15"
             asan: true
+
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:15"
+            compiler_name: "gcc"
+            compiler_version: "15"
 
           - prefix: "Linux"
             os: "ubuntu-latest"
