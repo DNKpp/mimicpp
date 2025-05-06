@@ -437,6 +437,32 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "parsing::NameParser handles decorated types.",
+    "[print][print::type]")
+{
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    StringT const indirection = GENERATE("&", "&&", "*");
+    StringT const spacing = GENERATE("", " ");
+    StringT const input = "int* __ptr64" + spacing + indirection + " __ptr64";
+    CAPTURE(indirection, input);
+
+    sequence += visitor.begin.expect_call();
+    sequence += visitor.begin_type.expect_call();
+
+    sequence += visitor.add_identifier.expect_call("int");
+    sequence += visitor.add_ptr.expect_call();
+    sequence += visitor.expect_spec_call(indirection);
+
+    sequence += visitor.end_type.expect_call();
+    sequence += visitor.end.expect_call();
+
+    printing::type::parsing::NameParser parser{std::ref(visitor), input};
+    parser.parse_type();
+}
+
+TEST_CASE(
     "parsing::NameParser detects templates.",
     "[print][print::type]")
 {
