@@ -79,6 +79,25 @@ namespace
 }
 
 TEST_CASE(
+    "printing::type::lexing::is_space determines, whether the given character is a space.",
+    "[print][print::type]")
+{
+    SECTION("When a space is given, returns true.")
+    {
+        char const input = GENERATE(' ', '\t');
+
+        CHECK(printing::type::lexing::is_space(input));
+    }
+
+    SECTION("When no space is given, returns false.")
+    {
+        char const input = GENERATE('a', '_', '-', '1');
+
+        CHECK(!printing::type::lexing::is_space(input));
+    }
+}
+
+TEST_CASE(
     "printing::type::lexing::NameLexer extracts tokens from given input.",
     "[print][print::type]")
 {
