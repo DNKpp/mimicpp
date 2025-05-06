@@ -496,8 +496,8 @@ namespace mimicpp::printing::type::parsing
             auto funIdentifier = std::get<token::FunctionIdentifier>(m_TokenStack.back());
             m_TokenStack.pop_back();
 
-            token::ScopeSequence scopes{};
-            if (auto* scopeSeq = match_suffix<token::ScopeSequence>(m_TokenStack))
+            std::optional<token::ScopeSequence> scopes{};
+            if (auto* const scopeSeq = match_suffix<token::ScopeSequence>(m_TokenStack))
             {
                 scopes = std::move(*scopeSeq);
                 m_TokenStack.pop_back();
@@ -526,17 +526,10 @@ namespace mimicpp::printing::type::parsing
                 m_TokenStack.pop_back();
             }
 
-            if (auto* targetScopes = match_suffix<token::ScopeSequence>(m_TokenStack))
+            MIMICPP_ASSERT(!is_suffix_of<token::ScopeSequence>(m_TokenStack), "Invlid state.");
+            if (scopes)
             {
-                auto& target = targetScopes->scopes;
-                target.insert(
-                    target.cend(),
-                    std::make_move_iterator(scopes.scopes.begin()),
-                    std::make_move_iterator(scopes.scopes.end()));
-            }
-            else
-            {
-                m_TokenStack.emplace_back(std::move(scopes));
+                m_TokenStack.emplace_back(*std::move(scopes));
             }
 
             m_TokenStack.emplace_back(std::move(funIdentifier));
