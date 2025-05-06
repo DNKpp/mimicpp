@@ -10,7 +10,6 @@ target_sources(${TARGET_NAME}
     "PathPrinter.cpp"
     "StatePrinter.cpp"
     "FunctionTypePostProcessing.cpp"
-    "TypeScopeIterator.cpp"
     "TypePostProcessing.cpp"
     "TypePrinter.cpp"
     "TypeNameLexer.cpp"

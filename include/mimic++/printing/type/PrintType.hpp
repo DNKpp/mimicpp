@@ -11,11 +11,9 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
-#include "mimic++/printing/type/PostProcessing.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 
 #include <algorithm>
-#include <cassert>
 #include <concepts>
 #include <functional>
 #include <iterator>
@@ -36,15 +34,60 @@ namespace mimicpp::printing::type
      * When `MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES` is enabled, it further demangles the name using `abi::__cxa_demangle`.
      */
     template <typename T>
+    [[nodiscard]]
     StringT type_name();
+
+    /**
+     * \brief Prettifies a demangled name.
+     * \ingroup PRINTING_TYPE
+     * \tparam OutIter The print-iterator type.
+     * \param out The print iterator.
+     * \param name The demangled name to be prettified.
+     * \return The current print iterator.
+     *
+     * \details This function formats a type or template name for better readability.
+     * The primary strategy is to minimize unnecessary details while retaining essential information.
+     * Although this may introduce some ambiguity, it is generally more beneficial to provide an approximate name.
+     *
+     * For example, when a template-dependent type is provided, the template arguments are omitted:
+     * `std::vector<int, std::allocator>::iterator` => `std::vector::iterator`
+     *
+     * \attention Providing a mangled name will result in unexpected behavior.
+     * \note When `MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES` is disabled,
+     * this function simply outputs the provided name without any modifications.
+     */
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_type(OutIter out, StringT name);
+
+    /**
+     * \brief Prettifies a function name produces by e.g. `std::source_location::function_name()`.
+     * \ingroup PRINTING_TYPE
+     * \tparam OutIter The print-iterator type.
+     * \param out The print iterator.
+     * \param name The function name to be prettified.
+     * \return The current print iterator.
+     *
+     * \details This function formats a function for better readability.
+     * The primary strategy is to minimize unnecessary details while retaining essential information.
+     * Although this may introduce some ambiguity, it is generally more beneficial to provide an approximate name.
+     *
+     * For example, when a template-dependent type is provided, the template arguments are omitted:
+     * `void fun(std::vector<int, std::allocator>::iterator)` => `void fun(std::vector::iterator)`
+     *
+     * \note When `MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES` is disabled,
+     * this function simply outputs the provided name without any modifications.
+     */
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_function(OutIter out, StringT name);
 }
 
-#if defined(MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES) \
-    && (MIMICPP_DETAIL_IS_GCC || MIMICPP_DETAIL_IS_CLANG)
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
-    #include <cstdlib>
-    #include <cxxabi.h>
-    #include <memory>
+    #if MIMICPP_DETAIL_IS_GCC || MIMICPP_DETAIL_IS_CLANG
+
+        #include <cstdlib>
+        #include <cxxabi.h>
+        #include <memory>
 
 namespace mimicpp::printing::type
 {
@@ -67,6 +110,74 @@ namespace mimicpp::printing::type
     }
 }
 
+    #else
+
+namespace mimicpp::printing::type
+{
+    template <typename T>
+    StringT type_name()
+    {
+        return typeid(T).name();
+    }
+}
+
+    #endif
+
+    #include "mimic++/printing/type/NameParser.hpp"
+    #include "mimic++/printing/type/NamePrintVisitor.hpp"
+
+namespace mimicpp::printing::type
+{
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_type(OutIter out, StringT name)
+    {
+        static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
+
+        PrintVisitor visitor{std::move(out)};
+        parsing::NameParser parser{std::ref(visitor), name};
+        parser.parse_type();
+
+        return visitor.out();
+    }
+
+    namespace detail
+    {
+        [[nodiscard]]
+        constexpr StringT remove_template_details(StringT name)
+        {
+            if (name.ends_with(']'))
+            {
+                auto rest = name | std::views::reverse | std::views::drop(1);
+                if (auto const closingIter = util::find_closing_token(rest, ']', '[');
+                    closingIter != rest.end())
+                {
+                    auto const end = std::ranges::find_if_not(
+                        closingIter + 1,
+                        rest.end(),
+                        lexing::is_space);
+                    name.erase(end.base(), name.end());
+                }
+            }
+
+            return name;
+        }
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_function(OutIter out, StringT name)
+    {
+        name = detail::remove_template_details(std::move(name));
+
+        static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
+
+        PrintVisitor visitor{std::move(out)};
+        parsing::NameParser parser{std::ref(visitor), name};
+        parser.parse_function();
+
+        return visitor.out();
+    }
+}
+
 #else
 
 namespace mimicpp::printing::type
@@ -75,6 +186,18 @@ namespace mimicpp::printing::type
     StringT type_name()
     {
         return typeid(T).name();
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_type(OutIter out, StringT name)
+    {
+        return std::ranges::copy(name, std::move(out)).out;
+    }
+
+    template <print_iterator OutIter>
+    constexpr OutIter prettify_function(OutIter out, StringT name)
+    {
+        return std::ranges::copy(name, std::move(out)).out;
     }
 }
 

@@ -15,7 +15,7 @@
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/state/Print.hpp"
-#include "mimic++/printing/type/PostProcessing.hpp"
+#include "mimic++/printing/type/PrintType.hpp"
 #include "mimic++/utilities/C++23Backports.hpp" // unreachable
 
 #include <algorithm>
