@@ -236,7 +236,7 @@ namespace mimicpp::printing::type::parsing
                 auto& specs = token::get_or_emplace_specs(m_TokenStack);
                 MIMICPP_ASSERT(!specs.layers.empty(), "Zero spec layers detected.");
                 auto& top = specs.layers.back();
-                MIMICPP_ASSERT(!top.isConst, "Specs is already volatile.");
+                MIMICPP_ASSERT(!top.isVolatile, "Specs is already volatile.");
                 top.isVolatile = true;
             }
             else if (noexceptKeyword == keyword)
