@@ -418,6 +418,8 @@ namespace mimicpp::printing::type::parsing
             }
 
             ignore_space(pendingTokens);
+            // Ignore call-convention.
+            ignore_reserved_identifier(pendingTokens);
 
             auto* specs = match_suffix<Specs>(pendingTokens);
             ScopeSequence* scopeSeq{};
