@@ -143,6 +143,135 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "parsing::NameParser supports builtin-types.",
+    "[print][print::type]")
+{
+    StringT const type = GENERATE(
+        "auto",
+        "int",
+        "float",
+        "double",
+        "unsigned",
+        "signed",
+        "unsigned char",
+        "signed char",
+        "long long",
+        "unsigned long long",
+        "signed long long");
+
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+
+    SECTION("When plain type is given.")
+    {
+        StringT const input = type;
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call(input);
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("When qualified type is given.")
+    {
+        StringT const qualification = GENERATE("&", "&&", "*");
+        StringT const spacing = GENERATE("", " ");
+        StringT const input = type + spacing + qualification;
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call(type);
+        sequence += visitor.expect_spec_call(qualification);
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("When type is used as template-argument.")
+    {
+        StringT const input = "foo<" + type + ">";
+        CAPTURE(input);
+
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("foo");
+
+        sequence += visitor.begin_template_args.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call(type);
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_template_args.expect_call();
+
+        sequence += visitor.end_type.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("When type is used as function-argument.")
+    {
+        StringT const input = "ret (" + type + ")";
+        CAPTURE(input);
+
+        sequence += visitor.begin_function.expect_call();
+
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call("ret");
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call(type);
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+
+    SECTION("When type is used as return-type.")
+    {
+        StringT const input = type + " ()";
+        CAPTURE(input);
+
+        sequence += visitor.begin_function.expect_call();
+
+        sequence += visitor.begin_return_type.expect_call();
+        sequence += visitor.begin_type.expect_call();
+        sequence += visitor.add_identifier.expect_call(type);
+        sequence += visitor.end_type.expect_call();
+        sequence += visitor.end_return_type.expect_call();
+
+        sequence += visitor.begin_function_args.expect_call();
+        sequence += visitor.end_function_args.expect_call();
+
+        sequence += visitor.end_function.expect_call();
+
+        sequence += visitor.end.expect_call();
+
+        printing::type::parsing::NameParser parser{std::ref(visitor), input};
+        parser.parse_type();
+    }
+}
+
+TEST_CASE(
     "parsing::NameParser detects identifiers.",
     "[print][print::type]")
 {

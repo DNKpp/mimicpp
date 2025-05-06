@@ -687,8 +687,8 @@ namespace mimicpp::printing::type::parsing
             tokenStack.pop_back();
 
             MIMICPP_ASSERT(is_suffix_of<OperatorKeyword>(tokenStack), "Invalid state");
-            tokenStack.back().emplace<Identifier>(
-                Identifier::OperatorInfo{.symbol = std::move(targetType)});
+            tokenStack.back() = Identifier{
+                .content = Identifier::OperatorInfo{.symbol = std::move(targetType)}};
             tokenStack.emplace_back(std::move(funCtx));
             try_reduce_as_function_identifier(tokenStack);
         }

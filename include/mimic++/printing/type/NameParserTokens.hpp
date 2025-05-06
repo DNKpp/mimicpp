@@ -251,6 +251,8 @@ namespace mimicpp::printing::type::parsing::token
     class Identifier
     {
     public:
+        bool isBuiltinType{false};
+
         struct OperatorInfo
         {
             using Symbol = std::variant<StringViewT, std::shared_ptr<Type>>;
@@ -283,6 +285,12 @@ namespace mimicpp::printing::type::parsing::token
 
             return id
                 && id->starts_with("__");
+        }
+
+        [[nodiscard]]
+        constexpr bool is_builtin() const noexcept
+        {
+            return isBuiltinType;
         }
 
         template <parser_visitor Visitor>

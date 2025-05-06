@@ -104,6 +104,23 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::keyword structKeyword{"struct"};
         static constexpr lexing::keyword enumKeyword{"enum"};
 
+        static constexpr std::array typeKeywordCollection = {
+            lexing::keyword{"auto"},
+            lexing::keyword{"void"},
+            lexing::keyword{"bool"},
+            lexing::keyword{"char"},
+            lexing::keyword{"char8_t"},
+            lexing::keyword{"char16_t"},
+            lexing::keyword{"char32_t"},
+            lexing::keyword{"wchar_t"},
+            lexing::keyword{"double"},
+            lexing::keyword{"float"},
+            lexing::keyword{"int"},
+            lexing::keyword{"long"},
+            lexing::keyword{"short"},
+            lexing::keyword{"signed"},
+            lexing::keyword{"unsigned"}};
+
         Visitor m_Visitor;
         StringViewT m_Content;
         lexing::NameLexer m_Lexer;
@@ -162,8 +179,27 @@ namespace mimicpp::printing::type::parsing
 
         constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, [[maybe_unused]] lexing::space const& space)
         {
-            if (is_suffix_of<token::Identifier>(m_TokenStack))
+            if (auto* const id = match_suffix<token::Identifier>(m_TokenStack))
             {
+                // See, whether we need to merge the current builtin identifier with another one.
+                // E.g. `long long` or `unsigned int`.
+                if (auto const* const nextKeyword = peek_if<lexing::keyword>();
+                    nextKeyword
+                    && id->is_builtin()
+                    && util::contains(typeKeywordCollection, *nextKeyword))
+                {
+                    auto& curContent = std::get<StringViewT>(id->content);
+                    auto const [nextContent, _] = m_Lexer.next();
+                    // Merge both keywords by simply treating them as contiguous content.
+                    MIMICPP_ASSERT(curContent.data() + curContent.size() == content.data(), "Violated expectation.");
+                    MIMICPP_ASSERT(content.data() + content.size() = nextContent.data(), "Violated expectation.");
+                    curContent = StringViewT{
+                        curContent.data(),
+                        nextContent.data() + nextContent.size()};
+
+                    return;
+                }
+
                 token::try_reduce_as_type(m_TokenStack);
             }
 
@@ -223,6 +259,13 @@ namespace mimicpp::printing::type::parsing
                 // This token is needed, so we do not accidentally treat e.g. `(anonymous class)` as function args,
                 // because otherwise there would just be the `anonymous` identifier left.
                 m_TokenStack.emplace_back(token::TypeContext{.content = content});
+            }
+            else if (util::contains(typeKeywordCollection, keyword))
+            {
+                m_TokenStack.emplace_back(
+                    token::Identifier{
+                        .isBuiltinType = true,
+                        .content = content});
             }
         }
 

@@ -196,9 +196,56 @@ namespace
     StringT const callOpScopePattern = R"(operator\(\)::)";
 }
 
+TEMPLATE_TEST_CASE(
+    "printing::type::prettify_type handles built-in types correctly.",
+    "[print][print::type]",
+    char,
+    wchar_t,
+    char8_t,
+    char16_t,
+    char32_t,
+    short,
+    int,
+    long,
+    long long)
+{
+    StringT const rawName = printing::type::type_name<TestType>();
+    CAPTURE(rawName);
+
+    StringStreamT ss{};
+
+    SECTION("When explicit signed name is given.")
+    {
+        using T = std::make_signed_t<TestType>;
+        StringT const name = printing::type::type_name<T>();
+        CAPTURE(name);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            name);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(name));
+    }
+
+    SECTION("When unsigned name is given.")
+    {
+        using T = std::make_unsigned_t<TestType>;
+        StringT const name = printing::type::type_name<T>();
+        CAPTURE(name);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            name);
+        REQUIRE_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches(name));
+    }
+}
+
 TEST_CASE(
     "printing::type::prettify_type enhances names appearance.",
-    "[print]")
+    "[print][print::type]")
 {
     StringStreamT ss{};
 
