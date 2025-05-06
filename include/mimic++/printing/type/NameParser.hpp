@@ -91,6 +91,8 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::operator_or_punctuator colon{":"};
         static constexpr lexing::operator_or_punctuator leftShift{"<<"};
         static constexpr lexing::operator_or_punctuator rightShift{">>"};
+        static constexpr lexing::operator_or_punctuator plus{"+"};
+        static constexpr lexing::operator_or_punctuator exclamationMark{"!"};
         static constexpr lexing::keyword operatorKeyword{"operator"};
         static constexpr lexing::keyword constKeyword{"const"};
         static constexpr lexing::keyword volatileKeyword{"volatile"};
@@ -486,6 +488,26 @@ namespace mimicpp::printing::type::parsing
             {
                 handle_lexer_token(content.substr(0, 1u), closingAngle);
                 handle_lexer_token(content.substr(1u, 1u), closingAngle);
+            }
+            // The msvc c++23 `std::stacktrace` implementation adds `+0x\d+` to function identifiers.
+            // The only reason to receive a `+`-token without an `operator`-token is exactly that case.
+            // So, just ignore it and skip the next identifier.
+            else if (plus == token)
+            {
+                if (auto const* const nextId = peek_if<lexing::identifier>();
+                    nextId
+                    && nextId->content.starts_with("0x"))
+                {
+                    std::ignore = m_Lexer.next();
+                }
+            }
+            // The msvc c++23 `std::stacktrace` implementation seems to add something which looks like the executable-name as prefix.
+            // The only reason to receive a `!`-token without an `operator`-token is exactly that case.
+            // So, just ignore it and skip the previous identifier.
+            else if (exclamationMark == token
+                && is_suffix_of<token::Identifier>(m_TokenStack))
+            {
+                m_TokenStack.pop_back();
             }
         }
 

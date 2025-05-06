@@ -2028,6 +2028,27 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "parsing::NameParser handles msvc's std::stacktrace special characteristics.",
+    "[print][print::type]")
+{
+    StringT const identifier = "executable!foo+0x1337";
+
+    VisitorMock visitor{};
+    ScopedSequence sequence{};
+
+    sequence += visitor.begin.expect_call();
+    sequence += visitor.begin_type.expect_call();
+
+    sequence += visitor.add_identifier.expect_call("foo");
+
+    sequence += visitor.end_type.expect_call();
+    sequence += visitor.end.expect_call();
+
+    printing::type::parsing::NameParser parser{std::ref(visitor), identifier};
+    parser.parse_type();
+}
+
+TEST_CASE(
     "parsing::NameParser keeps meaningful reserved identifiers.",
     "[print][print::type]")
 {
