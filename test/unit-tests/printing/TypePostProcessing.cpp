@@ -201,7 +201,7 @@ TEMPLATE_TEST_CASE(
     "[print][print::type]",
     char,
     wchar_t,
-    char8_t,
+    // char8_t, this causes some linker-issues on AppleClang-16 and 17
     char16_t,
     char32_t,
     short,
