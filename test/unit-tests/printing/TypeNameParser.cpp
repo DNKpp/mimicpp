@@ -2172,9 +2172,10 @@ TEST_CASE(
 
     SECTION("When decorated function local type is given.")
     {
-        StringViewT const visibility = GENERATE("public", "private", "protected");
-        StringViewT const typeClass = GENERATE("struct", "class", "enum");
-        StringT const input = StringT{typeClass} + " `" + StringT{visibility} + ": void __cdecl foo() __ptr64" + spacing + "'::my_type";
+        StringT const visibility = GENERATE("public", "private", "protected");
+        StringT const typeClass = GENERATE("struct", "class", "enum");
+        StringT const refness = GENERATE("", "&", "&&");
+        StringT const input = typeClass + " `" + visibility + ": void __cdecl foo() __ptr64" + spacing + refness + "'::my_type";
         CAPTURE(input);
 
         sequence += visitor.begin_type.expect_call();
@@ -2193,6 +2194,11 @@ TEST_CASE(
 
             sequence += visitor.begin_function_args.expect_call();
             sequence += visitor.end_function_args.expect_call();
+
+            CHECKED_IF(!refness.empty())
+            {
+                sequence += visitor.expect_spec_call(refness);
+            }
 
             sequence += visitor.end_function.expect_call();
         }

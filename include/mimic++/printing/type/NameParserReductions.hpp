@@ -703,8 +703,15 @@ namespace mimicpp::printing::type::parsing
             // Maybe wo got something like `type&` and need to reduce that identifier to an actual `Type` token.
             if (is_suffix_of<Identifier>(tokenStack))
             {
-                [[maybe_unused]] bool const result = try_reduce_as_type(tokenStack);
-                MIMICPP_ASSERT(result, "Unexpected state.");
+                if (try_reduce_as_type(tokenStack))
+                {
+                    return std::get<Type>(tokenStack.back()).specs();
+                }
+
+                // The reduction failed, so it's something like `__ptr64` and should be ignored.
+                // This may happen, when specs are attached to functions, like `ret T::foo() & __ptr64`.
+                MIMICPP_ASSERT(std::get<Identifier>(tokenStack.back()).is_reserved(), "Unexpected token.");
+                tokenStack.pop_back();
             }
 
             if (auto* const type = match_suffix<Type>(tokenStack))
