@@ -124,18 +124,18 @@ namespace mimicpp::printing::type::parsing
         template <token_type EndToken>
         constexpr bool finalize()
         {
-            if (1u == m_TokenStack.size()
-                && std::holds_alternative<EndToken>(m_TokenStack.back()))
+            if (1u == m_TokenStack.size())
             {
-                auto& unwrapped = unwrap_visitor(m_Visitor);
+                if (auto const* const end = std::get_if<EndToken>(&m_TokenStack.back()))
+                {
+                    auto& unwrapped = unwrap_visitor(m_Visitor);
 
-                unwrapped.begin();
-                std::invoke(
-                    std::get<EndToken>(m_TokenStack.back()),
-                    m_Visitor);
-                unwrapped.end();
+                    unwrapped.begin();
+                    std::invoke(*end, m_Visitor);
+                    unwrapped.end();
 
-                return true;
+                    return true;
+                }
             }
 
             return false;
