@@ -15,7 +15,6 @@
 #include <algorithm>
 #include <array>
 #include <cctype>
-#include <concepts>
 #include <functional>
 #include <tuple>
 #include <variant>
@@ -24,22 +23,14 @@ namespace mimicpp::printing::type::lexing
 {
     // see: https://en.cppreference.com/w/cpp/string/byte/isspace
     constexpr auto is_space = [](char const c) noexcept {
-        return static_cast<bool>(std::isspace(static_cast<unsigned char>(c)));
-    };
-
-    // see: https://en.cppreference.com/w/cpp/string/byte/isalpha
-    constexpr auto is_digit = [](char const c) noexcept {
-        return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
+        return static_cast<bool>(
+            std::isspace(static_cast<unsigned char>(c)));
     };
 
     // see: https://en.cppreference.com/w/cpp/string/byte/isdigit
-    constexpr auto is_alpha = [](char const c) noexcept {
-        return static_cast<bool>(std::isdigit(static_cast<unsigned char>(c)));
-    };
-
-    // see: https://en.cppreference.com/w/cpp/string/byte/isxdigit
-    constexpr auto is_hex_digit = [](char const c) noexcept {
-        return static_cast<bool>(std::isxdigit(static_cast<unsigned char>(c)));
+    constexpr auto is_digit = [](char const c) noexcept {
+        return static_cast<bool>(
+            std::isdigit(static_cast<unsigned char>(c)));
     };
 
     namespace texts
