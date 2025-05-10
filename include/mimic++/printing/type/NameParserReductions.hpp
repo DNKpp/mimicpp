@@ -678,29 +678,23 @@ namespace mimicpp::printing::type::parsing
             return false;
         }
 
-        inline bool try_reduce_as_conversion_operator_function_identifier(TokenStack& tokenStack)
+        inline void reduce_as_conversion_operator_function_identifier(TokenStack& tokenStack)
         {
-            if (auto* const funCtxPtr = match_suffix<FunctionContext>(tokenStack))
-            {
-                FunctionContext funCtx = std::move(*funCtxPtr);
-                tokenStack.pop_back();
+            MIMICPP_ASSERT(is_suffix_of<FunctionContext>(tokenStack), "Invalid state");
+            auto funCtx = std::get<FunctionContext>(std::move(tokenStack.back()));
+            tokenStack.pop_back();
 
-                try_reduce_as_type(tokenStack);
-                MIMICPP_ASSERT(is_suffix_of<Type>(tokenStack), "Invalid state");
-                auto targetType = std::make_shared<Type>(
-                    std::get<Type>(std::move(tokenStack.back())));
-                tokenStack.pop_back();
+            try_reduce_as_type(tokenStack);
+            MIMICPP_ASSERT(is_suffix_of<Type>(tokenStack), "Invalid state");
+            auto targetType = std::make_shared<Type>(
+                std::get<Type>(std::move(tokenStack.back())));
+            tokenStack.pop_back();
 
-                MIMICPP_ASSERT(is_suffix_of<OperatorKeyword>(tokenStack), "Invalid state");
-                tokenStack.back() = Identifier{
-                    .content = Identifier::OperatorInfo{.symbol = std::move(targetType)}};
-                tokenStack.emplace_back(std::move(funCtx));
-                try_reduce_as_function_identifier(tokenStack);
-
-                return true;
-            }
-
-            return false;
+            MIMICPP_ASSERT(is_suffix_of<OperatorKeyword>(tokenStack), "Invalid state");
+            tokenStack.back() = Identifier{
+                .content = Identifier::OperatorInfo{.symbol = std::move(targetType)}};
+            tokenStack.emplace_back(std::move(funCtx));
+            try_reduce_as_function_identifier(tokenStack);
         }
 
         [[nodiscard]]
