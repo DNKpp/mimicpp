@@ -23,7 +23,7 @@ namespace mimicpp::printing::type::parsing
 {
     template <typename T>
     concept parser_visitor = std::movable<T>
-                          && requires(std::unwrap_reference_t<T> visitor, StringViewT content) {
+                          && requires(std::unwrap_reference_t<T> visitor, StringViewT content, std::ptrdiff_t count) {
                                  visitor.unrecognized(content);
 
                                  visitor.begin();
@@ -38,7 +38,7 @@ namespace mimicpp::printing::type::parsing
                                  visitor.add_identifier(content);
                                  visitor.add_arg();
 
-                                 visitor.begin_template_args();
+                                 visitor.begin_template_args(count);
                                  visitor.end_template_args();
 
                                  visitor.add_const();
@@ -52,7 +52,7 @@ namespace mimicpp::printing::type::parsing
                                  visitor.end_function();
                                  visitor.begin_return_type();
                                  visitor.end_return_type();
-                                 visitor.begin_function_args();
+                                 visitor.begin_function_args(count);
                                  visitor.end_function_args();
 
                                  visitor.begin_function_ptr();
@@ -355,7 +355,7 @@ namespace mimicpp::printing::type::parsing::token
         {
             auto& unwrapped = unwrap_visitor(visitor);
 
-            unwrapped.begin_function_args();
+            unwrapped.begin_function_args(std::ranges::ssize(args.types));
             std::invoke(args, unwrapped);
             unwrapped.end_function_args();
             std::invoke(specs, unwrapped);
@@ -601,7 +601,7 @@ namespace mimicpp::printing::type::parsing::token
     {
         auto& unwrapped = unwrap_visitor(visitor);
 
-        unwrapped.begin_template_args();
+        unwrapped.begin_template_args(std::ranges::ssize(types));
         std::invoke(*this, unwrapped);
         unwrapped.end_template_args();
     }

@@ -168,7 +168,7 @@ namespace mimicpp::printing::type
             print(content);
         }
 
-        constexpr void begin_template_args()
+        constexpr void begin_template_args([[maybe_unused]] std::ptrdiff_t const count)
         {
             m_Context.push_arg_sequence();
 
@@ -204,7 +204,7 @@ namespace mimicpp::printing::type
             print(" ");
         }
 
-        constexpr void begin_function_args()
+        constexpr void begin_function_args([[maybe_unused]] std::ptrdiff_t const count)
         {
             m_Context.push_arg_sequence();
 
