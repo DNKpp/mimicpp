@@ -230,7 +230,7 @@ namespace mimicpp::printing::type
 
         constexpr void begin_operator_identifier()
         {
-            print("operator");
+            print("operator ");
         }
 
         static constexpr void end_operator_identifier()

@@ -51,7 +51,7 @@ namespace mimicpp::printing::type::parsing
 
             if (m_HasConversionOperator)
             {
-                token::reduce_as_conversion_operator_function_identifier(m_TokenStack);
+                token::try_reduce_as_conversion_operator_function_identifier(m_TokenStack);
             }
             else
             {

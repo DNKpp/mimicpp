@@ -5,8 +5,7 @@
 
 #include "mimic++/Stacktrace.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
-
-#include <source_location>
+#include "mimic++/utilities/SourceLocation.hpp"
 
 using namespace mimicpp;
 
@@ -286,6 +285,119 @@ TEST_CASE(
                 + "my_template::foo"
                   R"(\((\{anon-ns\}::my_template::)?my_type\))"));
     }
+}
+
+namespace
+{
+    struct conversion
+    {
+        operator util::SourceLocation()
+        {
+            return util::SourceLocation{};
+        }
+
+        operator util::SourceLocation() const
+        {
+            return util::SourceLocation{};
+        }
+
+        operator Stacktrace()
+        {
+            return stacktrace::current();
+        }
+
+        operator Stacktrace() const
+        {
+            return stacktrace::current();
+        }
+    };
+}
+
+TEST_CASE(
+    "printing::type::prettify_function supports conversion-operators.",
+    "[print][print::type]")
+{
+    StringStreamT ss{};
+
+    SECTION("When getting function name via source_location")
+    {
+        SECTION("and when converted to simple type via non-const function.")
+        {
+            conversion conv{};
+            auto const loc = static_cast<util::SourceLocation>(conv);
+            StringT const fnName = loc->function_name();
+            CAPTURE(fnName);
+
+            printing::type::prettify_function(
+                std::ostreambuf_iterator{ss},
+                fnName);
+
+            REQUIRE_THAT(
+                ss.str(),
+                Catch::Matchers::Matches(
+                    anonNsScopePattern
+                    + "conversion::"
+                    + R"(operator mimicpp::util::SourceLocation\(\))"));
+        }
+
+        SECTION("and when converted to simple type via const function.")
+        {
+            conversion const conv{};
+            auto const loc = static_cast<util::SourceLocation>(conv);
+            StringT const fnName = loc->function_name();
+            CAPTURE(fnName);
+
+            printing::type::prettify_function(
+                std::ostreambuf_iterator{ss},
+                fnName);
+
+            REQUIRE_THAT(
+                ss.str(),
+                Catch::Matchers::Matches(
+                    anonNsScopePattern
+                    + "conversion::"
+                    + R"(operator mimicpp::util::SourceLocation\(\) const)"));
+        }
+    }
+
+    #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+
+    SECTION("When getting function name via stacktrace")
+    {
+        SECTION("and when converted to simple type via non-const function.")
+        {
+            conversion conv{};
+            auto const trace = static_cast<Stacktrace>(conv);
+            StringT const fnName = trace.description(0u);
+            CAPTURE(fnName);
+
+            printing::type::prettify_function(
+                std::ostreambuf_iterator{ss},
+                fnName);
+
+            REQUIRE_THAT(
+                ss.str(),
+                Catch::Matchers::Matches(R"(operator mimicpp::Stacktrace)"));
+        }
+
+        SECTION("When converted to simple type via const function.")
+        {
+            conversion const conv{};
+            auto const trace = static_cast<Stacktrace>(conv);
+            StringT const fnName = trace.description(0u);
+            CAPTURE(fnName);
+
+            printing::type::prettify_function(
+                std::ostreambuf_iterator{ss},
+                fnName);
+
+            REQUIRE_THAT(
+                ss.str(),
+                Catch::Matchers::Matches(R"(operator mimicpp::Stacktrace)"));
+        }
+    }
+
+    #endif
 }
 
     #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
