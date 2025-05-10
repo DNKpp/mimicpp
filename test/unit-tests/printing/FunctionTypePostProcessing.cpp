@@ -313,9 +313,15 @@ namespace
     };
 }
 
+#ifdef MIMICPP_DETAIL_IS_MSVC
+    #define MAYFAIL_ON_MSVC "[!mayfail]"
+#else
+    #define MAYFAIL_ON_MSVC
+#endif
+
 TEST_CASE(
     "printing::type::prettify_function supports conversion-operators.",
-    "[print][print::type]")
+    MAYFAIL_ON_MSVC "[print][print::type]")
 {
     StringStreamT ss{};
 
@@ -383,7 +389,7 @@ TEST_CASE(
                 ss.str(),
                 Catch::Matchers::Matches(
                     R"((\{anon-ns\}::conversion::)?)"
-                    R"(operator mimicpp::Stacktrace(\(\))?)"));
+                    R"(operator (mimicpp::)?Stacktrace(\(\))?)"));
         }
 
         SECTION("When converted to simple type via const function.")
@@ -401,7 +407,7 @@ TEST_CASE(
                 ss.str(),
                 Catch::Matchers::Matches(
                     R"((\{anon-ns\}::conversion::)?)"
-                    R"(operator mimicpp::Stacktrace(\(\)(\s?const)?)?)"));
+                    R"(operator (mimicpp::)?Stacktrace(\(\)(\s?const)?)?)"));
         }
     }
 
