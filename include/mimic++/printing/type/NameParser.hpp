@@ -49,9 +49,7 @@ namespace mimicpp::printing::type::parsing
         {
             parse();
 
-            // Functions reported by stacktrace are not in actual function form. So, we need to check here.
-            if (m_HasConversionOperator
-                && is_suffix_of<token::FunctionContext>(m_TokenStack))
+            if (m_HasConversionOperator)
             {
                 token::reduce_as_conversion_operator_function_identifier(m_TokenStack);
             }

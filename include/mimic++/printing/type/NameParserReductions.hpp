@@ -685,9 +685,16 @@ namespace mimicpp::printing::type::parsing
 
         inline void reduce_as_conversion_operator_function_identifier(TokenStack& tokenStack)
         {
-            MIMICPP_ASSERT(is_suffix_of<FunctionContext>(tokenStack), "Invalid state");
-            auto funCtx = std::get<FunctionContext>(std::move(tokenStack.back()));
-            tokenStack.pop_back();
+            // Functions reported by stacktrace are not in actual function form.
+            // As `operator T()` can not contain any arguments, we can simply create a dummy argument-sequence.
+            // Unfortunately, we can not detect whether it's e.g. `const` or `noexcept`.
+            // Todo: This issue should be somehow addressed.
+            FunctionContext funCtx{};
+            if (auto* const ctx = match_suffix<FunctionContext>(tokenStack))
+            {
+                funCtx = std::move(*ctx);
+                tokenStack.pop_back();
+            }
 
             try_reduce_as_type(tokenStack);
             MIMICPP_ASSERT(is_suffix_of<Type>(tokenStack), "Invalid state");

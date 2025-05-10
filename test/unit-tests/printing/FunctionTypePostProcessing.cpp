@@ -401,7 +401,7 @@ TEST_CASE(
                 ss.str(),
                 Catch::Matchers::Matches(
                     R"((\{anon-ns\}::conversion::)?)"
-                    R"(operator mimicpp::Stacktrace(\(\)\s?const)?)"));
+                    R"(operator mimicpp::Stacktrace(\(\)(\s?const)?)?)"));
         }
     }
 
