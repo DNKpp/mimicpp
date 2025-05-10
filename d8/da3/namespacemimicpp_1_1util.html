@@ -101,7 +101,8 @@ $(function(){initNavTree('d8/da3/namespacemimicpp_1_1util.html','../../'); initR
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#concepts">Concepts</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">mimicpp::util Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -146,6 +147,10 @@ Concepts</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:a1bf76cb81561bd1b640e8303d2f3e7b7" id="r_a1bf76cb81561bd1b640e8303d2f3e7b7"><td class="memTemplParams" colspan="2">template&lt;std::indirectly_readable I, std::indirectly_regular_unary_invocable&lt; I &gt; Projection&gt; </td></tr>
+<tr class="memitem:a1bf76cb81561bd1b640e8303d2f3e7b7"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1bf76cb81561bd1b640e8303d2f3e7b7">projected_value_t</a></td></tr>
+<tr class="memdesc:a1bf76cb81561bd1b640e8303d2f3e7b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The alias template <a class="el" href="#a1bf76cb81561bd1b640e8303d2f3e7b7" title="The alias template projected_value_t obtains the value type by stripping any reference and its topmos...">projected_value_t</a> obtains the value type by stripping any reference and its topmost cv-qualifiers of the result type of applying Proj to <code>std::iter_value_t&lt;I&gt;&amp;</code>.  <br /></td></tr>
+<tr class="separator:a1bf76cb81561bd1b640e8303d2f3e7b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e7b756bc206828739845da4bcd8f2a0" id="r_a9e7b756bc206828739845da4bcd8f2a0"><td class="memTemplParams" colspan="2">template&lt;typename TypeList&gt; </td></tr>
 <tr class="memitem:a9e7b756bc206828739845da4bcd8f2a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a9e7b756bc206828739845da4bcd8f2a0">type_list_reverse_t</a> = typename <a class="el" href="../../d7/de5/structmimicpp_1_1util_1_1type__list__reverse.html">type_list_reverse</a>&lt;TypeList&gt;::type</td></tr>
 <tr class="separator:a9e7b756bc206828739845da4bcd8f2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,6 +176,20 @@ requires std::ranges::sized_range&lt;Target&gt; &amp;&amp; std::ranges::sized_ra
 <tr class="memitem:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::ranges::borrowed_subrange_t&lt; Range &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ad9543460b0c98427b3cf3b46f5b5aaad">find_next_unwrapped_token</a> (Range &amp;&amp;str, std::string_view const token, std::ranges::forward_range auto &amp;&amp;opening, std::ranges::forward_range auto &amp;&amp;closing)</td></tr>
 <tr class="memdesc:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the next unwrapped token in the given string.  <br /></td></tr>
 <tr class="separator:ad9543460b0c98427b3cf3b46f5b5aaad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dd9f411a69f3ec1f01f4fb68217c7f4" id="r_a1dd9f411a69f3ec1f01f4fb68217c7f4"><td class="memTemplParams" colspan="2">template&lt;std::ranges::forward_range Range, std::ranges::forward_range Prefix&gt; <br />
+requires std::totally_ordered_with&lt;std::ranges::range_value_t&lt;Range&gt;, Prefix&gt;</td></tr>
+<tr class="memitem:a1dd9f411a69f3ec1f01f4fb68217c7f4"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::ranges::borrowed_subrange_t&lt; Range &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1dd9f411a69f3ec1f01f4fb68217c7f4">prefix_range</a> (Range &amp;&amp;range, Prefix &amp;&amp;prefix)</td></tr>
+<tr class="memdesc:a1dd9f411a69f3ec1f01f4fb68217c7f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a view containing all elements, which start with the given prefix.  <br /></td></tr>
+<tr class="separator:a1dd9f411a69f3ec1f01f4fb68217c7f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a226566adae6e502d71ebf49c3a47e165" id="r_a226566adae6e502d71ebf49c3a47e165"><td class="memTemplParams" colspan="2">template&lt;std::copyable T, std::size_t firstN, std::size_t secondN&gt; </td></tr>
+<tr class="memitem:a226566adae6e502d71ebf49c3a47e165"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, firstN+secondN &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a226566adae6e502d71ebf49c3a47e165">concat_arrays</a> (std::array&lt; T, firstN &gt; const &amp;first, std::array&lt; T, secondN &gt; const &amp;second)</td></tr>
+<tr class="memdesc:a226566adae6e502d71ebf49c3a47e165"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenates the given arrays by copying all elements into a new array.  <br /></td></tr>
+<tr class="separator:a226566adae6e502d71ebf49c3a47e165"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab67670867e6588001d719e36ad404c79" id="r_ab67670867e6588001d719e36ad404c79"><td class="memTemplParams" colspan="2">template&lt;std::copyable T, std::size_t firstN, typename... Others&gt; <br />
+requires (... &amp;&amp; std::same_as&lt;T, std::ranges::range_value_t&lt;Others&gt;&gt;) &amp;&amp; (... &amp;&amp; (0u &lt;= std::tuple_size_v&lt;Others&gt;))</td></tr>
+<tr class="memitem:ab67670867e6588001d719e36ad404c79"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab67670867e6588001d719e36ad404c79">concat_arrays</a> (std::array&lt; T, firstN &gt; const &amp;first, Others const &amp;... others)</td></tr>
+<tr class="memdesc:ab67670867e6588001d719e36ad404c79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concatenates the given arrays by copying all elements into a new array.     <br /></td></tr>
+<tr class="separator:ab67670867e6588001d719e36ad404c79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac58fced4701bdff093838ed1807e8836" id="r_ac58fced4701bdff093838ed1807e8836"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac58fced4701bdff093838ed1807e8836">unreachable</a> ()</td></tr>
 <tr class="memdesc:ac58fced4701bdff093838ed1807e8836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invokes undefined behavior.  <br /></td></tr>
 <tr class="separator:ac58fced4701bdff093838ed1807e8836"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,8 +197,46 @@ requires std::ranges::sized_range&lt;Target&gt; &amp;&amp; std::ranges::sized_ra
 requires std::is_enum_v&lt;T&gt;</td></tr>
 <tr class="memitem:aa8fe6ff3a0ec4c237cd98f2e295af8a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::underlying_type_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa8fe6ff3a0ec4c237cd98f2e295af8a9">to_underlying</a> (T const value) noexcept</td></tr>
 <tr class="separator:aa8fe6ff3a0ec4c237cd98f2e295af8a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ae6cea4e9b0f4576bf518112f12bd8e5d" id="r_ae6cea4e9b0f4576bf518112f12bd8e5d"><td class="memItemLeft" align="right" valign="top">constexpr detail::binary_find_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae6cea4e9b0f4576bf518112f12bd8e5d">binary_find</a> {}</td></tr>
+<tr class="memdesc:ae6cea4e9b0f4576bf518112f12bd8e5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Finds the specified value within the container and returns an iterator pointing to it. If the value is not found, it returns an iterator to the end of the container.  <br /></td></tr>
+<tr class="separator:ae6cea4e9b0f4576bf518112f12bd8e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ab229fce64e2c104a052a34d45e626c" id="r_a6ab229fce64e2c104a052a34d45e626c"><td class="memItemLeft" align="right" valign="top">constexpr detail::contains_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ab229fce64e2c104a052a34d45e626c">contains</a> {}</td></tr>
+<tr class="memdesc:a6ab229fce64e2c104a052a34d45e626c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines, whether the specified value is contained in the given range.  <br /></td></tr>
+<tr class="separator:a6ab229fce64e2c104a052a34d45e626c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
+<a id="a1bf76cb81561bd1b640e8303d2f3e7b7" name="a1bf76cb81561bd1b640e8303d2f3e7b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bf76cb81561bd1b640e8303d2f3e7b7">&#9670;&#160;</a></span>projected_value_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::indirectly_readable I, std::indirectly_regular_unary_invocable&lt; I &gt; Projection&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a1bf76cb81561bd1b640e8303d2f3e7b7">mimicpp::util::projected_value_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> std::remove_cvref_t&lt;</div>
+<div class="line">        std::invoke_result_t&lt;Projection&amp;, std::iter_value_t&lt;I&gt;&amp;&gt;&gt;</div>
+</div><!-- fragment -->
+<p>The alias template <a class="el" href="#a1bf76cb81561bd1b640e8303d2f3e7b7" title="The alias template projected_value_t obtains the value type by stripping any reference and its topmos...">projected_value_t</a> obtains the value type by stripping any reference and its topmost cv-qualifiers of the result type of applying Proj to <code>std::iter_value_t&lt;I&gt;&amp;</code>. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">I</td><td>an indirectly readable type. </td></tr>
+    <tr><td class="paramname">Projection</td><td>projection applied to an lvalue reference to value type of <code>I</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/iterator/projected_value_t">https://en.cppreference.com/w/cpp/iterator/projected_value_t</a> </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Implementation directly taken from <a href="https://en.cppreference.com/w/cpp/iterator/projected_value_t">https://en.cppreference.com/w/cpp/iterator/projected_value_t</a> </dd></dl>
+
+</div>
+</div>
 <a id="ade36f86aac332827425e8d069c0e6586" name="ade36f86aac332827425e8d069c0e6586"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ade36f86aac332827425e8d069c0e6586">&#9670;&#160;</a></span>type_list_pop_back_t</h2>
 
@@ -229,6 +286,115 @@ template&lt;typename TypeList&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ab67670867e6588001d719e36ad404c79" name="ab67670867e6588001d719e36ad404c79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab67670867e6588001d719e36ad404c79">&#9670;&#160;</a></span>concat_arrays() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::copyable T, std::size_t firstN, typename... Others&gt; <br />
+requires (... &amp;&amp; std::same_as&lt;T, std::ranges::range_value_t&lt;Others&gt;&gt;) &amp;&amp; (... &amp;&amp; (0u &lt;= std::tuple_size_v&lt;Others&gt;))</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::util::concat_arrays </td>
+          <td>(</td>
+          <td class="paramtype">std::array&lt; T, firstN &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Others const &amp;...</td>          <td class="paramname"><span class="paramname"><em>others</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Concatenates the given arrays by copying all elements into a new array.    </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The element type. </td></tr>
+    <tr><td class="paramname">firstN</td><td>The size of the first array. </td></tr>
+    <tr><td class="paramname">Others</td><td>Other array types which share the same element-type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>The first array. </td></tr>
+    <tr><td class="paramname">others</td><td>The second array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A newly constructed arrays with copied elements. </dd></dl>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/da3/namespacemimicpp_1_1util_ab67670867e6588001d719e36ad404c79_cgraph.svg" width="336" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a226566adae6e502d71ebf49c3a47e165" name="a226566adae6e502d71ebf49c3a47e165"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a226566adae6e502d71ebf49c3a47e165">&#9670;&#160;</a></span>concat_arrays() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::copyable T, std::size_t firstN, std::size_t secondN&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::array&lt; T, firstN+secondN &gt; mimicpp::util::concat_arrays </td>
+          <td>(</td>
+          <td class="paramtype">std::array&lt; T, firstN &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>first</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::array&lt; T, secondN &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>second</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Concatenates the given arrays by copying all elements into a new array. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The element type. </td></tr>
+    <tr><td class="paramname">firstN</td><td>The size of the first array. </td></tr>
+    <tr><td class="paramname">secondN</td><td>The size of the second array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">first</td><td>The first array. </td></tr>
+    <tr><td class="paramname">second</td><td>The second array. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A newly constructed arrays with copied elements. </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/da3/namespacemimicpp_1_1util_a226566adae6e502d71ebf49c3a47e165_icgraph.svg" width="336" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="a775d0ca317345e92231ec716a81ca921" name="a775d0ca317345e92231ec716a81ca921"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a775d0ca317345e92231ec716a81ca921">&#9670;&#160;</a></span>find_closing_token()</h2>
 
@@ -414,6 +580,56 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a1dd9f411a69f3ec1f01f4fb68217c7f4" name="a1dd9f411a69f3ec1f01f4fb68217c7f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1dd9f411a69f3ec1f01f4fb68217c7f4">&#9670;&#160;</a></span>prefix_range()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::ranges::forward_range Range, std::ranges::forward_range Prefix&gt; <br />
+requires std::totally_ordered_with&lt;std::ranges::range_value_t&lt;Range&gt;, Prefix&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::ranges::borrowed_subrange_t&lt; Range &gt; mimicpp::util::prefix_range </td>
+          <td>(</td>
+          <td class="paramtype">Range &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>range</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Prefix &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>prefix</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns a view containing all elements, which start with the given prefix. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Range</td><td>The range type, which holds elements comparable with <code>Prefix</code>. </td></tr>
+    <tr><td class="paramname">Prefix</td><td>The prefix type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">range</td><td>The range. </td></tr>
+    <tr><td class="paramname">prefix</td><td>The prefix. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A subrange view to <code>range</code>.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>The behaviour is undefined, when <code>range</code> is not sorted. </dd></dl>
+
+</div>
+</div>
 <a id="aa8fe6ff3a0ec4c237cd98f2e295af8a9" name="aa8fe6ff3a0ec4c237cd98f2e295af8a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa8fe6ff3a0ec4c237cd98f2e295af8a9">&#9670;&#160;</a></span>to_underlying()</h2>
 
@@ -471,13 +687,66 @@ requires std::is_enum_v&lt;T&gt;</div>
 
 </div>
 </div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ae6cea4e9b0f4576bf518112f12bd8e5d" name="ae6cea4e9b0f4576bf518112f12bd8e5d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6cea4e9b0f4576bf518112f12bd8e5d">&#9670;&#160;</a></span>binary_find</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">detail::binary_find_fn mimicpp::util::binary_find {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Finds the specified value within the container and returns an iterator pointing to it. If the value is not found, it returns an iterator to the end of the container. </p>
+<dl class="section return"><dt>Returns</dt><dd>A borrowed iterator to the element (or end). </dd></dl>
+
+</div>
+</div>
+<a id="a6ab229fce64e2c104a052a34d45e626c" name="a6ab229fce64e2c104a052a34d45e626c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ab229fce64e2c104a052a34d45e626c">&#9670;&#160;</a></span>contains</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">detail::contains_fn mimicpp::util::contains {}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines, whether the specified value is contained in the given range. </p>
+<dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code>, when the value is contained.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This is a backport from c++23 <code>std::ranges::contains</code>. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/algorithm/ranges/contains">https://en.cppreference.com/w/cpp/algorithm/ranges/contains</a> </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">util</a></li>
-    <li class="footer">Generated on Tue May 6 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat May 10 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

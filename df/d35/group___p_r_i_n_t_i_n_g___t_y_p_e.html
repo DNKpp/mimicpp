@@ -121,14 +121,18 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae6a9ffb6738e44a4f1447fe01174996b" id="r_gae6a9ffb6738e44a4f1447fe01174996b"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
-<tr class="memitem:gae6a9ffb6738e44a4f1447fe01174996b"><td class="memTemplItemLeft" align="right" valign="top">constexpr OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gae6a9ffb6738e44a4f1447fe01174996b">mimicpp::printing::type::prettify_identifier</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
-<tr class="memdesc:gae6a9ffb6738e44a4f1447fe01174996b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a demangled name.  <br /></td></tr>
-<tr class="separator:gae6a9ffb6738e44a4f1447fe01174996b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450" id="r_ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga18ad74efa55d75d3db296d3ec7d7d450">mimicpp::printing::type::type_name</a> ()</td></tr>
 <tr class="memdesc:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the (potentially demangled) name.  <br /></td></tr>
 <tr class="separator:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga60eb33515bb6d0910660a0200ff521fa" id="r_ga60eb33515bb6d0910660a0200ff521fa"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:ga60eb33515bb6d0910660a0200ff521fa"><td class="memTemplItemLeft" align="right" valign="top">constexpr OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga60eb33515bb6d0910660a0200ff521fa">mimicpp::printing::type::prettify_type</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
+<tr class="memdesc:ga60eb33515bb6d0910660a0200ff521fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a demangled name.  <br /></td></tr>
+<tr class="separator:ga60eb33515bb6d0910660a0200ff521fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga88fcba5cc0f51ab59bb46bad1b4d5755" id="r_ga88fcba5cc0f51ab59bb46bad1b4d5755"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:ga88fcba5cc0f51ab59bb46bad1b4d5755"><td class="memTemplItemLeft" align="right" valign="top">constexpr OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga88fcba5cc0f51ab59bb46bad1b4d5755">mimicpp::printing::type::prettify_function</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
+<tr class="memdesc:ga88fcba5cc0f51ab59bb46bad1b4d5755"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a function name produces by e.g. <code>std::source_location::function_name()</code>.  <br /></td></tr>
+<tr class="separator:ga88fcba5cc0f51ab59bb46bad1b4d5755"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -178,8 +182,8 @@ Customize type-stringification</h3>
 <div class="line">        qualifiedName,</div>
 <div class="line">        Catch::Matchers::Equals(<span class="stringliteral">&quot;This-Is-My-Mighty-Type* const&amp;&amp;&quot;</span>));</div>
 </div><!-- fragment --> <h2 class="groupheader">Function Documentation</h2>
-<a id="gae6a9ffb6738e44a4f1447fe01174996b" name="gae6a9ffb6738e44a4f1447fe01174996b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae6a9ffb6738e44a4f1447fe01174996b">&#9670;&#160;</a></span>prettify_identifier()</h2>
+<a id="ga88fcba5cc0f51ab59bb46bad1b4d5755" name="ga88fcba5cc0f51ab59bb46bad1b4d5755"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga88fcba5cc0f51ab59bb46bad1b4d5755">&#9670;&#160;</a></span>prettify_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -190,7 +194,57 @@ template&lt;print_iterator OutIter&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">OutIter mimicpp::printing::type::prettify_identifier </td>
+          <td class="memname">OutIter mimicpp::printing::type::prettify_function </td>
+          <td>(</td>
+          <td class="paramtype">OutIter</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Prettifies a function name produces by e.g. <code>std::source_location::function_name()</code>. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">OutIter</td><td>The print-iterator type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out</td><td>The print iterator. </td></tr>
+    <tr><td class="paramname">name</td><td>The function name to be prettified. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The current print iterator.</dd></dl>
+<p>This function formats a function for better readability. The primary strategy is to minimize unnecessary details while retaining essential information. Although this may introduce some ambiguity, it is generally more beneficial to provide an approximate name.</p>
+<p>For example, when a template-dependent type is provided, the template arguments are omitted: <code>void fun(std::vector&lt;int, std::allocator&gt;::iterator)</code> =&gt; <code>void fun(std::vector::iterator)</code></p>
+<dl class="section note"><dt>Note</dt><dd>When <code>MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES</code> is disabled, this function simply outputs the provided name without any modifications. </dd></dl>
+
+</div>
+</div>
+<a id="ga60eb33515bb6d0910660a0200ff521fa" name="ga60eb33515bb6d0910660a0200ff521fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga60eb33515bb6d0910660a0200ff521fa">&#9670;&#160;</a></span>prettify_type()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;print_iterator OutIter&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">OutIter mimicpp::printing::type::prettify_type </td>
           <td>(</td>
           <td class="paramtype">OutIter</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
         </tr>
@@ -236,6 +290,9 @@ template&lt;print_iterator OutIter&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> mimicpp::printing::type::type_name </td>
@@ -244,6 +301,11 @@ template&lt;typename T&gt; </div>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Returns the (potentially demangled) name. </p>
@@ -293,7 +355,7 @@ template&lt;typename T&gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Tue May 6 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat May 10 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

@@ -73,9 +73,11 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
@@ -93,11 +95,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d3/d4a/classmimicpp_1_1_basic_expectation.html",
-"d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a97aabdc22c19b11b1ce31bf7c7526ab6",
-"d9/dc5/_string_8hpp_source.html",
-"dc/dec/_always_false_8hpp_source.html",
-"namespacemembers_enum.html"
+"d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html#aa309cf22f6a191101d4f6d5e64c8c9da",
+"d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gafdc92bf0fd579b44a68e2eb42d89f078",
+"d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html",
+"d9/d42/_boost_test_8hpp_source.html",
+"dc/d8d/structmimicpp_1_1util_1_1type__list__pop__back.html",
+"df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a4b39908774ae2fc23eb6fcd623e6cbb5"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

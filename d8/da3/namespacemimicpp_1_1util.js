@@ -15,12 +15,18 @@ var namespacemimicpp_1_1util =
     [ "satisfies", "dc/d18/conceptmimicpp_1_1util_1_1satisfies.html", null ],
     [ "boolean_testable", "d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html", null ],
     [ "weakly_equality_comparable_with", "d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html", null ],
+    [ "projected_value_t", "d8/da3/namespacemimicpp_1_1util.html#a1bf76cb81561bd1b640e8303d2f3e7b7", null ],
     [ "type_list_pop_back_t", "d8/da3/namespacemimicpp_1_1util.html#ade36f86aac332827425e8d069c0e6586", null ],
     [ "type_list_populate_t", "d8/da3/namespacemimicpp_1_1util.html#ac33626f0a0b03836340f5fb0efd4847c", null ],
     [ "type_list_reverse_t", "d8/da3/namespacemimicpp_1_1util.html#a9e7b756bc206828739845da4bcd8f2a0", null ],
+    [ "concat_arrays", "d8/da3/namespacemimicpp_1_1util.html#ab67670867e6588001d719e36ad404c79", null ],
+    [ "concat_arrays", "d8/da3/namespacemimicpp_1_1util.html#a226566adae6e502d71ebf49c3a47e165", null ],
     [ "find_closing_token", "d8/da3/namespacemimicpp_1_1util.html#a775d0ca317345e92231ec716a81ca921", null ],
     [ "find_next_unwrapped_token", "d8/da3/namespacemimicpp_1_1util.html#ad9543460b0c98427b3cf3b46f5b5aaad", null ],
     [ "partition_by", "d8/da3/namespacemimicpp_1_1util.html#a1cacfa68d0494f3efdf72b945dfe65ca", null ],
+    [ "prefix_range", "d8/da3/namespacemimicpp_1_1util.html#a1dd9f411a69f3ec1f01f4fb68217c7f4", null ],
     [ "to_underlying", "d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9", null ],
-    [ "unreachable", "d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836", null ]
+    [ "unreachable", "d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836", null ],
+    [ "binary_find", "d8/da3/namespacemimicpp_1_1util.html#ae6cea4e9b0f4576bf518112f12bd8e5d", null ],
+    [ "contains", "d8/da3/namespacemimicpp_1_1util.html#a6ab229fce64e2c104a052a34d45e626c", null ]
 ];

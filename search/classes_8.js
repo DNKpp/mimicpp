@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['lazysequence_0',['LazySequence',['../db/d46/classmimicpp_1_1_lazy_sequence.html',1,'mimicpp']]],
-  ['lifetimewatcher_1',['LifetimeWatcher',['../db/d98/classmimicpp_1_1_lifetime_watcher.html',1,'mimicpp']]]
+  ['keyword_0',['keyword',['../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html',1,'mimicpp::printing::type::lexing']]]
 ];

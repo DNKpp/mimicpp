@@ -22,6 +22,48 @@ var annotated_dup =
         [ "Throws", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws" ]
       ] ],
       [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", [
+        [ "type", "d9/d41/namespacemimicpp_1_1printing_1_1type.html", [
+          [ "lexing", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html", [
+            [ "end", "d8/d12/structmimicpp_1_1printing_1_1type_1_1lexing_1_1end.html", "d8/d12/structmimicpp_1_1printing_1_1type_1_1lexing_1_1end" ],
+            [ "identifier", "de/dd6/structmimicpp_1_1printing_1_1type_1_1lexing_1_1identifier.html", "de/dd6/structmimicpp_1_1printing_1_1type_1_1lexing_1_1identifier" ],
+            [ "keyword", "d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html", "d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword" ],
+            [ "NameLexer", "de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html", "de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer" ],
+            [ "operator_or_punctuator", "d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html", "d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator" ],
+            [ "space", "d2/de3/structmimicpp_1_1printing_1_1type_1_1lexing_1_1space.html", "d2/de3/structmimicpp_1_1printing_1_1type_1_1lexing_1_1space" ],
+            [ "token", "dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token.html", "dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token" ]
+          ] ],
+          [ "parsing", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html", [
+            [ "token", "d2/d01/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1token.html", [
+              [ "ArgSeparator", "d0/d1e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_separator.html", "d0/d1e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_separator" ],
+              [ "ArgSequence", "d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html", "d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence" ],
+              [ "ClosingAngle", "d1/d2c/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_angle.html", "d1/d2c/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_angle" ],
+              [ "ClosingCurly", "d6/d7f/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_curly.html", "d6/d7f/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_curly" ],
+              [ "ClosingParens", "d5/dd0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_parens.html", "d5/dd0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_parens" ],
+              [ "ClosingSingleQuote", "d0/dcd/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_single_quote.html", "d0/dcd/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_single_quote" ],
+              [ "Function", "d6/d14/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function.html", "d6/d14/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function" ],
+              [ "FunctionContext", "d8/dd3/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_context.html", "d8/dd3/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_context" ],
+              [ "FunctionIdentifier", "d4/d09/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_identifier.html", "d4/d09/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_identifier" ],
+              [ "FunctionPtr", "d8/d0d/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr.html", "d8/d0d/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr" ],
+              [ "FunctionPtrType", "dd/df1/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_type.html", "dd/df1/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_type" ],
+              [ "FunctionType", "d7/d12/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_type.html", "d7/d12/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_type" ],
+              [ "Identifier", "d3/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_identifier.html", "d3/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_identifier" ],
+              [ "OpeningAngle", "d8/dc8/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_angle.html", "d8/dc8/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_angle" ],
+              [ "OpeningBacktick", "df/dab/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_backtick.html", "df/dab/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_backtick" ],
+              [ "OpeningCurly", "dc/d50/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_curly.html", "dc/d50/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_curly" ],
+              [ "OpeningParens", "d3/d37/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_parens.html", "d3/d37/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_parens" ],
+              [ "OperatorKeyword", "d5/d73/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_operator_keyword.html", null ],
+              [ "RegularType", "d1/d3a/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_regular_type.html", "d1/d3a/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_regular_type" ],
+              [ "ScopeResolution", "d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution.html", "d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution" ],
+              [ "ScopeSequence", "df/d6e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_sequence.html", "df/d6e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_sequence" ],
+              [ "Space", "d5/d4b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_space.html", null ],
+              [ "Specs", "de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs.html", "de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs" ],
+              [ "Type", "d1/da5/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_type.html", "d1/da5/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_type" ],
+              [ "TypeContext", "dd/d8e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_type_context.html", "dd/d8e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_type_context" ]
+            ] ],
+            [ "NameParser", "d4/dc0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_name_parser.html", "d4/dc0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_name_parser" ]
+          ] ],
+          [ "PrintVisitor", "df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html", "df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor" ]
+        ] ],
         [ "PrintFn", "d1/db9/classmimicpp_1_1printing_1_1_print_fn.html", "d1/db9/classmimicpp_1_1printing_1_1_print_fn" ],
         [ "PrintTypeFn", "d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html", "d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn" ]
       ] ],

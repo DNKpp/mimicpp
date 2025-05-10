@@ -1,6 +1,14 @@
 var concepts =
 [
     [ "mimicpp", "d1/d11/namespacemimicpp.html", [
+      [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", [
+        [ "type", "d9/d41/namespacemimicpp_1_1printing_1_1type.html", [
+          [ "parsing", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html", [
+            [ "parser_visitor", "d6/def/conceptmimicpp_1_1printing_1_1type_1_1parsing_1_1parser__visitor.html", null ],
+            [ "token_type", "d4/d1b/conceptmimicpp_1_1printing_1_1type_1_1parsing_1_1token__type.html", null ]
+          ] ]
+        ] ]
+      ] ],
       [ "stacktrace", "df/d4b/namespacemimicpp_1_1stacktrace.html", [
         [ "backend", "d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html", null ]
       ] ],

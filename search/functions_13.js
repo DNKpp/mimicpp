@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['watched_0',['Watched',['../d3/d5d/classmimicpp_1_1_watched.html#a8647ca5a5168969e3cd5cf18fb7f284b',1,'mimicpp::Watched::Watched(const Watched &amp;)=default'],['../d3/d5d/classmimicpp_1_1_watched.html#afa77d7e7eef110ca0d8be6e0a11ce60d',1,'mimicpp::Watched::Watched(Watched &amp;&amp;)=default']]],
-  ['where_1',['where',['../dd/d2e/classmimicpp_1_1reporting_1_1_error.html#a365c4c7a8a72ee7ebcf02b8de98e1bd6',1,'mimicpp::reporting::Error']]]
+  ['view_0',['view',['../d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html#abfdffee38c585c50f16359a508675746',1,'mimicpp::string_traits&lt; T &gt;::view()'],['../d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html#ab9bfe506e844c95fe74d2e846c71a83c',1,'mimicpp::string_traits&lt; std::basic_string&lt; Char, Traits, Allocator &gt; &gt;::view()'],['../d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html#a87aa093833a75a92f8b58be9d6e64676',1,'mimicpp::string_traits&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;::view()']]]
 ];
