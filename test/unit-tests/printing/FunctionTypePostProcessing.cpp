@@ -208,7 +208,7 @@ TEST_CASE(
                 + "::"
                 + anonTypePattern
                 + "::"
-                  R"(operator\(\))"
+                  R"(operator\s?\(\))"
                   R"(\(\)\s?const)"));
     }
 
@@ -238,7 +238,7 @@ TEST_CASE(
                 + "::"
                 + anonTypePattern
                 + "::"
-                  R"(operator\(\))"
+                  R"(operator\s?\(\))"
                   R"(\(\)\s?const)"));
     }
 
@@ -486,7 +486,7 @@ TEST_CASE(
         #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Matches(R"(operator\(\))"));
+            Catch::Matchers::Matches(R"(operator\s?\(\))"));
         #else
         REQUIRE_THAT(
             ss.str(),
@@ -510,7 +510,7 @@ TEST_CASE(
         #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Matches(R"(operator\(\))"));
+            Catch::Matchers::Matches(R"(operator\s?\(\))"));
         #else
         REQUIRE_THAT(
             ss.str(),
@@ -540,7 +540,7 @@ TEST_CASE(
         #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Matches(R"(operator\(\))"));
+            Catch::Matchers::Matches(R"(operator\s?\(\))"));
         #else
         REQUIRE_THAT(
             ss.str(),
@@ -575,7 +575,7 @@ TEST_CASE(
         #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Matches(R"(operator\(\))"));
+            Catch::Matchers::Matches(R"(operator\s?\(\))"));
         #else
         REQUIRE_THAT(
             ss.str(),
@@ -612,7 +612,7 @@ TEST_CASE(
         #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Matches(R"(operator\(\))"));
+            Catch::Matchers::Matches(R"(operator\s?\(\))"));
         #else
         REQUIRE_THAT(
             ss.str(),
@@ -639,7 +639,7 @@ TEST_CASE(
         #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
             ss.str(),
-            Catch::Matchers::Matches(R"(operator\(\))"));
+            Catch::Matchers::Matches(R"(operator\s?\(\))"));
         #else
         REQUIRE_THAT(
             ss.str(),

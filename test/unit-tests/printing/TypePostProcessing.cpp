@@ -193,7 +193,7 @@ namespace
     StringT const anonNsScopePattern = R"(\{anon-ns\}::)";
     StringT const anonTypePattern = R"((\$_\d+|\{unnamed type#\d+\}|<unnamed-type-anon_(class|struct|enum)>))";
     StringT const testCaseScopePattern = R"(CATCH2_INTERNAL_TEST_\d+::)";
-    StringT const callOpScopePattern = R"(operator\(\)::)";
+    StringT const callOpScopePattern = R"(operator\s?\(\)::)";
 }
 
 TEMPLATE_TEST_CASE(
@@ -635,7 +635,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 anonNsScopePattern
                 + "outer_type::"
-                  R"(operator\+::)"
+                  R"(operator\s?\+::)"
                   "my_type"));
     }
 }
@@ -1227,10 +1227,10 @@ TEST_CASE(
     {
         auto const [expectedFunctionName, rawName] = GENERATE(
             (table<StringT, StringT>)({
-                { R"(operator<)",  printing::type::type_name<decltype(special_operators{}.operator<(42))>()},
-                {R"(operator<=)", printing::type::type_name<decltype(special_operators{}.operator<=(42))>()},
-                { R"(operator>)",  printing::type::type_name<decltype(special_operators{}.operator>(42))>()},
-                {R"(operator>=)", printing::type::type_name<decltype(special_operators{}.operator>=(42))>()}
+                { R"(operator\s?<)",  printing::type::type_name<decltype(special_operators{}.operator<(42))>()},
+                {R"(operator\s?<=)", printing::type::type_name<decltype(special_operators{}.operator<=(42))>()},
+                { R"(operator\s?>)",  printing::type::type_name<decltype(special_operators{}.operator>(42))>()},
+                {R"(operator\s?>=)", printing::type::type_name<decltype(special_operators{}.operator>=(42))>()}
         }));
         CAPTURE(rawName);
 
@@ -1250,10 +1250,10 @@ TEST_CASE(
     {
         auto const [expectedFunctionName, expectedNestedFunctionName, rawName] = GENERATE(
             (table<StringT, StringT, StringT>)({
-                { R"(operator<)", R"(operator>=)",  printing::type::type_name<decltype(special_operators{}.operator<(""))>()},
-                {R"(operator<=)",  R"(operator>)", printing::type::type_name<decltype(special_operators{}.operator<=(""))>()},
-                { R"(operator>)", R"(operator<=)",  printing::type::type_name<decltype(special_operators{}.operator>(""))>()},
-                {R"(operator>=)",  R"(operator<)", printing::type::type_name<decltype(special_operators{}.operator>=(""))>()}
+                { R"(operator\s?<)", R"(operator\s?>=)",  printing::type::type_name<decltype(special_operators{}.operator<(""))>()},
+                {R"(operator\s?<=)",  R"(operator\s?>)", printing::type::type_name<decltype(special_operators{}.operator<=(""))>()},
+                { R"(operator\s?>)", R"(operator\s?<=)",  printing::type::type_name<decltype(special_operators{}.operator>(""))>()},
+                {R"(operator\s?>=)",  R"(operator\s?<)", printing::type::type_name<decltype(special_operators{}.operator>=(""))>()}
         }));
         CAPTURE(rawName);
 
@@ -1284,7 +1284,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 anonNsScopePattern
                 + "special_operators::"
-                + "operator<=>::"
+                + R"(operator\s?<=>::)"
                 + "my_type"));
     }
 }
@@ -1308,7 +1308,7 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 anonNsScopePattern
                 + "special_operators::"
-                + R"(operator\(\)::)"
+                + R"(operator\s?\(\)::)"
                 + "my_type"));
     }
 
@@ -1327,7 +1327,7 @@ TEST_CASE(
     #else
             anonNsScopePattern +
     #endif
-            R"(special_operators::operator\(\)::my_type )";
+            R"(special_operators::operator\s?\(\)::my_type )";
 
         REQUIRE_THAT(
             ss.str(),
