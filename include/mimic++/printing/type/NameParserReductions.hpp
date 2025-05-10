@@ -598,9 +598,14 @@ namespace mimicpp::printing::type::parsing
             auto* const prefixSpecs = match_suffix<Specs>(pendingTokens);
             if (prefixSpecs)
             {
-                [[maybe_unused]] auto& layers = prefixSpecs->layers;
-                MIMICPP_ASSERT(token::Specs::Refness::none == prefixSpecs->refness && !prefixSpecs->isNoexcept, "Invalid prefix specs.");
-                MIMICPP_ASSERT(1u == layers.size(), "Prefix specs can not have more than one layer.");
+                // Prefix-specs can only have `const` and/or `volatile`.
+                if (auto const& layers = prefixSpecs->layers;
+                    token::Specs::Refness::none != prefixSpecs->refness
+                    || prefixSpecs->isNoexcept
+                    || 1u != layers.size())
+                {
+                    return false;
+                }
 
                 remove_suffix(pendingTokens, 1u);
             }
