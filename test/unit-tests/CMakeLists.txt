@@ -37,7 +37,6 @@ enable_sanitizers(${TARGET_NAME})
 
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
-find_package(libassert REQUIRED)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
@@ -48,8 +47,8 @@ target_link_libraries(${TARGET_NAME}
 
 target_precompile_headers(${TARGET_NAME}
     PRIVATE
-    "Catch2FallbackStringifier.hpp"
     <TestAssert.hpp>
+    "Catch2FallbackStringifier.hpp"
     <catch2/catch_all.hpp>
     <catch2/trompeloeil.hpp>
 )

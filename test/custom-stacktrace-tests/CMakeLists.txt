@@ -20,7 +20,6 @@ enable_sanitizers(${TARGET_NAME})
 
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
-find_package(libassert REQUIRED)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
     mimicpp::mimicpp
