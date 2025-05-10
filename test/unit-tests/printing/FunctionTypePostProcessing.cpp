@@ -82,7 +82,7 @@ namespace
     StringT const topLevelLambdaPattern =
         R"((\$_\d+|lambda(#\d+)?|\(anonymous class\)))";
 
-    StringT const lambdaCallOpPattern = topLevelLambdaPattern + R"(::(operator)?\(\))";
+    StringT const lambdaCallOpPattern = topLevelLambdaPattern + R"(::(operator\s?)?\(\))";
 
     StringT const anonNsScopePattern = R"(\{anon-ns\}::)";
     StringT const anonTypePattern = R"((\$_\d+|<unnamed-(tag|type-obj)>|<unnamed (class|struct|enum)>|\(anonymous (class|struct|enum)\)))";
@@ -335,9 +335,11 @@ TEST_CASE(
             REQUIRE_THAT(
                 ss.str(),
                 Catch::Matchers::Matches(
-                    anonNsScopePattern
+                    // Clang adds a return type here.
+                    "(util::SourceLocation )?"
+                    + anonNsScopePattern
                     + "conversion::"
-                    + R"(operator mimicpp::util::SourceLocation\(\))"));
+                    + R"(operator (mimicpp::util::)?SourceLocation\(\))"));
         }
 
         SECTION("and when converted to simple type via const function.")
@@ -354,9 +356,11 @@ TEST_CASE(
             REQUIRE_THAT(
                 ss.str(),
                 Catch::Matchers::Matches(
-                    anonNsScopePattern
+                    // Clang adds a return type here.
+                    "(util::SourceLocation )?"
+                    + anonNsScopePattern
                     + "conversion::"
-                    + R"(operator mimicpp::util::SourceLocation\(\) const)"));
+                    + R"(operator (mimicpp::util::)?SourceLocation\(\) const)"));
         }
     }
 
@@ -377,7 +381,9 @@ TEST_CASE(
 
             REQUIRE_THAT(
                 ss.str(),
-                Catch::Matchers::Matches(R"(operator mimicpp::Stacktrace)"));
+                Catch::Matchers::Matches(
+                    R"((\{anon-ns\}::conversion::)?)"
+                    R"(operator mimicpp::Stacktrace(\(\))?)"));
         }
 
         SECTION("When converted to simple type via const function.")
@@ -393,7 +399,9 @@ TEST_CASE(
 
             REQUIRE_THAT(
                 ss.str(),
-                Catch::Matchers::Matches(R"(operator mimicpp::Stacktrace)"));
+                Catch::Matchers::Matches(
+                    R"((\{anon-ns\}::conversion::)?)"
+                    R"(operator mimicpp::Stacktrace(\(\)\s?const)?)"));
         }
     }
 
@@ -583,8 +591,8 @@ TEST_CASE(
                 testCasePattern
                 + "::"
                 + anonTypePattern
-                + R"(::operator\(\))"
-                R"((\(\)(\s?const)?)?)"));
+                + R"(::operator\s?\(\))"
+                  R"((\(\)(\s?const)?)?)"));
         #endif
     }
 
@@ -620,8 +628,8 @@ TEST_CASE(
                 testCasePattern
                 + "::"
                 + anonTypePattern
-                + R"(::operator\(\))"
-                R"((\(\)(\s?const)?)?)"));
+                + R"(::operator\s?\(\))"
+                  R"((\(\)(\s?const)?)?)"));
         #endif
     }
 

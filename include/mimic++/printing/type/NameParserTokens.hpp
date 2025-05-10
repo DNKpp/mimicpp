@@ -351,15 +351,7 @@ namespace mimicpp::printing::type::parsing::token
         Specs specs{};
 
         template <parser_visitor Visitor>
-        constexpr void operator()(Visitor& visitor) const
-        {
-            auto& unwrapped = unwrap_visitor(visitor);
-
-            unwrapped.begin_function_args(std::ranges::ssize(args.types));
-            std::invoke(args, unwrapped);
-            unwrapped.end_function_args();
-            std::invoke(specs, unwrapped);
-        }
+        constexpr void operator()(Visitor& visitor) const;
     };
 
     class FunctionIdentifier
@@ -604,6 +596,17 @@ namespace mimicpp::printing::type::parsing::token
         unwrapped.begin_template_args(std::ranges::ssize(types));
         std::invoke(*this, unwrapped);
         unwrapped.end_template_args();
+    }
+
+    template <parser_visitor Visitor>
+    constexpr void FunctionContext::operator()(Visitor& visitor) const
+    {
+        auto& unwrapped = unwrap_visitor(visitor);
+
+        unwrapped.begin_function_args(std::ranges::ssize(args.types));
+        std::invoke(args, unwrapped);
+        unwrapped.end_function_args();
+        std::invoke(specs, unwrapped);
     }
 
     class Function
