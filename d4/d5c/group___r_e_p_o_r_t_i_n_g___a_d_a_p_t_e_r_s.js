@@ -1,7 +1,7 @@
 var group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s =
 [
-    [ "mimicpp::BoostTestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaff6166a635def8d5ecbca2a02bc6018c", null ],
-    [ "mimicpp::Catch2ReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga83491b3ee848d76b88f36fa99b9e1b54", null ],
-    [ "mimicpp::DoctestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga858ff9942a3a1336b76a511608b567db", null ],
-    [ "mimicpp::GTestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga6ccf9eea58860121e1301d1ab0a82821", null ]
+    [ "mimicpp::reporting::BoostTestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaa1a2d936b0a089d8b4e19f75eb6b8bbc", null ],
+    [ "mimicpp::reporting::Catch2ReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gafdc92bf0fd579b44a68e2eb42d89f078", null ],
+    [ "mimicpp::reporting::DoctestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga8ef20c643725738016314f855cc453fa", null ],
+    [ "mimicpp::reporting::GTestReporterT", "d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gadbde6f54f7ab90797afb95b0e37b50a2", null ]
 ];

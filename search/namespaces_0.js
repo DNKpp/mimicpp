@@ -10,7 +10,15 @@ var searchData=
   ['mimicpp_3a_3amatches_7',['matches',['../dd/d7b/namespacemimicpp_1_1matches.html',1,'mimicpp']]],
   ['mimicpp_3a_3amatches_3a_3arange_8',['range',['../d2/d24/namespacemimicpp_1_1matches_1_1range.html',1,'mimicpp::matches']]],
   ['mimicpp_3a_3amatches_3a_3astr_9',['str',['../dc/d7d/namespacemimicpp_1_1matches_1_1str.html',1,'mimicpp::matches']]],
-  ['mimicpp_3a_3asequence_10',['sequence',['../d8/dce/namespacemimicpp_1_1sequence.html',1,'mimicpp']]],
-  ['mimicpp_3a_3astacktrace_11',['stacktrace',['../df/d4b/namespacemimicpp_1_1stacktrace.html',1,'mimicpp']]],
-  ['mimicpp_3a_3athen_12',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]]
+  ['mimicpp_3a_3aprinting_10',['printing',['../d8/ddf/namespacemimicpp_1_1printing.html',1,'mimicpp']]],
+  ['mimicpp_3a_3aprinting_3a_3atype_11',['type',['../d9/d41/namespacemimicpp_1_1printing_1_1type.html',1,'mimicpp::printing']]],
+  ['mimicpp_3a_3aprinting_3a_3atype_3a_3alexing_12',['lexing',['../d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html',1,'mimicpp::printing::type']]],
+  ['mimicpp_3a_3aprinting_3a_3atype_3a_3alexing_3a_3atexts_13',['texts',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html',1,'mimicpp::printing::type::lexing']]],
+  ['mimicpp_3a_3aprinting_3a_3atype_3a_3aparsing_14',['parsing',['../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html',1,'mimicpp::printing::type']]],
+  ['mimicpp_3a_3aprinting_3a_3atype_3a_3aparsing_3a_3atoken_15',['token',['../d2/d01/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1token.html',1,'mimicpp::printing::type::parsing']]],
+  ['mimicpp_3a_3areporting_16',['reporting',['../d6/d48/namespacemimicpp_1_1reporting.html',1,'mimicpp']]],
+  ['mimicpp_3a_3asequence_17',['sequence',['../d8/dce/namespacemimicpp_1_1sequence.html',1,'mimicpp']]],
+  ['mimicpp_3a_3astacktrace_18',['stacktrace',['../df/d4b/namespacemimicpp_1_1stacktrace.html',1,'mimicpp']]],
+  ['mimicpp_3a_3athen_19',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]],
+  ['mimicpp_3a_3autil_20',['util',['../d8/da3/namespacemimicpp_1_1util.html',1,'mimicpp']]]
 ];

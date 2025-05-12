@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['finalize_0',['Finalize',['../d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html',1,'mimicpp::MatchReport']]],
-  ['find_5fbackend_1',['find_backend',['../dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend.html',1,'mimicpp::stacktrace']]],
-  ['formatter_3c_20mimicpp_3a_3aconstness_2c_20mimicpp_3a_3achart_20_3e_2',['formatter&lt; mimicpp::Constness, mimicpp::CharT &gt;',['../d2/d9b/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_constness_00_01mimicpp_1_1_char_t_01_4.html',1,'mimicpp::format']]],
-  ['formatter_3c_20mimicpp_3a_3avaluecategory_2c_20mimicpp_3a_3achart_20_3e_3',['formatter&lt; mimicpp::ValueCategory, mimicpp::CharT &gt;',['../db/dc9/structmimicpp_1_1format_1_1formatter_3_01mimicpp_1_1_value_category_00_01mimicpp_1_1_char_t_01_4.html',1,'mimicpp::format']]]
+  ['find_5fbackend_0',['find_backend',['../dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend.html',1,'mimicpp::stacktrace']]],
+  ['for_5fbase_5ftag_1',['for_base_tag',['../d6/da7/structmimicpp_1_1for__base__tag.html',1,'mimicpp']]],
+  ['function_2',['Function',['../d6/d14/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function.html',1,'mimicpp::printing::type::parsing::token']]],
+  ['functioncontext_3',['FunctionContext',['../d8/dd3/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_context.html',1,'mimicpp::printing::type::parsing::token']]],
+  ['functionidentifier_4',['FunctionIdentifier',['../d4/d09/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_identifier.html',1,'mimicpp::printing::type::parsing::token']]],
+  ['functionptr_5',['FunctionPtr',['../d8/d0d/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr.html',1,'mimicpp::printing::type::parsing::token']]],
+  ['functionptrtype_6',['FunctionPtrType',['../dd/df1/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_type.html',1,'mimicpp::printing::type::parsing::token']]],
+  ['functiontype_7',['FunctionType',['../d7/d12/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_type.html',1,'mimicpp::printing::type::parsing::token']]]
 ];

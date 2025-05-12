@@ -1,8 +1,10 @@
 var searchData=
 [
-  ['inapplicablesequences_0',['inapplicableSequences',['../d7/dd2/structmimicpp_1_1state__inapplicable.html#ac498a9837eec3d70da0dd3e2b215043e',1,'mimicpp::state_inapplicable']]],
-  ['is_5fcharacter_5fv_1',['is_character_v',['../dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html#ga88d25d2fd5d4f51c8a9d81bdfb57bcb2',1,'mimicpp']]],
-  ['is_5foverload_5fset_5fv_2',['is_overload_set_v',['../df/dc6/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d___s_e_t.html#ga39bc4106334393c907fb7c716490135c',1,'mimicpp']]],
-  ['is_5foverloadable_5fwith_5fv_3',['is_overloadable_with_v',['../d1/d9e/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d_a_b_l_e___w_i_t_h.html#ga444a530890b564007a9d8f9b5d035785',1,'mimicpp']]],
-  ['ismatching_4',['isMatching',['../da/d15/classmimicpp_1_1_match_report_1_1_expectation.html#aa49a27c0f7623851fab2054dfae07678',1,'mimicpp::MatchReport::Expectation']]]
+  ['finalizerdescription_0',['finalizerDescription',['../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a6d32697cd0c5d9c6556483e787d95410',1,'mimicpp::reporting::ExpectationReport']]],
+  ['for_5fbase_5fv_1',['for_base_v',['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#gace3dbca1a90cde9b3d2e145819615a75',1,'mimicpp']]],
+  ['from_2',['from',['../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a027d5b0050b7dfd10da75b15311aed63',1,'mimicpp::reporting::ExpectationReport']]],
+  ['fromcategory_3',['fromCategory',['../d4/d44/classmimicpp_1_1call_1_1_info.html#a153d607922dd5ca195dc8daa23587776',1,'mimicpp::call::Info::fromCategory'],['../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#ae43070443741c44e518849b5a3e9811d',1,'mimicpp::reporting::CallReport::fromCategory']]],
+  ['fromconstness_4',['fromConstness',['../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3',1,'mimicpp::call::Info::fromConstness'],['../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a6824a122077ea2308b1840fe7e69cd85',1,'mimicpp::reporting::CallReport::fromConstness']]],
+  ['fromloc_5',['fromLoc',['../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#aed352ed918c40d74c26659c1e221f402',1,'mimicpp::reporting::CallReport']]],
+  ['fromsourcelocation_6',['fromSourceLocation',['../d4/d44/classmimicpp_1_1call_1_1_info.html#aa8a744a37e78959a2fa61b24af052bfd',1,'mimicpp::call::Info']]]
 ];

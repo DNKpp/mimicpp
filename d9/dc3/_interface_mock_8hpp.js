@@ -18,7 +18,7 @@ var _interface_mock_8hpp =
     [ "MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL", "d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga77c987f146661ad673e08a434b3b8a1e", null ],
     [ "MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC", "d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#ga10423936a3e62b352191532a93fbfb5f", null ],
     [ "MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS", "d0/dd9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___o_v_e_r_l_o_a_d___i_n_f_o_s.html#gac0c4c04b439893ddc57f388acd4439cf", null ],
-    [ "MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK", "d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html#ga6b5a5839a7084be1c5f34ebe2be8d6c0", null ],
+    [ "MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK", "d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html#ga1872fb9c4ec3dc1a53a849e97442d6a6", null ],
     [ "MIMICPP_DETAIL_MAKE_PARAM", "da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html#gabbb445760536f41ecf62e0f385e2ddac", null ],
     [ "MIMICPP_DETAIL_MAKE_PARAM_LIST", "da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html#ga57cbefd5ba9b1a1caf8cb36021c406ab", null ],
     [ "MIMICPP_DETAIL_MAKE_SIGNATURE", "d7/d9a/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___s_i_g_n_a_t_u_r_e___l_i_s_t.html#ga94652cf5f9182ee774aeea4fde8b9594", null ],

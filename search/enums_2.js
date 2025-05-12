@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['matchresult_0',['MatchResult',['../d1/d11/namespacemimicpp.html#a0e5bd3ba3ed7ebefe6d2016ce35bbe5b',1,'mimicpp']]]
+  ['refness_0',['Refness',['../de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs.html#a8b79936fe9f3950aaeeafc51c46648a4',1,'mimicpp::printing::type::parsing::token::Specs']]]
 ];

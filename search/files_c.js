@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['sequence_2ehpp_0',['Sequence.hpp',['../d8/de4/_sequence_8hpp.html',1,'']]],
-  ['sideeffectpolicies_2ehpp_1',['SideEffectPolicies.hpp',['../dc/d18/_side_effect_policies_8hpp.html',1,'']]],
-  ['stacktrace_2ehpp_2',['Stacktrace.hpp',['../de/df5/_stacktrace_8hpp.html',1,'']]],
-  ['string_2ehpp_3',['String.hpp',['../d9/dc5/_string_8hpp.html',1,'']]],
-  ['stringmatchers_2ehpp_4',['StringMatchers.hpp',['../d2/d56/_string_matchers_8hpp.html',1,'']]]
+  ['rangematchers_2ehpp_0',['RangeMatchers.hpp',['../df/df3/_range_matchers_8hpp.html',1,'']]],
+  ['readme_2emd_1',['README.md',['../d9/dd6/_r_e_a_d_m_e_8md.html',1,'']]],
+  ['reporting_2ehpp_2',['Reporting.hpp',['../d7/deb/_reporting_8hpp.html',1,'']]]
 ];

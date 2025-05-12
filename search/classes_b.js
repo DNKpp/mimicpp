@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['predicatematcher_0',['PredicateMatcher',['../dc/d5e/classmimicpp_1_1_predicate_matcher.html',1,'mimicpp']]],
-  ['printer_1',['Printer',['../da/d68/classmimicpp_1_1custom_1_1_printer.html',1,'mimicpp::custom']]],
-  ['priority_5ftag_2',['priority_tag',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]],
-  ['priority_5ftag_3c_200_20_3e_3',['priority_tag&lt; 0 &gt;',['../d1/d9f/structmimicpp_1_1priority__tag.html',1,'mimicpp']]]
+  ['namelexer_0',['NameLexer',['../de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html',1,'mimicpp::printing::type::lexing']]],
+  ['nameparser_1',['NameParser',['../d4/dc0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_name_parser.html',1,'mimicpp::printing::type::parsing']]],
+  ['nestedinfo_2',['NestedInfo',['../d8/dad/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_1_1_nested_info.html',1,'mimicpp::printing::type::parsing::token::FunctionPtr']]],
+  ['nomatchreport_3',['NoMatchReport',['../df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html',1,'mimicpp::reporting']]],
+  ['nullbackend_4',['NullBackend',['../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html',1,'mimicpp::stacktrace']]]
 ];

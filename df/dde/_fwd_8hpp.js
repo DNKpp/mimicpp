@@ -1,6 +1,5 @@
 var _fwd_8hpp =
 [
-    [ "mimicpp::type_list< Args >", "db/dc6/structmimicpp_1_1type__list.html", null ],
     [ "mimicpp::sequence::rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", "de/d81/structmimicpp_1_1sequence_1_1rating" ],
     [ "mimicpp::CharT", "d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc", null ],
     [ "mimicpp::CharTraitsT", "d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad", null ],
@@ -23,11 +22,6 @@ var _fwd_8hpp =
       [ "mimicpp::Constness::any", "d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a100b8cad7cf2a56f6df78f171f97a1ec", null ]
     ] ],
     [ "mimicpp::sequence::Id", "d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673", null ],
-    [ "mimicpp::MatchResult", "d1/d11/namespacemimicpp.html#a0e5bd3ba3ed7ebefe6d2016ce35bbe5b", [
-      [ "mimicpp::MatchResult::none", "d1/d11/namespacemimicpp.html#a0e5bd3ba3ed7ebefe6d2016ce35bbe5ba334c4a4c42fdb79d7ebc3e73b517e6f8", null ],
-      [ "mimicpp::MatchResult::inapplicable", "d1/d11/namespacemimicpp.html#a0e5bd3ba3ed7ebefe6d2016ce35bbe5ba1ac68c34085161b5777c3fd2d4572a6b", null ],
-      [ "mimicpp::MatchResult::full", "d1/d11/namespacemimicpp.html#a0e5bd3ba3ed7ebefe6d2016ce35bbe5bae9dc924f238fa6cc29465942875fe8f0", null ]
-    ] ],
     [ "mimicpp::sequence::Tag", "d8/dce/namespacemimicpp_1_1sequence.html#ade137497ede2a9436dd532cf2e95fec8", null ],
     [ "mimicpp::ValueCategory", "d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a", [
       [ "mimicpp::ValueCategory::lvalue", "d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa44f6155f13a820089c09cb5e9d7ccdef", null ],

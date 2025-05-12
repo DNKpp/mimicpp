@@ -17,12 +17,14 @@ var group___e_x_p_e_c_t_a_t_i_o_n =
       [ "Expectation", "d3/d1c/classmimicpp_1_1_expectation.html#a3ffc7b5fa9454e7c052abdea70fdc7ec", null ],
       [ "consume", "d3/d1c/classmimicpp_1_1_expectation.html#ade6f50ff0588c785589b185e9d186c40", null ],
       [ "finalize_call", "d3/d1c/classmimicpp_1_1_expectation.html#ad37db14b76d614af34a80397ccc6ffc1", null ],
-      [ "from", "d3/d1c/classmimicpp_1_1_expectation.html#a6d8a1682ed0a214d768b28b008222e29", null ],
+      [ "from", "d3/d1c/classmimicpp_1_1_expectation.html#a3cf57378de3fa78c88e0d4b21de4d3ca", null ],
+      [ "is_applicable", "d3/d1c/classmimicpp_1_1_expectation.html#a57cf8b9836f261e12230cc47201dcc92", null ],
       [ "is_satisfied", "d3/d1c/classmimicpp_1_1_expectation.html#a6418e14292b666c6d0fd10f8af3e5260", null ],
-      [ "matches", "d3/d1c/classmimicpp_1_1_expectation.html#ab030189070f8b4ad118a49f6a82ebff7", null ],
+      [ "matches", "d3/d1c/classmimicpp_1_1_expectation.html#a47d401aa88b2b7220bdd5b3199e99b6e", null ],
+      [ "mock_name", "d3/d1c/classmimicpp_1_1_expectation.html#a16157e8133dc1f4abeca53700e9d2374", null ],
       [ "operator=", "d3/d1c/classmimicpp_1_1_expectation.html#adacaa7d3f88409da0e5af3c1986bdb27", null ],
       [ "operator=", "d3/d1c/classmimicpp_1_1_expectation.html#adf55e1fbc545c9bdddba57f77387f3bd", null ],
-      [ "report", "d3/d1c/classmimicpp_1_1_expectation.html#a73093b259b40576b1c0b00eeff5a2f0b", null ]
+      [ "report", "d3/d1c/classmimicpp_1_1_expectation.html#a4662b66a438fd176c0443781050265d5", null ]
     ] ],
     [ "mimicpp::ExpectationCollection< Signature >", "d5/d86/classmimicpp_1_1_expectation_collection.html", [
       [ "CallInfoT", "d5/d86/classmimicpp_1_1_expectation_collection.html#a97bba009e1ae573153e2bf3249c3ac9e", null ],
@@ -32,7 +34,7 @@ var group___e_x_p_e_c_t_a_t_i_o_n =
       [ "ExpectationCollection", "d5/d86/classmimicpp_1_1_expectation_collection.html#a8efff1247c04d6b09e0425e57d208149", null ],
       [ "ExpectationCollection", "d5/d86/classmimicpp_1_1_expectation_collection.html#a0a7e136b22ea0244df639e35ae7d0e02", null ],
       [ "ExpectationCollection", "d5/d86/classmimicpp_1_1_expectation_collection.html#a64813a973e31aeb6f6f18bca555fecba", null ],
-      [ "handle_call", "d5/d86/classmimicpp_1_1_expectation_collection.html#a56a2ccd73b22a72184d9caa4e1dae5f2", null ],
+      [ "handle_call", "d5/d86/classmimicpp_1_1_expectation_collection.html#a8e3002b976904d39beee24762b5f835b", null ],
       [ "operator=", "d5/d86/classmimicpp_1_1_expectation_collection.html#a31f1627a80140183edc7c39b87e3054e", null ],
       [ "operator=", "d5/d86/classmimicpp_1_1_expectation_collection.html#addac3b52fbacc023b71132174ef993b0", null ],
       [ "push", "d5/d86/classmimicpp_1_1_expectation_collection.html#a78ffe18283eb86c491ff77fbbd787969", null ],
@@ -44,23 +46,27 @@ var group___e_x_p_e_c_t_a_t_i_o_n =
       [ "FinalizerT", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a116870181a5b6c9638979f0abc69b3c2", null ],
       [ "PolicyListT", "d3/d4a/classmimicpp_1_1_basic_expectation.html#af12ea9bb928ea78efeec1075533854a1", null ],
       [ "ReturnT", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a72deb1105e293a672eb6231199c9833d", null ],
-      [ "BasicExpectation", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a482e36dadc5934857c5802e62a565d85", null ],
+      [ "BasicExpectation", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a11b0b6fa0c33cc1548fc6f133cdc2bb3", null ],
       [ "consume", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a39959de78d392d5eba200bbcac9500ac", null ],
       [ "finalize_call", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a76f17839b261d2635a537d95e266e0f2", null ],
-      [ "from", "d3/d4a/classmimicpp_1_1_basic_expectation.html#af986e9b83bdd1963992dce454a7d9f59", null ],
+      [ "from", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a5f29c528dc4fea2285b1da4a09cccdf4", null ],
+      [ "is_applicable", "d3/d4a/classmimicpp_1_1_basic_expectation.html#abe240fbb603cf49f0286e6e76f95fa7f", null ],
       [ "is_satisfied", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a5d1ecf08b17a82981b189706beaab27e", null ],
-      [ "matches", "d3/d4a/classmimicpp_1_1_basic_expectation.html#ac27966d7b0cd77e74f6970a6e56638d2", null ],
-      [ "report", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a80385a3d307b861b9251627e0b447c90", null ]
+      [ "matches", "d3/d4a/classmimicpp_1_1_basic_expectation.html#a95214826f8890106ea4e165f44190a3f", null ],
+      [ "mock_name", "d3/d4a/classmimicpp_1_1_basic_expectation.html#ab292704f8e5a4e2a551f7e08d49d667c", null ],
+      [ "report", "d3/d4a/classmimicpp_1_1_basic_expectation.html#ac3d8e976e2b94ef243fed660281dfc96", null ]
     ] ],
     [ "mimicpp::ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", [
       [ "~ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#ad74606fce962dc55495e735c56243fe7", null ],
       [ "ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a8a1e5f6dd65ccb47cdc7349de63e1265", null ],
       [ "ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a485d6a5176d34d672b2a49616af68771", null ],
-      [ "explicit", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a7610bd96d38f59865ef8c1f0cd4dfb64", null ],
-      [ "from", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a86c2ce76f1c4172362bbb740716ba8c0", null ],
+      [ "explicit", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#aed8bd2c9a3204c5dea027b5f2b5ad697", null ],
+      [ "from", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a4aa466776963262b27b98a0eca3d729b", null ],
+      [ "is_applicable", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#abf1278354f38d295249299c5efe7f5e2", null ],
       [ "is_satisfied", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a03c2a991b53bf9a0dae759a2233b3dfb", null ],
-      [ "operator=", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a9b3d1d989056d9ddcbb506e9158b9af8", null ],
+      [ "mock_name", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a0fd6057e65032c658985731c233ef224", null ],
       [ "operator=", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#aa48fe5758101545108e89a13035b9c45", null ],
-      [ "loc", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a100b15ef4d509421ea0d5f806b0d0b6e", null ]
+      [ "operator=", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#a8781518d3ddc9e824eb135b4b99008ee", null ],
+      [ "loc", "d6/dc0/classmimicpp_1_1_scoped_expectation.html#ac84f61fe24cb2bdf631bf03396405dbf", null ]
     ] ]
 ];

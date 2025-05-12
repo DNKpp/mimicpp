@@ -25,7 +25,36 @@
 var NAVTREE =
 [
   [ "mimic++", "index.html", [
-    [ "mimic++, a modern and (mostly) macro free mocking framework", "index.html", "index" ],
+    [ "mimic++, a modern and (mostly) macro free mocking framework", "index.html#autotoc_md46", [
+      [ "Table of Contents", "index.html#autotoc_md50", null ],
+      [ "Introduction", "index.html#autotoc_md52", [
+        [ "✅ Quality", "index.html#autotoc_md47", null ],
+        [ "🔗 Developer Hub", "index.html#autotoc_md48", null ],
+        [ "Core Design", "index.html#autotoc_md53", null ],
+        [ "Quick Demo", "index.html#autotoc_md54", null ],
+        [ "Examples", "index.html#autotoc_md55", null ]
+      ] ],
+      [ "Features & Customizability", "index.html#autotoc_md57", [
+        [ "Matchers", "index.html#autotoc_md58", null ],
+        [ "Policies", "index.html#autotoc_md59", null ],
+        [ "Stringification", "index.html#autotoc_md60", null ],
+        [ "Bring your own string- and char-types", "index.html#autotoc_md61", null ],
+        [ "Call-Conventions", "index.html#autotoc_md62", null ]
+      ] ],
+      [ "Integration", "index.html#autotoc_md64", [
+        [ "Portability", "index.html#autotoc_md65", null ],
+        [ "CMake", "index.html#autotoc_md66", null ],
+        [ "Packaging Tools", "index.html#autotoc_md67", null ],
+        [ "Single-Header", "index.html#autotoc_md68", null ],
+        [ "Test Framework", "index.html#autotoc_md69", null ],
+        [ "Documentation", "index.html#autotoc_md70", null ]
+      ] ],
+      [ "Testing", "index.html#autotoc_md72", null ],
+      [ "Known Issues", "index.html#autotoc_md74", [
+        [ "Clang-18.1 + libc++", "index.html#autotoc_md75", null ]
+      ] ],
+      [ "Special Acknowledgement", "index.html#autotoc_md77", null ]
+    ] ],
     [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -44,9 +73,11 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
@@ -64,10 +95,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a",
-"d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7",
-"db/d70/_control_policies_8hpp.html",
-"de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#gacaeaf0bcc3197e6325285d9035a019df"
+"d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html#aa309cf22f6a191101d4f6d5e64c8c9da",
+"d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gafdc92bf0fd579b44a68e2eb42d89f078",
+"d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html",
+"d9/d42/_boost_test_8hpp_source.html",
+"dc/d8d/structmimicpp_1_1util_1_1type__list__pop__back.html",
+"df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a4b39908774ae2fc23eb6fcd623e6cbb5"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

@@ -1,66 +1,66 @@
 var group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s =
 [
-    [ "mimicpp::state_inapplicable", "d7/dd2/structmimicpp_1_1state__inapplicable.html", [
-      [ "operator==", "d7/dd2/structmimicpp_1_1state__inapplicable.html#a6c05a88f6b4d79991236f71066b56766", null ],
-      [ "count", "d7/dd2/structmimicpp_1_1state__inapplicable.html#a4842914d211afe5f1e18df79947026fe", null ],
-      [ "inapplicableSequences", "d7/dd2/structmimicpp_1_1state__inapplicable.html#ac498a9837eec3d70da0dd3e2b215043e", null ],
-      [ "max", "d7/dd2/structmimicpp_1_1state__inapplicable.html#ab11df76666122ed1422be10f15a42d16", null ],
-      [ "min", "d7/dd2/structmimicpp_1_1state__inapplicable.html#aa19a0241a93943ac97a4c477fd2414a7", null ],
-      [ "sequenceRatings", "d7/dd2/structmimicpp_1_1state__inapplicable.html#a40bb2b0f6391e66b90176cd6b5fad662", null ]
-    ] ],
-    [ "mimicpp::state_applicable", "d0/d12/structmimicpp_1_1state__applicable.html", [
-      [ "operator==", "d0/d12/structmimicpp_1_1state__applicable.html#ac1fcd74ef3c128f03dbe87261bee83af", null ],
-      [ "count", "d0/d12/structmimicpp_1_1state__applicable.html#a2d29022d757fe0d91c340cfcb5eade6b", null ],
-      [ "max", "d0/d12/structmimicpp_1_1state__applicable.html#aeef30fe89a8bd3e3159cc5ca241187c8", null ],
-      [ "min", "d0/d12/structmimicpp_1_1state__applicable.html#ab1aee33819fba5125b8a335cc7719a09", null ],
-      [ "sequenceRatings", "d0/d12/structmimicpp_1_1state__applicable.html#a24c03e4dbab880dfd2837387a6615aa1", null ]
-    ] ],
-    [ "mimicpp::state_saturated", "de/d68/structmimicpp_1_1state__saturated.html", [
-      [ "operator==", "de/d68/structmimicpp_1_1state__saturated.html#a85e543d5105c143f999faa00fc7e33aa", null ],
-      [ "count", "de/d68/structmimicpp_1_1state__saturated.html#a728e616eb8bfe48a3f9dfeeeadbc05c3", null ],
-      [ "max", "de/d68/structmimicpp_1_1state__saturated.html#a1cbe431d93dff59a4431151781c206f8", null ],
-      [ "min", "de/d68/structmimicpp_1_1state__saturated.html#ac4f440908f1d7c307e3368874684e80a", null ],
-      [ "sequences", "de/d68/structmimicpp_1_1state__saturated.html#a35a64cf83e128debf533211ac760c888", null ]
-    ] ],
-    [ "mimicpp::CallReport", "dc/dd0/classmimicpp_1_1_call_report.html", [
-      [ "Arg", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html", [
-        [ "operator==", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#a5ea21a96c1b8d78fd25b9471f62b74f9", null ],
-        [ "stateString", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#a7e4239ebd09fd4b1fe3964408eda9c96", null ],
-        [ "typeIndex", "dc/d03/classmimicpp_1_1_call_report_1_1_arg.html#a5adaad7e0085d86273c6eb6679480356", null ]
+    [ "mimicpp::reporting::CallReport", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html", [
+      [ "Arg", "dd/db3/classmimicpp_1_1reporting_1_1_call_report_1_1_arg.html", [
+        [ "operator==", "dd/db3/classmimicpp_1_1reporting_1_1_call_report_1_1_arg.html#a5ea21a96c1b8d78fd25b9471f62b74f9", null ],
+        [ "stateString", "dd/db3/classmimicpp_1_1reporting_1_1_call_report_1_1_arg.html#a8c3fac07aeb1894ef4c6b3f058740049", null ],
+        [ "typeInfo", "dd/db3/classmimicpp_1_1reporting_1_1_call_report_1_1_arg.html#a916ac0ee43257451f58447f546f3a9bb", null ]
       ] ],
-      [ "operator==", "dc/dd0/classmimicpp_1_1_call_report.html#a76d4b7d57fceb67734daa037e186814f", null ],
-      [ "argDetails", "dc/dd0/classmimicpp_1_1_call_report.html#ad71a0206d331b986f85a6c9a59729fde", null ],
-      [ "fromCategory", "dc/dd0/classmimicpp_1_1_call_report.html#ad0af98e56cddb30e0074ff8dc8fd54ee", null ],
-      [ "fromConstness", "dc/dd0/classmimicpp_1_1_call_report.html#a804aea975ce3fd4f4348b4cc1f51f333", null ],
-      [ "fromLoc", "dc/dd0/classmimicpp_1_1_call_report.html#aeb9ed8b5928e4a5673abb5e7e34978de", null ],
-      [ "returnTypeIndex", "dc/dd0/classmimicpp_1_1_call_report.html#a75c1ad8b191ba8dd5d36258c38017609", null ],
-      [ "stacktrace", "dc/dd0/classmimicpp_1_1_call_report.html#aea59c14511e6881ce40297e6e1a2a1f2", null ]
+      [ "make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga0057b25e1863ab7956d2ecbaade46326", null ],
+      [ "operator==", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a52f79b633bf1e00c5bf1eac0f9300eae", null ],
+      [ "argDetails", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a60717b338c2378bfa612cda41c1b905a", null ],
+      [ "fromCategory", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#ae43070443741c44e518849b5a3e9811d", null ],
+      [ "fromConstness", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a6824a122077ea2308b1840fe7e69cd85", null ],
+      [ "fromLoc", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#aed352ed918c40d74c26659c1e221f402", null ],
+      [ "returnTypeInfo", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#abb0a5b5d42dbf0364a80b233dbc98396", null ],
+      [ "stacktrace", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a8aa826da79f09845a9f14acc7abd4558", null ],
+      [ "target", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a051be767e80c03e94fd818c571250e3b", null ]
     ] ],
-    [ "mimicpp::ExpectationReport", "dd/d62/classmimicpp_1_1_expectation_report.html", [
-      [ "operator==", "dd/d62/classmimicpp_1_1_expectation_report.html#a9c3682131a4e9fb08a0d9c873c3cca7f", null ],
-      [ "expectationDescriptions", "dd/d62/classmimicpp_1_1_expectation_report.html#a58c124daff3201aa82c755e7ebafbe34", null ],
-      [ "finalizerDescription", "dd/d62/classmimicpp_1_1_expectation_report.html#a4170deeff1bba26b0357f710e1378cb1", null ],
-      [ "sourceLocation", "dd/d62/classmimicpp_1_1_expectation_report.html#a57b7f9b0d18c0b7e90d350c0ed3609ca", null ],
-      [ "timesDescription", "dd/d62/classmimicpp_1_1_expectation_report.html#a4286056857a39f172534d15d647fdbad", null ]
+    [ "mimicpp::reporting::state_inapplicable", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html", [
+      [ "operator==", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a6c05a88f6b4d79991236f71066b56766", null ],
+      [ "count", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a21f853081e80239db6cb91387130e822", null ],
+      [ "inapplicableSequences", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a6614458d4d81edf472cc9cd11120199a", null ],
+      [ "max", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a62a6d46cc47595f324d6f644bc171c6c", null ],
+      [ "min", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a986ac210d9d1af029e8983f7835d1b64", null ],
+      [ "sequenceRatings", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a635fdefec137efea4c87e344f164f3ac", null ]
     ] ],
-    [ "mimicpp::MatchReport", "db/d11/classmimicpp_1_1_match_report.html", [
-      [ "Expectation", "da/d15/classmimicpp_1_1_match_report_1_1_expectation.html", [
-        [ "operator==", "da/d15/classmimicpp_1_1_match_report_1_1_expectation.html#a8929a8edfceff0b412c4d3691bda5eb0", null ],
-        [ "description", "da/d15/classmimicpp_1_1_match_report_1_1_expectation.html#a5b458853bab8c0864ac327997ee7c021", null ],
-        [ "isMatching", "da/d15/classmimicpp_1_1_match_report_1_1_expectation.html#aa49a27c0f7623851fab2054dfae07678", null ]
-      ] ],
-      [ "Finalize", "d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html", [
-        [ "operator==", "d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html#ab333440bbcca9ceb0ef7f0bee24264ac", null ],
-        [ "description", "d5/d36/classmimicpp_1_1_match_report_1_1_finalize.html#a5af31dceb9d8e2f4402cbe08c588f533", null ]
-      ] ],
-      [ "operator==", "db/d11/classmimicpp_1_1_match_report.html#a9af3b7d94043ff1d4969cb1283a70a7e", null ],
-      [ "controlReport", "db/d11/classmimicpp_1_1_match_report.html#ad9c88790ba56c6ef4e4339cb1212f9bd", null ],
-      [ "expectationReports", "db/d11/classmimicpp_1_1_match_report.html#a4a0f546bbd6d5cdc94aaf8ce753c55ae", null ],
-      [ "finalizeReport", "db/d11/classmimicpp_1_1_match_report.html#a96bc13493c977acf05ecf6eb216d212a", null ],
-      [ "sourceLocation", "db/d11/classmimicpp_1_1_match_report.html#ae54d08447ba833e1d44f000bb7a1a4c7", null ]
+    [ "mimicpp::reporting::state_applicable", "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html", [
+      [ "operator==", "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#ac1fcd74ef3c128f03dbe87261bee83af", null ],
+      [ "count", "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#ab0b4917b7f75f006a001544edbc8b443", null ],
+      [ "max", "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#a2280abe8d0f40418a958cdc35b4c30b2", null ],
+      [ "min", "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#a2df535e7d0762fed72409715953de874", null ],
+      [ "sequenceRatings", "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#ae595ac6c21a79a69c7c09d8984cfd5a3", null ]
     ] ],
-    [ "mimicpp::control_state_t", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga7bf75ebaaabf547897c17050ad3f0229", null ],
-    [ "mimicpp::evaluate_match_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga28bf45ff6df85506325c64349d37ca85", null ],
-    [ "mimicpp::call::Info::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3d607fd28ec8623aae626660a688c88e", null ],
-    [ "mimicpp::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga877915dccf6f8ac53665ba6774dcfa57", null ]
+    [ "mimicpp::reporting::state_saturated", "d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html", [
+      [ "operator==", "d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html#a85e543d5105c143f999faa00fc7e33aa", null ],
+      [ "count", "d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html#ae9dd3af623091e2f001677ef095acdd8", null ],
+      [ "max", "d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html#a0c36f6e8c559d3f2338eb7bd04eddd1c", null ],
+      [ "min", "d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html#aac6ae652d4d46efce67901d93fdc9256", null ],
+      [ "sequences", "d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html#a307120a0e41b9ce148971e194d8eec52", null ]
+    ] ],
+    [ "mimicpp::reporting::ExpectationReport", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html", [
+      [ "operator==", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a16b6344eeddff54e5fdcabe1c057ec9b", null ],
+      [ "controlReport", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#ad59f96434c23acb5d1e9e55b0e261c88", null ],
+      [ "finalizerDescription", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a6d32697cd0c5d9c6556483e787d95410", null ],
+      [ "from", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a027d5b0050b7dfd10da75b15311aed63", null ],
+      [ "requirementDescriptions", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a280e61fc3ce964eddc01023811e73bc4", null ],
+      [ "target", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#ad0b948b2d97adf49989acd9783bf72b5", null ]
+    ] ],
+    [ "mimicpp::reporting::RequirementOutcomes", "d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html", [
+      [ "operator==", "d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#afddc69090c56c21c85f70d2c43ef1a6f", null ],
+      [ "outcomes", "d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#a4b8f1904f9c77fd148fed62a62ba0772", null ]
+    ] ],
+    [ "mimicpp::reporting::NoMatchReport", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html", [
+      [ "operator==", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html#aab6ee4844ed434c2bf566eda9eea4cba", null ],
+      [ "expectationReport", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html#ae015c5b5e2cb065dac96e526172047ed", null ],
+      [ "requirementOutcomes", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html#a44607d7c7fca956d65e71466cb8802c3", null ]
+    ] ],
+    [ "mimicpp::reporting::TargetReport", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html", [
+      [ "operator==", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8b78711d78b99fd2bad8c41193a84735", null ],
+      [ "name", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8871d590ea99c01ea76a5bf208b3d3a9", null ],
+      [ "overloadReport", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8192c831aed792ce4b8b6af8b01d17a3", null ]
+    ] ],
+    [ "mimicpp::reporting::control_state_t", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b", null ],
+    [ "mimicpp::reporting::CallReport::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga0057b25e1863ab7956d2ecbaade46326", null ],
+    [ "mimicpp::reporting::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga0057b25e1863ab7956d2ecbaade46326", null ]
 ];

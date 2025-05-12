@@ -1,7 +1,7 @@
 var namespacemimicpp_1_1stacktrace =
 [
     [ "backend_traits", "da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html", null ],
-    [ "backend_traits< mimicpp::stacktrace::NullBackend >", "da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html", "da/d77/structmimicpp_1_1stacktrace_1_1backend__traits" ],
+    [ "backend_traits< mimicpp::stacktrace::NullBackend >", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4" ],
     [ "find_backend", "dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend.html", "dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend" ],
     [ "NullBackend", "d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html", null ],
     [ "backend", "d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html", null ],
