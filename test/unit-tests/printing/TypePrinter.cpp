@@ -727,7 +727,7 @@ namespace
 TEMPLATE_TEST_CASE_SIG(
     "Signatures are printed nicely.",
     "[print]",
-    ((auto baseName, typename Return, typename... Params), baseName, Return, Params...),
+    ((auto funStr, typename Return, typename... Params), funStr, Return, Params...),
     (FixedString{"void()"}, void),
     (FixedString{"std::string&(float const&&, char*)"}, std::string&, float const&&, char*),
     (
@@ -737,68 +737,70 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "Signatures are printed nicely.",
     "[print]",
-    ((auto baseName, typename Return, typename... Params), baseName, Return, Params...),
+    ((auto funStr, typename Return, typename... Params), funStr, Return, Params...),
     (FixedString{"void()"}, void),
     (FixedString{"std::string&(float const&&, char*)"}, std::string&, float const&&, char*))
 #endif
 {
+    StringT const base{funStr};
+
     SECTION("Plain function.")
     {
         REQUIRE_THAT(
             print_type<Return(Params...)>(),
-            Catch::Matchers::Equals(StringT{baseName}));
+            Catch::Matchers::Equals(base));
         REQUIRE_THAT(
             print_type<Return(Params...) noexcept>(),
-            Catch::Matchers::Equals(StringT{baseName} + " noexcept"));
+            Catch::Matchers::Equals(base + " noexcept"));
     }
 
     SECTION("const function.")
     {
         REQUIRE_THAT(
             print_type<Return(Params...) const>(),
-            Catch::Matchers::Equals(StringT{baseName} + " const"));
+            Catch::Matchers::Equals(base + " const"));
         REQUIRE_THAT(
             print_type<Return(Params...) const noexcept>(),
-            Catch::Matchers::Equals(StringT{baseName} + " const noexcept"));
+            Catch::Matchers::Equals(base + " const noexcept"));
     }
 
     SECTION("& function.")
     {
         REQUIRE_THAT(
             print_type<Return(Params...)&>(),
-            Catch::Matchers::Equals(StringT{baseName} + " &"));
+            Catch::Matchers::Equals(base + " &"));
         REQUIRE_THAT(
             print_type < Return(Params...) & noexcept > (),
-            Catch::Matchers::Equals(StringT{baseName} + " & noexcept"));
+            Catch::Matchers::Equals(base + " & noexcept"));
     }
 
     SECTION("const & function.")
     {
         REQUIRE_THAT(
             print_type<Return(Params...) const&>(),
-            Catch::Matchers::Equals(StringT{baseName} + " const &"));
+            Catch::Matchers::Equals(base + " const &"));
         REQUIRE_THAT(
             print_type < Return(Params...) const& noexcept > (),
-            Catch::Matchers::Equals(StringT{baseName} + " const & noexcept"));
+            Catch::Matchers::Equals(base + " const & noexcept"));
     }
 
     SECTION("&& function.")
     {
         REQUIRE_THAT(
             print_type<Return(Params...) &&>(),
-            Catch::Matchers::Equals(StringT{baseName} + " &&"));
+            Catch::Matchers::Equals(base + " &&"));
         REQUIRE_THAT(
             print_type < Return(Params...) && noexcept > (),
-            Catch::Matchers::Equals(StringT{baseName} + " && noexcept"));
+            Catch::Matchers::Equals(base + " && noexcept"));
     }
 
     SECTION("const && function.")
     {
         REQUIRE_THAT(
             print_type<Return(Params...) const&&>(),
-            Catch::Matchers::Equals(StringT{baseName} + " const &&"));
+            Catch::Matchers::Equals(base + " const &&"));
         REQUIRE_THAT(
             print_type < Return(Params...) const&& noexcept > (),
-            Catch::Matchers::Equals(StringT{baseName} + " const && noexcept"));
+            Catch::Matchers::Equals(base + " const && noexcept"));
     }
 }
