@@ -24,14 +24,13 @@ var searchData=
   ['operator_5for_5fpunctuator_21',['operator_or_punctuator',['../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html',1,'mimicpp::printing::type::lexing::operator_or_punctuator'],['../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html#ae341e6a7cdc2985ae51c09f34a538fe1',1,'mimicpp::printing::type::lexing::operator_or_punctuator::operator_or_punctuator(StringViewT const &amp;text) noexcept'],['../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html#a9c28760067eeeb682e5625b845761c26',1,'mimicpp::printing::type::lexing::operator_or_punctuator::operator_or_punctuator(std::ptrdiff_t const textIndex) noexcept']]],
   ['operatorinfo_22',['OperatorInfo',['../d8/deb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_identifier_1_1_operator_info.html',1,'mimicpp::printing::type::parsing::token::Identifier']]],
   ['operatorkeyword_23',['OperatorKeyword',['../d5/d73/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_operator_keyword.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['operatororpunctuatorcollection_24',['operatorOrPunctuatorCollection',['../d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#ac04e70b769d253e5fd744e13d019d437',1,'mimicpp::printing::type::lexing']]],
-  ['or_20print_20custom_20types_25',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
-  ['origin_26',['origin',['../dd/d68/_c_make_lists_8txt.html#a4421eb9d096b69b442520fd7e3857268',1,'CMakeLists.txt']]],
-  ['other_20character_20types_27',['Strings with other character-types',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
-  ['otherkeywords_28',['otherKeywords',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a2d866c38d2bdea930fcc3fc940697e9b',1,'mimicpp::printing::type::lexing::texts']]],
-  ['out_29',['out',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#aa707698f2f86444ba7964f671304cb3e',1,'mimicpp::printing::type::PrintVisitor']]],
-  ['outcomes_30',['outcomes',['../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#a4b8f1904f9c77fd148fed62a62ba0772',1,'mimicpp::reporting::RequirementOutcomes']]],
-  ['overloadreport_31',['overloadReport',['../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8192c831aed792ce4b8b6af8b01d17a3',1,'mimicpp::reporting::TargetReport']]],
-  ['override_20existing_20printings_20or_20print_20custom_20types_32',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
-  ['own_20string_20and_20char_20types_33',['Bring your own string- and char-types',['../index.html#autotoc_md61',1,'']]]
+  ['or_20print_20custom_20types_24',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
+  ['origin_25',['origin',['../dd/d68/_c_make_lists_8txt.html#a4421eb9d096b69b442520fd7e3857268',1,'CMakeLists.txt']]],
+  ['other_20character_20types_26',['Strings with other character-types',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
+  ['otherkeywords_27',['otherKeywords',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a2d866c38d2bdea930fcc3fc940697e9b',1,'mimicpp::printing::type::lexing::texts']]],
+  ['out_28',['out',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#aa707698f2f86444ba7964f671304cb3e',1,'mimicpp::printing::type::PrintVisitor']]],
+  ['outcomes_29',['outcomes',['../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#a4b8f1904f9c77fd148fed62a62ba0772',1,'mimicpp::reporting::RequirementOutcomes']]],
+  ['overloadreport_30',['overloadReport',['../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8192c831aed792ce4b8b6af8b01d17a3',1,'mimicpp::reporting::TargetReport']]],
+  ['override_20existing_20printings_20or_20print_20custom_20types_31',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
+  ['own_20string_20and_20char_20types_32',['Bring your own string- and char-types',['../index.html#autotoc_md61',1,'']]]
 ];

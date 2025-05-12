@@ -26,8 +26,8 @@ var namespacemimicpp_1_1printing_1_1type_1_1lexing =
     [ "space", "d2/de3/structmimicpp_1_1printing_1_1type_1_1lexing_1_1space.html", "d2/de3/structmimicpp_1_1printing_1_1type_1_1lexing_1_1space" ],
     [ "token", "dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token.html", "dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token" ],
     [ "token_class", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a2f8729144d5fac5579969deaa79e8921", null ],
+    [ "make_keyword_collection", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#af60816d29f6dbcdb4a49fb1e483b16ab", null ],
+    [ "make_operator_or_punctuator_collection", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a1c2d902db3259d99e885c7d667be0b6a", null ],
     [ "is_digit", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#adc5a781859b180faa2ba55703af8a35f", null ],
-    [ "is_space", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a55519c82cbaa007fb73f3836101e776c", null ],
-    [ "keywordCollection", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#aa47c1d253fac2d0d10ca40ccd6759334", null ],
-    [ "operatorOrPunctuatorCollection", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#ac04e70b769d253e5fd744e13d019d437", null ]
+    [ "is_space", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a55519c82cbaa007fb73f3836101e776c", null ]
 ];

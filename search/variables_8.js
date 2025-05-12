@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['keywordcollection_0',['keywordCollection',['../d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#aa47c1d253fac2d0d10ca40ccd6759334',1,'mimicpp::printing::type::lexing']]]
+  ['layers_0',['layers',['../de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs.html#a1101a096b04601048bc6a4740fb218c6',1,'mimicpp::printing::type::parsing::token::Specs']]],
+  ['loc_1',['loc',['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#ac84f61fe24cb2bdf631bf03396405dbf',1,'mimicpp::ScopedExpectation']]],
+  ['logical_2',['logical',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a986b53abc69cd73d79770c871dffaa28',1,'mimicpp::printing::type::lexing::texts']]]
 ];
