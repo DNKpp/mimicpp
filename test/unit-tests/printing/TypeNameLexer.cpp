@@ -416,7 +416,7 @@ TEST_CASE(
 
     SECTION("Keywords are detected.")
     {
-        StringViewT const input = GENERATE(from_range(keywordCollection));
+        StringViewT const input = GENERATE(from_range(keyword::textCollection));
         CAPTURE(input);
 
         auto const expectedToken = matches_token(input, keyword{input});
@@ -563,7 +563,7 @@ TEST_CASE(
     "lexing::operator_or_punctuator::text yields the token text.",
     "[print][print::type]")
 {
-    StringT const tokenText{GENERATE(from_range(printing::type::lexing::operatorOrPunctuatorCollection))};
+    StringT const tokenText{GENERATE(from_range(printing::type::lexing::operator_or_punctuator::textCollection))};
     printing::type::lexing::operator_or_punctuator const token{tokenText};
 
     CHECK_THAT(
@@ -575,7 +575,7 @@ TEST_CASE(
     "lexing::keyword::text yields the token text.",
     "[print][print::type]")
 {
-    StringT const tokenText{GENERATE(from_range(printing::type::lexing::keywordCollection))};
+    StringT const tokenText{GENERATE(from_range(printing::type::lexing::keyword::textCollection))};
     printing::type::lexing::keyword const token{tokenText};
 
     CHECK_THAT(

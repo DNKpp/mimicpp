@@ -57,47 +57,43 @@ namespace mimicpp::printing::type::lexing
         constexpr std::array rest = std::to_array<StringViewT>({"::", ";", ",", ":", "...", "?"});
     }
 
-    // GCOVR_EXCL_START
+    [[nodiscard]]
+    consteval auto make_keyword_collection() noexcept
+    {
+        std::array collection = util::concat_arrays(
+            texts::visibilityKeywords,
+            texts::specKeywords,
+            texts::contextKeywords,
+            texts::otherKeywords,
+            texts::typeKeywords,
+            texts::digraphs);
 
-    // These functions are only executed at compile-time and thus be reported as uncovered.
+        std::ranges::sort(collection);
+        MIMICPP_ASSERT(collection.cend() == std::ranges::unique(collection).begin(), "Fix your input!");
 
-    constexpr std::array keywordCollection = std::invoke(
-        [] {
-            std::array collection = util::concat_arrays(
-                texts::visibilityKeywords,
-                texts::specKeywords,
-                texts::contextKeywords,
-                texts::otherKeywords,
-                texts::typeKeywords,
-                texts::digraphs);
+        return collection;
+    }
 
-            std::ranges::sort(collection);
-            MIMICPP_ASSERT(collection.cend() == std::ranges::unique(collection).begin(), "Fix your input!");
+    [[nodiscard]]
+    consteval auto make_operator_or_punctuator_collection() noexcept
+    {
+        // see: https://eel.is/c++draft/lex.operators#nt:operator-or-punctuator
+        std::array collection = util::concat_arrays(
+            texts::braceLikes,
+            texts::comparison,
+            texts::assignment,
+            texts::incOrDec,
+            texts::arithmetic,
+            texts::bitArithmetic,
+            texts::logical,
+            texts::access,
+            texts::specialAngles,
+            texts::rest);
+        std::ranges::sort(collection);
+        MIMICPP_ASSERT(collection.cend() == std::ranges::unique(collection).begin(), "Fix your input!");
 
-            return collection;
-        });
-
-    // see: https://eel.is/c++draft/lex.operators#nt:operator-or-punctuator
-    constexpr std::array operatorOrPunctuatorCollection = std::invoke(
-        [] {
-            std::array collection = util::concat_arrays(
-                texts::braceLikes,
-                texts::comparison,
-                texts::assignment,
-                texts::incOrDec,
-                texts::arithmetic,
-                texts::bitArithmetic,
-                texts::logical,
-                texts::access,
-                texts::specialAngles,
-                texts::rest);
-            std::ranges::sort(collection);
-            MIMICPP_ASSERT(collection.cend() == std::ranges::unique(collection).begin(), "Fix your input!");
-
-            return collection;
-        });
-
-    // GCOVR_EXCL_STOP
+        return collection;
+    }
 
     struct space
     {
@@ -108,7 +104,7 @@ namespace mimicpp::printing::type::lexing
     struct keyword
     {
     public:
-        static constexpr auto& textCollection = keywordCollection;
+        static constexpr std::array textCollection = make_keyword_collection();
 
         [[nodiscard]]
         explicit constexpr keyword(StringViewT const& text) noexcept
@@ -142,7 +138,7 @@ namespace mimicpp::printing::type::lexing
     struct operator_or_punctuator
     {
     public:
-        static constexpr auto& textCollection = operatorOrPunctuatorCollection;
+        static constexpr std::array textCollection = make_operator_or_punctuator_collection();
 
         [[nodiscard]]
         explicit constexpr operator_or_punctuator(StringViewT const& text) noexcept
@@ -255,7 +251,7 @@ namespace mimicpp::printing::type::lexing
             }
 
             if (auto const options = util::prefix_range(
-                    operatorOrPunctuatorCollection,
+                    operator_or_punctuator::textCollection,
                     m_Text.substr(0u, 1u)))
             {
                 return next_as_op_or_punctuator(options);
@@ -263,12 +259,12 @@ namespace mimicpp::printing::type::lexing
 
             StringViewT const content = next_as_identifier();
             // As we do not perform any prefix-checks, we need to check now whether the token actually denotes a keyword.
-            if (auto const iter = util::binary_find(keywordCollection, content);
-                iter != keywordCollection.cend())
+            if (auto const iter = util::binary_find(keyword::textCollection, content);
+                iter != keyword::textCollection.cend())
             {
                 return token{
                     .content = content,
-                    .classification = keyword{std::ranges::distance(keywordCollection.begin(), iter)}};
+                    .classification = keyword{std::ranges::distance(keyword::textCollection.begin(), iter)}};
             }
 
             return token{
@@ -324,7 +320,7 @@ namespace mimicpp::printing::type::lexing
             MIMICPP_ASSERT(!options.empty(), "Invalid state.");
             MIMICPP_ASSERT(lastMatch, "Invalid state.");
 
-            auto const index = std::ranges::distance(operatorOrPunctuatorCollection.data(), lastMatch);
+            auto const index = std::ranges::distance(operator_or_punctuator::textCollection.data(), lastMatch);
             StringViewT const content{m_Text.substr(0u, lastMatch->size())};
             m_Text.remove_prefix(lastMatch->size());
 
@@ -351,7 +347,7 @@ namespace mimicpp::printing::type::lexing
                 m_Text.cend(),
                 [](auto const c) {
                     return !is_space(c)
-                        && !std::ranges::binary_search(operatorOrPunctuatorCollection, StringViewT{&c, 1u});
+                        && !std::ranges::binary_search(operator_or_punctuator::textCollection, StringViewT{&c, 1u});
                 });
 
             StringViewT const content{m_Text.cbegin(), last};
