@@ -28,7 +28,7 @@ namespace mimicpp::call
         ValueCategory fromCategory{};
         Constness fromConstness{};
         util::SourceLocation fromSourceLocation{};
-        Stacktrace stacktrace{stacktrace::NullBackend{}};
+        std::size_t baseStacktraceSkip{};
     };
 
     template <typename Signature>

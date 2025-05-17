@@ -67,16 +67,17 @@ namespace mimicpp::reporting
      * \tparam Params The function parameter types.
      * \param target The mock-target report.
      * \param callInfo The call info.
+     * \param stacktrace The stacktrace, from where the call originates.
      * \return The call report.
      * \relatesalso CallReport
      */
     template <typename Return, typename... Params>
     [[nodiscard]]
-    CallReport make_call_report(TargetReport target, call::Info<Return, Params...> callInfo)
+    CallReport make_call_report(TargetReport target, call::Info<Return, Params...> callInfo, Stacktrace stacktrace)
     {
         return CallReport{
-            .target = std::move(target),
-            .returnTypeInfo = TypeReport::make<Return>(),
+            .target{std::move(target)},
+            .returnTypeInfo{TypeReport::make<Return>()},
             .argDetails = std::apply(
                 [](auto&... args) {
                     return std::vector<CallReport::Arg>{
@@ -87,10 +88,10 @@ namespace mimicpp::reporting
                     };
                 },
                 callInfo.args),
-            .fromLoc = std::move(callInfo.fromSourceLocation),
-            .stacktrace = std::move(callInfo.stacktrace),
-            .fromCategory = callInfo.fromCategory,
-            .fromConstness = callInfo.fromConstness};
+            .fromLoc{std::move(callInfo.fromSourceLocation)},
+            .stacktrace{std::move(stacktrace)},
+            .fromCategory{callInfo.fromCategory},
+            .fromConstness{callInfo.fromConstness}};
     }
 
     /**
