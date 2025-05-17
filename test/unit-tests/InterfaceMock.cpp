@@ -645,10 +645,10 @@ TEST_CASE(
     ScopedReporter reporter{};
 
     derived mock{};
-    ScopedExpectation exp = mock.foo_.expect_call();
-    std::source_location const before = std::source_location::current();
+    ScopedExpectation const exp = mock.foo_.expect_call();
+    [[maybe_unused]] std::source_location const before = std::source_location::current();
     mock.foo();
-    std::source_location const after = std::source_location::current();
+    [[maybe_unused]] std::source_location const after = std::source_location::current();
 
     REQUIRE_THAT(
         reporter.full_match_reports(),
