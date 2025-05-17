@@ -246,7 +246,10 @@ TEST_CASE(
             NoMatchError);
         REQUIRE_THAT(
             reporter.no_match_reports(),
-            Catch::Matchers::SizeIs(4));
+            Catch::Matchers::SizeIs(1u));
+        REQUIRE_THAT(
+            std::get<1>(reporter.no_match_reports().front()),
+            Catch::Matchers::SizeIs(4u));
         REQUIRE_THAT(
             reporter.inapplicable_match_reports(),
             Catch::Matchers::IsEmpty());
@@ -298,7 +301,12 @@ TEST_CASE(
         }
         catch (Exception const&)
         {
-            return info.call == reporting::make_call_report(make_common_target_report<void()>(), call)
+            auto const expected = reporting::make_call_report(
+                make_common_target_report<void()>(),
+                call,
+                // Just use the existing stacktrace, because we can not construct it ourselves.
+                info.call.stacktrace);
+            return info.call == expected
                 && info.expectation == throwingReport;
         }
         catch (...)

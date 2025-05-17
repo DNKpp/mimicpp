@@ -35,11 +35,11 @@ TEST_CASE(
             reporter.inapplicable_match_reports(),
             Matches::IsEmpty());
         REQUIRE_THAT(
-            reporter.no_match_reports(),
-            Matches::IsEmpty());
-        REQUIRE_THAT(
             reporter.unfulfilled_expectations(),
             Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::SizeIs(1u));
     }
 
     SECTION("Reports an unfulfilled expectation, if the expectation expires before destruction occurs.")
@@ -539,16 +539,16 @@ TEST_CASE(
             STOP_WARNING_SUPPRESSION
         }
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.full_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.inapplicable_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.no_match_reports(),
-            Matches::IsEmpty());
-        REQUIRE_THAT(
+            Matches::SizeIs(1u));
+        CHECK_THAT(
             reporter.unfulfilled_expectations(),
             Matches::IsEmpty());
     }
@@ -559,16 +559,16 @@ TEST_CASE(
         std::optional<ScopedExpectation> expectation = watcher.expect_relocate();
         expectation.reset();
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.full_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.inapplicable_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.no_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.unfulfilled_expectations(),
             Matches::SizeIs(1));
     }
@@ -597,16 +597,16 @@ TEST_CASE(
             STOP_WARNING_SUPPRESSION
         }
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.full_match_reports(),
             Matches::SizeIs(1));
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.inapplicable_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.no_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.unfulfilled_expectations(),
             Matches::IsEmpty());
     }
@@ -626,6 +626,10 @@ TEST_CASE(
     SECTION("When copy-constructing.")
     {
         RelocationWatcher other{watcher};
+
+        CHECK_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
     }
 
     SECTION("When copy-assigning.")
@@ -633,6 +637,10 @@ TEST_CASE(
         RelocationWatcher other{};
 
         other = watcher;
+
+        CHECK_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
     }
 
     SECTION("When self copy-assigning.")
@@ -642,6 +650,10 @@ TEST_CASE(
         watcher = watcher;
         STOP_WARNING_SUPPRESSION
 
+        CHECK_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+
         SECTION("And it does not accept the expectation from the previous instance.")
         {
             START_WARNING_SUPPRESSION
@@ -650,23 +662,24 @@ TEST_CASE(
                 watcher = std::move(watcher),
                 NoMatchError);
             STOP_WARNING_SUPPRESSION
+
+            CHECK_THAT(
+                reporter.no_match_reports(),
+                Matches::SizeIs(1u));
         }
     }
 
     expectation.reset();
 
-    REQUIRE_THAT(
+    CHECK_THAT(
         reporter.full_match_reports(),
         Matches::IsEmpty());
-    REQUIRE_THAT(
+    CHECK_THAT(
         reporter.inapplicable_match_reports(),
         Matches::IsEmpty());
-    REQUIRE_THAT(
-        reporter.no_match_reports(),
-        Matches::IsEmpty());
-    REQUIRE_THAT(
+    CHECK_THAT(
         reporter.unfulfilled_expectations(),
-        Matches::SizeIs(1));
+        Matches::SizeIs(1u));
 }
 
 TEST_CASE(
