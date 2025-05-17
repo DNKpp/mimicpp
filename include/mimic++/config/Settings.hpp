@@ -12,7 +12,24 @@
 
 namespace mimicpp::settings
 {
+    /**
+     * \defgroup SETTINGS settings
+     * \brief Contains global settings, which can be changed at runtime.
+     * \{
+     */
+
+    /**
+     * \brief Controls whether successful matches are reported.
+     * \details Reporting can be an expensive operation, particularly when stacktraces are collected.
+     * To reduce overhead, `mimic++` reports only violations by default.
+     * \note This setting affects only the behavior of mimic++.
+     * When using a test adapter, additional configuration in the test framework may be required to receive such reports.
+     */
     inline std::atomic_bool reportSuccess{false};
+
+    /**
+     * \}
+     */
 }
 
 #endif
