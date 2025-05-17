@@ -954,6 +954,77 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "Mocks report a stacktrace.",
+    "[mock]")
+{
+    ScopedReporter reporter{};
+
+    Mock<void()> mock{};
+
+    Stacktrace const here = stacktrace::current();
+    auto const check = [&](reporting::CallReport const& call) {
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+        REQUIRE(!here.empty());
+        REQUIRE(call.stacktrace.size() == here.size());
+        CHECK(call.stacktrace.source_file(0u) == here.source_file(0u));
+        CHECK(call.stacktrace.description(0u) == here.description(0u));
+        CHECK(call.stacktrace.source_line(0u) > here.source_line(0u));
+        CHECK(
+            std::ranges::all_of(
+                std::views::iota(1u, here.size()),
+                [&](std::size_t const i) {
+                    return call.stacktrace.source_file(i) == here.source_file(i)
+                        && call.stacktrace.source_line(i) == here.source_line(i)
+                        && call.stacktrace.description(i) == here.description(i);
+                }));
+#else
+        REQUIRE(call.stacktrace.empty());
+#endif
+    };
+
+    SECTION("When matched call is given.")
+    {
+        ScopedExpectation exp = mock.expect_call();
+
+        mock();
+
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u));
+
+        check(std::get<reporting::CallReport>(reporter.full_match_reports().front()));
+    }
+
+    SECTION("When no-match call is given.")
+    {
+        REQUIRE_THROWS(mock());
+
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Catch::Matchers::SizeIs(1u));
+
+        check(std::get<reporting::CallReport>(reporter.no_match_reports().front()));
+    }
+
+    SECTION("When inapplicable call is given.")
+    {
+        ScopedExpectation exp = mock.expect_call();
+
+        mock();
+        REQUIRE_THROWS(mock());
+
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u));
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Catch::Matchers::SizeIs(1u));
+
+        check(std::get<reporting::CallReport>(reporter.inapplicable_match_reports().front()));
+    }
+}
+
+TEST_CASE(
     "Mocks stacktrace-skip value can be adjusted.",
     "[mock]")
 {
@@ -963,26 +1034,28 @@ TEST_CASE(
     ScopedExpectation exp = mock.expect_call();
     mock();
     std::size_t const skip = GENERATE(1u, 2u, 3u);
-    mock = Mock<void()>{
-        MockSettings{.stacktraceSkip = skip}};
+    mock = Mock<void()>{MockSettings{.stacktraceSkip = skip}};
     exp = mock.expect_call();
     mock();
 
     auto const& [first, _1] = reporter.full_match_reports().front();
     auto const& [second, _2] = reporter.full_match_reports().at(1u);
-    CHECKED_IF(!first.stacktrace.empty())
-    {
-        REQUIRE(first.stacktrace.size() == second.stacktrace.size() + skip);
 
-        CHECK(
-            std::ranges::all_of(
-                std::views::iota(0u, second.stacktrace.size()),
-                [&](std::size_t const i) {
-                    return first.stacktrace.source_file(i + skip) == second.stacktrace.source_file(i)
-                        && first.stacktrace.source_line(i + skip) == second.stacktrace.source_line(i)
-                        && first.stacktrace.description(i + skip) == second.stacktrace.description(i);
-                }));
-    }
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+    REQUIRE(first.stacktrace.size() == second.stacktrace.size() + skip);
+
+    CHECK(
+        std::ranges::all_of(
+            std::views::iota(0u, second.stacktrace.size()),
+            [&](std::size_t const i) {
+                return first.stacktrace.source_file(i + skip) == second.stacktrace.source_file(i)
+                    && first.stacktrace.source_line(i + skip) == second.stacktrace.source_line(i)
+                    && first.stacktrace.description(i + skip) == second.stacktrace.description(i);
+            }));
+#else
+    REQUIRE(first.stacktrace.empty());
+    REQUIRE(second.stacktrace.empty());
+#endif
 }
 
 TEST_CASE(
