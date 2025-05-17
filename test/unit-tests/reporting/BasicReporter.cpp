@@ -62,11 +62,13 @@ namespace
     public:
         ~ScopedReporter() noexcept
         {
+            settings::reportSuccess = false;
             reporting::install_reporter<reporting::DefaultReporter>();
         }
 
         ScopedReporter() noexcept
         {
+            settings::reportSuccess = true;
             reporting::install_reporter<
                 reporting::BasicReporter<
                     &send_success,

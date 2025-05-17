@@ -13,6 +13,7 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/config/Settings.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
@@ -359,7 +360,7 @@ namespace mimicpp
             std::scoped_lock const lock{m_ExpectationsMx};
             evaluate_expectations(target, call, matches, inapplicableMatches, noMatches);
 
-            Stacktrace stacktrace = stacktrace::current(1u + call.baseStacktraceSkip);
+            std::size_t const stacktraceSkip{1u + call.baseStacktraceSkip};
             if (!std::ranges::empty(matches))
             {
                 std::vector reports = detail::gather_expectation_reports(matches);
@@ -367,16 +368,21 @@ namespace mimicpp
                 auto const bestIndex = detail::find_best_match(reports);
                 MIMICPP_ASSERT(0 <= bestIndex && bestIndex < std::ssize(reports), "Invalid index.");
 
-                auto& report = reports[bestIndex];
                 auto& expectation = *matches[bestIndex];
 
-                // Todo: Avoid the call copy
-                // Maybe we can prevent the copy here, but we should keep the instruction order as-is, because
-                // in cases of a throwing finalizer, we might introduce bugs. At least there are some tests, which
-                // will fail if done wrong.
-                reporting::detail::report_full_match(
-                    reporting::make_call_report(std::move(target), call, std::move(stacktrace)),
-                    std::move(report));
+                if (settings::reportSuccess)
+                {
+                    auto& report = reports[bestIndex];
+
+                    // Todo: Avoid the call copy
+                    // Maybe we can prevent the copy here, but we should keep the instruction order as-is, because
+                    // in cases of a throwing finalizer, we might introduce bugs. At least there are some tests, which
+                    // will fail if done wrong.
+                    reporting::detail::report_full_match(
+                        reporting::make_call_report(std::move(target), call, stacktrace::current(stacktraceSkip)),
+                        std::move(report));
+                }
+
                 expectation.consume(call);
                 return expectation.finalize_call(call);
             }
@@ -384,12 +390,12 @@ namespace mimicpp
             if (!std::ranges::empty(inapplicableMatches))
             {
                 reporting::detail::report_inapplicable_matches(
-                    reporting::make_call_report(std::move(target), std::move(call), std::move(stacktrace)),
+                    reporting::make_call_report(std::move(target), std::move(call), stacktrace::current(stacktraceSkip)),
                     detail::gather_expectation_reports(inapplicableMatches));
             }
 
             reporting::detail::report_no_matches(
-                reporting::make_call_report(std::move(target), std::move(call), std::move(stacktrace)),
+                reporting::make_call_report(std::move(target), std::move(call), stacktrace::current(stacktraceSkip)),
                 detail::make_no_match_reports(std::move(noMatches)));
         }
 

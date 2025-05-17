@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "mimic++/config/Settings.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/DefaultReporter.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
@@ -111,11 +112,13 @@ class ScopedReporter
 public:
     ~ScopedReporter() noexcept
     {
+        mimicpp::settings::reportSuccess = false;
         mimicpp::reporting::install_reporter<mimicpp::reporting::DefaultReporter>();
     }
 
     ScopedReporter() noexcept
     {
+        mimicpp::settings::reportSuccess = true;
         mimicpp::reporting::install_reporter<TestReporter>();
     }
 
