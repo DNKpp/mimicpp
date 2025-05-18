@@ -18,7 +18,8 @@ var searchData=
   ['mimicpp_3a_3aprinting_3a_3atype_3a_3aparsing_3a_3atoken_15',['token',['../d2/d01/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1token.html',1,'mimicpp::printing::type::parsing']]],
   ['mimicpp_3a_3areporting_16',['reporting',['../d6/d48/namespacemimicpp_1_1reporting.html',1,'mimicpp']]],
   ['mimicpp_3a_3asequence_17',['sequence',['../d8/dce/namespacemimicpp_1_1sequence.html',1,'mimicpp']]],
-  ['mimicpp_3a_3astacktrace_18',['stacktrace',['../df/d4b/namespacemimicpp_1_1stacktrace.html',1,'mimicpp']]],
-  ['mimicpp_3a_3athen_19',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]],
-  ['mimicpp_3a_3autil_20',['util',['../d8/da3/namespacemimicpp_1_1util.html',1,'mimicpp']]]
+  ['mimicpp_3a_3asettings_18',['settings',['../d3/dce/namespacemimicpp_1_1settings.html',1,'mimicpp']]],
+  ['mimicpp_3a_3astacktrace_19',['stacktrace',['../df/d4b/namespacemimicpp_1_1stacktrace.html',1,'mimicpp']]],
+  ['mimicpp_3a_3athen_20',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]],
+  ['mimicpp_3a_3autil_21',['util',['../d8/da3/namespacemimicpp_1_1util.html',1,'mimicpp']]]
 ];

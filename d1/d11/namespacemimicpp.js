@@ -30,6 +30,9 @@ var namespacemimicpp =
     [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", "d8/ddf/namespacemimicpp_1_1printing" ],
     [ "reporting", "d6/d48/namespacemimicpp_1_1reporting.html", "d6/d48/namespacemimicpp_1_1reporting" ],
     [ "sequence", "d8/dce/namespacemimicpp_1_1sequence.html", "d8/dce/namespacemimicpp_1_1sequence" ],
+    [ "settings", "d3/dce/namespacemimicpp_1_1settings.html", [
+      [ "report_success", "db/d9c/group___s_e_t_t_i_n_g_s.html#gae1e66f9f6bdfb761224d25fac7556a2b", null ]
+    ] ],
     [ "stacktrace", "df/d4b/namespacemimicpp_1_1stacktrace.html", "df/d4b/namespacemimicpp_1_1stacktrace" ],
     [ "then", "d9/d4c/namespacemimicpp_1_1then.html", [
       [ "apply_all", "db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga1115bba8873d79b6492ad72f1051e22d", null ],
