@@ -112,13 +112,13 @@ class ScopedReporter
 public:
     ~ScopedReporter() noexcept
     {
-        mimicpp::settings::reportSuccess = false;
+        mimicpp::settings::report_success().store(false);
         mimicpp::reporting::install_reporter<mimicpp::reporting::DefaultReporter>();
     }
 
     ScopedReporter() noexcept
     {
-        mimicpp::settings::reportSuccess = true;
+        mimicpp::settings::report_success().store(true);
         mimicpp::reporting::install_reporter<TestReporter>();
     }
 

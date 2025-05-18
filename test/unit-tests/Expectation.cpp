@@ -281,7 +281,7 @@ TEST_CASE(
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>()};
 
-    settings::reportSuccess = false;
+    settings::report_success().store(false);
 
     REQUIRE_CALL(*expectation, matches(_))
         .RETURN(commonMatchingOutcome);

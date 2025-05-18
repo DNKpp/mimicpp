@@ -24,8 +24,15 @@ namespace mimicpp::settings
      * To reduce overhead, `mimic++` reports only violations by default.
      * \note This setting affects only the behavior of mimic++.
      * When using a test adapter, additional configuration in the test framework may be required to receive such reports.
+     * \returns a mutable reference to the actual settings value.
      */
-    inline std::atomic_bool reportSuccess{false};
+    [[nodiscard]]
+    inline std::atomic_bool& report_success() noexcept
+    {
+        static std::atomic_bool value{false};
+
+        return value;
+    }
 
     /**
      * \}

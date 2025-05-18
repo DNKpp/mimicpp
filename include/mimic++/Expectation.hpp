@@ -370,7 +370,7 @@ namespace mimicpp
 
                 auto& expectation = *matches[bestIndex];
 
-                if (settings::reportSuccess)
+                if (settings::report_success())
                 {
                     auto& report = reports[bestIndex];
 
