@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "mimic++/config/Settings.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/DefaultReporter.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
@@ -31,36 +32,30 @@ public:
     using ExpectationReport = mimicpp::reporting::ExpectationReport;
     using NoMatchReport = mimicpp::reporting::NoMatchReport;
 
-    std::vector<std::tuple<CallReport, NoMatchReport>> noMatchResults{};
+    std::vector<std::tuple<CallReport, std::vector<NoMatchReport>>> noMatchResults{};
 
     [[noreturn]]
     void report_no_matches(
         CallReport call,
         std::vector<NoMatchReport> noMatchReports) override
     {
-        for (auto& exp : noMatchReports)
-        {
-            noMatchResults.emplace_back(
-                call,
-                std::move(exp));
-        }
+        noMatchResults.emplace_back(
+            std::move(call),
+            std::move(noMatchReports));
 
         throw NoMatchError{};
     }
 
-    std::vector<std::tuple<CallReport, ExpectationReport>> inapplicableMatchResults{};
+    std::vector<std::tuple<CallReport, std::vector<ExpectationReport>>> inapplicableMatchResults{};
 
     [[noreturn]]
     void report_inapplicable_matches(
         CallReport call,
         std::vector<ExpectationReport> expectationReports) override
     {
-        for (auto& exp : expectationReports)
-        {
-            inapplicableMatchResults.emplace_back(
-                call,
-                std::move(exp));
-        }
+        inapplicableMatchResults.emplace_back(
+            std::move(call),
+            std::move(expectationReports));
 
         throw NonApplicableMatchError{};
     }
@@ -117,11 +112,13 @@ class ScopedReporter
 public:
     ~ScopedReporter() noexcept
     {
+        mimicpp::settings::reportSuccess = false;
         mimicpp::reporting::install_reporter<mimicpp::reporting::DefaultReporter>();
     }
 
     ScopedReporter() noexcept
     {
+        mimicpp::settings::reportSuccess = true;
         mimicpp::reporting::install_reporter<TestReporter>();
     }
 

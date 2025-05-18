@@ -335,14 +335,14 @@ namespace mimicpp::detail
         {
             return m_Expectations->handle_call(
                 reporting::TargetReport{
-                    .name = *m_Settings.name,
-                    .overloadReport = std::move(overloadReport)},
+                    .name{*m_Settings.name},
+                    .overloadReport{std::move(overloadReport)}},
                 call::info_for_signature_t<SignatureT>{
-                    .args = std::move(params),
-                    .fromCategory = refQualification,
-                    .fromConstness = constQualification,
-                    .fromSourceLocation = std::move(from),
-                    .stacktrace = stacktrace::current(m_Settings.stacktraceSkip)});
+                    .args{std::move(params)},
+                    .fromCategory{refQualification},
+                    .fromConstness{constQualification},
+                    .fromSourceLocation{std::move(from)},
+                    .baseStacktraceSkip{m_Settings.stacktraceSkip}});
         }
 
         template <typename... Args>

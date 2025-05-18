@@ -133,12 +133,6 @@ TEST_CASE(
 {
     using SignatureT = void(int);
     using CallInfoT = call::info_for_signature_t<SignatureT>;
-    int arg0{42};
-    const CallInfoT info{
-        .args = {arg0},
-        .fromCategory = GENERATE(from_range(refQualifiers)),
-        .fromConstness = GENERATE(from_range(constQualifiers))};
-
     using DescriberStrategyT = InvocableMock<StringT, StringViewT>;
 
     struct Matcher

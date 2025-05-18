@@ -645,22 +645,28 @@ TEST_CASE(
     ScopedReporter reporter{};
 
     derived mock{};
-    ScopedExpectation exp = mock.foo_.expect_call();
-    const std::source_location before = std::source_location::current();
+    ScopedExpectation const exp = mock.foo_.expect_call();
+    [[maybe_unused]] std::source_location const before = std::source_location::current();
     mock.foo();
-    const std::source_location after = std::source_location::current();
+    [[maybe_unused]] std::source_location const after = std::source_location::current();
 
-    const reporting::CallReport& report = std::get<0>(reporter.full_match_reports().front());
-    CHECKED_IF(!report.stacktrace.empty())
-    {
-        REQUIRE_THAT(
-            report.stacktrace.source_file(0u),
-            Catch::Matchers::Equals(before.file_name()));
-        // there is no straight-forward way to check the description
-        REQUIRE(before.line() < report.stacktrace.source_line(0u));
-        // strict < fails on some compilers
-        REQUIRE(report.stacktrace.source_line(0u) <= after.line());
-    }
+    REQUIRE_THAT(
+        reporter.full_match_reports(),
+        Catch::Matchers::SizeIs(1u));
+
+    reporting::CallReport const& report = std::get<0>(reporter.full_match_reports().front());
+
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+    CHECK_THAT(
+        report.stacktrace.source_file(0u),
+        Catch::Matchers::Equals(before.file_name()));
+    // there is no straight-forward way to check the description
+    CHECK(before.line() < report.stacktrace.source_line(0u));
+    // strict < fails on some compilers
+    CHECK(report.stacktrace.source_line(0u) <= after.line());
+#else
+    REQUIRE(report.stacktrace.empty());
+#endif
 }
 
 TEST_CASE(
