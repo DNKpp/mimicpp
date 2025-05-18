@@ -33,6 +33,7 @@ namespace
     public:
         ~ScopedListener() noexcept
         {
+            mimicpp::settings::reportSuccess = false;
             delete testing::UnitTest::GetInstance()
                 ->listeners()
                 .Release(m_Ptr);
@@ -42,6 +43,7 @@ namespace
         ScopedListener()
             : m_Ptr{new Listener{}}
         {
+            mimicpp::settings::reportSuccess = true;
             testing::UnitTest::GetInstance()
                 ->listeners()
                 .Append(m_Ptr);
