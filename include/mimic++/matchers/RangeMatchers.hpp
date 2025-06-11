@@ -19,6 +19,35 @@
 
 namespace mimicpp::matches::range
 {
+    namespace detail
+    {
+#if MIMICPP_DETAIL_IS_GCC \
+    && __GNUC__ <= 11
+        // This is a small compatibility layer for gcc 11 and prior, because they do just provide a partial
+        // implementation of `std::views::all`. In fact, the `std::ranges::owning_view` impl is completely missing.
+        template <std::ranges::range Range>
+        [[nodiscard]]
+        constexpr auto store(Range&& range)
+        {
+            if constexpr (std::ranges::view<std::decay_t<Range>>)
+            {
+                return std::forward<Range>(range);
+            }
+            else if constexpr (requires { std::ranges::ref_view{std::declval<Range>()}; })
+            {
+                return std::ranges::ref_view{std::forward<Range>(range)};
+            }
+            else
+            {
+                return std::forward<Range>(range);
+            }
+        }
+
+#else
+        constexpr auto store = std::views::all;
+#endif
+    }
+
     /**
      * \defgroup MATCHERS_RANGE range matchers
      * \ingroup MATCHERS
@@ -41,7 +70,7 @@ namespace mimicpp::matches::range
         return PredicateMatcher{
             [comp = std::move(comparator)]<typename Target>(Target&& target, auto& range) // NOLINT(cppcoreguidelines-missing-std-forward)
                 requires std::predicate<
-                             const Comparator&,
+                             Comparator const&,
                              std::ranges::range_reference_t<Target>,
                              std::ranges::range_reference_t<Range>>
             {
@@ -52,7 +81,7 @@ namespace mimicpp::matches::range
             },
             "elements are {}",
             "elements are not {}",
-            std::make_tuple(std::views::all(std::forward<Range>(expected)))};
+            std::make_tuple(detail::store(std::forward<Range>(expected)))};
     }
 
     /**
@@ -69,7 +98,7 @@ namespace mimicpp::matches::range
         return PredicateMatcher{
             [comp = std::move(comparator)]<typename Target>(Target&& target, auto& range) // NOLINT(cppcoreguidelines-missing-std-forward)
                 requires std::predicate<
-                             const Comparator&,
+                             Comparator const&,
                              std::ranges::range_reference_t<Target>,
                              std::ranges::range_reference_t<Range>>
             {
@@ -80,7 +109,7 @@ namespace mimicpp::matches::range
             },
             "is a permutation of {}",
             "is not a permutation of {}",
-            std::make_tuple(std::views::all(std::forward<Range>(expected)))};
+            std::make_tuple(detail::store(std::forward<Range>(expected)))};
     }
 
     /**

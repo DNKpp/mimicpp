@@ -119,6 +119,58 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "matches::range::eq supports all kind of ranges.",
+    "[matcher][matcher::range]")
+{
+    std::vector source{42, 1337};
+    std::vector const other{42};
+
+    SECTION("Non-const ref ranges.")
+    {
+        const auto matcher = matches::range::eq(source);
+        CHECK(matcher.matches(source));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("const ref ranges.")
+    {
+        const auto matcher = matches::range::eq(std::as_const(source));
+        CHECK(matcher.matches(source));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("Value ranges.")
+    {
+        const auto matcher = matches::range::eq(std::vector{source});
+        CHECK(matcher.matches(source));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("Non-const rvalue ref ranges.")
+    {
+        std::vector const copy{source};
+        const auto matcher = matches::range::eq(std::move(source));
+        CHECK(matcher.matches(copy));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("Const rvalue ref ranges.")
+    {
+        std::vector const copy{source};
+        const auto matcher = matches::range::eq(std::move(std::as_const(source)));
+        CHECK(matcher.matches(copy));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("Views,")
+    {
+        const auto matcher = matches::range::eq(source | std::views::transform(std::identity{}));
+        CHECK(matcher.matches(source));
+        CHECK(!matcher.matches(other));
+    }
+}
+
+TEST_CASE(
     "matches::range::unordered_eq matches when target range is a permutation of the stored one.",
     "[matcher][matcher::range]")
 {
@@ -225,6 +277,58 @@ TEST_CASE(
             .RETURN(true);
 
         REQUIRE(matcher.matches(target));
+    }
+}
+
+TEST_CASE(
+    "matches::range::unordered_eq supports all kind of ranges.",
+    "[matcher][matcher::range]")
+{
+    std::vector source{42, 1337};
+    std::vector const other{42};
+
+    SECTION("Non-const ref ranges.")
+    {
+        const auto matcher = matches::range::unordered_eq(source);
+        CHECK(matcher.matches(source));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("const ref ranges.")
+    {
+        const auto matcher = matches::range::unordered_eq(std::as_const(source));
+        CHECK(matcher.matches(source));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("Value ranges.")
+    {
+        const auto matcher = matches::range::unordered_eq(std::vector{source});
+        CHECK(matcher.matches(source));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("Non-const rvalue ref ranges.")
+    {
+        std::vector const copy{source};
+        const auto matcher = matches::range::unordered_eq(std::move(source));
+        CHECK(matcher.matches(copy));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("Const rvalue ref ranges.")
+    {
+        std::vector const copy{source};
+        const auto matcher = matches::range::unordered_eq(std::move(std::as_const(source)));
+        CHECK(matcher.matches(copy));
+        CHECK(!matcher.matches(other));
+    }
+
+    SECTION("Views,")
+    {
+        const auto matcher = matches::range::unordered_eq(source | std::views::transform(std::identity{}));
+        CHECK(matcher.matches(source));
+        CHECK(!matcher.matches(other));
     }
 }
 
