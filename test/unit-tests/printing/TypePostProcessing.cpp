@@ -300,6 +300,7 @@ TEST_CASE(
     {
         enum
         {
+            dummy
         } constexpr anon_enum [[maybe_unused]]{};
 
         StringT const rawName = printing::type::type_name<decltype(anon_enum)>();
