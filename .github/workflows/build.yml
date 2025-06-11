@@ -207,6 +207,14 @@ jobs:
             compiler_version: "12"
             only_fmt: true
 
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:11"
+            compiler_name: "gcc"
+            compiler_version: "11"
+            only_fmt: true
+
           # msvc
           - prefix: "Windows 2022"
             os: "windows-2022"
