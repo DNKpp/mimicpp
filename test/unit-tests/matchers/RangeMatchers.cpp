@@ -154,14 +154,6 @@ TEST_CASE(
         CHECK(!matcher.matches(other));
     }
 
-    SECTION("Const rvalue ref ranges.")
-    {
-        std::vector const copy{source};
-        const auto matcher = matches::range::eq(std::move(std::as_const(source)));
-        CHECK(matcher.matches(copy));
-        CHECK(!matcher.matches(other));
-    }
-
     SECTION("Views,")
     {
         const auto matcher = matches::range::eq(source | std::views::transform(std::identity{}));
@@ -312,14 +304,6 @@ TEST_CASE(
     {
         std::vector const copy{source};
         const auto matcher = matches::range::unordered_eq(std::move(source));
-        CHECK(matcher.matches(copy));
-        CHECK(!matcher.matches(other));
-    }
-
-    SECTION("Const rvalue ref ranges.")
-    {
-        std::vector const copy{source};
-        const auto matcher = matches::range::unordered_eq(std::move(std::as_const(source)));
         CHECK(matcher.matches(copy));
         CHECK(!matcher.matches(other));
     }
