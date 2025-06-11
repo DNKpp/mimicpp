@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
@@ -143,7 +144,7 @@ namespace mimicpp::printing::type
     namespace detail
     {
         [[nodiscard]]
-        constexpr StringT remove_template_details(StringT name)
+        MIMICPP_DETAIL_CONSTEXPR_STRING StringT remove_template_details(StringT name)
         {
             if (name.ends_with(']'))
             {
