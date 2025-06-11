@@ -8,6 +8,7 @@
 #include "mimic++/printing/state/CommonTypes.hpp"
 
 #include <memory>
+#include <span>
 
 using namespace mimicpp;
 
