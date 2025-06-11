@@ -275,10 +275,11 @@ namespace mimicpp::matches::str
             []<case_foldable_string T>(T&& target, auto const& patternView) {
                 detail::check_string_compatibility<T, Pattern>();
 
-                auto reversedCaseFoldedPattern = detail::make_case_folded_string<Pattern>(patternView)
-                                               | std::views::reverse;
+                auto caseFoldedPattern = detail::make_case_folded_string<Pattern>(patternView);
+                auto reversedCaseFoldedPattern = caseFoldedPattern | std::views::reverse;
+                auto caseFoldedTargetPattern = detail::make_case_folded_string<T>(detail::make_view(target));
                 const auto [ignore, patternIter] = std::ranges::mismatch(
-                    detail::make_case_folded_string<T>(detail::make_view(target)) | std::views::reverse,
+                    caseFoldedTargetPattern | std::views::reverse,
                     reversedCaseFoldedPattern);
 
                 return patternIter == std::ranges::end(reversedCaseFoldedPattern);
