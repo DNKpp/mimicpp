@@ -26,7 +26,7 @@ namespace mimicpp::reporting
 
         template <typename T>
         [[nodiscard]]
-        static constexpr StringT make_type_name()
+        static MIMICPP_DETAIL_CONSTEXPR_STRING StringT make_type_name()
         {
             return mimicpp::print_type<T>();
         }
@@ -40,7 +40,7 @@ namespace mimicpp::reporting
         }
 
         [[nodiscard]]
-        constexpr StringT name() const
+        MIMICPP_DETAIL_CONSTEXPR_STRING StringT name() const
         {
             return std::invoke(m_MakeNameFn);
         }

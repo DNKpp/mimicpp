@@ -258,7 +258,7 @@ namespace mimicpp
          * \return The description of the selected stacktrace-entry.
          */
         [[nodiscard]]
-        constexpr std::string description(const std::size_t at) const
+        MIMICPP_DETAIL_CONSTEXPR_STRING std::string description(const std::size_t at) const
         {
             return std::invoke(m_DescriptionFn, m_Inner, at);
         }
@@ -269,7 +269,7 @@ namespace mimicpp
          * \return The source-file of the selected stacktrace-entry.
          */
         [[nodiscard]]
-        constexpr std::string source_file(const std::size_t at) const
+        MIMICPP_DETAIL_CONSTEXPR_STRING std::string source_file(const std::size_t at) const
         {
             return std::invoke(m_SourceFileFn, m_Inner, at);
         }
