@@ -124,83 +124,86 @@ namespace mimicpp
  * \details For example, this makes ``mimic++`` aware of the ``__stdcall`` call-convention.
  * \snippet RegisterCallConvention.cpp register __stdcall
  */
-#define MIMICPP_REGISTER_CALL_CONVENTION(call_convention, namespace_name)                                  \
-    namespace namespace_name                                                                               \
-    {                                                                                                      \
-        struct tag                                                                                         \
-        {                                                                                                  \
-        };                                                                                                 \
-                                                                                                           \
-        inline constexpr bool is_default_call_convention = ::std::same_as<void(), void call_convention()>; \
-                                                                                                           \
-        template <typename Signature>                                                                      \
-        struct remove_call_convention;                                                                     \
-                                                                                                           \
-        template <typename Signature>                                                                      \
-        using remove_call_convention_t = typename remove_call_convention<Signature>::type;                 \
-                                                                                                           \
-        template <typename Signature>                                                                      \
-        concept has_call_convention = !std::same_as<Signature, remove_call_convention_t<Signature>>;       \
-                                                                                                           \
-        template <typename Signature>                                                                      \
-        struct add_call_convention;                                                                        \
-                                                                                                           \
-        template <typename Signature>                                                                      \
-        using add_call_convention_t = typename add_call_convention<Signature>::type;                       \
-                                                                                                           \
-        template <has_call_convention Signature>                                                           \
-        struct add_call_convention<Signature>                                                              \
-        {                                                                                                  \
-            using type = Signature;                                                                        \
-        };                                                                                                 \
-                                                                                                           \
-        template <typename Derived, typename Signature>                                                    \
-        class CallInterface;                                                                               \
-                                                                                                           \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, );                          \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, noexcept);                  \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const);                     \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const noexcept);            \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, &);                         \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, & noexcept);                \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&);                    \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const& noexcept);           \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, &&);                        \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, && noexcept);               \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&&);                   \
-        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&& noexcept);          \
-    }                                                                                                      \
-                                                                                                           \
-    template <::namespace_name::has_call_convention Signature>                                             \
-        requires(!::namespace_name::is_default_call_convention)                                            \
-    struct mimicpp::signature_call_convention<Signature>                                                   \
-    {                                                                                                      \
-        using type = ::namespace_name::tag;                                                                \
-    };                                                                                                     \
-                                                                                                           \
-    /* In cases, where the call-convention is the default, we still want to get this tag,                  \
-    because it's not guaranteed, that it will be applied on member functions (e.g. __vectorcall).          \
-    Due to this, we must explicitly mark the call-interface operators.*/                                   \
-    template <::mimicpp::has_default_call_convention Signature>                                            \
-        requires ::namespace_name::is_default_call_convention                                              \
-    struct mimicpp::signature_call_convention<Signature>                                                   \
-    {                                                                                                      \
-        using type = ::namespace_name::tag;                                                                \
-    };                                                                                                     \
-                                                                                                           \
-    template <>                                                                                            \
-    struct mimicpp::call_convention_traits<::namespace_name::tag>                                          \
-    {                                                                                                      \
-        using tag_t = ::namespace_name::tag;                                                               \
-                                                                                                           \
-        template <typename Signature>                                                                      \
-        using remove_call_convention_t = ::namespace_name::remove_call_convention_t<Signature>;            \
-                                                                                                           \
-        template <typename Signature>                                                                      \
-        using add_call_convention_t = ::namespace_name::add_call_convention_t<Signature>;                  \
-                                                                                                           \
-        template <typename Derived, typename Signature>                                                    \
-        using call_interface_t = ::namespace_name::CallInterface<Derived, Signature>;                      \
+#define MIMICPP_REGISTER_CALL_CONVENTION(call_convention, namespace_name)                              \
+    namespace namespace_name                                                                           \
+    {                                                                                                  \
+        struct tag                                                                                     \
+        {                                                                                              \
+        };                                                                                             \
+                                                                                                       \
+        constexpr bool is_default_call_convention = ::std::same_as<void(), void call_convention()>;    \
+                                                                                                       \
+        template <typename Signature>                                                                  \
+        struct remove_call_convention;                                                                 \
+                                                                                                       \
+        template <typename Signature>                                                                  \
+        using remove_call_convention_t = typename remove_call_convention<Signature>::type;             \
+                                                                                                       \
+        template <typename Signature>                                                                  \
+        concept has_call_convention = !::std::same_as<Signature, remove_call_convention_t<Signature>>; \
+                                                                                                       \
+        template <typename Signature>                                                                  \
+        struct add_call_convention;                                                                    \
+                                                                                                       \
+        template <typename Signature>                                                                  \
+        using add_call_convention_t = typename add_call_convention<Signature>::type;                   \
+                                                                                                       \
+        template <has_call_convention Signature>                                                       \
+        struct add_call_convention<Signature>                                                          \
+        {                                                                                              \
+            using type = Signature;                                                                    \
+        };                                                                                             \
+                                                                                                       \
+        template <typename Derived, typename Signature>                                                \
+        class CallInterface;                                                                           \
+                                                                                                       \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, );                      \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, noexcept);              \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const);                 \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const noexcept);        \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, &);                     \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, & noexcept);            \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&);                \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const& noexcept);       \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, &&);                    \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, && noexcept);           \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&&);               \
+        MIMICPP_DETAIL_DEFINE_CALL_CONVENTION_SPECIALIZATIONS(call_convention, const&& noexcept);      \
+    }                                                                                                  \
+    /* Wrapping the specializations in the actual namespace is required for gcc 11*/                   \
+    namespace mimicpp                                                                                  \
+    {                                                                                                  \
+        template <::namespace_name::has_call_convention Signature>                                     \
+            requires(!::namespace_name::is_default_call_convention)                                    \
+        struct signature_call_convention<Signature>                                                    \
+        {                                                                                              \
+            using type = ::namespace_name::tag;                                                        \
+        };                                                                                             \
+                                                                                                       \
+        /* In cases, where the call-convention is the default, we still want to get this tag,          \
+        because it's not guaranteed, that it will be applied on member functions (e.g. __vectorcall).  \
+        Due to this, we must explicitly mark the call-interface operators.*/                           \
+        template <::mimicpp::has_default_call_convention Signature>                                    \
+            requires ::namespace_name::is_default_call_convention                                      \
+        struct signature_call_convention<Signature>                                                    \
+        {                                                                                              \
+            using type = ::namespace_name::tag;                                                        \
+        };                                                                                             \
+                                                                                                       \
+        template <>                                                                                    \
+        struct call_convention_traits<::namespace_name::tag>                                           \
+        {                                                                                              \
+            using tag_t = ::namespace_name::tag;                                                       \
+                                                                                                       \
+            template <typename Signature>                                                              \
+            using remove_call_convention_t = ::namespace_name::remove_call_convention_t<Signature>;    \
+                                                                                                       \
+            template <typename Signature>                                                              \
+            using add_call_convention_t = ::namespace_name::add_call_convention_t<Signature>;          \
+                                                                                                       \
+            template <typename Derived, typename Signature>                                            \
+            using call_interface_t = ::namespace_name::CallInterface<Derived, Signature>;              \
+        };                                                                                             \
     }
 
 #endif
