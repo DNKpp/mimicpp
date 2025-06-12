@@ -12,6 +12,15 @@
  * which can be set during cmake configuration. If an option is enabled, ``mimic++`` defines the relevant macro by itself.
  *
  * ---
+ * \anchor MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND
+ * ## Install a custom source-location backend.
+ * **Name:** ``MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND``
+ *
+ * By default, `mimic++` uses the C++20 `std::source_location`. However, this feature is not available on all platforms or with all compilers.
+ * To support older environments, users can configure an alternative by setting this variable to a fully qualified type name.
+ * \note The provided type must satisfy the requirements of the `mimicpp::util::source_location::backend` concept.
+ *
+ * ---
  * \anchor MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
  * ## Disable unprefixed macros
  * **Name:** ``MIMICPP_CONFIG_ONLY_PREFIXED_MACROS``
