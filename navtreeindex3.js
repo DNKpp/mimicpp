@@ -219,6 +219,8 @@ var NAVTREEINDEX3 =
 "d8/dce/namespacemimicpp_1_1sequence.html#ade137497ede2a9436dd532cf2e95fec8":[2,0,0,9,2],
 "d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673":[2,0,0,9,1],
 "d8/dd2/_config_8hpp.html":[5,0,1,1,0],
+"d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2":[5,0,1,1,0,1],
+"d8/dd2/_config_8hpp.html#a76508669f47b73a0a062c6d4f21d32f2":[5,0,1,1,0,2],
 "d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f":[5,0,1,1,0,0],
 "d8/dd2/_config_8hpp_source.html":[5,0,1,1,0],
 "d8/dd3/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_context.html":[2,0,0,7,0,1,0,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX3 =
 "d9/d10/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html":[1,10,15,11],
 "d9/d10/structmimicpp_1_1signature__remove__ref__qualifier_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html#a64c14de67887e4b092cc6898640ce721":[1,10,15,11,0],
 "d9/d28/structmimicpp_1_1signature__is__noexcept.html":[1,10,8,0],
-"d9/d41/namespacemimicpp_1_1printing_1_1type.html":[2,0,0,7,0],
-"d9/d41/namespacemimicpp_1_1printing_1_1type.html#a1dea32f5bfd2ba78031da023449c4905":[2,0,0,7,0,3],
-"d9/d41/namespacemimicpp_1_1printing_1_1type.html#a3682a00e00667de4b9196505a5d739d0":[2,0,0,7,0,4]
+"d9/d41/namespacemimicpp_1_1printing_1_1type.html":[2,0,0,7,0]
 };

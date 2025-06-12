@@ -106,6 +106,7 @@ $(function(){initNavTree('da/db0/_print_type_8hpp.html','../../'); initResizable
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/dd2/_config_8hpp_source.html">mimic++/config/Config.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d5/dec/_format_8hpp_source.html">mimic++/printing/Format.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d52/printing_2_fwd_8hpp_source.html">mimic++/printing/Fwd.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d65/_priority_tag_8hpp_source.html">mimic++/utilities/PriorityTag.hpp</a>&quot;</code><br />
@@ -149,14 +150,14 @@ Functions</h2></td></tr>
 <tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga18ad74efa55d75d3db296d3ec7d7d450">mimicpp::printing::type::type_name</a> ()</td></tr>
 <tr class="memdesc:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the (potentially demangled) name.  <br /></td></tr>
 <tr class="separator:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga60eb33515bb6d0910660a0200ff521fa" id="r_ga60eb33515bb6d0910660a0200ff521fa"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
-<tr class="memitem:ga60eb33515bb6d0910660a0200ff521fa"><td class="memTemplItemLeft" align="right" valign="top">constexpr OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga60eb33515bb6d0910660a0200ff521fa">mimicpp::printing::type::prettify_type</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
-<tr class="memdesc:ga60eb33515bb6d0910660a0200ff521fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a demangled name.  <br /></td></tr>
-<tr class="separator:ga60eb33515bb6d0910660a0200ff521fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga88fcba5cc0f51ab59bb46bad1b4d5755" id="r_ga88fcba5cc0f51ab59bb46bad1b4d5755"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
-<tr class="memitem:ga88fcba5cc0f51ab59bb46bad1b4d5755"><td class="memTemplItemLeft" align="right" valign="top">constexpr OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga88fcba5cc0f51ab59bb46bad1b4d5755">mimicpp::printing::type::prettify_function</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
-<tr class="memdesc:ga88fcba5cc0f51ab59bb46bad1b4d5755"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a function name produces by e.g. <code>std::source_location::function_name()</code>.  <br /></td></tr>
-<tr class="separator:ga88fcba5cc0f51ab59bb46bad1b4d5755"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2cc0c1474116143316d553c4fe01b367" id="r_ga2cc0c1474116143316d553c4fe01b367"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:ga2cc0c1474116143316d553c4fe01b367"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga2cc0c1474116143316d553c4fe01b367">mimicpp::printing::type::prettify_type</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
+<tr class="memdesc:ga2cc0c1474116143316d553c4fe01b367"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a demangled name.  <br /></td></tr>
+<tr class="separator:ga2cc0c1474116143316d553c4fe01b367"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga79dfa19e05686e7ac09ed3861dec2feb" id="r_ga79dfa19e05686e7ac09ed3861dec2feb"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:ga79dfa19e05686e7ac09ed3861dec2feb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> OutIter&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga79dfa19e05686e7ac09ed3861dec2feb">mimicpp::printing::type::prettify_function</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
+<tr class="memdesc:ga79dfa19e05686e7ac09ed3861dec2feb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a function name produces by e.g. <code>std::source_location::function_name()</code>.  <br /></td></tr>
+<tr class="separator:ga79dfa19e05686e7ac09ed3861dec2feb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -171,7 +172,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_092aa99ea44c2ea5c05e2b02d3022b6c.html">printing</a></li><li class="navelem"><a class="el" href="../../dir_f6af1113142479a5fa0447ddd9471db7.html">type</a></li><li class="navelem"><a class="el" href="../../da/db0/_print_type_8hpp.html">PrintType.hpp</a></li>
-    <li class="footer">Generated on Sun May 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Thu Jun 12 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
