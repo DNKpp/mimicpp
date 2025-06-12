@@ -58,7 +58,7 @@ namespace mimicpp::printing::type
      * this function simply outputs the provided name without any modifications.
      */
     template <print_iterator OutIter>
-    constexpr OutIter prettify_type(OutIter out, StringT name);
+    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_type(OutIter out, StringT name);
 
     /**
      * \brief Prettifies a function name produces by e.g. `std::source_location::function_name()`.
@@ -79,7 +79,7 @@ namespace mimicpp::printing::type
      * this function simply outputs the provided name without any modifications.
      */
     template <print_iterator OutIter>
-    constexpr OutIter prettify_function(OutIter out, StringT name);
+    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_function(OutIter out, StringT name);
 }
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
@@ -130,7 +130,7 @@ namespace mimicpp::printing::type
 namespace mimicpp::printing::type
 {
     template <print_iterator OutIter>
-    constexpr OutIter prettify_type(OutIter out, StringT name)
+    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_type(OutIter out, StringT name)
     {
         static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
 
@@ -165,7 +165,7 @@ namespace mimicpp::printing::type
     }
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify_function(OutIter out, StringT name)
+    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_function(OutIter out, StringT name)
     {
         name = detail::remove_template_details(std::move(name));
 
@@ -190,13 +190,13 @@ namespace mimicpp::printing::type
     }
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify_type(OutIter out, StringT name)
+    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_type(OutIter out, StringT name)
     {
         return std::ranges::copy(name, std::move(out)).out;
     }
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify_function(OutIter out, StringT name)
+    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_function(OutIter out, StringT name)
     {
         return std::ranges::copy(name, std::move(out)).out;
     }
