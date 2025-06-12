@@ -15,11 +15,11 @@
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/reporting/NoMatchReport.hpp"
 #include "mimic++/reporting/StringifyReports.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #include <cstddef>
 #include <exception>
 #include <ostream>
-#include <source_location>
 #include <stdexcept>
 #include <utility>
 
@@ -32,12 +32,12 @@ namespace mimicpp::reporting
     public:
         [[nodiscard]]
         explicit Error(
-            const std::string& what,
+            std::string const& what,
             Data&& data = {},
-            const std::source_location& loc = std::source_location::current())
+            util::SourceLocation loc = {})
             : std::logic_error{what},
               m_Data{std::move(data)},
-              m_Loc{loc}
+              m_Loc{std::move(loc)}
         {
         }
 
@@ -48,14 +48,14 @@ namespace mimicpp::reporting
         }
 
         [[nodiscard]]
-        std::source_location const& where() const noexcept
+        util::SourceLocation const& where() const noexcept
         {
             return m_Loc;
         }
 
     private:
         Data m_Data;
-        std::source_location m_Loc;
+        util::SourceLocation m_Loc;
     };
 
     using UnmatchedCallT = Error<CallReport>;
@@ -88,8 +88,7 @@ namespace mimicpp::reporting
                 *m_Out << msg << '\n';
             }
 
-            std::source_location const loc{*call.fromLoc};
-            throw UnmatchedCallT{msg, std::move(call), loc};
+            throw UnmatchedCallT{msg, std::move(call), call.fromLoc};
         }
 
         [[noreturn]]
@@ -104,8 +103,7 @@ namespace mimicpp::reporting
                 *m_Out << msg << '\n';
             }
 
-            std::source_location const loc{*call.fromLoc};
-            throw UnmatchedCallT{msg, std::move(call), loc};
+            throw UnmatchedCallT{msg, std::move(call), call.fromLoc};
         }
 
         void report_full_match(
