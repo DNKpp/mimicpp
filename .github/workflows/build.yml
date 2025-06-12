@@ -167,6 +167,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "16"
             only_fmt: true
+            only_cpptrace: true
 
           # gcc
           - prefix: "Linux"
@@ -206,6 +207,7 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "12"
             only_fmt: true
+            only_cpptrace: true
 
           - prefix: "Linux"
             os: "ubuntu-latest"
@@ -214,6 +216,7 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "11"
             only_fmt: true
+            only_cpptrace: true
 
           # msvc
           - prefix: "Windows 2022"
@@ -255,6 +258,7 @@ jobs:
             compiler_version: "16"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
             only_fmt: true
+            only_cpptrace: true
 
         exclude:
           # This combination results in a compile error in ranges header.
@@ -521,7 +525,7 @@ jobs:
       # Feature: stacktrace
       - name: Configure with std::stacktrace backend
         id: config-cxx23-stacktrace
-        if: ${{ matrix.cxx_standard >= 23 }}
+        if: ${{ matrix.cxx_standard >= 23 && matrix.config.only_cpptrace != true }}
         shell: bash
         run: |
           cmake \
