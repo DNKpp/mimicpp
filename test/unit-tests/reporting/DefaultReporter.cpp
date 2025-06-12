@@ -55,7 +55,6 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     CallReport const callReport{
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = TypeReport::make<void>(),
-        .fromLoc = std::source_location::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 

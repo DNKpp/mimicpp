@@ -4,8 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/printing/TypePrinter.hpp"
-
-#include <source_location>
+#include "mimic++/utilities/SourceLocation.hpp"
 
 using namespace mimicpp;
 
@@ -935,11 +934,11 @@ namespace
             return std::source_location::current();
         }
 
-        auto bar(my_type const&, std::source_location* outLoc)
+        auto bar(my_type const&, util::SourceLocation* outLoc)
         {
             if (outLoc)
             {
-                *outLoc = std::source_location::current();
+                *outLoc = util::SourceLocation{};
             }
 
             struct bar_type
@@ -1031,7 +1030,7 @@ TEST_CASE(
     #else
             anonNsScopePattern +
     #endif
-            R"(my_template::my_type const\s?&, std::source_location\s?\*)";
+            R"(my_template::my_type const\s?&, mimicpp::util::SourceLocation\s?\*)";
 
         StringT const pattern =
             returnPattern

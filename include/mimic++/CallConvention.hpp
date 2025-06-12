@@ -9,9 +9,9 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #include <concepts>
-#include <source_location>
 #include <tuple>
 
 namespace mimicpp
@@ -95,7 +95,7 @@ namespace mimicpp
     public:                                                                            \
         constexpr Return call_convention operator()(                                   \
             Params... params,                                                          \
-            ::std::source_location from = ::std::source_location::current()) specs     \
+            ::mimicpp::util::SourceLocation from = {}) specs                           \
         {                                                                              \
             return static_cast<Derived const&>(*this)                                  \
                 .handle_call(                                                          \

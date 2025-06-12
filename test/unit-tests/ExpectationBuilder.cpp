@@ -165,8 +165,7 @@ TEST_CASE(
     const CallInfoT call{
         .args = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any,
-        .fromSourceLocation = std::source_location::current()};
+        .fromConstness = Constness::any};
 
     SECTION("It is allowed to omit the finalize policy.")
     {
@@ -208,8 +207,7 @@ TEST_CASE(
     const CallInfoT call{
         .args = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any,
-        .fromSourceLocation = std::source_location::current()};
+        .fromConstness = Constness::any};
 
     using FinalizerT = FinalizerMock<SignatureT>;
     using FinalizerPolicyT = FinalizerFacade<
@@ -289,10 +287,10 @@ TEST_CASE(
 
     const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
 
-    const std::source_location beforeLoc = std::source_location::current();
+    util::SourceLocation constexpr beforeLoc{};
     const ScopedExpectation expectation = make_builder(collection)
                                        && detail::TimesConfig{0, 0};
-    const std::source_location afterLoc = std::source_location::current();
+    util::SourceLocation constexpr afterLoc{};
 
     REQUIRE_THAT(
         expectation.from().file_name(),

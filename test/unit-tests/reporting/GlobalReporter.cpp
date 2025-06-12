@@ -62,8 +62,8 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     CallReport const callReport{
         .target = {"Mock-Name", TypeReport::make<void()>()},
-        .returnTypeInfo = TypeReport::make<void>(),
-        .fromLoc = std::source_location::current()};
+        .returnTypeInfo = TypeReport::make<void>()
+    };
 
     ExpectationReport const expectationReport{
         .target = callReport.target};

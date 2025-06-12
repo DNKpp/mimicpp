@@ -15,7 +15,6 @@
 #include <functional>
 #include <optional>
 #include <ranges>
-#include <source_location>
 
 using namespace mimicpp;
 
@@ -125,8 +124,7 @@ TEST_CASE(
     CallInfoT const call{
         .args = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any,
-        .fromSourceLocation = std::source_location::current()};
+        .fromConstness = Constness::any};
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>()};
 
@@ -276,8 +274,7 @@ TEST_CASE(
     CallInfoT const call{
         .args = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any,
-        .fromSourceLocation = std::source_location::current()};
+        .fromConstness = Constness::any};
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>()};
 

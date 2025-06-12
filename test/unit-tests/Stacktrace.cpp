@@ -4,12 +4,12 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Stacktrace.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #include "SuppressionMacros.hpp"
 #include "TestTypes.hpp"
 
 #include <ranges> // std::views::*
-#include <source_location>
 
 using namespace mimicpp;
 
@@ -65,9 +65,9 @@ TEST_CASE(
     "stacktrace::current retrieves the current stacktrace.",
     "[stacktrace]")
 {
-    const auto before = std::source_location::current();
+    util::SourceLocation constexpr before{};
     const Stacktrace cur = stacktrace::current();
-    const auto after = std::source_location::current();
+    util::SourceLocation constexpr after{};
 
     REQUIRE(!cur.empty());
     REQUIRE_THAT(

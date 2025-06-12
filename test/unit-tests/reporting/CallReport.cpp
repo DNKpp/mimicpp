@@ -53,7 +53,6 @@ TEST_CASE(
         .target = make_common_target_report<std::string(int)>(),
         .returnTypeInfo = TypeReport::make<std::string>(),
         .argDetails = {{.typeInfo = TypeReport::make<int>(), .stateString = "42"}},
-        .fromLoc = std::source_location::current(),
         .stacktrace = stacktrace::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -120,7 +119,7 @@ TEST_CASE(
     {
         CallReport second{first};
 
-        second.fromLoc = std::source_location::current();
+        second.fromLoc = util::SourceLocation{};
 
         CHECK(first != second);
         CHECK(second != first);
@@ -170,8 +169,7 @@ TEST_CASE(
         call::Info<void> const info{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
-            .fromConstness = GENERATE(from_range(constQualifiers)),
-            .fromSourceLocation = std::source_location::current()};
+            .fromConstness = GENERATE(from_range(constQualifiers))};
         TargetReport const target = make_common_target_report<void()>();
         Stacktrace const stacktrace = stacktrace::current();
         CallReport const report = make_call_report(
@@ -195,8 +193,7 @@ TEST_CASE(
         call::Info<int> const info{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
-            .fromConstness = GENERATE(from_range(constQualifiers)),
-            .fromSourceLocation = std::source_location::current()};
+            .fromConstness = GENERATE(from_range(constQualifiers))};
         TargetReport const target = make_common_target_report<int()>();
         Stacktrace const stacktrace = stacktrace::current();
         CallReport const report = make_call_report(
@@ -223,8 +220,7 @@ TEST_CASE(
         call::Info<void, const int&, double, std::string> const info{
             .args = {std::ref(arg0), std::ref(arg1), std::ref(arg2)},
             .fromCategory = GENERATE(from_range(refQualifiers)),
-            .fromConstness = GENERATE(from_range(constQualifiers)),
-            .fromSourceLocation = std::source_location::current()
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
         TargetReport const target = make_common_target_report<void(const int&, double, std::string)>();
         Stacktrace const stacktrace = stacktrace::current();

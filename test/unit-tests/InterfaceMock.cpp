@@ -646,9 +646,9 @@ TEST_CASE(
 
     derived mock{};
     ScopedExpectation const exp = mock.foo_.expect_call();
-    [[maybe_unused]] std::source_location const before = std::source_location::current();
+    [[maybe_unused]] util::SourceLocation constexpr before{};
     mock.foo();
-    [[maybe_unused]] std::source_location const after = std::source_location::current();
+    [[maybe_unused]] util::SourceLocation constexpr after{};
 
     REQUIRE_THAT(
         reporter.full_match_reports(),

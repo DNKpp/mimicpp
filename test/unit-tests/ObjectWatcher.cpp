@@ -993,7 +993,7 @@ TEST_CASE(
 
     ScopedReporter reporter{};
 
-    const auto check_stacktrace = [](const Stacktrace& stacktrace, const std::source_location& before, const std::source_location& after) {
+    const auto check_stacktrace = [](const Stacktrace& stacktrace, util::SourceLocation const& before, util::SourceLocation const& after) {
         CHECKED_IF(!stacktrace.empty())
         {
             INFO("stacktrace:\n"
@@ -1015,11 +1015,11 @@ TEST_CASE(
         WatchedT watched{};
         MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
 
-        constexpr std::source_location before = std::source_location::current();
+        util::SourceLocation constexpr before{};
         {
             WatchedT other{std::move(watched)};
         }
-        constexpr std::source_location after = std::source_location::current();
+        util::SourceLocation constexpr after{};
 
         REQUIRE_THAT(
             reporter.full_match_reports(),
@@ -1036,9 +1036,9 @@ TEST_CASE(
 
         SECTION("When move constructing.")
         {
-            constexpr auto before = std::source_location::current();
+            util::SourceLocation constexpr before{};
             WatchedT other{std::move(watched)};
-            constexpr auto after = std::source_location::current();
+            util::SourceLocation constexpr after{};
 
             REQUIRE_THAT(
                 reporter.full_match_reports(),
@@ -1051,9 +1051,9 @@ TEST_CASE(
         {
             WatchedT other{};
 
-            constexpr auto before = std::source_location::current();
+            util::SourceLocation constexpr before{};
             other = std::move(watched);
-            constexpr auto after = std::source_location::current();
+            util::SourceLocation constexpr after{};
 
             REQUIRE_THAT(
                 reporter.full_match_reports(),
