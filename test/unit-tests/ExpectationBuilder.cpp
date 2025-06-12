@@ -295,13 +295,13 @@ TEST_CASE(
     const std::source_location afterLoc = std::source_location::current();
 
     REQUIRE_THAT(
-        expectation.from()->file_name(),
+        expectation.from().file_name(),
         Matches::Equals(beforeLoc.file_name()));
     REQUIRE_THAT(
-        expectation.from()->function_name(),
+        expectation.from().function_name(),
         Matches::Equals(beforeLoc.function_name()));
-    REQUIRE(beforeLoc.line() < expectation.from()->line());
-    REQUIRE(expectation.from()->line() < afterLoc.line());
+    REQUIRE(beforeLoc.line() < expectation.from().line());
+    REQUIRE(expectation.from().line() < afterLoc.line());
 }
 
 TEST_CASE(

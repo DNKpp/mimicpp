@@ -15,16 +15,15 @@ TEST_CASE(
     constexpr util::SourceLocation loc{};
     constexpr auto after = std::source_location::current();
 
-    CHECK(loc.operator->() == std::addressof(*loc));
-
     CHECK_THAT(
-        loc->file_name(),
+        loc.file_name(),
         Catch::Matchers::Equals(before.file_name()));
     CHECK_THAT(
-        loc->function_name(),
+        loc.function_name(),
         Catch::Matchers::Equals(before.function_name()));
-    CHECK(before.line() < loc->line());
-    CHECK(loc->line() < after.line());
+    CHECK(before.line() < loc.line());
+    CHECK(loc.line() < after.line());
+    CHECK(0 < loc.column());
 }
 
 TEST_CASE(
@@ -35,13 +34,13 @@ TEST_CASE(
     constexpr util::SourceLocation loc{source};
 
     CHECK_THAT(
-        loc->file_name(),
+        loc.file_name(),
         Catch::Matchers::Equals(source.file_name()));
     CHECK_THAT(
-        loc->function_name(),
+        loc.function_name(),
         Catch::Matchers::Equals(source.function_name()));
-    CHECK(source.line() == loc->line());
-    CHECK(source.column() == source.column());
+    CHECK(source.line() == loc.line());
+    CHECK(source.column() == loc.column());
 }
 
 TEST_CASE(
@@ -62,8 +61,7 @@ TEST_CASE(
     {
         constexpr util::SourceLocation loc{};
         constexpr util::SourceLocation other{};
-        REQUIRE(other->line() != loc->line());
-        REQUIRE(other->column() == other->column());
+        REQUIRE(other.line() != loc.line());
 
         CHECK_FALSE(loc == other);
         CHECK_FALSE(other == loc);
@@ -74,8 +72,8 @@ TEST_CASE(
     SECTION("Compares unequal, when column differs.")
     {
         constexpr util::SourceLocation loc{}, other{};
-        REQUIRE(other->line() == loc->line());
-        REQUIRE(other->column() != loc->column());
+        REQUIRE(other.line() == loc.line());
+        REQUIRE(other.column() != loc.column());
 
         CHECK_FALSE(loc == other);
         CHECK_FALSE(other == loc);

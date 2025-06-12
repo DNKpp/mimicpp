@@ -28,15 +28,27 @@ namespace mimicpp::util
         }
 
         [[nodiscard]]
-        constexpr std::source_location const* operator->() const noexcept
+        constexpr char const* file_name() const noexcept
         {
-            return &m_SourceLocation;
+            return m_SourceLocation.file_name();
         }
 
         [[nodiscard]]
-        constexpr std::source_location const& operator*() const noexcept
+        constexpr char const* function_name() const noexcept
         {
-            return m_SourceLocation;
+            return m_SourceLocation.function_name();
+        }
+
+        [[nodiscard]]
+        constexpr std::size_t line() const noexcept
+        {
+            return std::size_t{m_SourceLocation.line()};
+        }
+
+        [[nodiscard]]
+        constexpr std::size_t column() const noexcept
+        {
+            return std::size_t{m_SourceLocation.column()};
         }
 
         [[nodiscard]]
@@ -62,7 +74,18 @@ struct mimicpp::printing::detail::state::common_type_printer<mimicpp::util::Sour
     template <print_iterator OutIter>
     static OutIter print(OutIter out, util::SourceLocation const& loc)
     {
-        return mimicpp::print(std::move(out), *loc);
+        out = format::format_to(std::move(out), "`");
+        out = print_path(std::move(out), loc.file_name());
+        out = format::format_to(std::move(out), "`");
+
+        out = format::format_to(
+            std::move(out),
+            "#L{}, `",
+            loc.line());
+        out = type::prettify_function(std::move(out), loc.function_name());
+        out = format::format_to(std::move(out), "`");
+
+        return out;
     }
 };
 
