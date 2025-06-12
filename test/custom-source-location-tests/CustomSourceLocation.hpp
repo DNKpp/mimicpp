@@ -29,6 +29,11 @@ public:
     std::shared_ptr<Inner> inner{};
 };
 
+// This may already exist, when set as config option. But, we want to test with this particular backend.
+#ifdef MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND
+    #undef MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND
+#endif
+
 #define MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND CustomBackend
 
 template <>
