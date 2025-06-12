@@ -18,9 +18,6 @@
 
 namespace mimicpp::util::source_location
 {
-    template <typename Backend>
-    struct backend_traits;
-
     template <typename T>
     concept backend =
         std::copyable<T>
