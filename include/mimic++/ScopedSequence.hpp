@@ -39,11 +39,11 @@ namespace mimicpp::sequence::detail
             : m_Builder{&builder},
               m_SourceLocation{std::move(loc)},
               m_FinalizeFn{
-                  +[](void* storage, util::SourceLocation const& loc, Sequence& sequence) {
+                  +[](void* storage, util::SourceLocation finalLoc, Sequence& sequence) {
                       auto* builderPtr = static_cast<BasicExpectationBuilder<timesConfigured, Args...>*>(storage);
                       return ScopedExpectation{
                           std::move(*builderPtr) and expect::in_sequence(sequence),
-                          *loc};
+                          std::move(finalLoc)};
                   }}
         {
         }
@@ -57,7 +57,7 @@ namespace mimicpp::sequence::detail
             return std::invoke(
                 std::exchange(m_FinalizeFn, nullptr),
                 std::exchange(m_Builder, nullptr),
-                m_SourceLocation,
+                std::move(m_SourceLocation),
                 sequence);
         }
 
@@ -65,7 +65,7 @@ namespace mimicpp::sequence::detail
         void* m_Builder;
         util::SourceLocation m_SourceLocation;
 
-        using FinalizeFn = ScopedExpectation (*)(void*, util::SourceLocation const&, Sequence&);
+        using FinalizeFn = ScopedExpectation (*)(void*, util::SourceLocation, Sequence&);
         FinalizeFn m_FinalizeFn;
     };
 }
