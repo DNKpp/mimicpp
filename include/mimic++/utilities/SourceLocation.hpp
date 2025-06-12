@@ -6,11 +6,14 @@
 #ifndef MIMICPP_UTILITIES_SOURCE_LOCATION_HPP
 #define MIMICPP_UTILITIES_SOURCE_LOCATION_HPP
 
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/state/Print.hpp"
 
-#include <cstring>
-#include <source_location>
+#include <concepts>
+#include <cstddef>
+#include <string_view>
+#include <type_traits>
 #include <utility>
 
 namespace mimicpp::util::source_location
@@ -77,13 +80,16 @@ namespace mimicpp::util::source_location
 namespace mimicpp::util
 {
     /**
-     * \brief A thin wrapper around a ``std::source_location`` with additional ``operator ==``.
+     * \brief A thin wrapper around the currently installed source-location backend with additional ``operator ==``.
      */
     class SourceLocation
     {
+        using Backend = source_location::InstalledBackend;
+        using Traits = source_location::backend_traits<Backend>;
+
     public:
         [[nodiscard]]
-        explicit(false) constexpr SourceLocation(std::source_location loc = std::source_location::current()) noexcept
+        explicit(false) constexpr SourceLocation(Backend loc = Traits::current()) noexcept
             : m_SourceLocation{std::move(loc)}
         {
         }
@@ -91,25 +97,25 @@ namespace mimicpp::util
         [[nodiscard]]
         constexpr std::string_view file_name() const noexcept
         {
-            return m_SourceLocation.file_name();
+            return Traits::file_name(m_SourceLocation);
         }
 
         [[nodiscard]]
         constexpr std::string_view function_name() const noexcept
         {
-            return m_SourceLocation.function_name();
+            return Traits::function_name(m_SourceLocation);
         }
 
         [[nodiscard]]
         constexpr std::size_t line() const noexcept
         {
-            return std::size_t{m_SourceLocation.line()};
+            return Traits::line(m_SourceLocation);
         }
 
         [[nodiscard]]
         constexpr std::size_t column() const noexcept
         {
-            return std::size_t{m_SourceLocation.column()};
+            return Traits::column(m_SourceLocation);
         }
 
         [[nodiscard]]
@@ -122,7 +128,7 @@ namespace mimicpp::util
         }
 
     private:
-        std::source_location m_SourceLocation;
+        Backend m_SourceLocation;
     };
 }
 
