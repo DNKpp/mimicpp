@@ -98,7 +98,7 @@ namespace
                 Catch::Matchers::Equals(other.source_file(i + otherSkip)));
             CHECK(full.source_line(i + fullSkip) == other.source_line(i + otherSkip));
         }
-    };
+    }
 }
 
 TEST_CASE(

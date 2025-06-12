@@ -8,7 +8,7 @@
 #include "mimic++/Mock.hpp"
 
 #define CALL_CONVENTION __attribute__((ms_abi))
-MIMICPP_REGISTER_CALL_CONVENTION(CALL_CONVENTION, call_convention);
+MIMICPP_REGISTER_CALL_CONVENTION(CALL_CONVENTION, call_convention)
 
 using namespace mimicpp;
 
