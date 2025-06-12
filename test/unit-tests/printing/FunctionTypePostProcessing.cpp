@@ -103,7 +103,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
         REQUIRE_THAT(
             ss.str(),
@@ -117,7 +117,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
     #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
@@ -140,7 +140,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
     #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
@@ -165,7 +165,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
     #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
@@ -198,7 +198,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
         REQUIRE_THAT(
             ss.str(),
@@ -228,7 +228,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
         REQUIRE_THAT(
             ss.str(),
@@ -249,7 +249,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
     #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
@@ -275,7 +275,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
         REQUIRE_THAT(
             ss.str(),

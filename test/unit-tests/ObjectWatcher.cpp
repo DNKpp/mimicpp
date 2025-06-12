@@ -1001,7 +1001,7 @@ TEST_CASE(
 
             REQUIRE_THAT(
                 stacktrace.source_file(0u),
-                Catch::Matchers::Equals(before.file_name()));
+                Catch::Matchers::Equals(std::string{before.file_name()}));
             // there is no straight-forward way to check the description
             REQUIRE(before.line() < stacktrace.source_line(0u));
             // strict < fails on some compilers

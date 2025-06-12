@@ -659,7 +659,7 @@ TEST_CASE(
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
     CHECK_THAT(
         report.stacktrace.source_file(0u),
-        Catch::Matchers::Equals(before.file_name()));
+        Catch::Matchers::Equals(std::string{before.file_name()}));
     // there is no straight-forward way to check the description
     CHECK(before.line() < report.stacktrace.source_line(0u));
     // strict < fails on some compilers

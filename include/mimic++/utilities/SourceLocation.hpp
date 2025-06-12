@@ -29,6 +29,50 @@ namespace mimicpp::util::source_location
                { decltype(traits)::column(backend) } -> std::convertible_to<std::size_t>;
            };
 
+#ifndef __cpp_lib_source_location
+    #error "The std::source_location feature is unknown. Please setup a custom source-location backend."
+#endif
+
+#include <source_location>
+
+    template <>
+    struct backend_traits<std::source_location>
+    {
+        [[nodiscard]]
+        static constexpr std::source_location current(std::source_location const loc = std::source_location::current()) noexcept
+        {
+            return loc;
+        }
+
+        [[nodiscard]]
+        static constexpr std::string_view file_name(std::source_location const& loc) noexcept
+        {
+            return loc.file_name();
+        }
+
+        [[nodiscard]]
+        static constexpr std::string_view function_name(std::source_location const& loc) noexcept
+        {
+            return loc.function_name();
+        }
+
+        [[nodiscard]]
+        static constexpr std::size_t line(std::source_location const& loc) noexcept
+        {
+            return std::size_t{loc.line()};
+        }
+
+        [[nodiscard]]
+        static constexpr std::size_t column(std::source_location const& loc) noexcept
+        {
+            return std::size_t{loc.column()};
+        }
+    };
+
+    static_assert(backend<std::source_location>, "std::source_location isn't suitable as a source-location backend. Blame the mimic++ maintainer!");
+
+    using InstalledBackend = std::source_location;
+}
 
 namespace mimicpp::util
 {
@@ -45,13 +89,13 @@ namespace mimicpp::util
         }
 
         [[nodiscard]]
-        constexpr char const* file_name() const noexcept
+        constexpr std::string_view file_name() const noexcept
         {
             return m_SourceLocation.file_name();
         }
 
         [[nodiscard]]
-        constexpr char const* function_name() const noexcept
+        constexpr std::string_view function_name() const noexcept
         {
             return m_SourceLocation.function_name();
         }
@@ -71,13 +115,10 @@ namespace mimicpp::util
         [[nodiscard]]
         friend bool operator==(SourceLocation const& lhs, SourceLocation const& rhs) noexcept
         {
-            auto const& lhsLoc = lhs.m_SourceLocation;
-            auto const& rhsLoc = rhs.m_SourceLocation;
-
-            return 0 == std::strcmp(lhsLoc.file_name(), rhsLoc.file_name())
-                && 0 == std::strcmp(lhsLoc.function_name(), rhsLoc.function_name())
-                && lhsLoc.line() == rhsLoc.line()
-                && lhsLoc.column() == rhsLoc.column();
+            return lhs.line() == rhs.line()
+                && lhs.column() == rhs.column()
+                && lhs.file_name() == rhs.file_name()
+                && lhs.function_name() == rhs.function_name();
         }
 
     private:
@@ -99,7 +140,7 @@ struct mimicpp::printing::detail::state::common_type_printer<mimicpp::util::Sour
             std::move(out),
             "#L{}, `",
             loc.line());
-        out = type::prettify_function(std::move(out), loc.function_name());
+        out = type::prettify_function(std::move(out), StringT{loc.function_name()});
         out = format::format_to(std::move(out), "`");
 
         return out;

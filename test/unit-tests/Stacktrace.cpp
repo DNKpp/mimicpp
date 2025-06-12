@@ -72,7 +72,7 @@ TEST_CASE(
     REQUIRE(!cur.empty());
     REQUIRE_THAT(
         cur.source_file(0u),
-        Catch::Matchers::Equals(before.file_name()));
+        Catch::Matchers::Equals(std::string{before.file_name()}));
     const std::size_t line = cur.source_line(0u);
     REQUIRE(std::cmp_less(before.line(), line));
     REQUIRE(std::cmp_less(line, after.line()));

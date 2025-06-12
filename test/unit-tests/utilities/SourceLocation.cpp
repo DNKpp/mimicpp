@@ -16,11 +16,11 @@ TEST_CASE(
     util::SourceLocation constexpr after{};
 
     CHECK_THAT(
-        loc.file_name(),
-        Catch::Matchers::Equals(before.file_name()));
+        std::string{loc.file_name()},
+        Catch::Matchers::Equals(std::string{before.file_name()}));
     CHECK_THAT(
-        loc.function_name(),
-        Catch::Matchers::Equals(before.function_name()));
+        std::string{loc.function_name()},
+        Catch::Matchers::Equals(std::string{before.function_name()}));
     CHECK(before.line() < loc.line());
     CHECK(loc.line() < after.line());
     CHECK(0 < loc.column());
@@ -34,10 +34,10 @@ TEST_CASE(
     util::SourceLocation constexpr loc{source};
 
     CHECK_THAT(
-        loc.file_name(),
+        std::string{loc.file_name()},
         Catch::Matchers::Equals(source.file_name()));
     CHECK_THAT(
-        loc.function_name(),
+        std::string{loc.function_name()},
         Catch::Matchers::Equals(source.function_name()));
     CHECK(source.line() == loc.line());
     CHECK(source.column() == loc.column());
