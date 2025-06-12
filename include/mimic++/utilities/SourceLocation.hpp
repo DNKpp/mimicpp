@@ -13,6 +13,23 @@
 #include <source_location>
 #include <utility>
 
+namespace mimicpp::util::source_location
+{
+    template <typename Backend>
+    struct backend_traits;
+
+    template <typename T>
+    concept backend =
+        std::copyable<T>
+        && requires(backend_traits<std::remove_cvref_t<T>> traits, std::remove_cvref_t<T> const& backend) {
+               { decltype(traits)::current() } noexcept -> std::convertible_to<std::remove_cvref_t<T>>;
+               { decltype(traits)::file_name(backend) } -> std::convertible_to<std::string_view>;
+               { decltype(traits)::function_name(backend) } -> std::convertible_to<std::string_view>;
+               { decltype(traits)::line(backend) } -> std::convertible_to<std::size_t>;
+               { decltype(traits)::column(backend) } -> std::convertible_to<std::size_t>;
+           };
+
+
 namespace mimicpp::util
 {
     /**
