@@ -87,7 +87,7 @@ namespace
     StringT const anonNsScopePattern = R"(\{anon-ns\}::)";
     StringT const anonTypePattern = R"((\$_\d+|<unnamed-(tag|type-obj)>|<unnamed (class|struct|enum)>|\(anonymous (class|struct|enum)\)))";
     StringT const testCasePattern = R"(CATCH2_INTERNAL_TEST_\d+)";
-    StringT const locReturnPattern = "(auto|mimicpp::util::SourceLocation) ";
+    StringT const locReturnPattern = "(auto|(mimicpp::)?util::SourceLocation) ";
 }
 
 TEST_CASE(

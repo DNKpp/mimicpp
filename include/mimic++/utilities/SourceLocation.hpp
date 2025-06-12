@@ -102,45 +102,54 @@ namespace mimicpp::util
      */
     class SourceLocation
     {
-        using Backend = source_location::InstalledBackend;
-
-        // note: The `template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>` hack is done,
-        // so that we can declare all functions as `constexpr`.
+        // note: The `template <typename... Canary, typename Backend = source_location::InstalledBackend>` hack is done,
+        // so that we can declare all functions as `constexpr`, even when the currently installed backend is clearly not
+        // `constexpr`.
 
     public:
-        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
+        ~SourceLocation() = default;
+
+        static_assert(source_location::backend<source_location::InstalledBackend>);
+
+        template <typename... Canary, typename Backend = source_location::InstalledBackend>
+            requires std::same_as<Backend, source_location::InstalledBackend>
         [[nodiscard]]
-        explicit(false) constexpr SourceLocation(Backend loc = Traits::current()) noexcept
+        explicit(false) constexpr SourceLocation(Backend loc = source_location::backend_traits<Backend>::current()) noexcept
             : m_SourceLocation{std::move(loc)}
         {
         }
 
-        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
+        SourceLocation(SourceLocation const&) = default;
+        SourceLocation& operator=(SourceLocation const&) = default;
+        SourceLocation(SourceLocation&&) = default;
+        SourceLocation& operator=(SourceLocation&&) = default;
+
+        template <typename... Canary, typename Backend = source_location::InstalledBackend>
         [[nodiscard]]
         constexpr std::string_view file_name() const noexcept
         {
-            return Traits::file_name(m_SourceLocation);
+            return source_location::backend_traits<Backend>::file_name(m_SourceLocation);
         }
 
-        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
+        template <typename... Canary, typename Backend = source_location::InstalledBackend>
         [[nodiscard]]
         constexpr std::string_view function_name() const noexcept
         {
-            return Traits::function_name(m_SourceLocation);
+            return source_location::backend_traits<Backend>::function_name(m_SourceLocation);
         }
 
-        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
+        template <typename... Canary, typename Backend = source_location::InstalledBackend>
         [[nodiscard]]
         constexpr std::size_t line() const noexcept
         {
-            return Traits::line(m_SourceLocation);
+            return source_location::backend_traits<Backend>::line(m_SourceLocation);
         }
 
-        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
+        template <typename... Canary, typename Backend = source_location::InstalledBackend>
         [[nodiscard]]
         constexpr std::size_t column() const noexcept
         {
-            return Traits::column(m_SourceLocation);
+            return source_location::backend_traits<Backend>::column(m_SourceLocation);
         }
 
         [[nodiscard]]
@@ -153,7 +162,7 @@ namespace mimicpp::util
         }
 
     private:
-        Backend m_SourceLocation;
+        source_location::InstalledBackend m_SourceLocation;
     };
 }
 
