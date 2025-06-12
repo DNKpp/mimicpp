@@ -25,33 +25,38 @@
 #include <iterator>
 #include <memory>
 #include <optional>
-#include <source_location>
 #include <type_traits>
 #include <utility>
 
+#ifdef __cpp_lib_source_location
+
+    #include <source_location>
+
+template <>
+struct mimicpp::printing::detail::state::common_type_printer<std::source_location>
+{
+    template <print_iterator OutIter>
+    static OutIter print(OutIter out, std::source_location const& loc)
+    {
+        out = format::format_to(std::move(out), "`");
+        out = print_path(std::move(out), loc.file_name());
+        out = format::format_to(std::move(out), "`");
+
+        out = format::format_to(
+            std::move(out),
+            "#L{}, `",
+            loc.line());
+        out = type::prettify_function(std::move(out), loc.function_name());
+        out = format::format_to(std::move(out), "`");
+
+        return out;
+    }
+};
+
+#endif
+
 namespace mimicpp::printing::detail::state
 {
-    template <>
-    struct common_type_printer<std::source_location>
-    {
-        template <print_iterator OutIter>
-        static OutIter print(OutIter out, std::source_location const& loc)
-        {
-            out = format::format_to(std::move(out), "`");
-            out = print_path(std::move(out), loc.file_name());
-            out = format::format_to(std::move(out), "`");
-
-            out = format::format_to(
-                std::move(out),
-                "#L{}, `",
-                loc.line());
-            out = type::prettify_function(std::move(out), loc.function_name());
-            out = format::format_to(std::move(out), "`");
-
-            return out;
-        }
-    };
-
     template <>
     struct common_type_printer<std::nullopt_t>
     {
