@@ -6,9 +6,12 @@
 #ifndef MIMICPP_UTILITIES_SOURCE_LOCATION_HPP
 #define MIMICPP_UTILITIES_SOURCE_LOCATION_HPP
 
+#pragma once
+
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Fwd.hpp"
-#include "mimic++/printing/state/Print.hpp"
+#include "mimic++/printing/PathPrinter.hpp"
+#include "mimic++/printing/type/PrintType.hpp"
 
 #include <concepts>
 #include <cstddef>
@@ -28,13 +31,29 @@ namespace mimicpp::util::source_location
                { decltype(traits)::line(backend) } -> std::convertible_to<std::size_t>;
                { decltype(traits)::column(backend) } -> std::convertible_to<std::size_t>;
            };
+}
 
-#ifndef __cpp_lib_source_location
-    #error "The std::source_location feature is unknown. Please setup a custom source-location backend."
-#endif
+#ifdef MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND
 
-#include <source_location>
+namespace mimicpp::util::source_location
+{
+    using InstalledBackend = MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND;
+    static_assert(backend<InstalledBackend>, "The custom source-location backend does not satisfy the backend constraints.");
+}
 
+#else
+
+    #ifndef __cpp_lib_source_location
+        #error \
+            "std::source_location is not available in this environment." \
+            "mimic++ requires a working source location implementation, "\
+            "which can be provided by defining the MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND macro."
+    #endif
+
+    #include <source_location>
+
+namespace mimicpp::util::source_location
+{
     template <>
     struct backend_traits<std::source_location>
     {
@@ -74,6 +93,8 @@ namespace mimicpp::util::source_location
     using InstalledBackend = std::source_location;
 }
 
+#endif
+
 namespace mimicpp::util
 {
     /**
@@ -82,33 +103,40 @@ namespace mimicpp::util
     class SourceLocation
     {
         using Backend = source_location::InstalledBackend;
-        using Traits = source_location::backend_traits<Backend>;
+
+        // note: The `template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>` hack is done,
+        // so that we can declare all functions as `constexpr`.
 
     public:
+        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
         [[nodiscard]]
         explicit(false) constexpr SourceLocation(Backend loc = Traits::current()) noexcept
             : m_SourceLocation{std::move(loc)}
         {
         }
 
+        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
         [[nodiscard]]
         constexpr std::string_view file_name() const noexcept
         {
             return Traits::file_name(m_SourceLocation);
         }
 
+        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
         [[nodiscard]]
         constexpr std::string_view function_name() const noexcept
         {
             return Traits::function_name(m_SourceLocation);
         }
 
+        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
         [[nodiscard]]
         constexpr std::size_t line() const noexcept
         {
             return Traits::line(m_SourceLocation);
         }
 
+        template <typename... Canary, typename Traits = source_location::backend_traits<Backend>>
         [[nodiscard]]
         constexpr std::size_t column() const noexcept
         {
@@ -116,7 +144,7 @@ namespace mimicpp::util
         }
 
         [[nodiscard]]
-        friend bool operator==(SourceLocation const& lhs, SourceLocation const& rhs) noexcept
+        friend constexpr bool operator==(SourceLocation const& lhs, SourceLocation const& rhs) noexcept
         {
             return lhs.line() == rhs.line()
                 && lhs.column() == rhs.column()
@@ -133,7 +161,7 @@ template <>
 struct mimicpp::printing::detail::state::common_type_printer<mimicpp::util::SourceLocation>
 {
     template <print_iterator OutIter>
-    static OutIter print(OutIter out, util::SourceLocation const& loc)
+    static constexpr OutIter print(OutIter out, util::SourceLocation const& loc)
     {
         out = format::format_to(std::move(out), "`");
         out = print_path(std::move(out), loc.file_name());
