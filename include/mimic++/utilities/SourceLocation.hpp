@@ -109,10 +109,7 @@ namespace mimicpp::util
     public:
         ~SourceLocation() = default;
 
-        static_assert(source_location::backend<source_location::InstalledBackend>);
-
-        template <typename... Canary, typename Backend = source_location::InstalledBackend>
-            requires std::same_as<Backend, source_location::InstalledBackend>
+        template <typename... Canary, std::same_as<source_location::InstalledBackend> Backend = source_location::InstalledBackend>
         [[nodiscard]]
         explicit(false) constexpr SourceLocation(Backend loc = source_location::backend_traits<Backend>::current()) noexcept
             : m_SourceLocation{std::move(loc)}
@@ -162,6 +159,7 @@ namespace mimicpp::util
         }
 
     private:
+        static_assert(source_location::backend<source_location::InstalledBackend>);
         source_location::InstalledBackend m_SourceLocation;
     };
 }
