@@ -21,6 +21,34 @@
 
 namespace mimicpp::util::source_location
 {
+/**
+     * \defgroup SOURCE_LOCATION source-location
+     * \brief Contains source-location related functionalities.
+     * \details By default, `mimic++` uses the C++20 `std::source_location`.
+     * However, this feature is not available on all platforms or with all compilers.
+     * To support older environments, users can configure an alternative by setting the framework option \ref MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND.
+     *
+     * Additionally, users must provide an appropriate trait specialization for `mimicpp::util::source_location::backend_traits`,
+     * which will be checked by the `mimicpp::util::source_location::backend` concept.
+     * Such a specialization requires at least the following (compatible) definitions:
+     * ```cpp
+     * template <>
+     * struct mimicpp::source_location::backend_traits<MySourceLocationBackend>
+     * {
+     *    static MySourceLocationBackend current() noexcept;
+     *    static std::string_view function_name(MySourceLocationBackend const& backend);
+     *    static std::string_view file_name(MySourceLocationBackend const& backend);
+     *    static std::size_t line(MySourceLocationBackend const& backend);
+     *    static std::size_t column(MySourceLocationBackend const& backend);
+     * };
+     * ```
+     *
+     * \{
+     */
+
+    template <typename Backend>
+    struct backend_traits;
+
     template <typename T>
     concept backend =
         std::copyable<T>
@@ -31,6 +59,10 @@ namespace mimicpp::util::source_location
                { decltype(traits)::line(backend) } -> std::convertible_to<std::size_t>;
                { decltype(traits)::column(backend) } -> std::convertible_to<std::size_t>;
            };
+
+    /**
+     * \}
+     */
 }
 
 #ifdef MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND
@@ -99,6 +131,7 @@ namespace mimicpp::util
 {
     /**
      * \brief A thin wrapper around the currently installed source-location backend with additional ``operator ==``.
+     * \ingroup SOURCE_LOCATION
      */
     class SourceLocation
     {

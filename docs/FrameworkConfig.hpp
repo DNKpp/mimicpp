@@ -19,6 +19,7 @@
  * By default, `mimic++` uses the C++20 `std::source_location`. However, this feature is not available on all platforms or with all compilers.
  * To support older environments, users can configure an alternative by setting this variable to a fully qualified type name.
  * \note The provided type must satisfy the requirements of the `mimicpp::util::source_location::backend` concept.
+ * Refer to the \ref SOURCE_LOCATION "source-location" section for more details.
  *
  * ---
  * \anchor MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
