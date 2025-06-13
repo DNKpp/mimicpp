@@ -23,7 +23,6 @@ public:
         InvocableMock<std::string_view> functionNameMock{};
         InvocableMock<std::string_view> fileNameMock{};
         InvocableMock<std::size_t> lineMock{};
-        InvocableMock<std::size_t> columnMock{};
     };
 
     std::shared_ptr<Inner> inner{};
@@ -65,12 +64,6 @@ struct mimicpp::util::source_location::backend_traits<CustomBackend>
     static std::size_t line(BackendT const& backend)
     {
         return backend.inner->lineMock.Invoke();
-    }
-
-    [[nodiscard]]
-    static std::size_t column(BackendT const& backend)
-    {
-        return backend.inner->columnMock.Invoke();
     }
 };
 

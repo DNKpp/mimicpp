@@ -23,7 +23,6 @@ TEST_CASE(
         Catch::Matchers::Equals(std::string{before.function_name()}));
     CHECK(before.line() < loc.line());
     CHECK(loc.line() < after.line());
-    CHECK(0 < loc.column());
 }
 
 TEST_CASE(
@@ -40,7 +39,6 @@ TEST_CASE(
         std::string{loc.function_name()},
         Catch::Matchers::Equals(source.function_name()));
     CHECK(source.line() == loc.line());
-    CHECK(source.column() == loc.column());
 }
 
 TEST_CASE(
@@ -62,18 +60,6 @@ TEST_CASE(
         util::SourceLocation constexpr loc{};
         util::SourceLocation constexpr other{};
         REQUIRE(other.line() != loc.line());
-
-        CHECK_FALSE(loc == other);
-        CHECK_FALSE(other == loc);
-        CHECK(loc != other);
-        CHECK(other != loc);
-    }
-
-    SECTION("Compares unequal, when column differs.")
-    {
-        util::SourceLocation constexpr loc{}, other{};
-        REQUIRE(other.line() == loc.line());
-        REQUIRE(other.column() != loc.column());
 
         CHECK_FALSE(loc == other);
         CHECK_FALSE(other == loc);

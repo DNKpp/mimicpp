@@ -57,7 +57,6 @@ namespace mimicpp::util::source_location
                { decltype(traits)::file_name(backend) } -> std::convertible_to<std::string_view>;
                { decltype(traits)::function_name(backend) } -> std::convertible_to<std::string_view>;
                { decltype(traits)::line(backend) } -> std::convertible_to<std::size_t>;
-               { decltype(traits)::column(backend) } -> std::convertible_to<std::size_t>;
            };
 
     /**
@@ -111,12 +110,6 @@ namespace mimicpp::util::source_location
         static constexpr std::size_t line(std::source_location const& loc) noexcept
         {
             return std::size_t{loc.line()};
-        }
-
-        [[nodiscard]]
-        static constexpr std::size_t column(std::source_location const& loc) noexcept
-        {
-            return std::size_t{loc.column()};
         }
     };
 
@@ -175,18 +168,10 @@ namespace mimicpp::util
             return source_location::backend_traits<Backend>::line(m_SourceLocation);
         }
 
-        template <typename... Canary, typename Backend = source_location::InstalledBackend>
-        [[nodiscard]]
-        constexpr std::size_t column() const noexcept
-        {
-            return source_location::backend_traits<Backend>::column(m_SourceLocation);
-        }
-
         [[nodiscard]]
         friend constexpr bool operator==(SourceLocation const& lhs, SourceLocation const& rhs) noexcept
         {
             return lhs.line() == rhs.line()
-                && lhs.column() == rhs.column()
                 && lhs.file_name() == rhs.file_name()
                 && lhs.function_name() == rhs.function_name();
         }

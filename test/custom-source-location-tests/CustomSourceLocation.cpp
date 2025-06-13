@@ -53,13 +53,4 @@ TEST_CASE(
 
         REQUIRE(line == loc.line());
     }
-
-    SECTION("Testing column.")
-    {
-        std::size_t const column = GENERATE(0u, 1u, 42u);
-        REQUIRE_CALL(inner->columnMock, Invoke())
-            .LR_RETURN(column);
-
-        REQUIRE(column == loc.column());
-    }
 }
