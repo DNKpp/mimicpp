@@ -3,7 +3,7 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.15...3.31)
 set(MESSAGE_PREFIX "mimic++:")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
