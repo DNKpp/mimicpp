@@ -21,12 +21,12 @@
 
 namespace mimicpp::util::source_location
 {
-/**
+    /**
      * \defgroup SOURCE_LOCATION source-location
      * \brief Contains source-location related functionalities.
      * \details By default, `mimic++` uses the C++20 `std::source_location`.
      * However, this feature is not available on all platforms or with all compilers.
-     * To support older environments, users can configure an alternative by setting the framework option \ref MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND.
+     * To support older environments, users can configure an alternative by setting the framework option \ref MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND.
      *
      * Additionally, users must provide an appropriate trait specialization for `mimicpp::util::source_location::backend_traits`,
      * which will be checked by the `mimicpp::util::source_location::backend` concept.
@@ -65,12 +65,12 @@ namespace mimicpp::util::source_location
      */
 }
 
-#ifdef MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND
+#ifdef MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND
 
 namespace mimicpp::util::source_location
 {
-    using InstalledBackend = MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND;
-    static_assert(backend<InstalledBackend>, "The custom source-location backend does not satisfy the backend constraints.");
+    static_assert(backend<MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND>, "The provided source-location backend does not satisfy the backend requirements.");
+    using InstalledBackend = MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND;
 }
 
 #else

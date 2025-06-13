@@ -12,9 +12,9 @@
  * which can be set during cmake configuration. If an option is enabled, ``mimic++`` defines the relevant macro by itself.
  *
  * ---
- * \anchor MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND
- * ## Install a custom source-location backend.
- * **Name:** ``MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND``
+ * \anchor MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND
+ * ## Install an alternative source-location backend.
+ * **Name:** ``MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND``
  *
  * By default, `mimic++` uses the C++20 `std::source_location`. However, this feature is not available on all platforms or with all compilers.
  * To support older environments, users can configure an alternative by setting this variable to a fully qualified type name.

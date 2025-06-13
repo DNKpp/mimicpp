@@ -8,31 +8,33 @@ if (NOT TARGET enable-config-options)
 	add_library(enable-config-options INTERFACE)
 	add_library(mimicpp::internal::config-options ALIAS enable-config-options)
 
-	OPTION(MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES "When enabled, all types will be printed prettified." OFF)
+	option(MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES "When enabled, all types will be printed prettified." OFF)
 	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES: ${MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES}")
-	OPTION(MIMICPP_CONFIG_ONLY_PREFIXED_MACROS "When enabled, all macros will be prefixed with MIMICPP_." OFF)
+	option(MIMICPP_CONFIG_ONLY_PREFIXED_MACROS "When enabled, all macros will be prefixed with MIMICPP_." OFF)
 	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_ONLY_PREFIXED_MACROS: ${MIMICPP_CONFIG_ONLY_PREFIXED_MACROS}")
-	OPTION(
+	option(
 		MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
 		"When enabled, catch2 matchers integration will be enabled, if catch2 adapter is used (experimental)."
 		OFF
 	)
 	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION: ${MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION}")
-	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND: ${MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND}")
 
-	target_compile_definitions(
-		enable-config-options
+	# Config option, to utilize a custom source-location backend.
+	set(MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND "" CACHE STRING "Defines the utilized source-location type.")
+	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND: ${MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND}")
+
+	target_compile_definitions(enable-config-options
 		INTERFACE
 		$<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES}>:MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES>
 		$<$<BOOL:${MIMICPP_CONFIG_ONLY_PREFIXED_MACROS}>:MIMICPP_CONFIG_ONLY_PREFIXED_MACROS>
 		$<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION}>:MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION>
-		$<$<BOOL:${MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND}>:MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND=${MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND}>
+		$<$<BOOL:${MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND}>:MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND=${MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND}>
 	)
 
 	# Config option, to utilize fmt instead of std formatting.
 	# Checks, whether fmt is already available. Fetches it instead.
 	# Eventually defines the macro MIMICPP_CONFIG_USE_FMT.
-	OPTION(MIMICPP_CONFIG_USE_FMT "When enabled, uses fmt instead of std formatting." OFF)
+	option(MIMICPP_CONFIG_USE_FMT "When enabled, uses fmt instead of std formatting." OFF)
 	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_USE_FMT: ${MIMICPP_CONFIG_USE_FMT}")
 	if (MIMICPP_CONFIG_USE_FMT)
 
@@ -47,14 +49,12 @@ if (NOT TARGET enable-config-options)
 
 		find_package(fmt REQUIRED)
 		message(STATUS "${MESSAGE_PREFIX} Using {fmt}-package from: ${fmt_SOURCE_DIR}")
-		target_link_libraries(
-			enable-config-options
+		target_link_libraries(enable-config-options
 			INTERFACE
 			fmt::fmt
 		)
 
-		target_compile_definitions(
-			enable-config-options
+		target_compile_definitions(enable-config-options
 			INTERFACE
 			MIMICPP_CONFIG_USE_FMT
 		)
@@ -64,7 +64,7 @@ if (NOT TARGET enable-config-options)
 	# Config option, to enable unicode support for string matchers.
 	# This will download the cpp-unicodelib source and create an import target
 	# Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER.
-	OPTION(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-insensitive string matchers are available." OFF)
+	option(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-insensitive string matchers are available." OFF)
 	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER: ${MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER}")
 	if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
 
@@ -93,14 +93,12 @@ if (NOT TARGET enable-config-options)
 
 		find_package(uni-algo REQUIRED)
 		message(STATUS "${MESSAGE_PREFIX} Using {uni-algo}-package from: ${uni-algo_SOURCE_DIR}")
-		target_link_libraries(
-			enable-config-options
+		target_link_libraries(enable-config-options
 			INTERFACE
 			uni-algo::uni-algo
 		)
 
-		target_compile_definitions(
-			enable-config-options
+		target_compile_definitions(enable-config-options
 			INTERFACE
 			MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
 		)
@@ -111,7 +109,7 @@ if (NOT TARGET enable-config-options)
 
 	# Config option to enable full stacktrace support.
 	# Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE.
-	OPTION(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "When enabled, experimental stacktrace feature is enabled (requires either c++23 or cpptrace)." OFF)
+	option(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "When enabled, experimental stacktrace feature is enabled (requires either c++23 or cpptrace)." OFF)
 	message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
 	if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
 
@@ -120,7 +118,7 @@ if (NOT TARGET enable-config-options)
 		# Config option to enable cpptrace as stacktrace-backend.
 		# This will download the cpptrace source if not found.
 		# Eventually defines the macro MIMICPP_CONFIG_USE_CPPTRACE.
-		OPTION(MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE "When enabled, registers cpptrace library as stacktrace-backend." OFF)
+		option(MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE "When enabled, registers cpptrace library as stacktrace-backend." OFF)
 		message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE}")
 		if (MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE)
 
@@ -147,14 +145,12 @@ if (NOT TARGET enable-config-options)
 
 			find_package(cpptrace REQUIRED)
 			message(STATUS "${MESSAGE_PREFIX} Using {cpptrace}-package from: ${cpptrace_SOURCE_DIR}")
-			target_link_libraries(
-				enable-config-options
+			target_link_libraries(enable-config-options
 				INTERFACE
 				cpptrace::cpptrace
 			)
 
-			target_compile_definitions(
-				enable-config-options
+			target_compile_definitions(enable-config-options
 				INTERFACE
 				MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 			)
@@ -165,8 +161,7 @@ if (NOT TARGET enable-config-options)
 			message(DEBUG "${MESSAGE_PREFIX} Selected std::stacktrace.")
 		endif ()
 
-		target_compile_definitions(
-			enable-config-options
+		target_compile_definitions(enable-config-options
 			INTERFACE
 			MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
 		)
