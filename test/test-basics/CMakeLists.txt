@@ -5,8 +5,7 @@
 
 set(TARGET_NAME mimicpp-test-basics)
 
-add_library(${TARGET_NAME} INTERFACE
-)
+add_library(${TARGET_NAME} INTERFACE)
 add_library(mimicpp::test::basics ALIAS ${TARGET_NAME})
 
 target_include_directories(${TARGET_NAME}
@@ -38,3 +37,21 @@ target_link_libraries(${TARGET_NAME}
     mimicpp::internal::link-std-stacktrace
     libassert::assert
 )
+
+option(MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION "" ON)
+message(DEBUG "${MESSAGE_PREFIX} MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION: ${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}")
+if (MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION)
+
+    set(SOURCE_LOCATION_BUILD_TESTS OFF)
+    CPMAddPackage("gh:paweldac/source_location@0.4")
+
+    target_link_libraries(${TARGET_NAME}
+        INTERFACE
+        nostd::source_location
+    )
+
+    target_compile_definitions(enable-config-options
+        INTERFACE
+        MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION
+    )
+endif ()

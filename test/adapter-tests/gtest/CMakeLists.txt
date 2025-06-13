@@ -13,8 +13,8 @@ enable_sanitizers(${TARGET_NAME})
 
 CPMAddPackage(
 	NAME GTest
+	VERSION 1.15.2
 	GITHUB_REPOSITORY	"google/googletest"
-	GIT_TAG				"v1.15.2"
 	EXCLUDE_FROM_ALL	YES
 	SYSTEM				YES
 	OPTIONS
@@ -26,6 +26,12 @@ target_link_libraries(${TARGET_NAME}
 	mimicpp::mimicpp
 	mimicpp::test::basics
 	GTest::gtest_main
+)
+
+target_precompile_headers(${TARGET_NAME}
+	PRIVATE
+	<TestAssert.hpp>
+	$<$<BOOL:${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}>:\"mimic++/compatibility/paweldac-source_location.hpp\">
 )
 
 include(GoogleTest)

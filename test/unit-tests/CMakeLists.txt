@@ -48,6 +48,7 @@ target_link_libraries(${TARGET_NAME}
 target_precompile_headers(${TARGET_NAME}
     PRIVATE
     <TestAssert.hpp>
+    $<$<BOOL:${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}>:\"mimic++/compatibility/paweldac-source_location.hpp\">
     "Catch2FallbackStringifier.hpp"
     <catch2/catch_all.hpp>
     <catch2/trompeloeil.hpp>

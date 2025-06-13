@@ -90,9 +90,16 @@ namespace
     StringT const locReturnPattern = "(auto|(mimicpp::)?util::SourceLocation) ";
 }
 
+// source-locations other than std::source_location may behave differently.
+    #ifdef MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION
+        #define MAYFAIL_WITH_COMPAT_LOC "[!mayfail]"
+    #else
+        #define MAYFAIL_WITH_COMPAT_LOC
+    #endif
+
 TEST_CASE(
     "printing::type::prettify_function enhances std::source_location::function_name appearance.",
-    "[print]")
+    MAYFAIL_WITH_COMPAT_LOC "[print]")
 {
     StringStreamT ss{};
 
@@ -321,7 +328,7 @@ namespace
 
 TEST_CASE(
     "printing::type::prettify_function supports conversion-operators.",
-    MAYFAIL_ON_MSVC "[print][print::type]")
+    MAYFAIL_WITH_COMPAT_LOC MAYFAIL_ON_MSVC "[print][print::type]")
 {
     StringStreamT ss{};
 

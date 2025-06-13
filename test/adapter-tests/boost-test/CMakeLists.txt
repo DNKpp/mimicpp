@@ -28,6 +28,12 @@ target_link_libraries(${TARGET_NAME}
     Boost::unit_test_framework
 )
 
+target_precompile_headers(${TARGET_NAME}
+    PRIVATE
+    <TestAssert.hpp>
+    $<$<BOOL:${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}>:\"mimic++/compatibility/paweldac-source_location.hpp\">
+)
+
 add_test(
     NAME boost_adapter_test
     COMMAND ${TARGET_NAME} --run_test=SuccessSuite
