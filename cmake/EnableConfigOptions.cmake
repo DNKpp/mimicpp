@@ -134,13 +134,7 @@ if (NOT TARGET enable-config-options)
 				message(STATUS "${MESSAGE_PREFIX} No installed {cpptrace}-package found. Fetching via cpm.")
 
 				include(get_cpm)
-				CPMAddPackage(
-					NAME cpptrace
-					VERSION 0.8.2
-					GITHUB_REPOSITORY jeremy-rifkin/cpptrace
-					EXCLUDE_FROM_ALL YES
-					SYSTEM YES
-				)
+				CPMAddPackage("gh:jeremy-rifkin/cpptrace@1.0.0")
 			endif ()
 
 			find_package(cpptrace REQUIRED)
