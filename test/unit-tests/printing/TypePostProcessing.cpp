@@ -929,9 +929,9 @@ namespace
         {
         };
 
-        std::source_location foo(my_type)
+        auto foo(my_type)
         {
-            return std::source_location::current();
+            return util::SourceLocation{};
         }
 
         auto bar(my_type const&, util::SourceLocation* outLoc)
@@ -998,7 +998,7 @@ TEST_CASE(
             anonNsScopePattern + R"(my_template::my_type)";
     #endif
         StringT const pattern =
-            "std::source_location " // return type
+            "(mimicpp::)?util::SourceLocation " // return type
             R"(\()"
             + anonNsScopePattern
             + R"(my_template::\*\))"
