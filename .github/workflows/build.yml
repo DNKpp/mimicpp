@@ -218,6 +218,16 @@ jobs:
             only_fmt: true
             only_cpptrace: true
 
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:10"
+            compiler_name: "gcc"
+            compiler_version: "10"
+            only_fmt: true
+            only_cpptrace: true
+            compat_source_loc: true
+
           # msvc
           - prefix: "Windows 2022"
             os: "windows-2022"
@@ -296,6 +306,11 @@ jobs:
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=OFF \
                                       )" >> $GITHUB_ENV
+          
+          # Enable alternative source-location only if necessary
+          if [[ "${{ matrix.config.compat_source_loc }}" == "true" ]]; then
+            echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DMIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION=ON)" >> $GITHUB_ENV
+          fi
 
       - name: Setup macOS
         if: startsWith(matrix.config.os, 'macOS')
