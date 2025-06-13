@@ -3,10 +3,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-//
-// Created by dnkpp on 13.06.25.
-//
-
 #ifndef MIMICPP_COMPATIBILITY_PAWELDAC_SOURCE_LOCATION_HPP
 #define MIMICPP_COMPATIBILITY_PAWELDAC_SOURCE_LOCATION_HPP
 
