@@ -29,7 +29,8 @@ TEST_CASE(
     "util::SourceLocation can be constructed with a particular source-location.",
     "[util]")
 {
-    auto constexpr source = std::source_location::current();
+    using traits = util::source_location::backend_traits<util::source_location::InstalledBackend>;
+    auto constexpr source = traits::current();
     util::SourceLocation constexpr loc{source};
 
     CHECK_THAT(
