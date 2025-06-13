@@ -46,12 +46,6 @@ namespace mimicpp::util::source_location
         {
             return std::size_t{loc.line()};
         }
-
-        [[nodiscard]]
-        static constexpr std::size_t column(nostd::source_location const& loc) noexcept
-        {
-            return std::size_t{loc.column()};
-        }
     };
 
     using InstalledBackend = nostd::source_location;
