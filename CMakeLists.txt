@@ -68,11 +68,11 @@ target_link_libraries(
 	mimicpp::internal::config-options
 )
 
-if (CMAKE_SOURCE_DIR STREQUAL mimicpp_SOURCE_DIR)
-	set(IS_TOP_LEVEL_PROJECT ON)
-else()
-	set(IS_TOP_LEVEL_PROJECT OFF)
-endif()
+string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${mimicpp_SOURCE_DIR}" IS_TOP_LEVEL_PROJECT)
+
+# Causes some trouble on clang. Not needed and thus disabled for now.
+# see: https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 OPTION(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_TESTS)

@@ -134,6 +134,9 @@ if (NOT TARGET enable-config-options)
 				message(STATUS "${MESSAGE_PREFIX} No installed {cpptrace}-package found. Fetching via cpm.")
 
 				include(get_cpm)
+				# Causes some trouble on clang. Not needed and thus disabled for now.
+				# see: https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
+				set(CPPTRACE_DISABLE_CXX_20_MODULES ON)
 				CPMAddPackage("gh:jeremy-rifkin/cpptrace@1.0.0")
 			endif ()
 
