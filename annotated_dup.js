@@ -92,6 +92,10 @@ var annotated_dup =
         [ "NullBackend", "d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html", null ]
       ] ],
       [ "util", "d8/da3/namespacemimicpp_1_1util.html", [
+        [ "source_location", "db/d3e/namespacemimicpp_1_1util_1_1source__location.html", [
+          [ "backend_traits", "d0/d5f/structmimicpp_1_1util_1_1source__location_1_1backend__traits.html", null ],
+          [ "backend_traits< std::source_location >", "dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4.html", "dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4" ]
+        ] ],
         [ "always_false", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ],
         [ "priority_tag", "d0/db8/structmimicpp_1_1util_1_1priority__tag.html", null ],
         [ "priority_tag< 0u >", "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html", null ],

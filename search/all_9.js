@@ -7,6 +7,6 @@ var searchData=
   ['has_5fdefault_5fcall_5fconvention_4',['has_default_call_convention',['../da/d58/conceptmimicpp_1_1has__default__call__convention.html',1,'mimicpp']]],
   ['has_5fptr_5',['has_ptr',['../de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs.html#a1ebbdaf2be871c08ecefd8bf05eeb966',1,'mimicpp::printing::type::parsing::token::Specs']]],
   ['has_5fsize_6',['has_size',['../de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#gabe07e4394f348806148d665d73dc246f',1,'mimicpp::matches::range']]],
-  ['header_7',['Single-Header',['../index.html#autotoc_md68',1,'']]],
-  ['hub_8',['🔗 Developer Hub',['../index.html#autotoc_md48',1,'']]]
+  ['header_7',['Single-Header',['../index.html#autotoc_md70',1,'']]],
+  ['hub_8',['🔗 Developer Hub',['../index.html#autotoc_md50',1,'']]]
 ];

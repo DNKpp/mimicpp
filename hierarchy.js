@@ -5,7 +5,9 @@ var hierarchy =
     [ "mimicpp::printing::type::parsing::token::ArgSequence", "d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html", null ],
     [ "mimicpp::expectation_policies::ArgsRequirement< Matcher, MatchesStrategy, DescribeStrategy >", "d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html", null ],
     [ "mimicpp::stacktrace::backend_traits< Backend >", "da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html", null ],
+    [ "mimicpp::util::source_location::backend_traits< Backend >", "d0/d5f/structmimicpp_1_1util_1_1source__location_1_1backend__traits.html", null ],
     [ "mimicpp::stacktrace::backend_traits< mimicpp::stacktrace::NullBackend >", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html", null ],
+    [ "mimicpp::util::source_location::backend_traits< std::source_location >", "dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4.html", null ],
     [ "Base", null, [
       [ "mimicpp::detail::BasicWatched< Base, Watchers... >", null, [
         [ "mimicpp::Watched< Base, Watchers >", "d3/d5d/classmimicpp_1_1_watched.html", null ]

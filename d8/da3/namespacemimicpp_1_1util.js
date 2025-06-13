@@ -1,5 +1,6 @@
 var namespacemimicpp_1_1util =
 [
+    [ "source_location", "db/d3e/namespacemimicpp_1_1util_1_1source__location.html", "db/d3e/namespacemimicpp_1_1util_1_1source__location" ],
     [ "always_false", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ],
     [ "priority_tag", "d0/db8/structmimicpp_1_1util_1_1priority__tag.html", null ],
     [ "priority_tag< 0u >", "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html", null ],

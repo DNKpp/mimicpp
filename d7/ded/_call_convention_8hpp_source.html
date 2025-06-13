@@ -111,9 +111,9 @@ $(function(){initNavTree('d7/ded/_call_convention_8hpp_source.html','../../'); i
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/dde/_fwd_8hpp.html">mimic++/Fwd.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d32/_type_traits_8hpp.html">mimic++/TypeTraits.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d4c/_target_report_8hpp.html">mimic++/reporting/TargetReport.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;concepts&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;source_location&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/d15/_source_location_8hpp.html">mimic++/utilities/SourceLocation.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;concepts&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;tuple&gt;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
@@ -149,7 +149,7 @@ $(function(){initNavTree('d7/ded/_call_convention_8hpp_source.html','../../'); i
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="preprocessor">    public:                                                                            \</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">        constexpr Return call_convention operator()(                                   \</span></div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">            Params... params,                                                          \</span></div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">            ::std::source_location from = ::std::source_location::current()) specs     \</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">            ::mimicpp::util::SourceLocation from = {}) specs                           \</span></div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="preprocessor">        {                                                                              \</span></div>
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span><span class="preprocessor">            return static_cast&lt;Derived const&amp;&gt;(*this)                                  \</span></div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="preprocessor">                .handle_call(                                                          \</span></div>
@@ -253,6 +253,7 @@ $(function(){initNavTree('d7/ded/_call_convention_8hpp_source.html','../../'); i
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
+<div class="ttc" id="a_source_location_8hpp_html"><div class="ttname"><a href="../../d3/d15/_source_location_8hpp.html">SourceLocation.hpp</a></div></div>
 <div class="ttc" id="a_target_report_8hpp_html"><div class="ttname"><a href="../../d8/d4c/_target_report_8hpp.html">TargetReport.hpp</a></div></div>
 <div class="ttc" id="a_type_traits_8hpp_html"><div class="ttname"><a href="../../d8/d32/_type_traits_8hpp.html">TypeTraits.hpp</a></div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:26</div></div>
@@ -262,7 +263,7 @@ $(function(){initNavTree('d7/ded/_call_convention_8hpp_source.html','../../'); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d7/ded/_call_convention_8hpp.html">CallConvention.hpp</a></li>
-    <li class="footer">Generated on Thu Jun 12 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jun 13 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

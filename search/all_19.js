@@ -11,6 +11,7 @@ var searchData=
   ['_7erelocationwatcher_8',['~RelocationWatcher',['../da/d45/classmimicpp_1_1_relocation_watcher.html#a4dd3bd4a471844869fac24d1e5e1399a',1,'mimicpp::RelocationWatcher']]],
   ['_7escopedexpectation_9',['~ScopedExpectation',['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#ad74606fce962dc55495e735c56243fe7',1,'mimicpp::ScopedExpectation']]],
   ['_7esideeffectaction_10',['~SideEffectAction',['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#a399903f019ce67d203a4c21a7936cad3',1,'mimicpp::expectation_policies::SideEffectAction']]],
-  ['_7estacktrace_11',['~Stacktrace',['../db/d18/classmimicpp_1_1_stacktrace.html#a3a0d9f2d148e8d1cf17e76d3d0c9dee9',1,'mimicpp::Stacktrace']]],
-  ['_7ewatched_12',['~Watched',['../d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5',1,'mimicpp::Watched']]]
+  ['_7esourcelocation_11',['~SourceLocation',['../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412',1,'mimicpp::util::SourceLocation']]],
+  ['_7estacktrace_12',['~Stacktrace',['../db/d18/classmimicpp_1_1_stacktrace.html#a3a0d9f2d148e8d1cf17e76d3d0c9dee9',1,'mimicpp::Stacktrace']]],
+  ['_7ewatched_13',['~Watched',['../d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5',1,'mimicpp::Watched']]]
 ];
