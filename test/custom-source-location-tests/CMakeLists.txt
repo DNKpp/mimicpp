@@ -6,6 +6,7 @@
 set(TARGET_NAME mimicpp-custom-source-location-tests)
 add_executable(${TARGET_NAME}
     "CustomSourceLocation.cpp"
+    "EqualityComparison.cpp"
 )
 
 include(EnableSanitizers)

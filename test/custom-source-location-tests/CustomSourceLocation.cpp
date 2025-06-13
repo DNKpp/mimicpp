@@ -13,9 +13,6 @@ TEST_CASE(
 {
     STATIC_REQUIRE(std::same_as<CustomBackend, util::source_location::InstalledBackend>);
 
-    using trompeloeil::_;
-    using trompeloeil::gt;
-
     using traits = util::source_location::backend_traits<CustomBackend>;
 
     std::shared_ptr const inner = std::make_shared<CustomBackend::Inner>();
