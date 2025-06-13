@@ -612,13 +612,17 @@ supported.
 | clang-18 |   x    |   x    |     x     |   *    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | clang-19 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | clang-20 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| gcc-10   |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace    |
 | gcc-11   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace    |
 | gcc-12   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace    |
 | gcc-13   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | gcc-14   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | gcc-15   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
 
-Note: ``libc++`` doesn't support ``std::stacktrace`` yet.
+Note:
+
+- `libc++` doesn't support `std::stacktrace` yet.
+- `gcc-10` doesn't support `std::source_location`, but `mimic++` supports alternative source-location implementations.
 
 **macOS**
 
