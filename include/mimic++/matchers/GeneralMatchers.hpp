@@ -230,9 +230,26 @@ namespace mimicpp::matches
      * ### Custom Matcher
      * Matchers are highly customizable. In fact, any type which satisfies ``matcher_for`` concept can be used.
      * There exists no base or interface type, but the ``PredicateMatcher`` servers as a convenient generic type, which
-     * simply contains a predicate, a format string and optional additional arguments. But, this is just one option. If
-     * you have some very specific needs, go and create your matcher from scratch.
-     * \snippet Requirements.cpp matcher predicate matcher
+     * simply contains a predicate, a format string and optional additional arguments.
+     *
+     * A very straight-forward custom matcher may look like this:
+     * \snippet CustomMatcher.cpp matcher custom contains definition
+     * \snippet CustomMatcher.cpp matcher custom contains usage
+     *
+     * In fact, the `PredicateMatcher` is very flexible and can most likely tailored to your needs.
+     * For example, you can store any additional data.
+     * In this case the internal formatter requires the raw-pattern string, but the actual predicate needs a `std::regex`.
+     * \snippet CustomMatcher.cpp matcher custom regex definition
+     * \snippet CustomMatcher.cpp matcher custom regex usage
+     *
+     * Variadic matchers are also directly supported.
+     * In this case, the matcher requires two inputs and checks whether the sum of both matches the specified value.
+     * \snippet CustomMatcher.cpp matcher custom variadic definition
+     * \snippet CustomMatcher.cpp matcher custom variadic usage
+     *
+     * When there are very special needs, users can also just define their own matcher type without any base-class.
+     * \snippet CustomMatcher.cpp matcher custom standalone definition
+     * \snippet CustomMatcher.cpp matcher custom standalone usage
      *
      *\{
      */

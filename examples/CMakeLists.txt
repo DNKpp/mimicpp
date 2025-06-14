@@ -5,6 +5,7 @@
 
 set(TARGET_NAME mimicpp-examples)
 add_executable(${TARGET_NAME}
+    "CustomMatcher.cpp"
     "CustomPrinter.cpp"
     "CustomString.cpp"
     "Finalizers.cpp"

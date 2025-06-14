@@ -197,38 +197,6 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "Custom matchers can be easily composed via the generic PredicateMatcher.",
-    "[example][example::requirements]")
-{
-    //! [matcher predicate matcher]
-    using mimicpp::matches::_;
-    namespace matches = mimicpp::matches;
-    namespace expect = mimicpp::expect;
-
-    mimicpp::PredicateMatcher containsMatcher{
-        // provide a test predicate
-        [](const auto& target, const auto& element) // the left most param is the argument to be checked
-        {
-            return std::ranges::find(target, element) != std::ranges::end(target);
-        },
-        // specify a descriptive format message, which will be applied to std::format.
-        "contains element {}",
-        // specify the inverted message, which will also be applied to std::format, when inversion is used
-        "contains not element {}",
-        // capture additional data, which will be forwarded to both, the predicate and the description
-        std::tuple{42}};
-
-    mimicpp::Mock<void(std::span<int>)> mock{};
-
-    SCOPED_EXP mock.expect_call(_)
-        and expect::arg<0>(containsMatcher);
-
-    std::vector collection{42, 1337};
-    mock(collection);
-    //! [matcher predicate matcher]
-}
-
-TEST_CASE(
     "Various string matchers are supported.",
     "[example][example::requirements]")
 {
