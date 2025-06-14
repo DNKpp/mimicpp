@@ -7,6 +7,7 @@ var hierarchy =
     [ "mimicpp::stacktrace::backend_traits< Backend >", "da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html", null ],
     [ "mimicpp::util::source_location::backend_traits< Backend >", "d0/d5f/structmimicpp_1_1util_1_1source__location_1_1backend__traits.html", null ],
     [ "mimicpp::stacktrace::backend_traits< mimicpp::stacktrace::NullBackend >", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html", null ],
+    [ "mimicpp::util::source_location::backend_traits< nostd::source_location >", "df/d21/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01nostd_1_1source__location_01_4.html", null ],
     [ "mimicpp::util::source_location::backend_traits< std::source_location >", "dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4.html", null ],
     [ "Base", null, [
       [ "mimicpp::detail::BasicWatched< Base, Watchers... >", null, [

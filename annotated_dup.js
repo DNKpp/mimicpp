@@ -94,6 +94,7 @@ var annotated_dup =
       [ "util", "d8/da3/namespacemimicpp_1_1util.html", [
         [ "source_location", "db/d3e/namespacemimicpp_1_1util_1_1source__location.html", [
           [ "backend_traits", "d0/d5f/structmimicpp_1_1util_1_1source__location_1_1backend__traits.html", null ],
+          [ "backend_traits< nostd::source_location >", "df/d21/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01nostd_1_1source__location_01_4.html", "df/d21/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01nostd_1_1source__location_01_4" ],
           [ "backend_traits< std::source_location >", "dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4.html", "dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4" ]
         ] ],
         [ "always_false", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ],
