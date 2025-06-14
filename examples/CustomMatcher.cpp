@@ -171,7 +171,7 @@ TEST_CASE(
     // This expects the input to be an even number.
     SCOPED_EXP mock.expect_call(IsEvenMatcher{});
 
-    mock(1337);
+    mock(42);
 
     // Note: It's the users responsibility to add additional feature, like negation.
     // The `matcher_for` concept does only require the absolute minimal feature-set (a `matches` and `describe` function).
