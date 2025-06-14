@@ -43,4 +43,16 @@
     #define MIMICPP_ASSERT(condition, msg) (void(0))
 #endif
 
+#if 201'907L <= __cpp_lib_constexpr_string
+    #define MIMICPP_DETAIL_CONSTEXPR_STRING constexpr
+#else
+    #define MIMICPP_DETAIL_CONSTEXPR_STRING inline
+#endif
+
+#if 201'907L <= __cpp_lib_constexpr_vector
+    #define MIMICPP_DETAIL_CONSTEXPR_VECTOR constexpr
+#else
+    #define MIMICPP_DETAIL_CONSTEXPR_VECTOR inline
+#endif
+
 #endif

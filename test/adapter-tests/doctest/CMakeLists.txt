@@ -19,6 +19,12 @@ target_link_libraries(${TARGET_NAME}
 	doctest::doctest
 )
 
+target_precompile_headers(${TARGET_NAME}
+	PRIVATE
+	<TestAssert.hpp>
+	$<$<BOOL:${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}>:\"mimic++/compatibility/paweldac-source_location.hpp\">
+)
+
 list(APPEND CMAKE_MODULE_PATH "${doctest_SOURCE_DIR}/scripts/cmake")
 include(doctest)
 doctest_discover_tests(${TARGET_NAME})

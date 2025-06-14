@@ -4,8 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/printing/TypePrinter.hpp"
-
-#include <source_location>
+#include "mimic++/utilities/SourceLocation.hpp"
 
 using namespace mimicpp;
 
@@ -300,6 +299,7 @@ TEST_CASE(
     {
         enum
         {
+            dummy
         } constexpr anon_enum [[maybe_unused]]{};
 
         StringT const rawName = printing::type::type_name<decltype(anon_enum)>();
@@ -929,16 +929,16 @@ namespace
         {
         };
 
-        std::source_location foo(my_type)
+        auto foo(my_type)
         {
-            return std::source_location::current();
+            return util::SourceLocation{};
         }
 
-        auto bar(my_type const&, std::source_location* outLoc)
+        auto bar(my_type const&, util::SourceLocation* outLoc)
         {
             if (outLoc)
             {
-                *outLoc = std::source_location::current();
+                *outLoc = util::SourceLocation{};
             }
 
             struct bar_type
@@ -998,7 +998,7 @@ TEST_CASE(
             anonNsScopePattern + R"(my_template::my_type)";
     #endif
         StringT const pattern =
-            "std::source_location " // return type
+            "(mimicpp::)?util::SourceLocation " // return type
             R"(\()"
             + anonNsScopePattern
             + R"(my_template::\*\))"
@@ -1030,7 +1030,7 @@ TEST_CASE(
     #else
             anonNsScopePattern +
     #endif
-            R"(my_template::my_type const\s?&, std::source_location\s?\*)";
+            R"(my_template::my_type const\s?&, mimicpp::util::SourceLocation\s?\*)";
 
         StringT const pattern =
             returnPattern

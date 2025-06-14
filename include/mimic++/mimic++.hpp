@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/config/Config.hpp"
+#include "mimic++/config/Settings.hpp"
 #include "mimic++/config/Version.hpp"
 
 #include "mimic++/Fwd.hpp"

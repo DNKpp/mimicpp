@@ -16,6 +16,7 @@
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/state/Print.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
+#include "mimic++/utilities/C++20Compatibility.hpp"
 #include "mimic++/utilities/C++23Backports.hpp" // unreachable
 
 #include <algorithm>
@@ -25,33 +26,38 @@
 #include <iterator>
 #include <memory>
 #include <optional>
-#include <source_location>
 #include <type_traits>
 #include <utility>
 
+#ifdef __cpp_lib_source_location
+
+    #include <source_location>
+
+template <>
+struct mimicpp::printing::detail::state::common_type_printer<std::source_location>
+{
+    template <print_iterator OutIter>
+    static OutIter print(OutIter out, std::source_location const& loc)
+    {
+        out = format::format_to(std::move(out), "`");
+        out = print_path(std::move(out), loc.file_name());
+        out = format::format_to(std::move(out), "`");
+
+        out = format::format_to(
+            std::move(out),
+            "#L{}, `",
+            loc.line());
+        out = type::prettify_function(std::move(out), loc.function_name());
+        out = format::format_to(std::move(out), "`");
+
+        return out;
+    }
+};
+
+#endif
+
 namespace mimicpp::printing::detail::state
 {
-    template <>
-    struct common_type_printer<std::source_location>
-    {
-        template <print_iterator OutIter>
-        static OutIter print(OutIter out, std::source_location const& loc)
-        {
-            out = format::format_to(std::move(out), "`");
-            out = print_path(std::move(out), loc.file_name());
-            out = format::format_to(std::move(out), "`");
-
-            out = format::format_to(
-                std::move(out),
-                "#L{}, `",
-                loc.line());
-            out = type::prettify_function(std::move(out), loc.function_name());
-            out = format::format_to(std::move(out), "`");
-
-            return out;
-        }
-    };
-
     template <>
     struct common_type_printer<std::nullopt_t>
     {
@@ -95,7 +101,7 @@ namespace mimicpp::printing::detail::state
         {
             if (auto const* inner = std::to_address(ptr))
             {
-                auto const value = std::bit_cast<std::uintptr_t>(inner);
+                auto const value = util::bit_cast<std::uintptr_t>(inner);
                 if constexpr (4u < sizeof(std::uintptr_t))
                 {
                     return format::format_to(
@@ -176,7 +182,7 @@ namespace mimicpp::printing::detail::state
             {
                 constexpr auto to_dump = [](const string_char_t<String>& c) noexcept {
                     using intermediate_t = uint_with_size_t<sizeof c>;
-                    return std::bit_cast<intermediate_t>(c);
+                    return util::bit_cast<intermediate_t>(c);
                 };
 
                 auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));

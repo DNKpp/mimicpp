@@ -3,8 +3,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include <TestAssert.hpp>
-
 #include "mimic++/Mock.hpp"
 #include "mimic++/adapters/gtest.hpp"
 
@@ -33,6 +31,7 @@ namespace
     public:
         ~ScopedListener() noexcept
         {
+            mimicpp::settings::report_success().store(false);
             delete testing::UnitTest::GetInstance()
                 ->listeners()
                 .Release(m_Ptr);
@@ -42,6 +41,7 @@ namespace
         ScopedListener()
             : m_Ptr{new Listener{}}
         {
+            mimicpp::settings::report_success().store(true);
             testing::UnitTest::GetInstance()
                 ->listeners()
                 .Append(m_Ptr);

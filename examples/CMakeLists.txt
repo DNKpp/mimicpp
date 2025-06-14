@@ -5,6 +5,7 @@
 
 set(TARGET_NAME mimicpp-examples)
 add_executable(${TARGET_NAME}
+    "CustomMatcher.cpp"
     "CustomPrinter.cpp"
     "CustomString.cpp"
     "Finalizers.cpp"
@@ -44,6 +45,7 @@ target_link_libraries(${TARGET_NAME}
 target_precompile_headers(${TARGET_NAME}
     PRIVATE
     <TestAssert.hpp>
+    $<$<BOOL:${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}>:\"mimic++/compatibility/paweldac-source_location.hpp\">
     <catch2/catch_all.hpp>
 )
 

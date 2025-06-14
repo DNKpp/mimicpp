@@ -6,6 +6,7 @@
 add_subdirectory("test-basics")
 add_subdirectory("unit-tests")
 add_subdirectory("custom-stacktrace-tests")
+add_subdirectory("custom-source-location-tests")
 
 option(MIMICPP_ENABLE_ADAPTER_TESTS "Determines, whether the adapter tests shall be built." OFF)
 if (MIMICPP_ENABLE_ADAPTER_TESTS)
