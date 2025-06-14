@@ -31,6 +31,12 @@ message(DEBUG "${MESSAGE_PREFIX} CXXFLAGS: $ENV{CXXFLAGS}")
 message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS_INIT: ${CMAKE_CXX_FLAGS_INIT}")
 
+string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${mimicpp_SOURCE_DIR}" IS_TOP_LEVEL_PROJECT)
+
+# Causes some trouble on clang. Not needed and thus disabled for now.
+# see: https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
 include(GNUInstallDirs)
 
 add_library(mimicpp INTERFACE)
@@ -68,34 +74,28 @@ target_link_libraries(
 	mimicpp::internal::config-options
 )
 
-string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${mimicpp_SOURCE_DIR}" IS_TOP_LEVEL_PROJECT)
-
-# Causes some trouble on clang. Not needed and thus disabled for now.
-# see: https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
-set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
-
-OPTION(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})
+option(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_TESTS)
 	include(CTest)
 	add_subdirectory("test")
 endif()
 
-OPTION(MIMICPP_BUILD_EXAMPLES "Determines, whether the examples shall be built." ${IS_TOP_LEVEL_PROJECT})
+option(MIMICPP_BUILD_EXAMPLES "Determines, whether the examples shall be built." ${IS_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_EXAMPLES)
 	include(CTest)
 	add_subdirectory("examples")
 endif()
 
-OPTION(MIMICPP_CONFIGURE_DOXYGEN "Determines, whether the doxyfile shall be configured." OFF)
+option(MIMICPP_CONFIGURE_DOXYGEN "Determines, whether the doxyfile shall be configured." OFF)
 if (MIMICPP_CONFIGURE_DOXYGEN)
 
-	OPTION(MIMICPP_ENABLE_GENERATE_DOCS "Enable the doxygen documentation target." OFF)
+	option(MIMICPP_ENABLE_GENERATE_DOCS "Enable the doxygen documentation target." OFF)
 
 	add_subdirectory("docs")
 
 endif()
 
-OPTION(MIMICPP_ENABLE_AMALGAMATE_HEADERS "Enables the amalgamation target." OFF)
+option(MIMICPP_ENABLE_AMALGAMATE_HEADERS "Enables the amalgamation target." OFF)
 if (MIMICPP_ENABLE_AMALGAMATE_HEADERS)
 
 	add_subdirectory("tools/amalgamate-headers")
