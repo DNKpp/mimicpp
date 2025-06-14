@@ -223,30 +223,122 @@ Matching arguments</h3>
 <div class="line">    mock(1337);</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md2"></a>
 Custom Matcher</h3>
-<p>Matchers are highly customizable. In fact, any type which satisfies <code><a class="el" href="../../df/d23/conceptmimicpp_1_1matcher__for.html">matcher_for</a></code> concept can be used. There exists no base or interface type, but the <code><a class="el" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html" title="Generic matcher and the basic building block of most of the built-in matchers.">PredicateMatcher</a></code> servers as a convenient generic type, which simply contains a predicate, a format string and optional additional arguments. But, this is just one option. If you have some very specific needs, go and create your matcher from scratch. </p><div class="fragment"><div class="line">    <span class="keyword">using </span><a class="code hl_variable" href="#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a>;</div>
-<div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
-<div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<p>Matchers are highly customizable. In fact, any type which satisfies <code><a class="el" href="../../df/d23/conceptmimicpp_1_1matcher__for.html">matcher_for</a></code> concept can be used. There exists no base or interface type, but the <code><a class="el" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html" title="Generic matcher and the basic building block of most of the built-in matchers.">PredicateMatcher</a></code> servers as a convenient generic type, which simply contains a predicate, a format string and optional additional arguments.</p>
+<p>A very straight-forward custom matcher may look like this: </p><div class="fragment"><div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> Contains(<span class="keywordtype">int</span> expectedElement)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">mimicpp::PredicateMatcher</a>{</div>
+<div class="line">            <span class="comment">// This is the actual predicate.</span></div>
+<div class="line">            <span class="comment">// The first argument is the actual input and the other are the stored tuple-elements.</span></div>
+<div class="line">            [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; argument, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; element) {</div>
+<div class="line">                <span class="keywordflow">return</span> std::ranges::find(argument, element) != std::ranges::end(argument);</div>
+<div class="line">            },</div>
+<div class="line">            <span class="stringliteral">&quot;contains element {}&quot;</span>,     <span class="comment">// This is the description format-string.</span></div>
+<div class="line">            <span class="stringliteral">&quot;contains not element {}&quot;</span>, <span class="comment">// This is the description string for the negated matcher (i.e. when `!Contains` is used).</span></div>
+<div class="line">            <span class="comment">// Capture additional data, which will be forwarded to both, the predicate and the description.</span></div>
+<div class="line">            std::make_tuple(expectedElement)};</div>
+<div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">mimicpp::PredicateMatcher</a> containsMatcher{</div>
-<div class="line">        <span class="comment">// provide a test predicate</span></div>
-<div class="line">        [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; target, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; element) <span class="comment">// the left most param is the argument to be checked</span></div>
-<div class="line">        {</div>
-<div class="line">            <span class="keywordflow">return</span> std::ranges::find(target, element) != std::ranges::end(target);</div>
-<div class="line">        },</div>
-<div class="line">        <span class="comment">// specify a descriptive format message, which will be applied to std::format.</span></div>
-<div class="line">        <span class="stringliteral">&quot;contains element {}&quot;</span>,</div>
-<div class="line">        <span class="comment">// specify the inverted message, which will also be applied to std::format, when inversion is used</span></div>
-<div class="line">        <span class="stringliteral">&quot;contains not element {}&quot;</span>,</div>
-<div class="line">        <span class="comment">// capture additional data, which will be forwarded to both, the predicate and the description</span></div>
-<div class="line">        std::tuple{42}};</div>
+</div><!-- fragment --> <div class="fragment"><div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(std::span&lt;int const&gt;)&gt; mock{};</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(std::span&lt;int&gt;)&gt; mock{};</div>
+<div class="line">    std::vector <span class="keyword">const</span> collection{42, 1337};</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(_)</div>
-<div class="line">        and expect::arg&lt;0&gt;(containsMatcher);</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(Contains(42));</div>
 <div class="line"> </div>
-<div class="line">    std::vector collection{42, 1337};</div>
 <div class="line">    mock(collection);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Negating the matcher is directly supported. In this case this means:</span></div>
+<div class="line">    <span class="comment">// &quot;input-array does not contain the element `-42`&quot;</span></div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(!Contains(-42));</div>
+<div class="line"> </div>
+<div class="line">    mock(collection);</div>
+</div><!-- fragment --><p>In fact, the <code><a class="el" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html" title="Generic matcher and the basic building block of most of the built-in matchers.">PredicateMatcher</a></code> is very flexible and can most likely tailored to your needs. For example, you can store any additional data. In this case the internal formatter requires the raw-pattern string, but the actual predicate needs a <code>std::regex</code>. </p><div class="fragment"><div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keyword">auto</span> MatchesRegex(std::string pattern)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">mimicpp::PredicateMatcher</a>{</div>
+<div class="line">            <span class="comment">// This is the actual predicate.</span></div>
+<div class="line">            <span class="comment">// The first argument is the actual input and the other are the stored tuple-elements.</span></div>
+<div class="line">            [](std::ranges::range <span class="keyword">auto</span>&amp;&amp; input, [[maybe_unused]] std::string <span class="keyword">const</span>&amp; patternString, std::regex <span class="keyword">const</span>&amp; regex) {</div>
+<div class="line">                <span class="keywordflow">return</span> std::regex_match(</div>
+<div class="line">                    std::ranges::begin(input),</div>
+<div class="line">                    std::ranges::end(input),</div>
+<div class="line">                    regex);</div>
+<div class="line">            },</div>
+<div class="line">            <span class="stringliteral">&quot;matches regex {}&quot;</span>,        <span class="comment">// This is the description format-string.</span></div>
+<div class="line">            <span class="stringliteral">&quot;does not match regex {}&quot;</span>, <span class="comment">// This is the description string for the negated matcher (i.e. when `!MatchesRegex` is used).</span></div>
+<div class="line">            <span class="comment">// PredicateMatcher accepts arbitrary additional date, wrapped as std::tuple.</span></div>
+<div class="line">            <span class="comment">// Each tuple-element will internally be applied to the predicate function and both format-strings.</span></div>
+<div class="line">            <span class="comment">// Note: It is allowed to store more elements than actually referenced by the format-strings.</span></div>
+<div class="line">            <span class="comment">// The formatter will consume the arguments in the stored order.</span></div>
+<div class="line">            std::make_tuple(pattern, std::regex{pattern})};</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+</div><!-- fragment --> <div class="fragment"><div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(std::string <span class="keyword">const</span>&amp;)&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Let&#39;s build an expectation where the argument-string must exactly contain 4 digits.</span></div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(MatchesRegex(R<span class="stringliteral">&quot;(\d{4})&quot;));</span></div>
+<div class="line"><span class="stringliteral"></span> </div>
+<div class="line"><span class="stringliteral">    mock(</span><span class="stringliteral">&quot;1337&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// And another expectation where the argument must not match the regex (note the preceding `!`).</span></div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(!MatchesRegex(R<span class="stringliteral">&quot;(\d*)&quot;));</span></div>
+<div class="line"><span class="stringliteral"></span> </div>
+<div class="line"><span class="stringliteral">    mock(</span><span class="stringliteral">&quot;Hello, World!&quot;</span>);</div>
+</div><!-- fragment --><p>Variadic matchers are also directly supported. In this case, the matcher requires two inputs and checks whether the sum of both matches the specified value. </p><div class="fragment"><div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> MatchesSum(<span class="keywordtype">int</span> <span class="keyword">const</span> expectedSum)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code hl_class" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">mimicpp::PredicateMatcher</a>{</div>
+<div class="line">            <span class="comment">// This is the actual predicate.</span></div>
+<div class="line">            <span class="comment">// The first two arguments are the input from the call and the last input is the set expectation.</span></div>
+<div class="line">            [](<span class="keywordtype">int</span> <span class="keyword">const</span> firstArg, <span class="keywordtype">int</span> <span class="keyword">const</span> secondArg, <span class="keywordtype">int</span> <span class="keyword">const</span> expected) {</div>
+<div class="line">                <span class="keywordflow">return</span> firstArg + secondArg == expected;</div>
+<div class="line">            },</div>
+<div class="line">            <span class="stringliteral">&quot;matches sum {}&quot;</span>,        <span class="comment">// This is the description format-string.</span></div>
+<div class="line">            <span class="stringliteral">&quot;does not match sum {}&quot;</span>, <span class="comment">// This is the description string for the negated matcher (i.e. when `!MatchesSum` is used).</span></div>
+<div class="line">            std::make_tuple(expectedSum)};</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+</div><!-- fragment --> <div class="fragment"><div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line">    <span class="keyword">using </span>matches::_;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keywordtype">int</span>, <span class="keywordtype">int</span>)&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(_, _)</div>
+<div class="line">        <span class="comment">// This policy applies all arguments at a whole onto the specified matcher.</span></div>
+<div class="line">        <span class="comment">// In this case, we expect that the sum of the two is equal to `1337`.</span></div>
+<div class="line">        and expect::all_args(MatchesSum(1337));</div>
+<div class="line"> </div>
+<div class="line">    mock(42, 1295);</div>
+</div><!-- fragment --><p>When there are very special needs, users can also just define their own matcher type without any base-class. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>IsEvenMatcher</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        [[nodiscard]]</div>
+<div class="line">        <span class="keywordtype">bool</span> matches(<span class="keywordtype">int</span> <span class="keyword">const</span> input)<span class="keyword"> const</span></div>
+<div class="line"><span class="keyword">        </span>{</div>
+<div class="line">            <span class="keywordflow">return</span> 0 == input % 2;</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        [[nodiscard]]</div>
+<div class="line">        std::string_view describe()<span class="keyword"> const</span></div>
+<div class="line"><span class="keyword">        </span>{</div>
+<div class="line">            <span class="keywordflow">return</span> <span class="stringliteral">&quot;is an even number.&quot;</span>;</div>
+<div class="line">        }</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Let&#39;s see, whether we actually satisfy all constraints.</span></div>
+<div class="line">    <span class="comment">// This checks, that `IsEvenNumber` is a matcher for a single `int` argument.</span></div>
+<div class="line">    <span class="keyword">static_assert</span>(<a class="code hl_concept" href="../../df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for&lt;IsEvenMatcher, int&gt;</a>);</div>
+</div><!-- fragment --> <div class="fragment"><div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keywordtype">int</span>)&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// This expects the input to be an even number.</span></div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(IsEvenMatcher{});</div>
+<div class="line"> </div>
+<div class="line">    mock(1337);</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// Note: It&#39;s the users responsibility to add additional feature, like negation.</span></div>
+<div class="line">    <span class="comment">// The `matcher_for` concept does only require the absolute minimal feature-set (a `matches` and `describe` function).</span></div>
+<div class="line">    <span class="comment">// So, in this case `!IsEvenMatcher{}` will not work.</span></div>
 </div><!-- fragment --><h2 class="groupheader">Function Documentation</h2>
 <a id="ga5ad9dad2daac36bba4d44337b7833c31" name="ga5ad9dad2daac36bba4d44337b7833c31"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga5ad9dad2daac36bba4d44337b7833c31">&#9670;&#160;</a></span>approx_abs()</h2>
