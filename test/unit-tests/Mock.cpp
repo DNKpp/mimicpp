@@ -998,8 +998,28 @@ TEST_CASE(
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
         REQUIRE(!here.empty());
         REQUIRE(call.stacktrace.size() == here.size());
+        std::invoke(
+            [&] {
+                auto const hereSrc = here.source_file(0u);
+                auto const callSrc = call.stacktrace.source_file(0u);
+
+                // On msvc, there may be additional noise after the actual function name (e.g. `foo+1337`).
+                CHECKED_ELSE(hereSrc == callSrc)
+                {
+                    auto const hereIter = std::ranges::find(hereSrc, '+');
+                    auto const callIter = std::ranges::find(callSrc, '+');
+                    CHECK_THAT(
+                        (std::string{callSrc.cbegin(), callIter}),
+                        Catch::Matchers::Equals(std::string{hereSrc.cbegin(), hereIter}));
+                    CHECK_THAT(
+                        (std::string{hereIter, hereSrc.cend()}),
+                        Catch::Matchers::Matches(R"(\+\d+)"));
+                    CHECK_THAT(
+                        (std::string{callIter, callSrc.cend()}),
+                        Catch::Matchers::Matches(R"(\+\d+)"));
+                }
+            });
         CHECK(call.stacktrace.source_file(0u) == here.source_file(0u));
-        CHECK(call.stacktrace.description(0u) == here.description(0u));
         CHECK(call.stacktrace.source_line(0u) > here.source_line(0u));
         CHECK(
             std::ranges::all_of(
