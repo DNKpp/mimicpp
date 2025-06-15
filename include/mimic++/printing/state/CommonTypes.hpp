@@ -37,7 +37,7 @@ template <>
 struct mimicpp::printing::detail::state::common_type_printer<std::source_location>
 {
     template <print_iterator OutIter>
-    static OutIter print(OutIter out, std::source_location const& loc)
+    static constexpr OutIter print(OutIter out, std::source_location const& loc)
     {
         out = format::format_to(std::move(out), "`");
         out = print_path(std::move(out), loc.file_name());
@@ -62,7 +62,7 @@ namespace mimicpp::printing::detail::state
     struct common_type_printer<std::nullopt_t>
     {
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, [[maybe_unused]] std::nullopt_t const)
+        static constexpr OutIter print(OutIter out, [[maybe_unused]] std::nullopt_t const)
         {
             return format::format_to(std::move(out), "nullopt");
         }
@@ -87,7 +87,7 @@ namespace mimicpp::printing::detail::state
     struct common_type_printer<std::nullptr_t>
     {
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, [[maybe_unused]] std::nullptr_t const& ptr)
+        static constexpr OutIter print(OutIter out, [[maybe_unused]] std::nullptr_t const ptr)
         {
             return format::format_to(std::move(out), "nullptr");
         }
@@ -97,7 +97,7 @@ namespace mimicpp::printing::detail::state
     struct common_type_printer<T*>
     {
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, T const* ptr)
+        static constexpr OutIter print(OutIter out, T const* ptr)
         {
             if (auto const* inner = std::to_address(ptr))
             {
@@ -152,9 +152,9 @@ namespace mimicpp::printing::detail::state
     struct common_type_printer<String>
     {
         template <std::common_reference_with<String> T, print_iterator OutIter>
-        static OutIter print(OutIter out, T& str)
+        static constexpr OutIter print(OutIter out, T& str)
         {
-            if constexpr (constexpr auto prefix = string_literal_prefix<string_char_t<String>>;
+            if constexpr (auto constexpr prefix = string_literal_prefix<string_char_t<String>>;
                           !std::ranges::empty(prefix))
             {
                 out = std::ranges::copy(prefix, std::move(out)).out;
@@ -173,35 +173,37 @@ namespace mimicpp::printing::detail::state
             else if constexpr (printer_for<custom::Printer<string_char_t<String>>, OutIter, string_char_t<String>>)
             {
                 for (custom::Printer<string_char_t<String>> printer{};
-                     const string_char_t<String>& c : string_traits<String>::view(str))
+                     string_char_t<String> const& c : string_traits<String>::view(str))
                 {
                     out = printer.print(std::move(out), c);
                 }
             }
             else
             {
-                constexpr auto to_dump = [](const string_char_t<String>& c) noexcept {
+                constexpr auto to_dump = [](string_char_t<String> const& c) noexcept {
                     using intermediate_t = uint_with_size_t<sizeof c>;
                     return util::bit_cast<intermediate_t>(c);
                 };
 
                 auto view = string_traits<std::remove_cvref_t<T>>::view(std::forward<T>(str));
-                auto iter = std::ranges::begin(view);
-                if (const auto end = std::ranges::end(view);
+                auto const end = std::ranges::end(view);
+                if (auto const iter = std::ranges::begin(view);
                     iter != end)
                 {
                     out = format::format_to(
                         std::move(out),
                         "{:#x}",
-                        to_dump(*iter++));
+                        to_dump(*iter));
 
-                    for (; iter != end; ++iter)
-                    {
-                        out = format::format_to(
-                            std::move(out),
-                            ", {:#x}",
-                            to_dump(*iter));
-                    }
+                    std::ranges::for_each(
+                        std::ranges::next(iter),
+                        end,
+                        [&](string_char_t<String> const& character) {
+                            out = format::format_to(
+                                std::move(out),
+                                ", {:#x}",
+                                to_dump(character));
+                        });
                 }
             }
 
