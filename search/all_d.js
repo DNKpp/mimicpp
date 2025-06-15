@@ -106,11 +106,11 @@ var searchData=
   ['mock_5fname_103',['mock_name',['../d3/d1c/classmimicpp_1_1_expectation.html#a16157e8133dc1f4abeca53700e9d2374',1,'mimicpp::Expectation::mock_name()'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#ab292704f8e5a4e2a551f7e08d49d667c',1,'mimicpp::BasicExpectation::mock_name()'],['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#a0fd6057e65032c658985731c233ef224',1,'mimicpp::ScopedExpectation::mock_name()']]],
   ['mock_5foverloaded_5fmethod_104',['MOCK_OVERLOADED_METHOD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0',1,'InterfaceMock.hpp']]],
   ['mocking_20framework_105',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md48',1,'']]],
-  ['mocks_20and_20variadic_20templates_106',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md11',1,'']]],
+  ['mocks_20and_20variadic_20templates_106',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
   ['mocksettings_107',['MockSettings',['../d4/d24/classmimicpp_1_1_mock_settings.html',1,'mimicpp']]],
   ['modern_20and_20mostly_20macro_20free_20mocking_20framework_108',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md48',1,'']]],
   ['mostly_20macro_20free_20mocking_20framework_109',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md48',1,'']]],
   ['move_20constructor_20and_20assignment_20operator_110',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
-  ['moving_111',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md8',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md12',1,'Moving']]],
-  ['multiple_20inheritance_112',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md10',1,'']]]
+  ['moving_111',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md10',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md12',1,'Moving']]],
+  ['multiple_20inheritance_112',['Multiple inheritance',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md8',1,'']]]
 ];
