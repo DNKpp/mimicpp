@@ -188,7 +188,7 @@ namespace mimicpp::printing::type::parsing::token
         bool isNoexcept{false};
 
         [[nodiscard]]
-        constexpr bool has_ptr() const noexcept
+        MIMICPP_DETAIL_CONSTEXPR_VECTOR bool has_ptr() const noexcept
         {
             return 1u < layers.size();
         }
@@ -234,12 +234,12 @@ namespace mimicpp::printing::type::parsing::token
     public:
         std::vector<Type> types;
 
-        constexpr ~ArgSequence() noexcept;
-        constexpr ArgSequence();
-        constexpr ArgSequence(ArgSequence const&);
-        constexpr ArgSequence& operator=(ArgSequence const&);
-        constexpr ArgSequence(ArgSequence&&) noexcept;
-        constexpr ArgSequence& operator=(ArgSequence&&) noexcept;
+        MIMICPP_DETAIL_CONSTEXPR_VECTOR ~ArgSequence() noexcept;
+        MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence();
+        MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence(ArgSequence const&);
+        MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence& operator=(ArgSequence const&);
+        MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence(ArgSequence&&) noexcept;
+        MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence& operator=(ArgSequence&&) noexcept;
 
         template <parser_visitor Visitor>
         constexpr void operator()(Visitor& visitor) const;
@@ -564,12 +564,12 @@ namespace mimicpp::printing::type::parsing::token
         }
     };
 
-    constexpr ArgSequence::~ArgSequence() noexcept = default;
-    constexpr ArgSequence::ArgSequence() = default;
-    constexpr ArgSequence::ArgSequence(ArgSequence const&) = default;
-    constexpr ArgSequence& ArgSequence::operator=(ArgSequence const&) = default;
-    constexpr ArgSequence::ArgSequence(ArgSequence&&) noexcept = default;
-    constexpr ArgSequence& ArgSequence::operator=(ArgSequence&&) noexcept = default;
+    MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence::~ArgSequence() noexcept = default;
+    MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence::ArgSequence() = default;
+    MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence::ArgSequence(ArgSequence const&) = default;
+    MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence& ArgSequence::operator=(ArgSequence const&) = default;
+    MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence::ArgSequence(ArgSequence&&) noexcept = default;
+    MIMICPP_DETAIL_CONSTEXPR_VECTOR ArgSequence& ArgSequence::operator=(ArgSequence&&) noexcept = default;
 
     template <parser_visitor Visitor>
     constexpr void ArgSequence::operator()(Visitor& visitor) const

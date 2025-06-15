@@ -47,7 +47,7 @@ namespace mimicpp::detail
     public:
         constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            std::source_location from = std::source_location::current()) noexcept(signature_is_noexcept_v<Signature>)
+            util::SourceLocation from = {}) noexcept(signature_is_noexcept_v<Signature>)
         {
             return static_cast<Derived const&>(*this)
                 .handle_call(
@@ -68,7 +68,7 @@ namespace mimicpp::detail
     public:
         constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            std::source_location from = std::source_location::current()) const noexcept(signature_is_noexcept_v<Signature>)
+            util::SourceLocation from = {}) const noexcept(signature_is_noexcept_v<Signature>)
         {
             return static_cast<Derived const&>(*this)
                 .handle_call(
@@ -89,7 +89,7 @@ namespace mimicpp::detail
     public:
         constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            std::source_location from = std::source_location::current()) & noexcept(signature_is_noexcept_v<Signature>)
+            util::SourceLocation from = {}) & noexcept(signature_is_noexcept_v<Signature>)
         {
             return static_cast<Derived const&>(*this)
                 .handle_call(
@@ -110,7 +110,7 @@ namespace mimicpp::detail
     public:
         constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            std::source_location from = std::source_location::current()) const& noexcept(signature_is_noexcept_v<Signature>)
+            util::SourceLocation from = {}) const& noexcept(signature_is_noexcept_v<Signature>)
         {
             return static_cast<Derived const&>(*this)
                 .handle_call(
@@ -131,7 +131,7 @@ namespace mimicpp::detail
     public:
         constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            std::source_location from = std::source_location::current()) && noexcept(signature_is_noexcept_v<Signature>)
+            util::SourceLocation from = {}) && noexcept(signature_is_noexcept_v<Signature>)
         {
             return static_cast<Derived const&>(*this)
                 .handle_call(
@@ -152,7 +152,7 @@ namespace mimicpp::detail
     public:
         constexpr signature_return_type_t<Signature> operator()(
             Params... params,
-            std::source_location from = std::source_location::current()) const&& noexcept(signature_is_noexcept_v<Signature>)
+            util::SourceLocation from = {}) const&& noexcept(signature_is_noexcept_v<Signature>)
         {
             return static_cast<Derived const&>(*this)
                 .handle_call(
@@ -335,14 +335,14 @@ namespace mimicpp::detail
         {
             return m_Expectations->handle_call(
                 reporting::TargetReport{
-                    .name = *m_Settings.name,
-                    .overloadReport = std::move(overloadReport)},
+                    .name{*m_Settings.name},
+                    .overloadReport{std::move(overloadReport)}},
                 call::info_for_signature_t<SignatureT>{
-                    .args = std::move(params),
-                    .fromCategory = refQualification,
-                    .fromConstness = constQualification,
-                    .fromSourceLocation = std::move(from),
-                    .stacktrace = stacktrace::current(m_Settings.stacktraceSkip)});
+                    .args{std::move(params)},
+                    .fromCategory{refQualification},
+                    .fromConstness{constQualification},
+                    .fromSourceLocation{std::move(from)},
+                    .baseStacktraceSkip{m_Settings.stacktraceSkip}});
         }
 
         template <typename... Args>

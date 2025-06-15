@@ -15,7 +15,6 @@
 #include <functional>
 #include <optional>
 #include <ranges>
-#include <source_location>
 
 using namespace mimicpp;
 
@@ -125,8 +124,7 @@ TEST_CASE(
     CallInfoT const call{
         .args = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any,
-        .fromSourceLocation = std::source_location::current()};
+        .fromConstness = Constness::any};
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>()};
 
@@ -246,7 +244,10 @@ TEST_CASE(
             NoMatchError);
         REQUIRE_THAT(
             reporter.no_match_reports(),
-            Catch::Matchers::SizeIs(4));
+            Catch::Matchers::SizeIs(1u));
+        REQUIRE_THAT(
+            std::get<1>(reporter.no_match_reports().front()),
+            Catch::Matchers::SizeIs(4u));
         REQUIRE_THAT(
             reporter.inapplicable_match_reports(),
             Catch::Matchers::IsEmpty());
@@ -254,6 +255,49 @@ TEST_CASE(
             reporter.full_match_reports(),
             Catch::Matchers::IsEmpty());
     }
+}
+
+TEST_CASE(
+    "mimicpp::ExpectationCollection::handle_call does not report matches, when settings::reportSuccess is false.",
+    "[expectation]")
+{
+    using namespace mimicpp::call;
+    using StorageT = ExpectationCollection<void()>;
+    using CallInfoT = Info<void>;
+    using trompeloeil::_;
+
+    ScopedReporter reporter{};
+    StorageT storage{};
+    auto expectation = std::make_shared<ExpectationMock>();
+    storage.push(expectation);
+
+    CallInfoT const call{
+        .args = {},
+        .fromCategory = ValueCategory::any,
+        .fromConstness = Constness::any};
+    reporting::ExpectationReport const expectationReport{
+        .target = make_common_target_report<void()>()};
+
+    settings::report_success().store(false);
+
+    REQUIRE_CALL(*expectation, matches(_))
+        .RETURN(commonMatchingOutcome);
+    REQUIRE_CALL(*expectation, is_applicable())
+        .RETURN(true);
+    REQUIRE_CALL(*expectation, consume(_));
+    REQUIRE_CALL(*expectation, finalize_call(_));
+    REQUIRE_CALL(*expectation, report())
+        .RETURN(expectationReport);
+    REQUIRE_NOTHROW(storage.handle_call(make_common_target_report<void()>(), call));
+    CHECK_THAT(
+        reporter.no_match_reports(),
+        Catch::Matchers::IsEmpty());
+    CHECK_THAT(
+        reporter.inapplicable_match_reports(),
+        Catch::Matchers::IsEmpty());
+    CHECK_THAT(
+        reporter.full_match_reports(),
+        Catch::Matchers::IsEmpty());
 }
 
 TEST_CASE(
@@ -298,7 +342,12 @@ TEST_CASE(
         }
         catch (Exception const&)
         {
-            return info.call == reporting::make_call_report(make_common_target_report<void()>(), call)
+            auto const expected = reporting::make_call_report(
+                make_common_target_report<void()>(),
+                call,
+                // Just use the existing stacktrace, because we can not construct it ourselves.
+                info.call.stacktrace);
+            return info.call == expected
                 && info.expectation == throwingReport;
         }
         catch (...)

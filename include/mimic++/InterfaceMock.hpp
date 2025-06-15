@@ -459,7 +459,7 @@ namespace mimicpp::detail
 
         constexpr auto sequence = std::index_sequence_for<Args...>{};
         return forward_apply(sequence);
-    };
+    }
 }
 
 /**

@@ -12,24 +12,24 @@ using namespace mimicpp;
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
 constexpr auto type_post_processing_lambda_loc = [] {
-    return std::source_location::current();
+    return util::SourceLocation{};
 };
 
 constexpr auto type_post_processing_nested_lambda_loc = [] {
     return [] {
-        return std::source_location::current();
+        return util::SourceLocation{};
     }();
 };
 
 namespace
 {
     [[nodiscard]]
-    constexpr std::source_location loc_fun()
+    constexpr util::SourceLocation loc_fun()
     {
         [[maybe_unused]] constexpr auto dummy = [] {};
         [[maybe_unused]] constexpr auto dummy2 = [] {};
         constexpr auto inner = [] {
-            return std::source_location::current();
+            return util::SourceLocation{};
         };
         [[maybe_unused]] constexpr auto dummy3 = [] {};
 
@@ -37,10 +37,10 @@ namespace
     }
 
     [[nodiscard]]
-    constexpr std::source_location loc_anon_lambda_fun()
+    constexpr util::SourceLocation loc_anon_lambda_fun()
     {
         return [] {
-            return std::source_location::current();
+            return util::SourceLocation{};
         }();
     }
 
@@ -59,16 +59,16 @@ namespace
         {
         };
 
-        std::source_location foo(my_type)
+        util::SourceLocation foo(my_type)
         {
-            return std::source_location::current();
+            return util::SourceLocation{};
         }
 
-        auto bar(my_type const&, std::source_location* outLoc)
+        auto bar(my_type const&, util::SourceLocation* outLoc)
         {
             if (outLoc)
             {
-                *outLoc = std::source_location::current();
+                *outLoc = util::SourceLocation{};
             }
 
             struct bar_type
@@ -87,23 +87,30 @@ namespace
     StringT const anonNsScopePattern = R"(\{anon-ns\}::)";
     StringT const anonTypePattern = R"((\$_\d+|<unnamed-(tag|type-obj)>|<unnamed (class|struct|enum)>|\(anonymous (class|struct|enum)\)))";
     StringT const testCasePattern = R"(CATCH2_INTERNAL_TEST_\d+)";
-    StringT const locReturnPattern = "(auto|std::source_location) ";
+    StringT const locReturnPattern = "(auto|(mimicpp::)?util::SourceLocation) ";
 }
+
+// source-locations other than std::source_location may behave differently.
+    #ifdef MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION
+        #define MAYFAIL_WITH_COMPAT_LOC "[!mayfail]"
+    #else
+        #define MAYFAIL_WITH_COMPAT_LOC
+    #endif
 
 TEST_CASE(
     "printing::type::prettify_function enhances std::source_location::function_name appearance.",
-    "[print]")
+    MAYFAIL_WITH_COMPAT_LOC "[print]")
 {
     StringStreamT ss{};
 
     SECTION("When general function is given.")
     {
-        constexpr auto loc = std::source_location::current();
+        util::SourceLocation constexpr loc{};
         CAPTURE(loc.function_name());
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
         REQUIRE_THAT(
             ss.str(),
@@ -117,7 +124,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
     #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
@@ -140,7 +147,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
     #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
@@ -165,7 +172,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
     #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
@@ -187,9 +194,9 @@ TEST_CASE(
     {
         struct
         {
-            constexpr std::source_location operator()() const
+            constexpr util::SourceLocation operator()() const
             {
-                return std::source_location::current();
+                return util::SourceLocation{};
             }
         } constexpr obj{};
 
@@ -198,7 +205,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
         REQUIRE_THAT(
             ss.str(),
@@ -217,9 +224,9 @@ TEST_CASE(
         class
         {
         public:
-            constexpr std::source_location operator()() const
+            constexpr util::SourceLocation operator()() const
             {
-                return std::source_location::current();
+                return util::SourceLocation{};
             }
         } constexpr obj{};
 
@@ -228,7 +235,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
         REQUIRE_THAT(
             ss.str(),
@@ -249,7 +256,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
     #if MIMICPP_DETAIL_IS_GCC
         REQUIRE_THAT(
@@ -275,7 +282,7 @@ TEST_CASE(
 
         printing::type::prettify_function(
             std::ostreambuf_iterator{ss},
-            loc.function_name());
+            StringT{loc.function_name()});
 
         REQUIRE_THAT(
             ss.str(),
@@ -321,7 +328,7 @@ namespace
 
 TEST_CASE(
     "printing::type::prettify_function supports conversion-operators.",
-    MAYFAIL_ON_MSVC "[print][print::type]")
+    MAYFAIL_WITH_COMPAT_LOC MAYFAIL_ON_MSVC "[print][print::type]")
 {
     StringStreamT ss{};
 
@@ -331,7 +338,7 @@ TEST_CASE(
         {
             conversion conv{};
             auto const loc = static_cast<util::SourceLocation>(conv);
-            StringT const fnName = loc->function_name();
+            StringT const fnName{loc.function_name()};
             CAPTURE(fnName);
 
             printing::type::prettify_function(
@@ -352,7 +359,7 @@ TEST_CASE(
         {
             conversion const conv{};
             auto const loc = static_cast<util::SourceLocation>(conv);
-            StringT const fnName = loc->function_name();
+            StringT const fnName{loc.function_name()};
             CAPTURE(fnName);
 
             printing::type::prettify_function(

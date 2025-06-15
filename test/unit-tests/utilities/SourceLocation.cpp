@@ -11,37 +11,35 @@ TEST_CASE(
     "util::SourceLocation is default constructible.",
     "[util]")
 {
-    constexpr auto before = std::source_location::current();
-    constexpr util::SourceLocation loc{};
-    constexpr auto after = std::source_location::current();
-
-    CHECK(loc.operator->() == std::addressof(*loc));
+    util::SourceLocation constexpr before{};
+    util::SourceLocation constexpr loc{};
+    util::SourceLocation constexpr after{};
 
     CHECK_THAT(
-        loc->file_name(),
-        Catch::Matchers::Equals(before.file_name()));
+        std::string{loc.file_name()},
+        Catch::Matchers::Equals(std::string{before.file_name()}));
     CHECK_THAT(
-        loc->function_name(),
-        Catch::Matchers::Equals(before.function_name()));
-    CHECK(before.line() < loc->line());
-    CHECK(loc->line() < after.line());
+        std::string{loc.function_name()},
+        Catch::Matchers::Equals(std::string{before.function_name()}));
+    CHECK(before.line() < loc.line());
+    CHECK(loc.line() < after.line());
 }
 
 TEST_CASE(
     "util::SourceLocation can be constructed with a particular source-location.",
     "[util]")
 {
-    constexpr auto source = std::source_location::current();
-    constexpr util::SourceLocation loc{source};
+    using traits = util::source_location::backend_traits<util::source_location::InstalledBackend>;
+    auto constexpr source = traits::current();
+    util::SourceLocation constexpr loc{source};
 
     CHECK_THAT(
-        loc->file_name(),
+        std::string{loc.file_name()},
         Catch::Matchers::Equals(source.file_name()));
     CHECK_THAT(
-        loc->function_name(),
+        std::string{loc.function_name()},
         Catch::Matchers::Equals(source.function_name()));
-    CHECK(source.line() == loc->line());
-    CHECK(source.column() == source.column());
+    CHECK(source.line() == loc.line());
 }
 
 TEST_CASE(
@@ -49,8 +47,8 @@ TEST_CASE(
 {
     SECTION("Compares equal, when both sides denote the same source-location.")
     {
-        constexpr util::SourceLocation loc{};
-        constexpr util::SourceLocation other{loc};
+        util::SourceLocation constexpr loc{};
+        util::SourceLocation constexpr other{loc};
 
         CHECK(loc == other);
         CHECK(other == loc);
@@ -60,22 +58,9 @@ TEST_CASE(
 
     SECTION("Compares unequal, when line differs.")
     {
-        constexpr util::SourceLocation loc{};
-        constexpr util::SourceLocation other{};
-        REQUIRE(other->line() != loc->line());
-        REQUIRE(other->column() == other->column());
-
-        CHECK_FALSE(loc == other);
-        CHECK_FALSE(other == loc);
-        CHECK(loc != other);
-        CHECK(other != loc);
-    }
-
-    SECTION("Compares unequal, when column differs.")
-    {
-        constexpr util::SourceLocation loc{}, other{};
-        REQUIRE(other->line() == loc->line());
-        REQUIRE(other->column() != loc->column());
+        util::SourceLocation constexpr loc{};
+        util::SourceLocation constexpr other{};
+        REQUIRE(other.line() != loc.line());
 
         CHECK_FALSE(loc == other);
         CHECK_FALSE(other == loc);
@@ -85,10 +70,10 @@ TEST_CASE(
 
     SECTION("Compares unequal, when function differs.")
     {
-        constexpr util::SourceLocation loc{};
-        constexpr auto other = std::invoke(
+        util::SourceLocation constexpr loc{};
+        auto constexpr other = std::invoke(
             [] {
-                return std::source_location::current();
+                return util::SourceLocation{};
             });
 
         CHECK_FALSE(loc == other);

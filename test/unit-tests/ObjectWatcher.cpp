@@ -35,11 +35,11 @@ TEST_CASE(
             reporter.inapplicable_match_reports(),
             Matches::IsEmpty());
         REQUIRE_THAT(
-            reporter.no_match_reports(),
-            Matches::IsEmpty());
-        REQUIRE_THAT(
             reporter.unfulfilled_expectations(),
             Matches::IsEmpty());
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Matches::SizeIs(1u));
     }
 
     SECTION("Reports an unfulfilled expectation, if the expectation expires before destruction occurs.")
@@ -539,16 +539,16 @@ TEST_CASE(
             STOP_WARNING_SUPPRESSION
         }
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.full_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.inapplicable_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.no_match_reports(),
-            Matches::IsEmpty());
-        REQUIRE_THAT(
+            Matches::SizeIs(1u));
+        CHECK_THAT(
             reporter.unfulfilled_expectations(),
             Matches::IsEmpty());
     }
@@ -559,16 +559,16 @@ TEST_CASE(
         std::optional<ScopedExpectation> expectation = watcher.expect_relocate();
         expectation.reset();
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.full_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.inapplicable_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.no_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.unfulfilled_expectations(),
             Matches::SizeIs(1));
     }
@@ -597,16 +597,16 @@ TEST_CASE(
             STOP_WARNING_SUPPRESSION
         }
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.full_match_reports(),
             Matches::SizeIs(1));
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.inapplicable_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.no_match_reports(),
             Matches::IsEmpty());
-        REQUIRE_THAT(
+        CHECK_THAT(
             reporter.unfulfilled_expectations(),
             Matches::IsEmpty());
     }
@@ -626,6 +626,10 @@ TEST_CASE(
     SECTION("When copy-constructing.")
     {
         RelocationWatcher other{watcher};
+
+        CHECK_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
     }
 
     SECTION("When copy-assigning.")
@@ -633,6 +637,10 @@ TEST_CASE(
         RelocationWatcher other{};
 
         other = watcher;
+
+        CHECK_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
     }
 
     SECTION("When self copy-assigning.")
@@ -642,6 +650,10 @@ TEST_CASE(
         watcher = watcher;
         STOP_WARNING_SUPPRESSION
 
+        CHECK_THAT(
+            reporter.no_match_reports(),
+            Matches::IsEmpty());
+
         SECTION("And it does not accept the expectation from the previous instance.")
         {
             START_WARNING_SUPPRESSION
@@ -650,23 +662,24 @@ TEST_CASE(
                 watcher = std::move(watcher),
                 NoMatchError);
             STOP_WARNING_SUPPRESSION
+
+            CHECK_THAT(
+                reporter.no_match_reports(),
+                Matches::SizeIs(1u));
         }
     }
 
     expectation.reset();
 
-    REQUIRE_THAT(
+    CHECK_THAT(
         reporter.full_match_reports(),
         Matches::IsEmpty());
-    REQUIRE_THAT(
+    CHECK_THAT(
         reporter.inapplicable_match_reports(),
         Matches::IsEmpty());
-    REQUIRE_THAT(
-        reporter.no_match_reports(),
-        Matches::IsEmpty());
-    REQUIRE_THAT(
+    CHECK_THAT(
         reporter.unfulfilled_expectations(),
-        Matches::SizeIs(1));
+        Matches::SizeIs(1u));
 }
 
 TEST_CASE(
@@ -980,7 +993,7 @@ TEST_CASE(
 
     ScopedReporter reporter{};
 
-    const auto check_stacktrace = [](const Stacktrace& stacktrace, const std::source_location& before, const std::source_location& after) {
+    const auto check_stacktrace = [](const Stacktrace& stacktrace, util::SourceLocation const& before, util::SourceLocation const& after) {
         CHECKED_IF(!stacktrace.empty())
         {
             INFO("stacktrace:\n"
@@ -988,7 +1001,7 @@ TEST_CASE(
 
             REQUIRE_THAT(
                 stacktrace.source_file(0u),
-                Catch::Matchers::Equals(before.file_name()));
+                Catch::Matchers::Equals(std::string{before.file_name()}));
             // there is no straight-forward way to check the description
             REQUIRE(before.line() < stacktrace.source_line(0u));
             // strict < fails on some compilers
@@ -1002,12 +1015,15 @@ TEST_CASE(
         WatchedT watched{};
         MIMICPP_SCOPED_EXPECTATION watched.expect_destruct();
 
-        constexpr std::source_location before = std::source_location::current();
+        util::SourceLocation constexpr before{};
         {
             WatchedT other{std::move(watched)};
         }
-        constexpr std::source_location after = std::source_location::current();
+        util::SourceLocation constexpr after{};
 
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u));
         const reporting::CallReport& report = std::get<0>(reporter.full_match_reports().front());
         check_stacktrace(report.stacktrace, before, after);
     }
@@ -1020,10 +1036,13 @@ TEST_CASE(
 
         SECTION("When move constructing.")
         {
-            constexpr auto before = std::source_location::current();
+            util::SourceLocation constexpr before{};
             WatchedT other{std::move(watched)};
-            constexpr auto after = std::source_location::current();
+            util::SourceLocation constexpr after{};
 
+            REQUIRE_THAT(
+                reporter.full_match_reports(),
+                Catch::Matchers::SizeIs(1u));
             const reporting::CallReport& report = std::get<0>(reporter.full_match_reports().front());
             check_stacktrace(report.stacktrace, before, after);
         }
@@ -1032,10 +1051,13 @@ TEST_CASE(
         {
             WatchedT other{};
 
-            constexpr auto before = std::source_location::current();
+            util::SourceLocation constexpr before{};
             other = std::move(watched);
-            constexpr auto after = std::source_location::current();
+            util::SourceLocation constexpr after{};
 
+            REQUIRE_THAT(
+                reporter.full_match_reports(),
+                Catch::Matchers::SizeIs(1u));
             const reporting::CallReport& report = std::get<0>(reporter.full_match_reports().front());
             check_stacktrace(report.stacktrace, before, after);
         }

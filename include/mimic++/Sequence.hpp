@@ -12,6 +12,7 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/reporting/GlobalReporter.hpp"
+#include "mimic++/utilities/C++20Compatibility.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
 #include <algorithm>
@@ -199,8 +200,7 @@ namespace mimicpp::sequence
             [[nodiscard]]
             constexpr Tag tag() const noexcept
             {
-                return Tag{
-                    std::bit_cast<std::ptrdiff_t>(this)};
+                return Tag{util::bit_cast<std::ptrdiff_t>(this)};
             }
 
         private:

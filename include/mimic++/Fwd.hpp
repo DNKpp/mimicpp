@@ -375,4 +375,15 @@ namespace mimicpp
     class Stacktrace;
 }
 
+namespace mimicpp::util
+{
+    namespace source_location
+    {
+        template <typename Backend>
+        struct backend_traits;
+    }
+
+    class SourceLocation;
+}
+
 #endif
