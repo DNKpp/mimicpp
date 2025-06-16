@@ -16,18 +16,20 @@
 #include "mimic++/utilities/AlwaysFalse.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 
-#include <algorithm>
-#include <any>
-// ReSharper disable once CppUnusedIncludeDirective
-#include <functional> // std::invoke
-#include <limits>
-#include <ranges>
-#include <stdexcept>
-#include <type_traits>
-#include <utility>
-#include <variant>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <any>
+    // ReSharper disable once CppUnusedIncludeDirective
+    #include <functional> // std::invoke
+    #include <limits>
+    #include <ranges>
+    #include <stdexcept>
+    #include <type_traits>
+    #include <utility>
+    #include <variant>
+#endif
 
-namespace mimicpp::custom
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
 {
     /**
      * \brief Users may define this type to enable their own stacktrace-backend
@@ -37,7 +39,7 @@ namespace mimicpp::custom
     struct find_stacktrace_backend;
 }
 
-namespace mimicpp::stacktrace
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
 {
     /**
      * \defgroup STACKTRACE stacktrace
@@ -170,7 +172,7 @@ namespace mimicpp::stacktrace::detail
     }
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \brief A simple type-erase stacktrace abstraction.
@@ -425,7 +427,7 @@ namespace mimicpp::stacktrace::detail::current_hook
     };
 }
 
-namespace mimicpp::stacktrace
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
 {
     /**
      * \brief Function object, which generates the current-stacktrace.
@@ -554,14 +556,16 @@ static_assert(
 
     #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
-        #if __has_include(<cpptrace/basic.hpp>)
-            #include <cpptrace/basic.hpp>
-        #elif __has_include(<cpptrace/cpptrace.hpp>)
-            // this is necessary for old cpptrace versions.
-            // see: https://github.com/jeremy-rifkin/libassert/issues/110
-            #include <cpptrace/cpptrace.hpp>
-        #else
-            #error "The cpptrace stacktrace backend is explicitly enabled, but the the required include-file can not be found."
+        #ifndef MIMICPP_DETAIL_IS_MODULE
+            #if __has_include(<cpptrace/basic.hpp>)
+                #include <cpptrace/basic.hpp>
+            #elif __has_include(<cpptrace/cpptrace.hpp>)
+                // this is necessary for old cpptrace versions.
+                // see: https://github.com/jeremy-rifkin/libassert/issues/110
+                #include <cpptrace/cpptrace.hpp>
+            #else
+                #error "The cpptrace stacktrace backend is explicitly enabled, but the the required include-file can not be found."
+            #endif
         #endif
 
 namespace mimicpp::stacktrace
@@ -668,7 +672,9 @@ static_assert(
 
     #elif defined(__cpp_lib_stacktrace)
 
-        #include <stacktrace>
+        #ifndef MIMICPP_DETAIL_IS_MODULE
+            #include <stacktrace>
+        #endif
 
 struct mimicpp::stacktrace::find_backend
 {
