@@ -31,6 +31,12 @@ if (NOT TARGET mimicpp-enable-config-options)
         $<$<BOOL:${MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND}>:MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND=${MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND}>
     )
 
+    # Make this option available, when CMake actually supports C++20 modules.
+    # As portability is very limited, users have to explicitly opt-in.
+    cmake_dependent_option(MIMICPP_CONFIG_ENABLE_CXX20_MODULES "" OFF "CMAKE_VERSION VERSION_GREATER_EQUAL 3.28" OFF)
+    set(CMAKE_CXX_SCAN_FOR_MODULES ${MIMICPP_CONFIG_ENABLE_CXX20_MODULES})
+    message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_ENABLE_CXX20_MODULES: " ${MIMICPP_CONFIG_ENABLE_CXX20_MODULES})
+
     # Config option, to utilize fmt instead of std formatting.
     # Checks, whether fmt is already available. Fetches it instead.
     # Eventually defines the macro MIMICPP_CONFIG_USE_FMT.
@@ -39,7 +45,7 @@ if (NOT TARGET mimicpp-enable-config-options)
     if (MIMICPP_CONFIG_USE_FMT)
 
         message(DEBUG "${MESSAGE_PREFIX} Searching for installed {fmt}-package.")
-        cmake_dependent_option(MIMICPP_CONFIG_IMPORT_FMT "Determines, whether fmt will be consumed as a c++20 module." ON "MIMICPP_CMAKE_HAS_CXX20_MODULES" OFF)
+        cmake_dependent_option(MIMICPP_CONFIG_IMPORT_FMT "Determines, whether fmt will be consumed as a c++20 module." ON "MIMICPP_CONFIG_ENABLE_CXX20_MODULES" OFF)
         set(FMT_MODULE ${MIMICPP_CONFIG_IMPORT_FMT})
 
         find_package(fmt QUIET)
@@ -118,7 +124,7 @@ if (NOT TARGET mimicpp-enable-config-options)
                 MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
                 "Determines, whether cpptrace will be consumed as a c++20 module."
                 ON
-                "MIMICPP_CMAKE_HAS_CXX20_MODULES"
+                "MIMICPP_CONFIG_ENABLE_CXX20_MODULES"
                 OFF
             )
             if (NOT MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE)
