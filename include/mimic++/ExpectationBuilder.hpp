@@ -31,7 +31,7 @@
     #include <utility>
 #endif
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     template <
         bool timesConfigured,
