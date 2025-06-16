@@ -13,11 +13,15 @@
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 
-#include <concepts>
-#include <memory>
-#include <stdexcept>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <concepts>
+    #include <cstddef>
+    #include <memory>
+    #include <stdexcept>
+    #include <type_traits>
+    #include <utility>
+#endif
 
 namespace mimicpp::detail
 {
@@ -40,7 +44,7 @@ namespace mimicpp::detail
     }
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \defgroup OBJECT_WATCHING object-watching
@@ -381,61 +385,64 @@ namespace mimicpp
                               && std::is_move_constructible_v<T>
                               && std::is_move_assignable_v<T>
                               && std::is_destructible_v<T>;
+}
 
-    namespace detail
+namespace mimicpp::detail
+{
+    template <typename Base, typename... Watchers>
+    class CombinedWatchers
+        : public Watchers...
     {
-        template <typename Base, typename... Watchers>
-        class CombinedWatchers
-            : public Watchers...
+    public:
+        ~CombinedWatchers() noexcept(std::is_nothrow_destructible_v<Base>) = default;
+
+        CombinedWatchers()
+            : Watchers{for_base_v<Base>}...
         {
-        public:
-            ~CombinedWatchers() noexcept(std::is_nothrow_destructible_v<Base>) = default;
+        }
 
-            CombinedWatchers()
-                : Watchers{for_base_v<Base>}...
-            {
-            }
+        CombinedWatchers(const CombinedWatchers&) = default;
+        CombinedWatchers& operator=(const CombinedWatchers&) = default;
 
-            CombinedWatchers(const CombinedWatchers&) = default;
-            CombinedWatchers& operator=(const CombinedWatchers&) = default;
+        CombinedWatchers(CombinedWatchers&& other) noexcept(std::is_nothrow_move_constructible_v<Base>) = default;
+        CombinedWatchers& operator=(CombinedWatchers&& other) noexcept(std::is_nothrow_move_assignable_v<Base>) = default;
+    };
 
-            CombinedWatchers(CombinedWatchers&& other) noexcept(std::is_nothrow_move_constructible_v<Base>) = default;
-            CombinedWatchers& operator=(CombinedWatchers&& other) noexcept(std::is_nothrow_move_assignable_v<Base>) = default;
-        };
+    template <typename Base, typename... Watchers>
+    class BasicWatched
+        : public CombinedWatchers<Base, Watchers...>,
+          public Base
+    {
+    public:
+        ~BasicWatched() = default;
 
-        template <typename Base, typename... Watchers>
-        class BasicWatched
-            : public CombinedWatchers<Base, Watchers...>,
-              public Base
-        {
-        public:
-            ~BasicWatched() = default;
+        using Base::Base;
 
-            using Base::Base;
+        BasicWatched(const BasicWatched&) = default;
+        BasicWatched& operator=(const BasicWatched&) = default;
+        BasicWatched(BasicWatched&&) = default;
+        BasicWatched& operator=(BasicWatched&&) = default;
+    };
 
-            BasicWatched(const BasicWatched&) = default;
-            BasicWatched& operator=(const BasicWatched&) = default;
-            BasicWatched(BasicWatched&&) = default;
-            BasicWatched& operator=(BasicWatched&&) = default;
-        };
+    template <util::satisfies<std::has_virtual_destructor> Base, typename... Watchers>
+    class BasicWatched<Base, Watchers...>
+        : public CombinedWatchers<Base, Watchers...>,
+          public Base
+    {
+    public:
+        ~BasicWatched() override = default;
 
-        template <util::satisfies<std::has_virtual_destructor> Base, typename... Watchers>
-        class BasicWatched<Base, Watchers...>
-            : public CombinedWatchers<Base, Watchers...>,
-              public Base
-        {
-        public:
-            ~BasicWatched() override = default;
+        using Base::Base;
 
-            using Base::Base;
+        BasicWatched(const BasicWatched&) = default;
+        BasicWatched& operator=(const BasicWatched&) = default;
+        BasicWatched(BasicWatched&&) = default;
+        BasicWatched& operator=(BasicWatched&&) = default;
+    };
+}
 
-            BasicWatched(const BasicWatched&) = default;
-            BasicWatched& operator=(const BasicWatched&) = default;
-            BasicWatched(BasicWatched&&) = default;
-            BasicWatched& operator=(BasicWatched&&) = default;
-        };
-    }
-
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
+{
     /**
      * \brief CRTP-type, inheriting first from all ``Watchers`` and then ``Base``, thus effectively couple them all together.
      * \tparam Base The main type.
