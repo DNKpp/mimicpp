@@ -10,8 +10,10 @@
 
 #include "mimic++/config/Config.hpp"
 
-#include <string>
-#include <string_view>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <string>
+    #include <string_view>
+#endif
 
 namespace mimicpp::call
 {
