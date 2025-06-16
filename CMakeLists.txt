@@ -33,10 +33,6 @@ message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS_INIT: ${CMAKE_CXX_FLAGS_INIT}")
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${mimicpp_SOURCE_DIR}" IS_TOP_LEVEL_PROJECT)
 
-# Causes some trouble on clang. Not needed and thus disabled for now.
-# see: https://discourse.cmake.org/t/cmake-3-28-cmake-cxx-compiler-clang-scan-deps-notfound-not-found/9244/3
-set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
-
 include(GNUInstallDirs)
 
 add_library(mimicpp INTERFACE)
