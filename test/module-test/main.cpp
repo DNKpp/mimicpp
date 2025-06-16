@@ -21,6 +21,35 @@ TEST_CASE("mimic++ supports modules!")
         and mimicpp::then::invoke([] {})
         and mimicpp::finally::returns(42);
 
+    sequence += mock.expect_call("Test")
+            and mimicpp::finally::throws(std::runtime_error{"Exception"});
+
     CHECK(42 == mock("Hello, mimic++!"));
     CHECK(42 == mock("Hello, mimic++!"));
+
+    CHECK_THROWS(mock("Test"));
+}
+
+TEST_CASE("mimic++ interface mocks support modules!")
+{
+    class Interface
+    {
+    public:
+        virtual ~Interface() = default;
+        virtual void foo() = 0;
+    };
+
+    struct Derived
+        : public Interface
+    {
+    public:
+        MOCK_METHOD(foo, void, ());
+    };
+
+    auto mock = std::make_unique<Derived>();
+    Interface& interface{*mock};
+
+    SCOPED_EXP mock->foo_.expect_call();
+
+    interface.foo();
 }
