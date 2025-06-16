@@ -8,8 +8,16 @@
 
 #pragma once
 
-#include <cstdint>
-#include <version>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <cstdint>
+    #include <version>
+#endif
+
+#ifdef MIMICPP_DETAIL_IS_MODULE
+    #define MIMICPP_DETAIL_MODULE_EXPORT export
+#else
+    #define MIMICPP_DETAIL_MODULE_EXPORT
+#endif
 
 #if INTPTR_MAX < INT64_MAX
     #define MIMICPP_DETAIL_IS_32BIT 1

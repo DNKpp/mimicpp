@@ -8,9 +8,11 @@
 
 #include "mimic++/config/Config.hpp"
 
-#include <atomic>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <atomic>
+#endif
 
-namespace mimicpp::settings
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::settings
 {
     /**
      * \defgroup SETTINGS settings
