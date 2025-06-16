@@ -3,19 +3,22 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_ARGUMENT_LIST_HPP
-#define MIMICPP_ARGUMENT_LIST_HPP
+#ifndef MIMICPP_POLICIES_ARGUMENT_LIST_HPP
+#define MIMICPP_POLICIES_ARGUMENT_LIST_HPP
 
 #pragma once
 
 #include "mimic++/Call.hpp"
+#include "mimic++/config/Config.hpp"
 
-#include <concepts>
-// ReSharper disable once CppUnusedIncludeDirective
-#include <functional> // std::invoke
-#include <tuple>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    // ReSharper disable once CppUnusedIncludeDirective
+    #include <functional> // std::invoke
+    #include <tuple>
+    #include <type_traits>
+    #include <utility>
+#endif
 
 namespace mimicpp::detail
 {

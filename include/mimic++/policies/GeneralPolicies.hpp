@@ -13,7 +13,10 @@
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
-#include <iterator>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <iterator>
+    #include <utility>
+#endif
 
 namespace mimicpp::detail
 {

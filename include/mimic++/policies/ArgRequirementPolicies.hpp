@@ -8,17 +8,21 @@
 
 #pragma once
 
+#include "mimic++/config/Config.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/policies/ArgumentList.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
-#include <concepts>
-// ReSharper disable once CppUnusedIncludeDirective
-#include <functional> // std::invoke
-#include <tuple>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <cstddef>
+    // ReSharper disable once CppUnusedIncludeDirective
+    #include <functional> // std::invoke
+    #include <tuple>
+    #include <type_traits>
+    #include <utility>
+#endif
 
 namespace mimicpp::expectation_policies
 {
@@ -120,63 +124,63 @@ namespace mimicpp::expectation_policies
     };
 }
 
-namespace mimicpp::expect
+namespace mimicpp::expect::detail
 {
-    namespace detail
+    template <std::size_t index, std::size_t... others>
+    struct arg_requirement_describer
     {
-        template <std::size_t index, std::size_t... others>
-        struct arg_requirement_describer
-        {
-            [[nodiscard]]
-            StringT operator()(StringViewT const matcherDescription) const
-            {
-                StringStreamT out{};
-                out << "expect: arg[" << index;
-                ((out << ", " << others), ...);
-                out << "] " << matcherDescription;
-                return std::move(out).str();
-            }
-        };
-
-        struct all_args_requirement_describer
-        {
-            [[nodiscard]]
-            StringT operator()(StringViewT const matcherDescription) const
-            {
-                StringStreamT out{};
-                out << "expect: arg[all] " << matcherDescription;
-                return std::move(out).str();
-            }
-        };
-
-        template <
-            std::size_t... indices,
-            typename Matcher,
-            typename... Projections>
         [[nodiscard]]
-        constexpr auto make_args_policy(
-            Matcher&& matcher,
-            std::tuple<Projections...>&& projections)
+        StringT operator()(StringViewT const matcherDescription) const
         {
-            static_assert(
-                sizeof...(indices) == sizeof...(Projections),
-                "Indices and projections size mismatch.");
-
-            using arg_selector_t = mimicpp::detail::args_selector_fn<
-                std::add_lvalue_reference_t,
-                std::index_sequence<indices...>>;
-            using apply_strategy_t = mimicpp::detail::arg_list_indirect_apply_fn<std::remove_cvref_t<Projections>...>;
-            using describe_strategy_t = arg_requirement_describer<indices...>;
-
-            return expectation_policies::ArgsRequirement{
-                std::forward<Matcher>(matcher),
-                mimicpp::detail::apply_args_fn(
-                    arg_selector_t{},
-                    apply_strategy_t{std::move(projections)}),
-                describe_strategy_t{}};
+            StringStreamT out{};
+            out << "expect: arg[" << index;
+            ((out << ", " << others), ...);
+            out << "] " << matcherDescription;
+            return std::move(out).str();
         }
-    }
+    };
 
+    struct all_args_requirement_describer
+    {
+        [[nodiscard]]
+        StringT operator()(StringViewT const matcherDescription) const
+        {
+            StringStreamT out{};
+            out << "expect: arg[all] " << matcherDescription;
+            return std::move(out).str();
+        }
+    };
+
+    template <
+        std::size_t... indices,
+        typename Matcher,
+        typename... Projections>
+    [[nodiscard]]
+    constexpr auto make_args_policy(
+        Matcher&& matcher,
+        std::tuple<Projections...>&& projections)
+    {
+        static_assert(
+            sizeof...(indices) == sizeof...(Projections),
+            "Indices and projections size mismatch.");
+
+        using arg_selector_t = mimicpp::detail::args_selector_fn<
+            std::add_lvalue_reference_t,
+            std::index_sequence<indices...>>;
+        using apply_strategy_t = mimicpp::detail::arg_list_indirect_apply_fn<std::remove_cvref_t<Projections>...>;
+        using describe_strategy_t = arg_requirement_describer<indices...>;
+
+        return expectation_policies::ArgsRequirement{
+            std::forward<Matcher>(matcher),
+            mimicpp::detail::apply_args_fn(
+                arg_selector_t{},
+                apply_strategy_t{std::move(projections)}),
+            describe_strategy_t{}};
+    }
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
+{
     /**
      * \defgroup EXPECTATION_REQUIREMENT requirement
      * \ingroup EXPECTATION
