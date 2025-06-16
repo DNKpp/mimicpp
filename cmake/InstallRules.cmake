@@ -5,9 +5,8 @@
 
 include(CMakePackageConfigHelpers)
 
-set(MIMICPP_LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/mimicpp")
+set(MIMICPP_LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/mimic++")
 set(MIMICPP_CMAKE_INSTALL_DIR "${MIMICPP_LIB_INSTALL_DIR}/cmake")
-set(MIMICPP_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/mimicpp")
 
 write_basic_package_version_file(
     "mimicpp-version.cmake"
@@ -23,9 +22,8 @@ configure_package_config_file(
 )
 
 install(
-	TARGETS						mimicpp enable-config-options
+	TARGETS mimicpp-header-only mimicpp-enable-config-options
 	EXPORT						mimicpp-targets
-	PUBLIC_HEADER DESTINATION	"${MIMICPP_INCLUDE_INSTALL_DIR}"
 )
 
 install(

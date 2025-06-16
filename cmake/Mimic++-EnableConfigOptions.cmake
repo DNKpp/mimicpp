@@ -3,10 +3,10 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-if (NOT TARGET enable-config-options)
+if (NOT TARGET mimicpp-enable-config-options)
 
-    add_library(enable-config-options INTERFACE)
-    add_library(mimicpp::internal::config-options ALIAS enable-config-options)
+    add_library(mimicpp-enable-config-options INTERFACE)
+    add_library(mimicpp::internal::config-options ALIAS mimicpp-enable-config-options)
 
     option(MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES "When enabled, all types will be printed prettified." OFF)
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES: ${MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES}")
@@ -23,7 +23,7 @@ if (NOT TARGET enable-config-options)
     set(MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND "" CACHE STRING "Defines the utilized source-location type.")
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND: ${MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND}")
 
-    target_compile_definitions(enable-config-options
+    target_compile_definitions(mimicpp-enable-config-options
         INTERFACE
         $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES}>:MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES>
         $<$<BOOL:${MIMICPP_CONFIG_ONLY_PREFIXED_MACROS}>:MIMICPP_CONFIG_ONLY_PREFIXED_MACROS>
@@ -52,12 +52,12 @@ if (NOT TARGET enable-config-options)
 
         find_package(fmt REQUIRED)
         message(STATUS "${MESSAGE_PREFIX} Using {fmt}-package from: ${fmt_SOURCE_DIR}")
-        target_link_libraries(enable-config-options
+        target_link_libraries(mimicpp-enable-config-options
             INTERFACE
             fmt::fmt
         )
 
-        target_compile_definitions(enable-config-options
+        target_compile_definitions(mimicpp-enable-config-options
             INTERFACE
             MIMICPP_CONFIG_USE_FMT=1
             $<$<BOOL:${MIMICPP_CONFIG_IMPORT_FMT}>:MIMICPP_CONFIG_IMPORT_FMT=1>
@@ -85,12 +85,12 @@ if (NOT TARGET enable-config-options)
 
         find_package(uni-algo REQUIRED)
         message(STATUS "${MESSAGE_PREFIX} Using {uni-algo}-package from: ${uni-algo_SOURCE_DIR}")
-        target_link_libraries(enable-config-options
+        target_link_libraries(mimicpp-enable-config-options
             INTERFACE
             uni-algo::uni-algo
         )
 
-        target_compile_definitions(enable-config-options
+        target_compile_definitions(mimicpp-enable-config-options
             INTERFACE
             MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=1
         )
@@ -137,12 +137,12 @@ if (NOT TARGET enable-config-options)
 
             find_package(cpptrace REQUIRED)
             message(STATUS "${MESSAGE_PREFIX} Using {cpptrace}-package from: ${cpptrace_SOURCE_DIR}")
-            target_link_libraries(enable-config-options
+            target_link_libraries(mimicpp-enable-config-options
                 INTERFACE
                 cpptrace::cpptrace
             )
 
-            target_compile_definitions(enable-config-options
+            target_compile_definitions(mimicpp-enable-config-options
                 INTERFACE
                 MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=1
                 $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
@@ -152,7 +152,7 @@ if (NOT TARGET enable-config-options)
             message(DEBUG "${MESSAGE_PREFIX} Selected std::stacktrace.")
         endif ()
 
-        target_compile_definitions(enable-config-options
+        target_compile_definitions(mimicpp-enable-config-options
             INTERFACE
             MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
         )
