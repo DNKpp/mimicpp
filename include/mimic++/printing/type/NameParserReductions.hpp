@@ -11,10 +11,12 @@
 #include "mimic++/printing/type/NameParserTokens.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
-#include <optional>
-#include <span>
-#include <utility>
-#include <variant>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <optional>
+    #include <span>
+    #include <utility>
+    #include <variant>
+#endif
 
 namespace mimicpp::printing::type::parsing
 {

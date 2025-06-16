@@ -15,11 +15,13 @@
 #include "mimic++/printing/type/NameParserTokens.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
-#include <array>
-#include <functional>
-#include <iterator>
-#include <type_traits>
-#include <variant>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <array>
+    #include <functional>
+    #include <iterator>
+    #include <type_traits>
+    #include <variant>
+#endif
 
 namespace mimicpp::printing::type::parsing
 {

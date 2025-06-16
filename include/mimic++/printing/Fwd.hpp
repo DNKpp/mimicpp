@@ -8,7 +8,9 @@
 
 #pragma once
 
-namespace mimicpp::custom
+#include "mimic++/config/Config.hpp"
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
 {
     /**
      * \brief User may add specializations, which will then be used during ``print`` calls.
@@ -25,7 +27,7 @@ namespace mimicpp::custom
     class TypePrinter;
 }
 
-namespace mimicpp::printing
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing
 {
     class PrintFn;
 
