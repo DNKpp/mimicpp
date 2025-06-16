@@ -13,8 +13,12 @@
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
-#include <tuple>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <cstddef>
+    #include <functional>
+    #include <tuple>
+    #include <type_traits>
+#endif
 
 namespace mimicpp::call
 {
