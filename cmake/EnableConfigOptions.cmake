@@ -113,15 +113,25 @@ if (NOT TARGET enable-config-options)
 
         # Config option to enable cpptrace as stacktrace-backend.
         # This will download the cpptrace source if not found.
-        # Eventually defines the macro MIMICPP_CONFIG_USE_CPPTRACE.
+        # Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE.
         option(MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE "When enabled, registers cpptrace library as stacktrace-backend." OFF)
         message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE}")
         if (MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE)
 
             message(DEBUG "${MESSAGE_PREFIX} Searching for installed {cpptrace}-package.")
 
-            # Causes some trouble on clang. Not needed and thus disabled for now.
-            set(CPPTRACE_DISABLE_CXX_20_MODULES ON)
+            cmake_dependent_option(
+                MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
+                "Determines, whether cpptrace will be consumed as a c++20 module."
+                ON
+                "MIMICPP_CMAKE_HAS_CXX20_MODULES"
+                OFF
+            )
+            if (NOT MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE)
+                set(CPPTRACE_DISABLE_CXX_20_MODULES ON)
+            else ()
+                set(CPPTRACE_DISABLE_CXX_20_MODULES OFF)
+            endif ()
 
             find_package(cpptrace QUIET)
             if (NOT cpptrace_FOUND)
@@ -140,7 +150,8 @@ if (NOT TARGET enable-config-options)
 
             target_compile_definitions(enable-config-options
                 INTERFACE
-                MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+                MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=1
+                $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
             )
 
         else ()
@@ -149,7 +160,7 @@ if (NOT TARGET enable-config-options)
 
         target_compile_definitions(enable-config-options
             INTERFACE
-            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
         )
 
     endif ()
