@@ -34,6 +34,25 @@
  *
  * ---
  *
+*  * \anchor MIMICPP_CONFIG_ENABLE_CXX20_MODULES
+ * ## Enable C++20 modules.
+ * **Name:** `MIMICPP_CONFIG_ENABLE_CXX20_MODULES`
+ *
+ * C++20 Modules have come a long way and they are finally arriving on the horizon.
+ * Unfortunately, this requires a very up to date toolchain (CMake, Compiler, etc.), which is not the case by default.
+ * Due to this, users have to explicitly opt-in to that feature.
+ * \note This option is only available when CMake actually supports C++20 Modules (i.e. version `3.28` and later).
+ *
+ * On the one hand, this defines the CMake target `mimicpp::module` and also makes `mimicpp::mimicpp` an alias to it.
+ * \note Users can still choose to explicitly link to the header-only target with `mimicpp::header-only`.
+ *
+ * On the other hand, this signals that all (optional) dependencies should be consumed as modules when they provide one.
+ *
+ * \attention While this feature is not explicitly marked as experimental, please be aware that the implementation may still have some limitations.
+ * Your feedback is greatly appreciated and will help improve the functionality!
+ *
+ * ---
+ *
  * \anchor MIMICPP_CONFIG_USE_FMT
  * ## Use `fmt` as formatting backend
  * **Name:** `MIMICPP_CONFIG_USE_FMT`

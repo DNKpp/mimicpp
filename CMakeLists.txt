@@ -28,13 +28,6 @@ else ()
 	message(WARNING "${MESSAGE_PREFIX} unable to determine architecture")
 endif ()
 
-include(CMakeDependentOption)
-# Enable cmake c++20 modules support when possible,
-# but give users the option to explicitly disable it in cases where e.g. an insufficient generator or compiler is used.
-cmake_dependent_option(MIMICPP_CMAKE_HAS_CXX20_MODULES "" OFF "CMAKE_VERSION VERSION_GREATER_EQUAL 3.28" OFF)
-set(CMAKE_CXX_SCAN_FOR_MODULES ${MIMICPP_CMAKE_HAS_CXX20_MODULES})
-message(DEBUG "${MESSAGE_PREFIX} CMake has c++20 modules: " ${MIMICPP_CMAKE_HAS_CXX20_MODULES})
-
 message(DEBUG "${MESSAGE_PREFIX} CXXFLAGS: $ENV{CXXFLAGS}")
 message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS_INIT: ${CMAKE_CXX_FLAGS_INIT}")
@@ -46,6 +39,9 @@ if (MIMICPP_FORCED_CXX_STANDARD)
 	message(DEBUG "${MESSAGE_PREFIX} forced c++-standard c++${MIMICPP_FORCED_CXX_STANDARD}")
 	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
 endif ()
+
+include(CMakeDependentOption)
+include(Mimic++-EnableConfigOptions)
 
 add_library(mimicpp-header-only INTERFACE)
 add_library(mimicpp::header-only ALIAS mimicpp-header-only)
@@ -65,7 +61,6 @@ target_compile_features(mimicpp-header-only INTERFACE
 	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
-include(Mimic++-EnableConfigOptions)
 target_link_libraries(mimicpp-header-only INTERFACE
 	mimicpp::internal::config-options
 )
