@@ -23,6 +23,13 @@
 #include "mimic++/utilities/PriorityTag.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <memory>
+    #include <tuple>
+    #include <utility>
+#endif
+
 namespace mimicpp
 {
     template <
