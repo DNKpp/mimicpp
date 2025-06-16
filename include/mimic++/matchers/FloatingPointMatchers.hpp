@@ -9,16 +9,19 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 
-#include <algorithm>
-#include <cmath>
-#include <concepts>
-#include <limits>
-#include <stdexcept>
-#include <tuple>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <cmath>
+    #include <concepts>
+    #include <limits>
+    #include <stdexcept>
+    #include <tuple>
+#endif
 
-namespace mimicpp::matches
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
 {
     /**
      * \addtogroup MATCHERS

@@ -8,16 +8,19 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/String.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 
-#include <algorithm>
-#include <concepts>
-#include <ranges>
-#include <tuple>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <concepts>
+    #include <ranges>
+    #include <tuple>
+    #include <utility>
+#endif
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \brief Tag type, used in string matchers.
@@ -93,7 +96,7 @@ namespace mimicpp::matches::detail
     }
 }
 
-namespace mimicpp::matches::str
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches::str
 {
     /**
      * \defgroup MATCHERS_STRING string matchers
