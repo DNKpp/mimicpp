@@ -11,11 +11,13 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
-#include <concepts>
-#include <cstddef>
-#include <cstdint>
-#include <tuple>
-#include <type_traits>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <cstddef>
+    #include <cstdint>
+    #include <tuple>
+    #include <type_traits>
+#endif
 
 namespace mimicpp::detail
 {
@@ -177,7 +179,7 @@ namespace mimicpp::detail
     };
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \defgroup TYPE_TRAITS type-traits
@@ -1145,75 +1147,78 @@ namespace mimicpp
     /**
      * \}
      */
+}
 
-    namespace detail
+namespace mimicpp::detail
+{
+    template <typename First, typename Second, bool reversed = false>
+    struct is_overloadable_with
+        : public std::conditional_t<
+              reversed,
+              std::false_type,
+              is_overloadable_with<Second, First, true>>
     {
-        template <typename First, typename Second, bool reversed = false>
-        struct is_overloadable_with
-            : public std::conditional_t<
-                  reversed,
-                  std::false_type,
-                  is_overloadable_with<Second, First, true>>
-        {
-        };
+    };
 
-        template <typename First, typename Second>
-            requires(
-                !std::same_as<
-                    signature_param_list_t<signature_decay_t<First>>,
-                    signature_param_list_t<signature_decay_t<Second>>>)
-        struct is_overloadable_with<First, Second, false>
-            : public std::true_type
-        {
-        };
+    template <typename First, typename Second>
+        requires(
+            !std::same_as<
+                signature_param_list_t<signature_decay_t<First>>,
+                signature_param_list_t<signature_decay_t<Second>>>)
+    struct is_overloadable_with<First, Second, false>
+        : public std::true_type
+    {
+    };
 
-        template <typename Return1, typename Return2, typename... Params, bool reversed>
-        struct is_overloadable_with<Return1(Params...), Return2(Params...) const, reversed>
-            : public std::true_type
-        {
-        };
+    template <typename Return1, typename Return2, typename... Params, bool reversed>
+    struct is_overloadable_with<Return1(Params...), Return2(Params...) const, reversed>
+        : public std::true_type
+    {
+    };
 
-        template <typename Return1, typename Return2, typename... Params, bool reversed>
-        struct is_overloadable_with<Return1(Params...)&, Return2(Params...) const&, reversed>
-            : public std::true_type
-        {
-        };
+    template <typename Return1, typename Return2, typename... Params, bool reversed>
+    struct is_overloadable_with<Return1(Params...)&, Return2(Params...) const&, reversed>
+        : public std::true_type
+    {
+    };
 
-        template <typename Return1, typename Return2, typename... Params, bool reversed>
-        struct is_overloadable_with<Return1(Params...)&, Return2(Params...)&&, reversed>
-            : public std::true_type
-        {
-        };
+    template <typename Return1, typename Return2, typename... Params, bool reversed>
+    struct is_overloadable_with<Return1(Params...)&, Return2(Params...)&&, reversed>
+        : public std::true_type
+    {
+    };
 
-        template <typename Return1, typename Return2, typename... Params, bool reversed>
-        struct is_overloadable_with<Return1(Params...)&, Return2(Params...) const&&, reversed>
-            : public std::true_type
-        {
-        };
+    template <typename Return1, typename Return2, typename... Params, bool reversed>
+    struct is_overloadable_with<Return1(Params...)&, Return2(Params...) const&&, reversed>
+        : public std::true_type
+    {
+    };
 
-        template <typename Return1, typename Return2, typename... Params, bool reversed>
-        struct is_overloadable_with<Return1(Params...) const&, Return2(Params...)&&, reversed>
-            : public std::true_type
-        {
-        };
+    template <typename Return1, typename Return2, typename... Params, bool reversed>
+    struct is_overloadable_with<Return1(Params...) const&, Return2(Params...)&&, reversed>
+        : public std::true_type
+    {
+    };
 
-        template <typename Return1, typename Return2, typename... Params, bool reversed>
-        struct is_overloadable_with<Return1(Params...) const&, Return2(Params...) const&&, reversed>
-            : public std::true_type
-        {
-        };
+    template <typename Return1, typename Return2, typename... Params, bool reversed>
+    struct is_overloadable_with<Return1(Params...) const&, Return2(Params...) const&&, reversed>
+        : public std::true_type
+    {
+    };
 
-        template <typename Return1, typename Return2, typename... Params, bool reversed>
-        struct is_overloadable_with<Return1(Params...)&&, Return2(Params...) const&&, reversed>
-            : public std::true_type
-        {
-        };
+    template <typename Return1, typename Return2, typename... Params, bool reversed>
+    struct is_overloadable_with<Return1(Params...)&&, Return2(Params...) const&&, reversed>
+        : public std::true_type
+    {
+    };
 
-        template <typename Signature>
-        using normalize_overload_t = signature_remove_noexcept_t<
-            signature_remove_call_convention_t<Signature>>;
-    }
+    template <typename Signature>
+    using normalize_overload_t = signature_remove_noexcept_t<
+        signature_remove_call_convention_t<Signature>>;
+}
 
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
+{
     /**
      * \defgroup TYPE_TRAITS_IS_OVERLOADABLE_WITH is_overloadable_with
      * \ingroup TYPE_TRAITS
