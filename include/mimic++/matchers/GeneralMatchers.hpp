@@ -9,16 +9,19 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 
-#include <functional>
-#include <tuple>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <functional>
+    #include <tuple>
+    #include <type_traits>
+    #include <utility>
+#endif
 
 namespace mimicpp::detail
 {
@@ -57,7 +60,7 @@ namespace mimicpp::detail
     using to_arg_storage_t = typename to_arg_storage<T>::type;
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \brief Generic matcher and the basic building block of most of the built-in matchers.
@@ -203,7 +206,7 @@ namespace mimicpp
     };
 }
 
-namespace mimicpp::matches
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
 {
     /**
      * \defgroup MATCHERS matchers
