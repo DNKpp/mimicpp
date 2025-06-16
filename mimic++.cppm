@@ -39,8 +39,12 @@ module;
 #include <variant>
 #include <vector>
 
-#if MIMICPP_CONFIG_USE_FMT
+#if defined(MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES) \
+    && __has_include(<cxxabi.h>)
+    #include <cxxabi.h>
+#endif
 
+#if MIMICPP_CONFIG_USE_FMT
     #if MIMICPP_CONFIG_IMPORT_FMT
 import fmt;
     #else
@@ -48,7 +52,6 @@ import fmt;
     #endif
 #else
     #include <format>
-
 #endif
 
 #if MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
