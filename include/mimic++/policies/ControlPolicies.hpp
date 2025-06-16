@@ -13,13 +13,15 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 
-#include <limits>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <tuple>
-#include <utility>
-#include <vector>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <limits>
+    #include <memory>
+    #include <optional>
+    #include <stdexcept>
+    #include <tuple>
+    #include <utility>
+    #include <vector>
+#endif
 
 namespace mimicpp::detail
 {
@@ -248,7 +250,7 @@ namespace mimicpp
     };
 }
 
-namespace mimicpp::expect
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
 {
     /**
      * \defgroup EXPECTATION_TIMES times

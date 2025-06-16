@@ -9,12 +9,17 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/policies/ArgumentList.hpp"
 
-#include <concepts>
-#include <functional>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <cstddef>
+    #include <functional>
+    #include <optional>
+    #include <type_traits>
+    #include <utility>
+#endif
 
 namespace mimicpp::expectation_policies
 {
@@ -69,7 +74,7 @@ namespace mimicpp::expectation_policies
     };
 }
 
-namespace mimicpp::then
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::then
 {
     /**
      * \defgroup EXPECTATION_SIDE_EFFECTS side effects
