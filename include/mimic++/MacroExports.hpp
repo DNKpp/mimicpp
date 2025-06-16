@@ -6,25 +6,7 @@
 #ifndef MIMICPP_MACRO_EXPORTS_HPP
 #define MIMICPP_MACRO_EXPORTS_HPP
 
-#define MIMICPP_DETAIL_UNIQUE_NAME(prefix, counter) prefix##counter
-#define MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(counter) \
-    [[maybe_unused]]                                    \
-    ::mimicpp::ScopedExpectation const MIMICPP_DETAIL_UNIQUE_NAME(_mimicpp_expectation_, counter) =
-
-/**
- * \brief Convenience macro, which creates a ScopedExpectation with a unique name.
- * \ingroup MOCK
- */
-#define MIMICPP_SCOPED_EXPECTATION MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(__COUNTER__)
-
-#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
-
-    /**
-     * \brief Shorthand variant of \ref MIMICPP_SCOPED_EXPECTATION.
-     * \ingroup MOCK
-     */
-    #define SCOPED_EXP MIMICPP_SCOPED_EXPECTATION
-
-#endif
+#include "mimic++/macros/InterfaceMocking.hpp"
+#include "mimic++/macros/ScopedExpectation.hpp"
 
 #endif
