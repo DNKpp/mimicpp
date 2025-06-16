@@ -30,8 +30,8 @@ endif ()
 
 include(CMakeDependentOption)
 # Enable cmake c++20 modules support when possible,
-# but give users the option to explicitly disable it in cases where e.g. an insufficient generator is targeted.
-cmake_dependent_option(MIMICPP_CMAKE_HAS_CXX20_MODULES "" ON "CMAKE_VERSION VERSION_GREATER_EQUAL 3.28" OFF)
+# but give users the option to explicitly disable it in cases where e.g. an insufficient generator or compiler is used.
+cmake_dependent_option(MIMICPP_CMAKE_HAS_CXX20_MODULES "" OFF "CMAKE_VERSION VERSION_GREATER_EQUAL 3.28" OFF)
 set(CMAKE_CXX_SCAN_FOR_MODULES ${MIMICPP_CMAKE_HAS_CXX20_MODULES})
 message(DEBUG "${MESSAGE_PREFIX} CMake has c++20 modules: " ${MIMICPP_CMAKE_HAS_CXX20_MODULES})
 
@@ -47,56 +47,40 @@ if (MIMICPP_FORCED_CXX_STANDARD)
 	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
 endif ()
 
-add_library(mimicpp-base INTERFACE)
-add_library(mimicpp::internal::base ALIAS mimicpp-base)
+add_library(mimicpp-header-only INTERFACE)
+add_library(mimicpp::header-only ALIAS mimicpp-header-only)
 
-target_include_directories(mimicpp-base
-	INTERFACE
+include(GNUInstallDirs)
+target_include_directories(mimicpp-header-only INTERFACE
 	"$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
+	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-target_compile_options(mimicpp-base
-	INTERFACE
+target_compile_options(mimicpp-header-only INTERFACE
 	# this option is required to make __VA_OPT__ work on msvc
 	"$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>"
 )
 
-target_compile_features(mimicpp-base
-	INTERFACE
+target_compile_features(mimicpp-header-only INTERFACE
 	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
 include(EnableConfigOptions)
-target_link_libraries(mimicpp-base
-	INTERFACE
+target_link_libraries(mimicpp-header-only INTERFACE
 	mimicpp::internal::config-options
 )
-
-add_library(mimicpp-header-only INTERFACE)
-include(GNUInstallDirs)
-target_include_directories(mimicpp-header-only
-	INTERFACE
-	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
-)
-
-target_link_libraries(mimicpp-header-only
-	INTERFACE
-	mimicpp::internal::base
-)
-add_library(mimicpp::header-only ALIAS mimicpp-header-only)
 
 if (MIMICPP_CMAKE_HAS_CXX20_MODULES)
 	add_library(mimicpp-module)
 	add_library(mimicpp::module ALIAS mimicpp-module)
 	add_library(mimicpp::mimicpp ALIAS mimicpp-module)
 
-	target_link_libraries(mimicpp-module
-		PUBLIC
-		mimicpp::internal::base
+	target_link_libraries(mimicpp-module PUBLIC
+		mimicpp::header-only
 	)
 
-	target_sources(mimicpp-module
-		PUBLIC FILE_SET CXX_MODULES
+	target_sources(mimicpp-module PUBLIC
+		FILE_SET CXX_MODULES
 		TYPE CXX_MODULES FILES mimic++.cppm
 	)
 else ()
@@ -117,22 +101,15 @@ endif()
 
 option(MIMICPP_CONFIGURE_DOXYGEN "Determines, whether the doxyfile shall be configured." OFF)
 if (MIMICPP_CONFIGURE_DOXYGEN)
-
 	option(MIMICPP_ENABLE_GENERATE_DOCS "Enable the doxygen documentation target." OFF)
-
 	add_subdirectory("docs")
-
 endif()
 
 option(MIMICPP_ENABLE_AMALGAMATE_HEADERS "Enables the amalgamation target." OFF)
 if (MIMICPP_ENABLE_AMALGAMATE_HEADERS)
-
 	add_subdirectory("tools/amalgamate-headers")
-
 endif()
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
-
-  include(InstallRules)
-
+	#  include(InstallRules)
 endif()

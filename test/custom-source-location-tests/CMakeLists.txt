@@ -14,16 +14,14 @@ enable_sanitizers(${TARGET_NAME})
 
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
-target_link_libraries(${TARGET_NAME}
-    PRIVATE
-    mimicpp::mimicpp
+target_link_libraries(${TARGET_NAME} PRIVATE
+    mimicpp::header-only
     mimicpp::test::basics
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil
 )
 
-target_precompile_headers(${TARGET_NAME}
-    PRIVATE
+target_precompile_headers(${TARGET_NAME} PRIVATE
     <TestAssert.hpp>
     <catch2/catch_all.hpp>
     <catch2/trompeloeil.hpp>
