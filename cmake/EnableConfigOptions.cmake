@@ -39,6 +39,9 @@ if (NOT TARGET enable-config-options)
     if (MIMICPP_CONFIG_USE_FMT)
 
         message(DEBUG "${MESSAGE_PREFIX} Searching for installed {fmt}-package.")
+        cmake_dependent_option(MIMICPP_CONFIG_IMPORT_FMT "Determines, whether fmt will be consumed as a c++20 module." ON "MIMICPP_CMAKE_HAS_CXX20_MODULES" OFF)
+        set(FMT_MODULE ${MIMICPP_CONFIG_IMPORT_FMT})
+
         find_package(fmt QUIET)
         if (NOT fmt_FOUND)
             message(STATUS "${MESSAGE_PREFIX} No installed {fmt}-package found. Fetching via cpm.")
@@ -56,7 +59,8 @@ if (NOT TARGET enable-config-options)
 
         target_compile_definitions(enable-config-options
             INTERFACE
-            MIMICPP_CONFIG_USE_FMT
+            MIMICPP_CONFIG_USE_FMT=1
+            $<$<BOOL:${MIMICPP_CONFIG_IMPORT_FMT}>:MIMICPP_CONFIG_IMPORT_FMT=1>
         )
 
     endif ()
