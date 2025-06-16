@@ -21,16 +21,18 @@
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
-#include <algorithm>
-#include <concepts>
-#include <functional>
-#include <memory>
-#include <mutex>
-#include <optional>
-#include <ranges>
-#include <tuple>
-#include <utility>
-#include <vector>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <concepts>
+    #include <functional>
+    #include <memory>
+    #include <mutex>
+    #include <optional>
+    #include <ranges>
+    #include <tuple>
+    #include <utility>
+    #include <vector>
+#endif
 
 namespace mimicpp::detail
 {
@@ -111,7 +113,7 @@ namespace mimicpp::detail
     }
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \defgroup EXPECTATION expectation
