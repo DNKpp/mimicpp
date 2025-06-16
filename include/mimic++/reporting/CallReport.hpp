@@ -11,16 +11,19 @@
 #include "mimic++/Call.hpp"
 #include "mimic++/Fwd.hpp"
 #include "mimic++/Stacktrace.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
-#include <tuple>
-#include <utility>
-#include <vector>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <tuple>
+    #include <utility>
+    #include <vector>
+#endif
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     /**
      * \defgroup REPORTING_REPORTS reports

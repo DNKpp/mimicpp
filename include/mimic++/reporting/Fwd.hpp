@@ -8,7 +8,9 @@
 
 #pragma once
 
-namespace mimicpp::reporting
+#include "mimic++/config/Config.hpp"
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     class IReporter;
     class DefaultReporter;

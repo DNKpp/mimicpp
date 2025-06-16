@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
@@ -16,11 +17,13 @@
 #include "mimic++/reporting/StringifyReports.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
-#include <concepts>
-#include <exception>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <exception>
+    #include <utility>
+#endif
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     /**
      * \brief A reporter, which creates text messages and reports them via the provided callbacks.
