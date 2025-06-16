@@ -31,23 +31,6 @@ if (NOT TARGET enable-config-options)
         $<$<BOOL:${MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND}>:MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND=${MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND}>
     )
 
-    # Config option, to enable c++20 modules support.
-    # CMake doesn't support c++20 modules before 3.28, so it doesn't make much sense offering this option with older versions.
-    if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.28")
-
-        message(DEBUG "${MESSAGE_PREFIX} Detected CMake c++20 modules support.")
-
-        option(MIMICPP_CONFIG_ENABLE_CXX20_MODULES "When enabled, c++20 modules support is activated." OFF)
-        message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_ENABLE_CXX20_MODULES: ${MIMICPP_CONFIG_ENABLE_CXX20_MODULES}")
-        set(CMAKE_CXX_SCAN_FOR_MODULES ${MIMICPP_CONFIG_ENABLE_CXX20_MODULES})
-
-        target_compile_definitions(enable-config-options
-            INTERFACE
-            $<$<BOOL:${MIMICPP_CONFIG_ENABLE_CXX20_MODULES}>:MIMICPP_CONFIG_ENABLE_CXX20_MODULES>
-        )
-
-    endif ()
-
     # Config option, to utilize fmt instead of std formatting.
     # Checks, whether fmt is already available. Fetches it instead.
     # Eventually defines the macro MIMICPP_CONFIG_USE_FMT.

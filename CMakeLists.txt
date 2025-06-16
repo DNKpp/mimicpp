@@ -27,48 +27,81 @@ elseif (CMAKE_SIZEOF_VOID_P EQUAL 4)
 else ()
 	message(WARNING "${MESSAGE_PREFIX} unable to determine architecture")
 endif ()
+
+include(CMakeDependentOption)
+# Enable cmake c++20 modules support when possible,
+# but give users the option to explicitly disable it in cases where e.g. an insufficient generator is targeted.
+cmake_dependent_option(MIMICPP_CMAKE_HAS_CXX20_MODULES "" ON "CMAKE_VERSION VERSION_GREATER_EQUAL 3.28" OFF)
+set(CMAKE_CXX_SCAN_FOR_MODULES ${MIMICPP_CMAKE_HAS_CXX20_MODULES})
+message(DEBUG "${MESSAGE_PREFIX} CMake has c++20 modules: " ${MIMICPP_CMAKE_HAS_CXX20_MODULES})
+
 message(DEBUG "${MESSAGE_PREFIX} CXXFLAGS: $ENV{CXXFLAGS}")
 message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS_INIT: ${CMAKE_CXX_FLAGS_INIT}")
 
 string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${mimicpp_SOURCE_DIR}" IS_TOP_LEVEL_PROJECT)
 
-include(GNUInstallDirs)
+set(CMAKE_CXX_STANDARD 20)
+if (MIMICPP_FORCED_CXX_STANDARD)
+	message(DEBUG "${MESSAGE_PREFIX} forced c++-standard c++${MIMICPP_FORCED_CXX_STANDARD}")
+	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
+endif ()
 
-add_library(mimicpp INTERFACE)
-add_library(mimicpp::mimicpp ALIAS mimicpp)
-target_include_directories(
-	mimicpp
+add_library(mimicpp-base INTERFACE)
+add_library(mimicpp::internal::base ALIAS mimicpp-base)
+
+target_include_directories(mimicpp-base
 	INTERFACE
 	"$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
-	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-target_compile_options(
-	mimicpp
+target_compile_options(mimicpp-base
 	INTERFACE
 	# this option is required to make __VA_OPT__ work on msvc
 	"$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>"
 )
 
-set(CMAKE_CXX_STANDARD 20)
-if (MIMICPP_FORCED_CXX_STANDARD)
-	message(DEBUG "${MESSAGE_PREFIX} forced c++-standard c++${MIMICPP_FORCED_CXX_STANDARD}")
-	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
-endif()
-
-target_compile_features(
-	mimicpp
+target_compile_features(mimicpp-base
 	INTERFACE
 	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
 include(EnableConfigOptions)
-target_link_libraries(
-	mimicpp
+target_link_libraries(mimicpp-base
 	INTERFACE
 	mimicpp::internal::config-options
 )
+
+add_library(mimicpp-header-only INTERFACE)
+include(GNUInstallDirs)
+target_include_directories(mimicpp-header-only
+	INTERFACE
+	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+
+target_link_libraries(mimicpp-header-only
+	INTERFACE
+	mimicpp::internal::base
+)
+add_library(mimicpp::header-only ALIAS mimicpp-header-only)
+
+if (MIMICPP_CMAKE_HAS_CXX20_MODULES)
+	add_library(mimicpp-module)
+	add_library(mimicpp::module ALIAS mimicpp-module)
+	add_library(mimicpp::mimicpp ALIAS mimicpp-module)
+
+	target_link_libraries(mimicpp-module
+		PUBLIC
+		mimicpp::internal::base
+	)
+
+	target_sources(mimicpp-module
+		PUBLIC FILE_SET CXX_MODULES
+		TYPE CXX_MODULES FILES mimic++.cppm
+	)
+else ()
+	add_library(mimicpp::mimicpp ALIAS mimicpp-header-only)
+endif ()
 
 option(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_TESTS)
