@@ -66,11 +66,13 @@ if (NOT TARGET enable-config-options)
     endif ()
 
     # Config option, to enable unicode support for string matchers.
-    # This will download the cpp-unicodelib source and create an import target
+    # This will download the uni-algo/uni-algo source.
     # Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER.
     option(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-insensitive string matchers are available." OFF)
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER: ${MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER}")
     if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
+
+        set(UNI_ALGO_INSTALL ON)
 
         message(DEBUG "${MESSAGE_PREFIX} Searching for installed {uni-algo}-package.")
         find_package(uni-algo QUIET)
@@ -78,15 +80,7 @@ if (NOT TARGET enable-config-options)
             message(STATUS "${MESSAGE_PREFIX} No installed {uni-algo}-package found. Fetching via cpm.")
 
             include(get_cpm)
-            CPMAddPackage(
-                NAME uni-algo
-                VERSION 1.2.0
-                GITHUB_REPOSITORY uni-algo/uni-algo
-                EXCLUDE_FROM_ALL YES
-                SYSTEM YES
-                OPTIONS
-                UNI_ALGO_INSTALL YES
-            )
+            CPMAddPackage("gh:uni-algo/uni-algo@1.2.0")
         endif ()
 
         find_package(uni-algo REQUIRED)
@@ -98,7 +92,7 @@ if (NOT TARGET enable-config-options)
 
         target_compile_definitions(enable-config-options
             INTERFACE
-            MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+            MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=1
         )
 
     endif ()
