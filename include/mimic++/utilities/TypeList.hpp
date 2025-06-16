@@ -8,14 +8,17 @@
 
 #pragma once
 
+#include "mimic++/config/Config.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 
-#include <concepts>
-#include <cstddef>
-#include <tuple>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <cstddef>
+    #include <tuple>
+    #include <utility>
+#endif
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
      * \brief A very basic type-list template.
@@ -130,10 +133,7 @@ namespace mimicpp::util::detail
 
     template <typename... Types>
     using unique_list_t = typename unique<type_list<>, Types...>::type_t;
-}
 
-namespace mimicpp::util::detail
-{
     template <std::default_initializable FillElement, std::size_t n, typename... Elements>
         requires(sizeof...(Elements) <= n)
     [[nodiscard]]

@@ -10,12 +10,14 @@
 
 #include "mimic++/config/Config.hpp"
 
-#include <concepts>
-#include <iterator>
-#include <type_traits>
-#include <version>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <iterator>
+    #include <type_traits>
+    #include <version>
+#endif
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
      * \brief The alias template projected_value_t obtains the value type by stripping any reference and its topmost

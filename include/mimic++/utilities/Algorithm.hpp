@@ -11,18 +11,20 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/utilities/C++26Backports.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <ranges>
-#include <string_view>
-#include <tuple>
-#include <utility>
-#include <type_traits>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <array>
+    #include <concepts>
+    #include <functional>
+    #include <iterator>
+    #include <ranges>
+    #include <string_view>
+    #include <tuple>
+    #include <type_traits>
+    #include <utility>
+#endif
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
      * \brief Partitions the target range by the predicate results on the control range.
@@ -58,8 +60,8 @@ namespace mimicpp::util
     && std::permutable<std::ranges::iterator_t<Control>>*/
     [[nodiscard]]
     constexpr std::ranges::borrowed_subrange_t<Target> partition_by(
-        Target&& targetRange,
-        Control&& controlRange,
+        Target && targetRange,
+        Control && controlRange,
         Predicate predicate,
         Projection projection = {})
     {
@@ -96,7 +98,7 @@ namespace mimicpp::util
     template <std::ranges::borrowed_range Range>
     [[nodiscard]]
     constexpr std::ranges::borrowed_iterator_t<Range> find_closing_token(
-        Range&& str,
+        Range && str,
         std::ranges::range_value_t<Range> const& openingToken,
         std::ranges::range_value_t<Range> const& closingToken)
     {
@@ -136,7 +138,7 @@ namespace mimicpp::util
     template <std::ranges::borrowed_range Range>
     [[nodiscard]]
     constexpr std::ranges::borrowed_subrange_t<Range> find_next_unwrapped_token(
-        Range&& str,
+        Range && str,
         std::string_view const token,
         std::ranges::forward_range auto&& opening,
         std::ranges::forward_range auto&& closing)
@@ -187,7 +189,7 @@ namespace mimicpp::util
     template <std::ranges::forward_range Range, std::ranges::forward_range Prefix>
         requires std::totally_ordered_with<std::ranges::range_value_t<Range>, Prefix>
     [[nodiscard]]
-    constexpr std::ranges::borrowed_subrange_t<Range> prefix_range(Range&& range, Prefix&& prefix)
+    constexpr std::ranges::borrowed_subrange_t<Range> prefix_range(Range && range, Prefix && prefix)
     {
         auto const lower = std::ranges::lower_bound(range, prefix);
         auto const end = std::ranges::lower_bound(
@@ -254,109 +256,109 @@ namespace mimicpp::util
                 concat_arrays(others...));
         }
     }
+}
 
-    namespace detail
+namespace mimicpp::util::detail
+{
+    struct binary_find_fn
     {
-        struct binary_find_fn
+        template <
+            std::forward_iterator Iterator,
+            std::sentinel_for<Iterator> Sentinel,
+            typename Projection = std::identity,
+            typename T = util::projected_value_t<Iterator, Projection>,
+            std::indirect_strict_weak_order<
+                T const*,
+                std::projected<Iterator, Projection>> Comparator = std::ranges::less>
+        [[nodiscard]]
+        constexpr Iterator operator()(
+            Iterator const first,
+            Sentinel const last,
+            T const& value,
+            Comparator compare = {},
+            Projection projection = {}) const
         {
-            template <
-                std::forward_iterator Iterator,
-                std::sentinel_for<Iterator> Sentinel,
-                typename Projection = std::identity,
-                typename T = util::projected_value_t<Iterator, Projection>,
-                std::indirect_strict_weak_order<
-                    T const*,
-                    std::projected<Iterator, Projection>> Comparator = std::ranges::less>
-            [[nodiscard]]
-            constexpr Iterator operator()(
-                Iterator const first,
-                Sentinel const last,
-                T const& value,
-                Comparator compare = {},
-                Projection projection = {}) const
+            if (auto const iter = std::ranges::lower_bound(first, last, value, compare, projection);
+                iter != last
+                && !std::invoke(compare, value, std::invoke(projection, *iter)))
             {
-                if (auto const iter = std::ranges::lower_bound(first, last, value, compare, projection);
-                    iter != last
-                    && !std::invoke(compare, value, std::invoke(projection, *iter)))
-                {
-                    return iter;
-                }
-
-                return last;
+                return iter;
             }
 
-            template <
-                std::ranges::forward_range Range,
-                typename Projection = std::identity,
-                typename T = util::projected_value_t<std::ranges::iterator_t<Range>, Projection>,
-                std::indirect_strict_weak_order<
-                    T const*,
-                    std::projected<std::ranges::iterator_t<Range>, Projection>> Comparator = std::ranges::less>
-            [[nodiscard]]
-            constexpr std::ranges::borrowed_iterator_t<Range> operator()(
-                Range&& range,
-                T const& value,
-                Comparator compare = {},
-                Projection projection = {}) const
-            {
-                return std::invoke(
-                    *this,
-                    std::ranges::begin(range),
-                    std::ranges::end(range),
-                    value,
-                    std::move(compare),
-                    std::move(projection));
-            }
-        };
-    }
+            return last;
+        }
 
+        template <
+            std::ranges::forward_range Range,
+            typename Projection = std::identity,
+            typename T = util::projected_value_t<std::ranges::iterator_t<Range>, Projection>,
+            std::indirect_strict_weak_order<
+                T const*,
+                std::projected<std::ranges::iterator_t<Range>, Projection>> Comparator = std::ranges::less>
+        [[nodiscard]]
+        constexpr std::ranges::borrowed_iterator_t<Range> operator()(
+            Range&& range,
+            T const& value,
+            Comparator compare = {},
+            Projection projection = {}) const
+        {
+            return std::invoke(
+                *this,
+                std::ranges::begin(range),
+                std::ranges::end(range),
+                value,
+                std::move(compare),
+                std::move(projection));
+        }
+    };
+
+    struct contains_fn
+    {
+        template <
+            std::input_iterator Iterator,
+            std::sentinel_for<Iterator> Sentinel,
+            typename Projection = std::identity,
+            typename T = util::projected_value_t<Iterator, Projection>>
+            requires std::indirect_binary_predicate<
+                std::ranges::equal_to,
+                std::projected<Iterator, Projection>,
+                T const*>
+        [[nodiscard]]
+        constexpr bool operator()(Iterator first, Sentinel last, T const& value, Projection projection = {}) const
+        {
+            auto const iter = std::ranges::find(std::move(first), last, value, std::move(projection));
+            return iter != last;
+        }
+
+        template <
+            std::ranges::input_range Range,
+            typename Projection = std::identity,
+            typename T = util::projected_value_t<std::ranges::iterator_t<Range>, Projection>>
+            requires std::indirect_binary_predicate<
+                std::ranges::equal_to,
+                std::projected<std::ranges::iterator_t<Range>, Projection>,
+                T const*>
+        [[nodiscard]]
+        constexpr bool operator()(Range&& r, T const& value, Projection projection = {}) const
+        {
+            return std::invoke(
+                *this,
+                std::ranges::begin(r),
+                std::ranges::end(r),
+                value,
+                std::move(projection));
+        }
+    };
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
+{
     /**
      * \brief Finds the specified value within the container and returns an iterator pointing to it.
      * If the value is not found, it returns an iterator to the end of the container.
      * \return A borrowed iterator to the element (or end).
      */
     inline constexpr detail::binary_find_fn binary_find{};
-
-    namespace detail
-    {
-        struct contains_fn
-        {
-            template <
-                std::input_iterator Iterator,
-                std::sentinel_for<Iterator> Sentinel,
-                typename Projection = std::identity,
-                typename T = util::projected_value_t<Iterator, Projection>>
-                requires std::indirect_binary_predicate<
-                    std::ranges::equal_to,
-                    std::projected<Iterator, Projection>,
-                    T const*>
-            [[nodiscard]]
-            constexpr bool operator()(Iterator first, Sentinel last, T const& value, Projection projection = {}) const
-            {
-                auto const iter = std::ranges::find(std::move(first), last, value, std::move(projection));
-                return iter != last;
-            }
-
-            template <
-                std::ranges::input_range Range,
-                typename Projection = std::identity,
-                typename T = util::projected_value_t<std::ranges::iterator_t<Range>, Projection>>
-                requires std::indirect_binary_predicate<
-                    std::ranges::equal_to,
-                    std::projected<std::ranges::iterator_t<Range>, Projection>,
-                    T const*>
-            [[nodiscard]]
-            constexpr bool operator()(Range&& r, T const& value, Projection projection = {}) const
-            {
-                return std::invoke(
-                    *this,
-                    std::ranges::begin(r),
-                    std::ranges::end(r),
-                    value,
-                    std::move(projection));
-            }
-        };
-    }
 
     /**
      * \brief Determines, whether the specified value is contained in the given range.

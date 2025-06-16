@@ -8,10 +8,14 @@
 
 #pragma once
 
-#include <concepts>
-#include <utility>
+#include "mimic++/config/Config.hpp"
 
-namespace mimicpp::util
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <utility>
+#endif
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     template <typename From, typename To>
     concept explicitly_convertible_to =

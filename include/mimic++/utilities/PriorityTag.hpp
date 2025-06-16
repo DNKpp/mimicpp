@@ -8,9 +8,13 @@
 
 #pragma once
 
-#include <cstddef>
+#include "mimic++/config/Config.hpp"
 
-namespace mimicpp::util
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <cstddef>
+#endif
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     template <std::size_t priority>
     struct priority_tag
