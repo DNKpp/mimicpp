@@ -78,6 +78,11 @@ import cpptrace;
 
 #endif
 
+#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+    #include <uni_algo/case.h>
+    #include <uni_algo/conv.h>
+#endif
+
 export module mimicpp;
 
 #define MIMICPP_DETAIL_IS_MODULE 1
