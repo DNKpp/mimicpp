@@ -46,6 +46,18 @@ import std;
     #endif
 #endif
 
+#if MIMICPP_CONFIG_USE_FMT
+
+    #if MIMICPP_CONFIG_IMPORT_FMT
+import fmt;
+    #else
+        #include <fmt/format.h>
+    #endif
+#else
+    #include <format>
+
+#endif
+
 export module mimicpp;
 
 #define MIMICPP_DETAIL_IS_MODULE 1
