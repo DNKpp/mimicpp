@@ -9,17 +9,20 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/DefaultReporter.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
-#include <exception>
-#include <iostream>
-#include <memory>
-#include <utility>
-#include <vector>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <exception>
+    #include <iostream>
+    #include <memory>
+    #include <utility>
+    #include <vector>
+#endif
 
 namespace mimicpp::reporting::detail
 {
@@ -139,7 +142,7 @@ namespace mimicpp::reporting::detail
     }
 }
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     /**
      * \brief Replaces the previous reporter with a newly constructed one.

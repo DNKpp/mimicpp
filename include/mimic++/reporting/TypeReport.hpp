@@ -12,9 +12,11 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 
-#include <functional>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <functional>
+#endif
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     /**
      * \brief Contains information about a specific (potentially cv-ref-qualified) type.

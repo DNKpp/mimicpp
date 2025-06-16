@@ -9,9 +9,10 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     /**
      * \brief Contains the extracted mock info.

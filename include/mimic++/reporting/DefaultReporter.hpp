@@ -17,13 +17,15 @@
 #include "mimic++/reporting/StringifyReports.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
-#include <cstddef>
-#include <exception>
-#include <ostream>
-#include <stdexcept>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <cstddef>
+    #include <exception>
+    #include <ostream>
+    #include <stdexcept>
+    #include <utility>
+#endif
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     template <typename Data = std::nullptr_t>
     class Error final
