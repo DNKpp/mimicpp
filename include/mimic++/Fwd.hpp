@@ -21,7 +21,7 @@ namespace mimicpp::call
     class Info;
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     enum class Constness
     {
@@ -378,7 +378,7 @@ namespace mimicpp::detail
     class DefaultCallInterface;
 }
 
-namespace mimicpp::stacktrace
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
 {
     class NullBackend;
 
@@ -388,12 +388,12 @@ namespace mimicpp::stacktrace
     struct backend_traits;
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     class Stacktrace;
 }
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     namespace source_location
     {
