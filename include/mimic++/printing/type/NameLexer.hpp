@@ -12,13 +12,15 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 
-#include <algorithm>
-#include <array>
-#include <cctype>
-#include <functional>
-#include <span>
-#include <tuple>
-#include <variant>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <array>
+    #include <cctype>
+    #include <functional>
+    #include <span>
+    #include <tuple>
+    #include <variant>
+#endif
 
 namespace mimicpp::printing::type::lexing
 {

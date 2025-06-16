@@ -11,6 +11,7 @@
 #include "mimic++/Fwd.hpp"
 #include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp" // uint_with_size
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
@@ -19,19 +20,23 @@
 #include "mimic++/utilities/C++20Compatibility.hpp"
 #include "mimic++/utilities/C++23Backports.hpp" // unreachable
 
-#include <algorithm>
-#include <bit>
-#include <concepts>
-#include <cstddef>
-#include <iterator>
-#include <memory>
-#include <optional>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <bit>
+    #include <concepts>
+    #include <cstddef>
+    #include <iterator>
+    #include <memory>
+    #include <optional>
+    #include <type_traits>
+    #include <utility>
+#endif
 
 #ifdef __cpp_lib_source_location
 
-    #include <source_location>
+    #ifndef MIMICPP_DETAIL_IS_MODULE
+        #include <source_location>
+    #endif
 
 template <>
 struct mimicpp::printing::detail::state::common_type_printer<std::source_location>

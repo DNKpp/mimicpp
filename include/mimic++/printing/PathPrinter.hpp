@@ -12,10 +12,12 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 
-#include <algorithm>
-#include <filesystem>
-#include <functional>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <filesystem>
+    #include <functional>
+    #include <utility>
+#endif
 
 namespace mimicpp::printing::detail
 {
@@ -56,7 +58,7 @@ namespace mimicpp::printing::detail
     };
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \defgroup PRINTING_PATH path

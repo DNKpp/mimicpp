@@ -14,15 +14,17 @@
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 
-#include <algorithm>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <type_traits>
-#include <typeinfo>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <concepts>
+    #include <functional>
+    #include <iterator>
+    #include <type_traits>
+    #include <typeinfo>
+    #include <utility>
+#endif
 
-namespace mimicpp::printing::type
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
 {
     /**
      * \brief Returns the (potentially demangled) name.
@@ -86,9 +88,11 @@ namespace mimicpp::printing::type
 
     #if MIMICPP_DETAIL_IS_GCC || MIMICPP_DETAIL_IS_CLANG
 
-        #include <cstdlib>
-        #include <cxxabi.h>
-        #include <memory>
+        #ifndef MIMICPP_DETAIL_IS_MODULE
+            #include <cstdlib>
+            #include <cxxabi.h>
+            #include <memory>
+        #endif
 
 namespace mimicpp::printing::type
 {
@@ -383,7 +387,7 @@ namespace mimicpp::printing::type::detail
     };
 }
 
-namespace mimicpp::printing
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing
 {
     template <typename T>
     class PrintTypeFn
@@ -405,7 +409,7 @@ namespace mimicpp::printing
     };
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \defgroup PRINTING_TYPE object-type stringification

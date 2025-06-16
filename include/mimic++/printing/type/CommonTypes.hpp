@@ -7,13 +7,16 @@
 #define MIMICPP_PRINTING_TYPE_COMMON_TYPES_HPP
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 
-#include <cstddef>
-#include <string>
-// ReSharper disable once CppUnusedIncludeDirective
-#include <string_view> // false-positive
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <cstddef>
+    #include <string>
+    // ReSharper disable once CppUnusedIncludeDirective
+    #include <string_view> // false-positive
+#endif
 
 namespace mimicpp::printing::type::detail
 {
