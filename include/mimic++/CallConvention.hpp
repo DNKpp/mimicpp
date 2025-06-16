@@ -8,11 +8,15 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
-#include <concepts>
-#include <tuple>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <tuple>
+    #include <utility>
+#endif
 
 namespace mimicpp
 {
