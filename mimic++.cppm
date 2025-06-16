@@ -58,6 +58,30 @@ import fmt;
 
 #endif
 
+#if MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+
+    #if MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+
+        #if MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
+import cpptrace;
+        #else
+
+            #if __has_include(<cpptrace/basic.hpp>)
+                #include <cpptrace/basic.hpp>
+            #elif __has_include(<cpptrace/cpptrace.hpp>)
+                // This is necessary for older cpptrace versions.
+                // see: https://github.com/jeremy-rifkin/libassert/issues/110
+                #include <cpptrace/cpptrace.hpp>
+            #endif
+
+        #endif
+
+    #elif defined(__cpp_lib_stacktrace)
+        #include <stacktrace>
+    #endif
+
+#endif
+
 export module mimicpp;
 
 #define MIMICPP_DETAIL_IS_MODULE 1

@@ -112,20 +112,25 @@
  *
  * \anchor MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
  * ## Enable experimental cpptrace stacktrace-backend
- * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE``
+ * **Name:** `MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE`
+ * \see https://github.com/jeremy-rifkin/cpptrace
  *
- * When enabled, ``mimic++`` installs the ``cpptrace`` stacktrace as default stacktrace-backend.
+ * When enabled, `mimic++` installs `cpptrace` as the default stacktrace-backend.
  * \note This option is only available, if \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE is enabled.
  *
- * ``mimic++`` attempts to detect whether ``cpptrace`` is already available before pulling it from GitHub.
- * If you want to reuse an existing ``cpptrace`` package, make sure that it can be found via ``find_package(cpptrace)``.
- * \see https://github.com/jeremy-rifkin/cpptrace
+ * `mimic++` attempts to detect whether `cpptrace` is already available before pulling it from GitHub.
+ * If you want to reuse an existing `cpptrace` package, make sure that it can be found via `find_package(cpptrace)`.
+ *
+ * If C++20 modules are supported, you can also control how `cpptrace` is included via the `MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE` option (default: `ON`).
+ * When set to `ON`, `import cpptrace;` will be used (requires version `1.0.0` or later).
+ * Otherwise, it will fall back to a traditional `#include` directive.
  *
  * \attention This is an experimental feature, which may be removed during any release.
  *
- * ### Why is it an experimental feature?
+ * ### Why is this feature experimental?
  *
- * Since general stacktrace support is currently declared experimental, this feature is also considered experimental.
+ * General stacktrace support in `mimic++` is currently marked as experimental.
+ * Since this backend depends on that feature, it is also considered experimental.
  *
  * ---
  *
