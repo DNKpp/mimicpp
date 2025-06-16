@@ -20,7 +20,16 @@
 #include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
-namespace mimicpp
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <cstddef>
+    #include <functional>
+    #include <optional>
+    #include <tuple>
+    #include <type_traits>
+    #include <utility>
+#endif
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     class MockSettings
     {
@@ -388,7 +397,7 @@ namespace mimicpp::detail
     }
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \defgroup MOCK mock
