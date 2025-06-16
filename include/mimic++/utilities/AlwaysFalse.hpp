@@ -8,9 +8,13 @@
 
 #pragma once
 
-#include <type_traits>
+#include "mimic++/config/Config.hpp"
 
-namespace mimicpp::util
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <type_traits>
+#endif
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     template <typename...>
     struct always_false

@@ -10,22 +10,26 @@
 
 #include "mimic++/config/Config.hpp"
 
-#include <type_traits>
-#include <version>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <type_traits>
+    #include <version>
+#endif
 
 // GCOVR_EXCL_START
 #ifdef __cpp_lib_unreachable
 
-    #include <utility>
+    #ifndef MIMICPP_DETAIL_IS_MODULE
+        #include <utility>
+    #endif
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     using std::unreachable;
 }
 
 #else
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
      * \brief Invokes undefined behavior
@@ -50,7 +54,7 @@ namespace mimicpp::util
 #endif
 // GCOVR_EXCL_STOP
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     template <typename T>
         requires std::is_enum_v<T>
