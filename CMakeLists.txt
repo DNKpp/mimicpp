@@ -65,7 +65,7 @@ target_compile_features(mimicpp-header-only INTERFACE
 	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
-include(EnableConfigOptions)
+include(Mimic++-EnableConfigOptions)
 target_link_libraries(mimicpp-header-only INTERFACE
 	mimicpp::internal::config-options
 )
@@ -111,5 +111,5 @@ if (MIMICPP_ENABLE_AMALGAMATE_HEADERS)
 endif()
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
-	#  include(InstallRules)
+	include(InstallRules)
 endif()

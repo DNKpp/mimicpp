@@ -45,7 +45,7 @@ if (MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION)
         nostd::source_location
     )
 
-    target_compile_definitions(enable-config-options INTERFACE
+    target_compile_definitions(${TARGET_NAME} INTERFACE
         MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION
     )
 endif ()
