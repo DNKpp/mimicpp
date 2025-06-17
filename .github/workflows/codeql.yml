@@ -65,7 +65,6 @@ jobs:
           cmake -S . \
               -B build \
               -D CMAKE_BUILD_TYPE="Release" \
-              -D MIMICPP_CONFIG_ENABLE_CXX20_MODULES=ON \
               -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES \

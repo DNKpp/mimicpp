@@ -352,7 +352,7 @@ jobs:
         shell: bash
         run: |
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
-                                          -D MIMICPP_CONFIG_ENABLE_CXX20_MODULES=ON \
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__=ON \
                                           -D MIMICPP_CONFIG_IMPORT_FMT=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=OFF \
                                       )" >> $GITHUB_ENV
