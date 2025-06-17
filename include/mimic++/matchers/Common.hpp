@@ -55,11 +55,11 @@ namespace mimicpp::detail::matches_hook
         return matcher.matches(target, others...);
     }
 
-    constexpr util::priority_tag<1> maxTag{};
+    inline constexpr util::priority_tag<1> maxTag{};
 
-    constexpr auto matches = []<typename Matcher, typename T, typename... Others>(
-                                 Matcher const& matcher,
-                                 T& target,
+    inline constexpr auto matches = []<typename Matcher, typename T, typename... Others>(
+                                        Matcher const& matcher,
+                                        T& target,
                                  Others&... others)
         requires requires {
             {
@@ -96,7 +96,7 @@ namespace mimicpp::detail::describe_hook
         return matcher.describe();
     }
 
-    constexpr util::priority_tag<1> maxTag{};
+    inline constexpr util::priority_tag<1> maxTag{};
 
     constexpr auto describe = []<typename Matcher>(Matcher const& matcher) -> decltype(auto)
         requires requires { { describe_impl(maxTag, matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>; }

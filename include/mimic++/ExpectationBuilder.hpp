@@ -236,7 +236,7 @@ namespace mimicpp::detail
         return matches::eq(std::forward<Arg>(arg));
     }
 
-    constexpr util::priority_tag<2> max_make_arg_matcher_tag{};
+    inline constexpr util::priority_tag<2> max_make_arg_matcher_tag{};
 
     template <typename Arg, typename Target>
     concept requirement_for = requires {
