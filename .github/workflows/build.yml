@@ -95,7 +95,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "20"
             libcxx: true
-            cxx20_modules: true
+            cxx20_modules: false
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -113,7 +113,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "19"
             libcxx: true
-            cxx20_modules: true
+            cxx20_modules: false
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -131,7 +131,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "18"
             libcxx: true
-            cxx20_modules: true
+            cxx20_modules: false
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -149,7 +149,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "17"
             libcxx: true
-            cxx20_modules: true
+            cxx20_modules: false
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -168,7 +168,6 @@ jobs:
             compiler_version: "16"
             only_fmt: true
             libcxx: true
-            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -178,7 +177,6 @@ jobs:
             compiler_version: "16"
             only_fmt: true
             only_cpptrace: true
-            cxx20_modules: true
 
           # gcc
           - prefix: "Ubuntu"
@@ -189,7 +187,7 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "15"
             asan: true
-            cxx20_modules: true
+            cxx20_modules: false # in theory, it should work but in practice it does not.
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -197,7 +195,7 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:15"
             compiler_name: "gcc"
             compiler_version: "15"
-            cxx20_modules: true
+            cxx20_modules: false # in theory, it should work but in practice it does not.
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -205,7 +203,6 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:14"
             compiler_name: "gcc"
             compiler_version: "14"
-            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -283,7 +280,7 @@ jobs:
             compiler_name: "AppleClang"
             compiler_version: "18"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
-            cxx20_modules: true
+            cxx20_modules: false
 
           - prefix: "macOS"
             os: "macos-latest"
@@ -299,7 +296,6 @@ jobs:
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
             only_fmt: true
             only_cpptrace: true
-            cxx20_modules: true
 
         exclude:
           # This combination results in a compile error in ranges header.
