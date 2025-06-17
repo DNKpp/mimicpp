@@ -5,6 +5,8 @@
 
 module;
 
+#include "mimic++/mimic++.hpp"
+
 #include <version>
 
 #include <algorithm>
@@ -45,9 +47,7 @@ module;
 #endif
 
 #if MIMICPP_CONFIG_USE_FMT
-    #if MIMICPP_CONFIG_IMPORT_FMT
-import fmt;
-    #else
+    #if !MIMICPP_CONFIG_IMPORT_FMT
         #include <fmt/format.h>
     #endif
 #else
@@ -58,10 +58,7 @@ import fmt;
 
     #if MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
-        #if MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
-import cpptrace;
-        #else
-
+        #if !MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
             #if __has_include(<cpptrace/basic.hpp>)
                 #include <cpptrace/basic.hpp>
             #elif __has_include(<cpptrace/cpptrace.hpp>)
@@ -69,7 +66,6 @@ import cpptrace;
                 // see: https://github.com/jeremy-rifkin/libassert/issues/110
                 #include <cpptrace/cpptrace.hpp>
             #endif
-
         #endif
 
     #elif defined(__cpp_lib_stacktrace)
@@ -85,6 +81,13 @@ import cpptrace;
 
 export module mimicpp;
 
-#define MIMICPP_DETAIL_IS_MODULE 1
+#if MIMICPP_CONFIG_IMPORT_FMT
+import fmt;
+#endif
 
+#if MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
+import cpptrace;
+#endif
+
+#define MIMICPP_DETAIL_IS_MODULE 1
 #include "mimic++/mimic++.hpp"
