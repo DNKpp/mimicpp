@@ -85,6 +85,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "20"
             asan: true
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             suffix: "/libc++"
@@ -94,6 +95,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "20"
             libcxx: true
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -101,6 +103,7 @@ jobs:
               image: "ghcr.io/dnkpp/clang:20"
             compiler_name: "clang"
             compiler_version: "20"
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             suffix: "/libc++"
@@ -110,6 +113,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "19"
             libcxx: true
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -117,6 +121,7 @@ jobs:
               image: "ghcr.io/dnkpp/clang:19"
             compiler_name: "clang"
             compiler_version: "19"
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             suffix: "/libc++"
@@ -126,6 +131,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "18"
             libcxx: true
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -133,6 +139,7 @@ jobs:
               image: "ghcr.io/dnkpp/clang:18"
             compiler_name: "clang"
             compiler_version: "18"
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             suffix: "/libc++"
@@ -142,6 +149,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "17"
             libcxx: true
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -149,6 +157,7 @@ jobs:
               image: "ghcr.io/dnkpp/clang:17"
             compiler_name: "clang"
             compiler_version: "17"
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             suffix: "/libc++"
@@ -159,6 +168,7 @@ jobs:
             compiler_version: "16"
             only_fmt: true
             libcxx: true
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -168,6 +178,7 @@ jobs:
             compiler_version: "16"
             only_fmt: true
             only_cpptrace: true
+            cxx20_modules: true
 
           # gcc
           - prefix: "Ubuntu"
@@ -178,6 +189,7 @@ jobs:
             compiler_name: "gcc"
             compiler_version: "15"
             asan: true
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -185,6 +197,7 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:15"
             compiler_name: "gcc"
             compiler_version: "15"
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -192,6 +205,7 @@ jobs:
               image: "ghcr.io/dnkpp/gcc:14"
             compiler_name: "gcc"
             compiler_version: "14"
+            cxx20_modules: true
 
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
@@ -226,7 +240,6 @@ jobs:
             compiler_version: "10"
             only_fmt: true
             only_cpptrace: true
-            compat_source_loc: true
 
           # This is the latest debian-11 (aka `bullseye`) version
           # and the absolute minimum version mimic++ ensures compatibility with.
@@ -246,6 +259,7 @@ jobs:
             compiler_name: "msvc"
             compiler_version: "v143"
             cmake_generator: "Visual Studio 17 2022"
+            cxx20_modules: true
 
           - prefix: "Windows 2022"
             suffix: "/Gv"
@@ -254,6 +268,7 @@ jobs:
             compiler_version: "v143"
             cmake_generator: "Visual Studio 17 2022"
             default_call_convention: "vectorcall"
+            cxx20_modules: true
 
           - prefix: "Windows 2022"
             os: "windows-2022"
@@ -267,12 +282,14 @@ jobs:
             compiler_name: "AppleClang"
             compiler_version: "18"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
+            cxx20_modules: true
 
           - prefix: "macOS"
             os: "macos-latest"
             compiler_name: "AppleClang"
             compiler_version: "17"
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++"
+            cxx20_modules: true
 
           - prefix: "macOS"
             os: "macos-latest"
@@ -281,6 +298,7 @@ jobs:
             ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
             only_fmt: true
             only_cpptrace: true
+            cxx20_modules: true
 
         exclude:
           # This combination results in a compile error in ranges header.
@@ -333,6 +351,7 @@ jobs:
       # Enable C++20 modules, but consume the dependencies in the traditional way.
       # This way, we can test modules and header-only targets in one go.
       - name: Setup C++20 modules related options
+        if: ${{ matrix.config.cxx20_modules == 'true' }}
         shell: bash
         run: |
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
