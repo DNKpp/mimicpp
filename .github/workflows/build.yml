@@ -240,6 +240,7 @@ jobs:
             compiler_version: "10"
             only_fmt: true
             only_cpptrace: true
+            compat_source_loc: true
 
           # This is the latest debian-11 (aka `bullseye`) version
           # and the absolute minimum version mimic++ ensures compatibility with.
