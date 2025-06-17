@@ -8,6 +8,10 @@ add_executable(${TARGET_NAME}
     "main.cpp"
 )
 
+target_compile_options(${TARGET_NAME} PRIVATE
+    "$<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-declarations>"
+)
+
 include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
