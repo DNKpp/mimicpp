@@ -64,8 +64,7 @@ namespace mimicpp::detail
     [[nodiscard]]
     std::vector<reporting::ExpectationReport> gather_expectation_reports(auto&& expectationPtrs)
     {
-        auto view = expectationPtrs
-                  | std::views::transform([](auto const& exp) { return exp->report(); });
+        auto view = std::views::transform(expectationPtrs, [](auto const& exp) { return exp->report(); });
         return std::vector<reporting::ExpectationReport>{
             view.begin(),
             view.end()};
@@ -412,7 +411,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
             std::vector<ExpectationT*>& inapplicableMatches,
             std::vector<std::tuple<ExpectationT*, reporting::RequirementOutcomes>>& noMatches)
         {
-            for (auto const& exp : m_Expectations | std::views::reverse)
+            for (auto const& exp : std::views::reverse(m_Expectations))
             {
                 if (std::optional outcomes = detail::determine_requirement_outcomes(target, call, *exp))
                 {
