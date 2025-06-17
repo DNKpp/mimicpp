@@ -34,25 +34,6 @@
  *
  * ---
  *
-*  * \anchor MIMICPP_CONFIG_ENABLE_CXX20_MODULES
- * ## Enable C++20 modules.
- * **Name:** `MIMICPP_CONFIG_ENABLE_CXX20_MODULES`
- *
- * C++20 Modules have come a long way and they are finally arriving on the horizon.
- * Unfortunately, this requires a very up to date toolchain (CMake, Compiler, etc.), which is not the case by default.
- * Due to this, users have to explicitly opt-in to that feature.
- * \note This option is only available when CMake actually supports C++20 Modules (i.e. version `3.28` and later).
- *
- * On the one hand, this defines the CMake target `mimicpp::module` and also makes `mimicpp::mimicpp` an alias to it.
- * \note Users can still choose to explicitly link to the header-only target with `mimicpp::header-only`.
- *
- * On the other hand, this signals that all (optional) dependencies should be consumed as modules when they provide one.
- *
- * \attention While this feature is not explicitly marked as experimental, please be aware that the implementation may still have some limitations.
- * Your feedback is greatly appreciated and will help improve the functionality!
- *
- * ---
- *
  * \anchor MIMICPP_CONFIG_USE_FMT
  * ## Use `fmt` as formatting backend
  * **Name:** `MIMICPP_CONFIG_USE_FMT`
@@ -172,6 +153,27 @@
  * The complexity lies in **post-processing** type strings into a uniform and human-readable format.
  * Since compilers produce **inconsistent and platform-dependent** type names, `mimic++` must handle **a wide range of patterns, quirks, and edge cases**.
  * While great effort has been made to make this reliable, unexpected cases may still exist in certain environments.
+ *
+ * ---
+ *
+ * \anchor MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__
+ * ## Enable experimental C++20 modules.
+ * **Name:** `MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__`
+ *
+ * C++20 modules have come a long way and are finally appearing on the horizon.
+ * Unfortunately, they still require a very up-to-date toolchain (CMake, compiler, etc.), which is often not available by default.
+ * Even then, there's a significant chance of encountering compiler bugs that are difficult or impossible to work around.
+ * Because of this, users must explicitly opt-in to this feature.
+ * \note This option is only available when CMake actually supports C++20 Modules (i.e. version `3.28` and later).
+ *
+ * When enabled, this defines the CMake target `mimicpp::module` and makes `mimicpp::mimicpp` an alias for it.
+ * \note Users can still explicitly choose to link against the header-only target via `mimicpp::header-only`.
+ *
+ * In addition, this option signals that all (optional) dependencies should be consumed as modules when they provide one.
+ *
+ * \attention This is an experimental and **highly unportable** feature.
+ * Its behavior may change in any release.
+ * However, it is unlikely to be removed entirely and will probably continue to evolve as C++20 module support stabilizes across toolchains.
  *
  * ---
  *

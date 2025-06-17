@@ -8,7 +8,7 @@ add_subdirectory("unit-tests")
 add_subdirectory("custom-stacktrace-tests")
 add_subdirectory("custom-source-location-tests")
 
-if (MIMICPP_CONFIG_ENABLE_CXX20_MODULES)
+if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)
     add_subdirectory("module-test")
 endif ()
 
