@@ -18,9 +18,4 @@ target_link_libraries(${TARGET_NAME} PRIVATE
     Catch2::Catch2WithMain
 )
 
-target_precompile_headers(${TARGET_NAME} PRIVATE
-    <TestAssert.hpp>
-    <catch2/catch_all.hpp>
-)
-
 catch_discover_tests(${TARGET_NAME})
