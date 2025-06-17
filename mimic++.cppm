@@ -4,9 +4,6 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 module;
-
-#include "mimic++/mimic++.hpp"
-
 #include <version>
 
 #include <algorithm>
