@@ -330,6 +330,17 @@ jobs:
         run: |
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DMIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION=ON)" >> $GITHUB_ENV
 
+      # Enable C++20 modules, but consume the dependencies in the traditional way.
+      # This way, we can test modules and header-only targets in one go.
+      - name: Setup C++20 modules related options
+        shell: bash
+        run: |
+          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
+                                          -D MIMICPP_CONFIG_ENABLE_CXX20_MODULES=ON \
+                                          -D MIMICPP_CONFIG_IMPORT_FMT=OFF \
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=OFF \
+                                      )" >> $GITHUB_ENV
+
       - name: Setup macOS
         if: startsWith(matrix.config.os, 'macOS')
         shell: bash
