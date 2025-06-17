@@ -3,10 +3,15 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/MacroExports.hpp"
-import mimicpp;
+#if MIMICPP_CONFIG_USE_FMT
+    // Todo: This is currently a workaround for msvc, which rejects compiling without an actual error message.
+    #include <fmt/format.h>
+#endif
 
 #include <catch2/catch_test_macros.hpp>
+
+#include "mimic++/MacroExports.hpp"
+import mimicpp;
 
 TEST_CASE("mimic++ supports modules!")
 {
