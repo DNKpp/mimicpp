@@ -65,7 +65,7 @@ target_link_libraries(mimicpp-header-only INTERFACE
 	mimicpp::internal::config-options
 )
 
-if (MIMICPP_CMAKE_HAS_CXX20_MODULES)
+if (MIMICPP_CONFIG_ENABLE_CXX20_MODULES)
 	add_library(mimicpp-module)
 	add_library(mimicpp::module ALIAS mimicpp-module)
 	add_library(mimicpp::mimicpp ALIAS mimicpp-module)
