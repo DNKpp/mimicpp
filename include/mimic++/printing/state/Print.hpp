@@ -66,7 +66,7 @@ namespace mimicpp::printing::detail::state
     }
 
     template <print_iterator OutIter, format::detail::formattable<CharT> T>
-    OutIter print(
+    constexpr OutIter print(
         [[maybe_unused]] util::priority_tag<1> const,
         OutIter out,
         T& value)
@@ -78,7 +78,7 @@ namespace mimicpp::printing::detail::state
     }
 
     template <print_iterator OutIter>
-    OutIter print(
+    constexpr OutIter print(
         [[maybe_unused]] util::priority_tag<0> const,
         OutIter out,
         auto&)
@@ -88,7 +88,7 @@ namespace mimicpp::printing::detail::state
             "{{?}}");
     }
 
-    constexpr util::priority_tag<4> maxStatePrinterTag{};
+    inline constexpr util::priority_tag<4> maxStatePrinterTag{};
 }
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing

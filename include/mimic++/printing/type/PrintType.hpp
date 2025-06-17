@@ -249,7 +249,7 @@ namespace mimicpp::printing::type::detail
             type::type_name<T>());
     }
 
-    constexpr util::priority_tag<4u> maxPrintTypePriority{};
+    inline constexpr util::priority_tag<4u> maxPrintTypePriority{};
 
     template <typename T>
     struct print_type_helper

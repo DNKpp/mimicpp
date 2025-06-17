@@ -393,7 +393,7 @@ namespace mimicpp::stacktrace::detail::current_hook
             "mimic++ does not have a registered stacktrace-backend.");
     }
 
-    constexpr util::priority_tag<2> maxTag{};
+    inline constexpr util::priority_tag<2> maxTag{};
 
     struct current_fn
     {
