@@ -355,7 +355,7 @@ jobs:
           # solves this issue: https://github.com/Homebrew/homebrew-core/issues/178435
           echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
 
-          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
       - name: Setup linux
         if: ${{ matrix.config.prefix == 'Linux' }}
