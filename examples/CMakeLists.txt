@@ -37,7 +37,7 @@ find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
 target_link_libraries(${TARGET_NAME}
     PRIVATE
-    mimicpp::mimicpp
+    mimicpp::header-only
     mimicpp::test::basics
     Catch2::Catch2WithMain
 )
