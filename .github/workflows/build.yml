@@ -352,7 +352,7 @@ jobs:
       # Enable C++20 modules, but consume the dependencies in the traditional way.
       # This way, we can test modules and header-only targets in one go.
       - name: Setup C++20 modules related options
-        if: ${{ matrix.config.cxx20_modules == 'true' }}
+        if: ${{ matrix.config.cxx20_modules == true }}
         shell: bash
         run: |
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
