@@ -3,11 +3,10 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "mimic++/MacroExports.hpp"
 import mimicpp;
 
-#include <string>
-
-#include "mimic++/MacroExports.hpp"
+#include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("mimic++ supports modules!")
 {
