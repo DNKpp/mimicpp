@@ -9,7 +9,7 @@ var searchData=
   ['targetreport_2ehpp_6',['TargetReport.hpp',['../d8/d4c/_target_report_8hpp.html',1,'']]],
   ['templateargs_7',['templateArgs',['../d3/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_identifier.html#ae4ea94cd6b5ef8f88cacc0c3a0e406b8',1,'mimicpp::printing::type::parsing::token::Identifier']]],
   ['templated_2ehpp_8',['Templated.hpp',['../da/deb/_templated_8hpp.html',1,'']]],
-  ['templates_9',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md11',1,'']]],
+  ['templates_9',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md9',1,'']]],
   ['test_20framework_10',['Test Framework',['../index.html#autotoc_md71',1,'']]],
   ['test_20framework_20adapters_11',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['testing_12',['Testing',['../index.html#autotoc_md74',1,'']]],
