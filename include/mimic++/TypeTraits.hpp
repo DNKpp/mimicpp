@@ -260,6 +260,25 @@ namespace mimicpp
      */
 
     /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_CALL_CONVENTION signature_remove_call_convention
+     * \ingroup TYPE_TRAITS
+     * \brief Removes the call-convention from a signature (if present).
+     *
+     *\{
+     */
+
+    template <typename Signature>
+    struct signature_remove_call_convention
+    {
+        using type = typename call_convention_traits<
+            signature_call_convention_t<Signature>>::template remove_call_convention_t<Signature>;
+    };
+
+    /**
+     * \}
+     */
+
+    /**
      * \defgroup TYPE_TRAITS_SIGNATURE_ADD_NOEXCEPT signature_add_noexcept
      * \ingroup TYPE_TRAITS
      * \brief Adds the ``noexcept`` specification to a signature.
@@ -415,24 +434,6 @@ namespace mimicpp
      * \}
      */
 
-    /**
-     * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_CALL_CONVENTION signature_remove_call_convention
-     * \ingroup TYPE_TRAITS
-     * \brief Removes the call-convention from a signature (if present).
-     *
-     *\{
-     */
-
-    template <typename Signature>
-    struct signature_remove_call_convention
-    {
-        using type = typename call_convention_traits<
-            signature_call_convention_t<Signature>>::template remove_call_convention_t<Signature>;
-    };
-
-    /**
-     * \}
-     */
 
     /**
      * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT signature_remove_noexcept
