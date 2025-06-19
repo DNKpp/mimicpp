@@ -168,11 +168,13 @@ TEMPLATE_TEST_CASE(
 {
     using ExpectedT = typename signature_helper<TestType>::sig_noexcept;
 
-    STATIC_REQUIRE(std::same_as<ExpectedT, typename mimicpp::signature_add_noexcept<TestType>::type>);
-    STATIC_REQUIRE(std::same_as<ExpectedT, mimicpp::signature_add_noexcept_t<TestType>>);
+    STATIC_CHECK(std::same_as<ExpectedT, typename mimicpp::signature_add_noexcept<TestType>::type>);
+    STATIC_CHECK(mimicpp::signature_add_noexcept<TestType>::value);
+    STATIC_CHECK(std::same_as<ExpectedT, mimicpp::signature_add_noexcept_t<TestType>>);
 
-    STATIC_REQUIRE(std::same_as<ExpectedT, typename mimicpp::signature_add_noexcept<ExpectedT>::type>);
-    STATIC_REQUIRE(std::same_as<ExpectedT, mimicpp::signature_add_noexcept_t<ExpectedT>>);
+    STATIC_CHECK(std::same_as<ExpectedT, typename mimicpp::signature_add_noexcept<ExpectedT>::type>);
+    STATIC_CHECK(!mimicpp::signature_add_noexcept<ExpectedT>::value);
+    STATIC_CHECK(std::same_as<ExpectedT, mimicpp::signature_add_noexcept_t<ExpectedT>>);
 }
 
 TEMPLATE_TEST_CASE(

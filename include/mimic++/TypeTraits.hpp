@@ -288,144 +288,168 @@ namespace mimicpp
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...)>
+        : public std::true_type
     {
         using type = Return(Params...) noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...)>
+        : public std::true_type
     {
         using type = Return(Params..., ...) noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) noexcept>
+        : public std::false_type
     {
         using type = Return(Params...) noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) noexcept>
+        : public std::false_type
     {
         using type = Return(Params..., ...) noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) const>
+        : public std::true_type
     {
         using type = Return(Params...) const noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) const>
+        : public std::true_type
     {
         using type = Return(Params..., ...) const noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) const noexcept>
+        : public std::false_type
     {
         using type = Return(Params...) const noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) const noexcept>
+        : public std::false_type
     {
         using type = Return(Params..., ...) const noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...)&>
+        : public std::true_type
     {
         using type = Return(Params...) & noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...)&>
+        : public std::true_type
     {
         using type = Return(Params..., ...) & noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) & noexcept>
+        : public std::false_type
     {
         using type = Return(Params...) & noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) & noexcept>
+        : public std::false_type
     {
         using type = Return(Params..., ...) & noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) const&>
+        : public std::true_type
     {
         using type = Return(Params...) const& noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) const&>
+        : public std::true_type
     {
         using type = Return(Params..., ...) const& noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) const & noexcept>
+        : public std::false_type
     {
         using type = Return(Params...) const& noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) const & noexcept>
+        : public std::false_type
     {
         using type = Return(Params..., ...) const& noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) &&>
+        : public std::true_type
     {
         using type = Return(Params...) && noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) &&>
+        : public std::true_type
     {
         using type = Return(Params..., ...) && noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) && noexcept>
+        : public std::false_type
     {
         using type = Return(Params...) && noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) && noexcept>
+        : public std::false_type
     {
         using type = Return(Params..., ...) && noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) const&&>
+        : public std::true_type
     {
         using type = Return(Params...) const&& noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) const&&>
+        : public std::true_type
     {
         using type = Return(Params..., ...) const&& noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params...) const && noexcept>
+        : public std::false_type
     {
         using type = Return(Params...) const&& noexcept;
     };
 
     template <typename Return, typename... Params>
     struct signature_add_noexcept<Return(Params..., ...) const && noexcept>
+        : public std::false_type
     {
         using type = Return(Params..., ...) const&& noexcept;
     };
