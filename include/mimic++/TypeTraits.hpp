@@ -606,6 +606,24 @@ namespace mimicpp
      */
 
     /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT signature_is_noexcept
+     * \ingroup TYPE_TRAITS
+     * \brief Determines whether the given signature has a ``noexcept`` specification.
+     *
+     *\{
+     */
+
+    template <typename Signature>
+    struct signature_is_noexcept
+        : public std::bool_constant<!signature_add_noexcept<Signature>::value>
+    {
+    };
+
+    /**
+     * \}
+     */
+
+    /**
      * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_REF_QUALIFIER signature_remove_ref_qualifier
      * \ingroup TYPE_TRAITS
      * \brief Removes the ref-qualifier of a signature (if present).
@@ -1107,25 +1125,6 @@ namespace mimicpp
         : public std::integral_constant<
               ValueCategory,
               ValueCategory::rvalue>
-    {
-    };
-
-    /**
-     * \}
-     */
-
-    /**
-     * \defgroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT signature_is_noexcept
-     * \ingroup TYPE_TRAITS
-     * \brief Determines whether the given signature has a ``noexcept`` specification.
-     *
-     *\{
-     */
-
-    template <typename Signature>
-    struct signature_is_noexcept
-        : public std::bool_constant<
-              !std::same_as<Signature, signature_remove_noexcept_t<Signature>>>
     {
     };
 
