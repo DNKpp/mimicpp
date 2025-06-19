@@ -351,6 +351,22 @@ TEST_CASE(
         STATIC_CHECK(!signature_remove_noexcept<SignatureT>::value);
         STATIC_CHECK(std::same_as<void(), signature_decay_t<SignatureT>>);
     }
+
+    SECTION("When trait actually adds.")
+    {
+        using SignatureT = void CALL_CONVENTION();
+
+        STATIC_CHECK(std::same_as<void CALL_CONVENTION() noexcept, signature_add_noexcept_t<SignatureT>>);
+        STATIC_CHECK(signature_add_noexcept<SignatureT>::value);
+    }
+
+    SECTION("When trait silently adds nothing.")
+    {
+        using SignatureT = void CALL_CONVENTION() const& noexcept;
+
+        STATIC_CHECK(std::same_as < void CALL_CONVENTION() const& noexcept, signature_add_noexcept_t < SignatureT >>);
+        STATIC_CHECK(!signature_add_noexcept<SignatureT>::value);
+    }
 }
 
 TEST_CASE(
