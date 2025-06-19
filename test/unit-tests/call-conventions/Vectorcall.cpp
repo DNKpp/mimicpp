@@ -327,13 +327,29 @@ TEST_CASE(
     "All signature traits are supported by signatures with __vectorcall.",
     "[type_traits]")
 {
-    using SignatureT = void __vectorcall() const& noexcept;
+    SECTION("When trait actually removes.")
+    {
+        using SignatureT = void __vectorcall() const& noexcept;
 
-    STATIC_REQUIRE(std::same_as<void __vectorcall() const noexcept, signature_remove_ref_qualifier_t<SignatureT>>);
-    STATIC_REQUIRE(std::same_as < void __vectorcall()& noexcept, signature_remove_const_qualifier_t < SignatureT >>);
-    STATIC_REQUIRE(std::same_as<void __vectorcall() const&, signature_remove_noexcept_t<SignatureT>>);
-    STATIC_REQUIRE(std::same_as < void() const& noexcept, signature_remove_call_convention_t < SignatureT >>);
-    STATIC_REQUIRE(std::same_as<void(), signature_decay_t<SignatureT>>);
+        STATIC_CHECK(std::same_as < void() const& noexcept, signature_remove_call_convention_t < SignatureT >>);
+
+        STATIC_CHECK(std::same_as<void CALL_CONVENTION() const noexcept, signature_remove_ref_qualifier_t<SignatureT>>);
+        STATIC_CHECK(std::same_as < void CALL_CONVENTION()& noexcept, signature_remove_const_qualifier_t < SignatureT >>);
+        STATIC_CHECK(std::same_as<void CALL_CONVENTION() const&, signature_remove_noexcept_t<SignatureT>>);
+        STATIC_CHECK(signature_remove_noexcept<SignatureT>::value);
+        STATIC_CHECK(std::same_as<void(), signature_decay_t<SignatureT>>);
+    }
+
+    SECTION("When trait silently removes nothing.")
+    {
+        using SignatureT = void __vectorcall();
+
+        STATIC_CHECK(std::same_as<SignatureT, signature_remove_ref_qualifier_t<SignatureT>>);
+        STATIC_CHECK(std::same_as<SignatureT, signature_remove_const_qualifier_t<SignatureT>>);
+        STATIC_CHECK(std::same_as<SignatureT, signature_remove_noexcept_t<SignatureT>>);
+        STATIC_CHECK(!signature_remove_noexcept<SignatureT>::value);
+        STATIC_CHECK(std::same_as<void(), signature_decay_t<SignatureT>>);
+    }
 }
 
 TEST_CASE(

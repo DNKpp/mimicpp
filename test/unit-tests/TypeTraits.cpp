@@ -247,12 +247,14 @@ TEMPLATE_TEST_CASE(
     double(float, ...) const&&)
 {
     using SignatureT = TestType;
-    STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureT>::type>);
-    STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureT>>);
+    STATIC_CHECK(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureT>::type>);
+    STATIC_CHECK(!mimicpp::signature_remove_noexcept<TestType>::value);
+    STATIC_CHECK(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureT>>);
 
     using SignatureNoexceptT = typename signature_helper<SignatureT>::sig_noexcept;
-    STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureNoexceptT>::type>);
-    STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureNoexceptT>>);
+    STATIC_CHECK(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureNoexceptT>::type>);
+    STATIC_CHECK(mimicpp::signature_remove_noexcept<SignatureNoexceptT>::value);
+    STATIC_CHECK(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureNoexceptT>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
