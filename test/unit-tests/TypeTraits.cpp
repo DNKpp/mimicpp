@@ -95,6 +95,136 @@ namespace
         using sig = Return(Args..., ...) const&&;
         using sig_noexcept = Return(Args..., ...) const&& noexcept;
     };
+
+    template <typename Signature>
+    constexpr std::type_identity<Signature> type_v{};
+}
+
+TEMPLATE_TEST_CASE_SIG(
+    "signature_call_convention infers default call-convention tag for general function types.",
+    "[type_traits]",
+    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    (true, void),
+    (true, void, int),
+    (true, void, float, int),
+    (true, void, float&),
+    (true, void, const float&),
+    (true, void, float&&),
+    (true, void, const float&&),
+    (true, void, float*),
+    (true, void, const float*),
+
+    (true, double),
+    (true, double, int),
+    (true, double, float, int),
+    (true, double, float&),
+    (true, double, const float&),
+    (true, double, float&&),
+    (true, double, const float&&),
+    (true, double, float*),
+    (true, double, const float*),
+
+    (true, double&),
+    (true, double&, int),
+    (true, double&, float, int),
+    (true, double&, float&),
+    (true, double&, const float&),
+    (true, double&, float&&),
+    (true, double&, const float&&),
+    (true, double&, float*),
+    (true, double&, const float*),
+
+    (true, const double&),
+    (true, const double&, int),
+    (true, const double&, float, int),
+    (true, const double&, float&),
+    (true, const double&, const float&),
+    (true, const double&, float&&),
+    (true, const double&, const float&&),
+    (true, const double&, float*),
+    (true, const double&, const float*),
+
+    (true, double&&),
+    (true, double&&, int),
+    (true, double&&, float, int),
+    (true, double&&, float&),
+    (true, double&&, const float&),
+    (true, double&&, float&&),
+    (true, double&&, const float&&),
+    (true, double&&, float*),
+    (true, double&&, const float*),
+
+    (true, const double&&),
+    (true, const double&&, int),
+    (true, const double&&, float, int),
+    (true, const double&&, float&),
+    (true, const double&&, const float&),
+    (true, const double&&, float&&),
+    (true, const double&&, const float&&),
+    (true, const double&&, float*),
+    (true, const double&&, const float*),
+
+    (true, void*),
+    (true, void*, int),
+    (true, void*, float, int),
+    (true, void*, float&),
+    (true, void*, const float&),
+    (true, void*, float&&),
+    (true, void*, const float&&),
+    (true, void*, float*),
+    (true, void*, const float*),
+
+    (true, const void*),
+    (true, const void*, int),
+    (true, const void*, float, int),
+    (true, const void*, float&),
+    (true, const void*, const float&),
+    (true, const void*, float&&),
+    (true, const void*, const float&&),
+    (true, const void*, float*),
+    (true, const void*, const float*))
+{
+    static constexpr auto check = []<typename T>(std::type_identity<T> const) {
+        using Signature = T;
+        using Expected = mimicpp::detail::default_call_convention;
+
+        STATIC_CHECK(std::same_as<Expected, typename mimicpp::signature_call_convention<Signature>::type>);
+        STATIC_CHECK(std::same_as<Expected, mimicpp::signature_call_convention_t<Signature>>);
+    };
+
+    SECTION("Variadic c++ function.")
+    {
+        check(type_v<Return(Args...)>);
+        check(type_v<Return(Args...) const>);
+        check(type_v<Return(Args...)&>);
+        check(type_v<Return(Args...) const&>);
+        check(type_v<Return(Args...) &&>);
+        check(type_v<Return(Args...) const&&>);
+
+        check(type_v<Return(Args...) noexcept>);
+        check(type_v<Return(Args...) const noexcept>);
+        check(type_v < Return(Args...) & noexcept >);
+        check(type_v < Return(Args...) const& noexcept >);
+        check(type_v < Return(Args...) && noexcept >);
+        check(type_v < Return(Args...) const&& noexcept >);
+    }
+
+    SECTION("Function with c-ellipsis.")
+    {
+        check(type_v<Return(Args..., ...)>);
+        check(type_v<Return(Args..., ...) const>);
+        check(type_v<Return(Args..., ...)&>);
+        check(type_v<Return(Args..., ...) const&>);
+        check(type_v<Return(Args..., ...) &&>);
+        check(type_v<Return(Args..., ...) const&&>);
+
+        check(type_v<Return(Args..., ...) noexcept>);
+        check(type_v<Return(Args..., ...) const noexcept>);
+        check(type_v < Return(Args..., ...) & noexcept >);
+        check(type_v < Return(Args..., ...) const& noexcept >);
+        check(type_v < Return(Args..., ...) && noexcept >);
+        check(type_v < Return(Args..., ...) const&& noexcept >);
+    }
 }
 
 TEMPLATE_TEST_CASE(
