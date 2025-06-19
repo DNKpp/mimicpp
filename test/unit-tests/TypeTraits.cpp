@@ -664,6 +664,134 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+    "signature_add_const_qualifier adds const if not already present.",
+    "[type_traits]",
+    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    (true, void),
+    (true, void, int),
+    (true, void, float, int),
+    (true, void, float&),
+    (true, void, const float&),
+    (true, void, float&&),
+    (true, void, const float&&),
+    (true, void, float*),
+    (true, void, const float*),
+
+    (true, double),
+    (true, double, int),
+    (true, double, float, int),
+    (true, double, float&),
+    (true, double, const float&),
+    (true, double, float&&),
+    (true, double, const float&&),
+    (true, double, float*),
+    (true, double, const float*),
+
+    (true, double&),
+    (true, double&, int),
+    (true, double&, float, int),
+    (true, double&, float&),
+    (true, double&, const float&),
+    (true, double&, float&&),
+    (true, double&, const float&&),
+    (true, double&, float*),
+    (true, double&, const float*),
+
+    (true, const double&),
+    (true, const double&, int),
+    (true, const double&, float, int),
+    (true, const double&, float&),
+    (true, const double&, const float&),
+    (true, const double&, float&&),
+    (true, const double&, const float&&),
+    (true, const double&, float*),
+    (true, const double&, const float*),
+
+    (true, double&&),
+    (true, double&&, int),
+    (true, double&&, float, int),
+    (true, double&&, float&),
+    (true, double&&, const float&),
+    (true, double&&, float&&),
+    (true, double&&, const float&&),
+    (true, double&&, float*),
+    (true, double&&, const float*),
+
+    (true, const double&&),
+    (true, const double&&, int),
+    (true, const double&&, float, int),
+    (true, const double&&, float&),
+    (true, const double&&, const float&),
+    (true, const double&&, float&&),
+    (true, const double&&, const float&&),
+    (true, const double&&, float*),
+    (true, const double&&, const float*),
+
+    (true, void*),
+    (true, void*, int),
+    (true, void*, float, int),
+    (true, void*, float&),
+    (true, void*, const float&),
+    (true, void*, float&&),
+    (true, void*, const float&&),
+    (true, void*, float*),
+    (true, void*, const float*),
+
+    (true, const void*),
+    (true, const void*, int),
+    (true, const void*, float, int),
+    (true, const void*, float&),
+    (true, const void*, const float&),
+    (true, const void*, float&&),
+    (true, const void*, const float&&),
+    (true, const void*, float*),
+    (true, const void*, const float*))
+{
+    static constexpr auto check = []<typename ExpectAdded, typename Expected, typename Input>(
+                                      std::type_identity<ExpectAdded> const,
+                                      std::type_identity<Expected> const,
+                                      std::type_identity<Input> const) {
+        STATIC_CHECK(std::same_as<Expected, typename mimicpp::signature_add_const_qualifier<Input>::type>);
+        STATIC_CHECK(ExpectAdded{} == mimicpp::signature_add_const_qualifier<Input>::value);
+        STATIC_CHECK(std::same_as<Expected, mimicpp::signature_add_const_qualifier_t<Input>>);
+    };
+
+    SECTION("Variadic c++ function.")
+    {
+        check(type_v<std::true_type>, type_v<Return(Args...) const>, type_v<Return(Args...)>);
+        check(type_v<std::true_type>, type_v<Return(Args...) const noexcept>, type_v<Return(Args...) noexcept>);
+        check(type_v<std::true_type>, type_v<Return(Args...) const&>, type_v<Return(Args...)&>);
+        check(type_v<std::true_type>, type_v < Return(Args...) const& noexcept >, type_v < Return(Args...) & noexcept >);
+        check(type_v<std::true_type>, type_v<Return(Args...) const&&>, type_v<Return(Args...) &&>);
+        check(type_v<std::true_type>, type_v < Return(Args...) const&& noexcept >, type_v < Return(Args...) && noexcept >);
+
+        check(type_v<std::false_type>, type_v<Return(Args...) const>, type_v<Return(Args...) const>);
+        check(type_v<std::false_type>, type_v<Return(Args...) const noexcept>, type_v<Return(Args...) const noexcept>);
+        check(type_v<std::false_type>, type_v<Return(Args...) const&>, type_v<Return(Args...) const&>);
+        check(type_v<std::false_type>, type_v < Return(Args...) const& noexcept >, type_v < Return(Args...) const& noexcept >);
+        check(type_v<std::false_type>, type_v<Return(Args...) const&&>, type_v<Return(Args...) const&&>);
+        check(type_v<std::false_type>, type_v < Return(Args...) const&& noexcept >, type_v < Return(Args...) const&& noexcept >);
+    }
+
+    SECTION("Function with c-ellipsis.")
+    {
+        check(type_v<std::true_type>, type_v<Return(Args..., ...) const>, type_v<Return(Args..., ...)>);
+        check(type_v<std::true_type>, type_v<Return(Args..., ...) const noexcept>, type_v<Return(Args..., ...) noexcept>);
+        check(type_v<std::true_type>, type_v<Return(Args..., ...) const&>, type_v<Return(Args..., ...)&>);
+        check(type_v<std::true_type>, type_v < Return(Args..., ...) const& noexcept >, type_v < Return(Args..., ...) & noexcept >);
+        check(type_v<std::true_type>, type_v<Return(Args..., ...) const&&>, type_v<Return(Args..., ...) &&>);
+        check(type_v<std::true_type>, type_v < Return(Args..., ...) const&& noexcept >, type_v < Return(Args..., ...) && noexcept >);
+
+        check(type_v<std::false_type>, type_v<Return(Args..., ...) const>, type_v<Return(Args..., ...) const>);
+        check(type_v<std::false_type>, type_v<Return(Args..., ...) const noexcept>, type_v<Return(Args..., ...) const noexcept>);
+        check(type_v<std::false_type>, type_v<Return(Args..., ...) const&>, type_v<Return(Args..., ...) const&>);
+        check(type_v<std::false_type>, type_v < Return(Args..., ...) const& noexcept >, type_v < Return(Args..., ...) const& noexcept >);
+        check(type_v<std::false_type>, type_v<Return(Args..., ...) const&&>, type_v<Return(Args..., ...) const&&>);
+        check(type_v<std::false_type>, type_v < Return(Args..., ...) const&& noexcept >, type_v < Return(Args..., ...) const&& noexcept >);
+    }
+}
+
+TEMPLATE_TEST_CASE_SIG(
     "signature_remove_const_qualifier removes the const-qualification.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),

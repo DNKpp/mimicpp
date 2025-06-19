@@ -53,6 +53,38 @@ namespace mimicpp
 
     /**
      * \brief Primary template, purposely undefined.
+     * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_remove_noexcept;
+
+    /**
+     * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    using signature_remove_noexcept_t = typename signature_remove_noexcept<Signature>::type;
+
+    /**
+     * \brief Primary template.
+     * \ingroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_is_noexcept;
+
+    /**
+     * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    inline constexpr bool signature_is_noexcept_v = signature_is_noexcept<Signature>::value;
+
+    /**
+     * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_CALL_CONVENTION
      * \tparam Signature A function signature.
      */
@@ -85,22 +117,6 @@ namespace mimicpp
 
     /**
      * \brief Primary template, purposely undefined.
-     * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT
-     * \tparam Signature A function signature.
-     */
-    template <typename Signature>
-    struct signature_remove_noexcept;
-
-    /**
-     * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
-     * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT
-     * \tparam Signature A function signature.
-     */
-    template <typename Signature>
-    using signature_remove_noexcept_t = typename signature_remove_noexcept<Signature>::type;
-
-    /**
-     * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_REF_QUALIFIER
      * \tparam Signature A function signature.
      */
@@ -114,6 +130,22 @@ namespace mimicpp
      */
     template <typename Signature>
     using signature_remove_ref_qualifier_t = typename signature_remove_ref_qualifier<Signature>::type;
+
+    /**
+     * \brief Primary template, purposely undefined.
+     * \ingroup TYPE_TRAITS_SIGNATURE_ADD_CONST_QUALIFIER
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_add_const_qualifier;
+
+    /**
+     * \brief Convenience alias, exposing the `type` member alias of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_ADD_CONST_QUALIFIER
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    using signature_add_const_qualifier_t = typename signature_add_const_qualifier<Signature>::type;
 
     /**
      * \brief Primary template, purposely undefined.
@@ -194,22 +226,6 @@ namespace mimicpp
      */
     template <typename Signature>
     inline constexpr ValueCategory signature_ref_qualification_v = signature_ref_qualification<Signature>::value;
-
-    /**
-     * \brief Primary template.
-     * \ingroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT
-     * \tparam Signature A function signature.
-     */
-    template <typename Signature>
-    struct signature_is_noexcept;
-
-    /**
-     * \brief Convenience constant, exposing the ``value`` member of the actual type-trait.
-     * \ingroup TYPE_TRAITS_SIGNATURE_IS_NOEXCEPT
-     * \tparam Signature A function signature.
-     */
-    template <typename Signature>
-    inline constexpr bool signature_is_noexcept_v = signature_is_noexcept<Signature>::value;
 
     /**
      * \brief Primary template.

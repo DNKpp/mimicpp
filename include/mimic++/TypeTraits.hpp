@@ -791,6 +791,198 @@ namespace mimicpp
      */
 
     /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_ADD_CONST_QUALIFIER signature_add_const_qualifier
+     * \ingroup TYPE_TRAITS
+     * \brief Adds the const-qualifier of a signature (if not already present).
+     *
+     *\{
+     */
+
+    namespace detail
+    {
+        template <typename Signature>
+        struct signature_add_const_qualifier;
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...)>
+            : public std::true_type
+        {
+            using type = Return(Params...) const;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...)>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) noexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) const noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) noexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) const>
+            : public std::false_type
+        {
+            using type = Return(Params...) const;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) const>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) const;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) const noexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) const noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) const noexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) const noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...)&>
+            : public std::true_type
+        {
+            using type = Return(Params...) const&;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...)&>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const&;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) & noexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) const& noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) & noexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const& noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) const&>
+            : public std::false_type
+        {
+            using type = Return(Params...) const&;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) const&>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) const&;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) const & noexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) const& noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) const & noexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) const& noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) &&>
+            : public std::true_type
+        {
+            using type = Return(Params...) const&&;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) &&>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const&&;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) && noexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) const&& noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) && noexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const&& noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) const&&>
+            : public std::false_type
+        {
+            using type = Return(Params...) const&&;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) const&&>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) const&&;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params...) const && noexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) const&& noexcept;
+        };
+
+        template <typename Return, typename... Params>
+        struct signature_add_const_qualifier<Return(Params..., ...) const && noexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) const&& noexcept;
+        };
+    }
+
+    template <typename Signature>
+    struct signature_add_const_qualifier
+        : public detail::signature_apply_trait<Signature, detail::signature_add_const_qualifier>
+    {
+    };
+
+    /**
+     * \}
+     */
+
+    /**
      * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_CONST_QUALIFIER signature_remove_constqualifier
      * \ingroup TYPE_TRAITS
      * \brief Removes the const-qualifier of a signature (if present).

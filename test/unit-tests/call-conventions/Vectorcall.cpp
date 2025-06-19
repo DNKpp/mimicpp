@@ -357,6 +357,8 @@ TEST_CASE(
 
         STATIC_CHECK(std::same_as<void __vectorcall() noexcept, signature_add_noexcept_t<SignatureT>>);
         STATIC_CHECK(signature_add_noexcept<SignatureT>::value);
+        STATIC_CHECK(std::same_as<void __vectorcall() const, signature_add_const_qualifier_t<SignatureT>>);
+        STATIC_CHECK(signature_add_const_qualifier<SignatureT>::value);
     }
 
     SECTION("When trait silently adds nothing.")
@@ -365,6 +367,8 @@ TEST_CASE(
 
         STATIC_CHECK(std::same_as < void __vectorcall() const& noexcept, signature_add_noexcept_t < SignatureT >>);
         STATIC_CHECK(!signature_add_noexcept<SignatureT>::value);
+        STATIC_CHECK(std::same_as < void __vectorcall() const& noexcept, signature_add_const_qualifier_t < SignatureT >>);
+        STATIC_CHECK(!signature_add_const_qualifier<SignatureT>::value);
     }
 }
 
