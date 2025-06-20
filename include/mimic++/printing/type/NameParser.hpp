@@ -296,7 +296,7 @@ namespace mimicpp::printing::type::parsing
             {
                 std::ignore = m_Lexer.next();
 
-                auto const finishMultiOpOperator = [&, this](lexing::operator_or_punctuator const& expectedClosingOp) {
+                auto const finishMultiOpOperator = [&, this]([[maybe_unused]] lexing::operator_or_punctuator const& expectedClosingOp) {
                     auto const [closingContent, classification] = m_Lexer.next();
                     MIMICPP_ASSERT(lexing::token_class{expectedClosingOp} == classification, "Invalid input.");
 
