@@ -445,62 +445,43 @@ TEMPLATE_TEST_CASE_SIG(
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
+static constexpr auto check = []<typename Expected, typename Input>(std::type_identity<Expected> const, std::type_identity<Input> const) {
+        STATIC_CHECK(std::same_as<Expected, typename mimicpp::signature_decay<Input>::type>);
+        STATIC_CHECK(std::same_as<Expected, mimicpp::signature_decay_t<Input>>);
+    };
+
     SECTION("Variadic c++ function.")
     {
-        using SignatureT = Return(Args...);
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...)>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...)>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) const>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) const>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...)&>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...)&>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) const&>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) const&>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) &&>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) &&>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) const&&>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) const&&>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) const noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) const noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) & noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) & noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) const & noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) const & noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) && noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) && noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_decay<Return(Args...) const && noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args...) const && noexcept>>);
+        using Expected = Return(Args...);
+        check(type_v<Expected>, type_v<Return(Args...)>);
+        check(type_v<Expected>, type_v<Return(Args...) noexcept>);
+        check(type_v<Expected>, type_v<Return(Args...) const>);
+        check(type_v<Expected>, type_v<Return(Args...) const noexcept>);
+        check(type_v<Expected>, type_v<Return(Args...)&>);
+        check(type_v<Expected>, type_v < Return(Args...) & noexcept >);
+        check(type_v<Expected>, type_v<Return(Args...) const&>);
+        check(type_v<Expected>, type_v < Return(Args...) const& noexcept >);
+        check(type_v<Expected>, type_v<Return(Args...) &&>);
+        check(type_v<Expected>, type_v < Return(Args...) && noexcept >);
+        check(type_v<Expected>, type_v<Return(Args...) const&&>);
+        check(type_v<Expected>, type_v < Return(Args...) const&& noexcept >);
     }
 
     SECTION("Function with c-ellipsis.")
     {
-        using SignatureT = Return(Args..., ...);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...)>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) const>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...)&>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) const&>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) &&>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) const&&>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) const noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) & noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) const & noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) && noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_decay_t<Return(Args..., ...) const && noexcept>>);
+        using Expected = Return(Args..., ...);
+        check(type_v<Expected>, type_v<Return(Args..., ...)>);
+        check(type_v<Expected>, type_v<Return(Args..., ...) noexcept>);
+        check(type_v<Expected>, type_v<Return(Args..., ...) const>);
+        check(type_v<Expected>, type_v<Return(Args..., ...) const noexcept>);
+        check(type_v<Expected>, type_v<Return(Args..., ...)&>);
+        check(type_v<Expected>, type_v < Return(Args..., ...) & noexcept >);
+        check(type_v<Expected>, type_v<Return(Args..., ...) const&>);
+        check(type_v<Expected>, type_v < Return(Args..., ...) const& noexcept >);
+        check(type_v<Expected>, type_v<Return(Args..., ...) &&>);
+        check(type_v<Expected>, type_v < Return(Args..., ...) && noexcept >);
+        check(type_v<Expected>, type_v<Return(Args..., ...) const&&>);
+        check(type_v<Expected>, type_v < Return(Args..., ...) const&& noexcept >);
     }
 }
 

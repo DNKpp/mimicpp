@@ -945,10 +945,12 @@ namespace mimicpp
     struct signature_decay
     {
         using type =
-            signature_remove_noexcept_t<
-                signature_remove_ref_qualifier_t<
-                    signature_remove_const_qualifier_t<
-                        signature_remove_call_convention_t<Signature>>>>;
+            typename detail::signature_remove_ref_qualifier_impl<
+                typename detail::signature_remove_const_qualifier_impl<
+                    typename detail::signature_remove_noexcept<
+                        signature_remove_call_convention_t<Signature>>::type,
+                    false>::type,
+                false>::type;
     };
 
     /**
