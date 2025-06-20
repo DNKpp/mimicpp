@@ -721,10 +721,13 @@ namespace mimicpp
 
         // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
         template <typename Signature, typename Trait = signature_remove_noexcept<Signature>>
-        struct signature_remove_ref_qualifier
+        struct signature_remove_ref_qualifier_
             : public signature_remove_ref_qualifier_impl<typename Trait::type, Trait::value>
         {
         };
+
+        template <typename Signature>
+        using signature_remove_ref_qualifier = signature_remove_ref_qualifier_<Signature>;
     }
 
     template <typename Signature>
@@ -828,10 +831,13 @@ namespace mimicpp
 
         // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
         template <typename Signature, typename Trait = signature_remove_noexcept<Signature>>
-        struct signature_remove_const_qualifier
+        struct signature_remove_const_qualifier_
             : public signature_remove_const_qualifier_impl<typename Trait::type, Trait::value>
         {
         };
+
+        template <typename Signature>
+        using signature_remove_const_qualifier = signature_remove_const_qualifier_<Signature>;
     }
 
     template <typename Signature>
@@ -901,18 +907,21 @@ namespace mimicpp
 
         // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
         template <typename Signature, typename Trait = signature_remove_noexcept<Signature>>
-        struct signature_add_const_qualifier
+        struct signature_add_const_qualifier_
             : public signature_add_const_qualifier_impl<typename Trait::type, Trait::value>
         {
         };
 
         template <typename Signature>
             requires signature_remove_const_qualifier<Signature>::value
-        struct signature_add_const_qualifier<Signature>
+        struct signature_add_const_qualifier_<Signature>
             : public std::false_type
         {
             using type = Signature;
         };
+
+        template <typename Signature>
+        using signature_add_const_qualifier = signature_add_const_qualifier_<Signature>;
     }
 
     template <typename Signature>
