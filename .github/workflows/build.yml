@@ -277,6 +277,11 @@ jobs:
               compiler_name: "clang"
               compiler_version: "16"
               libcxx: false
+          # gcc-10 doesn't know C++-23
+          - cxx_standard: 23
+            config:
+              compiler_name: "gcc"
+              compiler_version: "10"
           # seems like macOS doesn't support 32bit builds
           - architecture: "32bit"
             config:
