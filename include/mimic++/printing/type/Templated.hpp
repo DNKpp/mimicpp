@@ -15,13 +15,15 @@
 #include "mimic++/printing/type/PrintType.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
-#include <algorithm>
-#include <concepts>
-#include <functional>
-#include <memory>
-#include <memory_resource>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <concepts>
+    #include <functional>
+    #include <memory>
+    #include <memory_resource>
+    #include <type_traits>
+    #include <utility>
+#endif
 
 namespace mimicpp::printing::type::detail
 {

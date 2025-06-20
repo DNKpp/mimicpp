@@ -20,16 +20,14 @@ enable_sanitizers(${TARGET_NAME})
 
 find_package(Catch2 REQUIRED)
 find_package(trompeloeil REQUIRED)
-target_link_libraries(${TARGET_NAME}
-    PRIVATE
-    mimicpp::mimicpp
+target_link_libraries(${TARGET_NAME} PRIVATE
+    mimicpp::header-only
     mimicpp::test::basics
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil
 )
 
-target_precompile_headers(${TARGET_NAME}
-    PRIVATE
+target_precompile_headers(${TARGET_NAME} PRIVATE
     <TestAssert.hpp>
     $<$<BOOL:${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}>:\"mimic++/compatibility/paweldac-source_location.hpp\">
     <catch2/catch_all.hpp>

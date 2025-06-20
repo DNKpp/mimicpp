@@ -21,15 +21,13 @@ CPMAddPackage(
 						"gtest_force_shared_crt ON"
 )
 
-target_link_libraries(${TARGET_NAME}
-	PRIVATE
-	mimicpp::mimicpp
+target_link_libraries(${TARGET_NAME} PRIVATE
+	mimicpp::header-only
 	mimicpp::test::basics
 	GTest::gtest_main
 )
 
-target_precompile_headers(${TARGET_NAME}
-	PRIVATE
+target_precompile_headers(${TARGET_NAME} PRIVATE
 	<TestAssert.hpp>
 	$<$<BOOL:${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}>:\"mimic++/compatibility/paweldac-source_location.hpp\">
 )

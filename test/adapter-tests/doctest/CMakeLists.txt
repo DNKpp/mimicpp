@@ -13,7 +13,7 @@ enable_sanitizers(${TARGET_NAME})
 
 CPMAddPackage("gh:doctest/doctest@2.4.11")
 target_link_libraries(${TARGET_NAME} PRIVATE
-	mimicpp::mimicpp
+	mimicpp::header-only
 	mimicpp::test::basics
 	doctest::doctest
 )

@@ -12,13 +12,15 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/type/NameParser.hpp"
 
-#include <algorithm>
-#include <ranges>
-#include <type_traits>
-#include <unordered_map>
-#include <unordered_set>
-#include <utility>
-#include <vector>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <ranges>
+    #include <type_traits>
+    #include <unordered_map>
+    #include <unordered_set>
+    #include <utility>
+    #include <vector>
+#endif
 
 namespace mimicpp::printing::type
 {
@@ -103,7 +105,7 @@ namespace mimicpp::printing::type
             if (content.starts_with("{lambda(")
                 && content.ends_with('}'))
             {
-                auto const closingIter = std::ranges::find(content | std::views::reverse, ')');
+                auto const closingIter = std::ranges::find(content.crbegin(), content.crend(), ')');
                 print("lambda");
                 print(StringViewT{closingIter.base(), content.cend() - 1});
 

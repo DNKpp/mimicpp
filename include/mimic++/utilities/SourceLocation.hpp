@@ -13,13 +13,15 @@
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
 
-#include <concepts>
-#include <cstddef>
-#include <string_view>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <cstddef>
+    #include <string_view>
+    #include <type_traits>
+    #include <utility>
+#endif
 
-namespace mimicpp::util::source_location
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::source_location
 {
     /**
      * \defgroup SOURCE_LOCATION source-location
@@ -81,7 +83,9 @@ namespace mimicpp::util::source_location
             "which can be provided by defining the MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND macro."
     #endif
 
-    #include <source_location>
+    #ifndef MIMICPP_DETAIL_IS_MODULE
+        #include <source_location>
+    #endif
 
 namespace mimicpp::util::source_location
 {
@@ -120,7 +124,7 @@ namespace mimicpp::util::source_location
 
 #endif
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
      * \brief A thin wrapper around the currently installed source-location backend with additional ``operator ==``.

@@ -10,20 +10,29 @@
 
 #include "mimic++/config/Config.hpp"
 
-#include <version>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <version>
+#endif
 
 #ifdef __cpp_lib_bit_cast
 
-    #include <bit>
+    #ifndef MIMICPP_DETAIL_IS_MODULE
+        #include <bit>
+    #endif
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     using std::bit_cast;
 }
 
 #else
 
-namespace mimicpp::util
+    #ifndef MIMICPP_DETAIL_IS_MODULE
+        #include <cstring>
+        #include <type_traits>
+    #endif
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     // taken from: https://www.en.cppreference.com/w/cpp/numeric/bit_cast.html
     template <typename To, typename From>

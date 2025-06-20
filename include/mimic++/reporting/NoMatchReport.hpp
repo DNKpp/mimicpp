@@ -8,9 +8,10 @@
 
 #pragma once
 
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     /**
      * \brief Contains the requirement-outcomes (where at least one is negative) and the related expectation-report.

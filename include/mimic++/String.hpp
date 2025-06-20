@@ -9,16 +9,19 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 
-#include <concepts>
-#include <functional>
-#include <ranges>
-#include <string>
-#include <string_view>
-#include <type_traits>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <functional>
+    #include <ranges>
+    #include <string>
+    #include <string_view>
+    #include <type_traits>
+#endif
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \defgroup STRING string
@@ -420,12 +423,14 @@ struct mimicpp::string_case_fold_converter<char>
 
 #else
 
-    #if __has_include(<uni_algo/case.h>) \
-	&& __has_include(<uni_algo/conv.h>)
-        #include <uni_algo/case.h>
-        #include <uni_algo/conv.h>
-    #else
-        #error "Unable to find uni_algo includes."
+    #ifndef MIMICPP_DETAIL_IS_MODULE
+        #if __has_include(<uni_algo/case.h>) \
+	        && __has_include(<uni_algo/conv.h>)
+            #include <uni_algo/case.h>
+            #include <uni_algo/conv.h>
+        #else
+            #error "Unable to find uni_algo includes."
+        #endif
     #endif
 
 /**

@@ -9,14 +9,17 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 
-#include <concepts>
-#include <optional>
-#include <type_traits>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <optional>
+    #include <type_traits>
+#endif
 
-namespace mimicpp::custom
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
 {
     template <typename Matcher>
     struct matcher_traits;
@@ -52,11 +55,11 @@ namespace mimicpp::detail::matches_hook
         return matcher.matches(target, others...);
     }
 
-    constexpr util::priority_tag<1> maxTag{};
+    inline constexpr util::priority_tag<1> maxTag{};
 
-    constexpr auto matches = []<typename Matcher, typename T, typename... Others>(
-                                 Matcher const& matcher,
-                                 T& target,
+    inline constexpr auto matches = []<typename Matcher, typename T, typename... Others>(
+                                        Matcher const& matcher,
+                                        T& target,
                                  Others&... others)
         requires requires {
             {
@@ -93,7 +96,7 @@ namespace mimicpp::detail::describe_hook
         return matcher.describe();
     }
 
-    constexpr util::priority_tag<1> maxTag{};
+    inline constexpr util::priority_tag<1> maxTag{};
 
     constexpr auto describe = []<typename Matcher>(Matcher const& matcher) -> decltype(auto)
         requires requires { { describe_impl(maxTag, matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>; }
@@ -102,7 +105,7 @@ namespace mimicpp::detail::describe_hook
     };
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     template <typename T, typename First, typename... Others>
     concept matcher_for = std::same_as<T, std::remove_cvref_t<T>>

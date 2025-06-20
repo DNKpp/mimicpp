@@ -10,8 +10,10 @@
 
 #include "mimic++/config/Config.hpp"
 
-#include <string>
-#include <string_view>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <string>
+    #include <string_view>
+#endif
 
 namespace mimicpp::call
 {
@@ -19,7 +21,7 @@ namespace mimicpp::call
     class Info;
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     enum class Constness
     {
@@ -376,7 +378,7 @@ namespace mimicpp::detail
     class DefaultCallInterface;
 }
 
-namespace mimicpp::stacktrace
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
 {
     class NullBackend;
 
@@ -386,12 +388,12 @@ namespace mimicpp::stacktrace
     struct backend_traits;
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     class Stacktrace;
 }
 
-namespace mimicpp::util
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     namespace source_location
     {

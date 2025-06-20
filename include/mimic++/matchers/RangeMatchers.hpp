@@ -7,47 +7,50 @@
 #define MIMICPP_MATCHERS_RANGE_MATCHERS_HPP
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 
-#include <algorithm>
-#include <concepts>
-#include <functional>
-#include <ranges>
-#include <tuple>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <concepts>
+    #include <functional>
+    #include <ranges>
+    #include <tuple>
+    #include <utility>
+#endif
 
-namespace mimicpp::matches::range
+namespace mimicpp::matches::range::detail
 {
-    namespace detail
-    {
 #if MIMICPP_DETAIL_IS_GCC \
     && __GNUC__ <= 11
-        // This is a small compatibility layer for gcc 11 and prior, because they do just provide a partial
-        // implementation of `std::views::all`. In fact, the `std::ranges::owning_view` impl is completely missing.
-        template <std::ranges::range Range>
-        [[nodiscard]]
-        constexpr auto store(Range&& range)
+    // This is a small compatibility layer for gcc 11 and prior, because they do just provide a partial
+    // implementation of `std::views::all`. In fact, the `std::ranges::owning_view` impl is completely missing.
+    template <std::ranges::range Range>
+    [[nodiscard]]
+    constexpr auto store(Range&& range)
+    {
+        if constexpr (std::ranges::view<std::decay_t<Range>>)
         {
-            if constexpr (std::ranges::view<std::decay_t<Range>>)
-            {
-                return std::forward<Range>(range);
-            }
-            else if constexpr (requires { std::ranges::ref_view{std::declval<Range>()}; })
-            {
-                return std::ranges::ref_view{std::forward<Range>(range)};
-            }
-            else
-            {
-                return std::forward<Range>(range);
-            }
+            return std::forward<Range>(range);
         }
-
-#else
-        constexpr auto store = std::views::all;
-#endif
+        else if constexpr (requires { std::ranges::ref_view{std::declval<Range>()}; })
+        {
+            return std::ranges::ref_view{std::forward<Range>(range)};
+        }
+        else
+        {
+            return std::forward<Range>(range);
+        }
     }
 
+#else
+    constexpr auto store = std::views::all;
+#endif
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches::range
+{
     /**
      * \defgroup MATCHERS_RANGE range matchers
      * \ingroup MATCHERS

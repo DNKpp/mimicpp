@@ -12,6 +12,7 @@
  * which can be set during cmake configuration. If an option is enabled, ``mimic++`` defines the relevant macro by itself.
  *
  * ---
+ *
  * \anchor MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND
  * ## Install an alternative source-location backend.
  * **Name:** ``MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND``
@@ -22,6 +23,7 @@
  * Refer to the \ref SOURCE_LOCATION "source-location" section for more details.
  *
  * ---
+ *
  * \anchor MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
  * ## Disable unprefixed macros
  * **Name:** ``MIMICPP_CONFIG_ONLY_PREFIXED_MACROS``
@@ -29,20 +31,28 @@
  * By default, ``mimic++`` defines several shorthand macros for their longer counterparts, to make it less verbose (e.g \ref SCOPED_EXP is shorthand for
  * \ref MIMICPP_SCOPED_EXPECTATION). Even if very unlikely, this may lead to name clashes with other dependencies. Because of that, the option
  * \ref MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is offered, which then disables all shorthand macros.
- * 
+ *
  * ---
+ *
  * \anchor MIMICPP_CONFIG_USE_FMT
- * ## Use ``fmt`` as formatting backend
- * **Name:** ``MIMICPP_CONFIG_USE_FMT``
+ * ## Use `fmt` as formatting backend
+ * **Name:** `MIMICPP_CONFIG_USE_FMT`
  * \see https://github.com/fmtlib/fmt
  * 
- * As of c++20, the format library is offically part of the ``std``. Unfortunatly some compilers, which already support the majority of c++20 features,
- * do not support the formatting part. In such cases, users can enable this option and thus use ``fmt`` instead.
+ * As of c++20, the format library is officially part of the `std`.
+ * Unfortunately some compilers — while supporting most C++20 features — do not yet support the formatting library.
+ * In such cases, users can enable this option to use `fmt` as a fallback.
  * 
- * Whatever the reason to use ``fmt`` might be, chances are good, that the library is already present. ``mimic++`` tries to detect that when linked
- * as cmake-target, before pulling it from github. If you want to reuse an existing ``fmt`` package, make sure, that it can be found via ``find_package(fmt)``.
- * 
+ * Whatever the reason to use `fmt` might be, chances are good that the library is already present.
+ * `mimic++` attempts to detect it when linked as CMake target, before pulling it from GitHub.
+ * To reuse an existing `fmt` package, ensure it can be found via `find_package(fmt)`.
+ *
+ * If C++20 modules are supported, you can also control how `fmt` is included via the `MIMICPP_CONFIG_IMPORT_FMT` option (default: `ON`).
+ * When set to `ON`, `import fmt;` will be used.
+ * Otherwise, it will fall back to a traditional `#include` directive.
+ *
  * ---
+ *
  * \anchor MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
  * ## Enable experimental catch2-matcher integration
  * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION``
@@ -59,8 +69,9 @@
  * ``mimic++`` needs to store the matcher inside the expectation. These requirements are not playing well together.
  * Nevertheless ``catch2`` offers some nice matcher definitions, which could be very helpfull for testing. But as already said, they are dangerous,
  * thus I decided to make them opt-in as experimental features.
- * 
+ *
  * ---
+ *
  * \anchor MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
  * ## Enable experimental string-matcher unicode support
  * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER``
@@ -81,6 +92,7 @@
  * to get some feedback, before I'll declare this as a stable feature.
  *
  * ---
+ *
  * \anchor MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
  * ## Enable experimental stacktrace support
  * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE``
@@ -97,24 +109,31 @@
  * Stack traces require significantly more work for each mock call. It can be worthwhile, but it can also be too excessive.
  *
  * ---
+ *
  * \anchor MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
  * ## Enable experimental cpptrace stacktrace-backend
- * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE``
+ * **Name:** `MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE`
+ * \see https://github.com/jeremy-rifkin/cpptrace
  *
- * When enabled, ``mimic++`` installs the ``cpptrace`` stacktrace as default stacktrace-backend.
+ * When enabled, `mimic++` installs `cpptrace` as the default stacktrace-backend.
  * \note This option is only available, if \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE is enabled.
  *
- * ``mimic++`` attempts to detect whether ``cpptrace`` is already available before pulling it from GitHub.
- * If you want to reuse an existing ``cpptrace`` package, make sure that it can be found via ``find_package(cpptrace)``.
- * \see https://github.com/jeremy-rifkin/cpptrace
+ * `mimic++` attempts to detect whether `cpptrace` is already available before pulling it from GitHub.
+ * If you want to reuse an existing `cpptrace` package, make sure that it can be found via `find_package(cpptrace)`.
+ *
+ * If C++20 modules are supported, you can also control how `cpptrace` is included via the `MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE` option (default: `ON`).
+ * When set to `ON`, `import cpptrace;` will be used (requires version `1.0.0` or later).
+ * Otherwise, it will fall back to a traditional `#include` directive.
  *
  * \attention This is an experimental feature, which may be removed during any release.
  *
- * ### Why is it an experimental feature?
+ * ### Why is this feature experimental?
  *
- * Since general stacktrace support is currently declared experimental, this feature is also considered experimental.
+ * General stacktrace support in `mimic++` is currently marked as experimental.
+ * Since this backend depends on that feature, it is also considered experimental.
  *
- *---
+ * ---
+ *
  * \anchor MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
  * ## Enable experimental pretty type-printing
  * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES``
@@ -134,5 +153,28 @@
  * The complexity lies in **post-processing** type strings into a uniform and human-readable format.
  * Since compilers produce **inconsistent and platform-dependent** type names, `mimic++` must handle **a wide range of patterns, quirks, and edge cases**.
  * While great effort has been made to make this reliable, unexpected cases may still exist in certain environments.
+ *
+ * ---
+ *
+ * \anchor MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__
+ * ## Enable experimental C++20 modules.
+ * **Name:** `MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__`
+ *
+ * C++20 modules have come a long way and are finally appearing on the horizon.
+ * Unfortunately, they still require a very up-to-date toolchain (CMake, compiler, etc.), which is often not available by default.
+ * Even then, there's a significant chance of encountering compiler bugs that are difficult or impossible to work around.
+ * Because of this, users must explicitly opt-in to this feature.
+ * \note This option is only available when CMake actually supports C++20 Modules (i.e. version `3.28` and later).
+ *
+ * When enabled, this defines the CMake target `mimicpp::module` and makes `mimicpp::mimicpp` an alias for it.
+ * \note Users can still explicitly choose to link against the header-only target via `mimicpp::header-only`.
+ *
+ * In addition, this option signals that all (optional) dependencies should be consumed as modules when they provide one.
+ *
+ * \attention This is an experimental and **highly unportable** feature.
+ * Its behavior may change in any release.
+ * However, it is unlikely to be removed entirely and will probably continue to evolve as C++20 module support stabilizes across toolchains.
+ *
+ * ---
  *
  */

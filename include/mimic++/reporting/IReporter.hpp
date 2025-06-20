@@ -9,12 +9,15 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/Fwd.hpp"
 
-#include <exception>
-#include <vector>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <exception>
+    #include <vector>
+#endif
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     /**
      * \defgroup REPORTING reporting

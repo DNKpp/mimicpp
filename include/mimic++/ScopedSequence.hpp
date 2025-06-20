@@ -14,9 +14,11 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
-#include <deque>
-#include <functional>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <deque>
+    #include <functional>
+    #include <utility>
+#endif
 
 namespace mimicpp::sequence::detail
 {
@@ -70,7 +72,7 @@ namespace mimicpp::sequence::detail
     };
 }
 
-namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
      * \brief A sequence type that verifies its owned expectations during destruction.

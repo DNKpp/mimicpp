@@ -10,14 +10,16 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 
-#include <concepts>
-#include <functional>
-#include <memory>
-#include <optional>
-#include <ranges>
-#include <type_traits>
-#include <variant>
-#include <vector>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <functional>
+    #include <memory>
+    #include <optional>
+    #include <ranges>
+    #include <type_traits>
+    #include <variant>
+    #include <vector>
+#endif
 
 namespace mimicpp::printing::type::parsing
 {

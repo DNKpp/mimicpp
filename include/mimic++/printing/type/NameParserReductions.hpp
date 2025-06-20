@@ -11,10 +11,12 @@
 #include "mimic++/printing/type/NameParserTokens.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
-#include <optional>
-#include <span>
-#include <utility>
-#include <variant>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <optional>
+    #include <span>
+    #include <utility>
+    #include <variant>
+#endif
 
 namespace mimicpp::printing::type::parsing
 {
@@ -321,7 +323,8 @@ namespace mimicpp::printing::type::parsing
             std::span pendingTokens{tokenStack.begin(), tokenStack.end() - 1};
 
             auto const openingIter = std::ranges::find_if(
-                pendingTokens | std::views::reverse,
+                pendingTokens.rbegin(),
+                pendingTokens.rend(),
                 [](Token const& token) noexcept { return std::holds_alternative<Opening>(token); });
             if (openingIter == pendingTokens.rend()
                 || !is_identifier_prefix({pendingTokens.begin(), openingIter.base() - 1}))

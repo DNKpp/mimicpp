@@ -9,14 +9,17 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
-#include <optional>
-#include <variant>
-#include <vector>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <optional>
+    #include <variant>
+    #include <vector>
+#endif
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     /**
      * \brief Denotes an inapplicable expectation state.

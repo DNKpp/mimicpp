@@ -9,13 +9,16 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
+#include "mimic++/config/Config.hpp"
 #include "mimic++/policies/ArgumentList.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 
-#include <concepts>
-#include <functional>
-#include <type_traits>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <functional>
+    #include <type_traits>
+    #include <utility>
+#endif
 
 namespace mimicpp::expectation_policies
 {
@@ -75,7 +78,7 @@ namespace mimicpp::expectation_policies
     };
 }
 
-namespace mimicpp::finally
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::finally
 {
     /**
      * \defgroup EXPECTATION_FINALIZER finalizer

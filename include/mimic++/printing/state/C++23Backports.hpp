@@ -8,14 +8,17 @@
 
 #pragma once
 
+#include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/state/Print.hpp"
 
-#include <concepts>
-#include <functional>
-#include <ranges>
-#include <tuple>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <functional>
+    #include <ranges>
+    #include <tuple>
+    #include <utility>
+#endif
 
 namespace mimicpp::printing::detail::state
 {

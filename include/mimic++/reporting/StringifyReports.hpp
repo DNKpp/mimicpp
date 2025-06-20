@@ -19,12 +19,14 @@
 #include "mimic++/utilities/Algorithm.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
-#include <algorithm>
-#include <exception>
-#include <iterator>
-#include <optional>
-#include <span>
-#include <utility>
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
+    #include <exception>
+    #include <iterator>
+    #include <optional>
+    #include <span>
+    #include <utility>
+#endif
 
 namespace mimicpp::reporting::detail
 {
@@ -294,7 +296,7 @@ namespace mimicpp::reporting::detail
     };
 }
 
-namespace mimicpp::reporting
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     [[nodiscard]]
     inline StringT stringify_full_match(CallReport const& call, ExpectationReport expectation)
