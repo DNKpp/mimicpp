@@ -488,7 +488,6 @@ namespace mimicpp
      * \}
      */
 
-
     /**
      * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_NOEXCEPT signature_remove_noexcept
      * \ingroup TYPE_TRAITS
@@ -631,159 +630,107 @@ namespace mimicpp
      *\{
      */
 
+    namespace detail
+    {
+        template <typename Signature, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl;
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params...), isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params..., ...), isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params...) const, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) const noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params..., ...) const, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) const noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params...)&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params..., ...)&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params...) const&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) const noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params..., ...) const&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params...)&&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params..., ...)&&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params...) const&&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) const noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_ref_qualifier_impl<Return(Params..., ...) const&&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const noexcept(isNoexcept);
+        };
+
+        // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
+        template <typename Signature, typename Trait = signature_remove_noexcept<Signature>>
+        struct signature_remove_ref_qualifier
+            : public signature_remove_ref_qualifier_impl<typename Trait::type, Trait::value>
+        {
+        };
+    }
+
     template <typename Signature>
-        requires(!has_default_call_convention<Signature>)
-    struct signature_remove_ref_qualifier<Signature>
+    struct signature_remove_ref_qualifier
+        : public detail::signature_apply_trait<Signature, detail::signature_remove_ref_qualifier>
     {
-        using call_convention_traits_t = call_convention_traits<signature_call_convention_t<Signature>>;
-        using type =
-            typename call_convention_traits_t::template add_call_convention_t<
-                signature_remove_ref_qualifier_t<
-                    typename call_convention_traits_t::template remove_call_convention_t<Signature>>>;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...)>
-    {
-        using type = Return(Params...);
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...)>
-    {
-        using type = Return(Params..., ...);
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) noexcept>
-    {
-        using type = Return(Params...) noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) noexcept>
-    {
-        using type = Return(Params..., ...) noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) const>
-    {
-        using type = Return(Params...) const;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) const>
-    {
-        using type = Return(Params..., ...) const;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) const noexcept>
-    {
-        using type = Return(Params...) const noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) const noexcept>
-    {
-        using type = Return(Params..., ...) const noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...)&>
-    {
-        using type = Return(Params...);
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...)&>
-    {
-        using type = Return(Params..., ...);
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) & noexcept>
-    {
-        using type = Return(Params...) noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) & noexcept>
-    {
-        using type = Return(Params..., ...) noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) const&>
-    {
-        using type = Return(Params...) const;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) const&>
-    {
-        using type = Return(Params..., ...) const;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) const & noexcept>
-    {
-        using type = Return(Params...) const noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) const & noexcept>
-    {
-        using type = Return(Params..., ...) const noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) &&>
-    {
-        using type = Return(Params...);
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) &&>
-    {
-        using type = Return(Params..., ...);
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) && noexcept>
-    {
-        using type = Return(Params...) noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) && noexcept>
-    {
-        using type = Return(Params..., ...) noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) const&&>
-    {
-        using type = Return(Params...) const;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) const&&>
-    {
-        using type = Return(Params..., ...) const;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params...) const && noexcept>
-    {
-        using type = Return(Params...) const noexcept;
-    };
-
-    template <typename Return, typename... Params>
-    struct signature_remove_ref_qualifier<Return(Params..., ...) const && noexcept>
-    {
-        using type = Return(Params..., ...) const noexcept;
     };
 
     /**

@@ -295,69 +295,47 @@ TEMPLATE_TEST_CASE_SIG(
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
+    static constexpr auto check = []<bool expectRemoved, typename Expected, typename Input>(
+                                      std::bool_constant<expectRemoved> const,
+                                      std::type_identity<Expected> const,
+                                      std::type_identity<Input> const) {
+        STATIC_CHECK(std::same_as<Expected, typename mimicpp::signature_remove_ref_qualifier<Input>::type>);
+        STATIC_CHECK(expectRemoved == mimicpp::signature_remove_ref_qualifier<Input>::value);
+        STATIC_CHECK(std::same_as<Expected, mimicpp::signature_remove_ref_qualifier_t<Input>>);
+    };
+
     SECTION("Variadic c++ function.")
     {
-        using SignatureT = Return(Args...);
-        using SignatureNoexceptT = Return(Args...) noexcept;
-        using SignatureConstT = Return(Args...) const;
-        using SignatureConstNoexceptT = Return(Args...) const noexcept;
+        check(std::bool_constant<false>{}, type_v<Return(Args...)>, type_v<Return(Args...)>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) const>, type_v<Return(Args...) const>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) noexcept>, type_v<Return(Args...) noexcept>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) const noexcept>, type_v<Return(Args...) const noexcept>);
 
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...)>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...)>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureConstT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...)&>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...)&>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureConstT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const&>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const&>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) &&>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) &&>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureConstT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const&&>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const&&>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) & noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) & noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const & noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const & noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) && noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) && noexcept>>);
-
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, typename mimicpp::signature_remove_ref_qualifier<Return(Args...) const && noexcept>::type>);
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args...) const && noexcept>>);
+        check(std::bool_constant<true>{}, type_v<Return(Args...)>, type_v<Return(Args...)&>);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) noexcept>, type_v < Return(Args...) & noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) const>, type_v<Return(Args...) const&>);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) const noexcept>, type_v < Return(Args...) const& noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args...)>, type_v<Return(Args...) &&>);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) noexcept>, type_v < Return(Args...) && noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) const>, type_v<Return(Args...) const&&>);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) const noexcept>, type_v < Return(Args...) const&& noexcept >);
     }
 
     SECTION("Function with c-ellipsis.")
     {
-        using SignatureT = Return(Args..., ...);
-        using SignatureNoexceptT = Return(Args..., ...) noexcept;
-        using SignatureConstT = Return(Args..., ...) const;
-        using SignatureConstNoexceptT = Return(Args..., ...) const noexcept;
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...)>, type_v<Return(Args..., ...)>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) const>, type_v<Return(Args..., ...) const>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) noexcept>, type_v<Return(Args..., ...) noexcept>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) const noexcept>, type_v<Return(Args..., ...) const noexcept>);
 
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...)>>);
-        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...)&>>);
-        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const&>>);
-        STATIC_REQUIRE(std::same_as<SignatureT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) &&>>);
-        STATIC_REQUIRE(std::same_as<SignatureConstT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const&&>>);
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) & noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const & noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) && noexcept>>);
-        STATIC_REQUIRE(std::same_as<SignatureConstNoexceptT, mimicpp::signature_remove_ref_qualifier_t<Return(Args..., ...) const && noexcept>>);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...)>, type_v<Return(Args..., ...)&>);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) noexcept>, type_v < Return(Args..., ...) & noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) const>, type_v<Return(Args..., ...) const&>);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) const noexcept>, type_v < Return(Args..., ...) const& noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...)>, type_v<Return(Args..., ...) &&>);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) noexcept>, type_v < Return(Args..., ...) && noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) const>, type_v<Return(Args..., ...) const&&>);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) const noexcept>, type_v < Return(Args..., ...) const&& noexcept >);
     }
 }
 

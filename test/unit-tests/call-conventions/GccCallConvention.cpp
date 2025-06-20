@@ -339,6 +339,7 @@ TEST_CASE(
         STATIC_CHECK(std::same_as < void CALL_CONVENTION()& noexcept, signature_remove_const_qualifier_t < SignatureT >>);
         STATIC_CHECK(signature_remove_const_qualifier<SignatureT>::value);
         STATIC_CHECK(std::same_as<void CALL_CONVENTION() const noexcept, signature_remove_ref_qualifier_t<SignatureT>>);
+        STATIC_CHECK(signature_remove_ref_qualifier<SignatureT>::value);
         STATIC_CHECK(std::same_as<void(), signature_decay_t<SignatureT>>);
     }
 
@@ -351,6 +352,7 @@ TEST_CASE(
         STATIC_CHECK(std::same_as<SignatureT, signature_remove_const_qualifier_t<SignatureT>>);
         STATIC_CHECK(!signature_remove_const_qualifier<SignatureT>::value);
         STATIC_CHECK(std::same_as<SignatureT, signature_remove_ref_qualifier_t<SignatureT>>);
+        STATIC_CHECK(!signature_remove_ref_qualifier<SignatureT>::value);
         STATIC_CHECK(std::same_as<void(), signature_decay_t<SignatureT>>);
     }
 
