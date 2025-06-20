@@ -5,8 +5,6 @@
 
 #include "mimic++/TypeTraits.hpp"
 
-#include <optional>
-
 namespace
 {
     template <typename>
@@ -97,92 +95,95 @@ namespace
     };
 
     template <typename Signature>
-    constexpr std::type_identity<Signature> type_v{};
+    std::type_identity<Signature> constexpr type_v{};
 }
+
+#define TEST_SIGNATURE_COLLECTION              \
+    (true, void),                              \
+        (true, void, int),                     \
+        (true, void, float, int),              \
+        (true, void, float&),                  \
+        (true, void, const float&),            \
+        (true, void, float&&),                 \
+        (true, void, const float&&),           \
+        (true, void, float*),                  \
+        (true, void, const float*),            \
+                                               \
+        (true, double),                        \
+        (true, double, int),                   \
+        (true, double, float, int),            \
+        (true, double, float&),                \
+        (true, double, const float&),          \
+        (true, double, float&&),               \
+        (true, double, const float&&),         \
+        (true, double, float*),                \
+        (true, double, const float*),          \
+                                               \
+        (true, double&),                       \
+        (true, double&, int),                  \
+        (true, double&, float, int),           \
+        (true, double&, float&),               \
+        (true, double&, const float&),         \
+        (true, double&, float&&),              \
+        (true, double&, const float&&),        \
+        (true, double&, float*),               \
+        (true, double&, const float*),         \
+                                               \
+        (true, const double&),                 \
+        (true, const double&, int),            \
+        (true, const double&, float, int),     \
+        (true, const double&, float&),         \
+        (true, const double&, const float&),   \
+        (true, const double&, float&&),        \
+        (true, const double&, const float&&),  \
+        (true, const double&, float*),         \
+        (true, const double&, const float*),   \
+                                               \
+        (true, double&&),                      \
+        (true, double&&, int),                 \
+        (true, double&&, float, int),          \
+        (true, double&&, float&),              \
+        (true, double&&, const float&),        \
+        (true, double&&, float&&),             \
+        (true, double&&, const float&&),       \
+        (true, double&&, float*),              \
+        (true, double&&, const float*),        \
+                                               \
+        (true, const double&&),                \
+        (true, const double&&, int),           \
+        (true, const double&&, float, int),    \
+        (true, const double&&, float&),        \
+        (true, const double&&, const float&),  \
+        (true, const double&&, float&&),       \
+        (true, const double&&, const float&&), \
+        (true, const double&&, float*),        \
+        (true, const double&&, const float*),  \
+                                               \
+        (true, void*),                         \
+        (true, void*, int),                    \
+        (true, void*, float, int),             \
+        (true, void*, float&),                 \
+        (true, void*, const float&),           \
+        (true, void*, float&&),                \
+        (true, void*, const float&&),          \
+        (true, void*, float*),                 \
+        (true, void*, const float*),           \
+                                               \
+        (true, const void*),                   \
+        (true, const void*, int),              \
+        (true, const void*, float, int),       \
+        (true, const void*, float&),           \
+        (true, const void*, const float&),     \
+        (true, const void*, float&&),          \
+        (true, const void*, const float&&),    \
+        (true, const void*, float*),           \
+        (true, const void*, const float*)
 
 TEMPLATE_TEST_CASE_SIG(
     "signature_call_convention infers default call-convention tag for general function types.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename T>(std::type_identity<T> const) {
         using Signature = T;
@@ -231,85 +232,7 @@ TEMPLATE_TEST_CASE_SIG(
     "signature_remove_call_convention does nothing for signatures with default call-conv..",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename T>(std::type_identity<T> const) {
         using Signature = T;
@@ -517,85 +440,7 @@ TEMPLATE_TEST_CASE_SIG(
     "signature_remove_ref_qualifier removes the ref-qualification.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     SECTION("Variadic c++ function.")
     {
@@ -667,85 +512,7 @@ TEMPLATE_TEST_CASE_SIG(
     "signature_add_const_qualifier adds const if not already present.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename ExpectAdded, typename Expected, typename Input>(
                                       std::type_identity<ExpectAdded> const,
@@ -795,85 +562,7 @@ TEMPLATE_TEST_CASE_SIG(
     "signature_remove_const_qualifier removes the const-qualification if present.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename ExpectRemoved, typename Expected, typename Input>(
                                       std::type_identity<ExpectRemoved> const,
@@ -923,85 +612,7 @@ TEMPLATE_TEST_CASE_SIG(
     "signature_decay removes all modifiers.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     SECTION("Variadic c++ function.")
     {
@@ -1137,85 +748,7 @@ TEMPLATE_TEST_CASE_SIG(
     "signature_const_qualification extracts the const-qualifier from the given signature.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     using mimicpp::Constness;
     using mimicpp::signature_const_qualification;
@@ -1303,85 +836,7 @@ TEMPLATE_TEST_CASE_SIG(
     "signature_ref_qualification extracts the ref-qualifier from the given signature.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     using mimicpp::signature_ref_qualification;
     using mimicpp::ValueCategory;
@@ -1469,85 +924,7 @@ TEMPLATE_TEST_CASE_SIG(
     "signature_is_noexcept determines, whether the given signature is noexcept.",
     "[type_traits]",
     ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
-    (true, void),
-    (true, void, int),
-    (true, void, float, int),
-    (true, void, float&),
-    (true, void, const float&),
-    (true, void, float&&),
-    (true, void, const float&&),
-    (true, void, float*),
-    (true, void, const float*),
-
-    (true, double),
-    (true, double, int),
-    (true, double, float, int),
-    (true, double, float&),
-    (true, double, const float&),
-    (true, double, float&&),
-    (true, double, const float&&),
-    (true, double, float*),
-    (true, double, const float*),
-
-    (true, double&),
-    (true, double&, int),
-    (true, double&, float, int),
-    (true, double&, float&),
-    (true, double&, const float&),
-    (true, double&, float&&),
-    (true, double&, const float&&),
-    (true, double&, float*),
-    (true, double&, const float*),
-
-    (true, const double&),
-    (true, const double&, int),
-    (true, const double&, float, int),
-    (true, const double&, float&),
-    (true, const double&, const float&),
-    (true, const double&, float&&),
-    (true, const double&, const float&&),
-    (true, const double&, float*),
-    (true, const double&, const float*),
-
-    (true, double&&),
-    (true, double&&, int),
-    (true, double&&, float, int),
-    (true, double&&, float&),
-    (true, double&&, const float&),
-    (true, double&&, float&&),
-    (true, double&&, const float&&),
-    (true, double&&, float*),
-    (true, double&&, const float*),
-
-    (true, const double&&),
-    (true, const double&&, int),
-    (true, const double&&, float, int),
-    (true, const double&&, float&),
-    (true, const double&&, const float&),
-    (true, const double&&, float&&),
-    (true, const double&&, const float&&),
-    (true, const double&&, float*),
-    (true, const double&&, const float*),
-
-    (true, void*),
-    (true, void*, int),
-    (true, void*, float, int),
-    (true, void*, float&),
-    (true, void*, const float&),
-    (true, void*, float&&),
-    (true, void*, const float&&),
-    (true, void*, float*),
-    (true, void*, const float*),
-
-    (true, const void*),
-    (true, const void*, int),
-    (true, const void*, float, int),
-    (true, const void*, float&),
-    (true, const void*, const float&),
-    (true, const void*, float&&),
-    (true, const void*, const float&&),
-    (true, const void*, float*),
-    (true, const void*, const float*))
+    TEST_SIGNATURE_COLLECTION)
 {
     using mimicpp::signature_is_noexcept;
 
