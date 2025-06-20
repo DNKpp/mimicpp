@@ -7,93 +7,6 @@
 
 namespace
 {
-    template <typename>
-    struct signature_helper;
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args...)>
-    {
-        using sig = Return(Args...);
-        using sig_noexcept = Return(Args...) noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args..., ...)>
-    {
-        using sig = Return(Args..., ...);
-        using sig_noexcept = Return(Args..., ...) noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args...) const>
-    {
-        using sig = Return(Args...) const;
-        using sig_noexcept = Return(Args...) const noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args..., ...) const>
-    {
-        using sig = Return(Args..., ...) const;
-        using sig_noexcept = Return(Args..., ...) const noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args...)&>
-    {
-        using sig = Return(Args...) &;
-        using sig_noexcept = Return(Args...) & noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args..., ...)&>
-    {
-        using sig = Return(Args..., ...) &;
-        using sig_noexcept = Return(Args..., ...) & noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args...) const&>
-    {
-        using sig = Return(Args...) const&;
-        using sig_noexcept = Return(Args...) const& noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args..., ...) const&>
-    {
-        using sig = Return(Args..., ...) const&;
-        using sig_noexcept = Return(Args..., ...) const& noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args...) &&>
-    {
-        using sig = Return(Args...) &&;
-        using sig_noexcept = Return(Args...) && noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args..., ...) &&>
-    {
-        using sig = Return(Args..., ...) &&;
-        using sig_noexcept = Return(Args..., ...) && noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args...) const&&>
-    {
-        using sig = Return(Args...) const&&;
-        using sig_noexcept = Return(Args...) const&& noexcept;
-    };
-
-    template <typename Return, typename... Args>
-    struct signature_helper<Return(Args..., ...) const&&>
-    {
-        using sig = Return(Args..., ...) const&&;
-        using sig_noexcept = Return(Args..., ...) const&& noexcept;
-    };
-
     template <typename Signature>
     std::type_identity<Signature> constexpr type_v{};
 }
@@ -276,164 +189,104 @@ TEMPLATE_TEST_CASE_SIG(
     }
 }
 
-TEMPLATE_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
     "signature_add_noexcept adds noexcept qualifier if not already present.",
     "[type_traits]",
-    void(),
-    void(int),
-    void(...),
-    void(float, int),
-    void(float, ...),
-    double(),
-    double(int),
-    double(...),
-    double(float, int),
-    double(float, ...),
-
-    void() const,
-    void(int) const,
-    void(...) const,
-    void(float, int) const,
-    void(float, ...) const,
-    double() const,
-    double(int) const,
-    double(...) const,
-    double(float, int) const,
-    double(float, ...) const,
-
-    void() &,
-    void(int) &,
-    void(...) &,
-    void(float, int) &,
-    void(float, ...) &,
-    double() &,
-    double(int) &,
-    double(...) &,
-    double(float, int) &,
-    double(float, ...) &,
-
-    void() const&,
-    void(int) const&,
-    void(...) const&,
-    void(float, int) const&,
-    void(float, ...) const&,
-    double() const&,
-    double(int) const&,
-    double(...) const&,
-    double(float, int) const&,
-    double(float, ...) const&,
-
-    void() &&,
-    void(int) &&,
-    void(...) &&,
-    void(float, int) &&,
-    void(float, ...) &&,
-    double() &&,
-    double(int) &&,
-    double(...) &&,
-    double(float, int) &&,
-    double(float, ...) &&,
-
-    void() const&&,
-    void(int) const&&,
-    void(...) const&&,
-    void(float, int) const&&,
-    void(float, ...) const&&,
-    double() const&&,
-    double(int) const&&,
-    double(...) const&&,
-    double(float, int) const&&,
-    double(float, ...) const&&)
+    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    TEST_SIGNATURE_COLLECTION)
 {
-    using ExpectedT = typename signature_helper<TestType>::sig_noexcept;
+    static constexpr auto check = []<bool expectAdded, typename Expected, typename Input>(
+                                      std::bool_constant<expectAdded> const,
+                                      std::type_identity<Expected> const,
+                                      std::type_identity<Input> const) {
+        STATIC_CHECK(std::same_as<Expected, typename mimicpp::signature_add_noexcept<Input>::type>);
+        STATIC_CHECK(expectAdded == mimicpp::signature_add_noexcept<Input>::value);
+        STATIC_CHECK(std::same_as<Expected, mimicpp::signature_add_noexcept_t<Input>>);
+    };
 
-    STATIC_CHECK(std::same_as<ExpectedT, typename mimicpp::signature_add_noexcept<TestType>::type>);
-    STATIC_CHECK(mimicpp::signature_add_noexcept<TestType>::value);
-    STATIC_CHECK(std::same_as<ExpectedT, mimicpp::signature_add_noexcept_t<TestType>>);
+    SECTION("Variadic c++ function.")
+    {
+        check(std::bool_constant<true>{}, type_v<Return(Args...) noexcept>, type_v<Return(Args...)>);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) const noexcept>, type_v<Return(Args...) const>);
+        check(std::bool_constant<true>{}, type_v < Return(Args...) & noexcept >, type_v<Return(Args...)&>);
+        check(std::bool_constant<true>{}, type_v < Return(Args...) const& noexcept >, type_v<Return(Args...) const&>);
+        check(std::bool_constant<true>{}, type_v < Return(Args...) && noexcept >, type_v<Return(Args...) &&>);
+        check(std::bool_constant<true>{}, type_v < Return(Args...) const&& noexcept >, type_v<Return(Args...) const&&>);
 
-    STATIC_CHECK(std::same_as<ExpectedT, typename mimicpp::signature_add_noexcept<ExpectedT>::type>);
-    STATIC_CHECK(!mimicpp::signature_add_noexcept<ExpectedT>::value);
-    STATIC_CHECK(std::same_as<ExpectedT, mimicpp::signature_add_noexcept_t<ExpectedT>>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) noexcept>, type_v<Return(Args...) noexcept>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) const noexcept>, type_v<Return(Args...) const noexcept>);
+        check(std::bool_constant<false>{}, type_v < Return(Args...) & noexcept >, type_v < Return(Args...) & noexcept >);
+        check(std::bool_constant<false>{}, type_v < Return(Args...) const& noexcept >, type_v < Return(Args...) const& noexcept >);
+        check(std::bool_constant<false>{}, type_v < Return(Args...) && noexcept >, type_v < Return(Args...) && noexcept >);
+        check(std::bool_constant<false>{}, type_v < Return(Args...) const&& noexcept >, type_v < Return(Args...) const&& noexcept >);
+    }
+
+    SECTION("Function with c-ellipsis.")
+    {
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) noexcept>, type_v<Return(Args..., ...)>);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) const noexcept>, type_v<Return(Args..., ...) const>);
+        check(std::bool_constant<true>{}, type_v < Return(Args..., ...) & noexcept >, type_v<Return(Args..., ...)&>);
+        check(std::bool_constant<true>{}, type_v < Return(Args..., ...) const& noexcept >, type_v<Return(Args..., ...) const&>);
+        check(std::bool_constant<true>{}, type_v < Return(Args..., ...) && noexcept >, type_v<Return(Args..., ...) &&>);
+        check(std::bool_constant<true>{}, type_v < Return(Args..., ...) const&& noexcept >, type_v<Return(Args..., ...) const&&>);
+
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) noexcept>, type_v<Return(Args..., ...) noexcept>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) const noexcept>, type_v<Return(Args..., ...) const noexcept>);
+        check(std::bool_constant<false>{}, type_v < Return(Args..., ...) & noexcept >, type_v < Return(Args..., ...) & noexcept >);
+        check(std::bool_constant<false>{}, type_v < Return(Args..., ...) const& noexcept >, type_v < Return(Args..., ...) const& noexcept >);
+        check(std::bool_constant<false>{}, type_v < Return(Args..., ...) && noexcept >, type_v < Return(Args..., ...) && noexcept >);
+        check(std::bool_constant<false>{}, type_v < Return(Args..., ...) const&& noexcept >, type_v < Return(Args..., ...) const&& noexcept >);
+    }
 }
 
-TEMPLATE_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
     "signature_remove_noexcept removes noexcept qualifier if present.",
     "[type_traits]",
-    void(),
-    void(int),
-    void(...),
-    void(float, int),
-    void(float, ...),
-    double(),
-    double(int),
-    double(...),
-    double(float, int),
-    double(float, ...),
-
-    void() const,
-    void(int) const,
-    void(...) const,
-    void(float, int) const,
-    void(float, ...) const,
-    double() const,
-    double(int) const,
-    double(...) const,
-    double(float, int) const,
-    double(float, ...) const,
-
-    void() &,
-    void(int) &,
-    void(...) &,
-    void(float, int) &,
-    void(float, ...) &,
-    double() &,
-    double(int) &,
-    double(...) &,
-    double(float, int) &,
-    double(float, ...) &,
-
-    void() const&,
-    void(int) const&,
-    void(...) const&,
-    void(float, int) const&,
-    void(float, ...) const&,
-    double() const&,
-    double(int) const&,
-    double(...) const&,
-    double(float, int) const&,
-    double(float, ...) const&,
-
-    void() &&,
-    void(int) &&,
-    void(...) &&,
-    void(float, int) &&,
-    void(float, ...) &&,
-    double() &&,
-    double(int) &&,
-    double(...) &&,
-    double(float, int) &&,
-    double(float, ...) &&,
-
-    void() const&&,
-    void(int) const&&,
-    void(...) const&&,
-    void(float, int) const&&,
-    void(float, ...) const&&,
-    double() const&&,
-    double(int) const&&,
-    double(...) const&&,
-    double(float, int) const&&,
-    double(float, ...) const&&)
+    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    TEST_SIGNATURE_COLLECTION)
 {
-    using SignatureT = TestType;
-    STATIC_CHECK(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureT>::type>);
-    STATIC_CHECK(!mimicpp::signature_remove_noexcept<TestType>::value);
-    STATIC_CHECK(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureT>>);
+    static constexpr auto check = []<bool expectRemoved, typename Expected, typename Input>(
+                                      std::bool_constant<expectRemoved> const,
+                                      std::type_identity<Expected> const,
+                                      std::type_identity<Input> const) {
+        STATIC_CHECK(std::same_as<Expected, typename mimicpp::signature_remove_noexcept<Input>::type>);
+        STATIC_CHECK(expectRemoved == mimicpp::signature_remove_noexcept<Input>::value);
+        STATIC_CHECK(std::same_as<Expected, mimicpp::signature_remove_noexcept_t<Input>>);
+    };
 
-    using SignatureNoexceptT = typename signature_helper<SignatureT>::sig_noexcept;
-    STATIC_CHECK(std::same_as<SignatureT, typename mimicpp::signature_remove_noexcept<SignatureNoexceptT>::type>);
-    STATIC_CHECK(mimicpp::signature_remove_noexcept<SignatureNoexceptT>::value);
-    STATIC_CHECK(std::same_as<SignatureT, mimicpp::signature_remove_noexcept_t<SignatureNoexceptT>>);
+    SECTION("Variadic c++ function.")
+    {
+        check(std::bool_constant<false>{}, type_v<Return(Args...)>, type_v<Return(Args...)>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) const>, type_v<Return(Args...) const>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...)&>, type_v<Return(Args...)&>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) const&>, type_v<Return(Args...) const&>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) &&>, type_v<Return(Args...) &&>);
+        check(std::bool_constant<false>{}, type_v<Return(Args...) const&&>, type_v<Return(Args...) const&&>);
+
+        check(std::bool_constant<true>{}, type_v<Return(Args...)>, type_v<Return(Args...) noexcept>);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) const>, type_v<Return(Args...) const noexcept>);
+        check(std::bool_constant<true>{}, type_v<Return(Args...)&>, type_v < Return(Args...) & noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) const&>, type_v < Return(Args...) const& noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) &&>, type_v < Return(Args...) && noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args...) const&&>, type_v < Return(Args...) const&& noexcept >);
+    }
+
+    SECTION("Function with c-ellipsis.")
+    {
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...)>, type_v<Return(Args..., ...)>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) const>, type_v<Return(Args..., ...) const>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...)&>, type_v<Return(Args..., ...)&>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) const&>, type_v<Return(Args..., ...) const&>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) &&>, type_v<Return(Args..., ...) &&>);
+        check(std::bool_constant<false>{}, type_v<Return(Args..., ...) const&&>, type_v<Return(Args..., ...) const&&>);
+
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...)>, type_v<Return(Args..., ...) noexcept>);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) const>, type_v<Return(Args..., ...) const noexcept>);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...)&>, type_v < Return(Args..., ...) & noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) const&>, type_v < Return(Args..., ...) const& noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) &&>, type_v < Return(Args..., ...) && noexcept >);
+        check(std::bool_constant<true>{}, type_v<Return(Args..., ...) const&&>, type_v < Return(Args..., ...) const&& noexcept >);
+    }
 }
 
 TEMPLATE_TEST_CASE_SIG(
