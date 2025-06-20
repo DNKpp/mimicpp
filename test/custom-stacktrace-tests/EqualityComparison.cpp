@@ -221,7 +221,7 @@ TEST_CASE(
 
         SECTION("second == first")
         {
-            REQUIRE(expected == (first == second));
+            REQUIRE(expected == (second == first));
         }
 
         SECTION("first != second")

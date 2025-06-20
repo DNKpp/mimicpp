@@ -15,7 +15,6 @@
 #include <algorithm>
 #include <filesystem>
 #include <functional>
-#include <ranges>
 #include <utility>
 
 namespace mimicpp::printing::detail
@@ -31,17 +30,17 @@ namespace mimicpp::printing::detail
             static constexpr CharT separator{std::filesystem::path::preferred_separator};
 
             auto const pathString = path.lexically_normal().string();
-            StringViewT printPath{pathString};
-            for (auto reversedPath = pathString | std::views::reverse;
-                 auto const& element : std::views::split(reversedPath, separator)
-                                           | std::views::take(maxPathElements))
+            auto const rend = pathString.crend();
+            auto iter = std::ranges::find(pathString.crbegin(), rend, separator);
+            for (int i = 1;
+                 i < maxPathElements
+                 && iter != rend;
+                 ++i, iter = std::ranges::find(iter, rend, separator))
             {
-                printPath = StringViewT{
-                    element.end().base(),
-                    pathString.end()};
+                ++iter;
             }
 
-            return std::ranges::copy(printPath, std::move(out)).out;
+            return std::ranges::copy(iter.base(), pathString.cend(), std::move(out)).out;
         }
 
         [[nodiscard]]

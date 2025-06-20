@@ -161,6 +161,10 @@ TEST_CASE(
     }
 }
 
+// gcc constantly complaints about the optionals as "maybe-uninitialized"
+START_WARNING_SUPPRESSION
+SUPPRESS_MAYBE_UNINITIALIZED
+
 TEST_CASE(
     "Watched<T, LifetimeWatcher> is satisfied, if destruction actually happens.",
     "[example][example::watched][example::watched::life-time]")
@@ -192,10 +196,6 @@ TEST_CASE(
     // nothing to do here. Violations will be reported automatically (as usual).
     //! [watched lifetime-watcher]
 }
-
-// gcc constantly complaints about the optionals as "maybe-uninitialized"
-START_WARNING_SUPPRESSION
-SUPPRESS_MAYBE_UNINITIALIZED
 
 TEST_CASE(
     "LifetimeWatcher and RelocationWatcher can trace object instances.",

@@ -4,12 +4,12 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Stacktrace.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #include "SuppressionMacros.hpp"
 #include "TestTypes.hpp"
 
 #include <ranges> // std::views::*
-#include <source_location>
 
 using namespace mimicpp;
 
@@ -65,14 +65,14 @@ TEST_CASE(
     "stacktrace::current retrieves the current stacktrace.",
     "[stacktrace]")
 {
-    const auto before = std::source_location::current();
+    util::SourceLocation constexpr before{};
     const Stacktrace cur = stacktrace::current();
-    const auto after = std::source_location::current();
+    util::SourceLocation constexpr after{};
 
     REQUIRE(!cur.empty());
     REQUIRE_THAT(
         cur.source_file(0u),
-        Catch::Matchers::Equals(before.file_name()));
+        Catch::Matchers::Equals(std::string{before.file_name()}));
     const std::size_t line = cur.source_line(0u);
     REQUIRE(std::cmp_less(before.line(), line));
     REQUIRE(std::cmp_less(line, after.line()));
@@ -98,7 +98,7 @@ namespace
                 Catch::Matchers::Equals(other.source_file(i + otherSkip)));
             CHECK(full.source_line(i + fullSkip) == other.source_line(i + otherSkip));
         }
-    };
+    }
 }
 
 TEST_CASE(

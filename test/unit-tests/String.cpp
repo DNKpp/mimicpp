@@ -112,7 +112,7 @@ struct mimicpp::string_traits<CustomString>
     using char_t = char;
 
     [[nodiscard]]
-    static constexpr std::string_view view(const CustomString& str) noexcept
+    static std::string_view view(const CustomString& str) noexcept
     {
         return std::string_view{str.inner};
     }

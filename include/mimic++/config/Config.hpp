@@ -43,4 +43,22 @@
     #define MIMICPP_ASSERT(condition, msg) (void(0))
 #endif
 
+// clang-format off
+// Prevent number from getting decorated with '.
+#if 201907L <= __cpp_lib_constexpr_string
+    // clang-format on
+    #define MIMICPP_DETAIL_CONSTEXPR_STRING constexpr
+#else
+    #define MIMICPP_DETAIL_CONSTEXPR_STRING inline
+#endif
+
+// clang-format off
+// Prevent number from getting decorated with '.
+#if 201907L <= __cpp_lib_constexpr_vector
+    // clang-format on
+    #define MIMICPP_DETAIL_CONSTEXPR_VECTOR constexpr
+#else
+    #define MIMICPP_DETAIL_CONSTEXPR_VECTOR inline
+#endif
+
 #endif

@@ -461,8 +461,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void()>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void()>()));
     }
 
     SECTION("With int() signature.")
@@ -476,8 +477,9 @@ TEST_CASE(
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int()>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int()>()));
     }
 }
 
@@ -498,8 +500,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void() const>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() const>()));
     }
 
     SECTION("With int() signature.")
@@ -513,8 +516,9 @@ TEST_CASE(
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int() const>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() const>()));
     }
 }
 
@@ -535,8 +539,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void()&>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void()&>()));
     }
 
     SECTION("With int() signature.")
@@ -550,8 +555,9 @@ TEST_CASE(
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int()&>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int()&>()));
     }
 }
 
@@ -572,8 +578,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void() const&>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() const&>()));
     }
 
     SECTION("With int() signature.")
@@ -587,8 +594,9 @@ TEST_CASE(
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int() const&>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() const&>()));
     }
 }
 
@@ -609,8 +617,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void() &&>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() &&>()));
     }
 
     SECTION("With int() signature.")
@@ -624,8 +633,9 @@ TEST_CASE(
         CHECK(42 == std::move(mock)());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int() &&>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() &&>()));
     }
 }
 
@@ -646,8 +656,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void() const&&>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() const&&>()));
     }
 
     SECTION("With int() signature.")
@@ -661,8 +672,9 @@ TEST_CASE(
         CHECK(42 == std::move(mock)());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int() const&&>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() const&&>()));
     }
 }
 
@@ -683,8 +695,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void() noexcept>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() noexcept>()));
     }
 
     SECTION("With int() signature.")
@@ -698,8 +711,9 @@ TEST_CASE(
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int() noexcept>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() noexcept>()));
     }
 }
 
@@ -720,8 +734,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void() const noexcept>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() const noexcept>()));
     }
 
     SECTION("With int() signature.")
@@ -735,8 +750,9 @@ TEST_CASE(
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int() const noexcept>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() const noexcept>()));
     }
 }
 
@@ -757,8 +773,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget < void() & noexcept > ());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget < void() & noexcept > ()));
     }
 
     SECTION("With int() signature.")
@@ -772,8 +789,9 @@ TEST_CASE(
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget < int() & noexcept > ());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget < int() & noexcept > ()));
     }
 }
 
@@ -794,8 +812,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget < void() const& noexcept > ());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget < void() const& noexcept > ()));
     }
 
     SECTION("With int() signature.")
@@ -809,8 +828,9 @@ TEST_CASE(
         CHECK(42 == mock());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget < int() const& noexcept > ());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget < int() const& noexcept > ()));
     }
 }
 
@@ -831,8 +851,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget < void() && noexcept > ());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget < void() && noexcept > ()));
     }
 
     SECTION("With int() signature.")
@@ -846,8 +867,9 @@ TEST_CASE(
         CHECK(42 == std::move(mock)());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget < int() && noexcept > ());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget < int() && noexcept > ()));
     }
 }
 
@@ -868,8 +890,9 @@ TEST_CASE(
 
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget < void() const&& noexcept > ());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget < void() const&& noexcept > ()));
     }
 
     SECTION("With int() signature.")
@@ -883,8 +906,9 @@ TEST_CASE(
         CHECK(42 == std::move(mock)());
         CHECK(expectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget < int() const&& noexcept > ());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget < int() const&& noexcept > ()));
     }
 }
 
@@ -911,13 +935,17 @@ TEST_CASE(
         CHECK(expectation.is_satisfied());
         CHECK_FALSE(constExpectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<void()>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void()>()));
 
         std::as_const(mock)();
 
         CHECK(expectation.is_satisfied());
         CHECK(constExpectation.is_satisfied());
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(2u));
         CHECK_THAT(
             reporter.full_match_reports().back(),
             MatchesOverloadTarget<void() const>());
@@ -941,15 +969,110 @@ TEST_CASE(
         CHECK(expectation.is_satisfied());
         CHECK_FALSE(constExpectation.is_satisfied());
         CHECK_THAT(
-            reporter.full_match_reports().front(),
-            MatchesOverloadTarget<int()>());
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u)
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int()>()));
 
         CHECK(1337 == std::as_const(mock)());
         CHECK(expectation.is_satisfied());
         CHECK(constExpectation.is_satisfied());
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(2u));
         CHECK_THAT(
             reporter.full_match_reports().back(),
             MatchesOverloadTarget<int() const>());
+    }
+}
+
+TEST_CASE(
+    "Mocks report a stacktrace.",
+    "[mock]")
+{
+    ScopedReporter reporter{};
+
+    Mock<void()> mock{};
+
+    Stacktrace const here = stacktrace::current();
+    auto const check = [&](reporting::CallReport const& call) {
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+        REQUIRE(!here.empty());
+        REQUIRE(call.stacktrace.size() == here.size());
+        std::invoke(
+            [&] {
+                auto const hereSrc = here.source_file(0u);
+                auto const callSrc = call.stacktrace.source_file(0u);
+
+                // On msvc, there may be additional noise after the actual function name (e.g. `foo+1337`).
+                CHECKED_ELSE(hereSrc == callSrc)
+                {
+                    auto const hereIter = std::ranges::find(hereSrc, '+');
+                    auto const callIter = std::ranges::find(callSrc, '+');
+                    CHECK_THAT(
+                        (std::string{callSrc.cbegin(), callIter}),
+                        Catch::Matchers::Equals(std::string{hereSrc.cbegin(), hereIter}));
+                    CHECK_THAT(
+                        (std::string{hereIter, hereSrc.cend()}),
+                        Catch::Matchers::Matches(R"(\+\d+)"));
+                    CHECK_THAT(
+                        (std::string{callIter, callSrc.cend()}),
+                        Catch::Matchers::Matches(R"(\+\d+)"));
+                }
+            });
+        CHECK(call.stacktrace.source_file(0u) == here.source_file(0u));
+        CHECK(call.stacktrace.source_line(0u) > here.source_line(0u));
+        CHECK(
+            std::ranges::all_of(
+                std::views::iota(1u, here.size()),
+                [&](std::size_t const i) {
+                    return call.stacktrace.source_file(i) == here.source_file(i)
+                        && call.stacktrace.source_line(i) == here.source_line(i)
+                        && call.stacktrace.description(i) == here.description(i);
+                }));
+#else
+        REQUIRE(call.stacktrace.empty());
+#endif
+    };
+
+    SECTION("When matched call is given.")
+    {
+        ScopedExpectation exp = mock.expect_call();
+
+        mock();
+
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u));
+
+        check(std::get<reporting::CallReport>(reporter.full_match_reports().front()));
+    }
+
+    SECTION("When no-match call is given.")
+    {
+        REQUIRE_THROWS(mock());
+
+        REQUIRE_THAT(
+            reporter.no_match_reports(),
+            Catch::Matchers::SizeIs(1u));
+
+        check(std::get<reporting::CallReport>(reporter.no_match_reports().front()));
+    }
+
+    SECTION("When inapplicable call is given.")
+    {
+        ScopedExpectation exp = mock.expect_call();
+
+        mock();
+        REQUIRE_THROWS(mock());
+
+        REQUIRE_THAT(
+            reporter.full_match_reports(),
+            Catch::Matchers::SizeIs(1u));
+        REQUIRE_THAT(
+            reporter.inapplicable_match_reports(),
+            Catch::Matchers::SizeIs(1u));
+
+        check(std::get<reporting::CallReport>(reporter.inapplicable_match_reports().front()));
     }
 }
 
@@ -963,26 +1086,28 @@ TEST_CASE(
     ScopedExpectation exp = mock.expect_call();
     mock();
     std::size_t const skip = GENERATE(1u, 2u, 3u);
-    mock = Mock<void()>{
-        MockSettings{.stacktraceSkip = skip}};
+    mock = Mock<void()>{MockSettings{.stacktraceSkip = skip}};
     exp = mock.expect_call();
     mock();
 
     auto const& [first, _1] = reporter.full_match_reports().front();
     auto const& [second, _2] = reporter.full_match_reports().at(1u);
-    CHECKED_IF(!first.stacktrace.empty())
-    {
-        REQUIRE(first.stacktrace.size() == second.stacktrace.size() + skip);
 
-        CHECK(
-            std::ranges::all_of(
-                std::views::iota(0u, second.stacktrace.size()),
-                [&](std::size_t const i) {
-                    return first.stacktrace.source_file(i + skip) == second.stacktrace.source_file(i)
-                        && first.stacktrace.source_line(i + skip) == second.stacktrace.source_line(i)
-                        && first.stacktrace.description(i + skip) == second.stacktrace.description(i);
-                }));
-    }
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+    REQUIRE(first.stacktrace.size() == second.stacktrace.size() + skip);
+
+    CHECK(
+        std::ranges::all_of(
+            std::views::iota(0u, second.stacktrace.size()),
+            [&](std::size_t const i) {
+                return first.stacktrace.source_file(i + skip) == second.stacktrace.source_file(i)
+                    && first.stacktrace.source_line(i + skip) == second.stacktrace.source_line(i)
+                    && first.stacktrace.description(i + skip) == second.stacktrace.description(i);
+            }));
+#else
+    REQUIRE(first.stacktrace.empty());
+    REQUIRE(second.stacktrace.empty());
+#endif
 }
 
 TEST_CASE(

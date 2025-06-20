@@ -12,11 +12,19 @@ include(EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
 CPMAddPackage("gh:doctest/doctest@2.4.11")
-target_link_libraries(${TARGET_NAME}
-	PRIVATE
+target_link_libraries(${TARGET_NAME} PRIVATE
 	mimicpp::mimicpp
 	mimicpp::test::basics
 	doctest::doctest
+)
+
+target_compile_options(${TARGET_NAME} PRIVATE
+	"$<$<CXX_COMPILER_ID:Clang>:-Wno-#warnings>"
+)
+
+target_precompile_headers(${TARGET_NAME} PRIVATE
+	<TestAssert.hpp>
+	$<$<BOOL:${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}>:\"mimic++/compatibility/paweldac-source_location.hpp\">
 )
 
 list(APPEND CMAKE_MODULE_PATH "${doctest_SOURCE_DIR}/scripts/cmake")

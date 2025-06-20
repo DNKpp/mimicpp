@@ -16,6 +16,7 @@
 #include <array>
 #include <cctype>
 #include <functional>
+#include <span>
 #include <tuple>
 #include <variant>
 

@@ -8,7 +8,7 @@
 #include "mimic++/Mock.hpp"
 
 #define CALL_CONVENTION __attribute__((ms_abi))
-MIMICPP_REGISTER_CALL_CONVENTION(CALL_CONVENTION, call_convention);
+MIMICPP_REGISTER_CALL_CONVENTION(CALL_CONVENTION, call_convention)
 
 using namespace mimicpp;
 
@@ -328,13 +328,53 @@ TEST_CASE(
     "All signature traits are supported by signatures with the desired call-convention.",
     "[type_traits]")
 {
-    using SignatureT = void CALL_CONVENTION() const& noexcept;
+    SECTION("When trait actually removes.")
+    {
+        using SignatureT = void CALL_CONVENTION() const& noexcept;
 
-    STATIC_REQUIRE(std::same_as<void CALL_CONVENTION() const noexcept, signature_remove_ref_qualifier_t<SignatureT>>);
-    STATIC_REQUIRE(std::same_as < void CALL_CONVENTION()& noexcept, signature_remove_const_qualifier_t < SignatureT >>);
-    STATIC_REQUIRE(std::same_as<void CALL_CONVENTION() const&, signature_remove_noexcept_t<SignatureT>>);
-    STATIC_REQUIRE(std::same_as < void() const& noexcept, signature_remove_call_convention_t < SignatureT >>);
-    STATIC_REQUIRE(std::same_as<void(), signature_decay_t<SignatureT>>);
+        STATIC_CHECK(std::same_as < void() const& noexcept, signature_remove_call_convention_t < SignatureT >>);
+
+        STATIC_CHECK(std::same_as<void CALL_CONVENTION() const&, signature_remove_noexcept_t<SignatureT>>);
+        STATIC_CHECK(signature_remove_noexcept<SignatureT>::value);
+        STATIC_CHECK(std::same_as < void CALL_CONVENTION()& noexcept, signature_remove_const_qualifier_t < SignatureT >>);
+        STATIC_CHECK(signature_remove_const_qualifier<SignatureT>::value);
+        STATIC_CHECK(std::same_as<void CALL_CONVENTION() const noexcept, signature_remove_ref_qualifier_t<SignatureT>>);
+        STATIC_CHECK(signature_remove_ref_qualifier<SignatureT>::value);
+        STATIC_CHECK(std::same_as<void(), signature_decay_t<SignatureT>>);
+    }
+
+    SECTION("When trait silently removes nothing.")
+    {
+        using SignatureT = void CALL_CONVENTION();
+
+        STATIC_CHECK(std::same_as<SignatureT, signature_remove_noexcept_t<SignatureT>>);
+        STATIC_CHECK(!signature_remove_noexcept<SignatureT>::value);
+        STATIC_CHECK(std::same_as<SignatureT, signature_remove_const_qualifier_t<SignatureT>>);
+        STATIC_CHECK(!signature_remove_const_qualifier<SignatureT>::value);
+        STATIC_CHECK(std::same_as<SignatureT, signature_remove_ref_qualifier_t<SignatureT>>);
+        STATIC_CHECK(!signature_remove_ref_qualifier<SignatureT>::value);
+        STATIC_CHECK(std::same_as<void(), signature_decay_t<SignatureT>>);
+    }
+
+    SECTION("When trait actually adds.")
+    {
+        using SignatureT = void CALL_CONVENTION();
+
+        STATIC_CHECK(std::same_as<void CALL_CONVENTION() noexcept, signature_add_noexcept_t<SignatureT>>);
+        STATIC_CHECK(signature_add_noexcept<SignatureT>::value);
+        STATIC_CHECK(std::same_as<void CALL_CONVENTION() const, signature_add_const_qualifier_t<SignatureT>>);
+        STATIC_CHECK(signature_add_const_qualifier<SignatureT>::value);
+    }
+
+    SECTION("When trait silently adds nothing.")
+    {
+        using SignatureT = void CALL_CONVENTION() const& noexcept;
+
+        STATIC_CHECK(std::same_as < void CALL_CONVENTION() const& noexcept, signature_add_noexcept_t < SignatureT >>);
+        STATIC_CHECK(!signature_add_noexcept<SignatureT>::value);
+        STATIC_CHECK(std::same_as < void CALL_CONVENTION() const& noexcept, signature_add_const_qualifier_t < SignatureT >>);
+        STATIC_CHECK(!signature_add_const_qualifier<SignatureT>::value);
+    }
 }
 
 TEST_CASE(
@@ -347,7 +387,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (CALL_CONVENTION MockT::*)(std::source_location)>);
+                void (CALL_CONVENTION MockT::*)(util::SourceLocation)>);
     }
 
     SECTION("Signatures with noexcept.")
@@ -356,7 +396,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (CALL_CONVENTION MockT::*)(std::source_location) noexcept>);
+                void (CALL_CONVENTION MockT::*)(util::SourceLocation) noexcept>);
     }
 
     SECTION("Signatures with const.")
@@ -365,7 +405,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (CALL_CONVENTION MockT::*)(std::source_location) const>);
+                void (CALL_CONVENTION MockT::*)(util::SourceLocation) const>);
     }
 
     SECTION("Signatures with const noexcept.")
@@ -374,7 +414,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (CALL_CONVENTION MockT::*)(std::source_location) const noexcept>);
+                void (CALL_CONVENTION MockT::*)(util::SourceLocation) const noexcept>);
     }
 
     SECTION("Signatures with &.")
@@ -383,7 +423,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (CALL_CONVENTION MockT::*)(std::source_location)&>);
+                void (CALL_CONVENTION MockT::*)(util::SourceLocation)&>);
     }
 
     SECTION("Signatures with & noexcept.")
@@ -391,7 +431,7 @@ TEST_CASE(
         using MockT = Mock<void CALL_CONVENTION() & noexcept>;
         STATIC_REQUIRE(
             std::convertible_to < decltype(&MockT::operator()),
-            void (CALL_CONVENTION MockT::*)(std::source_location)& noexcept >);
+            void (CALL_CONVENTION MockT::*)(util::SourceLocation)& noexcept >);
     }
 
     SECTION("Signatures with const&.")
@@ -400,7 +440,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (CALL_CONVENTION MockT::*)(std::source_location) const&>);
+                void (CALL_CONVENTION MockT::*)(util::SourceLocation) const&>);
     }
 
     SECTION("Signatures with const& noexcept.")
@@ -408,7 +448,7 @@ TEST_CASE(
         using MockT = Mock<void CALL_CONVENTION() const & noexcept>;
         STATIC_REQUIRE(
             std::convertible_to < decltype(&MockT::operator()),
-            void (CALL_CONVENTION MockT::*)(std::source_location) const& noexcept >);
+            void (CALL_CONVENTION MockT::*)(util::SourceLocation) const& noexcept >);
     }
 
     SECTION("Signatures with &&.")
@@ -417,7 +457,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (CALL_CONVENTION MockT::*)(std::source_location) &&>);
+                void (CALL_CONVENTION MockT::*)(util::SourceLocation) &&>);
     }
 
     SECTION("Signatures with && noexcept.")
@@ -425,7 +465,7 @@ TEST_CASE(
         using MockT = Mock<void CALL_CONVENTION() && noexcept>;
         STATIC_REQUIRE(
             std::convertible_to < decltype(&MockT::operator()),
-            void (CALL_CONVENTION MockT::*)(std::source_location)&& noexcept >);
+            void (CALL_CONVENTION MockT::*)(util::SourceLocation)&& noexcept >);
     }
 
     SECTION("Signatures with const&&.")
@@ -434,7 +474,7 @@ TEST_CASE(
         STATIC_REQUIRE(
             std::convertible_to<
                 decltype(&MockT::operator()),
-                void (CALL_CONVENTION MockT::*)(std::source_location) const&&>);
+                void (CALL_CONVENTION MockT::*)(util::SourceLocation) const&&>);
     }
 
     SECTION("Signatures with const&& noexcept.")
@@ -442,7 +482,7 @@ TEST_CASE(
         using MockT = Mock<void CALL_CONVENTION() const && noexcept>;
         STATIC_REQUIRE(
             std::convertible_to < decltype(&MockT::operator()),
-            void (CALL_CONVENTION MockT::*)(std::source_location) const&& noexcept >);
+            void (CALL_CONVENTION MockT::*)(util::SourceLocation) const&& noexcept >);
     }
 
     SECTION("Mocks still supports overloading.")

@@ -8,6 +8,7 @@
 #include "mimic++/printing/state/CommonTypes.hpp"
 
 #include <memory>
+#include <span>
 
 using namespace mimicpp;
 
@@ -310,9 +311,10 @@ TEST_CASE(
         }
     }
 
+#ifdef __cpp_lib_source_location
     SECTION("std::source_location has specialized printer.")
     {
-        const std::source_location loc = std::source_location::current();
+        std::source_location constexpr loc = std::source_location::current();
 
         REQUIRE_THAT(
             mimicpp::print(loc),
@@ -322,6 +324,7 @@ TEST_CASE(
                 R"(StatePrinter\.cpp`)"
                 R"(#L\d+, `.+`)"));
     }
+#endif
 
     SECTION("std::optional and std::nullopt_t have special treatment")
     {

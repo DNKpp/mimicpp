@@ -53,7 +53,6 @@ TEST_CASE(
         .target = make_common_target_report<std::string(int)>(),
         .returnTypeInfo = TypeReport::make<std::string>(),
         .argDetails = {{.typeInfo = TypeReport::make<int>(), .stateString = "42"}},
-        .fromLoc = std::source_location::current(),
         .stacktrace = stacktrace::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -120,7 +119,7 @@ TEST_CASE(
     {
         CallReport second{first};
 
-        second.fromLoc = std::source_location::current();
+        second.fromLoc = util::SourceLocation{};
 
         CHECK(first != second);
         CHECK(second != first);
@@ -170,18 +169,20 @@ TEST_CASE(
         call::Info<void> const info{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
-            .fromConstness = GENERATE(from_range(constQualifiers)),
-            .fromSourceLocation = std::source_location::current(),
-            .stacktrace = stacktrace::current()};
+            .fromConstness = GENERATE(from_range(constQualifiers))};
         TargetReport const target = make_common_target_report<void()>();
-        CallReport const report = make_call_report(target, info);
+        Stacktrace const stacktrace = stacktrace::current();
+        CallReport const report = make_call_report(
+            target,
+            info,
+            stacktrace);
 
         CallReport const expected{
             .target = target,
             .returnTypeInfo = TypeReport::make<void>(),
             .argDetails = {},
             .fromLoc = info.fromSourceLocation,
-            .stacktrace = info.stacktrace,
+            .stacktrace = stacktrace,
             .fromCategory = info.fromCategory,
             .fromConstness = info.fromConstness};
         CHECK(report == expected);
@@ -192,18 +193,20 @@ TEST_CASE(
         call::Info<int> const info{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
-            .fromConstness = GENERATE(from_range(constQualifiers)),
-            .fromSourceLocation = std::source_location::current(),
-            .stacktrace = stacktrace::current()};
+            .fromConstness = GENERATE(from_range(constQualifiers))};
         TargetReport const target = make_common_target_report<int()>();
-        CallReport const report = make_call_report(target, info);
+        Stacktrace const stacktrace = stacktrace::current();
+        CallReport const report = make_call_report(
+            target,
+            info,
+            stacktrace);
 
         CallReport const expected{
             .target = target,
             .returnTypeInfo = TypeReport::make<int>(),
             .argDetails = {},
             .fromLoc = info.fromSourceLocation,
-            .stacktrace = info.stacktrace,
+            .stacktrace = stacktrace,
             .fromCategory = info.fromCategory,
             .fromConstness = info.fromConstness};
         CHECK(report == expected);
@@ -211,18 +214,20 @@ TEST_CASE(
 
     SECTION("When call info has arbitrary args.")
     {
-        const int arg0{1337};
+        int const arg0{1337};
         double arg1{4.2};
         std::string arg2{"Hello, World!"};
         call::Info<void, const int&, double, std::string> const info{
             .args = {std::ref(arg0), std::ref(arg1), std::ref(arg2)},
             .fromCategory = GENERATE(from_range(refQualifiers)),
-            .fromConstness = GENERATE(from_range(constQualifiers)),
-            .fromSourceLocation = std::source_location::current(),
-            .stacktrace = stacktrace::current()
+            .fromConstness = GENERATE(from_range(constQualifiers))
         };
         TargetReport const target = make_common_target_report<void(const int&, double, std::string)>();
-        CallReport const report = make_call_report(target, info);
+        Stacktrace const stacktrace = stacktrace::current();
+        CallReport const report = make_call_report(
+            target,
+            info,
+            stacktrace);
 
         using ArgT = CallReport::Arg;
         CallReport const expected{
@@ -233,7 +238,7 @@ TEST_CASE(
                            ArgT{TypeReport::make<double>(), "4.2"},
                            ArgT{TypeReport::make<std::string>(), "\"Hello, World!\""}},
             .fromLoc = info.fromSourceLocation,
-            .stacktrace = info.stacktrace,
+            .stacktrace = stacktrace,
             .fromCategory = info.fromCategory,
             .fromConstness = info.fromConstness
         };
