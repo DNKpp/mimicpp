@@ -306,11 +306,12 @@ jobs:
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=OFF \
                                       )" >> $GITHUB_ENV
-          
-          # Enable alternative source-location only if necessary
-          if [[ "${{ matrix.config.compat_source_loc }}" == "true" ]]; then
-            echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DMIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION=ON)" >> $GITHUB_ENV
-          fi
+
+      - name: Setup compatibility source-location option
+        if: ${{ matrix.config.compat_source_loc }}
+        shell: bash
+        run: |
+          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DMIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION=ON)" >> $GITHUB_ENV
 
       - name: Setup macOS
         if: startsWith(matrix.config.os, 'macOS')
