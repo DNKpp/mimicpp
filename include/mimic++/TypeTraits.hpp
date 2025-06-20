@@ -737,6 +737,113 @@ namespace mimicpp
      * \}
      */
 
+    namespace detail
+    {
+        template <typename Signature, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl;
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params...), isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params...) const, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params..., ...), isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params..., ...) const, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params...)&, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) & noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params...) const&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) & noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params..., ...)&, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) & noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params..., ...) const&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) & noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params...)&&, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params...) const&&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params..., ...)&&, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_remove_const_qualifier_impl<Return(Params..., ...) const&&, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) && noexcept(isNoexcept);
+        };
+
+        // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
+        template <typename Signature, typename Trait = signature_remove_noexcept<Signature>>
+        struct signature_remove_const_qualifier
+            : public signature_remove_const_qualifier_impl<typename Trait::type, Trait::value>
+        {
+        };
+    }
+
+    template <typename Signature>
+    struct signature_remove_const_qualifier
+        : public detail::signature_apply_trait<Signature, detail::signature_remove_const_qualifier>
+    {
+    };
+
+    /**
+     * \}
+     */
+
     /**
      * \defgroup TYPE_TRAITS_SIGNATURE_ADD_CONST_QUALIFIER signature_add_const_qualifier
      * \ingroup TYPE_TRAITS
@@ -765,20 +872,6 @@ namespace mimicpp
         };
 
         template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_add_const_qualifier_impl<Return(Params...) const, isNoexcept>
-            : public std::false_type
-        {
-            using type = Return(Params...) const noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_add_const_qualifier_impl<Return(Params..., ...) const, isNoexcept>
-            : public std::false_type
-        {
-            using type = Return(Params..., ...) const noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
         struct signature_add_const_qualifier_impl<Return(Params...)&, isNoexcept>
             : public std::true_type
         {
@@ -788,20 +881,6 @@ namespace mimicpp
         template <typename Return, typename... Params, bool isNoexcept>
         struct signature_add_const_qualifier_impl<Return(Params..., ...)&, isNoexcept>
             : public std::true_type
-        {
-            using type = Return(Params..., ...) const& noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_add_const_qualifier_impl<Return(Params...) const&, isNoexcept>
-            : public std::false_type
-        {
-            using type = Return(Params...) const& noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_add_const_qualifier_impl<Return(Params..., ...) const&, isNoexcept>
-            : public std::false_type
         {
             using type = Return(Params..., ...) const& noexcept(isNoexcept);
         };
@@ -820,25 +899,19 @@ namespace mimicpp
             using type = Return(Params..., ...) const&& noexcept(isNoexcept);
         };
 
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_add_const_qualifier_impl<Return(Params...) const&&, isNoexcept>
-            : public std::false_type
-        {
-            using type = Return(Params...) const&& noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_add_const_qualifier_impl<Return(Params..., ...) const&&, isNoexcept>
-            : public std::false_type
-        {
-            using type = Return(Params..., ...) const&& noexcept(isNoexcept);
-        };
-
         // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
         template <typename Signature, typename Trait = signature_remove_noexcept<Signature>>
         struct signature_add_const_qualifier
             : public signature_add_const_qualifier_impl<typename Trait::type, Trait::value>
         {
+        };
+
+        template <typename Signature>
+            requires signature_remove_const_qualifier<Signature>::value
+        struct signature_add_const_qualifier<Signature>
+            : public std::false_type
+        {
+            using type = Signature;
         };
     }
 
@@ -858,79 +931,6 @@ namespace mimicpp
      * \brief Removes the const-qualifier of a signature (if present).
      *
      *\{
-     */
-
-    namespace detail
-    {
-        template <typename Signature, bool isNoexcept>
-        struct signature_remove_const_qualifier_impl;
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_remove_const_qualifier_impl<Return(Params...) const, isNoexcept>
-            : public std::true_type
-        {
-            using type = Return(Params...) noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_remove_const_qualifier_impl<Return(Params..., ...) const, isNoexcept>
-            : public std::true_type
-        {
-            using type = Return(Params..., ...) noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_remove_const_qualifier_impl<Return(Params...) const&, isNoexcept>
-            : public std::true_type
-        {
-            using type = Return(Params...) & noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_remove_const_qualifier_impl<Return(Params..., ...) const&, isNoexcept>
-            : public std::true_type
-        {
-            using type = Return(Params..., ...) & noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_remove_const_qualifier_impl<Return(Params...) const&&, isNoexcept>
-            : public std::true_type
-        {
-            using type = Return(Params...) && noexcept(isNoexcept);
-        };
-
-        template <typename Return, typename... Params, bool isNoexcept>
-        struct signature_remove_const_qualifier_impl<Return(Params..., ...) const&&, isNoexcept>
-            : public std::true_type
-        {
-            using type = Return(Params..., ...) && noexcept(isNoexcept);
-        };
-
-        // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
-        template <typename Signature, typename Trait = signature_remove_noexcept<Signature>>
-        struct signature_remove_const_qualifier
-            : public signature_remove_const_qualifier_impl<typename Trait::type, Trait::value>
-        {
-        };
-
-        template <typename Signature>
-            requires signature_add_const_qualifier<Signature>::value
-        struct signature_remove_const_qualifier<Signature>
-            : public std::false_type
-        {
-            using type = Signature;
-        };
-    }
-
-    template <typename Signature>
-    struct signature_remove_const_qualifier
-        : public detail::signature_apply_trait<Signature, detail::signature_remove_const_qualifier>
-    {
-    };
-
-    /**
-     * \}
      */
 
     /**
@@ -1027,9 +1027,9 @@ namespace mimicpp
     struct signature_const_qualification
         : public std::integral_constant<
               Constness,
-              std::same_as<Signature, signature_remove_const_qualifier_t<Signature>>
-                  ? Constness::non_const
-                  : Constness::as_const>
+              signature_remove_const_qualifier<Signature>::value
+                  ? Constness::as_const
+                  : Constness::non_const>
     {
     };
 
