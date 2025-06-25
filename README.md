@@ -589,6 +589,9 @@ The listed configurations are explicitly tested, but other do probably work, too
 As new compilers become available, they will be added to the workflow, but older compilers will probably never be
 supported.
 
+Note: Unless specified otherwise, it is assumed that each major compiler version refers to its most recent minor
+version.
+
 | Symbol |    Description     |
 |:------:|:------------------:|
 |   x    |       works        |
@@ -612,6 +615,7 @@ supported.
 | clang-18 |   x    |   x    |     x     |   *    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | clang-19 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
 | clang-20 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| gcc-10.2 |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace    |
 | gcc-10   |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace    |
 | gcc-11   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace    |
 | gcc-12   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace    |
@@ -623,6 +627,7 @@ Note:
 
 - `libc++` doesn't support `std::stacktrace` yet.
 - `gcc-10` doesn't support `std::source_location`, but `mimic++` supports alternative source-location implementations.
+- `gcc-10.2` is the latest version on Debian-11 (aka `bullseye`) and thus explicitly listed here.
 
 **macOS**
 
