@@ -77,7 +77,7 @@ jobs:
         cxx_standard: ${{ fromJSON(needs.generate-base-matrix.outputs.cxx_versions) }}
         config:
           # clang
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             suffix: "ASan"
             os: "ubuntu-latest"
             container:
@@ -86,7 +86,7 @@ jobs:
             compiler_version: "20"
             asan: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             suffix: "/libc++"
             os: "ubuntu-latest"
             container:
@@ -95,14 +95,14 @@ jobs:
             compiler_version: "20"
             libcxx: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/clang:20"
             compiler_name: "clang"
             compiler_version: "20"
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             suffix: "/libc++"
             os: "ubuntu-latest"
             container:
@@ -111,14 +111,14 @@ jobs:
             compiler_version: "19"
             libcxx: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/clang:19"
             compiler_name: "clang"
             compiler_version: "19"
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             suffix: "/libc++"
             os: "ubuntu-latest"
             container:
@@ -127,14 +127,14 @@ jobs:
             compiler_version: "18"
             libcxx: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/clang:18"
             compiler_name: "clang"
             compiler_version: "18"
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             suffix: "/libc++"
             os: "ubuntu-latest"
             container:
@@ -143,14 +143,14 @@ jobs:
             compiler_version: "17"
             libcxx: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/clang:17"
             compiler_name: "clang"
             compiler_version: "17"
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             suffix: "/libc++"
             os: "ubuntu-latest"
             container:
@@ -160,7 +160,7 @@ jobs:
             only_fmt: true
             libcxx: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/clang:16"
@@ -170,7 +170,7 @@ jobs:
             only_cpptrace: true
 
           # gcc
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             suffix: "ASan"
             os: "ubuntu-latest"
             container:
@@ -179,28 +179,28 @@ jobs:
             compiler_version: "15"
             asan: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/gcc:15"
             compiler_name: "gcc"
             compiler_version: "15"
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/gcc:14"
             compiler_name: "gcc"
             compiler_version: "14"
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/gcc:13"
             compiler_name: "gcc"
             compiler_version: "13"
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/gcc:12"
@@ -209,7 +209,7 @@ jobs:
             only_fmt: true
             only_cpptrace: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/gcc:11"
@@ -218,7 +218,7 @@ jobs:
             only_fmt: true
             only_cpptrace: true
 
-          - prefix: "Linux"
+          - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/gcc:10"
@@ -230,10 +230,10 @@ jobs:
 
           # This is the latest debian-11 (aka `bullseye`) version
           # and the absolute minimum version mimic++ ensures compatibility with.
-          - prefix: "Linux"
+          - prefix: "Debian-11"
             os: "ubuntu-latest"
             container:
-              image: "ghcr.io/dnkpp/gcc:10.2"
+              image: "ghcr.io/dnkpp/debian:bullseye-slim"
             compiler_name: "gcc"
             compiler_version: "10.2"
             only_fmt: true
