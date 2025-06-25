@@ -228,6 +228,18 @@ jobs:
             only_cpptrace: true
             compat_source_loc: true
 
+          # This is the latest debian-11 (aka `bullseye`) version
+          # and the absolute minimum version mimic++ ensures compatibility with.
+          - prefix: "Linux"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/gcc:10.2"
+            compiler_name: "gcc"
+            compiler_version: "10.2"
+            only_fmt: true
+            only_cpptrace: true
+            compat_source_loc: true
+
           # msvc
           - prefix: "Windows 2022"
             os: "windows-2022"
