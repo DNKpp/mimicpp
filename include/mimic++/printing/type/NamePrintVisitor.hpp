@@ -103,7 +103,7 @@ namespace mimicpp::printing::type
             if (content.starts_with("{lambda(")
                 && content.ends_with('}'))
             {
-                auto const closingIter = std::ranges::find(content | std::views::reverse, ')');
+                auto const closingIter = std::ranges::find(content.crbegin(), content.crend(), ')');
                 print("lambda");
                 print(StringViewT{closingIter.base(), content.cend() - 1});
 
