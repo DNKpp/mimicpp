@@ -80,7 +80,7 @@ namespace mimicpp::util::source_location
         #error \
             "std::source_location is not available in this environment." \
             "mimic++ requires a working source location implementation, "\
-            "which can be provided by defining the MIMICPP_CONFIG_SOURCE_LOCATION_BACKEND macro."
+            "which can be provided by defining the MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND macro."
     #endif
 
     #ifndef MIMICPP_DETAIL_IS_MODULE
