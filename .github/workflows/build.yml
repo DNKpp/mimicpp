@@ -374,7 +374,7 @@ jobs:
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
       - name: Setup linux
-        if: ${{ matrix.config.prefix == 'Linux' }}
+        if: startsWith(matrix.config.os, 'ubuntu-')
         shell: bash
         run: |
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
