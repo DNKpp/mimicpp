@@ -128,7 +128,7 @@ Typedefs</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Reporter integrations for various third-party testing frameworks. </p>
-<p>These reporters are specialized implementations that provide seamless integrations of <code>mimic++</code> into the desired unit-test framework. Integrations are enabled by simply including the specific header into any source file. The include order does not matter.</p>
+<p>These reporters are specialized implementations that provide seamless integrations of <code>mimic++</code> into the desired unit-test framework. Integrations are enabled by simply including the specific header from the <code>mimic++_ext/adapters</code> directory into any source file. The include order does not matter.</p>
 <dl class="section note"><dt>Note</dt><dd>Including multiple headers from the adapters subdirectory into one executable is possible, but with caveats. It's unspecified which reporter will be active at program start. So, if you need multiple reporters in one executable, you should explicitly install the desired reporter on a per-test case basis. </dd></dl>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="gaa1a2d936b0a089d8b4e19f75eb6b8bbc" name="gaa1a2d936b0a089d8b4e19f75eb6b8bbc"></a>
@@ -173,7 +173,7 @@ Typedefs</h2></td></tr>
 <p>Reporter for the integration into Catch2. </p>
 <p>This reporter enables the integration of <code>mimic++</code> into <code>Catch2</code> and prefixes the headers of <code>Catch2</code> with <code>catch2/</code>.</p>
 <p>This reporter installs itself by simply including this header file into any source file of the test executable.</p>
-<h2><a class="anchor" id="autotoc_md0"></a>
+<h2><a class="anchor" id="autotoc_md26"></a>
 Experimental Matcher integration</h2>
 <p><code>mimic++</code> has an opt-in config, which lets users directly use <code>catch2</code>-matchers everywhere, where a <code>mimic++</code>-matcher would be suitable. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION">MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION</a> </dd></dl>
 

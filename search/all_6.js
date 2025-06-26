@@ -8,7 +8,7 @@ var searchData=
   ['description_5',['description',['../db/d18/classmimicpp_1_1_stacktrace.html#aae5f3c5c8f238d5307760e30b766780b',1,'mimicpp::Stacktrace::description()'],['../d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html#adbbf80cba7d4a04aad3401c6c0215fa6',1,'mimicpp::stacktrace::backend_traits&lt; mimicpp::stacktrace::NullBackend &gt;::description()']]],
   ['description_5ffn_6',['description_fn',['../db/d18/classmimicpp_1_1_stacktrace.html#a5e8b90055387260b1ace3a8370bf7abf',1,'mimicpp::Stacktrace']]],
   ['design_7',['Core Design',['../index.html#autotoc_md58',1,'']]],
-  ['destructor_8',['Destructor',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md15',1,'']]],
+  ['destructor_8',['Destructor',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
   ['detail_9',['detail',['../db/d59/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s___d_e_t_a_i_l.html',1,'detail'],['../d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html',1,'detail']]],
   ['developer_20hub_10',['🔗 Developer Hub',['../index.html#autotoc_md53',1,'']]],
   ['digraphs_11',['digraphs',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a258b3ecff3516370228f7e7b32250458',1,'mimicpp::printing::type::lexing::texts']]],

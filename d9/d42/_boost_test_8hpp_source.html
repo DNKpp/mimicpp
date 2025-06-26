@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>mimic++: mimic++/adapters/BoostTest.hpp Source File</title>
+<title>mimic++: mimic++_ext/adapters/BoostTest.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -124,8 +124,7 @@ $(function(){initNavTree('d9/d42/_boost_test_8hpp_source.html','../../'); initRe
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">    #error &quot;Unable to find Boost.Test includes.&quot;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="foldopen" id="foldopen00025" data-start="{" data-end="}">
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="../../d1/d11/namespacemimicpp.html">   25</a></span><span class="keyword">namespace </span>mimicpp::reporting::detail::boost_test</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">namespace </span>mimicpp::reporting::detail::boost_test</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keyword">struct </span>failure</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    {</div>
@@ -148,7 +147,6 @@ $(function(){initNavTree('d9/d42/_boost_test_8hpp_source.html','../../'); initRe
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        BOOST_TEST_MESSAGE(<span class="stringliteral">&quot;warning: &quot;</span>) &lt;&lt; msg.data();</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>}</div>
-</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d6/d48/namespacemimicpp_1_1reporting.html">mimicpp::reporting</a></div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>{</div>
@@ -172,7 +170,7 @@ $(function(){initNavTree('d9/d42/_boost_test_8hpp_source.html','../../'); initRe
 <div class="ttc" id="a_reporting_8hpp_html"><div class="ttname"><a href="../../d7/deb/_reporting_8hpp.html">Reporting.hpp</a></div></div>
 <div class="ttc" id="aclassmimicpp_1_1reporting_1_1_basic_reporter_html"><div class="ttname"><a href="../../d5/db8/classmimicpp_1_1reporting_1_1_basic_reporter.html">mimicpp::reporting::BasicReporter</a></div><div class="ttdoc">A reporter, which creates text messages and reports them via the provided callbacks.</div><div class="ttdef"><b>Definition</b> BasicReporter.hpp:40</div></div>
 <div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s_html_gaa1a2d936b0a089d8b4e19f75eb6b8bbc"><div class="ttname"><a href="../../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaa1a2d936b0a089d8b4e19f75eb6b8bbc">mimicpp::reporting::BoostTestReporterT</a></div><div class="ttdeci">BasicReporter&lt; &amp;detail::boost_test::send_success, &amp;detail::boost_test::send_warning, &amp;detail::boost_test::send_fail &gt; BoostTestReporterT</div><div class="ttdoc">Reporter for the integration into Boost.Test.</div><div class="ttdef"><b>Definition</b> BoostTest.hpp:61</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1reporting_html"><div class="ttname"><a href="../../d6/d48/namespacemimicpp_1_1reporting.html">mimicpp::reporting</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:26</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1reporting_html"><div class="ttname"><a href="../../d6/d48/namespacemimicpp_1_1reporting.html">mimicpp::reporting</a></div><div class="ttdef"><b>Definition</b> BasicReporter.hpp:27</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1util_html_ac58fced4701bdff093838ed1807e8836"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">mimicpp::util::unreachable</a></div><div class="ttdeci">void unreachable()</div><div class="ttdoc">Invokes undefined behavior.</div><div class="ttdef"><b>Definition</b> C++23Backports.hpp:40</div></div>
 <div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:343</div></div>
 <div class="ttc" id="autilities_2_c_09_0923_backports_8hpp_html"><div class="ttname"><a href="../../d7/d59/utilities_2_c_09_0923_backports_8hpp.html">C++23Backports.hpp</a></div></div>
@@ -181,7 +179,7 @@ $(function(){initNavTree('d9/d42/_boost_test_8hpp_source.html','../../'); initRe
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_fea71f381ece93f367616978be34972a.html">adapters</a></li><li class="navelem"><a class="el" href="../../d9/d42/_boost_test_8hpp.html">BoostTest.hpp</a></li>
+    <li class="navelem"><a class="el" href="../../dir_8f79ed315b77ca998c1d86e7aa7f5ccf.html">mimic++_ext</a></li><li class="navelem"><a class="el" href="../../dir_fd16f845ff6d6fa1e1a7dbe545e57b8c.html">adapters</a></li><li class="navelem"><a class="el" href="../../d9/d42/_boost_test_8hpp.html">BoostTest.hpp</a></li>
     <li class="footer">Generated on Thu Jun 26 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
