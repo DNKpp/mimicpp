@@ -487,6 +487,7 @@ Testing</h2>
 CI Tests</summary>
 <p></p>
 <p>The listed configurations are explicitly tested, but other do probably work, too. As new compilers become available, they will be added to the workflow, but older compilers will probably never be supported.</p>
+<p>Note: Unless specified otherwise, it is assumed that each major compiler version refers to its most recent minor version.</p>
 <table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadCenter">Symbol   </th><th class="markdownTableHeadCenter">Description    </th></tr>
@@ -523,22 +524,25 @@ CI Tests</summary>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">clang-20   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">std/fmt   </td><td class="markdownTableBodyCenter">std*/cpptrace    </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">gcc-10.2   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">fmt   </td><td class="markdownTableBodyCenter">cpptrace    </td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">gcc-10   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">*   </td><td class="markdownTableBodyCenter">fmt   </td><td class="markdownTableBodyCenter">cpptrace    </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">gcc-11   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">fmt   </td><td class="markdownTableBodyCenter">cpptrace    </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">gcc-12   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">fmt   </td><td class="markdownTableBodyCenter">cpptrace    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">gcc-13   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">std/fmt   </td><td class="markdownTableBodyCenter">std*/cpptrace    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">gcc-14   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">std/fmt   </td><td class="markdownTableBodyCenter">std*/cpptrace    </td></tr>
+<td class="markdownTableBodyNone">gcc-13   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">std/fmt   </td><td class="markdownTableBodyCenter">std*/cpptrace    </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">gcc-14   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">std/fmt   </td><td class="markdownTableBodyCenter">std*/cpptrace    </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">gcc-15   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">?   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">x   </td><td class="markdownTableBodyCenter">std/fmt   </td><td class="markdownTableBodyCenter">std*/cpptrace   </td></tr>
 </table>
 <p>Note:</p>
 <ul>
 <li><code>libc++</code> doesn't support <code>std::stacktrace</code> yet.</li>
 <li><code>gcc-10</code> doesn't support <code>std::source_location</code>, but <code>mimic++</code> supports alternative source-location implementations.</li>
+<li><code>gcc-10.2</code> is the latest version on Debian-11 (aka <code>bullseye</code>) and thus explicitly listed here.</li>
 </ul>
 <p><b>macOS</b></p>
 <table class="markdownTable">
