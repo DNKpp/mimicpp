@@ -13,6 +13,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK0(Invoke, Return(Params...));
     MAKE_CONST_MOCK0(Invoke, Return(Params...));
 };
@@ -22,6 +23,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK1(Invoke, Return(Params...));
     MAKE_CONST_MOCK1(Invoke, Return(Params...));
 };
@@ -31,6 +33,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK2(Invoke, Return(Params...));
     MAKE_CONST_MOCK2(Invoke, Return(Params...));
 };
@@ -40,6 +43,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK3(Invoke, Return(Params...));
     MAKE_CONST_MOCK3(Invoke, Return(Params...));
 };
@@ -49,6 +53,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK4(Invoke, Return(Params...));
     MAKE_CONST_MOCK4(Invoke, Return(Params...));
 };
@@ -58,6 +63,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK5(Invoke, Return(Params...));
     MAKE_CONST_MOCK5(Invoke, Return(Params...));
 };
@@ -67,6 +73,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK6(Invoke, Return(Params...));
     MAKE_CONST_MOCK6(Invoke, Return(Params...));
 };
@@ -76,6 +83,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK7(Invoke, Return(Params...));
     MAKE_CONST_MOCK7(Invoke, Return(Params...));
 };
@@ -85,6 +93,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK8(Invoke, Return(Params...));
     MAKE_CONST_MOCK8(Invoke, Return(Params...));
 };
@@ -94,6 +103,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK9(Invoke, Return(Params...));
     MAKE_CONST_MOCK9(Invoke, Return(Params...));
 };
@@ -103,6 +113,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK10(Invoke, Return(Params...));
     MAKE_CONST_MOCK10(Invoke, Return(Params...));
 };
@@ -112,6 +123,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK11(Invoke, Return(Params...));
     MAKE_CONST_MOCK11(Invoke, Return(Params...));
 };
@@ -121,6 +133,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK12(Invoke, Return(Params...));
     MAKE_CONST_MOCK12(Invoke, Return(Params...));
 };
@@ -130,6 +143,7 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
     MAKE_MOCK13(Invoke, Return(Params...));
     MAKE_CONST_MOCK13(Invoke, Return(Params...));
 };
@@ -139,6 +153,8 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
+
     MAKE_MOCK14(Invoke, Return(Params...));
     MAKE_CONST_MOCK14(Invoke, Return(Params...));
 };
@@ -148,6 +164,8 @@ template <typename Return, typename... Params>
 class InvocableMockBase<Return, Params...>
 {
 public:
+    static constexpr bool trompeloeil_movable_mock = true;
+
     MAKE_MOCK15(Invoke, Return(Params...));
     MAKE_CONST_MOCK15(Invoke, Return(Params...));
 };
