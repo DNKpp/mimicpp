@@ -1,14 +1,9 @@
 var searchData=
 [
-  ['watched_0',['Watched',['../d3/d5d/classmimicpp_1_1_watched.html',1,'mimicpp::Watched&lt; Base, Watchers &gt;'],['../d3/d5d/classmimicpp_1_1_watched.html#a8647ca5a5168969e3cd5cf18fb7f284b',1,'mimicpp::Watched::Watched(const Watched &amp;)=default'],['../d3/d5d/classmimicpp_1_1_watched.html#afa77d7e7eef110ca0d8be6e0a11ce60d',1,'mimicpp::Watched::Watched(Watched &amp;&amp;)=default']]],
-  ['watching_1',['object-watching',['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html',1,'']]],
-  ['weakly_5fequality_5fcomparable_5fwith_2',['weakly_equality_comparable_with',['../d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html',1,'mimicpp::util']]],
-  ['where_3',['where',['../dd/d2e/classmimicpp_1_1reporting_1_1_error.html#aee2132f4440c16e4a285185cc0f34504',1,'mimicpp::reporting::Error']]],
-  ['why_20is_20it_20an_20experimental_20feature_4',['Why is it an experimental feature?',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md44',1,'']]],
-  ['why_20is_20this_20feature_20experimental_5',['Why is this feature experimental',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md35',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md38',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md41',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md47',1,'Why is this feature experimental?']]],
-  ['wildcardmatcher_6',['WildcardMatcher',['../db/de6/classmimicpp_1_1_wildcard_matcher.html',1,'mimicpp']]],
-  ['with_20common_20char_20type_7',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
-  ['with_20other_20character_20types_8',['Strings with other character-types',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
-  ['with_20times_9',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md21',1,'']]],
-  ['word_20on_20sequences_20with_20times_10',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md21',1,'']]]
+  ['valuecategory_0',['ValueCategory',['../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a',1,'mimicpp']]],
+  ['variadic_20templates_1',['Mocks and variadic templates',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#autotoc_md2',1,'']]],
+  ['version_2ehpp_2',['Version.hpp',['../d7/d67/_version_8hpp.html',1,'']]],
+  ['view_3',['view',['../d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html#abfdffee38c585c50f16359a508675746',1,'mimicpp::string_traits&lt; T &gt;::view()'],['../d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html#ab9bfe506e844c95fe74d2e846c71a83c',1,'mimicpp::string_traits&lt; std::basic_string&lt; Char, Traits, Allocator &gt; &gt;::view()'],['../d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html#a87aa093833a75a92f8b58be9d6e64676',1,'mimicpp::string_traits&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;::view()']]],
+  ['view_5ft_4',['view_t',['../d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html#abadd99c25b1306b73572d818d6665e79',1,'mimicpp::string_traits&lt; T &gt;::view_t'],['../d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html#a276dfba16921968745fe36e9ab08457f',1,'mimicpp::string_traits&lt; std::basic_string&lt; Char, Traits, Allocator &gt; &gt;::view_t'],['../d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html#a9a73d19f3814268b4fbbb5a2a344c855',1,'mimicpp::string_traits&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;::view_t']]],
+  ['visibilitykeywords_5',['visibilityKeywords',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a6f7d078d8181ca893e049035878465f5',1,'mimicpp::printing::type::lexing::texts']]]
 ];

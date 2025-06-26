@@ -114,66 +114,69 @@ $(function(){initNavTree('de/d4b/_path_printer_8hpp_source.html','../../'); init
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/dec/_format_8hpp.html">mimic++/printing/Format.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;filesystem&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;functional&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">namespace </span>mimicpp::printing::detail</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> maxPathElements{3};</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">class </span>PathPrinterFn</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keyword">template</span> &lt;pr<span class="keywordtype">int</span>_iterator OutIter&gt;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        OutIter operator()(OutIter out, std::filesystem::path <span class="keyword">const</span>&amp; path)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">        </span>{</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>            <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">CharT</a> separator{std::filesystem::path::preferred_separator};</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <span class="keyword">auto</span> <span class="keyword">const</span> pathString = path.lexically_normal().string();</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>            <span class="keyword">auto</span> <span class="keyword">const</span> rend = pathString.crend();</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keyword">auto</span> iter = std::ranges::find(pathString.crbegin(), rend, separator);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>                 i &lt; maxPathElements</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>                 &amp;&amp; iter != rend;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                 ++i, iter = std::ranges::find(iter, rend, separator))</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                ++iter;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            }</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keywordflow">return</span> std::ranges::copy(iter.base(), pathString.cend(), std::move(out)).out;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>        }</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> operator()(std::filesystem::path <span class="keyword">const</span>&amp; path)<span class="keyword"> const</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">        </span>{</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8">StringStreamT</a> stream{};</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            std::invoke(</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                *<span class="keyword">this</span>,</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                std::ostreambuf_iterator{stream},</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                path);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <span class="keywordflow">return</span> std::move(stream).str();</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        }</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    };</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>{</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno"><a class="line" href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">   74</a></span>    [[maybe_unused]] <span class="keyword">inline</span> <span class="keyword">constexpr</span> printing::detail::PathPrinterFn <a class="code hl_variable" href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">print_path</a>{};</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>}</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#ifndef MIMICPP_DETAIL_IS_MODULE</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">    #include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">    #include &lt;filesystem&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">    #include &lt;functional&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    #include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span>mimicpp::printing::detail</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>{</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">constexpr</span> <span class="keywordtype">int</span> maxPathElements{3};</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">class </span>PathPrinterFn</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        <span class="keyword">template</span> &lt;pr<span class="keywordtype">int</span>_iterator OutIter&gt;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        OutIter operator()(OutIter out, std::filesystem::path <span class="keyword">const</span>&amp; path)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">        </span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>            <span class="keyword">static</span> <span class="keyword">constexpr</span> <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">CharT</a> separator{std::filesystem::path::preferred_separator};</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>            <span class="keyword">auto</span> <span class="keyword">const</span> pathString = path.lexically_normal().string();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>            <span class="keyword">auto</span> <span class="keyword">const</span> rend = pathString.crend();</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>            <span class="keyword">auto</span> iter = std::ranges::find(pathString.crbegin(), rend, separator);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                 i &lt; maxPathElements</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                 &amp;&amp; iter != rend;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                 ++i, iter = std::ranges::find(iter, rend, separator))</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            {</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                ++iter;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="keywordflow">return</span> std::ranges::copy(iter.base(), pathString.cend(), std::move(out)).out;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        [[nodiscard]]</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> operator()(std::filesystem::path <span class="keyword">const</span>&amp; path)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="keyword">        </span>{</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8">StringStreamT</a> stream{};</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            std::invoke(</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                *<span class="keyword">this</span>,</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                std::ostreambuf_iterator{stream},</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>                path);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <span class="keywordflow">return</span> std::move(stream).str();</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    };</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>{</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno"><a class="line" href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">   76</a></span>    [[maybe_unused]] <span class="keyword">inline</span> <span class="keyword">constexpr</span> printing::detail::PathPrinterFn <a class="code hl_variable" href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">print_path</a>{};</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>}</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
+<div class="ttc" id="a_config_8hpp_html_af5897385afd790dba0e4971e29c1e3e0"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MODULE_EXPORT</div><div class="ttdef"><b>Definition</b> Config.hpp:19</div></div>
 <div class="ttc" id="a_format_8hpp_html"><div class="ttname"><a href="../../d5/dec/_format_8hpp.html">Format.hpp</a></div></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
-<div class="ttc" id="agroup___p_r_i_n_t_i_n_g___p_a_t_h_html_ga6b4dfc9e96c68455630c1e15ef5df67f"><div class="ttname"><a href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">mimicpp::print_path</a></div><div class="ttdeci">constexpr printing::detail::PathPrinterFn print_path</div><div class="ttdoc">Functional object that outputs paths in a specific format.</div><div class="ttdef"><b>Definition</b> PathPrinter.hpp:74</div></div>
+<div class="ttc" id="agroup___p_r_i_n_t_i_n_g___p_a_t_h_html_ga6b4dfc9e96c68455630c1e15ef5df67f"><div class="ttname"><a href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">mimicpp::print_path</a></div><div class="ttdeci">constexpr printing::detail::PathPrinterFn print_path</div><div class="ttdoc">Functional object that outputs paths in a specific format.</div><div class="ttdef"><b>Definition</b> PathPrinter.hpp:76</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> BoostTest.hpp:26</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a3cca43cdbdd561d88dddf4ceec9839fc"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">mimicpp::CharT</a></div><div class="ttdeci">char CharT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:338</div></div>
-<div class="ttc" id="anamespacemimicpp_html_a6b761dc4fb4f361e95dd3ec37da4a8a8"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8">mimicpp::StringStreamT</a></div><div class="ttdeci">std::basic_ostringstream&lt; CharT, CharTraitsT &gt; StringStreamT</div><div class="ttdef"><b>Definition</b> Format.hpp:33</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:340</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a3cca43cdbdd561d88dddf4ceec9839fc"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc">mimicpp::CharT</a></div><div class="ttdeci">char CharT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:340</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a6b761dc4fb4f361e95dd3ec37da4a8a8"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8">mimicpp::StringStreamT</a></div><div class="ttdeci">std::basic_ostringstream&lt; CharT, CharTraitsT &gt; StringStreamT</div><div class="ttdef"><b>Definition</b> Format.hpp:35</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:342</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

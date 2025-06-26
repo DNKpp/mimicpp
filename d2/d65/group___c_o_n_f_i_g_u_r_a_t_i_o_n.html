@@ -106,26 +106,27 @@ $(function(){initNavTree('d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html','../../
 <p>Contains documentation for the possible configuration options. </p>
 <p><code>mimic++</code> offers various configuration options, which are listed below. In general, these options can be enabled by defining a macro with that specified name, before any <code>mimic++</code> header is included. If <code>mimic++</code> is integrated as cmake-target, it also offers appropriate cmake-options with the same name, which can be set during cmake configuration. If an option is enabled, <code>mimic++</code> defines the relevant macro by itself.</p>
 <hr  />
-<p> <a class="anchor" id="MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND"></a></p>
 <h2><a class="anchor" id="autotoc_md28"></a>
 Install an alternative source-location backend.</h2>
 <p><b>Name:</b> <code>MIMICPP_CONFIG_ALTERNATIVE_SOURCE_LOCATION_BACKEND</code></p>
 <p>By default, <code>mimic++</code> uses the C++20 <code>std::source_location</code>. However, this feature is not available on all platforms or with all compilers. To support older environments, users can configure an alternative by setting this variable to a fully qualified type name. </p><dl class="section note"><dt>Note</dt><dd>The provided type must satisfy the requirements of the <code><a class="el" href="../../d4/dde/conceptmimicpp_1_1util_1_1source__location_1_1backend.html">mimicpp::util::source_location::backend</a></code> concept. Refer to the <a class="el" href="../../d7/da5/group___s_o_u_r_c_e___l_o_c_a_t_i_o_n.html">source-location</a> section for more details.</dd></dl>
 <hr  />
-<p> <a class="anchor" id="MIMICPP_CONFIG_ONLY_PREFIXED_MACROS"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_ONLY_PREFIXED_MACROS"></a></p>
 <h2><a class="anchor" id="autotoc_md30"></a>
 Disable unprefixed macros</h2>
 <p><b>Name:</b> <code>MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</code></p>
 <p>By default, <code>mimic++</code> defines several shorthand macros for their longer counterparts, to make it less verbose (e.g <a class="el" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> is shorthand for <a class="el" href="../../d8/d12/group___m_o_c_k.html#ga77b154196ed19c6ad4649b0a604f7601">MIMICPP_SCOPED_EXPECTATION</a>). Even if very unlikely, this may lead to name clashes with other dependencies. Because of that, the option <a class="el" href="#MIMICPP_CONFIG_ONLY_PREFIXED_MACROS">MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</a> is offered, which then disables all shorthand macros.</p>
 <hr  />
-<p> <a class="anchor" id="MIMICPP_CONFIG_USE_FMT"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_USE_FMT"></a></p>
 <h2><a class="anchor" id="autotoc_md32"></a>
 Use <code>fmt</code> as formatting backend</h2>
 <p><b>Name:</b> <code>MIMICPP_CONFIG_USE_FMT</code> </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/fmtlib/fmt">https://github.com/fmtlib/fmt</a></dd></dl>
-<p>As of c++20, the format library is offically part of the <code>std</code>. Unfortunatly some compilers, which already support the majority of c++20 features, do not support the formatting part. In such cases, users can enable this option and thus use <code>fmt</code> instead.</p>
-<p>Whatever the reason to use <code>fmt</code> might be, chances are good, that the library is already present. <code>mimic++</code> tries to detect that when linked as cmake-target, before pulling it from github. If you want to reuse an existing <code>fmt</code> package, make sure, that it can be found via <code>find_package(fmt)</code>.</p>
+<p>As of c++20, the format library is officially part of the <code>std</code>. Unfortunately some compilers — while supporting most C++20 features — do not yet support the formatting library. In such cases, users can enable this option to use <code>fmt</code> as a fallback.</p>
+<p>Whatever the reason to use <code>fmt</code> might be, chances are good that the library is already present. <code>mimic++</code> attempts to detect it when linked as CMake target, before pulling it from GitHub. To reuse an existing <code>fmt</code> package, ensure it can be found via <code>find_package(fmt)</code>.</p>
+<p>If C++20 modules are supported, you can also control how <code>fmt</code> is included via the <code>MIMICPP_CONFIG_IMPORT_FMT</code> option (default: <code>ON</code>). When set to <code>ON</code>, <code>import fmt;</code> will be used. Otherwise, it will fall back to a traditional <code>#include</code> directive.</p>
 <hr  />
-<p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION"></a></p>
 <h2><a class="anchor" id="autotoc_md34"></a>
 Enable experimental catch2-matcher integration</h2>
 <p><b>Name:</b> <code>MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION</code></p>
@@ -135,7 +136,7 @@ Why is this feature experimental?</h3>
 <p>Unfortunatly <code>catch2</code> matchers are desgined to be used in-place. Every combination you do, like negation via <code>operator !</code> or <code>operator &amp;&amp;</code>, just takes a const-reference to the source-matcher. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#combining-operators-and-lifetimes">https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#combining-operators-and-lifetimes</a></dd></dl>
 <p><code>mimic++</code> needs to store the matcher inside the expectation. These requirements are not playing well together. Nevertheless <code>catch2</code> offers some nice matcher definitions, which could be very helpfull for testing. But as already said, they are dangerous, thus I decided to make them opt-in as experimental features.</p>
 <hr  />
-<p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER"></a></p>
 <h2><a class="anchor" id="autotoc_md37"></a>
 Enable experimental string-matcher unicode support</h2>
 <p><b>Name:</b> <code>MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER</code></p>
@@ -147,7 +148,7 @@ Enable experimental string-matcher unicode support</h2>
 Why is this feature experimental?</h3>
 <p>I recently switched from <code>cpp-unicodelib</code>, which I didn't like very much for several reasons. <code>uni-algo</code> seems more mature, but I would like to get some feedback, before I'll declare this as a stable feature.</p>
 <hr  />
-<p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE"></a></p>
 <h2><a class="anchor" id="autotoc_md40"></a>
 Enable experimental stacktrace support</h2>
 <p><b>Name:</b> <code>MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</code></p>
@@ -159,18 +160,19 @@ Enable experimental stacktrace support</h2>
 Why is this feature experimental?</h3>
 <p>Stack traces require significantly more work for each mock call. It can be worthwhile, but it can also be too excessive.</p>
 <hr  />
-<p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE"></a></p>
 <h2><a class="anchor" id="autotoc_md43"></a>
 Enable experimental cpptrace stacktrace-backend</h2>
-<p><b>Name:</b> <code>MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE</code></p>
-<p>When enabled, <code>mimic++</code> installs the <code>cpptrace</code> stacktrace as default stacktrace-backend. </p><dl class="section note"><dt>Note</dt><dd>This option is only available, if <a class="el" href="#MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE">MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</a> is enabled.</dd></dl>
-<p><code>mimic++</code> attempts to detect whether <code>cpptrace</code> is already available before pulling it from GitHub. If you want to reuse an existing <code>cpptrace</code> package, make sure that it can be found via <code>find_package(cpptrace)</code>. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/jeremy-rifkin/cpptrace">https://github.com/jeremy-rifkin/cpptrace</a></dd></dl>
+<p><b>Name:</b> <code>MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE</code> </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/jeremy-rifkin/cpptrace">https://github.com/jeremy-rifkin/cpptrace</a></dd></dl>
+<p>When enabled, <code>mimic++</code> installs <code>cpptrace</code> as the default stacktrace-backend. </p><dl class="section note"><dt>Note</dt><dd>This option is only available, if <a class="el" href="#MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE">MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</a> is enabled.</dd></dl>
+<p><code>mimic++</code> attempts to detect whether <code>cpptrace</code> is already available before pulling it from GitHub. If you want to reuse an existing <code>cpptrace</code> package, make sure that it can be found via <code>find_package(cpptrace)</code>.</p>
+<p>If C++20 modules are supported, you can also control how <code>cpptrace</code> is included via the <code>MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE</code> option (default: <code>ON</code>). When set to <code>ON</code>, <code>import cpptrace;</code> will be used (requires version <code>1.0.0</code> or later). Otherwise, it will fall back to a traditional <code>#include</code> directive.</p>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, which may be removed during any release.</dd></dl>
 <h3><a class="anchor" id="autotoc_md44"></a>
-Why is it an experimental feature?</h3>
-<p>Since general stacktrace support is currently declared experimental, this feature is also considered experimental.</p>
+Why is this feature experimental?</h3>
+<p>General stacktrace support in <code>mimic++</code> is currently marked as experimental. Since this backend depends on that feature, it is also considered experimental.</p>
 <hr  />
-<p> <a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES"></a></p>
 <h2><a class="anchor" id="autotoc_md46"></a>
 Enable experimental pretty type-printing</h2>
 <p><b>Name:</b> <code>MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES</code></p>
@@ -179,8 +181,18 @@ Enable experimental pretty type-printing</h2>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, which may be removed during any release.</dd></dl>
 <h3><a class="anchor" id="autotoc_md47"></a>
 Why is this feature experimental?</h3>
-<p>The complexity lies in <b>post-processing</b> type strings into a uniform and human-readable format. Since compilers produce <b>inconsistent and platform-dependent</b> type names, <code>mimic++</code> must handle <b>a wide range of patterns, quirks, and edge cases</b>. While great effort has been made to make this reliable, unexpected cases may still exist in certain environments. </p>
-</div><!-- contents -->
+<p>The complexity lies in <b>post-processing</b> type strings into a uniform and human-readable format. Since compilers produce <b>inconsistent and platform-dependent</b> type names, <code>mimic++</code> must handle <b>a wide range of patterns, quirks, and edge cases</b>. While great effort has been made to make this reliable, unexpected cases may still exist in certain environments.</p>
+<hr  />
+<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__"></a></p>
+<h2><a class="anchor" id="autotoc_md49"></a>
+Enable experimental C++20 modules.</h2>
+<p><b>Name:</b> <code>MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__</code></p>
+<p>C++20 modules have come a long way and are finally appearing on the horizon. Unfortunately, they still require a very up-to-date toolchain (CMake, compiler, etc.), which is often not available by default. Even then, there's a significant chance of encountering compiler bugs that are difficult or impossible to work around. Because of this, users must explicitly opt-in to this feature. </p><dl class="section note"><dt>Note</dt><dd>This option is only available when CMake actually supports C++20 Modules (i.e. version <code>3.28</code> and later).</dd></dl>
+<p>When enabled, this defines the CMake target <code>mimicpp::module</code> and makes <code>mimicpp::mimicpp</code> an alias for it. </p><dl class="section note"><dt>Note</dt><dd>Users can still explicitly choose to link against the header-only target via <code>mimicpp::header-only</code>.</dd></dl>
+<p>In addition, this option signals that all (optional) dependencies should be consumed as modules when they provide one.</p>
+<dl class="section attention"><dt>Attention</dt><dd>This is an experimental and <b>highly unportable</b> feature. Its behavior may change in any release. However, it is unlikely to be removed entirely and will probably continue to evolve as C++20 module support stabilizes across toolchains.</dd></dl>
+<hr  />
+ </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
