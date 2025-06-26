@@ -66,16 +66,16 @@ TEST_CASE(
     "[stacktrace]")
 {
     util::SourceLocation constexpr before{};
-    const Stacktrace cur = stacktrace::current();
+    Stacktrace const cur = stacktrace::current();
+    REQUIRE(!cur.empty());
     util::SourceLocation constexpr after{};
 
-    REQUIRE(!cur.empty());
-    REQUIRE_THAT(
+    CHECK_THAT(
         cur.source_file(0u),
         Catch::Matchers::Equals(std::string{before.file_name()}));
-    const std::size_t line = cur.source_line(0u);
-    REQUIRE(std::cmp_less(before.line(), line));
-    REQUIRE(std::cmp_less(line, after.line()));
+    std::size_t const line = cur.source_line(0u);
+    CHECK(before.line() < line);
+    CHECK(line < after.line());
 }
 
 namespace
