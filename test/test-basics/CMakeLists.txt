@@ -48,4 +48,6 @@ if (MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION)
     target_compile_definitions(${TARGET_NAME} INTERFACE
         MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION
     )
+
+    set(MIMICPP_TESTING_COMPAT_SOURCE_LOCATION_HEADER "\"mimic++_ext/compatibility/paweldac-source_location.hpp\"" CACHE STRING "" FORCE)
 endif ()
