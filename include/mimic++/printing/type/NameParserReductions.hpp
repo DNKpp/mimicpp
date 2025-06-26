@@ -321,7 +321,8 @@ namespace mimicpp::printing::type::parsing
             std::span pendingTokens{tokenStack.begin(), tokenStack.end() - 1};
 
             auto const openingIter = std::ranges::find_if(
-                pendingTokens | std::views::reverse,
+                pendingTokens.rbegin(),
+                pendingTokens.rend(),
                 [](Token const& token) noexcept { return std::holds_alternative<Opening>(token); });
             if (openingIter == pendingTokens.rend()
                 || !is_identifier_prefix({pendingTokens.begin(), openingIter.base() - 1}))
