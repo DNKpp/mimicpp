@@ -23,7 +23,7 @@ jobs:
       - name: Attach adapter headers as release asset
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "include/mimic++/adapters/*.hpp"
+          artifacts: "include/mimic++_ext/adapters/*.hpp"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
           artifactErrorsFailBuild: true

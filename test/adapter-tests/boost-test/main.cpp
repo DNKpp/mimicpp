@@ -7,7 +7,7 @@
 #include "mimic++/Mock.hpp"
 
 #define BOOST_TEST_MODULE BoostAdapterTest
-#include "mimic++/adapters/BoostTest.hpp"
+#include "mimic++_ext/adapters/BoostTest.hpp"
 
 BOOST_AUTO_TEST_SUITE(SuccessSuite)
 

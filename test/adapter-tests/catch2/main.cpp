@@ -4,7 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Mock.hpp"
-#include "mimic++/adapters/Catch2.hpp"
+#include "mimic++_ext/adapters/Catch2.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>

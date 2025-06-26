@@ -534,7 +534,7 @@ test framework.
 but users can also create custom adapters for any test framework or simply use the default reporter.
 For more details, please refer to the reporting section in the documentation.
 
-Official adapters exist for the following frameworks:
+The following official adapters exist and can be included from the `mimic++_ext/adapters` include directory:
 
 * [Boost.Test](https://github.com/boostorg/test) (tested with v1.88.0)
 * [Catch2](https://github.com/catchorg) (tested with v3.7.1)

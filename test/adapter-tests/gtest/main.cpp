@@ -4,7 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Mock.hpp"
-#include "mimic++/adapters/gtest.hpp"
+#include "mimic++_ext/adapters/gtest.hpp"
 
 #include <gtest/gtest-spi.h>
 

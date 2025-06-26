@@ -161,7 +161,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
      * \ingroup REPORTING
      * \brief Reporter integrations for various third-party testing frameworks.
      * \details These reporters are specialized implementations that provide seamless integrations of ``mimic++`` into the desired unit-test framework.
-     * Integrations are enabled by simply including the specific header into any source file.
+     * Integrations are enabled by simply including the specific header from the `mimic++_ext/adapters` directory into any source file.
      * The include order does not matter.
      *
      * \note Including multiple headers from the adapters subdirectory into one executable is possible, but with caveats.
