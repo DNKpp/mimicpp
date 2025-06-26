@@ -45,6 +45,7 @@ include(Mimic++-EnableConfigOptions)
 
 add_library(mimicpp-header-only INTERFACE)
 add_library(mimicpp::header-only ALIAS mimicpp-header-only)
+add_library(mimicpp::mimicpp ALIAS mimicpp-header-only)
 
 include(GNUInstallDirs)
 target_include_directories(mimicpp-header-only INTERFACE
@@ -66,20 +67,7 @@ target_link_libraries(mimicpp-header-only INTERFACE
 )
 
 if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)
-	add_library(mimicpp-module)
-	add_library(mimicpp::module ALIAS mimicpp-module)
-	add_library(mimicpp::mimicpp ALIAS mimicpp-module)
-
-	target_link_libraries(mimicpp-module PUBLIC
-		mimicpp::header-only
-	)
-
-	target_sources(mimicpp-module PUBLIC
-		FILE_SET CXX_MODULES
-		TYPE CXX_MODULES FILES mimic++.cppm
-	)
-else ()
-	add_library(mimicpp::mimicpp ALIAS mimicpp-header-only)
+	add_subdirectory(module)
 endif ()
 
 option(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})

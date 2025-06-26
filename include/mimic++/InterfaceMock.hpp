@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/MacroExports.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/macros/InterfaceMocking.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 

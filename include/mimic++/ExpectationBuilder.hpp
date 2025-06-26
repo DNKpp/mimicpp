@@ -10,9 +10,9 @@
 
 #include "mimic++/Expectation.hpp"
 #include "mimic++/Fwd.hpp"
-#include "mimic++/MacroExports.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/macros/ScopedExpectation.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 #include "mimic++/matchers/StringMatchers.hpp"
