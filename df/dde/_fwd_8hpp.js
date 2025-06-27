@@ -3,6 +3,7 @@ var _fwd_8hpp =
     [ "mimicpp::sequence::rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", "de/d81/structmimicpp_1_1sequence_1_1rating" ],
     [ "mimicpp::CharT", "d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc", null ],
     [ "mimicpp::CharTraitsT", "d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad", null ],
+    [ "mimicpp::signature_add_const_qualifier_t", "df/ddb/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___c_o_n_s_t___q_u_a_l_i_f_i_e_r.html#gad0aa771934f5c52c2dbce782aae87ed5", null ],
     [ "mimicpp::signature_add_noexcept_t", "de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html#ga8e3ea8f62502eac4396439c2010b9cb9", null ],
     [ "mimicpp::signature_call_convention_t", "dd/dc9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#gaeb6c2d674d0976bad08f5fb98762a167", null ],
     [ "mimicpp::signature_decay_t", "d6/da6/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___d_e_c_a_y.html#gae85f02e3becd1c96735ae9bbcade1212", null ],

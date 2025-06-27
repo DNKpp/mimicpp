@@ -1,7 +1,7 @@
 var classmimicpp_1_1reporting_1_1_call_report =
 [
     [ "Arg", "dd/db3/classmimicpp_1_1reporting_1_1_call_report_1_1_arg.html", "dd/db3/classmimicpp_1_1reporting_1_1_call_report_1_1_arg" ],
-    [ "make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga0057b25e1863ab7956d2ecbaade46326", null ],
+    [ "make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gad7c9b093bb6ac590ef24b05eb329bda3", null ],
     [ "operator==", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a52f79b633bf1e00c5bf1eac0f9300eae", null ],
     [ "argDetails", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a60717b338c2378bfa612cda41c1b905a", null ],
     [ "fromCategory", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#ae43070443741c44e518849b5a3e9811d", null ],

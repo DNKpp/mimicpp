@@ -11,5 +11,6 @@ var searchData=
   ['begin_5freturn_5ftype_8',['begin_return_type',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#afe840a41407fa8a083b86ae9226ddd2a',1,'mimicpp::printing::type::PrintVisitor']]],
   ['begin_5fscope_9',['begin_scope',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a53b34a5d4c46d21a4c6568bac7f68a28',1,'mimicpp::printing::type::PrintVisitor']]],
   ['begin_5ftemplate_5fargs_10',['begin_template_args',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#ac85671b7407eee12ce82bd9d1b9d3068',1,'mimicpp::printing::type::PrintVisitor']]],
-  ['begin_5ftype_11',['begin_type',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a899e9bf9ea64e58241cd151dd2190707',1,'mimicpp::printing::type::PrintVisitor']]]
+  ['begin_5ftype_11',['begin_type',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a899e9bf9ea64e58241cd151dd2190707',1,'mimicpp::printing::type::PrintVisitor']]],
+  ['bit_5fcast_12',['bit_cast',['../d8/da3/namespacemimicpp_1_1util.html#ad1d380b73c0fefb98b5f0a7a5e8d4819',1,'mimicpp::util']]]
 ];

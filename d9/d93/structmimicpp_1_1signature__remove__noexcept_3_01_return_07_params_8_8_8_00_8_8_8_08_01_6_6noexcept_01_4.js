@@ -1,4 +1,0 @@
-var structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6noexcept_01_4 =
-[
-    [ "type", "d9/d93/structmimicpp_1_1signature__remove__noexcept_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6noexcept_01_4.html#adcbda39640055fd0008c0c3a2f652609", null ]
-];

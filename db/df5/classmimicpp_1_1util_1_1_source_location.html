@@ -101,37 +101,114 @@ $(function(){initNavTree('db/df5/classmimicpp_1_1util_1_1_source_location.html',
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="../../d0/d2d/classmimicpp_1_1util_1_1_source_location-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">mimicpp::util::SourceLocation Class Reference</div></div>
+  <div class="headertitle"><div class="title">mimicpp::util::SourceLocation Class Reference<div class="ingroups"><a class="el" href="../../d7/da5/group___s_o_u_r_c_e___l_o_c_a_t_i_o_n.html">source-location</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>A thin wrapper around a <code>std::source_location</code> with additional <code>operator ==</code>.  
+<p>A thin wrapper around the currently installed source-location backend with additional <code>operator ==</code>.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d3/d15/_source_location_8hpp_source.html">SourceLocation.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a71ade91a538b4d20c9c54e92445345f4" id="r_a71ade91a538b4d20c9c54e92445345f4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a71ade91a538b4d20c9c54e92445345f4">explicit</a> (false) const expr <a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a>(std</td></tr>
-<tr class="separator:a71ade91a538b4d20c9c54e92445345f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e9aa1ed6de8db26731aebf2f34560ee" id="r_a4e9aa1ed6de8db26731aebf2f34560ee"><td class="memItemLeft" align="right" valign="top">constexpr std::source_location const *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e9aa1ed6de8db26731aebf2f34560ee">operator-&gt;</a> () const noexcept</td></tr>
-<tr class="separator:a4e9aa1ed6de8db26731aebf2f34560ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b4ee1b6b6e5ac9ac87516900f759424" id="r_a2b4ee1b6b6e5ac9ac87516900f759424"><td class="memItemLeft" align="right" valign="top">constexpr std::source_location const &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b4ee1b6b6e5ac9ac87516900f759424">operator*</a> () const noexcept</td></tr>
-<tr class="separator:a2b4ee1b6b6e5ac9ac87516900f759424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d8740d0689905bbcb72e6a6fea63412" id="r_a2d8740d0689905bbcb72e6a6fea63412"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d8740d0689905bbcb72e6a6fea63412">~SourceLocation</a> ()=default</td></tr>
+<tr class="separator:a2d8740d0689905bbcb72e6a6fea63412"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60ec1c3f4408c42c3015e514f534b5a7" id="r_a60ec1c3f4408c42c3015e514f534b5a7"><td class="memTemplParams" colspan="2">template&lt;typename... Canary, std::same_as&lt; <a class="el" href="../../db/d3e/namespacemimicpp_1_1util_1_1source__location.html#a2312c9a4010f4d1443516c5b802ab680">source_location::InstalledBackend</a> &gt; Backend = source_location::InstalledBackend&gt; </td></tr>
+<tr class="memitem:a60ec1c3f4408c42c3015e514f534b5a7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a60ec1c3f4408c42c3015e514f534b5a7">explicit</a> (false) const expr <a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a>(Backend loc</td></tr>
+<tr class="separator:a60ec1c3f4408c42c3015e514f534b5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cac61b376f0491759210eb3a467cce3" id="r_a9cac61b376f0491759210eb3a467cce3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cac61b376f0491759210eb3a467cce3">operator=</a> (<a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> const &amp;)=default</td></tr>
+<tr class="separator:a9cac61b376f0491759210eb3a467cce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab62062ed14cd1ddf120f3ffdf67c81a5" id="r_ab62062ed14cd1ddf120f3ffdf67c81a5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> (<a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:ab62062ed14cd1ddf120f3ffdf67c81a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a752412b1901e309a3ff0cf1ed31d1d65" id="r_a752412b1901e309a3ff0cf1ed31d1d65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a752412b1901e309a3ff0cf1ed31d1d65">operator=</a> (<a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a752412b1901e309a3ff0cf1ed31d1d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf59d69bb4b111eebca3b24c37bcf57f" id="r_aaf59d69bb4b111eebca3b24c37bcf57f"><td class="memTemplParams" colspan="2">template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </td></tr>
+<tr class="memitem:aaf59d69bb4b111eebca3b24c37bcf57f"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aaf59d69bb4b111eebca3b24c37bcf57f">file_name</a> () const noexcept</td></tr>
+<tr class="separator:aaf59d69bb4b111eebca3b24c37bcf57f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab05cafc872c6bb7979203a88d0ac3711" id="r_ab05cafc872c6bb7979203a88d0ac3711"><td class="memTemplParams" colspan="2">template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </td></tr>
+<tr class="memitem:ab05cafc872c6bb7979203a88d0ac3711"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab05cafc872c6bb7979203a88d0ac3711">function_name</a> () const noexcept</td></tr>
+<tr class="separator:ab05cafc872c6bb7979203a88d0ac3711"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad11704ca3ac22990d6023124f50a8b0e" id="r_ad11704ca3ac22990d6023124f50a8b0e"><td class="memTemplParams" colspan="2">template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </td></tr>
+<tr class="memitem:ad11704ca3ac22990d6023124f50a8b0e"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ad11704ca3ac22990d6023124f50a8b0e">line</a> () const noexcept</td></tr>
+<tr class="separator:ad11704ca3ac22990d6023124f50a8b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a96075c1fdfab73c100011d42963a6101" id="r_a96075c1fdfab73c100011d42963a6101"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a96075c1fdfab73c100011d42963a6101">operator==</a> (<a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> const &amp;lhs, <a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> const &amp;rhs) noexcept</td></tr>
-<tr class="separator:a96075c1fdfab73c100011d42963a6101"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca199207b74aeeb4fbee5791ad387aa0" id="r_aca199207b74aeeb4fbee5791ad387aa0"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca199207b74aeeb4fbee5791ad387aa0">operator==</a> (<a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> const &amp;lhs, <a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> const &amp;rhs) noexcept</td></tr>
+<tr class="separator:aca199207b74aeeb4fbee5791ad387aa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A thin wrapper around a <code>std::source_location</code> with additional <code>operator ==</code>. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a71ade91a538b4d20c9c54e92445345f4" name="a71ade91a538b4d20c9c54e92445345f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71ade91a538b4d20c9c54e92445345f4">&#9670;&#160;</a></span>explicit()</h2>
+<div class="textblock"><p>A thin wrapper around the currently installed source-location backend with additional <code>operator ==</code>. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a2d8740d0689905bbcb72e6a6fea63412" name="a2d8740d0689905bbcb72e6a6fea63412"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d8740d0689905bbcb72e6a6fea63412">&#9670;&#160;</a></span>~SourceLocation()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mimicpp::util::SourceLocation::~SourceLocation </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab62062ed14cd1ddf120f3ffdf67c81a5" name="ab62062ed14cd1ddf120f3ffdf67c81a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab62062ed14cd1ddf120f3ffdf67c81a5">&#9670;&#160;</a></span>SourceLocation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">mimicpp::util::SourceLocation::SourceLocation </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../db/df5/classmimicpp_1_1util_1_1_source_location_ab62062ed14cd1ddf120f3ffdf67c81a5_cgraph.svg" width="202" height="76"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../db/df5/classmimicpp_1_1util_1_1_source_location_ab62062ed14cd1ddf120f3ffdf67c81a5_icgraph.svg" width="440" height="183"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a60ec1c3f4408c42c3015e514f534b5a7" name="a60ec1c3f4408c42c3015e514f534b5a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60ec1c3f4408c42c3015e514f534b5a7">&#9670;&#160;</a></span>explicit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Canary, std::same_as&lt; <a class="el" href="../../db/d3e/namespacemimicpp_1_1util_1_1source__location.html#a2312c9a4010f4d1443516c5b802ab680">source_location::InstalledBackend</a> &gt; Backend = source_location::InstalledBackend&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -145,24 +222,26 @@ Friends</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a2b4ee1b6b6e5ac9ac87516900f759424" name="a2b4ee1b6b6e5ac9ac87516900f759424"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b4ee1b6b6e5ac9ac87516900f759424">&#9670;&#160;</a></span>operator*()</h2>
+<a id="aaf59d69bb4b111eebca3b24c37bcf57f" name="aaf59d69bb4b111eebca3b24c37bcf57f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf59d69bb4b111eebca3b24c37bcf57f">&#9670;&#160;</a></span>file_name()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::source_location const  &amp; mimicpp::util::SourceLocation::operator* </td>
+          <td class="memname">std::string_view mimicpp::util::SourceLocation::file_name </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -177,17 +256,19 @@ Friends</h2></td></tr>
 
 </div>
 </div>
-<a id="a4e9aa1ed6de8db26731aebf2f34560ee" name="a4e9aa1ed6de8db26731aebf2f34560ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e9aa1ed6de8db26731aebf2f34560ee">&#9670;&#160;</a></span>operator-&gt;()</h2>
+<a id="ab05cafc872c6bb7979203a88d0ac3711" name="ab05cafc872c6bb7979203a88d0ac3711"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab05cafc872c6bb7979203a88d0ac3711">&#9670;&#160;</a></span>function_name()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::source_location const  * mimicpp::util::SourceLocation::operator-&gt; </td>
+          <td class="memname">std::string_view mimicpp::util::SourceLocation::function_name </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -199,12 +280,99 @@ Friends</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad11704ca3ac22990d6023124f50a8b0e" name="ad11704ca3ac22990d6023124f50a8b0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad11704ca3ac22990d6023124f50a8b0e">&#9670;&#160;</a></span>line()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t mimicpp::util::SourceLocation::line </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a752412b1901e309a3ff0cf1ed31d1d65" name="a752412b1901e309a3ff0cf1ed31d1d65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a752412b1901e309a3ff0cf1ed31d1d65">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp; mimicpp::util::SourceLocation::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../db/df5/classmimicpp_1_1util_1_1_source_location_a752412b1901e309a3ff0cf1ed31d1d65_cgraph.svg" width="440" height="76"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a9cac61b376f0491759210eb3a467cce3" name="a9cac61b376f0491759210eb3a467cce3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cac61b376f0491759210eb3a467cce3">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp; mimicpp::util::SourceLocation::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../db/df5/classmimicpp_1_1util_1_1_source_location_a9cac61b376f0491759210eb3a467cce3_cgraph.svg" width="440" height="76"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
 <h2 class="groupheader">Friends And Related Symbol Documentation</h2>
-<a id="a96075c1fdfab73c100011d42963a6101" name="a96075c1fdfab73c100011d42963a6101"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96075c1fdfab73c100011d42963a6101">&#9670;&#160;</a></span>operator==</h2>
+<a id="aca199207b74aeeb4fbee5791ad387aa0" name="aca199207b74aeeb4fbee5791ad387aa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca199207b74aeeb4fbee5791ad387aa0">&#9670;&#160;</a></span>operator==</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,7 +409,7 @@ Friends</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">util</a></li><li class="navelem"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a></li>
-    <li class="footer">Generated on Mon May 12 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

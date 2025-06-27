@@ -1,27 +1,7 @@
 var searchData=
 [
-  ['sequence_0',['sequence',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html',1,'']]],
-  ['side_20effects_1',['side effects',['../db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html',1,'']]],
-  ['signature_5fadd_5fnoexcept_2',['signature_add_noexcept',['../de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html',1,'']]],
-  ['signature_5fcall_5fconvention_3',['signature_call_convention',['../dd/dc9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html',1,'']]],
-  ['signature_5fconst_5fqualification_4',['signature_const_qualification',['../da/dc2/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___c_o_n_s_t___q_u_a_l_i_f_i_c_a_t_i_o_n.html',1,'']]],
-  ['signature_5fdecay_5',['signature_decay',['../d6/da6/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___d_e_c_a_y.html',1,'']]],
-  ['signature_5fis_5fnoexcept_6',['signature_is_noexcept',['../d0/df7/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___i_s___n_o_e_x_c_e_p_t.html',1,'']]],
-  ['signature_5fparam_5flist_7',['signature_param_list',['../d3/dce/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t.html',1,'']]],
-  ['signature_5fparam_5ftype_8',['signature_param_type',['../dd/df9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___t_y_p_e.html',1,'']]],
-  ['signature_5fref_5fqualification_9',['signature_ref_qualification',['../db/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_f___q_u_a_l_i_f_i_c_a_t_i_o_n.html',1,'']]],
-  ['signature_5fremove_5fcall_5fconvention_10',['signature_remove_call_convention',['../d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html',1,'']]],
-  ['signature_5fremove_5fconstqualifier_11',['signature_remove_constqualifier',['../d3/def/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_o_n_s_t___q_u_a_l_i_f_i_e_r.html',1,'']]],
-  ['signature_5fremove_5fnoexcept_12',['signature_remove_noexcept',['../d0/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t.html',1,'']]],
-  ['signature_5fremove_5fref_5fqualifier_13',['signature_remove_ref_qualifier',['../d6/ddd/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___r_e_f___q_u_a_l_i_f_i_e_r.html',1,'']]],
-  ['signature_5freturn_5ftype_14',['signature_return_type',['../d0/d3b/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_t_u_r_n___t_y_p_e.html',1,'']]],
-  ['stacktrace_15',['stacktrace',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html',1,'']]],
-  ['state_20stringification_16',['object-state stringification',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html',1,'']]],
-  ['string_17',['string',['../d8/d47/group___s_t_r_i_n_g.html',1,'']]],
-  ['string_20matchers_18',['string matchers',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html',1,'']]],
-  ['string_5fcase_5ffold_5fconverter_19',['string_case_fold_converter',['../d6/d04/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___c_a_s_e___f_o_l_d___c_o_n_v_e_r_t_e_r.html',1,'']]],
-  ['string_5fliteral_5fprefix_20',['string_literal_prefix',['../dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html',1,'']]],
-  ['string_5ftraits_21',['string_traits',['../da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html',1,'']]],
-  ['stringification_22',['stringification',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html',1,'object-state stringification'],['../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html',1,'object-type stringification']]],
-  ['strip_5fparens_23',['strip_parens',['../dd/d06/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html',1,'']]]
+  ['range_20matchers_0',['range matchers',['../de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html',1,'']]],
+  ['reporting_1',['reporting',['../dd/d4f/group___r_e_p_o_r_t_i_n_g.html',1,'']]],
+  ['reports_2',['reports',['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html',1,'']]],
+  ['requirement_3',['requirement',['../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html',1,'']]]
 ];

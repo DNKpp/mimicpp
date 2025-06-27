@@ -110,68 +110,72 @@ $(function(){initNavTree('de/d52/printing_2_fwd_8hpp_source.html','../../'); ini
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d4/d84/namespacemimicpp_1_1custom.html">mimicpp::custom</a></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>{</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">   18</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">Printer</a>;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html">   25</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html">TypePrinter</a>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>}</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="../../d8/ddf/namespacemimicpp_1_1printing.html">   28</a></span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/ddf/namespacemimicpp_1_1printing.html">mimicpp::printing</a></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">class </span><a class="code hl_class" href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html">PrintFn</a>;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keyword">class </span><a class="code hl_class" href="../../d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html">PrintTypeFn</a>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>}</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d4/d84/namespacemimicpp_1_1custom.html">mimicpp::custom</a></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>{</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">   20</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">Printer</a>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html">   27</a></span>    <span class="keyword">class </span><a class="code hl_class" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html">TypePrinter</a>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="}">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="../../d8/ddf/namespacemimicpp_1_1printing.html">   30</a></span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/ddf/namespacemimicpp_1_1printing.html">mimicpp::printing</a></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">class </span><a class="code hl_class" href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html">PrintFn</a>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">class </span><a class="code hl_class" href="../../d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html">PrintTypeFn</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">namespace </span>mimicpp::printing::detail::state</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>{</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">struct </span>common_type_printer;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">struct </span>cxx23_backport_printer;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keyword">struct </span>formattable_type_printer;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">struct </span>unknown_type_printer;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="foldopen" id="foldopen00051" data-start="{" data-end="}">
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html">   51</a></span><span class="keyword">namespace </span>mimicpp::printing::type::detail</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>{</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keyword">struct </span>common_type_printer;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">struct </span>signature_type_printer;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="keyword">struct </span>template_type_printer;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">namespace </span>mimicpp::printing::detail::state</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>{</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">struct </span>common_type_printer;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">struct </span>cxx23_backport_printer;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">struct </span>formattable_type_printer;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keyword">struct </span>unknown_type_printer;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>}</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
+<div class="foldopen" id="foldopen00053" data-start="{" data-end="}">
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html">   53</a></span><span class="keyword">namespace </span>mimicpp::printing::type::detail</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>{</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">struct </span>common_type_printer;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">struct </span>signature_type_printer;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">struct </span>template_type_printer;</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
 </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassmimicpp_1_1custom_1_1_printer_html"><div class="ttname"><a href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">mimicpp::custom::Printer</a></div><div class="ttdoc">User may add specializations, which will then be used during print calls.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:18</div></div>
-<div class="ttc" id="aclassmimicpp_1_1custom_1_1_type_printer_html"><div class="ttname"><a href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html">mimicpp::custom::TypePrinter</a></div><div class="ttdoc">User may add specializations that will be utilized during type_print calls.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:25</div></div>
-<div class="ttc" id="aclassmimicpp_1_1printing_1_1_print_fn_html"><div class="ttname"><a href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html">mimicpp::printing::PrintFn</a></div><div class="ttdef"><b>Definition</b> Print.hpp:94</div></div>
-<div class="ttc" id="aclassmimicpp_1_1printing_1_1_print_type_fn_html"><div class="ttname"><a href="../../d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html">mimicpp::printing::PrintTypeFn</a></div><div class="ttdef"><b>Definition</b> PrintType.hpp:389</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1custom_html"><div class="ttname"><a href="../../d4/d84/namespacemimicpp_1_1custom.html">mimicpp::custom</a></div><div class="ttdef"><b>Definition</b> Common.hpp:20</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1printing_html"><div class="ttname"><a href="../../d8/ddf/namespacemimicpp_1_1printing.html">mimicpp::printing</a></div><div class="ttdef"><b>Definition</b> Fwd.hpp:29</div></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
+<div class="ttc" id="a_config_8hpp_html_af5897385afd790dba0e4971e29c1e3e0"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MODULE_EXPORT</div><div class="ttdef"><b>Definition</b> Config.hpp:19</div></div>
+<div class="ttc" id="aclassmimicpp_1_1custom_1_1_printer_html"><div class="ttname"><a href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html">mimicpp::custom::Printer</a></div><div class="ttdoc">User may add specializations, which will then be used during print calls.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:20</div></div>
+<div class="ttc" id="aclassmimicpp_1_1custom_1_1_type_printer_html"><div class="ttname"><a href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html">mimicpp::custom::TypePrinter</a></div><div class="ttdoc">User may add specializations that will be utilized during type_print calls.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:27</div></div>
+<div class="ttc" id="aclassmimicpp_1_1printing_1_1_print_fn_html"><div class="ttname"><a href="../../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html">mimicpp::printing::PrintFn</a></div><div class="ttdef"><b>Definition</b> Print.hpp:97</div></div>
+<div class="ttc" id="aclassmimicpp_1_1printing_1_1_print_type_fn_html"><div class="ttname"><a href="../../d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html">mimicpp::printing::PrintTypeFn</a></div><div class="ttdef"><b>Definition</b> PrintType.hpp:394</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1custom_html"><div class="ttname"><a href="../../d4/d84/namespacemimicpp_1_1custom.html">mimicpp::custom</a></div><div class="ttdef"><b>Definition</b> Common.hpp:23</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_html"><div class="ttname"><a href="../../d8/ddf/namespacemimicpp_1_1printing.html">mimicpp::printing</a></div><div class="ttdef"><b>Definition</b> Fwd.hpp:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_092aa99ea44c2ea5c05e2b02d3022b6c.html">printing</a></li><li class="navelem"><a class="el" href="../../de/d52/printing_2_fwd_8hpp.html">Fwd.hpp</a></li>
-    <li class="footer">Generated on Mon May 12 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

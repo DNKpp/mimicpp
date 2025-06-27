@@ -1,5 +1,6 @@
 var namespacemimicpp_1_1util =
 [
+    [ "source_location", "db/d3e/namespacemimicpp_1_1util_1_1source__location.html", "db/d3e/namespacemimicpp_1_1util_1_1source__location" ],
     [ "always_false", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ],
     [ "priority_tag", "d0/db8/structmimicpp_1_1util_1_1priority__tag.html", null ],
     [ "priority_tag< 0u >", "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html", null ],
@@ -19,6 +20,7 @@ var namespacemimicpp_1_1util =
     [ "type_list_pop_back_t", "d8/da3/namespacemimicpp_1_1util.html#ade36f86aac332827425e8d069c0e6586", null ],
     [ "type_list_populate_t", "d8/da3/namespacemimicpp_1_1util.html#ac33626f0a0b03836340f5fb0efd4847c", null ],
     [ "type_list_reverse_t", "d8/da3/namespacemimicpp_1_1util.html#a9e7b756bc206828739845da4bcd8f2a0", null ],
+    [ "bit_cast", "d8/da3/namespacemimicpp_1_1util.html#ad1d380b73c0fefb98b5f0a7a5e8d4819", null ],
     [ "concat_arrays", "d8/da3/namespacemimicpp_1_1util.html#ab67670867e6588001d719e36ad404c79", null ],
     [ "concat_arrays", "d8/da3/namespacemimicpp_1_1util.html#a226566adae6e502d71ebf49c3a47e165", null ],
     [ "find_closing_token", "d8/da3/namespacemimicpp_1_1util.html#a775d0ca317345e92231ec716a81ca921", null ],

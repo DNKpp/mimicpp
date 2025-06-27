@@ -143,12 +143,12 @@ class mimicpp::Watched&lt; Base, Watchers &gt;</div><p>CRTP-type, inheriting fir
   </table>
   </dd>
 </dl>
-<h2><a class="anchor" id="autotoc_md14"></a>
+<h2><a class="anchor" id="autotoc_md13"></a>
 Move-constructor and -assignment-operator</h2>
 <p><code><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...">Watched</a></code> automatically detects the specifications of the <code>Base</code> move-constructor and -assignment-operator, regardless of the <code>Watchers</code> specifications. This is done, so that the <code><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...">Watched</a></code> instance does mimic the interface of <code>Base</code> as closely as possible.</p>
 <p>This is important to note, as this has implications when a <code><a class="el" href="../../da/d45/classmimicpp_1_1_relocation_watcher.html" title="A watcher type, which reports it&#39;s move-constructor and -assignment calls.">RelocationWatcher</a></code> is utilized. <code><a class="el" href="../../da/d45/classmimicpp_1_1_relocation_watcher.html" title="A watcher type, which reports it&#39;s move-constructor and -assignment calls.">RelocationWatcher</a></code> may, during either move-construction or -assignment, report violations to the currently active reporter. This reporter has to act accordingly, by either throwing an exception or terminating the program.</p>
 <p>So, if reporter throws due to a detected violation and the move-operation is declared <code>noexcept</code>, this will inevitable lead to a <code>std::terminate</code>. </p><dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/error/terminate">https://en.cppreference.com/w/cpp/error/terminate</a> Nevertheless, this is usually fine, as watchers are merely used under controlled circumstances and to guarantee the expected behavior. If a violation is reported, an appropriate output will be generated, which should be enough of a hint to track down the bug.</dd></dl>
-<h2><a class="anchor" id="autotoc_md15"></a>
+<h2><a class="anchor" id="autotoc_md14"></a>
 Destructor</h2>
 <p><code><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...">Watched</a></code> automatically detects, whether <code>Base</code> has a virtual destructor and applies <code>override</code> if that's the case. It also forces the same <code>noexcept</code>-ness for the destruct: If <code>Base</code> is nothrow destructible, <code><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html" title="CRTP-type, inheriting first from all Watchers and then Base, thus effectively couple them all togethe...">Watched</a></code> is it, too.</p>
 <p>This is important to note, as this has implications when a <code><a class="el" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html" title="A watcher type, which reports it&#39;s destructor calls.">LifetimeWatcher</a></code> is utilized. <code><a class="el" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html" title="A watcher type, which reports it&#39;s destructor calls.">LifetimeWatcher</a></code> may, during destruction, report violations to the currently active reporter. This reporter has to act accordingly, by either throwing an exception or terminating the program.</p>
@@ -329,7 +329,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d3/d5d/classmimicpp_1_1_watched.html">Watched</a></li>
-    <li class="footer">Generated on Mon May 12 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

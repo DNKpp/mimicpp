@@ -133,7 +133,7 @@ Variables</h2></td></tr>
 <li>Formattable types (based on the installed format backend)</li>
 </ul>
 <p>If no valid alternative is found, the default option is used, which simply prints "{?}").</p>
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md16"></a>
 Override existing printings or print custom types</h3>
 <p>As <code>mimic++</code> cannot automatically convert every custom type, it employs a simple yet effective mechanism. Users can create a specialization of <code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></code> for their own or third-party types. <code>mimic++</code> will always prioritize these specializations over any internal alternatives, even if it already has specific handling for that particular type (e.g. <code>std::source_location</code>).</p>
 <p>Consider the following type. </p><div class="fragment"><div class="line">    <span class="keyword">struct </span>my_type</div>
@@ -160,7 +160,7 @@ Override existing printings or print custom types</h3>
 <div class="line">    REQUIRE_THAT(</div>
 <div class="line">        text,</div>
 <div class="line">        Catch::Matchers::Equals(<span class="stringliteral">&quot;Object of my_type has value: 42&quot;</span>));</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md18"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md17"></a>
 String printing</h3>
 <p>All char-strings (like <code>const char*</code> or <code>std::string</code>) will be printed as they are. However, other character types (e.g. <code>wchar_t</code> or <code>char8_t</code>) require careful handling. Achieving 100% compatibility with all existing character types in <code>mimic++</code> would either involve significant workload or necessitate reliance on an external dependency. Currently, <code>mimic++</code> takes a different approach: if a string of a non-printable character type (as determined by the type trait <code><a class="el" href="../../d2/d73/structmimicpp_1_1is__character.html" title="Primary template, which always yields false.">is_character</a></code>) is detected, it prints the string literal, converting all elements to their value representation and displaying them as comma-separated hexadecimal values.</p>
 <p>For example, the string <code>u8"Hello, World!"</code> will then be printed as: <code>u8"0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f, 0x72, 0x6c, 0x64, 0x21"</code>. </p>
@@ -194,7 +194,7 @@ String printing</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon May 12 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

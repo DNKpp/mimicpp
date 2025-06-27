@@ -13,6 +13,9 @@ var concepts =
         [ "backend", "d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html", null ]
       ] ],
       [ "util", "d8/da3/namespacemimicpp_1_1util.html", [
+        [ "source_location", "db/d3e/namespacemimicpp_1_1util_1_1source__location.html", [
+          [ "backend", "d4/dde/conceptmimicpp_1_1util_1_1source__location_1_1backend.html", null ]
+        ] ],
         [ "explicitly_convertible_to", "d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertible__to.html", null ],
         [ "nothrow_explicitly_convertible_to", "db/d6a/conceptmimicpp_1_1util_1_1nothrow__explicitly__convertible__to.html", null ],
         [ "same_as_any", "d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html", null ],
