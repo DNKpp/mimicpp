@@ -52,7 +52,7 @@ if (NOT TARGET mimicpp-enable-config-options)
             "MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__"
             OFF
         )
-        set(FMT_MODULE ${MIMICPP_CONFIG_IMPORT_FMT})
+        set(FMT_MODULE ${MIMICPP_CONFIG_IMPORT_FMT} CACHE BOOL "")
 
         find_package(fmt QUIET)
         if (NOT fmt_FOUND)
@@ -84,7 +84,7 @@ if (NOT TARGET mimicpp-enable-config-options)
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER: ${MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER}")
     if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
 
-        set(UNI_ALGO_INSTALL ON)
+        set(UNI_ALGO_INSTALL ON CACHE BOOL "")
 
         message(DEBUG "${MESSAGE_PREFIX} Searching for installed {uni-algo}-package.")
         find_package(uni-algo QUIET)
@@ -134,9 +134,9 @@ if (NOT TARGET mimicpp-enable-config-options)
                 OFF
             )
             if (NOT MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE)
-                set(CPPTRACE_DISABLE_CXX_20_MODULES ON)
+                set(CPPTRACE_DISABLE_CXX_20_MODULES ON CACHE BOOL "")
             else ()
-                set(CPPTRACE_DISABLE_CXX_20_MODULES OFF)
+                set(CPPTRACE_DISABLE_CXX_20_MODULES OFF CACHE BOOL "")
             endif ()
 
             find_package(cpptrace QUIET)
