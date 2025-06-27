@@ -124,49 +124,22 @@ if (NOT TARGET mimicpp-enable-config-options)
         message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE}")
         if (MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE)
 
-            message(DEBUG "${MESSAGE_PREFIX} Searching for installed {cpptrace}-package.")
-
-            cmake_dependent_option(
-                MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
-                "Determines, whether cpptrace will be consumed as a c++20 module."
-                ON
-                "MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__"
-                OFF
-            )
-            if (NOT MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE)
-                set(CPPTRACE_DISABLE_CXX_20_MODULES ON CACHE BOOL "")
-            else ()
-                set(CPPTRACE_DISABLE_CXX_20_MODULES OFF CACHE BOOL "")
-            endif ()
-
-            find_package(cpptrace QUIET)
-            if (NOT cpptrace_FOUND)
-                message(STATUS "${MESSAGE_PREFIX} No installed {cpptrace}-package found. Fetching via cpm.")
-
-                include(get_cpm)
-                CPMAddPackage("gh:jeremy-rifkin/cpptrace@1.0.2")
-            endif ()
-
             find_package(cpptrace REQUIRED)
-            message(STATUS "${MESSAGE_PREFIX} Using {cpptrace}-package from: ${cpptrace_SOURCE_DIR}")
-            target_link_libraries(mimicpp-enable-config-options
-                INTERFACE
-                cpptrace::cpptrace
+            target_link_libraries(mimicpp-enable-config-options INTERFACE
+                    cpptrace::cpptrace
             )
 
-            target_compile_definitions(mimicpp-enable-config-options
-                INTERFACE
-                MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=1
-                $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
+            target_compile_definitions(mimicpp-enable-config-options INTERFACE
+                    MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=1
+                    $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
             )
 
         else ()
             message(DEBUG "${MESSAGE_PREFIX} Selected std::stacktrace.")
         endif ()
 
-        target_compile_definitions(mimicpp-enable-config-options
-            INTERFACE
-            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
+        target_compile_definitions(mimicpp-enable-config-options INTERFACE
+                MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
         )
 
     endif ()
