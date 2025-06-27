@@ -69,7 +69,7 @@ var searchData=
   ['typeprinter_2ehpp_66',['TypePrinter.hpp',['../d6/d35/_type_printer_8hpp.html',1,'']]],
   ['typereport_67',['TypeReport',['../de/d89/classmimicpp_1_1reporting_1_1_type_report.html',1,'mimicpp::reporting']]],
   ['typereport_2ehpp_68',['TypeReport.hpp',['../d0/d18/_type_report_8hpp.html',1,'']]],
-  ['types_69',['types',['../index.html#autotoc_md66',1,'Bring your own string- and char-types'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md16',1,'Override existing printings or print custom types'],['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md6',1,'Strings with other character-types'],['../d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html#a4d56d99f7ac4b4d86ceebc72fc7bd678',1,'mimicpp::printing::type::parsing::token::ArgSequence::types']]],
+  ['types_69',['types',['../index.html#autotoc_md66',1,'Bring your own string- and char-types'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md16',1,'Override existing printings or print custom types'],['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md8',1,'Strings with other character-types'],['../d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html#a4d56d99f7ac4b4d86ceebc72fc7bd678',1,'mimicpp::printing::type::parsing::token::ArgSequence::types']]],
   ['types_20and_20related_20strings_70',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['typetraits_2ehpp_71',['TypeTraits.hpp',['../d8/d32/_type_traits_8hpp.html',1,'']]]
 ];
