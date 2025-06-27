@@ -25,7 +25,7 @@ target_compile_definitions(${TARGET_NAME} INTERFACE
 
 include(Mimic++-EnableAdditionalTestFlags)
 include(Mimic++-EnableWarnings)
-include(LinkStdStacktrace)
+include(Mimic++-LinkStdStacktrace)
 find_package(libassert REQUIRED)
 target_link_libraries(${TARGET_NAME} INTERFACE
     mimicpp::internal::additional-test-flags
