@@ -257,7 +257,7 @@ jobs:
             compiler_name: "msvc"
             compiler_version: "v143"
             cmake_generator: "Visual Studio 17 2022"
-            cxx20_modules: true
+            cxx20_modules: false
 
           - prefix: "Windows 2022"
             suffix: "/Gv"
@@ -266,7 +266,7 @@ jobs:
             compiler_version: "v143"
             cmake_generator: "Visual Studio 17 2022"
             default_call_convention: "vectorcall"
-            cxx20_modules: true
+            cxx20_modules: false
 
           - prefix: "Windows 2022"
             os: "windows-2022"
