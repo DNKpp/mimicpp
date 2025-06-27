@@ -23,7 +23,7 @@ target_compile_definitions(${TARGET_NAME} INTERFACE
     "LIBASSERT_BREAK_ON_FAIL"
 )
 
-include(EnableAdditionalTestFlags)
+include(Mimic++-EnableAdditionalTestFlags)
 include(Mimic++-EnableWarnings)
 include(LinkStdStacktrace)
 find_package(libassert REQUIRED)
