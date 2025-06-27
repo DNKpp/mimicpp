@@ -309,6 +309,10 @@ jobs:
             config:
               compiler_name: "gcc"
               compiler_version: "10"
+          - cxx_standard: 23
+            config:
+              compiler_name: "gcc"
+              compiler_version: "10.2"
           # seems like macOS doesn't support 32bit builds
           - architecture: "32bit"
             config:
