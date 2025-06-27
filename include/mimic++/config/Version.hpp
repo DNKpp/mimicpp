@@ -8,6 +8,6 @@
 
 #pragma once
 
-#define MIMICPP_VERSION 7
+#define MIMICPP_VERSION 8
 
 #endif
