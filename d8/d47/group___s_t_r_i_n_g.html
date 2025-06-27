@@ -139,7 +139,7 @@ Concepts</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Contains symbols for generic string processing. </p>
 <p>There are plenty of different character-types and even more string-types out there. They mostly differ in their details, but in general some common operations shall be applied (like equality- or prefix-tests). Therefore, <code>mimic++</code> offers various abstractions, which users can utilize to make their char- and string-types compatible with the framework, and thus with all string-matchers.</p>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 Custom Strings with common char-type</h2>
 <p>Custom strings, which do use any of the common char-types (<code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, etc.), can be made compatible in no time. Users do just have to provide a specialization for the <code><a class="el" href="../../d1/dee/structmimicpp_1_1string__traits.html">string_traits</a></code> template: Given the following string-type, which in fact is just an abstraction around a <code>std::string</code>: </p><div class="fragment"><div class="line">    <span class="keyword">class </span>MyString</div>
 <div class="line">    {</div>

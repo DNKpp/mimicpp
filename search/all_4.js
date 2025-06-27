@@ -5,7 +5,7 @@ var searchData=
   ['backend_5ftraits_3c_20mimicpp_3a_3astacktrace_3a_3anullbackend_20_3e_2',['backend_traits&lt; mimicpp::stacktrace::NullBackend &gt;',['../d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html',1,'mimicpp::stacktrace']]],
   ['backend_5ftraits_3c_20nostd_3a_3asource_5flocation_20_3e_3',['backend_traits&lt; nostd::source_location &gt;',['../df/d21/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01nostd_1_1source__location_01_4.html',1,'mimicpp::util::source_location']]],
   ['backend_5ftraits_3c_20std_3a_3asource_5flocation_20_3e_4',['backend_traits&lt; std::source_location &gt;',['../dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4.html',1,'mimicpp::util::source_location']]],
-  ['backends_5',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md21',1,'']]],
+  ['backends_5',['Custom Stacktrace Backends',['../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#autotoc_md22',1,'']]],
   ['basestacktraceskip_6',['baseStacktraceSkip',['../d4/d44/classmimicpp_1_1call_1_1_info.html#aaed1d17e900f8ee111c3b8cd55ad8582',1,'mimicpp::call::Info']]],
   ['basicexpectation_7',['BasicExpectation',['../d3/d4a/classmimicpp_1_1_basic_expectation.html',1,'mimicpp::BasicExpectation&lt; Signature, ControlPolicy, FinalizePolicy, Policies &gt;'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a11b0b6fa0c33cc1548fc6f133cdc2bb3',1,'mimicpp::BasicExpectation::BasicExpectation()']]],
   ['basicexpectationbuilder_8',['BasicExpectationBuilder',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html',1,'mimicpp::BasicExpectationBuilder&lt; timesConfigured, SequenceConfig, Signature, FinalizePolicy, Policies &gt;'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(std::shared_ptr&lt; StorageT &gt; storage, reporting::TargetReport target, detail::TimesConfig timesConfig, SequenceConfig sequenceConfig, FinalizePolicyArg &amp;&amp;finalizePolicyArg, PolicyListArg &amp;&amp;policyListArg) noexcept'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a99b43a6ad6e94ecdb44e3c4a43c90363',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(const BasicExpectationBuilder &amp;)=delete'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1972372a9dee2539cc9f1c63beb3c6c6',1,'mimicpp::BasicExpectationBuilder::BasicExpectationBuilder(BasicExpectationBuilder &amp;&amp;)=default']]],
@@ -29,11 +29,11 @@ var searchData=
   ['begin_5ftype_26',['begin_type',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a899e9bf9ea64e58241cd151dd2190707',1,'mimicpp::printing::type::PrintVisitor']]],
   ['binary_5ffind_27',['binary_find',['../d8/da3/namespacemimicpp_1_1util.html#ae6cea4e9b0f4576bf518112f12bd8e5d',1,'mimicpp::util']]],
   ['bit_5fcast_28',['bit_cast',['../d8/da3/namespacemimicpp_1_1util.html#ad1d380b73c0fefb98b5f0a7a5e8d4819',1,'mimicpp::util']]],
-  ['bitarithmetic_29',['bitArithmetic',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a103c69ccbcd94695af5ee9313f2fdaaf',1,'mimicpp::printing::type::lexing::texts']]],
+  ['bitarithmetic_29',['bitArithmetic',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#ae49e5c477818b80916718f9de5f4f950',1,'mimicpp::printing::type::lexing::texts']]],
   ['boolean_5ftestable_30',['boolean_testable',['../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html',1,'mimicpp::util']]],
   ['boosttest_2ehpp_31',['BoostTest.hpp',['../d9/d42/_boost_test_8hpp.html',1,'']]],
   ['boosttestreportert_32',['BoostTestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaa1a2d936b0a089d8b4e19f75eb6b8bbc',1,'mimicpp::reporting']]],
-  ['bracelikes_33',['braceLikes',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a7eb0d62a4d0554f600ffedfc64c875c0',1,'mimicpp::printing::type::lexing::texts']]],
+  ['bracelikes_33',['braceLikes',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#aa7a125de4df0fcfb7fb3bd06fc95693b',1,'mimicpp::printing::type::lexing::texts']]],
   ['bring_20your_20own_20string_20and_20char_20types_34',['Bring your own string- and char-types',['../index.html#autotoc_md66',1,'']]],
   ['byte_20string_35',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]]
 ];

@@ -2,7 +2,7 @@ var searchData=
 [
   ['a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md51',1,'']]],
   ['a_20word_20on_20sequences_20with_20times_1',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md20',1,'']]],
-  ['access_2',['access',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a24945b6ea404d1c77937be9d6f504f72',1,'mimicpp::printing::type::lexing::texts']]],
+  ['access_2',['access',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#adab672e3469b40473720dc427ef0b064',1,'mimicpp::printing::type::lexing::texts']]],
   ['acknowledgement_3',['Special Acknowledgement',['../index.html#autotoc_md82',1,'']]],
   ['adapters_4',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['add_5farg_5',['add_arg',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#ae4b3078ff119523c8d8842c6efe25261',1,'mimicpp::printing::type::PrintVisitor']]],
@@ -45,10 +45,10 @@ var searchData=
   ['argsrequirement_42',['ArgsRequirement',['../d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html',1,'mimicpp::expectation_policies::ArgsRequirement&lt; Matcher, MatchesStrategy, DescribeStrategy &gt;'],['../d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html#a3068cd8cc16c7c1bb907424161c83ac1',1,'mimicpp::expectation_policies::ArgsRequirement::ArgsRequirement()']]],
   ['argumentlist_2ehpp_43',['ArgumentList.hpp',['../d2/dfd/_argument_list_8hpp.html',1,'']]],
   ['arguments_44',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md2',1,'']]],
-  ['arithmetic_45',['arithmetic',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a8b0bc7bfe8df4e02cc202010a3b7ff72',1,'mimicpp::printing::type::lexing::texts']]],
+  ['arithmetic_45',['arithmetic',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a97f5e37f808c4497329b669752f9acba',1,'mimicpp::printing::type::lexing::texts']]],
   ['as_20formatting_20backend_46',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'']]],
   ['as_5fconst_47',['as_const',['../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a7d8fbf6968b41f059fd98dfa87dc47c2',1,'mimicpp']]],
-  ['assignment_48',['assignment',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#af5084891e537601914848a32cf9b0d59',1,'mimicpp::printing::type::lexing::texts']]],
+  ['assignment_48',['assignment',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a12607a75c546d41ac003da0a7f0af45e',1,'mimicpp::printing::type::lexing::texts']]],
   ['assignment_20operator_49',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md13',1,'']]],
   ['at_5fleast_50',['at_least',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gaa44f54d8e8a587300db34bd55efdace4',1,'mimicpp::expect']]],
   ['at_5fmost_51',['at_most',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga5c1b44164371e807365df6c11d5fb221',1,'mimicpp::expect']]]

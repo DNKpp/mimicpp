@@ -11,7 +11,7 @@ var searchData=
   ['loc_8',['loc',['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#ac84f61fe24cb2bdf631bf03396405dbf',1,'mimicpp::ScopedExpectation']]],
   ['location_9',['source-location',['../d7/da5/group___s_o_u_r_c_e___l_o_c_a_t_i_o_n.html',1,'']]],
   ['location_20backend_10',['Install an alternative source-location backend.',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md28',1,'']]],
-  ['logical_11',['logical',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a986b53abc69cd73d79770c871dffaa28',1,'mimicpp::printing::type::lexing::texts']]],
+  ['logical_11',['logical',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a6331ef90418cbf95c86c609fbd181a90',1,'mimicpp::printing::type::lexing::texts']]],
   ['lt_12',['lt',['../d4/d14/group___m_a_t_c_h_e_r_s.html#ga242b5abc5a65421f91a90575acbceb66',1,'mimicpp::matches']]],
   ['lvalue_13',['lvalue',['../de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs.html#a8b79936fe9f3950aaeeafc51c46648a4a964f092ac003185b1368262d6a04738b',1,'mimicpp::printing::type::parsing::token::Specs::lvalue'],['../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa44f6155f13a820089c09cb5e9d7ccdef',1,'mimicpp::lvalue']]]
 ];

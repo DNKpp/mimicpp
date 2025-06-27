@@ -11,7 +11,7 @@ var searchData=
   ['destructor_8',['Destructor',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
   ['detail_9',['detail',['../db/d59/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s___d_e_t_a_i_l.html',1,'detail'],['../d0/d48/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l.html',1,'detail']]],
   ['developer_20hub_10',['🔗 Developer Hub',['../index.html#autotoc_md53',1,'']]],
-  ['digraphs_11',['digraphs',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a258b3ecff3516370228f7e7b32250458',1,'mimicpp::printing::type::lexing::texts']]],
+  ['digraphs_11',['digraphs',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a705a12c5b6004845a6cfa5738f7bee0d',1,'mimicpp::printing::type::lexing::texts']]],
   ['disable_20unprefixed_20macros_12',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'']]],
   ['doctest_2ehpp_13',['Doctest.hpp',['../dc/d42/_doctest_8hpp.html',1,'']]],
   ['doctestreportert_14',['DoctestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga8ef20c643725738016314f855cc453fa',1,'mimicpp::reporting']]],

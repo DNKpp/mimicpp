@@ -1,22 +1,22 @@
 var namespacemimicpp_1_1printing_1_1type_1_1lexing =
 [
     [ "texts", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html", [
-      [ "access", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a24945b6ea404d1c77937be9d6f504f72", null ],
-      [ "arithmetic", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a8b0bc7bfe8df4e02cc202010a3b7ff72", null ],
-      [ "assignment", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#af5084891e537601914848a32cf9b0d59", null ],
-      [ "bitArithmetic", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a103c69ccbcd94695af5ee9313f2fdaaf", null ],
-      [ "braceLikes", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a7eb0d62a4d0554f600ffedfc64c875c0", null ],
-      [ "comparison", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#af787bfa659cc09e95492ced46c2fc11c", null ],
-      [ "contextKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a4ab14f69abf3997093cdd04a252260a9", null ],
-      [ "digraphs", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a258b3ecff3516370228f7e7b32250458", null ],
-      [ "incOrDec", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a06016e872caf444f4ae6391b6d4bfbca", null ],
-      [ "logical", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a986b53abc69cd73d79770c871dffaa28", null ],
-      [ "otherKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a2d866c38d2bdea930fcc3fc940697e9b", null ],
-      [ "rest", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a91a167ab248ecfd94dddd5aba5a25fb2", null ],
-      [ "specialAngles", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a42f6d861a0953b2eda066cc826e252d4", null ],
-      [ "specKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a7adf37c7e77d9a7533430b82a8b66a64", null ],
-      [ "typeKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a743b50263dfbdfb946bbe9cfab52e352", null ],
-      [ "visibilityKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a6f7d078d8181ca893e049035878465f5", null ]
+      [ "access", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#adab672e3469b40473720dc427ef0b064", null ],
+      [ "arithmetic", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a97f5e37f808c4497329b669752f9acba", null ],
+      [ "assignment", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a12607a75c546d41ac003da0a7f0af45e", null ],
+      [ "bitArithmetic", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#ae49e5c477818b80916718f9de5f4f950", null ],
+      [ "braceLikes", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#aa7a125de4df0fcfb7fb3bd06fc95693b", null ],
+      [ "comparison", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#aa4fb9a9b60e0671d87f50ed2772a5853", null ],
+      [ "contextKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a1c778f7d01702577fd4a2e91c9ebe060", null ],
+      [ "digraphs", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a705a12c5b6004845a6cfa5738f7bee0d", null ],
+      [ "incOrDec", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a0447e2b60861d1055397b655c91d54de", null ],
+      [ "logical", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a6331ef90418cbf95c86c609fbd181a90", null ],
+      [ "otherKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a66c7edbd218a0fa8a7a42a8e2959ecd6", null ],
+      [ "rest", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a550a23a5d8c77211821d9880becd935a", null ],
+      [ "specialAngles", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a726c7100403050cd9226861576bfac42", null ],
+      [ "specKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#ac541216cf43a7fe98b42c38dbde8ed82", null ],
+      [ "typeKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a43abcae450b8a7fa17376eab2293ef3d", null ],
+      [ "visibilityKeywords", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#ac6c89ce29390c2d953b6a627c28a563f", null ]
     ] ],
     [ "end", "d8/d12/structmimicpp_1_1printing_1_1type_1_1lexing_1_1end.html", "d8/d12/structmimicpp_1_1printing_1_1type_1_1lexing_1_1end" ],
     [ "identifier", "de/dd6/structmimicpp_1_1printing_1_1type_1_1lexing_1_1identifier.html", "de/dd6/structmimicpp_1_1printing_1_1type_1_1lexing_1_1identifier" ],
@@ -28,6 +28,6 @@ var namespacemimicpp_1_1printing_1_1type_1_1lexing =
     [ "token_class", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a2f8729144d5fac5579969deaa79e8921", null ],
     [ "make_keyword_collection", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#af60816d29f6dbcdb4a49fb1e483b16ab", null ],
     [ "make_operator_or_punctuator_collection", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a1c2d902db3259d99e885c7d667be0b6a", null ],
-    [ "is_digit", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#adc5a781859b180faa2ba55703af8a35f", null ],
-    [ "is_space", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a55519c82cbaa007fb73f3836101e776c", null ]
+    [ "is_digit", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#ab3004c65e5348b1d6d50425d2afd4568", null ],
+    [ "is_space", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a8cf34592bdd77c55aba786690912681e", null ]
 ];
