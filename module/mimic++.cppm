@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 module;
+
 #include <version>
 
 #include <algorithm>
@@ -15,6 +16,7 @@ module;
 #include <cstddef>
 #include <cstdlib>
 #include <deque>
+#include <exception>
 #include <filesystem>
 #include <functional>
 #include <iostream>
