@@ -25,13 +25,13 @@
 namespace mimicpp::printing::type::lexing
 {
     // see: https://en.cppreference.com/w/cpp/string/byte/isspace
-    constexpr auto is_space = [](char const c) noexcept {
+    inline auto constexpr is_space = [](char const c) noexcept {
         return static_cast<bool>(
             std::isspace(static_cast<unsigned char>(c)));
     };
 
     // see: https://en.cppreference.com/w/cpp/string/byte/isdigit
-    constexpr auto is_digit = [](char const c) noexcept {
+    inline auto constexpr is_digit = [](char const c) noexcept {
         return static_cast<bool>(
             std::isdigit(static_cast<unsigned char>(c)));
     };
@@ -39,25 +39,26 @@ namespace mimicpp::printing::type::lexing
     namespace texts
     {
         // just list the noteworthy ones here
-        constexpr std::array visibilityKeywords = std::to_array<StringViewT>({"public", "protected", "private"});
-        constexpr std::array specKeywords = std::to_array<StringViewT>({"const", "constexpr", "volatile", "noexcept", "static"});
-        constexpr std::array contextKeywords = std::to_array<StringViewT>({"operator", "struct", "class", "enum"});
-        constexpr std::array typeKeywords = std::to_array<StringViewT>(
+        inline std::array constexpr visibilityKeywords = std::to_array<StringViewT>({"public", "protected", "private"});
+        inline std::array constexpr specKeywords = std::to_array<StringViewT>({"const", "constexpr", "volatile", "noexcept", "static"});
+        inline std::array constexpr contextKeywords = std::to_array<StringViewT>({"operator", "struct", "class", "enum"});
+        inline std::array constexpr typeKeywords = std::to_array<StringViewT>(
             // The `__int64` keyword is used by msvc as an alias for `long long`.
             {"auto", "void", "bool", "char", "char8_t", "char16_t", "char32_t", "wchar_t", "double", "float", "int", "long", "__int64", "short", "signed", "unsigned"});
-        constexpr std::array otherKeywords = std::to_array<StringViewT>({"new", "delete", "co_await"});
-        constexpr std::array digraphs = std::to_array<StringViewT>({"and", "or", "xor", "not", "bitand", "bitor", "compl", "and_eq", "or_eq", "xor_eq", "not_eq"});
+        inline std::array constexpr otherKeywords = std::to_array<StringViewT>({"new", "delete", "co_await"});
+        inline std::array constexpr digraphs = std::to_array<StringViewT>(
+            {"and", "or", "xor", "not", "bitand", "bitor", "compl", "and_eq", "or_eq", "xor_eq", "not_eq"});
 
-        constexpr std::array braceLikes = std::to_array<StringViewT>({"{", "}", "[", "]", "(", ")", "`", "'"});
-        constexpr std::array comparison = std::to_array<StringViewT>({"==", "!=", "<", "<=", ">", ">=", "<=>"});
-        constexpr std::array assignment = std::to_array<StringViewT>({"=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="});
-        constexpr std::array incOrDec = std::to_array<StringViewT>({"++", "--"});
-        constexpr std::array arithmetic = std::to_array<StringViewT>({"+", "-", "*", "/", "%"});
-        constexpr std::array bitArithmetic = std::to_array<StringViewT>({"~", "&", "|", "^", "<<", ">>"});
-        constexpr std::array logical = std::to_array<StringViewT>({"!", "&&", "||"});
-        constexpr std::array access = std::to_array<StringViewT>({".", ".*", "->", "->*"});
-        constexpr std::array specialAngles = std::to_array<StringViewT>({"<:", ":>", "<%", "%>"});
-        constexpr std::array rest = std::to_array<StringViewT>({"::", ";", ",", ":", "...", "?"});
+        inline std::array constexpr braceLikes = std::to_array<StringViewT>({"{", "}", "[", "]", "(", ")", "`", "'"});
+        inline std::array constexpr comparison = std::to_array<StringViewT>({"==", "!=", "<", "<=", ">", ">=", "<=>"});
+        inline std::array constexpr assignment = std::to_array<StringViewT>({"=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>="});
+        inline std::array constexpr incOrDec = std::to_array<StringViewT>({"++", "--"});
+        inline std::array constexpr arithmetic = std::to_array<StringViewT>({"+", "-", "*", "/", "%"});
+        inline std::array constexpr bitArithmetic = std::to_array<StringViewT>({"~", "&", "|", "^", "<<", ">>"});
+        inline std::array constexpr logical = std::to_array<StringViewT>({"!", "&&", "||"});
+        inline std::array constexpr access = std::to_array<StringViewT>({".", ".*", "->", "->*"});
+        inline std::array constexpr specialAngles = std::to_array<StringViewT>({"<:", ":>", "<%", "%>"});
+        inline std::array constexpr rest = std::to_array<StringViewT>({"::", ";", ",", ":", "...", "?"});
     }
 
     [[nodiscard]]
