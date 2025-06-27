@@ -5,4 +5,10 @@
 
 include(get_cpm)
 
-CPMAddPackage("gh:jeremy-rifkin/libassert@2.1.5")
+if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)
+    set(LIBASSERT_DISABLE_CXX_20_MODULES OFF)
+else ()
+    set(LIBASSERT_DISABLE_CXX_20_MODULES ON)
+endif ()
+
+CPMAddPackage("gh:jeremy-rifkin/libassert@2.2.0")
