@@ -563,11 +563,11 @@ The results of these test cases are consistently tracked by an extensive CI syst
 test case outcomes,
 and coverage across dozens of different operating systems, compilers, and build configurations.
 
-For the test builds, the flags ```-Wall -Wextra -Wpedantic -Werror``` (or ```/W4 /WX``` on MSVC) are set.
-This ensures that ``mimic++`` won't flood your build output with endless warnings - or, even worse, break your builds —
+For the test builds, the flags `-Wall -Wextra -Wpedantic -Werror` (or `/W4 /WX /permissive-` on MSVC) are set.
+This ensures that `mimic++` won't flood your build output with endless warnings - or, even worse, break your builds —
 if you enable these flags in your own projects.
 
-The coverage is generated via ``gcov`` and evaluated by
+The coverage is generated via `gcov` and evaluated by
 [codacy](https://app.codacy.com/gh/DNKpp/mimicpp),
 [codecov](https://codecov.io/gh/DNKpp/mimicpp) and
 [coveralls](https://coveralls.io/github/DNKpp/mimicpp).
@@ -578,7 +578,7 @@ The goal is to get as close to 100% as possible.
 
 On the other hand, there is a significant amount of code that isn't even analyzed by these tools, such as templates and
 macros.
-``mimic++`` contains a lot of templated code at its core, which requires at least an equal amount of effort to get right
+`mimic++` contains a lot of templated code at its core, which requires at least an equal amount of effort to get right
 and thoroughly tested.
 Therefore, it's important to take the coverage percentage with a grain of salt.
 
