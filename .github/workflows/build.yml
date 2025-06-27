@@ -298,6 +298,9 @@ jobs:
             only_cpptrace: true
 
         exclude:
+          # Honestly, we do not get much insight from testing Release modes of different c++-versions.
+          - build_mode: "Release"
+            cxx_standard: 23
           # This combination results in a compile error in ranges header.
           - cxx_standard: 23
             config:
