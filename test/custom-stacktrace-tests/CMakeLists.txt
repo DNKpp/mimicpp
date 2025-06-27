@@ -15,7 +15,7 @@ add_executable(${TARGET_NAME}
     "Printing.cpp"
 )
 
-include(EnableSanitizers)
+include(Mimic++-EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
 find_package(Catch2 REQUIRED)

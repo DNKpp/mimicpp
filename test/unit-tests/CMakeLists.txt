@@ -31,7 +31,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>"
 )
 
-include(EnableSanitizers)
+include(Mimic++-EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
 find_package(Catch2 REQUIRED)

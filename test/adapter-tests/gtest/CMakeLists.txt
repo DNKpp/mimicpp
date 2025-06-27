@@ -8,7 +8,7 @@ add_executable(${TARGET_NAME}
 	"main.cpp"
 )
 
-include(EnableSanitizers)
+include(Mimic++-EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
 CPMAddPackage(

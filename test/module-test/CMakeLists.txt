@@ -12,7 +12,7 @@ target_compile_options(${TARGET_NAME} PRIVATE
     "$<$<CXX_COMPILER_ID:Clang>:-Wno-deprecated-declarations>"
 )
 
-include(EnableSanitizers)
+include(Mimic++-EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
 find_package(Catch2 REQUIRED)

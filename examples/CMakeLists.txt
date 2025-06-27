@@ -30,7 +30,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"
 
 endif ()
 
-include(EnableSanitizers)
+include(Mimic++-EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
 find_package(Catch2 REQUIRED)
