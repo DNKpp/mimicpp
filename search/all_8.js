@@ -16,7 +16,7 @@ var searchData=
   ['find_5fnext_5funwrapped_5ftoken_13',['find_next_unwrapped_token',['../d8/da3/namespacemimicpp_1_1util.html#ad9543460b0c98427b3cf3b46f5b5aaad',1,'mimicpp::util']]],
   ['floatingpointmatchers_2ehpp_14',['FloatingPointMatchers.hpp',['../d1/de0/_floating_point_matchers_8hpp.html',1,'']]],
   ['fmt_20tt_20as_20formatting_20backend_15',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'']]],
-  ['folding_16',['Case-Folding',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md4',1,'']]],
+  ['folding_16',['Case-Folding',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md6',1,'']]],
   ['for_20case_20insensitive_20matching_17',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
   ['for_20printing_18',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
   ['for_5fbase_5ftag_19',['for_base_tag',['../d6/da7/structmimicpp_1_1for__base__tag.html',1,'mimicpp']]],
