@@ -94,5 +94,5 @@ if (MIMICPP_ENABLE_AMALGAMATE_HEADERS)
 endif()
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)
-	include(InstallRules)
+	include(Mimic++-InstallRules)
 endif()
