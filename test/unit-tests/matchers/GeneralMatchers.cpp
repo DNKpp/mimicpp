@@ -644,3 +644,28 @@ TEST_CASE(
         }
     }
 }
+
+TEST_CASE(
+    "matches::type satisfies matcher_for only for the given type.",
+    "[matcher]")
+{
+    auto constexpr matcher = matches::type<int&>;
+    using Matcher = std::remove_cvref_t<decltype(matcher)>;
+
+    SECTION("When argument is an exact match.")
+    {
+        STATIC_CHECK(matcher_for<Matcher, int&>);
+
+        int i{42};
+        CHECK(matcher.matches(i));
+        CHECK_FALSE(std::optional<StringT>{matcher.describe()});
+    }
+
+    SECTION("When argument is not an exact match.")
+    {
+        STATIC_CHECK_FALSE(matcher_for<Matcher, int>);
+        STATIC_CHECK_FALSE(matcher_for<Matcher, int const&>);
+        STATIC_CHECK_FALSE(matcher_for<Matcher, int&&>);
+        STATIC_CHECK_FALSE(matcher_for<Matcher, int const&&>);
+    }
+}

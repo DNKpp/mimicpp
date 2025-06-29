@@ -55,9 +55,9 @@ namespace mimicpp::detail::matches_hook
         return matcher.matches(target, others...);
     }
 
-    inline constexpr util::priority_tag<1> maxTag{};
+    inline util::priority_tag<1> constexpr maxTag{};
 
-    inline constexpr auto matches = []<typename Matcher, typename T, typename... Others>(
+    inline auto constexpr matches = []<typename Matcher, typename T, typename... Others>(
                                         Matcher const& matcher,
                                         T& target,
                                  Others&... others)
@@ -96,13 +96,61 @@ namespace mimicpp::detail::describe_hook
         return matcher.describe();
     }
 
-    inline constexpr util::priority_tag<1> maxTag{};
+    inline util::priority_tag<1> constexpr maxTag{};
 
-    constexpr auto describe = []<typename Matcher>(Matcher const& matcher) -> decltype(auto)
+    inline auto constexpr describe = []<typename Matcher>(Matcher const& matcher) -> decltype(auto)
         requires requires { { describe_impl(maxTag, matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>; }
     {
         return describe_impl(maxTag, matcher);
     };
+}
+
+namespace mimicpp::matcher
+{
+    namespace detail
+    {
+        /**
+         * \brief Primary template, accepting any `Matcher`/`Args` combination.
+         * \tparam Matcher The matcher type.
+         * \tparam Args The argument types.
+         */
+        template <typename Matcher, typename... Args>
+        struct is_accepting
+            : public std::true_type
+        {
+        };
+
+        template <template <typename...> typename is_accepting, typename... Args>
+        struct is_accepting_helper
+            : public is_accepting<Args...>
+        {
+        };
+
+        /**
+         * \brief Specialization, reading the `is_accepting` trait from `Matcher`, when such member-type template exists.
+         * \tparam Matcher The matcher type.
+         * \tparam Args The argument types.
+         */
+        template <typename Matcher, typename... Args>
+            requires requires { typename is_accepting_helper<Matcher::template is_accepting, Args...>; }
+        struct is_accepting<Matcher, Args...>
+            : public is_accepting_helper<Matcher::template is_accepting, Args...>
+        {
+        };
+    }
+
+    /**
+     * \brief Determines, whether the given `Matcher` accepts the specified `Args`.
+     * \tparam Matcher The matcher type.
+     * \tparam Args The argument types.
+     * \details This does check, whether matcher contains a member-type template `is_accepting`,
+     * which itself has a `value` bool-member.
+     * This is actually used by matchers to reject arguments at compile-time and thus removing specific overloads from
+     * the candidate-set.
+     * When no such member-type-template is found it defaults to `true`.
+     */
+    template <typename Matcher, typename... Args>
+    inline constexpr bool is_accepting_v{detail::is_accepting<Matcher, Args...>::value};
 }
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
@@ -111,6 +159,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     concept matcher_for = std::same_as<T, std::remove_cvref_t<T>>
                        && std::is_move_constructible_v<T>
                        && std::destructible<T>
+                       && matcher::is_accepting_v<T, First, Others...>
                        && requires(T const& matcher, First& first, Others&... others) {
                               { detail::matches_hook::matches(matcher, first, others...) } -> util::boolean_testable;
                               { detail::describe_hook::describe(matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>;

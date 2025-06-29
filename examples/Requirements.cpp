@@ -49,6 +49,31 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "matches::type can be used, to disambiguate similar overloads.",
+    "[example][example::requirements]")
+{
+    //! [matcher type]
+    namespace matches = mimicpp::matches;
+    mimicpp::Mock<void(int&&), void(int const&)> mock{};
+
+    SECTION("Selecting void(int&&)")
+    {
+        MIMICPP_SCOPED_EXPECTATION mock.expect_call(matches::type<int&&>);
+
+        mock(42);
+    }
+
+    SECTION("Selecting void(int const&)")
+    {
+        MIMICPP_SCOPED_EXPECTATION mock.expect_call(matches::type<int const&>);
+
+        int constexpr i{42};
+        mock(i);
+    }
+    //! [matcher type]
+}
+
+TEST_CASE(
     "Requirements can be specified later via expect::arg<n>.",
     "[example][example::requirements]")
 {

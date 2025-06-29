@@ -204,6 +204,31 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
             return std::nullopt;
         }
     };
+
+    /**
+     * \brief Matcher, which can be used to disambiguate between similar overloads.
+     * \ingroup MATCHERS
+     * \snippet Requirements.cpp matcher type
+     */
+    template <typename T>
+    class TypeMatcher
+    {
+    public:
+        template <typename U>
+        using is_accepting = std::is_same<T, U>;
+
+        [[nodiscard]]
+        static constexpr bool matches([[maybe_unused]] auto&& target) noexcept
+        {
+            return true;
+        }
+
+        [[nodiscard]]
+        static constexpr std::nullopt_t describe() noexcept
+        {
+            return std::nullopt;
+        }
+    };
 }
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
@@ -262,6 +287,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
      * \snippet Requirements.cpp matcher wildcard
      */
     [[maybe_unused]] inline constexpr WildcardMatcher _{};
+
+    /**
+     * \brief Matcher, which can be used as a last resort to disambiguate similar overloads.
+     * \tparam T The exact argument type.
+     * \snippet Requirements.cpp matcher type
+     */
+    template <typename T>
+    [[maybe_unused]] inline constexpr TypeMatcher<T> type{};
 
     /**
      * \brief Tests, whether the target compares equal to the expected value.
