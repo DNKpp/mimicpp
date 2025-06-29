@@ -142,8 +142,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     concept matcher_for = std::same_as<T, std::remove_cvref_t<T>>
                        && std::is_move_constructible_v<T>
                        && std::destructible<T>
+                       && matcher::detail::is_accepting_v<T, First, Others...>
                        && requires(T const& matcher, First& first, Others&... others) {
-                              requires matcher::detail::is_accepting_v<T, First, Others...>;
                               { detail::matches_hook::matches(matcher, first, others...) } -> util::boolean_testable;
                               { detail::describe_hook::describe(matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>;
                           };
