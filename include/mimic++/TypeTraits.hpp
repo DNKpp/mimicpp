@@ -742,6 +742,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
      * \}
      */
 
+    /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_CONST_QUALIFIER signature_remove_const_qualifier
+     * \ingroup TYPE_TRAITS
+     * \brief Removes the const-qualifier of a signature (if present).
+     *
+     *\{
+     */
+
     namespace detail
     {
         template <typename Signature, bool isNoexcept>
@@ -934,14 +942,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     /**
      * \}
-     */
-
-    /**
-     * \defgroup TYPE_TRAITS_SIGNATURE_REMOVE_CONST_QUALIFIER signature_remove_const_qualifier
-     * \ingroup TYPE_TRAITS
-     * \brief Removes the const-qualifier of a signature (if present).
-     *
-     *\{
      */
 
     /**
