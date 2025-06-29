@@ -331,9 +331,9 @@ namespace
     {
     public:
         template <typename... Ts>
-        using is_accepting = std::is_same<util::type_list<Ts...>, util::type_list<AcceptedTypes...>>;
+        using is_accepting = std::bool_constant<(... && std::is_same_v<AcceptedTypes, Ts>)>;
 
-        static constexpr bool matches(std::remove_cvref_t<AcceptedTypes> const&...) noexcept
+        static constexpr bool matches(auto&&...) noexcept
         {
             return true;
         }
@@ -375,11 +375,9 @@ TEMPLATE_TEST_CASE_SIG(
     (false, BasicAcceptingMatcher<int const&>, int const&&),
     (false, BasicAcceptingMatcher<int&&>, int const&&),
 
-    (true, BasicAcceptingMatcher<int, std::string>, int, std::string),
-    (false, BasicAcceptingMatcher<int, std::string>, std::string),
-    (false, BasicAcceptingMatcher<int, std::string>, int),
-    (false, BasicAcceptingMatcher<int, std::string>, std::string, int),
-    (false, BasicAcceptingMatcher<int, std::string>, float, int, std::string))
+    (true, BasicAcceptingMatcher<int const&, std::string>, int const&, std::string),
+    (false, BasicAcceptingMatcher<int const&, std::string>, int&, std::string),
+    (false, BasicAcceptingMatcher<int const&, std::string>, std::string, int const&))
 {
     STATIC_CHECK(expected == matcher_for<Matcher, First, Others...>);
 }

@@ -15,7 +15,6 @@
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/utilities/Concepts.hpp"
-#include "mimic++/utilities/TypeList.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <functional>
@@ -215,8 +214,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     class TypeMatcher
     {
     public:
-        template <typename... Args>
-        using is_accepting = std::is_same<util::type_list<T>, util::type_list<Args...>>;
+        template <typename U>
+        using is_accepting = std::is_same<T, U>;
 
         [[nodiscard]]
         static constexpr bool matches([[maybe_unused]] auto&& target) noexcept

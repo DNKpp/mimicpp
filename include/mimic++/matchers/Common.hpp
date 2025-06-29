@@ -120,21 +120,35 @@ namespace mimicpp::matcher
         {
         };
 
+        template <template <typename...> typename is_accepting, typename... Args>
+        struct is_accepting_helper
+            : public is_accepting<Args...>
+        {
+        };
+
         /**
          * \brief Specialization, reading the `is_accepting` trait from `Matcher`, when such member-type template exists.
          * \tparam Matcher The matcher type.
          * \tparam Args The argument types.
          */
         template <typename Matcher, typename... Args>
-            requires requires {
-                { Matcher::template is_accepting<Args...>::value } -> util::boolean_testable;
-            }
+            requires requires { typename is_accepting_helper<Matcher::template is_accepting, Args...>; }
         struct is_accepting<Matcher, Args...>
-            : public Matcher::template is_accepting<Args...>
+            : public is_accepting_helper<Matcher::template is_accepting, Args...>
         {
         };
     }
 
+    /**
+     * \brief Determines, whether the given `Matcher` accepts the specified `Args`.
+     * \tparam Matcher The matcher type.
+     * \tparam Args The argument types.
+     * \details This does check, whether matcher contains a member-type template `is_accepting`,
+     * which itself has a `value` bool-member.
+     * This is actually used by matchers to reject arguments at compile-time and thus removing specific overloads from
+     * the candidate-set.
+     * When no such member-type-template is found it defaults to `true`.
+     */
     template <typename Matcher, typename... Args>
     inline constexpr bool is_accepting_v{detail::is_accepting<Matcher, Args...>::value};
 }
