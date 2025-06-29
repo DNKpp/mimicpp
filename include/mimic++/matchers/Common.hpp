@@ -127,8 +127,8 @@ namespace mimicpp::matcher::detail
      * \tparam Args The argument types.
      */
     template <typename Matcher, typename... Args>
-        requires requires(typename Matcher::template is_accepting<Args...> trait) {
-            { trait } -> util::boolean_testable;
+        requires requires {
+            { Matcher::template is_accepting<Args...>::value } -> util::boolean_testable;
         }
     struct is_accepting<Matcher, Args...>
         : public Matcher::template is_accepting<Args...>
