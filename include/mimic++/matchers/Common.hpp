@@ -55,9 +55,9 @@ namespace mimicpp::detail::matches_hook
         return matcher.matches(target, others...);
     }
 
-    inline constexpr util::priority_tag<1> maxTag{};
+    inline util::priority_tag<1> constexpr maxTag{};
 
-    inline constexpr auto matches = []<typename Matcher, typename T, typename... Others>(
+    inline auto constexpr matches = []<typename Matcher, typename T, typename... Others>(
                                         Matcher const& matcher,
                                         T& target,
                                  Others&... others)
@@ -96,12 +96,43 @@ namespace mimicpp::detail::describe_hook
         return matcher.describe();
     }
 
-    inline constexpr util::priority_tag<1> maxTag{};
+    inline util::priority_tag<1> constexpr maxTag{};
 
-    constexpr auto describe = []<typename Matcher>(Matcher const& matcher) -> decltype(auto)
+    inline auto constexpr describe = []<typename Matcher>(Matcher const& matcher) -> decltype(auto)
         requires requires { { describe_impl(maxTag, matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>; }
     {
         return describe_impl(maxTag, matcher);
+    };
+}
+
+namespace mimicpp::matcher::detail
+{
+    /**
+     * \brief Primary template, accepting any `Matcher`/`Args` combination.
+     * \tparam Matcher The matcher type.
+     * \tparam Args The argument types.
+     */
+    template <typename Matcher, typename... Args>
+    struct is_accepting
+        : public std::true_type
+    {
+    };
+
+    template <typename Matcher, typename... Args>
+    inline constexpr bool is_accepting_v{is_accepting<Matcher, Args...>::value};
+
+    /**
+     * \brief Specialization, reading the `is_accepting` trait from `Matcher`, when such member-type template exists.
+     * \tparam Matcher The matcher type.
+     * \tparam Args The argument types.
+     */
+    template <typename Matcher, typename... Args>
+        requires requires(typename Matcher::template is_accepting<Args...> trait) {
+            { trait } -> util::boolean_testable;
+        }
+    struct is_accepting<Matcher, Args...>
+        : public Matcher::template is_accepting<Args...>
+    {
     };
 }
 
@@ -112,6 +143,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
                        && std::is_move_constructible_v<T>
                        && std::destructible<T>
                        && requires(T const& matcher, First& first, Others&... others) {
+                              requires matcher::detail::is_accepting_v<T, First, Others...>;
                               { detail::matches_hook::matches(matcher, first, others...) } -> util::boolean_testable;
                               { detail::describe_hook::describe(matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>;
                           };

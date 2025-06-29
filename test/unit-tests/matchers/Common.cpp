@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/matchers/Common.hpp"
+#include "mimic++/utilities/TypeList.hpp"
 
 using namespace mimicpp;
 
@@ -315,10 +316,70 @@ TEMPLATE_TEST_CASE_SIG(
     (std::ignore, CustomVariadicMatcher, int, double),
     (std::ignore, CustomVariadicMatcher, int, double, std::string))
 {
-    STATIC_REQUIRE(matcher_for<Matcher, First, Others...>);
-    STATIC_REQUIRE(matcher_for<Matcher, const First, const Others...>);
-    STATIC_REQUIRE(matcher_for<Matcher, First&, Others&...>);
-    STATIC_REQUIRE(matcher_for<Matcher, const First&, const Others&...>);
-    STATIC_REQUIRE(matcher_for<Matcher, First&&, Others&&...>);
-    STATIC_REQUIRE(matcher_for<Matcher, const First&&, const Others&&...>);
+    STATIC_CHECK(matcher_for<Matcher, First, Others...>);
+    STATIC_CHECK(matcher_for<Matcher, First const, Others const...>);
+    STATIC_CHECK(matcher_for<Matcher, First&, Others&...>);
+    STATIC_CHECK(matcher_for<Matcher, First const&, Others const&...>);
+    STATIC_CHECK(matcher_for<Matcher, First&&, Others&&...>);
+    STATIC_CHECK(matcher_for<Matcher, First const&&, Others const&&...>);
+}
+
+namespace
+{
+    template <typename... AcceptedTypes>
+    class BasicAcceptingMatcher
+    {
+    public:
+        template <typename... Ts>
+        using is_accepting = std::is_same<util::type_list<Ts...>, util::type_list<AcceptedTypes...>>;
+
+        static constexpr bool matches(std::remove_cvref_t<AcceptedTypes> const&...) noexcept
+        {
+            return true;
+        }
+
+        static constexpr std::nullopt_t describe() noexcept
+        {
+            return std::nullopt;
+        }
+    };
+}
+
+TEMPLATE_TEST_CASE_SIG(
+    "matcher_for acknowledges the optional is_accepting trait-property.",
+    "[matcher]",
+    ((bool expected, typename Matcher, typename First, typename... Others), expected, Matcher, First, Others...),
+    (true, BasicAcceptingMatcher<int>, int),
+    (true, BasicAcceptingMatcher<int&>, int&),
+    (true, BasicAcceptingMatcher<int const&>, int const&),
+    (true, BasicAcceptingMatcher<int&&>, int&&),
+    (true, BasicAcceptingMatcher<int const&&>, int const&&),
+
+    (false, BasicAcceptingMatcher<int>, int&),
+    (false, BasicAcceptingMatcher<int const&>, int&),
+    (false, BasicAcceptingMatcher<int&&>, int&),
+    (false, BasicAcceptingMatcher<int const&&>, int&),
+
+    (false, BasicAcceptingMatcher<int>, int const&),
+    (false, BasicAcceptingMatcher<int&>, int const&),
+    (false, BasicAcceptingMatcher<int&&>, int const&),
+    (false, BasicAcceptingMatcher<int const&&>, int const&),
+
+    (false, BasicAcceptingMatcher<int>, int&&),
+    (false, BasicAcceptingMatcher<int&>, int&&),
+    (false, BasicAcceptingMatcher<int const&>, int&&),
+    (false, BasicAcceptingMatcher<int const&&>, int&&),
+
+    (false, BasicAcceptingMatcher<int>, int const&&),
+    (false, BasicAcceptingMatcher<int&>, int const&&),
+    (false, BasicAcceptingMatcher<int const&>, int const&&),
+    (false, BasicAcceptingMatcher<int&&>, int const&&),
+
+    (true, BasicAcceptingMatcher<int, std::string>, int, std::string),
+    (false, BasicAcceptingMatcher<int, std::string>, std::string),
+    (false, BasicAcceptingMatcher<int, std::string>, int),
+    (false, BasicAcceptingMatcher<int, std::string>, std::string, int),
+    (false, BasicAcceptingMatcher<int, std::string>, float, int, std::string))
+{
+    STATIC_CHECK(expected == matcher_for<Matcher, First, Others...>);
 }
