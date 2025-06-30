@@ -1,5 +1,6 @@
 var topics =
 [
+    [ "concepts", "d6/d6c/group___c_o_n_c_e_p_t_s.html", "d6/d6c/group___c_o_n_c_e_p_t_s" ],
     [ "expectation", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n" ],
     [ "framework configuration", "d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html", null ],
     [ "matchers", "d4/d14/group___m_a_t_c_h_e_r_s.html", "d4/d14/group___m_a_t_c_h_e_r_s" ],

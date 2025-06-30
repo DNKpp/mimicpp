@@ -1,5 +1,7 @@
-var _concepts_8hpp =
+var group___c_o_n_c_e_p_t_s =
 [
+    [ "mimicpp::string", "d1/d44/conceptmimicpp_1_1string.html", null ],
+    [ "mimicpp::case_foldable_string", "d0/d48/conceptmimicpp_1_1case__foldable__string.html", null ],
     [ "mimicpp::util::explicitly_convertible_to", "d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertible__to.html", null ],
     [ "mimicpp::util::nothrow_explicitly_convertible_to", "db/d6a/conceptmimicpp_1_1util_1_1nothrow__explicitly__convertible__to.html", null ],
     [ "mimicpp::util::same_as_any", "d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html", null ],

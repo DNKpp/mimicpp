@@ -226,6 +226,7 @@ var hierarchy =
     [ "mimicpp::util::type_list_populate< Template, type_list< Args... > >", "db/d55/structmimicpp_1_1util_1_1type__list__populate_3_01_template_00_01type__list_3_01_args_8_8_8_01_4_01_4.html", null ],
     [ "mimicpp::util::type_list_reverse< TypeList >", "d7/de5/structmimicpp_1_1util_1_1type__list__reverse.html", null ],
     [ "mimicpp::printing::type::parsing::token::TypeContext", "dd/d8e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_type_context.html", null ],
+    [ "mimicpp::TypeMatcher< T >", "d6/db3/classmimicpp_1_1_type_matcher.html", null ],
     [ "mimicpp::custom::TypePrinter< typename >", "de/de7/classmimicpp_1_1custom_1_1_type_printer.html", null ],
     [ "mimicpp::reporting::TypeReport", "de/d89/classmimicpp_1_1reporting_1_1_type_report.html", null ],
     [ "mimicpp::uint_with_size< byteCount >", "d7/da0/structmimicpp_1_1uint__with__size.html", null ],

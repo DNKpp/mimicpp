@@ -97,9 +97,12 @@ $(function(){initNavTree('d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertib
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">mimicpp::util::explicitly_convertible_to Concept Reference</div></div>
+  <div class="headertitle"><div class="title">mimicpp::util::explicitly_convertible_to Concept Reference<div class="ingroups"><a class="el" href="../../d6/d6c/group___c_o_n_c_e_p_t_s.html">concepts</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Determines, whether <code>From</code> can be explicitly converted to <code>To</code>.  
+<a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d9/db9/_concepts_8hpp_source.html">Concepts.hpp</a>&gt;</code></p>
 <h2 class="groupheader">Concept definition</h2>
@@ -108,14 +111,18 @@ $(function(){initNavTree('d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertib
 <div class="line">        <span class="keyword">requires</span> {</div>
 <div class="line">            <span class="keyword">static_cast&lt;</span>To<span class="keyword">&gt;</span>(std::declval&lt;From&gt;());</div>
 <div class="line">        }</div>
-<div class="ttc" id="aconceptmimicpp_1_1util_1_1explicitly__convertible__to_html"><div class="ttname"><a href="../../d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertible__to.html">mimicpp::util::explicitly_convertible_to</a></div><div class="ttdef"><b>Definition</b> Concepts.hpp:21</div></div>
-</div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aconceptmimicpp_1_1util_1_1explicitly__convertible__to_html"><div class="ttname"><a href="../../d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertible__to.html">mimicpp::util::explicitly_convertible_to</a></div><div class="ttdoc">Determines, whether From can be explicitly converted to To.</div><div class="ttdef"><b>Definition</b> Concepts.hpp:33</div></div>
+</div><!-- fragment --><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Determines, whether <code>From</code> can be explicitly converted to <code>To</code>. </p>
+<dl class="section note"><dt>Note</dt><dd>In fact, this is a more relaxed version of <code>std::convertible_to</code>, as this also requires implicit-convertibility. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/concepts/convertible_to">https://en.cppreference.com/w/cpp/concepts/convertible_to</a> </dd></dl>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">util</a></li><li class="navelem"><a class="el" href="../../d1/db9/conceptmimicpp_1_1util_1_1explicitly__convertible__to.html">explicitly_convertible_to</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Jun 30 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

@@ -14,6 +14,7 @@ var searchData=
   ['type_5flist_5fpopulate_3c_20template_2c_20type_5flist_3c_20args_2e_2e_2e_20_3e_20_3e_11',['type_list_populate&lt; Template, type_list&lt; Args... &gt; &gt;',['../db/d55/structmimicpp_1_1util_1_1type__list__populate_3_01_template_00_01type__list_3_01_args_8_8_8_01_4_01_4.html',1,'mimicpp::util']]],
   ['type_5flist_5freverse_12',['type_list_reverse',['../d7/de5/structmimicpp_1_1util_1_1type__list__reverse.html',1,'mimicpp::util']]],
   ['typecontext_13',['TypeContext',['../dd/d8e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_type_context.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['typeprinter_14',['TypePrinter',['../de/de7/classmimicpp_1_1custom_1_1_type_printer.html',1,'mimicpp::custom']]],
-  ['typereport_15',['TypeReport',['../de/d89/classmimicpp_1_1reporting_1_1_type_report.html',1,'mimicpp::reporting']]]
+  ['typematcher_14',['TypeMatcher',['../d6/db3/classmimicpp_1_1_type_matcher.html',1,'mimicpp']]],
+  ['typeprinter_15',['TypePrinter',['../de/de7/classmimicpp_1_1custom_1_1_type_printer.html',1,'mimicpp::custom']]],
+  ['typereport_16',['TypeReport',['../de/d89/classmimicpp_1_1reporting_1_1_type_report.html',1,'mimicpp::reporting']]]
 ];

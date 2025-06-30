@@ -168,6 +168,7 @@ var annotated_dup =
       [ "string_traits< std::basic_string< Char, Traits, Allocator > >", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html", "d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4" ],
       [ "string_traits< std::basic_string_view< Char, Traits > >", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html", "d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4" ],
       [ "string_traits< T >", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4" ],
+      [ "TypeMatcher", "d6/db3/classmimicpp_1_1_type_matcher.html", "d6/db3/classmimicpp_1_1_type_matcher" ],
       [ "uint_with_size", "d7/da0/structmimicpp_1_1uint__with__size.html", null ],
       [ "uint_with_size< 1u >", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html", "da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4" ],
       [ "uint_with_size< 2u >", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html", "de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4" ],

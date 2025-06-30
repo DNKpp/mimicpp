@@ -6,7 +6,7 @@ var searchData=
   ['acknowledgement_3',['Special Acknowledgement',['../index.html#autotoc_md82',1,'']]],
   ['adapters_4',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['add_5farg_5',['add_arg',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#ae4b3078ff119523c8d8842c6efe25261',1,'mimicpp::printing::type::PrintVisitor']]],
-  ['add_5fcall_5fconvention_5ft_6',['add_call_convention_t',['../d3/def/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_o_n_s_t___q_u_a_l_i_f_i_e_r.html#ga8aaaa02958d794699258c27f8bf468dd',1,'mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;']]],
+  ['add_5fcall_5fconvention_5ft_6',['add_call_convention_t',['../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#a8aaaa02958d794699258c27f8bf468dd',1,'mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;']]],
   ['add_5fconst_7',['add_const',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a00ea3a794dab1d5b943d56939aa52252',1,'mimicpp::printing::type::PrintVisitor']]],
   ['add_5fidentifier_8',['add_identifier',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#abaefa3322363991be9ac85679c078359',1,'mimicpp::printing::type::PrintVisitor']]],
   ['add_5flvalue_5fref_9',['add_lvalue_ref',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a93c640117ed36187ceecb815b7ebaa3e',1,'mimicpp::printing::type::PrintVisitor']]],
