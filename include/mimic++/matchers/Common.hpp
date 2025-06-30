@@ -105,7 +105,7 @@ namespace mimicpp::detail::describe_hook
     };
 }
 
-namespace mimicpp::matcher
+namespace mimicpp
 {
     namespace detail
     {
@@ -115,13 +115,13 @@ namespace mimicpp::matcher
          * \tparam Args The argument types.
          */
         template <typename Matcher, typename... Args>
-        struct is_accepting
+        struct is_matcher_accepting
             : public std::true_type
         {
         };
 
         template <template <typename...> typename is_accepting, typename... Args>
-        struct is_accepting_helper
+        struct is_matcher_accepting_helper
             : public is_accepting<Args...>
         {
         };
@@ -132,9 +132,9 @@ namespace mimicpp::matcher
          * \tparam Args The argument types.
          */
         template <typename Matcher, typename... Args>
-            requires requires { typename is_accepting_helper<Matcher::template is_accepting, Args...>; }
-        struct is_accepting<Matcher, Args...>
-            : public is_accepting_helper<Matcher::template is_accepting, Args...>
+            requires requires { typename is_matcher_accepting_helper<Matcher::template is_accepting, Args...>; }
+        struct is_matcher_accepting<Matcher, Args...>
+            : public is_matcher_accepting_helper<Matcher::template is_accepting, Args...>
         {
         };
     }
@@ -150,7 +150,7 @@ namespace mimicpp::matcher
      * When no such member-type-template is found it defaults to `true`.
      */
     template <typename Matcher, typename... Args>
-    inline constexpr bool is_accepting_v{detail::is_accepting<Matcher, Args...>::value};
+    inline constexpr bool is_matcher_accepting_v{detail::is_matcher_accepting<Matcher, Args...>::value};
 }
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
@@ -159,7 +159,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     concept matcher_for = std::same_as<T, std::remove_cvref_t<T>>
                        && std::is_move_constructible_v<T>
                        && std::destructible<T>
-                       && matcher::is_accepting_v<T, First, Others...>
+                       && is_matcher_accepting_v<T, First, Others...>
                        && requires(T const& matcher, First& first, Others&... others) {
                               { detail::matches_hook::matches(matcher, first, others...) } -> util::boolean_testable;
                               { detail::describe_hook::describe(matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>;
