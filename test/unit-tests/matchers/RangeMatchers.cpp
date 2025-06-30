@@ -7,6 +7,8 @@
 
 #include "TestTypes.hpp"
 
+#include <list>
+
 using namespace mimicpp;
 
 TEST_CASE(
@@ -15,7 +17,7 @@ TEST_CASE(
 {
     SECTION("When an empty range is stored.")
     {
-        const auto matcher = matches::range::eq(std::vector<int>{});
+        auto const matcher = matches::range::eq(std::vector<int>{});
 
         REQUIRE_THAT(
             matcher.describe(),
@@ -23,14 +25,14 @@ TEST_CASE(
 
         SECTION("When target is also empty, they match.")
         {
-            const std::vector<int> target{};
+            std::list<int> const target{};
 
             REQUIRE(matcher.matches(target));
         }
 
         SECTION("When target is not empty, they do not match.")
         {
-            const std::vector target{42};
+            std::array const target{42};
 
             REQUIRE(!matcher.matches(target));
         }
@@ -38,7 +40,7 @@ TEST_CASE(
 
     SECTION("When a non-empty range is stored.")
     {
-        const auto matcher = matches::range::eq(std::vector{1337, 42});
+        auto const matcher = matches::range::eq(std::vector{1337, 42});
 
         REQUIRE_THAT(
             matcher.describe(),
@@ -46,21 +48,21 @@ TEST_CASE(
 
         SECTION("When target is equal, they match.")
         {
-            const std::vector target{1337, 42};
+            std::array const target{1337, 42};
 
             REQUIRE(matcher.matches(target));
         }
 
         SECTION("When target has same elements, but in different order, they do not match.")
         {
-            const std::vector target{42, 1337};
+            std::array const target{42, 1337};
 
             REQUIRE(!matcher.matches(target));
         }
 
         SECTION("When target is not equal, they do not match.")
         {
-            const std::vector target{42};
+            std::array const target{42};
 
             REQUIRE(!matcher.matches(target));
         }
@@ -68,7 +70,7 @@ TEST_CASE(
 
     SECTION("Matcher can be inverted.")
     {
-        const auto matcher = !matches::range::eq(std::vector{1337, 42});
+        auto const matcher = !matches::range::eq(std::vector{1337, 42});
 
         REQUIRE_THAT(
             matcher.describe(),
@@ -76,21 +78,21 @@ TEST_CASE(
 
         SECTION("When target is equal, they do not match.")
         {
-            const std::vector target{1337, 42};
+            std::array const target{1337, 42};
 
             REQUIRE(!matcher.matches(target));
         }
 
         SECTION("When target has same elements, but in different order, they do match.")
         {
-            const std::vector target{42, 1337};
+            std::array const target{42, 1337};
 
             REQUIRE(matcher.matches(target));
         }
 
         SECTION("When target is not equal, they do match.")
         {
-            const std::vector target{42};
+            std::array const target{42};
 
             REQUIRE(matcher.matches(target));
         }
@@ -100,11 +102,11 @@ TEST_CASE(
     {
         using ComparatorT = InvocableMock<bool, int, int>;
         ComparatorT comparator{};
-        const auto matcher = matches::range::eq(
+        auto const matcher = matches::range::eq(
             std::vector{1337, 42},
             std::ref(comparator));
 
-        const std::vector target{1337, 42};
+        std::vector const target{1337, 42};
 
         REQUIRE_CALL(comparator, Invoke(1337, 1337))
             .RETURN(true);
