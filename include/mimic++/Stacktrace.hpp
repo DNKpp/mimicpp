@@ -13,9 +13,7 @@
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
-#include "mimic++/utilities/AlwaysFalse.hpp"
 #include "mimic++/utilities/Concepts.hpp"
-#include "mimic++/utilities/PriorityTag.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
@@ -26,16 +24,6 @@
     #include <type_traits>
     #include <utility>
 #endif
-
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
-{
-    /**
-     * \brief Users may define this type to enable their own stacktrace-backend
-     * \note See \ref STACKTRACE "stacktrace" documentation for an example.
-     * \ingroup STACKTRACE
-     */
-    struct find_stacktrace_backend;
-}
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
 {
@@ -88,12 +76,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
      *
      * \{
      */
-
-    /**
-     * \brief Helper type for getting the default stacktrace-backend.
-     * \note See \ref STACKTRACE "stacktrace" documentation for an example.
-     */
-    struct find_backend;
 
     /**
      * \brief Trait type for stacktrace backends.
@@ -329,119 +311,32 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     };
 }
 
-namespace mimicpp::stacktrace::detail::current_hook
+namespace mimicpp::stacktrace::detail
 {
-    template <typename FindBackend, template <typename> typename Traits>
-    concept existing_backend = requires {
-        {
-            Traits<
-                typename FindBackend::type>::current(std::size_t{}, std::size_t{})
-        } -> backend;
-        {
-            Traits<
-                typename FindBackend::type>::current(std::size_t{})
-        } -> backend;
-    };
-
-    template <
-        template <typename> typename Traits,
-        existing_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
-    [[nodiscard]]
-    constexpr auto current([[maybe_unused]] util::priority_tag<2> const, std::size_t const skip, std::size_t const max)
-    {
-        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
-
-        return Traits<
-            typename FindBackendT::type>::current(skip + 1u, max);
-    }
-
-    template <
-        template <typename> typename Traits,
-        existing_backend<Traits> FindBackendT = find_backend>
-    [[nodiscard]]
-    constexpr auto current([[maybe_unused]] util::priority_tag<1> const, std::size_t const skip, std::size_t const max)
-    {
-        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
-
-        return Traits<
-            typename FindBackendT::type>::current(skip + 1u, max);
-    }
-
-    template <template <typename> typename Traits>
-    constexpr auto current(
-        [[maybe_unused]] util::priority_tag<0> const,
-        [[maybe_unused]] std::size_t const skip,
-        [[maybe_unused]] std::size_t const max)
-    {
-        static_assert(
-            util::always_false<Traits<void>>{},
-            "mimic++ does not have a registered stacktrace-backend.");
-    }
-
-    template <
-        template <typename> typename Traits,
-        existing_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
-    [[nodiscard]]
-    constexpr auto current([[maybe_unused]] util::priority_tag<2> const, std::size_t const skip)
-    {
-        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
-
-        return Traits<
-            typename FindBackendT::type>::current(skip + 1u);
-    }
-
-    template <
-        template <typename> typename Traits,
-        existing_backend<Traits> FindBackendT = find_backend>
-    [[nodiscard]]
-    constexpr auto current([[maybe_unused]] util::priority_tag<1> const, std::size_t const skip)
-    {
-        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
-
-        return Traits<
-            typename FindBackendT::type>::current(skip + 1u);
-    }
-
-    template <template <typename> typename Traits>
-    constexpr auto current(
-        [[maybe_unused]] util::priority_tag<0> const,
-        [[maybe_unused]] std::size_t const skip)
-    {
-        static_assert(
-            util::always_false<Traits<void>>{},
-            "mimic++ does not have a registered stacktrace-backend.");
-    }
-
-    inline constexpr util::priority_tag<2> maxTag{};
-
     struct current_fn
     {
-        template <typename... Canary, template <typename> typename Traits = backend_traits>
+        using Traits = backend_traits<InstalledBackend>;
+
         [[nodiscard]]
         Stacktrace operator()(std::size_t const skip, std::size_t const max) const
         {
             MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
 
-            return Stacktrace{
-                current_hook::current<Traits>(maxTag, skip + 1u, max)};
+            return Stacktrace{Traits::current(skip + 1u, max)};
         }
 
-        template <typename... Canary, template <typename> typename Traits = backend_traits>
         [[nodiscard]]
         Stacktrace operator()(std::size_t const skip) const
         {
             MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
 
-            return Stacktrace{
-                current_hook::current<Traits>(maxTag, skip + 1u)};
+            return Stacktrace{Traits::current(skip + 1u)};
         }
 
-        template <typename... Canary, template <typename> typename Traits = backend_traits>
         [[nodiscard]]
         Stacktrace operator()() const
         {
-            return Stacktrace{
-                current_hook::current<Traits>(maxTag, 1u)};
+            return Stacktrace{Traits::current(1u)};
         }
     };
 }
@@ -455,7 +350,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
      * Callers may specify the optional ``skip`` parameter to remove additional entries.
      */
     [[maybe_unused]]
-    constexpr detail::current_hook::current_fn current{};
+    inline constexpr detail::current_fn current{};
 }
 
 namespace mimicpp::stacktrace::detail
@@ -503,16 +398,5 @@ struct mimicpp::printing::detail::state::common_type_printer<mimicpp::Stacktrace
         return out;
     }
 };
-
-// This is enabled as fallback solution, when neither std::stacktrace nor cpptrace is available,
-// or MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE simply not defined.
-#if !MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
-
-struct mimicpp::stacktrace::find_backend
-{
-    using type = NullBackend;
-};
-
-#endif
 
 #endif
