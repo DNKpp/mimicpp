@@ -109,39 +109,33 @@ if (NOT TARGET mimicpp-enable-config-options)
 
     endif ()
 
-    # Config option to enable full stacktrace support.
-    # Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE.
-    option(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "When enabled, experimental stacktrace feature is enabled (requires either c++23 or cpptrace)." OFF)
+    # Config option regarding stacktrace support.
+    set(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "none" CACHE STRING "Which stacktrace backend to use. Options: none, c++23, cpptrace")
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
-    if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
+    if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "c++23")
 
-        message(DEBUG "${MESSAGE_PREFIX} Stacktrace feature enabled.")
-
-        # Config option to enable cpptrace as stacktrace-backend.
-        # This will download the cpptrace source if not found.
-        # Eventually defines the macro MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE.
-        option(MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE "When enabled, registers cpptrace library as stacktrace-backend." OFF)
-        message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE}")
-        if (MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE)
-
-            find_package(cpptrace REQUIRED)
-            target_link_libraries(mimicpp-enable-config-options INTERFACE
-                    cpptrace::cpptrace
-            )
-
-            target_compile_definitions(mimicpp-enable-config-options INTERFACE
-                    MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=1
-                    $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
-            )
-
-        else ()
-            message(DEBUG "${MESSAGE_PREFIX} Selected std::stacktrace.")
-        endif ()
-
+        target_compile_features(mimicpp-enable-config-options INTERFACE
+            cxx_std_23
+        )
         target_compile_definitions(mimicpp-enable-config-options INTERFACE
-                MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
+            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
+            MIMICPP_CONFIG_USE_CXX23_STACKTRACE=1
         )
 
+    elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "cpptrace")
+
+        find_package(cpptrace REQUIRED)
+        target_link_libraries(mimicpp-enable-config-options INTERFACE
+            cpptrace::cpptrace
+        )
+        target_compile_definitions(mimicpp-enable-config-options INTERFACE
+            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
+            MIMICPP_CONFIG_USE_CPPTRACE=1
+            $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
+        )
+
+    elseif (NOT MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "none")
+        message(FATAL_ERROR "${MESSAGE_PREFIX} Invalid value for MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
     endif ()
 
 endif ()
