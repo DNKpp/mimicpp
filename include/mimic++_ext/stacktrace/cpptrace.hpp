@@ -60,11 +60,6 @@ namespace mimicpp::stacktrace
     };
 }
 
-struct mimicpp::stacktrace::find_backend
-{
-    using type = CpptraceBackend;
-};
-
 template <>
 struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::CpptraceBackend>
 {
