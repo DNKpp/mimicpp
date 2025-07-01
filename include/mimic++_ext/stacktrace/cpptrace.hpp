@@ -22,107 +22,69 @@
 
     #include <limits>
     #include <string>
-    #include <variant>
 #endif
 
-namespace mimicpp::stacktrace
-{
-    class CpptraceBackend
-    {
-    public:
-        ~CpptraceBackend() = default;
-
-        [[nodiscard]]
-        explicit CpptraceBackend(cpptrace::raw_trace&& trace) noexcept
-            : m_Trace{std::move(trace)}
-        {
-        }
-
-        CpptraceBackend(const CpptraceBackend&) = default;
-        CpptraceBackend& operator=(const CpptraceBackend&) = default;
-        CpptraceBackend(CpptraceBackend&&) = default;
-        CpptraceBackend& operator=(CpptraceBackend&&) = default;
-
-        [[nodiscard]]
-        const cpptrace::stacktrace& data() const
-        {
-            if (const auto* raw = std::get_if<cpptrace::raw_trace>(&m_Trace))
-            {
-                m_Trace = raw->resolve();
-            }
-
-            return std::get<cpptrace::stacktrace>(m_Trace);
-        }
-
-    private:
-        using TraceT = std::variant<cpptrace::raw_trace, cpptrace::stacktrace>;
-        mutable TraceT m_Trace;
-    };
-}
-
 template <>
-struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::CpptraceBackend>
+struct mimicpp::stacktrace::backend_traits<cpptrace::stacktrace>
 {
+    using Backend = cpptrace::stacktrace;
+
     [[nodiscard]]
-    static CpptraceBackend current(std::size_t const skip, std::size_t const max) noexcept
+    static Backend current(std::size_t const skip, std::size_t const max) noexcept
     {
         MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
 
-        return CpptraceBackend{cpptrace::generate_raw_trace(skip + 1, max)};
+        return cpptrace::generate_trace(skip + 1, max);
     }
 
     [[nodiscard]]
-    static CpptraceBackend current(std::size_t const skip)
+    static Backend current(std::size_t const skip)
     {
         MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
 
-        return CpptraceBackend{cpptrace::generate_raw_trace(skip + 1)};
+        return cpptrace::generate_trace(skip + 1);
     }
 
     [[nodiscard]]
-    static std::size_t size(CpptraceBackend const& stacktrace)
+    static MIMICPP_DETAIL_CONSTEXPR_VECTOR std::size_t size(Backend const& stacktrace)
     {
-        return stacktrace.data().frames.size();
+        return stacktrace.frames.size();
     }
 
     [[nodiscard]]
-    static bool empty(CpptraceBackend const& stacktrace)
+    static MIMICPP_DETAIL_CONSTEXPR_VECTOR bool empty(Backend const& stacktrace)
     {
-        return stacktrace.data().empty();
+        return stacktrace.frames.empty();
     }
 
     [[nodiscard]]
-    static std::string description(CpptraceBackend const& stacktrace, std::size_t const at)
+    static MIMICPP_DETAIL_CONSTEXPR_STRING std::string description(Backend const& stacktrace, std::size_t const at)
     {
         return frame(stacktrace, at).symbol;
     }
 
     [[nodiscard]]
-    static std::string source_file(CpptraceBackend const& stacktrace, std::size_t const at)
+    static MIMICPP_DETAIL_CONSTEXPR_STRING std::string source_file(Backend const& stacktrace, std::size_t const at)
     {
         return frame(stacktrace, at).filename;
     }
 
     [[nodiscard]]
-    static std::size_t source_line(CpptraceBackend const& stacktrace, std::size_t const at)
+    static MIMICPP_DETAIL_CONSTEXPR_VECTOR std::size_t source_line(Backend const& stacktrace, std::size_t const at)
     {
         return frame(stacktrace, at).line.value_or(0u);
     }
 
     [[nodiscard]]
-    static const cpptrace::stacktrace_frame& frame(CpptraceBackend const& stacktrace, std::size_t const at)
+    static constexpr cpptrace::stacktrace_frame const& frame(Backend const& stacktrace, std::size_t const at)
     {
-        return stacktrace.data().frames.at(at);
+        return stacktrace.frames.at(at);
     }
 };
 
-static_assert(
-    mimicpp::stacktrace::backend<mimicpp::stacktrace::CpptraceBackend>,
-    "stacktrace::CpptraceBackend does not satisfy the stacktrace::backend concept");
-
 namespace mimicpp::stacktrace
 {
-    using InstalledBackend = CpptraceBackend;
+    using InstalledBackend = cpptrace::stacktrace;
 }
 
 #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
