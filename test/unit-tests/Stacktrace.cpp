@@ -191,35 +191,35 @@ TEST_CASE(
     "stacktrace::backend_traits<stacktrace::NullBackend>::current() generates a new stacktrace::NullBackend.",
     "[stacktrace]")
 {
-    using traits_t = stacktrace::backend_traits<stacktrace::NullBackend>;
+    using Traits = stacktrace::backend_traits<stacktrace::NullBackend>;
 
-    const Stacktrace stacktrace{traits_t::current(42)};
+    stacktrace::NullBackend constexpr stacktrace{Traits::current(42)};
 
-    REQUIRE(stacktrace.empty());
-    REQUIRE(0u == stacktrace.size());
+    CHECK(Traits::empty(stacktrace));
+    CHECK(0u == Traits::size(stacktrace));
 
-    const std::size_t index = GENERATE(0, 1, 42);
-    REQUIRE_THROWS(stacktrace.description(index));
-    REQUIRE_THROWS(stacktrace.source_file(index));
-    REQUIRE_THROWS(stacktrace.source_line(index));
+    std::size_t const index = GENERATE(0, 1, 42);
+    CHECK_THROWS(Traits::description(stacktrace, index));
+    CHECK_THROWS(Traits::source_file(stacktrace, index));
+    CHECK_THROWS(Traits::source_line(stacktrace, index));
 }
 
 namespace
 {
     [[nodiscard]]
-    bool equal_entries(const Stacktrace& original, const Stacktrace& test)
+    bool equal_entries(Stacktrace const& original, Stacktrace const& test)
     {
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
         return std::ranges::all_of(
             std::views::iota(0u, original.size()),
-            [&](const std::size_t index) {
+            [&](std::size_t const index) {
                 return original.description(index) == test.description(index)
                     && original.source_file(index) == test.source_file(index)
                     && original.source_line(index) == test.source_line(index);
             });
 #else
         // we have an EmptyStacktraceBackend
-        const std::size_t index = GENERATE(0, 1, 42);
+        std::size_t const index = GENERATE(0, 1, 42);
         REQUIRE_THROWS(original.description(index));
         REQUIRE_THROWS(original.source_file(index));
         REQUIRE_THROWS(original.source_line(index));
@@ -235,27 +235,25 @@ TEST_CASE(
     "Stacktrace is copyable.",
     "[stacktrace]")
 {
-    // explicitly prevent a custom backend.
-    using traits_t = stacktrace::backend_traits<stacktrace::find_backend::type>;
-    const Stacktrace source{traits_t::current(0)};
+    Stacktrace const source{stacktrace::current(0)};
 
     SECTION("When copy-constructing.")
     {
-        const Stacktrace copy{source};
+        Stacktrace const copy{source};
 
-        REQUIRE(copy.empty() == source.empty());
-        REQUIRE(copy.size() == source.size());
-        REQUIRE(equal_entries(source, copy));
+        CHECK(copy.empty() == source.empty());
+        CHECK(copy.size() == source.size());
+        CHECK(equal_entries(source, copy));
     }
 
     SECTION("When copy-assigning.")
     {
-        Stacktrace copy{traits_t::current(0)};
+        Stacktrace copy{stacktrace::current(0)};
         copy = source;
 
-        REQUIRE(copy.empty() == source.empty());
-        REQUIRE(copy.size() == source.size());
-        REQUIRE(equal_entries(source, copy));
+        CHECK(copy.empty() == source.empty());
+        CHECK(copy.size() == source.size());
+        CHECK(equal_entries(source, copy));
     }
 }
 
@@ -263,28 +261,26 @@ TEST_CASE(
     "Stacktrace is movable.",
     "[stacktrace]")
 {
-    // explicitly prevent a custom backend.
-    using traits_t = stacktrace::backend_traits<stacktrace::find_backend::type>;
-    Stacktrace source{traits_t::current(0)};
-    const Stacktrace copy{source};
+    Stacktrace source{stacktrace::current(0)};
+    Stacktrace const copy{source};
 
     SECTION("When move-constructing.")
     {
-        const Stacktrace current{std::move(source)};
+        Stacktrace const current{std::move(source)};
 
-        REQUIRE(copy.empty() == current.empty());
-        REQUIRE(copy.size() == current.size());
-        REQUIRE(equal_entries(copy, current));
+        CHECK(copy.empty() == current.empty());
+        CHECK(copy.size() == current.size());
+        CHECK(equal_entries(copy, current));
     }
 
     SECTION("When move-assigning.")
     {
-        Stacktrace current{traits_t::current(0)};
+        Stacktrace current{stacktrace::current(0)};
         current = std::move(source);
 
-        REQUIRE(copy.empty() == current.empty());
-        REQUIRE(copy.size() == current.size());
-        REQUIRE(equal_entries(copy, current));
+        CHECK(copy.empty() == current.empty());
+        CHECK(copy.size() == current.size());
+        CHECK(equal_entries(copy, current));
     }
 
     SECTION("When self move-assigning.")
@@ -294,9 +290,9 @@ TEST_CASE(
         source = std::move(source);
         STOP_WARNING_SUPPRESSION
 
-        REQUIRE(copy.empty() == source.empty());
-        REQUIRE(copy.size() == source.size());
-        REQUIRE(equal_entries(copy, source));
+        CHECK(copy.empty() == source.empty());
+        CHECK(copy.size() == source.size());
+        CHECK(equal_entries(copy, source));
     }
 }
 
@@ -306,8 +302,8 @@ TEST_CASE(
 {
     SECTION("Empty stacktraces have special treatment.")
     {
-        const Stacktrace stacktrace{stacktrace::NullBackend{}};
-        REQUIRE_THAT(
+        Stacktrace const stacktrace{stacktrace::current(0u, 0u)};
+        CHECK_THAT(
             mimicpp::print(stacktrace),
             Catch::Matchers::Equals("empty"));
     }
@@ -315,16 +311,16 @@ TEST_CASE(
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
     Stacktrace stacktrace = stacktrace::current();
-    CHECK(!stacktrace.empty());
+    REQUIRE(!stacktrace.empty());
 
     // the std::regex on windows is too complex, so we limit it
-    constexpr std::size_t maxLength{6u};
-    const auto size = std::min(maxLength, stacktrace.size());
-    const auto skip = stacktrace.size() - size;
+    std::size_t constexpr maxLength{6u};
+    auto const size = std::min(maxLength, stacktrace.size());
+    auto const skip = stacktrace.size() - size;
     stacktrace = stacktrace::current(skip);
-    CHECK(size == stacktrace.size());
+    REQUIRE(size == stacktrace.size());
 
-    const std::string pattern = format::format(
+    std::string const pattern = format::format(
         R"((?:#\d+ )"                              // always starts with the entry index
         "`"
         R"((?:\/?)"                                // may begin with a /
@@ -333,7 +329,7 @@ TEST_CASE(
         "`"
         R"((?:#L\d+, `.*`\n)){{{}}})", // other stuff
         size);
-    REQUIRE_THAT(
+    CHECK_THAT(
         mimicpp::print(stacktrace),
         Catch::Matchers::Matches(pattern));
 

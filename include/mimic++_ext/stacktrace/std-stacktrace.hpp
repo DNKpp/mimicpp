@@ -82,6 +82,11 @@ static_assert(
     mimicpp::stacktrace::backend<std::stacktrace>,
     "std::stacktrace does not satisfy the stacktrace::backend concept");
 
+namespace mimicpp::stacktrace
+{
+    using InstalledBackend = std::stacktrace;
+}
+
 #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
 
 #endif
