@@ -17,43 +17,21 @@ using namespace mimicpp;
     #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
 
 TEST_CASE(
-    "stacktrace::backend_traits<stacktrace::CpptraceBackend>::current() generates a new cpptrace::stacktrace.",
-    "[cpptrace][stacktrace]")
+    "cpptrace::stacktrace is the installed stacktrace-backend.",
+    "[stacktrace]")
 {
-    using BackendT = stacktrace::CpptraceBackend;
-    using traits_t = stacktrace::backend_traits<BackendT>;
-
-    const BackendT first = traits_t::current(0);
-    const BackendT second = traits_t::current(0);
-
-    REQUIRE_THAT(
-        first.data().frames,
-        !Catch::Matchers::IsEmpty());
-    REQUIRE_THAT(
-        first.data().frames | std::views::drop(1),
-        Catch::Matchers::RangeEquals(second.data().frames | std::views::drop(1)));
-    REQUIRE(first.data().frames.front() != second.data().frames.front());
+    STATIC_REQUIRE(std::same_as<cpptrace::stacktrace, stacktrace::InstalledBackend>);
+    STATIC_REQUIRE(stacktrace::backend<stacktrace::InstalledBackend>);
 }
 
     #elif defined(__cpp_lib_stacktrace)
 
 TEST_CASE(
-    "stacktrace::backend_traits<std::stacktrace>::current() generates a new std::stacktrace.",
+    "std::stacktrace is the installed stacktrace-backend.",
     "[stacktrace]")
 {
-    using BackendT = std::stacktrace;
-    using traits_t = stacktrace::backend_traits<BackendT>;
-
-    const BackendT first = traits_t::current(0);
-    const BackendT second = traits_t::current(0);
-
-    REQUIRE_THAT(
-        first,
-        !Catch::Matchers::IsEmpty());
-    REQUIRE_THAT(
-        first | std::views::drop(1),
-        Catch::Matchers::RangeEquals(second | std::views::drop(1)));
-    REQUIRE(first.at(0) != second.at(0));
+    STATIC_REQUIRE(std::same_as<std::stacktrace, stacktrace::InstalledBackend>);
+    STATIC_REQUIRE(stacktrace::backend<stacktrace::InstalledBackend>);
 }
 
     #endif
