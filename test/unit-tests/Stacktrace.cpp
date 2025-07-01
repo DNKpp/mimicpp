@@ -13,18 +13,7 @@
 
 using namespace mimicpp;
 
-#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
-    #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
-
-TEST_CASE(
-    "cpptrace::stacktrace is the installed stacktrace-backend.",
-    "[stacktrace]")
-{
-    STATIC_REQUIRE(std::same_as<cpptrace::stacktrace, stacktrace::InstalledBackend>);
-    STATIC_REQUIRE(stacktrace::backend<stacktrace::InstalledBackend>);
-}
-
-    #elif defined(__cpp_lib_stacktrace)
+#if MIMICPP_CONFIG_USE_CXX23_STACKTRACE
 
 TEST_CASE(
     "std::stacktrace is the installed stacktrace-backend.",
@@ -34,7 +23,18 @@ TEST_CASE(
     STATIC_REQUIRE(stacktrace::backend<stacktrace::InstalledBackend>);
 }
 
-    #endif
+#endif
+
+#if MIMICPP_CONFIG_USE_CPPTRACE
+
+TEST_CASE(
+    "cpptrace::stacktrace is the installed stacktrace-backend.",
+    "[stacktrace]")
+{
+    STATIC_REQUIRE(std::same_as<cpptrace::stacktrace, stacktrace::InstalledBackend>);
+    STATIC_REQUIRE(stacktrace::backend<stacktrace::InstalledBackend>);
+}
+
 #endif
 
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND

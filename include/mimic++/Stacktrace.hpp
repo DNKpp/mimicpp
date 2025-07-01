@@ -172,15 +172,10 @@ static_assert(
 #if defined(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE) \
     && !defined(NDEBUG)
 
-    #ifdef MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
-        #include "mimic++_ext/stacktrace/cpptrace.hpp"
-    #elif defined(__cpp_lib_stacktrace)
+    #if MIMICPP_CONFIG_USE_CXX23_STACKTRACE
         #include "mimic++_ext/stacktrace/std-stacktrace.hpp"
-    #else
-
-        // neither backend is available, but maybe a custom type?
-        // so, we should not emit an error here.
-
+    #elif MIMICPP_CONFIG_USE_CPPTRACE
+        #include "mimic++_ext/stacktrace/cpptrace.hpp"
     #endif
 
 #endif
