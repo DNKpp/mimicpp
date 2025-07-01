@@ -180,6 +180,15 @@ static_assert(
 
 #endif
 
+#ifndef MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+
+namespace mimicpp::stacktrace
+{
+    using InstalledBackend = NullBackend;
+}
+
+#endif
+
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
