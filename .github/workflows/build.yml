@@ -342,8 +342,7 @@ jobs:
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
-                                          -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
-                                          -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=OFF \
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=none \
                                       )" >> $GITHUB_ENV
 
       - name: Setup compatibility source-location option
@@ -589,10 +588,18 @@ jobs:
       #################################
 
       #################################
-      # Feature: stacktrace
-      - name: Configure with std::stacktrace backend
-        id: config-cxx23-stacktrace
-        if: ${{ matrix.cxx_standard >= 23 && matrix.config.only_cpptrace != true }}
+      # Feature: experimental stacktrace
+      - name: Select stacktrace backend
+        shell: bash
+        run: |
+          BACKEND=cpptrace
+          if [[ "${{ matrix.cxx_standard }}" == "23" && "${{ matrix.config.only_cpptrace }}" != "true" ]]; then
+            BACKEND=c++23
+          fi
+
+          echo "SELECTED_STACKTRACE_BACKEND=$(echo ${BACKEND})" >> $GITHUB_ENV
+
+      - name: Configure with experimental stacktrace
         shell: bash
         run: |
           cmake \
@@ -601,47 +608,16 @@ jobs:
               ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=YES \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES
+              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=${SELECTED_STACKTRACE_BACKEND}
 
-      - name: Build with std::stacktrace backend
-        if: ${{ steps.config-cxx23-stacktrace.outcome == 'success' }}
+      - name: Build with experimental stacktrace
         shell: bash
         run: |
           cmake --build build \
               -j5 \
               ${{ env.CMAKE_BUILD_EXTRA }}
 
-      - name: Run tests with std::stacktrace backend
-        if: ${{ steps.config-cxx23-stacktrace.outcome == 'success' }}
-        shell: bash
-        env:
-          CTEST_OUTPUT_ON_FAILURE: 1
-        run: |
-          ctest --test-dir build \
-              -C ${{ matrix.build_mode }} \
-              -j5
-
-      # cpptrace
-      - name: Configure with cpptrace backend
-        shell: bash
-        run: |
-          cmake \
-              -S . \
-              -B build \
-              ${{ env.CMAKE_BASE_OPTIONS }} \
-              -D MIMICPP_CONFIG_USE_FMT=YES \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=YES \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=YES \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=YES
-
-      - name: Build with cpptrace backend
-        shell: bash
-        run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
-
-      - name: Run tests with cpptrace backend
+      - name: Run tests with experimental stacktrace
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
