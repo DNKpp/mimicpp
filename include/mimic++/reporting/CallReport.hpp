@@ -56,7 +56,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         TypeReport returnTypeInfo;
         std::vector<Arg> argDetails{};
         util::SourceLocation fromLoc{};
-        Stacktrace stacktrace{stacktrace::NullBackend{}};
+        Stacktrace stacktrace{};
         ValueCategory fromCategory{};
         Constness fromConstness{};
 
