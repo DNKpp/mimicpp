@@ -24,10 +24,9 @@ InsertNewlineAtEOF: true
 InsertTrailingCommas: None
 RemoveParentheses: MultipleParentheses
 RemoveSemicolon: true
-EnumTrailingComma: Remove
 FixNamespaceComments: false
 CommentPragmas: '^ IWYU pragma:'
-ReflowComments: Always
+ReflowComments: true
 LineEnding: DeriveLF
 
 IntegerLiteralSeparator:
@@ -40,8 +39,6 @@ IntegerLiteralSeparator:
 
 # Empty lines
 
-RemoveEmptyLinesInUnwrappedLines: true
-WrapNamespaceBodyWithEmptyLines: Never
 EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: Always
 
@@ -73,7 +70,6 @@ AlignConsecutiveShortCaseStatements:
 
 BinPackArguments: false
 BinPackParameters: false
-BinPackLongBracedList: false
 PackConstructorInitializers: Never
 
 AllowAllArgumentsOnNextLine: false
@@ -170,7 +166,6 @@ SpaceAroundPointerQualifiers: Default
 
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
-SpaceAfterOperatorKeyword: false
 SpaceAfterTemplateKeyword: true
 
 SpaceBeforeAssignmentOperators: true
