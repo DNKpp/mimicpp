@@ -1,9 +1,8 @@
 
-# ---------------------------------------------------------------------------
-#
-#                          Clang-format for mimicpp
-#
-# ---------------------------------------------------------------------------
+#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          https://www.boost.org/LICENSE_1_0.txt)
 
 ---
 Language: Cpp
@@ -25,7 +24,6 @@ InsertTrailingCommas: None
 RemoveParentheses: MultipleParentheses
 RemoveSemicolon: true
 FixNamespaceComments: false
-CommentPragmas: '^ IWYU pragma:'
 ReflowComments: true
 LineEnding: DeriveLF
 
@@ -191,47 +189,16 @@ SpacesInLineCommentPrefix:
 
 SortIncludes: CaseInsensitive
 SortUsingDeclarations: LexicographicNumeric
-IncludeIsMainRegex: '(Test)?'
-MainIncludeChar: Quote
 
 IncludeBlocks: Preserve
 IncludeCategories:
-  - Regex: '^"(llvm|llvm-c|clang|clang-c)/'
-    Priority: 2
-  - Regex: '^(<|"(gtest|gmock|isl|json)/)'
-    Priority: 3
-  - Regex: '.*'
+  - Regex: '".*"'
     Priority: 1
+  - Regex: '<.*>'
+    Priority: 2
 
 # Qualifiers alignment
 
 PointerAlignment: Left
 ReferenceAlignment: Left
 QualifierAlignment: Leave
-
-# Macros
-
-StatementAttributeLikeMacros:
-  - Q_EMIT
-
-StatementMacros:
-  - Q_UNUSED
-  - QT_REQUIRE_VERSION
-
-WhitespaceSensitiveMacros:
-  - BOOST_PP_STRINGIZE
-  - CF_SWIFT_NAME
-  - NS_SWIFT_NAME
-  - PP_STRINGIZE
-  - STRINGIZE
-
-AttributeMacros:
-  - __capability
-
-ForEachMacros:
-  - foreach
-  - Q_FOREACH
-  - BOOST_FOREACH
-
-IfMacros:
-  - KJ_IF_MAYBE
