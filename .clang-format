@@ -21,10 +21,9 @@ ShortNamespaceLines: 1
 InsertBraces: true
 InsertNewlineAtEOF: true
 InsertTrailingCommas: None
-RemoveParentheses: MultipleParentheses
 RemoveSemicolon: true
 FixNamespaceComments: false
-ReflowComments: true
+ReflowComments: Always
 LineEnding: DeriveLF
 
 IntegerLiteralSeparator:
@@ -55,7 +54,7 @@ AlignConsecutiveDeclarations: None
 AlignConsecutiveAssignments: None
 AlignEscapedNewlines: Left
 AlignOperands: AlignAfterOperator
-AlignTrailingComments: Always
+AlignTrailingComments: true
 
 AlignConsecutiveMacros:
   Enabled: true
