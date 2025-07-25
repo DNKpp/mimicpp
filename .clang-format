@@ -186,15 +186,8 @@ SpacesInLineCommentPrefix:
 
 # Include and using definitions
 
-SortIncludes: CaseInsensitive
 SortUsingDeclarations: LexicographicNumeric
-
 IncludeBlocks: Preserve
-IncludeCategories:
-  - Regex: '".*"'
-    Priority: 1
-  - Regex: '<.*>'
-    Priority: 2
 
 # Qualifiers alignment
 
