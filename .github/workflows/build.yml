@@ -342,7 +342,7 @@ jobs:
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
-                                          -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=none \
+                                          -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
                                       )" >> $GITHUB_ENV
 
       - name: Setup compatibility source-location option
