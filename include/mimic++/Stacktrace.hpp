@@ -158,25 +158,25 @@ struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::NullBackend>
         return true;
     }
 
-    static constexpr std::string description([[maybe_unused]] NullBackend const& stacktrace, [[maybe_unused]] std::size_t const at)
+    static std::string description([[maybe_unused]] NullBackend const& stacktrace, [[maybe_unused]] std::size_t const at)
     {
         raise_unsupported_operation();
     }
 
-    static constexpr std::string source_file([[maybe_unused]] NullBackend const& stacktrace, [[maybe_unused]] std::size_t const at)
+    static std::string source_file([[maybe_unused]] NullBackend const& stacktrace, [[maybe_unused]] std::size_t const at)
     {
         raise_unsupported_operation();
     }
 
     [[nodiscard]]
-    static constexpr std::size_t source_line([[maybe_unused]] NullBackend const& stacktrace, [[maybe_unused]] std::size_t const at)
+    static std::size_t source_line([[maybe_unused]] NullBackend const& stacktrace, [[maybe_unused]] std::size_t const at)
     {
         raise_unsupported_operation();
     }
 
 private:
     [[noreturn]]
-    static constexpr void raise_unsupported_operation()
+    static void raise_unsupported_operation()
     {
         throw std::runtime_error{"stacktrace::NullBackend doesn't support this operation."};
     }
