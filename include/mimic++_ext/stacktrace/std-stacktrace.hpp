@@ -78,10 +78,9 @@ struct mimicpp::stacktrace::backend_traits<std::basic_stacktrace<Allocator>>
     }
 };
 
-namespace mimicpp::stacktrace
-{
-    using InstalledBackend = std::stacktrace;
-}
+static_assert(
+    mimicpp::stacktrace::backend<std::stacktrace>,
+    "std::stacktrace does not satisfy the stacktrace::backend concept");
 
 #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
 

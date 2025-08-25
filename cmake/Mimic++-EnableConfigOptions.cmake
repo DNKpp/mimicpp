@@ -110,7 +110,11 @@ if (NOT TARGET mimicpp-enable-config-options)
     endif ()
 
     # Config option regarding stacktrace support.
-    set(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "none" CACHE STRING "Which stacktrace backend to use. Options: none, c++23, cpptrace")
+    set(MIMICPP_DETAIL_STACKTRACE_FEATURES "off;c++23;cpptrace;custom")
+    set(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "off" CACHE STRING "Which stacktrace backend to use.")
+    set(CACHE MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE PROPERTY
+        STRINGS ${MIMICPP_DETAIL_STACKTRACE_FEATURES}
+    )
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
     if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "c++23")
 
@@ -119,7 +123,7 @@ if (NOT TARGET mimicpp-enable-config-options)
         )
         target_compile_definitions(mimicpp-enable-config-options INTERFACE
             MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-            MIMICPP_CONFIG_USE_CXX23_STACKTRACE=1
+            MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE=1
         )
 
     elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "cpptrace")
@@ -130,12 +134,21 @@ if (NOT TARGET mimicpp-enable-config-options)
         )
         target_compile_definitions(mimicpp-enable-config-options INTERFACE
             MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-            MIMICPP_CONFIG_USE_CPPTRACE=1
+            MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=1
             $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
         )
 
-    elseif (NOT MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "none")
-        message(FATAL_ERROR "${MESSAGE_PREFIX} Invalid value for MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
+    elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "custom")
+
+        target_compile_definitions(mimicpp-enable-config-options INTERFACE
+            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
+            MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE=1
+        )
+
+    elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
+        message(FATAL_ERROR "${MESSAGE_PREFIX} Invalid value for MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}\
+            \tOptions are: ${MIMICPP_DETAIL_STACKTRACE_FEATURES}"
+        )
     endif ()
 
 endif ()

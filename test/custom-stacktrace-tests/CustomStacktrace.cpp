@@ -14,10 +14,10 @@ TEST_CASE(
     using trompeloeil::_;
     using trompeloeil::gt;
 
-    using traits_t = stacktrace::backend_traits<CustomBackend>;
+    using traits = stacktrace::backend_traits<CustomBackend>;
 
     std::shared_ptr const inner = std::make_shared<CustomBackend::Inner>();
-    REQUIRE_CALL(traits_t::currentMock, Invoke(_))
+    REQUIRE_CALL(traits::currentMock, Invoke(_))
         .WITH(_1 > 42)
         .LR_RETURN(CustomBackend{inner});
     Stacktrace const stacktrace = stacktrace::current(42);

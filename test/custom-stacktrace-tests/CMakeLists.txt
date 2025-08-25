@@ -34,4 +34,10 @@ target_precompile_headers(${TARGET_NAME} PRIVATE
     <catch2/trompeloeil.hpp>
 )
 
+# Make sure, stacktrace feature with custom backend is always on.
+target_compile_definitions(${TARGET_NAME} PRIVATE
+    MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
+    MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE=1
+)
+
 catch_discover_tests(${TARGET_NAME})

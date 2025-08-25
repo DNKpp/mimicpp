@@ -13,14 +13,13 @@
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
-#include "mimic++/utilities/AlwaysFalse.hpp"
 #include "mimic++/utilities/Concepts.hpp"
-#include "mimic++/utilities/PriorityTag.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
     #include <functional> // std::invoke
     #include <limits>
+    #include <memory>
     #include <ranges>
     #include <stdexcept>
     #include <type_traits>
@@ -187,57 +186,111 @@ static_assert(
     mimicpp::stacktrace::backend<mimicpp::stacktrace::NullBackend>,
     "stacktrace::NullBackend does not satisfy the stacktrace::backend concept");
 
-#if defined(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE) \
-    && !defined(NDEBUG)
-
-    #if MIMICPP_CONFIG_USE_CXX23_STACKTRACE
-        #include "mimic++_ext/stacktrace/std-stacktrace.hpp"
-    #elif MIMICPP_CONFIG_USE_CPPTRACE
-        #include "mimic++_ext/stacktrace/cpptrace.hpp"
-    #endif
-
-#endif
-
-#ifndef MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
-
-namespace mimicpp::stacktrace
-{
-    using InstalledBackend = NullBackend;
-}
-
-#endif
-
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     /**
-     * \brief A simple type-erase stacktrace abstraction.
+     * \brief A simple type-erased stacktrace abstraction.
      * \ingroup STACKTRACE
      */
     class Stacktrace
     {
+    private:
+        class Concept
+        {
+        public:
+            [[nodiscard]]
+            constexpr virtual bool empty() const = 0;
+
+            [[nodiscard]]
+            constexpr virtual std::size_t size() const = 0;
+
+            [[nodiscard]]
+            constexpr virtual std::string description(std::size_t at) const = 0;
+
+            [[nodiscard]]
+            constexpr virtual std::string source_file(std::size_t at) const = 0;
+
+            [[nodiscard]]
+            constexpr virtual std::size_t source_line(std::size_t at) const = 0;
+
+        protected:
+            virtual ~Concept() = default;
+            Concept() = default;
+            Concept(Concept const&) = default;
+            Concept& operator=(Concept const&) = default;
+            Concept(Concept&&) = default;
+            Concept& operator=(Concept&&) = default;
+        };
+
+        template <typename Backend>
+        class Model final
+            : public Concept
+        {
+        public:
+            using BackendTraits = stacktrace::backend_traits<Backend>;
+
+            [[nodiscard]]
+            explicit Model(Backend&& backend) noexcept(std::is_nothrow_move_constructible_v<Backend>)
+                : m_Backend{std::move(backend)}
+            {
+            }
+
+            [[nodiscard]]
+            constexpr bool empty() const override
+            {
+                return std::invoke(BackendTraits::empty, m_Backend);
+            }
+
+            [[nodiscard]]
+            constexpr std::size_t size() const override
+            {
+                return std::invoke(BackendTraits::size, m_Backend);
+            }
+
+            [[nodiscard]]
+            constexpr std::string description(std::size_t const at) const override
+            {
+                return std::invoke(BackendTraits::description, m_Backend, at);
+            }
+
+            [[nodiscard]]
+            constexpr std::string source_file(std::size_t const at) const override
+            {
+                return std::invoke(BackendTraits::source_file, m_Backend, at);
+            }
+
+            [[nodiscard]]
+            constexpr std::size_t source_line(std::size_t const at) const override
+            {
+                return std::invoke(BackendTraits::source_line, m_Backend, at);
+            }
+
+        private:
+            Backend m_Backend;
+        };
+
     public:
-        using Backend = stacktrace::InstalledBackend;
-        static_assert(stacktrace::backend<Backend>);
-
-        using BackendTraits = stacktrace::backend_traits<Backend>;
-
         /**
          * \brief Defaulted destructor.
          */
         ~Stacktrace() = default;
 
         /**
-         * \brief Defaulted constructor.
+         * \brief Default constructor.
          */
-        Stacktrace() = default;
+        Stacktrace()
+            : Stacktrace{stacktrace::NullBackend{}}
+        {
+        }
 
         /**
          * \brief Constructor storing the given stacktrace-backend.
          * \param backend The actual stacktrace-backend object.
          */
+        template <stacktrace::backend Backend>
         [[nodiscard]]
         explicit constexpr Stacktrace(Backend backend)
-            : m_Backend{std::move(backend)}
+            : m_Backend{std::make_shared<Model<Backend>>(std::move(backend))}
         {
         }
 
@@ -269,7 +322,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         [[nodiscard]]
         std::size_t size() const
         {
-            return std::invoke(BackendTraits::size, m_Backend);
+            return backend().size();
         }
 
         /**
@@ -279,7 +332,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         [[nodiscard]]
         bool empty() const
         {
-            return std::invoke(BackendTraits::empty, m_Backend);
+            return backend().empty();
         }
 
         /**
@@ -290,7 +343,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         [[nodiscard]]
         std::string description(std::size_t const at) const
         {
-            return std::invoke(BackendTraits::description, m_Backend, at);
+            return backend().description(at);
         }
 
         /**
@@ -301,7 +354,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         [[nodiscard]]
         std::string source_file(std::size_t const at) const
         {
-            return std::invoke(BackendTraits::source_file, m_Backend, at);
+            return backend().source_file(at);
         }
 
         /**
@@ -312,7 +365,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         [[nodiscard]]
         std::size_t source_line(std::size_t const at) const
         {
-            return std::invoke(BackendTraits::source_line, m_Backend, at);
+            return backend().source_line(at);
         }
 
         [[nodiscard]]
@@ -329,123 +382,65 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         }
 
     private:
-        Backend m_Backend;
+        std::shared_ptr<Concept> m_Backend;
+
+        [[nodiscard]]
+        constexpr Concept const& backend() const noexcept
+        {
+            MIMICPP_ASSERT(m_Backend, "Invalid state");
+
+            return *m_Backend;
+        }
     };
 }
 
-namespace mimicpp::stacktrace::detail::current_hook
+namespace mimicpp::stacktrace::detail
 {
     template <typename FindBackend, template <typename> typename Traits>
-    concept existing_backend = requires {
-        {
-            Traits<
-                typename FindBackend::type>::current(std::size_t{}, std::size_t{})
-        } -> backend;
-        {
-            Traits<
-                typename FindBackend::type>::current(std::size_t{})
-        } -> backend;
+    concept existing_backend = requires(std::size_t const value) {
+        { Traits<typename FindBackend::type>::current(value, value) } -> backend;
+        { Traits<typename FindBackend::type>::current(value) } -> backend;
     };
 
     template <
         template <typename> typename Traits,
-        existing_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
-    [[nodiscard]]
-    constexpr auto current([[maybe_unused]] util::priority_tag<2> const, std::size_t const skip, std::size_t const max)
-    {
-        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
-
-        return Traits<
-            typename FindBackendT::type>::current(skip + 1u, max);
-    }
-
-    template <
-        template <typename> typename Traits,
-        existing_backend<Traits> FindBackendT = find_backend>
-    [[nodiscard]]
-    constexpr auto current([[maybe_unused]] util::priority_tag<1> const, std::size_t const skip, std::size_t const max)
-    {
-        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
-
-        return Traits<
-            typename FindBackendT::type>::current(skip + 1u, max);
-    }
-
-    template <template <typename> typename Traits>
-    constexpr auto current(
-        [[maybe_unused]] util::priority_tag<0> const,
-        [[maybe_unused]] std::size_t const skip,
-        [[maybe_unused]] std::size_t const max)
-    {
-        static_assert(
-            util::always_false<Traits<void>>{},
-            "mimic++ does not have a registered stacktrace-backend.");
-    }
-
-    template <
-        template <typename> typename Traits,
-        existing_backend<Traits> FindBackendT = custom::find_stacktrace_backend>
-    [[nodiscard]]
-    constexpr auto current([[maybe_unused]] util::priority_tag<2> const, std::size_t const skip)
-    {
-        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
-
-        return Traits<
-            typename FindBackendT::type>::current(skip + 1u);
-    }
-
-    template <
-        template <typename> typename Traits,
-        existing_backend<Traits> FindBackendT = find_backend>
-    [[nodiscard]]
-    constexpr auto current([[maybe_unused]] util::priority_tag<1> const, std::size_t const skip)
-    {
-        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
-
-        return Traits<
-            typename FindBackendT::type>::current(skip + 1u);
-    }
-
-    template <template <typename> typename Traits>
-    constexpr auto current(
-        [[maybe_unused]] util::priority_tag<0> const,
-        [[maybe_unused]] std::size_t const skip)
-    {
-        static_assert(
-            util::always_false<Traits<void>>{},
-            "mimic++ does not have a registered stacktrace-backend.");
-    }
-
-    inline constexpr util::priority_tag<2> maxTag{};
+#if MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE
+        existing_backend<Traits> FindBackend = custom::find_stacktrace_backend>
+#else
+        existing_backend<Traits> FindBackend = stacktrace::find_backend>
+#endif
+    // ReSharper disable once CppFunctionIsNotImplemented
+    Traits<typename FindBackend::type> find_traits();
 
     struct current_fn
     {
-        template <typename... Canary, template <typename> typename Traits = backend_traits>
+        template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
         [[nodiscard]]
-        Stacktrace operator()(std::size_t const skip, std::size_t const max) const
+        constexpr Stacktrace operator()(std::size_t const skip, std::size_t const max) const
         {
             MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
+            using Traits = decltype(find_traits<TraitsTemplate>());
 
-            return Stacktrace{
-                current_hook::current<Traits>(maxTag, skip + 1u, max)};
+            return Stacktrace{Traits::current(skip + 1u, max)};
         }
 
-        template <typename... Canary, template <typename> typename Traits = backend_traits>
+        template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
         [[nodiscard]]
-        Stacktrace operator()(std::size_t const skip) const
+        constexpr Stacktrace operator()(std::size_t const skip) const
         {
             MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
+            using Traits = decltype(find_traits<TraitsTemplate>());
 
-            return Stacktrace{
-                current_hook::current<Traits>(maxTag, skip + 1u)};
+            return Stacktrace{Traits::current(skip + 1u)};
         }
 
-        template <typename... Canary, template <typename> typename Traits = backend_traits>
+        template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
         [[nodiscard]]
-        Stacktrace operator()() const
+        constexpr Stacktrace operator()() const
         {
-            return Stacktrace{
-                current_hook::current<Traits>(maxTag, 1u)};
+            using Traits = decltype(find_traits<TraitsTemplate>());
+
+            return Stacktrace{Traits::current(1u)};
         }
     };
 }
@@ -459,13 +454,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
      * Callers may specify the optional ``skip`` parameter to remove additional entries.
      */
     [[maybe_unused]]
-    constexpr detail::current_hook::current_fn current{};
+    inline constexpr detail::current_fn current{};
 }
 
 namespace mimicpp::stacktrace::detail
 {
     template <print_iterator OutIter>
-    OutIter print_entry(OutIter out, Stacktrace const& stacktrace, std::size_t const index)
+    constexpr OutIter print_entry(OutIter out, Stacktrace const& stacktrace, std::size_t const index)
     {
         MIMICPP_ASSERT(index < stacktrace.size(), "Index out of bounds.");
 
@@ -487,7 +482,7 @@ template <>
 struct mimicpp::printing::detail::state::common_type_printer<mimicpp::Stacktrace>
 {
     template <print_iterator OutIter>
-    static OutIter print(OutIter out, Stacktrace const& stacktrace)
+    static constexpr OutIter print(OutIter out, Stacktrace const& stacktrace)
     {
         if (stacktrace.empty())
         {
@@ -508,15 +503,18 @@ struct mimicpp::printing::detail::state::common_type_printer<mimicpp::Stacktrace
     }
 };
 
-// This is enabled as fallback solution, when neither std::stacktrace nor cpptrace is available,
-// or MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE simply not defined.
-#if !MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
-
-struct mimicpp::stacktrace::find_backend
+#if MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE
+    #include "mimic++_ext/stacktrace/std-stacktrace.hpp"
+#elif MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+    #include "mimic++_ext/stacktrace/cpptrace.hpp"
+#else
+namespace mimicpp::stacktrace
 {
-    using type = NullBackend;
-};
-
+    struct find_backend
+    {
+        using type = NullBackend;
+    };
+}
 #endif
 
 #endif
