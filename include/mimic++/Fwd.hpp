@@ -382,6 +382,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
 {
     class NullBackend;
 
+    struct find_backend;
+
     template <typename Backend>
     struct backend_traits;
 }

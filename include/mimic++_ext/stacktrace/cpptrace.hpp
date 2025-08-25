@@ -24,6 +24,11 @@
     #include <string>
 #endif
 
+struct mimicpp::stacktrace::find_backend
+{
+    using type = cpptrace::stacktrace;
+};
+
 template <>
 struct mimicpp::stacktrace::backend_traits<cpptrace::stacktrace>
 {
