@@ -97,40 +97,27 @@
  * ## Enable experimental stacktrace support
  * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE``
  *
- * When enabled, ``mimic++`` uses stacktrace information to provide more useful information to the users.
- * Users can decide whether they use the c++23 ``std::stacktrace``, the third-party ``cpptrace`` or any custom stacktrace-backend.
+ * When enabled, ``mimic++`` uses stacktrace information to provide more helpful diagnostics.
+ * Users can choose between the C++23 `std::stacktrace` (`c++23`),
+ * the third-party `cpptrace` (`cpptrace`),
+ * or a custom stacktrace backend (`custom`).
  * \see \ref STACKTRACE "stacktrace" documentation
- * \see \ref MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+ *
+ * ### Non-cmake usage
+ * In cases where *mimic++* is not configured via cmake,
+ * users can manually define the following macros (set them to `1`) before the inclusion of any *mimic++* header.
+ * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE`
+ * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE`
+ * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE`
  *
  * \attention This is an experimental feature, which may be removed during any release.
  *
  * ### Why is this feature experimental?
  *
- * Stack traces require significantly more work for each mock call. It can be worthwhile, but it can also be too excessive.
- *
- * ---
- *
- * \anchor MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
- * ## Enable experimental cpptrace stacktrace-backend
- * **Name:** `MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE`
- * \see https://github.com/jeremy-rifkin/cpptrace
- *
- * When enabled, `mimic++` installs `cpptrace` as the default stacktrace-backend.
- * \note This option is only available, if \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE is enabled.
- *
- * `mimic++` attempts to detect whether `cpptrace` is already available before pulling it from GitHub.
- * If you want to reuse an existing `cpptrace` package, make sure that it can be found via `find_package(cpptrace)`.
- *
- * If C++20 modules are supported, you can also control how `cpptrace` is included via the `MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE` option (default: `ON`).
- * When set to `ON`, `import cpptrace;` will be used (requires version `1.0.0` or later).
- * Otherwise, it will fall back to a traditional `#include` directive.
- *
- * \attention This is an experimental feature, which may be removed during any release.
- *
- * ### Why is this feature experimental?
- *
- * General stacktrace support in `mimic++` is currently marked as experimental.
- * Since this backend depends on that feature, it is also considered experimental.
+ * The stacktrace integration has recently been reworked.
+ * Stacktraces are now collected only when a violation is detected (or `settings::report_success` is enabled).
+ * Previously, they were gathered on every mock call, which introduced significant overhead.
+ * With this change, the implementation is close to its intended design and may become stable soon.
  *
  * ---
  *
