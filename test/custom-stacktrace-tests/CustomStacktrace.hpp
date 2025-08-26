@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "mimic++/Stacktrace.hpp"
+#include "mimic++/utilities/Stacktrace.hpp"
 
 #include "../unit-tests/TestTypes.hpp"
 

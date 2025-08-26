@@ -12,12 +12,12 @@
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
+#include "mimic++/utilities/Stacktrace.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE

@@ -14,7 +14,6 @@ add_executable(${TARGET_NAME}
     "ObjectWatcher.cpp"
     "Sequence.cpp"
     "ScopedSequence.cpp"
-    "Stacktrace.cpp"
     "String.cpp"
     "TypeTraits.cpp"
 )

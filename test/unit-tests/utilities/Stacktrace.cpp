@@ -3,11 +3,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/Stacktrace.hpp"
+#include "mimic++/utilities/Stacktrace.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
-#include "SuppressionMacros.hpp"
-#include "TestTypes.hpp"
+#include "../SuppressionMacros.hpp"
+#include "../TestTypes.hpp"
 
 #include <ranges> // std::views::*
 

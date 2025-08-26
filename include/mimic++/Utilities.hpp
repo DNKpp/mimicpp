@@ -13,6 +13,7 @@
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
+#include "mimic++/utilities/Stacktrace.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
 #endif

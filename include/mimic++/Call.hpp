@@ -9,9 +9,9 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Stacktrace.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
+#include "mimic++/utilities/Stacktrace.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <cstddef>

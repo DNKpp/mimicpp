@@ -9,5 +9,6 @@ target_sources(${TARGET_NAME}
     "Concepts.cpp"
     "C++23Backports.cpp"
     "SourceLocation.cpp"
+    "Stacktrace.cpp"
     "TypeList.cpp"
 )

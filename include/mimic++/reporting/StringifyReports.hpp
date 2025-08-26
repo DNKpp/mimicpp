@@ -9,7 +9,6 @@
 #pragma once
 
 #include "mimic++/Fwd.hpp"
-#include "mimic++/Stacktrace.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/reporting/CallReport.hpp"
@@ -18,6 +17,7 @@
 #include "mimic++/reporting/TypeReport.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
+#include "mimic++/utilities/Stacktrace.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
