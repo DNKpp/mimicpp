@@ -386,7 +386,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
         std::shared_ptr<Concept> m_Backend;
 
         [[nodiscard]]
-        constexpr Concept const& backend() const noexcept
+        Concept const& backend() const noexcept
         {
             MIMICPP_ASSERT(m_Backend, "Invalid state");
 
