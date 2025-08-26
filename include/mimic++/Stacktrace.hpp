@@ -398,18 +398,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
 namespace mimicpp::stacktrace::detail
 {
-    template <typename FindBackend, template <typename> typename Traits>
-    concept existing_backend = requires(std::size_t const value) {
-        { Traits<typename FindBackend::type>::current(value, value) } -> backend;
-        { Traits<typename FindBackend::type>::current(value) } -> backend;
-    };
-
     template <
         template <typename> typename Traits,
 #if MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE
-        existing_backend<Traits> FindBackend = custom::find_stacktrace_backend>
+        typename FindBackend = custom::find_stacktrace_backend>
 #else
-        existing_backend<Traits> FindBackend = stacktrace::find_backend>
+        typename FindBackend = stacktrace::find_backend>
 #endif
     // ReSharper disable once CppFunctionIsNotImplemented
     Traits<typename FindBackend::type> find_traits();
