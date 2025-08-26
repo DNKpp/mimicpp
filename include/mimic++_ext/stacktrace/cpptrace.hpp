@@ -81,7 +81,7 @@ struct mimicpp::util::stacktrace::backend_traits<cpptrace::stacktrace>
     }
 
     [[nodiscard]]
-    static constexpr cpptrace::stacktrace_frame const& frame(Backend const& stacktrace, std::size_t const at)
+    static MIMICPP_DETAIL_CONSTEXPR_VECTOR cpptrace::stacktrace_frame const& frame(Backend const& stacktrace, std::size_t const at)
     {
         return stacktrace.frames.at(at);
     }
