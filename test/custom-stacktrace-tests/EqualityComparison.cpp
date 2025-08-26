@@ -7,7 +7,7 @@
 
 using namespace mimicpp;
 
-using traits_t = stacktrace::backend_traits<CustomBackend>;
+using traits_t = util::stacktrace::backend_traits<CustomBackend>;
 
 TEST_CASE(
     "Two stacktraces with different sizes always compare unequal.",
@@ -17,8 +17,8 @@ TEST_CASE(
 
     const std::shared_ptr firstInner = std::make_shared<CustomBackend::Inner>();
     const std::shared_ptr secondInner = std::make_shared<CustomBackend::Inner>();
-    Stacktrace first{CustomBackend{firstInner}};
-    Stacktrace second{CustomBackend{secondInner}};
+    util::Stacktrace first{CustomBackend{firstInner}};
+    util::Stacktrace second{CustomBackend{secondInner}};
 
     const auto [firstSize, secondSize] = GENERATE(
         (table<std::size_t, std::size_t>({
@@ -71,8 +71,8 @@ TEST_CASE(
 
     const std::shared_ptr firstInner = std::make_shared<CustomBackend::Inner>();
     const std::shared_ptr secondInner = std::make_shared<CustomBackend::Inner>();
-    Stacktrace first{CustomBackend{firstInner}};
-    Stacktrace second{CustomBackend{secondInner}};
+    util::Stacktrace first{CustomBackend{firstInner}};
+    util::Stacktrace second{CustomBackend{secondInner}};
 
     SECTION("When both are empty.")
     {

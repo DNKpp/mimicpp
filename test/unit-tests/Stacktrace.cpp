@@ -44,7 +44,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     util::SourceLocation constexpr before{};
-    Stacktrace const cur = stacktrace::current();
+    util::Stacktrace const cur = util::stacktrace::current();
     REQUIRE(!cur.empty());
     util::SourceLocation constexpr after{};
 
@@ -58,7 +58,7 @@ TEST_CASE(
 
 namespace
 {
-    void compare_traces(std::size_t const fullSkip, std::size_t const otherSkip, Stacktrace const& full, Stacktrace const& other)
+    void compare_traces(std::size_t const fullSkip, std::size_t const otherSkip, util::Stacktrace const& full, util::Stacktrace const& other)
     {
         CAPTURE(fullSkip, otherSkip);
         REQUIRE(fullSkip < full.size());
@@ -83,12 +83,12 @@ TEST_CASE(
     "stacktrace::current supports skipping of the top elements.",
     "[stacktrace]")
 {
-    Stacktrace const full = stacktrace::current();
+    util::Stacktrace const full = util::stacktrace::current();
     REQUIRE(!full.empty());
 
     SECTION("When skip == 0")
     {
-        Stacktrace const other = stacktrace::current();
+        util::Stacktrace const other = util::stacktrace::current();
         CHECK(full.size() == other.size());
 
         // everything except the top element must be equal
@@ -102,7 +102,7 @@ TEST_CASE(
 
     SECTION("When skip == 1.")
     {
-        Stacktrace const partial = stacktrace::current(1);
+        util::Stacktrace const partial = util::stacktrace::current(1);
         CHECK(!partial.empty());
         CHECK(full.size() == partial.size() + 1u);
 
@@ -111,7 +111,7 @@ TEST_CASE(
 
     SECTION("When skip == 2.")
     {
-        Stacktrace const partial = stacktrace::current(2);
+        util::Stacktrace const partial = util::stacktrace::current(2);
         CHECK(!partial.empty());
         CHECK(full.size() == partial.size() + 2u);
 
@@ -120,7 +120,7 @@ TEST_CASE(
 
     SECTION("When skip is very high.")
     {
-        Stacktrace const partial = stacktrace::current(1337);
+        util::Stacktrace const partial = util::stacktrace::current(1337);
         REQUIRE(partial.empty());
     }
 }
@@ -129,18 +129,18 @@ TEST_CASE(
     "stacktrace::current supports setting a maximum depth.",
     "[stacktrace]")
 {
-    Stacktrace const full = stacktrace::current();
+    util::Stacktrace const full = util::stacktrace::current();
     REQUIRE(!full.empty());
 
     SECTION("When max == 0")
     {
-        Stacktrace const other = stacktrace::current(0u, 0u);
+        util::Stacktrace const other = util::stacktrace::current(0u, 0u);
         CHECK(other.empty());
     }
 
     SECTION("When max == 1.")
     {
-        Stacktrace const partial = stacktrace::current(1u, 1u);
+        util::Stacktrace const partial = util::stacktrace::current(1u, 1u);
         CHECK(!partial.empty());
         CHECK(1u == partial.size());
 
@@ -149,7 +149,7 @@ TEST_CASE(
 
     SECTION("When max == 2.")
     {
-        Stacktrace const partial = stacktrace::current(1u, 2u);
+        util::Stacktrace const partial = util::stacktrace::current(1u, 2u);
         CHECK(!partial.empty());
         CHECK(2u == partial.size());
 
@@ -158,7 +158,7 @@ TEST_CASE(
 
     SECTION("When max is very high.")
     {
-        Stacktrace const partial = stacktrace::current(1u, 1337);
+        util::Stacktrace const partial = util::stacktrace::current(1u, 1337);
         REQUIRE(full.size() == partial.size() + 1u);
     }
 }
@@ -169,9 +169,9 @@ TEST_CASE(
     "stacktrace::backend_traits<stacktrace::NullBackend>::current() generates a new stacktrace::NullBackend.",
     "[stacktrace]")
 {
-    using Traits = stacktrace::backend_traits<stacktrace::NullBackend>;
+    using Traits = util::stacktrace::backend_traits<util::stacktrace::NullBackend>;
 
-    stacktrace::NullBackend constexpr stacktrace{Traits::current(42)};
+    util::stacktrace::NullBackend constexpr stacktrace{Traits::current(42)};
 
     CHECK(Traits::empty(stacktrace));
     CHECK(0u == Traits::size(stacktrace));
@@ -185,7 +185,7 @@ TEST_CASE(
 namespace
 {
     [[nodiscard]]
-    bool equal_entries(Stacktrace const& original, Stacktrace const& test)
+    bool equal_entries(util::Stacktrace const& original, util::Stacktrace const& test)
     {
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
         return std::ranges::all_of(
@@ -213,11 +213,11 @@ TEST_CASE(
     "Stacktrace is copyable.",
     "[stacktrace]")
 {
-    Stacktrace const source{stacktrace::current(0)};
+    util::Stacktrace const source{util::stacktrace::current(0)};
 
     SECTION("When copy-constructing.")
     {
-        Stacktrace const copy{source};
+        util::Stacktrace const copy{source};
 
         CHECK(copy.empty() == source.empty());
         CHECK(copy.size() == source.size());
@@ -226,7 +226,7 @@ TEST_CASE(
 
     SECTION("When copy-assigning.")
     {
-        Stacktrace copy{stacktrace::current(0)};
+        util::Stacktrace copy{util::stacktrace::current(0)};
         copy = source;
 
         CHECK(copy.empty() == source.empty());
@@ -239,12 +239,12 @@ TEST_CASE(
     "Stacktrace is movable.",
     "[stacktrace]")
 {
-    Stacktrace source{stacktrace::current(0)};
-    Stacktrace const copy{source};
+    util::Stacktrace source{util::stacktrace::current(0)};
+    util::Stacktrace const copy{source};
 
     SECTION("When move-constructing.")
     {
-        Stacktrace const current{std::move(source)};
+        util::Stacktrace const current{std::move(source)};
 
         CHECK(copy.empty() == current.empty());
         CHECK(copy.size() == current.size());
@@ -253,7 +253,7 @@ TEST_CASE(
 
     SECTION("When move-assigning.")
     {
-        Stacktrace current{stacktrace::current(0)};
+        util::Stacktrace current{util::stacktrace::current(0)};
         current = std::move(source);
 
         CHECK(copy.empty() == current.empty());
@@ -280,7 +280,7 @@ TEST_CASE(
 {
     SECTION("Empty stacktraces have special treatment.")
     {
-        Stacktrace const stacktrace{stacktrace::current(0u, 0u)};
+        util::Stacktrace const stacktrace{util::stacktrace::current(0u, 0u)};
         CHECK_THAT(
             mimicpp::print(stacktrace),
             Catch::Matchers::Equals("empty"));
@@ -288,7 +288,7 @@ TEST_CASE(
 
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
-    Stacktrace stacktrace = stacktrace::current();
+    util::Stacktrace stacktrace = util::stacktrace::current();
     REQUIRE(!stacktrace.empty());
 
     // the std::regex on windows is too complex, so we limit it

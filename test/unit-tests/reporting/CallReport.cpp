@@ -53,7 +53,7 @@ TEST_CASE(
         .target = make_common_target_report<std::string(int)>(),
         .returnTypeInfo = TypeReport::make<std::string>(),
         .argDetails = {{.typeInfo = TypeReport::make<int>(), .stateString = "42"}},
-        .stacktrace = stacktrace::current(),
+        .stacktrace = util::stacktrace::current(),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
@@ -171,7 +171,7 @@ TEST_CASE(
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
         TargetReport const target = make_common_target_report<void()>();
-        Stacktrace const stacktrace = stacktrace::current();
+        util::Stacktrace const stacktrace = util::stacktrace::current();
         CallReport const report = make_call_report(
             target,
             info,
@@ -195,7 +195,7 @@ TEST_CASE(
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
         TargetReport const target = make_common_target_report<int()>();
-        Stacktrace const stacktrace = stacktrace::current();
+        util::Stacktrace const stacktrace = util::stacktrace::current();
         CallReport const report = make_call_report(
             target,
             info,
@@ -223,7 +223,7 @@ TEST_CASE(
             .fromConstness = GENERATE(from_range(constQualifiers))
         };
         TargetReport const target = make_common_target_report<void(const int&, double, std::string)>();
-        Stacktrace const stacktrace = stacktrace::current();
+        util::Stacktrace const stacktrace = util::stacktrace::current();
         CallReport const report = make_call_report(
             target,
             info,

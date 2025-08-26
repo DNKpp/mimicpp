@@ -31,7 +31,7 @@
 namespace mimicpp::reporting::detail
 {
     template <print_iterator OutIter>
-    OutIter stringify_stacktrace(OutIter out, Stacktrace const& stacktrace)
+    OutIter stringify_stacktrace(OutIter out, util::Stacktrace const& stacktrace)
     {
         if (!stacktrace.empty())
         {
@@ -74,7 +74,7 @@ namespace mimicpp::reporting::detail
 
         if (!call.stacktrace.empty())
         {
-            out = stacktrace::detail::print_entry(std::move(out), call.stacktrace, 0u);
+            out = util::stacktrace::detail::print_entry(std::move(out), call.stacktrace, 0u);
         }
         else
         {

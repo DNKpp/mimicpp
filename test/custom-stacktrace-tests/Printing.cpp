@@ -16,7 +16,7 @@ TEST_CASE(
         [] {
             const std::shared_ptr ptr = std::make_shared<CustomBackend::Inner>();
             return std::tuple{
-                Stacktrace{CustomBackend{ptr}},
+                util::Stacktrace{CustomBackend{ptr}},
                 ptr};
         });
 

@@ -378,23 +378,20 @@ namespace mimicpp::detail
     class DefaultCallInterface;
 }
 
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
-{
-    class NullBackend;
-
-    struct find_backend;
-
-    template <typename Backend>
-    struct backend_traits;
-}
-
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
-{
-    class Stacktrace;
-}
-
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
+    namespace stacktrace
+    {
+        class NullBackend;
+
+        struct find_backend;
+
+        template <typename Backend>
+        struct backend_traits;
+    }
+
+    class Stacktrace;
+
     namespace source_location
     {
         template <typename Backend>

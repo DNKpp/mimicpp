@@ -993,7 +993,7 @@ TEST_CASE(
 
     ScopedReporter reporter{};
 
-    const auto check_stacktrace = [](const Stacktrace& stacktrace, util::SourceLocation const& before, util::SourceLocation const& after) {
+    const auto check_stacktrace = [](const util::Stacktrace& stacktrace, util::SourceLocation const& before, util::SourceLocation const& after) {
         CHECKED_IF(!stacktrace.empty())
         {
             INFO("stacktrace:\n"

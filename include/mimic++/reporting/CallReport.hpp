@@ -56,7 +56,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         TypeReport returnTypeInfo;
         std::vector<Arg> argDetails{};
         util::SourceLocation fromLoc{};
-        Stacktrace stacktrace{};
+        util::Stacktrace stacktrace{};
         ValueCategory fromCategory{};
         Constness fromConstness{};
 
@@ -76,7 +76,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
      */
     template <typename Return, typename... Params>
     [[nodiscard]]
-    CallReport make_call_report(TargetReport target, call::Info<Return, Params...> callInfo, Stacktrace stacktrace)
+    CallReport make_call_report(TargetReport target, call::Info<Return, Params...> callInfo, util::Stacktrace stacktrace)
     {
         return CallReport{
             .target{std::move(target)},

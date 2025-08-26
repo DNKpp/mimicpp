@@ -15,13 +15,13 @@
     #include <string>
 #endif
 
-struct mimicpp::stacktrace::find_backend
+struct mimicpp::util::stacktrace::find_backend
 {
     using type = std::stacktrace;
 };
 
 template <typename Allocator>
-struct mimicpp::stacktrace::backend_traits<std::basic_stacktrace<Allocator>>
+struct mimicpp::util::stacktrace::backend_traits<std::basic_stacktrace<Allocator>>
 {
     using Backend = std::basic_stacktrace<Allocator>;
 

@@ -36,7 +36,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
     struct find_stacktrace_backend;
 }
 
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
 {
     /**
      * \defgroup STACKTRACE stacktrace
@@ -68,11 +68,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
      *      using type = MyStacktraceBackend;
      * };
      * ```
-     * Additionally, a specialization for the ``stacktrace::backend_traits`` template must be added, which defines at least the
+     * Additionally, a specialization for the `util::stacktrace::backend_traits` template must be added, which defines at least the
      * following functions:
      * ```cpp
      * template <>
-     * struct mimicpp::stacktrace::backend_traits<MyStacktraceBackend>
+     * struct mimicpp::util::stacktrace::backend_traits<MyStacktraceBackend>
      * {
      *    static MyStacktraceBackend current(std::size_t skip);
      *    static MyStacktraceBackend current(std::size_t skip, std::size_t max);
@@ -132,7 +132,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
 }
 
 template <>
-struct mimicpp::stacktrace::backend_traits<mimicpp::stacktrace::NullBackend>
+struct mimicpp::util::stacktrace::backend_traits<mimicpp::util::stacktrace::NullBackend>
 {
     [[nodiscard]]
     static constexpr NullBackend current([[maybe_unused]] std::size_t const skip, [[maybe_unused]] std::size_t const max) noexcept
@@ -183,10 +183,10 @@ private:
 };
 
 static_assert(
-    mimicpp::stacktrace::backend<mimicpp::stacktrace::NullBackend>,
+    mimicpp::util::stacktrace::backend<mimicpp::util::stacktrace::NullBackend>,
     "stacktrace::NullBackend does not satisfy the stacktrace::backend concept");
 
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
      * \brief A simple type-erased stacktrace abstraction.
@@ -396,7 +396,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     };
 }
 
-namespace mimicpp::stacktrace::detail
+namespace mimicpp::util::stacktrace::detail
 {
     template <
         template <typename> typename Traits,
@@ -441,7 +441,7 @@ namespace mimicpp::stacktrace::detail
     };
 }
 
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
 {
     /**
      * \brief Function object, which generates the current-stacktrace.
@@ -453,7 +453,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::stacktrace
     inline constexpr detail::current_fn current{};
 }
 
-namespace mimicpp::stacktrace::detail
+namespace mimicpp::util::stacktrace::detail
 {
     template <print_iterator OutIter>
     constexpr OutIter print_entry(OutIter out, Stacktrace const& stacktrace, std::size_t const index)
@@ -475,10 +475,10 @@ namespace mimicpp::stacktrace::detail
 }
 
 template <>
-struct mimicpp::printing::detail::state::common_type_printer<mimicpp::Stacktrace>
+struct mimicpp::printing::detail::state::common_type_printer<mimicpp::util::Stacktrace>
 {
     template <print_iterator OutIter>
-    static constexpr OutIter print(OutIter out, Stacktrace const& stacktrace)
+    static constexpr OutIter print(OutIter out, util::Stacktrace const& stacktrace)
     {
         if (stacktrace.empty())
         {
@@ -488,7 +488,7 @@ struct mimicpp::printing::detail::state::common_type_printer<mimicpp::Stacktrace
         for (std::size_t const i : std::views::iota(0u, stacktrace.size()))
         {
             out = format::format_to(std::move(out), "#{} ", i);
-            out = stacktrace::detail::print_entry(
+            out = util::stacktrace::detail::print_entry(
                 std::move(out),
                 stacktrace,
                 i);
@@ -506,7 +506,7 @@ struct mimicpp::printing::detail::state::common_type_printer<mimicpp::Stacktrace
     #include "mimic++_ext/stacktrace/cpptrace.hpp"
     #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
 #else
-namespace mimicpp::stacktrace
+namespace mimicpp::util::stacktrace
 {
     struct find_backend
     {

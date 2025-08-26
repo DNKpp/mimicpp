@@ -34,7 +34,7 @@ struct mimicpp::custom::find_stacktrace_backend
 };
 
 template <>
-struct mimicpp::stacktrace::backend_traits<CustomBackend>
+struct mimicpp::util::stacktrace::backend_traits<CustomBackend>
 {
     using BackendT = CustomBackend;
 
@@ -83,6 +83,6 @@ struct mimicpp::stacktrace::backend_traits<CustomBackend>
     }
 };
 
-static_assert(mimicpp::stacktrace::backend<CustomBackend>);
+static_assert(mimicpp::util::stacktrace::backend<CustomBackend>);
 
 #endif

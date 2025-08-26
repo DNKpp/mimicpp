@@ -993,7 +993,7 @@ TEST_CASE(
 
     Mock<void()> mock{};
 
-    Stacktrace const here = stacktrace::current();
+    util::Stacktrace const here = util::stacktrace::current();
     auto const check = [&](reporting::CallReport const& call) {
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
         REQUIRE(!here.empty());

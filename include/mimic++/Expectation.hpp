@@ -53,7 +53,7 @@ namespace mimicpp::detail
                 reporting::make_call_report(
                     target,
                     call,
-                    stacktrace::current(3u + call.baseStacktraceSkip)),
+                    util::stacktrace::current(3u + call.baseStacktraceSkip)),
                 expectation.report(),
                 std::current_exception());
         }
@@ -380,7 +380,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
                     // in cases of a throwing finalizer, we might introduce bugs. At least there are some tests, which
                     // will fail if done wrong.
                     reporting::detail::report_full_match(
-                        reporting::make_call_report(std::move(target), call, stacktrace::current(stacktraceSkip)),
+                        reporting::make_call_report(std::move(target), call, util::stacktrace::current(stacktraceSkip)),
                         std::move(report));
                 }
 
@@ -391,12 +391,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
             if (!std::ranges::empty(inapplicableMatches))
             {
                 reporting::detail::report_inapplicable_matches(
-                    reporting::make_call_report(std::move(target), std::move(call), stacktrace::current(stacktraceSkip)),
+                    reporting::make_call_report(std::move(target), std::move(call), util::stacktrace::current(stacktraceSkip)),
                     detail::gather_expectation_reports(inapplicableMatches));
             }
 
             reporting::detail::report_no_matches(
-                reporting::make_call_report(std::move(target), std::move(call), stacktrace::current(stacktraceSkip)),
+                reporting::make_call_report(std::move(target), std::move(call), util::stacktrace::current(stacktraceSkip)),
                 detail::make_no_match_reports(std::move(noMatches)));
         }
 
