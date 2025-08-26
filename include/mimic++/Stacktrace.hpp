@@ -287,9 +287,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
          * \brief Constructor storing the given stacktrace-backend.
          * \param backend The actual stacktrace-backend object.
          */
-        template <stacktrace::backend Backend>
+        template <typename Backend>
+            requires(!std::same_as<Stacktrace, std::remove_cvref_t<Backend>>)
+                 && stacktrace::backend<Backend>
         [[nodiscard]]
-        explicit constexpr Stacktrace(Backend backend)
+        explicit Stacktrace(Backend backend)
             : m_Backend{std::make_shared<Model<Backend>>(std::move(backend))}
         {
         }
@@ -416,7 +418,7 @@ namespace mimicpp::stacktrace::detail
     {
         template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
         [[nodiscard]]
-        constexpr Stacktrace operator()(std::size_t const skip, std::size_t const max) const
+        Stacktrace operator()(std::size_t const skip, std::size_t const max) const
         {
             MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
             using Traits = decltype(find_traits<TraitsTemplate>());
@@ -426,7 +428,7 @@ namespace mimicpp::stacktrace::detail
 
         template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
         [[nodiscard]]
-        constexpr Stacktrace operator()(std::size_t const skip) const
+        Stacktrace operator()(std::size_t const skip) const
         {
             MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
             using Traits = decltype(find_traits<TraitsTemplate>());
@@ -436,7 +438,7 @@ namespace mimicpp::stacktrace::detail
 
         template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
         [[nodiscard]]
-        constexpr Stacktrace operator()() const
+        Stacktrace operator()() const
         {
             using Traits = decltype(find_traits<TraitsTemplate>());
 
