@@ -308,14 +308,14 @@ namespace
             return util::SourceLocation{};
         }
 
-        operator Stacktrace()
+        operator util::Stacktrace()
         {
-            return stacktrace::current();
+            return util::stacktrace::current();
         }
 
-        operator Stacktrace() const
+        operator util::Stacktrace() const
         {
-            return stacktrace::current();
+            return util::stacktrace::current();
         }
     };
 }
@@ -384,7 +384,7 @@ TEST_CASE(
         SECTION("and when converted to simple type via non-const function.")
         {
             conversion conv{};
-            auto const trace = static_cast<Stacktrace>(conv);
+            auto const trace = static_cast<util::Stacktrace>(conv);
             StringT const fnName = trace.description(0u);
             CAPTURE(fnName);
 
@@ -402,7 +402,7 @@ TEST_CASE(
         SECTION("When converted to simple type via const function.")
         {
             conversion const conv{};
-            auto const trace = static_cast<Stacktrace>(conv);
+            auto const trace = static_cast<util::Stacktrace>(conv);
             StringT const fnName = trace.description(0u);
             CAPTURE(fnName);
 
@@ -424,24 +424,24 @@ TEST_CASE(
     #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
 
 constexpr auto function_type_post_processing_lambda_stacktrace = [] {
-    return stacktrace::current();
+    return util::stacktrace::current();
 };
 
 constexpr auto function_type_post_processing_nested_lambda_stacktrace = [] {
     return [] {
-        return stacktrace::current();
+        return util::stacktrace::current();
     }();
 };
 
 namespace
 {
     [[nodiscard]]
-    Stacktrace stacktrace_fun()
+    util::Stacktrace stacktrace_fun()
     {
         [[maybe_unused]] constexpr auto dummy = [] {};
         [[maybe_unused]] constexpr auto dummy2 = [] {};
         constexpr auto inner = [] {
-            return stacktrace::current();
+            return util::stacktrace::current();
         };
         [[maybe_unused]] constexpr auto dummy3 = [] {};
 
@@ -449,10 +449,10 @@ namespace
     }
 
     [[nodiscard]]
-    Stacktrace stacktrace_anon_lambda_fun()
+    util::Stacktrace stacktrace_anon_lambda_fun()
     {
         return [] {
-            return stacktrace::current();
+            return util::stacktrace::current();
         }();
     }
 
@@ -464,9 +464,9 @@ namespace
         };
 
         [[nodiscard]]
-        Stacktrace foo(my_type)
+        util::Stacktrace foo(my_type)
         {
-            return stacktrace::current();
+            return util::stacktrace::current();
         }
     };
 }
@@ -479,7 +479,7 @@ TEST_CASE(
 
     SECTION("When general function is given.")
     {
-        auto const trace = stacktrace::current();
+        auto const trace = util::stacktrace::current();
         REQUIRE_FALSE(trace.empty());
         StringT const name = trace.description(0u);
         CAPTURE(name);
@@ -578,9 +578,9 @@ TEST_CASE(
         struct
         {
             [[nodiscard]]
-            Stacktrace operator()() const
+            util::Stacktrace operator()() const
             {
-                return stacktrace::current();
+                return util::stacktrace::current();
             }
         } constexpr obj{};
 
@@ -615,9 +615,9 @@ TEST_CASE(
         {
         public:
             [[nodiscard]]
-            Stacktrace operator()() const
+            util::Stacktrace operator()() const
             {
-                return stacktrace::current();
+                return util::stacktrace::current();
             }
         } constexpr obj{};
 

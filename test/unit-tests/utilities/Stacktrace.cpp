@@ -295,11 +295,11 @@ TEST_CASE(
     std::size_t constexpr maxLength{6u};
     auto const size = std::min(maxLength, stacktrace.size());
     auto const skip = stacktrace.size() - size;
-    stacktrace = stacktrace::current(skip);
+    stacktrace = util::stacktrace::current(skip);
     REQUIRE(size == stacktrace.size());
 
     std::string const pattern = format::format(
-        R"((?:#\d+ )"                              // always starts with the entry index
+        R"((?:#\d+ )" // always starts with the entry index
         "`"
         R"((?:\/?)"                                // may begin with a /
         R"((?:(?:\d|\w|_|-|\+|\*|\.)+(?:\\|\/))*)" // arbitrary times `dir/`

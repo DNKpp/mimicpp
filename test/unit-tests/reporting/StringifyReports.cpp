@@ -43,10 +43,9 @@ TEST_CASE(
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
-                 {"expect: arg[1] not empty",
+            {"expect: arg[1] not empty",
              std::nullopt,
-             "expect: arg[0] > 0"}}
-    };
+             "expect: arg[0] > 0"}}};
 
     auto const text = reporting::stringify_full_match(callReport, expectationReport);
 
@@ -82,8 +81,7 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {{"expect: some requirement"}}
-    };
+        .requirementDescriptions = {{"expect: some requirement"}}};
 
     auto const text = reporting::stringify_full_match(callReport, expectationReport);
 
@@ -113,8 +111,7 @@ TEST_CASE(
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt
-    };
+        .finalizerDescription = std::nullopt};
 
     auto const text = reporting::stringify_full_match(callReport, expectationReport);
 
@@ -139,15 +136,14 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .stacktrace = stacktrace::current(0u, 5u),
+        .stacktrace = util::stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt
-    };
+        .finalizerDescription = std::nullopt};
 
     auto const text = reporting::stringify_full_match(callReport, expectationReport);
     CAPTURE(text);
@@ -189,17 +185,15 @@ TEST_CASE(
         .controlReport = commonInapplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
-                 {"expect: arg[1] not empty",
+            {"expect: arg[1] not empty",
              std::nullopt,
-             "expect: arg[0] > 0"}}
-    };
+             "expect: arg[0] > 0"}}};
 
     reporting::ExpectationReport const expectationReport2{
         .target = make_common_target_report<void(int, std::string)>("Mock-Name2"),
         .controlReport = commonSaturatedState,
         .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {{"expect: test"}}
-    };
+        .requirementDescriptions = {{"expect: test"}}};
 
     std::vector expectationReports{expectationReport1, expectationReport2};
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
@@ -243,8 +237,7 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .controlReport = commonSaturatedState,
         .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {{"expect: some requirement"}}
-    };
+        .requirementDescriptions = {{"expect: some requirement"}}};
 
     std::vector expectationReports{expectationReport};
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
@@ -277,8 +270,7 @@ TEST_CASE(
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>(),
         .controlReport = commonSaturatedState,
-        .finalizerDescription = std::nullopt
-    };
+        .finalizerDescription = std::nullopt};
 
     std::vector expectationReports{expectationReport};
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
@@ -305,15 +297,14 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .stacktrace = stacktrace::current(0u, 5u),
+        .stacktrace = util::stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>(),
         .controlReport = commonInapplicableState,
-        .finalizerDescription = std::nullopt
-    };
+        .finalizerDescription = std::nullopt};
 
     std::vector expectationReports{expectationReport};
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
@@ -353,12 +344,11 @@ TEST_CASE(
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
-                 {std::nullopt,
+            {std::nullopt,
              "expect: arg[1] not empty",
              std::nullopt,
              "expect: arg[0] > 0",
-             std::nullopt}}
-    };
+             std::nullopt}}};
     reporting::RequirementOutcomes const outcomes1{
         .outcomes = {{false, true, false, false, true}}};
 
@@ -367,9 +357,8 @@ TEST_CASE(
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
-                 {"expect: violated",
-             "expect: adhered"}}
-    };
+            {"expect: violated",
+             "expect: adhered"}}};
     reporting::RequirementOutcomes const outcomes2{
         .outcomes = {false, true}
     };
@@ -467,11 +456,10 @@ TEST_CASE(
         .controlReport = commonApplicableState,
         .finalizerDescription = std::nullopt,
         .requirementDescriptions = {
-                 {
+            {
                 "expect: adherence",
                 "expect: violation",
-            }}
-    };
+            }}};
     reporting::RequirementOutcomes const outcomes{
         .outcomes = {true, false}
     };
@@ -510,8 +498,7 @@ TEST_CASE(
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
-        .requirementDescriptions = {{"expect: violation"}}
-    };
+        .requirementDescriptions = {{"expect: violation"}}};
 
     reporting::RequirementOutcomes const outcomes{
         .outcomes = {false}};
@@ -599,15 +586,14 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .stacktrace = stacktrace::current(0u, 5u),
+        .stacktrace = util::stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
-        .requirementDescriptions = {{"expect: violation"}}
-    };
+        .requirementDescriptions = {{"expect: violation"}}};
 
     reporting::RequirementOutcomes const outcomes{
         .outcomes = {false}};
@@ -666,8 +652,7 @@ TEST_CASE(
 
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>(),
-        .controlReport = state
-    };
+        .controlReport = state};
 
     auto const text = reporting::stringify_unfulfilled_expectation(expectationReport);
     std::string const regex = format::format(
@@ -698,8 +683,7 @@ TEST_CASE(
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void(int, std::string)>(),
         .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt
-    };
+        .finalizerDescription = std::nullopt};
 
     SECTION("When std::exception is given.")
     {
@@ -760,8 +744,7 @@ TEST_CASE(
     reporting::ExpectationReport const expectationReport{
         .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt
-    };
+        .finalizerDescription = std::nullopt};
 
     auto const exceptionPtr = std::make_exception_ptr(std::runtime_error{"Something went wrong."});
     auto const text = reporting::stringify_unhandled_exception(
@@ -790,7 +773,7 @@ TEST_CASE(
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
-        .stacktrace = stacktrace::current(0u, 5u),
+        .stacktrace = util::stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
