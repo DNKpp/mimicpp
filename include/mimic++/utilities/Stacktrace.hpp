@@ -40,27 +40,25 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
 {
     /**
      * \defgroup STACKTRACE stacktrace
-     * \brief Contains stacktrace related functionalities.
-     * \details As ``mimic++`` is officially a C++20 framework, it can not rely on built-in stack trace support from the STL.
-     * However, stack traces are particularly valuable for users in the context of mocking, especially when expectations are violated.
-     * To address this, ``mimic++`` introduces a simple stacktrace abstraction that can be used to integrate existing stacktrace
-     * implementations.
+     * \brief Provides stacktrace-related functionality.
+     * \details Since *mimic++* is officially a C++20 framework, it cannot rely on built-in stacktrace support from the *STL*.
+     * However, stacktraces are especially valuable in the context of mocking, particularly when expectations are violated.
+     * To address this, *mimic++* introduces a simple stacktrace abstraction that allows integration with existing
+     * stacktrace implementations.
      *
-     * \note The \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE macro must be defined to fully enable the support.
-     * - If the \ref MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE is defined, the ``cpptrace::stacktrace`` is selected as the default stacktrace-backend.
-     * - If ``std::stacktrace`` is available (i.e. c++23 is available), it's selected as the default stacktrace-backend.
-     * - Otherwise, the ``stacktrace::NullBackend`` is selected, which does not provide any valuable information.
+     * \note For more information about available backends, see the \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE config option.
      *
-     * \attention The built-in backend-priority is skipped if a non-debug build-mode is detected (i.e. when ``NDEBUG`` is defined),
-     * because neither ``std::stacktrace`` nor ``cpptrace`` do provide correct information.
-     * In this case the ``stacktrace::NullBackend`` is chosen as the active stacktrace-backend.
+     * \attention In non-debug build modes (i.e., when `NDEBUG` is defined),
+     * *mimic++* always activates `stacktrace::NullBackend`, since none of the tested stacktrace backends provided useful information.
      *
      * \details
      * ### Custom Stacktrace Backends
      *
-     * In any case, users can define ``mimicpp::custom::find_stacktrace_backend`` to enable their own stacktrace-backend,
-     * which will then be preferred over any other stacktrace-backend (even for non-debug builds).
-     * That type must contain at least a ``type`` member-alias, which denotes the desired stacktrace-backend implementation.
+     * When the \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE option is set to `custom`
+     * (or the preprocessor macro `MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE` is defined as `1`),
+     * users can define `mimicpp::custom::find_stacktrace_backend` to enable their own stacktrace backend.
+     * This custom backend will take precedence over all other backends.
+     * The provided type must at least define a `type` member alias, which specifies the desired stacktrace backend implementation.
      *
      * ```cpp
      * struct mimicpp::custom::find_stacktrace_backend
@@ -68,6 +66,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
      *      using type = MyStacktraceBackend;
      * };
      * ```
+     *
      * Additionally, a specialization for the `util::stacktrace::backend_traits` template must be added, which defines at least the
      * following functions:
      * ```cpp
@@ -83,7 +82,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
      *    static std::size_t source_line(MyStacktraceBackend const& backend, std::size_t index);
      * };
      * ```
-     * \note The ``index`` param denotes the index of the selected stacktrace-entry.
+     * \note The `index` param denotes the index of the selected stacktrace-entry.
      *
      * \{
      */
