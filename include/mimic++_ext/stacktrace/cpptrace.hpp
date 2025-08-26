@@ -87,8 +87,4 @@ struct mimicpp::stacktrace::backend_traits<cpptrace::stacktrace>
     }
 };
 
-static_assert(
-    mimicpp::stacktrace::backend<cpptrace::stacktrace>,
-    "cpptrace::stacktrace does not satisfy the stacktrace::backend concept");
-
 #endif

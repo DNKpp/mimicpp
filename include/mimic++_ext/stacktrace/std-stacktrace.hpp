@@ -23,63 +23,59 @@ struct mimicpp::stacktrace::find_backend
 template <typename Allocator>
 struct mimicpp::stacktrace::backend_traits<std::basic_stacktrace<Allocator>>
 {
-    using BackendT = std::basic_stacktrace<Allocator>;
+    using Backend = std::basic_stacktrace<Allocator>;
 
     [[nodiscard]]
-    static BackendT current(std::size_t const skip, std::size_t const max) noexcept
+    static Backend current(std::size_t const skip, std::size_t const max) noexcept
     {
         MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
 
-        return BackendT::current(skip + 1, max);
+        return Backend::current(skip + 1, max);
     }
 
     [[nodiscard]]
-    static BackendT current(std::size_t const skip) noexcept
+    static Backend current(std::size_t const skip) noexcept
     {
         MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
 
-        return BackendT::current(skip + 1);
+        return Backend::current(skip + 1);
     }
 
     [[nodiscard]]
-    static std::size_t size(BackendT const& backend) noexcept
+    static std::size_t size(Backend const& backend) noexcept
     {
         return backend.size();
     }
 
     [[nodiscard]]
-    static bool empty(BackendT const& backend) noexcept
+    static bool empty(Backend const& backend) noexcept
     {
         return backend.empty();
     }
 
     [[nodiscard]]
-    static std::string description(BackendT const& backend, std::size_t const at)
+    static std::string description(Backend const& backend, std::size_t const at)
     {
         return entry(backend, at).description();
     }
 
     [[nodiscard]]
-    static std::string source_file(BackendT const& backend, std::size_t const at)
+    static std::string source_file(Backend const& backend, std::size_t const at)
     {
         return entry(backend, at).source_file();
     }
 
     [[nodiscard]]
-    static std::size_t source_line(BackendT const& backend, std::size_t const at)
+    static std::size_t source_line(Backend const& backend, std::size_t const at)
     {
         return entry(backend, at).source_line();
     }
 
     [[nodiscard]]
-    static std::stacktrace_entry const& entry(BackendT const& backend, std::size_t const at)
+    static std::stacktrace_entry const& entry(Backend const& backend, std::size_t const at)
     {
         return backend.at(at);
     }
 };
-
-static_assert(
-    mimicpp::stacktrace::backend<std::stacktrace>,
-    "std::stacktrace does not satisfy the stacktrace::backend concept");
 
 #endif
