@@ -18,7 +18,8 @@
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
-     * \defgroup CONCEPTS concepts
+     * \defgroup UTIL_CONCEPTS concepts
+     * \ingroup UTILITIES
      * \brief Contains common concept definitions.
      *
      * \{

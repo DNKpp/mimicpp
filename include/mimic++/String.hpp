@@ -332,7 +332,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     /**
      * \brief Determines, whether the given type can be used as a string-type.
      * \ingroup STRING
-     * \ingroup CONCEPTS
+     * \ingroup UTIL_CONCEPTS
      */
     template <typename T>
     concept string = requires {
@@ -373,7 +373,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     /**
      * \brief Determines, whether the given type supports string normalization.
      * \ingroup STRING
-     * \ingroup CONCEPTS
+     * \ingroup UTIL_CONCEPTS
      */
     template <typename String>
     concept case_foldable_string =
