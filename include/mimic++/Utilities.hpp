@@ -16,4 +16,13 @@
 #include "mimic++/utilities/Stacktrace.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
+namespace mimicpp::util
+{
+    /**
+     * \defgroup UTILITIES utilities
+     * \brief Contains various utility used by *mimic++*.
+     * \details The contained features are mainly used by *mimic++* but are also available to users.
+     */
+}
+
 #endif

@@ -101,7 +101,7 @@
  * Users can choose between the C++23 `std::stacktrace` (`c++23`),
  * the third-party `cpptrace` (`cpptrace`),
  * or a custom stacktrace backend (`custom`).
- * \see \ref STACKTRACE "stacktrace" documentation
+ * \see \ref UTIL_STACKTRACE "stacktrace" documentation
  *
  * ### Non-cmake usage
  * In cases where *mimic++* is not configured via cmake,

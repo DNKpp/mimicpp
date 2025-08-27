@@ -31,7 +31,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
     /**
      * \brief Users may define this type to enable their own stacktrace-backend
      * \note See \ref STACKTRACE "stacktrace" documentation for an example.
-     * \ingroup STACKTRACE
+     * \ingroup UTIL_STACKTRACE
      */
     struct find_stacktrace_backend;
 }
@@ -39,7 +39,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
 {
     /**
-     * \defgroup STACKTRACE stacktrace
+     * \defgroup UTIL_STACKTRACE stacktrace
+     * \ingroup UTILITIES
      * \brief Provides stacktrace-related functionality.
      * \details Since *mimic++* is officially a C++20 framework, it cannot rely on built-in stacktrace support from the *STL*.
      * However, stacktraces are especially valuable in the context of mocking, particularly when expectations are violated.
@@ -89,13 +90,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
 
     /**
      * \brief Helper type for getting the default stacktrace-backend.
-     * \note See \ref STACKTRACE "stacktrace" documentation for an example.
+     * \note See \ref UTIL_STACKTRACE "stacktrace" documentation for an example.
      */
     struct find_backend;
 
     /**
      * \brief Trait type for stacktrace backends.
-     * \note See \ref STACKTRACE "stacktrace" documentation for an example.
+     * \note See \ref UTIL_STACKTRACE "stacktrace" documentation for an example.
      */
     template <typename Backend>
     struct backend_traits;
@@ -189,7 +190,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
      * \brief A simple type-erased stacktrace abstraction.
-     * \ingroup STACKTRACE
+     * \ingroup UTIL_STACKTRACE
      */
     class Stacktrace
     {
@@ -444,9 +445,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
 {
     /**
      * \brief Function object, which generates the current-stacktrace.
-     * \ingroup STACKTRACE
+     * \ingroup UTIL_STACKTRACE
      * \details This function skips at least all internal stacktrace-entries.
-     * Callers may specify the optional ``skip`` parameter to remove additional entries.
+     * Callers may specify the optional `skip` parameter to remove additional entries.
      */
     [[maybe_unused]]
     inline constexpr detail::current_fn current{};
