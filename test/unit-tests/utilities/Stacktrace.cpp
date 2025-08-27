@@ -171,7 +171,9 @@ TEST_CASE(
 {
     using Traits = util::stacktrace::backend_traits<util::stacktrace::NullBackend>;
 
-    util::stacktrace::NullBackend constexpr stacktrace{Traits::current(42)};
+    util::stacktrace::NullBackend const& stacktrace = GENERATE(
+        Traits::current(42),
+        Traits::current(1337, 42));
 
     CHECK(Traits::empty(stacktrace));
     CHECK(0u == Traits::size(stacktrace));
