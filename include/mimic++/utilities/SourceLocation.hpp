@@ -24,7 +24,8 @@
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::source_location
 {
     /**
-     * \defgroup SOURCE_LOCATION source-location
+     * \defgroup UTIL_SOURCE_LOCATION source-location
+     * \ingroup UTILITIES
      * \brief Contains source-location related functionalities.
      * \details By default, `mimic++` uses the C++20 `std::source_location`.
      * However, this feature is not available on all platforms or with all compilers.
@@ -128,7 +129,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 {
     /**
      * \brief A thin wrapper around the currently installed source-location backend with additional ``operator ==``.
-     * \ingroup SOURCE_LOCATION
+     * \ingroup UTIL_SOURCE_LOCATION
      */
     class SourceLocation
     {
