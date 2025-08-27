@@ -396,7 +396,7 @@ TEST_CASE(
                 ss.str(),
                 Catch::Matchers::Matches(
                     R"((\{anon-ns\}::conversion::)?)"
-                    R"(operator (mimicpp::util)?::Stacktrace(\(\))?)"));
+                    R"(operator (mimicpp::util::)?Stacktrace(\(\))?)"));
         }
 
         SECTION("When converted to simple type via const function.")
@@ -414,7 +414,7 @@ TEST_CASE(
                 ss.str(),
                 Catch::Matchers::Matches(
                     R"((\{anon-ns\}::conversion::)?)"
-                    R"(operator (mimicpp::util)?::Stacktrace(\(\)(\s?const)?)?)"));
+                    R"(operator (mimicpp::util::)?Stacktrace(\(\)(\s?const)?)?)"));
         }
     }
 
