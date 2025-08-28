@@ -8,28 +8,29 @@ include(CMakePackageConfigHelpers)
 set(MIMICPP_LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/mimic++")
 set(MIMICPP_CMAKE_INSTALL_DIR "${MIMICPP_LIB_INSTALL_DIR}/cmake")
 
-write_basic_package_version_file(
-    "mimicpp-version.cmake"
-    VERSION         ${PROJECT_VERSION}
-    COMPATIBILITY   AnyNewerVersion
-    ARCH_INDEPENDENT
-)
-
 configure_package_config_file(
-    "${PROJECT_SOURCE_DIR}/cmake/mimicpp-config.cmake.in"
-    "mimicpp-config.cmake"
-    INSTALL_DESTINATION "${MIMICPP_CMAKE_INSTALL_DIR}"
+	"${PROJECT_SOURCE_DIR}/cmake/mimicpp-config.cmake.in"
+	"mimicpp-config.cmake"
+	INSTALL_DESTINATION "${MIMICPP_CMAKE_INSTALL_DIR}"
 )
 
-install(
-	TARGETS mimicpp-header-only mimicpp-enable-config-options
-	EXPORT						mimicpp-targets
+write_basic_package_version_file(
+	"mimicpp-version.cmake"
+	VERSION ${PROJECT_VERSION}
+	COMPATIBILITY AnyNewerVersion
+	ARCH_INDEPENDENT
 )
 
-install(
-    DIRECTORY				"include/"
-    TYPE					INCLUDE
-    FILES_MATCHING PATTERN	"*.hpp"
+# Gather all targets starting with `mimicpp-internal-enable-`
+get_property(MIMICPP_FEATURE_TARGETS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY BUILDSYSTEM_TARGETS)
+list(FILTER MIMICPP_FEATURE_TARGETS INCLUDE REGEX "^mimicpp-internal-enable-")
+install(TARGETS mimicpp-header-only mimicpp-enable-config-options ${MIMICPP_FEATURE_TARGETS}
+	EXPORT mimicpp-targets
+)
+
+install(DIRECTORY "include/"
+	TYPE INCLUDE
+	FILES_MATCHING PATTERN "*.hpp"
 )
 
 install(
@@ -39,9 +40,8 @@ install(
     NAMESPACE               mimicpp::
 )
 
-install(
-    FILES
-        "${PROJECT_BINARY_DIR}/mimicpp-config.cmake"
-        "${PROJECT_BINARY_DIR}/mimicpp-version.cmake"
-    DESTINATION "${MIMICPP_CMAKE_INSTALL_DIR}"
+install(FILES
+	"${PROJECT_BINARY_DIR}/mimicpp-config.cmake"
+	"${PROJECT_BINARY_DIR}/mimicpp-version.cmake"
+	DESTINATION "${MIMICPP_CMAKE_INSTALL_DIR}"
 )
