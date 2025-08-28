@@ -13,12 +13,12 @@
 
 using namespace mimicpp;
 
-TEST_CASE("The active backend is not stacktrace::NullBackend.")
+TEST_CASE(TEST_CASE_PREFIX "- The active backend is not stacktrace::NullBackend.")
 {
     STATIC_CHECK(!std::same_as<util::stacktrace::NullBackend, util::stacktrace::find_backend::type>);
 }
 
-TEST_CASE("The active backend is fully functional.")
+TEST_CASE(TEST_CASE_PREFIX "- The active backend is fully functional.")
 {
     util::Stacktrace const stacktrace = GENERATE(
         util::stacktrace::current(),

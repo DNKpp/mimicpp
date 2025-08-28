@@ -13,6 +13,10 @@ function(create_stacktrace_test BACKEND LIBS)
         "test.cpp"
     )
 
+    target_compile_definitions(${TARGET_NAME} PRIVATE
+        TEST_CASE_PREFIX="${BACKEND}"
+    )
+
     target_link_libraries(${TARGET_NAME} PRIVATE
         mimicpp::header-only
         mimicpp::test::basics
