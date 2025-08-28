@@ -601,27 +601,27 @@ version.
 
 **Windows**
 
-| OS           | Compiler | x86_32 | x86_64 | c++-20 | c++-23 | formatting |  stacktrace  |
-|--------------|:--------:|:------:|:------:|:------:|:------:|:----------:|:------------:|
-| Windows 2022 |   msvc   |   x    |   x    |   x    |   x    |  std/fmt   | std/cpptrace |
-| Windows 2022 | clangCl  |   x    |   x    |   x    |   x    |  std/fmt   | std/cpptrace |
+| OS           | Compiler | x86_32 | x86_64 | c++-20 | c++-23 | formatting |     stacktrace     |
+|--------------|:--------:|:------:|:------:|:------:|:------:|:----------:|:------------------:|
+| Windows 2022 |   msvc   |   x    |   x    |   x    |   x    |  std/fmt   | std/cpptrace/boost |
+| Windows 2022 | clangCl  |   x    |   x    |   x    |   x    |  std/fmt   | std/cpptrace/boost |
 
 **Linux**
 
-| Compiler | x86_32 | x86_64 | libstdc++ | libc++ | c++-20 | c++-23 | formatting |  stacktrace   |
-|----------|:------:|:------:|:---------:|:------:|:------:|:------:|:----------:|:-------------:|
-| clang-16 |   x    |   x    |     x     |   x    |   x    |   x    |    fmt     |   cpptrace    |
-| clang-17 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
-| clang-18 |   x    |   x    |     x     |   *    |   x    |   x    |  std/fmt   | std*/cpptrace |
-| clang-19 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
-| clang-20 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
-| gcc-10.2 |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace    |
-| gcc-10   |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace    |
-| gcc-11   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace    |
-| gcc-12   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace    |
-| gcc-13   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
-| gcc-14   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
-| gcc-15   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| Compiler | x86_32 | x86_64 | libstdc++ | libc++ | c++-20 | c++-23 | formatting |     stacktrace      |
+|----------|:------:|:------:|:---------:|:------:|:------:|:------:|:----------:|:-------------------:|
+| clang-16 |   x    |   x    |     x     |   x    |   x    |   x    |    fmt     |   cpptrace/boost    |
+| clang-17 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| clang-18 |   x    |   x    |     x     |   *    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| clang-19 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| clang-20 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| gcc-10   |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace/boost    |
+| gcc-10.2 |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace/boost    |
+| gcc-11   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace/boost    |
+| gcc-12   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace/boost    |
+| gcc-13   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| gcc-14   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| gcc-15   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 
 Note:
 
@@ -631,11 +631,11 @@ Note:
 
 **macOS**
 
-| Compiler          | x86_64 | libstdc++ | libc++ | c++-20 | c++-23 | formatting |  stacktrace   |
-|-------------------|:------:|:---------:|:------:|:------:|:------:|:----------:|:-------------:|
-| AppleClang-16.0.6 |   x    |     ?     |   x    |   x    |   x    |    fmt     |   cpptrace    |
-| AppleClang-17.0.6 |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
-| AppleClang-18.1.6 |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace |
+| Compiler          | x86_64 | libstdc++ | libc++ | c++-20 | c++-23 | formatting |     stacktrace      |
+|-------------------|:------:|:---------:|:------:|:------:|:------:|:----------:|:-------------------:|
+| AppleClang-16.0.6 |   x    |     ?     |   x    |   x    |   x    |    fmt     |   cpptrace/boost    |
+| AppleClang-17.0.6 |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| AppleClang-18.1.6 |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 
 Note: macOS officially doesn't support 32bit builds, so they are not tested.
 
