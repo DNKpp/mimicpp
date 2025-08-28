@@ -112,7 +112,7 @@ if (NOT TARGET mimicpp-enable-config-options)
     endif ()
 
     # Config option regarding stacktrace support.
-    set(MIMICPP_DETAIL_STACKTRACE_FEATURES "off;c++23;cpptrace;custom")
+    set(MIMICPP_DETAIL_STACKTRACE_FEATURES "off;c++23;cpptrace;boost;custom")
     set(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "off" CACHE STRING "Which stacktrace backend to use.")
     set(CACHE MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE PROPERTY
         STRINGS ${MIMICPP_DETAIL_STACKTRACE_FEATURES}
@@ -125,7 +125,18 @@ if (NOT TARGET mimicpp-enable-config-options)
     elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "cpptrace")
         find_package(cpptrace REQUIRED)
         target_link_libraries(mimicpp-enable-config-options INTERFACE
+            cpptrace::cpptrace
+        )
+        target_link_libraries(mimicpp-enable-config-options INTERFACE
             mimicpp::internal::enable-cpptrace
+        )
+    elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "boost")
+        find_package(Boost REQUIRED COMPONENTS stacktrace)
+        target_link_libraries(mimicpp-enable-config-options INTERFACE
+            Boost::stacktrace
+        )
+        target_link_libraries(mimicpp-enable-config-options INTERFACE
+            mimicpp::internal::enable-boost-stacktrace
         )
     elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "custom")
         target_link_libraries(mimicpp-enable-config-options INTERFACE

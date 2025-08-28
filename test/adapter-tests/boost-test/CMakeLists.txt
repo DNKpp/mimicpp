@@ -11,16 +11,7 @@ add_executable(${TARGET_NAME}
 include(Mimic++-EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
-set(BOOST_INCLUDE_LIBRARIES "test")
-CPMAddPackage(
-    NAME Boost
-    URL "https://github.com/boostorg/boost/releases/download/boost-1.88.0/boost-1.88.0-cmake.tar.gz"
-    URL_HASH "SHA256=dcea50f40ba1ecfc448fdf886c0165cf3e525fef2c9e3e080b9804e8117b9694"
-    VERSION 1.88.0
-    EXCLUDE_FROM_ALL YES
-    SYSTEM YES
-)
-
+find_package(Boost COMPONENTS test)
 target_link_libraries(${TARGET_NAME} PRIVATE
     mimicpp::header-only
     mimicpp::test::basics

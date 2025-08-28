@@ -502,6 +502,9 @@ struct mimicpp::printing::detail::state::common_type_printer<mimicpp::util::Stac
 #if MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE
     #include "mimic++_ext/stacktrace/std-stacktrace.hpp"
     #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
+#elif MIMICPP_CONFIG_EXPERIMENTAL_USE_BOOST_STACKTRACE
+    #include "mimic++_ext/stacktrace/boost-stacktrace.hpp"
+    #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
 #elif MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
     #include "mimic++_ext/stacktrace/cpptrace.hpp"
     #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1

@@ -99,7 +99,7 @@
  *
  * When enabled, ``mimic++`` uses stacktrace information to provide more helpful diagnostics.
  * Users can choose between the C++23 `std::stacktrace` (`c++23`),
- * the third-party `cpptrace` (`cpptrace`),
+ * the third-party `cpptrace` (`cpptrace`) or `boost` (`boost`),
  * or a custom stacktrace backend (`custom`).
  * \see \ref UTIL_STACKTRACE "stacktrace" documentation
  *
@@ -108,6 +108,7 @@
  * users can manually define the following macros (set them to `1`) before the inclusion of any *mimic++* header.
  * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE`
  * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE`
+ * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_BOOST_STACKTRACE`
  * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE`
  *
  * \attention This is an experimental feature, which may be removed during any release.
