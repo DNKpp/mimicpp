@@ -667,7 +667,11 @@ jobs:
 
       #################################
       # Stacktrace Tests
+      # Workflow is skipped, when an alternative default call-convention is applied, because not all of these
+      # framework supports it.
       - name: Configure stacktrace tests
+        id: config-stacktrace-test
+        if: ${{ matrix.config.default_call_convention == '' }}
         shell: bash
         run: |
           cmake \
@@ -678,6 +682,7 @@ jobs:
               -D MIMICPP_ENABLE_STACKTRACE_TESTS=YES
 
       - name: Build stacktrace tests
+        if: ${{ steps.config-stacktrace-test.outcome == 'success' }}
         shell: bash
         run: |
           cmake --build build \
@@ -685,6 +690,7 @@ jobs:
               ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run stacktrace tests
+        if: ${{ steps.config-stacktrace-test.outcome == 'success' }}
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
