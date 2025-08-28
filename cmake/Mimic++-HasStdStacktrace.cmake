@@ -5,16 +5,28 @@
 
 include(Mimic++-LinkStdStacktrace)
 include(CheckCXXSourceCompiles)
+include(CheckCXXCompilerFlag)
 
 function(check_std_stacktrace_support)
+
+    if (MSVC)
+        set(CXX23_FLAG "/std:c++latest")
+    else ()
+        set(CXX23_FLAG "-std=c++23")
+    endif ()
+
+    check_cxx_compiler_flag(${CXX23_FLAG} COMPILER_SUPPORTS_CXX23)
+    if (NOT COMPILER_SUPPORTS_CXX23)
+        return()
+    endif ()
+
     set(CMAKE_CXX_STANDARD 23)
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
     get_target_property(LIBS mimicpp::internal::link-std-stacktrace INTERFACE_LINK_LIBRARIES)
     set(CMAKE_REQUIRED_LIBRARIES "${LIBS}")
 
-    set(CODE
-        "
+    set(CODE "
 #include <stacktrace>
 int main()
 {
