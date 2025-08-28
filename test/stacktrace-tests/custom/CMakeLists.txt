@@ -8,7 +8,7 @@
 # into a separate test-executable.
 # see: https://eel.is/c++draft/temp.spec#general-5 for the technical reason
 
-set(TARGET_NAME mimicpp-custom-stacktrace-tests)
+set(TARGET_NAME mimicpp-stacktrace-custom-tests)
 add_executable(${TARGET_NAME}
     "CustomStacktrace.cpp"
     "EqualityComparison.cpp"

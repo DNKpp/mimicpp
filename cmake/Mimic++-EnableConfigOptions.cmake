@@ -3,6 +3,8 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
+include(Mimic++-InternalTargets)
+
 if (NOT TARGET mimicpp-enable-config-options)
 
     add_library(mimicpp-enable-config-options INTERFACE)
@@ -117,34 +119,18 @@ if (NOT TARGET mimicpp-enable-config-options)
     )
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
     if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "c++23")
-
-        target_compile_features(mimicpp-enable-config-options INTERFACE
-            cxx_std_23
+        target_link_libraries(mimicpp-enable-config-options INTERFACE
+            mimicpp::internal::enable-std-stacktrace
         )
-        target_compile_definitions(mimicpp-enable-config-options INTERFACE
-            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-            MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE=1
-        )
-
     elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "cpptrace")
-
         find_package(cpptrace REQUIRED)
         target_link_libraries(mimicpp-enable-config-options INTERFACE
-            cpptrace::cpptrace
+            mimicpp::internal::enable-cpptrace
         )
-        target_compile_definitions(mimicpp-enable-config-options INTERFACE
-            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-            MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=1
-            $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
-        )
-
     elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "custom")
-
-        target_compile_definitions(mimicpp-enable-config-options INTERFACE
-            MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-            MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE=1
+        target_link_libraries(mimicpp-enable-config-options INTERFACE
+            mimicpp::internal::enable-custom-stacktrace
         )
-
     elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
         message(FATAL_ERROR "${MESSAGE_PREFIX} Invalid value for MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}\
             \tOptions are: ${MIMICPP_DETAIL_STACKTRACE_FEATURES}"

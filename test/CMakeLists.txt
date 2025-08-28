@@ -5,7 +5,6 @@
 
 add_subdirectory("test-basics")
 add_subdirectory("unit-tests")
-add_subdirectory("custom-stacktrace-tests")
 add_subdirectory("custom-source-location-tests")
 
 if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)
@@ -15,4 +14,9 @@ endif ()
 option(MIMICPP_ENABLE_ADAPTER_TESTS "Determines, whether the adapter tests shall be built." OFF)
 if (MIMICPP_ENABLE_ADAPTER_TESTS)
     add_subdirectory("adapter-tests")
+endif ()
+
+option(MIMICPP_ENABLE_STACKTRACE_TESTS "Determines, whether the stacktrace tests shall be built." OFF)
+if (MIMICPP_ENABLE_STACKTRACE_TESTS)
+    add_subdirectory("stacktrace-tests")
 endif ()

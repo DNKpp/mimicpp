@@ -664,3 +664,33 @@ jobs:
               -j5
       #
       #################################
+
+      #################################
+      # Stacktrace Tests
+      - name: Configure stacktrace tests
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              ${{ env.CMAKE_BASE_OPTIONS }} \
+              -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_ENABLE_STACKTRACE_TESTS=YES
+
+      - name: Build stacktrace tests
+        shell: bash
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
+
+      - name: Run stacktrace tests
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build/test/stacktrace-tests \
+              -C ${{ matrix.build_mode }} \
+              -j5
+      #
+      #################################
