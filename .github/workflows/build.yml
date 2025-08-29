@@ -642,6 +642,8 @@ jobs:
               -B build \
               ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_BUILD_EXAMPLES=OFF \
+              -D MIMICPP_ENABLE_UNIT_TESTS=OFF \
               -D MIMICPP_ENABLE_ADAPTER_TESTS=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=YES
 
@@ -679,6 +681,8 @@ jobs:
               -B build \
               ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_BUILD_EXAMPLES=OFF \
+              -D MIMICPP_ENABLE_UNIT_TESTS=OFF \
               -D MIMICPP_ENABLE_STACKTRACE_TESTS=YES
 
       - name: Build stacktrace tests

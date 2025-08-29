@@ -6,8 +6,12 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 add_subdirectory("test-basics")
-add_subdirectory("unit-tests")
-add_subdirectory("custom-source-location-tests")
+
+option(MIMICPP_ENABLE_UNIT_TESTS "Determines, whether the unit-tests shall be built." ON)
+if (MIMICPP_ENABLE_UNIT_TESTS)
+    add_subdirectory("unit-tests")
+    add_subdirectory("custom-source-location-tests")
+endif ()
 
 if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)
     add_subdirectory("module-test")
