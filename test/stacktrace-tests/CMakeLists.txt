@@ -36,10 +36,11 @@ endfunction()
 
 include(Mimic++-HasStdStacktrace)
 include(Mimic++-InternalTargets)
+include(Mimic++-LinkStdStacktrace)
 
 if (HAS_STD_STACKTRACE)
     message(DEBUG "${MESSAGE_PREFIX} adding std-stacktrace test.")
-    create_stacktrace_test(std-stacktrace "")
+    create_stacktrace_test(std-stacktrace mimicpp::internal::link-std-stacktrace)
 else ()
     message(DEBUG "${MESSAGE_PREFIX} skipping std-stacktrace test.")
 endif ()
