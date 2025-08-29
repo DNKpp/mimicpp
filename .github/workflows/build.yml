@@ -338,7 +338,9 @@ jobs:
                                           --log-level=DEBUG \
                                           -D CMAKE_VERBOSE_MAKEFILE=YES \
                                           -D MIMICPP_FORCED_CXX_STANDARD="${{ matrix.cxx_standard }}" \
+                                          -D MIMICPP_ENABLE_UNIT_TESTS=ON \
                                           -D MIMICPP_ENABLE_ADAPTER_TESTS=OFF \
+                                          -D MIMICPP_ENABLE_STACKTRACE_TESTS=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
