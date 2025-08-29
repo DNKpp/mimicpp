@@ -51,6 +51,6 @@ create_stacktrace_test(cpptrace cpptrace::cpptrace)
 find_package(Boost REQUIRED COMPONENTS stacktrace)
 create_stacktrace_test(
     boost-stacktrace
-    $<IF:$<PLATFORM_ID:Darwin>,Boost::stacktrace_basic,Boost::stacktrace>
+    $<IF:$<PLATFORM_ID:Darwin>,Boost::stacktrace_basic dl,Boost::stacktrace>
 )
 
