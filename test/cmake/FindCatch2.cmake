@@ -8,7 +8,7 @@ include(get_cpm)
 # fixes reporting in clion
 set(CATCH_CONFIG_CONSOLE_WIDTH 800 CACHE STRING "")
 
-CPMAddPackage("gh:catchorg/Catch2@3.7.1")
+CPMAddPackage("gh:catchorg/Catch2@3.10.0")
 
 if (Catch2_ADDED)
 	include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
