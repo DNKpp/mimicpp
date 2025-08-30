@@ -136,16 +136,16 @@ Typedefs</h2></td></tr>
 <tr class="memitem:gaf7c9e177bed083aa4c61b13b78d4be0f" id="r_gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf7c9e177bed083aa4c61b13b78d4be0f">mimicpp::ScopedSequence</a> = <a class="el" href="#ga9efea600d953c01de2d99d7d144264e4">LazyScopedSequence</a></td></tr>
 <tr class="memdesc:gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default scoped-sequence type (lazy strategy).  <br /></td></tr>
 <tr class="separator:gaf7c9e177bed083aa4c61b13b78d4be0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaf6777ae3a4ea46f945ad2e998885a07c" id="r_gaf6777ae3a4ea46f945ad2e998885a07c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> = <a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">LazySequence</a></td></tr>
-<tr class="memdesc:gaf6777ae3a4ea46f945ad2e998885a07c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default sequence type (<a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html" title="The lazy sequence interface.">LazySequence</a>).  <br /></td></tr>
-<tr class="separator:gaf6777ae3a4ea46f945ad2e998885a07c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga64985a7f6100743488af428fa6e3eeba" id="r_ga64985a7f6100743488af428fa6e3eeba"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> = <a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">LazySequence</a></td></tr>
+<tr class="memdesc:ga64985a7f6100743488af428fa6e3eeba"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default sequence type (<a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html" title="The lazy sequence interface.">LazySequence</a>).  <br /></td></tr>
+<tr class="separator:ga64985a7f6100743488af428fa6e3eeba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaccf673d491adb8bec0694d4ead2bf91a" id="r_gaccf673d491adb8bec0694d4ead2bf91a"><td class="memTemplParams" colspan="2">template&lt;typename Id, auto priorityStrategy&gt; </td></tr>
-<tr class="memitem:gaccf673d491adb8bec0694d4ead2bf91a"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gaccf673d491adb8bec0694d4ead2bf91a">mimicpp::expect::in_sequence</a> (sequence::detail::BasicSequenceInterface&lt; Id, priorityStrategy &gt; &amp;sequence) noexcept</td></tr>
-<tr class="memdesc:gaccf673d491adb8bec0694d4ead2bf91a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches the expectation onto a sequence.  <br /></td></tr>
-<tr class="separator:gaccf673d491adb8bec0694d4ead2bf91a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafaccdca014c38611a9b8e3eef4d43a97" id="r_gafaccdca014c38611a9b8e3eef4d43a97"><td class="memTemplParams" colspan="2">template&lt;typename Id, auto priorityStrategy&gt; </td></tr>
+<tr class="memitem:gafaccdca014c38611a9b8e3eef4d43a97"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#gafaccdca014c38611a9b8e3eef4d43a97">mimicpp::expect::in_sequence</a> (sequence::detail::BasicSequenceInterface&lt; Id, priorityStrategy &gt; &amp;sequence)</td></tr>
+<tr class="memdesc:gafaccdca014c38611a9b8e3eef4d43a97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches the expectation onto a sequence.  <br /></td></tr>
+<tr class="separator:gafaccdca014c38611a9b8e3eef4d43a97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga000183a184796dbab88558e072a63f4d" id="r_ga000183a184796dbab88558e072a63f4d"><td class="memTemplParams" colspan="2">template&lt;typename FirstId, auto firstPriorityStrategy, typename SecondId, auto secondPriorityStrategy, typename... OtherIds, auto... otherPriorityStrategies&gt; </td></tr>
 <tr class="memitem:ga000183a184796dbab88558e072a63f4d"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga000183a184796dbab88558e072a63f4d">mimicpp::expect::in_sequences</a> (sequence::detail::BasicSequenceInterface&lt; FirstId, firstPriorityStrategy &gt; &amp;firstSequence, sequence::detail::BasicSequenceInterface&lt; SecondId, secondPriorityStrategy &gt; &amp;secondSequence, sequence::detail::BasicSequenceInterface&lt; OtherIds, otherPriorityStrategies &gt; &amp;... otherSequences)</td></tr>
 <tr class="memdesc:ga000183a184796dbab88558e072a63f4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches the expectation onto the listed sequences.  <br /></td></tr>
@@ -160,7 +160,7 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keywordtype">int</span>)&gt; mock{};</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_typedef" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> sequence{};</div>
+<div class="line">    <a class="code hl_typedef" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::ne(0))</div>
 <div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::le(42))</div>
@@ -177,7 +177,7 @@ Functions</h2></td></tr>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keywordtype">int</span>)&gt; mock1{};</div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keywordtype">int</span>)&gt; mock2{};</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_typedef" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> sequence{};</div>
+<div class="line">    <a class="code hl_typedef" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock2.expect_call(_) <span class="comment">// mock2 must go first</span></div>
 <div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock1.expect_call(_) <span class="comment">// mock1 must go second</span></div>
@@ -194,7 +194,7 @@ Functions</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337); <span class="comment">// (2)</span></div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_typedef" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> sequence{};</div>
+<div class="line">    <a class="code hl_typedef" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337) <span class="comment">// (3)</span></div>
 <div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
@@ -221,13 +221,13 @@ Functions</h2></td></tr>
 <div class="line">    mock(); <span class="comment">// matches (1)</span></div>
 <div class="line">    mock(); <span class="comment">// matches (2)</span></div>
 </div><!-- fragment --><p>It's totally fine to attach expectations to sequences, which are already queried for matches. Sequences do not have to be setup in one go.</p>
-<h1><a class="anchor" id="autotoc_md20"></a>
+<h1><a class="anchor" id="autotoc_md23"></a>
 Thread-Safety</h1>
 <p>Sequences are not thread-safe and are never intended to be. If one attempts to enforce a strong ordering between multiple threads without any explicit synchronisation, that attempt is doomed to fail.</p>
-<h1><a class="anchor" id="autotoc_md21"></a>
+<h1><a class="anchor" id="autotoc_md24"></a>
 A word on sequences with times</h1>
 <p>Sequences and times are fully compatible, but can quickly lead to very hard to understand flows. In general, when mixing sequences with exact times (like <a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695" title="Specifies a times policy with both limits set to 2.">expect::twice</a>) it will just work. But when users are defining very permissive expectations combined with ranging times (like binary <a class="el" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515" title="Specifies a times policy with a limit range.">expect::times</a>), that may lead to surprising behaviour.</p>
-<p>Imagine a Sequence with two expectations; the first one with <code>min = 0</code> and <code>max = 1</code> and the second one with arbitrary limits. When a new call matches both expectations, which one should be preferred?</p>
+<p>Imagine a <a class="el" href="#ga64985a7f6100743488af428fa6e3eeba" title="The default sequence type (LazySequence).">Sequence</a> with two expectations; the first one with <code>min = 0</code> and <code>max = 1</code> and the second one with arbitrary limits. When a new call matches both expectations, which one should be preferred?</p>
 <p>As a last resort, sequences come in two built-in flavors:</p><ul>
 <li><a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html" title="The lazy sequence interface.">LazySequence</a> (default)</li>
 <li><a class="el" href="../../db/d43/classmimicpp_1_1_greedy_sequence.html" title="The greedy sequence interface.">GreedySequence</a></li>
@@ -309,14 +309,14 @@ A word on sequences with times</h1>
 
 </div>
 </div>
-<a id="gaf6777ae3a4ea46f945ad2e998885a07c" name="gaf6777ae3a4ea46f945ad2e998885a07c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaf6777ae3a4ea46f945ad2e998885a07c">&#9670;&#160;</a></span>SequenceT</h2>
+<a id="ga64985a7f6100743488af428fa6e3eeba" name="ga64985a7f6100743488af428fa6e3eeba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga64985a7f6100743488af428fa6e3eeba">&#9670;&#160;</a></span>Sequence</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> = <a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">LazySequence</a></td>
+          <td class="memname">using <a class="el" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> = <a class="el" href="../../db/d46/classmimicpp_1_1_lazy_sequence.html">LazySequence</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -326,8 +326,8 @@ A word on sequences with times</h1>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gaccf673d491adb8bec0694d4ead2bf91a" name="gaccf673d491adb8bec0694d4ead2bf91a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaccf673d491adb8bec0694d4ead2bf91a">&#9670;&#160;</a></span>in_sequence()</h2>
+<a id="gafaccdca014c38611a9b8e3eef4d43a97" name="gafaccdca014c38611a9b8e3eef4d43a97"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafaccdca014c38611a9b8e3eef4d43a97">&#9670;&#160;</a></span>in_sequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -346,7 +346,7 @@ template&lt;typename Id, auto priorityStrategy&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -369,7 +369,7 @@ template&lt;typename Id, auto priorityStrategy&gt; </div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keywordtype">int</span>)&gt; mock{};</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_typedef" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> sequence{};</div>
+<div class="line">    <a class="code hl_typedef" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::ne(0))</div>
 <div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(matches::le(42))</div>
@@ -389,7 +389,7 @@ template&lt;typename Id, auto priorityStrategy&gt; </div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337); <span class="comment">// (2)</span></div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_typedef" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> sequence{};</div>
+<div class="line">    <a class="code hl_typedef" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> sequence{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(1337) <span class="comment">// (3)</span></div>
 <div class="line">        and expect::in_sequence(sequence);</div>
 <div class="line"> </div>
@@ -460,8 +460,8 @@ template&lt;typename FirstId, auto firstPriorityStrategy, typename SecondId, aut
 <div class="line"> </div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void()&gt; mock{};</div>
 <div class="line"> </div>
-<div class="line">    <a class="code hl_typedef" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> sequence1{};</div>
-<div class="line">    <a class="code hl_typedef" href="#gaf6777ae3a4ea46f945ad2e998885a07c">mimicpp::SequenceT</a> sequence2{};</div>
+<div class="line">    <a class="code hl_typedef" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> sequence1{};</div>
+<div class="line">    <a class="code hl_typedef" href="#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a> sequence2{};</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (1)</span></div>
 <div class="line">        and expect::in_sequence(sequence1);</div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call() <span class="comment">// (2)</span></div>

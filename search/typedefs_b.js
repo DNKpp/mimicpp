@@ -2,7 +2,7 @@ var searchData=
 [
   ['scope_0',['Scope',['../df/d6e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_sequence.html#aa0e848f4c80229cfb143e2bcb58d16e8',1,'mimicpp::printing::type::parsing::token::ScopeSequence']]],
   ['scopedsequence_1',['ScopedSequence',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf7c9e177bed083aa4c61b13b78d4be0f',1,'mimicpp']]],
-  ['sequencet_2',['SequenceT',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf6777ae3a4ea46f945ad2e998885a07c',1,'mimicpp']]],
+  ['sequence_2',['Sequence',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga64985a7f6100743488af428fa6e3eeba',1,'mimicpp']]],
   ['signature_5fadd_5fconst_5fqualifier_5ft_3',['signature_add_const_qualifier_t',['../df/ddb/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___c_o_n_s_t___q_u_a_l_i_f_i_e_r.html#gad0aa771934f5c52c2dbce782aae87ed5',1,'mimicpp']]],
   ['signature_5fadd_5fnoexcept_5ft_4',['signature_add_noexcept_t',['../de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html#ga8e3ea8f62502eac4396439c2010b9cb9',1,'mimicpp']]],
   ['signature_5fcall_5fconvention_5ft_5',['signature_call_convention_t',['../dd/dc9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#gaeb6c2d674d0976bad08f5fb98762a167',1,'mimicpp']]],
