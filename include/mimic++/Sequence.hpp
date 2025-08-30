@@ -434,13 +434,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
      */
     template <typename Id, auto priorityStrategy>
     [[nodiscard]]
-    constexpr auto in_sequence(sequence::detail::BasicSequenceInterface<Id, priorityStrategy>& sequence) noexcept
+    constexpr auto in_sequence(sequence::detail::BasicSequenceInterface<Id, priorityStrategy>& sequence)
     {
         using ConfigT = sequence::detail::Config<
             sequence::detail::BasicSequence<Id, priorityStrategy>>;
 
-        return ConfigT{
-            sequence};
+        return ConfigT{sequence};
     }
 
     /**
