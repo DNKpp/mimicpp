@@ -6,7 +6,7 @@
 find_package(Catch2 REQUIRED)
 add_subdirectory("custom")
 
-function(create_stacktrace_test BACKEND LIBS)
+function(create_stacktrace_test BACKEND CXX_TYPE LIBS)
     set(TARGET_NAME mimicpp-stacktrace-${BACKEND}-tests)
 
     add_executable(${TARGET_NAME}
@@ -15,6 +15,7 @@ function(create_stacktrace_test BACKEND LIBS)
 
     target_compile_definitions(${TARGET_NAME} PRIVATE
         TEST_CASE_PREFIX="${BACKEND}"
+        EXPECTED_BACKEND_TYPE=${CXX_TYPE}
     )
 
     target_link_libraries(${TARGET_NAME} PRIVATE
@@ -40,13 +41,13 @@ include(Mimic++-LinkStdStacktrace)
 
 if (HAS_STD_STACKTRACE)
     message(DEBUG "${MESSAGE_PREFIX} adding std-stacktrace test.")
-    create_stacktrace_test(std-stacktrace mimicpp::internal::link-std-stacktrace)
+    create_stacktrace_test(std-stacktrace std::stacktrace mimicpp::internal::link-std-stacktrace)
 else ()
     message(DEBUG "${MESSAGE_PREFIX} skipping std-stacktrace test.")
 endif ()
 
 find_package(cpptrace REQUIRED)
-create_stacktrace_test(cpptrace cpptrace::cpptrace)
+create_stacktrace_test(cpptrace cpptrace::stacktrace cpptrace::cpptrace)
 
 find_package(Boost REQUIRED COMPONENTS stacktrace)
-create_stacktrace_test(boost-stacktrace Boost::stacktrace)
+create_stacktrace_test(boost-stacktrace boost::stacktrace::stacktrace Boost::stacktrace)
