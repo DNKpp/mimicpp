@@ -32,8 +32,6 @@ namespace mimicpp::reporting::detail::catch2
 #else
         FAIL(msg);
 #endif
-
-        util::unreachable();
     }
 
     inline void send_success(StringViewT const msg)
