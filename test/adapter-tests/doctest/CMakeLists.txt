@@ -11,7 +11,7 @@ add_executable(${TARGET_NAME}
 include(Mimic++-EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
-CPMAddPackage("gh:doctest/doctest@2.4.11")
+CPMAddPackage("gh:doctest/doctest@2.4.12")
 target_link_libraries(${TARGET_NAME} PRIVATE
 	mimicpp::header-only
 	mimicpp::test::basics
