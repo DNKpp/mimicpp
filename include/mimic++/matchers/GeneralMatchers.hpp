@@ -425,7 +425,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
     constexpr auto instance(T&& instance) // NOLINT(cppcoreguidelines-missing-std-forward)
     {
         return PredicateMatcher{
-            [](const std::remove_cvref_t<T>& target, const auto* instancePtr) noexcept {
+            []<typename Other>(Other const& target, auto const* instancePtr) noexcept
+                requires std::is_convertible_v<std::remove_cvref_t<T> const volatile*, Other const volatile*>
+            {
                 return std::addressof(target) == instancePtr;
             },
             "is instance at {}",

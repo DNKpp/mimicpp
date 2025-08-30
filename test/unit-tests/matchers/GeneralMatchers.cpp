@@ -646,6 +646,34 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "matches::instance supports type hierarchies.",
+    "[matcher]")
+{
+    struct base
+    {
+    };
+
+    struct derived
+        : public base
+    {
+    };
+
+    derived constexpr object{};
+    auto const matcher = matches::instance(object);
+
+    SECTION("Matches, when same instance is provided.")
+    {
+        CHECK(matcher.matches(static_cast<base const&>(object)));
+    }
+
+    SECTION("Does not match, when other instance is provided.")
+    {
+        derived constexpr other{};
+        CHECK(!matcher.matches(static_cast<base const&>(other)));
+    }
+}
+
+TEST_CASE(
     "matches::type satisfies matcher_for only for the given type.",
     "[matcher]")
 {
