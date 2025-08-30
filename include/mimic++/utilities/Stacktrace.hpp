@@ -14,6 +14,7 @@
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/utilities/Concepts.hpp"
+#include "mimic++/utilities/PriorityTag.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
@@ -49,17 +50,15 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
      *
      * \note For more information about available backends, see the \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE config option.
      *
-     * \attention In non-debug build modes (i.e., when `NDEBUG` is defined),
-     * *mimic++* always activates `stacktrace::NullBackend`, since none of the tested stacktrace backends provided useful information.
-     *
      * \details
      * ### Custom Stacktrace Backends
      *
-     * When the \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE option is set to `custom`
-     * (or the preprocessor macro `MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE` is defined as `1`),
-     * users can define `mimicpp::custom::find_stacktrace_backend` to enable their own stacktrace backend.
-     * This custom backend will take precedence over all other backends.
-     * The provided type must at least define a `type` member alias, which specifies the desired stacktrace backend implementation.
+     * *mimic++* always prefers available custom stacktrace backends, registered via `mimicpp::custom::find_stacktrace_backend` trait.
+     * \note This is always the case, even if the \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE option is set to a different value than `custom`.
+     * Nevertheless, when configuring with cmake, users should set that option accordingly, because this will enable some sanity checks internally.
+     *
+     * \details Setting up `mimicpp::custom::find_stacktrace_backend` is rather easy,
+     * as it just requires a single member alias named `type`, which points to the desired backend:
      *
      * ```cpp
      * struct mimicpp::custom::find_stacktrace_backend
@@ -398,15 +397,27 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 
 namespace mimicpp::util::stacktrace::detail
 {
-    template <
-        template <typename> typename Traits,
-#if MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE
-        typename FindBackend = custom::find_stacktrace_backend>
-#else
-        typename FindBackend = stacktrace::find_backend>
+    template <typename T>
+    concept backend_finder = requires {
+        typename T::type;
+    };
+
+    // ReSharper disable CppFunctionIsNotImplemented
+    template <template <typename> typename Traits, backend_finder FindBackend = custom::find_stacktrace_backend>
+    Traits<typename FindBackend::type> find_traits_impl([[maybe_unused]] priority_tag<1u>);
+
+    // When users explicitly register a custom stacktrace, we should not accidentally fall back to another backend.
+#ifndef MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE
+    template <template <typename> typename Traits, backend_finder FindBackend = stacktrace::find_backend>
+    Traits<typename FindBackend::type> find_traits_impl([[maybe_unused]] priority_tag<0u>);
 #endif
-    // ReSharper disable once CppFunctionIsNotImplemented
-    Traits<typename FindBackend::type> find_traits();
+    // ReSharper restore CppFunctionIsNotImplemented
+
+    template <template <typename> typename Traits>
+    auto find_traits()
+    {
+        return find_traits_impl<Traits>(priority_tag<1u>{});
+    }
 
     struct current_fn
     {
