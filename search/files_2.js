@@ -12,5 +12,6 @@ var searchData=
   ['commontypes_2ehpp_9',['CommonTypes.hpp',['../df/d0b/state_2_common_types_8hpp.html',1,'(Global Namespace)'],['../d4/d96/type_2_common_types_8hpp.html',1,'(Global Namespace)']]],
   ['concepts_2ehpp_10',['Concepts.hpp',['../d9/db9/_concepts_8hpp.html',1,'']]],
   ['config_2ehpp_11',['Config.hpp',['../d8/dd2/_config_8hpp.html',1,'']]],
-  ['controlpolicies_2ehpp_12',['ControlPolicies.hpp',['../db/d70/_control_policies_8hpp.html',1,'']]]
+  ['controlpolicies_2ehpp_12',['ControlPolicies.hpp',['../db/d70/_control_policies_8hpp.html',1,'']]],
+  ['cpptrace_2ehpp_13',['cpptrace.hpp',['../d2/dd7/cpptrace_8hpp.html',1,'']]]
 ];

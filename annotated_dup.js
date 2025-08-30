@@ -85,22 +85,26 @@ var annotated_dup =
       [ "sequence", "d8/dce/namespacemimicpp_1_1sequence.html", [
         [ "rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", "de/d81/structmimicpp_1_1sequence_1_1rating" ]
       ] ],
-      [ "stacktrace", "df/d4b/namespacemimicpp_1_1stacktrace.html", [
-        [ "backend_traits", "da/d77/structmimicpp_1_1stacktrace_1_1backend__traits.html", null ],
-        [ "backend_traits< mimicpp::stacktrace::NullBackend >", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html", "d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4" ],
-        [ "find_backend", "dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend.html", "dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend" ],
-        [ "NullBackend", "d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html", null ]
-      ] ],
       [ "util", "d8/da3/namespacemimicpp_1_1util.html", [
         [ "source_location", "db/d3e/namespacemimicpp_1_1util_1_1source__location.html", [
           [ "backend_traits", "d0/d5f/structmimicpp_1_1util_1_1source__location_1_1backend__traits.html", null ],
           [ "backend_traits< nostd::source_location >", "df/d21/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01nostd_1_1source__location_01_4.html", "df/d21/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01nostd_1_1source__location_01_4" ],
           [ "backend_traits< std::source_location >", "dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4.html", "dc/df3/structmimicpp_1_1util_1_1source__location_1_1backend__traits_3_01std_1_1source__location_01_4" ]
         ] ],
+        [ "stacktrace", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html", [
+          [ "backend_traits", "d3/d47/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits.html", null ],
+          [ "backend_traits< boost::stacktrace::stacktrace >", "da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html", "da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4" ],
+          [ "backend_traits< cpptrace::stacktrace >", "dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html", "dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4" ],
+          [ "backend_traits< mimicpp::util::stacktrace::NullBackend >", "de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html", "de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4" ],
+          [ "backend_traits< std::basic_stacktrace< Allocator > >", "d9/de3/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01std_1_1basic__stacktrace_3_01_allocator_01_4_01_4.html", "d9/de3/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01std_1_1basic__stacktrace_3_01_allocator_01_4_01_4" ],
+          [ "find_backend", "d6/d4c/structmimicpp_1_1util_1_1stacktrace_1_1find__backend.html", "d6/d4c/structmimicpp_1_1util_1_1stacktrace_1_1find__backend" ],
+          [ "NullBackend", "d8/df5/classmimicpp_1_1util_1_1stacktrace_1_1_null_backend.html", null ]
+        ] ],
         [ "always_false", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ],
         [ "priority_tag", "d0/db8/structmimicpp_1_1util_1_1priority__tag.html", null ],
         [ "priority_tag< 0u >", "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html", null ],
         [ "SourceLocation", "db/df5/classmimicpp_1_1util_1_1_source_location.html", "db/df5/classmimicpp_1_1util_1_1_source_location" ],
+        [ "Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html", "d2/d27/classmimicpp_1_1util_1_1_stacktrace" ],
         [ "type_list", "dc/d9e/structmimicpp_1_1util_1_1type__list.html", "dc/d9e/structmimicpp_1_1util_1_1type__list" ],
         [ "type_list_pop_back", "dc/d8d/structmimicpp_1_1util_1_1type__list__pop__back.html", null ],
         [ "type_list_populate", "d5/d99/structmimicpp_1_1util_1_1type__list__populate.html", null ],
@@ -161,7 +165,6 @@ var annotated_dup =
       [ "signature_return_type", "d4/d96/structmimicpp_1_1signature__return__type.html", null ],
       [ "signature_return_type< Return(Params...)>", "d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html", "d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4" ],
       [ "signature_return_type< Return(Params...,...)>", "d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", "d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4" ],
-      [ "Stacktrace", "db/d18/classmimicpp_1_1_stacktrace.html", "db/d18/classmimicpp_1_1_stacktrace" ],
       [ "string_case_fold_converter", "d4/d2d/structmimicpp_1_1string__case__fold__converter.html", null ],
       [ "string_case_fold_converter< char >", "de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4.html", "de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4" ],
       [ "string_traits", "d1/dee/structmimicpp_1_1string__traits.html", null ],

@@ -230,9 +230,9 @@
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="../../db/d18/classmimicpp_1_1_stacktrace.html" target="_top" xlink:title="A simple type&#45;erase stacktrace abstraction.">
-<polygon fill="white" stroke="#666666" points="785.88,-19.25 681.38,-19.25 681.38,0 785.88,0 785.88,-19.25"/>
-<text text-anchor="middle" x="733.62" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::Stacktrace</text>
+<g id="a_Node000011"><a xlink:href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html" target="_top" xlink:title="A simple type&#45;erased stacktrace abstraction.">
+<polygon fill="white" stroke="#666666" points="794.5,-19.25 672.75,-19.25 672.75,0 794.5,0 794.5,-19.25"/>
+<text text-anchor="middle" x="733.62" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::util::Stacktrace</text>
 </a>
 </g>
 </g>
@@ -240,8 +240,8 @@
 <g id="edge13_Node000001_Node000011" class="edge">
 <title>Node11&#45;&gt;Node1</title>
 <g id="a_edge13_Node000001_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M797.53,-15.94C821.27,-19.85 848.08,-26.18 871,-36.38 888.99,-44.38 906.7,-58.2 918.97,-69.01"/>
-<polygon fill="#9a32cd" stroke="#9a32cd" points="798.06,-12.48 787.64,-14.43 797,-19.4 798.06,-12.48"/>
+<path fill="none" stroke="#9a32cd" stroke-dasharray="5,2" d="M805.87,-17.39C827.42,-21.37 850.72,-27.36 871,-36.38 888.99,-44.38 906.7,-58.2 918.97,-69.01"/>
+<polygon fill="#9a32cd" stroke="#9a32cd" points="806.73,-13.99 796.28,-15.75 805.55,-20.89 806.73,-13.99"/>
 </a>
 </g>
 <text text-anchor="middle" x="847" y="-38.12" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> stacktrace</text>

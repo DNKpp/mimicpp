@@ -1,10 +1,12 @@
 var namespacemimicpp_1_1util =
 [
     [ "source_location", "db/d3e/namespacemimicpp_1_1util_1_1source__location.html", "db/d3e/namespacemimicpp_1_1util_1_1source__location" ],
+    [ "stacktrace", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace" ],
     [ "always_false", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ],
     [ "priority_tag", "d0/db8/structmimicpp_1_1util_1_1priority__tag.html", null ],
     [ "priority_tag< 0u >", "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html", null ],
     [ "SourceLocation", "db/df5/classmimicpp_1_1util_1_1_source_location.html", "db/df5/classmimicpp_1_1util_1_1_source_location" ],
+    [ "Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html", "d2/d27/classmimicpp_1_1util_1_1_stacktrace" ],
     [ "type_list", "dc/d9e/structmimicpp_1_1util_1_1type__list.html", "dc/d9e/structmimicpp_1_1util_1_1type__list" ],
     [ "type_list_pop_back", "dc/d8d/structmimicpp_1_1util_1_1type__list__pop__back.html", null ],
     [ "type_list_populate", "d5/d99/structmimicpp_1_1util_1_1type__list__populate.html", null ],

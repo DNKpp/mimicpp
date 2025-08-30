@@ -8,5 +8,6 @@ var dir_2f75f8b84a1b0b31df547365a4a1eaf8 =
     [ "Concepts.hpp", "d9/db9/_concepts_8hpp.html", null ],
     [ "PriorityTag.hpp", "d8/d65/_priority_tag_8hpp.html", "d8/d65/_priority_tag_8hpp" ],
     [ "SourceLocation.hpp", "d3/d15/_source_location_8hpp.html", "d3/d15/_source_location_8hpp" ],
+    [ "Stacktrace.hpp", "de/df5/_stacktrace_8hpp.html", "de/df5/_stacktrace_8hpp" ],
     [ "TypeList.hpp", "df/d2e/_type_list_8hpp.html", "df/d2e/_type_list_8hpp" ]
 ];

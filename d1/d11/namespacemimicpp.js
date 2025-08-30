@@ -33,7 +33,6 @@ var namespacemimicpp =
     [ "settings", "d3/dce/namespacemimicpp_1_1settings.html", [
       [ "report_success", "db/d9c/group___s_e_t_t_i_n_g_s.html#gae1e66f9f6bdfb761224d25fac7556a2b", null ]
     ] ],
-    [ "stacktrace", "df/d4b/namespacemimicpp_1_1stacktrace.html", "df/d4b/namespacemimicpp_1_1stacktrace" ],
     [ "then", "d9/d4c/namespacemimicpp_1_1then.html", [
       [ "apply_all", "db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga1115bba8873d79b6492ad72f1051e22d", null ],
       [ "apply_arg", "db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga51b593416fa39d20f134216c56ab518f", null ],
@@ -95,7 +94,6 @@ var namespacemimicpp =
     [ "signature_return_type", "d4/d96/structmimicpp_1_1signature__return__type.html", null ],
     [ "signature_return_type< Return(Params...)>", "d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html", "d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4" ],
     [ "signature_return_type< Return(Params...,...)>", "d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html", "d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4" ],
-    [ "Stacktrace", "db/d18/classmimicpp_1_1_stacktrace.html", "db/d18/classmimicpp_1_1_stacktrace" ],
     [ "string_case_fold_converter", "d4/d2d/structmimicpp_1_1string__case__fold__converter.html", null ],
     [ "string_case_fold_converter< char >", "de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4.html", "de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4" ],
     [ "string_traits", "d1/dee/structmimicpp_1_1string__traits.html", null ],

@@ -33,7 +33,7 @@ var searchData=
   ['space_30',['Space',['../d5/d4b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_space.html',1,'mimicpp::printing::type::parsing::token']]],
   ['space_31',['space',['../d2/de3/structmimicpp_1_1printing_1_1type_1_1lexing_1_1space.html',1,'mimicpp::printing::type::lexing']]],
   ['specs_32',['Specs',['../de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['stacktrace_33',['Stacktrace',['../db/d18/classmimicpp_1_1_stacktrace.html',1,'mimicpp']]],
+  ['stacktrace_33',['Stacktrace',['../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html',1,'mimicpp::util']]],
   ['state_5fapplicable_34',['state_applicable',['../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html',1,'mimicpp::reporting']]],
   ['state_5finapplicable_35',['state_inapplicable',['../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html',1,'mimicpp::reporting']]],
   ['state_5fsaturated_36',['state_saturated',['../d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html',1,'mimicpp::reporting']]],
