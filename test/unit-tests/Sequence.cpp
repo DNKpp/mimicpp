@@ -36,7 +36,7 @@ TEMPLATE_TEST_CASE(
     "[sequence]",
     LazySequence,
     GreedySequence,
-    SequenceT)
+    Sequence)
 {
     STATIC_REQUIRE(std::is_default_constructible_v<TestType>);
 
@@ -417,7 +417,7 @@ TEST_CASE(
     "expect::in_sequence creates detail::SequenceConfig.",
     "[expectation::factories][sequence]")
 {
-    SequenceT sequence{};
+    Sequence sequence{};
 
     const sequence::detail::Config config = expect::in_sequence(sequence);
 
@@ -430,7 +430,7 @@ TEST_CASE(
 {
     LazySequence firstSequence{};
     GreedySequence secondSequence{};
-    SequenceT thirdSequence{};
+    Sequence thirdSequence{};
 
     SECTION("Throws, when duplicates are given.")
     {
@@ -485,13 +485,13 @@ TEST_CASE(
 
     SECTION("Concat appends the right side.")
     {
-        SequenceT firstSequence{};
+        Sequence firstSequence{};
         const sequence::detail::Config firstResult = firstConfig.concat(
             expect::in_sequence(firstSequence));
 
         REQUIRE(std::get<0>(firstResult.sequences())->tag() == firstSequence.tag());
 
-        SequenceT secondSequence{};
+        Sequence secondSequence{};
         sequence::detail::Config secondResult = firstResult.concat(
             expect::in_sequence(secondSequence));
         REQUIRE(std::get<0>(secondResult.sequences())->tag() == firstSequence.tag());
@@ -511,7 +511,7 @@ TEST_CASE(
 
         SECTION("Can be arbitrarily continued.")
         {
-            SequenceT thirdSequence{};
+            Sequence thirdSequence{};
             sequence::detail::Config thirdResult = secondResult.concat(
                 expect::in_sequence(thirdSequence));
             REQUIRE(std::get<0>(thirdResult.sequences())->tag() == firstSequence.tag());

@@ -102,7 +102,7 @@ TEST_CASE(
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
-    SequenceT sequence{};
+    Sequence sequence{};
 
     SECTION("Can be specified once.")
     {
@@ -129,7 +129,7 @@ TEST_CASE(
 
     SECTION("Can be specified multiple times.")
     {
-        SequenceT secondSequence{};
+        Sequence secondSequence{};
         const ScopedExpectation expectation = make_builder(collection)
                                            && expect::in_sequence(sequence)
                                            && expect::in_sequence(secondSequence);

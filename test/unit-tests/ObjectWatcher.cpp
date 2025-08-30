@@ -414,7 +414,7 @@ TEST_CASE(
             LifetimeWatcher>
             watched{};
 
-        SequenceT sequence{};
+        Sequence sequence{};
         {
             Watched<
                 Mock<void()>,
@@ -857,7 +857,7 @@ TEST_CASE(
         STATIC_REQUIRE(std::is_nothrow_move_constructible_v<decltype(watched)>);
         STATIC_REQUIRE(std::is_nothrow_move_assignable_v<decltype(watched)>);
 
-        SequenceT sequence{};
+        Sequence sequence{};
 
         MIMICPP_SCOPED_EXPECTATION watched.expect_call(42)
             and expect::in_sequence(sequence);

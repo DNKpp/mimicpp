@@ -184,7 +184,7 @@ TEST_CASE(
 
     // Let's say, we are very suspicious and want to get sure, that ``some_function``
     // invokes the provided functional, before its getting destroyed.
-    mimicpp::SequenceT sequence{};
+    mimicpp::Sequence sequence{};
     SCOPED_EXP watched.expect_call()
         and expect::in_sequence(sequence);
     SCOPED_EXP watched.expect_destruct()
