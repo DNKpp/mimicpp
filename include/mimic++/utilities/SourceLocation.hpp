@@ -19,6 +19,10 @@
     #include <string_view>
     #include <type_traits>
     #include <utility>
+
+    #ifdef __cpp_lib_source_location
+        #include <source_location>
+    #endif
 #endif
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::source_location
@@ -140,37 +144,65 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
     public:
         ~SourceLocation() = default;
 
-        template <typename... Canary, std::same_as<source_location::InstalledBackend> Backend = source_location::InstalledBackend>
-        [[nodiscard]]
-        explicit(false) constexpr SourceLocation(Backend loc = source_location::backend_traits<Backend>::current()) noexcept
-            : m_SourceLocation{std::move(loc)}
+#ifdef __cpp_lib_source_location
+        /**
+         * \brief Default constructor, deducing the source-location info via `std::source_location`.
+         * \param canary Parameter-pack, preventing users modifying the relevant default argument.
+         * \param loc The deduced source-location.
+         */
+        [[nodiscard]] //
+        explicit(false) constexpr SourceLocation(
+            [[maybe_unused]] auto&&... canary,
+            std::source_location const& loc = std::source_location::current()) noexcept
+            : m_FileName{loc.file_name()},
+              m_FunctionName{loc.function_name()},
+              m_Line{loc.line()}
         {
+            static_assert(0 == sizeof...(canary), "Do not supply custom arguments to util::SourceLocation.");
         }
+#else
+        /**
+         * \brief Compatibility constructor, used in cases where `std::source_location` is not available.
+         * \param canary Parameter-pack, preventing users modifying the relevant default arguments.
+         * \param fileName The deduced file name.
+         * \param functionName The deduced function name.
+         * \param line The deduced line number.
+         */
+        [[nodiscard]] //
+        explicit(false) constexpr SourceLocation(
+            [[maybe_unused]] auto&&... canary,
+            std::string_view const fileName = __builtin_FILE(),
+            std::string_view const functionName = __builtin_FUNCTION(),
+            std::size_t const line = __builtin_LINE()) noexcept
+            : m_FileName{fileName},
+              m_FunctionName{functionName},
+              m_Line{line}
+        {
+            static_assert(0 == sizeof...(canary), "Do not supply custom arguments to util::SourceLocation.");
+        }
+#endif
 
         SourceLocation(SourceLocation const&) = default;
         SourceLocation& operator=(SourceLocation const&) = default;
         SourceLocation(SourceLocation&&) = default;
         SourceLocation& operator=(SourceLocation&&) = default;
 
-        template <typename... Canary, typename Backend = source_location::InstalledBackend>
         [[nodiscard]]
         constexpr std::string_view file_name() const noexcept
         {
-            return source_location::backend_traits<Backend>::file_name(m_SourceLocation);
+            return m_FileName;
         }
 
-        template <typename... Canary, typename Backend = source_location::InstalledBackend>
         [[nodiscard]]
         constexpr std::string_view function_name() const noexcept
         {
-            return source_location::backend_traits<Backend>::function_name(m_SourceLocation);
+            return m_FunctionName;
         }
 
-        template <typename... Canary, typename Backend = source_location::InstalledBackend>
         [[nodiscard]]
         constexpr std::size_t line() const noexcept
         {
-            return source_location::backend_traits<Backend>::line(m_SourceLocation);
+            return m_Line;
         }
 
         [[nodiscard]]
@@ -182,8 +214,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
         }
 
     private:
-        static_assert(source_location::backend<source_location::InstalledBackend>);
-        source_location::InstalledBackend m_SourceLocation;
+        std::string_view m_FileName{};
+        std::string_view m_FunctionName{};
+        std::size_t m_Line{};
     };
 }
 

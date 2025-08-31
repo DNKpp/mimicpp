@@ -11,9 +11,9 @@ TEST_CASE(
     "util::SourceLocation is default constructible.",
     "[util]")
 {
-    util::SourceLocation constexpr before{};
-    util::SourceLocation constexpr loc{};
-    util::SourceLocation constexpr after{};
+    constexpr util::SourceLocation before{};
+    constexpr util::SourceLocation loc{};
+    constexpr util::SourceLocation after{};
 
     CHECK_THAT(
         std::string{loc.file_name()},
@@ -26,29 +26,12 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "util::SourceLocation can be constructed with a particular source-location.",
-    "[util]")
-{
-    using traits = util::source_location::backend_traits<util::source_location::InstalledBackend>;
-    auto constexpr source = traits::current();
-    util::SourceLocation constexpr loc{source};
-
-    CHECK_THAT(
-        std::string{loc.file_name()},
-        Catch::Matchers::Equals(source.file_name()));
-    CHECK_THAT(
-        std::string{loc.function_name()},
-        Catch::Matchers::Equals(source.function_name()));
-    CHECK(source.line() == loc.line());
-}
-
-TEST_CASE(
     "util::SourceLocation is equality-comparable.")
 {
     SECTION("Compares equal, when both sides denote the same source-location.")
     {
-        util::SourceLocation constexpr loc{};
-        util::SourceLocation constexpr other{loc};
+        constexpr util::SourceLocation loc{};
+        constexpr util::SourceLocation other{loc};
 
         CHECK(loc == other);
         CHECK(other == loc);
@@ -58,8 +41,8 @@ TEST_CASE(
 
     SECTION("Compares unequal, when line differs.")
     {
-        util::SourceLocation constexpr loc{};
-        util::SourceLocation constexpr other{};
+        constexpr util::SourceLocation loc{};
+        constexpr util::SourceLocation other{};
         REQUIRE(other.line() != loc.line());
 
         CHECK_FALSE(loc == other);
@@ -70,11 +53,9 @@ TEST_CASE(
 
     SECTION("Compares unequal, when function differs.")
     {
-        util::SourceLocation constexpr loc{};
-        auto constexpr other = std::invoke(
-            [] {
-                return util::SourceLocation{};
-            });
+        constexpr util::SourceLocation loc{};
+        constexpr auto other = std::invoke(
+            [] { return util::SourceLocation{}; });
 
         CHECK_FALSE(loc == other);
         CHECK_FALSE(other == loc);
