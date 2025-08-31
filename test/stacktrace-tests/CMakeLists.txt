@@ -28,7 +28,6 @@ function(create_stacktrace_test BACKEND CXX_TYPE LIBS)
 
     target_precompile_headers(${TARGET_NAME} PRIVATE
         <TestAssert.hpp>
-        ${MIMICPP_TESTING_COMPAT_SOURCE_LOCATION_HEADER}
         <catch2/catch_all.hpp>
     )
 

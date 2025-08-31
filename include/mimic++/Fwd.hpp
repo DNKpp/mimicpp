@@ -391,13 +391,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
     }
 
     class Stacktrace;
-
-    namespace source_location
-    {
-        template <typename Backend>
-        struct backend_traits;
-    }
-
     class SourceLocation;
 }
 

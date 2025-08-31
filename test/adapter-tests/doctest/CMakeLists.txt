@@ -24,7 +24,6 @@ target_compile_options(${TARGET_NAME} PRIVATE
 
 target_precompile_headers(${TARGET_NAME} PRIVATE
 	<TestAssert.hpp>
-	${MIMICPP_TESTING_COMPAT_SOURCE_LOCATION_HEADER}
 )
 
 list(APPEND CMAKE_MODULE_PATH "${doctest_SOURCE_DIR}/scripts/cmake")

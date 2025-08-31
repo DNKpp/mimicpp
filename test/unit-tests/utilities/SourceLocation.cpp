@@ -26,7 +26,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "util::SourceLocation is equality-comparable.")
+    "util::SourceLocation is equality-comparable.",
+    "[util]")
 {
     SECTION("Compares equal, when both sides denote the same source-location.")
     {

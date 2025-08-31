@@ -20,7 +20,6 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 
 target_precompile_headers(${TARGET_NAME} PRIVATE
 	<TestAssert.hpp>
-	${MIMICPP_TESTING_COMPAT_SOURCE_LOCATION_HEADER}
 )
 
 catch_discover_tests(${TARGET_NAME})

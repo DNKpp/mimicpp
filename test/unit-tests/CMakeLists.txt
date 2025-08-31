@@ -44,7 +44,6 @@ target_link_libraries(${TARGET_NAME} PRIVATE
 
 target_precompile_headers(${TARGET_NAME} PRIVATE
     <TestAssert.hpp>
-    ${MIMICPP_TESTING_COMPAT_SOURCE_LOCATION_HEADER}
     "Catch2FallbackStringifier.hpp"
     <catch2/catch_all.hpp>
     <catch2/trompeloeil.hpp>

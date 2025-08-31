@@ -10,7 +10,6 @@ add_subdirectory("test-basics")
 option(MIMICPP_ENABLE_UNIT_TESTS "Determines, whether the unit-tests shall be built." ON)
 if (MIMICPP_ENABLE_UNIT_TESTS)
     add_subdirectory("unit-tests")
-    add_subdirectory("custom-source-location-tests")
 endif ()
 
 if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)

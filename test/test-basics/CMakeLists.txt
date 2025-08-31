@@ -33,21 +33,3 @@ target_link_libraries(${TARGET_NAME} INTERFACE
     mimicpp::internal::link-std-stacktrace
     libassert::assert
 )
-
-option(MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION "" OFF)
-message(DEBUG "${MESSAGE_PREFIX} MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION: ${MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION}")
-if (MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION)
-
-    set(SOURCE_LOCATION_BUILD_TESTS OFF)
-    CPMAddPackage("gh:paweldac/source_location@0.4")
-
-    target_link_libraries(${TARGET_NAME} INTERFACE
-        nostd::source_location
-    )
-
-    target_compile_definitions(${TARGET_NAME} INTERFACE
-        MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION
-    )
-
-    set(MIMICPP_TESTING_COMPAT_SOURCE_LOCATION_HEADER "\"mimic++_ext/compatibility/paweldac-source_location.hpp\"" CACHE STRING "" FORCE)
-endif ()

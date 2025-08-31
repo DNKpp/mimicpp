@@ -23,21 +23,15 @@ find_package(trompeloeil REQUIRED)
 target_link_libraries(${TARGET_NAME} PRIVATE
     mimicpp::header-only
     mimicpp::test::basics
+    mimicpp::internal::enable-custom-stacktrace
     Catch2::Catch2WithMain
     trompeloeil::trompeloeil
 )
 
 target_precompile_headers(${TARGET_NAME} PRIVATE
     <TestAssert.hpp>
-    ${MIMICPP_TESTING_COMPAT_SOURCE_LOCATION_HEADER}
     <catch2/catch_all.hpp>
     <catch2/trompeloeil.hpp>
-)
-
-# Make sure, stacktrace feature with custom backend is always on.
-target_compile_definitions(${TARGET_NAME} PRIVATE
-    MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-    MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE=1
 )
 
 catch_discover_tests(${TARGET_NAME})
