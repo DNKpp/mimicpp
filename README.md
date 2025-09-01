@@ -626,7 +626,7 @@ version.
 Note:
 
 - `libc++` doesn't support `std::stacktrace` yet.
-- `gcc-10` doesn't support `std::source_location`, but `mimic++` supports alternative source-location implementations.
+- `gcc-10` doesn't support `std::source_location`, but `mimic++` falls back to compiler intrinsics in these cases.
 - `gcc-10.2` is the latest version on Debian-11 (aka `bullseye`) and thus explicitly listed here.
 
 **macOS**
@@ -649,8 +649,7 @@ Note: macOS officially doesn't support 32bit builds, so they are not tested.
 
 Date: 25.09.2024
 
-This combination introduced a regression regarding the ``std::invocable`` concept and a default parameter of type
-``std::source_location``.
+This combination introduced a regression regarding the ``std::invocable`` concept and default parameter(s).
 On this version, all invocable checks will fail, but the ``std::is_invocable`` trait still works as expected.
 Unfortunately this can not solved easily by this framework - sorry for that.
 
