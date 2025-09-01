@@ -91,7 +91,7 @@ namespace
 }
 
 // source-locations other than std::source_location may behave differently.
-    #ifdef MIMICPP_TESTING_ENABLE_COMPAT_SOURCE_LOCATION
+    #ifndef MIMICPP_DETAIL_HAS_SOURCE_LOCATION
         #define MAYFAIL_WITH_COMPAT_LOC "[!mayfail]"
     #else
         #define MAYFAIL_WITH_COMPAT_LOC

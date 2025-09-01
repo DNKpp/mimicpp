@@ -20,6 +20,7 @@
 
     #ifdef __cpp_lib_source_location
         #include <source_location>
+        #define MIMICPP_DETAIL_HAS_SOURCE_LOCATION 1
     #endif
 #endif
 
@@ -37,7 +38,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
     public:
         ~SourceLocation() = default;
 
-#ifdef __cpp_lib_source_location
+#ifdef MIMICPP_DETAIL_HAS_SOURCE_LOCATION
         /**
          * \brief Default constructor, deducing the source-location info via `std::source_location`.
          * \param canary Parameter-pack, preventing users modifying the relevant default argument.
