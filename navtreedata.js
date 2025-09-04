@@ -25,35 +25,35 @@
 var NAVTREE =
 [
   [ "mimic++", "index.html", [
-    [ "mimic++, a modern and (mostly) macro free mocking framework", "index.html#autotoc_md49", [
-      [ "Table of Contents", "index.html#autotoc_md53", null ],
-      [ "Introduction", "index.html#autotoc_md55", [
-        [ "✅ Quality", "index.html#autotoc_md50", null ],
-        [ "🔗 Developer Hub", "index.html#autotoc_md51", null ],
-        [ "Core Design", "index.html#autotoc_md56", null ],
-        [ "Quick Demo", "index.html#autotoc_md57", null ],
-        [ "Examples", "index.html#autotoc_md58", null ]
+    [ "mimic++, a modern and (mostly) macro free mocking framework", "index.html#autotoc_md47", [
+      [ "Table of Contents", "index.html#autotoc_md51", null ],
+      [ "Introduction", "index.html#autotoc_md53", [
+        [ "✅ Quality", "index.html#autotoc_md48", null ],
+        [ "🔗 Developer Hub", "index.html#autotoc_md49", null ],
+        [ "Core Design", "index.html#autotoc_md54", null ],
+        [ "Quick Demo", "index.html#autotoc_md55", null ],
+        [ "Examples", "index.html#autotoc_md56", null ]
       ] ],
-      [ "Features & Customizability", "index.html#autotoc_md60", [
-        [ "Matchers", "index.html#autotoc_md61", null ],
-        [ "Policies", "index.html#autotoc_md62", null ],
-        [ "Stringification", "index.html#autotoc_md63", null ],
-        [ "Bring your own string- and char-types", "index.html#autotoc_md64", null ],
-        [ "Call-Conventions", "index.html#autotoc_md65", null ]
+      [ "Features & Customizability", "index.html#autotoc_md58", [
+        [ "Matchers", "index.html#autotoc_md59", null ],
+        [ "Policies", "index.html#autotoc_md60", null ],
+        [ "Stringification", "index.html#autotoc_md61", null ],
+        [ "Bring your own string- and char-types", "index.html#autotoc_md62", null ],
+        [ "Call-Conventions", "index.html#autotoc_md63", null ]
       ] ],
-      [ "Integration", "index.html#autotoc_md67", [
-        [ "Portability", "index.html#autotoc_md68", null ],
-        [ "CMake", "index.html#autotoc_md69", null ],
-        [ "Packaging Tools", "index.html#autotoc_md70", null ],
-        [ "Single-Header", "index.html#autotoc_md71", null ],
-        [ "Test Framework", "index.html#autotoc_md72", null ],
-        [ "Documentation", "index.html#autotoc_md73", null ]
+      [ "Integration", "index.html#autotoc_md65", [
+        [ "Portability", "index.html#autotoc_md66", null ],
+        [ "CMake", "index.html#autotoc_md67", null ],
+        [ "Packaging Tools", "index.html#autotoc_md68", null ],
+        [ "Single-Header", "index.html#autotoc_md69", null ],
+        [ "Test Framework", "index.html#autotoc_md70", null ],
+        [ "Documentation", "index.html#autotoc_md71", null ]
       ] ],
-      [ "Testing", "index.html#autotoc_md75", null ],
-      [ "Known Issues", "index.html#autotoc_md77", [
-        [ "Clang-18.1 + libc++", "index.html#autotoc_md78", null ]
+      [ "Testing", "index.html#autotoc_md73", null ],
+      [ "Known Issues", "index.html#autotoc_md75", [
+        [ "Clang-18.1 + libc++", "index.html#autotoc_md76", null ]
       ] ],
-      [ "Special Acknowledgement", "index.html#autotoc_md80", null ]
+      [ "Special Acknowledgement", "index.html#autotoc_md78", null ]
     ] ],
     [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
@@ -95,12 +95,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a280e61fc3ce964eddc01023811e73bc4",
-"d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a64ca9757dadaa7d54a3734a8477e78b3",
-"d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga5c1b44164371e807365df6c11d5fb221",
-"da/dc7/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html",
-"dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html#a2fb45ca6db082c00fea4564646d60329",
-"df/dc6/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d___s_e_t.html#ga39bc4106334393c907fb7c716490135c"
+"d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a6d32697cd0c5d9c6556483e787d95410",
+"d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html",
+"d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515",
+"da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html",
+"dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html",
+"functions_b.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

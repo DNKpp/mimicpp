@@ -10,9 +10,6 @@ var concepts =
         ] ]
       ] ],
       [ "util", "d8/da3/namespacemimicpp_1_1util.html", [
-        [ "source_location", "db/d3e/namespacemimicpp_1_1util_1_1source__location.html", [
-          [ "backend", "d4/dde/conceptmimicpp_1_1util_1_1source__location_1_1backend.html", null ]
-        ] ],
         [ "stacktrace", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html", [
           [ "backend", "d6/ded/conceptmimicpp_1_1util_1_1stacktrace_1_1backend.html", null ]
         ] ],

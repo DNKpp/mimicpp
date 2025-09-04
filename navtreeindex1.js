@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a280e61fc3ce964eddc01023811e73bc4":[1,6,0,4,4],
 "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a6d32697cd0c5d9c6556483e787d95410":[1,6,0,4,2],
 "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#ad0b948b2d97adf49989acd9783bf72b5":[1,6,0,4,5],
 "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#ad59f96434c23acb5d1e9e55b0e261c88":[1,6,0,4,1],
@@ -22,8 +21,8 @@ var NAVTREEINDEX1 =
 "d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#aeb3ecd722baac5c5622f84619aaf45c7":[1,6,2,5],
 "d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#aee0447e5b3d605d34ead6dac81735621":[1,6,2,4],
 "d2/dd4/structmimicpp_1_1case__insensitive__t.html":[1,2,1,0],
-"d2/dd7/cpptrace_8hpp.html":[5,0,2,2,1],
-"d2/dd7/cpptrace_8hpp_source.html":[5,0,2,2,1],
+"d2/dd7/cpptrace_8hpp.html":[5,0,2,1,1],
+"d2/dd7/cpptrace_8hpp_source.html":[5,0,2,1,1],
 "d2/de2/structmimicpp_1_1signature__const__qualification.html":[1,9,7,0],
 "d2/de3/structmimicpp_1_1printing_1_1type_1_1lexing_1_1space.html":[2,0,0,7,0,0,6],
 "d2/de3/structmimicpp_1_1printing_1_1type_1_1lexing_1_1space.html":[4,0,0,3,0,0,5],
@@ -59,9 +58,9 @@ var NAVTREEINDEX1 =
 "d3/d37/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_parens.html":[4,0,0,3,0,1,0,16],
 "d3/d37/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_parens.html#add3b14d0fa5cb832febdf08583a1b226":[2,0,0,7,0,1,0,16,0],
 "d3/d37/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_opening_parens.html#add3b14d0fa5cb832febdf08583a1b226":[4,0,0,3,0,1,0,16,0],
-"d3/d3f/boost-stacktrace_8hpp.html":[5,0,2,2,0],
-"d3/d3f/boost-stacktrace_8hpp_source.html":[5,0,2,2,0],
-"d3/d47/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits.html":[1,10,2,1],
+"d3/d3f/boost-stacktrace_8hpp.html":[5,0,2,1,0],
+"d3/d3f/boost-stacktrace_8hpp_source.html":[5,0,2,1,0],
+"d3/d47/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits.html":[1,10,1,1],
 "d3/d4a/classmimicpp_1_1_basic_expectation.html":[1,0,10],
 "d3/d4a/classmimicpp_1_1_basic_expectation.html#a116870181a5b6c9638979f0abc69b3c2":[1,0,10,2],
 "d3/d4a/classmimicpp_1_1_basic_expectation.html#a11b0b6fa0c33cc1548fc6f133cdc2bb3":[1,0,10,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a120b6425bb34a0b74c2fcb945cd8411a":[4,0,0,3,0,1,0,22,0,0],
 "d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a24685a3e4202c3ceed5ee4f54c569ad0":[2,0,0,7,0,1,0,22,0,2],
 "d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a24685a3e4202c3ceed5ee4f54c569ad0":[4,0,0,3,0,1,0,22,0,2],
-"d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a64ca9757dadaa7d54a3734a8477e78b3":[2,0,0,7,0,1,0,22,0,1]
+"d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a64ca9757dadaa7d54a3734a8477e78b3":[2,0,0,7,0,1,0,22,0,1],
+"d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a64ca9757dadaa7d54a3734a8477e78b3":[4,0,0,3,0,1,0,22,0,1]
 };

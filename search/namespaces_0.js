@@ -21,6 +21,5 @@ var searchData=
   ['mimicpp_3a_3asettings_18',['settings',['../d3/dce/namespacemimicpp_1_1settings.html',1,'mimicpp']]],
   ['mimicpp_3a_3athen_19',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]],
   ['mimicpp_3a_3autil_20',['util',['../d8/da3/namespacemimicpp_1_1util.html',1,'mimicpp']]],
-  ['mimicpp_3a_3autil_3a_3asource_5flocation_21',['source_location',['../db/d3e/namespacemimicpp_1_1util_1_1source__location.html',1,'mimicpp::util']]],
-  ['mimicpp_3a_3autil_3a_3astacktrace_22',['stacktrace',['../d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html',1,'mimicpp::util']]]
+  ['mimicpp_3a_3autil_3a_3astacktrace_21',['stacktrace',['../d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html',1,'mimicpp::util']]]
 ];
