@@ -3,15 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/utilities/SourceLocation.hpp"
-
-#include <mimic++/utilities/Stacktrace.hpp>
-
-#include <catch2/catch_test_macros.hpp>
-#include <catch2/generators/catch_generators.hpp>
-#include <catch2/matchers/catch_matchers_container_properties.hpp>
-#include <concepts>
-#include <ranges>
+#include "mimic++/utilities/Stacktrace.hpp"
 
 using namespace mimicpp;
 
@@ -31,6 +23,7 @@ TEST_CASE(
         util::stacktrace::current(),
         util::stacktrace::current(0),
         util::stacktrace::current(0, 3));
+    CAPTURE(stacktrace);
     REQUIRE_FALSE(stacktrace.empty());
     REQUIRE(0 < stacktrace.size());
 
@@ -51,76 +44,67 @@ TEST_CASE(
     }
 }
 
-namespace
-{
-    [[nodiscard]]
-    util::Stacktrace generate_stacktrace()
-    {
-        return util::stacktrace::current();
-    }
-}
-
 TEST_CASE(
     TEST_CASE_PREFIX " - stacktrace::current's first frame is the from the source function.",
     "[stacktrace]")
 {
-    auto const stacktrace = generate_stacktrace();
+    auto const super = [] { return util::stacktrace::current(); }();
+    CAPTURE(super);
+    REQUIRE(4u < super.size());
 
-    REQUIRE_FALSE(stacktrace.empty());
+    auto const stacktrace = util::stacktrace::current();
+    CAPTURE(stacktrace);
+
+    // Comparing the current top-lvl frame is quite inconsistent with boost::stacktrace on msvc,
+    // so let's head a few layers up.
+    REQUIRE(3u < stacktrace.size());
+    CHECK(super.source_line(4u) == stacktrace.source_line(3u));
     CHECK_THAT(
-        stacktrace.description(0u),
-        Catch::Matchers::ContainsSubstring("generate_stacktrace"));
-}
-
-namespace
-{
-    [[nodiscard]]
-    util::Stacktrace skip_inner_generate_stacktrace(std::size_t const skip)
-    {
-        return util::stacktrace::current(skip);
-    }
-
-    [[nodiscard]]
-    util::Stacktrace skip_generate_stacktrace(std::size_t const skip)
-    {
-        return skip_inner_generate_stacktrace(skip);
-    }
+        stacktrace.source_file(3u),
+        Catch::Matchers::Equals(super.source_file(4u)));
+    CHECK_THAT(
+        stacktrace.description(3u),
+        Catch::Matchers::Equals(super.description(4u)));
 }
 
 TEST_CASE(
     TEST_CASE_PREFIX " - stacktrace::current supports skip.",
     "[stacktrace]")
 {
-    REQUIRE(1u < skip_generate_stacktrace(0u).size());
-    REQUIRE_THAT(
-        skip_generate_stacktrace(0u).description(0u),
-        Catch::Matchers::ContainsSubstring("skip_inner_generate_stacktrace"));
+    auto const full = util::stacktrace::current();
+    CAPTURE(full);
+    REQUIRE(3u < full.size());
 
-    auto const stacktrace = skip_generate_stacktrace(1u);
+    auto const stacktrace = util::stacktrace::current(3u);
+    CAPTURE(stacktrace);
 
     REQUIRE_FALSE(stacktrace.empty());
+    CHECK(full.source_line(3u) == stacktrace.source_line(0u));
+    CHECK_THAT(
+        stacktrace.source_file(0u),
+        Catch::Matchers::ContainsSubstring(std::string{full.source_file(3u)}));
     CHECK_THAT(
         stacktrace.description(0u),
-        Catch::Matchers::ContainsSubstring("skip_generate_stacktrace"));
-}
-
-namespace
-{
-    [[nodiscard]]
-    util::Stacktrace max_generate_stacktrace(std::size_t const max)
-    {
-        return util::stacktrace::current(0u, max);
-    }
+        Catch::Matchers::ContainsSubstring(std::string{full.description(3u)}));
 }
 
 TEST_CASE(
     TEST_CASE_PREFIX " - stacktrace::current supports max.",
     "[stacktrace]")
 {
-    auto const stacktrace = max_generate_stacktrace(1u);
+    auto const full = util::stacktrace::current();
+    CAPTURE(full);
+    REQUIRE(3u < full.size());
+
+    auto const stacktrace = util::stacktrace::current(3u, 1u);
+    CAPTURE(stacktrace);
 
     REQUIRE(1u == stacktrace.size());
-    REQUIRE_THAT(
+    CHECK(full.source_line(3u) == stacktrace.source_line(0u));
+    CHECK_THAT(
+        stacktrace.source_file(0u),
+        Catch::Matchers::ContainsSubstring(std::string{full.source_file(3u)}));
+    CHECK_THAT(
         stacktrace.description(0u),
-        Catch::Matchers::ContainsSubstring("max_generate_stacktrace"));
+        Catch::Matchers::ContainsSubstring(std::string{full.description(3u)}));
 }
