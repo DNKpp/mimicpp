@@ -20,17 +20,17 @@ namespace
     class SuccessListener final
         : public Catch::EventListenerBase
     {
-        using SuperT = EventListenerBase;
+        using Super = EventListenerBase;
 
     public:
         [[nodiscard]]
-        explicit SuccessListener(const Catch::IConfig* config)
-            : SuperT{config}
+        explicit SuccessListener(Catch::IConfig const* config)
+            : Super{config}
         {
             m_preferences.shouldReportAllAssertions = true;
         }
 
-        void assertionEnded(const Catch::AssertionStats& assertionStats) override
+        void assertionEnded(Catch::AssertionStats const& assertionStats) override
         {
             if (assertionStats.assertionResult.succeeded())
             {

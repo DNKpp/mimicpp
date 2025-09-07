@@ -24,16 +24,6 @@
 
 namespace mimicpp::reporting::detail::catch2
 {
-    [[noreturn]]
-    inline void send_fail(StringViewT const msg)
-    {
-#ifdef CATCH_CONFIG_PREFIX_ALL
-        CATCH_FAIL(msg);
-#else
-        FAIL(msg);
-#endif
-    }
-
     inline void send_success(StringViewT const msg)
     {
 #ifdef CATCH_CONFIG_PREFIX_ALL
@@ -50,6 +40,29 @@ namespace mimicpp::reporting::detail::catch2
 #else
         WARN(msg);
 #endif
+    }
+
+    [[noreturn]]
+    inline void send_fail(StringViewT const msg)
+    {
+        /* This is a workaround because when there is a `noexcept` function somewhere in the current call-stack,
+         * the error message will not be flushed to the actual output before the process termination.
+         * So, we catch it here, write another message which seems to flush the current content,
+         * so *mimic++* users can see the actual error-description.
+         */
+        CATCH_TRY
+        {
+#ifdef CATCH_CONFIG_PREFIX_ALL
+            CATCH_FAIL(msg);
+#else
+            FAIL(msg);
+#endif
+        }
+        CATCH_CATCH_ANON(Catch::TestFailureException const&)
+        {
+            send_warning("Fatal failure!");
+            throw;
+        }
     }
 }
 
