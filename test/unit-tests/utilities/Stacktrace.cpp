@@ -163,6 +163,80 @@ TEST_CASE(
     }
 }
 
+namespace
+{
+    struct scoped_base_skip
+    {
+    public:
+        ~scoped_base_skip()
+        {
+            settings::stacktrace_base_skip() = m_OriginalValue;
+        }
+
+        explicit scoped_base_skip(std::size_t const value)
+            : m_OriginalValue{settings::stacktrace_base_skip().exchange(value)}
+        {
+        }
+
+        scoped_base_skip(scoped_base_skip const&) = delete;
+        scoped_base_skip& operator=(scoped_base_skip const&) = delete;
+        scoped_base_skip(scoped_base_skip&&) = delete;
+        scoped_base_skip& operator=(scoped_base_skip&&) = delete;
+
+    private:
+        std::size_t m_OriginalValue;
+    };
+}
+
+TEST_CASE(
+    "stacktrace::current acknowledges settings::stacktrace_base_skip.",
+    "[stacktrace]")
+{
+    util::Stacktrace const full = util::stacktrace::current();
+    REQUIRE(2u < full.size());
+
+    scoped_base_skip const guard{1u};
+
+    SECTION("When til::stacktrace::current() is used.")
+    {
+        util::Stacktrace const partial = util::stacktrace::current();
+        REQUIRE(full.size() == partial.size() + 1u);
+        CHECK(full.source_line(1u) == partial.source_line(0u));
+        CHECK_THAT(
+            partial.description(0u),
+            Catch::Matchers::Equals(full.description(1u)));
+        CHECK_THAT(
+            partial.source_file(0u),
+            Catch::Matchers::Equals(full.source_file(1u)));
+    }
+
+    SECTION("When til::stacktrace::current(skip) is used.")
+    {
+        util::Stacktrace const partial = util::stacktrace::current(0u);
+        REQUIRE(full.size() == partial.size() + 1u);
+        CHECK(full.source_line(1u) == partial.source_line(0u));
+        CHECK_THAT(
+            partial.description(0u),
+            Catch::Matchers::Equals(full.description(1u)));
+        CHECK_THAT(
+            partial.source_file(0u),
+            Catch::Matchers::Equals(full.source_file(1u)));
+    }
+
+    SECTION("When til::stacktrace::current(skip, max) is used.")
+    {
+        util::Stacktrace const partial = util::stacktrace::current(0u, 42u);
+        REQUIRE(full.size() == partial.size() + 1u);
+        CHECK(full.source_line(1u) == partial.source_line(0u));
+        CHECK_THAT(
+            partial.description(0u),
+            Catch::Matchers::Equals(full.description(1u)));
+        CHECK_THAT(
+            partial.source_file(0u),
+            Catch::Matchers::Equals(full.source_file(1u)));
+    }
+}
+
 #endif
 
 TEST_CASE(

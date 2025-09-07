@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/config/Settings.hpp"
 #include "mimic++/printing/PathPrinter.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
@@ -419,26 +420,34 @@ namespace mimicpp::util::stacktrace::detail
         return find_traits_impl<Traits>(priority_tag<1u>{});
     }
 
+    [[nodiscard]]
+    inline std::size_t calc_skip(std::size_t const skip)
+    {
+        std::size_t const baseSkip = settings::stacktrace_base_skip().load();
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - 1u, "Skip is too high.");
+        MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - baseSkip, "Skip + base-skip is too high.");
+
+        return skip + 1u + baseSkip;
+    }
+
     struct current_fn
     {
         template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
         [[nodiscard]]
         Stacktrace operator()(std::size_t const skip, std::size_t const max) const
         {
-            MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max() - max, "Skip + max is too high.");
             using Traits = decltype(find_traits<TraitsTemplate>());
 
-            return Stacktrace{Traits::current(skip + 1u, max)};
+            return Stacktrace{Traits::current(calc_skip(skip), max)};
         }
 
         template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
         [[nodiscard]]
         Stacktrace operator()(std::size_t const skip) const
         {
-            MIMICPP_ASSERT(skip < std::numeric_limits<std::size_t>::max(), "Skip is too high.");
             using Traits = decltype(find_traits<TraitsTemplate>());
 
-            return Stacktrace{Traits::current(skip + 1u)};
+            return Stacktrace{Traits::current(calc_skip(skip))};
         }
 
         template <typename... Canary, template <typename> typename TraitsTemplate = backend_traits>
@@ -447,7 +456,7 @@ namespace mimicpp::util::stacktrace::detail
         {
             using Traits = decltype(find_traits<TraitsTemplate>());
 
-            return Stacktrace{Traits::current(1u)};
+            return Stacktrace{Traits::current(calc_skip(0u))};
         }
     };
 }

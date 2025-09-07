@@ -37,6 +37,20 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::settings
     }
 
     /**
+     * \brief Controls whether the base stacktrace-skip value.
+     * \details This value will be added to all user-supplied *skip* values.
+     * This comes in handy when the current stacktrace backend captures more frames than other backends would usually do.
+     * \returns a mutable reference to the actual settings value.
+     */
+    [[nodiscard]]
+    inline std::atomic_size_t& stacktrace_base_skip() noexcept
+    {
+        static std::atomic_size_t value{0u};
+
+        return value;
+    }
+
+    /**
      * \}
      */
 }
