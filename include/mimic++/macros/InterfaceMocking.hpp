@@ -204,14 +204,10 @@ namespace mimicpp
  * \param fn_name The function name.
  * \param signatures The given signatures. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, fn_name, signatures)           \
-    ::mimicpp::Mock<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name                \
-    {                                                                                 \
-        ::mimicpp::MockSettings                                                       \
-        {                                                                             \
-            .name = ::mimicpp::detail::generate_interface_mock_name(*this, #fn_name), \
-            .stacktraceSkip = ::mimicpp::detail::interfaceMockStacktraceSkip          \
-        }                                                                             \
+#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(mock_name, fn_name, signatures) \
+    ::mimicpp::Mock<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name      \
+    {                                                                       \
+        ::mimicpp::detail::make_interface_mock_settings(*this, #fn_name)    \
     }
 
 namespace mimicpp
