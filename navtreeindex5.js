@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html":[2,0,0,12,3],
 "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html":[4,0,0,6,3],
 "dd/df1/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_type.html":[2,0,0,7,0,1,0,10],
 "dd/df1/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_type.html":[4,0,0,3,0,1,0,10],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "dir_f6af1113142479a5fa0447ddd9471db7.html":[5,0,1,4,1],
 "dir_fd16f845ff6d6fa1e1a7dbe545e57b8c.html":[5,0,2,0],
 "files.html":[5,0],
-"functions.html":[4,3,0],
-"functions.html":[4,3,0,0]
+"functions.html":[4,3,0]
 };

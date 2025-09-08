@@ -49,6 +49,7 @@ var NAVTREEINDEX4 =
 "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#ac1fcd74ef3c128f03dbe87261bee83af":[1,6,0,2,0],
 "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#ae595ac6c21a79a69c7c09d8984cfd5a3":[1,6,0,2,4],
 "db/d9c/group___s_e_t_t_i_n_g_s.html":[1,7],
+"db/d9c/group___s_e_t_t_i_n_g_s.html#gaa51ae037436c54a4a0d9999aaca67511":[1,7,1],
 "db/d9c/group___s_e_t_t_i_n_g_s.html#gae1e66f9f6bdfb761224d25fac7556a2b":[1,7,0],
 "db/db6/conceptmimicpp_1_1object__watcher__for.html":[1,4,0],
 "db/db9/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s___d_e_t_a_i_l___m_a_k_e___m_e_t_h_o_d___o_v_e_r_r_i_d_e_s.html":[1,3,1,0,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html#af136ad38fa4412a568605953aa9ce207":[2,0,0,12,0,2,6],
 "dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html#af136ad38fa4412a568605953aa9ce207":[4,0,0,6,0,2,6],
 "dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html#af826e089f338bb306ad507e55ec3e0d2":[2,0,0,12,0,2,8],
-"dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html#af826e089f338bb306ad507e55ec3e0d2":[4,0,0,6,0,2,8],
-"dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html":[2,0,0,12,3]
+"dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html#af826e089f338bb306ad507e55ec3e0d2":[4,0,0,6,0,2,8]
 };

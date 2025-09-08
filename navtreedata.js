@@ -100,7 +100,7 @@ var NAVTREEINDEX =
 "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515",
 "da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html",
 "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html",
-"functions_b.html"
+"functions.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
