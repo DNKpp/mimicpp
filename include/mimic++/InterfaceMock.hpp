@@ -82,6 +82,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
         return std::move(ss).str();
     }
 
+    [[nodiscard]]
+    MockSettings make_interface_mock_settings(auto const& self, StringViewT const functionName)
+    {
+        return MockSettings{
+            .name = generate_interface_mock_name(self, functionName),
+            .stacktraceSkip = interfaceMockStacktraceSkip};
+    }
+
     /**
      * \brief Applies the given args on the mock.
      * \details This function helps with the general apply procedure of the mock.
