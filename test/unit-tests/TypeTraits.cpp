@@ -952,3 +952,91 @@ TEMPLATE_TEST_CASE_SIG(
     STATIC_REQUIRE(std::same_as<Expected, typename mimicpp::uint_with_size<size>::type>);
     STATIC_REQUIRE(std::same_as<Expected, mimicpp::uint_with_size_t<size>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+    "signature_prepend_param adds the given param to the front of the param-list.",
+    "[type_traits]",
+    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    TEST_SIGNATURE_COLLECTION)
+{
+    using mimicpp::signature_prepend_param;
+    using T = int const&;
+
+    SECTION("Variadic c++ function.")
+    {
+        STATIC_REQUIRE(std::same_as<Return(T, Args...), typename signature_prepend_param<Return(Args...), T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args...), mimicpp::signature_prepend_param_t<Return(Args...), T>>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) noexcept, typename signature_prepend_param<Return(Args...) noexcept, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) noexcept, mimicpp::signature_prepend_param_t<Return(Args...) noexcept, T>>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args...)&, typename signature_prepend_param<Return(Args...)&, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args...)&, mimicpp::signature_prepend_param_t<Return(Args...)&, T>>);
+
+        STATIC_REQUIRE(std::same_as < Return(T, Args...) & noexcept, typename signature_prepend_param < Return(Args...) & noexcept, T > ::type >);
+        STATIC_REQUIRE(std::same_as < Return(T, Args...) & noexcept, mimicpp::signature_prepend_param_t < Return(Args...) & noexcept, T >>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args...)&&, typename signature_prepend_param<Return(Args...)&&, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args...)&&, mimicpp::signature_prepend_param_t<Return(Args...)&&, T>>);
+
+        STATIC_REQUIRE(std::same_as < Return(T, Args...) && noexcept, typename signature_prepend_param < Return(Args...) && noexcept, T > ::type >);
+        STATIC_REQUIRE(std::same_as < Return(T, Args...) && noexcept, mimicpp::signature_prepend_param_t < Return(Args...) && noexcept, T >>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) const, typename signature_prepend_param<Return(Args...) const, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) const, mimicpp::signature_prepend_param_t<Return(Args...) const, T>>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) const noexcept, typename signature_prepend_param<Return(Args...) const noexcept, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) const noexcept, mimicpp::signature_prepend_param_t<Return(Args...) const noexcept, T>>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) const&, typename signature_prepend_param<Return(Args...) const&, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) const&, mimicpp::signature_prepend_param_t<Return(Args...) const&, T>>);
+
+        STATIC_REQUIRE(std::same_as < Return(T, Args...) const& noexcept, typename signature_prepend_param<Return(Args...) const & noexcept, T>::type >);
+        STATIC_REQUIRE(std::same_as < Return(T, Args...) const& noexcept, mimicpp::signature_prepend_param_t < Return(Args...) const& noexcept, T >>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) const&&, typename signature_prepend_param<Return(Args...) const&&, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args...) const&&, mimicpp::signature_prepend_param_t<Return(Args...) const&&, T>>);
+
+        STATIC_REQUIRE(std::same_as < Return(T, Args...) const&& noexcept, typename signature_prepend_param<Return(Args...) const && noexcept, T>::type >);
+        STATIC_REQUIRE(std::same_as < Return(T, Args...) const&& noexcept, mimicpp::signature_prepend_param_t < Return(Args...) const&& noexcept, T >>);
+    }
+
+    SECTION("Function with c-ellipsis.")
+    {
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...), typename signature_prepend_param<Return(Args..., ...), T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...), mimicpp::signature_prepend_param_t<Return(Args..., ...), T>>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) noexcept, typename signature_prepend_param<Return(Args..., ...) noexcept, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) noexcept, mimicpp::signature_prepend_param_t<Return(Args..., ...) noexcept, T>>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...)&, typename signature_prepend_param<Return(Args..., ...)&, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...)&, mimicpp::signature_prepend_param_t<Return(Args..., ...)&, T>>);
+
+        STATIC_REQUIRE(std::same_as < Return(T, Args..., ...) & noexcept, typename signature_prepend_param < Return(Args..., ...) & noexcept, T > ::type >);
+        STATIC_REQUIRE(std::same_as < Return(T, Args..., ...) & noexcept, mimicpp::signature_prepend_param_t < Return(Args..., ...) & noexcept, T >>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...)&&, typename signature_prepend_param<Return(Args..., ...)&&, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...)&&, mimicpp::signature_prepend_param_t<Return(Args..., ...)&&, T>>);
+
+        STATIC_REQUIRE(std::same_as < Return(T, Args..., ...) && noexcept, typename signature_prepend_param < Return(Args..., ...) && noexcept, T > ::type >);
+        STATIC_REQUIRE(std::same_as < Return(T, Args..., ...) && noexcept, mimicpp::signature_prepend_param_t < Return(Args..., ...) && noexcept, T >>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) const, typename signature_prepend_param<Return(Args..., ...) const, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) const, mimicpp::signature_prepend_param_t<Return(Args..., ...) const, T>>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) const noexcept, typename signature_prepend_param<Return(Args..., ...) const noexcept, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) const noexcept, mimicpp::signature_prepend_param_t<Return(Args..., ...) const noexcept, T>>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) const&, typename signature_prepend_param<Return(Args..., ...) const&, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) const&, mimicpp::signature_prepend_param_t<Return(Args..., ...) const&, T>>);
+
+        STATIC_REQUIRE(std::same_as < Return(T, Args..., ...) const& noexcept, typename signature_prepend_param<Return(Args..., ...) const & noexcept, T>::type >);
+        STATIC_REQUIRE(std::same_as < Return(T, Args..., ...) const& noexcept, mimicpp::signature_prepend_param_t < Return(Args..., ...) const& noexcept, T >>);
+
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) const&&, typename signature_prepend_param<Return(Args..., ...) const&&, T>::type>);
+        STATIC_REQUIRE(std::same_as<Return(T, Args..., ...) const&&, mimicpp::signature_prepend_param_t<Return(Args..., ...) const&&, T>>);
+
+        STATIC_REQUIRE(std::same_as < Return(T, Args..., ...) const&& noexcept, typename signature_prepend_param<Return(Args..., ...) const && noexcept, T>::type >);
+        STATIC_REQUIRE(std::same_as < Return(T, Args..., ...) const&& noexcept, mimicpp::signature_prepend_param_t < Return(Args..., ...) const&& noexcept, T >>);
+    }
+}

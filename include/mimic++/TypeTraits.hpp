@@ -1147,6 +1147,128 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     /**
      * \}
      */
+
+    /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_PREPEND_PARAM signature_prepend_param
+     * \ingroup TYPE_TRAITS
+     * \brief Adds the specified type to the front of the param-list.
+     *
+     *\{
+     */
+
+    namespace detail
+    {
+        template <typename Signature, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl;
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params...), T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params..., ...), T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params..., ...) noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params...)&, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params...) & noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params..., ...)&, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params..., ...) & noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params...)&&, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params..., ...)&&, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params..., ...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params...) const, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params...) const noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params..., ...) const, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params..., ...) const noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params...) const&, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params...) const& noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params..., ...) const&, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params..., ...) const& noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params...) const&&, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params...) const&& noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, typename T, bool isNoexcept>
+        struct signature_prepend_param_impl<Return(Params..., ...) const&&, T, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(T, Params..., ...) const&& noexcept(isNoexcept);
+        };
+
+        // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
+        template <typename Signature, typename T, typename Trait = signature_remove_noexcept<Signature>>
+        struct signature_prepend_param_
+            : public signature_prepend_param_impl<typename Trait::type, T, Trait::value>
+        {
+        };
+
+        template <typename T>
+        struct signature_prepend_param
+        {
+            template <typename Signature>
+            using type = signature_prepend_param_<Signature, T>;
+        };
+    }
+
+    template <typename Signature, typename T>
+    struct signature_prepend_param
+        : public detail::signature_apply_trait<Signature, detail::signature_prepend_param<T>::template type>
+    {
+    };
+
+    /**
+     * \}
+     */
 }
 
 namespace mimicpp::detail
