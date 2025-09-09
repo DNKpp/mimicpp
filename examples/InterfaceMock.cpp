@@ -189,3 +189,46 @@ TEST_CASE(
     use_interfaceB(mock); // calls foo() and the const bar()
                           //! [interface mock multiple inheritance]
 }
+
+TEST_CASE(
+    "Mocks can have an explicit *this* param.",
+    "[example][example::mock][example::mock::interface]")
+{
+    //! [interface mock with this]
+    namespace finally = mimicpp::finally;
+
+    class Base
+    {
+    public:
+        virtual ~Base() = default;
+
+        virtual int foo() const
+        {
+            return 42;
+        }
+    };
+
+    class Derived
+        : public Base
+    {
+    public:
+        ~Derived() override = default;
+
+        // This alias is required because the `..._WITH_THIS` macros are not able to determine the current type by themselves.
+        using self_type = Derived;
+
+        // This generates the override method and a mock object named foo_, which expects an explicit *this* param.
+        // => `Mock<int(Derived const*) const>`
+        MOCK_METHOD_WITH_THIS(foo, int, (), const);
+    };
+
+    Derived object{};
+
+    // The first param behaves like an actual *this* pointer.
+    SCOPED_EXP object.foo_.expect_call(&object)
+        // Let's redirect the call to the actual `Base::foo` implementation.
+        and finally::returns_apply_all_result_of([](auto* self) { return self->Base::foo(); });
+
+    CHECK(42 == object.foo());
+    //! [interface mock with this]
+}
