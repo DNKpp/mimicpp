@@ -456,6 +456,7 @@ namespace mimicpp
  * \attention
  * This macro requires a `self_type` alias to be defined in the class where the mock is declared.
  * If `self_type` does not match the actual containing type, the behavior is undefined.
+ * \snippet InterfaceMock.cpp interface mock with this
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(fn_name, ...)         \
     MIMICPP_DETAIL_MAKE_INTERFACE_MOCK(                                \
@@ -495,6 +496,7 @@ namespace mimicpp
  * \attention
  * This macro requires a `self_type` alias to be defined in the class where the mock is declared.
  * If `self_type` does not match the actual containing type, the behavior is undefined.
+ * \snippet InterfaceMock.cpp interface mock with this
  */
 #define MIMICPP_MOCK_METHOD_WITH_THIS(fn_name, ret, param_type_list, ...) \
     MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(                             \
@@ -512,6 +514,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MOCK_METHOD_WITH_THIS.
      * \ingroup MOCK_INTERFACES
+     * \snippet InterfaceMock.cpp interface mock with this
      */
     #define MOCK_METHOD_WITH_THIS MIMICPP_MOCK_METHOD_WITH_THIS
 
@@ -524,6 +527,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS.
      * \ingroup MOCK_INTERFACES
+     * \snippet InterfaceMock.cpp interface mock with this
      */
     #define MOCK_OVERLOADED_METHOD_WITH_THIS MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS
 
