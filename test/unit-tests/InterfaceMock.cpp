@@ -82,6 +82,7 @@ TEST_CASE(
         struct helper
         {
             MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(
+                detail::interface_mock_traits,
                 mock,
                 test,
                 (void()));
@@ -95,6 +96,7 @@ TEST_CASE(
         struct helper
         {
             MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(
+                detail::interface_mock_traits,
                 mock,
                 test,
                 (float&(int&&)));
