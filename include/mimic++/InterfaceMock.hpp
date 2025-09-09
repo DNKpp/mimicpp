@@ -73,11 +73,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
     // * the generated interface implementation
     inline constexpr std::size_t interfaceMockStacktraceSkip{4u};
 
+    template <typename Self>
     [[nodiscard]]
-    StringT generate_interface_mock_name([[maybe_unused]] auto const& self, StringViewT const functionName)
+    StringT generate_interface_mock_name(StringViewT const functionName)
     {
         StringStreamT ss{};
-        mimicpp::print_type<std::remove_cvref_t<decltype(self)>>(std::ostreambuf_iterator{ss});
+        mimicpp::print_type<Self>(std::ostreambuf_iterator{ss});
         ss << "::" << functionName;
 
         return std::move(ss).str();
@@ -113,8 +114,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
         template <typename... Signatures>
         using mock_type = Mock<Signatures...>;
 
-        template <typename Signature, typename Mock, typename... Args>
-        static constexpr signature_return_type_t<Signature> invoke(Mock& mock, [[maybe_unused]] auto* self, std::tuple<Args...>&& args)
+        template <typename Signature, typename... Args>
+        static constexpr signature_return_type_t<Signature> invoke(
+            auto& mock,
+            [[maybe_unused]] auto* self,
+            std::tuple<Args...>&& args)
         {
             return indirectly_apply_mock<Signature>(mock, std::move(args));
         }
@@ -123,7 +127,35 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
         static MockSettings make_settings(auto const& self, StringViewT const functionName)
         {
             return MockSettings{
-                .name = generate_interface_mock_name(self, functionName),
+                .name = generate_interface_mock_name<std::remove_cvref_t<decltype(self)>>(functionName),
+                .stacktraceSkip = interfaceMockStacktraceSkip};
+        }
+    };
+
+    template <typename Self>
+    struct interface_mock_with_this_traits
+    {
+        template <typename Signature, bool isConst = Constness::as_const == signature_const_qualification_v<Signature>>
+        using prepend_this = signature_prepend_param_t<
+            Signature,
+            std::conditional_t<isConst, Self const*, Self*>>;
+
+        template <typename... Signatures>
+        using mock_type = Mock<prepend_this<Signatures>...>;
+
+        template <typename Signature, typename... Args>
+        static constexpr signature_return_type_t<Signature> invoke(auto& mock, auto* self, std::tuple<Args...>&& args)
+        {
+            return indirectly_apply_mock<Signature>(
+                mock,
+                std::tuple_cat(std::make_tuple(self), std::move(args)));
+        }
+
+        [[nodiscard]]
+        static MockSettings make_settings([[maybe_unused]] auto const& self, StringViewT const functionName)
+        {
+            return MockSettings{
+                .name = generate_interface_mock_name<Self>(functionName),
                 .stacktraceSkip = interfaceMockStacktraceSkip};
         }
     };

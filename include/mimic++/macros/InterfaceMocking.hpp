@@ -425,13 +425,14 @@ namespace mimicpp
         (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
 
 /**
- * \brief Starting point for mocking overloaded interface methods.
+ * \brief Entry point for mocking an overloaded interface method.
  * \ingroup MOCK_INTERFACES
- * \param fn_name The overload-set name.
- * \param ... Overloads must be added via \ref MIMICPP_ADD_OVERLOAD macro.
- * \details This macro creates a single mock object, which supports an arbitrary amount of overloads.
- * Those overloads will also be implemented as override methods, which all forward their calls to the
- * single mock object.
+ * \param fn_name The name of the overload-set.
+ * \param ... Overloads must be declared using the \ref MIMICPP_ADD_OVERLOAD macro.
+ *
+ * \details
+ * This macro defines a single mock object that supports an arbitrary number of overloads.
+ * Each overload is implemented as an override method, forwarding calls to the mock object.
  * \snippet InterfaceMock.cpp interface mock overloaded
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...) \
@@ -442,18 +443,62 @@ namespace mimicpp
         __VA_ARGS__)
 
 /**
- * \brief Starting point for mocking a single interface method.
+ * \brief Entry point for mocking an overloaded interface method with an explicit *this* pointer.
  * \ingroup MOCK_INTERFACES
- * \param fn_name The overload-set name.
- * \param param_type_list The parameter types.
- * \param ... An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
- * \details This macro creates a single mock object with a single signature and creates a corresponding override method,
- * which forwards its calls to the mock object.
+ * \param fn_name The name of the overload-set.
+ * \param ... Overloads must be declared using the \ref MIMICPP_ADD_OVERLOAD macro.
+ *
+ * \details
+ * This macro defines a single mock object that supports an arbitrary number of overloads.
+ * Each overload is implemented as an override method, forwarding calls to the mock object
+ * while prepending an explicit *this* pointer to the argument list.
+ *
+ * \attention
+ * This macro requires a `self_type` alias to be defined in the class where the mock is declared.
+ * If `self_type` does not match the actual containing type, the behavior is undefined.
+ */
+#define MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(fn_name, ...)         \
+    MIMICPP_DETAIL_MAKE_INTERFACE_MOCK(                                \
+        ::mimicpp::detail::interface_mock_with_this_traits<self_type>, \
+        fn_name##_,                                                    \
+        fn_name,                                                       \
+        __VA_ARGS__)
+
+/**
+ * \brief Entry point for mocking a single interface method.
+ * \ingroup MOCK_INTERFACES
+ * \param fn_name The method name.
+ * \param param_type_list The list of parameter types.
+ * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ * \details
+ * This macro defines a single mock object for one method signature and generates a corresponding
+ * override method. The override method forwards calls to the mock object.
  * \snippet InterfaceMock.cpp interface mock simple
  */
 #define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...) \
     MIMICPP_MOCK_OVERLOADED_METHOD(                             \
         fn_name,                                                \
+        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
+
+/**
+ * \brief Entry point for mocking a single interface method with an explicit *this* pointer.
+ * \ingroup MOCK_INTERFACES
+ * \param fn_name The method name.
+ * \param param_type_list The list of parameter types.
+ * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ *
+ * \details
+ * This macro defines a single mock object for one method signature and generates a corresponding
+ * override method. The override method forwards calls to the mock object and prepends an explicit
+ * *this* pointer to the argument list.
+ *
+ * \attention
+ * This macro requires a `self_type` alias to be defined in the class where the mock is declared.
+ * If `self_type` does not match the actual containing type, the behavior is undefined.
+ */
+#define MIMICPP_MOCK_METHOD_WITH_THIS(fn_name, ret, param_type_list, ...) \
+    MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(                             \
+        fn_name,                                                          \
         MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
 
 #ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
@@ -465,10 +510,22 @@ namespace mimicpp
     #define MOCK_METHOD MIMICPP_MOCK_METHOD
 
     /**
+     * \brief Shorthand variant of \ref MIMICPP_MOCK_METHOD_WITH_THIS.
+     * \ingroup MOCK_INTERFACES
+     */
+    #define MOCK_METHOD_WITH_THIS MIMICPP_MOCK_METHOD_WITH_THIS
+
+    /**
      * \brief Shorthand variant of \ref MIMICPP_MOCK_OVERLOADED_METHOD.
      * \ingroup MOCK_INTERFACES
      */
     #define MOCK_OVERLOADED_METHOD MIMICPP_MOCK_OVERLOADED_METHOD
+
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS.
+     * \ingroup MOCK_INTERFACES
+     */
+    #define MOCK_OVERLOADED_METHOD_WITH_THIS MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS
 
     /**
      * \brief Shorthand variant of \ref MIMICPP_ADD_OVERLOAD.
