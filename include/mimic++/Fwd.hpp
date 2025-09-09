@@ -263,6 +263,23 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     /**
      * \brief Primary template.
+     * \ingroup TYPE_TRAITS_SIGNATURE_PREPEND_PARAM
+     * \tparam Signature A function signature.
+     * \tparam T The type to be added.
+     */
+    template <typename Signature, typename T>
+    struct signature_prepend_param;
+
+    /**
+     * \brief Convenience alias, exposing the ``type`` member alias of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_PREPEND_PARAM
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature, typename T>
+    using signature_prepend_param_t = typename signature_prepend_param<Signature, T>::type;
+
+    /**
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_IS_OVERLOADABLE_WITH
      * \tparam First The first function signature.
      * \tparam Second The second function signature.
