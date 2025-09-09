@@ -696,3 +696,178 @@ TEST_CASE(
             && Catch::Matchers::EndsWith("::foo")
             && Catch::Matchers::Matches(R"(.+derived::foo)"));
 }
+
+TEST_CASE(
+    "MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS generates a mock explicit *this* param.",
+    "[mock][mock::interface]")
+{
+    struct interface
+    {
+        virtual ~interface() = default;
+        virtual void foo() = 0;
+        virtual void foo() const = 0;
+    };
+
+    struct derived
+        : public interface
+    {
+        using self_type = derived;
+
+        MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(
+            foo,
+            MIMICPP_ADD_OVERLOAD(void, ()),
+            MIMICPP_ADD_OVERLOAD(void, (), const));
+    };
+
+    using Expected = Mock<void(derived*), void(derived const*) const>;
+    STATIC_REQUIRE(std::same_as<Expected, decltype(derived::foo_)>);
+
+    derived object{};
+
+    {
+        SCOPED_EXP object.foo_.expect_call(&object);
+        REQUIRE_NOTHROW(object.foo());
+    }
+
+    {
+        SCOPED_EXP std::as_const(object).foo_.expect_call(&object);
+        REQUIRE_NOTHROW(std::as_const(object).foo());
+    }
+}
+
+TEST_CASE(
+    "MIMICPP_MOCK_METHOD_WITH_THIS generates a mock with explicit *this* param.",
+    "[mock][mock::interface]")
+{
+    struct interface
+    {
+        virtual ~interface() = default;
+        virtual void foo() = 0;
+        virtual void foo_const() const = 0;
+
+        virtual void foo_lvalue() & = 0;
+        virtual void foo_lvalue_const() const& = 0;
+
+        virtual void foo_rvalue() && = 0;
+        virtual void foo_rvalue_const() const&& = 0;
+
+        virtual void foo_noexcept() noexcept = 0;
+        virtual void foo_const_noexcept() const noexcept = 0;
+
+        virtual void foo_lvalue_noexcept() & noexcept = 0;
+        virtual void foo_lvalue_const_noexcept() const& noexcept = 0;
+
+        virtual void foo_rvalue_noexcept() && noexcept = 0;
+        virtual void foo_rvalue_const_noexcept() const&& noexcept = 0;
+    };
+
+    struct derived
+        : public interface
+    {
+        using self_type = derived;
+
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo, void, ());
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_const, void, (), const);
+
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_lvalue, void, (), &);
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_lvalue_const, void, (), const&);
+
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_rvalue, void, (), &&);
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_rvalue_const, void, (), const&&);
+
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_noexcept, void, (), noexcept);
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_const_noexcept, void, (), const noexcept);
+
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_lvalue_noexcept, void, (), & noexcept);
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_lvalue_const_noexcept, void, (), const& noexcept);
+
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_rvalue_noexcept, void, (), && noexcept);
+        MIMICPP_MOCK_METHOD_WITH_THIS(foo_rvalue_const_noexcept, void, (), const&& noexcept);
+    };
+
+    derived object{};
+
+    SECTION("Mocking an unqualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived*)>, decltype(derived::foo_)>);
+        SCOPED_EXP object.foo_.expect_call(&object);
+        REQUIRE_NOTHROW(object.foo());
+    }
+
+    SECTION("Mocking const qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived const*) const>, decltype(derived::foo_const_)>);
+        SCOPED_EXP std::as_const(object).foo_const_.expect_call(&object);
+        REQUIRE_NOTHROW(std::as_const(object).foo_const());
+    }
+
+    SECTION("Mocking lvalue qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived*)&>, decltype(derived::foo_lvalue_)>);
+        SCOPED_EXP object.foo_lvalue_.expect_call(&object);
+        REQUIRE_NOTHROW(object.foo_lvalue());
+    }
+
+    SECTION("Mocking const lvalue qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived const*) const&>, decltype(derived::foo_lvalue_const_)>);
+        SCOPED_EXP std::as_const(object).foo_lvalue_const_.expect_call(&object);
+        REQUIRE_NOTHROW(std::as_const(object).foo_lvalue_const());
+    }
+
+    SECTION("Mocking rvalue qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived*) &&>, decltype(derived::foo_rvalue_)>);
+        SCOPED_EXP std::move(object).foo_rvalue_.expect_call(&object);
+        REQUIRE_NOTHROW(std::move(object).foo_rvalue());
+    }
+
+    SECTION("Mocking const rvalue qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived const*) const&&>, decltype(derived::foo_rvalue_const_)>);
+        SCOPED_EXP std::move(std::as_const(object)).foo_rvalue_const_.expect_call(&object);
+        REQUIRE_NOTHROW(std::move(std::as_const(object)).foo_rvalue_const());
+    }
+
+    SECTION("Mocking a noexcept member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived*) noexcept>, decltype(derived::foo_noexcept_)>);
+        SCOPED_EXP object.foo_noexcept_.expect_call(&object);
+        REQUIRE_NOTHROW(object.foo_noexcept());
+    }
+
+    SECTION("Mocking noexcept const qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived const*) const noexcept>, decltype(derived::foo_const_noexcept_)>);
+        SCOPED_EXP std::as_const(object).foo_const_noexcept_.expect_call(&object);
+        REQUIRE_NOTHROW(std::as_const(object).foo_const_noexcept());
+    }
+
+    SECTION("Mocking noexcept lvalue qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived*) & noexcept>, decltype(derived::foo_lvalue_noexcept_)>);
+        SCOPED_EXP object.foo_lvalue_noexcept_.expect_call(&object);
+        REQUIRE_NOTHROW(object.foo_lvalue_noexcept());
+    }
+
+    SECTION("Mocking noexcept const lvalue qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived const*) const & noexcept>, decltype(derived::foo_lvalue_const_noexcept_)>);
+        SCOPED_EXP std::as_const(object).foo_lvalue_const_noexcept_.expect_call(&object);
+        REQUIRE_NOTHROW(std::as_const(object).foo_lvalue_const_noexcept());
+    }
+
+    SECTION("Mocking noexcept rvalue qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived*) && noexcept>, decltype(derived::foo_rvalue_noexcept_)>);
+        SCOPED_EXP std::move(object).foo_rvalue_noexcept_.expect_call(&object);
+        REQUIRE_NOTHROW(std::move(object).foo_rvalue_noexcept());
+    }
+
+    SECTION("Mocking noexcept const rvalue qualified member function.")
+    {
+        STATIC_REQUIRE(std::same_as<Mock<void(derived const*) const && noexcept>, decltype(derived::foo_rvalue_const_noexcept_)>);
+        SCOPED_EXP std::move(std::as_const(object)).foo_rvalue_const_noexcept_.expect_call(&object);
+        REQUIRE_NOTHROW(std::move(std::as_const(object)).foo_rvalue_const_noexcept());
+    }
+}
