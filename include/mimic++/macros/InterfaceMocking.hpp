@@ -370,27 +370,56 @@ namespace mimicpp
 }
 
 /**
- * \brief Create a single overload for the given information.
+ * \brief Creates the function header.
+ * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
+ * \param linkage The linkage specs.
+ * \param ret The return type.
+ * \param call_convention The call-convention.
+ * \param fn_name The function name.
+ * \param param_list Enclosed parameter list.
+ * \param specs Additional specifiers (e.g. ``const``, ``noexcept``, etc.).
+ */
+#define MIMICPP_DETAIL_MAKE_FUNCTION_HEADER(linkage, ret, call_convention, fn_name, param_list, specs) \
+    linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                           \
+    call_convention fn_name param_list specs
+
+/**
+ * \brief Creates the mock invocation.
+ * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
+ * \param traits The interface traits.
+ * \param ret The return type.
+ * \param param_type_list The parameter types.
+ * \param mock_name The mock name.
+ * \param invoke_params The enclosed invoke params.
+ */
+#define MIMICPP_DETAIL_MAKE_MOCK_INVOKE(traits, ret, param_type_list, specs, mock_name, invoke_params) \
+    using Signature = MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs;                          \
+    return traits::invoke<Signature>(mock_name, MIMICPP_DETAIL_STRIP_PARENS(invoke_params))
+
+/**
+ * \brief Creates a single overload for the given information.
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
  * \param ignore Ignored
  * \param traits The interface traits.
  * \param mock_name The mock name.
  * \param fn_name The function name.
  * \param ret The return type.
+ * \param call_convention The call-convention.
  * \param param_type_list The parameter types.
  * \param specs Additional specifiers (e.g. ``const``, ``noexcept``, etc.).
  * \param param_list Enclosed parameter list.
  * \param forward_list Enclosed forward statements.
  */
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, traits, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
-    MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                         \
-    call_convention fn_name param_list specs override                                                                                                        \
+    MIMICPP_DETAIL_MAKE_FUNCTION_HEADER(, ret, call_convention, fn_name, param_list, specs override)                                                         \
     {                                                                                                                                                        \
-        using Signature = MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs;                                                                            \
-        return traits::invoke<Signature>(                                                                                                                    \
+        MIMICPP_DETAIL_MAKE_MOCK_INVOKE(                                                                                                                     \
+            traits,                                                                                                                                          \
+            ret,                                                                                                                                             \
+            param_type_list,                                                                                                                                 \
+            specs,                                                                                                                                           \
             mock_name,                                                                                                                                       \
-            this,                                                                                                                                            \
-            ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list)));                                                                                    \
+            (this, ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list))));                                                                            \
     }
 
 /**
