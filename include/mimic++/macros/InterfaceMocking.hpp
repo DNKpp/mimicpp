@@ -363,42 +363,32 @@ namespace mimicpp
 namespace mimicpp
 {
     /**
-     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES make_method_overrides
+     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_FACADES make facades
      * \ingroup MOCK_INTERFACES_DETAIL
-     * \brief Creates all required override overloads.
+     * \brief Creates all required facades.
      */
 }
 
 /**
- * \brief Creates the function header.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
- * \param linkage The linkage specs.
- * \param ret The return type.
- * \param call_convention The call-convention.
- * \param fn_name The function name.
- * \param param_list Enclosed parameter list.
- * \param specs Additional specifiers (e.g. ``const``, ``noexcept``, etc.).
+ * \brief Creates the facade function.
+ * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
+ * \param traits The (enclosed) interface traits.
+ * \param fn_header The (enclosed)  facade function header.
+ * \param sig The (enclosed) signature.
+ * \param target_name The invocation target name.
+ * \param invoke_args The (enclosed) invoke-argument list.
  */
-#define MIMICPP_DETAIL_MAKE_FUNCTION_HEADER(linkage, ret, call_convention, fn_name, param_list, specs) \
-    linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                           \
-    call_convention fn_name param_list specs
-
-/**
- * \brief Creates the mock invocation.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
- * \param traits The interface traits.
- * \param ret The return type.
- * \param param_type_list The parameter types.
- * \param mock_name The mock name.
- * \param invoke_params The enclosed invoke params.
- */
-#define MIMICPP_DETAIL_MAKE_MOCK_INVOKE(traits, ret, param_type_list, specs, mock_name, invoke_params) \
-    using Signature = MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs;                          \
-    return traits::invoke<Signature>(mock_name, MIMICPP_DETAIL_STRIP_PARENS(invoke_params))
+#define MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(traits, fn_header, sig, target_name, invoke_args) \
+    MIMICPP_DETAIL_STRIP_PARENS(fn_header)                                                    \
+    {                                                                                         \
+        return MIMICPP_DETAIL_STRIP_PARENS(traits)::invoke<MIMICPP_DETAIL_STRIP_PARENS(sig)>( \
+            target_name,                                                                      \
+            MIMICPP_DETAIL_STRIP_PARENS(invoke_args));                                        \
+    }
 
 /**
  * \brief Creates a single overload for the given information.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
+ * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
  * \param ignore Ignored
  * \param traits The interface traits.
  * \param mock_name The mock name.
@@ -411,46 +401,43 @@ namespace mimicpp
  * \param forward_list Enclosed forward statements.
  */
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, traits, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
-    MIMICPP_DETAIL_MAKE_FUNCTION_HEADER(, ret, call_convention, fn_name, param_list, specs override)                                                         \
-    {                                                                                                                                                        \
-        MIMICPP_DETAIL_MAKE_MOCK_INVOKE(                                                                                                                     \
-            traits,                                                                                                                                          \
-            ret,                                                                                                                                             \
-            param_type_list,                                                                                                                                 \
-            specs,                                                                                                                                           \
-            mock_name,                                                                                                                                       \
-            (this, ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list))));                                                                            \
-    }
+    MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(                                                                                                                     \
+        traits,                                                                                                                                              \
+        (MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override),                                                                \
+        (MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs),                                                                                            \
+        mock_name,                                                                                                                                           \
+        (this, ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list))))
 
 /**
  * \brief Creates all overloads for a specific function as overrides.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
+ * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
  * \param traits The interface traits.
+ * \param op The operation for each element (see `MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE` as an example for the list of required arguments).
  * \param mock_name The mock name.
  * \param fn_name The function name to be overloaded.
  */
-#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(traits, mock_name, fn_name, ...) \
-    MIMICPP_DETAIL_FOR_EACH_EXT(                                              \
-        MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                                  \
-        ,                                                                     \
-        MIMICPP_DETAIL_NO_DELIMITER,                                          \
-        MIMICPP_DETAIL_STRIP_PARENS,                                          \
-        (traits, mock_name, fn_name),                                         \
+#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(traits, op, mock_name, fn_name, ...) \
+    MIMICPP_DETAIL_FOR_EACH_EXT(                                                  \
+        op,                                                                       \
+        ,                                                                         \
+        MIMICPP_DETAIL_NO_DELIMITER,                                              \
+        MIMICPP_DETAIL_STRIP_PARENS,                                              \
+        (traits, mock_name, fn_name),                                             \
         __VA_ARGS__)
 
 /**
  * \brief Creates all overloads for a specific function as overrides and the mock member.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_METHOD_OVERRIDES
+ * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
  * \param traits The interface traits.
  * \param mock_name The mock name.
  * \param fn_name The function name to be overloaded.
  */
-#define MIMICPP_DETAIL_MAKE_INTERFACE_MOCK(traits, mock_name, fn_name, ...)       \
-    MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(traits, mock_name, fn_name, __VA_ARGS__) \
-    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                          \
-        traits,                                                                   \
-        mock_name,                                                                \
-        fn_name,                                                                  \
+#define MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(traits, mock_name, fn_name, ...)                                          \
+    MIMICPP_DETAIL_MAKE_METHOD_OVERRIDES(traits, MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE, mock_name, fn_name, __VA_ARGS__) \
+    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                                                               \
+        traits,                                                                                                        \
+        mock_name,                                                                                                     \
+        fn_name,                                                                                                       \
         (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
 
 /**
@@ -465,7 +452,7 @@ namespace mimicpp
  * \snippet InterfaceMock.cpp interface mock overloaded
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...) \
-    MIMICPP_DETAIL_MAKE_INTERFACE_MOCK(              \
+    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(            \
         ::mimicpp::detail::interface_mock_traits,    \
         fn_name##_,                                  \
         fn_name,                                     \
@@ -488,7 +475,7 @@ namespace mimicpp
  * \snippet InterfaceMock.cpp interface mock with this
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(fn_name, ...)         \
-    MIMICPP_DETAIL_MAKE_INTERFACE_MOCK(                                \
+    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(                              \
         ::mimicpp::detail::interface_mock_with_this_traits<self_type>, \
         fn_name##_,                                                    \
         fn_name,                                                       \
