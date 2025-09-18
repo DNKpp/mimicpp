@@ -33,10 +33,7 @@ namespace mimicpp::expectation_policies
         Matcher const& matcher;
 
         template <typename... Args>
-            requires std::invocable<
-                decltype(detail::matches_hook::matches),
-                const Matcher&,
-                Args&...>
+            requires std::invocable<detail::matches_hook::matches_fn, Matcher const&, Args&...>
         [[nodiscard]]
         // projected arguments may come as value, so Args& won't work in all cases
         // just forward them as lvalue-ref

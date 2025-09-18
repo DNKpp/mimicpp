@@ -35,9 +35,7 @@ namespace mimicpp::detail::matches_hook
         T& target,
         Others&... others)
         requires requires {
-            {
-                custom::matcher_traits<Matcher>{}.matches(matcher, target, others...)
-            } -> util::boolean_testable;
+            { custom::matcher_traits<Matcher>{}.matches(matcher, target, others...) } -> util::boolean_testable;
         }
     {
         return custom::matcher_traits<Matcher>{}.matches(matcher, target, others...);
@@ -50,24 +48,29 @@ namespace mimicpp::detail::matches_hook
         Matcher const& matcher,
         T& target,
         Others&... others)
-        requires requires { { matcher.matches(target, others...) } -> util::boolean_testable; }
+        requires requires {
+            { matcher.matches(target, others...) } -> util::boolean_testable;
+        }
     {
         return matcher.matches(target, others...);
     }
 
-    inline util::priority_tag<1> constexpr maxTag{};
+    inline constexpr util::priority_tag<1> maxTag{};
 
-    inline auto constexpr matches = []<typename Matcher, typename T, typename... Others>(
-                                        Matcher const& matcher,
-                                        T& target,
-                                 Others&... others)
-        requires requires {
-            {
-                matches_impl(maxTag, matcher, target, others...)
-            } -> util::boolean_testable; }
+    struct matches_fn
     {
-        return matches_impl(maxTag, matcher, target, others...);
+        template <typename Matcher, typename T, typename... Others>
+        [[nodiscard]]
+        constexpr bool operator()(Matcher const& matcher, T& target, Others&... others) const
+            requires requires {
+                { matches_impl(maxTag, matcher, target, others...) } -> util::boolean_testable;
+            }
+        {
+            return matches_impl(maxTag, matcher, target, others...);
+        }
     };
+
+    inline constexpr matches_fn matches{};
 }
 
 namespace mimicpp::detail::describe_hook

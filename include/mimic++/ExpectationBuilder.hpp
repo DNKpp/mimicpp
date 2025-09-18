@@ -209,13 +209,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 namespace mimicpp::detail
 {
     template <typename Param, typename Arg>
-        requires matcher_for<
-            std::remove_cvref_t<Arg>,
-            Param>
+        requires matcher_for<Arg, Param>
     [[nodiscard]]
-    constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<2> const, Arg&& arg)
+    constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<2> const, Arg arg)
     {
-        return std::forward<Arg>(arg);
+        return arg;
     }
 
     // if the param is a character-pointer, there is no evidence, whether it denotes a null-terminated string or just an
@@ -224,7 +222,8 @@ namespace mimicpp::detail
     template <string Param, string Arg>
         requires(!std::is_pointer_v<std::remove_reference_t<Param>>)
              || (!std::is_pointer_v<std::remove_reference_t<Arg>>)
-    [[nodiscard]] constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<1> const, Arg&& arg)
+    [[nodiscard]] //
+    constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<1> const, Arg&& arg)
     {
         return matches::str::eq(std::forward<Arg>(arg));
     }
@@ -236,12 +235,12 @@ namespace mimicpp::detail
         return matches::eq(std::forward<Arg>(arg));
     }
 
-    inline constexpr util::priority_tag<2> max_make_arg_matcher_tag{};
+    inline constexpr util::priority_tag<2> maxMakeArgMatcherTag{};
 
     template <typename Arg, typename Target>
     concept requirement_for = requires {
         {
-            detail::make_arg_matcher<Target, Arg>(max_make_arg_matcher_tag, std::declval<Arg>())
+            detail::make_arg_matcher<Target, Arg>(maxMakeArgMatcherTag, std::declval<Arg>())
         } -> matcher_for<Target>;
     };
 
@@ -255,21 +254,20 @@ namespace mimicpp::detail
     constexpr auto make_arg_policy(Arg&& arg)
     {
         return expect::arg<index>(
-            detail::make_arg_matcher<Param, Arg>(max_make_arg_matcher_tag, std::forward<Arg>(arg)));
+            detail::make_arg_matcher<Param, Arg>(maxMakeArgMatcherTag, std::forward<Arg>(arg)));
     }
 
     template <typename Signature, typename Builder, std::size_t... indices, typename... Args>
     [[nodiscard]]
     constexpr auto extend_builder_with_arg_policies(
         Builder&& builder,
-        const std::index_sequence<indices...>,
+        [[maybe_unused]] std::index_sequence<indices...> const,
         Args&&... args)
     {
         return (
             std::forward<Builder>(builder)
             && ...
-            && detail::make_arg_policy<Signature, indices>(
-                std::forward<Args>(args)));
+            && detail::make_arg_policy<Signature, indices>(std::forward<Args>(args)));
     }
 
     template <typename Signature, typename... Args>
