@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/InterfaceMock.hpp"
+#include "mimic++/ScopedSequence.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
 #include "TestReporter.hpp"
@@ -534,6 +535,300 @@ TEST_CASE(
             REQUIRE(42 == mock.foo(4.2f));
         }
     }
+}
+
+TEST_CASE(
+    "MIMICPP_MOCK_OVERLOADED_METHOD can handle at least up to 64 signatures.",
+    "[mock][mock::interface]")
+{
+    struct interface
+    {
+        virtual ~interface() = default;
+
+        virtual void foo() = 0;
+        virtual void foo() const = 0;
+        virtual void foo(int) = 0;
+        virtual void foo(int) const = 0;
+        virtual void foo(float) = 0;
+        virtual void foo(float) const = 0;
+        virtual void foo(double) = 0;
+        virtual void foo(double) const = 0; // 8
+
+        virtual void foo(short) = 0;
+        virtual void foo(short) const = 0;
+        virtual void foo(bool) = 0;
+        virtual void foo(bool) const = 0;
+        virtual void foo(unsigned) = 0;
+        virtual void foo(unsigned) const = 0;
+        virtual void foo(char) = 0;
+        virtual void foo(char) const = 0; // 16
+
+        virtual void foo(wchar_t) = 0;
+        virtual void foo(wchar_t) const = 0;
+        virtual void foo(wchar_t, int) = 0;
+        virtual void foo(wchar_t, int) const = 0;
+        virtual void foo(wchar_t, float) = 0;
+        virtual void foo(wchar_t, float) const = 0;
+        virtual void foo(wchar_t, double) = 0;
+        virtual void foo(wchar_t, double) const = 0; // 24
+
+        virtual void foo(wchar_t, short) = 0;
+        virtual void foo(wchar_t, short) const = 0;
+        virtual void foo(wchar_t, bool) = 0;
+        virtual void foo(wchar_t, bool) const = 0;
+        virtual void foo(wchar_t, unsigned) = 0;
+        virtual void foo(wchar_t, unsigned) const = 0;
+        virtual void foo(wchar_t, char) = 0;
+        virtual void foo(wchar_t, char) const = 0; // 32
+
+        virtual void foo(char16_t) = 0;
+        virtual void foo(char16_t) const = 0;
+        virtual void foo(char16_t, int) = 0;
+        virtual void foo(char16_t, int) const = 0;
+        virtual void foo(char16_t, float) = 0;
+        virtual void foo(char16_t, float) const = 0;
+        virtual void foo(char16_t, double) = 0;
+        virtual void foo(char16_t, double) const = 0; // 40
+
+        virtual void foo(char16_t, short) = 0;
+        virtual void foo(char16_t, short) const = 0;
+        virtual void foo(char16_t, bool) = 0;
+        virtual void foo(char16_t, bool) const = 0;
+        virtual void foo(char16_t, unsigned) = 0;
+        virtual void foo(char16_t, unsigned) const = 0;
+        virtual void foo(char16_t, char) = 0;
+        virtual void foo(char16_t, char) const = 0; // 48
+
+        virtual void foo(char32_t) = 0;
+        virtual void foo(char32_t) const = 0;
+        virtual void foo(char32_t, int) = 0;
+        virtual void foo(char32_t, int) const = 0;
+        virtual void foo(char32_t, float) = 0;
+        virtual void foo(char32_t, float) const = 0;
+        virtual void foo(char32_t, double) = 0;
+        virtual void foo(char32_t, double) const = 0; // 56
+
+        virtual void foo(char32_t, short) = 0;
+        virtual void foo(char32_t, short) const = 0;
+        virtual void foo(char32_t, bool) = 0;
+        virtual void foo(char32_t, bool) const = 0;
+        virtual void foo(char32_t, unsigned) = 0;
+        virtual void foo(char32_t, unsigned) const = 0;
+        virtual void foo(char32_t, char) = 0;
+        virtual void foo(char32_t, char) const = 0; // 64
+    };
+
+    struct derived
+        : public interface
+    {
+        MIMICPP_MOCK_OVERLOADED_METHOD(
+            foo,
+            MIMICPP_ADD_OVERLOAD(void, ()),
+            MIMICPP_ADD_OVERLOAD(void, (), const),
+            MIMICPP_ADD_OVERLOAD(void, (int)),
+            MIMICPP_ADD_OVERLOAD(void, (int), const),
+            MIMICPP_ADD_OVERLOAD(void, (float)),
+            MIMICPP_ADD_OVERLOAD(void, (float), const),
+            MIMICPP_ADD_OVERLOAD(void, (double)),
+            MIMICPP_ADD_OVERLOAD(void, (double), const),
+            MIMICPP_ADD_OVERLOAD(void, (short)),
+            MIMICPP_ADD_OVERLOAD(void, (short), const),
+            MIMICPP_ADD_OVERLOAD(void, (bool)),
+            MIMICPP_ADD_OVERLOAD(void, (bool), const),
+            MIMICPP_ADD_OVERLOAD(void, (unsigned)),
+            MIMICPP_ADD_OVERLOAD(void, (unsigned), const),
+            MIMICPP_ADD_OVERLOAD(void, (char)),
+            MIMICPP_ADD_OVERLOAD(void, (char), const),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t)),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t), const),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, int)),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, int), const),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, float)),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, float), const),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, double)),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, double), const),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, short)),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, short), const),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, bool)),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, bool), const),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, unsigned)),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, unsigned), const),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, char)),
+            MIMICPP_ADD_OVERLOAD(void, (wchar_t, char), const),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t)),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t), const),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, int)),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, int), const),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, float)),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, float), const),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, double)),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, double), const),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, short)),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, short), const),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, bool)),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, bool), const),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, unsigned)),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, unsigned), const),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, char)),
+            MIMICPP_ADD_OVERLOAD(void, (char16_t, char), const),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t)),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t), const),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, int)),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, int), const),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, float)),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, float), const),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, double)),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, double), const),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, short)),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, short), const),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, bool)),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, bool), const),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, unsigned)),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, unsigned), const),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, char)),
+            MIMICPP_ADD_OVERLOAD(void, (char32_t, char), const));
+    };
+
+    derived mock{};
+
+    ScopedSequence sequence{};
+
+    // Completed expectations for all 64 overloads
+    sequence += mock.foo_.expect_call();
+    sequence += std::as_const(mock).foo_.expect_call();
+    sequence += mock.foo_.expect_call(matches::type<int>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<int>);
+    sequence += mock.foo_.expect_call(matches::type<float>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<float>);
+    sequence += mock.foo_.expect_call(matches::type<double>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<double>);
+    sequence += mock.foo_.expect_call(matches::type<short>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<short>);
+    sequence += mock.foo_.expect_call(matches::type<bool>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<bool>);
+    sequence += mock.foo_.expect_call(matches::type<unsigned>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<unsigned>);
+    sequence += mock.foo_.expect_call(matches::type<char>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char>);
+
+    sequence += mock.foo_.expect_call(matches::type<wchar_t>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<wchar_t>);
+    sequence += mock.foo_.expect_call(matches::type<wchar_t>, matches::type<int>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<wchar_t>, matches::type<int>);
+    sequence += mock.foo_.expect_call(matches::type<wchar_t>, matches::type<float>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<wchar_t>, matches::type<float>);
+    sequence += mock.foo_.expect_call(matches::type<wchar_t>, matches::type<double>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<wchar_t>, matches::type<double>);
+    sequence += mock.foo_.expect_call(matches::type<wchar_t>, matches::type<short>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<wchar_t>, matches::type<short>);
+    sequence += mock.foo_.expect_call(matches::type<wchar_t>, matches::type<bool>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<wchar_t>, matches::type<bool>);
+    sequence += mock.foo_.expect_call(matches::type<wchar_t>, matches::type<unsigned>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<wchar_t>, matches::type<unsigned>);
+    sequence += mock.foo_.expect_call(matches::type<wchar_t>, matches::type<char>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<wchar_t>, matches::type<char>);
+
+    sequence += mock.foo_.expect_call(matches::type<char16_t>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char16_t>);
+    sequence += mock.foo_.expect_call(matches::type<char16_t>, matches::type<int>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char16_t>, matches::type<int>);
+    sequence += mock.foo_.expect_call(matches::type<char16_t>, matches::type<float>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char16_t>, matches::type<float>);
+    sequence += mock.foo_.expect_call(matches::type<char16_t>, matches::type<double>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char16_t>, matches::type<double>);
+    sequence += mock.foo_.expect_call(matches::type<char16_t>, matches::type<short>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char16_t>, matches::type<short>);
+    sequence += mock.foo_.expect_call(matches::type<char16_t>, matches::type<bool>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char16_t>, matches::type<bool>);
+    sequence += mock.foo_.expect_call(matches::type<char16_t>, matches::type<unsigned>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char16_t>, matches::type<unsigned>);
+    sequence += mock.foo_.expect_call(matches::type<char16_t>, matches::type<char>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char16_t>, matches::type<char>);
+
+    sequence += mock.foo_.expect_call(matches::type<char32_t>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char32_t>);
+    sequence += mock.foo_.expect_call(matches::type<char32_t>, matches::type<int>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char32_t>, matches::type<int>);
+    sequence += mock.foo_.expect_call(matches::type<char32_t>, matches::type<float>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char32_t>, matches::type<float>);
+    sequence += mock.foo_.expect_call(matches::type<char32_t>, matches::type<double>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char32_t>, matches::type<double>);
+    sequence += mock.foo_.expect_call(matches::type<char32_t>, matches::type<short>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char32_t>, matches::type<short>);
+    sequence += mock.foo_.expect_call(matches::type<char32_t>, matches::type<bool>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char32_t>, matches::type<bool>);
+    sequence += mock.foo_.expect_call(matches::type<char32_t>, matches::type<unsigned>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char32_t>, matches::type<unsigned>);
+    sequence += mock.foo_.expect_call(matches::type<char32_t>, matches::type<char>);
+    sequence += std::as_const(mock).foo_.expect_call(matches::type<char32_t>, matches::type<char>);
+
+    mock.foo();
+    std::as_const(mock).foo();
+    mock.foo(42);
+    std::as_const(mock).foo(42);
+    mock.foo(4.2f);
+    std::as_const(mock).foo(4.2f);
+    mock.foo(4.2);
+    std::as_const(mock).foo(4.2);
+    mock.foo(static_cast<short>(7));
+    std::as_const(mock).foo(static_cast<short>(7));
+    mock.foo(true);
+    std::as_const(mock).foo(true);
+    mock.foo(7u);
+    std::as_const(mock).foo(7u);
+    mock.foo('a');
+    std::as_const(mock).foo('a');
+
+    mock.foo(L'x');
+    std::as_const(mock).foo(L'x');
+    mock.foo(L'x', 1);
+    std::as_const(mock).foo(L'x', 1);
+    mock.foo(L'x', 4.2f);
+    std::as_const(mock).foo(L'x', 4.2f);
+    mock.foo(L'x', 4.2);
+    std::as_const(mock).foo(L'x', 4.2);
+    mock.foo(L'x', static_cast<short>(2));
+    std::as_const(mock).foo(L'x', static_cast<short>(2));
+    mock.foo(L'x', true);
+    std::as_const(mock).foo(L'x', true);
+    mock.foo(L'x', 3u);
+    std::as_const(mock).foo(L'x', 3u);
+    mock.foo(L'x', 'c');
+    std::as_const(mock).foo(L'x', 'c');
+
+    mock.foo(u'x');
+    std::as_const(mock).foo(u'x');
+    mock.foo(u'x', 1);
+    std::as_const(mock).foo(u'x', 1);
+    mock.foo(u'x', 4.2f);
+    std::as_const(mock).foo(u'x', 4.2f);
+    mock.foo(u'x', 4.2);
+    std::as_const(mock).foo(u'x', 4.2);
+    mock.foo(u'x', static_cast<short>(2));
+    std::as_const(mock).foo(u'x', static_cast<short>(2));
+    mock.foo(u'x', true);
+    std::as_const(mock).foo(u'x', true);
+    mock.foo(u'x', 3u);
+    std::as_const(mock).foo(u'x', 3u);
+    mock.foo(u'x', 'c');
+    std::as_const(mock).foo(u'x', 'c');
+
+    mock.foo(U'x');
+    std::as_const(mock).foo(U'x');
+    mock.foo(U'x', 1);
+    std::as_const(mock).foo(U'x', 1);
+    mock.foo(U'x', 4.2f);
+    std::as_const(mock).foo(U'x', 4.2f);
+    mock.foo(U'x', 4.2);
+    std::as_const(mock).foo(U'x', 4.2);
+    mock.foo(U'x', static_cast<short>(2));
+    std::as_const(mock).foo(U'x', static_cast<short>(2));
+    mock.foo(U'x', true);
+    std::as_const(mock).foo(U'x', true);
+    mock.foo(U'x', 3u);
+    std::as_const(mock).foo(U'x', 3u);
+    mock.foo(U'x', 'c');
+    std::as_const(mock).foo(U'x', 'c');
 }
 
 TEST_CASE(
