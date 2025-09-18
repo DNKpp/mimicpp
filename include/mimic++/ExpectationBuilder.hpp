@@ -208,8 +208,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
 namespace mimicpp::detail
 {
-    template <typename Param, typename Arg>
-        requires matcher_for<Arg, Param>
+    template <typename Param, typename... Canary, matcher_for<Param> Arg>
     [[nodiscard]]
     constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<2> const, Arg arg)
     {
@@ -219,7 +218,7 @@ namespace mimicpp::detail
     // if the param is a character-pointer, there is no evidence, whether it denotes a null-terminated string or just an
     // actual pointer to a value.
     // But, the Mock user shall know it, thus if `Arg` is not a character-pointer, we enable this matcher.
-    template <string Param, string Arg>
+    template <string Param, typename... Canary, string Arg>
         requires(!std::is_pointer_v<std::remove_reference_t<Param>>)
              || (!std::is_pointer_v<std::remove_reference_t<Arg>>)
     [[nodiscard]] //
@@ -228,7 +227,7 @@ namespace mimicpp::detail
         return matches::str::eq(std::forward<Arg>(arg));
     }
 
-    template <typename Param, util::weakly_equality_comparable_with<Param> Arg>
+    template <typename Param, typename... Canary, util::weakly_equality_comparable_with<Param> Arg>
     [[nodiscard]]
     constexpr auto make_arg_matcher([[maybe_unused]] util::priority_tag<0> const, Arg&& arg)
     {
@@ -240,7 +239,7 @@ namespace mimicpp::detail
     template <typename Arg, typename Target>
     concept requirement_for = requires {
         {
-            detail::make_arg_matcher<Target, Arg>(maxMakeArgMatcherTag, std::declval<Arg>())
+            detail::make_arg_matcher<Target>(maxMakeArgMatcherTag, std::declval<Arg>())
         } -> matcher_for<Target>;
     };
 
@@ -254,7 +253,7 @@ namespace mimicpp::detail
     constexpr auto make_arg_policy(Arg&& arg)
     {
         return expect::arg<index>(
-            detail::make_arg_matcher<Param, Arg>(maxMakeArgMatcherTag, std::forward<Arg>(arg)));
+            detail::make_arg_matcher<Param>(maxMakeArgMatcherTag, std::forward<Arg>(arg)));
     }
 
     template <typename Signature, typename Builder, std::size_t... indices, typename... Args>
