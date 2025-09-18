@@ -72,11 +72,11 @@ namespace mimicpp::detail::matches_hook
 
 namespace mimicpp::detail::describe_hook
 {
+    // This section uses trailing return-types because this seems to help clangd in some cases.
     template <typename Matcher>
     [[nodiscard]]
-    constexpr decltype(auto) describe_impl(
-        [[maybe_unused]] util::priority_tag<1> const,
-        Matcher const& matcher)
+    constexpr auto describe_impl([[maybe_unused]] util::priority_tag<1> const, Matcher const& matcher)
+        -> decltype(custom::matcher_traits<Matcher>{}.describe(matcher))
         requires requires {
             {
                 custom::matcher_traits<Matcher>{}.describe(matcher)
@@ -88,21 +88,27 @@ namespace mimicpp::detail::describe_hook
 
     template <typename Matcher>
     [[nodiscard]]
-    constexpr decltype(auto) describe_impl(
-        [[maybe_unused]] util::priority_tag<0> const,
-        Matcher const& matcher)
-        requires requires { { matcher.describe() } -> util::explicitly_convertible_to<std::optional<StringT>>; }
+    constexpr auto describe_impl([[maybe_unused]] util::priority_tag<0> const, Matcher const& matcher)
+        -> decltype(matcher.describe())
+        requires requires {
+            { matcher.describe() } -> util::explicitly_convertible_to<std::optional<StringT>>;
+        }
     {
         return matcher.describe();
     }
 
-    inline util::priority_tag<1> constexpr maxTag{};
+    inline constexpr util::priority_tag<1> maxTag{};
 
-    inline auto constexpr describe = []<typename Matcher>(Matcher const& matcher) -> decltype(auto)
-        requires requires { { describe_impl(maxTag, matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>; }
+    template <typename Matcher>
+    [[nodiscard]]
+    constexpr auto describe(Matcher const& matcher)
+        -> decltype(describe_impl(maxTag, matcher))
+        requires requires {
+            { describe_impl(maxTag, matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>;
+        }
     {
         return describe_impl(maxTag, matcher);
-    };
+    }
 }
 
 namespace mimicpp
