@@ -1361,25 +1361,40 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
      * \}
      */
 
+    namespace detail
+    {
+        template <typename... Signatures>
+        struct is_overload_set;
+
+        template <typename First, typename Second, typename... Others>
+        struct is_overload_set<First, Second, Others...>
+            : public std::conjunction<
+                  is_overloadable_with<First, Second>,
+                  is_overload_set<First, Others...>,
+                  is_overload_set<Second, Others...>>
+        {
+        };
+
+        template <typename First>
+        struct is_overload_set<First>
+            : public std::true_type
+        {
+        };
+    }
+
     /**
      * \defgroup TYPE_TRAITS_IS_OVERLOAD_SET is_overload_set
      * \ingroup TYPE_TRAITS
-     * \brief Determines, whether a list of signatures form a valid overloads-set.
+     * \brief Determines whether all signatures can appear in a single overload-set.
      *
      *\{
      */
 
     template <typename First, typename... Others>
     struct is_overload_set
-        : public std::conjunction<
-              is_overloadable_with<First, Others>...,
-              is_overload_set<Others...>>
-    {
-    };
-
-    template <typename First>
-    struct is_overload_set<First>
-        : public std::true_type
+        : public detail::is_overload_set<
+              detail::normalize_overload_t<First>,
+              detail::normalize_overload_t<Others>...>
     {
     };
 
