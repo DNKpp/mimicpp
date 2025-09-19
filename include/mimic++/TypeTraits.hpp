@@ -1380,6 +1380,21 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
             : public std::true_type
         {
         };
+
+        template <typename First, typename... Others>
+        [[nodiscard]]
+        consteval bool is_overload_set_impl() noexcept
+        {
+            if constexpr (0 == sizeof...(Others))
+            {
+                return true;
+            }
+            else
+            {
+                return (... && is_overloadable_with<First, Others>::value)
+                    && is_overload_set_impl<Others...>();
+            }
+        }
     }
 
     /**
@@ -1392,9 +1407,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     template <typename First, typename... Others>
     struct is_overload_set
-        : public detail::is_overload_set<
-              detail::normalize_overload_t<First>,
-              detail::normalize_overload_t<Others>...>
+        : public std::bool_constant<
+              detail::is_overload_set_impl<detail::normalize_overload_t<First>, detail::normalize_overload_t<Others>...>()>
     {
     };
 
