@@ -1363,27 +1363,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     namespace detail
     {
-        template <typename... Signatures>
-        struct is_overload_set;
-
-        template <typename First, typename Second, typename... Others>
-        struct is_overload_set<First, Second, Others...>
-            : public std::conjunction<
-                  is_overloadable_with<First, Second>,
-                  is_overload_set<First, Others...>,
-                  is_overload_set<Second, Others...>>
-        {
-        };
-
-        template <typename First>
-        struct is_overload_set<First>
-            : public std::true_type
-        {
-        };
-
         template <typename First, typename... Others>
         [[nodiscard]]
-        consteval bool is_overload_set_impl() noexcept
+        consteval bool is_overload_set() noexcept
         {
             if constexpr (0 == sizeof...(Others))
             {
@@ -1392,7 +1374,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
             else
             {
                 return (... && is_overloadable_with<First, Others>::value)
-                    && is_overload_set_impl<Others...>();
+                    && is_overload_set<Others...>();
             }
         }
     }
@@ -1408,7 +1390,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     template <typename First, typename... Others>
     struct is_overload_set
         : public std::bool_constant<
-              detail::is_overload_set_impl<detail::normalize_overload_t<First>, detail::normalize_overload_t<Others>...>()>
+              detail::is_overload_set<detail::normalize_overload_t<First>, detail::normalize_overload_t<Others>...>()>
     {
     };
 
