@@ -203,12 +203,13 @@ namespace mimicpp
  * \param traits The interface traits.
  * \param mock_name The mock name.
  * \param fn_name The function name.
+ * \param linkage The linkage specifier(s).
  * \param signatures The given signatures. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(traits, mock_name, fn_name, signatures) \
-    typename traits::mock_type<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name   \
-    {                                                                               \
-        traits::make_settings(*this, #fn_name)                                      \
+#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(traits, mock_name, fn_name, linkage, signatures) \
+    linkage typename traits::mock_type<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name    \
+    {                                                                                        \
+        traits::make_settings(*this, #fn_name)                                               \
     }
 
 namespace mimicpp
@@ -393,6 +394,7 @@ namespace mimicpp
  * \param traits The interface traits.
  * \param mock_name The mock name.
  * \param fn_name The function name.
+ * \param linkage The linkage for both, the facade functions and the target.
  * \param ret The return type.
  * \param call_convention The call-convention.
  * \param param_type_list The parameter types.
@@ -400,29 +402,30 @@ namespace mimicpp
  * \param param_list Enclosed parameter list.
  * \param forward_list Enclosed forward statements.
  */
-#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, traits, mock_name, fn_name, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
-    MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(                                                                                                                     \
-        traits,                                                                                                                                              \
-        (MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override),                                                                \
-        (MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs),                                                                                            \
-        mock_name,                                                                                                                                           \
+#define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, traits, mock_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
+    MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(                                                                                                                              \
+        traits,                                                                                                                                                       \
+        (linkage MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override),                                                                 \
+        (MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs),                                                                                                     \
+        mock_name,                                                                                                                                                    \
         (this, ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list))))
 
 /**
  * \brief Creates all overloads for a specific function facade.
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
- * \param traits The interface traits.
  * \param op The operation for each element (see `MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE` as an example for the list of required arguments).
+ * \param traits The interface traits.
  * \param mock_name The mock name.
  * \param fn_name The function name to be overloaded.
+ * \param linkage The linkage for both, the facade functions and the target.
  */
-#define MIMICPP_DETAIL_MAKE_INTERFACE_FACADE_OVERLOADS(traits, op, mock_name, fn_name, ...) \
-    MIMICPP_DETAIL_FOR_EACH_EXT(                                                            \
-        op,                                                                                 \
-        ,                                                                                   \
-        MIMICPP_DETAIL_NO_DELIMITER,                                                        \
-        MIMICPP_DETAIL_STRIP_PARENS,                                                        \
-        (traits, mock_name, fn_name),                                                       \
+#define MIMICPP_DETAIL_MAKE_INTERFACE_FACADE_OVERLOADS(op, traits, mock_name, fn_name, linkage, ...) \
+    MIMICPP_DETAIL_FOR_EACH_EXT(                                                                     \
+        op,                                                                                          \
+        ,                                                                                            \
+        MIMICPP_DETAIL_NO_DELIMITER,                                                                 \
+        MIMICPP_DETAIL_STRIP_PARENS,                                                                 \
+        (traits, mock_name, fn_name, linkage),                                                       \
         __VA_ARGS__)
 
 /**
@@ -431,13 +434,15 @@ namespace mimicpp
  * \param traits The interface traits.
  * \param mock_name The mock name.
  * \param fn_name The function name to be overloaded.
+ * \param linkage The linkage for both, the facade functions and the target.
  */
-#define MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(traits, mock_name, fn_name, ...)                                                    \
-    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE_OVERLOADS(traits, MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE, mock_name, fn_name, __VA_ARGS__) \
-    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                                                                         \
-        traits,                                                                                                                  \
-        mock_name,                                                                                                               \
-        fn_name,                                                                                                                 \
+#define MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(fn_op, traits, mock_name, fn_name, linkage, ...)               \
+    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE_OVERLOADS(fn_op, traits, mock_name, fn_name, linkage, __VA_ARGS__) \
+    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                                                    \
+        traits,                                                                                             \
+        mock_name,                                                                                          \
+        fn_name,                                                                                            \
+        linkage,                                                                                            \
         (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
 
 /**
@@ -453,10 +458,28 @@ namespace mimicpp
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...) \
     MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(            \
+        MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,         \
         ::mimicpp::detail::interface_mock_traits,    \
         fn_name##_,                                  \
         fn_name,                                     \
+        ,                                            \
         __VA_ARGS__)
+
+/**
+ * \brief Entry point for mocking a single interface method.
+ * \ingroup MOCK_INTERFACES
+ * \param fn_name The method name.
+ * \param param_type_list The list of parameter types.
+ * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ * \details
+ * This macro defines a single mock object for one method signature and generates a corresponding
+ * override method. The override method forwards calls to the mock object.
+ * \snippet InterfaceMock.cpp interface mock simple
+ */
+#define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...) \
+    MIMICPP_MOCK_OVERLOADED_METHOD(                             \
+        fn_name,                                                \
+        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
 
 /**
  * \brief Entry point for mocking an overloaded interface method with an explicit *this* pointer.
@@ -476,26 +499,12 @@ namespace mimicpp
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(fn_name, ...)         \
     MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(                              \
+        MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                           \
         ::mimicpp::detail::interface_mock_with_this_traits<self_type>, \
         fn_name##_,                                                    \
         fn_name,                                                       \
+        ,                                                              \
         __VA_ARGS__)
-
-/**
- * \brief Entry point for mocking a single interface method.
- * \ingroup MOCK_INTERFACES
- * \param fn_name The method name.
- * \param param_type_list The list of parameter types.
- * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
- * \details
- * This macro defines a single mock object for one method signature and generates a corresponding
- * override method. The override method forwards calls to the mock object.
- * \snippet InterfaceMock.cpp interface mock simple
- */
-#define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...) \
-    MIMICPP_MOCK_OVERLOADED_METHOD(                             \
-        fn_name,                                                \
-        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
 
 /**
  * \brief Entry point for mocking a single interface method with an explicit *this* pointer.

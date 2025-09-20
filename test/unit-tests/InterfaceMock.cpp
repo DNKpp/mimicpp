@@ -86,6 +86,7 @@ TEST_CASE(
                 detail::interface_mock_traits,
                 mock,
                 test,
+                /*linkage*/,
                 (void()));
         };
 
@@ -100,6 +101,7 @@ TEST_CASE(
                 detail::interface_mock_traits,
                 mock,
                 test,
+                /*linkage*/,
                 (float&(int&&)));
         };
 
