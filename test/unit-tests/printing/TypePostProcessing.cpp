@@ -1341,6 +1341,37 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "printing::type::prettify_type supports destructors.",
+    "[print]")
+{
+    struct outer
+    {
+        StringT& out;
+
+        ~outer()
+        {
+            struct my_type
+            {
+            };
+
+            out = printing::type::type_name<my_type>();
+        }
+    };
+
+    StringT rawName{};
+    std::ignore = outer{rawName};
+    CAPTURE(rawName);
+
+    StringStreamT ss{};
+    printing::type::prettify_type(
+        std::ostreambuf_iterator{ss},
+        rawName);
+    REQUIRE_THAT(
+        ss.str(),
+        Catch::Matchers::Matches(testCaseScopePattern + "outer::~outer::my_type"));
+}
+
+TEST_CASE(
     "printing::type::prettify_function omits function args with just `void` content.",
     "[print]")
 {
