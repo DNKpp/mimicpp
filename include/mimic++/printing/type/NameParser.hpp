@@ -95,6 +95,7 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::operator_or_punctuator rightShift{">>"};
         static constexpr lexing::operator_or_punctuator plus{"+"};
         static constexpr lexing::operator_or_punctuator exclamationMark{"!"};
+        static constexpr lexing::operator_or_punctuator tilde{"~"};
         static constexpr lexing::keyword operatorKeyword{"operator"};
         static constexpr lexing::keyword constKeyword{"const"};
         static constexpr lexing::keyword volatileKeyword{"volatile"};
@@ -541,6 +542,18 @@ namespace mimicpp::printing::type::parsing
             {
                 handle_lexer_token(content.substr(0, 1u), closingAngle);
                 handle_lexer_token(content.substr(1u, 1u), closingAngle);
+            }
+            // A `~` without a preceding `operator` keyword must be followed by a type-name and forms a destructor.
+            else if (tilde == token)
+            {
+                if (auto const* nextId = peek_if<lexing::identifier>())
+                {
+                    StringViewT const merged{
+                        content.data(),
+                        nextId->content.data() + nextId->content.size()};
+                    m_TokenStack.emplace_back(token::Identifier{.content = merged});
+                    std::ignore = m_Lexer.next();
+                }
             }
             // The msvc c++23 `std::stacktrace` implementation adds `+0x\d+` to function identifiers.
             // The only reason to receive a `+`-token without an `operator`-token is exactly that case.
