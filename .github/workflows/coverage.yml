@@ -80,6 +80,10 @@ jobs:
               -C Debug \
               -j4
 
+      - name: Find gcov-files before
+        shell: bash
+        run: find . -type f -name "*.gcov"
+
       - name: Run gcovr
         run: |
           # circumvent "fatal: detected dubious ownership in repository" error
@@ -99,6 +103,10 @@ jobs:
               --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
               --json-summary ${{env.JSON_SUMMARY}} --json-summary-pretty \
               --json ${{env.JSON_REPORT}} --json-pretty
+
+      - name: Find gcov-files after
+        shell: bash
+        run: find . -type f -name "*.gcov"
 
       # Gathering the coveralls.json in one go with all the other reports results in inconsistent reports.
       # see: https://github.com/gcovr/gcovr/issues/1074
