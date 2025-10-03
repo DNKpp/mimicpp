@@ -71,7 +71,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
     // * detail::indirectly_apply_mock::lambda
     // * detail::traits::invoke
     // * the generated interface implementation
-    inline constexpr std::size_t interfaceMockStacktraceSkip{4u};
+    inline constexpr std::size_t interfaceMockStacktraceSkip{5u};
 
     template <typename Self>
     [[nodiscard]]
@@ -109,8 +109,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
         return forward_apply(sequence);
     }
 
+    template <typename Traits>
+    inline constexpr bool is_member_facade_v = false;
+
+    template <typename Traits>
+        requires requires { Traits::is_member; }
+    inline constexpr bool is_member_facade_v<Traits>{Traits::is_member};
+
     struct interface_mock_traits
     {
+        static constexpr bool is_member{true};
+
         template <typename... Signatures>
         using mock_type = Mock<Signatures...>;
 
@@ -123,11 +132,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
             return indirectly_apply_mock<Signature>(mock, std::move(args));
         }
 
+        template <typename Self>
         [[nodiscard]]
-        static MockSettings make_settings(auto const& self, StringViewT const functionName)
+        static MockSettings make_settings([[maybe_unused]] Self const* const self, StringViewT const functionName)
         {
             return MockSettings{
-                .name = generate_interface_mock_name<std::remove_cvref_t<decltype(self)>>(functionName),
+                .name = generate_interface_mock_name<Self>(functionName),
                 .stacktraceSkip = interfaceMockStacktraceSkip};
         }
     };
@@ -135,6 +145,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
     template <typename Self>
     struct interface_mock_with_this_traits
     {
+        static constexpr bool is_member{true};
+
         template <typename Signature, bool isConst = Constness::as_const == signature_const_qualification_v<Signature>>
         using prepend_this = signature_prepend_param_t<
             Signature,
@@ -152,7 +164,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
         }
 
         [[nodiscard]]
-        static MockSettings make_settings([[maybe_unused]] auto const& self, StringViewT const functionName)
+        static MockSettings make_settings([[maybe_unused]] auto const* const self, StringViewT const functionName)
         {
             return MockSettings{
                 .name = generate_interface_mock_name<Self>(functionName),
