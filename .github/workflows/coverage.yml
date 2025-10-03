@@ -102,6 +102,11 @@ jobs:
               --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
               --json-summary ${{env.JSON_SUMMARY}} --json-summary-pretty \
               --json ${{env.JSON_REPORT}} --json-pretty
+          
+          mv ${{env.COBERTURA_REPORT}} ..
+          mv ${{env.HTML_REPORT_DIR}} ..
+          mv ${{env.JSON_SUMMARY}} ..
+          mv ${{env.JSON_REPORT}} ..
 
       # Gathering the coveralls.json in one go with all the other reports results in inconsistent reports.
       # see: https://github.com/gcovr/gcovr/issues/1074
@@ -112,8 +117,10 @@ jobs:
               --verbose \
               --include "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
               --filter "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
-              --add-tracefile ${{env.JSON_REPORT}} \
+              --add-tracefile ../${{env.JSON_REPORT}} \
               --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
+          
+          mv ${{env.COVERALLS_REPORT}} ..
 
       - name: Find gcov-files
         shell: bash
