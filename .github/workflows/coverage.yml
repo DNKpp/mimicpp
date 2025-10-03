@@ -36,7 +36,7 @@ jobs:
 
       - name: Install gcovr
         run: |
-          python -m pip install gcovr
+          python -m pip install gcovr==8.3
 
       - name: Print versions
         run: |
@@ -88,8 +88,11 @@ jobs:
         run: |
           # circumvent "fatal: detected dubious ownership in repository" error
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
-          gcovr --verbose \
-              --filter "include/mimic++(_ext)?" \
+          cd build
+          gcovr --root .. \
+              --verbose \
+              --include "include/mimic++(_ext)?" \
+              --filter "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
               --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
               --exclude-unreachable-branches \
               --exclude-function-lines \
