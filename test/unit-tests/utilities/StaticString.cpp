@@ -7,6 +7,8 @@
 
 using namespace mimicpp;
 
+#define MAKE_STATIC_STRING(text) util::StaticString{#text};
+
 TEST_CASE(
     "util::StaticString can hold compile-time usable strings.",
     "[util]")
@@ -39,6 +41,36 @@ TEST_CASE(
         CHECK_THAT(
             text,
             Catch::Matchers::SizeIs(std::ranges::size("Hello, World!") - 1u));
+    }
+
+    SECTION("When empty macro arg is converted.")
+    {
+        constexpr util::StaticString<char, 0u> text = MAKE_STATIC_STRING();
+
+        CHECK_THAT(
+            text,
+            Catch::Matchers::IsEmpty());
+        CHECK_THAT(
+            text,
+            Catch::Matchers::SizeIs(0u));
+        CHECK_THAT(
+            text,
+            Catch::Matchers::RangeEquals(std::vector<char>{}));
+    }
+
+    SECTION("When arbitrary macro arg is converted.")
+    {
+        constexpr util::StaticString text = MAKE_STATIC_STRING(test_input);
+
+        CHECK_THAT(
+            (std::string{text.begin(), text.end()}),
+            Catch::Matchers::Equals("test_input"));
+        CHECK_THAT(
+            text,
+            !Catch::Matchers::IsEmpty());
+        CHECK_THAT(
+            text,
+            Catch::Matchers::SizeIs(10u));
     }
 
     SECTION("StaticString is fully usable in compile-time context.")
