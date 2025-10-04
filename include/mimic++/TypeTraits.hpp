@@ -1036,6 +1036,97 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
      */
 
     /**
+     * \defgroup TYPE_TRAITS_SIGNATURE_ADD_RVALUE_REF_QUALIFIER signature_add_rvalue_ref_qualifier
+     * \ingroup TYPE_TRAITS
+     * \brief Adds the rvalue-ref qualifier to a signature (if not already present).
+     * \note This will yield a compile-error when the signature already has the lvalue-ref qualifier.
+     *
+     *\{
+     */
+
+    namespace detail
+    {
+        template <typename Signature, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl;
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl<Return(Params...), isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl<Return(Params..., ...), isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl<Return(Params...) const, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params...) const&& noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl<Return(Params..., ...) const, isNoexcept>
+            : public std::true_type
+        {
+            using type = Return(Params..., ...) const&& noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl<Return(Params...)&&, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl<Return(Params..., ...)&&, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) && noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl<Return(Params...) const&&, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params...) const&& noexcept(isNoexcept);
+        };
+
+        template <typename Return, typename... Params, bool isNoexcept>
+        struct signature_add_rvalue_ref_qualifier_impl<Return(Params..., ...) const&&, isNoexcept>
+            : public std::false_type
+        {
+            using type = Return(Params..., ...) const&& noexcept(isNoexcept);
+        };
+
+        // Todo: When msvc some day supports deducing noexcept, we can further simplify this.
+        template <typename Signature, typename Trait = signature_remove_noexcept<Signature>>
+        struct signature_add_rvalue_ref_qualifier_
+            : public signature_add_rvalue_ref_qualifier_impl<typename Trait::type, Trait::value>
+        {
+        };
+
+        template <typename Signature>
+        using signature_add_rvalue_ref_qualifier = signature_add_rvalue_ref_qualifier_<Signature>;
+    }
+
+    template <typename Signature>
+    struct signature_add_rvalue_ref_qualifier
+        : public detail::signature_apply_trait<Signature, detail::signature_add_rvalue_ref_qualifier>
+    {
+    };
+
+    /**
+     * \}
+     */
+
+    /**
      * \defgroup TYPE_TRAITS_SIGNATURE_DECAY signature_decay
      * \ingroup TYPE_TRAITS
      * \brief Removes all specifications from the given signature.
