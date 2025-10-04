@@ -88,8 +88,8 @@ jobs:
           cd build
           gcovr --root .. \
               --verbose \
-              --include "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
-              --filter "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
+              --include "${GITHUB_WORKSPACE}/include" \
+              --filter "${GITHUB_WORKSPACE}/include" \
               --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
               --exclude-unreachable-branches \
               --exclude-function-lines \
@@ -116,8 +116,8 @@ jobs:
           cd build
           gcovr --root .. \
               --verbose \
-              --include "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
-              --filter "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
+              --include "${GITHUB_WORKSPACE}/include" \
+              --filter "${GITHUB_WORKSPACE}/include" \
               --add-tracefile ../${{env.JSON_REPORT}} \
               --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
           
