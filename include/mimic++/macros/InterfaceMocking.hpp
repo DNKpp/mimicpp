@@ -389,29 +389,32 @@ namespace mimicpp
  * \param target_name The invocation target name.
  * \param invoke_args The (enclosed) invoke-argument list.
  */
-#define MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(traits, fn_header, sig, target_name, forward_list)                            \
-    MIMICPP_DETAIL_STRIP_PARENS(fn_header)                                                                                \
-    {                                                                                                                     \
-        using Signature = MIMICPP_DETAIL_STRIP_PARENS(sig);                                                               \
-        return [&]<typename T = MIMICPP_DETAIL_STRIP_PARENS(traits)>() -> ::mimicpp::signature_return_type_t<Signature> { \
-            if constexpr (::mimicpp::detail::is_member_facade_v<T>)                                                       \
-            {                                                                                                             \
-                return T::template invoke<Signature>(                                                                     \
-                    target_name,                                                                                          \
-                    this,                                                                                                 \
-                    ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list)));                                         \
-            }                                                                                                             \
-            else                                                                                                          \
-            {                                                                                                             \
-                return T::template invoke<Signature>(                                                                     \
-                    target_name,                                                                                          \
-                    ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list)));                                         \
-            }                                                                                                             \
-        }();                                                                                                              \
+#define MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
+    linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                            \
+    call_convention fn_name param_list specs                                                                                                                            \
+    {                                                                                                                                                                   \
+        using Signature = ::mimicpp::detail::apply_normalized_specs_t<                                                                                                  \
+            MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list,                                                                                                           \
+            ::mimicpp::util::StaticString{#specs}>;                                                                                                                     \
+        return [&]<typename T = MIMICPP_DETAIL_STRIP_PARENS(traits)>() -> decltype(auto) {                                                                              \
+            if constexpr (::mimicpp::detail::is_member_facade_v<T>)                                                                                                     \
+            {                                                                                                                                                           \
+                return T::template invoke<Signature>(                                                                                                                   \
+                    target_name,                                                                                                                                        \
+                    this,                                                                                                                                               \
+                    ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list)));                                                                                       \
+            }                                                                                                                                                           \
+            else                                                                                                                                                        \
+            {                                                                                                                                                           \
+                return T::template invoke<Signature>(                                                                                                                   \
+                    target_name,                                                                                                                                        \
+                    ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list)));                                                                                       \
+            }                                                                                                                                                           \
+        }();                                                                                                                                                            \
     }
 
 /**
- * \brief Creates a single overload for the given information.
+ * \brief Creates a single overload for the given information and extends the `specs` with override.
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
  * \param ignore Ignored
  * \param traits The interface traits.
@@ -427,16 +430,23 @@ namespace mimicpp
  */
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
     MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(                                                                                                                                \
+        ignore,                                                                                                                                                         \
         traits,                                                                                                                                                         \
-        (linkage MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override),                                                                   \
-        (::mimicpp::detail::apply_normalized_specs_t<MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list, ::mimicpp::util::StaticString{#specs}>),                         \
         target_name,                                                                                                                                                    \
-        forward_list)
+        fn_name,                                                                                                                                                        \
+        linkage,                                                                                                                                                        \
+        ret,                                                                                                                                                            \
+        call_convention,                                                                                                                                                \
+        param_type_list,                                                                                                                                                \
+        specs override,                                                                                                                                                 \
+        param_list,                                                                                                                                                     \
+        forward_list,                                                                                                                                                   \
+        VA_ARGS)
 
 /**
  * \brief Creates all overloads for a specific function facade.
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
- * \param op The operation for each element (see `MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE` as an example for the list of required arguments).
+ * \param op The operation for each element (see `MIMICPP_DETAIL_MAKE_FACADE_FUNCTION` as an example for the list of required arguments).
  * \param traits The interface traits.
  * \param target_name The callable target name.
  * \param fn_name The function name to be overloaded.
