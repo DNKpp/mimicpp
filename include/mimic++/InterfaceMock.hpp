@@ -13,6 +13,7 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/macros/InterfaceMocking.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/utilities/AlwaysFalse.hpp"
 #include "mimic++/utilities/StaticString.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
@@ -173,36 +174,110 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
     template <auto specText>
     struct apply_normalized_specs
     {
-    public:
-        static constexpr bool hasConst{std::ranges::search(specText, std::string_view{"const"})};
-        static constexpr bool hasNoexcept = std::ranges::search(specText, std::string_view{"noexcept"})
-                                         && !std::ranges::search(specText, std::string_view{"noexcept(false)"});
-        static constexpr bool hasRefRef{std::ranges::search(specText, std::string_view{"&&"})};
-        static constexpr bool hasRef = hasRefRef || std::ranges::search(specText, std::string_view{"&"});
+        [[nodiscard]]
+        static consteval auto evaluate_specs() noexcept
+        {
+            constexpr std::string_view constKeyword{"const"};
+            constexpr std::string_view noexceptKeyword{"noexcept"};
+            constexpr std::string_view overrideKeyword{"override"};
+            constexpr std::string_view finalKeyword{"final"};
 
+            auto const end = std::ranges::end(specText);
+            auto const find_token_begin = [&](auto const first) noexcept {
+                constexpr auto is_space = [](char const c) noexcept {
+                    return ' ' == c || '\t' == c;
+                };
+
+                return std::ranges::find_if_not(first, end, is_space);
+            };
+
+            struct spec_info
+            {
+                bool hasConst{false};
+                ValueCategory refQualifier = ValueCategory::any;
+                bool hasNoexcept;
+            };
+
+            spec_info result{};
+            for (auto tokenBegin = find_token_begin(std::ranges::begin(specText));
+                 tokenBegin != end;
+                 tokenBegin = find_token_begin(tokenBegin))
+            {
+                if ('&' == *tokenBegin)
+                {
+                    MIMICPP_ASSERT(result.refQualifier == ValueCategory::any, "Ref-qualifier already set.");
+                    if (++tokenBegin != end
+                        && '&' == *tokenBegin)
+                    {
+                        ++tokenBegin;
+                        result.refQualifier = ValueCategory::rvalue;
+                    }
+                    else
+                    {
+                        result.refQualifier = ValueCategory::lvalue;
+                    }
+                }
+                else
+                {
+                    constexpr auto is_word_continue = [](char const c) noexcept {
+                        return ('a' <= c && c <= 'z')
+                            || ('A' <= c && c <= 'Z');
+                    };
+                    std::string_view const token{
+                        tokenBegin,
+                        std::ranges::find_if_not(tokenBegin, end, is_word_continue)};
+                    if (constKeyword == token)
+                    {
+                        MIMICPP_ASSERT(!result.hasConst, "Const-qualifier already set.");
+                        result.hasConst = true;
+                    }
+                    else if (noexceptKeyword == token)
+                    {
+                        MIMICPP_ASSERT(!result.hasNoexcept, "Noexcept-qualifier already set.");
+                        result.hasNoexcept = true;
+                    }
+                    else if (overrideKeyword == token || finalKeyword == token)
+                    {
+                        // nothing to do
+                    }
+                    else
+                    {
+                        throw std::runtime_error{"Invalid spec"};
+                    }
+
+                    tokenBegin = token.cend();
+                }
+            }
+
+            return result;
+        }
+
+    public:
         template <typename Signature>
         [[nodiscard]]
         static consteval auto evaluate() noexcept
         {
+            constexpr auto info = evaluate_specs();
+
+            using sig_maybe_ref = std::conditional_t<
+                ValueCategory::lvalue == info.refQualifier,
+                signature_add_lvalue_ref_qualifier_t<Signature>,
+                std::conditional_t<
+                    ValueCategory::rvalue == info.refQualifier,
+                    signature_add_rvalue_ref_qualifier_t<Signature>,
+                    Signature>>;
+
             using sig_maybe_const = std::conditional_t<
-                hasConst,
-                signature_add_const_qualifier_t<Signature>,
-                Signature>;
+                info.hasConst,
+                signature_add_const_qualifier_t<sig_maybe_ref>,
+                sig_maybe_ref>;
 
             using sig_maybe_noexcept = std::conditional_t<
-                hasNoexcept,
+                info.hasNoexcept,
                 signature_add_noexcept_t<sig_maybe_const>,
                 sig_maybe_const>;
 
-            using sig_maybe_ref = std::conditional_t<
-                hasRef,
-                std::conditional_t<
-                    hasRefRef,
-                    signature_add_rvalue_ref_qualifier_t<sig_maybe_noexcept>,
-                    signature_add_lvalue_ref_qualifier_t<sig_maybe_noexcept>>,
-                sig_maybe_noexcept>;
-
-            return std::type_identity<sig_maybe_ref>{};
+            return std::type_identity<sig_maybe_noexcept>{};
         }
 
         template <typename Signature>
