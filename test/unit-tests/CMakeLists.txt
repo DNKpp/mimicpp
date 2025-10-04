@@ -24,6 +24,7 @@ add_subdirectory(matchers)
 add_subdirectory(policies)
 add_subdirectory(printing)
 add_subdirectory(reporting)
+add_subdirectory(signature-traits)
 add_subdirectory(utilities)
 
 target_include_directories(${TARGET_NAME} PRIVATE
