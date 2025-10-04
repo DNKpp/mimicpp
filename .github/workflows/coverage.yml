@@ -36,7 +36,7 @@ jobs:
 
       - name: Install gcovr
         run: |
-          python -m pip install gcovr==8.3
+          python -m pip install gcovr
 
       - name: Print versions
         run: |
@@ -123,15 +123,12 @@ jobs:
           
           mv ${{env.COVERALLS_REPORT}} ..
 
-      - name: Find gcov-files
-        shell: bash
-        run: find . -type f -name "*.gcov"
-
+      # As of gcovr 8.4, these are *json.gz instead of *.gcov
       - name: Upload gcov coverage report artifacts
         uses: actions/upload-artifact@v4
         with:
           name: gcov-files
-          path: "**/*.gcov"
+          path: "**/*.json.gz"
           if-no-files-found: error
 
       - name: Upload generated report artifacts
