@@ -175,7 +175,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
     struct apply_normalized_specs
     {
         [[nodiscard]]
-        static consteval auto evaluate_specs() noexcept
+        static consteval auto evaluate_specs()
         {
             constexpr std::string_view constKeyword{"const"};
             constexpr std::string_view noexceptKeyword{"noexcept"};
