@@ -24,9 +24,21 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
         Char data[length];
 
         [[nodiscard]] //
-        explicit(false) consteval StaticString(Char const (&arr)[length]) noexcept
+        explicit(false) consteval StaticString(Char const (&arr)[length + 1]) noexcept
         {
-            std::ranges::copy(arr, std::ranges::begin(data));
+            std::ranges::copy_n(arr, length, std::ranges::begin(data));
+        }
+
+        [[nodiscard]]
+        static constexpr bool empty() noexcept
+        {
+            return false;
+        }
+
+        [[nodiscard]]
+        static constexpr std::size_t size() noexcept
+        {
+            return length;
         }
 
         [[nodiscard]]
@@ -41,6 +53,43 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
             return std::ranges::end(data);
         }
     };
+
+    template <typename Char>
+    class StaticString<Char, 0u>
+    {
+    public:
+        [[nodiscard]] //
+        explicit(false) consteval StaticString([[maybe_unused]] Char const (&arr)[1]) noexcept
+        {
+        }
+
+        [[nodiscard]]
+        static constexpr bool empty() noexcept
+        {
+            return true;
+        }
+
+        [[nodiscard]]
+        static constexpr std::size_t size() noexcept
+        {
+            return 0u;
+        }
+
+        [[nodiscard]]
+        static constexpr Char const* begin() noexcept
+        {
+            return nullptr;
+        }
+
+        [[nodiscard]]
+        static constexpr Char const* end() noexcept
+        {
+            return nullptr;
+        }
+    };
+
+    template <typename Char, std::size_t length>
+    StaticString(Char const(&)[length]) -> StaticString<Char, length - 1u>;
 }
 
 #endif

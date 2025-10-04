@@ -10,5 +10,6 @@ target_sources(${TARGET_NAME}
     "C++23Backports.cpp"
     "SourceLocation.cpp"
     "Stacktrace.cpp"
+    "StaticString.cpp"
     "TypeList.cpp"
 )
