@@ -13,6 +13,7 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/macros/InterfaceMocking.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/utilities/StaticString.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
@@ -171,6 +172,48 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
                 .stacktraceSkip = interfaceMockStacktraceSkip};
         }
     };
+
+    template <auto specText>
+    struct apply_normalized_specs
+    {
+    public:
+        static constexpr bool hasConst{std::ranges::search(specText, std::string_view{"const"})};
+        static constexpr bool hasNoexcept = std::ranges::search(specText, std::string_view{"noexcept"})
+                                         && !std::ranges::search(specText, std::string_view{"noexcept(false)"});
+        static constexpr bool hasRefRef{std::ranges::search(specText, std::string_view{"&&"})};
+        static constexpr bool hasRef = hasRefRef || std::ranges::search(specText, std::string_view{"&"});
+
+        template <typename Signature>
+        [[nodiscard]]
+        static consteval auto evaluate() noexcept
+        {
+            using sig_maybe_const = std::conditional_t<
+                hasConst,
+                signature_add_const_qualifier_t<Signature>,
+                Signature>;
+
+            using sig_maybe_noexcept = std::conditional_t<
+                hasNoexcept,
+                signature_add_noexcept_t<sig_maybe_const>,
+                sig_maybe_const>;
+
+            using sig_maybe_ref = std::conditional_t<
+                hasRef,
+                std::conditional_t<
+                    hasRefRef,
+                    signature_add_rvalue_ref_qualifier_t<sig_maybe_noexcept>,
+                    signature_add_lvalue_ref_qualifier_t<sig_maybe_noexcept>>,
+                sig_maybe_noexcept>;
+
+            return std::type_identity<sig_maybe_ref>{};
+        }
+
+        template <typename Signature>
+        using type = decltype(evaluate<Signature>())::type;
+    };
+
+    template <typename RawSignature, auto specText>
+    using apply_normalized_specs_t = apply_normalized_specs<specText>::template type<RawSignature>;
 }
 
 #endif
