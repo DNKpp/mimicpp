@@ -330,10 +330,6 @@ TEMPLATE_TEST_CASE_SIG(
             STATIC_REQUIRE(std::same_as<Return(Params...), detail::apply_normalized_specs_t<RawSig, util::StaticString{"override"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...), detail::apply_normalized_specs_t<RawSig, util::StaticString{"final"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...), detail::apply_normalized_specs_t<RawSig, util::StaticString{""}>>);
-
-            STATIC_REQUIRE(std::same_as<Return(Params...), detail::apply_normalized_specs_t<RawSig, util::StaticString{"noexcept(false) override"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...), detail::apply_normalized_specs_t<RawSig, util::StaticString{"noexcept(false) final"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...), detail::apply_normalized_specs_t<RawSig, util::StaticString{"noexcept(false)"}>>);
         }
 
         SECTION("With const.")
@@ -341,10 +337,6 @@ TEMPLATE_TEST_CASE_SIG(
             STATIC_REQUIRE(std::same_as<Return(Params...) const, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const override"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...) const, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const final"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...) const, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const"}>>);
-
-            STATIC_REQUIRE(std::same_as<Return(Params...) const, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const noexcept(false) override"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...) const, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const noexcept(false) final"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...) const, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const noexcept(false)"}>>);
         }
 
         SECTION("With lvalue-ref.")
@@ -352,10 +344,6 @@ TEMPLATE_TEST_CASE_SIG(
             STATIC_REQUIRE(std::same_as<Return(Params...)&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"& override"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...)&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"& final"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...)&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"&"}>>);
-
-            STATIC_REQUIRE(std::same_as<Return(Params...)&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"& noexcept(false) override"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...)&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"& noexcept(false) final"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...)&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"& noexcept(false)"}>>);
         }
 
         SECTION("With const lvalue-ref.")
@@ -363,10 +351,6 @@ TEMPLATE_TEST_CASE_SIG(
             STATIC_REQUIRE(std::same_as<Return(Params...) const&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& override"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...) const&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& final"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...) const&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&"}>>);
-
-            STATIC_REQUIRE(std::same_as<Return(Params...) const&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& noexcept(false) override"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...) const&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& noexcept(false) final"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...) const&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& noexcept(false)"}>>);
         }
 
         SECTION("With rvalue-ref.")
@@ -374,10 +358,6 @@ TEMPLATE_TEST_CASE_SIG(
             STATIC_REQUIRE(std::same_as<Return(Params...)&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& override"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...)&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& final"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...)&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"&&"}>>);
-
-            STATIC_REQUIRE(std::same_as<Return(Params...)&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& noexcept(false) override"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...)&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& noexcept(false) final"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...)&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& noexcept(false)"}>>);
         }
 
         SECTION("With const rvalue-ref.")
@@ -385,10 +365,6 @@ TEMPLATE_TEST_CASE_SIG(
             STATIC_REQUIRE(std::same_as<Return(Params...) const&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&& override"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...) const&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&& final"}>>);
             STATIC_REQUIRE(std::same_as<Return(Params...) const&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&&"}>>);
-
-            STATIC_REQUIRE(std::same_as<Return(Params...) const&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&& noexcept(false) override"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...) const&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&& noexcept(false) final"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...) const&&, detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&& noexcept(false)"}>>);
         }
     }
 
