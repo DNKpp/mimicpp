@@ -8,7 +8,6 @@ name: coverage
 env:
   COBERTURA_REPORT: cobertura.xml
   COVERALLS_REPORT: coveralls.json
-  JSON_REPORT: report.json
   JSON_SUMMARY: summary.json
   HTML_REPORT_DIR: html/
   COVERAGE_ARTIFACT_NAME: coverage-report
@@ -100,28 +99,14 @@ jobs:
               --keep \
               --txt \
               --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
+              --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty \
               --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
-              --json-summary ${{env.JSON_SUMMARY}} --json-summary-pretty \
-              --json ${{env.JSON_REPORT}} --json-pretty
+              --json-summary ${{env.JSON_SUMMARY}} --json-summary-pretty
           
           mv ${{env.COBERTURA_REPORT}} ..
+          mv ${{env.COVERALLS_REPORT}} ..
           mv ${{env.HTML_REPORT_DIR}} ..
           mv ${{env.JSON_SUMMARY}} ..
-          mv ${{env.JSON_REPORT}} ..
-
-      # Gathering the coveralls.json in one go with all the other reports results in inconsistent reports.
-      # see: https://github.com/gcovr/gcovr/issues/1074
-      - name: Create coveralls report
-        run: |
-          cd build
-          gcovr --root .. \
-              --verbose \
-              --include "${GITHUB_WORKSPACE}/include" \
-              --filter "${GITHUB_WORKSPACE}/include" \
-              --add-tracefile ../${{env.JSON_REPORT}} \
-              --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
-          
-          mv ${{env.COVERALLS_REPORT}} ..
 
       # As of gcovr 8.4, these are *json.gz instead of *.gcov
       - name: Upload gcov coverage report artifacts
@@ -138,7 +123,6 @@ jobs:
           path: |
             ${{env.COBERTURA_REPORT}}
             ${{env.COVERALLS_REPORT}}
-            ${{env.JSON_REPORT}}
             ${{env.JSON_SUMMARY}}
             ${{env.HTML_REPORT_DIR}}
           if-no-files-found: error
