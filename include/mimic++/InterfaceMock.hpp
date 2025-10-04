@@ -13,9 +13,7 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/macros/InterfaceMocking.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
-#include "mimic++/utilities/AlwaysFalse.hpp"
 #include "mimic++/utilities/StaticString.hpp"
-#include "mimic++/utilities/TypeList.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <cstddef>
@@ -223,9 +221,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
                         return ('a' <= c && c <= 'z')
                             || ('A' <= c && c <= 'Z');
                     };
-                    std::string_view const token{
-                        tokenBegin,
-                        std::ranges::find_if_not(tokenBegin, end, is_word_continue)};
+
+                    auto const tokenEnd = std::ranges::find_if_not(tokenBegin, end, is_word_continue);
+                    std::string_view const token{tokenBegin, tokenEnd};
                     if (constKeyword == token)
                     {
                         MIMICPP_ASSERT(!result.hasConst, "Const-qualifier already set.");
@@ -241,7 +239,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
                         throw std::runtime_error{"Invalid spec"};
                     }
 
-                    tokenBegin = token.cend();
+                    tokenBegin = tokenEnd;
                 }
             }
 
