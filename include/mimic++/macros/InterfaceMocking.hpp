@@ -382,11 +382,17 @@ namespace mimicpp
 /**
  * \brief Creates the facade function.
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
- * \param traits The (enclosed) interface traits.
- * \param fn_header The (enclosed)  facade function header.
- * \param sig The (enclosed) signature.
- * \param target_name The invocation target name.
- * \param invoke_args The (enclosed) invoke-argument list.
+ * \param ignore Ignored
+ * \param traits The interface traits.
+ * \param target_name The callable target name.
+ * \param fn_name The function name.
+ * \param linkage The function linkage.
+ * \param ret The return type.
+ * \param call_convention The call-convention.
+ * \param param_type_list The parameter types.
+ * \param specs Additional specifiers (e.g. ``const``, ``noexcept``, etc.).
+ * \param param_list Enclosed parameter list.
+ * \param forward_list Enclosed forward statements.
  */
 #define MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
     linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                            \
@@ -397,7 +403,7 @@ namespace mimicpp
             ::mimicpp::util::StaticString{#specs}>;                                                                                                                     \
         auto args = ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                        \
                                                                                                                                                                         \
-        return [&]<typename T = MIMICPP_DETAIL_STRIP_PARENS(traits)>() -> decltype(auto) {                                                                              \
+        return [&]<typename T = traits>() -> decltype(auto) {                                                                                                           \
             if constexpr (::mimicpp::detail::is_member_facade_v<T>)                                                                                                     \
             {                                                                                                                                                           \
                 return T::template invoke<Signature>(target_name, this, ::std::move(args));                                                                             \
