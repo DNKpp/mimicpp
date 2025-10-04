@@ -284,9 +284,8 @@ namespace mimicpp
  * \param param_type The type of the parameter. Enclosing parentheses will be stripped.
  */
 #define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type)                    \
-    [&]<typename... Type>([[maybe_unused]] const ::mimicpp::util::type_list<Type...>) noexcept { \
-        return ::std::forward_as_tuple(                                                          \
-            ::std::forward<Type>(arg_##sequence)...);                                            \
+    [&]<typename... Type>([[maybe_unused]] ::mimicpp::util::type_list<Type...> const) noexcept { \
+        return ::std::forward_as_tuple(::std::forward<Type>(arg_##sequence)...);                 \
     }(::mimicpp::util::type_list<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
 
 /**
@@ -396,19 +395,16 @@ namespace mimicpp
         using Signature = ::mimicpp::detail::apply_normalized_specs_t<                                                                                                  \
             MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list,                                                                                                           \
             ::mimicpp::util::StaticString{#specs}>;                                                                                                                     \
+        auto args = ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                        \
+                                                                                                                                                                        \
         return [&]<typename T = MIMICPP_DETAIL_STRIP_PARENS(traits)>() -> decltype(auto) {                                                                              \
             if constexpr (::mimicpp::detail::is_member_facade_v<T>)                                                                                                     \
             {                                                                                                                                                           \
-                return T::template invoke<Signature>(                                                                                                                   \
-                    target_name,                                                                                                                                        \
-                    this,                                                                                                                                               \
-                    ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list)));                                                                                       \
+                return T::template invoke<Signature>(target_name, this, ::std::move(args));                                                                             \
             }                                                                                                                                                           \
             else                                                                                                                                                        \
             {                                                                                                                                                           \
-                return T::template invoke<Signature>(                                                                                                                   \
-                    target_name,                                                                                                                                        \
-                    ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list)));                                                                                       \
+                return T::template invoke<Signature>(target_name, ::std::move(args));                                                                                   \
             }                                                                                                                                                           \
         }();                                                                                                                                                            \
     }
