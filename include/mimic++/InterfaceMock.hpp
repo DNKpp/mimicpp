@@ -71,6 +71,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
     // * detail::indirectly_apply_mock
     // * detail::indirectly_apply_mock::lambda
     // * detail::traits::invoke
+    // * the generated interface implementation - lambda
     // * the generated interface implementation
     inline constexpr std::size_t interfaceMockStacktraceSkip{5u};
 
@@ -94,20 +95,16 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
      * That's also the reason, why no ``std::invoke`` is used here.
      */
     template <typename Signature, typename Mock, typename... Args>
-    constexpr signature_return_type_t<Signature> indirectly_apply_mock(Mock & mock, std::tuple<Args...> && args)
+    constexpr decltype(auto) indirectly_apply_mock(Mock & mock, std::tuple<Args...> && args)
     {
         using mock_ref_t = std::conditional_t<
             ValueCategory::rvalue == signature_ref_qualification_v<Signature>,
             Mock&&,
             Mock&>;
-        const auto forward_apply = [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const)
-            -> signature_return_type_t<Signature> {
-            return static_cast<mock_ref_t>(mock)(
-                std::forward<Args>(std::get<indices>(args))...);
-        };
 
-        constexpr auto sequence = std::index_sequence_for<Args...>{};
-        return forward_apply(sequence);
+        return [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) -> decltype(auto) {
+            return static_cast<mock_ref_t>(mock)(std::forward<Args>(std::get<indices>(args))...);
+        }(std::index_sequence_for<Args...>{});
     }
 
     template <typename Traits>
@@ -125,7 +122,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
         using mock_type = Mock<Signatures...>;
 
         template <typename Signature, typename... Args>
-        static constexpr signature_return_type_t<Signature> invoke(
+        static constexpr decltype(auto) invoke(
             auto& mock,
             [[maybe_unused]] auto* self,
             std::tuple<Args...>&& args)
@@ -157,7 +154,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
         using mock_type = Mock<prepend_this<Signatures>...>;
 
         template <typename Signature, typename... Args>
-        static constexpr signature_return_type_t<Signature> invoke(auto& mock, auto* self, std::tuple<Args...>&& args)
+        static constexpr decltype(auto) invoke(auto& mock, auto* self, std::tuple<Args...>&& args)
         {
             return indirectly_apply_mock<Signature>(
                 mock,
