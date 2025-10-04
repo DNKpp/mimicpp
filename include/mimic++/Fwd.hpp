@@ -167,6 +167,22 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     /**
      * \brief Primary template, purposely undefined.
+     * \ingroup TYPE_TRAITS_SIGNATURE_ADD_RVALUE_REF_QUALIFIER
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_add_rvalue_ref_qualifier;
+
+    /**
+     * \brief Convenience alias, exposing the `type` member alias of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_ADD_RVALUE_REF_QUALIFIER
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    using signature_add_rvalue_ref_qualifier_t = typename signature_add_rvalue_ref_qualifier<Signature>::type;
+
+    /**
+     * \brief Primary template, purposely undefined.
      * \ingroup TYPE_TRAITS_SIGNATURE_REMOVE_CONST_QUALIFIER
      * \tparam Signature A function signature.
      */
