@@ -181,8 +181,9 @@ namespace mimicpp
  * \param specs Additional specs (e.g. ``const``, ``noexcept``).
  */
 #define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, call_convention, param_type_list, specs, ...) \
-    MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                           \
-    call_convention param_type_list specs
+    ::mimicpp::detail::apply_normalized_specs_t<                                                               \
+        MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention param_type_list,                                      \
+        ::mimicpp::util::StaticString{#specs}>
 
 /**
  * \brief Converts all given arguments to a signature list (not enclosed by parentheses).
@@ -428,7 +429,7 @@ namespace mimicpp
     MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(                                                                                                                                \
         traits,                                                                                                                                                         \
         (linkage MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention fn_name param_list specs override),                                                                   \
-        (MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list specs),                                                                                                       \
+        (::mimicpp::detail::apply_normalized_specs_t<MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list, ::mimicpp::util::StaticString{#specs}>),                         \
         target_name,                                                                                                                                                    \
         forward_list)
 
