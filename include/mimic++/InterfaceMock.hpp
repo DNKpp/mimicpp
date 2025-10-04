@@ -236,11 +236,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
                         MIMICPP_ASSERT(!result.hasNoexcept, "Noexcept-qualifier already set.");
                         result.hasNoexcept = true;
                     }
-                    else if (overrideKeyword == token || finalKeyword == token)
-                    {
-                        // nothing to do
-                    }
-                    else
+                    else if (overrideKeyword != token && finalKeyword != token)
                     {
                         throw std::runtime_error{"Invalid spec"};
                     }
@@ -252,13 +248,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
             return result;
         }
 
+        static constexpr auto info = evaluate_specs();
+
     public:
         template <typename Signature>
         [[nodiscard]]
         static consteval auto evaluate() noexcept
         {
-            constexpr auto info = evaluate_specs();
-
             using sig_maybe_ref = std::conditional_t<
                 ValueCategory::lvalue == info.refQualifier,
                 signature_add_lvalue_ref_qualifier_t<Signature>,
