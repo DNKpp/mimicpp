@@ -330,6 +330,14 @@ namespace mimicpp
         linkage,                                                                       \
         __VA_ARGS__)
 
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MAKE_OVERLOADED_FACADE_EXT.
+     * \ingroup FACADE
+     */
+    #define MAKE_OVERLOADED_FACADE_EXT MIMICPP_MAKE_OVERLOADED_FACADE_EXT
+#endif
+
 /**
  * \brief The most powerful entry point for creating a single facade function.
  * \ingroup FACADE
@@ -350,5 +358,13 @@ namespace mimicpp
         fn_name,                                                                                  \
         linkage,                                                                                  \
         MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
+
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MAKE_FACADE_EXT.
+     * \ingroup FACADE
+     */
+    #define MAKE_FACADE_EXT MIMICPP_MAKE_FACADE_EXT
+#endif
 
 #endif
