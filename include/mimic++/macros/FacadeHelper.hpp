@@ -10,7 +10,7 @@
 
 #include "mimic++/macros/Common.hpp"
 
-namespace mimicpp
+namespace mimicpp::facade
 {
     /**
      * \defgroup FACADE_DETAIL detail
@@ -78,7 +78,7 @@ namespace mimicpp
         }()                                                                                   \
     }
 
-namespace mimicpp
+namespace mimicpp::facade
 {
     /**
      * \defgroup FACADE_DETAIL_MAKE_PARAM_LIST make_param_list
@@ -107,6 +107,56 @@ namespace mimicpp
         MIMICPP_DETAIL_COMMA_DELIMITER,     \
         MIMICPP_DETAIL_IDENTITY,            \
         ,                                   \
+        __VA_ARGS__)
+
+namespace mimicpp::facade
+{
+    /**
+     * \defgroup FACADE_DETAIL_FORWARD_ARGS_AS_TUPLE forward_args
+     * \ingroup FACADE_DETAIL
+     * \brief Creates comma-separated forwarding `std::tuple`s for each given argument (not enclosed by parentheses).
+     * \details
+     * The whole purpose of these macros is to somehow generate forwarding references from the given context.
+     * The first version just applied a `std::forward` call onto each argument, but this wasn't enough to support parameter-packs.
+     *
+     * As parameter-packs are applied in the form `T...`,
+     * the `MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE` macro must somehow handle this kind of argument.
+     * There is no way to distinguish via trait, whether the `param_type` is a type or pack,
+     * so we cannot simply apply an expanding `...` when required.
+     * So the question is, how to unify the handling?
+     *
+     * The solution here is to pass both, either types or packs, into a tuple and then make use of the (possibly) simultaneous expansion feature.
+     * When the param is a type, there is only one pack (the tuple with exactly one argument) in the scope.
+     * When the param is a pack, both will be expanded simultaneously, because they appear in the same pattern.
+     *
+     * \see https://en.cppreference.com/w/cpp/language/pack
+     * \see https://dnkpp.github.io/2024-12-15-simultaneous-pack-expansion-inside-macros/
+     */
+}
+
+/**
+ * \brief Creates a forwarding `std::tuple` for the given argument.
+ * \ingroup FACADE_DETAIL_FORWARD_ARGS_AS_TUPLE
+ * \param sequence A unique sequence, which will be appended to the parameter name (as suffix).
+ * \param bound_data Unused.
+ * \param param_type The type of the parameter. Enclosing parentheses will be stripped.
+ */
+#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type)                    \
+    [&]<typename... Type>([[maybe_unused]] ::mimicpp::util::type_list<Type...> const) noexcept { \
+        return ::std::forward_as_tuple(::std::forward<Type>(arg_##sequence)...);                 \
+    }(::mimicpp::util::type_list<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
+
+/**
+ * \brief Creates forwarding `std::tuple`s for each given argument (not enclosed by parentheses).
+ * \ingroup FACADE_DETAIL_FORWARD_ARGS_AS_TUPLE
+ */
+#define MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(...) \
+    MIMICPP_DETAIL_FOR_EACH_EXT(                  \
+        MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE,      \
+        i,                                        \
+        MIMICPP_DETAIL_COMMA_DELIMITER,           \
+        MIMICPP_DETAIL_IDENTITY,                  \
+        ,                                         \
         __VA_ARGS__)
 
 #endif
