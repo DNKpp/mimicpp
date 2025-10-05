@@ -181,7 +181,7 @@ namespace mimicpp
  * \param specs Additional specs (e.g. ``const``, ``noexcept``).
  */
 #define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, call_convention, param_type_list, specs, ...) \
-    ::mimicpp::detail::apply_normalized_specs_t<                                                               \
+    ::mimicpp::facade::detail::apply_normalized_specs_t<                                                       \
         MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention param_type_list,                                      \
         ::mimicpp::util::StaticString{#specs}>
 
@@ -202,24 +202,24 @@ namespace mimicpp
  * \brief Creates a mimicpp::Mock object for the given signatures.
  * \ingroup MOCK_INTERFACES_DETAIL
  * \param traits The interface traits.
- * \param mock_name The mock name.
+ * \param target_name The target name.
  * \param fn_name The function name.
  * \param linkage The linkage specifier(s).
  * \param signatures The given signatures. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(traits, mock_name, fn_name, linkage, signatures) \
-    linkage typename traits::mock_type<MIMICPP_DETAIL_STRIP_PARENS(signatures)> mock_name    \
-    {                                                                                        \
-        [&]<typename T = traits>() {                                                         \
-            if constexpr (::mimicpp::detail::is_member_facade_v<T>)                          \
-            {                                                                                \
-                return T::make_settings(this, #fn_name);                                     \
-            }                                                                                \
-            else                                                                             \
-            {                                                                                \
-                return T::make_settings(#fn_name);                                           \
-            }                                                                                \
-        }()                                                                                  \
+#define MIMICPP_DETAIL_MAKE_FACADE_TARGET(traits, target_name, fn_name, linkage, signatures)  \
+    linkage typename traits::target_type<MIMICPP_DETAIL_STRIP_PARENS(signatures)> target_name \
+    {                                                                                         \
+        [&]<typename T = traits>() {                                                          \
+            if constexpr (::mimicpp::facade::detail::is_member_v<T>)                          \
+            {                                                                                 \
+                return T::make_settings(this, #fn_name);                                      \
+            }                                                                                 \
+            else                                                                              \
+            {                                                                                 \
+                return T::make_settings(#fn_name);                                            \
+            }                                                                                 \
+        }()                                                                                   \
     }
 
 namespace mimicpp
@@ -398,13 +398,13 @@ namespace mimicpp
     linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                            \
     call_convention fn_name param_list specs                                                                                                                            \
     {                                                                                                                                                                   \
-        using Signature = ::mimicpp::detail::apply_normalized_specs_t<                                                                                                  \
+        using Signature = ::mimicpp::facade::detail::apply_normalized_specs_t<                                                                                          \
             MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list,                                                                                                           \
             ::mimicpp::util::StaticString{#specs}>;                                                                                                                     \
         auto args = ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                        \
                                                                                                                                                                         \
         return [&]<typename T = traits>() -> decltype(auto) {                                                                                                           \
-            if constexpr (::mimicpp::detail::is_member_facade_v<T>)                                                                                                     \
+            if constexpr (::mimicpp::facade::detail::is_member_v<T>)                                                                                                    \
             {                                                                                                                                                           \
                 return T::template invoke<Signature>(target_name, this, ::std::move(args));                                                                             \
             }                                                                                                                                                           \
@@ -473,7 +473,7 @@ namespace mimicpp
  */
 #define MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(fn_op, traits, target_name, fn_name, linkage, ...)               \
     MIMICPP_DETAIL_MAKE_INTERFACE_FACADE_OVERLOADS(fn_op, traits, target_name, fn_name, linkage, __VA_ARGS__) \
-    MIMICPP_DETAIL_MAKE_OVERLOADED_MOCK(                                                                      \
+    MIMICPP_DETAIL_MAKE_FACADE_TARGET(                                                                        \
         traits,                                                                                               \
         target_name,                                                                                          \
         fn_name,                                                                                              \
@@ -494,7 +494,7 @@ namespace mimicpp
 #define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...) \
     MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(            \
         MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,         \
-        ::mimicpp::detail::interface_mock_traits,    \
+        ::mimicpp::facade::mock_as_member,           \
         fn_name##_,                                  \
         fn_name,                                     \
         ,                                            \
@@ -532,13 +532,13 @@ namespace mimicpp
  * If `self_type` does not match the actual containing type, the behavior is undefined.
  * \snippet InterfaceMock.cpp interface mock with this
  */
-#define MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(fn_name, ...)         \
-    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(                              \
-        MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                           \
-        ::mimicpp::detail::interface_mock_with_this_traits<self_type>, \
-        fn_name##_,                                                    \
-        fn_name,                                                       \
-        ,                                                              \
+#define MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(fn_name, ...)  \
+    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(                       \
+        MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                    \
+        ::mimicpp::facade::mock_as_member_with_this<self_type>, \
+        fn_name##_,                                             \
+        fn_name,                                                \
+        ,                                                       \
         __VA_ARGS__)
 
 /**

@@ -4,8 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/CallConvention.hpp"
-#include "mimic++/InterfaceMock.hpp"
-#include "mimic++/Mock.hpp"
+#include "mimic++/Facade.hpp"
 
 MIMICPP_REGISTER_CALL_CONVENTION(__vectorcall, vectorcall_call_convention);
 

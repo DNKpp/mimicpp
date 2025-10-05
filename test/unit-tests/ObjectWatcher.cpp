@@ -4,7 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/ObjectWatcher.hpp"
-#include "mimic++/InterfaceMock.hpp"
+#include "mimic++/Facade.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
 #include "SuppressionMacros.hpp"

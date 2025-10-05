@@ -4,8 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/CallConvention.hpp"
-#include "mimic++/InterfaceMock.hpp"
-#include "mimic++/Mock.hpp"
+#include "mimic++/Facade.hpp"
 
 #define CALL_CONVENTION __attribute__((ms_abi))
 MIMICPP_REGISTER_CALL_CONVENTION(CALL_CONVENTION, call_convention)
