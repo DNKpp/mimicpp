@@ -3,9 +3,111 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/InterfaceMock.hpp"
+#include "mimic++/Facade.hpp"
 
 using namespace mimicpp;
+
+TEMPLATE_TEST_CASE_SIG(
+    "facade::detail::apply_normalized_specs omits override and final specifiers.",
+    "[facade][detail]",
+    ((typename Return, typename... Params), Return, Params...),
+    (void),
+    (void, int),
+    (void, int, double, (std::tuple<int, float>)),
+    (std::tuple<int, float>))
+{
+    using RawSig = Return(Params...);
+
+    SECTION("Without noexcept.")
+    {
+        SECTION("Without other specs.")
+        {
+            STATIC_REQUIRE(std::same_as<Return(Params...), facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...), facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...), facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{""}>>);
+        }
+
+        SECTION("With const.")
+        {
+            STATIC_REQUIRE(std::same_as<Return(Params...) const, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const"}>>);
+        }
+
+        SECTION("With lvalue-ref.")
+        {
+            STATIC_REQUIRE(std::same_as<Return(Params...)&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...)&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...)&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&"}>>);
+        }
+
+        SECTION("With const lvalue-ref.")
+        {
+            STATIC_REQUIRE(std::same_as<Return(Params...) const&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&"}>>);
+        }
+
+        SECTION("With rvalue-ref.")
+        {
+            STATIC_REQUIRE(std::same_as<Return(Params...)&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...)&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...)&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&&"}>>);
+        }
+
+        SECTION("With const rvalue-ref.")
+        {
+            STATIC_REQUIRE(std::same_as<Return(Params...) const&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&& override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&& final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const&&"}>>);
+        }
+    }
+
+    SECTION("With noexcept.")
+    {
+        SECTION("Without other specs.")
+        {
+            STATIC_REQUIRE(std::same_as<Return(Params...) noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"noexcept override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"noexcept final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"noexcept"}>>);
+        }
+
+        SECTION("With const.")
+        {
+            STATIC_REQUIRE(std::same_as<Return(Params...) const noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const noexcept override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const noexcept final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const noexcept"}>>);
+        }
+
+        SECTION("With lvalue-ref.")
+        {
+            STATIC_REQUIRE(std::same_as < Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"& noexcept override"} >>);
+            STATIC_REQUIRE(std::same_as < Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"& noexcept final"} >>);
+            STATIC_REQUIRE(std::same_as < Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"& noexcept"} >>);
+        }
+
+        SECTION("With const lvalue-ref.")
+        {
+            STATIC_REQUIRE(std::same_as < Return(Params...) const& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const& noexcept override"} >>);
+            STATIC_REQUIRE(std::same_as < Return(Params...) const& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const& noexcept final"} >>);
+            STATIC_REQUIRE(std::same_as < Return(Params...) const& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const& noexcept"} >>);
+        }
+
+        SECTION("With rvalue-ref.")
+        {
+            STATIC_REQUIRE(std::same_as < Return(Params...) && noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"&& noexcept override"} >>);
+            STATIC_REQUIRE(std::same_as < Return(Params...) && noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"&& noexcept final"} >>);
+            STATIC_REQUIRE(std::same_as < Return(Params...) && noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"&& noexcept"} >>);
+        }
+
+        SECTION("With const rvalue-ref.")
+        {
+            STATIC_REQUIRE(std::same_as < Return(Params...) const&& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const&& noexcept override"} >>);
+            STATIC_REQUIRE(std::same_as < Return(Params...) const&& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const&& noexcept final"} >>);
+            STATIC_REQUIRE(std::same_as < Return(Params...) const&& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const&& noexcept"} >>);
+        }
+    }
+}
 
 namespace
 {
@@ -14,7 +116,7 @@ namespace
         static constexpr bool is_member{true};
 
         template <typename... Signatures>
-        using mock_type = Mock<Signatures...>;
+        using target_type = Mock<Signatures...>;
 
         template <typename Signature, typename... Args>
         static constexpr decltype(auto) invoke(
@@ -22,7 +124,7 @@ namespace
             [[maybe_unused]] auto* self,
             std::tuple<Args...>&& args)
         {
-            return detail::indirectly_apply_mock<Signature>(mock, std::move(args));
+            return facade::detail::apply<Signature>(mock, std::move(args));
         }
 
         template <typename Self>
@@ -32,6 +134,41 @@ namespace
             return MockSettings{.name = std::move(functionName), .stacktraceSkip = 1u};
         }
     };
+}
+
+TEST_CASE(
+    "MIMICPP_DETAIL_MAKE_FACADE_TARGET creates a mock from a list of signatures.",
+    "[mock][mock::interface]")
+{
+    SECTION("Just void()")
+    {
+        struct helper
+        {
+            MIMICPP_DETAIL_MAKE_FACADE_TARGET(
+                TestTraits,
+                mock,
+                test,
+                /*linkage*/,
+                (void()));
+        };
+
+        STATIC_REQUIRE(std::is_invocable_r_v<void, decltype(helper::mock)>);
+    }
+
+    SECTION("Just float&(int&&)")
+    {
+        struct helper
+        {
+            MIMICPP_DETAIL_MAKE_FACADE_TARGET(
+                TestTraits,
+                mock,
+                test,
+                /*linkage*/,
+                (float&(int&&)));
+        };
+
+        STATIC_REQUIRE(std::is_invocable_r_v<float&, decltype(helper::mock), int&&>);
+    }
 }
 
 TEST_CASE(
