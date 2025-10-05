@@ -190,20 +190,6 @@ namespace mimicpp
  */
 #define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, _2, N, ...) N
 
-/**
- * \brief Adds an overload to the currently built facade.
- * \ingroup FACADE
- * \param ret The return type.
- * \param param_type_list The parameter types.
- * \param ... An optional parameter for the specifiers (e.g. `const`, `noexcept`, `override`, etc.).
- */
-#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \
-    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \
-        __VA_ARGS__,                                    \
-        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL,         \
-        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \
-        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) // clangCl doesn't compile without that extra `,`
-
 namespace mimicpp
 {
     /**
@@ -307,6 +293,28 @@ namespace mimicpp
         fn_name,                                                                                        \
         linkage,                                                                                        \
         (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
+
+/**
+ * \brief Adds an overload to the currently built facade.
+ * \ingroup FACADE
+ * \param ret The return type.
+ * \param param_type_list The parameter types.
+ * \param ... An optional parameter for the specifiers (e.g. `const`, `noexcept`, `override`, etc.).
+ */
+#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \
+    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \
+        __VA_ARGS__,                                    \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL,         \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) // clangCl doesn't compile without that extra `,`
+
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_ADD_OVERLOAD.
+     * \ingroup FACADE
+     */
+    #define ADD_OVERLOAD MIMICPP_ADD_OVERLOAD
+#endif
 
 /**
  * \brief The most powerful entry point for creating a facade overload-set.
