@@ -21,54 +21,6 @@ namespace mimicpp
 namespace mimicpp
 {
     /**
-     * \defgroup MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE forward_args
-     * \ingroup MOCK_INTERFACES_DETAIL
-     * \brief Creates comma-separated forwarding ``std::tuple``s for each given argument (not enclosed by parentheses).
-     * \details The whole purpose of these macros are to somehow generate forwarding references from the given context.
-     * The first version just applied a ``std::forward`` call onto each argument, but this wasn't sufficient to
-     * support parameter-packs.
-     *
-     * As parameter-packs are applied in the form ``T...``, the ``MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE`` macro must
-     * somehow handle these kind of arguments. There is no way to distinguish via trait, whether the ``param_type``
-     * is a type or pack, so we can not simply apply an expanding ``...`` when required.
-     * So the question is, how to unify the handling?
-     *
-     * The solution here is to pass both, either types or packs, into a tuple and then make use of the (possibly)
-     * simultaneous expansion feature.
-     * When the param is a type, there is only one pack (the tuple with exactly one argument) in the scope.
-     * When the param is a pack, both will be expanded simultaneously, because they appear in the same pattern.
-     * \see https://en.cppreference.com/w/cpp/language/pack
-     */
-}
-
-/**
- * \brief Creates a forwarding ``std::tuple`` for the given argument.
- * \ingroup MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE
- * \param sequence A unique sequence, which will be appended to the parameter name (as suffix).
- * \param bound_data Unused.
- * \param param_type The type of the parameter. Enclosing parentheses will be stripped.
- */
-#define MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE(sequence, bound_data, param_type)                    \
-    [&]<typename... Type>([[maybe_unused]] ::mimicpp::util::type_list<Type...> const) noexcept { \
-        return ::std::forward_as_tuple(::std::forward<Type>(arg_##sequence)...);                 \
-    }(::mimicpp::util::type_list<MIMICPP_DETAIL_STRIP_PARENS(param_type)>{})
-
-/**
- * \brief Creates forwarding ``std::tuple``s for each given argument (not enclosed by parentheses).
- * \ingroup MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE
- */
-#define MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(...) \
-    MIMICPP_DETAIL_FOR_EACH_EXT(                  \
-        MIMICPP_DETAIL_FORWARD_ARG_AS_TUPLE,      \
-        i,                                        \
-        MIMICPP_DETAIL_COMMA_DELIMITER,           \
-        MIMICPP_DETAIL_IDENTITY,                  \
-        ,                                         \
-        __VA_ARGS__)
-
-namespace mimicpp
-{
-    /**
      * \defgroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS make_overload_infos
      * \ingroup MOCK_INTERFACES_DETAIL
      * \brief Related functions for MIMICPP_ADD_OVERLOAD.
