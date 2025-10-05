@@ -21,39 +21,6 @@ namespace mimicpp
 namespace mimicpp
 {
     /**
-     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE_LIST make_signature_list
-     * \ingroup MOCK_INTERFACES_DETAIL
-     * \brief Converts all given arguments to a signature.
-     */
-}
-
-/**
- * \brief Creates a mimicpp::Mock object for the given signatures.
- * \ingroup MOCK_INTERFACES_DETAIL
- * \param traits The interface traits.
- * \param target_name The target name.
- * \param fn_name The function name.
- * \param linkage The linkage specifier(s).
- * \param signatures The given signatures. Enclosing parentheses will be stripped.
- */
-#define MIMICPP_DETAIL_MAKE_FACADE_TARGET(traits, target_name, fn_name, linkage, signatures)  \
-    linkage typename traits::target_type<MIMICPP_DETAIL_STRIP_PARENS(signatures)> target_name \
-    {                                                                                         \
-        [&]<typename T = traits>() {                                                          \
-            if constexpr (::mimicpp::facade::detail::is_member_v<T>)                          \
-            {                                                                                 \
-                return T::make_settings(this, #fn_name);                                      \
-            }                                                                                 \
-            else                                                                              \
-            {                                                                                 \
-                return T::make_settings(#fn_name);                                            \
-            }                                                                                 \
-        }()                                                                                   \
-    }
-
-namespace mimicpp
-{
-    /**
      * \defgroup MOCK_INTERFACES_DETAIL_MAKE_PARAM_LIST make_param_list
      * \ingroup MOCK_INTERFACES_DETAIL
      * \brief Converts all given arguments to a parameter-list.
