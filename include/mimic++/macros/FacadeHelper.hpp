@@ -78,4 +78,35 @@ namespace mimicpp
         }()                                                                                   \
     }
 
+namespace mimicpp
+{
+    /**
+     * \defgroup FACADE_DETAIL_MAKE_PARAM_LIST make_param_list
+     * \ingroup FACADE_DETAIL
+     * \brief Converts all given arguments to a parameter-list.
+     */
+}
+
+/**
+ * \brief Converts the given information to a single parameter.
+ * \ingroup FACADE_DETAIL_MAKE_PARAM_LIST
+ * \param sequence A unique sequence, which will be appended to the parameter name (as suffix).
+ * \param bound_data Unused.
+ * \param type The type of the parameter. Enclosing parentheses will be stripped.
+ */
+#define MIMICPP_DETAIL_MAKE_PARAM(sequence, bound_data, type) MIMICPP_DETAIL_STRIP_PARENS(type) arg_##sequence
+
+/**
+ * \brief Converts all given parameters to a parameter-list (not enclosed by parentheses).
+ * \ingroup FACADE_DETAIL_MAKE_PARAM_LIST
+ */
+#define MIMICPP_DETAIL_MAKE_PARAM_LIST(...) \
+    MIMICPP_DETAIL_FOR_EACH_EXT(            \
+        MIMICPP_DETAIL_MAKE_PARAM,          \
+        i,                                  \
+        MIMICPP_DETAIL_COMMA_DELIMITER,     \
+        MIMICPP_DETAIL_IDENTITY,            \
+        ,                                   \
+        __VA_ARGS__)
+
 #endif

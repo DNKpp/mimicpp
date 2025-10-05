@@ -27,3 +27,30 @@ TEST_CASE(
                 (const int&, (float&&), const noexcept, ),
                 (void, (), , ))>>);
 }
+
+TEST_CASE(
+    "MIMICPP_DETAIL_MAKE_PARAM_LIST creates the param list for the given types.",
+    "[mock][mock::interface]")
+{
+    namespace Matches = Catch::Matchers;
+
+    REQUIRE_THAT(
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST()),
+        Matches::Equals(""));
+
+    REQUIRE_THAT(
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST(int)),
+        Matches::Equals("int arg_i"));
+
+    REQUIRE_THAT(
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST(const int&, int&&)),
+        Matches::Matches("const int& arg_i\\s*, int&& arg_ii"));
+
+    REQUIRE_THAT(
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST(int, int)),
+        Matches::Matches("int arg_i\\s*, int arg_ii"));
+
+    REQUIRE_THAT(
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST((std::tuple<int, float>))),
+        Matches::Equals("std::tuple<int, float> arg_i"));
+}
