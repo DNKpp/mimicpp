@@ -5,4 +5,5 @@
 
 target_sources(${TARGET_NAME} PRIVATE
     "Common.cpp"
+    "FacadeHelper.cpp"
 )
