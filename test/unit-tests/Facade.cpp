@@ -137,14 +137,14 @@ namespace
 }
 
 TEST_CASE(
-    "MIMICPP_DETAIL_MAKE_FACADE_TARGET creates a mock from a list of signatures.",
-    "[mock][mock::interface]")
+    "MIMICPP_DETAIL_GENERATE_FACADE_TARGET creates a mock from a list of signatures.",
+    "[facade][detail]")
 {
     SECTION("Just void()")
     {
         struct helper
         {
-            MIMICPP_DETAIL_MAKE_FACADE_TARGET(
+            MIMICPP_DETAIL_GENERATE_FACADE_TARGET(
                 TestTraits,
                 mock,
                 test,
@@ -159,7 +159,7 @@ TEST_CASE(
     {
         struct helper
         {
-            MIMICPP_DETAIL_MAKE_FACADE_TARGET(
+            MIMICPP_DETAIL_GENERATE_FACADE_TARGET(
                 TestTraits,
                 mock,
                 test,

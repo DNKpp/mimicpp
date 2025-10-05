@@ -34,7 +34,7 @@ namespace mimicpp
  * \param forward_list Enclosed forward statements.
  */
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
-    MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(                                                                                                                                \
+    MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION(                                                                                                                            \
         ignore,                                                                                                                                                         \
         traits,                                                                                                                                                         \
         target_name,                                                                                                                                                    \
@@ -60,7 +60,7 @@ namespace mimicpp
  * \snippet InterfaceMock.cpp interface mock overloaded
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...) \
-    MIMICPP_DETAIL_MAKE_FACADE(                      \
+    MIMICPP_DETAIL_GENERATE_FACADE(                  \
         MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,         \
         ::mimicpp::facade::mock_as_member,           \
         fn_name##_,                                  \
@@ -101,7 +101,7 @@ namespace mimicpp
  * \snippet InterfaceMock.cpp interface mock with this
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(fn_name, ...)  \
-    MIMICPP_DETAIL_MAKE_FACADE(                                 \
+    MIMICPP_DETAIL_GENERATE_FACADE(                             \
         MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                    \
         ::mimicpp::facade::mock_as_member_with_this<self_type>, \
         fn_name##_,                                             \
@@ -145,8 +145,8 @@ namespace mimicpp
  * Each overload is implemented as its own facade function, forwarding calls to the underlying target object.
  */
 #define MIMICPP_MAKE_OVERLOADED_FACADE_EXT(traits, target_name, fn_name, linkage, ...) \
-    MIMICPP_DETAIL_MAKE_FACADE(                                                        \
-        MIMICPP_DETAIL_MAKE_FACADE_FUNCTION,                                           \
+    MIMICPP_DETAIL_GENERATE_FACADE(                                                    \
+        MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION,                                       \
         traits,                                                                        \
         target_name,                                                                   \
         fn_name,                                                                       \
