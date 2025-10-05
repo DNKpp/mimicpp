@@ -563,6 +563,49 @@ namespace mimicpp
         fn_name,                                                          \
         MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
 
+/**
+ * \brief The most powerful entry point for creating a facade overload-set.
+ * \ingroup MOCK_INTERFACES
+ * \param traits The facade-traits.
+ * \param target_name The name of the underlying target object.
+ * \param fn_name The name of the facade overload-set.
+ * \param linkage The linkage for the facade functions and the target object.
+ * \param ... Overloads must be declared using the \ref MIMICPP_ADD_OVERLOAD macro.
+ *
+ * \details
+ * This macro defines a single target object that supports an arbitrary number of overloads.
+ * Each overload is implemented as its own facade function, forwarding calls to the underlying target object.
+ */
+#define MIMICPP_MAKE_OVERLOADED_FACADE_EXT(traits, target_name, fn_name, linkage, ...) \
+    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(                                              \
+        MIMICPP_DETAIL_MAKE_FACADE_FUNCTION,                                           \
+        traits,                                                                        \
+        target_name,                                                                   \
+        fn_name,                                                                       \
+        linkage,                                                                       \
+        __VA_ARGS__)
+
+/**
+ * \brief The most powerful entry point for creating a single facade function.
+ * \ingroup MOCK_INTERFACES
+ * \param traits The facade-traits.
+ * \param target_name The name of the underlying target object.
+ * \param fn_name The name of the facade function.
+ * \param linkage The linkage for the facade function and the target object.
+ * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ *
+ * \details
+ * This macro defines a single target object for one method signature and generates a corresponding facade method.
+ * The facade method forwards its calls to the underlying target object.
+ */
+#define MIMICPP_MAKE_FACADE_EXT(traits, target_name, fn_name, linkage, ret, param_type_list, ...) \
+    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                                                           \
+        traits,                                                                                   \
+        target_name,                                                                              \
+        fn_name,                                                                                  \
+        linkage,                                                                                  \
+        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
+
 #ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
 
     /**

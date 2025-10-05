@@ -8,6 +8,7 @@ set(TARGET_NAME mimicpp-tests)
 add_executable(${TARGET_NAME}
     "Expectation.cpp"
     "ExpectationBuilder.cpp"
+    "Facade.cpp"
     "InterfaceMock.cpp"
     "mimic++.cpp"
     "Mock.cpp"
