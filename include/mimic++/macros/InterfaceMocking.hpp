@@ -159,12 +159,6 @@ namespace mimicpp
      */
     #define MOCK_OVERLOADED_METHOD_WITH_THIS MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS
 
-    /**
-     * \brief Shorthand variant of \ref MIMICPP_ADD_OVERLOAD.
-     * \ingroup MOCK_INTERFACES
-     */
-    #define ADD_OVERLOAD MIMICPP_ADD_OVERLOAD
-
 #endif
 
 #endif
