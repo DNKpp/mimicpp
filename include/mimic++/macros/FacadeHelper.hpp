@@ -54,4 +54,28 @@ namespace mimicpp
         ,                                       \
         __VA_ARGS__)
 
+/**
+ * \brief Creates the target object with the specified signatures.
+ * \ingroup FACADE_DETAIL
+ * \param traits The interface traits.
+ * \param target_name The target name.
+ * \param fn_name The function name.
+ * \param linkage The linkage specifier(s).
+ * \param signatures The given signatures. Enclosing parentheses will be stripped.
+ */
+#define MIMICPP_DETAIL_MAKE_FACADE_TARGET(traits, target_name, fn_name, linkage, signatures)  \
+    linkage typename traits::target_type<MIMICPP_DETAIL_STRIP_PARENS(signatures)> target_name \
+    {                                                                                         \
+        [&]<typename T = traits>() {                                                          \
+            if constexpr (::mimicpp::facade::detail::is_member_v<T>)                          \
+            {                                                                                 \
+                return T::make_settings(this, #fn_name);                                      \
+            }                                                                                 \
+            else                                                                              \
+            {                                                                                 \
+                return T::make_settings(#fn_name);                                            \
+            }                                                                                 \
+        }()                                                                                   \
+    }
+
 #endif
