@@ -13,28 +13,6 @@
 using namespace mimicpp;
 
 TEST_CASE(
-    "MIMICPP_DETAIL_MAKE_SIGNATURE_LIST creates a list of signatures from the given arguments.",
-    "[mock][mock::interface]")
-{
-    STATIC_REQUIRE(
-        std::same_as<
-            std::tuple<>,
-            std::tuple<MIMICPP_DETAIL_MAKE_SIGNATURE_LIST()>>);
-
-    STATIC_REQUIRE(
-        std::same_as<
-            std::tuple<void()>,
-            std::tuple<MIMICPP_DETAIL_MAKE_SIGNATURE_LIST((void, (), , ))>>);
-
-    STATIC_REQUIRE(
-        std::same_as<
-            std::tuple<const int&(float&&) const noexcept, void()>,
-            std::tuple<MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(
-                (const int&, (float&&), const noexcept, ),
-                (void, (), , ))>>);
-}
-
-TEST_CASE(
     "MIMICPP_DETAIL_MAKE_PARAM_LIST creates the param list for the given types.",
     "[mock][mock::interface]")
 {

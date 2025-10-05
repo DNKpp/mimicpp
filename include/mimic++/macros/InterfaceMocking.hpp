@@ -28,34 +28,6 @@ namespace mimicpp
 }
 
 /**
- * \brief Converts the given information to a single signature.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE_LIST
- * \param sequence Unused.
- * \param bound_data Unused.
- * \param call_convention The call-convention.
- * \param ret The return type.
- * \param param_type_list The parameter types.
- * \param specs Additional specs (e.g. ``const``, ``noexcept``).
- */
-#define MIMICPP_DETAIL_MAKE_SIGNATURE(sequence, bound_data, ret, call_convention, param_type_list, specs, ...) \
-    ::mimicpp::facade::detail::apply_normalized_specs_t<                                                       \
-        MIMICPP_DETAIL_STRIP_PARENS(ret) call_convention param_type_list,                                      \
-        ::mimicpp::util::StaticString{#specs}>
-
-/**
- * \brief Converts all given arguments to a signature list (not enclosed by parentheses).
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_SIGNATURE_LIST
- */
-#define MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(...) \
-    MIMICPP_DETAIL_FOR_EACH_EXT(                \
-        MIMICPP_DETAIL_MAKE_SIGNATURE,          \
-        ,                                       \
-        MIMICPP_DETAIL_COMMA_DELIMITER,         \
-        MIMICPP_DETAIL_STRIP_PARENS,            \
-        ,                                       \
-        __VA_ARGS__)
-
-/**
  * \brief Creates a mimicpp::Mock object for the given signatures.
  * \ingroup MOCK_INTERFACES_DETAIL
  * \param traits The interface traits.
