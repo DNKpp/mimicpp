@@ -12,46 +12,6 @@
 
 using namespace mimicpp;
 
-#define TO_STRING_IMPL(...) #__VA_ARGS__
-#define TO_STRING(...)      TO_STRING_IMPL(__VA_ARGS__)
-
-TEST_CASE(
-    "MIMICPP_DETAIL_STRIP_PARENS removes outer parens, if present.",
-    "[mock][mock::interface]")
-{
-    namespace Matches = Catch::Matchers;
-
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_STRIP_PARENS()),
-        Matches::Equals(""));
-
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(())),
-        Matches::Equals(""));
-
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_STRIP_PARENS((()))),
-        Matches::Equals("()"));
-
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(Test())),
-        Matches::Equals("Test()"));
-
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_STRIP_PARENS((Test()))),
-        Matches::Equals("Test()"));
-
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(((Test())))),
-        Matches::Equals("(Test())"));
-
-    // clang-format off
-    REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_STRIP_PARENS(((,Test(),)))),
-        Matches::Equals("(,Test(),)"));
-    // clang-format on
-}
-
 TEST_CASE(
     "MIMICPP_DETAIL_MAKE_SIGNATURE_LIST creates a list of signatures from the given arguments.",
     "[mock][mock::interface]")
@@ -81,23 +41,23 @@ TEST_CASE(
     namespace Matches = Catch::Matchers;
 
     REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST()),
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST()),
         Matches::Equals(""));
 
     REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST(int)),
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST(int)),
         Matches::Equals("int arg_i"));
 
     REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST(const int&, int&&)),
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST(const int&, int&&)),
         Matches::Matches("const int& arg_i\\s*, int&& arg_ii"));
 
     REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST(int, int)),
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST(int, int)),
         Matches::Matches("int arg_i\\s*, int arg_ii"));
 
     REQUIRE_THAT(
-        TO_STRING(MIMICPP_DETAIL_MAKE_PARAM_LIST((std::tuple<int, float>))),
+        MIMICPP_DETAIL_STRINGIFY(MIMICPP_DETAIL_MAKE_PARAM_LIST((std::tuple<int, float>))),
         Matches::Equals("std::tuple<int, float> arg_i"));
 }
 
