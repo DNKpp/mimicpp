@@ -19,65 +19,6 @@ namespace mimicpp
 }
 
 /**
- * \brief Adds an overload to an interface mock. Used only in combination with \ref MIMICPP_MOCK_OVERLOADED_METHOD.
- * \ingroup MOCK_INTERFACES
- * \param ret The return type.
- * \param param_type_list The parameter types.
- * \param ... An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
- */
-#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \
-    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \
-        __VA_ARGS__,                                    \
-        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL,         \
-        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \
-        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) // clangCl doesn't compile without that extra ,
-
-namespace mimicpp
-{
-    /**
-     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_FACADES make facades
-     * \ingroup MOCK_INTERFACES_DETAIL
-     * \brief Creates all required facades.
-     */
-}
-
-/**
- * \brief Creates the facade function.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
- * \param ignore Ignored
- * \param traits The interface traits.
- * \param target_name The callable target name.
- * \param fn_name The function name.
- * \param linkage The function linkage.
- * \param ret The return type.
- * \param call_convention The call-convention.
- * \param param_type_list The parameter types.
- * \param specs Additional specifiers (e.g. ``const``, ``noexcept``, etc.).
- * \param param_list Enclosed parameter list.
- * \param forward_list Enclosed forward statements.
- */
-#define MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
-    linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                            \
-    call_convention fn_name param_list specs                                                                                                                            \
-    {                                                                                                                                                                   \
-        using Signature = ::mimicpp::facade::detail::apply_normalized_specs_t<                                                                                          \
-            MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list,                                                                                                           \
-            ::mimicpp::util::StaticString{#specs}>;                                                                                                                     \
-        auto args = ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                        \
-                                                                                                                                                                        \
-        return [&]<typename T = traits>() -> decltype(auto) {                                                                                                           \
-            if constexpr (::mimicpp::facade::detail::is_member_v<T>)                                                                                                    \
-            {                                                                                                                                                           \
-                return T::template invoke<Signature>(target_name, this, ::std::move(args));                                                                             \
-            }                                                                                                                                                           \
-            else                                                                                                                                                        \
-            {                                                                                                                                                           \
-                return T::template invoke<Signature>(target_name, ::std::move(args));                                                                                   \
-            }                                                                                                                                                           \
-        }();                                                                                                                                                            \
-    }
-
-/**
  * \brief Creates a single overload for the given information and extends the `specs` with override.
  * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
  * \param ignore Ignored
@@ -108,41 +49,6 @@ namespace mimicpp
         VA_ARGS)
 
 /**
- * \brief Creates all overloads for a specific function facade.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
- * \param op The operation for each element (see `MIMICPP_DETAIL_MAKE_FACADE_FUNCTION` as an example for the list of required arguments).
- * \param traits The interface traits.
- * \param target_name The callable target name.
- * \param fn_name The function name to be overloaded.
- * \param linkage The linkage for both, the facade functions and the target.
- */
-#define MIMICPP_DETAIL_MAKE_INTERFACE_FACADE_OVERLOADS(op, traits, target_name, fn_name, linkage, ...) \
-    MIMICPP_DETAIL_FOR_EACH_EXT(                                                                       \
-        op,                                                                                            \
-        ,                                                                                              \
-        MIMICPP_DETAIL_NO_DELIMITER,                                                                   \
-        MIMICPP_DETAIL_STRIP_PARENS,                                                                   \
-        (traits, target_name, fn_name, linkage),                                                       \
-        __VA_ARGS__)
-
-/**
- * \brief Creates all overloads for a specific function as overrides and the mock member.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
- * \param traits The interface traits.
- * \param target_name The callable target name.
- * \param fn_name The function name to be overloaded.
- * \param linkage The linkage for both, the facade functions and the target.
- */
-#define MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(fn_op, traits, target_name, fn_name, linkage, ...)               \
-    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE_OVERLOADS(fn_op, traits, target_name, fn_name, linkage, __VA_ARGS__) \
-    MIMICPP_DETAIL_MAKE_FACADE_TARGET(                                                                        \
-        traits,                                                                                               \
-        target_name,                                                                                          \
-        fn_name,                                                                                              \
-        linkage,                                                                                              \
-        (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
-
-/**
  * \brief Entry point for mocking an overloaded interface method.
  * \ingroup MOCK_INTERFACES
  * \param fn_name The name of the overload-set.
@@ -154,7 +60,7 @@ namespace mimicpp
  * \snippet InterfaceMock.cpp interface mock overloaded
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...) \
-    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(            \
+    MIMICPP_DETAIL_MAKE_FACADE(                      \
         MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,         \
         ::mimicpp::facade::mock_as_member,           \
         fn_name##_,                                  \
@@ -195,7 +101,7 @@ namespace mimicpp
  * \snippet InterfaceMock.cpp interface mock with this
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD_WITH_THIS(fn_name, ...)  \
-    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(                       \
+    MIMICPP_DETAIL_MAKE_FACADE(                                 \
         MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE,                    \
         ::mimicpp::facade::mock_as_member_with_this<self_type>, \
         fn_name##_,                                             \
@@ -239,7 +145,7 @@ namespace mimicpp
  * Each overload is implemented as its own facade function, forwarding calls to the underlying target object.
  */
 #define MIMICPP_MAKE_OVERLOADED_FACADE_EXT(traits, target_name, fn_name, linkage, ...) \
-    MIMICPP_DETAIL_MAKE_INTERFACE_FACADE(                                              \
+    MIMICPP_DETAIL_MAKE_FACADE(                                                        \
         MIMICPP_DETAIL_MAKE_FACADE_FUNCTION,                                           \
         traits,                                                                        \
         target_name,                                                                   \

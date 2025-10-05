@@ -173,7 +173,7 @@ namespace mimicpp
  * \ingroup FACADE_DETAIL_MAKE_OVERLOAD_INFOS
  * \param ret The return type.
  * \param param_type_list The parameter types.
- * \param specs An optional parameter for categories (e.g. `const`, `noexcept`, etc.).
+ * \param specs An optional parameter for the specifiers (e.g. `const`, `noexcept`, `override`, etc.).
  * \param call_convention An optional parameter for the used call-convention.
  * \details Strips all optional parenthesizes from the arguments.
  * \note No parens will be stripped from `ret`, because a return type may contain commas (e.g. `std::tuple<int, int`).
@@ -193,7 +193,7 @@ namespace mimicpp
  * \ingroup FACADE_DETAIL_MAKE_OVERLOAD_INFOS
  * \param ret The return type.
  * \param param_type_list The parameter types.
- * \param specs An optional parameter for categories (e.g. `const`, `noexcept`, etc.).
+ * \param specs An optional parameter for the specifiers (e.g. `const`, `noexcept`, `override`, etc.).
  */
 #define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs, ...) \
     MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, specs, )
@@ -213,5 +213,99 @@ namespace mimicpp
  * \see For an explanation of that pattern: https://stackoverflow.com/a/16683147
  */
 #define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, _2, N, ...) N
+
+/**
+ * \brief Adds an overload to the currently built facade.
+ * \ingroup FACADE
+ * \param ret The return type.
+ * \param param_type_list The parameter types.
+ * \param ... An optional parameter for the specifiers (e.g. `const`, `noexcept`, `override`, etc.).
+ */
+#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \
+    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \
+        __VA_ARGS__,                                    \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL,         \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \
+        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) // clangCl doesn't compile without that extra `,`
+
+namespace mimicpp
+{
+    /**
+     * \defgroup FACADE_DETAIL_MAKE_FACADE make facade
+     * \ingroup FACADE_DETAIL
+     * \brief Creates all required facade functions.
+     */
+}
+
+/**
+ * \brief Creates a single facade function.
+ * \ingroup FACADE_DETAIL_MAKE_FACADE
+ * \param ignore Ignored
+ * \param traits The interface traits.
+ * \param target_name The callable target name.
+ * \param fn_name The function name.
+ * \param linkage The function linkage.
+ * \param ret The return type.
+ * \param call_convention The call-convention.
+ * \param param_type_list The parameter types.
+ * \param specs The specifiers (e.g. `const`, `noexcept`, `override`, etc.).
+ * \param param_list Enclosed parameter list.
+ * \param forward_list Enclosed forward statements.
+ */
+#define MIMICPP_DETAIL_MAKE_FACADE_FUNCTION(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
+    linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                            \
+    call_convention fn_name param_list specs                                                                                                                            \
+    {                                                                                                                                                                   \
+        using Signature = ::mimicpp::facade::detail::apply_normalized_specs_t<                                                                                          \
+            MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list,                                                                                                           \
+            ::mimicpp::util::StaticString{#specs}>;                                                                                                                     \
+        auto args = ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                        \
+                                                                                                                                                                        \
+        return [&]<typename T = traits>() -> decltype(auto) {                                                                                                           \
+            if constexpr (::mimicpp::facade::detail::is_member_v<T>)                                                                                                    \
+            {                                                                                                                                                           \
+                return T::template invoke<Signature>(target_name, this, ::std::move(args));                                                                             \
+            }                                                                                                                                                           \
+            else                                                                                                                                                        \
+            {                                                                                                                                                           \
+                return T::template invoke<Signature>(target_name, ::std::move(args));                                                                                   \
+            }                                                                                                                                                           \
+        }();                                                                                                                                                            \
+    }
+
+/**
+ * \brief Creates all overloads for a specific function facade.
+ * \ingroup FACADE_DETAIL_MAKE_FACADE
+ * \param op The operation for each element (see `MIMICPP_DETAIL_MAKE_FACADE_FUNCTION` as an example for the list of required arguments).
+ * \param traits The interface traits.
+ * \param target_name The callable target name.
+ * \param fn_name The function name to be overloaded.
+ * \param linkage The linkage for both, the facade functions and the target.
+ */
+#define MIMICPP_DETAIL_MAKE_FACADE_OVERLOADS(op, traits, target_name, fn_name, linkage, ...) \
+    MIMICPP_DETAIL_FOR_EACH_EXT(                                                             \
+        op,                                                                                  \
+        ,                                                                                    \
+        MIMICPP_DETAIL_NO_DELIMITER,                                                         \
+        MIMICPP_DETAIL_STRIP_PARENS,                                                         \
+        (traits, target_name, fn_name, linkage),                                             \
+        __VA_ARGS__)
+
+/**
+ * \brief Creates all overloads for a specific function facade and the target object.
+ * \ingroup FACADE_DETAIL_MAKE_FACADE
+ * \param traits The interface traits.
+ * \param target_name The callable target name.
+ * \param fn_name The function name to be overloaded.
+ * \param linkage The linkage for both, the facade functions and the target.
+ */
+#define MIMICPP_DETAIL_MAKE_FACADE(fn_op, traits, target_name, fn_name, linkage, ...)               \
+    MIMICPP_DETAIL_MAKE_FACADE_OVERLOADS(fn_op, traits, target_name, fn_name, linkage, __VA_ARGS__) \
+    MIMICPP_DETAIL_MAKE_FACADE_TARGET(                                                              \
+        traits,                                                                                     \
+        target_name,                                                                                \
+        fn_name,                                                                                    \
+        linkage,                                                                                    \
+        (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))
 
 #endif
