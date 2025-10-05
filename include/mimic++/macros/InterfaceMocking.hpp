@@ -18,61 +18,6 @@ namespace mimicpp
      */
 }
 
-namespace mimicpp
-{
-    /**
-     * \defgroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS make_overload_infos
-     * \ingroup MOCK_INTERFACES_DETAIL
-     * \brief Related functions for MIMICPP_ADD_OVERLOAD.
-     */
-}
-
-/**
- * \brief Base overload, extending the overload info (enclosed by parentheses).
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS
- * \param ret The return type.
- * \param param_type_list The parameter types.
- * \param specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
- * \param call_convention An optional parameter for the utilized call-convention.
- * \details Strips all optional parenthesize from the arguments.
- * \note No parens will be stripped from ``ret``, because a return type may contain commas (e.g. ``std::tuple<int, int>``).
- * This must be done in a later step.
- */
-#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, specs, call_convention, ...) \
-    (                                                                                             \
-        ret,                                                                                      \
-        MIMICPP_DETAIL_STRIP_PARENS(call_convention),                                             \
-        param_type_list,                                                                          \
-        MIMICPP_DETAIL_STRIP_PARENS(specs),                                                       \
-        (MIMICPP_DETAIL_MAKE_PARAM_LIST(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))),           \
-        (MIMICPP_DETAIL_FORWARD_ARGS_AS_TUPLE(MIMICPP_DETAIL_STRIP_PARENS(param_type_list))))
-
-/**
- * \brief Simple overload, extending the overload info (enclosed by parentheses).
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS
- * \param ret The return type.
- * \param param_type_list The parameter types.
- * \param specs An optional parameter for categories (e.g. ``const``, ``noexcept``, etc.).
- */
-#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS(ret, param_type_list, specs, ...) \
-    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, specs, )
-
-/**
- * \brief Simple overload, extending the overload info (enclosed by parentheses).
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS
- * \param ret The return type.
- * \param param_type_list The parameter types.
- */
-#define MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC(ret, param_type_list, ...) \
-    MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL(ret, param_type_list, , )
-
-/**
- * \brief Selects the correct overload, depending on the number of arguments.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_OVERLOAD_INFOS
- * \see For an explanation of that pattern: https://stackoverflow.com/a/16683147
- */
-#define MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(_1, _2, N, ...) N
-
 /**
  * \brief Adds an overload to an interface mock. Used only in combination with \ref MIMICPP_MOCK_OVERLOADED_METHOD.
  * \ingroup MOCK_INTERFACES
