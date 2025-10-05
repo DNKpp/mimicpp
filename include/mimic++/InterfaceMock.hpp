@@ -193,7 +193,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::detail
             {
                 bool hasConst{false};
                 ValueCategory refQualifier = ValueCategory::any;
-                bool hasNoexcept;
+                bool hasNoexcept{false};
             };
 
             spec_info result{};
