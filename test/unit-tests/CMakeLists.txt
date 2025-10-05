@@ -21,6 +21,7 @@ add_executable(${TARGET_NAME}
 
 add_subdirectory(call-conventions)
 add_subdirectory(config)
+add_subdirectory(macros)
 add_subdirectory(matchers)
 add_subdirectory(policies)
 add_subdirectory(printing)
