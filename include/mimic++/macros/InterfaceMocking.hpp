@@ -7,6 +7,7 @@
 #define MIMICPP_MACROS_INTERFACE_MOCKING_HPP
 
 #include "mimic++/macros/Common.hpp"
+#include "mimic++/macros/FacadeHelper.hpp"
 
 namespace mimicpp
 {
