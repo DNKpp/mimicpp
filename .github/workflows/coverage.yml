@@ -94,6 +94,7 @@ jobs:
               --exclude-function-lines \
               --exclude-noncode-lines \
               --exclude-throw-branches \
+              --merge-lines \
               --decisions \
               --calls \
               --keep \
