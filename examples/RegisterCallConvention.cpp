@@ -37,7 +37,7 @@ TEST_CASE(
     struct derived
         : public interface
     {
-        MIMICPP_MOCK_METHOD(foo, void, (), const, __stdcall); // the call-convention goes last
+        MIMICPP_MAKE_MEMBER_MOCK(foo, void, (), const override, __stdcall); // the call-convention goes last
     };
 
     derived mock{};
