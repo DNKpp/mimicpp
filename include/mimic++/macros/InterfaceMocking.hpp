@@ -12,6 +12,18 @@
 namespace mimicpp
 {
     /**
+     * \defgroup MOCK_INTERFACES interfaces
+     * \ingroup MOCK
+     * \ingroup FACADE
+     * \brief [Deprecated] Utilities to simplify interface mocking.
+     * \details
+     * Please note that all symbols in this section are deprecated and will be removed in a future release.
+     * I kindly recommend replacing their usage with the new, more feature-rich facade generator macros,
+     * which offer improved flexibility and maintainability.
+     * For more information, please refer to the \ref FACADE "facade section" in the documentation.
+     */
+
+    /**
      * \defgroup MOCK_INTERFACES_DETAIL detail
      * \ingroup MOCK_INTERFACES
      * \brief Contains several macros, used for interface mock implementation.
@@ -21,7 +33,7 @@ namespace mimicpp
 
 /**
  * \brief Creates a single overload for the given information and extends the `specs` with override.
- * \ingroup MOCK_INTERFACES_DETAIL_MAKE_FACADES
+ * \ingroup MOCK_INTERFACES_DETAIL
  * \param ignore Ignored
  * \param traits The interface traits.
  * \param target_name The callable target name.
