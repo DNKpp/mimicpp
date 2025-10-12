@@ -8,6 +8,7 @@ add_executable(${TARGET_NAME}
     "CustomMatcher.cpp"
     "CustomPrinter.cpp"
     "CustomString.cpp"
+    "FacadeMock.cpp"
     "Finalizers.cpp"
     "InterfaceMock.cpp"
     "Mock.cpp"

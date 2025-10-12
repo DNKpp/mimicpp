@@ -35,28 +35,28 @@ static_assert(
     "MAKE_MEMBER_MOCK must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
 #endif
 
+#ifdef MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+#endif
+
+#ifdef MAKE_MEMBER_MOCK_WITH_THIS
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "MAKE_MEMBER_MOCK_WITH_THIS must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+#endif
+
 #ifdef MOCK_METHOD
 static_assert(
     mimicpp::util::always_false<>::value,
     "MOCK_METHOD must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
 #endif
 
-#ifdef MOCK_METHOD_WITH_THIS
-static_assert(
-    mimicpp::util::always_false<>::value,
-    "MOCK_METHOD_WITH_THIS must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
-#endif
-
 #ifdef MOCK_OVERLOADED_METHOD
 static_assert(
     mimicpp::util::always_false<>::value,
     "MOCK_OVERLOADED_METHOD must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
-#endif
-
-#ifdef MOCK_OVERLOADED_METHOD_WITH_THIS
-static_assert(
-    mimicpp::util::always_false<>::value,
-    "MOCK_OVERLOADED_METHOD_WITH_THIS must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
 #endif
 
 #ifdef ADD_OVERLOAD

@@ -405,7 +405,7 @@ namespace mimicpp
 
 /**
  * \brief Entry point for mocking a single member method.
- * \ingroup MOCK_INTERFACES
+ * \ingroup FACADE
  * \param fn_name The method name.
  * \param param_type_list The list of parameter types.
  * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
@@ -427,6 +427,76 @@ namespace mimicpp
      * \ingroup FACADE
      */
     #define MAKE_MEMBER_MOCK MIMICPP_MAKE_MEMBER_MOCK
+#endif
+
+/**
+ * \brief Entry point for mocking a member method overload-set with an explicit `this` pointer.
+ * \ingroup FACADE
+ * \param fn_name The name of the overload-set.
+ * \param ... Overloads must be declared using the \ref MIMICPP_ADD_OVERLOAD macro.
+ *
+ * \details
+ * This macro defines a single member mock object that supports an arbitrary number of member function overloads.
+ * Each overload is implemented as its own facade member function,
+ * forwarding calls to the underlying mock member-object while prepending an explicit `this` pointer to the argument list.
+ *
+ * The mock member-object name is the content of `fn_name` suffixed by an additional `_`.
+ *
+ * \attention
+ * This macro requires a `self_type` alias to be defined in the class where the mock is declared.
+ * If `self_type` does not match the actual containing type, the behavior is undefined.
+ *
+ * \snippet FacadeMock.cpp facade mock with this
+ */
+#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS(fn_name, ...) \
+    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                             \
+        ::mimicpp::facade::mock_as_member_with_this<self_type>,     \
+        fn_name##_,                                                 \
+        fn_name,                                                    \
+        ,                                                           \
+        __VA_ARGS__)
+
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS.
+     * \ingroup FACADE
+     * \snippet FacadeMock.cpp facade mock with this
+     */
+    #define MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS
+#endif
+
+/**
+ * \brief Entry point for mocking a single member method with an explicit *this* pointer.
+ * \ingroup FACADE
+ * \param fn_name The method name.
+ * \param param_type_list The list of parameter types.
+ * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ *
+ * \details
+ * This macro defines a single mock member-object for one method signature and generates a corresponding facade member function.
+ * The facade member function forwards its calls to the underlying mock object-member
+ * and prepends an explicit `this` pointer to the argument list.
+ *
+ * The mock member-object name is the content of `fn_name` suffixed by an additional `_`.
+ *
+ * \attention
+ * This macro requires a `self_type` alias to be defined in the class where the mock is declared.
+ * If `self_type` does not match the actual containing type, the behavior is undefined.
+ *
+ * \snippet FacadeMock.cpp facade mock with this
+ */
+#define MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS(fn_name, ret, param_type_list, ...) \
+    MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS(                             \
+        fn_name,                                                               \
+        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
+
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS.
+     * \ingroup FACADE
+     * \snippet FacadeMock.cpp facade mock with this
+     */
+    #define MAKE_MEMBER_MOCK_WITH_THIS MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS
 #endif
 
 #endif
