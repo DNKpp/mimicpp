@@ -35,6 +35,7 @@ namespace mimicpp
  * \param forward_list Enclosed forward statements.
  */
 #define MIMICPP_DETAIL_MAKE_METHOD_OVERRIDE(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
+    [[deprecated("(MIMICPP_)MOCK_(OVERLOADED_)METHOD is deprecated, use (MIMICPP_)MAKE_(OVERLOADED_)MEMBER_MOCK instead.")]]                                            \
     MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION(                                                                                                                            \
         ignore,                                                                                                                                                         \
         traits,                                                                                                                                                         \

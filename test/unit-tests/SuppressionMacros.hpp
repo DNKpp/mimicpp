@@ -16,6 +16,7 @@
     #define SUPPRESS_SELF_MOVE           // seems not required on msvc
     #define SUPPRESS_SELF_ASSIGN         // seems not required on msvc
     #define SUPPRESS_MAYBE_UNINITIALIZED // seems not required on msvc
+    #define SUPPRESS_DEPRECATION         __pragma(warning(disable: 4996))
 
 #else
 
@@ -48,4 +49,5 @@
         #define SUPPRESS_SELF_ASSIGN
     #endif
 
+    #define SUPPRESS_DEPRECATION _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #endif

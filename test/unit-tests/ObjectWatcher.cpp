@@ -455,7 +455,7 @@ TEST_CASE(
         : public Interface
     {
     public:
-        MIMICPP_MOCK_METHOD(foo, void, ());
+        MIMICPP_MAKE_MEMBER_MOCK(foo, void, (), override);
     };
 
     STATIC_REQUIRE(std::is_nothrow_destructible_v<Watched<Derived, LifetimeWatcher>>);
@@ -890,7 +890,7 @@ TEST_CASE(
         : public Interface
     {
     public:
-        MIMICPP_MOCK_METHOD(foo, void, ());
+        MIMICPP_MAKE_MEMBER_MOCK(foo, void, (), override);
     };
 
     STATIC_REQUIRE(std::is_nothrow_move_constructible_v<Watched<Derived, RelocationWatcher>>);
