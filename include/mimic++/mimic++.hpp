@@ -18,7 +18,7 @@
 #include "mimic++/CallConvention.hpp"
 #include "mimic++/Expectation.hpp"
 #include "mimic++/ExpectationBuilder.hpp"
-#include "mimic++/InterfaceMock.hpp"
+#include "mimic++/Facade.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/ObjectWatcher.hpp"
 #include "mimic++/Printing.hpp"
