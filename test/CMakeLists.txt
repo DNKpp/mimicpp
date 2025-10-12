@@ -6,6 +6,7 @@
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 add_subdirectory("test-basics")
+add_subdirectory("compile-errors")
 
 option(MIMICPP_ENABLE_UNIT_TESTS "Determines, whether the unit-tests shall be built." ON)
 if (MIMICPP_ENABLE_UNIT_TESTS)
