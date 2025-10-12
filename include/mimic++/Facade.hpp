@@ -24,6 +24,54 @@
     #include <utility>
 #endif
 
+namespace mimicpp
+{
+    /**
+     * \defgroup FACADE facade
+     * \brief Contains utility to simplify the process of generating forwarding facade functions.
+     *
+     * \details
+     * While this library tries avoiding macros when possible, sometimes we must not be too stubborn.
+     * Making interface mocking more enjoyable is such a situation.
+     * While this can, of course, be done without macros, this quickly becomes annoying, due to the necessary boilerplate code.
+     * \snippet FacadeMock.cpp facade mock manual
+     *
+     * *mimic++* therefore introduces several macros, which helps to reduce the effort to a minimum.
+     * With them, the boilerplate can be reduced to this macro invocation, which effectively does the same as before:
+     * ```cpp
+     * MAKE_MEMBER_METHOD(foo, void, (), override);
+     * ```
+     *
+     * The good news is that these macros are just a thin layer around the macro-free core and can thus be easily avoided.
+     * Nevertheless, *mimic++* still aims to become as macro-less as possible.
+     * As soon as reflection becomes available,
+     * an attempt will be made to solve this feature completely in the C++ language (hopefully with c++26, but only time will tell).
+     *
+     * ## Multiple inheritance
+     *
+     * This use-case is fully supported, without any special tricks.
+     * \snippet FacadeMock.cpp facade mock multiple inheritance
+     *
+     * ## Mocks and variadic templates
+     *
+     * Due to the nature of the `mimicpp::Mock` design, it directly supports packs without any question.
+     * \snippet VariadicMocks.cpp variadic mock def
+     * \snippet VariadicMocks.cpp variadic mock
+     *
+     * The interesting part is: Do the facade macros also support variadic templates?
+     *
+     * Yes they do! Both handle packs correctly.
+     * \snippet VariadicMocks.cpp variadic interface def
+     *
+     * They can then be used with arbitrary template arguments.
+     * \snippet VariadicMocks.cpp variadic interface zero
+     * \snippet VariadicMocks.cpp variadic interface 2
+     *
+     * \see A more detailed explanation about the internals can be found here
+     * https://dnkpp.github.io/2024-12-15-simultaneous-pack-expansion-inside-macros/
+     */
+}
+
 namespace mimicpp::facade::detail
 {
     // * the generated facade implementation - lambda
