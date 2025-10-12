@@ -208,19 +208,19 @@ namespace mimicpp
  * \param linkage The linkage specifier(s).
  * \param signatures The given signatures. Enclosing parentheses will be stripped.
  */
-#define MIMICPP_DETAIL_GENERATE_FACADE_TARGET(traits, target_name, fn_name, linkage, signatures) \
-    linkage typename traits::target_type<MIMICPP_DETAIL_STRIP_PARENS(signatures)> target_name    \
-    {                                                                                            \
-        [&]<typename T = traits>() {                                                             \
-            if constexpr (::mimicpp::facade::detail::is_member_v<T>)                             \
-            {                                                                                    \
-                return T::make_settings(this, #fn_name);                                         \
-            }                                                                                    \
-            else                                                                                 \
-            {                                                                                    \
-                return T::make_settings(#fn_name);                                               \
-            }                                                                                    \
-        }()                                                                                      \
+#define MIMICPP_DETAIL_GENERATE_FACADE_TARGET(traits, target_name, fn_name, linkage, signatures)       \
+    linkage typename traits::template target_type<MIMICPP_DETAIL_STRIP_PARENS(signatures)> target_name \
+    {                                                                                                  \
+        [&]<typename T = traits>() {                                                                   \
+            if constexpr (::mimicpp::facade::detail::is_member_v<T>)                                   \
+            {                                                                                          \
+                return T::make_settings(this, #fn_name);                                               \
+            }                                                                                          \
+            else                                                                                       \
+            {                                                                                          \
+                return T::make_settings(#fn_name);                                                     \
+            }                                                                                          \
+        }()                                                                                            \
     }
 
 /**
@@ -356,8 +356,8 @@ namespace mimicpp
  * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
  *
  * \details
- * This macro defines a single target object for one method signature and generates a corresponding facade method.
- * The facade method forwards its calls to the underlying target object.
+ * This macro defines a single target object for one method signature and generates a corresponding facade function.
+ * The facade function forwards its calls to the underlying target object.
  */
 #define MIMICPP_MAKE_FACADE_EXT(traits, target_name, fn_name, linkage, ret, param_type_list, ...) \
     MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                                                           \
@@ -374,5 +374,43 @@ namespace mimicpp
      */
     #define MAKE_FACADE_EXT MIMICPP_MAKE_FACADE_EXT
 #endif
+
+/**
+ * \brief Entry point for mocking a member method overload-set.
+ * \ingroup FACADE
+ * \param fn_name The name of the overload-set.
+ * \param ... Overloads must be declared using the \ref MIMICPP_ADD_OVERLOAD macro.
+ *
+ * \details
+ * This macro defines a single member target object that supports an arbitrary number of member function overloads.
+ * Each overload is implemented as its own facade member function, forwarding calls to the underlying target object member.
+ *
+ * The target name is the `fn_name` suffixed by an additional `_`.
+ */
+#define MIMICPP_MAKE_OVERLOADED_MEMBER_FACADE(fn_name, ...) \
+    MIMICPP_MAKE_FACADE_EXT(                                \
+        ::mimicpp::facade::mock_as_member,                  \
+        fn_name##_,                                         \
+        fn_name,                                            \
+        ,                                                   \
+        __VA_ARGS__)
+
+/**
+ * \brief Entry point for mocking a single member method.
+ * \ingroup MOCK_INTERFACES
+ * \param fn_name The method name.
+ * \param param_type_list The list of parameter types.
+ * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ *
+ * \details
+ * This macro defines a single member target object for one method signature and generates a corresponding facade member function.
+ * The facade member function forwards its calls to the underlying target object member.
+ *
+ * The target name is the `fn_name` suffixed by an additional `_`.
+ */
+#define MIMICPP_MAKE_MEMBER_FACADE(fn_name, ret, param_type_list, ...) \
+    MIMICPP_MAKE_OVERLOADED_MEMBER_FACADE(                             \
+        fn_name,                                                       \
+        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
 
 #endif
