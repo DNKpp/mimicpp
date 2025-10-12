@@ -16,7 +16,8 @@ namespace mimicpp
      * \ingroup MOCK
      * \ingroup FACADE
      * \brief [Deprecated] Utilities to simplify interface mocking.
-     * \details
+     *
+     * \deprecated
      * Please note that all symbols in this section are deprecated and will be removed in a future release.
      * I kindly recommend replacing their usage with the new, more feature-rich facade generator macros,
      * which offer improved flexibility and maintainability.
@@ -68,6 +69,7 @@ namespace mimicpp
  * \param fn_name The name of the overload-set.
  * \param ... Overloads must be declared using the \ref MIMICPP_ADD_OVERLOAD macro.
  *
+ * \deprecated Use \ref MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK or \ref MAKE_OVERLOADED_MEMBER_MOCK instead.
  * \details
  * This macro defines a single mock object that supports an arbitrary number of overloads.
  * Each overload is implemented as an override method, forwarding calls to the mock object.
@@ -88,6 +90,8 @@ namespace mimicpp
  * \param fn_name The method name.
  * \param param_type_list The list of parameter types.
  * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ *
+ * \deprecated Use \ref MIMICPP_MAKE_MEMBER_MOCK or \ref MAKE_MEMBER_MOCK instead.
  * \details
  * This macro defines a single mock object for one method signature and generates a corresponding
  * override method. The override method forwards calls to the mock object.
