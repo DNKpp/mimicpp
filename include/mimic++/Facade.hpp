@@ -72,13 +72,6 @@ namespace mimicpp::facade::detail
                 std::forward<Args>(std::get<indices>(args))...);
         }(std::index_sequence_for<Args...>{});
     }
-
-    template <typename Traits>
-    inline constexpr bool is_member_v = false;
-
-    template <typename Traits>
-        requires requires { Traits::is_member; }
-    inline constexpr bool is_member_v<Traits>{Traits::is_member};
 }
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade
@@ -153,6 +146,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade
 // These symbols are called from within "exported" macros and must thus be visible to the caller.
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade::detail
 {
+    template <typename Traits>
+    inline constexpr bool is_member_v = false;
+
+    template <typename Traits>
+        requires requires { Traits::is_member; }
+    inline constexpr bool is_member_v<Traits>{Traits::is_member};
+
     template <auto specText>
     struct apply_normalized_specs
     {
