@@ -11,7 +11,10 @@ using namespace mimicpp;
 
 namespace
 {
-    void CheckOmittedStacktraceEntry(util::SourceLocation const& before, reporting::CallReport const& report, util::SourceLocation const& after)
+    void CheckOmittedStacktraceEntry(
+        [[maybe_unused]] util::SourceLocation const& before,
+        reporting::CallReport const& report,
+        [[maybe_unused]] util::SourceLocation const& after)
     {
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
         CHECK_THAT(
