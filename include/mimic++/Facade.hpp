@@ -204,28 +204,24 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade::detail
     template <auto specText>
     struct apply_normalized_specs
     {
+    private:
+        struct spec_info
+        {
+            bool hasConst{false};
+            ValueCategory refQualifier = ValueCategory::any;
+            bool hasNoexcept{false};
+        };
+
         [[nodiscard]]
         static consteval auto evaluate_specs()
         {
-            constexpr std::string_view constKeyword{"const"};
-            constexpr std::string_view noexceptKeyword{"noexcept"};
-            constexpr std::string_view overrideKeyword{"override"};
-            constexpr std::string_view finalKeyword{"final"};
-
             auto const end = std::ranges::end(specText);
-            auto const find_token_begin = [&](auto const first) noexcept {
-                constexpr auto is_space = [](char const c) noexcept {
+            auto const find_token_begin = [&](auto const first) consteval noexcept {
+                constexpr auto is_space = [](char const c) consteval noexcept {
                     return ' ' == c || '\t' == c;
                 };
 
                 return std::ranges::find_if_not(first, end, is_space);
-            };
-
-            struct spec_info
-            {
-                bool hasConst{false};
-                ValueCategory refQualifier = ValueCategory::any;
-                bool hasNoexcept{false};
             };
 
             spec_info result{};
@@ -233,49 +229,67 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade::detail
                  tokenBegin != end;
                  tokenBegin = find_token_begin(tokenBegin))
             {
-                if ('&' == *tokenBegin)
-                {
-                    MIMICPP_ASSERT(result.refQualifier == ValueCategory::any, "Ref-qualifier already set.");
-                    if (++tokenBegin != end
-                        && '&' == *tokenBegin)
-                    {
-                        ++tokenBegin;
-                        result.refQualifier = ValueCategory::rvalue;
-                    }
-                    else
-                    {
-                        result.refQualifier = ValueCategory::lvalue;
-                    }
-                }
-                else
-                {
-                    constexpr auto is_word_continue = [](char const c) noexcept {
-                        return ('a' <= c && c <= 'z')
-                            || ('A' <= c && c <= 'Z');
-                    };
-
-                    auto const tokenEnd = std::ranges::find_if_not(tokenBegin, end, is_word_continue);
-                    std::string_view const token{tokenBegin, tokenEnd};
-                    if (constKeyword == token)
-                    {
-                        MIMICPP_ASSERT(!result.hasConst, "Const-qualifier already set.");
-                        result.hasConst = true;
-                    }
-                    else if (noexceptKeyword == token)
-                    {
-                        MIMICPP_ASSERT(!result.hasNoexcept, "Noexcept-qualifier already set.");
-                        result.hasNoexcept = true;
-                    }
-                    else if (overrideKeyword != token && finalKeyword != token)
-                    {
-                        throw std::runtime_error{"Invalid spec"};
-                    }
-
-                    tokenBegin = tokenEnd;
-                }
+                tokenBegin = ('&' == *tokenBegin)
+                               ? parse_ref_specifier(tokenBegin, end, result)
+                               : parse_keyword_specifier(tokenBegin, end, result);
             }
 
             return result;
+        }
+
+        template <typename Iter>
+        [[nodiscard]]
+        static consteval Iter parse_ref_specifier(Iter first, auto const end, spec_info& out_info)
+        {
+            MIMICPP_ASSERT(first != end, "First must point to the first `&` character.");
+            MIMICPP_ASSERT(out_info.refQualifier == ValueCategory::any, "Ref-qualifier already set.");
+
+            if (++first != end
+                && '&' == *first)
+            {
+                ++first;
+                out_info.refQualifier = ValueCategory::rvalue;
+            }
+            else
+            {
+                out_info.refQualifier = ValueCategory::lvalue;
+            }
+
+            return first;
+        }
+
+        template <typename Iter>
+        [[nodiscard]]
+        static consteval Iter parse_keyword_specifier(Iter first, auto const end, spec_info& out_info)
+        {
+            MIMICPP_ASSERT(first != end, "First must point to the first keyword character.");
+
+            constexpr auto is_word_continue = [](char const c) consteval noexcept {
+                return ('a' <= c && c <= 'z')
+                    || ('A' <= c && c <= 'Z');
+            };
+
+            auto const tokenEnd = std::ranges::find_if_not(first + 1u, end, is_word_continue);
+            std::string_view const token{first, tokenEnd};
+            if (constexpr std::string_view constKeyword{"const"};
+                constKeyword == token)
+            {
+                MIMICPP_ASSERT(!out_info.hasConst, "Const-qualifier already set.");
+                out_info.hasConst = true;
+            }
+            else if (constexpr std::string_view noexceptKeyword{"noexcept"};
+                     noexceptKeyword == token)
+            {
+                MIMICPP_ASSERT(!out_info.hasNoexcept, "Noexcept-qualifier already set.");
+                out_info.hasNoexcept = true;
+            }
+            else if (constexpr std::string_view overrideKeyword{"override"}, finalKeyword{"final"};
+                     overrideKeyword != token && finalKeyword != token)
+            {
+                throw "Invalid spec";
+            }
+
+            return tokenEnd;
         }
 
         static constexpr auto info = evaluate_specs();

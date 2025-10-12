@@ -20,6 +20,13 @@ TEMPLATE_TEST_CASE_SIG(
 {
     using RawSig = Return(Params...);
 
+    SECTION("Leading and trailing whitespaces are ignored.")
+    {
+        STATIC_REQUIRE(std::same_as<Return(Params...), facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"    override\t\t  "}>>);
+        STATIC_REQUIRE(std::same_as<Return(Params...), facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"\t\t\toverride  \t"}>>);
+        STATIC_REQUIRE(std::same_as<Return(Params...), facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"  \t\t  "}>>);
+    }
+
     SECTION("Without noexcept.")
     {
         SECTION("Without other specs.")
