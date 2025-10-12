@@ -332,6 +332,49 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "Interface mock omits the forwarding functions stacktrace entry.",
+    "[mock][mock::interface]")
+{
+    struct interface
+    {
+        virtual ~interface() = default;
+        virtual void foo() = 0;
+    };
+
+    struct derived
+        : public interface
+    {
+        MIMICPP_MOCK_METHOD(foo, void, ());
+    };
+
+    ScopedReporter reporter{};
+
+    derived mock{};
+    ScopedExpectation const exp = mock.foo_.expect_call();
+    [[maybe_unused]] util::SourceLocation constexpr before{};
+    mock.foo();
+    [[maybe_unused]] util::SourceLocation constexpr after{};
+
+    REQUIRE_THAT(
+        reporter.full_match_reports(),
+        Catch::Matchers::SizeIs(1u));
+
+    reporting::CallReport const& report = std::get<0>(reporter.full_match_reports().front());
+
+#if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
+    CHECK_THAT(
+        report.stacktrace.source_file(0u),
+        Catch::Matchers::Equals(std::string{before.file_name()}));
+    // there is no straight-forward way to check the description
+    CHECK(before.line() < report.stacktrace.source_line(0u));
+    // strict < fails on some compilers
+    CHECK(report.stacktrace.source_line(0u) <= after.line());
+#else
+    REQUIRE(report.stacktrace.empty());
+#endif
+}
+
+TEST_CASE(
     "Interface mock generates appropriate mock names.",
     "[mock][mock::interface]")
 {
