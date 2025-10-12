@@ -6,6 +6,8 @@
 #include "mimic++/Facade.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
+#include "../test/unit-tests/SuppressionMacros.hpp" // needs to disable the deprecations
+
 TEST_CASE(
     "Mocking interface methods by hand.",
     "[example][example::mock][example::mock::interface]")
@@ -49,6 +51,9 @@ TEST_CASE(
     my_function(mock);
     //! [interface mock manual]
 }
+
+START_WARNING_SUPPRESSION
+SUPPRESS_DEPRECATION
 
 TEST_CASE(
     "Interfaces methods can be mocked.",
@@ -189,3 +194,5 @@ TEST_CASE(
     use_interfaceB(mock); // calls foo() and the const bar()
                           //! [interface mock multiple inheritance]
 }
+
+STOP_WARNING_SUPPRESSION

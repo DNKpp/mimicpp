@@ -54,11 +54,11 @@ namespace
         : public VariadicInterface<Args...>
     {
     public:
-        MOCK_METHOD(foo, void, (Args...));
-        MOCK_OVERLOADED_METHOD(
+        MAKE_MEMBER_MOCK(foo, void, (Args...), override);
+        MAKE_OVERLOADED_MEMBER_MOCK(
             bar,
-            ADD_OVERLOAD(int, (int, Args...)),
-            ADD_OVERLOAD(std::string, (Args..., int, Args...), const));
+            ADD_OVERLOAD(int, (int, Args...), override),
+            ADD_OVERLOAD(std::string, (Args..., int, Args...), const override));
     };
 
     //! [variadic interface def]

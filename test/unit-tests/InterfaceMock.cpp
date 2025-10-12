@@ -7,10 +7,14 @@
 #include "mimic++/ScopedSequence.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
+#include "SuppressionMacros.hpp"
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
 
 using namespace mimicpp;
+
+START_WARNING_SUPPRESSION
+SUPPRESS_DEPRECATION
 
 TEST_CASE(
     "MIMICPP_MOCK_OVERLOADED_METHOD creates mock and overloaded functions.",
@@ -399,3 +403,5 @@ TEST_CASE(
             && Catch::Matchers::EndsWith("::foo")
             && Catch::Matchers::Matches(R"(.+derived::foo)"));
 }
+
+STOP_WARNING_SUPPRESSION

@@ -521,7 +521,7 @@ TEST_CASE(
             : public Interface
         {
         public:
-            MIMICPP_MOCK_METHOD(foo, void, (), , CALL_CONVENTION);
+            MIMICPP_MAKE_MEMBER_MOCK(foo, void, (), override, CALL_CONVENTION);
         };
 
         Derived mock{};
@@ -543,7 +543,7 @@ TEST_CASE(
             : public Interface
         {
         public:
-            MIMICPP_MOCK_METHOD(foo, void, (), , (CALL_CONVENTION));
+            MIMICPP_MAKE_MEMBER_MOCK(foo, void, (), override, (CALL_CONVENTION));
         };
 
         Derived mock{};
@@ -566,10 +566,10 @@ TEST_CASE(
             : public Interface
         {
         public:
-            MIMICPP_MOCK_OVERLOADED_METHOD(
+            MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(
                 foo,
-                MIMICPP_ADD_OVERLOAD(void, (), , CALL_CONVENTION),
-                MIMICPP_ADD_OVERLOAD(void, (), const));
+                MIMICPP_ADD_OVERLOAD(void, (), override, CALL_CONVENTION),
+                MIMICPP_ADD_OVERLOAD(void, (), const override));
         };
 
         Derived mock{};
