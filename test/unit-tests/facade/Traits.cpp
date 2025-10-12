@@ -92,3 +92,54 @@ TEST_CASE(
         std::get<0>(reporter.full_match_reports().front()),
         after);
 }
+
+TEST_CASE(
+    "facade::mock_as_member traits generates an appropriate target name.",
+    "[facade]")
+{
+    struct Type
+    {
+        MIMICPP_MAKE_FACADE_EXT(
+            facade::mock_as_member,
+            foo_,
+            foo,
+            /*linkage*/,
+            void,
+            ());
+    };
+
+    Type target{};
+    ScopedExpectation const expectation = target.foo_.expect_call()
+                                      and expect::never();
+    REQUIRE_THAT(
+        expectation.mock_name(),
+        Catch::Matchers::ContainsSubstring("Type")
+            && Catch::Matchers::EndsWith("::foo")
+            && Catch::Matchers::Matches(R"(.+Type::foo)"));
+}
+
+TEST_CASE(
+    "facade::mock_as_member_with_this traits generates an appropriate target name.",
+    "[facade]")
+{
+    struct Type
+    {
+        MIMICPP_MAKE_FACADE_EXT(
+            facade::mock_as_member_with_this<Type>,
+            foo_,
+            foo,
+            /*linkage*/,
+            void,
+            ());
+    };
+
+    Type target{};
+    ScopedExpectation const expectation = target.foo_.expect_call(&target)
+                                      and expect::never();
+    REQUIRE_THAT(
+        expectation.mock_name(),
+        Catch::Matchers::ContainsSubstring("Type")
+            && Catch::Matchers::EndsWith("::foo")
+            && Catch::Matchers::Matches(R"(.+Type::foo)"));
+}
+
