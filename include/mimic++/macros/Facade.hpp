@@ -382,17 +382,17 @@ namespace mimicpp
  * \param ... Overloads must be declared using the \ref MIMICPP_ADD_OVERLOAD macro.
  *
  * \details
- * This macro defines a single member target object that supports an arbitrary number of member function overloads.
- * Each overload is implemented as its own facade member function, forwarding calls to the underlying target object member.
+ * This macro defines a single member mock object that supports an arbitrary number of member function overloads.
+ * Each overload is implemented as its own facade member function, forwarding calls to the underlying mock member-object.
  *
- * The target name is the `fn_name` suffixed by an additional `_`.
+ * The mock member-object name is the content of `fn_name` suffixed by an additional `_`.
  */
-#define MIMICPP_MAKE_OVERLOADED_MEMBER_FACADE(fn_name, ...) \
-    MIMICPP_MAKE_FACADE_EXT(                                \
-        ::mimicpp::facade::mock_as_member,                  \
-        fn_name##_,                                         \
-        fn_name,                                            \
-        ,                                                   \
+#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(fn_name, ...) \
+    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                   \
+        ::mimicpp::facade::mock_as_member,                \
+        fn_name##_,                                       \
+        fn_name,                                          \
+        ,                                                 \
         __VA_ARGS__)
 
 /**
@@ -403,14 +403,14 @@ namespace mimicpp
  * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
  *
  * \details
- * This macro defines a single member target object for one method signature and generates a corresponding facade member function.
- * The facade member function forwards its calls to the underlying target object member.
+ * This macro defines a single mock member-object for one method signature and generates a corresponding facade member function.
+ * The facade member function forwards its calls to the underlying mock object-member.
  *
- * The target name is the `fn_name` suffixed by an additional `_`.
+ * The mock member-object name is the content of `fn_name` suffixed by an additional `_`.
  */
-#define MIMICPP_MAKE_MEMBER_FACADE(fn_name, ret, param_type_list, ...) \
-    MIMICPP_MAKE_OVERLOADED_MEMBER_FACADE(                             \
-        fn_name,                                                       \
+#define MIMICPP_MAKE_MEMBER_MOCK(fn_name, ret, param_type_list, ...) \
+    MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(                             \
+        fn_name,                                                     \
         MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
 
 #endif
