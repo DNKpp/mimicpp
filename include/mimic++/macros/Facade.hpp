@@ -395,6 +395,14 @@ namespace mimicpp
         ,                                                 \
         __VA_ARGS__)
 
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK.
+     * \ingroup FACADE
+     */
+    #define MAKE_OVERLOADED_MEMBER_MOCK MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK
+#endif
+
 /**
  * \brief Entry point for mocking a single member method.
  * \ingroup MOCK_INTERFACES
@@ -412,5 +420,13 @@ namespace mimicpp
     MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(                             \
         fn_name,                                                     \
         MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))
+
+#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
+    /**
+     * \brief Shorthand variant of \ref MIMICPP_MAKE_MEMBER_MOCK.
+     * \ingroup FACADE
+     */
+    #define MAKE_MEMBER_MOCK MIMICPP_MAKE_MEMBER_MOCK
+#endif
 
 #endif

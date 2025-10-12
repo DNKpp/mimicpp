@@ -11,6 +11,30 @@
 #include "mimic++/utilities/AlwaysFalse.hpp"
 // ReSharper restore CppUnusedIncludeDirective
 
+#ifdef MAKE_OVERLOADED_FACADE_EXT
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "MAKE_OVERLOADED_FACADE_EXT must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+#endif
+
+#ifdef MAKE_FACADE_EXT
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "MAKE_FACADE_EXT must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+#endif
+
+#ifdef MAKE_OVERLOADED_MEMBER_MOCK
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "MAKE_OVERLOADED_MEMBER_MOCK must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+#endif
+
+#ifdef MAKE_MEMBER_MOCK
+static_assert(
+    mimicpp::util::always_false<>::value,
+    "MAKE_MEMBER_MOCK must be undefined when MIMICPP_CONFIG_ONLY_PREFIXED_MACROS is defined.");
+#endif
+
 #ifdef MOCK_METHOD
 static_assert(
     mimicpp::util::always_false<>::value,
