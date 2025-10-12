@@ -7,7 +7,7 @@
 #define MIMICPP_MACRO_EXPORTS_HPP
 
 #include "mimic++/macros/Common.hpp"
-#include "mimic++/macros/FacadeHelper.hpp"
+#include "mimic++/macros/Facade.hpp"
 #include "mimic++/macros/InterfaceMocking.hpp"
 #include "mimic++/macros/ScopedExpectation.hpp"
 
