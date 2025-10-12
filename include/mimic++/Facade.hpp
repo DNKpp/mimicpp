@@ -216,12 +216,15 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade::detail
         static consteval auto evaluate_specs()
         {
             auto const end = std::ranges::end(specText);
-            auto const find_token_begin = [&](auto const first) consteval noexcept {
-                constexpr auto is_space = [](char const c) consteval noexcept {
+            auto const find_token_begin = [&](auto const first) noexcept {
+                // LCOV_EXCL_START
+                // For whatever reason, marking this lambda as `consteval` does not compile...
+                constexpr auto is_space = [](char const c) noexcept {
                     return ' ' == c || '\t' == c;
                 };
 
                 return std::ranges::find_if_not(first, end, is_space);
+                // LCOV_EXCL_STOP
             };
 
             spec_info result{};
@@ -264,12 +267,15 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade::detail
         {
             MIMICPP_ASSERT(first != end, "First must point to the first keyword character.");
 
-            constexpr auto is_word_continue = [](char const c) consteval noexcept {
+            constexpr auto is_keyword_continue = [](char const c) noexcept {
+                // LCOV_EXCL_START
+                // For whatever reason, marking this lambda as `consteval` does not compile...
                 return ('a' <= c && c <= 'z')
                     || ('A' <= c && c <= 'Z');
+                // LCOV_EXCL_STOP
             };
 
-            auto const tokenEnd = std::ranges::find_if_not(first + 1u, end, is_word_continue);
+            auto const tokenEnd = std::ranges::find_if_not(first + 1u, end, is_keyword_continue);
             std::string_view const token{first, tokenEnd};
             if (constexpr std::string_view constKeyword{"const"};
                 constKeyword == token)
