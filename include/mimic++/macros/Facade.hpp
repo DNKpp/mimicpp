@@ -299,7 +299,9 @@ namespace mimicpp
  * \ingroup FACADE
  * \param ret The return type.
  * \param param_type_list The parameter types.
- * \param ... An optional parameter for the specifiers (e.g. `const`, `noexcept`, `override`, etc.).
+ * \param ... Two optional arguments can be supplied, where
+ * - the first specifies the function specifiers (e.g. `&`, `const`, `noexcept`, `override`, etc.), and
+ * - the second specifies the call-convention.
  */
 #define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \
     MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \
@@ -312,6 +314,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_ADD_OVERLOAD.
      * \ingroup FACADE
+     * \copydoc MIMICPP_ADD_OVERLOAD
      */
     #define ADD_OVERLOAD MIMICPP_ADD_OVERLOAD
 #endif
@@ -342,6 +345,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MAKE_OVERLOADED_FACADE_EXT.
      * \ingroup FACADE
+     * \copydoc MIMICPP_MAKE_OVERLOADED_FACADE_EXT
      */
     #define MAKE_OVERLOADED_FACADE_EXT MIMICPP_MAKE_OVERLOADED_FACADE_EXT
 #endif
@@ -353,7 +357,9 @@ namespace mimicpp
  * \param target_name The name of the underlying target object.
  * \param fn_name The name of the facade function.
  * \param linkage The linkage for the facade function and the target object.
- * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ * \param ... Two optional arguments can be supplied, where
+ * - the first specifies the function specifiers (e.g. `&`, `const`, `noexcept`, `override`, etc.), and
+ * - the second specifies the call-convention.
  *
  * \details
  * This macro defines a single target object for one method signature and generates a corresponding facade function.
@@ -371,6 +377,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MAKE_FACADE_EXT.
      * \ingroup FACADE
+     * \copydoc MIMICPP_MAKE_FACADE_EXT
      */
     #define MAKE_FACADE_EXT MIMICPP_MAKE_FACADE_EXT
 #endif
@@ -399,6 +406,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK.
      * \ingroup FACADE
+     * \copydoc MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK
      */
     #define MAKE_OVERLOADED_MEMBER_MOCK MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK
 #endif
@@ -408,7 +416,9 @@ namespace mimicpp
  * \ingroup FACADE
  * \param fn_name The method name.
  * \param param_type_list The list of parameter types.
- * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ * \param ... Two optional arguments can be supplied, where
+ * - the first specifies the function specifiers (e.g. `&`, `const`, `noexcept`, `override`, etc.), and
+ * - the second specifies the call-convention.
  *
  * \details
  * This macro defines a single mock member-object for one method signature and generates a corresponding facade member function.
@@ -425,6 +435,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MAKE_MEMBER_MOCK.
      * \ingroup FACADE
+     * \copydoc MIMICPP_MAKE_MEMBER_MOCK
      */
     #define MAKE_MEMBER_MOCK MIMICPP_MAKE_MEMBER_MOCK
 #endif
@@ -460,7 +471,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS.
      * \ingroup FACADE
-     * \snippet FacadeMock.cpp facade mock with this
+     * \copydoc MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS
      */
     #define MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS
 #endif
@@ -470,7 +481,9 @@ namespace mimicpp
  * \ingroup FACADE
  * \param fn_name The method name.
  * \param param_type_list The list of parameter types.
- * \param ... Optional qualifiers (e.g., ``const``, ``noexcept``).
+ * \param ... Two optional arguments can be supplied, where
+ * - the first specifies the function specifiers (e.g. `&`, `const`, `noexcept`, `override`, etc.), and
+ * - the second specifies the call-convention.
  *
  * \details
  * This macro defines a single mock member-object for one method signature and generates a corresponding facade member function.
@@ -494,7 +507,7 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS.
      * \ingroup FACADE
-     * \snippet FacadeMock.cpp facade mock with this
+     * \copydoc MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS
      */
     #define MAKE_MEMBER_MOCK_WITH_THIS MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS
 #endif

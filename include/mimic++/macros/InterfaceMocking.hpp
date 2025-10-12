@@ -102,12 +102,14 @@ namespace mimicpp
     /**
      * \brief Shorthand variant of \ref MIMICPP_MOCK_METHOD.
      * \ingroup MOCK_INTERFACES
+     * \copydoc MIMICPP_MOCK_METHOD
      */
     #define MOCK_METHOD MIMICPP_MOCK_METHOD
 
     /**
      * \brief Shorthand variant of \ref MIMICPP_MOCK_OVERLOADED_METHOD.
      * \ingroup MOCK_INTERFACES
+     * \copydoc MIMICPP_MOCK_OVERLOADED_METHOD
      */
     #define MOCK_OVERLOADED_METHOD MIMICPP_MOCK_OVERLOADED_METHOD
 
