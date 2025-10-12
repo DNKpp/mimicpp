@@ -7,7 +7,7 @@
 
 // ReSharper disable CppUnusedIncludeDirective
 #include "mimic++/ExpectationBuilder.hpp"
-#include "mimic++/InterfaceMock.hpp"
+#include "mimic++/Facade.hpp"
 #include "mimic++/utilities/AlwaysFalse.hpp"
 // ReSharper restore CppUnusedIncludeDirective
 
