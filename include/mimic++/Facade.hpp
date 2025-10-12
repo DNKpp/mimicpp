@@ -95,7 +95,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade
 
         template <typename Self>
         [[nodiscard]]
-        static MockSettings make_settings([[maybe_unused]] Self const* const self, StringViewT const functionName)
+        static constexpr MockSettings make_settings([[maybe_unused]] Self const* const self, StringViewT const functionName)
         {
             constexpr std::size_t skip = 1u + detail::facadeBaseCallDepth + detail::applyCallDepth;
 
@@ -129,7 +129,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade
         }
 
         [[nodiscard]]
-        static MockSettings make_settings([[maybe_unused]] auto const* const self, StringViewT const functionName)
+        static constexpr MockSettings make_settings([[maybe_unused]] auto const* const self, StringViewT const functionName)
         {
             constexpr std::size_t skip = 1u + detail::facadeBaseCallDepth + detail::applyCallDepth;
 
