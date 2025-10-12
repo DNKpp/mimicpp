@@ -8,50 +8,6 @@
 
 #include "../test/unit-tests/SuppressionMacros.hpp" // needs to disable the deprecations
 
-TEST_CASE(
-    "Mocking interface methods by hand.",
-    "[example][example::mock][example::mock::interface]")
-{
-    //! [interface mock manual]
-    class Interface
-    {
-    public:
-        virtual ~Interface() = default;
-        virtual void foo() = 0;
-    };
-
-    class Derived
-        : public Interface
-    {
-    public:
-        ~Derived() override = default;
-
-        // Begin boilerplate
-
-        // we build our mock object by hand
-        mimicpp::Mock<void()> foo_{};
-
-        // and forward the incoming call from the interface function to the mock object.
-        void foo() override
-        {
-            return foo_();
-        }
-
-        // End boilerplate
-    };
-
-    // this may be a function from somewhere else, working with an interface.
-    constexpr auto my_function = [](Interface& obj) {
-        obj.foo();
-    };
-
-    Derived mock{};
-    SCOPED_EXP mock.foo_.expect_call();
-
-    my_function(mock);
-    //! [interface mock manual]
-}
-
 START_WARNING_SUPPRESSION
 SUPPRESS_DEPRECATION
 
