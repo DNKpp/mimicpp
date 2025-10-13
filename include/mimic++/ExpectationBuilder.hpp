@@ -138,16 +138,20 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
         [[nodiscard]]
         friend constexpr auto operator&&(BasicExpectationBuilder&& builder, detail::TimesConfig&& config)
-            requires(!timesConfigured)
         {
-            using NewBuilderT = BasicExpectationBuilder<
+            static_assert(
+                detail::verify_constraint<!timesConfigured>(
+                    "Only one times-policy may be specified per expectation."
+                    "See: https://dnkpp.github.io/mimicpp/d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#details"));
+
+            using Builder = BasicExpectationBuilder<
                 true,
                 SequenceConfig,
                 Signature,
                 FinalizePolicy,
                 Policies...>;
 
-            return NewBuilderT{
+            return Builder{
                 std::move(builder.m_Storage),
                 std::move(builder.m_TargetReport),
                 std::move(config),
@@ -186,10 +190,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
                     "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
             }
         {
-            static_assert(
-                finalize_policy_for<FinalizePolicy, Signature>,
-                "For non-void return types, a finalize policy must be set.");
-
             return ScopedExpectation{
                 std::move(m_Storage),
                 std::apply(
