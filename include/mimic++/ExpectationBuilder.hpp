@@ -31,6 +31,19 @@
     #include <utility>
 #endif
 
+namespace mimicpp::detail
+{
+    template <bool outcome>
+    consteval bool verify_constraint([[maybe_unused]] std::string_view const diagnostic) noexcept
+    {
+        return outcome;
+    }
+
+    // ReSharper disable once CppFunctionIsNotImplemented
+    template <>
+    bool verify_constraint<false>([[maybe_unused]] std::string_view diagnostic) noexcept;
+}
+
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     template <
@@ -167,6 +180,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
         [[nodiscard]]
         ScopedExpectation finalize(util::SourceLocation sourceLocation) &&
+            requires requires {
+                requires detail::verify_constraint<finalize_policy_for<FinalizePolicy, Signature>>(
+                    "For non-void return types, a finalize-policy must be specified."
+                    "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
+            }
         {
             static_assert(
                 finalize_policy_for<FinalizePolicy, Signature>,
