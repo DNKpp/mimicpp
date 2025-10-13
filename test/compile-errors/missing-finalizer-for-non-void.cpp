@@ -7,7 +7,7 @@
 
 /*
 <begin-expected-compile-error>
-For non-void return types, a finalize-policy must be specified\.;
+For non-void return types, a finalize-policy must be specified\.
 See: https://dnkpp\.github\.io/mimicpp
 <end-expected-compile-error>
 */
