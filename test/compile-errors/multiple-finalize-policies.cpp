@@ -7,7 +7,7 @@
 
 /*
 <begin-expected-compile-error>
-Only one times-policy may be specified per expectation\.
+Only one finalize-policy may be specified per expectation\.
 See: https://dnkpp\.github\.io/mimicpp/
 <end-expected-compile-error>
 */
@@ -16,6 +16,6 @@ void check()
 {
     mimicpp::Mock<void()> mock{};
     SCOPED_EXP mock.expect_call()
-        and mimicpp::expect::at_least(1u)
-        and mimicpp::expect::at_most(42u);
+        and mimicpp::finally::throws(1u)
+        and mimicpp::finally::throws(42u);
 }

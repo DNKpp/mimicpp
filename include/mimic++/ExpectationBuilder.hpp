@@ -90,20 +90,27 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         BasicExpectationBuilder& operator=(BasicExpectationBuilder&&) = default;
 
         template <typename Policy>
-            requires std::same_as<expectation_policies::InitFinalize, FinalizePolicy>
-                  && (!std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>)
-                  && finalize_policy_for<std::remove_cvref_t<Policy>, Signature>
+            requires finalize_policy_for<std::remove_cvref_t<Policy>, Signature>
         [[nodiscard]]
         friend constexpr auto operator&&(BasicExpectationBuilder&& builder, Policy&& policy)
         {
-            using ExtendedExpectationBuilderT = BasicExpectationBuilder<
+            static_assert(
+                detail::verify_constraint<!std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>>(
+                    "Explicitly specifying the `expectation_policies::InitFinalize` is disallowed."));
+
+            static_assert(
+                detail::verify_constraint<std::same_as<expectation_policies::InitFinalize, FinalizePolicy>>(
+                    "Only one finalize-policy may be specified per expectation."
+                    "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details"));
+
+            using Builder = BasicExpectationBuilder<
                 timesConfigured,
                 SequenceConfig,
                 Signature,
                 std::remove_cvref_t<Policy>,
                 Policies...>;
 
-            return ExtendedExpectationBuilderT{
+            return Builder{
                 std::move(builder.m_Storage),
                 std::move(builder.m_TargetReport),
                 std::move(builder.m_TimesConfig),

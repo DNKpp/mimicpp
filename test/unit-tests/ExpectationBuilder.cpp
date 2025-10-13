@@ -129,18 +129,6 @@ TEST_CASE(
     }
 }
 
-TEMPLATE_TEST_CASE(
-    "Finalize policy of mimicpp::BasicExpectationBuilder can be exchanged only once.",
-    "[expectation][expectation::builder]",
-    BaseBuilderT<void()>)
-{
-    using BuilderT = TestType;
-    using FinalizerT = FinalizerFake<void()>;
-
-    STATIC_REQUIRE(requires { std::declval<BuilderT&&>() && FinalizerT{}; });
-    STATIC_REQUIRE(!requires { std::declval<BuilderT&&>() && FinalizerT{} && FinalizerT{}; });
-}
-
 TEST_CASE(
     "Finalize policy of mimicpp::BasicExpectationBuilder for void return may be exchanged.",
     "[expectation][expectation::builder]")
