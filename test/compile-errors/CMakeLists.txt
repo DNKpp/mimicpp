@@ -52,3 +52,4 @@ function(check_compile_error SOURCE_FILE)
 endfunction()
 
 check_compile_error("missing-finalizer-for-non-void.cpp")
+check_compile_error("multiple-times-policies.cpp")

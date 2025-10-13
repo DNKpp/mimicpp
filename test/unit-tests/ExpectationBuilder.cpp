@@ -43,17 +43,6 @@ namespace
     }
 }
 
-TEMPLATE_TEST_CASE(
-    "Times of mimicpp::BasicExpectationBuilder can be exchanged only once.",
-    "[expectation][expectation::builder]",
-    BaseBuilderT<void()>)
-{
-    using BuilderT = TestType;
-
-    STATIC_REQUIRE(requires { std::declval<BuilderT&&>() && detail::TimesConfig{}; });
-    STATIC_REQUIRE(!requires { std::declval<BuilderT&&>() && detail::TimesConfig{} && detail::TimesConfig{}; });
-}
-
 TEST_CASE(
     "BasicExpectationBuilder times-limits can be configured.",
     "[expectation][expectation::builder]")
