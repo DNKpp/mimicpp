@@ -19,9 +19,11 @@ namespace mimicpp::diagnostics
         return outcome;
     }
 
-    // ReSharper disable once CppFunctionIsNotImplemented
     template <>
-    bool verify_constraint<false>([[maybe_unused]] char const* diagnostic) noexcept;
+    consteval bool verify_constraint<false>([[maybe_unused]] char const* diagnostic) noexcept
+    {
+        return false;
+    }
 }
 
 #endif
