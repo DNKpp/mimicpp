@@ -940,320 +940,607 @@ $(function(){initNavTree('d8/d32/_type_traits_8hpp_source.html','../../'); initR
 </div>
 <div class="line"><a id="l00942" name="l00942"></a><span class="lineno">  942</span></div>
 <div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span></div>
-<div class="line"><a id="l00954" name="l00954"></a><span class="lineno">  954</span> </div>
-<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="foldopen" id="foldopen00956" data-start="{" data-end="};">
-<div class="line"><a id="l00956" name="l00956"></a><span class="lineno"><a class="line" href="../../db/df4/structmimicpp_1_1signature__decay.html">  956</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../db/df4/structmimicpp_1_1signature__decay.html">signature_decay</a></div>
+<div class="line"><a id="l00955" name="l00955"></a><span class="lineno">  955</span> </div>
+<div class="line"><a id="l00956" name="l00956"></a><span class="lineno">  956</span>    <span class="keyword">namespace </span>detail</div>
 <div class="line"><a id="l00957" name="l00957"></a><span class="lineno">  957</span>    {</div>
-<div class="line"><a id="l00958" name="l00958"></a><span class="lineno"><a class="line" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">  958</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">type</a> =</div>
-<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>            <span class="keyword">typename</span> detail::signature_remove_ref_qualifier_impl&lt;</div>
-<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span>                <span class="keyword">typename</span> detail::signature_remove_const_qualifier_impl&lt;</div>
-<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>                    <span class="keyword">typename</span> detail::signature_remove_noexcept&lt;</div>
-<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>                        <a class="code hl_typedef" href="../../d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7">signature_remove_call_convention_t&lt;Signature&gt;</a>&gt;<a class="code hl_typedef" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">::type</a>,</div>
-<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>                    <span class="keyword">false</span>&gt;<a class="code hl_typedef" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">::type</a>,</div>
-<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>                <span class="keyword">false</span>&gt;<a class="code hl_typedef" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">::type</a>;</div>
-<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>    };</div>
+<div class="line"><a id="l00958" name="l00958"></a><span class="lineno">  958</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l00959" name="l00959"></a><span class="lineno">  959</span>        <span class="keyword">struct </span>signature_add_lvalue_ref_qualifier_impl;</div>
+<div class="line"><a id="l00960" name="l00960"></a><span class="lineno">  960</span> </div>
+<div class="line"><a id="l00961" name="l00961"></a><span class="lineno">  961</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l00962" name="l00962"></a><span class="lineno">  962</span>        <span class="keyword">struct </span>signature_add_lvalue_ref_qualifier_impl&lt;Return(Params...), isNoexcept&gt;</div>
+<div class="line"><a id="l00963" name="l00963"></a><span class="lineno">  963</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l00964" name="l00964"></a><span class="lineno">  964</span>        {</div>
+<div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>            <span class="keyword">using </span>type = Return(Params...) &amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span>        };</div>
+<div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span> </div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span>        <span class="keyword">struct </span>signature_add_lvalue_ref_qualifier_impl&lt;Return(Params..., ...), isNoexcept&gt;</div>
+<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>        {</div>
+<div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span>            <span class="keyword">using </span>type = Return(Params..., ...) &amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span>        };</div>
+<div class="line"><a id="l00974" name="l00974"></a><span class="lineno">  974</span> </div>
+<div class="line"><a id="l00975" name="l00975"></a><span class="lineno">  975</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l00976" name="l00976"></a><span class="lineno">  976</span>        <span class="keyword">struct </span>signature_add_lvalue_ref_qualifier_impl&lt;Return(Params...) const, isNoexcept&gt;</div>
+<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span>        {</div>
+<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params...) const&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l00980" name="l00980"></a><span class="lineno">  980</span>        };</div>
+<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span> </div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>        template &lt;typename Return, typename... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span>        struct signature_add_lvalue_ref_qualifier_impl&lt;Return(Params..., ...) const, isNoexcept&gt;</div>
+<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>            : public std::true_type</div>
+<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>        {</div>
+<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params..., ...) const&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>        };</div>
+<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span> </div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>        template &lt;typename Return, typename... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span>        struct signature_add_lvalue_ref_qualifier_impl&lt;Return(Params...)&amp;, isNoexcept&gt;</div>
+<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>            : public std::false_type</div>
+<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>        {</div>
+<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params...) &amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span>        };</div>
+<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span> </div>
+<div class="line"><a id="l00996" name="l00996"></a><span class="lineno">  996</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>        <span class="keyword">struct </span>signature_add_lvalue_ref_qualifier_impl&lt;Return(Params..., ...)&amp;, isNoexcept&gt;</div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span>            : <span class="keyword">public</span> std::false_type</div>
+<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span>        {</div>
+<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params..., ...) &amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01001" name="l01001"></a><span class="lineno"> 1001</span>        };</div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span> </div>
+<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01004" name="l01004"></a><span class="lineno"> 1004</span>        <span class="keyword">struct </span>signature_add_lvalue_ref_qualifier_impl&lt;Return(Params...) const&amp;, isNoexcept&gt;</div>
+<div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>            : <span class="keyword">public</span> std::false_type</div>
+<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span>        {</div>
+<div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params...) const&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>        };</div>
+<div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span> </div>
+<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>        template &lt;typename Return, typename... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>        struct signature_add_lvalue_ref_qualifier_impl&lt;Return(Params..., ...) const&amp;, isNoexcept&gt;</div>
+<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>            : public std::false_type</div>
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>        {</div>
+<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params..., ...) const&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>        };</div>
+<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span> </div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>        <span class="comment">// Todo: When msvc some day supports deducing noexcept, we can further simplify this.</span></div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>        template &lt;typename Signature, typename Trait = signature_remove_noexcept&lt;Signature&gt;&gt;</div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>        struct signature_add_lvalue_ref_qualifier_</div>
+<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>            : public signature_add_lvalue_ref_qualifier_impl&lt;typename Trait::type, Trait::value&gt;</div>
+<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>        {</div>
+<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>        };</div>
+<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span> </div>
+<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>        <span class="keyword">using </span>signature_add_lvalue_ref_qualifier = signature_add_lvalue_ref_qualifier_&lt;Signature&gt;;</div>
+<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>    }</div>
+<div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span> </div>
+<div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen01029" data-start="{" data-end="};">
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"><a class="line" href="../../d8/dc1/structmimicpp_1_1signature__add__lvalue__ref__qualifier.html"> 1029</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/dc1/structmimicpp_1_1signature__add__lvalue__ref__qualifier.html">signature_add_lvalue_ref_qualifier</a></div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span>        : <span class="keyword">public</span> detail::signature_apply_trait&lt;Signature, detail::signature_add_lvalue_ref_qualifier&gt;</div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>    {</div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>    };</div>
 </div>
-<div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span></div>
-<div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span></div>
-<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span> </div>
-<div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="foldopen" id="foldopen00980" data-start="{" data-end="};">
-<div class="line"><a id="l00980" name="l00980"></a><span class="lineno"><a class="line" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">  980</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">signature_return_type</a></div>
-<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">signature_return_type</a>&lt;signature_decay_t&lt;Signature&gt;&gt;</div>
-<div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span>    {</div>
-<div class="line"><a id="l00985" name="l00985"></a><span class="lineno">  985</span>    };</div>
-</div>
-<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span> </div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen00988" data-start="{" data-end="};">
-<div class="line"><a id="l00988" name="l00988"></a><span class="lineno"><a class="line" href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html">  988</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">signature_return_type</a>&lt;Return(Params...)&gt;</div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>    {</div>
-<div class="line"><a id="l00990" name="l00990"></a><span class="lineno"><a class="line" href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html#a1d69e687d4cad1aca48534aff5c18e09">  990</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html#a1d69e687d4cad1aca48534aff5c18e09">type</a> = Return;</div>
-<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>    };</div>
-</div>
-<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span> </div>
-<div class="line"><a id="l00993" name="l00993"></a><span class="lineno">  993</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen00994" data-start="{" data-end="};">
-<div class="line"><a id="l00994" name="l00994"></a><span class="lineno"><a class="line" href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html">  994</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">signature_return_type</a>&lt;Return(Params..., ...)&gt;</div>
-<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span>    {</div>
-<div class="line"><a id="l00996" name="l00996"></a><span class="lineno"><a class="line" href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html#aae2462c73bdababb0806c9d47efba9a3">  996</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html#aae2462c73bdababb0806c9d47efba9a3">type</a> = Return;</div>
-<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span>    };</div>
-</div>
-<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span></div>
-<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span></div>
-<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span> </div>
-<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>    <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> index, <span class="keyword">typename</span> Signature&gt;</div>
-<div class="foldopen" id="foldopen01012" data-start="{" data-end="};">
-<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"><a class="line" href="../../db/dd5/structmimicpp_1_1signature__param__type.html"> 1012</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../db/dd5/structmimicpp_1_1signature__param__type.html">signature_param_type</a></div>
-<div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../db/dd5/structmimicpp_1_1signature__param__type.html">signature_param_type</a>&lt;</div>
-<div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>              index,</div>
-<div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>              signature_decay_t&lt;Signature&gt;&gt;</div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>    {</div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>    };</div>
-</div>
-<div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span> </div>
-<div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>    <span class="keyword">template</span> &lt;std::size_t index, <span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen01022" data-start="{" data-end="};">
-<div class="line"><a id="l01022" name="l01022"></a><span class="lineno"><a class="line" href="../../d0/d24/structmimicpp_1_1signature__param__type_3_01index_00_01_return_07_params_8_8_8_08_4.html"> 1022</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../db/dd5/structmimicpp_1_1signature__param__type.html">signature_param_type</a>&lt;index, Return(Params...)&gt;</div>
-<div class="line"><a id="l01023" name="l01023"></a><span class="lineno"> 1023</span>        : <span class="keyword">public</span> std::tuple_element&lt;index, std::tuple&lt;Params...&gt;&gt;</div>
-<div class="line"><a id="l01024" name="l01024"></a><span class="lineno"> 1024</span>    {</div>
-<div class="line"><a id="l01025" name="l01025"></a><span class="lineno"> 1025</span>    };</div>
-</div>
-<div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span></div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span></div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span> </div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="foldopen" id="foldopen01040" data-start="{" data-end="};">
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"><a class="line" href="../../d2/de2/structmimicpp_1_1signature__const__qualification.html"> 1040</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d2/de2/structmimicpp_1_1signature__const__qualification.html">signature_const_qualification</a></div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>              Constness,</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>              signature_remove_const_qualifier&lt;Signature&gt;::value</div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>                  ? Constness::as_const</div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>                  : Constness::non_const&gt;</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    {</div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    };</div>
-</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span></div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span></div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span> </div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="foldopen" id="foldopen01062" data-start="{" data-end="};">
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"><a class="line" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html"> 1062</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a></div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;</div>
-<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>              signature_remove_noexcept_t&lt;</div>
-<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>                  signature_remove_const_qualifier_t&lt;</div>
-<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>                      signature_remove_call_convention_t&lt;Signature&gt;&gt;&gt;&gt;</div>
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>    {</div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>    };</div>
-</div>
-<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span> </div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen01073" data-start="{" data-end="};">
-<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"><a class="line" href="../../db/df8/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_4.html"> 1073</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params...)&gt;</div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
-<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>              ValueCategory,</div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>              ValueCategory::any&gt;</div>
-<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    {</div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>    };</div>
-</div>
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span></div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span></div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span> </div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    <span class="keyword">namespace </span>detail</div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    {</div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>        <span class="keyword">struct </span>signature_add_rvalue_ref_qualifier_impl;</div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span> </div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>        <span class="keyword">struct </span>signature_add_rvalue_ref_qualifier_impl&lt;Return(Params...), isNoexcept&gt;</div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>        {</div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>            <span class="keyword">using </span>type = Return(Params...) &amp;&amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>        };</div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span> </div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>        <span class="keyword">struct </span>signature_add_rvalue_ref_qualifier_impl&lt;Return(Params..., ...), isNoexcept&gt;</div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>        {</div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>            <span class="keyword">using </span>type = Return(Params..., ...) &amp;&amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>        };</div>
+<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span> </div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>        <span class="keyword">struct </span>signature_add_rvalue_ref_qualifier_impl&lt;Return(Params...) const, isNoexcept&gt;</div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>        {</div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params...) const&amp;&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>        };</div>
+<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span> </div>
+<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>        template &lt;typename Return, typename... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>        struct signature_add_rvalue_ref_qualifier_impl&lt;Return(Params..., ...) const, isNoexcept&gt;</div>
+<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>            : public std::true_type</div>
+<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>        {</div>
+<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params..., ...) const&amp;&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>        };</div>
 <div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span> </div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen01081" data-start="{" data-end="};">
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"><a class="line" href="../../d5/db0/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html"> 1081</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params..., ...)&gt;</div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>              ValueCategory,</div>
-<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>              ValueCategory::any&gt;</div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    {</div>
-<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>    };</div>
+<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>        template &lt;typename Return, typename... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>        struct signature_add_rvalue_ref_qualifier_impl&lt;Return(Params...)&amp;&amp;, isNoexcept&gt;</div>
+<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>            : public std::false_type</div>
+<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>        {</div>
+<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params...) &amp;&amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>        };</div>
+<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span> </div>
+<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>        <span class="keyword">struct </span>signature_add_rvalue_ref_qualifier_impl&lt;Return(Params..., ...)&amp;&amp;, isNoexcept&gt;</div>
+<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>            : <span class="keyword">public</span> std::false_type</div>
+<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>        {</div>
+<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params..., ...) &amp;&amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>        };</div>
+<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span> </div>
+<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>        <span class="keyword">struct </span>signature_add_rvalue_ref_qualifier_impl&lt;Return(Params...) const&amp;&amp;, isNoexcept&gt;</div>
+<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>            : <span class="keyword">public</span> std::false_type</div>
+<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>        {</div>
+<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params...) const&amp;&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>        };</div>
+<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span> </div>
+<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>        template &lt;typename Return, typename... Params, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>        struct signature_add_rvalue_ref_qualifier_impl&lt;Return(Params..., ...) const&amp;&amp;, isNoexcept&gt;</div>
+<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>            : public std::false_type</div>
+<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>        {</div>
+<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(Params..., ...) const&amp;&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>        };</div>
+<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span> </div>
+<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>        <span class="comment">// Todo: When msvc some day supports deducing noexcept, we can further simplify this.</span></div>
+<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span>        template &lt;typename Signature, typename Trait = signature_remove_noexcept&lt;Signature&gt;&gt;</div>
+<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>        struct signature_add_rvalue_ref_qualifier_</div>
+<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span>            : public signature_add_rvalue_ref_qualifier_impl&lt;typename Trait::type, Trait::value&gt;</div>
+<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>        {</div>
+<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>        };</div>
+<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span> </div>
+<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>        <span class="keyword">using </span>signature_add_rvalue_ref_qualifier = signature_add_rvalue_ref_qualifier_&lt;Signature&gt;;</div>
+<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>    }</div>
+<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span> </div>
+<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen01120" data-start="{" data-end="};">
+<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"><a class="line" href="../../d1/d2c/structmimicpp_1_1signature__add__rvalue__ref__qualifier.html"> 1120</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d1/d2c/structmimicpp_1_1signature__add__rvalue__ref__qualifier.html">signature_add_rvalue_ref_qualifier</a></div>
+<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>        : <span class="keyword">public</span> detail::signature_apply_trait&lt;Signature, detail::signature_add_rvalue_ref_qualifier&gt;</div>
+<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>    {</div>
+<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>    };</div>
 </div>
-<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span> </div>
-<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen01089" data-start="{" data-end="};">
-<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"><a class="line" href="../../df/de4/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_6_01_4.html"> 1089</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params...)&amp;&gt;</div>
-<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
-<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>              <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a>,</div>
-<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>              <a class="code hl_enumvalue" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa44f6155f13a820089c09cb5e9d7ccdef">ValueCategory::lvalue</a>&gt;</div>
-<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>    {</div>
-<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>    };</div>
+<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span></div>
+<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span></div>
+<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span> </div>
+<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen01138" data-start="{" data-end="};">
+<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"><a class="line" href="../../db/df4/structmimicpp_1_1signature__decay.html"> 1138</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../db/df4/structmimicpp_1_1signature__decay.html">signature_decay</a></div>
+<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>    {</div>
+<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"><a class="line" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152"> 1140</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">type</a> =</div>
+<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>            <span class="keyword">typename</span> detail::signature_remove_ref_qualifier_impl&lt;</div>
+<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>                <span class="keyword">typename</span> detail::signature_remove_const_qualifier_impl&lt;</div>
+<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>                    <span class="keyword">typename</span> detail::signature_remove_noexcept&lt;</div>
+<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>                        <a class="code hl_typedef" href="../../d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7">signature_remove_call_convention_t&lt;Signature&gt;</a>&gt;<a class="code hl_typedef" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">::type</a>,</div>
+<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>                    <span class="keyword">false</span>&gt;<a class="code hl_typedef" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">::type</a>,</div>
+<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>                <span class="keyword">false</span>&gt;<a class="code hl_typedef" href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">::type</a>;</div>
+<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>    };</div>
 </div>
-<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span> </div>
-<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen01097" data-start="{" data-end="};">
-<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"><a class="line" href="../../d6/d7d/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html"> 1097</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params..., ...)&amp;&gt;</div>
-<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>              <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a>,</div>
-<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>              <a class="code hl_enumvalue" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa44f6155f13a820089c09cb5e9d7ccdef">ValueCategory::lvalue</a>&gt;</div>
-<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>    {</div>
-<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>    };</div>
+<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span></div>
+<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span></div>
+<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span> </div>
+<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen01162" data-start="{" data-end="};">
+<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"><a class="line" href="../../d4/d96/structmimicpp_1_1signature__return__type.html"> 1162</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">signature_return_type</a></div>
+<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">signature_return_type</a>&lt;signature_decay_t&lt;Signature&gt;&gt;</div>
+<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>    {</div>
+<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>    };</div>
 </div>
-<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span> </div>
-<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen01105" data-start="{" data-end="};">
-<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"><a class="line" href="../../d1/d70/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html"> 1105</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params...) &amp;&amp;&gt;</div>
-<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
-<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>              <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a>,</div>
-<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>              <a class="code hl_enumvalue" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aab5528fe69322e9e7de4c701519197fcd">ValueCategory::rvalue</a>&gt;</div>
-<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span>    {</div>
-<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>    };</div>
+<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span> </div>
+<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01170" data-start="{" data-end="};">
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"><a class="line" href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html"> 1170</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">signature_return_type</a>&lt;Return(Params...)&gt;</div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>    {</div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"><a class="line" href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html#a1d69e687d4cad1aca48534aff5c18e09"> 1172</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html#a1d69e687d4cad1aca48534aff5c18e09">type</a> = Return;</div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>    };</div>
 </div>
-<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span> </div>
-<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen01113" data-start="{" data-end="};">
-<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"><a class="line" href="../../d5/dfd/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6_01_4.html"> 1113</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params..., ...) &amp;&amp;&gt;</div>
-<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
-<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>              <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a>,</div>
-<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>              <a class="code hl_enumvalue" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aab5528fe69322e9e7de4c701519197fcd">ValueCategory::rvalue</a>&gt;</div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>    {</div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>    };</div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span> </div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01176" data-start="{" data-end="};">
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"><a class="line" href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html"> 1176</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d96/structmimicpp_1_1signature__return__type.html">signature_return_type</a>&lt;Return(Params..., ...)&gt;</div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>    {</div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"><a class="line" href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html#aae2462c73bdababb0806c9d47efba9a3"> 1178</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html#aae2462c73bdababb0806c9d47efba9a3">type</a> = Return;</div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>    };</div>
 </div>
-<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span></div>
-<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span></div>
-<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span> </div>
-<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="foldopen" id="foldopen01133" data-start="{" data-end="};">
-<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"><a class="line" href="../../d0/df4/structmimicpp_1_1signature__param__list.html"> 1133</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/df4/structmimicpp_1_1signature__param__list.html">signature_param_list</a></div>
-<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../d0/df4/structmimicpp_1_1signature__param__list.html">signature_param_list</a>&lt;</div>
-<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>              signature_decay_t&lt;Signature&gt;&gt;</div>
-<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>    {</div>
-<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>    };</div>
-</div>
-<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span> </div>
-<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
-<div class="foldopen" id="foldopen01142" data-start="{" data-end="};">
-<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"><a class="line" href="../../d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html"> 1142</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/df4/structmimicpp_1_1signature__param__list.html">signature_param_list</a>&lt;Return(Params...)&gt;</div>
-<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>    {</div>
-<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"><a class="line" href="../../d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html#a967b718b7319e2ca11035549b39c003a"> 1144</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html#a967b718b7319e2ca11035549b39c003a">type</a> = <a class="code hl_struct" href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html">util::type_list</a>&lt;Params...&gt;;</div>
-<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>    };</div>
-</div>
-<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span></div>
-<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>}</div>
-<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span> </div>
-<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span><span class="keyword">namespace </span>mimicpp::detail</div>
-<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>{</div>
-<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Second, <span class="keywordtype">bool</span> reversed = false&gt;</div>
-<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>    <span class="keyword">struct </span>is_overloadable_with</div>
-<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>        : <span class="keyword">public</span> std::conditional_t&lt;</div>
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span>              reversed,</div>
-<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>              std::false_type,</div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>              is_overloadable_with&lt;Second, First, true&gt;&gt;</div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>    {</div>
-<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>    };</div>
-<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span> </div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Second&gt;</div>
-<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>        <span class="keyword">requires</span>(</div>
-<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>            !std::same_as&lt;</div>
-<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>                <a class="code hl_typedef" href="../../d3/dce/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t.html#gaaf6745d6b76342d272c0b53912757fcf">signature_param_list_t&lt;signature_decay_t&lt;First&gt;</a>&gt;,</div>
-<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>                <a class="code hl_typedef" href="../../d3/dce/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t.html#gaaf6745d6b76342d272c0b53912757fcf">signature_param_list_t&lt;signature_decay_t&lt;Second&gt;</a>&gt;&gt;)</div>
-<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>    <span class="keyword">struct </span>is_overloadable_with&lt;First, Second, false&gt;</div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>        : <span class="keyword">public</span> std::true_type</div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>    {</div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>    };</div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span> </div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...), Return2(Params...) const, reversed&gt;</div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>        : <span class="keyword">public</span> std::true_type</div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>    {</div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>    };</div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span> </div>
-<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
-<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...)&amp;, Return2(Params...) const&amp;, reversed&gt;</div>
-<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>        : public std::true_type</div>
-<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>    {</div>
-<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>    };</div>
-<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span> </div>
-<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...)&amp;, Return2(Params...)&amp;&amp;, reversed&gt;</div>
-<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>        : <span class="keyword">public</span> std::true_type</div>
-<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>    {</div>
-<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>    };</div>
-<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span> </div>
-<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
-<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...)&amp;, Return2(Params...) const&amp;&amp;, reversed&gt;</div>
-<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>        : public std::true_type</div>
-<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>    {</div>
-<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>    };</div>
-<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span> </div>
-<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
-<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...) const&amp;, Return2(Params...)&amp;&amp;, reversed&gt;</div>
-<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span>        : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span></div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span></div>
+<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span> </div>
+<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>    <span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> index, <span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen01194" data-start="{" data-end="};">
+<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"><a class="line" href="../../db/dd5/structmimicpp_1_1signature__param__type.html"> 1194</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../db/dd5/structmimicpp_1_1signature__param__type.html">signature_param_type</a></div>
+<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../db/dd5/structmimicpp_1_1signature__param__type.html">signature_param_type</a>&lt;</div>
+<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>              index,</div>
+<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>              signature_decay_t&lt;Signature&gt;&gt;</div>
 <div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>    {</div>
 <div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>    };</div>
+</div>
 <div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span> </div>
-<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
-<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...) const&amp;, Return2(Params...) const&amp;&amp;, reversed&gt;</div>
-<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>        : public std::true_type</div>
+<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>    <span class="keyword">template</span> &lt;std::size_t index, <span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01204" data-start="{" data-end="};">
+<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"><a class="line" href="../../d0/d24/structmimicpp_1_1signature__param__type_3_01index_00_01_return_07_params_8_8_8_08_4.html"> 1204</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../db/dd5/structmimicpp_1_1signature__param__type.html">signature_param_type</a>&lt;index, Return(Params...)&gt;</div>
+<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>        : <span class="keyword">public</span> std::tuple_element&lt;index, std::tuple&lt;Params...&gt;&gt;</div>
 <div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>    {</div>
 <div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>    };</div>
-<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span> </div>
-<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
-<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...)&amp;&amp;, Return2(Params...) const&amp;&amp;, reversed&gt;</div>
-<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span>        : public std::true_type</div>
-<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span>    {</div>
-<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span>    };</div>
-<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span> </div>
-<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span>    <span class="keyword">using </span>normalize_overload_t = <a class="code hl_typedef" href="../../d0/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t.html#ga1944b7b7ba7e20b04cfe5849d6a73df9">signature_remove_noexcept_t</a>&lt;</div>
-<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span>        <a class="code hl_typedef" href="../../d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7">signature_remove_call_convention_t&lt;Signature&gt;</a>&gt;;</div>
-<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span>}</div>
-<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span> </div>
-<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span>mimicpp</div>
-<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span>{</div>
-<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span> </div>
-<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Second&gt;</div>
-<div class="foldopen" id="foldopen01231" data-start="{" data-end="};">
-<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"><a class="line" href="../../d4/dd6/structmimicpp_1_1is__overloadable__with.html"> 1231</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/dd6/structmimicpp_1_1is__overloadable__with.html">is_overloadable_with</a></div>
-<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span>        : <span class="keyword">public</span> detail::is_overloadable_with&lt;</div>
-<div class="line"><a id="l01233" name="l01233"></a><span class="lineno"> 1233</span>              detail::normalize_overload_t&lt;First&gt;,</div>
-<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span>              detail::normalize_overload_t&lt;Second&gt;&gt;</div>
-<div class="line"><a id="l01235" name="l01235"></a><span class="lineno"> 1235</span>    {</div>
-<div class="line"><a id="l01236" name="l01236"></a><span class="lineno"> 1236</span>    };</div>
 </div>
-<div class="line"><a id="l01237" name="l01237"></a><span class="lineno"> 1237</span></div>
-<div class="line"><a id="l01241" name="l01241"></a><span class="lineno"> 1241</span></div>
-<div class="line"><a id="l01249" name="l01249"></a><span class="lineno"> 1249</span> </div>
-<div class="line"><a id="l01250" name="l01250"></a><span class="lineno"> 1250</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</div>
-<div class="foldopen" id="foldopen01251" data-start="{" data-end="};">
-<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"><a class="line" href="../../dd/df5/structmimicpp_1_1is__overload__set.html"> 1251</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">is_overload_set</a></div>
-<div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span>        : <span class="keyword">public</span> std::conjunction&lt;</div>
-<div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span>              is_overloadable_with&lt;First, Others&gt;...,</div>
-<div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span>              is_overload_set&lt;Others...&gt;&gt;</div>
-<div class="line"><a id="l01255" name="l01255"></a><span class="lineno"> 1255</span>    {</div>
-<div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span>    };</div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span></div>
+<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span></div>
+<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span> </div>
+<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen01222" data-start="{" data-end="};">
+<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"><a class="line" href="../../d2/de2/structmimicpp_1_1signature__const__qualification.html"> 1222</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d2/de2/structmimicpp_1_1signature__const__qualification.html">signature_const_qualification</a></div>
+<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
+<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span>              Constness,</div>
+<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span>              signature_remove_const_qualifier&lt;Signature&gt;::value</div>
+<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span>                  ? Constness::as_const</div>
+<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>                  : Constness::non_const&gt;</div>
+<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span>    {</div>
+<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span>    };</div>
 </div>
-<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span> </div>
-<div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First&gt;</div>
-<div class="foldopen" id="foldopen01259" data-start="{" data-end="};">
-<div class="line"><a id="l01259" name="l01259"></a><span class="lineno"><a class="line" href="../../d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html"> 1259</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">is_overload_set</a>&lt;First&gt;</div>
-<div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span>        : <span class="keyword">public</span> std::true_type</div>
-<div class="line"><a id="l01261" name="l01261"></a><span class="lineno"> 1261</span>    {</div>
-<div class="line"><a id="l01262" name="l01262"></a><span class="lineno"> 1262</span>    };</div>
+<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span></div>
+<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span></div>
+<div class="line"><a id="l01242" name="l01242"></a><span class="lineno"> 1242</span> </div>
+<div class="line"><a id="l01243" name="l01243"></a><span class="lineno"> 1243</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen01244" data-start="{" data-end="};">
+<div class="line"><a id="l01244" name="l01244"></a><span class="lineno"><a class="line" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html"> 1244</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a></div>
+<div class="line"><a id="l01246" name="l01246"></a><span class="lineno"> 1246</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;</div>
+<div class="line"><a id="l01247" name="l01247"></a><span class="lineno"> 1247</span>              signature_remove_noexcept_t&lt;</div>
+<div class="line"><a id="l01248" name="l01248"></a><span class="lineno"> 1248</span>                  signature_remove_const_qualifier_t&lt;</div>
+<div class="line"><a id="l01249" name="l01249"></a><span class="lineno"> 1249</span>                      signature_remove_call_convention_t&lt;Signature&gt;&gt;&gt;&gt;</div>
+<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>    {</div>
+<div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span>    };</div>
 </div>
-<div class="line"><a id="l01263" name="l01263"></a><span class="lineno"> 1263</span></div>
-<div class="line"><a id="l01267" name="l01267"></a><span class="lineno"> 1267</span></div>
-<div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span></div>
-<div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span>    <span class="keyword">template</span> &lt;&gt;</div>
-<div class="foldopen" id="foldopen01281" data-start="{" data-end="};">
-<div class="line"><a id="l01281" name="l01281"></a><span class="lineno"><a class="line" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html"> 1281</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;1u&gt;</div>
-<div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span>    {</div>
-<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"><a class="line" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005"> 1283</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">type</a> = std::uint8_t;</div>
+<div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span> </div>
+<div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01255" data-start="{" data-end="};">
+<div class="line"><a id="l01255" name="l01255"></a><span class="lineno"><a class="line" href="../../db/df8/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_4.html"> 1255</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params...)&gt;</div>
+<div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
+<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>              ValueCategory,</div>
+<div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>              ValueCategory::any&gt;</div>
+<div class="line"><a id="l01259" name="l01259"></a><span class="lineno"> 1259</span>    {</div>
+<div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span>    };</div>
+</div>
+<div class="line"><a id="l01261" name="l01261"></a><span class="lineno"> 1261</span> </div>
+<div class="line"><a id="l01262" name="l01262"></a><span class="lineno"> 1262</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01263" data-start="{" data-end="};">
+<div class="line"><a id="l01263" name="l01263"></a><span class="lineno"><a class="line" href="../../d5/db0/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html"> 1263</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params..., ...)&gt;</div>
+<div class="line"><a id="l01264" name="l01264"></a><span class="lineno"> 1264</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
+<div class="line"><a id="l01265" name="l01265"></a><span class="lineno"> 1265</span>              ValueCategory,</div>
+<div class="line"><a id="l01266" name="l01266"></a><span class="lineno"> 1266</span>              ValueCategory::any&gt;</div>
+<div class="line"><a id="l01267" name="l01267"></a><span class="lineno"> 1267</span>    {</div>
+<div class="line"><a id="l01268" name="l01268"></a><span class="lineno"> 1268</span>    };</div>
+</div>
+<div class="line"><a id="l01269" name="l01269"></a><span class="lineno"> 1269</span> </div>
+<div class="line"><a id="l01270" name="l01270"></a><span class="lineno"> 1270</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01271" data-start="{" data-end="};">
+<div class="line"><a id="l01271" name="l01271"></a><span class="lineno"><a class="line" href="../../df/de4/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_6_01_4.html"> 1271</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params...)&amp;&gt;</div>
+<div class="line"><a id="l01272" name="l01272"></a><span class="lineno"> 1272</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
+<div class="line"><a id="l01273" name="l01273"></a><span class="lineno"> 1273</span>              <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a>,</div>
+<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span>              <a class="code hl_enumvalue" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa44f6155f13a820089c09cb5e9d7ccdef">ValueCategory::lvalue</a>&gt;</div>
+<div class="line"><a id="l01275" name="l01275"></a><span class="lineno"> 1275</span>    {</div>
+<div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span>    };</div>
+</div>
+<div class="line"><a id="l01277" name="l01277"></a><span class="lineno"> 1277</span> </div>
+<div class="line"><a id="l01278" name="l01278"></a><span class="lineno"> 1278</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01279" data-start="{" data-end="};">
+<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"><a class="line" href="../../d6/d7d/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_6_01_4.html"> 1279</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params..., ...)&amp;&gt;</div>
+<div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
+<div class="line"><a id="l01281" name="l01281"></a><span class="lineno"> 1281</span>              <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a>,</div>
+<div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span>              <a class="code hl_enumvalue" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa44f6155f13a820089c09cb5e9d7ccdef">ValueCategory::lvalue</a>&gt;</div>
+<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"> 1283</span>    {</div>
 <div class="line"><a id="l01284" name="l01284"></a><span class="lineno"> 1284</span>    };</div>
 </div>
-<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span></div>
-<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span>    <span class="keyword">template</span> &lt;&gt;</div>
-<div class="foldopen" id="foldopen01290" data-start="{" data-end="};">
-<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"><a class="line" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html"> 1290</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;2u&gt;</div>
+<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span> </div>
+<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01287" data-start="{" data-end="};">
+<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"><a class="line" href="../../d1/d70/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html"> 1287</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params...) &amp;&amp;&gt;</div>
+<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
+<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span>              <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a>,</div>
+<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span>              <a class="code hl_enumvalue" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aab5528fe69322e9e7de4c701519197fcd">ValueCategory::rvalue</a>&gt;</div>
 <div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>    {</div>
-<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"><a class="line" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3"> 1292</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">type</a> = std::uint16_t;</div>
-<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>    };</div>
+<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span>    };</div>
 </div>
-<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span></div>
-<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>    <span class="keyword">template</span> &lt;&gt;</div>
-<div class="foldopen" id="foldopen01299" data-start="{" data-end="};">
-<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"><a class="line" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html"> 1299</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;4u&gt;</div>
-<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>    {</div>
-<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"><a class="line" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1"> 1301</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">type</a> = std::uint32_t;</div>
-<div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span>    };</div>
+<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span> </div>
+<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01295" data-start="{" data-end="};">
+<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"><a class="line" href="../../d5/dfd/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_00_8_8_8_08_01_6_6_01_4.html"> 1295</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">signature_ref_qualification</a>&lt;Return(Params..., ...) &amp;&amp;&gt;</div>
+<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>        : <span class="keyword">public</span> std::integral_constant&lt;</div>
+<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>              <a class="code hl_enumeration" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824a">ValueCategory</a>,</div>
+<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>              <a class="code hl_enumvalue" href="../../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aab5528fe69322e9e7de4c701519197fcd">ValueCategory::rvalue</a>&gt;</div>
+<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>    {</div>
+<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>    };</div>
 </div>
-<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span></div>
-<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>    <span class="keyword">template</span> &lt;&gt;</div>
-<div class="foldopen" id="foldopen01308" data-start="{" data-end="};">
-<div class="line"><a id="l01308" name="l01308"></a><span class="lineno"><a class="line" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html"> 1308</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;8u&gt;</div>
-<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span>    {</div>
-<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"><a class="line" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9"> 1310</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">type</a> = std::uint64_t;</div>
-<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span>    };</div>
+<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span></div>
+<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span></div>
+<div class="line"><a id="l01313" name="l01313"></a><span class="lineno"> 1313</span> </div>
+<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="foldopen" id="foldopen01315" data-start="{" data-end="};">
+<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"><a class="line" href="../../d0/df4/structmimicpp_1_1signature__param__list.html"> 1315</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/df4/structmimicpp_1_1signature__param__list.html">signature_param_list</a></div>
+<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>        : <span class="keyword">public</span> <a class="code hl_struct" href="../../d0/df4/structmimicpp_1_1signature__param__list.html">signature_param_list</a>&lt;</div>
+<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>              signature_decay_t&lt;Signature&gt;&gt;</div>
+<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span>    {</div>
+<div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span>    };</div>
 </div>
-<div class="line"><a id="l01312" name="l01312"></a><span class="lineno"> 1312</span></div>
-<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>}</div>
-<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span> </div>
-<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span> </div>
+<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params&gt;</div>
+<div class="foldopen" id="foldopen01324" data-start="{" data-end="};">
+<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"><a class="line" href="../../d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html"> 1324</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/df4/structmimicpp_1_1signature__param__list.html">signature_param_list</a>&lt;Return(Params...)&gt;</div>
+<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>    {</div>
+<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"><a class="line" href="../../d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html#a967b718b7319e2ca11035549b39c003a"> 1326</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html#a967b718b7319e2ca11035549b39c003a">type</a> = <a class="code hl_struct" href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html">util::type_list</a>&lt;Params...&gt;;</div>
+<div class="line"><a id="l01327" name="l01327"></a><span class="lineno"> 1327</span>    };</div>
+</div>
+<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span></div>
+<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span></div>
+<div class="line"><a id="l01340" name="l01340"></a><span class="lineno"> 1340</span> </div>
+<div class="line"><a id="l01341" name="l01341"></a><span class="lineno"> 1341</span>    <span class="keyword">namespace </span>detail</div>
+<div class="line"><a id="l01342" name="l01342"></a><span class="lineno"> 1342</span>    {</div>
+<div class="line"><a id="l01343" name="l01343"></a><span class="lineno"> 1343</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature, <span class="keyword">typename</span> T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01344" name="l01344"></a><span class="lineno"> 1344</span>        <span class="keyword">struct </span>signature_prepend_param_impl;</div>
+<div class="line"><a id="l01345" name="l01345"></a><span class="lineno"> 1345</span> </div>
+<div class="line"><a id="l01346" name="l01346"></a><span class="lineno"> 1346</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keyword">typename</span> T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01347" name="l01347"></a><span class="lineno"> 1347</span>        <span class="keyword">struct </span>signature_prepend_param_impl&lt;Return(Params...), T, isNoexcept&gt;</div>
+<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"> 1349</span>        {</div>
+<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>            <span class="keyword">using </span>type = Return(T, Params...) <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span>        };</div>
+<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span> </div>
+<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keyword">typename</span> T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>        <span class="keyword">struct </span>signature_prepend_param_impl&lt;Return(Params..., ...), T, isNoexcept&gt;</div>
+<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span>        {</div>
+<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span>            <span class="keyword">using </span>type = Return(T, Params..., ...) noexcept(isNoexcept);</div>
+<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span>        };</div>
+<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span> </div>
+<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>        template &lt;typename Return, typename... Params, typename T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>        struct signature_prepend_param_impl&lt;Return(Params...)&amp;, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>            : public std::true_type</div>
+<div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span>        {</div>
+<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span>            <span class="keyword">using </span>type = Return(T, Params...) &amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span>        };</div>
+<div class="line"><a id="l01366" name="l01366"></a><span class="lineno"> 1366</span> </div>
+<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keyword">typename</span> T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"> 1368</span>        <span class="keyword">struct </span>signature_prepend_param_impl&lt;Return(Params..., ...)&amp;, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>        {</div>
+<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params..., ...) &amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span>        };</div>
+<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span> </div>
+<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keyword">typename</span> T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>        <span class="keyword">struct </span>signature_prepend_param_impl&lt;Return(Params...)&amp;&amp;, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>        {</div>
+<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params...) &amp;&amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>        };</div>
+<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span> </div>
+<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keyword">typename</span> T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>        <span class="keyword">struct </span>signature_prepend_param_impl&lt;Return(Params..., ...)&amp;&amp;, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>        {</div>
+<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params..., ...) &amp;&amp; <span class="keyword">noexcept</span>(isNoexcept);</div>
+<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>        };</div>
+<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span> </div>
+<div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Params, <span class="keyword">typename</span> T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span>        <span class="keyword">struct </span>signature_prepend_param_impl&lt;Return(Params...) const, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span>            : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>        {</div>
+<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params...) const noexcept(isNoexcept);</div>
+<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span>        };</div>
+<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span> </div>
+<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span>        template &lt;typename Return, typename... Params, typename T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>        struct signature_prepend_param_impl&lt;Return(Params..., ...) const, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span>            : public std::true_type</div>
+<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>        {</div>
+<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params..., ...) const noexcept(isNoexcept);</div>
+<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>        };</div>
+<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span> </div>
+<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>        template &lt;typename Return, typename... Params, typename T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>        struct signature_prepend_param_impl&lt;Return(Params...) const&amp;, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>            : public std::true_type</div>
+<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>        {</div>
+<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params...) const&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>        };</div>
+<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span> </div>
+<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>        template &lt;typename Return, typename... Params, typename T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span>        struct signature_prepend_param_impl&lt;Return(Params..., ...) const&amp;, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>            : public std::true_type</div>
+<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>        {</div>
+<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params..., ...) const&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>        };</div>
+<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span> </div>
+<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>        template &lt;typename Return, typename... Params, typename T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>        struct signature_prepend_param_impl&lt;Return(Params...) const&amp;&amp;, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>            : public std::true_type</div>
+<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>        {</div>
+<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params...) const&amp;&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>        };</div>
+<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span> </div>
+<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>        template &lt;typename Return, typename... Params, typename T, <span class="keywordtype">bool</span> isNoexcept&gt;</div>
+<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>        struct signature_prepend_param_impl&lt;Return(Params..., ...) const&amp;&amp;, T, isNoexcept&gt;</div>
+<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>            : public std::true_type</div>
+<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>        {</div>
+<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = Return(T, Params..., ...) const&amp;&amp; noexcept(isNoexcept);</div>
+<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>        };</div>
+<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span> </div>
+<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>        <span class="comment">// Todo: When msvc some day supports deducing noexcept, we can further simplify this.</span></div>
+<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>        template &lt;typename Signature, typename T, typename Trait = signature_remove_noexcept&lt;Signature&gt;&gt;</div>
+<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>        struct signature_prepend_param_</div>
+<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>            : public signature_prepend_param_impl&lt;typename Trait::type, T, Trait::value&gt;</div>
+<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>        {</div>
+<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>        };</div>
+<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span> </div>
+<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>        <span class="keyword">struct </span>signature_prepend_param</div>
+<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span>        {</div>
+<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>            <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>            <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = signature_prepend_param_&lt;Signature, T&gt;;</div>
+<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>        };</div>
+<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>    }</div>
+<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span> </div>
+<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature, <span class="keyword">typename</span> T&gt;</div>
+<div class="foldopen" id="foldopen01446" data-start="{" data-end="};">
+<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"><a class="line" href="../../d6/da0/structmimicpp_1_1signature__prepend__param.html"> 1446</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d6/da0/structmimicpp_1_1signature__prepend__param.html">signature_prepend_param</a></div>
+<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>        : <span class="keyword">public</span> detail::signature_apply_trait&lt;Signature, detail::signature_prepend_param&lt;T&gt;::template type&gt;</div>
+<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>    {</div>
+<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>    };</div>
+</div>
+<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span></div>
+<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>}</div>
+<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span> </div>
+<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span><span class="keyword">namespace </span>mimicpp::detail</div>
+<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>{</div>
+<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Second, <span class="keywordtype">bool</span> reversed = false&gt;</div>
+<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>    <span class="keyword">struct </span>is_overloadable_with</div>
+<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>        : <span class="keyword">public</span> std::conditional_t&lt;</div>
+<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>              reversed,</div>
+<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>              std::false_type,</div>
+<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>              is_overloadable_with&lt;Second, First, true&gt;&gt;</div>
+<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>    {</div>
+<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>    };</div>
+<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span> </div>
+<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Second&gt;</div>
+<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>        <span class="keyword">requires</span>(</div>
+<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>            !std::same_as&lt;</div>
+<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>                <a class="code hl_typedef" href="../../d3/dce/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t.html#gaaf6745d6b76342d272c0b53912757fcf">signature_param_list_t&lt;signature_decay_t&lt;First&gt;</a>&gt;,</div>
+<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>                <a class="code hl_typedef" href="../../d3/dce/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t.html#gaaf6745d6b76342d272c0b53912757fcf">signature_param_list_t&lt;signature_decay_t&lt;Second&gt;</a>&gt;&gt;)</div>
+<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>    <span class="keyword">struct </span>is_overloadable_with&lt;First, Second, false&gt;</div>
+<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>        : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>    {</div>
+<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span>    };</div>
+<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span> </div>
+<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
+<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...), Return2(Params...) const, reversed&gt;</div>
+<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>        : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>    {</div>
+<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>    };</div>
+<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span> </div>
+<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
+<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...)&amp;, Return2(Params...) const&amp;, reversed&gt;</div>
+<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>        : public std::true_type</div>
+<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>    {</div>
+<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>    };</div>
+<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span> </div>
+<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
+<div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...)&amp;, Return2(Params...)&amp;&amp;, reversed&gt;</div>
+<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>        : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>    {</div>
+<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>    };</div>
+<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span> </div>
+<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
+<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...)&amp;, Return2(Params...) const&amp;&amp;, reversed&gt;</div>
+<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>        : public std::true_type</div>
+<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>    {</div>
+<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span>    };</div>
+<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span> </div>
+<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
+<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...) const&amp;, Return2(Params...)&amp;&amp;, reversed&gt;</div>
+<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span>        : <span class="keyword">public</span> std::true_type</div>
+<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span>    {</div>
+<div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span>    };</div>
+<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span> </div>
+<div class="line"><a id="l01507" name="l01507"></a><span class="lineno"> 1507</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
+<div class="line"><a id="l01508" name="l01508"></a><span class="lineno"> 1508</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...) const&amp;, Return2(Params...) const&amp;&amp;, reversed&gt;</div>
+<div class="line"><a id="l01509" name="l01509"></a><span class="lineno"> 1509</span>        : public std::true_type</div>
+<div class="line"><a id="l01510" name="l01510"></a><span class="lineno"> 1510</span>    {</div>
+<div class="line"><a id="l01511" name="l01511"></a><span class="lineno"> 1511</span>    };</div>
+<div class="line"><a id="l01512" name="l01512"></a><span class="lineno"> 1512</span> </div>
+<div class="line"><a id="l01513" name="l01513"></a><span class="lineno"> 1513</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return1, <span class="keyword">typename</span> Return2, <span class="keyword">typename</span>... Params, <span class="keywordtype">bool</span> reversed&gt;</div>
+<div class="line"><a id="l01514" name="l01514"></a><span class="lineno"> 1514</span>    <span class="keyword">struct </span>is_overloadable_with&lt;Return1(Params...)&amp;&amp;, Return2(Params...) const&amp;&amp;, reversed&gt;</div>
+<div class="line"><a id="l01515" name="l01515"></a><span class="lineno"> 1515</span>        : public std::true_type</div>
+<div class="line"><a id="l01516" name="l01516"></a><span class="lineno"> 1516</span>    {</div>
+<div class="line"><a id="l01517" name="l01517"></a><span class="lineno"> 1517</span>    };</div>
+<div class="line"><a id="l01518" name="l01518"></a><span class="lineno"> 1518</span> </div>
+<div class="line"><a id="l01519" name="l01519"></a><span class="lineno"> 1519</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="line"><a id="l01520" name="l01520"></a><span class="lineno"> 1520</span>    <span class="keyword">using </span>normalize_overload_t = <a class="code hl_typedef" href="../../d0/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t.html#ga1944b7b7ba7e20b04cfe5849d6a73df9">signature_remove_noexcept_t</a>&lt;</div>
+<div class="line"><a id="l01521" name="l01521"></a><span class="lineno"> 1521</span>        <a class="code hl_typedef" href="../../d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7">signature_remove_call_convention_t&lt;Signature&gt;</a>&gt;;</div>
+<div class="line"><a id="l01522" name="l01522"></a><span class="lineno"> 1522</span>}</div>
+<div class="line"><a id="l01523" name="l01523"></a><span class="lineno"> 1523</span> </div>
+<div class="line"><a id="l01524" name="l01524"></a><span class="lineno"> 1524</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span>mimicpp</div>
+<div class="line"><a id="l01525" name="l01525"></a><span class="lineno"> 1525</span>{</div>
+<div class="line"><a id="l01533" name="l01533"></a><span class="lineno"> 1533</span> </div>
+<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span> Second&gt;</div>
+<div class="foldopen" id="foldopen01535" data-start="{" data-end="};">
+<div class="line"><a id="l01535" name="l01535"></a><span class="lineno"><a class="line" href="../../d4/dd6/structmimicpp_1_1is__overloadable__with.html"> 1535</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/dd6/structmimicpp_1_1is__overloadable__with.html">is_overloadable_with</a></div>
+<div class="line"><a id="l01536" name="l01536"></a><span class="lineno"> 1536</span>        : <span class="keyword">public</span> detail::is_overloadable_with&lt;</div>
+<div class="line"><a id="l01537" name="l01537"></a><span class="lineno"> 1537</span>              detail::normalize_overload_t&lt;First&gt;,</div>
+<div class="line"><a id="l01538" name="l01538"></a><span class="lineno"> 1538</span>              detail::normalize_overload_t&lt;Second&gt;&gt;</div>
+<div class="line"><a id="l01539" name="l01539"></a><span class="lineno"> 1539</span>    {</div>
+<div class="line"><a id="l01540" name="l01540"></a><span class="lineno"> 1540</span>    };</div>
+</div>
+<div class="line"><a id="l01541" name="l01541"></a><span class="lineno"> 1541</span></div>
+<div class="line"><a id="l01545" name="l01545"></a><span class="lineno"> 1545</span> </div>
+<div class="line"><a id="l01546" name="l01546"></a><span class="lineno"> 1546</span>    <span class="keyword">namespace </span>detail</div>
+<div class="line"><a id="l01547" name="l01547"></a><span class="lineno"> 1547</span>    {</div>
+<div class="line"><a id="l01548" name="l01548"></a><span class="lineno"> 1548</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</div>
+<div class="line"><a id="l01549" name="l01549"></a><span class="lineno"> 1549</span>        [[nodiscard]]</div>
+<div class="line"><a id="l01550" name="l01550"></a><span class="lineno"> 1550</span>        <span class="keyword">consteval</span> <span class="keywordtype">bool</span> <a class="code hl_struct" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">is_overload_set</a>() noexcept</div>
+<div class="line"><a id="l01551" name="l01551"></a><span class="lineno"> 1551</span>        {</div>
+<div class="line"><a id="l01552" name="l01552"></a><span class="lineno"> 1552</span>            <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (0 == <span class="keyword">sizeof</span>...(Others))</div>
+<div class="line"><a id="l01553" name="l01553"></a><span class="lineno"> 1553</span>            {</div>
+<div class="line"><a id="l01554" name="l01554"></a><span class="lineno"> 1554</span>                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01555" name="l01555"></a><span class="lineno"> 1555</span>            }</div>
+<div class="line"><a id="l01556" name="l01556"></a><span class="lineno"> 1556</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l01557" name="l01557"></a><span class="lineno"> 1557</span>            {</div>
+<div class="line"><a id="l01558" name="l01558"></a><span class="lineno"> 1558</span>                <span class="keywordflow">return</span> (... &amp;&amp; is_overloadable_with&lt;First, Others&gt;::value)</div>
+<div class="line"><a id="l01559" name="l01559"></a><span class="lineno"> 1559</span>                    &amp;&amp; is_overload_set&lt;Others...&gt;();</div>
+<div class="line"><a id="l01560" name="l01560"></a><span class="lineno"> 1560</span>            }</div>
+<div class="line"><a id="l01561" name="l01561"></a><span class="lineno"> 1561</span>        }</div>
+<div class="line"><a id="l01562" name="l01562"></a><span class="lineno"> 1562</span>    }</div>
+<div class="line"><a id="l01563" name="l01563"></a><span class="lineno"> 1563</span></div>
+<div class="line"><a id="l01571" name="l01571"></a><span class="lineno"> 1571</span> </div>
+<div class="line"><a id="l01572" name="l01572"></a><span class="lineno"> 1572</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</div>
+<div class="foldopen" id="foldopen01573" data-start="{" data-end="};">
+<div class="line"><a id="l01573" name="l01573"></a><span class="lineno"><a class="line" href="../../dd/df5/structmimicpp_1_1is__overload__set.html"> 1573</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../dd/df5/structmimicpp_1_1is__overload__set.html">is_overload_set</a></div>
+<div class="line"><a id="l01574" name="l01574"></a><span class="lineno"> 1574</span>        : <span class="keyword">public</span> std::bool_constant&lt;</div>
+<div class="line"><a id="l01575" name="l01575"></a><span class="lineno"> 1575</span>              detail::is_overload_set&lt;detail::normalize_overload_t&lt;First&gt;, detail::normalize_overload_t&lt;Others&gt;...&gt;()&gt;</div>
+<div class="line"><a id="l01576" name="l01576"></a><span class="lineno"> 1576</span>    {</div>
+<div class="line"><a id="l01577" name="l01577"></a><span class="lineno"> 1577</span>    };</div>
+</div>
+<div class="line"><a id="l01578" name="l01578"></a><span class="lineno"> 1578</span></div>
+<div class="line"><a id="l01582" name="l01582"></a><span class="lineno"> 1582</span></div>
+<div class="line"><a id="l01591" name="l01591"></a><span class="lineno"> 1591</span></div>
+<div class="line"><a id="l01595" name="l01595"></a><span class="lineno"> 1595</span>    <span class="keyword">template</span> &lt;&gt;</div>
+<div class="foldopen" id="foldopen01596" data-start="{" data-end="};">
+<div class="line"><a id="l01596" name="l01596"></a><span class="lineno"><a class="line" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html"> 1596</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;1u&gt;</div>
+<div class="line"><a id="l01597" name="l01597"></a><span class="lineno"> 1597</span>    {</div>
+<div class="line"><a id="l01598" name="l01598"></a><span class="lineno"><a class="line" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005"> 1598</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">type</a> = std::uint8_t;</div>
+<div class="line"><a id="l01599" name="l01599"></a><span class="lineno"> 1599</span>    };</div>
+</div>
+<div class="line"><a id="l01600" name="l01600"></a><span class="lineno"> 1600</span></div>
+<div class="line"><a id="l01604" name="l01604"></a><span class="lineno"> 1604</span>    <span class="keyword">template</span> &lt;&gt;</div>
+<div class="foldopen" id="foldopen01605" data-start="{" data-end="};">
+<div class="line"><a id="l01605" name="l01605"></a><span class="lineno"><a class="line" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html"> 1605</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;2u&gt;</div>
+<div class="line"><a id="l01606" name="l01606"></a><span class="lineno"> 1606</span>    {</div>
+<div class="line"><a id="l01607" name="l01607"></a><span class="lineno"><a class="line" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3"> 1607</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">type</a> = std::uint16_t;</div>
+<div class="line"><a id="l01608" name="l01608"></a><span class="lineno"> 1608</span>    };</div>
+</div>
+<div class="line"><a id="l01609" name="l01609"></a><span class="lineno"> 1609</span></div>
+<div class="line"><a id="l01613" name="l01613"></a><span class="lineno"> 1613</span>    <span class="keyword">template</span> &lt;&gt;</div>
+<div class="foldopen" id="foldopen01614" data-start="{" data-end="};">
+<div class="line"><a id="l01614" name="l01614"></a><span class="lineno"><a class="line" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html"> 1614</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;4u&gt;</div>
+<div class="line"><a id="l01615" name="l01615"></a><span class="lineno"> 1615</span>    {</div>
+<div class="line"><a id="l01616" name="l01616"></a><span class="lineno"><a class="line" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1"> 1616</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">type</a> = std::uint32_t;</div>
+<div class="line"><a id="l01617" name="l01617"></a><span class="lineno"> 1617</span>    };</div>
+</div>
+<div class="line"><a id="l01618" name="l01618"></a><span class="lineno"> 1618</span></div>
+<div class="line"><a id="l01622" name="l01622"></a><span class="lineno"> 1622</span>    <span class="keyword">template</span> &lt;&gt;</div>
+<div class="foldopen" id="foldopen01623" data-start="{" data-end="};">
+<div class="line"><a id="l01623" name="l01623"></a><span class="lineno"><a class="line" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html"> 1623</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/da0/structmimicpp_1_1uint__with__size.html">uint_with_size</a>&lt;8u&gt;</div>
+<div class="line"><a id="l01624" name="l01624"></a><span class="lineno"> 1624</span>    {</div>
+<div class="line"><a id="l01625" name="l01625"></a><span class="lineno"><a class="line" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9"> 1625</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">type</a> = std::uint64_t;</div>
+<div class="line"><a id="l01626" name="l01626"></a><span class="lineno"> 1626</span>    };</div>
+</div>
+<div class="line"><a id="l01627" name="l01627"></a><span class="lineno"> 1627</span></div>
+<div class="line"><a id="l01631" name="l01631"></a><span class="lineno"> 1631</span>}</div>
+<div class="line"><a id="l01632" name="l01632"></a><span class="lineno"> 1632</span> </div>
+<div class="line"><a id="l01633" name="l01633"></a><span class="lineno"> 1633</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_config_8hpp_html_af5897385afd790dba0e4971e29c1e3e0"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MODULE_EXPORT</div><div class="ttdef"><b>Definition</b> Config.hpp:19</div></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_type_list_8hpp_html"><div class="ttname"><a href="../../df/d2e/_type_list_8hpp.html">TypeList.hpp</a></div></div>
 <div class="ttc" id="aconceptmimicpp_1_1has__default__call__convention_html"><div class="ttname"><a href="../../da/d58/conceptmimicpp_1_1has__default__call__convention.html">mimicpp::has_default_call_convention</a></div><div class="ttdoc">Determines, whether the given signature has default call-convention.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:195</div></div>
 <div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaa4e3d7f5e74af5877f1466395f7d0c12"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">mimicpp::matches::type</a></div><div class="ttdeci">constexpr TypeMatcher&lt; T &gt; type</div><div class="ttdoc">Matcher, which can be used as a last resort to disambiguate similar overloads.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:297</div></div>
 <div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n_html_gaeb6c2d674d0976bad08f5fb98762a167"><div class="ttname"><a href="../../dd/dc9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#gaeb6c2d674d0976bad08f5fb98762a167">mimicpp::signature_call_convention_t</a></div><div class="ttdeci">typename signature_call_convention&lt; Signature &gt;::type signature_call_convention_t</div><div class="ttdoc">Convenience alias, exposing the type member alias of the actual type-trait.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:102</div></div>
-<div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t_html_gaaf6745d6b76342d272c0b53912757fcf"><div class="ttname"><a href="../../d3/dce/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t.html#gaaf6745d6b76342d272c0b53912757fcf">mimicpp::signature_param_list_t</a></div><div class="ttdeci">typename signature_param_list&lt; Signature &gt;::type signature_param_list_t</div><div class="ttdoc">Convenience alias, exposing the type member alias of the actual type-trait.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:262</div></div>
+<div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t_html_gaaf6745d6b76342d272c0b53912757fcf"><div class="ttname"><a href="../../d3/dce/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___l_i_s_t.html#gaaf6745d6b76342d272c0b53912757fcf">mimicpp::signature_param_list_t</a></div><div class="ttdeci">typename signature_param_list&lt; Signature &gt;::type signature_param_list_t</div><div class="ttdoc">Convenience alias, exposing the type member alias of the actual type-trait.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:294</div></div>
 <div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n_html_ga3f94935150946f4d048fa0511c07e6a7"><div class="ttname"><a href="../../d6/d20/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___c_a_l_l___c_o_n_v_e_n_t_i_o_n.html#ga3f94935150946f4d048fa0511c07e6a7">mimicpp::signature_remove_call_convention_t</a></div><div class="ttdeci">typename signature_remove_call_convention&lt; Signature &gt;::type signature_remove_call_convention_t</div><div class="ttdoc">Convenience alias, exposing the type member alias of the actual type-trait.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:118</div></div>
 <div class="ttc" id="agroup___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t_html_ga1944b7b7ba7e20b04cfe5849d6a73df9"><div class="ttname"><a href="../../d0/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_m_o_v_e___n_o_e_x_c_e_p_t.html#ga1944b7b7ba7e20b04cfe5849d6a73df9">mimicpp::signature_remove_noexcept_t</a></div><div class="ttdeci">typename signature_remove_noexcept&lt; Signature &gt;::type signature_remove_noexcept_t</div><div class="ttdoc">Convenience alias, exposing the type member alias of the actual type-trait.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:70</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> Call.hpp:24</div></div>
@@ -1264,34 +1551,37 @@ $(function(){initNavTree('d8/d32/_type_traits_8hpp_source.html','../../'); initR
 <div class="ttc" id="astructmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4_html_a8aaaa02958d794699258c27f8bf468dd"><div class="ttname"><a href="../../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#a8aaaa02958d794699258c27f8bf468dd">mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;::add_call_convention_t</a></div><div class="ttdeci">std::type_identity_t&lt; Signature &gt; add_call_convention_t</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:254</div></div>
 <div class="ttc" id="astructmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4_html_addddf8af9c1dca219b021607824b0775"><div class="ttname"><a href="../../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#addddf8af9c1dca219b021607824b0775">mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;::tag_t</a></div><div class="ttdeci">detail::default_call_convention tag_t</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:248</div></div>
 <div class="ttc" id="astructmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4_html_ae9bf33737a7f5a7e6e6252b4c4dfd5d4"><div class="ttname"><a href="../../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#ae9bf33737a7f5a7e6e6252b4c4dfd5d4">mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;::remove_call_convention_t</a></div><div class="ttdeci">std::type_identity_t&lt; Signature &gt; remove_call_convention_t</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:251</div></div>
-<div class="ttc" id="astructmimicpp_1_1call__convention__traits_html"><div class="ttname"><a href="../../d3/db5/structmimicpp_1_1call__convention__traits.html">mimicpp::call_convention_traits</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:306</div></div>
-<div class="ttc" id="astructmimicpp_1_1is__overload__set_html"><div class="ttname"><a href="../../dd/df5/structmimicpp_1_1is__overload__set.html">mimicpp::is_overload_set</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1255</div></div>
-<div class="ttc" id="astructmimicpp_1_1is__overloadable__with_html"><div class="ttname"><a href="../../d4/dd6/structmimicpp_1_1is__overloadable__with.html">mimicpp::is_overloadable_with</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1235</div></div>
+<div class="ttc" id="astructmimicpp_1_1call__convention__traits_html"><div class="ttname"><a href="../../d3/db5/structmimicpp_1_1call__convention__traits.html">mimicpp::call_convention_traits</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:355</div></div>
+<div class="ttc" id="astructmimicpp_1_1is__overload__set_html"><div class="ttname"><a href="../../dd/df5/structmimicpp_1_1is__overload__set.html">mimicpp::is_overload_set</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1576</div></div>
+<div class="ttc" id="astructmimicpp_1_1is__overloadable__with_html"><div class="ttname"><a href="../../d4/dd6/structmimicpp_1_1is__overloadable__with.html">mimicpp::is_overloadable_with</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1539</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__add__const__qualifier_html"><div class="ttname"><a href="../../dc/dcc/structmimicpp_1_1signature__add__const__qualifier.html">mimicpp::signature_add_const_qualifier</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:940</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__add__lvalue__ref__qualifier_html"><div class="ttname"><a href="../../d8/dc1/structmimicpp_1_1signature__add__lvalue__ref__qualifier.html">mimicpp::signature_add_lvalue_ref_qualifier</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1031</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__add__noexcept_html"><div class="ttname"><a href="../../dd/db4/structmimicpp_1_1signature__add__noexcept.html">mimicpp::signature_add_noexcept</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:602</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__add__rvalue__ref__qualifier_html"><div class="ttname"><a href="../../d1/d2c/structmimicpp_1_1signature__add__rvalue__ref__qualifier.html">mimicpp::signature_add_rvalue_ref_qualifier</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1122</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__call__convention_3_01_signature_01_4_html_a0f54c01510f88e759532968e5af6ccbc"><div class="ttname"><a href="../../da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html#a0f54c01510f88e759532968e5af6ccbc">mimicpp::signature_call_convention&lt; Signature &gt;::type</a></div><div class="ttdeci">detail::default_call_convention type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:213</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__call__convention_html"><div class="ttname"><a href="../../dc/d9a/structmimicpp_1_1signature__call__convention.html">mimicpp::signature_call_convention</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:94</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__const__qualification_html"><div class="ttname"><a href="../../d2/de2/structmimicpp_1_1signature__const__qualification.html">mimicpp::signature_const_qualification</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1046</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__decay_html"><div class="ttname"><a href="../../db/df4/structmimicpp_1_1signature__decay.html">mimicpp::signature_decay</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:957</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__decay_html_ab7cd71c1e5587ea9e2cdfe43a91a3152"><div class="ttname"><a href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">mimicpp::signature_decay::type</a></div><div class="ttdeci">typename detail::signature_remove_ref_qualifier_impl&lt; typename detail::signature_remove_const_qualifier_impl&lt; typename detail::signature_remove_noexcept&lt; signature_remove_call_convention_t&lt; Signature &gt; &gt;::type, false &gt;::type, false &gt;::type type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:958</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__const__qualification_html"><div class="ttname"><a href="../../d2/de2/structmimicpp_1_1signature__const__qualification.html">mimicpp::signature_const_qualification</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1228</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__decay_html"><div class="ttname"><a href="../../db/df4/structmimicpp_1_1signature__decay.html">mimicpp::signature_decay</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1139</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__decay_html_ab7cd71c1e5587ea9e2cdfe43a91a3152"><div class="ttname"><a href="../../db/df4/structmimicpp_1_1signature__decay.html#ab7cd71c1e5587ea9e2cdfe43a91a3152">mimicpp::signature_decay::type</a></div><div class="ttdeci">typename detail::signature_remove_ref_qualifier_impl&lt; typename detail::signature_remove_const_qualifier_impl&lt; typename detail::signature_remove_noexcept&lt; signature_remove_call_convention_t&lt; Signature &gt; &gt;::type, false &gt;::type, false &gt;::type type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1140</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__is__noexcept_html"><div class="ttname"><a href="../../d9/d28/structmimicpp_1_1signature__is__noexcept.html">mimicpp::signature_is_noexcept</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:620</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4_html_a967b718b7319e2ca11035549b39c003a"><div class="ttname"><a href="../../d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html#a967b718b7319e2ca11035549b39c003a">mimicpp::signature_param_list&lt; Return(Params...)&gt;::type</a></div><div class="ttdeci">util::type_list&lt; Params... &gt; type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1144</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__param__list_html"><div class="ttname"><a href="../../d0/df4/structmimicpp_1_1signature__param__list.html">mimicpp::signature_param_list</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1138</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__param__type_html"><div class="ttname"><a href="../../db/dd5/structmimicpp_1_1signature__param__type.html">mimicpp::signature_param_type</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1018</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__ref__qualification_html"><div class="ttname"><a href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">mimicpp::signature_ref_qualification</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1069</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4_html_a967b718b7319e2ca11035549b39c003a"><div class="ttname"><a href="../../d0/d14/structmimicpp_1_1signature__param__list_3_01_return_07_params_8_8_8_08_4.html#a967b718b7319e2ca11035549b39c003a">mimicpp::signature_param_list&lt; Return(Params...)&gt;::type</a></div><div class="ttdeci">util::type_list&lt; Params... &gt; type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1326</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__param__list_html"><div class="ttname"><a href="../../d0/df4/structmimicpp_1_1signature__param__list.html">mimicpp::signature_param_list</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1320</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__param__type_html"><div class="ttname"><a href="../../db/dd5/structmimicpp_1_1signature__param__type.html">mimicpp::signature_param_type</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1200</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__prepend__param_html"><div class="ttname"><a href="../../d6/da0/structmimicpp_1_1signature__prepend__param.html">mimicpp::signature_prepend_param</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1448</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__ref__qualification_html"><div class="ttname"><a href="../../d7/d97/structmimicpp_1_1signature__ref__qualification.html">mimicpp::signature_ref_qualification</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1251</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__remove__call__convention_html"><div class="ttname"><a href="../../dc/d70/structmimicpp_1_1signature__remove__call__convention.html">mimicpp::signature_remove_call_convention</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:274</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__remove__call__convention_html_a981cda6f9bb53ed6ee1daa5a7fb2486f"><div class="ttname"><a href="../../dc/d70/structmimicpp_1_1signature__remove__call__convention.html#a981cda6f9bb53ed6ee1daa5a7fb2486f">mimicpp::signature_remove_call_convention::type</a></div><div class="ttdeci">typename call_convention_traits&lt; signature_call_convention_t&lt; Signature &gt; &gt;::template remove_call_convention_t&lt; Signature &gt; type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:275</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__remove__const__qualifier_html"><div class="ttname"><a href="../../d8/de6/structmimicpp_1_1signature__remove__const__qualifier.html">mimicpp::signature_remove_const_qualifier</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:856</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__remove__noexcept_html"><div class="ttname"><a href="../../d4/db7/structmimicpp_1_1signature__remove__noexcept.html">mimicpp::signature_remove_noexcept</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:486</div></div>
 <div class="ttc" id="astructmimicpp_1_1signature__remove__ref__qualifier_html"><div class="ttname"><a href="../../d5/dae/structmimicpp_1_1signature__remove__ref__qualifier.html">mimicpp::signature_remove_ref_qualifier</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:738</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4_html_aae2462c73bdababb0806c9d47efba9a3"><div class="ttname"><a href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html#aae2462c73bdababb0806c9d47efba9a3">mimicpp::signature_return_type&lt; Return(Params...,...)&gt;::type</a></div><div class="ttdeci">Return type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:996</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4_html_a1d69e687d4cad1aca48534aff5c18e09"><div class="ttname"><a href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html#a1d69e687d4cad1aca48534aff5c18e09">mimicpp::signature_return_type&lt; Return(Params...)&gt;::type</a></div><div class="ttdeci">Return type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:990</div></div>
-<div class="ttc" id="astructmimicpp_1_1signature__return__type_html"><div class="ttname"><a href="../../d4/d96/structmimicpp_1_1signature__return__type.html">mimicpp::signature_return_type</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:984</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_011u_01_4_html_a7f8ddb0c20e95f3add9056e351984005"><div class="ttname"><a href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">mimicpp::uint_with_size&lt; 1u &gt;::type</a></div><div class="ttdeci">std::uint8_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1283</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_012u_01_4_html_a1087b04b099a74a359bf025a33dde0c3"><div class="ttname"><a href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">mimicpp::uint_with_size&lt; 2u &gt;::type</a></div><div class="ttdeci">std::uint16_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1292</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_014u_01_4_html_ae44882b5ea4ca17ab16f2f94c670f9e1"><div class="ttname"><a href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">mimicpp::uint_with_size&lt; 4u &gt;::type</a></div><div class="ttdeci">std::uint32_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1301</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_018u_01_4_html_a7f777d6e66976ce6720af6ecce4754a9"><div class="ttname"><a href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">mimicpp::uint_with_size&lt; 8u &gt;::type</a></div><div class="ttdeci">std::uint64_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1310</div></div>
-<div class="ttc" id="astructmimicpp_1_1uint__with__size_html"><div class="ttname"><a href="../../d7/da0/structmimicpp_1_1uint__with__size.html">mimicpp::uint_with_size</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:314</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4_html_aae2462c73bdababb0806c9d47efba9a3"><div class="ttname"><a href="../../d3/d9e/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_00_8_8_8_08_4.html#aae2462c73bdababb0806c9d47efba9a3">mimicpp::signature_return_type&lt; Return(Params...,...)&gt;::type</a></div><div class="ttdeci">Return type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1178</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4_html_a1d69e687d4cad1aca48534aff5c18e09"><div class="ttname"><a href="../../d0/d85/structmimicpp_1_1signature__return__type_3_01_return_07_params_8_8_8_08_4.html#a1d69e687d4cad1aca48534aff5c18e09">mimicpp::signature_return_type&lt; Return(Params...)&gt;::type</a></div><div class="ttdeci">Return type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1172</div></div>
+<div class="ttc" id="astructmimicpp_1_1signature__return__type_html"><div class="ttname"><a href="../../d4/d96/structmimicpp_1_1signature__return__type.html">mimicpp::signature_return_type</a></div><div class="ttdoc">Primary template.</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1166</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_011u_01_4_html_a7f8ddb0c20e95f3add9056e351984005"><div class="ttname"><a href="../../da/da1/structmimicpp_1_1uint__with__size_3_011u_01_4.html#a7f8ddb0c20e95f3add9056e351984005">mimicpp::uint_with_size&lt; 1u &gt;::type</a></div><div class="ttdeci">std::uint8_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1598</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_012u_01_4_html_a1087b04b099a74a359bf025a33dde0c3"><div class="ttname"><a href="../../de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3">mimicpp::uint_with_size&lt; 2u &gt;::type</a></div><div class="ttdeci">std::uint16_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1607</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_014u_01_4_html_ae44882b5ea4ca17ab16f2f94c670f9e1"><div class="ttname"><a href="../../d7/def/structmimicpp_1_1uint__with__size_3_014u_01_4.html#ae44882b5ea4ca17ab16f2f94c670f9e1">mimicpp::uint_with_size&lt; 4u &gt;::type</a></div><div class="ttdeci">std::uint32_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1616</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_3_018u_01_4_html_a7f777d6e66976ce6720af6ecce4754a9"><div class="ttname"><a href="../../d5/d45/structmimicpp_1_1uint__with__size_3_018u_01_4.html#a7f777d6e66976ce6720af6ecce4754a9">mimicpp::uint_with_size&lt; 8u &gt;::type</a></div><div class="ttdeci">std::uint64_t type</div><div class="ttdef"><b>Definition</b> TypeTraits.hpp:1625</div></div>
+<div class="ttc" id="astructmimicpp_1_1uint__with__size_html"><div class="ttname"><a href="../../d7/da0/structmimicpp_1_1uint__with__size.html">mimicpp::uint_with_size</a></div><div class="ttdoc">Primary template, purposely undefined.</div><div class="ttdef"><b>Definition</b> Fwd.hpp:363</div></div>
 <div class="ttc" id="astructmimicpp_1_1util_1_1type__list_html"><div class="ttname"><a href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html">mimicpp::util::type_list</a></div><div class="ttdoc">A very basic type-list template.</div><div class="ttdef"><b>Definition</b> TypeList.hpp:29</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -1299,7 +1589,7 @@ $(function(){initNavTree('d8/d32/_type_traits_8hpp_source.html','../../'); initR
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d8/d32/_type_traits_8hpp.html">TypeTraits.hpp</a></li>
-    <li class="footer">Generated on Sat Oct 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Oct 14 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

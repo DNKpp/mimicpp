@@ -120,7 +120,7 @@ $(function(){initNavTree('d0/db9/mimic_09_09_8hpp_source.html','../../'); initRe
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/ded/_call_convention_8hpp.html">mimic++/CallConvention.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d8a/_expectation_8hpp.html">mimic++/Expectation.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/d4f/_expectation_builder_8hpp.html">mimic++/ExpectationBuilder.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="../../d9/dc3/_interface_mock_8hpp.html">mimic++/InterfaceMock.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/dc3/_facade_8hpp.html">mimic++/Facade.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/dc5/_mock_8hpp.html">mimic++/Mock.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/d92/_object_watcher_8hpp.html">mimic++/ObjectWatcher.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="../../db/d15/_printing_8hpp.html">mimic++/Printing.hpp</a>&quot;</span></div>
@@ -131,40 +131,46 @@ $(function(){initNavTree('d0/db9/mimic_09_09_8hpp_source.html','../../'); initRe
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d32/_type_traits_8hpp.html">mimic++/TypeTraits.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/d54/_utilities_8hpp.html">mimic++/Utilities.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/d58/_common_8hpp.html">mimic++/matchers/Common.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="../../d1/de0/_floating_point_matchers_8hpp.html">mimic++/matchers/FloatingPointMatchers.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;<a class="code" href="../../d9/dd5/_general_matchers_8hpp.html">mimic++/matchers/GeneralMatchers.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/df3/_range_matchers_8hpp.html">mimic++/matchers/RangeMatchers.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/d56/_string_matchers_8hpp.html">mimic++/matchers/StringMatchers.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="../../d1/d42/_arg_requirement_policies_8hpp.html">mimic++/policies/ArgRequirementPolicies.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/dfd/_argument_list_8hpp.html">mimic++/policies/ArgumentList.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &quot;<a class="code" href="../../db/d70/_control_policies_8hpp.html">mimic++/policies/ControlPolicies.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/da3/_finalizer_policies_8hpp.html">mimic++/policies/FinalizerPolicies.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d10/_general_policies_8hpp.html">mimic++/policies/GeneralPolicies.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/d18/_side_effect_policies_8hpp.html">mimic++/policies/SideEffectPolicies.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/dfa/macros_2_common_8hpp.html">mimic++/macros/Common.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="../../da/d64/macros_2_facade_8hpp.html">mimic++/macros/Facade.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;<a class="code" href="../../d0/dc1/_interface_mocking_8hpp.html">mimic++/macros/InterfaceMocking.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/d1d/_scoped_expectation_8hpp.html">mimic++/macros/ScopedExpectation.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &quot;<a class="code" href="../../da/d5a/matchers_2_common_8hpp.html">mimic++/matchers/Common.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="../../d1/de0/_floating_point_matchers_8hpp.html">mimic++/matchers/FloatingPointMatchers.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &quot;<a class="code" href="../../d9/dd5/_general_matchers_8hpp.html">mimic++/matchers/GeneralMatchers.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/df3/_range_matchers_8hpp.html">mimic++/matchers/RangeMatchers.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/d56/_string_matchers_8hpp.html">mimic++/matchers/StringMatchers.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">#include &quot;<a class="code" href="../../d1/d42/_arg_requirement_policies_8hpp.html">mimic++/policies/ArgRequirementPolicies.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/dfd/_argument_list_8hpp.html">mimic++/policies/ArgumentList.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#include &quot;<a class="code" href="../../db/d70/_control_policies_8hpp.html">mimic++/policies/ControlPolicies.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/da3/_finalizer_policies_8hpp.html">mimic++/policies/FinalizerPolicies.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d10/_general_policies_8hpp.html">mimic++/policies/GeneralPolicies.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="preprocessor">#include &quot;<a class="code" href="../../dc/d18/_side_effect_policies_8hpp.html">mimic++/policies/SideEffectPolicies.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_arg_requirement_policies_8hpp_html"><div class="ttname"><a href="../../d1/d42/_arg_requirement_policies_8hpp.html">ArgRequirementPolicies.hpp</a></div></div>
 <div class="ttc" id="a_argument_list_8hpp_html"><div class="ttname"><a href="../../d2/dfd/_argument_list_8hpp.html">ArgumentList.hpp</a></div></div>
 <div class="ttc" id="a_call_8hpp_html"><div class="ttname"><a href="../../dc/d44/_call_8hpp.html">Call.hpp</a></div></div>
 <div class="ttc" id="a_call_convention_8hpp_html"><div class="ttname"><a href="../../d7/ded/_call_convention_8hpp.html">CallConvention.hpp</a></div></div>
-<div class="ttc" id="a_common_8hpp_html"><div class="ttname"><a href="../../d3/d58/_common_8hpp.html">Common.hpp</a></div></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
 <div class="ttc" id="a_control_policies_8hpp_html"><div class="ttname"><a href="../../db/d70/_control_policies_8hpp.html">ControlPolicies.hpp</a></div></div>
 <div class="ttc" id="a_expectation_8hpp_html"><div class="ttname"><a href="../../d5/d8a/_expectation_8hpp.html">Expectation.hpp</a></div></div>
 <div class="ttc" id="a_expectation_builder_8hpp_html"><div class="ttname"><a href="../../d2/d4f/_expectation_builder_8hpp.html">ExpectationBuilder.hpp</a></div></div>
+<div class="ttc" id="a_facade_8hpp_html"><div class="ttname"><a href="../../d6/dc3/_facade_8hpp.html">Facade.hpp</a></div></div>
 <div class="ttc" id="a_finalizer_policies_8hpp_html"><div class="ttname"><a href="../../d3/da3/_finalizer_policies_8hpp.html">FinalizerPolicies.hpp</a></div></div>
 <div class="ttc" id="a_floating_point_matchers_8hpp_html"><div class="ttname"><a href="../../d1/de0/_floating_point_matchers_8hpp.html">FloatingPointMatchers.hpp</a></div></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_general_matchers_8hpp_html"><div class="ttname"><a href="../../d9/dd5/_general_matchers_8hpp.html">GeneralMatchers.hpp</a></div></div>
 <div class="ttc" id="a_general_policies_8hpp_html"><div class="ttname"><a href="../../de/d10/_general_policies_8hpp.html">GeneralPolicies.hpp</a></div></div>
-<div class="ttc" id="a_interface_mock_8hpp_html"><div class="ttname"><a href="../../d9/dc3/_interface_mock_8hpp.html">InterfaceMock.hpp</a></div></div>
+<div class="ttc" id="a_interface_mocking_8hpp_html"><div class="ttname"><a href="../../d0/dc1/_interface_mocking_8hpp.html">InterfaceMocking.hpp</a></div></div>
 <div class="ttc" id="a_mock_8hpp_html"><div class="ttname"><a href="../../d5/dc5/_mock_8hpp.html">Mock.hpp</a></div></div>
 <div class="ttc" id="a_object_watcher_8hpp_html"><div class="ttname"><a href="../../d5/d92/_object_watcher_8hpp.html">ObjectWatcher.hpp</a></div></div>
 <div class="ttc" id="a_printing_8hpp_html"><div class="ttname"><a href="../../db/d15/_printing_8hpp.html">Printing.hpp</a></div></div>
 <div class="ttc" id="a_range_matchers_8hpp_html"><div class="ttname"><a href="../../df/df3/_range_matchers_8hpp.html">RangeMatchers.hpp</a></div></div>
 <div class="ttc" id="a_reporting_8hpp_html"><div class="ttname"><a href="../../d7/deb/_reporting_8hpp.html">Reporting.hpp</a></div></div>
+<div class="ttc" id="a_scoped_expectation_8hpp_html"><div class="ttname"><a href="../../d2/d1d/_scoped_expectation_8hpp.html">ScopedExpectation.hpp</a></div></div>
 <div class="ttc" id="a_scoped_sequence_8hpp_html"><div class="ttname"><a href="../../db/d83/_scoped_sequence_8hpp.html">ScopedSequence.hpp</a></div></div>
 <div class="ttc" id="a_sequence_8hpp_html"><div class="ttname"><a href="../../d8/de4/_sequence_8hpp.html">Sequence.hpp</a></div></div>
 <div class="ttc" id="a_settings_8hpp_html"><div class="ttname"><a href="../../dd/d90/_settings_8hpp.html">Settings.hpp</a></div></div>
@@ -174,13 +180,16 @@ $(function(){initNavTree('d0/db9/mimic_09_09_8hpp_source.html','../../'); initRe
 <div class="ttc" id="a_type_traits_8hpp_html"><div class="ttname"><a href="../../d8/d32/_type_traits_8hpp.html">TypeTraits.hpp</a></div></div>
 <div class="ttc" id="a_utilities_8hpp_html"><div class="ttname"><a href="../../dc/d54/_utilities_8hpp.html">Utilities.hpp</a></div></div>
 <div class="ttc" id="a_version_8hpp_html"><div class="ttname"><a href="../../d7/d67/_version_8hpp.html">Version.hpp</a></div></div>
+<div class="ttc" id="amacros_2_common_8hpp_html"><div class="ttname"><a href="../../dd/dfa/macros_2_common_8hpp.html">Common.hpp</a></div></div>
+<div class="ttc" id="amacros_2_facade_8hpp_html"><div class="ttname"><a href="../../da/d64/macros_2_facade_8hpp.html">Facade.hpp</a></div></div>
+<div class="ttc" id="amatchers_2_common_8hpp_html"><div class="ttname"><a href="../../da/d5a/matchers_2_common_8hpp.html">Common.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d0/db9/mimic_09_09_8hpp.html">mimic++.hpp</a></li>
-    <li class="footer">Generated on Sat Oct 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Oct 14 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

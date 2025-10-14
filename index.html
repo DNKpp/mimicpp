@@ -310,7 +310,7 @@ Mocking interfaces</summary>
 <div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">// This generates the override method and a mock object named `get_`.</span></div>
-<div class="line">        <a class="code hl_define" href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a>(get, <span class="keywordtype">int</span>, (), <span class="keyword">const</span>);</div>
+<div class="line">        <a class="code hl_define" href="dc/da4/group___f_a_c_a_d_e.html#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a>(get, <span class="keywordtype">int</span>, (), <span class="keyword">const</span> <span class="keyword">override</span>);</div>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    Derived mock{};</div>
@@ -319,7 +319,7 @@ Mocking interfaces</summary>
 <div class="line"> </div>
 <div class="line">    foo(mock);        <span class="comment">// `foo` calls the `get()` member function, which forwards the call to the mock object `get_`.</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_ga6d5cb660367ff702eb85c0257b8d474b"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a></div><div class="ttdeci">#define MOCK_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMocking.hpp:449</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga7df48c038b42f8cedb05a15cedd1dfba"><div class="ttname"><a href="dc/da4/group___f_a_c_a_d_e.html#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a></div><div class="ttdeci">#define MAKE_MEMBER_MOCK</div><div class="ttdoc">Shorthand variant of MIMICPP_MAKE_MEMBER_MOCK.</div><div class="ttdef"><b>Definition</b> Facade.hpp:444</div></div>
 </div><!-- fragment --><p>Sometimes, an interface method may also have several overloads. <code>mimic++</code> directly supports overriding overload-sets.</p>
 <div class="fragment"><div class="line"><span class="comment">// Let&#39;s say we have the following interface with an overload set:</span></div>
 <div class="line"><span class="keyword">class </span>Interface</div>
@@ -345,10 +345,10 @@ Mocking interfaces</summary>
 <div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"> </div>
 <div class="line">        <span class="comment">// This generates two overloads of `get` and a single mock object named `get_`.</span></div>
-<div class="line">        <a class="code hl_define" href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0">MOCK_OVERLOADED_METHOD</a>(</div>
+<div class="line">        <a class="code hl_define" href="dc/da4/group___f_a_c_a_d_e.html#ga752c0d1b1ae33a85e9fade3596a7e99a">MAKE_OVERLOADED_MEMBER_MOCK</a>(</div>
 <div class="line">            get,                                    <span class="comment">// The name of the overload set.</span></div>
-<div class="line">            <a class="code hl_define" href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keywordtype">int</span>&amp;, ()),                 <span class="comment">// This enables `int&amp; operator ()()`...</span></div>
-<div class="line">            <a class="code hl_define" href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keyword">const</span> <span class="keywordtype">int</span>&amp;, (), <span class="keyword">const</span>));   <span class="comment">// ... and this the `const int&amp; operator ()() const` on the mock.</span></div>
+<div class="line">            <a class="code hl_define" href="dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keywordtype">int</span>&amp;, ()),                 <span class="comment">// This enables `int&amp; operator ()()`...</span></div>
+<div class="line">            <a class="code hl_define" href="dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keyword">const</span> <span class="keywordtype">int</span>&amp;, (), <span class="keyword">const</span>));   <span class="comment">// ... and this the `const int&amp; operator ()() const` on the mock.</span></div>
 <div class="line">    };</div>
 <div class="line"> </div>
 <div class="line">    Derived mock{};</div>
@@ -357,8 +357,8 @@ Mocking interfaces</summary>
 <div class="line"> </div>
 <div class="line">    foo(mock);                      <span class="comment">// `foo` calls the `get() const` member function, which forwards the call to the mock object `get_`, as before.</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_gaf7eca902448118eaf4359c12be4ed098"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a></div><div class="ttdeci">#define ADD_OVERLOAD</div><div class="ttdoc">Shorthand variant of MIMICPP_ADD_OVERLOAD.</div><div class="ttdef"><b>Definition</b> InterfaceMocking.hpp:461</div></div>
-<div class="ttc" id="agroup___m_o_c_k___i_n_t_e_r_f_a_c_e_s_html_gafd903cfdd4f9496f29642c9b9e3859c0"><div class="ttname"><a href="de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0">MOCK_OVERLOADED_METHOD</a></div><div class="ttdeci">#define MOCK_OVERLOADED_METHOD</div><div class="ttdoc">Shorthand variant of MIMICPP_MOCK_OVERLOADED_METHOD.</div><div class="ttdef"><b>Definition</b> InterfaceMocking.hpp:455</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga752c0d1b1ae33a85e9fade3596a7e99a"><div class="ttname"><a href="dc/da4/group___f_a_c_a_d_e.html#ga752c0d1b1ae33a85e9fade3596a7e99a">MAKE_OVERLOADED_MEMBER_MOCK</a></div><div class="ttdeci">#define MAKE_OVERLOADED_MEMBER_MOCK</div><div class="ttdoc">Shorthand variant of MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK.</div><div class="ttdef"><b>Definition</b> Facade.hpp:413</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e_html_gaf7eca902448118eaf4359c12be4ed098"><div class="ttname"><a href="dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a></div><div class="ttdeci">#define ADD_OVERLOAD</div><div class="ttdoc">Shorthand variant of MIMICPP_ADD_OVERLOAD.</div><div class="ttdef"><b>Definition</b> Facade.hpp:319</div></div>
 </div><!-- fragment --><p></p>
 </details>
 <details >
@@ -578,7 +578,7 @@ Special Acknowledgement</h2>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Sat Oct 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Oct 14 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['remove_5fcall_5fconvention_5ft_0',['remove_call_convention_t',['../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#ae9bf33737a7f5a7e6e6252b4c4dfd5d4',1,'mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;']]],
-  ['returnt_1',['ReturnT',['../d3/d1c/classmimicpp_1_1_expectation.html#ab9e16aa62ad77938e224d686349d6195',1,'mimicpp::Expectation::ReturnT'],['../d5/d86/classmimicpp_1_1_expectation_collection.html#a30e9a1cc32ffd3b2f6b7f11ae26537aa',1,'mimicpp::ExpectationCollection::ReturnT'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a72deb1105e293a672eb6231199c9833d',1,'mimicpp::BasicExpectation::ReturnT'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a97aabdc22c19b11b1ce31bf7c7526ab6',1,'mimicpp::BasicExpectationBuilder::ReturnT']]]
+  ['policylistt_0',['PolicyListT',['../d3/d4a/classmimicpp_1_1_basic_expectation.html#af12ea9bb928ea78efeec1075533854a1',1,'mimicpp::BasicExpectation::PolicyListT'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a61ddae5a025434b5abbafa19252920f9',1,'mimicpp::BasicExpectationBuilder::PolicyListT']]],
+  ['prepend_5fthis_1',['prepend_this',['../d8/db0/structmimicpp_1_1facade_1_1basic__as__member__with__this.html#a63d5641913de67b01593af5dea125eb4',1,'mimicpp::facade::basic_as_member_with_this']]],
+  ['projected_5fvalue_5ft_2',['projected_value_t',['../d8/da3/namespacemimicpp_1_1util.html#a1bf76cb81561bd1b640e8303d2f3e7b7',1,'mimicpp::util']]]
 ];

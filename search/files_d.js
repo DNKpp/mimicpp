@@ -9,8 +9,9 @@ var searchData=
   ['sourcelocation_2ehpp_6',['SourceLocation.hpp',['../d3/d15/_source_location_8hpp.html',1,'']]],
   ['stacktrace_2ehpp_7',['Stacktrace.hpp',['../de/df5/_stacktrace_8hpp.html',1,'']]],
   ['stateprinter_2ehpp_8',['StatePrinter.hpp',['../de/d62/_state_printer_8hpp.html',1,'']]],
-  ['std_2dstacktrace_2ehpp_9',['std-stacktrace.hpp',['../dc/d66/std-stacktrace_8hpp.html',1,'']]],
-  ['string_2ehpp_10',['String.hpp',['../d9/dc5/_string_8hpp.html',1,'']]],
-  ['stringifyreports_2ehpp_11',['StringifyReports.hpp',['../d9/d70/_stringify_reports_8hpp.html',1,'']]],
-  ['stringmatchers_2ehpp_12',['StringMatchers.hpp',['../d2/d56/_string_matchers_8hpp.html',1,'']]]
+  ['staticstring_2ehpp_9',['StaticString.hpp',['../d7/d89/_static_string_8hpp.html',1,'']]],
+  ['std_2dstacktrace_2ehpp_10',['std-stacktrace.hpp',['../dc/d66/std-stacktrace_8hpp.html',1,'']]],
+  ['string_2ehpp_11',['String.hpp',['../d9/dc5/_string_8hpp.html',1,'']]],
+  ['stringifyreports_2ehpp_12',['StringifyReports.hpp',['../d9/d70/_stringify_reports_8hpp.html',1,'']]],
+  ['stringmatchers_2ehpp_13',['StringMatchers.hpp',['../d2/d56/_string_matchers_8hpp.html',1,'']]]
 ];

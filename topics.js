@@ -1,6 +1,8 @@
 var topics =
 [
+    [ "detail macros", "d3/d2f/group___m_a_c_r_o___d_e_t_a_i_l.html", "d3/d2f/group___m_a_c_r_o___d_e_t_a_i_l" ],
     [ "expectation", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n" ],
+    [ "facade", "dc/da4/group___f_a_c_a_d_e.html", "dc/da4/group___f_a_c_a_d_e" ],
     [ "framework configuration", "d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html", null ],
     [ "matchers", "d4/d14/group___m_a_t_c_h_e_r_s.html", "d4/d14/group___m_a_t_c_h_e_r_s" ],
     [ "mock", "d8/d12/group___m_o_c_k.html", "d8/d12/group___m_o_c_k" ],

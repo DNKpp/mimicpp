@@ -15,6 +15,8 @@ var hierarchy =
       ] ],
       [ "mimicpp::detail::BasicWatched< Base, Watchers... >", null, null ]
     ] ],
+    [ "mimicpp::facade::basic_as_member< TargetTemplate >", "dc/d2a/structmimicpp_1_1facade_1_1basic__as__member.html", null ],
+    [ "mimicpp::facade::basic_as_member_with_this< Self, TargetTemplate >", "d8/db0/structmimicpp_1_1facade_1_1basic__as__member__with__this.html", null ],
     [ "mimicpp::BasicExpectationBuilder< timesConfigured, SequenceConfig, Signature, FinalizePolicy, Policies >", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html", null ],
     [ "mimicpp::detail::BasicMock< FirstSignature >", null, [
       [ "mimicpp::Mock< FirstSignature, OtherSignatures >", "d2/d48/classmimicpp_1_1_mock.html", null ]
@@ -36,6 +38,7 @@ var hierarchy =
       [ "mimicpp::BasicScopedSequence< Strategy >", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html", null ]
     ] ],
     [ "std::bool_constant", null, [
+      [ "mimicpp::is_overload_set< First, Others >", "dd/df5/structmimicpp_1_1is__overload__set.html", null ],
       [ "mimicpp::signature_is_noexcept< Signature >", "d9/d28/structmimicpp_1_1signature__is__noexcept.html", null ],
       [ "mimicpp::util::always_false<... >", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ]
     ] ],
@@ -44,9 +47,24 @@ var hierarchy =
         [ "mimicpp::signature_add_const_qualifier< Signature >", "dc/dcc/structmimicpp_1_1signature__add__const__qualifier.html", null ]
       ] ]
     ] ],
+    [ "std::bool_constant< detail::signature_add_lvalue_ref_qualifier< typename call_convention_traits< signature_call_convention_t< Signature > >::template remove_call_convention_t< Signature > >::value >", null, [
+      [ "mimicpp::detail::signature_apply_trait< Signature, detail::signature_add_lvalue_ref_qualifier >", null, [
+        [ "mimicpp::signature_add_lvalue_ref_qualifier< Signature >", "d8/dc1/structmimicpp_1_1signature__add__lvalue__ref__qualifier.html", null ]
+      ] ]
+    ] ],
     [ "std::bool_constant< detail::signature_add_noexcept< typename call_convention_traits< signature_call_convention_t< Signature > >::template remove_call_convention_t< Signature > >::value >", null, [
       [ "mimicpp::detail::signature_apply_trait< Signature, detail::signature_add_noexcept >", null, [
         [ "mimicpp::signature_add_noexcept< Signature >", "dd/db4/structmimicpp_1_1signature__add__noexcept.html", null ]
+      ] ]
+    ] ],
+    [ "std::bool_constant< detail::signature_add_rvalue_ref_qualifier< typename call_convention_traits< signature_call_convention_t< Signature > >::template remove_call_convention_t< Signature > >::value >", null, [
+      [ "mimicpp::detail::signature_apply_trait< Signature, detail::signature_add_rvalue_ref_qualifier >", null, [
+        [ "mimicpp::signature_add_rvalue_ref_qualifier< Signature >", "d1/d2c/structmimicpp_1_1signature__add__rvalue__ref__qualifier.html", null ]
+      ] ]
+    ] ],
+    [ "std::bool_constant< detail::signature_prepend_param< T >::template type< typename call_convention_traits< signature_call_convention_t< Signature > >::template remove_call_convention_t< Signature > >::value >", null, [
+      [ "mimicpp::detail::signature_apply_trait< Signature, detail::signature_prepend_param< T >::template type >", null, [
+        [ "mimicpp::signature_prepend_param< Signature, T >", "d6/da0/structmimicpp_1_1signature__prepend__param.html", null ]
       ] ]
     ] ],
     [ "std::bool_constant< detail::signature_remove_const_qualifier< typename call_convention_traits< signature_call_convention_t< Signature > >::template remove_call_convention_t< Signature > >::value >", null, [
@@ -78,10 +96,6 @@ var hierarchy =
       [ "mimicpp::detail::is_overloadable_with< detail::normalize_overload_t< First >, detail::normalize_overload_t< Second > >", null, [
         [ "mimicpp::is_overloadable_with< First, Second >", "d4/dd6/structmimicpp_1_1is__overloadable__with.html", null ]
       ] ]
-    ] ],
-    [ "std::conjunction", null, [
-      [ "mimicpp::is_overload_set< First >", "d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html", null ],
-      [ "mimicpp::is_overload_set< First, Others >", "dd/df5/structmimicpp_1_1is__overload__set.html", null ]
     ] ],
     [ "mimicpp::expectation_policies::Constness< constness >", "db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html", null ],
     [ "mimicpp::ControlPolicy< Sequences >", "dc/db2/classmimicpp_1_1_control_policy.html", null ],
@@ -193,6 +207,8 @@ var hierarchy =
     [ "mimicpp::reporting::state_applicable", "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html", null ],
     [ "mimicpp::reporting::state_inapplicable", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html", null ],
     [ "mimicpp::reporting::state_saturated", "d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html", null ],
+    [ "mimicpp::util::StaticString< Char, length >", "de/daf/classmimicpp_1_1util_1_1_static_string.html", null ],
+    [ "mimicpp::util::StaticString< Char, 0u >", "d2/d50/classmimicpp_1_1util_1_1_static_string_3_01_char_00_010u_01_4.html", null ],
     [ "mimicpp::string_case_fold_converter< Char >", "d4/d2d/structmimicpp_1_1string__case__fold__converter.html", null ],
     [ "mimicpp::string_case_fold_converter< char >", "de/d08/structmimicpp_1_1string__case__fold__converter_3_01char_01_4.html", null ],
     [ "mimicpp::string_traits< T >", "d1/dee/structmimicpp_1_1string__traits.html", null ],
@@ -211,8 +227,7 @@ var hierarchy =
       [ "mimicpp::is_character< char8_t >", "d6/da5/structmimicpp_1_1is__character_3_01char8__t_01_4.html", null ],
       [ "mimicpp::is_character< signed char >", "de/da5/structmimicpp_1_1is__character_3_01signed_01char_01_4.html", null ],
       [ "mimicpp::is_character< unsigned char >", "d8/d39/structmimicpp_1_1is__character_3_01unsigned_01char_01_4.html", null ],
-      [ "mimicpp::is_character< wchar_t >", "df/d35/structmimicpp_1_1is__character_3_01wchar__t_01_4.html", null ],
-      [ "mimicpp::is_overload_set< First >", "d5/d31/structmimicpp_1_1is__overload__set_3_01_first_01_4.html", null ]
+      [ "mimicpp::is_character< wchar_t >", "df/d35/structmimicpp_1_1is__character_3_01wchar__t_01_4.html", null ]
     ] ],
     [ "std::tuple_element", null, [
       [ "mimicpp::signature_param_type< index, Return(Params...)>", "d0/d24/structmimicpp_1_1signature__param__type_3_01index_00_01_return_07_params_8_8_8_08_4.html", null ]

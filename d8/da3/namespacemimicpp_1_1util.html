@@ -127,6 +127,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html">Stacktrace</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple type-erased stacktrace abstraction.  <a href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">StaticString</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d50/classmimicpp_1_1util_1_1_static_string_3_01_char_00_010u_01_4.html">StaticString&lt; Char, 0u &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html">type_list</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A very basic type-list template.  <a href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,6 +219,9 @@ requires (... &amp;&amp; std::same_as&lt;T, std::ranges::range_value_t&lt;Others
 requires std::is_enum_v&lt;T&gt;</td></tr>
 <tr class="memitem:aa8fe6ff3a0ec4c237cd98f2e295af8a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::underlying_type_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa8fe6ff3a0ec4c237cd98f2e295af8a9">to_underlying</a> (T const value) noexcept</td></tr>
 <tr class="separator:aa8fe6ff3a0ec4c237cd98f2e295af8a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4fcfcaa329db378296093c1deff115e" id="r_ac4fcfcaa329db378296093c1deff115e"><td class="memTemplParams" colspan="2">template&lt;typename Char, std::size_t length&gt; </td></tr>
+<tr class="memitem:ac4fcfcaa329db378296093c1deff115e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac4fcfcaa329db378296093c1deff115e">StaticString</a> (Char const(&amp;)[length]) -&gt; StaticString&lt; Char, length - 1u &gt;</td></tr>
+<tr class="separator:ac4fcfcaa329db378296093c1deff115e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -675,6 +682,25 @@ requires std::totally_ordered_with&lt;std::ranges::range_value_t&lt;Range&gt;, P
 
 </div>
 </div>
+<a id="ac4fcfcaa329db378296093c1deff115e" name="ac4fcfcaa329db378296093c1deff115e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4fcfcaa329db378296093c1deff115e">&#9670;&#160;</a></span>StaticString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Char, std::size_t length&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">mimicpp::util::StaticString </td>
+          <td>(</td>
+          <td class="paramtype">Char const </td>          <td class="paramname"><span class="paramname"><em></em></span>(&amp;)[length]</td><td>)</td>
+          <td> -&gt;  StaticString&lt; Char, length - 1u &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aa8fe6ff3a0ec4c237cd98f2e295af8a9" name="aa8fe6ff3a0ec4c237cd98f2e295af8a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa8fe6ff3a0ec4c237cd98f2e295af8a9">&#9670;&#160;</a></span>to_underlying()</h2>
 
@@ -791,7 +817,7 @@ requires std::is_enum_v&lt;T&gt;</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">util</a></li>
-    <li class="footer">Generated on Sat Oct 4 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Tue Oct 14 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

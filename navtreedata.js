@@ -55,6 +55,7 @@ var NAVTREE =
       ] ],
       [ "Special Acknowledgement", "index.html#autotoc_md78", null ]
     ] ],
+    [ "Deprecated List", "da/d58/deprecated.html", null ],
     [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -95,12 +96,12 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a6d32697cd0c5d9c6556483e787d95410",
-"d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html",
-"d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515",
-"da/df3/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___t_r_a_i_t_s.html",
-"dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html",
-"functions.html"
+"d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8871d590ea99c01ea76a5bf208b3d3a9",
+"d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution.html",
+"d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html#a1356befb766d36569dc0caeedc3c84e5",
+"da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html#a2f75cfa9e51870e4a81b57fa9f7534b2",
+"dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html",
+"df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a2e16f2489f80180b09c68ab5d38b517e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
