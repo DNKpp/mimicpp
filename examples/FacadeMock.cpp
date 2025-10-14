@@ -51,6 +51,78 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "Virtual functions can be mocked.",
+    "[example][example::mock][example::mock::facade]")
+{
+    //! [facade interface mock simple]
+    class Interface
+    {
+    public:
+        virtual ~Interface() = default;
+        virtual void foo() = 0;
+    };
+
+    class Derived
+        : public Interface
+    {
+    public:
+        ~Derived() override = default;
+
+        // this generates the override method and a mock object named `foo_`
+        MAKE_MEMBER_MOCK(foo, void, (), override);
+    };
+
+    // this may be a function from somewhere else, working with an interface.
+    constexpr auto my_function = [](Interface& obj) {
+        obj.foo();
+    };
+
+    Derived mock{};
+    SCOPED_EXP mock.foo_.expect_call(); // note the `_` suffix. That's the name of the mock object.
+
+    my_function(mock);
+    //! [facade interface mock]
+}
+
+TEST_CASE(
+    "Overloaded virtual functions can be mocked.",
+    "[example][example::mock][example::mock::facade]")
+{
+    //! [facade interface mock overloaded]
+    class Interface
+    {
+    public:
+        virtual ~Interface() = default;
+        virtual void foo() = 0;
+        virtual void foo() const noexcept = 0;
+    };
+
+    class Derived
+        : public Interface
+    {
+    public:
+        ~Derived() override = default;
+
+        // this generates both overrides and a mock object named `foo_`
+        MAKE_OVERLOADED_MEMBER_MOCK(
+            foo,
+            ADD_OVERLOAD(void, (), override),
+            ADD_OVERLOAD(void, (), const noexcept override)); // note the `const noexcept` specifications as third argument
+    };
+
+    // this may be a function from somewhere else, working with an immutable interface.
+    constexpr auto my_function = [](Interface const& obj) {
+        obj.foo();
+    };
+
+    Derived mock{};
+    SCOPED_EXP std::as_const(mock).foo_.expect_call(); // We explicitly require the const overload to be called.
+
+    my_function(mock);
+    //! [facade interface mock overloaded]
+}
+
+TEST_CASE(
     "Facade-Mocks can have an explicit *this* param.",
     "[example][example::mock][example::mock::facade]")
 {
