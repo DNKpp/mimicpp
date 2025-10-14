@@ -303,7 +303,7 @@ TEST_CASE("Interfaces can be mocked.")
         ~Derived() override = default;
 
         // This generates the override method and a mock object named `get_`.
-        MOCK_METHOD(get, int, (), const);
+        MAKE_MEMBER_MOCK(get, int, (), const override);
     };
 
     Derived mock{};
@@ -342,7 +342,7 @@ TEST_CASE("Interface overload-sets are directly supported.")
         ~Derived() override = default;
 
         // This generates two overloads of `get` and a single mock object named `get_`.
-        MOCK_OVERLOADED_METHOD(
+        MAKE_OVERLOADED_MEMBER_MOCK(
             get,                                    // The name of the overload set.
             ADD_OVERLOAD(int&, ()),                 // This enables `int& operator ()()`...
             ADD_OVERLOAD(const int&, (), const));   // ... and this the `const int& operator ()() const` on the mock.
