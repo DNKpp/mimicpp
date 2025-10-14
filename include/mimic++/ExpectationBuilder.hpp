@@ -179,12 +179,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
         [[nodiscard]]
         ScopedExpectation finalize(util::SourceLocation sourceLocation) &&
-            requires requires {
-                requires diagnostics::verify_constraint<finalize_policy_for<FinalizePolicy, Signature>>(
-                    "For non-void return types, a finalize-policy must be specified."
-                    "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
-            }
         {
+            static_assert(
+                diagnostics::verify_constraint<finalize_policy_for<FinalizePolicy, Signature>>(
+                    "For non-void return types, a finalize-policy must be specified."
+                    "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details"));
+
             return ScopedExpectation{
                 std::move(m_Storage),
                 std::apply(
