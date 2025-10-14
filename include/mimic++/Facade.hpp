@@ -38,7 +38,7 @@ namespace mimicpp
      * *mimic++* therefore introduces several macros, which helps to reduce the effort to a minimum.
      * With them, the boilerplate can be reduced to this macro invocation, which effectively does the same as before:
      * ```cpp
-     * MAKE_MEMBER_METHOD(foo, void, (), override);
+     * MAKE_MEMBER_MOCK(foo, void, (), override);
      * ```
      *
      * The good news is that these macros are just a thin layer around the macro-free core and can thus be easily avoided.

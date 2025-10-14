@@ -393,6 +393,8 @@ namespace mimicpp
  * Each overload is implemented as its own facade member function, forwarding calls to the underlying mock member-object.
  *
  * The mock member-object name is the content of `fn_name` suffixed by an additional `_`.
+ *
+ * \snippet FacadeMock.cpp facade interface mock overloaded
  */
 #define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(fn_name, ...) \
     MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                   \
@@ -425,6 +427,8 @@ namespace mimicpp
  * The facade member function forwards its calls to the underlying mock object-member.
  *
  * The mock member-object name is the content of `fn_name` suffixed by an additional `_`.
+ *
+ * \snippet FacadeMock.cpp facade interface mock simple
  */
 #define MIMICPP_MAKE_MEMBER_MOCK(fn_name, ret, param_type_list, ...) \
     MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(                             \
