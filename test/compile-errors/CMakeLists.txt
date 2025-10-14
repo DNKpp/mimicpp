@@ -44,7 +44,8 @@ function(check_compile_error SOURCE_FILE)
     )
 
     add_test(NAME ${TEST_NAME}
-        COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${TARGET_NAME}
+        COMMAND ${CMAKE_COMMAND} -E env "INCLUDE=${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES};$ENV{INCLUDE}"
+                ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target ${TARGET_NAME}
     )
 
     set_tests_properties(${TEST_NAME} PROPERTIES
