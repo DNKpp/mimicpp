@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Facade.hpp"
+#include "mimic++/macros/InterfaceMocking.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
 #include "../test/unit-tests/SuppressionMacros.hpp" // needs to disable the deprecations

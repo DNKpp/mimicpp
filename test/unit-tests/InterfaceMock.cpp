@@ -5,6 +5,7 @@
 
 #include "mimic++/Facade.hpp"
 #include "mimic++/ScopedSequence.hpp"
+#include "mimic++/macros/InterfaceMocking.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
 #include "SuppressionMacros.hpp"
