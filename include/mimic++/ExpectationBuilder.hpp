@@ -21,7 +21,6 @@
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/utilities/Concepts.hpp"
-#include "mimic++/utilities/DiagnosticsHelper.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
@@ -83,13 +82,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         friend constexpr auto operator&&(BasicExpectationBuilder&& builder, Policy&& policy)
         {
             static_assert(
-                diagnostics::verify_constraint<!std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>>(
-                    "Explicitly specifying the `expectation_policies::InitFinalize` is disallowed."));
+                !std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>,
+                "Explicitly specifying the `expectation_policies::InitFinalize` is disallowed.");
 
             static_assert(
-                diagnostics::verify_constraint<std::same_as<expectation_policies::InitFinalize, FinalizePolicy>>(
-                    "Only one finalize-policy may be specified per expectation."
-                    "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details"));
+                std::same_as<expectation_policies::InitFinalize, FinalizePolicy>,
+                "Only one finalize-policy may be specified per expectation. "
+                "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
 
             using Builder = BasicExpectationBuilder<
                 timesConfigured,
@@ -135,9 +134,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         friend constexpr auto operator&&(BasicExpectationBuilder&& builder, detail::TimesConfig&& config)
         {
             static_assert(
-                diagnostics::verify_constraint<!timesConfigured>(
-                    "Only one times-policy may be specified per expectation."
-                    "See: https://dnkpp.github.io/mimicpp/d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#details"));
+                !timesConfigured,
+                "Only one times-policy may be specified per expectation. "
+                "See: https://dnkpp.github.io/mimicpp/d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#details");
 
             using Builder = BasicExpectationBuilder<
                 true,
@@ -181,9 +180,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         ScopedExpectation finalize(util::SourceLocation sourceLocation) &&
         {
             static_assert(
-                diagnostics::verify_constraint<finalize_policy_for<FinalizePolicy, Signature>>(
-                    "For non-void return types, a finalize-policy must be specified."
-                    "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details"));
+                finalize_policy_for<FinalizePolicy, Signature>,
+                "For non-void return types, a finalize-policy must be specified. "
+                "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
 
             return ScopedExpectation{
                 std::move(m_Storage),
