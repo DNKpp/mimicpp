@@ -29,6 +29,11 @@
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utilities.hpp"
 
+#include "mimic++/macros/Common.hpp"
+#include "mimic++/macros/Facade.hpp"
+#include "mimic++/macros/InterfaceMocking.hpp"
+#include "mimic++/macros/ScopedExpectation.hpp"
+
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/FloatingPointMatchers.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
