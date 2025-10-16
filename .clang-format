@@ -23,7 +23,7 @@ InsertNewlineAtEOF: true
 InsertTrailingCommas: None
 RemoveSemicolon: true
 FixNamespaceComments: false
-ReflowComments: Always
+#ReflowComments: Always
 LineEnding: DeriveLF
 
 IntegerLiteralSeparator:
