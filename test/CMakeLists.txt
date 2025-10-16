@@ -26,3 +26,8 @@ option(MIMICPP_ENABLE_STACKTRACE_TESTS "Determines, whether the stacktrace tests
 if (MIMICPP_ENABLE_STACKTRACE_TESTS)
     add_subdirectory("stacktrace-tests")
 endif ()
+
+option(MIMICPP_ENABLE_PACKAGE_TEST "Determines, whether the package tests shall be executed." OFF)
+if (MIMICPP_ENABLE_PACKAGE_TEST)
+    add_subdirectory("package-test")
+endif ()
