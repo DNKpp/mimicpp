@@ -182,235 +182,247 @@ $(function(){initNavTree('d2/d4f/_expectation_builder_8hpp_source.html','../../'
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a28ca17d7ed0b8cc8a78f9637b74953d1">   77</a></span>        <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp; <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a28ca17d7ed0b8cc8a78f9637b74953d1">operator=</a>(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Policy&gt;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keyword">requires</span> std::same_as&lt;expectation_policies::InitFinalize, FinalizePolicy&gt;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>                  &amp;&amp; (!std::same_as&lt;expectation_policies::InitFinalize, std::remove_cvref_t&lt;Policy&gt;&gt;)</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>                  &amp;&amp; <a class="code hl_concept" href="../../d9/d64/conceptmimicpp_1_1finalize__policy__for.html">finalize_policy_for</a>&lt;std::remove_cvref_t&lt;Policy&gt;, Signature&gt;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00084" data-start="{" data-end="}">
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a723237e2c180da1f8733f55d11a985d9">   84</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <span class="keyword">operator</span>&amp;&amp;(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp; builder, Policy&amp;&amp; policy)</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>            <span class="keyword">using </span>ExtendedExpectationBuilderT = <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&lt;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                timesConfigured,</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                SequenceConfig,</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                Signature,</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                std::remove_cvref_t&lt;Policy&gt;,</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                Policies...&gt;;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>            <span class="keyword">requires</span> <a class="code hl_concept" href="../../d9/d64/conceptmimicpp_1_1finalize__policy__for.html">finalize_policy_for&lt;std::remove_cvref_t&lt;Policy&gt;</a>, Signature&gt;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00082" data-start="{" data-end="}">
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#aa3357fce0e6322910c6b3076d019d1a1">   82</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_friend" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#aa3357fce0e6322910c6b3076d019d1a1">operator&amp;&amp;</a>(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp; builder, Policy&amp;&amp; policy)</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        {</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                !std::same_as&lt;expectation_policies::InitFinalize, std::remove_cvref_t&lt;Policy&gt;&gt;,</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                <span class="stringliteral">&quot;Explicitly specifying the `expectation_policies::InitFinalize` is disallowed.&quot;</span>);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                std::same_as&lt;expectation_policies::InitFinalize, FinalizePolicy&gt;,</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                <span class="stringliteral">&quot;Only one finalize-policy may be specified per expectation. &quot;</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                <span class="stringliteral">&quot;See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details&quot;</span>);</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">return</span> ExtendedExpectationBuilderT{</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                std::move(builder.m_Storage),</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                std::move(builder.m_TargetReport),</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                std::move(builder.m_TimesConfig),</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                std::move(builder.m_SequenceConfig),</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                std::forward&lt;Policy&gt;(policy),</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                std::move(builder.m_ExpectationPolicies)};</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keyword">using </span>Builder = <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&lt;</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                timesConfigured,</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                SequenceConfig,</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                Signature,</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                std::remove_cvref_t&lt;Policy&gt;,</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                Policies...&gt;;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keywordflow">return</span> Builder{</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                std::move(builder.m_Storage),</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                std::move(builder.m_TargetReport),</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                std::move(builder.m_TimesConfig),</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                std::move(builder.m_SequenceConfig),</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                std::forward&lt;Policy&gt;(policy),</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                std::move(builder.m_ExpectationPolicies)};</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        }</div>
 </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Policy&gt;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            <span class="keyword">requires</span> <a class="code hl_concept" href="../../dd/d1d/conceptmimicpp_1_1expectation__policy__for.html">expectation_policy_for&lt;std::remove_cvref_t&lt;Policy&gt;</a>, Signature&gt;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00105" data-start="{" data-end="}">
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1b894766d046e6e699680be3fea28219">  105</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_friend" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1b894766d046e6e699680be3fea28219">operator&amp;&amp;</a>(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp; builder, Policy&amp;&amp; policy)</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        {</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            <span class="keyword">using </span>ExtendedExpectationBuilderT = <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&lt;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                timesConfigured,</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                SequenceConfig,</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                Signature,</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                FinalizePolicy,</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                Policies...,</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                std::remove_cvref_t&lt;Policy&gt;&gt;;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            <span class="keywordflow">return</span> ExtendedExpectationBuilderT{</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                std::move(builder.m_Storage),</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                std::move(builder.m_TargetReport),</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                std::move(builder.m_TimesConfig),</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                std::move(builder.m_SequenceConfig),</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                std::move(builder.m_FinalizePolicy),</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                std::tuple_cat(</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                    std::move(builder.m_ExpectationPolicies),</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                    std::forward_as_tuple(std::forward&lt;Policy&gt;(policy)))};</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Policy&gt;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            <span class="keyword">requires</span> <a class="code hl_concept" href="../../dd/d1d/conceptmimicpp_1_1expectation__policy__for.html">expectation_policy_for&lt;std::remove_cvref_t&lt;Policy&gt;</a>, Signature&gt;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00112" data-start="{" data-end="}">
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1b894766d046e6e699680be3fea28219">  112</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_friend" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1b894766d046e6e699680be3fea28219">operator&amp;&amp;</a>(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp; builder, Policy&amp;&amp; policy)</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        {</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            <span class="keyword">using </span>ExtendedExpectationBuilderT = <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&lt;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>                timesConfigured,</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>                SequenceConfig,</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                Signature,</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                FinalizePolicy,</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                Policies...,</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                std::remove_cvref_t&lt;Policy&gt;&gt;;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span> </div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            <span class="keywordflow">return</span> ExtendedExpectationBuilderT{</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                std::move(builder.m_Storage),</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                std::move(builder.m_TargetReport),</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                std::move(builder.m_TimesConfig),</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                std::move(builder.m_SequenceConfig),</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                std::move(builder.m_FinalizePolicy),</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                std::tuple_cat(</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                    std::move(builder.m_ExpectationPolicies),</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                    std::forward_as_tuple(std::forward&lt;Policy&gt;(policy)))};</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        }</div>
 </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00127" data-start="{" data-end="}">
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#aae29bd9e2b56b6b56690d9cc1e958b01">  127</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_friend" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#aae29bd9e2b56b6b56690d9cc1e958b01">operator&amp;&amp;</a>(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp; builder, detail::TimesConfig&amp;&amp; config)</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            <span class="keyword">requires</span>(!timesConfigured)</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        {</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            <span class="keyword">using </span>NewBuilderT = <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&lt;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="keyword">true</span>,</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                SequenceConfig,</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                Signature,</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                FinalizePolicy,</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                Policies...&gt;;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            <span class="keywordflow">return</span> NewBuilderT{</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                std::move(builder.m_Storage),</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                std::move(builder.m_TargetReport),</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                std::move(config),</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                std::move(builder.m_SequenceConfig),</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                std::move(builder.m_FinalizePolicy),</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                std::move(builder.m_ExpectationPolicies)};</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        }</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00134" data-start="{" data-end="}">
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a432b5de09677926441ea961f92aa7e09">  134</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_friend" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a432b5de09677926441ea961f92aa7e09">operator&amp;&amp;</a>(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp; builder, detail::TimesConfig&amp;&amp; config)</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        {</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                !timesConfigured,</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                <span class="stringliteral">&quot;Only one times-policy may be specified per expectation. &quot;</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                <span class="stringliteral">&quot;See: https://dnkpp.github.io/mimicpp/d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#details&quot;</span>);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            <span class="keyword">using </span>Builder = <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&lt;</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                <span class="keyword">true</span>,</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                SequenceConfig,</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                Signature,</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                FinalizePolicy,</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                Policies...&gt;;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span> </div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            <span class="keywordflow">return</span> Builder{</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                std::move(builder.m_Storage),</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                std::move(builder.m_TargetReport),</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                std::move(config),</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                std::move(builder.m_SequenceConfig),</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                std::move(builder.m_FinalizePolicy),</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                std::move(builder.m_ExpectationPolicies)};</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        }</div>
 </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Sequences&gt;</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00148" data-start="{" data-end="}">
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e72ea8043a9303edd13307ded34ba7c">  148</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_friend" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e72ea8043a9303edd13307ded34ba7c">operator&amp;&amp;</a>(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp; builder, sequence::detail::Config&lt;Sequences...&gt;&amp;&amp; config)</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        {</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            sequence::detail::Config newConfig = builder.m_SequenceConfig.concat(std::move(config));</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keyword">using </span>ExtendedExpectationBuilderT = <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&lt;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                timesConfigured,</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                <span class="keyword">decltype</span>(newConfig),</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                Signature,</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                FinalizePolicy,</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                Policies...&gt;;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keywordflow">return</span> ExtendedExpectationBuilderT{</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                std::move(builder.m_Storage),</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                std::move(builder.m_TargetReport),</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                std::move(builder.m_TimesConfig),</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                std::move(newConfig),</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                std::move(builder.m_FinalizePolicy),</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                std::move(builder.m_ExpectationPolicies)};</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        }</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Sequences&gt;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00159" data-start="{" data-end="}">
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e72ea8043a9303edd13307ded34ba7c">  159</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_friend" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e72ea8043a9303edd13307ded34ba7c">operator&amp;&amp;</a>(<a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&amp;&amp; builder, sequence::detail::Config&lt;Sequences...&gt;&amp;&amp; config)</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>        {</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            sequence::detail::Config newConfig = builder.m_SequenceConfig.concat(std::move(config));</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span> </div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>            <span class="keyword">using </span>ExtendedExpectationBuilderT = <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">BasicExpectationBuilder</a>&lt;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                timesConfigured,</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                <span class="keyword">decltype</span>(newConfig),</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                Signature,</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                FinalizePolicy,</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                Policies...&gt;;</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            <span class="keywordflow">return</span> ExtendedExpectationBuilderT{</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                std::move(builder.m_Storage),</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                std::move(builder.m_TargetReport),</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                std::move(builder.m_TimesConfig),</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                std::move(newConfig),</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                std::move(builder.m_FinalizePolicy),</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                std::move(builder.m_ExpectationPolicies)};</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        }</div>
 </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00169" data-start="{" data-end="}">
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0ff3086cd59e7cb50332d378d4580808">  169</a></span>        <a class="code hl_class" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html">ScopedExpectation</a> <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0ff3086cd59e7cb50332d378d4580808">finalize</a>(<a class="code hl_class" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">util::SourceLocation</a> sourceLocation) &amp;&amp;</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        {</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            <span class="keyword">static_assert</span>(</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                <a class="code hl_concept" href="../../d9/d64/conceptmimicpp_1_1finalize__policy__for.html">finalize_policy_for&lt;FinalizePolicy, Signature&gt;</a>,</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                <span class="stringliteral">&quot;For non-void return types, a finalize policy must be set.&quot;</span>);</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            <span class="keywordflow">return</span> <a class="code hl_class" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html">ScopedExpectation</a>{</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                std::move(m_Storage),</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                std::apply(</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                    [&amp;](<span class="keyword">auto</span>&amp;... policies) {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                        <a class="code hl_class" href="../../dc/db2/classmimicpp_1_1_control_policy.html">ControlPolicy</a> controlPolicy{</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                            std::move(m_TimesConfig),</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                            std::move(m_SequenceConfig)};</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                        <span class="keyword">using </span>ExpectationT = <a class="code hl_class" href="../../d3/d4a/classmimicpp_1_1_basic_expectation.html">BasicExpectation</a>&lt;</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                            Signature,</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                            <span class="keyword">decltype</span>(controlPolicy),</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                            FinalizePolicy,</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                            Policies...&gt;;</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                        <span class="keywordflow">return</span> std::make_unique&lt;ExpectationT&gt;(</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                            std::move(sourceLocation),</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                            std::move(m_TargetReport),</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                            std::move(controlPolicy),</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                            std::move(m_FinalizePolicy),</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                            std::move(policies)...);</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                    },</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                    m_ExpectationPolicies)};</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        }</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00180" data-start="{" data-end="}">
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0ff3086cd59e7cb50332d378d4580808">  180</a></span>        <a class="code hl_class" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html">ScopedExpectation</a> <a class="code hl_function" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0ff3086cd59e7cb50332d378d4580808">finalize</a>(<a class="code hl_class" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">util::SourceLocation</a> sourceLocation) &amp;&amp;</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        {</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            <span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                <a class="code hl_concept" href="../../d9/d64/conceptmimicpp_1_1finalize__policy__for.html">finalize_policy_for&lt;FinalizePolicy, Signature&gt;</a>,</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                <span class="stringliteral">&quot;For non-void return types, a finalize-policy must be specified. &quot;</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                <span class="stringliteral">&quot;See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details&quot;</span>);</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            <span class="keywordflow">return</span> <a class="code hl_class" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html">ScopedExpectation</a>{</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                std::move(m_Storage),</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                std::apply(</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                    [&amp;](<span class="keyword">auto</span>&amp;... policies) {</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                        <a class="code hl_class" href="../../dc/db2/classmimicpp_1_1_control_policy.html">ControlPolicy</a> controlPolicy{</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                            std::move(m_TimesConfig),</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                            std::move(m_SequenceConfig)};</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                        <span class="keyword">using </span>ExpectationT = <a class="code hl_class" href="../../d3/d4a/classmimicpp_1_1_basic_expectation.html">BasicExpectation</a>&lt;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                            Signature,</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                            <span class="keyword">decltype</span>(controlPolicy),</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                            FinalizePolicy,</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                            Policies...&gt;;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                        <span class="keywordflow">return</span> std::make_unique&lt;ExpectationT&gt;(</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                            std::move(sourceLocation),</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                            std::move(m_TargetReport),</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                            std::move(controlPolicy),</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                            std::move(m_FinalizePolicy),</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                            std::move(policies)...);</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                    },</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                    m_ExpectationPolicies)};</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        }</div>
 </div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        std::shared_ptr&lt;StorageT&gt; m_Storage;</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <a class="code hl_class" href="../../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html">reporting::TargetReport</a> m_TargetReport;</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        detail::TimesConfig m_TimesConfig{};</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        SequenceConfig m_SequenceConfig{};</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        FinalizePolicy m_FinalizePolicy{};</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <a class="code hl_typedef" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a61ddae5a025434b5abbafa19252920f9">PolicyListT</a> m_ExpectationPolicies{};</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    };</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        std::shared_ptr&lt;StorageT&gt; m_Storage;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <a class="code hl_class" href="../../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html">reporting::TargetReport</a> m_TargetReport;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        detail::TimesConfig m_TimesConfig{};</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        SequenceConfig m_SequenceConfig{};</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        FinalizePolicy m_FinalizePolicy{};</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <a class="code hl_typedef" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a61ddae5a025434b5abbafa19252920f9">PolicyListT</a> m_ExpectationPolicies{};</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    };</div>
 </div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>}</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span><span class="keyword">namespace </span>mimicpp::detail</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>{</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Param, <span class="keyword">typename</span>... Canary, matcher_for&lt;Param&gt; Arg&gt;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_arg_matcher([[maybe_unused]] util::priority_tag&lt;2&gt; <span class="keyword">const</span>, Arg arg)</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>    {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga0678d47507b2bf3f1446e9925a5d2761">arg</a>;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>    }</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    <span class="comment">// if the param is a character-pointer, there is no evidence, whether it denotes a null-terminated string or just an</span></div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="comment">// actual pointer to a value.</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    <span class="comment">// But, the Mock user shall know it, thus if `Arg` is not a character-pointer, we enable this matcher.</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">string</span> Param, <span class="keyword">typename</span>... Canary, <span class="keywordtype">string</span> Arg&gt;</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keyword">requires</span>(!std::is_pointer_v&lt;std::remove_reference_t&lt;Param&gt;&gt;)</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>             || (!std::is_pointer_v&lt;std::remove_reference_t&lt;Arg&gt;&gt;)</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    [[nodiscard]] <span class="comment">//</span></div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_arg_matcher([[maybe_unused]] util::priority_tag&lt;1&gt; <span class="keyword">const</span>, Arg&amp;&amp; arg)</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>}</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span><span class="keyword">namespace </span>mimicpp::detail</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>{</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Param, <span class="keyword">typename</span>... Canary, matcher_for&lt;Param&gt; Arg&gt;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_arg_matcher([[maybe_unused]] util::priority_tag&lt;2&gt; <span class="keyword">const</span>, Arg arg)</div>
 <div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    {</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga82a6a5d0b7997fa42507a98d703f1ce4">matches::str::eq</a>(std::forward&lt;Arg&gt;(arg));</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga0678d47507b2bf3f1446e9925a5d2761">arg</a>;</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    }</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Param, <span class="keyword">typename</span>... Canary, util::weakly_equality_comparable_with&lt;Param&gt; Arg&gt;</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_arg_matcher([[maybe_unused]] util::priority_tag&lt;0&gt; <span class="keyword">const</span>, Arg&amp;&amp; arg)</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    {</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">matches::eq</a>(std::forward&lt;Arg&gt;(arg));</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    }</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span> </div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keyword">inline</span> <span class="keyword">constexpr</span> util::priority_tag&lt;2&gt; maxMakeArgMatcherTag{};</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Arg, <span class="keyword">typename</span> Target&gt;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keyword">concept </span>requirement_for = <span class="keyword">requires</span> {</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        {</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            detail::make_arg_matcher&lt;Target&gt;(maxMakeArgMatcherTag, std::declval&lt;Arg&gt;())</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>        } -&gt; matcher_for&lt;Target&gt;;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    };</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keyword">template</span> &lt;</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>        <span class="keyword">typename</span> Signature,</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        std::size_t index,</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="keyword">typename</span> Arg,</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keyword">typename</span>... Canary,</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        <span class="keyword">typename</span> Param = <a class="code hl_typedef" href="../../dd/df9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___t_y_p_e.html#ga87147d9464358037f54907bf773c81d7">signature_param_type_t&lt;index, Signature&gt;</a>&gt;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>        <span class="keyword">requires</span> requirement_for&lt;Arg, Param&gt;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_arg_policy(Arg&amp;&amp; arg)</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    {</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga0678d47507b2bf3f1446e9925a5d2761">expect::arg&lt;index&gt;</a>(</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            detail::make_arg_matcher&lt;Param&gt;(maxMakeArgMatcherTag, std::forward&lt;Arg&gt;(arg)));</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>    }</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature, <span class="keyword">typename</span> Builder, std::size_t... indices, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> extend_builder_with_arg_policies(</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        Builder&amp;&amp; builder,</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        [[maybe_unused]] std::index_sequence&lt;indices...&gt; <span class="keyword">const</span>,</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        Args&amp;&amp;... args)</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    {</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        <span class="keywordflow">return</span> (</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            std::forward&lt;Builder&gt;(builder)</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            &amp;&amp; ...</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            &amp;&amp; detail::make_arg_policy&lt;Signature, indices&gt;(std::forward&lt;Args&gt;(args)));</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    }</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_expectation_builder(</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        std::shared_ptr&lt;ExpectationCollection&lt;Signature&gt;&gt; expectations,</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        reporting::TargetReport target,</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="comment">// if the param is a character-pointer, there is no evidence, whether it denotes a null-terminated string or just an</span></div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="comment">// actual pointer to a value.</span></div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>    <span class="comment">// But, the Mock user shall know it, thus if `Arg` is not a character-pointer, we enable this matcher.</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">string</span> Param, <span class="keyword">typename</span>... Canary, <span class="keywordtype">string</span> Arg&gt;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        <span class="keyword">requires</span>(!std::is_pointer_v&lt;std::remove_reference_t&lt;Param&gt;&gt;)</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>             || (!std::is_pointer_v&lt;std::remove_reference_t&lt;Arg&gt;&gt;)</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>    [[nodiscard]] <span class="comment">//</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_arg_matcher([[maybe_unused]] util::priority_tag&lt;1&gt; <span class="keyword">const</span>, Arg&amp;&amp; arg)</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    {</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga82a6a5d0b7997fa42507a98d703f1ce4">matches::str::eq</a>(std::forward&lt;Arg&gt;(arg));</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    }</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Param, <span class="keyword">typename</span>... Canary, util::weakly_equality_comparable_with&lt;Param&gt; Arg&gt;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_arg_matcher([[maybe_unused]] util::priority_tag&lt;0&gt; <span class="keyword">const</span>, Arg&amp;&amp; arg)</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    {</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">matches::eq</a>(std::forward&lt;Arg&gt;(arg));</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    }</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    <span class="keyword">inline</span> <span class="keyword">constexpr</span> util::priority_tag&lt;2&gt; maxMakeArgMatcherTag{};</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Arg, <span class="keyword">typename</span> Target&gt;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    <span class="keyword">concept </span>requirement_for = <span class="keyword">requires</span> {</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>        {</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            detail::make_arg_matcher&lt;Target&gt;(maxMakeArgMatcherTag, std::declval&lt;Arg&gt;())</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>        } -&gt; matcher_for&lt;Target&gt;;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>    };</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    <span class="keyword">template</span> &lt;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        <span class="keyword">typename</span> Signature,</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        std::size_t index,</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="keyword">typename</span> Arg,</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="keyword">typename</span>... Canary,</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <span class="keyword">typename</span> Param = <a class="code hl_typedef" href="../../dd/df9/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___p_a_r_a_m___t_y_p_e.html#ga87147d9464358037f54907bf773c81d7">signature_param_type_t&lt;index, Signature&gt;</a>&gt;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        <span class="keyword">requires</span> requirement_for&lt;Arg, Param&gt;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_arg_policy(Arg&amp;&amp; arg)</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    {</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga0678d47507b2bf3f1446e9925a5d2761">expect::arg&lt;index&gt;</a>(</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            detail::make_arg_matcher&lt;Param&gt;(maxMakeArgMatcherTag, std::forward&lt;Arg&gt;(arg)));</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    }</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature, <span class="keyword">typename</span> Builder, std::size_t... indices, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> extend_builder_with_arg_policies(</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>        Builder&amp;&amp; builder,</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        [[maybe_unused]] std::index_sequence&lt;indices...&gt; <span class="keyword">const</span>,</div>
 <div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        Args&amp;&amp;... args)</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    {</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        <span class="keyword">using </span>BaseBuilderT = BasicExpectationBuilder&lt;</div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>            <span class="keyword">false</span>,</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>            sequence::detail::Config&lt;&gt;,</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            Signature,</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>            expectation_policies::InitFinalize&gt;;</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        <span class="keywordflow">return</span> (</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>            std::forward&lt;Builder&gt;(builder)</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>            &amp;&amp; ...</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>            &amp;&amp; detail::make_arg_policy&lt;Signature, indices&gt;(std::forward&lt;Args&gt;(args)));</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    }</div>
 <div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span> </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>        <span class="keywordflow">return</span> detail::extend_builder_with_arg_policies&lt;Signature&gt;(</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>            BaseBuilderT{</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                std::move(expectations),</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                std::move(target),</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                TimesConfig{},</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                sequence::detail::Config&lt;&gt;{},</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                expectation_policies::InitFinalize{},</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>                std::tuple{}},</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            std::index_sequence_for&lt;Args...&gt;{},</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    }</div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>}</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span> </div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_expectation_builder(</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>        std::shared_ptr&lt;ExpectationCollection&lt;Signature&gt;&gt; expectations,</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        reporting::TargetReport target,</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>        Args&amp;&amp;... args)</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    {</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>        <span class="keyword">using </span>BaseBuilderT = BasicExpectationBuilder&lt;</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            <span class="keyword">false</span>,</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            sequence::detail::Config&lt;&gt;,</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            Signature,</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>            expectation_policies::InitFinalize&gt;;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>        <span class="keywordflow">return</span> detail::extend_builder_with_arg_policies&lt;Signature&gt;(</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>            BaseBuilderT{</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>                std::move(expectations),</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>                std::move(target),</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>                TimesConfig{},</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>                sequence::detail::Config&lt;&gt;{},</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>                expectation_policies::InitFinalize{},</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>                std::tuple{}},</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>            std::index_sequence_for&lt;Args...&gt;{},</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>            std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    }</div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>}</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span> </div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_arg_requirement_policies_8hpp_html"><div class="ttname"><a href="../../d1/d42/_arg_requirement_policies_8hpp.html">ArgRequirementPolicies.hpp</a></div></div>
 <div class="ttc" id="a_concepts_8hpp_html"><div class="ttname"><a href="../../d9/db9/_concepts_8hpp.html">Concepts.hpp</a></div></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
@@ -427,17 +439,18 @@ $(function(){initNavTree('d2/d4f/_expectation_builder_8hpp_source.html','../../'
 <div class="ttc" id="a_source_location_8hpp_html"><div class="ttname"><a href="../../d3/d15/_source_location_8hpp.html">SourceLocation.hpp</a></div></div>
 <div class="ttc" id="a_string_matchers_8hpp_html"><div class="ttname"><a href="../../d2/d56/_string_matchers_8hpp.html">StringMatchers.hpp</a></div></div>
 <div class="ttc" id="a_target_report_8hpp_html"><div class="ttname"><a href="../../d8/d4c/_target_report_8hpp.html">TargetReport.hpp</a></div></div>
-<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a0ff3086cd59e7cb50332d378d4580808"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0ff3086cd59e7cb50332d378d4580808">mimicpp::BasicExpectationBuilder::finalize</a></div><div class="ttdeci">ScopedExpectation finalize(util::SourceLocation sourceLocation) &amp;&amp;</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:169</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a0ff3086cd59e7cb50332d378d4580808"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a0ff3086cd59e7cb50332d378d4580808">mimicpp::BasicExpectationBuilder::finalize</a></div><div class="ttdeci">ScopedExpectation finalize(util::SourceLocation sourceLocation) &amp;&amp;</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:180</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a1972372a9dee2539cc9f1c63beb3c6c6"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1972372a9dee2539cc9f1c63beb3c6c6">mimicpp::BasicExpectationBuilder::BasicExpectationBuilder</a></div><div class="ttdeci">BasicExpectationBuilder(BasicExpectationBuilder &amp;&amp;)=default</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a1b894766d046e6e699680be3fea28219"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1b894766d046e6e699680be3fea28219">mimicpp::BasicExpectationBuilder::operator&amp;&amp;</a></div><div class="ttdeci">friend constexpr auto operator&amp;&amp;(BasicExpectationBuilder &amp;&amp;builder, Policy &amp;&amp;policy)</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:105</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a1b894766d046e6e699680be3fea28219"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a1b894766d046e6e699680be3fea28219">mimicpp::BasicExpectationBuilder::operator&amp;&amp;</a></div><div class="ttdeci">friend constexpr auto operator&amp;&amp;(BasicExpectationBuilder &amp;&amp;builder, Policy &amp;&amp;policy)</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:112</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a28ca17d7ed0b8cc8a78f9637b74953d1"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a28ca17d7ed0b8cc8a78f9637b74953d1">mimicpp::BasicExpectationBuilder::operator=</a></div><div class="ttdeci">BasicExpectationBuilder &amp; operator=(BasicExpectationBuilder &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a432b5de09677926441ea961f92aa7e09"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a432b5de09677926441ea961f92aa7e09">mimicpp::BasicExpectationBuilder::operator&amp;&amp;</a></div><div class="ttdeci">friend constexpr auto operator&amp;&amp;(BasicExpectationBuilder &amp;&amp;builder, detail::TimesConfig &amp;&amp;config)</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:134</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a4e58b0aaa6d8d3389e2134dec6e8b47c"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e58b0aaa6d8d3389e2134dec6e8b47c">mimicpp::BasicExpectationBuilder::StorageT</a></div><div class="ttdeci">ExpectationCollection&lt; Signature &gt; StorageT</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:45</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a4e72ea8043a9303edd13307ded34ba7c"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e72ea8043a9303edd13307ded34ba7c">mimicpp::BasicExpectationBuilder::operator&amp;&amp;</a></div><div class="ttdeci">friend constexpr auto operator&amp;&amp;(BasicExpectationBuilder &amp;&amp;builder, sequence::detail::Config&lt; Sequences... &gt; &amp;&amp;config)</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:148</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a4e72ea8043a9303edd13307ded34ba7c"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a4e72ea8043a9303edd13307ded34ba7c">mimicpp::BasicExpectationBuilder::operator&amp;&amp;</a></div><div class="ttdeci">friend constexpr auto operator&amp;&amp;(BasicExpectationBuilder &amp;&amp;builder, sequence::detail::Config&lt; Sequences... &gt; &amp;&amp;config)</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:159</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a61ddae5a025434b5abbafa19252920f9"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a61ddae5a025434b5abbafa19252920f9">mimicpp::BasicExpectationBuilder::PolicyListT</a></div><div class="ttdeci">std::tuple&lt; Policies... &gt; PolicyListT</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:46</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a74c1d734ba231e03cb33bc8432e5c77b"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a74c1d734ba231e03cb33bc8432e5c77b">mimicpp::BasicExpectationBuilder::operator=</a></div><div class="ttdeci">BasicExpectationBuilder &amp; operator=(const BasicExpectationBuilder &amp;)=delete</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a97aabdc22c19b11b1ce31bf7c7526ab6"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a97aabdc22c19b11b1ce31bf7c7526ab6">mimicpp::BasicExpectationBuilder::ReturnT</a></div><div class="ttdeci">typename Expectation&lt; Signature &gt;::ReturnT ReturnT</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:47</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_a99b43a6ad6e94ecdb44e3c4a43c90363"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a99b43a6ad6e94ecdb44e3c4a43c90363">mimicpp::BasicExpectationBuilder::BasicExpectationBuilder</a></div><div class="ttdeci">BasicExpectationBuilder(const BasicExpectationBuilder &amp;)=delete</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_aae29bd9e2b56b6b56690d9cc1e958b01"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#aae29bd9e2b56b6b56690d9cc1e958b01">mimicpp::BasicExpectationBuilder::operator&amp;&amp;</a></div><div class="ttdeci">friend constexpr auto operator&amp;&amp;(BasicExpectationBuilder &amp;&amp;builder, detail::TimesConfig &amp;&amp;config)</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:127</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_aa3357fce0e6322910c6b3076d019d1a1"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#aa3357fce0e6322910c6b3076d019d1a1">mimicpp::BasicExpectationBuilder::operator&amp;&amp;</a></div><div class="ttdeci">friend constexpr auto operator&amp;&amp;(BasicExpectationBuilder &amp;&amp;builder, Policy &amp;&amp;policy)</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:82</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_abadfcc621bcc915d070c096229163445"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#abadfcc621bcc915d070c096229163445">mimicpp::BasicExpectationBuilder::BasicExpectationBuilder</a></div><div class="ttdeci">constexpr BasicExpectationBuilder(std::shared_ptr&lt; StorageT &gt; storage, reporting::TargetReport target, detail::TimesConfig timesConfig, SequenceConfig sequenceConfig, FinalizePolicyArg &amp;&amp;finalizePolicyArg, PolicyListArg &amp;&amp;policyListArg) noexcept</div><div class="ttdef"><b>Definition</b> ExpectationBuilder.hpp:55</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_builder_html_ac21118a6f294d01b1ed2fa9cf347cf72"><div class="ttname"><a href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#ac21118a6f294d01b1ed2fa9cf347cf72">mimicpp::BasicExpectationBuilder::~BasicExpectationBuilder</a></div><div class="ttdeci">~BasicExpectationBuilder()=default</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_expectation_html"><div class="ttname"><a href="../../d3/d4a/classmimicpp_1_1_basic_expectation.html">mimicpp::BasicExpectation</a></div><div class="ttdoc">The actual expectation template.</div><div class="ttdef"><b>Definition</b> Expectation.hpp:487</div></div>
@@ -461,7 +474,7 @@ $(function(){initNavTree('d2/d4f/_expectation_builder_8hpp_source.html','../../'
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../d2/d4f/_expectation_builder_8hpp.html">ExpectationBuilder.hpp</a></li>
-    <li class="footer">Generated on Tue Oct 14 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Thu Oct 16 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
