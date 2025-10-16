@@ -4,6 +4,7 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 include(Mimic++-InternalTargets)
+include(CMakeDependentOption)
 
 if (NOT TARGET mimicpp-enable-config-options)
 
@@ -118,7 +119,7 @@ if (NOT TARGET mimicpp-enable-config-options)
             mimicpp::internal::enable-std-stacktrace
         )
     elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "cpptrace")
-        find_package(cpptrace REQUIRED)
+        find_package(mimicpp-cpptrace MODULE REQUIRED)
         target_link_libraries(mimicpp-enable-config-options INTERFACE
             cpptrace::cpptrace
         )

@@ -11,6 +11,6 @@ else ()
     set(LIBASSERT_DISABLE_CXX_20_MODULES ON CACHE BOOL "")
 endif ()
 
-find_package(cpptrace REQUIRED)
+find_package(mimicpp-cpptrace MODULE REQUIRED)
 set(LIBASSERT_USE_EXTERNAL_CPPTRACE ON CACHE BOOL "")
 CPMAddPackage("gh:jeremy-rifkin/libassert@2.1.5")

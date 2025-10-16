@@ -5,6 +5,7 @@
 
 message(DEBUG "${MESSAGE_PREFIX} Searching for installed {cpptrace}-package.")
 
+include(CMakeDependentOption)
 cmake_dependent_option(
     MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
     "Determines whether cpptrace will be consumed as a c++20 module."
