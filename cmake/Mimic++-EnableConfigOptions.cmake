@@ -42,33 +42,12 @@ if (NOT TARGET mimicpp-enable-config-options)
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_USE_FMT: ${MIMICPP_CONFIG_USE_FMT}")
     if (MIMICPP_CONFIG_USE_FMT)
 
-        message(DEBUG "${MESSAGE_PREFIX} Searching for installed {fmt}-package.")
-        cmake_dependent_option(
-            MIMICPP_CONFIG_IMPORT_FMT
-            "Determines, whether fmt will be consumed as a c++20 module."
-            ON
-            "MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__"
-            OFF
-        )
-        set(FMT_MODULE ${MIMICPP_CONFIG_IMPORT_FMT} CACHE BOOL "")
-
-        find_package(fmt QUIET)
-        if (NOT fmt_FOUND)
-            message(STATUS "${MESSAGE_PREFIX} No installed {fmt}-package found. Fetching via cpm.")
-
-            include(get_cpm)
-            CPMAddPackage("gh:fmtlib/fmt#11.1.4")
-        endif ()
-
-        find_package(fmt REQUIRED)
-        message(STATUS "${MESSAGE_PREFIX} Using {fmt}-package from: ${fmt_SOURCE_DIR}")
-        target_link_libraries(mimicpp-enable-config-options
-            INTERFACE
+        find_package(mimicpp-fmt MODULE REQUIRED)
+        target_link_libraries(mimicpp-enable-config-options INTERFACE
             fmt::fmt
         )
 
-        target_compile_definitions(mimicpp-enable-config-options
-            INTERFACE
+        target_compile_definitions(mimicpp-enable-config-options INTERFACE
             MIMICPP_CONFIG_USE_FMT=1
             $<$<BOOL:${MIMICPP_CONFIG_IMPORT_FMT}>:MIMICPP_CONFIG_IMPORT_FMT=1>
         )
