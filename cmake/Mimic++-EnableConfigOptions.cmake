@@ -60,30 +60,14 @@ if (NOT TARGET mimicpp-enable-config-options)
     option(MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER "When enabled, all case-insensitive string matchers are available." OFF)
     message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER: ${MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER}")
     if (MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER)
-
-        set(UNI_ALGO_INSTALL ON CACHE BOOL "")
-
-        message(DEBUG "${MESSAGE_PREFIX} Searching for installed {uni-algo}-package.")
-        find_package(uni-algo QUIET)
-        if (NOT uni-algo_FOUND)
-            message(STATUS "${MESSAGE_PREFIX} No installed {uni-algo}-package found. Fetching via cpm.")
-
-            include(get_cpm)
-            CPMAddPackage("gh:uni-algo/uni-algo@1.2.0")
-        endif ()
-
-        find_package(uni-algo REQUIRED)
-        message(STATUS "${MESSAGE_PREFIX} Using {uni-algo}-package from: ${uni-algo_SOURCE_DIR}")
-        target_link_libraries(mimicpp-enable-config-options
-            INTERFACE
+        find_package(mimicpp-uni-algo MODULE REQUIRED)
+        target_link_libraries(mimicpp-enable-config-options INTERFACE
             uni-algo::uni-algo
         )
 
-        target_compile_definitions(mimicpp-enable-config-options
-            INTERFACE
+        target_compile_definitions(mimicpp-enable-config-options INTERFACE
             MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=1
         )
-
     endif ()
 
     # Config option regarding stacktrace support.
