@@ -4,9 +4,9 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
-set(MIMICPP_LIB_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/mimic++")
-set(MIMICPP_CMAKE_INSTALL_DIR "${MIMICPP_LIB_INSTALL_DIR}/cmake")
+set(MIMICPP_CMAKE_INSTALL_DIR "cmake/mimicpp")
 
 configure_package_config_file(
 	"${PROJECT_SOURCE_DIR}/cmake/mimicpp-config.cmake.in"
@@ -24,7 +24,7 @@ write_basic_package_version_file(
 # Gather all targets starting with `mimicpp-internal-enable-`
 get_property(MIMICPP_FEATURE_TARGETS DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY BUILDSYSTEM_TARGETS)
 list(FILTER MIMICPP_FEATURE_TARGETS INCLUDE REGEX "^mimicpp-internal-enable-")
-install(TARGETS mimicpp-header-only mimicpp-enable-config-options ${MIMICPP_FEATURE_TARGETS}
+install(TARGETS mimicpp mimicpp-enable-config-options ${MIMICPP_FEATURE_TARGETS}
 	EXPORT mimicpp-targets
 )
 

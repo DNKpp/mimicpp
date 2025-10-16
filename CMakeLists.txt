@@ -43,26 +43,26 @@ endif ()
 include(CMakeDependentOption)
 include(Mimic++-EnableConfigOptions)
 
-add_library(mimicpp-header-only INTERFACE)
-add_library(mimicpp::header-only ALIAS mimicpp-header-only)
-add_library(mimicpp::mimicpp ALIAS mimicpp-header-only)
+add_library(mimicpp INTERFACE)
+add_library(mimicpp::header-only ALIAS mimicpp)
+add_library(mimicpp::mimicpp ALIAS mimicpp)
 
 include(GNUInstallDirs)
-target_include_directories(mimicpp-header-only INTERFACE
+target_include_directories(mimicpp INTERFACE
 	"$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
 	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-target_compile_options(mimicpp-header-only INTERFACE
+target_compile_options(mimicpp INTERFACE
 	# this option is required to make __VA_OPT__ work on msvc
 	"$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>"
 )
 
-target_compile_features(mimicpp-header-only INTERFACE
+target_compile_features(mimicpp INTERFACE
 	cxx_std_${CMAKE_CXX_STANDARD}
 )
 
-target_link_libraries(mimicpp-header-only INTERFACE
+target_link_libraries(mimicpp INTERFACE
 	mimicpp::internal::config-options
 )
 
