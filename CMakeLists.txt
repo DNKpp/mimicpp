@@ -40,7 +40,6 @@ if (MIMICPP_FORCED_CXX_STANDARD)
 	set(CMAKE_CXX_STANDARD ${MIMICPP_FORCED_CXX_STANDARD})
 endif ()
 
-include(CMakeDependentOption)
 include(Mimic++-EnableConfigOptions)
 
 add_library(mimicpp INTERFACE)

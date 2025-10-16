@@ -9,15 +9,26 @@ project(package-consumer
     LANGUAGES CXX
 )
 
-message(DEBUG "MIMICPP_PACKAGE_PREFIX: ${MIMICPP_PACKAGE_PREFIX}")
+message(DEBUG "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+message(DEBUG "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 set(TARGET_NAME package-consumer)
 add_executable(${TARGET_NAME}
     "main.cpp"
 )
 
-find_package(mimicpp REQUIRED
-    PATHS ${MIMICPP_PACKAGE_PREFIX}
-)
+if (MIMICPP_WITH_STACKTRACE STREQUAL "cpptrace")
+    find_package(mimicpp-cpptrace MODULE REQUIRED)
+endif ()
+
+if (MIMICPP_WITH_FMT)
+    find_package(mimicpp-fmt MODULE REQUIRED)
+endif ()
+
+if (MIMICPP_WITH_UNICODE_STR_MATCHER)
+    find_package(mimicpp-uni-algo MODULE REQUIRED)
+endif ()
+
+find_package(mimicpp REQUIRED)
 target_link_libraries(${TARGET_NAME} PRIVATE
     mimicpp::mimicpp
 )
