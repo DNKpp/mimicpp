@@ -9,7 +9,7 @@ function(unwrap_args LIST OUT_LIST)
     string(LENGTH ${LIST} STR_LENGTH)
     math(EXPR STR_LENGTH "${STR_LENGTH} - 4")
     string(SUBSTRING ${LIST} 2 ${STR_LENGTH} LIST)
-    set(${OUT_LIST} ${LIST} PARENT_SCOPE)
+    set(${OUT_LIST} "${LIST}" PARENT_SCOPE)
 endfunction()
 
 unwrap_args(${CONFIG_ARGS} CONFIG_ARGS)
@@ -61,7 +61,6 @@ execute_process(COMMAND ${CMAKE_COMMAND} --build "${PACKAGE_TEST_BINARY_DIR}" ${
         COMMAND_ECHO STDOUT
 )
 execute_process(COMMAND ${CMAKE_CTEST_COMMAND} --test-dir "${PACKAGE_TEST_BINARY_DIR}" -C ${CMAKE_BUILD_TYPE}
-        COMMAND_ERROR_IS_FATAL ANY
-        COMMAND_ECHO STDOUT
+    COMMAND_ERROR_IS_FATAL ANY
+    COMMAND_ECHO STDOUT
 )
-

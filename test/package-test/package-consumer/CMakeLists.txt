@@ -29,9 +29,11 @@ if (MIMICPP_WITH_UNICODE_STR_MATCHER)
     find_package(mimicpp-uni-algo MODULE REQUIRED)
 endif ()
 
+include("../../cmake/Mimic++-LinkStdStacktrace.cmake")
 find_package(mimicpp REQUIRED)
 target_link_libraries(${TARGET_NAME} PRIVATE
     mimicpp::mimicpp
+    mimicpp::internal::link-std-stacktrace
 )
 
 include(CTest)
