@@ -34,7 +34,7 @@ Quick access to **documentation, package managers, and community support**.
 
 <p>
   &nbsp;&nbsp;&nbsp;&nbsp;╌ 🛠️ ╍╌&nbsp;&nbsp;
-  <a href="https://godbolt.org/z/63nhG1Mx3">
+  <a href="https://godbolt.org/z/TsE7bb5eG">
     <img src="https://img.shields.io/badge/try%20it-On%20Compiler%20Explorer-brightgreen?style=flat&logo=compilerexplorer" alt="Compiler Explorer">
   </a>
   &nbsp;&nbsp;
@@ -100,9 +100,9 @@ Mock objects are explicitly defined as function objects, making them directly ca
 This design choice ensures that the framework remains extensible and straightforward to use.
 
 If you're curious to learn more, feel free to explore the [documentation](https://dnkpp.github.io/mimicpp/) and the
-cheat-sheet of to the latest release.
+cheat-sheet of the latest release.
 You can also check out the examples folder or experiment with the framework online
-at [godbolt.org](https://godbolt.org/z/fYavvqfeM).
+at [godbolt.org](https://godbolt.org/z/TsE7bb5eG).
 
 ### Core Design
 
