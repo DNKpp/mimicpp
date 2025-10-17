@@ -11,6 +11,7 @@ project(package-consumer
 
 message(DEBUG "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
 message(DEBUG "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+message(DEBUG "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 set(TARGET_NAME package-consumer)
 add_executable(${TARGET_NAME}
     "main.cpp"
