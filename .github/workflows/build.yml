@@ -94,6 +94,7 @@ jobs:
               image: "ghcr.io/dnkpp/clang:20"
             compiler_name: "clang"
             compiler_version: "20"
+            only_cpptrace: true
             libcxx: true
             cxx20_modules: false
 
@@ -112,6 +113,7 @@ jobs:
               image: "ghcr.io/dnkpp/clang:19"
             compiler_name: "clang"
             compiler_version: "19"
+            only_cpptrace: true
             libcxx: true
             cxx20_modules: false
 
@@ -130,6 +132,7 @@ jobs:
               image: "ghcr.io/dnkpp/clang:18"
             compiler_name: "clang"
             compiler_version: "18"
+            only_cpptrace: true
             libcxx: true
             cxx20_modules: false
 
@@ -149,6 +152,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "17"
             libcxx: true
+            only_cpptrace: true
             cxx20_modules: false
 
           - prefix: "Ubuntu"
@@ -167,6 +171,7 @@ jobs:
             compiler_name: "clang"
             compiler_version: "16"
             only_fmt: true
+            only_cpptrace: true
             libcxx: true
 
           - prefix: "Ubuntu"
