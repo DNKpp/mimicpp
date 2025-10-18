@@ -600,7 +600,7 @@ jobs:
       #################################
       # Feature: experimental stacktrace
       - name: Select stacktrace backend
-        id: config-stacktrace-test
+        id: config-stacktrace-backend-test
         if: ${{ matrix.config.build_mode == 'Debug' }}
         shell: bash
         run: |
@@ -612,7 +612,7 @@ jobs:
           echo "SELECTED_STACKTRACE_BACKEND=$(echo ${BACKEND})" >> $GITHUB_ENV
 
       - name: Configure with experimental stacktrace
-        if: ${{ steps.config-stacktrace-test.outcome == 'success' }}
+        if: ${{ steps.config-stacktrace-backend-test.outcome == 'success' }}
         shell: bash
         run: |
           cmake \
@@ -624,7 +624,7 @@ jobs:
               -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=${SELECTED_STACKTRACE_BACKEND}
 
       - name: Build with experimental stacktrace
-        if: ${{ steps.config-stacktrace-test.outcome == 'success' }}
+        if: ${{ steps.config-stacktrace-backend-test.outcome == 'success' }}
         shell: bash
         run: |
           cmake --build build \
@@ -632,7 +632,7 @@ jobs:
               ${{ env.CMAKE_BUILD_EXTRA }}
 
       - name: Run tests with experimental stacktrace
-        if: ${{ steps.config-stacktrace-test.outcome == 'success' }}
+        if: ${{ steps.config-stacktrace-backend-test.outcome == 'success' }}
         shell: bash
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
