@@ -48,7 +48,7 @@ jobs:
         shell: bash
         run: |
           echo "ARCHITECTURES=$(echo ${ARCHITECTURES}, \"32bit\")" >> $GITHUB_ENV
-          echo "BUILD_MODES=$(echo ${BUILD_MODES}, \"RelWithDebInfo\")" >> $GITHUB_ENV
+          echo "BUILD_MODES=$(echo ${BUILD_MODES}, \"Release\")" >> $GITHUB_ENV
           echo "CXX_VERSIONS=$(echo ${CXX_VERSIONS}, 23)" >> $GITHUB_ENV
 
       - name: Output architectures, build-modes and c++-versions
