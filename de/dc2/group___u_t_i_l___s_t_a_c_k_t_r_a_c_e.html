@@ -141,7 +141,7 @@ Variables</h2></td></tr>
 <p>Provides stacktrace-related functionality. </p>
 <p>Since <em>mimic++</em> is officially a C++20 framework, it cannot rely on built-in stacktrace support from the <em>STL</em>. However, stacktraces are especially valuable in the context of mocking, particularly when expectations are violated. To address this, <em>mimic++</em> introduces a simple stacktrace abstraction that allows integration with existing stacktrace implementations.</p>
 <dl class="section note"><dt>Note</dt><dd>For more information about available backends, see the <a class="el" href="../../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE">MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</a> config option.</dd></dl>
-<h3><a class="anchor" id="autotoc_md25"></a>
+<h3><a class="anchor" id="autotoc_md26"></a>
 Custom Stacktrace Backends</h3>
 <p><em>mimic++</em> always prefers available custom stacktrace backends, registered via <code>mimicpp::custom::find_stacktrace_backend</code> trait. </p><dl class="section note"><dt>Note</dt><dd>This is always the case, even if the <a class="el" href="../../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE">MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</a> option is set to a different value than <code>custom</code>. Nevertheless, when configuring with cmake, users should set that option accordingly, because this will enable some sanity checks internally.</dd></dl>
 <p>Setting up <code>mimicpp::custom::find_stacktrace_backend</code> is rather easy, as it just requires a single member alias named <code>type</code>, which points to the desired backend:</p>
@@ -193,7 +193,7 @@ Custom Stacktrace Backends</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Oct 17 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
