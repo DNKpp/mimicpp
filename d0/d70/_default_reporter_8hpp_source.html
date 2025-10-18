@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -308,7 +308,7 @@ $(function(){initNavTree('d0/d70/_default_reporter_8hpp_source.html','../../'); 
 <div class="ttc" id="aclassmimicpp_1_1reporting_1_1_error_html_aee2132f4440c16e4a285185cc0f34504"><div class="ttname"><a href="../../dd/d2e/classmimicpp_1_1reporting_1_1_error.html#aee2132f4440c16e4a285185cc0f34504">mimicpp::reporting::Error::where</a></div><div class="ttdeci">util::SourceLocation const &amp; where() const noexcept</div><div class="ttdef"><b>Definition</b> DefaultReporter.hpp:53</div></div>
 <div class="ttc" id="aclassmimicpp_1_1reporting_1_1_expectation_report_html"><div class="ttname"><a href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">mimicpp::reporting::ExpectationReport</a></div><div class="ttdoc">Contains the extracted info from a typed expectation.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:84</div></div>
 <div class="ttc" id="aclassmimicpp_1_1reporting_1_1_i_reporter_html_a940feef3a613ea2343509a9023017012"><div class="ttname"><a href="../../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#a940feef3a613ea2343509a9023017012">mimicpp::reporting::IReporter::IReporter</a></div><div class="ttdeci">IReporter()=default</div></div>
-<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">mimicpp::util::SourceLocation</a></div><div class="ttdoc">A thin wrapper around the currently installed source-location backend with additional operator ==.</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:134</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">mimicpp::util::SourceLocation</a></div><div class="ttdoc">A thin wrapper around general source-location info.</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:37</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1call_html"><div class="ttname"><a href="../../dc/d2e/namespacemimicpp_1_1call.html">mimicpp::call</a></div><div class="ttdef"><b>Definition</b> Call.hpp:24</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1reporting_html"><div class="ttname"><a href="../../d6/d48/namespacemimicpp_1_1reporting.html">mimicpp::reporting</a></div><div class="ttdef"><b>Definition</b> BasicReporter.hpp:27</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1reporting_html_a31f05e9181e8ca535aaed2884ab8edaa"><div class="ttname"><a href="../../d6/d48/namespacemimicpp_1_1reporting.html#a31f05e9181e8ca535aaed2884ab8edaa">mimicpp::reporting::stringify_unhandled_exception</a></div><div class="ttdeci">StringT stringify_unhandled_exception(CallReport const &amp;call, ExpectationReport const &amp;expectationReport, std::exception_ptr const &amp;exception)</div><div class="ttdef"><b>Definition</b> StringifyReports.hpp:454</div></div>
@@ -317,14 +317,14 @@ $(function(){initNavTree('d0/d70/_default_reporter_8hpp_source.html','../../'); 
 <div class="ttc" id="anamespacemimicpp_1_1reporting_html_aba19596f12a846065efee9cd261081bb"><div class="ttname"><a href="../../d6/d48/namespacemimicpp_1_1reporting.html#aba19596f12a846065efee9cd261081bb">mimicpp::reporting::stringify_inapplicable_matches</a></div><div class="ttdeci">StringT stringify_inapplicable_matches(CallReport const &amp;call, std::span&lt; ExpectationReport &gt; expectations)</div><div class="ttdef"><b>Definition</b> StringifyReports.hpp:336</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1reporting_html_abdd379793ae51648f844efc2d1b8efbd"><div class="ttname"><a href="../../d6/d48/namespacemimicpp_1_1reporting.html#abdd379793ae51648f844efc2d1b8efbd">mimicpp::reporting::UnmatchedCallT</a></div><div class="ttdeci">Error&lt; CallReport &gt; UnmatchedCallT</div><div class="ttdef"><b>Definition</b> DefaultReporter.hpp:63</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1reporting_html_ac1ed9be684207ba82b9dabeb01660489"><div class="ttname"><a href="../../d6/d48/namespacemimicpp_1_1reporting.html#ac1ed9be684207ba82b9dabeb01660489">mimicpp::reporting::stringify_no_matches</a></div><div class="ttdeci">StringT stringify_no_matches(CallReport const &amp;call, std::span&lt; NoMatchReport &gt; noMatchReports)</div><div class="ttdef"><b>Definition</b> StringifyReports.hpp:376</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:342</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:391</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_18327b906210ac22926d8dfd10b98a1a.html">reporting</a></li><li class="navelem"><a class="el" href="../../d0/d70/_default_reporter_8hpp.html">DefaultReporter.hpp</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

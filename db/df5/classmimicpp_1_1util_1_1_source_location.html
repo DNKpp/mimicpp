@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -99,39 +99,51 @@ $(function(){initNavTree('db/df5/classmimicpp_1_1util_1_1_source_location.html',
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="../../d0/d2d/classmimicpp_1_1util_1_1_source_location-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">mimicpp::util::SourceLocation Class Reference<div class="ingroups"><a class="el" href="../../d7/da5/group___s_o_u_r_c_e___l_o_c_a_t_i_o_n.html">source-location</a></div></div></div>
+  <div class="headertitle"><div class="title">mimicpp::util::SourceLocation Class Reference<div class="ingroups"><a class="el" href="../../df/d94/group___u_t_i_l_i_t_i_e_s.html">utilities</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>A thin wrapper around the currently installed source-location backend with additional <code>operator ==</code>.  
+<p>A thin wrapper around general source-location info.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d3/d15/_source_location_8hpp_source.html">SourceLocation.hpp</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for mimicpp::util::SourceLocation:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d5/df2/classmimicpp_1_1util_1_1_source_location__coll__graph.svg" width="202" height="246"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2d8740d0689905bbcb72e6a6fea63412" id="r_a2d8740d0689905bbcb72e6a6fea63412"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d8740d0689905bbcb72e6a6fea63412">~SourceLocation</a> ()=default</td></tr>
 <tr class="separator:a2d8740d0689905bbcb72e6a6fea63412"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60ec1c3f4408c42c3015e514f534b5a7" id="r_a60ec1c3f4408c42c3015e514f534b5a7"><td class="memTemplParams" colspan="2">template&lt;typename... Canary, std::same_as&lt; <a class="el" href="../../db/d3e/namespacemimicpp_1_1util_1_1source__location.html#a2312c9a4010f4d1443516c5b802ab680">source_location::InstalledBackend</a> &gt; Backend = source_location::InstalledBackend&gt; </td></tr>
-<tr class="memitem:a60ec1c3f4408c42c3015e514f534b5a7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a60ec1c3f4408c42c3015e514f534b5a7">explicit</a> (false) const expr <a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a>(Backend loc</td></tr>
-<tr class="separator:a60ec1c3f4408c42c3015e514f534b5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad331e69afebaab0ae5838c0a70f60743" id="r_ad331e69afebaab0ae5838c0a70f60743"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad331e69afebaab0ae5838c0a70f60743">explicit</a> (false) const expr <a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a>(auto &amp;&amp;... canary</td></tr>
+<tr class="memdesc:ad331e69afebaab0ae5838c0a70f60743"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compatibility constructor, used in cases where <code>std::source_location</code> is not available.  <br /></td></tr>
+<tr class="separator:ad331e69afebaab0ae5838c0a70f60743"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cac61b376f0491759210eb3a467cce3" id="r_a9cac61b376f0491759210eb3a467cce3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cac61b376f0491759210eb3a467cce3">operator=</a> (<a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> const &amp;)=default</td></tr>
 <tr class="separator:a9cac61b376f0491759210eb3a467cce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab62062ed14cd1ddf120f3ffdf67c81a5" id="r_ab62062ed14cd1ddf120f3ffdf67c81a5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> (<a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:ab62062ed14cd1ddf120f3ffdf67c81a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a752412b1901e309a3ff0cf1ed31d1d65" id="r_a752412b1901e309a3ff0cf1ed31d1d65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a752412b1901e309a3ff0cf1ed31d1d65">operator=</a> (<a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a752412b1901e309a3ff0cf1ed31d1d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf59d69bb4b111eebca3b24c37bcf57f" id="r_aaf59d69bb4b111eebca3b24c37bcf57f"><td class="memTemplParams" colspan="2">template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </td></tr>
-<tr class="memitem:aaf59d69bb4b111eebca3b24c37bcf57f"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aaf59d69bb4b111eebca3b24c37bcf57f">file_name</a> () const noexcept</td></tr>
-<tr class="separator:aaf59d69bb4b111eebca3b24c37bcf57f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab05cafc872c6bb7979203a88d0ac3711" id="r_ab05cafc872c6bb7979203a88d0ac3711"><td class="memTemplParams" colspan="2">template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </td></tr>
-<tr class="memitem:ab05cafc872c6bb7979203a88d0ac3711"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab05cafc872c6bb7979203a88d0ac3711">function_name</a> () const noexcept</td></tr>
-<tr class="separator:ab05cafc872c6bb7979203a88d0ac3711"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad11704ca3ac22990d6023124f50a8b0e" id="r_ad11704ca3ac22990d6023124f50a8b0e"><td class="memTemplParams" colspan="2">template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </td></tr>
-<tr class="memitem:ad11704ca3ac22990d6023124f50a8b0e"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ad11704ca3ac22990d6023124f50a8b0e">line</a> () const noexcept</td></tr>
-<tr class="separator:ad11704ca3ac22990d6023124f50a8b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae13f46cce0cd7d2567cb901f875815c6" id="r_ae13f46cce0cd7d2567cb901f875815c6"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae13f46cce0cd7d2567cb901f875815c6">file_name</a> () const noexcept</td></tr>
+<tr class="separator:ae13f46cce0cd7d2567cb901f875815c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58af2e7f13a902da05a6f97809c5789b" id="r_a58af2e7f13a902da05a6f97809c5789b"><td class="memItemLeft" align="right" valign="top">constexpr std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58af2e7f13a902da05a6f97809c5789b">function_name</a> () const noexcept</td></tr>
+<tr class="separator:a58af2e7f13a902da05a6f97809c5789b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4062820dddfb4008ff5dfc2c5047d2d" id="r_ae4062820dddfb4008ff5dfc2c5047d2d"><td class="memItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4062820dddfb4008ff5dfc2c5047d2d">line</a> () const noexcept</td></tr>
+<tr class="separator:ae4062820dddfb4008ff5dfc2c5047d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a8c0b5c8afcb2968364bc24eb6a00599d" id="r_a8c0b5c8afcb2968364bc24eb6a00599d"><td class="memItemLeft" align="right" valign="top">std::string_view const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c0b5c8afcb2968364bc24eb6a00599d">fileName</a> = __builtin_FILE()</td></tr>
+<tr class="separator:a8c0b5c8afcb2968364bc24eb6a00599d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fcc2b804e5e579c1c39cb2349ecd05c" id="r_a1fcc2b804e5e579c1c39cb2349ecd05c"><td class="memItemLeft" align="right" valign="top">std::string_view const std::string_view const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fcc2b804e5e579c1c39cb2349ecd05c">functionName</a> = __builtin_FUNCTION()</td></tr>
+<tr class="separator:a1fcc2b804e5e579c1c39cb2349ecd05c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abad289d66d0078662d45f4c4411b8b67" id="r_abad289d66d0078662d45f4c4411b8b67"><td class="memItemLeft" align="right" valign="top">std::string_view const std::string_view const std::size_t const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abad289d66d0078662d45f4c4411b8b67">line</a></td></tr>
+<tr class="separator:abad289d66d0078662d45f4c4411b8b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -139,7 +151,8 @@ Friends</h2></td></tr>
 <tr class="separator:aca199207b74aeeb4fbee5791ad387aa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A thin wrapper around the currently installed source-location backend with additional <code>operator ==</code>. </p>
+<div class="textblock"><p>A thin wrapper around general source-location info. </p>
+<p>By default, <em>mimic++</em> uses the C++20 <code>std::source_location</code> feature. However, this feature is not available on all platforms or with all compilers, for which it then automatically falls back to specific compiler intrinsics. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2d8740d0689905bbcb72e6a6fea63412" name="a2d8740d0689905bbcb72e6a6fea63412"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2d8740d0689905bbcb72e6a6fea63412">&#9670;&#160;</a></span>~SourceLocation()</h2>
@@ -202,13 +215,11 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a60ec1c3f4408c42c3015e514f534b5a7" name="a60ec1c3f4408c42c3015e514f534b5a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60ec1c3f4408c42c3015e514f534b5a7">&#9670;&#160;</a></span>explicit()</h2>
+<a id="ad331e69afebaab0ae5838c0a70f60743" name="ad331e69afebaab0ae5838c0a70f60743"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad331e69afebaab0ae5838c0a70f60743">&#9670;&#160;</a></span>explicit()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename... Canary, std::same_as&lt; <a class="el" href="../../db/d3e/namespacemimicpp_1_1util_1_1source__location.html#a2312c9a4010f4d1443516c5b802ab680">source_location::InstalledBackend</a> &gt; Backend = source_location::InstalledBackend&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -217,7 +228,7 @@ template&lt;typename... Canary, std::same_as&lt; <a class="el" href="../../db/d3
           <td class="memname">mimicpp::util::SourceLocation::explicit </td>
           <td>(</td>
           <td class="paramtype">false</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
+          <td> const &amp;&amp;</td>
         </tr>
       </table>
   </td>
@@ -227,15 +238,24 @@ template&lt;typename... Canary, std::same_as&lt; <a class="el" href="../../db/d3
 </table>
 </div><div class="memdoc">
 
+<p>Compatibility constructor, used in cases where <code>std::source_location</code> is not available. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">canary</td><td>Parameter-pack, preventing users modifying the relevant default arguments. </td></tr>
+    <tr><td class="paramname">fileName</td><td>The deduced file name. </td></tr>
+    <tr><td class="paramname">functionName</td><td>The deduced function name. </td></tr>
+    <tr><td class="paramname">line</td><td>The deduced line number. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
-<a id="aaf59d69bb4b111eebca3b24c37bcf57f" name="aaf59d69bb4b111eebca3b24c37bcf57f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf59d69bb4b111eebca3b24c37bcf57f">&#9670;&#160;</a></span>file_name()</h2>
+<a id="ae13f46cce0cd7d2567cb901f875815c6" name="ae13f46cce0cd7d2567cb901f875815c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae13f46cce0cd7d2567cb901f875815c6">&#9670;&#160;</a></span>file_name()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -256,13 +276,11 @@ template&lt;typename... Canary, typename Backend = source_location::InstalledBac
 
 </div>
 </div>
-<a id="ab05cafc872c6bb7979203a88d0ac3711" name="ab05cafc872c6bb7979203a88d0ac3711"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab05cafc872c6bb7979203a88d0ac3711">&#9670;&#160;</a></span>function_name()</h2>
+<a id="a58af2e7f13a902da05a6f97809c5789b" name="a58af2e7f13a902da05a6f97809c5789b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58af2e7f13a902da05a6f97809c5789b">&#9670;&#160;</a></span>function_name()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -283,13 +301,11 @@ template&lt;typename... Canary, typename Backend = source_location::InstalledBac
 
 </div>
 </div>
-<a id="ad11704ca3ac22990d6023124f50a8b0e" name="ad11704ca3ac22990d6023124f50a8b0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad11704ca3ac22990d6023124f50a8b0e">&#9670;&#160;</a></span>line()</h2>
+<a id="ae4062820dddfb4008ff5dfc2c5047d2d" name="ae4062820dddfb4008ff5dfc2c5047d2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4062820dddfb4008ff5dfc2c5047d2d">&#9670;&#160;</a></span>line()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename... Canary, typename Backend = source_location::InstalledBackend&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -400,6 +416,63 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a8c0b5c8afcb2968364bc24eb6a00599d" name="a8c0b5c8afcb2968364bc24eb6a00599d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c0b5c8afcb2968364bc24eb6a00599d">&#9670;&#160;</a></span>fileName</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string_view const mimicpp::util::SourceLocation::fileName = __builtin_FILE()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1fcc2b804e5e579c1c39cb2349ecd05c" name="a1fcc2b804e5e579c1c39cb2349ecd05c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fcc2b804e5e579c1c39cb2349ecd05c">&#9670;&#160;</a></span>functionName</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string_view const std::string_view const mimicpp::util::SourceLocation::functionName = __builtin_FUNCTION()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abad289d66d0078662d45f4c4411b8b67" name="abad289d66d0078662d45f4c4411b8b67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abad289d66d0078662d45f4c4411b8b67">&#9670;&#160;</a></span>line</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string_view const std::string_view const std::size_t const mimicpp::util::SourceLocation::line</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= __builtin_LINE()) <span class="keyword">noexcept</span></div>
+<div class="line">            : m_FileName{<a class="code hl_variable" href="#a8c0b5c8afcb2968364bc24eb6a00599d">fileName</a>},</div>
+<div class="line">              m_FunctionName{<a class="code hl_variable" href="#a1fcc2b804e5e579c1c39cb2349ecd05c">functionName</a>},</div>
+<div class="line">              m_Line{<a class="code hl_variable" href="#abad289d66d0078662d45f4c4411b8b67">line</a>}</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keyword">static_assert</span>(0 == <span class="keyword">sizeof</span>...(canary), <span class="stringliteral">&quot;Do not supply custom arguments to util::SourceLocation.&quot;</span>);</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line">        <a class="code hl_function" href="#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(<a class="code hl_function" href="#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp;) = <span class="keywordflow">default</span></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a1fcc2b804e5e579c1c39cb2349ecd05c"><div class="ttname"><a href="#a1fcc2b804e5e579c1c39cb2349ecd05c">mimicpp::util::SourceLocation::functionName</a></div><div class="ttdeci">std::string_view const std::string_view const functionName</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:69</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a8c0b5c8afcb2968364bc24eb6a00599d"><div class="ttname"><a href="#a8c0b5c8afcb2968364bc24eb6a00599d">mimicpp::util::SourceLocation::fileName</a></div><div class="ttdeci">std::string_view const fileName</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:68</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_ab62062ed14cd1ddf120f3ffdf67c81a5"><div class="ttname"><a href="#ab62062ed14cd1ddf120f3ffdf67c81a5">mimicpp::util::SourceLocation::SourceLocation</a></div><div class="ttdeci">SourceLocation(SourceLocation &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_abad289d66d0078662d45f4c4411b8b67"><div class="ttname"><a href="#abad289d66d0078662d45f4c4411b8b67">mimicpp::util::SourceLocation::line</a></div><div class="ttdeci">std::string_view const std::string_view const std::size_t const line</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:70</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>mimic++/utilities/<a class="el" href="../../d3/d15/_source_location_8hpp_source.html">SourceLocation.hpp</a></li>
 </ul>
@@ -409,7 +482,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">util</a></li><li class="navelem"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">SourceLocation</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

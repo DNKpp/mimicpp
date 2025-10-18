@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -101,25 +101,27 @@ $(function(){initNavTree('df/d23/conceptmimicpp_1_1matcher__for.html','../../');
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d3/d58/_common_8hpp_source.html">Common.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../da/d5a/matchers_2_common_8hpp_source.html">Common.hpp</a>&gt;</code></p>
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> First, <span class="keyword">typename</span>... Others&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for</a> =  std::same_as&lt;T, std::remove_cvref_t&lt;T&gt;&gt;</div>
 <div class="line">                       &amp;&amp; std::is_move_constructible_v&lt;T&gt;</div>
 <div class="line">                       &amp;&amp; std::destructible&lt;T&gt;</div>
+<div class="line">                       &amp;&amp; <a class="code hl_variable" href="../../d1/d11/namespacemimicpp.html#a80a1ca200a0be306eb026302ae90b060">is_matcher_accepting_v</a>&lt;T, First, Others...&gt;</div>
 <div class="line">                       &amp;&amp; <span class="keyword">requires</span>(T <span class="keyword">const</span>&amp; matcher, First&amp; first, Others&amp;... others) {</div>
 <div class="line">                              { detail::matches_hook::matches(matcher, first, others...) } -&gt; <a class="code hl_concept" href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">util::boolean_testable</a>;</div>
 <div class="line">                              { detail::describe_hook::describe(matcher) } -&gt; util::explicitly_convertible_to&lt;std::optional&lt;StringT&gt;&gt;;</div>
 <div class="line">                          }</div>
-<div class="ttc" id="aconceptmimicpp_1_1matcher__for_html"><div class="ttname"><a href="../../df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for</a></div><div class="ttdef"><b>Definition</b> Common.hpp:111</div></div>
-<div class="ttc" id="aconceptmimicpp_1_1util_1_1boolean__testable_html"><div class="ttname"><a href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">mimicpp::util::boolean_testable</a></div><div class="ttdef"><b>Definition</b> Concepts.hpp:41</div></div>
+<div class="ttc" id="aconceptmimicpp_1_1matcher__for_html"><div class="ttname"><a href="../../df/d23/conceptmimicpp_1_1matcher__for.html">mimicpp::matcher_for</a></div><div class="ttdef"><b>Definition</b> Common.hpp:168</div></div>
+<div class="ttc" id="aconceptmimicpp_1_1util_1_1boolean__testable_html"><div class="ttname"><a href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">mimicpp::util::boolean_testable</a></div><div class="ttdoc">Determines, whether B behaves as a the builtin type bool.</div><div class="ttdef"><b>Definition</b> Concepts.hpp:66</div></div>
+<div class="ttc" id="anamespacemimicpp_html_a80a1ca200a0be306eb026302ae90b060"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a80a1ca200a0be306eb026302ae90b060">mimicpp::is_matcher_accepting_v</a></div><div class="ttdeci">constexpr bool is_matcher_accepting_v</div><div class="ttdoc">Determines, whether the given Matcher accepts the specified Args.</div><div class="ttdef"><b>Definition</b> Common.hpp:162</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../df/d23/conceptmimicpp_1_1matcher__for.html">matcher_for</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -143,17 +143,17 @@ $(function(){initNavTree('db/d83/_scoped_sequence_8hpp_source.html','../../'); i
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            : m_Builder{&amp;builder},</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>              m_SourceLocation{std::move(loc)},</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>              m_FinalizeFn{</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                  +[](void* storage, util::SourceLocation finalLoc, Sequence&amp; sequence) {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                  +[](void* storage, util::SourceLocation finalLoc, <a class="code hl_typedef" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga64985a7f6100743488af428fa6e3eeba">Sequence</a>&amp; sequence) {</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                      <span class="keyword">auto</span>* builderPtr = <span class="keyword">static_cast&lt;</span>BasicExpectationBuilder&lt;timesConfigured, Args...<span class="keyword">&gt;</span>*&gt;(storage);</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                      <span class="keywordflow">return</span> ScopedExpectation{</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                          std::move(*builderPtr) and <a class="code hl_function" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaccf673d491adb8bec0694d4ead2bf91a">expect::in_sequence</a>(sequence),</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                          std::move(*builderPtr) and <a class="code hl_function" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gafaccdca014c38611a9b8e3eef4d43a97">expect::in_sequence</a>(sequence),</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                          std::move(finalLoc)};</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                  }}</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        {</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        }</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        ScopedExpectation finalize(Sequence&amp; sequence)</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        ScopedExpectation finalize(<a class="code hl_typedef" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga64985a7f6100743488af428fa6e3eeba">Sequence</a>&amp; sequence)</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        {</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(m_Builder, <span class="stringliteral">&quot;Builder is nullptr.&quot;</span>);</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(m_FinalizeFn, <span class="stringliteral">&quot;FinalizeFn is nullptr.&quot;</span>);</div>
@@ -169,7 +169,7 @@ $(function(){initNavTree('db/d83/_scoped_sequence_8hpp_source.html','../../'); i
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keywordtype">void</span>* m_Builder;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        util::SourceLocation m_SourceLocation;</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">using </span>FinalizeFn = ScopedExpectation (*)(<span class="keywordtype">void</span>*, util::SourceLocation, Sequence&amp;);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        <span class="keyword">using </span>FinalizeFn = ScopedExpectation (*)(<span class="keywordtype">void</span>*, util::SourceLocation, <a class="code hl_typedef" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga64985a7f6100743488af428fa6e3eeba">Sequence</a>&amp;);</div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        FinalizeFn m_FinalizeFn;</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    };</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>}</div>
@@ -254,10 +254,11 @@ $(function(){initNavTree('db/d83/_scoped_sequence_8hpp_source.html','../../'); i
 <div class="ttc" id="aclassmimicpp_1_1_basic_scoped_sequence_html_ac4eb869f51039eeaf74ff97e2b55ec5d"><div class="ttname"><a href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#ac4eb869f51039eeaf74ff97e2b55ec5d">mimicpp::BasicScopedSequence::operator=</a></div><div class="ttdeci">BasicScopedSequence &amp; operator=(BasicScopedSequence &amp;&amp;)=default</div><div class="ttdoc">Defaulted move-assignment operator.</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_scoped_sequence_html_ace91408d86a79d585d0271ccd10a95a3"><div class="ttname"><a href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#ace91408d86a79d585d0271ccd10a95a3">mimicpp::BasicScopedSequence::BasicScopedSequence</a></div><div class="ttdeci">BasicScopedSequence(BasicScopedSequence &amp;&amp;)=default</div><div class="ttdoc">Defaulted move-constructor.</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_basic_scoped_sequence_html_ae1ff354dc83d222a7774c9944f174555"><div class="ttname"><a href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#ae1ff354dc83d222a7774c9944f174555">mimicpp::BasicScopedSequence::operator+=</a></div><div class="ttdeci">BasicScopedSequence &amp; operator+=(sequence::detail::ExpectationBuilderFinalizer&lt; BasicScopedSequence &gt; &amp;&amp;builder)</div><div class="ttdoc">Attaches a newly constructed expectation.</div><div class="ttdef"><b>Definition</b> ScopedSequence.hpp:151</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e_html_ga64985a7f6100743488af428fa6e3eeba"><div class="ttname"><a href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga64985a7f6100743488af428fa6e3eeba">mimicpp::Sequence</a></div><div class="ttdeci">LazySequence Sequence</div><div class="ttdoc">The default sequence type (LazySequence).</div><div class="ttdef"><b>Definition</b> Sequence.hpp:396</div></div>
 <div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e_html_ga9efea600d953c01de2d99d7d144264e4"><div class="ttname"><a href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga9efea600d953c01de2d99d7d144264e4">mimicpp::LazyScopedSequence</a></div><div class="ttdeci">BasicScopedSequence&lt; sequence::detail::LazyStrategy{}&gt; LazyScopedSequence</div><div class="ttdoc">The scoped-sequence type with lazy strategy.</div><div class="ttdef"><b>Definition</b> ScopedSequence.hpp:184</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e_html_gaccf673d491adb8bec0694d4ead2bf91a"><div class="ttname"><a href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaccf673d491adb8bec0694d4ead2bf91a">mimicpp::expect::in_sequence</a></div><div class="ttdeci">constexpr auto in_sequence(sequence::detail::BasicSequenceInterface&lt; Id, priorityStrategy &gt; &amp;sequence) noexcept</div><div class="ttdoc">Attaches the expectation onto a sequence.</div><div class="ttdef"><b>Definition</b> Sequence.hpp:431</div></div>
 <div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e_html_gaf7c9e177bed083aa4c61b13b78d4be0f"><div class="ttname"><a href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf7c9e177bed083aa4c61b13b78d4be0f">mimicpp::ScopedSequence</a></div><div class="ttdeci">LazyScopedSequence ScopedSequence</div><div class="ttdoc">The default scoped-sequence type (lazy strategy).</div><div class="ttdef"><b>Definition</b> ScopedSequence.hpp:190</div></div>
 <div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e_html_gaf9c4e7108a57906787965591f6064d82"><div class="ttname"><a href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf9c4e7108a57906787965591f6064d82">mimicpp::GreedyScopedSequence</a></div><div class="ttdeci">BasicScopedSequence&lt; sequence::detail::GreedyStrategy{}&gt; GreedyScopedSequence</div><div class="ttdoc">The scoped-sequence type with greedy strategy.</div><div class="ttdef"><b>Definition</b> ScopedSequence.hpp:178</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e_html_gafaccdca014c38611a9b8e3eef4d43a97"><div class="ttname"><a href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gafaccdca014c38611a9b8e3eef4d43a97">mimicpp::expect::in_sequence</a></div><div class="ttdeci">constexpr auto in_sequence(sequence::detail::BasicSequenceInterface&lt; Id, priorityStrategy &gt; &amp;sequence)</div><div class="ttdoc">Attaches the expectation onto a sequence.</div><div class="ttdef"><b>Definition</b> Sequence.hpp:437</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> Call.hpp:24</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -265,7 +266,7 @@ $(function(){initNavTree('db/d83/_scoped_sequence_8hpp_source.html','../../'); i
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../db/d83/_scoped_sequence_8hpp.html">ScopedSequence.hpp</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

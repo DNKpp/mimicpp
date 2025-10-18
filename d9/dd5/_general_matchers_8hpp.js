@@ -8,5 +8,6 @@ var _general_matchers_8hpp =
     [ "mimicpp::matches::lt", "d4/d14/group___m_a_t_c_h_e_r_s.html#ga242b5abc5a65421f91a90575acbceb66", null ],
     [ "mimicpp::matches::ne", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0", null ],
     [ "mimicpp::matches::predicate", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c", null ],
-    [ "mimicpp::matches::_", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e", null ]
+    [ "mimicpp::matches::_", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e", null ],
+    [ "mimicpp::matches::type", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12", null ]
 ];

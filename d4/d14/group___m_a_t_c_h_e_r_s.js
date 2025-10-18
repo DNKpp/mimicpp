@@ -13,6 +13,11 @@ var group___m_a_t_c_h_e_r_s =
       [ "describe", "db/de6/classmimicpp_1_1_wildcard_matcher.html#a650fb20b5ba02c58f8e54b3f6b1e0b77", null ],
       [ "matches", "db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc", null ]
     ] ],
+    [ "mimicpp::TypeMatcher< T >", "d6/db3/classmimicpp_1_1_type_matcher.html", [
+      [ "is_accepting", "d6/db3/classmimicpp_1_1_type_matcher.html#ad038609fce3bf59eaee411e9d101ee78", null ],
+      [ "describe", "d6/db3/classmimicpp_1_1_type_matcher.html#ad891a2a7cb82ab6d16b4d97cf4624394", null ],
+      [ "matches", "d6/db3/classmimicpp_1_1_type_matcher.html#aedf616914d85441281a97e230645d5d5", null ]
+    ] ],
     [ "mimicpp::matches::approx_abs", "d4/d14/group___m_a_t_c_h_e_r_s.html#ga5ad9dad2daac36bba4d44337b7833c31", null ],
     [ "mimicpp::matches::approx_rel", "d4/d14/group___m_a_t_c_h_e_r_s.html#ga0b2791cdf415fd2b897164f6d82cfe54", null ],
     [ "mimicpp::matches::approx_rel", "d4/d14/group___m_a_t_c_h_e_r_s.html#ga462b450f6d9186a2b190716daf53cf9f", null ],
@@ -25,5 +30,6 @@ var group___m_a_t_c_h_e_r_s =
     [ "mimicpp::matches::NaN", "d4/d14/group___m_a_t_c_h_e_r_s.html#ga234eebf558269d3b39a8f64e8b9e100d", null ],
     [ "mimicpp::matches::ne", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaf71aaa68ad1bea169500e80263d51db0", null ],
     [ "mimicpp::matches::predicate", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c", null ],
-    [ "mimicpp::matches::_", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e", null ]
+    [ "mimicpp::matches::_", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e", null ],
+    [ "mimicpp::matches::type", "d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12", null ]
 ];

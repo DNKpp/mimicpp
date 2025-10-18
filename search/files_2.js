@@ -8,9 +8,10 @@ var searchData=
   ['callreport_2ehpp_5',['CallReport.hpp',['../d9/d6c/_call_report_8hpp.html',1,'']]],
   ['catch2_2ehpp_6',['Catch2.hpp',['../d3/d04/_catch2_8hpp.html',1,'']]],
   ['cmakelists_2etxt_7',['CMakeLists.txt',['../dd/d68/_c_make_lists_8txt.html',1,'']]],
-  ['common_2ehpp_8',['Common.hpp',['../d3/d58/_common_8hpp.html',1,'']]],
+  ['common_2ehpp_8',['Common.hpp',['../dd/dfa/macros_2_common_8hpp.html',1,'(Global Namespace)'],['../da/d5a/matchers_2_common_8hpp.html',1,'(Global Namespace)']]],
   ['commontypes_2ehpp_9',['CommonTypes.hpp',['../df/d0b/state_2_common_types_8hpp.html',1,'(Global Namespace)'],['../d4/d96/type_2_common_types_8hpp.html',1,'(Global Namespace)']]],
   ['concepts_2ehpp_10',['Concepts.hpp',['../d9/db9/_concepts_8hpp.html',1,'']]],
   ['config_2ehpp_11',['Config.hpp',['../d8/dd2/_config_8hpp.html',1,'']]],
-  ['controlpolicies_2ehpp_12',['ControlPolicies.hpp',['../db/d70/_control_policies_8hpp.html',1,'']]]
+  ['controlpolicies_2ehpp_12',['ControlPolicies.hpp',['../db/d70/_control_policies_8hpp.html',1,'']]],
+  ['cpptrace_2ehpp_13',['cpptrace.hpp',['../d2/dd7/cpptrace_8hpp.html',1,'']]]
 ];

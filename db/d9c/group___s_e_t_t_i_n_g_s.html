@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -111,6 +111,9 @@ Functions</h2></td></tr>
 <tr class="memitem:gae1e66f9f6bdfb761224d25fac7556a2b" id="r_gae1e66f9f6bdfb761224d25fac7556a2b"><td class="memItemLeft" align="right" valign="top">std::atomic_bool &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae1e66f9f6bdfb761224d25fac7556a2b">mimicpp::settings::report_success</a> () noexcept</td></tr>
 <tr class="memdesc:gae1e66f9f6bdfb761224d25fac7556a2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls whether successful matches are reported.  <br /></td></tr>
 <tr class="separator:gae1e66f9f6bdfb761224d25fac7556a2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa51ae037436c54a4a0d9999aaca67511" id="r_gaa51ae037436c54a4a0d9999aaca67511"><td class="memItemLeft" align="right" valign="top">std::atomic_size_t &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa51ae037436c54a4a0d9999aaca67511">mimicpp::settings::stacktrace_base_skip</a> () noexcept</td></tr>
+<tr class="memdesc:gaa51ae037436c54a4a0d9999aaca67511"><td class="mdescLeft">&#160;</td><td class="mdescRight">Controls whether the base stacktrace-skip value.  <br /></td></tr>
+<tr class="separator:gaa51ae037436c54a4a0d9999aaca67511"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Contains global settings, which can be changed at runtime. </p>
@@ -149,12 +152,40 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="gaa51ae037436c54a4a0d9999aaca67511" name="gaa51ae037436c54a4a0d9999aaca67511"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa51ae037436c54a4a0d9999aaca67511">&#9670;&#160;</a></span>stacktrace_base_skip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::atomic_size_t &amp; mimicpp::settings::stacktrace_base_skip </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Controls whether the base stacktrace-skip value. </p>
+<p>This value will be added to all user-supplied <em>skip</em> values. This comes in handy when the current stacktrace backend captures more frames than other backends would usually do. </p><dl class="section return"><dt>Returns</dt><dd>a mutable reference to the actual settings value. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

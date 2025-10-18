@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['✅_20quality_0',['✅ Quality',['../index.html#autotoc_md52',1,'']]]
+  ['✅_20quality_0',['✅ Quality',['../index.html#autotoc_md48',1,'']]]
 ];

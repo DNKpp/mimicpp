@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -179,7 +179,7 @@ $(function(){initNavTree('da/deb/_templated_8hpp_source.html','../../'); initRes
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keyword">template</span> &lt;&gt;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="keyword">struct </span>type_list_pop_back_if_can&lt;util::type_list&lt;&gt;&gt;</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    {</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keyword">using </span>type = util::type_list&lt;&gt;;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = util::type_list&lt;&gt;;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    };</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    <span class="keyword">template</span> &lt;</div>
@@ -188,7 +188,7 @@ $(function(){initNavTree('da/deb/_templated_8hpp_source.html','../../'); initRes
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        <span class="keyword">typename</span> PopBack = type_list_pop_back_if_can&lt;ArgList&gt;&gt;</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">struct </span>drop_default_args_for_impl</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">using </span>type = ArgList;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">type</a> = ArgList;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    };</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ArgList, <span class="keyword">template</span> &lt;<span class="keyword">typename</span>...&gt; <span class="keyword">typename</span> Template, <span class="keyword">typename</span> PopBack&gt;</div>
@@ -344,13 +344,14 @@ $(function(){initNavTree('da/deb/_templated_8hpp_source.html','../../'); initRes
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_print_type_8hpp_html"><div class="ttname"><a href="../../da/db0/_print_type_8hpp.html">PrintType.hpp</a></div></div>
 <div class="ttc" id="a_type_list_8hpp_html"><div class="ttname"><a href="../../df/d2e/_type_list_8hpp.html">TypeList.hpp</a></div></div>
+<div class="ttc" id="agroup___m_a_t_c_h_e_r_s_html_gaa4e3d7f5e74af5877f1466395f7d0c12"><div class="ttname"><a href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">mimicpp::matches::type</a></div><div class="ttdeci">constexpr TypeMatcher&lt; T &gt; type</div><div class="ttdoc">Matcher, which can be used as a last resort to disambiguate similar overloads.</div><div class="ttdef"><b>Definition</b> GeneralMatchers.hpp:297</div></div>
 <div class="ttc" id="agroup___p_r_i_n_t_i_n_g___s_t_a_t_e_html_ga4dbd7a323f25eecf13e0b10059f52ea9"><div class="ttname"><a href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">mimicpp::print</a></div><div class="ttdeci">constexpr printing::PrintFn print</div><div class="ttdoc">Functional object, converting the given object to its textual representation.</div><div class="ttdef"><b>Definition</b> Print.hpp:183</div></div>
 <div class="ttc" id="agroup___p_r_i_n_t_i_n_g___t_y_p_e_html_ga18ad74efa55d75d3db296d3ec7d7d450"><div class="ttname"><a href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga18ad74efa55d75d3db296d3ec7d7d450">mimicpp::printing::type::type_name</a></div><div class="ttdeci">StringT type_name()</div><div class="ttdoc">Returns the (potentially demangled) name.</div><div class="ttdef"><b>Definition</b> PrintType.hpp:191</div></div>
 <div class="ttc" id="agroup___p_r_i_n_t_i_n_g___t_y_p_e_html_ga2cc0c1474116143316d553c4fe01b367"><div class="ttname"><a href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga2cc0c1474116143316d553c4fe01b367">mimicpp::printing::type::prettify_type</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_type(OutIter out, StringT name)</div><div class="ttdoc">Prettifies a demangled name.</div><div class="ttdef"><b>Definition</b> PrintType.hpp:197</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1util_html_ade36f86aac332827425e8d069c0e6586"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#ade36f86aac332827425e8d069c0e6586">mimicpp::util::type_list_pop_back_t</a></div><div class="ttdeci">typename type_list_pop_back&lt; TypeList &gt;::type type_list_pop_back_t</div><div class="ttdef"><b>Definition</b> TypeList.hpp:86</div></div>
 <div class="ttc" id="anamespacemimicpp_html_a6b761dc4fb4f361e95dd3ec37da4a8a8"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8">mimicpp::StringStreamT</a></div><div class="ttdeci">std::basic_ostringstream&lt; CharT, CharTraitsT &gt; StringStreamT</div><div class="ttdef"><b>Definition</b> Format.hpp:35</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:343</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:342</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afa212d98f2d4a7016c05d3e9171431c6"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">mimicpp::StringViewT</a></div><div class="ttdeci">std::basic_string_view&lt; CharT, CharTraitsT &gt; StringViewT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:392</div></div>
+<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:391</div></div>
 <div class="ttc" id="aprinting_2_fwd_8hpp_html"><div class="ttname"><a href="../../de/d52/printing_2_fwd_8hpp.html">Fwd.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
@@ -358,7 +359,7 @@ $(function(){initNavTree('da/deb/_templated_8hpp_source.html','../../'); initRes
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_092aa99ea44c2ea5c05e2b02d3022b6c.html">printing</a></li><li class="navelem"><a class="el" href="../../dir_f6af1113142479a5fa0447ddd9471db7.html">type</a></li><li class="navelem"><a class="el" href="../../da/deb/_templated_8hpp.html">Templated.hpp</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

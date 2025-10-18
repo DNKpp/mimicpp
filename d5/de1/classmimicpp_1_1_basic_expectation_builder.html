@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -138,16 +138,16 @@ requires std::constructible_from&lt;FinalizePolicy, FinalizePolicyArg&gt; &amp;&
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a723237e2c180da1f8733f55d11a985d9" id="r_a723237e2c180da1f8733f55d11a985d9"><td class="memTemplParams" colspan="2">template&lt;typename Policy&gt; <br />
-requires std::same_as&lt;<a class="el" href="../../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html">expectation_policies::InitFinalize</a>, FinalizePolicy&gt; &amp;&amp; (!std::same_as&lt;<a class="el" href="../../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html">expectation_policies::InitFinalize</a>, std::remove_cvref_t&lt;Policy&gt;&gt;) &amp;&amp; finalize_policy_for&lt;std::remove_cvref_t&lt;Policy&gt;, Signature&gt;</td></tr>
-<tr class="memitem:a723237e2c180da1f8733f55d11a985d9"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a723237e2c180da1f8733f55d11a985d9">operator&amp;&amp;</a> (<a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;&amp;builder, Policy &amp;&amp;policy)</td></tr>
-<tr class="separator:a723237e2c180da1f8733f55d11a985d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3357fce0e6322910c6b3076d019d1a1" id="r_aa3357fce0e6322910c6b3076d019d1a1"><td class="memTemplParams" colspan="2">template&lt;typename Policy&gt; <br />
+requires finalize_policy_for&lt;std::remove_cvref_t&lt;Policy&gt;, Signature&gt;</td></tr>
+<tr class="memitem:aa3357fce0e6322910c6b3076d019d1a1"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa3357fce0e6322910c6b3076d019d1a1">operator&amp;&amp;</a> (<a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;&amp;builder, Policy &amp;&amp;policy)</td></tr>
+<tr class="separator:aa3357fce0e6322910c6b3076d019d1a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b894766d046e6e699680be3fea28219" id="r_a1b894766d046e6e699680be3fea28219"><td class="memTemplParams" colspan="2">template&lt;typename Policy&gt; <br />
 requires expectation_policy_for&lt;std::remove_cvref_t&lt;Policy&gt;, Signature&gt;</td></tr>
 <tr class="memitem:a1b894766d046e6e699680be3fea28219"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1b894766d046e6e699680be3fea28219">operator&amp;&amp;</a> (<a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;&amp;builder, Policy &amp;&amp;policy)</td></tr>
 <tr class="separator:a1b894766d046e6e699680be3fea28219"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae29bd9e2b56b6b56690d9cc1e958b01" id="r_aae29bd9e2b56b6b56690d9cc1e958b01"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae29bd9e2b56b6b56690d9cc1e958b01">operator&amp;&amp;</a> (<a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;&amp;builder, detail::TimesConfig &amp;&amp;config)</td></tr>
-<tr class="separator:aae29bd9e2b56b6b56690d9cc1e958b01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a432b5de09677926441ea961f92aa7e09" id="r_a432b5de09677926441ea961f92aa7e09"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a432b5de09677926441ea961f92aa7e09">operator&amp;&amp;</a> (<a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;&amp;builder, detail::TimesConfig &amp;&amp;config)</td></tr>
+<tr class="separator:a432b5de09677926441ea961f92aa7e09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e72ea8043a9303edd13307ded34ba7c" id="r_a4e72ea8043a9303edd13307ded34ba7c"><td class="memTemplParams" colspan="2">template&lt;typename... Sequences&gt; </td></tr>
 <tr class="memitem:a4e72ea8043a9303edd13307ded34ba7c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a4e72ea8043a9303edd13307ded34ba7c">operator&amp;&amp;</a> (<a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a> &amp;&amp;builder, sequence::detail::Config&lt; Sequences... &gt; &amp;&amp;config)</td></tr>
 <tr class="separator:a4e72ea8043a9303edd13307ded34ba7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -445,8 +445,8 @@ Here is the call graph for this function:</div>
 </div>
 </div>
 <h2 class="groupheader">Friends And Related Symbol Documentation</h2>
-<a id="aae29bd9e2b56b6b56690d9cc1e958b01" name="aae29bd9e2b56b6b56690d9cc1e958b01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae29bd9e2b56b6b56690d9cc1e958b01">&#9670;&#160;</a></span>operator&amp;&amp; <span class="overload">[1/4]</span></h2>
+<a id="a432b5de09677926441ea961f92aa7e09" name="a432b5de09677926441ea961f92aa7e09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a432b5de09677926441ea961f92aa7e09">&#9670;&#160;</a></span>operator&amp;&amp; <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -476,8 +476,8 @@ template&lt;bool timesConfigured, typename SequenceConfig, typename Signature, t
 
 </div>
 </div>
-<a id="a723237e2c180da1f8733f55d11a985d9" name="a723237e2c180da1f8733f55d11a985d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a723237e2c180da1f8733f55d11a985d9">&#9670;&#160;</a></span>operator&amp;&amp; <span class="overload">[2/4]</span></h2>
+<a id="aa3357fce0e6322910c6b3076d019d1a1" name="aa3357fce0e6322910c6b3076d019d1a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3357fce0e6322910c6b3076d019d1a1">&#9670;&#160;</a></span>operator&amp;&amp; <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -485,7 +485,7 @@ template&lt;bool timesConfigured, typename SequenceConfig, typename Signature, t
 template&lt;bool timesConfigured, typename SequenceConfig, typename Signature, typename FinalizePolicy, expectation_policy_for&lt; Signature &gt;... Policies&gt; </div>
 <div class="memtemplate">
 template&lt;typename Policy&gt; <br />
-requires std::same_as&lt;<a class="el" href="../../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html">expectation_policies::InitFinalize</a>, FinalizePolicy&gt; &amp;&amp; (!std::same_as&lt;<a class="el" href="../../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html">expectation_policies::InitFinalize</a>, std::remove_cvref_t&lt;Policy&gt;&gt;) &amp;&amp; finalize_policy_for&lt;std::remove_cvref_t&lt;Policy&gt;, Signature&gt;</div>
+requires finalize_policy_for&lt;std::remove_cvref_t&lt;Policy&gt;, Signature&gt;</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -586,7 +586,7 @@ template&lt;typename... Sequences&gt; </div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d5/de1/classmimicpp_1_1_basic_expectation_builder.html">BasicExpectationBuilder</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

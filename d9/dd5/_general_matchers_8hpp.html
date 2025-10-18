@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -107,7 +107,7 @@ $(function(){initNavTree('d9/dd5/_general_matchers_8hpp.html','../../'); initRes
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/dd2/_config_8hpp_source.html">mimic++/config/Config.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/d58/_common_8hpp_source.html">mimic++/matchers/Common.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../da/d5a/matchers_2_common_8hpp_source.html">mimic++/matchers/Common.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d5/dec/_format_8hpp_source.html">mimic++/printing/Format.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d52/printing_2_fwd_8hpp_source.html">mimic++/printing/Fwd.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d62/_state_printer_8hpp_source.html">mimic++/printing/StatePrinter.hpp</a>&quot;</code><br />
@@ -136,6 +136,9 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html">mimicpp::WildcardMatcher</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matcher, which never fails.  <a href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/db3/classmimicpp_1_1_type_matcher.html">mimicpp::TypeMatcher&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matcher, which can be used to disambiguate between similar overloads.  <a href="../../d6/db3/classmimicpp_1_1_type_matcher.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -185,6 +188,10 @@ Variables</h2></td></tr>
 <tr class="memitem:gaa74e274d126775d36dd9ebfd5879b61e" id="r_gaa74e274d126775d36dd9ebfd5879b61e"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html">WildcardMatcher</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a> {}</td></tr>
 <tr class="memdesc:gaa74e274d126775d36dd9ebfd5879b61e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The wildcard matcher, always matching.  <br /></td></tr>
 <tr class="separator:gaa74e274d126775d36dd9ebfd5879b61e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa4e3d7f5e74af5877f1466395f7d0c12" id="r_gaa4e3d7f5e74af5877f1466395f7d0c12"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:gaa4e3d7f5e74af5877f1466395f7d0c12"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d6/db3/classmimicpp_1_1_type_matcher.html">TypeMatcher</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa4e3d7f5e74af5877f1466395f7d0c12">mimicpp::matches::type</a> {}</td></tr>
+<tr class="memdesc:gaa4e3d7f5e74af5877f1466395f7d0c12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matcher, which can be used as a last resort to disambiguate similar overloads.  <br /></td></tr>
+<tr class="separator:gaa4e3d7f5e74af5877f1466395f7d0c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -192,7 +199,7 @@ Variables</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_c8613b7c6812845d24ae03bf6f0c949e.html">matchers</a></li><li class="navelem"><a class="el" href="../../d9/dd5/_general_matchers_8hpp.html">GeneralMatchers.hpp</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

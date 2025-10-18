@@ -11,8 +11,8 @@ var dir_d1aac795712c1a80b032d3d2760385d8 =
     [ "CallConvention.hpp", "d7/ded/_call_convention_8hpp.html", "d7/ded/_call_convention_8hpp" ],
     [ "Expectation.hpp", "d5/d8a/_expectation_8hpp.html", null ],
     [ "ExpectationBuilder.hpp", "d2/d4f/_expectation_builder_8hpp.html", "d2/d4f/_expectation_builder_8hpp" ],
+    [ "Facade.hpp", "d6/dc3/_facade_8hpp.html", "d6/dc3/_facade_8hpp" ],
     [ "Fwd.hpp", "df/dde/_fwd_8hpp.html", "df/dde/_fwd_8hpp" ],
-    [ "InterfaceMock.hpp", "d9/dc3/_interface_mock_8hpp.html", null ],
     [ "mimic++.hpp", "d0/db9/mimic_09_09_8hpp.html", null ],
     [ "Mock.hpp", "d5/dc5/_mock_8hpp.html", "d5/dc5/_mock_8hpp" ],
     [ "ObjectWatcher.hpp", "d5/d92/_object_watcher_8hpp.html", "d5/d92/_object_watcher_8hpp" ],
@@ -20,7 +20,6 @@ var dir_d1aac795712c1a80b032d3d2760385d8 =
     [ "Reporting.hpp", "d7/deb/_reporting_8hpp.html", null ],
     [ "ScopedSequence.hpp", "db/d83/_scoped_sequence_8hpp.html", "db/d83/_scoped_sequence_8hpp" ],
     [ "Sequence.hpp", "d8/de4/_sequence_8hpp.html", "d8/de4/_sequence_8hpp" ],
-    [ "Stacktrace.hpp", "de/df5/_stacktrace_8hpp.html", "de/df5/_stacktrace_8hpp" ],
     [ "String.hpp", "d9/dc5/_string_8hpp.html", "d9/dc5/_string_8hpp" ],
     [ "TypeTraits.hpp", "d8/d32/_type_traits_8hpp.html", "d8/d32/_type_traits_8hpp" ],
     [ "Utilities.hpp", "dc/d54/_utilities_8hpp.html", null ]

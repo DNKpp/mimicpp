@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>mimic++: mimic++/Stacktrace.hpp File Reference</title>
+<title>mimic++: mimic++/utilities/Stacktrace.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v8</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
    </div>
   </td>
  </tr>
@@ -107,20 +107,20 @@ $(function(){initNavTree('de/df5/_stacktrace_8hpp.html','../../'); initResizable
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/dd2/_config_8hpp_source.html">mimic++/config/Config.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dd/d90/_settings_8hpp_source.html">mimic++/config/Settings.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d4b/_path_printer_8hpp_source.html">mimic++/printing/PathPrinter.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d62/_state_printer_8hpp_source.html">mimic++/printing/StatePrinter.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d6/d35/_type_printer_8hpp_source.html">mimic++/printing/TypePrinter.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../dc/dec/_always_false_8hpp_source.html">mimic++/utilities/AlwaysFalse.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/db9/_concepts_8hpp_source.html">mimic++/utilities/Concepts.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d65/_priority_tag_8hpp_source.html">mimic++/utilities/PriorityTag.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
-<code>#include &lt;any&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;ranges&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
-<code>#include &lt;variant&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Stacktrace.hpp:</div>
 <div class="dyncontent">
@@ -136,15 +136,15 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d18/classmimicpp_1_1_stacktrace.html">mimicpp::Stacktrace</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple type-erase stacktrace abstraction.  <a href="../../db/d18/classmimicpp_1_1_stacktrace.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/df5/classmimicpp_1_1util_1_1stacktrace_1_1_null_backend.html">mimicpp::util::stacktrace::NullBackend</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The fallback stacktrace-backend.  <a href="../../d8/df5/classmimicpp_1_1util_1_1stacktrace_1_1_null_backend.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html">mimicpp::stacktrace::NullBackend</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The fallback stacktrace-backend.  <a href="../../d0/d60/classmimicpp_1_1stacktrace_1_1_null_backend.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html">mimicpp::util::stacktrace::backend_traits&lt; mimicpp::util::stacktrace::NullBackend &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d5e/structmimicpp_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1stacktrace_1_1_null_backend_01_4.html">mimicpp::stacktrace::backend_traits&lt; mimicpp::stacktrace::NullBackend &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html">mimicpp::util::Stacktrace</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple type-erased stacktrace abstraction.  <a href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc2/structmimicpp_1_1stacktrace_1_1find__backend.html">mimicpp::stacktrace::find_backend</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d4c/structmimicpp_1_1util_1_1stacktrace_1_1find__backend.html">mimicpp::util::stacktrace::find_backend</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -153,28 +153,30 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d84/namespacemimicpp_1_1custom.html">mimicpp::custom</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d4b/namespacemimicpp_1_1stacktrace.html">mimicpp::stacktrace</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html">mimicpp::util::stacktrace</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
 Concepts</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d8e/conceptmimicpp_1_1stacktrace_1_1backend.html">mimicpp::stacktrace::backend</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/ded/conceptmimicpp_1_1util_1_1stacktrace_1_1backend.html">mimicpp::util::stacktrace::backend</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the given type satisfies the requirements of a stacktrace backend. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga5c4d1f1cf21a4da73caaec337ae42ceb" id="r_ga5c4d1f1cf21a4da73caaec337ae42ceb"><td class="memItemLeft" align="right" valign="top">constexpr detail::current_hook::current_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d23/group___s_t_a_c_k_t_r_a_c_e.html#ga5c4d1f1cf21a4da73caaec337ae42ceb">mimicpp::stacktrace::current</a> {}</td></tr>
-<tr class="memdesc:ga5c4d1f1cf21a4da73caaec337ae42ceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object, which generates the current-stacktrace.  <br /></td></tr>
-<tr class="separator:ga5c4d1f1cf21a4da73caaec337ae42ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa467fc74d9e076d53e5406ec8de8015f" id="r_gaa467fc74d9e076d53e5406ec8de8015f"><td class="memItemLeft" align="right" valign="top">constexpr detail::current_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">mimicpp::util::stacktrace::current</a> {}</td></tr>
+<tr class="memdesc:gaa467fc74d9e076d53e5406ec8de8015f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object, which generates the current-stacktrace.  <br /></td></tr>
+<tr class="separator:gaa467fc74d9e076d53e5406ec8de8015f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../de/df5/_stacktrace_8hpp.html">Stacktrace.hpp</a></li>
-    <li class="footer">Generated on Fri Jun 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_2f75f8b84a1b0b31df547365a4a1eaf8.html">utilities</a></li><li class="navelem"><a class="el" href="../../de/df5/_stacktrace_8hpp.html">Stacktrace.hpp</a></li>
+    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
