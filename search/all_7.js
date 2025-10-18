@@ -42,7 +42,7 @@ var searchData=
   ['experimental_39',['experimental',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md36',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md40',1,'Why is this feature experimental?'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md43',1,'Why is this feature experimental?']]],
   ['experimental_20c_2020_20modules_40',['Enable experimental C++20 modules.',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md45',1,'']]],
   ['experimental_20catch2_20matcher_20integration_41',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'']]],
-  ['experimental_20matcher_20integration_42',['Experimental Matcher integration',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md25',1,'']]],
+  ['experimental_20matcher_20integration_42',['Experimental Matcher integration',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md26',1,'']]],
   ['experimental_20pretty_20type_20printing_43',['Enable experimental pretty type-printing',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md42',1,'']]],
   ['experimental_20stacktrace_20support_44',['Enable experimental stacktrace support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md38',1,'']]],
   ['experimental_20string_20matcher_20unicode_20support_45',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md35',1,'']]],
