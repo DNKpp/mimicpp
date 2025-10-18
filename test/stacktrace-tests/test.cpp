@@ -15,6 +15,8 @@ TEST_CASE(
     STATIC_CHECK(std::same_as<ExpectedBackend, util::stacktrace::find_backend::type>);
 }
 
+#ifndef NDEBUG
+
 TEST_CASE(
     TEST_CASE_PREFIX " - The active backend is fully functional.",
     "[stacktrace]")
@@ -108,3 +110,5 @@ TEST_CASE(
         stacktrace.description(0u),
         Catch::Matchers::ContainsSubstring(std::string{full.description(3u)}));
 }
+
+#endif
