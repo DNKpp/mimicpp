@@ -7,7 +7,7 @@ var searchData=
   ['backend_5ftraits_3c_20cpptrace_3a_3astacktrace_20_3e_4',['backend_traits&lt; cpptrace::stacktrace &gt;',['../dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html',1,'mimicpp::util::stacktrace']]],
   ['backend_5ftraits_3c_20mimicpp_3a_3autil_3a_3astacktrace_3a_3anullbackend_20_3e_5',['backend_traits&lt; mimicpp::util::stacktrace::NullBackend &gt;',['../de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html',1,'mimicpp::util::stacktrace']]],
   ['backend_5ftraits_3c_20std_3a_3abasic_5fstacktrace_3c_20allocator_20_3e_20_3e_6',['backend_traits&lt; std::basic_stacktrace&lt; Allocator &gt; &gt;',['../d9/de3/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01std_1_1basic__stacktrace_3_01_allocator_01_4_01_4.html',1,'mimicpp::util::stacktrace']]],
-  ['backends_7',['Custom Stacktrace Backends',['../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#autotoc_md26',1,'']]],
+  ['backends_7',['Custom Stacktrace Backends',['../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#autotoc_md25',1,'']]],
   ['basestacktraceskip_8',['baseStacktraceSkip',['../d4/d44/classmimicpp_1_1call_1_1_info.html#aaed1d17e900f8ee111c3b8cd55ad8582',1,'mimicpp::call::Info']]],
   ['basic_5fas_5fmember_9',['basic_as_member',['../dc/d2a/structmimicpp_1_1facade_1_1basic__as__member.html',1,'mimicpp::facade']]],
   ['basic_5fas_5fmember_3c_20mock_20_3e_10',['basic_as_member&lt; Mock &gt;',['../dc/d2a/structmimicpp_1_1facade_1_1basic__as__member.html',1,'mimicpp::facade']]],
