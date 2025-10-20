@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"da/d2c/group___f_a_c_a_d_e___d_e_t_a_i_l___m_a_k_e___p_a_r_a_m___l_i_s_t.html#gabbb445760536f41ecf62e0f385e2ddac":[2,2,0,3,0],
+"da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html":[3,0,0,13,0,1],
+"da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html":[5,0,0,7,0,1],
 "da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html#a2f75cfa9e51870e4a81b57fa9f7534b2":[3,0,0,13,0,1,2],
 "da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html#a2f75cfa9e51870e4a81b57fa9f7534b2":[5,0,0,7,0,1,2],
 "da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html#a34fd023812e221bdebb2de158d6e1429":[3,0,0,13,0,1,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "dd/d2e/classmimicpp_1_1reporting_1_1_error.html#a871f2174d19307e3b1d15eb923127f48":[3,0,0,9,3,1],
 "dd/d2e/classmimicpp_1_1reporting_1_1_error.html#a871f2174d19307e3b1d15eb923127f48":[5,0,0,5,3,1],
 "dd/d2e/classmimicpp_1_1reporting_1_1_error.html#aee2132f4440c16e4a285185cc0f34504":[3,0,0,9,3,2],
-"dd/d2e/classmimicpp_1_1reporting_1_1_error.html#aee2132f4440c16e4a285185cc0f34504":[5,0,0,5,3,2],
-"dd/d4f/group___r_e_p_o_r_t_i_n_g.html":[2,8],
-"dd/d4f/group___r_e_p_o_r_t_i_n_g.html#gacc0d9f819eebe61a00d604e2457536a1":[2,8,3],
-"dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html":[3,0,0,3,5]
+"dd/d2e/classmimicpp_1_1reporting_1_1_error.html#aee2132f4440c16e4a285185cc0f34504":[5,0,0,5,3,2]
 };
