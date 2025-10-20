@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.1.0</span>
    </div>
   </td>
  </tr>
@@ -102,7 +102,13 @@ $(function(){initNavTree('d7/d67/_version_8hpp.html','../../'); initResizable(tr
   <div class="headertitle"><div class="title">Version.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
+<div class="textblock"><code>#include &quot;<a class="el" href="../../dd/dfa/macros_2_common_8hpp_source.html">mimic++/macros/Common.hpp</a>&quot;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for Version.hpp:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d9/d39/_version_8hpp__incl.svg" width="211" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="../../d1/d81/_version_8hpp__dep__incl.svg" width="194" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
@@ -112,7 +118,13 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a83f6bbc3a769a19868dcdd904593474a" id="r_a83f6bbc3a769a19868dcdd904593474a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83f6bbc3a769a19868dcdd904593474a">MIMICPP_VERSION</a>&#160;&#160;&#160;9</td></tr>
+<tr class="memitem:abc919001d4dd925822880fde780c33f5" id="r_abc919001d4dd925822880fde780c33f5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc919001d4dd925822880fde780c33f5">MIMICPP_VERSION_MAJOR</a>&#160;&#160;&#160;9</td></tr>
+<tr class="separator:abc919001d4dd925822880fde780c33f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4dde18a6c96b1a822b10dfcd5237ba2" id="r_ad4dde18a6c96b1a822b10dfcd5237ba2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4dde18a6c96b1a822b10dfcd5237ba2">MIMICPP_VERSION_MINOR</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:ad4dde18a6c96b1a822b10dfcd5237ba2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a019e096209f3af6341b0e891e365d9eb" id="r_a019e096209f3af6341b0e891e365d9eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a019e096209f3af6341b0e891e365d9eb">MIMICPP_VERSION_PATCH</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a019e096209f3af6341b0e891e365d9eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83f6bbc3a769a19868dcdd904593474a" id="r_a83f6bbc3a769a19868dcdd904593474a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83f6bbc3a769a19868dcdd904593474a">MIMICPP_VERSION</a></td></tr>
 <tr class="separator:a83f6bbc3a769a19868dcdd904593474a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -123,7 +135,56 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MIMICPP_VERSION&#160;&#160;&#160;9</td>
+          <td class="memname">#define MIMICPP_VERSION</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_define" href="../../d7/d30/group___m_a_c_r_o___d_e_t_a_i_l___s_t_r_i_n_g_i_f_y.html#ga7646b94c1ce8a79a92d84c16fbe31fc6">MIMICPP_DETAIL_STRINGIFY</a>(<a class="code hl_define" href="#abc919001d4dd925822880fde780c33f5">MIMICPP_VERSION_MAJOR</a>) <span class="stringliteral">&quot;.&quot;</span> \</div>
+<div class="line">    MIMICPP_DETAIL_STRINGIFY(<a class="code hl_define" href="#ad4dde18a6c96b1a822b10dfcd5237ba2">MIMICPP_VERSION_MINOR</a>) <span class="stringliteral">&quot;.&quot;</span> \</div>
+<div class="line">    MIMICPP_DETAIL_STRINGIFY(<a class="code hl_define" href="#a019e096209f3af6341b0e891e365d9eb">MIMICPP_VERSION_PATCH</a>)</div>
+<div class="ttc" id="a_version_8hpp_html_a019e096209f3af6341b0e891e365d9eb"><div class="ttname"><a href="#a019e096209f3af6341b0e891e365d9eb">MIMICPP_VERSION_PATCH</a></div><div class="ttdeci">#define MIMICPP_VERSION_PATCH</div><div class="ttdef"><b>Definition</b> Version.hpp:15</div></div>
+<div class="ttc" id="a_version_8hpp_html_abc919001d4dd925822880fde780c33f5"><div class="ttname"><a href="#abc919001d4dd925822880fde780c33f5">MIMICPP_VERSION_MAJOR</a></div><div class="ttdeci">#define MIMICPP_VERSION_MAJOR</div><div class="ttdef"><b>Definition</b> Version.hpp:13</div></div>
+<div class="ttc" id="a_version_8hpp_html_ad4dde18a6c96b1a822b10dfcd5237ba2"><div class="ttname"><a href="#ad4dde18a6c96b1a822b10dfcd5237ba2">MIMICPP_VERSION_MINOR</a></div><div class="ttdeci">#define MIMICPP_VERSION_MINOR</div><div class="ttdef"><b>Definition</b> Version.hpp:14</div></div>
+<div class="ttc" id="agroup___m_a_c_r_o___d_e_t_a_i_l___s_t_r_i_n_g_i_f_y_html_ga7646b94c1ce8a79a92d84c16fbe31fc6"><div class="ttname"><a href="../../d7/d30/group___m_a_c_r_o___d_e_t_a_i_l___s_t_r_i_n_g_i_f_y.html#ga7646b94c1ce8a79a92d84c16fbe31fc6">MIMICPP_DETAIL_STRINGIFY</a></div><div class="ttdeci">#define MIMICPP_DETAIL_STRINGIFY(...)</div><div class="ttdoc">Stringifies the provided arguments.</div><div class="ttdef"><b>Definition</b> Common.hpp:180</div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="abc919001d4dd925822880fde780c33f5" name="abc919001d4dd925822880fde780c33f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc919001d4dd925822880fde780c33f5">&#9670;&#160;</a></span>MIMICPP_VERSION_MAJOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MIMICPP_VERSION_MAJOR&#160;&#160;&#160;9</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad4dde18a6c96b1a822b10dfcd5237ba2" name="ad4dde18a6c96b1a822b10dfcd5237ba2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4dde18a6c96b1a822b10dfcd5237ba2">&#9670;&#160;</a></span>MIMICPP_VERSION_MINOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MIMICPP_VERSION_MINOR&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a019e096209f3af6341b0e891e365d9eb" name="a019e096209f3af6341b0e891e365d9eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a019e096209f3af6341b0e891e365d9eb">&#9670;&#160;</a></span>MIMICPP_VERSION_PATCH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MIMICPP_VERSION_PATCH&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -136,7 +197,7 @@ Macros</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_08ebf9492445e058b0ba4156a3978cfb.html">config</a></li><li class="navelem"><a class="el" href="../../d7/d67/_version_8hpp.html">Version.hpp</a></li>
-    <li class="footer">Generated on Sat Oct 18 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Oct 20 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
