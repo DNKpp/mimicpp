@@ -9,7 +9,7 @@ set(MESSAGE_PREFIX "mimic++:")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(Mimic++-ReadProjectVersion)
-read_project_version("include/mimic++/config/Version.hpp" MIMICPP_VERSION)
+mimicpp_read_project_version("include/mimic++/config/Version.hpp" MIMICPP_VERSION)
 
 project(
 	mimicpp
