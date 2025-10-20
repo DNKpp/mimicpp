@@ -3,7 +3,7 @@
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
 
-message(DEBUG "${MESSAGE_PREFIX} Searching for installed {cpptrace}-package.")
+message(DEBUG "${MESSAGE_PREFIX} Searching for `cpptrace`-package.")
 
 include(CMakeDependentOption)
 cmake_dependent_option(
@@ -15,17 +15,15 @@ cmake_dependent_option(
 )
 
 if (NOT MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE)
-    set(CPPTRACE_DISABLE_CXX_20_MODULES ON CACHE BOOL "")
+    set(CPPTRACE_DISABLE_CXX_20_MODULES ON CACHE BOOL "" FORCE)
 else ()
-    set(CPPTRACE_DISABLE_CXX_20_MODULES OFF CACHE BOOL "")
+    set(CPPTRACE_DISABLE_CXX_20_MODULES OFF CACHE BOOL "" FORCE)
 endif ()
 
-find_package(cpptrace QUIET CONFIG)
+find_package(cpptrace QUIET)
 if (NOT cpptrace_FOUND)
-    message(DEBUG "${MESSAGE_PREFIX} No installed {cpptrace}-package found. Fetching via cpm.")
+    message(DEBUG "${MESSAGE_PREFIX} No installed `cpptrace`-package found. Fetching via cpm.")
 
     include(get_cpm)
     CPMAddPackage("gh:jeremy-rifkin/cpptrace@1.0.2")
 endif ()
-
-find_package(cpptrace REQUIRED CONFIG)

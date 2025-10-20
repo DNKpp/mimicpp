@@ -13,9 +13,9 @@ cmake_dependent_option(
     "MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__"
     OFF
 )
-set(FMT_MODULE ${MIMICPP_CONFIG_IMPORT_FMT} CACHE BOOL "")
+set(FMT_MODULE ${MIMICPP_CONFIG_IMPORT_FMT} CACHE BOOL "" FORCE)
 
-find_package(fmt QUIET CONFIG)
+find_package(fmt QUIET)
 if (NOT fmt_FOUND)
     include(get_cpm)
     CPMAddPackage("gh:fmtlib/fmt#11.1.4")
