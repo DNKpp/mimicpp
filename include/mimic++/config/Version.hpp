@@ -11,7 +11,7 @@
 #include "mimic++/macros/Common.hpp"
 
 #define MIMICPP_VERSION_MAJOR 9
-#define MIMICPP_VERSION_MINOR 0
+#define MIMICPP_VERSION_MINOR 1
 #define MIMICPP_VERSION_PATCH 0
 
 #define MIMICPP_VERSION \
