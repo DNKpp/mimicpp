@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/Config/Version.hpp"
+#include "mimic++/config/Version.hpp"
 
 TEST_CASE(
     "MIMICPP_VERSION_MAJOR is an integral number.",
