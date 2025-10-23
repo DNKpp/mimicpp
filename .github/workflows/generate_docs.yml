@@ -6,12 +6,12 @@
 name: generate docs
 
 on:
-    push:
-        branches: [main, development]
-    pull_request:
-        branches: [main, development]
-    release:
-        types: [released]
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
+  release:
+    types: [ released ]
 
 jobs:
   create-documentation:
@@ -19,49 +19,49 @@ jobs:
 
     # this is required for the gh-pages deployment
     permissions:
-        contents: write
+      contents: write
 
     steps:
       - uses: actions/checkout@v5
 
-    # we must configure, because the Doxyfile is generated via cmake
-    - name: Configure
-      run: |
-        cmake \
-            -S . \
-            -B build \
-            --log-level=VERBOSE \
-            -DMIMICPP_CONFIGURE_DOXYGEN=ON \
-            -DMIMICPP_BUILD_TESTS=OFF \
-            -DMIMICPP_BUILD_EXAMPLES=OFF
+      # we must configure, because the Doxyfile is generated via cmake
+      - name: Configure
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              --log-level=VERBOSE \
+              -DMIMICPP_CONFIGURE_DOXYGEN=ON \
+              -DMIMICPP_BUILD_TESTS=OFF \
+              -DMIMICPP_BUILD_EXAMPLES=OFF
 
-    - name: Generate Doxygen Documentation
-      uses: mattnotmitt/doxygen-action@edge
-      with:
-        doxyfile-path: build/docs/Doxyfile
+      - name: Generate Doxygen Documentation
+        uses: mattnotmitt/doxygen-action@edge
+        with:
+          doxyfile-path: build/docs/Doxyfile
 
-    - name: Upload html documentation
-      uses: actions/upload-artifact@v4
-      with:
-        name: HTML-Documentation
-        path: build/docs/html
+      - name: Upload html documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: HTML-Documentation
+          path: build/docs/html
 
-    # publish to main gh-pages, when main branch is pushed
-    - name: Deploy to GitHub main Pages
-      uses: peaceiris/actions-gh-pages@v4
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/docs/html
+      # publish to main gh-pages, when main branch is pushed
+      - name: Deploy to GitHub main Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/docs/html
 
-    # publish to dev gh-pages, when development branch is pushed
-    - name: Deploy to GitHub dev Pages
-      uses: peaceiris/actions-gh-pages@v4
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development' }}
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: build/docs/html
-        publish_branch: dev-gh-pages
+      # publish to dev gh-pages, when development branch is pushed
+      - name: Deploy to GitHub dev Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/development' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/docs/html
+          publish_branch: dev-gh-pages
 
   release-documentation:
     runs-on: ubuntu-latest
@@ -74,23 +74,23 @@ jobs:
 
     steps:
       - uses: actions/download-artifact@v5
-      with:
-        name: HTML-Documentation
-        path: ./documentation
+        with:
+          name: HTML-Documentation
+          path: ./documentation
 
-    - name: zip documentation
-      uses: thedoctor0/zip-release@0.7.6
-      with:
-        type: 'zip'
-        filename: "documentation.zip"
-        path: ./documentation
+      - name: zip documentation
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: "documentation.zip"
+          path: ./documentation
 
-    - name: attach release assets
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "documentation.zip"
-        token: ${{ secrets.GITHUB_TOKEN }}
-        allowUpdates: true
-        artifactErrorsFailBuild: true
-        omitBody: true
-        omitName: true
+      - name: attach release assets
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "documentation.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          omitBody: true
+          omitName: true
