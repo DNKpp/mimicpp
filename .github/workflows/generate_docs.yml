@@ -16,8 +16,6 @@ on:
 jobs:
   create-documentation:
     runs-on: ubuntu-latest
-    container:
-        image: ghcr.io/dnkpp/gcc:14
 
     # this is required for the gh-pages deployment
     permissions:
