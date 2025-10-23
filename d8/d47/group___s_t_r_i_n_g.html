@@ -256,7 +256,7 @@ Custom char-types and related strings</h2>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(s);</div>
 <div class="line"> </div>
 <div class="line">    mock(s);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md21"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md23"></a>
 Support for printing</h3>
 <p>The current setup is already enough, that these strings can be printed. Unfortunately this will print the whole string just as comma separated hex-values, because <code>mimic++</code> doesn't know yet, how to print the underlying char-type. This can easily be fixed by proving a <code><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">custom::Printer</a></code> specialization for that particular char-type. </p><dl class="section note"><dt>Note</dt><dd>Proving a custom printer for the char-type is enough, to make any related string type printable, too. </dd>
 <dd>
@@ -300,7 +300,7 @@ Support for case-insensitive matching</h3>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Oct 20 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Thu Oct 23 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

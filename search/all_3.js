@@ -1,7 +1,7 @@
 var searchData=
 [
   ['a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
-  ['a_20word_20on_20sequences_20with_20times_1',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md23',1,'']]],
+  ['a_20word_20on_20sequences_20with_20times_1',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md22',1,'']]],
   ['access_2',['access',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#adab672e3469b40473720dc427ef0b064',1,'mimicpp::printing::type::lexing::texts']]],
   ['acknowledgement_3',['Special Acknowledgement',['../index.html#autotoc_md78',1,'']]],
   ['adapters_4',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
