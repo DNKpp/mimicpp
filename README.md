@@ -70,9 +70,9 @@ Quick access to **documentation, package managers, and community support**.
   * [Quick Demo](#quick-demo)
   * [Examples](#examples)
 * [Features & Customizability](#features--customizability)
-  * [Stringification](#stringification)
   * [Matchers](#matchers)
   * [Policies](#policies)
+  * [Stringification](#stringification)
   * [Bring your own string- and char-types](#bring-your-own-string--and-char-types)
   * [Call-Conventions](#call-conventions)
 * [Integration](#integration)
@@ -88,6 +88,7 @@ Quick access to **documentation, package managers, and community support**.
 
 ---
 
+<a name="introduction"></a>
 ## Introduction
 
 ``mimic++`` is a C++20 mocking framework designed to offer a natural and expressive syntax.
@@ -104,6 +105,7 @@ cheat-sheet of the latest release.
 You can also check out the examples folder or experiment with the framework online
 at [godbolt.org](https://godbolt.org/z/TsE7bb5eG).
 
+<a name="core-design"></a>
 ### Core Design
 
 The framework is built around two core concepts: **Mocks** and **Expectations**.
@@ -120,6 +122,7 @@ accurately represented and maintained.
 
 In essence, Mocks and Expectations work hand in hand to facilitate effective testing.
 
+<a name="quick-demo"></a>
 ### Quick Demo
 
 A robust mocking framework must effectively notify users of errors by providing all relevant details — without
@@ -179,6 +182,7 @@ Stacktrace:
 // ...
 ```
 
+<a name="examples"></a>
 ### Examples
 
 <details>
@@ -393,6 +397,7 @@ TEST_CASE("LifetimeWatcher and RelocationWatcher can trace the lifetime and relo
 
 ---
 
+<a name="features--customizability"></a>
 ## Features & Customizability
 
 A framework should be a versatile tool that can be utilized in various ways and tailored to meet specific needs.
@@ -400,6 +405,7 @@ For this reason, ``mimic++`` offers a range of customization options.
 For example, users can create their own expectation policies and integrate them seamlessly without modifying any line of
 the ``mimic++`` codebase.
 
+<a name="matchers"></a>
 ### Matchers
 
 Matchers are used to check whether arguments satisfy specific requirements. While there are many existing matchers
@@ -410,6 +416,7 @@ However, if you need full control, you can start with a fresh type (without any 
 Custom matchers simply need to conform to the ``mimicpp::matcher_for`` concept.
 For more information, please refer to the documentation.
 
+<a name="policies"></a>
 ### Policies
 
 There are multiple types of policies, depending on the tasks they are designed to fulfill.
@@ -421,6 +428,7 @@ These policies can implement arbitrary logic, so feel free to experiment.
 There is no base type requirement; they simply need to satisfy either the ``mimicpp::expectation_policy_for``,
 ``mimicpp::control_policy``, or ``mimicpp::finalize_policy_for``.
 
+<a name="stringification"></a>
 ### Stringification
 
 ``mimic++`` cannot provide stringification for every type, but having a proper textual representation of an object can
@@ -434,6 +442,7 @@ specify how a given type should be printed.
 Custom specializations will always take precedence over any pre-existing printing methods, enabling users to override
 the stringification of internal report types as well.
 
+<a name="bring-your-own-string--and-char-types"></a>
 ### Bring your own string- and char-types
 
 If you are working with a large framework, there’s a good chance that it utilizes a custom string or character type (
@@ -444,6 +453,7 @@ compatible with the existing string matchers.
 ``mimic++`` supports this; users simply need to provide some trait-specializations.
 For more information, please refer to the string section of the documentation.
 
+<a name="call-conventions"></a>
 ### Call-Conventions
 
 Call conventions are a somewhat controversial topic, as the C++ language definition does not explicitly address them.
@@ -457,11 +467,13 @@ framework compatible with any call convention they require.
 
 ---
 
+<a name="integration"></a>
 ## Integration
 
 ``mimic++`` is a header-only library, allowing users to easily access all features by simply including the
 ``mimic++/mimic++.hpp`` header.
 
+<a name="portability"></a>
 ### Portability
 
 ``mimic++`` is designed to work with any C++20 conforming compiler, independent of the underlying platform or
@@ -472,6 +484,7 @@ which is continuously verified through an extensive CI/CD workflow that tracks n
 In fact, ``mimic++`` is known to work on Windows, Ubuntu, and macOS with both ``x86_64`` and ``x86_32`` architectures.
 For a more comprehensive overview, please refer to the [Testing](#testing) section.
 
+<a name="cmake"></a>
 ### CMake
 
 The integration into a cmake project is straight-forward.
@@ -509,12 +522,14 @@ CPMAddPackage("gh:DNKpp/mimicpp@5") # or gh:DNKpp/mimicpp#<commit_hash>
 # do not forget linking via target_link_libraries as shown above
 ```
 
+<a name="packaging-tools"></a>
 ### Packaging Tools
 
 * [vcpkg](https://github.com/Microsoft/vcpkg) - The Microsoft VC++ Packaging Tool.
   Thanks to contributions from community members, ``mimic++`` also has a **vcpkg port**, which can be found
   [here](https://vcpkg.link/ports/mimicpp).
 
+<a name="single-header"></a>
 ### Single-Header
 
 As an alternative, each release includes a header file named ``mimic++-amalgamated.hpp``, which contains all
@@ -523,6 +538,7 @@ and can be easily dropped into any C++20 project.
 After that, users can simply select the appropriate adapter header from the ``adapters``-folder and include it in their
 project as well.
 
+<a name="test-framework"></a>
 ### Test Framework
 
 Mocking frameworks typically do not exist in isolation; rather, they are advanced techniques for creating tests.
@@ -541,6 +557,7 @@ The following official adapters exist and can be included from the `mimic++_ext/
 * [Doctest](https://github.com/doctest/doctest) (tested with v2.4.12)
 * [GTest](https://github.com/google/googletest) (tested with v1.15.2)
 
+<a name="documentation"></a>
 ### Documentation
 
 The documentation is generated using Doxygen.
@@ -556,6 +573,7 @@ Each release includes the generated documentation as an attachment.
 
 ---
 
+<a name="testing"></a>
 ## Testing
 
 ``mimic++`` employs a strict testing policy, ensuring that each official feature is thoroughly tested.
@@ -643,6 +661,7 @@ Note: macOS officially doesn't support 32bit builds, so they are not tested.
 
 ---
 
+<a name="known-issues"></a>
 ## Known Issues
 
 ### Clang-18.1 + libc++
@@ -658,6 +677,7 @@ For more information have a look [here](https://github.com/llvm/llvm-project/iss
 
 ---
 
+<a name="special-acknowledgement"></a>
 ## Special Acknowledgement
 
 This framework is heavily inspired by the well-known [trompeloeil](https://github.com/rollbear/trompeloeil), which I
