@@ -490,11 +490,7 @@ For a more comprehensive overview, please refer to the [Testing](#testing) secti
 The integration into a cmake project is straight-forward.
 
 ```cmake
-target_link_libraries(
-    <your_target_name>
-    PUBLIC
-    mimicpp::mimicpp
-)
+target_link_libraries(<your_target_name> PUBLIC mimicpp::mimicpp)
 ```
 
 Users can either select a commit in the **main** branch or a version tag and utilize the CMake ``FetchContent`` module:
@@ -502,9 +498,8 @@ Users can either select a commit in the **main** branch or a version tag and uti
 ```cmake
 include(FetchContent)
 
-FetchContent_Declare(
-    mimicpp
-        VERSION 5 # or GIT_TAG <commit_hash> 
+FetchContent_Declare(mimicpp
+        VERSION 9.1.0 # or GIT_TAG <commit_hash> 
     GIT_REPOSITORY https://github.com/DNKpp/mimicpp
 )
 
@@ -518,7 +513,7 @@ on the ``FetchContent`` feature:
 ```cmake
 include(CPM.cmake) # or include(get_cpm.cmake)
 
-CPMAddPackage("gh:DNKpp/mimicpp@5") # or gh:DNKpp/mimicpp#<commit_hash>
+CPMAddPackage("gh:DNKpp/mimicpp@9.1.0") # or gh:DNKpp/mimicpp#<commit_hash>
 # do not forget linking via target_link_libraries as shown above
 ```
 
