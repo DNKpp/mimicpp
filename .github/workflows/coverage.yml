@@ -35,7 +35,7 @@ jobs:
 
       - name: Install gcovr
         run: |
-          python -m pip install git+https://github.com/gcovr/gcovr.git@3e5e4343658175fcf786092a06336e592ecb1ed0
+          python -m pip install git+https://github.com/gcovr/gcovr.git@faa1add67a30afcd3e067f4074d8ac7246f53644
 
       - name: Print versions
         run: |
