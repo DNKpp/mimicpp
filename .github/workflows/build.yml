@@ -352,7 +352,9 @@ jobs:
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
+                                          -D MIMICPP_ENABLE_UNICODE_STR_MATCHER_TESTS=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
+                                          -D MIMICPP_ENABLE_STACKTRACE_TESTS=OFF \
                                       )" >> $GITHUB_ENV
 
       - name: Setup compatibility source-location option
@@ -568,36 +570,6 @@ jobs:
       #################################
 
       #################################
-      # Feature: Unicode string-matchers
-      - name: Configure with unicode string-matchers
-        shell: bash
-        run: |
-          cmake \
-              -S . \
-              -B build \
-              ${{ env.CMAKE_BASE_OPTIONS }} \
-              -D MIMICPP_CONFIG_USE_FMT=YES \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES
-
-      - name: Build with unicode string-matchers
-        shell: bash
-        run: |
-          cmake --build build \
-              -j5 \
-              ${{ env.CMAKE_BUILD_EXTRA }}
-
-      - name: Run tests unicode string-matchers
-        shell: bash
-        env:
-          CTEST_OUTPUT_ON_FAILURE: 1
-        run: |
-          ctest --test-dir build \
-              -C ${{ matrix.build_mode }} \
-              -j5
-      #
-      #################################
-
-      #################################
       # Feature: experimental stacktrace
       - name: Select stacktrace backend
         id: config-stacktrace-backend-test
@@ -715,6 +687,39 @@ jobs:
           CTEST_OUTPUT_ON_FAILURE: 1
         run: |
           ctest --test-dir build/test/stacktrace-tests \
+              -C ${{ matrix.build_mode }} \
+              -j5
+      #
+      #################################
+
+      #################################
+      # Feature: Unicode string-matchers
+      - name: Configure with unicode string-matchers
+        shell: bash
+        run: |
+          cmake \
+              -S . \
+              -B build \
+              ${{ env.CMAKE_BASE_OPTIONS }} \
+              -D MIMICPP_CONFIG_USE_FMT=YES \
+              -D MIMICPP_BUILD_EXAMPLES=OFF \
+              -D MIMICPP_ENABLE_UNIT_TESTS=OFF \
+              -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES \
+              -D MIMICPP_ENABLE_UNICODE_STR_MATCHER_TESTS=YES
+
+      - name: Build with unicode string-matchers
+        shell: bash
+        run: |
+          cmake --build build \
+              -j5 \
+              ${{ env.CMAKE_BUILD_EXTRA }}
+
+      - name: Run tests with unicode string-matchers
+        shell: bash
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: |
+          ctest --test-dir build/test/unicode-str-matcher-tests \
               -C ${{ matrix.build_mode }} \
               -j5
       #
