@@ -325,33 +325,30 @@ TEMPLATE_TEST_CASE(
 }
 
 TEST_CASE(
-    "matches::str::contains case-insensitive overload supports empty strings.",
+    "matches::str::contains case-insensitive overload supports empty char-strings.",
     "[matcher][matcher::str]")
 {
-    SECTION("For char-strings.")
+    constexpr auto* pattern = "";
+    constexpr auto* alternativeMatch = " ";
+
+    SECTION("For plain matchers.")
     {
-        constexpr auto* pattern = "";
-        constexpr auto* alternativeMatch = " ";
+        auto const matcher = matches::str::contains(pattern, mimicpp::case_insensitive);
+        CHECK_THAT(
+            matcher.describe(),
+            Matches::Equals("case-insensitively contains \"\""));
+        CHECK(matcher.matches(pattern));
+        CHECK(matcher.matches(alternativeMatch));
+    }
 
-        SECTION("For plain matchers.")
-        {
-            auto const matcher = matches::str::contains(pattern, mimicpp::case_insensitive);
-            CHECK_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains \"\""));
-            CHECK(matcher.matches(pattern));
-            CHECK(matcher.matches(alternativeMatch));
-        }
-
-        SECTION("For inverted matchers.")
-        {
-            const auto matcher = !matches::str::contains(pattern, mimicpp::case_insensitive);
-            CHECK_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains not \"\""));
-            CHECK(!matcher.matches(pattern));
-            CHECK(!matcher.matches(alternativeMatch));
-        }
+    SECTION("For inverted matchers.")
+    {
+        const auto matcher = !matches::str::contains(pattern, mimicpp::case_insensitive);
+        CHECK_THAT(
+            matcher.describe(),
+            Matches::Equals("case-insensitively contains not \"\""));
+        CHECK(!matcher.matches(pattern));
+        CHECK(!matcher.matches(alternativeMatch));
     }
 }
 
