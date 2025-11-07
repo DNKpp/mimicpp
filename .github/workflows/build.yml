@@ -81,10 +81,29 @@ jobs:
             suffix: "ASan"
             os: "ubuntu-latest"
             container:
-              image: "ghcr.io/dnkpp/clang:20"
+              image: "ghcr.io/dnkpp/clang:21"
             compiler_name: "clang"
-            compiler_version: "20"
+            compiler_version: "21"
             asan: true
+            cxx20_modules: true
+
+          - prefix: "Ubuntu"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:21"
+            compiler_name: "clang"
+            compiler_version: "21"
+            only_cpptrace: true
+            libcxx: true
+            cxx20_modules: false
+
+          - prefix: "Ubuntu"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:21"
+            compiler_name: "clang"
+            compiler_version: "21"
             cxx20_modules: true
 
           - prefix: "Ubuntu"
