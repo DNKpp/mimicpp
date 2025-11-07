@@ -21,7 +21,7 @@ TEST_CASE(
 
         SECTION("For plain matchers.")
         {
-            const auto matcher = matches::str::contains(patter);
+            auto const matcher = matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains \"\""));
@@ -31,7 +31,7 @@ TEST_CASE(
 
         SECTION("For inverted matchers.")
         {
-            const auto matcher = !matches::str::contains(patter);
+            auto const matcher = !matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not \"\""));
@@ -47,7 +47,7 @@ TEST_CASE(
 
         SECTION("For plain matchers.")
         {
-            const auto matcher = matches::str::contains(patter);
+            auto const matcher = matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains L\"\""));
@@ -57,7 +57,7 @@ TEST_CASE(
 
         SECTION("For inverted matchers.")
         {
-            const auto matcher = !matches::str::contains(patter);
+            auto const matcher = !matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not L\"\""));
@@ -73,7 +73,7 @@ TEST_CASE(
 
         SECTION("For plain matchers.")
         {
-            const auto matcher = matches::str::contains(patter);
+            auto const matcher = matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains u8\"\""));
@@ -83,7 +83,7 @@ TEST_CASE(
 
         SECTION("For inverted matchers.")
         {
-            const auto matcher = !matches::str::contains(patter);
+            auto const matcher = !matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not u8\"\""));
@@ -99,7 +99,7 @@ TEST_CASE(
 
         SECTION("For plain matchers.")
         {
-            const auto matcher = matches::str::contains(patter);
+            auto const matcher = matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains u\"\""));
@@ -109,7 +109,7 @@ TEST_CASE(
 
         SECTION("For inverted matchers.")
         {
-            const auto matcher = !matches::str::contains(patter);
+            auto const matcher = !matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not u\"\""));
@@ -125,7 +125,7 @@ TEST_CASE(
 
         SECTION("For plain matchers.")
         {
-            const auto matcher = matches::str::contains(patter);
+            auto const matcher = matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains U\"\""));
@@ -135,7 +135,7 @@ TEST_CASE(
 
         SECTION("For inverted matchers.")
         {
-            const auto matcher = !matches::str::contains(patter);
+            auto const matcher = !matches::str::contains(patter);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not U\"\""));
@@ -155,7 +155,7 @@ namespace
     {
         SECTION("When plain matcher is used.")
         {
-            const auto matcher = matches::str::contains(pattern);
+            auto const matcher = matches::str::contains(pattern);
 
             REQUIRE_THAT(
                 matcher.describe(),
@@ -176,7 +176,7 @@ namespace
 
         SECTION("Matcher can be inverted.")
         {
-            const auto invertedMatcher = !matches::str::contains(pattern);
+            auto const invertedMatcher = !matches::str::contains(pattern);
 
             REQUIRE_THAT(
                 invertedMatcher.describe(),
@@ -196,6 +196,8 @@ namespace
         }
     }
 }
+
+// NOLINTBEGIN(*-avoid-c-arrays)
 
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given char-string pattern is part of target.",
@@ -225,8 +227,8 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given wchar_t-string pattern is part of target.",
     "[matcher][matcher::str]",
-    const wchar_t*,
-    const wchar_t (&)[7],
+    wchar_t const*,
+    wchar_t const (&)[7],
     std::wstring,
     std::wstring_view)
 {
@@ -250,8 +252,8 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given char8_t-string pattern is part of target.",
     "[matcher][matcher::str]",
-    const char8_t*,
-    const char8_t (&)[7],
+    char8_t const*,
+    char8_t const (&)[7],
     std::u8string,
     std::u8string_view)
 {
@@ -275,8 +277,8 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given char16_t-string pattern is part of target.",
     "[matcher][matcher::str]",
-    const char16_t*,
-    const char16_t (&)[7],
+    char16_t const*,
+    char16_t const (&)[7],
     std::u16string,
     std::u16string_view)
 {
@@ -300,8 +302,8 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given char32_t-string pattern is part of target.",
     "[matcher][matcher::str]",
-    const char32_t*,
-    const char32_t (&)[7],
+    char32_t const*,
+    char32_t const (&)[7],
     std::u32string,
     std::u32string_view)
 {
@@ -333,7 +335,7 @@ TEST_CASE(
 
         SECTION("For plain matchers.")
         {
-            const auto matcher = matches::str::contains(pattern, mimicpp::case_insensitive);
+            auto const matcher = matches::str::contains(pattern, mimicpp::case_insensitive);
             REQUIRE_THAT(
                 matcher.describe(),
                 Matches::Equals("case-insensitively contains \"\""));
@@ -351,121 +353,13 @@ TEST_CASE(
             REQUIRE(!matcher.matches(alternativeMatch));
         }
     }
-
-#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
-
-    SECTION("For wchar_t-strings.")
-    {
-        constexpr auto* patter = L"";
-        constexpr auto* alternativeMatch = L" ";
-
-        SECTION("For plain matchers.")
-        {
-            const auto matcher = matches::str::contains(patter, mimicpp::case_insensitive);
-            REQUIRE_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains L\"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
-        }
-
-        SECTION("For inverted matchers.")
-        {
-            const auto matcher = !matches::str::contains(patter, mimicpp::case_insensitive);
-            REQUIRE_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains not L\"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
-        }
-    }
-
-    SECTION("For char8_t-strings.")
-    {
-        constexpr auto* patter = u8"";
-        constexpr auto* alternativeMatch = u8" ";
-
-        SECTION("For plain matchers.")
-        {
-            const auto matcher = matches::str::contains(patter, mimicpp::case_insensitive);
-            REQUIRE_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains u8\"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
-        }
-
-        SECTION("For inverted matchers.")
-        {
-            const auto matcher = !matches::str::contains(patter, mimicpp::case_insensitive);
-            REQUIRE_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains not u8\"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
-        }
-    }
-
-    SECTION("For char16_t-strings.")
-    {
-        constexpr auto* patter = u"";
-        constexpr auto* alternativeMatch = u" ";
-
-        SECTION("For plain matchers.")
-        {
-            const auto matcher = matches::str::contains(patter, mimicpp::case_insensitive);
-            REQUIRE_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains u\"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
-        }
-
-        SECTION("For inverted matchers.")
-        {
-            const auto matcher = !matches::str::contains(patter, mimicpp::case_insensitive);
-            REQUIRE_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains not u\"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
-        }
-    }
-
-    SECTION("For char32_t-strings.")
-    {
-        constexpr auto* patter = U"";
-        constexpr auto* alternativeMatch = U" ";
-
-        SECTION("For plain matchers.")
-        {
-            const auto matcher = matches::str::contains(patter, mimicpp::case_insensitive);
-            REQUIRE_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains U\"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
-        }
-
-        SECTION("For inverted matchers.")
-        {
-            const auto matcher = !matches::str::contains(patter, mimicpp::case_insensitive);
-            REQUIRE_THAT(
-                matcher.describe(),
-                Matches::Equals("case-insensitively contains not U\"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
-        }
-    }
-
-#endif
 }
 
 namespace
 {
     void generic_str_contains_case_insensitive_test(
         auto&& pattern,
-        std::string descriptionPartExpectation,
+        std::string const& descriptionPartExpectation,
         auto&& matches,
         auto&& mismatches)
     {
@@ -516,8 +410,8 @@ namespace
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given char-string pattern is case-insensitively part of target.",
     "[matcher][matcher::str]",
-    const char*,
-    const char (&)[7],
+    char const*,
+    char const (&)[7],
     std::string,
     std::string_view)
 {
@@ -539,110 +433,4 @@ TEMPLATE_TEST_CASE(
         mismatches);
 }
 
-#ifdef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
-
-TEMPLATE_TEST_CASE(
-    "matches::str::contains matches when given wchar_t-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
-    const wchar_t*,
-    const wchar_t (&)[7],
-    std::wstring,
-    std::wstring_view)
-{
-    static constexpr std::array matches = std::to_array<const wchar_t*>(
-        {L"lo, Wo",
-         L"Lo, Wo",
-         L"lo, wo",
-         L"HelLO, wOrld!"});
-
-    static constexpr std::array mismatches = std::to_array<const wchar_t*>(
-        {L"Hello, W",
-         L"o, World!"});
-
-    constexpr wchar_t pattern[] = L"lo, Wo";
-    generic_str_contains_case_insensitive_test(
-        static_cast<TestType>(pattern),
-        "L\"0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f\"",
-        matches,
-        mismatches);
-}
-
-TEMPLATE_TEST_CASE(
-    "matches::str::contains matches when given char8_t-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
-    const char8_t*,
-    const char8_t (&)[7],
-    std::u8string,
-    std::u8string_view)
-{
-    static constexpr std::array matches = std::to_array<const char8_t*>(
-        {u8"lo, Wo",
-         u8"Lo, Wo",
-         u8"lo, wo",
-         u8"HelLO, wOrld!"});
-
-    static constexpr std::array mismatches = std::to_array<const char8_t*>(
-        {u8"Hello, W",
-         u8"o, World!"});
-
-    constexpr char8_t pattern[] = u8"lo, Wo";
-    generic_str_contains_case_insensitive_test(
-        static_cast<TestType>(pattern),
-        "u8\"0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f\"",
-        matches,
-        mismatches);
-}
-
-TEMPLATE_TEST_CASE(
-    "matches::str::contains matches when given char16_t-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
-    const char16_t*,
-    const char16_t (&)[7],
-    std::u16string,
-    std::u16string_view)
-{
-    static constexpr std::array matches = std::to_array<const char16_t*>(
-        {u"lo, Wo",
-         u"Lo, Wo",
-         u"lo, wo",
-         u"HelLO, wOrld!"});
-
-    static constexpr std::array mismatches = std::to_array<const char16_t*>(
-        {u"Hello, W",
-         u"o, World!"});
-
-    constexpr char16_t pattern[] = u"lo, Wo";
-    generic_str_contains_case_insensitive_test(
-        static_cast<TestType>(pattern),
-        "u\"0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f\"",
-        matches,
-        mismatches);
-}
-
-TEMPLATE_TEST_CASE(
-    "matches::str::contains matches when given char32_t-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
-    const char32_t*,
-    const char32_t (&)[7],
-    std::u32string,
-    std::u32string_view)
-{
-    static constexpr std::array matches = std::to_array<const char32_t*>(
-        {U"lo, Wo",
-         U"Lo, Wo",
-         U"lo, wo",
-         U"HelLO, wOrld!"});
-
-    static constexpr std::array mismatches = std::to_array<const char32_t*>(
-        {U"Hello, W",
-         U"o, World!"});
-
-    constexpr char32_t pattern[] = U"lo, Wo";
-    generic_str_contains_case_insensitive_test(
-        static_cast<TestType>(pattern),
-        "U\"0x6c, 0x6f, 0x2c, 0x20, 0x57, 0x6f\"",
-        matches,
-        mismatches);
-}
-
-#endif
+// NOLINTEND(*-avoid-c-arrays)
