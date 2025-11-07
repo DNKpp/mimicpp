@@ -7,6 +7,7 @@ set(TARGET_NAME mimicpp-unicode-str-matcher-tests)
 
 add_executable(${TARGET_NAME}
     "StringContains.cpp"
+    "../unit-tests/matchers/StringContains.cpp"
 )
 
 include(Mimic++-EnableSanitizers)

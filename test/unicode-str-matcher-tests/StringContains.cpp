@@ -5,11 +5,15 @@
 
 #include "mimic++/matchers/StringMatchers.hpp"
 
+#ifndef MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER
+    #error "Unicode string-matcher feature must be active."
+#endif
+
 namespace matches = mimicpp::matches;
 
 TEST_CASE(
     "matches::str::contains case-insensitive overload supports empty strings.",
-    "[matcher][matcher::str]")
+    "[matcher][matcher::str][unicode]")
 {
     SECTION("For char-strings.")
     {
@@ -197,34 +201,8 @@ namespace
 // NOLINTBEGIN(*-avoid-c-arrays)
 
 TEMPLATE_TEST_CASE(
-    "matches::str::contains matches when given char-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
-    const char*,
-    const char (&)[7],
-    std::string,
-    std::string_view)
-{
-    static constexpr std::array matches = std::to_array<const char*>(
-        {"lo, Wo",
-         "Lo, Wo",
-         "lo, wo",
-         "HelLO, wOrld!"});
-
-    static constexpr std::array mismatches = std::to_array<const char*>(
-        {"Hello, W",
-         "o, World!"});
-
-    constexpr char pattern[] = "lo, Wo";
-    generic_str_contains_case_insensitive_test(
-        static_cast<TestType>(pattern),
-        "\"lo, Wo\"",
-        matches,
-        mismatches);
-}
-
-TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given wchar_t-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
+    "[matcher][matcher::str][unicode]",
     wchar_t const*,
     wchar_t const (&)[7],
     std::wstring,
@@ -250,7 +228,7 @@ TEMPLATE_TEST_CASE(
 
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given char8_t-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
+    "[matcher][matcher::str][unicode]",
     char8_t const*,
     char8_t const (&)[7],
     std::u8string,
@@ -276,7 +254,7 @@ TEMPLATE_TEST_CASE(
 
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given char16_t-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
+    "[matcher][matcher::str][unicode]",
     char16_t const*,
     char16_t const (&)[7],
     std::u16string,
@@ -302,7 +280,7 @@ TEMPLATE_TEST_CASE(
 
 TEMPLATE_TEST_CASE(
     "matches::str::contains matches when given char32_t-string pattern is case-insensitively part of target.",
-    "[matcher][matcher::str]",
+    "[matcher][matcher::str][unicode]",
     char32_t const*,
     char32_t const (&)[7],
     std::u32string,
