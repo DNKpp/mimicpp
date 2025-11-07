@@ -22,21 +22,21 @@ TEST_CASE(
         SECTION("For plain matchers.")
         {
             auto const matcher = matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains \"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
+            CHECK(matcher.matches(patter));
+            CHECK(matcher.matches(alternativeMatch));
         }
 
         SECTION("For inverted matchers.")
         {
             auto const matcher = !matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not \"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
+            CHECK(!matcher.matches(patter));
+            CHECK(!matcher.matches(alternativeMatch));
         }
     }
 
@@ -48,21 +48,21 @@ TEST_CASE(
         SECTION("For plain matchers.")
         {
             auto const matcher = matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains L\"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
+            CHECK(matcher.matches(patter));
+            CHECK(matcher.matches(alternativeMatch));
         }
 
         SECTION("For inverted matchers.")
         {
             auto const matcher = !matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not L\"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
+            CHECK(!matcher.matches(patter));
+            CHECK(!matcher.matches(alternativeMatch));
         }
     }
 
@@ -74,21 +74,21 @@ TEST_CASE(
         SECTION("For plain matchers.")
         {
             auto const matcher = matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains u8\"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
+            CHECK(matcher.matches(patter));
+            CHECK(matcher.matches(alternativeMatch));
         }
 
         SECTION("For inverted matchers.")
         {
             auto const matcher = !matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not u8\"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
+            CHECK(!matcher.matches(patter));
+            CHECK(!matcher.matches(alternativeMatch));
         }
     }
 
@@ -100,21 +100,21 @@ TEST_CASE(
         SECTION("For plain matchers.")
         {
             auto const matcher = matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains u\"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
+            CHECK(matcher.matches(patter));
+            CHECK(matcher.matches(alternativeMatch));
         }
 
         SECTION("For inverted matchers.")
         {
             auto const matcher = !matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not u\"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
+            CHECK(!matcher.matches(patter));
+            CHECK(!matcher.matches(alternativeMatch));
         }
     }
 
@@ -126,21 +126,21 @@ TEST_CASE(
         SECTION("For plain matchers.")
         {
             auto const matcher = matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains U\"\""));
-            REQUIRE(matcher.matches(patter));
-            REQUIRE(matcher.matches(alternativeMatch));
+            CHECK(matcher.matches(patter));
+            CHECK(matcher.matches(alternativeMatch));
         }
 
         SECTION("For inverted matchers.")
         {
             auto const matcher = !matches::str::contains(patter);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains not U\"\""));
-            REQUIRE(!matcher.matches(patter));
-            REQUIRE(!matcher.matches(alternativeMatch));
+            CHECK(!matcher.matches(patter));
+            CHECK(!matcher.matches(alternativeMatch));
         }
     }
 }
@@ -149,7 +149,7 @@ namespace
 {
     void generic_str_contains_test(
         auto&& pattern,
-        std::string descriptionPartExpectation,
+        std::string const& descriptionPartExpectation,
         auto&& matches,
         auto&& mismatches)
     {
@@ -157,20 +157,20 @@ namespace
         {
             auto const matcher = matches::str::contains(pattern);
 
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("contains " + descriptionPartExpectation));
 
             SECTION("When pattern is part of target, they match.")
             {
                 auto&& match = GENERATE_REF(from_range(matches));
-                REQUIRE(matcher.matches(match));
+                CHECK(matcher.matches(match));
             }
 
             SECTION("When pattern is part of target, they do not match.")
             {
                 auto&& mismatch = GENERATE_REF(from_range(mismatches));
-                REQUIRE(!matcher.matches(mismatch));
+                CHECK(!matcher.matches(mismatch));
             }
         }
 
@@ -178,20 +178,20 @@ namespace
         {
             auto const invertedMatcher = !matches::str::contains(pattern);
 
-            REQUIRE_THAT(
+            CHECK_THAT(
                 invertedMatcher.describe(),
                 Matches::Equals("contains not " + descriptionPartExpectation));
 
             SECTION("When pattern is part of target, they do not match.")
             {
                 auto&& match = GENERATE_REF(from_range(matches));
-                REQUIRE(!invertedMatcher.matches(match));
+                CHECK(!invertedMatcher.matches(match));
             }
 
             SECTION("When pattern is part of target, they do match.")
             {
                 auto&& mismatch = GENERATE_REF(from_range(mismatches));
-                REQUIRE(invertedMatcher.matches(mismatch));
+                CHECK(invertedMatcher.matches(mismatch));
             }
         }
     }
@@ -336,21 +336,21 @@ TEST_CASE(
         SECTION("For plain matchers.")
         {
             auto const matcher = matches::str::contains(pattern, mimicpp::case_insensitive);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("case-insensitively contains \"\""));
-            REQUIRE(matcher.matches(pattern));
-            REQUIRE(matcher.matches(alternativeMatch));
+            CHECK(matcher.matches(pattern));
+            CHECK(matcher.matches(alternativeMatch));
         }
 
         SECTION("For inverted matchers.")
         {
             const auto matcher = !matches::str::contains(pattern, mimicpp::case_insensitive);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("case-insensitively contains not \"\""));
-            REQUIRE(!matcher.matches(pattern));
-            REQUIRE(!matcher.matches(alternativeMatch));
+            CHECK(!matcher.matches(pattern));
+            CHECK(!matcher.matches(alternativeMatch));
         }
     }
 }
@@ -367,20 +367,20 @@ namespace
         {
             const auto matcher = matches::str::contains(pattern, mimicpp::case_insensitive);
 
-            REQUIRE_THAT(
+            CHECK_THAT(
                 matcher.describe(),
                 Matches::Equals("case-insensitively contains " + descriptionPartExpectation));
 
             SECTION("When pattern is part of target, they match.")
             {
                 auto&& match = GENERATE_REF(from_range(matches));
-                REQUIRE(matcher.matches(match));
+                CHECK(matcher.matches(match));
             }
 
             SECTION("When pattern is part of target, they do not match.")
             {
                 auto&& mismatch = GENERATE_REF(from_range(mismatches));
-                REQUIRE(!matcher.matches(mismatch));
+                CHECK(!matcher.matches(mismatch));
             }
         }
 
@@ -388,20 +388,20 @@ namespace
         {
             const auto invertedMatcher = !matches::str::contains(pattern, mimicpp::case_insensitive);
 
-            REQUIRE_THAT(
+            CHECK_THAT(
                 invertedMatcher.describe(),
                 Matches::Equals("case-insensitively contains not " + descriptionPartExpectation));
 
             SECTION("When pattern is part of target, they do not match.")
             {
                 auto&& match = GENERATE_REF(from_range(matches));
-                REQUIRE(!invertedMatcher.matches(match));
+                CHECK(!invertedMatcher.matches(match));
             }
 
             SECTION("When pattern is part of target, they do match.")
             {
                 auto&& mismatch = GENERATE_REF(from_range(mismatches));
-                REQUIRE(invertedMatcher.matches(mismatch));
+                CHECK(invertedMatcher.matches(mismatch));
             }
         }
     }
