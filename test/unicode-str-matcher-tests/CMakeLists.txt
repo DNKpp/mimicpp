@@ -12,6 +12,8 @@ add_executable(${TARGET_NAME}
     "../unit-tests/matchers/StringEq.cpp"
     "StringStartsWith.cpp"
     "../unit-tests/matchers/StringStartsWith.cpp"
+    "StringEndsWith.cpp"
+    "../unit-tests/matchers/StringEndsWith.cpp"
 )
 
 include(Mimic++-EnableSanitizers)
