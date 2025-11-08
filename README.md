@@ -628,6 +628,7 @@ version.
 | clang-18 |   x    |   x    |     x     |   *    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 | clang-19 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 | clang-20 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| clang-21 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 | gcc-10   |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace/boost    |
 | gcc-10.2 |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace/boost    |
 | gcc-11   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace/boost    |
