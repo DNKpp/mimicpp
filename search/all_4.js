@@ -42,5 +42,5 @@ var searchData=
   ['boosttestreportert_39',['BoostTestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gaa1a2d936b0a089d8b4e19f75eb6b8bbc',1,'mimicpp::reporting']]],
   ['bracelikes_40',['braceLikes',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#aa7a125de4df0fcfb7fb3bd06fc95693b',1,'mimicpp::printing::type::lexing::texts']]],
   ['bring_20your_20own_20string_20and_20char_20types_41',['Bring your own string- and char-types',['../index.html#autotoc_md62',1,'']]],
-  ['byte_20string_42',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]]
+  ['byte_20string_42',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md5',1,'']]]
 ];
