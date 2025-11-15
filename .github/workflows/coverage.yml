@@ -35,7 +35,7 @@ jobs:
 
       - name: Install gcovr
         run: |
-          python -m pip install git+https://github.com/gcovr/gcovr.git@faa1add67a30afcd3e067f4074d8ac7246f53644
+          python -m pip install git+https://github.com/gcovr/gcovr.git@9f1b4422dc060dd1b65ed46371fc31ee3c63ca04
 
       - name: Print versions
         run: |
@@ -86,41 +86,46 @@ jobs:
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
           cd build
           gcovr --root .. \
-            --trace-include '.*Templated.*' \
-            --include "${GITHUB_WORKSPACE}/include" \
-            --filter "${GITHUB_WORKSPACE}/include" \
-            --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
-            --exclude-unreachable-branches \
-            --exclude-function-lines \
-            --exclude-noncode-lines \
-            --exclude-throw-branches \
-            --merge-lines \
-            --decisions \
-            --calls \
-            --keep \
-            --txt \
-            --json report.1.json --json-pretty \
-            --cobertura cobertura.1.xml --cobertura-pretty \
-            --coveralls coveralls.1.json --coveralls-pretty \
-            --html-nested html/ --html-title "mimic++ Coverage Report" \
-            --json-summary summary.1.json --json-summary-pretty
+                --keep \
+                --verbose \
+                --trace-include='.*Templated.*' \
+                --include "${GITHUB_WORKSPACE}/include" \
+                --filter "${GITHUB_WORKSPACE}/include" \
+                --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
+                --exclude-unreachable-branches \
+                --exclude-function-lines \
+                --exclude-noncode-lines \
+                --exclude-throw-branches \
+                --decisions \
+                --calls \
+                --merge-lines \
+                --json-trace-data-source \
+                --txt \
+                --json report.1.json --json-pretty \
+                --cobertura cobertura.1.xml --cobertura-pretty \
+                --coveralls coveralls.1.json --coveralls-pretty \
+                --html-nested html/ --html-title "mimic++ Coverage Report" \
+                --json-summary summary.1.json --json-summary-pretty
           gcovr --root .. \
-            --trace-include '.*Templated.*' \
-            --include "${GITHUB_WORKSPACE}/include" \
-            --filter "${GITHUB_WORKSPACE}/include" \
-            --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
-            --exclude-unreachable-branches \
-            --exclude-function-lines \
-            --exclude-noncode-lines \
-            --exclude-throw-branches \
-            --decisions \
-            --calls \
-            --add-tracefile report.1.json \
-            --txt \
-            --json report.2.json --json-pretty \
-            --cobertura cobertura.2.xml --cobertura-pretty \
-            --coveralls coveralls.2.json --coveralls-pretty \
-            --json-summary summary.2.json --json-summary-pretty
+                --verbose \
+                --trace-include='.*Templated.*' \
+                --include "${GITHUB_WORKSPACE}/include" \
+                --filter "${GITHUB_WORKSPACE}/include" \
+                --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
+                --exclude-unreachable-branches \
+                --exclude-function-lines \
+                --exclude-noncode-lines \
+                --exclude-throw-branches \
+                --decisions \
+                --calls \
+                --merge-lines \
+                --json-trace-data-source \
+                --add-tracefile report.1.json \
+                --txt \
+                --json report.2.json --json-pretty \
+                --cobertura cobertura.2.xml --cobertura-pretty \
+                --coveralls coveralls.2.json --coveralls-pretty \
+                --json-summary summary.2.json --json-summary-pretty
           
           mv report.1.json ..
           mv cobertura.1.xml ..
