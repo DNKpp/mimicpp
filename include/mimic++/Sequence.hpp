@@ -348,7 +348,7 @@ namespace mimicpp::sequence::detail
         constexpr Config<Sequences..., OtherSequences...> concat(Config<OtherSequences...> const& other) const
         {
             return std::make_from_tuple<Config<Sequences..., OtherSequences...>>(
-                std::tuple_cat(std::tuple{util::pass_key<Config>{}}, m_Sequences, other.sequences()));
+                std::tuple_cat(std::make_tuple(selfKey), m_Sequences, other.sequences()));
         }
 
     private:
