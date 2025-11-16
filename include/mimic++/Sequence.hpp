@@ -386,6 +386,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     /**
      * \brief The default sequence type (LazySequence).
      * \ingroup EXPECTATION_SEQUENCE
+     * \deprecated Please use `mimicpp::Sequence` instead.
      */
     using SequenceT [[deprecated("Please use mimicpp::Sequence instead.")]] = LazySequence;
 
