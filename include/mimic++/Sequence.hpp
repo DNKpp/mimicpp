@@ -255,9 +255,9 @@ namespace mimicpp::sequence::detail
         template <typename... Sequences>
         friend class Config;
 
-    public:
-        using SequenceT = BasicSequence<Id, priorityStrategy>;
+        using Sequence = BasicSequence<Id, priorityStrategy>;
 
+    public:
         BasicSequenceInterface(const BasicSequenceInterface&) = delete;
         BasicSequenceInterface& operator=(const BasicSequenceInterface&) = delete;
 
@@ -277,7 +277,7 @@ namespace mimicpp::sequence::detail
         }
 
     private:
-        std::shared_ptr<SequenceT> m_Sequence{std::make_shared<SequenceT>()};
+        std::shared_ptr<Sequence> m_Sequence{std::make_shared<Sequence>()};
     };
 
     template <typename... Sequences>
@@ -429,10 +429,10 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto in_sequence(sequence::detail::BasicSequenceInterface<Id, priorityStrategy>& sequence)
     {
-        using ConfigT = sequence::detail::Config<
+        using Config = sequence::detail::Config<
             sequence::detail::BasicSequence<Id, priorityStrategy>>;
 
-        return ConfigT{sequence};
+        return Config{sequence};
     }
 
     /**
@@ -458,15 +458,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
         sequence::detail::BasicSequenceInterface<SecondId, secondPriorityStrategy>& secondSequence,
         sequence::detail::BasicSequenceInterface<OtherIds, otherPriorityStrategies>&... otherSequences)
     {
-        using ConfigT = sequence::detail::Config<
+        using Config = sequence::detail::Config<
             sequence::detail::BasicSequence<FirstId, firstPriorityStrategy>,
             sequence::detail::BasicSequence<SecondId, secondPriorityStrategy>,
             sequence::detail::BasicSequence<OtherIds, otherPriorityStrategies>...>;
 
-        return ConfigT{
-            firstSequence,
-            secondSequence,
-            otherSequences...};
+        return Config{firstSequence, secondSequence, otherSequences...};
     }
 }
 
