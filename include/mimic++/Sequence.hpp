@@ -14,6 +14,7 @@
 #include "mimic++/reporting/GlobalReporter.hpp"
 #include "mimic++/utilities/C++20Compatibility.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
+#include "mimic++/utilities/PassKey.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
@@ -283,9 +284,6 @@ namespace mimicpp::sequence::detail
     template <typename... Sequences>
     class Config
     {
-        template <typename... Ts>
-        friend class Config;
-
     public:
         static constexpr std::size_t sequenceCount = sizeof...(Sequences);
 
@@ -298,33 +296,17 @@ namespace mimicpp::sequence::detail
             requires(sizeof...(Interfaces) == sequenceCount)
         [[nodiscard]] //
         explicit constexpr Config(Interfaces&... interfaces) noexcept(1u == sequenceCount)
-            : Config{interfaces.m_Sequence...}
+            requires requires { Config{util::pass_key<Config>{}, interfaces.m_Sequence...}; }
+            : Config{util::pass_key<Config>{}, interfaces.m_Sequence...}
         {
-        }
-
-        [[nodiscard]]
-        constexpr auto& sequences() const noexcept
-        {
-            return m_Sequences;
         }
 
         template <typename... OtherSequences>
-        [[nodiscard]]
-        constexpr Config<Sequences..., OtherSequences...> concat(Config<OtherSequences...> const& other) const
-        {
-            return std::apply(
-                [](auto... sequences) {
-                    return Config<Sequences..., OtherSequences...>{std::move(sequences)...};
-                },
-                std::tuple_cat(m_Sequences, other.sequences()));
-        }
-
-    private:
-        std::tuple<std::shared_ptr<Sequences>...> m_Sequences;
-
-        [[nodiscard]]
-        explicit constexpr Config(std::shared_ptr<Sequences>... sequences) noexcept(1u == sequenceCount)
-            requires(0u < sequenceCount)
+        [[nodiscard]] //
+        explicit constexpr Config(
+            [[maybe_unused]] util::pass_key<Config<OtherSequences...>> const key,
+            std::shared_ptr<Sequences>... sequences)
+            noexcept(1u == sequenceCount)
         {
             if constexpr (1u < sequenceCount)
             {
@@ -340,6 +322,23 @@ namespace mimicpp::sequence::detail
 
             m_Sequences = std::tuple{std::move(sequences)...};
         }
+
+        [[nodiscard]]
+        constexpr auto& sequences() const noexcept
+        {
+            return m_Sequences;
+        }
+
+        template <typename... OtherSequences>
+        [[nodiscard]]
+        constexpr Config<Sequences..., OtherSequences...> concat(Config<OtherSequences...> const& other) const
+        {
+            return std::make_from_tuple<Config<Sequences..., OtherSequences...>>(
+                std::tuple_cat(std::tuple{util::pass_key<Config>{}}, m_Sequences, other.sequences()));
+        }
+
+    private:
+        std::tuple<std::shared_ptr<Sequences>...> m_Sequences;
     };
 }
 
