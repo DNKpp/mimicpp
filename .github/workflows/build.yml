@@ -78,7 +78,6 @@ jobs:
         config:
           # clang
           - prefix: "Ubuntu"
-            suffix: "ASan"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/clang:21"
@@ -97,14 +96,6 @@ jobs:
             only_cpptrace: true
             libcxx: true
             cxx20_modules: false
-
-          - prefix: "Ubuntu"
-            os: "ubuntu-latest"
-            container:
-              image: "ghcr.io/dnkpp/clang:21"
-            compiler_name: "clang"
-            compiler_version: "21"
-            cxx20_modules: true
 
           - prefix: "Ubuntu"
             suffix: "/libc++"
@@ -204,21 +195,12 @@ jobs:
 
           # gcc
           - prefix: "Ubuntu"
-            suffix: "ASan"
             os: "ubuntu-latest"
             container:
               image: "ghcr.io/dnkpp/gcc:15"
             compiler_name: "gcc"
             compiler_version: "15"
             asan: true
-            cxx20_modules: false # in theory, it should work but in practice it does not.
-
-          - prefix: "Ubuntu"
-            os: "ubuntu-latest"
-            container:
-              image: "ghcr.io/dnkpp/gcc:15"
-            compiler_name: "gcc"
-            compiler_version: "15"
             cxx20_modules: false # in theory, it should work but in practice it does not.
 
           - prefix: "Ubuntu"
@@ -342,14 +324,10 @@ jobs:
             config:
               compiler_name: "gcc"
               compiler_version: "10.2"
-          # seems like macOS doesn't support 32bit builds
+          # It seems macOS doesn't support 32bit builds.
           - architecture: "32bit"
             config:
               prefix: "macOS"
-          # run asan only in debug mode
-          - build_mode: "Release"
-            config:
-              asan: true
 
     steps:
       - name: Checkout code
@@ -486,7 +464,7 @@ jobs:
             libc++abi-${{ matrix.config.compiler_version }}-dev:i386
 
       - name: Enable Address and Undefined Sanitizer
-        if: ${{ matrix.config.asan }}
+        if: ${{ matrix.config.asan && matrix.build_mode == 'Debug' }}
         shell: bash
         run: |
           # ASan has some serious trouble with libc++ exception mechanism
