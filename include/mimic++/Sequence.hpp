@@ -14,6 +14,7 @@
 #include "mimic++/reporting/GlobalReporter.hpp"
 #include "mimic++/utilities/C++20Compatibility.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
+#include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/PassKey.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
@@ -250,12 +251,12 @@ namespace mimicpp::sequence::detail
         }
     };
 
+    template <typename... Sequences>
+    class Config;
+
     template <typename Id, auto priorityStrategy>
     class BasicSequenceInterface
     {
-        template <typename... Sequences>
-        friend class Config;
-
         using Sequence = BasicSequence<Id, priorityStrategy>;
 
     public:
@@ -277,6 +278,13 @@ namespace mimicpp::sequence::detail
             return m_Sequence->tag();
         }
 
+        template <typename... Sequences>
+            requires util::same_as_any<Sequence, Sequences...>
+        constexpr std::shared_ptr<Sequence> sequence([[maybe_unused]] util::pass_key<Config<Sequences...>> key) const
+        {
+            return m_Sequence;
+        }
+
     private:
         std::shared_ptr<Sequence> m_Sequence{std::make_shared<Sequence>()};
     };
@@ -284,6 +292,8 @@ namespace mimicpp::sequence::detail
     template <typename... Sequences>
     class Config
     {
+        static constexpr util::pass_key<Config> selfKey{};
+
     public:
         static constexpr std::size_t sequenceCount = sizeof...(Sequences);
 
@@ -292,12 +302,16 @@ namespace mimicpp::sequence::detail
             requires(0u == sequenceCount)
         = default;
 
-        template <typename... Interfaces>
-            requires(sizeof...(Interfaces) == sequenceCount)
+        template <typename First, typename... Others>
+            requires(1u + sizeof...(Others) == sequenceCount)
+                 && (!std::same_as<util::pass_key<Config>, std::remove_cvref_t<First>>)
+                 && (!std::same_as<Config, std::remove_cvref_t<First>>)
         [[nodiscard]] //
-        explicit constexpr Config(Interfaces&... interfaces) noexcept(1u == sequenceCount)
-            requires requires { Config{util::pass_key<Config>{}, interfaces.m_Sequence...}; }
-            : Config{util::pass_key<Config>{}, interfaces.m_Sequence...}
+        explicit constexpr Config(First& firstInterface, Others&... interfaces) noexcept(1u == sequenceCount)
+            : Config{
+                  selfKey,
+                  firstInterface.sequence(selfKey),
+                  interfaces.sequence(selfKey)...}
         {
         }
 
