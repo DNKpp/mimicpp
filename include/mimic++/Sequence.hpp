@@ -100,7 +100,7 @@ namespace mimicpp::sequence::detail
 
         ~BasicSequence() noexcept(false)
         {
-            const auto iter = std::ranges::find_if_not(
+            auto const iter = std::ranges::find_if_not(
                 m_Entries.cbegin() + m_Cursor,
                 m_Entries.cend(),
                 [](const State s) noexcept {
@@ -122,7 +122,7 @@ namespace mimicpp::sequence::detail
         BasicSequence() = default;
 
         [[nodiscard]]
-        constexpr std::optional<int> priority_of(const Id id) const noexcept
+        constexpr std::optional<int> priority_of(Id const id) const noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
 
@@ -137,7 +137,7 @@ namespace mimicpp::sequence::detail
             return std::nullopt;
         }
 
-        constexpr void set_satisfied(const Id id) noexcept
+        constexpr void set_satisfied(Id const id) noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
             MIMICPP_ASSERT(m_Cursor <= util::to_underlying(id), "Invalid state.");
@@ -147,10 +147,10 @@ namespace mimicpp::sequence::detail
             element = State::satisfied;
         }
 
-        constexpr void set_saturated(const Id id) noexcept
+        constexpr void set_saturated(Id const id) noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
-            const auto index = util::to_underlying(id);
+            auto const index = util::to_underlying(id);
             MIMICPP_ASSERT(m_Cursor <= index, "Invalid state.");
 
             auto& element = m_Entries[index];
@@ -159,17 +159,18 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        constexpr bool is_consumable(const Id id) const noexcept
+        constexpr bool is_consumable(Id const id) const noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
 
-            const int index = util::to_underlying(id);
-            const auto state = m_Entries[index];
+            int const index = util::to_underlying(id);
+            auto state = m_Entries[index];
+
             return m_Cursor <= index
                 && std::ranges::all_of(
                        m_Entries.begin() + m_Cursor,
                        m_Entries.begin() + index,
-                       [](const State s) noexcept {
+                       [](State const s) noexcept {
                            return s == State::satisfied
                                || s == State::saturated;
                        })
@@ -177,7 +178,7 @@ namespace mimicpp::sequence::detail
                     || state == State::satisfied);
         }
 
-        constexpr void consume(const Id id) noexcept
+        constexpr void consume(Id const id) noexcept
         {
             MIMICPP_ASSERT(is_consumable(id), "Sequence is not in consumable state.");
 
@@ -195,6 +196,7 @@ namespace mimicpp::sequence::detail
             }
 
             m_Entries.emplace_back(State::unsatisfied);
+
             return static_cast<Id>(m_Entries.size() - 1);
         }
 
@@ -216,7 +218,7 @@ namespace mimicpp::sequence::detail
         int m_Cursor{};
 
         [[nodiscard]]
-        constexpr bool is_valid(const Id id) const noexcept
+        constexpr bool is_valid(Id const id) const noexcept
         {
             return 0 <= util::to_underlying(id)
                 && std::cmp_less(util::to_underlying(id), m_Entries.size());
@@ -227,9 +229,9 @@ namespace mimicpp::sequence::detail
     {
     public:
         [[nodiscard]]
-        constexpr int operator()(const auto id, const int cursor) const noexcept
+        constexpr int operator()(auto const id, int const cursor) const noexcept
         {
-            const auto index = util::to_underlying(id);
+            auto const index = util::to_underlying(id);
             MIMICPP_ASSERT(std::cmp_less_equal(cursor, index), "Invalid state.");
 
             return std::numeric_limits<int>::max()
@@ -241,9 +243,9 @@ namespace mimicpp::sequence::detail
     {
     public:
         [[nodiscard]]
-        constexpr int operator()(const auto id, const int cursor) const noexcept
+        constexpr int operator()(auto const id, int const cursor) const noexcept
         {
-            const auto index = util::to_underlying(id);
+            auto const index = util::to_underlying(id);
             MIMICPP_ASSERT(std::cmp_less_equal(cursor, index), "Invalid state.");
 
             return static_cast<int>(index) - cursor;
@@ -399,13 +401,13 @@ namespace mimicpp::sequence::detail
 {
     [[nodiscard]]
     constexpr bool has_better_rating(
-        const std::span<const rating> lhs,
-        const std::span<const rating> rhs) noexcept
+        std::span<rating const> const lhs,
+        std::span<rating const> const rhs) noexcept
     {
         int rating{};
-        for (const auto& [lhsPriority, lhsTag] : lhs)
+        for (auto const& [lhsPriority, lhsTag] : lhs)
         {
-            if (const auto iter = std::ranges::find(rhs, lhsTag, &rating::tag);
+            if (auto const iter = std::ranges::find(rhs, lhsTag, &rating::tag);
                 iter != std::ranges::end(rhs))
             {
                 rating += lhsPriority < iter->priority ? -1 : 1;
