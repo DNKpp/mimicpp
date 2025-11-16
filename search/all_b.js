@@ -17,7 +17,7 @@ var searchData=
   ['info_5ffor_5fsignature_5ft_14',['info_for_signature_t',['../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb',1,'mimicpp::call']]],
   ['inheritance_15',['Multiple inheritance',['../dc/da4/group___f_a_c_a_d_e.html#autotoc_md0',1,'']]],
   ['initfinalize_16',['InitFinalize',['../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html',1,'mimicpp::expectation_policies']]],
-  ['insensitive_20matchers_17',['Case-Insensitive Matchers',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md3',1,'']]],
+  ['insensitive_20matchers_17',['Case-Insensitive Matchers',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md5',1,'']]],
   ['insensitive_20matching_18',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
   ['install_5freporter_19',['install_reporter',['../dd/d4f/group___r_e_p_o_r_t_i_n_g.html#gacc0d9f819eebe61a00d604e2457536a1',1,'mimicpp::reporting']]],
   ['instance_20',['instance',['../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9',1,'mimicpp::matches']]],
