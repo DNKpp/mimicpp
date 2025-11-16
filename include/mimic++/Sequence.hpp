@@ -94,8 +94,8 @@ namespace mimicpp::sequence::detail
     class BasicSequence
     {
     public:
-        BasicSequence(const BasicSequence&) = delete;
-        BasicSequence& operator=(const BasicSequence&) = delete;
+        BasicSequence(BasicSequence const&) = delete;
+        BasicSequence& operator=(BasicSequence const&) = delete;
         BasicSequence(BasicSequence&&) = delete;
         BasicSequence& operator=(BasicSequence&&) = delete;
 
