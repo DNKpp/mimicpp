@@ -100,20 +100,16 @@ namespace mimicpp::sequence::detail
 
         ~BasicSequence() noexcept(false)
         {
-            auto const iter = std::ranges::find_if_not(
-                m_Entries.cbegin() + m_Cursor,
-                m_Entries.cend(),
-                [](const State s) noexcept {
-                    return s == State::satisfied
-                        || s == State::saturated;
-                });
+            auto const iter = std::ranges::find_if_not(m_Entries, is_fulfilled);
+            auto const satisfiedCount = std::ranges::distance(m_Entries.cbegin(), iter);
+            MIMICPP_ASSERT(m_Cursor <= satisfiedCount, "Cursor skipped unsatisfied entries.");
 
             if (iter != m_Entries.cend())
             {
                 reporting::detail::report_error(
                     format::format(
                         "Unfulfilled sequence. {} out of {} expectation(s) are satisfied.",
-                        std::ranges::distance(m_Entries.cbegin(), iter),
+                        satisfiedCount,
                         m_Entries.size()));
             }
         }
@@ -128,10 +124,7 @@ namespace mimicpp::sequence::detail
 
             if (is_consumable(id))
             {
-                return std::invoke(
-                    priorityStrategy,
-                    id,
-                    m_Cursor);
+                return std::invoke(priorityStrategy, id, m_Cursor);
             }
 
             return std::nullopt;
@@ -150,11 +143,11 @@ namespace mimicpp::sequence::detail
         constexpr void set_saturated(Id const id) noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
-            auto const index = util::to_underlying(id);
+            int const index = util::to_underlying(id);
             MIMICPP_ASSERT(m_Cursor <= index, "Invalid state.");
 
             auto& element = m_Entries[index];
-            MIMICPP_ASSERT(element == State::unsatisfied || element == State::satisfied, "Element is in unexpected state.");
+            MIMICPP_ASSERT(is_active(element), "Element is in unexpected state.");
             element = State::saturated;
         }
 
@@ -163,19 +156,12 @@ namespace mimicpp::sequence::detail
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
 
-            int const index = util::to_underlying(id);
-            auto state = m_Entries[index];
+            std::span const pending = std::span{m_Entries}.subspan(m_Cursor);
+            auto const index = util::to_underlying(id) - m_Cursor;
 
-            return m_Cursor <= index
-                && std::ranges::all_of(
-                       m_Entries.begin() + m_Cursor,
-                       m_Entries.begin() + index,
-                       [](State const s) noexcept {
-                           return s == State::satisfied
-                               || s == State::saturated;
-                       })
-                && (state == State::unsatisfied
-                    || state == State::satisfied);
+            return 0 <= index
+                && std::ranges::all_of(pending.first(index), is_fulfilled)
+                && is_active(pending[index]);
         }
 
         constexpr void consume(Id const id) noexcept
@@ -191,8 +177,7 @@ namespace mimicpp::sequence::detail
             if (!std::in_range<std::underlying_type_t<Id>>(m_Entries.size()))
                 [[unlikely]]
             {
-                throw std::runtime_error{
-                    "Sequence already holds maximum amount of elements."};
+                throw std::runtime_error{"Sequence already holds maximum amount of elements."};
             }
 
             m_Entries.emplace_back(State::unsatisfied);
@@ -214,14 +199,26 @@ namespace mimicpp::sequence::detail
             saturated
         };
 
+        static constexpr auto is_fulfilled = [](State const state) noexcept {
+            return state == State::satisfied
+                || state == State::saturated;
+        };
+
+        static constexpr auto is_active = [](State const state) noexcept {
+            return state == State::unsatisfied
+                || state == State::satisfied;
+        };
+
         std::vector<State> m_Entries{};
         int m_Cursor{};
 
         [[nodiscard]]
         constexpr bool is_valid(Id const id) const noexcept
         {
-            return 0 <= util::to_underlying(id)
-                && std::cmp_less(util::to_underlying(id), m_Entries.size());
+            auto const index = util::to_underlying(id);
+
+            return 0 <= index
+                && index < std::ssize(m_Entries);
         }
     };
 
@@ -231,11 +228,11 @@ namespace mimicpp::sequence::detail
         [[nodiscard]]
         constexpr int operator()(auto const id, int const cursor) const noexcept
         {
-            auto const index = util::to_underlying(id);
+            int const index = util::to_underlying(id);
             MIMICPP_ASSERT(std::cmp_less_equal(cursor, index), "Invalid state.");
 
             return std::numeric_limits<int>::max()
-                 - (static_cast<int>(index) - cursor);
+                 - (index - cursor);
         }
     };
 
@@ -245,10 +242,10 @@ namespace mimicpp::sequence::detail
         [[nodiscard]]
         constexpr int operator()(auto const id, int const cursor) const noexcept
         {
-            auto const index = util::to_underlying(id);
+            int const index = util::to_underlying(id);
             MIMICPP_ASSERT(std::cmp_less_equal(cursor, index), "Invalid state.");
 
-            return static_cast<int>(index) - cursor;
+            return index - cursor;
         }
     };
 
@@ -280,8 +277,7 @@ namespace mimicpp::sequence::detail
         }
 
     private:
-        std::shared_ptr<SequenceT> m_Sequence{
-            std::make_shared<SequenceT>()};
+        std::shared_ptr<SequenceT> m_Sequence{std::make_shared<SequenceT>()};
     };
 
     template <typename... Sequences>
@@ -295,14 +291,14 @@ namespace mimicpp::sequence::detail
 
         [[nodiscard]]
         Config()
-            requires(0 == sizeof...(Sequences))
+            requires(0u == sequenceCount)
         = default;
 
         template <typename... Interfaces>
             requires(sizeof...(Interfaces) == sequenceCount)
-        [[nodiscard]] explicit constexpr Config(Interfaces&... interfaces) noexcept(1 == sequenceCount)
-            : Config{
-                  interfaces.m_Sequence...}
+        [[nodiscard]] //
+        explicit constexpr Config(Interfaces&... interfaces) noexcept(1u == sequenceCount)
+            : Config{interfaces.m_Sequence...}
         {
         }
 
@@ -314,13 +310,11 @@ namespace mimicpp::sequence::detail
 
         template <typename... OtherSequences>
         [[nodiscard]]
-        constexpr Config<Sequences..., OtherSequences...> concat(
-            const Config<OtherSequences...>& other) const
+        constexpr Config<Sequences..., OtherSequences...> concat(Config<OtherSequences...> const& other) const
         {
             return std::apply(
                 [](auto... sequences) {
-                    return Config<Sequences..., OtherSequences...>{
-                        std::move(sequences)...};
+                    return Config<Sequences..., OtherSequences...>{std::move(sequences)...};
                 },
                 std::tuple_cat(m_Sequences, other.sequences()));
         }
@@ -329,13 +323,12 @@ namespace mimicpp::sequence::detail
         std::tuple<std::shared_ptr<Sequences>...> m_Sequences;
 
         [[nodiscard]]
-        explicit constexpr Config(std::shared_ptr<Sequences>... sequences) noexcept(1 == sequenceCount)
-            requires(0 < sequenceCount)
+        explicit constexpr Config(std::shared_ptr<Sequences>... sequences) noexcept(1u == sequenceCount)
+            requires(0u < sequenceCount)
         {
-            if constexpr (1 < sequenceCount)
+            if constexpr (1u < sequenceCount)
             {
-                std::array tags{
-                    sequences->tag()...};
+                std::array tags{sequences->tag()...};
 
                 std::ranges::sort(tags);
                 if (!std::ranges::empty(std::ranges::unique(tags)))
@@ -345,8 +338,7 @@ namespace mimicpp::sequence::detail
                 }
             }
 
-            m_Sequences = std::tuple{
-                std::move(sequences)...};
+            m_Sequences = std::tuple{std::move(sequences)...};
         }
     };
 }
