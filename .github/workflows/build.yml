@@ -592,7 +592,7 @@ jobs:
       # Feature: experimental stacktrace
       - name: Select stacktrace backend
         id: config-stacktrace-backend-test
-        if: ${{ matrix.config.build_mode == 'Debug' }}
+        if: ${{ matrix.build_mode == 'Debug' }}
         shell: bash
         run: |
           BACKEND=cpptrace
