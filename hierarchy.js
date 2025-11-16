@@ -172,6 +172,7 @@ var hierarchy =
     [ "mimicpp::printing::type::lexing::operator_or_punctuator", "d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html", null ],
     [ "mimicpp::printing::type::parsing::token::Identifier::OperatorInfo", "d8/deb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_identifier_1_1_operator_info.html", null ],
     [ "mimicpp::printing::type::parsing::token::OperatorKeyword", "d5/d73/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_operator_keyword.html", null ],
+    [ "mimicpp::util::pass_key< Trusted >", "db/dcd/structmimicpp_1_1util_1_1pass__key.html", null ],
     [ "mimicpp::PredicateMatcher< Predicate, AdditionalArgs >", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", null ],
     [ "mimicpp::custom::Printer< typename >", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],
     [ "mimicpp::printing::PrintFn", "d1/db9/classmimicpp_1_1printing_1_1_print_fn.html", null ],

@@ -2,6 +2,7 @@ var namespacemimicpp_1_1util =
 [
     [ "stacktrace", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace" ],
     [ "always_false", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ],
+    [ "pass_key", "db/dcd/structmimicpp_1_1util_1_1pass__key.html", null ],
     [ "priority_tag", "d0/db8/structmimicpp_1_1util_1_1priority__tag.html", null ],
     [ "priority_tag< 0u >", "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html", null ],
     [ "SourceLocation", "db/df5/classmimicpp_1_1util_1_1_source_location.html", "db/df5/classmimicpp_1_1util_1_1_source_location" ],

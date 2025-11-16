@@ -2,6 +2,7 @@ var group___u_t_i_l_i_t_i_e_s =
 [
     [ "concepts", "df/d20/group___u_t_i_l___c_o_n_c_e_p_t_s.html", "df/d20/group___u_t_i_l___c_o_n_c_e_p_t_s" ],
     [ "stacktrace", "de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html", "de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e" ],
+    [ "mimicpp::util::pass_key< Trusted >", "db/dcd/structmimicpp_1_1util_1_1pass__key.html", null ],
     [ "mimicpp::util::SourceLocation", "db/df5/classmimicpp_1_1util_1_1_source_location.html", [
       [ "~SourceLocation", "db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412", null ],
       [ "SourceLocation", "db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5", null ],
