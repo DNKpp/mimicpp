@@ -11,6 +11,7 @@
 #include "mimic++/utilities/C++23Backports.hpp"
 #include "mimic++/utilities/C++26Backports.hpp"
 #include "mimic++/utilities/Concepts.hpp"
+#include "mimic++/utilities/PassKey.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 #include "mimic++/utilities/Stacktrace.hpp"
