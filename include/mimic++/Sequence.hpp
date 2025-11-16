@@ -93,7 +93,10 @@ namespace mimicpp::sequence::detail
     class BasicSequence
     {
     public:
-        using IdT = Id;
+        BasicSequence(const BasicSequence&) = delete;
+        BasicSequence& operator=(const BasicSequence&) = delete;
+        BasicSequence(BasicSequence&&) = delete;
+        BasicSequence& operator=(BasicSequence&&) = delete;
 
         ~BasicSequence() noexcept(false)
         {
@@ -118,13 +121,8 @@ namespace mimicpp::sequence::detail
         [[nodiscard]]
         BasicSequence() = default;
 
-        BasicSequence(const BasicSequence&) = delete;
-        BasicSequence& operator=(const BasicSequence&) = delete;
-        BasicSequence(BasicSequence&&) = delete;
-        BasicSequence& operator=(BasicSequence&&) = delete;
-
         [[nodiscard]]
-        constexpr std::optional<int> priority_of(const IdT id) const noexcept
+        constexpr std::optional<int> priority_of(const Id id) const noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
 
@@ -139,7 +137,7 @@ namespace mimicpp::sequence::detail
             return std::nullopt;
         }
 
-        constexpr void set_satisfied(const IdT id) noexcept
+        constexpr void set_satisfied(const Id id) noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
             MIMICPP_ASSERT(m_Cursor <= util::to_underlying(id), "Invalid state.");
@@ -149,7 +147,7 @@ namespace mimicpp::sequence::detail
             element = State::satisfied;
         }
 
-        constexpr void set_saturated(const IdT id) noexcept
+        constexpr void set_saturated(const Id id) noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
             const auto index = util::to_underlying(id);
@@ -161,7 +159,7 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        constexpr bool is_consumable(const IdT id) const noexcept
+        constexpr bool is_consumable(const Id id) const noexcept
         {
             MIMICPP_ASSERT(is_valid(id), "Invalid id given.");
 
@@ -179,7 +177,7 @@ namespace mimicpp::sequence::detail
                     || state == State::satisfied);
         }
 
-        constexpr void consume(const IdT id) noexcept
+        constexpr void consume(const Id id) noexcept
         {
             MIMICPP_ASSERT(is_consumable(id), "Sequence is not in consumable state.");
 
@@ -187,9 +185,9 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        constexpr IdT add()
+        constexpr Id add()
         {
-            if (!std::in_range<std::underlying_type_t<IdT>>(m_Entries.size()))
+            if (!std::in_range<std::underlying_type_t<Id>>(m_Entries.size()))
                 [[unlikely]]
             {
                 throw std::runtime_error{
@@ -197,7 +195,7 @@ namespace mimicpp::sequence::detail
             }
 
             m_Entries.emplace_back(State::unsatisfied);
-            return static_cast<IdT>(m_Entries.size() - 1);
+            return static_cast<Id>(m_Entries.size() - 1);
         }
 
         [[nodiscard]]
@@ -218,7 +216,7 @@ namespace mimicpp::sequence::detail
         int m_Cursor{};
 
         [[nodiscard]]
-        constexpr bool is_valid(const IdT id) const noexcept
+        constexpr bool is_valid(const Id id) const noexcept
         {
             return 0 <= util::to_underlying(id)
                 && std::cmp_less(util::to_underlying(id), m_Entries.size());
