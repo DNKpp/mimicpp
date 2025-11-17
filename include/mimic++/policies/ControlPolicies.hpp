@@ -274,7 +274,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto times(int const min, int const max)
     {
-        return detail::TimesConfig{min, max};
+        return mimicpp::detail::TimesConfig{min, max};
     }
 
     /**
@@ -289,7 +289,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto times(int const exactly)
     {
-        return detail::TimesConfig(exactly, exactly);
+        return mimicpp::detail::TimesConfig(exactly, exactly);
     }
 
     /**
@@ -304,7 +304,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto at_least(int const min)
     {
-        return detail::TimesConfig{min, std::numeric_limits<int>::max()};
+        return mimicpp::detail::TimesConfig{min, std::numeric_limits<int>::max()};
     }
 
     /**
@@ -319,7 +319,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto at_most(int const max)
     {
-        return detail::TimesConfig{0, max};
+        return mimicpp::detail::TimesConfig{0, max};
     }
 
     /**
@@ -331,7 +331,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto never() noexcept
     {
-        constexpr detail::TimesConfig config{0, 0};
+        constexpr mimicpp::detail::TimesConfig config{0, 0};
 
         return config;
     }
@@ -346,7 +346,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto once() noexcept
     {
-        constexpr detail::TimesConfig config{1, 1};
+        constexpr mimicpp::detail::TimesConfig config{1, 1};
 
         return config;
     }
@@ -361,7 +361,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto twice() noexcept
     {
-        constexpr detail::TimesConfig config{2, 2};
+        constexpr mimicpp::detail::TimesConfig config{2, 2};
 
         return config;
     }
@@ -373,7 +373,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto any_times() noexcept
     {
-        constexpr detail::TimesConfig config{0, std::numeric_limits<int>::max()};
+        constexpr mimicpp::detail::TimesConfig config{0, std::numeric_limits<int>::max()};
 
         return config;
     }
