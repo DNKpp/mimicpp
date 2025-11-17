@@ -28,14 +28,14 @@ namespace mimicpp::detail
     template <typename... Sequences>
     [[nodiscard]]
     constexpr std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> make_sequence_entries(
-        const std::tuple<std::shared_ptr<Sequences>...>& sequences) noexcept
+        std::tuple<std::shared_ptr<Sequences>...> const& sequences) noexcept
     {
         // This is a workaround due to some issues with clang-17 with c++23 and libstdc++
         // That configuration prevents the direct initialization, thus we have to default construct first and
         // setup afterwards. Compilers will probably detect that and optimize accordingly.
         std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> result{};
         std::invoke(
-            [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) noexcept {
+            [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) noexcept {
                 ((std::get<indices>(result) =
                       std::tuple{
                           std::get<indices>(sequences),
@@ -54,7 +54,7 @@ namespace mimicpp::detail
         TimesConfig() = default;
 
         [[nodiscard]]
-        constexpr TimesConfig(const int min, const int max)
+        constexpr TimesConfig(int const min, int const max)
         {
             if (min < 0
                 || max < 0
@@ -92,10 +92,10 @@ namespace mimicpp
     {
         [[nodiscard]]
         reporting::control_state_t make_control_state(
-            const int min,
-            const int max,
-            const int count,
-            const auto& sequenceEntries)
+            int const min,
+            int const max,
+            int const count,
+            auto const& sequenceEntries)
         {
             if (count == max)
             {
@@ -104,9 +104,8 @@ namespace mimicpp
                     .max = max,
                     .count = count,
                     .sequences = std::apply(
-                        [](const auto&... entries) {
-                            return std::vector<sequence::Tag>{
-                                std::get<0>(entries)->tag()...};
+                        [](auto const&... entries) {
+                            return std::vector<sequence::Tag>{std::get<0>(entries)->tag()...};
                         },
                         sequenceEntries)};
             }
@@ -114,15 +113,13 @@ namespace mimicpp
             std::vector<sequence::Tag> inapplicable{};
             std::vector<sequence::rating> ratings{};
             std::apply(
-                [&](const auto&... entries) {
+                [&](auto const&... entries) {
                     (...,
                      std::invoke(
-                         [&](auto& seq, const sequence::Id id) {
-                             if (const std::optional priority = seq->priority_of(id))
+                         [&](auto& seq, sequence::Id const id) {
+                             if (std::optional const priority = seq->priority_of(id))
                              {
-                                 ratings.emplace_back(
-                                     *priority,
-                                     seq->tag());
+                                 ratings.emplace_back(*priority, seq->tag());
                              }
                              else
                              {
@@ -161,12 +158,11 @@ namespace mimicpp
 
         [[nodiscard]]
         explicit constexpr ControlPolicy(
-            const detail::TimesConfig& timesConfig,
-            const sequence::detail::Config<Sequences...>& sequenceConfig) noexcept
+            detail::TimesConfig const& timesConfig,
+            sequence::detail::Config<Sequences...> const& sequenceConfig) noexcept
             : m_Min{timesConfig.min()},
               m_Max{timesConfig.max()},
-              m_Sequences{
-                  detail::make_sequence_entries(sequenceConfig.sequences())}
+              m_Sequences{detail::make_sequence_entries(sequenceConfig.sequences())}
         {
             update_sequence_states();
         }
@@ -189,7 +185,7 @@ namespace mimicpp
         {
             return m_Count < m_Max
                 && std::apply(
-                       [](const auto&... entries) noexcept {
+                       [](auto const&... entries) noexcept {
                            return (... && std::get<0>(entries)->is_consumable(std::get<1>(entries)));
                        },
                        m_Sequences);
@@ -206,7 +202,6 @@ namespace mimicpp
                 m_Sequences);
 
             ++m_Count;
-
             update_sequence_states();
         }
 
@@ -277,9 +272,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
      * \snippet Times.cpp times
      */
     [[nodiscard]]
-    constexpr auto times(const int min, const int max)
+    constexpr auto times(int const min, int const max)
     {
-        return mimicpp::detail::TimesConfig{min, max};
+        return detail::TimesConfig{min, max};
     }
 
     /**
@@ -292,9 +287,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
      * \snippet Times.cpp times single
      */
     [[nodiscard]]
-    constexpr auto times(const int exactly)
+    constexpr auto times(int const exactly)
     {
-        return mimicpp::detail::TimesConfig(exactly, exactly);
+        return detail::TimesConfig(exactly, exactly);
     }
 
     /**
@@ -307,11 +302,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
      * \snippet Times.cpp at_least
      */
     [[nodiscard]]
-    constexpr auto at_least(const int min)
+    constexpr auto at_least(int const min)
     {
-        return mimicpp::detail::TimesConfig{
-            min,
-            std::numeric_limits<int>::max()};
+        return detail::TimesConfig{min, std::numeric_limits<int>::max()};
     }
 
     /**
@@ -324,11 +317,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
      * \snippet Times.cpp at_most
      */
     [[nodiscard]]
-    constexpr auto at_most(const int max)
+    constexpr auto at_most(int const max)
     {
-        return mimicpp::detail::TimesConfig{
-            0,
-            max};
+        return detail::TimesConfig{0, max};
     }
 
     /**
@@ -340,9 +331,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto never() noexcept
     {
-        constexpr mimicpp::detail::TimesConfig config{
-            0,
-            0};
+        constexpr detail::TimesConfig config{0, 0};
 
         return config;
     }
@@ -357,9 +346,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto once() noexcept
     {
-        constexpr mimicpp::detail::TimesConfig config{
-            1,
-            1};
+        constexpr detail::TimesConfig config{1, 1};
 
         return config;
     }
@@ -374,9 +361,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto twice() noexcept
     {
-        constexpr mimicpp::detail::TimesConfig config{
-            2,
-            2};
+        constexpr detail::TimesConfig config{2, 2};
 
         return config;
     }
@@ -388,9 +373,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto any_times() noexcept
     {
-        constexpr mimicpp::detail::TimesConfig config{
-            0,
-            std::numeric_limits<int>::max()};
+        constexpr detail::TimesConfig config{0, std::numeric_limits<int>::max()};
 
         return config;
     }
@@ -398,7 +381,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     /**
      * \}
      */
-
 }
 
 #endif
