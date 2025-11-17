@@ -250,11 +250,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     /**
      * \defgroup EXPECTATION_TIMES times
      * \ingroup EXPECTATION
-     * \brief Times indicates, how often an expectation must be matched.
-     * \details During each expectation building users can specify a times policy once. If not specified, that policy defaults to ``once``.
-     * If users attempt to specify a times policy more than once for a single expectation, a compile-error will occur.
+     * \brief Specifies how many times an expectation must be matched.
+     * \details
+     * When defining an expectation, users may specify a times-policy exactly once.
+     * If no policy is provided, it defaults to `expect::once()`.
+     * Attempting to set more than one times-policy for the same expectation results in a compile-time error.
      *
-     * Times in general have both, a lower and an upper limit. Both limits are treated as inclusive.
+     * A times-policy always defines both a lower and an upper bound on the number of allowed matches.
+     * Both bounds are inclusive.
      *
      *\{
      */
