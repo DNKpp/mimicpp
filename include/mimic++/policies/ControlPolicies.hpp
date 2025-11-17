@@ -382,6 +382,20 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     }
 
     /**
+     * \brief Specifies a times-policy with no constraints on how many times an expectation may match.
+     * \return The newly created policy.
+     */
+    [[nodiscard]]
+    consteval auto any_times() noexcept
+    {
+        constexpr mimicpp::detail::TimesConfig config{
+            0,
+            std::numeric_limits<int>::max()};
+
+        return config;
+    }
+
+    /**
      * \}
      */
 

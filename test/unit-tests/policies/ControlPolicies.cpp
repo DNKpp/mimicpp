@@ -1031,6 +1031,14 @@ TEST_CASE(
         REQUIRE(2 == config.min());
         REQUIRE(2 == config.max());
     }
+
+    SECTION("any_times")
+    {
+        constexpr detail::TimesConfig config = expect::any_times();
+
+        REQUIRE(0 == config.min());
+        REQUIRE(std::numeric_limits<int>::max() == config.max());
+    }
 }
 
 TEST_CASE(
