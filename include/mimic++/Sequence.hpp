@@ -16,6 +16,7 @@
 #include "mimic++/utilities/C++23Backports.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/PassKey.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
@@ -117,7 +118,16 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        BasicSequence() = default;
+        explicit BasicSequence(util::SourceLocation loc = {}) noexcept
+            : m_Loc{std::move(loc)}
+        {
+        }
+
+        [[nodiscard]]
+        constexpr util::SourceLocation const& from() const noexcept
+        {
+            return m_Loc;
+        }
 
         [[nodiscard]]
         constexpr std::optional<int> priority_of(Id const id) const noexcept
@@ -194,6 +204,8 @@ namespace mimicpp::sequence::detail
         }
 
     private:
+        util::SourceLocation m_Loc;
+
         enum class State
         {
             unsatisfied,
@@ -266,7 +278,10 @@ namespace mimicpp::sequence::detail
         ~BasicSequenceInterface() = default;
 
         [[nodiscard]]
-        BasicSequenceInterface() = default;
+        explicit BasicSequenceInterface(util::SourceLocation loc = {})
+            : m_Sequence{std::make_shared<Sequence>(std::move(loc))}
+        {
+        }
 
         [[nodiscard]]
         BasicSequenceInterface(BasicSequenceInterface&&) = default;
@@ -278,6 +293,12 @@ namespace mimicpp::sequence::detail
             return m_Sequence->tag();
         }
 
+        [[nodiscard]]
+        util::SourceLocation const& from() const noexcept
+        {
+            return m_Sequence->from();
+        }
+
         template <typename... Sequences>
             requires util::same_as_any<Sequence, Sequences...>
         constexpr std::shared_ptr<Sequence> sequence([[maybe_unused]] util::pass_key<Config<Sequences...>> key) const
@@ -286,7 +307,7 @@ namespace mimicpp::sequence::detail
         }
 
     private:
-        std::shared_ptr<Sequence> m_Sequence{std::make_shared<Sequence>()};
+        std::shared_ptr<Sequence> m_Sequence;
     };
 
     template <typename... Sequences>
@@ -371,6 +392,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
               sequence::Id,
               sequence::detail::LazyStrategy{}>
     {
+    public:
+        [[nodiscard]]
+        explicit LazySequence([[maybe_unused]] auto&&... canary, util::SourceLocation loc = {})
+            : BasicSequenceInterface{std::move(loc)}
+        {
+            static_assert(0u == sizeof...(canary), "LazySequence does not accept constructor arguments.");
+        }
     };
 
     /**
@@ -386,6 +414,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
               sequence::Id,
               sequence::detail::GreedyStrategy{}>
     {
+    public:
+        [[nodiscard]]
+        explicit GreedySequence([[maybe_unused]] auto&&... canary, util::SourceLocation loc = {})
+            : BasicSequenceInterface{std::move(loc)}
+        {
+            static_assert(0u == sizeof...(canary), "GreedySequence does not accept constructor arguments.");
+        }
     };
 
     /**

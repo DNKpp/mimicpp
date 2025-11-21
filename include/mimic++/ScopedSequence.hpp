@@ -123,10 +123,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         }
 
         /**
-         * \brief Default default-constructor.
+         * \brief Default-constructor.
          */
         [[nodiscard]]
-        BasicScopedSequence() = default;
+        explicit BasicScopedSequence([[maybe_unused]] auto&&... canary, util::SourceLocation loc = {})
+            : sequence::detail::BasicSequenceInterface<sequence::Id, Strategy>{std::move(loc)}
+        {
+            static_assert(0u == sizeof...(canary), "ScopedSequence does not accept constructor arguments.");
+        }
 
         /**
          * \brief Defaulted move-constructor.

@@ -299,6 +299,28 @@ TEST_CASE(
     REQUIRE(expected == std::invoke(sequence::detail::GreedyStrategy{}, id, cursor));
 }
 
+TEMPLATE_TEST_CASE(
+    "Sequences capture their construction location.",
+    "[sequence]",
+    LazySequence,
+    GreedySequence)
+{
+    constexpr util::SourceLocation before{};
+    TestType const sequence{};
+    constexpr util::SourceLocation after{};
+
+    CHECK_THAT(
+        std::string{sequence.from().file_name()},
+        Catch::Matchers::Equals(std::string{before.file_name()})
+            && Catch::Matchers::Equals(std::string{after.file_name()}));
+    CHECK_THAT(
+        std::string{sequence.from().function_name()},
+        Catch::Matchers::StartsWith(std::string{before.function_name()})
+            && Catch::Matchers::StartsWith(std::string{after.function_name()}));
+    CHECK(before.line() < sequence.from().line());
+    CHECK(sequence.from().line() < after.line());
+}
+
 TEST_CASE(
     "detail::has_better_rating determines, whether lhs shall be preferred over rhs.",
     "[detail][sequence]")
