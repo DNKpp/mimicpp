@@ -158,7 +158,7 @@ namespace mimicpp::reporting::detail
         template <print_iterator OutIter>
         OutIter operator()(OutIter out, state_inapplicable const& state) const
         {
-            auto const totalSequences = std::ranges::ssize(state.sequenceRatings)
+            auto const totalSequences = std::ranges::ssize(state.sequences)
                                       + std::ranges::ssize(state.inapplicableSequences);
             return format::format_to(
                 std::move(out),

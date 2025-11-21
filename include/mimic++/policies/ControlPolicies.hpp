@@ -12,6 +12,7 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
+#include "mimic++/reporting/SequenceReport.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <limits>
@@ -91,6 +92,32 @@ namespace mimicpp
     namespace detail
     {
         [[nodiscard]]
+        constexpr std::tuple<std::vector<sequence::rating>, std::vector<reporting::SequenceReport>> gather_sequence_reports(auto const& sequenceEntries)
+        {
+            std::vector<reporting::SequenceReport> inapplicable{};
+            std::vector<sequence::rating> ratings{};
+
+            auto const handleSequence = [&](auto& seq, sequence::Id const id) {
+                if (std::optional const priority = seq->priority_of(id))
+                {
+                    ratings.emplace_back(*priority, seq->tag());
+                }
+                else
+                {
+                    inapplicable.emplace_back(reporting::make_sequence_report(*seq));
+                }
+            };
+
+            std::apply(
+                [&](auto const&... entries) {
+                    (..., handleSequence(std::get<0>(entries), std::get<1>(entries)));
+                },
+                sequenceEntries);
+
+            return {std::move(ratings), std::move(inapplicable)};
+        }
+
+        [[nodiscard]]
         reporting::control_state_t make_control_state(
             int const min,
             int const max,
@@ -105,39 +132,19 @@ namespace mimicpp
                     .count = count,
                     .sequences = std::apply(
                         [](auto const&... entries) {
-                            return std::vector<sequence::Tag>{std::get<0>(entries)->tag()...};
+                            return std::vector<reporting::SequenceReport>{reporting::make_sequence_report(*std::get<0>(entries))...};
                         },
                         sequenceEntries)};
             }
 
-            std::vector<sequence::Tag> inapplicable{};
-            std::vector<sequence::rating> ratings{};
-            std::apply(
-                [&](auto const&... entries) {
-                    (...,
-                     std::invoke(
-                         [&](auto& seq, sequence::Id const id) {
-                             if (std::optional const priority = seq->priority_of(id))
-                             {
-                                 ratings.emplace_back(*priority, seq->tag());
-                             }
-                             else
-                             {
-                                 inapplicable.emplace_back(seq->tag());
-                             }
-                         },
-                         std::get<0>(entries),
-                         std::get<1>(entries)));
-                },
-                sequenceEntries);
-
+            auto&& [ratings, inapplicable] = gather_sequence_reports(sequenceEntries);
             if (!std::ranges::empty(inapplicable))
             {
                 return reporting::state_inapplicable{
                     .min = min,
                     .max = max,
                     .count = count,
-                    .sequenceRatings = std::move(ratings),
+                    .sequences = std::move(ratings),
                     .inapplicableSequences = std::move(inapplicable)};
             }
 

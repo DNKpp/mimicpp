@@ -22,7 +22,7 @@ namespace
 {
     inline reporting::control_state_t const commonApplicableState = reporting::state_applicable{0, 1, 0};
     inline reporting::control_state_t const commonUnsatisfiedState = reporting::state_applicable{1, 1, 0};
-    inline reporting::control_state_t const commonInapplicableState = reporting::state_inapplicable{0, 1, 0, {}, {sequence::Tag{1337}}};
+    inline reporting::control_state_t const commonInapplicableState = reporting::state_inapplicable{0, 1, 0, {}, {{sequence::Tag{1337}}}};
     inline reporting::control_state_t const commonSaturatedState = reporting::state_saturated{0, 1, 1};
 
     class ExpectationMock final

@@ -412,8 +412,22 @@ namespace mimicpp::sequence
         Tag tag{};
 
         [[nodiscard]]
-        friend bool operator==(const rating&, const rating&) = default;
+        friend bool operator==(rating const&, rating const&) = default;
     };
+
+    namespace detail
+    {
+        template <typename Id, auto priorityStrategy>
+            requires std::is_enum_v<Id>
+                  && std::signed_integral<std::underlying_type_t<Id>>
+                  && std::convertible_to<
+                         std::invoke_result_t<decltype(priorityStrategy), Id, int>,
+                         int>
+        class BasicSequence;
+
+        template <typename Id, auto priorityStrategy>
+        class BasicSequenceInterface;
+    }
 }
 
 namespace mimicpp::detail

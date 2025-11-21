@@ -10,7 +10,7 @@ using namespace mimicpp;
 namespace
 {
     inline reporting::control_state_t const commonApplicableState = reporting::state_applicable{13, 1337, 42};
-    inline reporting::control_state_t const commonInapplicableState = reporting::state_inapplicable{13, 1337, 42, {sequence::rating{1}}, {sequence::Tag{1337}}};
+    inline reporting::control_state_t const commonInapplicableState = reporting::state_inapplicable{13, 1337, 42, {sequence::rating{1}}, {{sequence::Tag{1337}}}};
     inline reporting::control_state_t const commonSaturatedState = reporting::state_saturated{42, 42, 42};
 
     [[maybe_unused]] constexpr std::string_view stacktraceToken{"Stacktrace:\n"};
@@ -638,16 +638,16 @@ TEST_CASE(
             {         "at least twice", 2,                                                     reporting::state_applicable{.min = 2, .max = maxSize, .count = 0}},
             {      "at least 42 times", 5,                                                   reporting::state_applicable{.min = 42, .max = maxSize, .count = 37}},
 
-            {           "exactly once", 1,         reporting::state_inapplicable{.min = 1, .max = 1, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
-            {          "exactly twice", 2,         reporting::state_inapplicable{.min = 2, .max = 2, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
-            {       "exactly 42 times", 5,      reporting::state_inapplicable{.min = 42, .max = 42, .count = 37, .inapplicableSequences = {sequence::Tag{1337}}}},
+            {           "exactly once", 1,         reporting::state_inapplicable{.min = 1, .max = 1, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
+            {          "exactly twice", 2,         reporting::state_inapplicable{.min = 2, .max = 2, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
+            {       "exactly 42 times", 5,      reporting::state_inapplicable{.min = 42, .max = 42, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}},
 
-            {  "between 1 and 2 times", 1,         reporting::state_inapplicable{.min = 1, .max = 2, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
-            {"between 42 and 47 times", 5,      reporting::state_inapplicable{.min = 42, .max = 47, .count = 37, .inapplicableSequences = {sequence::Tag{1337}}}},
+            {  "between 1 and 2 times", 1,         reporting::state_inapplicable{.min = 1, .max = 2, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
+            {"between 42 and 47 times", 5,      reporting::state_inapplicable{.min = 42, .max = 47, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}},
 
-            {          "at least once", 1,   reporting::state_inapplicable{.min = 1, .max = maxSize, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
-            {         "at least twice", 2,   reporting::state_inapplicable{.min = 2, .max = maxSize, .count = 0, .inapplicableSequences = {sequence::Tag{1337}}}},
-            {      "at least 42 times", 5, reporting::state_inapplicable{.min = 42, .max = maxSize, .count = 37, .inapplicableSequences = {sequence::Tag{1337}}}}
+            {          "at least once", 1,   reporting::state_inapplicable{.min = 1, .max = maxSize, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
+            {         "at least twice", 2,   reporting::state_inapplicable{.min = 2, .max = maxSize, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
+            {      "at least 42 times", 5, reporting::state_inapplicable{.min = 42, .max = maxSize, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}}
     }));
 
     reporting::ExpectationReport const expectationReport{
