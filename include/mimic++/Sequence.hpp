@@ -103,7 +103,7 @@ namespace mimicpp::sequence::detail
 
         ~BasicSequence() noexcept(false)
         {
-            auto const iter = std::ranges::find_if_not(m_Entries, is_fulfilled);
+            auto const iter = std::ranges::find_if_not(m_Entries, &Entry::is_fulfilled);
             auto const satisfiedCount = std::ranges::distance(m_Entries.cbegin(), iter);
             MIMICPP_ASSERT(m_Cursor <= satisfiedCount, "Cursor skipped unsatisfied entries.");
 
@@ -118,7 +118,7 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        explicit BasicSequence(util::SourceLocation loc = {}) noexcept
+        explicit constexpr BasicSequence(util::SourceLocation loc = {}) noexcept
             : m_Loc{std::move(loc)}
         {
         }
@@ -148,8 +148,8 @@ namespace mimicpp::sequence::detail
             MIMICPP_ASSERT(m_Cursor <= util::to_underlying(id), "Invalid state.");
 
             auto& element = m_Entries[util::to_underlying(id)];
-            MIMICPP_ASSERT(element == State::unsatisfied, "Element is in unexpected state.");
-            element = State::satisfied;
+            MIMICPP_ASSERT(element.is_unsatisfied(), "Element is in unexpected state.");
+            element.state = State::satisfied;
         }
 
         constexpr void set_saturated(Id const id) noexcept
@@ -159,8 +159,8 @@ namespace mimicpp::sequence::detail
             MIMICPP_ASSERT(m_Cursor <= index, "Invalid state.");
 
             auto& element = m_Entries[index];
-            MIMICPP_ASSERT(is_active(element), "Element is in unexpected state.");
-            element = State::saturated;
+            MIMICPP_ASSERT(element.is_active(), "Element is in unexpected state.");
+            element.state = State::saturated;
         }
 
         [[nodiscard]]
@@ -172,8 +172,8 @@ namespace mimicpp::sequence::detail
             auto const index = util::to_underlying(id) - m_Cursor;
 
             return 0 <= index
-                && std::ranges::all_of(pending.first(index), is_fulfilled)
-                && is_active(pending[index]);
+                && std::ranges::all_of(pending.first(index), &Entry::is_fulfilled)
+                && pending[index].is_active();
         }
 
         constexpr void consume(Id const id) noexcept
@@ -213,17 +213,32 @@ namespace mimicpp::sequence::detail
             saturated
         };
 
-        static constexpr auto is_fulfilled = [](State const state) noexcept {
-            return state == State::satisfied
-                || state == State::saturated;
+        struct Entry
+        {
+            State state{State::unsatisfied};
+
+            [[nodiscard]]
+            constexpr bool is_fulfilled() const noexcept
+            {
+                return state == State::satisfied
+                    || state == State::saturated;
+            }
+
+            [[nodiscard]]
+            constexpr bool is_active() const noexcept
+            {
+                return state == State::unsatisfied
+                    || state == State::satisfied;
+            }
+
+            [[nodiscard]]
+            constexpr bool is_unsatisfied() const noexcept
+            {
+                return state == State::unsatisfied;
+            }
         };
 
-        static constexpr auto is_active = [](State const state) noexcept {
-            return state == State::unsatisfied
-                || state == State::satisfied;
-        };
-
-        std::vector<State> m_Entries{};
+        std::vector<Entry> m_Entries{};
         int m_Cursor{};
 
         [[nodiscard]]
