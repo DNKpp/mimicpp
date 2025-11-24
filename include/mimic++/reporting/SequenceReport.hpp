@@ -25,7 +25,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
     public:
         sequence::Tag tag{};
         util::SourceLocation from{};
-        std::vector<util::SourceLocation> headFrom{};
+        std::optional<util::SourceLocation> headFrom{};
 
         [[nodiscard]]
         friend bool operator==(SequenceReport const&, SequenceReport const&) = default;

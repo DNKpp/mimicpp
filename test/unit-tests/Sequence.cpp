@@ -268,6 +268,40 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "detail::BasicSequence::head_from returns the source-location of the first available entry.",
+    "[sequence]")
+{
+    sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}> sequence{};
+    constexpr util::SourceLocation firstLoc{};
+    auto const first = sequence.add(firstLoc);
+    constexpr util::SourceLocation secondLoc{};
+    auto const second = sequence.add(secondLoc);
+    sequence.set_satisfied(second);
+    constexpr util::SourceLocation thirdLoc{};
+    auto const third = sequence.add(thirdLoc);
+
+    SECTION("When first entry is available.")
+    {
+        CHECK(firstLoc == sequence.head_from());
+
+        SECTION("And when second and third entries are available.")
+        {
+            sequence.set_saturated(first);
+
+            CHECK(secondLoc == sequence.head_from());
+
+            SECTION("And when no entry is available.")
+            {
+                sequence.set_saturated(second);
+                sequence.set_saturated(third);
+
+                CHECK_FALSE(sequence.head_from());
+            }
+        }
+    }
+}
+
+TEST_CASE(
     "detail::LazyStrategy prefers elements near cursor.",
     "[sequence]")
 {

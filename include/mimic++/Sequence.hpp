@@ -130,16 +130,16 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        constexpr std::vector<util::SourceLocation> head_from() const
+        constexpr std::optional<util::SourceLocation> head_from() const
         {
-            MIMICPP_ASSERT(is_valid(Id{m_Cursor}), "Sequence has no head.");
+            auto const pending = std::span{m_Entries}.subspan(m_Cursor);
+            auto const iter = std::ranges::find_if(pending, &Entry::is_active);
+            if (iter != pending.end())
+            {
+                return iter->loc;
+            }
 
-            auto locs = std::span{m_Entries}.subspan(m_Cursor)
-                      | std::views::take_while(&Entry::is_active)
-                      | std::views::transform(&Entry::loc)
-                      | std::views::common;
-
-            return std::vector(locs.begin(), locs.end());
+            return std::nullopt;
         }
 
         [[nodiscard]]
@@ -329,7 +329,7 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        std::vector<util::SourceLocation> head_from() const
+        std::optional<util::SourceLocation> head_from() const
         {
             return m_Sequence->head_from();
         }

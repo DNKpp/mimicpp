@@ -213,8 +213,7 @@ TEST_CASE(
 2 inapplicable but otherwise matching Expectation\(s\):
 	#1 Expectation defined at `.+`#L\d+, `.+`
 	Because it's not Head of 1 Sequence\(s\) \(2 total\).
-		Sequence from `.+`#L\d+, `.*` has the following Head\(s\):
-		- Expectation defined at .+`#L\d+, `.*`
+		Expectation defined at .+`#L\d+, `.*` is Head of Sequence from `.+`#L\d+, `.*`
 	With Adherence\(s\):
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
