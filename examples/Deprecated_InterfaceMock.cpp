@@ -85,7 +85,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "Multiple-inheritance is supported.",
+    "Multiple interface-inheritance is supported.",
     "[example][example::mock][example::mock::interface]")
 {
     //! [interface mock multiple inheritance]
