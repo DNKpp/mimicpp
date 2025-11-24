@@ -160,15 +160,38 @@ namespace mimicpp::reporting::detail
         {
             auto const totalSequences = std::ranges::ssize(state.sequences)
                                       + std::ranges::ssize(state.inapplicableSequences);
-            return format::format_to(
+            out = format::format_to(
                 std::move(out),
-                "it's not head of {} Sequence(s) ({} total).",
+                "it's not Head of {} Sequence(s) ({} total).\n",
                 std::ranges::ssize(state.inapplicableSequences),
                 totalSequences);
+
+            MIMICPP_ASSERT(!state.inapplicableSequences.empty(), "Inapplicable sequences can not be empty.");
+            for (auto const& sequence : state.inapplicableSequences)
+            {
+                out = format::format_to(std::move(out), "\t\tSequence from ");
+                out = mimicpp::print(std::move(out), sequence.from);
+                out = format::format_to(std::move(out), " has the following Head(s):\n");
+
+                MIMICPP_ASSERT(!sequence.headFrom.empty(), "Head-collection can not be empty.");
+                bool first{true};
+                for (auto const& head : sequence.headFrom)
+                {
+                    if (!std::exchange(first, false))
+                    {
+                        out = format::format_to(std::move(out), "\n");
+                    }
+
+                    out = format::format_to(std::move(out), "\t\t- Expectation defined at ");
+                    out = mimicpp::print(std::move(out), head);
+                }
+            }
+
+            return out;
         }
 
         template <print_iterator OutIter>
-        OutIter operator()(OutIter out, const state_saturated& state) const
+        OutIter operator()(OutIter out, state_saturated const& state) const
         {
             out = format::format_to(
                 std::move(out),

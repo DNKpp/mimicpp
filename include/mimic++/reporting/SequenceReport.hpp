@@ -25,6 +25,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
     public:
         sequence::Tag tag{};
         util::SourceLocation from{};
+        std::vector<util::SourceLocation> headFrom{};
 
         [[nodiscard]]
         friend bool operator==(SequenceReport const&, SequenceReport const&) = default;
@@ -34,14 +35,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
     [[nodiscard]]
     constexpr SequenceReport make_sequence_report(sequence::detail::BasicSequence<Id, priorityStrategy> const& seq)
     {
-        return SequenceReport{seq.tag(), seq.from()};
+        return SequenceReport{seq.tag(), seq.from(), seq.head_from()};
     }
 
     template <typename Id, auto priorityStrategy>
     [[nodiscard]]
     constexpr SequenceReport make_sequence_report(sequence::detail::BasicSequenceInterface<Id, priorityStrategy> const& seq)
     {
-        return SequenceReport{seq.tag(), seq.from()};
+        return SequenceReport{seq.tag(), seq.from(), seq.head_from()};
     }
 
     /**

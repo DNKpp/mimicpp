@@ -10,7 +10,12 @@ using namespace mimicpp;
 namespace
 {
     inline reporting::control_state_t const commonApplicableState = reporting::state_applicable{13, 1337, 42};
-    inline reporting::control_state_t const commonInapplicableState = reporting::state_inapplicable{13, 1337, 42, {sequence::rating{1}}, {{sequence::Tag{1337}}}};
+    inline reporting::control_state_t const commonInapplicableState = reporting::state_inapplicable{
+        13,
+        1337,
+        42,
+        {sequence::rating{1}},
+        {{sequence::Tag{1337}, {}, {util::SourceLocation{}}}}};
     inline reporting::control_state_t const commonSaturatedState = reporting::state_saturated{42, 42, 42};
 
     [[maybe_unused]] constexpr std::string_view stacktraceToken{"Stacktrace:\n"};
@@ -207,7 +212,9 @@ TEST_CASE(
 		arg\[1\] => std::string: "Hello, World!"
 2 inapplicable but otherwise matching Expectation\(s\):
 	#1 Expectation defined at `.+`#L\d+, `.+`
-	Because it's not head of 1 Sequence\(s\) \(2 total\).
+	Because it's not Head of 1 Sequence\(s\) \(2 total\).
+		Sequence from `.+`#L\d+, `.*` has the following Head\(s\):
+		- Expectation defined at .+`#L\d+, `.*`
 	With Adherence\(s\):
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
@@ -313,7 +320,7 @@ TEST_CASE(
     REQUIRE(stacktraceBegin != text.cend());
     REQUIRE_THAT(
         (std::string{text.cbegin(), stacktraceBegin}),
-        Catch::Matchers::EndsWith("Because it's not head of 1 Sequence(s) (2 total).\n\n"));
+        Catch::Matchers::ContainsSubstring("Because it's not Head of 1 Sequence(s) (2 total).\n"));
 
     std::string const stacktraceRegex =
         R"(Stacktrace:

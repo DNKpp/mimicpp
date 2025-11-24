@@ -92,7 +92,12 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
     {
         ExpectationReport const expectationReport{
             .target = make_common_target_report<void()>(),
-            .controlReport = reporting::state_inapplicable{1, 1, 1},
+            .controlReport = reporting::state_inapplicable{
+                                                           1,
+                                                           1,
+                                                           1,
+                                                           {},
+                                                           {{sequence::Tag{1337}, {}, {util::SourceLocation{}}}}},
             .requirementDescriptions = {{"expect: Valid"}}
         };
 
