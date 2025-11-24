@@ -70,6 +70,7 @@ TEST_CASE(
     const int max = min + GENERATE(range(0, 5));
 
     ControlPolicy<> policy{
+        {},
         detail::TimesConfig{min, max},
         sequence::detail::Config<>{}
     };
@@ -140,6 +141,7 @@ TEST_CASE(
         CHECK(sequence);
         std::optional policy{
             ControlPolicy{
+                          {},
                           detail::TimesConfig{},
                           expect::in_sequence(*sequence)}
         };
@@ -188,6 +190,7 @@ TEST_CASE(
         std::optional<TestSequenceT> secondSequence{std::in_place};
         std::optional policy{
             ControlPolicy{
+                          {},
                           detail::TimesConfig{},
                           expect::in_sequences(*firstSequence, *secondSequence)}
         };
@@ -265,6 +268,7 @@ TEST_CASE(
 
         TestSequenceT sequence{};
         ControlPolicy policy{
+            {},
             expect::times(min, max),
             expect::in_sequence(sequence)};
 
@@ -339,6 +343,7 @@ TEST_CASE(
     {
         const auto count = GENERATE(range(1, 5));
         ControlPolicy policy{
+            {},
             expect::times(count),
             expect::in_sequence(sequence)};
 
@@ -374,6 +379,7 @@ TEST_CASE(
     SECTION("When sequence has multiple expectations, the order matters.")
     {
         ControlPolicy policy1{
+            {},
             expect::once(),
             expect::in_sequence(sequence)};
 
@@ -381,6 +387,7 @@ TEST_CASE(
 
         const auto count2 = GENERATE(range(1, 5));
         ControlPolicy policy2{
+            {},
             expect::times(count2),
             expect::in_sequence(sequence)};
 
@@ -474,11 +481,13 @@ TEST_CASE(
         SECTION("When the first expectation is the prefix of multiple sequences.")
         {
             ControlPolicy policy1{
+                {},
                 expect::once(),
                 expect::in_sequences(sequence1, sequence2)};
             REQUIRE(2u == policy1.sequenceCount);
 
             ControlPolicy policy2{
+                {},
                 expect::once(),
                 expect::in_sequence(sequence2)};
             REQUIRE(1u == policy2.sequenceCount);
@@ -558,16 +567,19 @@ TEST_CASE(
         SECTION("When an expectation waits for multiple sequences.")
         {
             ControlPolicy policy1{
+                {},
                 expect::once(),
                 expect::in_sequence(sequence1)};
             REQUIRE(1u == policy1.sequenceCount);
 
             ControlPolicy policy2{
+                {},
                 expect::once(),
                 expect::in_sequence(sequence2)};
             REQUIRE(1u == policy2.sequenceCount);
 
             ControlPolicy policy3{
+                {},
                 expect::once(),
                 expect::in_sequences(sequence1, sequence2)};
             REQUIRE(2u == policy3.sequenceCount);
@@ -719,6 +731,7 @@ TEST_CASE(
     {
         LazySequence sequence{};
         ControlPolicy policy1{
+            {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
         CHECK(1u == policy1.sequenceCount);
@@ -734,6 +747,7 @@ TEST_CASE(
                         sequence::rating{std::numeric_limits<int>::max(), sequence.tag()}}}));
 
         ControlPolicy policy2{
+            {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
         CHECK(1u == policy2.sequenceCount);
@@ -836,6 +850,7 @@ TEST_CASE(
     {
         GreedySequence sequence{};
         ControlPolicy policy1{
+            {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
         CHECK(1u == policy1.sequenceCount);
@@ -851,6 +866,7 @@ TEST_CASE(
                         sequence::rating{0, sequence.tag()}}}));
 
         ControlPolicy policy2{
+            {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
         CHECK(1u == policy2.sequenceCount);

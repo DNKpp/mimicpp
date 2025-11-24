@@ -48,7 +48,7 @@ TEMPLATE_TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::BasicSequence::add throws, when all Ids are in use.",
+    "detail::BasicSequence::add throws, when id range is exhausted.",
     "[sequence]")
 {
     enum class ShortSequenceId : std::int8_t
@@ -60,15 +60,15 @@ TEST_CASE(
         FakeSequenceStrategy{}>
         seq{};
 
-    for ([[maybe_unused]] const auto i : std::views::iota(
+    for ([[maybe_unused]] auto const i : std::views::iota(
              0,
              int{std::numeric_limits<std::int8_t>::max()} + 1))
     {
-        seq.set_satisfied(seq.add());
+        seq.set_satisfied(seq.add({}));
     }
 
     REQUIRE_THROWS_AS(
-        seq.add(),
+        seq.add({}),
         std::runtime_error);
 }
 
@@ -94,7 +94,7 @@ TEST_CASE(
 
     SECTION("When sequence contains one id, that id must be satisfied.")
     {
-        const Id id = sequence->add();
+        const Id id = sequence->add({});
         REQUIRE(sequence->is_consumable(id));
 
         std::invoke(
@@ -143,9 +143,9 @@ TEST_CASE(
              +[](TestSequenceT& seq, const Id v) { seq.set_saturated(v); }});
 
         const std::vector ids{
-            sequence->add(),
-            sequence->add(),
-            sequence->add()};
+            sequence->add({}),
+            sequence->add({}),
+            sequence->add({})};
 
         SECTION("In initial state, only the first one is consumable.")
         {

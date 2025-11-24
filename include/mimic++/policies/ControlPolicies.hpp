@@ -29,6 +29,7 @@ namespace mimicpp::detail
     template <typename... Sequences>
     [[nodiscard]]
     constexpr std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> make_sequence_entries(
+        util::SourceLocation loc,
         std::tuple<std::shared_ptr<Sequences>...> const& sequences) noexcept
     {
         // This is a workaround due to some issues with clang-17 with c++23 and libstdc++
@@ -37,12 +38,10 @@ namespace mimicpp::detail
         std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> result{};
         std::invoke(
             [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) noexcept {
-                ((std::get<indices>(result) =
-                      std::tuple{
-                          std::get<indices>(sequences),
-                          std::get<indices>(sequences)->add(),
-                      }),
-                 ...);
+                (..., (std::get<indices>(result) = std::tuple{
+                           std::get<indices>(sequences),
+                           std::get<indices>(sequences)->add(loc),
+                       }));
             },
             std::index_sequence_for<Sequences...>{});
         return result;
@@ -165,11 +164,12 @@ namespace mimicpp
 
         [[nodiscard]]
         explicit constexpr ControlPolicy(
+            util::SourceLocation loc,
             detail::TimesConfig const& timesConfig,
             sequence::detail::Config<Sequences...> const& sequenceConfig) noexcept
             : m_Min{timesConfig.min()},
               m_Max{timesConfig.max()},
-              m_Sequences{detail::make_sequence_entries(sequenceConfig.sequences())}
+              m_Sequences{detail::make_sequence_entries(std::move(loc), sequenceConfig.sequences())}
         {
             update_sequence_states();
         }

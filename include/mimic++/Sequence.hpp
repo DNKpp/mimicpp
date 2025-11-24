@@ -184,7 +184,7 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        constexpr Id add()
+        constexpr Id add(util::SourceLocation info)
         {
             if (!std::in_range<std::underlying_type_t<Id>>(m_Entries.size()))
                 [[unlikely]]
@@ -192,7 +192,7 @@ namespace mimicpp::sequence::detail
                 throw std::runtime_error{"Sequence already holds maximum amount of elements."};
             }
 
-            m_Entries.emplace_back(State::unsatisfied);
+            m_Entries.emplace_back(State::unsatisfied, std::move(info));
 
             return static_cast<Id>(m_Entries.size() - 1);
         }
@@ -216,6 +216,7 @@ namespace mimicpp::sequence::detail
         struct Entry
         {
             State state{State::unsatisfied};
+            util::SourceLocation loc{};
 
             [[nodiscard]]
             constexpr bool is_fulfilled() const noexcept
