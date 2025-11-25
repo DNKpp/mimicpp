@@ -321,8 +321,8 @@ TEST_CASE(
             Catch::Matchers::Matches(
                 // should be close enough to what is allowed on all systems
                 R"(`((\d|\w|_|-|\+|\*)+(\\|/)){2})"
-                R"(StatePrinter\.cpp`)"
-                R"(#L\d+, `.+`)"));
+                R"(StatePrinter\.cpp)"
+                R"(:\d+`, `.+`)"));
     }
 #endif
 
