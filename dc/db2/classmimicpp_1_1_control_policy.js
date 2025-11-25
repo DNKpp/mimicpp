@@ -1,6 +1,6 @@
 var classmimicpp_1_1_control_policy =
 [
-    [ "ControlPolicy", "dc/db2/classmimicpp_1_1_control_policy.html#ae676c8f48df7046eea32bc227b9ed9fb", null ],
+    [ "ControlPolicy", "dc/db2/classmimicpp_1_1_control_policy.html#a6f89418a4913d7e6a1418f659caa0b95", null ],
     [ "consume", "dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87", null ],
     [ "is_applicable", "dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867", null ],
     [ "is_satisfied", "dc/db2/classmimicpp_1_1_control_policy.html#a917e4f636523433cecdeae81675b1e1f", null ],

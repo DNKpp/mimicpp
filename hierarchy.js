@@ -188,6 +188,7 @@ var hierarchy =
     [ "mimicpp::ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", null ],
     [ "mimicpp::printing::type::parsing::token::ScopeResolution", "d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution.html", null ],
     [ "mimicpp::printing::type::parsing::token::ScopeSequence", "df/d6e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_sequence.html", null ],
+    [ "mimicpp::reporting::SequenceReport", "d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html", null ],
     [ "mimicpp::expectation_policies::SideEffectAction< Action >", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html", null ],
     [ "mimicpp::signature_call_convention< Signature >", "dc/d9a/structmimicpp_1_1signature__call__convention.html", null ],
     [ "mimicpp::signature_call_convention< Signature >", "da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html", null ],
