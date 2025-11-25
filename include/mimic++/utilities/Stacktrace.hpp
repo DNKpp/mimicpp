@@ -480,17 +480,11 @@ namespace mimicpp::util::stacktrace::detail
     {
         MIMICPP_ASSERT(index < stacktrace.size(), "Index out of bounds.");
 
-        out = format::format_to(std::move(out), "`");
-        out = print_path(std::move(out), stacktrace.source_file(index));
-        out = format::format_to(std::move(out), "`");
-        out = format::format_to(
+        return printing::detail::print_source_location(
             std::move(out),
-            "#L{}, `",
-            stacktrace.source_line(index));
-        out = printing::type::prettify_function(std::move(out), stacktrace.description(index));
-        out = format::format_to(std::move(out), "`");
-
-        return out;
+            stacktrace.source_file(index),
+            stacktrace.source_line(index),
+            stacktrace.description(index));
     }
 }
 

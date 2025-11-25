@@ -380,8 +380,7 @@ TEST_CASE(
         R"((?:\/?)"                                // may begin with a /
         R"((?:(?:\d|\w|_|-|\+|\*|\.)+(?:\\|\/))*)" // arbitrary times `dir/`
         R"((?:\d|\w|_|-|\+|\*|\.)+)?)"             // file name; sometimes there is no file, so the whole path may be empty
-        "`"
-        R"((?:#L\d+, `.*`\n)){{{}}})", // other stuff
+        R"((?::\d+`, `.*`\n)){{{}}})",             // other stuff
         size);
     CHECK_THAT(
         mimicpp::print(stacktrace),
