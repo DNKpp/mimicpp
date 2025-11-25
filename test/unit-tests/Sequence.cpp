@@ -48,7 +48,7 @@ TEMPLATE_TEST_CASE(
 }
 
 TEST_CASE(
-    "detail::BasicSequence::add throws, when all Ids are in use.",
+    "detail::BasicSequence::add throws, when id range is exhausted.",
     "[sequence]")
 {
     enum class ShortSequenceId : std::int8_t
@@ -60,15 +60,15 @@ TEST_CASE(
         FakeSequenceStrategy{}>
         seq{};
 
-    for ([[maybe_unused]] const auto i : std::views::iota(
+    for ([[maybe_unused]] auto const i : std::views::iota(
              0,
              int{std::numeric_limits<std::int8_t>::max()} + 1))
     {
-        seq.set_satisfied(seq.add());
+        seq.set_satisfied(seq.add({}));
     }
 
     REQUIRE_THROWS_AS(
-        seq.add(),
+        seq.add({}),
         std::runtime_error);
 }
 
@@ -94,7 +94,7 @@ TEST_CASE(
 
     SECTION("When sequence contains one id, that id must be satisfied.")
     {
-        const Id id = sequence->add();
+        const Id id = sequence->add({});
         REQUIRE(sequence->is_consumable(id));
 
         std::invoke(
@@ -143,9 +143,9 @@ TEST_CASE(
              +[](TestSequenceT& seq, const Id v) { seq.set_saturated(v); }});
 
         const std::vector ids{
-            sequence->add(),
-            sequence->add(),
-            sequence->add()};
+            sequence->add({}),
+            sequence->add({}),
+            sequence->add({})};
 
         SECTION("In initial state, only the first one is consumable.")
         {
@@ -268,6 +268,40 @@ TEST_CASE(
 }
 
 TEST_CASE(
+    "detail::BasicSequence::head_from returns the source-location of the first available entry.",
+    "[sequence]")
+{
+    sequence::detail::BasicSequence<Id, FakeSequenceStrategy{}> sequence{};
+    constexpr util::SourceLocation firstLoc{};
+    auto const first = sequence.add(firstLoc);
+    constexpr util::SourceLocation secondLoc{};
+    auto const second = sequence.add(secondLoc);
+    sequence.set_satisfied(second);
+    constexpr util::SourceLocation thirdLoc{};
+    auto const third = sequence.add(thirdLoc);
+
+    SECTION("When first entry is available.")
+    {
+        CHECK(firstLoc == sequence.head_from());
+
+        SECTION("And when second and third entries are available.")
+        {
+            sequence.set_saturated(first);
+
+            CHECK(secondLoc == sequence.head_from());
+
+            SECTION("And when no entry is available.")
+            {
+                sequence.set_saturated(second);
+                sequence.set_saturated(third);
+
+                CHECK_FALSE(sequence.head_from());
+            }
+        }
+    }
+}
+
+TEST_CASE(
     "detail::LazyStrategy prefers elements near cursor.",
     "[sequence]")
 {
@@ -297,6 +331,28 @@ TEST_CASE(
     })));
 
     REQUIRE(expected == std::invoke(sequence::detail::GreedyStrategy{}, id, cursor));
+}
+
+TEMPLATE_TEST_CASE(
+    "Sequences capture their construction location.",
+    "[sequence]",
+    LazySequence,
+    GreedySequence)
+{
+    constexpr util::SourceLocation before{};
+    TestType const sequence{};
+    constexpr util::SourceLocation after{};
+
+    CHECK_THAT(
+        std::string{sequence.from().file_name()},
+        Catch::Matchers::Equals(std::string{before.file_name()})
+            && Catch::Matchers::Equals(std::string{after.file_name()}));
+    CHECK_THAT(
+        std::string{sequence.from().function_name()},
+        Catch::Matchers::StartsWith(std::string{before.function_name()})
+            && Catch::Matchers::StartsWith(std::string{after.function_name()}));
+    CHECK(before.line() < sequence.from().line());
+    CHECK(sequence.from().line() < after.line());
 }
 
 TEST_CASE(

@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/reporting/SequenceReport.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
@@ -30,15 +31,15 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         int min{};
         int max{};
         int count{};
-        std::vector<sequence::rating> sequenceRatings{};
-        std::vector<sequence::Tag> inapplicableSequences{};
+        std::vector<sequence::rating> sequences{};
+        std::vector<SequenceReport> inapplicableSequences{};
 
         [[nodiscard]]
-        friend bool operator==(const state_inapplicable&, const state_inapplicable&) = default;
+        friend bool operator==(state_inapplicable const&, state_inapplicable const&) = default;
     };
 
     /**
-     * \brief Denotes a applicable expectation state.
+     * \brief Denotes an applicable expectation state.
      * \ingroup REPORTING_REPORTS
      */
     struct state_applicable
@@ -49,7 +50,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         std::vector<sequence::rating> sequenceRatings{};
 
         [[nodiscard]]
-        friend bool operator==(const state_applicable&, const state_applicable&) = default;
+        friend bool operator==(state_applicable const&, state_applicable const&) = default;
     };
 
     /**
@@ -61,10 +62,10 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         int min{};
         int max{};
         int count{};
-        std::vector<sequence::Tag> sequences{};
+        std::vector<SequenceReport> sequences{};
 
         [[nodiscard]]
-        friend bool operator==(const state_saturated&, const state_saturated&) = default;
+        friend bool operator==(state_saturated const&, state_saturated const&) = default;
     };
 
     /**
@@ -90,7 +91,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         std::vector<std::optional<StringT>> requirementDescriptions{};
 
         [[nodiscard]]
-        friend bool operator==(const ExpectationReport&, const ExpectationReport&) = default;
+        friend bool operator==(ExpectationReport const&, ExpectationReport const&) = default;
     };
 
     /**
@@ -103,7 +104,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         std::vector<bool> outcomes{};
 
         [[nodiscard]]
-        friend bool operator==(const RequirementOutcomes&, const RequirementOutcomes&) = default;
+        friend bool operator==(RequirementOutcomes const&, RequirementOutcomes const&) = default;
     };
 }
 

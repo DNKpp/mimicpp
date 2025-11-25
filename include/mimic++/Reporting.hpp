@@ -13,6 +13,7 @@
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/NoMatchReport.hpp"
+#include "mimic++/reporting/SequenceReport.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
 
