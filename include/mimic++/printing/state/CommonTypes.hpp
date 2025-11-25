@@ -32,8 +32,22 @@
     #include <utility>
 #endif
 
-#ifdef __cpp_lib_source_location
+namespace mimicpp::printing::detail
+{
+    template <print_iterator OutIter>
+    constexpr OutIter print_source_location(OutIter out, std::string_view const filePath, int const line, std::string_view const function)
+    {
+        out = format::format_to(std::move(out), "`");
+        out = print_path(std::move(out), filePath);
+        out = format::format_to(std::move(out), ":{}`, `", line);
+        out = type::prettify_function(std::move(out), StringT{function});
+        out = format::format_to(std::move(out), "`");
 
+        return out;
+    }
+}
+
+#ifdef __cpp_lib_source_location
     #ifndef MIMICPP_DETAIL_IS_MODULE
         #include <source_location>
     #endif
@@ -44,21 +58,13 @@ struct mimicpp::printing::detail::state::common_type_printer<std::source_locatio
     template <print_iterator OutIter>
     static constexpr OutIter print(OutIter out, std::source_location const& loc)
     {
-        out = format::format_to(std::move(out), "`");
-        out = print_path(std::move(out), loc.file_name());
-        out = format::format_to(std::move(out), "`");
-
-        out = format::format_to(
+        return detail::print_source_location(
             std::move(out),
-            "#L{}, `",
-            loc.line());
-        out = type::prettify_function(std::move(out), loc.function_name());
-        out = format::format_to(std::move(out), "`");
-
-        return out;
+            loc.file_name(),
+            loc.line(),
+            loc.function_name());
     }
 };
-
 #endif
 
 namespace mimicpp::printing::detail::state

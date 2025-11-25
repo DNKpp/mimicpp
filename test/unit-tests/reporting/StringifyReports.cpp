@@ -56,12 +56,12 @@ TEST_CASE(
 
     // note the Adherence reordering
     std::string const regex =
-        R"(Matched Call originated from `.+`#L\d+, `.+`
+        R"(Matched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(int, std::string\)`
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
-	Chose Expectation defined at `.+`#L\d+, `.+`
+	Chose Expectation defined at `.+:\d+`, `.+`
 	With Adherence\(s\):
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
@@ -91,9 +91,9 @@ TEST_CASE(
     auto const text = reporting::stringify_full_match(callReport, expectationReport);
 
     std::string const regex =
-        R"(Matched Call originated from `.+`#L\d+, `.+`
+        R"(Matched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
-	Chose Expectation defined at `.+`#L\d+, `.+`
+	Chose Expectation defined at `.+:\d+`, `.+`
 	With Adherence\(s\):
 	  \+ expect: some requirement
 )";
@@ -121,9 +121,9 @@ TEST_CASE(
     auto const text = reporting::stringify_full_match(callReport, expectationReport);
 
     std::string const regex =
-        R"(Matched Call originated from `.+`#L\d+, `.+`
+        R"(Matched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
-	Chose Expectation defined at `.+`#L\d+, `.+`
+	Chose Expectation defined at `.+:\d+`, `.+`
 	Without any Requirements.
 )";
     CHECK_THAT(
@@ -163,8 +163,8 @@ TEST_CASE(
 
     std::string const stacktraceRegex =
         R"(Stacktrace:
-#0 `.*StringifyReports.cpp`#L\d+, `.+`
-(?:#\d+ `.*`#L\d+, `.*`\n){4})";
+#0 `.*StringifyReports.cpp:\d+`, `.+`
+(?:#\d+ `.*:\d+`, `.*`\n){4})";
     CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
@@ -205,20 +205,20 @@ TEST_CASE(
 
     // note the Adherence reordering
     std::string const regex =
-        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(int, std::string\)`
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
 2 inapplicable but otherwise matching Expectation\(s\):
-	#1 Expectation defined at `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+:\d+`, `.+`
 	Because it's not Head of 1 Sequence\(s\) \(2 total\).
-		Expectation defined at .+`#L\d+, `.*` is Head of Sequence from `.+`#L\d+, `.*`
+		Expectation defined at `.+:\d+`, `.*` is Head of Sequence from `.+:\d+`, `.*`
 	With Adherence\(s\):
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
 
-	#2 Expectation defined at `.+`#L\d+, `.+`
+	#2 Expectation defined at `.+:\d+`, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
 	With Adherence\(s\):
 	  \+ expect: test
@@ -249,10 +249,10 @@ TEST_CASE(
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
 
     std::string const regex =
-        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
 1 inapplicable but otherwise matching Expectation\(s\):
-	#1 Expectation defined at `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+:\d+`, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
 	With Adherence\(s\):
 	  \+ expect: some requirement
@@ -282,10 +282,10 @@ TEST_CASE(
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
 
     std::string const regex =
-        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
 1 inapplicable but otherwise matching Expectation\(s\):
-	#1 Expectation defined at `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+:\d+`, `.+`
 	Because it's already saturated \(matched 42 out of 42 times\).
 )";
     CHECK_THAT(
@@ -323,8 +323,8 @@ TEST_CASE(
 
     std::string const stacktraceRegex =
         R"(Stacktrace:
-#0 `.*StringifyReports.cpp`#L\d+, `.+`
-(?:#\d+ `.*`#L\d+, `.*`\n){4})";
+#0 `.*StringifyReports.cpp:\d+`, `.+`
+(?:#\d+ `.*:\d+`, `.*`\n){4})";
     CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
@@ -376,20 +376,20 @@ TEST_CASE(
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(int, std::string\)`
 	Where:
 		arg\[0\] => int: 1337
 		arg\[1\] => std::string: "Hello, World!"
 2 applicable non-matching Expectation\(s\):
-	#1 Expectation defined at `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+:\d+`, `.+`
 	Due to Violation\(s\):
 	  \- expect: arg\[0\] > 0
 	  \- 2 Requirement\(s\) failed without further description\.
 	With Adherence\(s\):
 	  \+ expect: arg\[1\] not empty
 
-	#2 Expectation defined at `.+`#L\d+, `.+`
+	#2 Expectation defined at `.+:\d+`, `.+`
 	Due to Violation\(s\):
 	  \- expect: violated
 	With Adherence\(s\):
@@ -434,10 +434,10 @@ TEST_CASE(
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
 1 applicable non-matching Expectation\(s\):
-	#1 Expectation defined at `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+:\d+`, `.+`
 	Due to Violation\(s\):
 	  \- expect: violation2
 )";
@@ -476,10 +476,10 @@ TEST_CASE(
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
 1 applicable non-matching Expectation\(s\):
-	#1 Expectation defined at `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+:\d+`, `.+`
 	Due to Violation\(s\):
 	  \- expect: violation
 	With Adherence\(s\):
@@ -515,10 +515,10 @@ TEST_CASE(
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
 1 applicable non-matching Expectation\(s\):
-	#1 Expectation defined at `.+`#L\d+, `.+`
+	#1 Expectation defined at `.+:\d+`, `.+`
 	Due to Violation\(s\):
 	  \- expect: violation
 )";
@@ -573,7 +573,7 @@ TEST_CASE(
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
-        R"(Unmatched Call originated from `.+`#L\d+, `.+`
+        R"(Unmatched Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
 No applicable Expectations available!
 )";
@@ -617,8 +617,8 @@ TEST_CASE(
 
     std::string const stacktraceRegex =
         R"(Stacktrace:
-#0 `.*StringifyReports.cpp`#L\d+, `.+`
-(?:#\d+ `.*`#L\d+, `.*`\n){4})";
+#0 `.*StringifyReports.cpp:\d+`, `.+`
+(?:#\d+ `.*:\d+`, `.*`\n){4})";
     CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
@@ -662,7 +662,7 @@ TEST_CASE(
 
     auto const text = reporting::stringify_unfulfilled_expectation(expectationReport);
     std::string const regex = format::format(
-        R"(Unfulfilled Expectation defined at `.+`#L\d+, `.+`
+        R"(Unfulfilled Expectation defined at `.+:\d+`, `.+`
 	Of Target `Mock-Name` related to Overload `void\(\)`
 	Because matching {} was expected => requires {} further match\(es\)\.
 )",
@@ -701,8 +701,8 @@ TEST_CASE(
 
         std::string const regex =
             R"(Unhandled Exception with message `Something went wrong\.`
-	While checking Expectation defined at `.+`#L\d+, `.+`
-For Call originated from `.+`#L\d+, `.+`
+	While checking Expectation defined at `.+:\d+`, `.+`
+For Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(int, std::string\)`
 	Where:
 		arg\[0\] => int: 1337
@@ -723,8 +723,8 @@ For Call originated from `.+`#L\d+, `.+`
 
         std::string const regex =
             R"(Unhandled Exception of unknown type\.
-	While checking Expectation defined at `.+`#L\d+, `.+`
-For Call originated from `.+`#L\d+, `.+`
+	While checking Expectation defined at `.+:\d+`, `.+`
+For Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(int, std::string\)`
 	Where:
 		arg\[0\] => int: 1337
@@ -760,8 +760,8 @@ TEST_CASE(
 
     std::string const regex =
         R"(Unhandled Exception with message `Something went wrong\.`
-	While checking Expectation defined at `.+`#L\d+, `.+`
-For Call originated from `.+`#L\d+, `.+`
+	While checking Expectation defined at `.+:\d+`, `.+`
+For Call originated from `.+:\d+`, `.+`
 	On Target `Mock-Name` used Overload `void\(\)`
 )";
     CHECK_THAT(
@@ -801,8 +801,8 @@ TEST_CASE(
 
     std::string const stacktraceRegex =
         R"(Stacktrace:
-#0 `.*StringifyReports.cpp`#L\d+, `.+`
-(?:#\d+ `.*`#L\d+, `.*`\n){4})";
+#0 `.*StringifyReports.cpp:\d+`, `.+`
+(?:#\d+ `.*:\d+`, `.*`\n){4})";
     CHECK_THAT(
         (std::string{stacktraceBegin, text.cend()}),
         Catch::Matchers::Matches(stacktraceRegex));
