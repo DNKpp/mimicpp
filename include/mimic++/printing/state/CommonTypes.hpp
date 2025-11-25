@@ -35,7 +35,7 @@
 namespace mimicpp::printing::detail
 {
     template <print_iterator OutIter>
-    constexpr OutIter print_source_location(OutIter out, std::string_view const filePath, int const line, std::string_view const function)
+    constexpr OutIter print_source_location(OutIter out, std::string_view const filePath, std::size_t const line, std::string_view const function)
     {
         out = format::format_to(std::move(out), "`");
         out = print_path(std::move(out), filePath);
