@@ -12,6 +12,7 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
+#include "mimic++/reporting/SequenceReport.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <limits>
@@ -28,6 +29,7 @@ namespace mimicpp::detail
     template <typename... Sequences>
     [[nodiscard]]
     constexpr std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> make_sequence_entries(
+        util::SourceLocation loc,
         std::tuple<std::shared_ptr<Sequences>...> const& sequences) noexcept
     {
         // This is a workaround due to some issues with clang-17 with c++23 and libstdc++
@@ -36,12 +38,10 @@ namespace mimicpp::detail
         std::tuple<std::tuple<std::shared_ptr<Sequences>, sequence::Id>...> result{};
         std::invoke(
             [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) noexcept {
-                ((std::get<indices>(result) =
-                      std::tuple{
-                          std::get<indices>(sequences),
-                          std::get<indices>(sequences)->add(),
-                      }),
-                 ...);
+                (..., (std::get<indices>(result) = std::tuple{
+                           std::get<indices>(sequences),
+                           std::get<indices>(sequences)->add(loc),
+                       }));
             },
             std::index_sequence_for<Sequences...>{});
         return result;
@@ -91,6 +91,32 @@ namespace mimicpp
     namespace detail
     {
         [[nodiscard]]
+        constexpr std::tuple<std::vector<sequence::rating>, std::vector<reporting::SequenceReport>> gather_sequence_reports(auto const& sequenceEntries)
+        {
+            std::vector<reporting::SequenceReport> inapplicable{};
+            std::vector<sequence::rating> ratings{};
+
+            auto const handleSequence = [&](auto& seq, sequence::Id const id) {
+                if (std::optional const priority = seq->priority_of(id))
+                {
+                    ratings.emplace_back(*priority, seq->tag());
+                }
+                else
+                {
+                    inapplicable.emplace_back(reporting::make_sequence_report(*seq));
+                }
+            };
+
+            std::apply(
+                [&](auto const&... entries) {
+                    (..., handleSequence(std::get<0>(entries), std::get<1>(entries)));
+                },
+                sequenceEntries);
+
+            return {std::move(ratings), std::move(inapplicable)};
+        }
+
+        [[nodiscard]]
         reporting::control_state_t make_control_state(
             int const min,
             int const max,
@@ -105,39 +131,19 @@ namespace mimicpp
                     .count = count,
                     .sequences = std::apply(
                         [](auto const&... entries) {
-                            return std::vector<sequence::Tag>{std::get<0>(entries)->tag()...};
+                            return std::vector<reporting::SequenceReport>{reporting::make_sequence_report(*std::get<0>(entries))...};
                         },
                         sequenceEntries)};
             }
 
-            std::vector<sequence::Tag> inapplicable{};
-            std::vector<sequence::rating> ratings{};
-            std::apply(
-                [&](auto const&... entries) {
-                    (...,
-                     std::invoke(
-                         [&](auto& seq, sequence::Id const id) {
-                             if (std::optional const priority = seq->priority_of(id))
-                             {
-                                 ratings.emplace_back(*priority, seq->tag());
-                             }
-                             else
-                             {
-                                 inapplicable.emplace_back(seq->tag());
-                             }
-                         },
-                         std::get<0>(entries),
-                         std::get<1>(entries)));
-                },
-                sequenceEntries);
-
+            auto&& [ratings, inapplicable] = gather_sequence_reports(sequenceEntries);
             if (!std::ranges::empty(inapplicable))
             {
                 return reporting::state_inapplicable{
                     .min = min,
                     .max = max,
                     .count = count,
-                    .sequenceRatings = std::move(ratings),
+                    .sequences = std::move(ratings),
                     .inapplicableSequences = std::move(inapplicable)};
             }
 
@@ -158,11 +164,12 @@ namespace mimicpp
 
         [[nodiscard]]
         explicit constexpr ControlPolicy(
+            util::SourceLocation loc,
             detail::TimesConfig const& timesConfig,
             sequence::detail::Config<Sequences...> const& sequenceConfig) noexcept
             : m_Min{timesConfig.min()},
               m_Max{timesConfig.max()},
-              m_Sequences{detail::make_sequence_entries(sequenceConfig.sequences())}
+              m_Sequences{detail::make_sequence_entries(std::move(loc), sequenceConfig.sequences())}
         {
             update_sequence_states();
         }

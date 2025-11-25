@@ -189,16 +189,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
                 std::apply(
                     [&](auto&... policies) {
                         ControlPolicy controlPolicy{
+                            sourceLocation,
                             std::move(m_TimesConfig),
                             std::move(m_SequenceConfig)};
 
-                        using ExpectationT = BasicExpectation<
+                        using Expectation = BasicExpectation<
                             Signature,
                             decltype(controlPolicy),
                             FinalizePolicy,
                             Policies...>;
 
-                        return std::make_unique<ExpectationT>(
+                        return std::make_unique<Expectation>(
                             std::move(sourceLocation),
                             std::move(m_TargetReport),
                             std::move(controlPolicy),

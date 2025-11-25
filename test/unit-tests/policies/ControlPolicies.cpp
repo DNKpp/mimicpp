@@ -70,6 +70,7 @@ TEST_CASE(
     const int max = min + GENERATE(range(0, 5));
 
     ControlPolicy<> policy{
+        {},
         detail::TimesConfig{min, max},
         sequence::detail::Config<>{}
     };
@@ -140,6 +141,7 @@ TEST_CASE(
         CHECK(sequence);
         std::optional policy{
             ControlPolicy{
+                          {},
                           detail::TimesConfig{},
                           expect::in_sequence(*sequence)}
         };
@@ -169,7 +171,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence->tag()}}));
+                        .sequences = {reporting::make_sequence_report(*sequence)}}));
         }
 
         SECTION("Reports error, when unconsumed.")
@@ -188,10 +190,9 @@ TEST_CASE(
         std::optional<TestSequenceT> secondSequence{std::in_place};
         std::optional policy{
             ControlPolicy{
+                          {},
                           detail::TimesConfig{},
-                          expect::in_sequences(
-                    *firstSequence,
-                          *secondSequence)}
+                          expect::in_sequences(*firstSequence, *secondSequence)}
         };
 
         REQUIRE(2u == policy->sequenceCount);
@@ -221,9 +222,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {
-                                      firstSequence->tag(),
-                                      secondSequence->tag()}
+                        .sequences = {reporting::make_sequence_report(*firstSequence), reporting::make_sequence_report(*secondSequence)}
             }));
         }
 
@@ -269,6 +268,7 @@ TEST_CASE(
 
         TestSequenceT sequence{};
         ControlPolicy policy{
+            {},
             expect::times(min, max),
             expect::in_sequence(sequence)};
 
@@ -322,7 +322,7 @@ TEST_CASE(
                         .min = min,
                         .max = max,
                         .count = max,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
         }
     }
 
@@ -343,6 +343,7 @@ TEST_CASE(
     {
         const auto count = GENERATE(range(1, 5));
         ControlPolicy policy{
+            {},
             expect::times(count),
             expect::in_sequence(sequence)};
 
@@ -372,12 +373,13 @@ TEST_CASE(
                     .min = count,
                     .max = count,
                     .count = count,
-                    .sequences = {sequence.tag()}}));
+                    .sequences = {reporting::make_sequence_report(sequence)}}));
     }
 
     SECTION("When sequence has multiple expectations, the order matters.")
     {
         ControlPolicy policy1{
+            {},
             expect::once(),
             expect::in_sequence(sequence)};
 
@@ -385,6 +387,7 @@ TEST_CASE(
 
         const auto count2 = GENERATE(range(1, 5));
         ControlPolicy policy2{
+            {},
             expect::times(count2),
             expect::in_sequence(sequence)};
 
@@ -411,7 +414,7 @@ TEST_CASE(
                         .min = count2,
                         .max = count2,
                         .count = 0,
-                        .inapplicableSequences = {sequence.tag()}}));
+                        .inapplicableSequences = {reporting::make_sequence_report(sequence)}}));
 
             REQUIRE_NOTHROW(policy1.consume());
 
@@ -425,7 +428,7 @@ TEST_CASE(
                             .min = 1,
                             .max = 1,
                             .count = 1,
-                            .sequences = {sequence.tag()}}));
+                            .sequences = {reporting::make_sequence_report(sequence)}}));
 
                 REQUIRE(!std::as_const(policy2).is_satisfied());
                 REQUIRE_THAT(
@@ -449,7 +452,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
 
             REQUIRE(policy2.is_satisfied());
             REQUIRE_THAT(
@@ -459,7 +462,7 @@ TEST_CASE(
                         .min = count2,
                         .max = count2,
                         .count = count2,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
         }
     }
 }
@@ -478,11 +481,13 @@ TEST_CASE(
         SECTION("When the first expectation is the prefix of multiple sequences.")
         {
             ControlPolicy policy1{
+                {},
                 expect::once(),
                 expect::in_sequences(sequence1, sequence2)};
             REQUIRE(2u == policy1.sequenceCount);
 
             ControlPolicy policy2{
+                {},
                 expect::once(),
                 expect::in_sequence(sequence2)};
             REQUIRE(1u == policy2.sequenceCount);
@@ -509,7 +514,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 0,
-                        .inapplicableSequences = {sequence2.tag()}}));
+                        .inapplicableSequences = {reporting::make_sequence_report(sequence2)}}));
 
             policy1.consume();
 
@@ -521,9 +526,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {
-                                      sequence1.tag(),
-                                      sequence2.tag()}
+                        .sequences = {reporting::make_sequence_report(sequence1), reporting::make_sequence_report(sequence2)}
             }));
 
             REQUIRE(!policy2.is_satisfied());
@@ -535,9 +538,7 @@ TEST_CASE(
                         .max = 1,
                         .count = 0,
                         .sequenceRatings = {
-                                            sequence::rating{1, sequence2.tag()},
-                                            }
-            }));
+                            sequence::rating{1, sequence2.tag()}}}));
 
             policy2.consume();
 
@@ -549,9 +550,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {
-                                      sequence1.tag(),
-                                      sequence2.tag()}
+                        .sequences = {reporting::make_sequence_report(sequence1), reporting::make_sequence_report(sequence2)}
             }));
 
             REQUIRE(policy2.is_satisfied());
@@ -562,22 +561,25 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence2.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence2)}}));
         }
 
         SECTION("When an expectation waits for multiple sequences.")
         {
             ControlPolicy policy1{
+                {},
                 expect::once(),
                 expect::in_sequence(sequence1)};
             REQUIRE(1u == policy1.sequenceCount);
 
             ControlPolicy policy2{
+                {},
                 expect::once(),
                 expect::in_sequence(sequence2)};
             REQUIRE(1u == policy2.sequenceCount);
 
             ControlPolicy policy3{
+                {},
                 expect::once(),
                 expect::in_sequences(sequence1, sequence2)};
             REQUIRE(2u == policy3.sequenceCount);
@@ -612,9 +614,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 0,
-                        .inapplicableSequences = {
-                                                  sequence1.tag(),
-                                                  sequence2.tag()}
+                        .inapplicableSequences = {reporting::make_sequence_report(sequence1), reporting::make_sequence_report(sequence2)}
             }));
 
             policy1.consume();
@@ -627,7 +627,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence1.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence1)}}));
 
             REQUIRE(!policy2.is_satisfied());
             REQUIRE_THAT(
@@ -648,9 +648,9 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 0,
-                        .sequenceRatings = {
+                        .sequences = {
                             sequence::rating{1, sequence1.tag()}},
-                        .inapplicableSequences = {sequence2.tag()}}));
+                        .inapplicableSequences = {reporting::make_sequence_report(sequence2)}}));
 
             policy2.consume();
 
@@ -662,7 +662,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence1.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence1)}}));
 
             REQUIRE(policy2.is_satisfied());
             REQUIRE_THAT(
@@ -672,7 +672,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence2.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence2)}}));
 
             REQUIRE(!policy3.is_satisfied());
             REQUIRE_THAT(
@@ -697,7 +697,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence1.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence1)}}));
 
             REQUIRE(policy2.is_satisfied());
             REQUIRE_THAT(
@@ -707,7 +707,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence2.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence2)}}));
 
             REQUIRE(policy3.is_satisfied());
             REQUIRE_THAT(
@@ -717,9 +717,7 @@ TEST_CASE(
                         .min = 1,
                         .max = 1,
                         .count = 1,
-                        .sequences = {
-                                      sequence1.tag(),
-                                      sequence2.tag()}
+                        .sequences = {reporting::make_sequence_report(sequence1), reporting::make_sequence_report(sequence2)}
             }));
         }
     }
@@ -733,6 +731,7 @@ TEST_CASE(
     {
         LazySequence sequence{};
         ControlPolicy policy1{
+            {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
         CHECK(1u == policy1.sequenceCount);
@@ -748,6 +747,7 @@ TEST_CASE(
                         sequence::rating{std::numeric_limits<int>::max(), sequence.tag()}}}));
 
         ControlPolicy policy2{
+            {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
         CHECK(1u == policy2.sequenceCount);
@@ -778,7 +778,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
 
             REQUIRE(policy2.is_satisfied());
             REQUIRE_THAT(
@@ -805,7 +805,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 0,
-                        .inapplicableSequences = {sequence.tag()}}));
+                        .inapplicableSequences = {reporting::make_sequence_report(sequence)}}));
 
             REQUIRE(policy2.is_satisfied());
             REQUIRE_THAT(
@@ -815,7 +815,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
         }
 
         SECTION("Succeeds, when both got consumed.")
@@ -831,7 +831,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
             REQUIRE(!policy1.is_applicable());
 
             REQUIRE(policy2.is_satisfied());
@@ -842,7 +842,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
         }
     }
 
@@ -850,6 +850,7 @@ TEST_CASE(
     {
         GreedySequence sequence{};
         ControlPolicy policy1{
+            {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
         CHECK(1u == policy1.sequenceCount);
@@ -865,6 +866,7 @@ TEST_CASE(
                         sequence::rating{0, sequence.tag()}}}));
 
         ControlPolicy policy2{
+            {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
         CHECK(1u == policy2.sequenceCount);
@@ -895,7 +897,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
 
             REQUIRE(policy2.is_satisfied());
             REQUIRE_THAT(
@@ -922,7 +924,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 0,
-                        .inapplicableSequences = {sequence.tag()}}));
+                        .inapplicableSequences = {reporting::make_sequence_report(sequence)}}));
 
             REQUIRE(policy2.is_satisfied());
             REQUIRE_THAT(
@@ -932,7 +934,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
         }
 
         SECTION("Succeeds, when both got consumed.")
@@ -948,7 +950,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
 
             REQUIRE(policy2.is_satisfied());
             REQUIRE_THAT(
@@ -958,7 +960,7 @@ TEST_CASE(
                         .min = 0,
                         .max = 1,
                         .count = 1,
-                        .sequences = {sequence.tag()}}));
+                        .sequences = {reporting::make_sequence_report(sequence)}}));
         }
     }
 }

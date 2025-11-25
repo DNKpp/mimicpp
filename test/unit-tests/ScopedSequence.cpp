@@ -160,3 +160,25 @@ TEST_CASE(
     CHECK(expectation.is_satisfied());
     CHECK(sequence.expectations().front().is_satisfied());
 }
+
+TEMPLATE_TEST_CASE(
+    "ScopedSequences capture their construction location.",
+    "[sequence]",
+    LazyScopedSequence,
+    GreedyScopedSequence)
+{
+    constexpr util::SourceLocation before{};
+    TestType const sequence{};
+    constexpr util::SourceLocation after{};
+
+    CHECK_THAT(
+        std::string{sequence.from().file_name()},
+        Catch::Matchers::Equals(std::string{before.file_name()})
+            && Catch::Matchers::Equals(std::string{after.file_name()}));
+    CHECK_THAT(
+        std::string{sequence.from().function_name()},
+        Catch::Matchers::StartsWith(std::string{before.function_name()})
+            && Catch::Matchers::StartsWith(std::string{after.function_name()}));
+    CHECK(before.line() < sequence.from().line());
+    CHECK(sequence.from().line() < after.line());
+}

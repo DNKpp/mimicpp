@@ -156,23 +156,36 @@ namespace mimicpp::reporting::detail
         }
 
         template <print_iterator OutIter>
-        OutIter operator()(OutIter out, state_inapplicable const& state) const
+        constexpr OutIter operator()(OutIter out, state_inapplicable const& state) const
         {
-            auto const totalSequences = std::ranges::ssize(state.sequenceRatings)
+            auto const totalSequences = std::ranges::ssize(state.sequences)
                                       + std::ranges::ssize(state.inapplicableSequences);
-            return format::format_to(
+            out = format::format_to(
                 std::move(out),
-                "it's not head of {} Sequence(s) ({} total).",
+                "it's not Head of {} Sequence(s) ({} total).\n",
                 std::ranges::ssize(state.inapplicableSequences),
                 totalSequences);
+
+            MIMICPP_ASSERT(!state.inapplicableSequences.empty(), "Inapplicable sequences can not be empty.");
+            for (auto const& sequence : state.inapplicableSequences)
+            {
+                MIMICPP_ASSERT(sequence.headFrom, "Head-from can not be empty.");
+                out = format::format_to(std::move(out), "\t\tExpectation defined at ");
+                out = mimicpp::print(std::move(out), *sequence.headFrom);
+                out = format::format_to(std::move(out), " is Head of Sequence from ");
+                out = mimicpp::print(std::move(out), sequence.from);
+                out = format::format_to(std::move(out), "\n");
+            }
+
+            return out;
         }
 
         template <print_iterator OutIter>
-        OutIter operator()(OutIter out, const state_saturated& state) const
+        constexpr OutIter operator()(OutIter out, state_saturated const& state) const
         {
             out = format::format_to(
                 std::move(out),
-                "it's already saturated (matched {} out of {} times).",
+                "it's already saturated (matched {} out of {} times).\n",
                 state.count,
                 state.max);
 
@@ -356,7 +369,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
             std::visit(
                 std::bind_front(detail::inapplicable_reason_printer{}, std::ostreambuf_iterator{ss}),
                 expReport.controlReport);
-            ss << "\n";
 
             std::ranges::sort(expReport.requirementDescriptions);
             detail::stringify_expectation_report_requirement_adherences(

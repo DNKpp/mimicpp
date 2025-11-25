@@ -16,6 +16,7 @@
 #include "mimic++/utilities/C++23Backports.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/PassKey.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
@@ -102,7 +103,7 @@ namespace mimicpp::sequence::detail
 
         ~BasicSequence() noexcept(false)
         {
-            auto const iter = std::ranges::find_if_not(m_Entries, is_fulfilled);
+            auto const iter = std::ranges::find_if_not(m_Entries, &Entry::is_fulfilled);
             auto const satisfiedCount = std::ranges::distance(m_Entries.cbegin(), iter);
             MIMICPP_ASSERT(m_Cursor <= satisfiedCount, "Cursor skipped unsatisfied entries.");
 
@@ -117,7 +118,29 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        BasicSequence() = default;
+        explicit constexpr BasicSequence(util::SourceLocation loc = {}) noexcept
+            : m_Loc{std::move(loc)}
+        {
+        }
+
+        [[nodiscard]]
+        constexpr util::SourceLocation const& from() const noexcept
+        {
+            return m_Loc;
+        }
+
+        [[nodiscard]]
+        constexpr std::optional<util::SourceLocation> head_from() const
+        {
+            auto const pending = std::span{m_Entries}.subspan(m_Cursor);
+            auto const iter = std::ranges::find_if(pending, &Entry::is_active);
+            if (iter != pending.end())
+            {
+                return iter->loc;
+            }
+
+            return std::nullopt;
+        }
 
         [[nodiscard]]
         constexpr std::optional<int> priority_of(Id const id) const noexcept
@@ -138,8 +161,8 @@ namespace mimicpp::sequence::detail
             MIMICPP_ASSERT(m_Cursor <= util::to_underlying(id), "Invalid state.");
 
             auto& element = m_Entries[util::to_underlying(id)];
-            MIMICPP_ASSERT(element == State::unsatisfied, "Element is in unexpected state.");
-            element = State::satisfied;
+            MIMICPP_ASSERT(element.is_unsatisfied(), "Element is in unexpected state.");
+            element.state = State::satisfied;
         }
 
         constexpr void set_saturated(Id const id) noexcept
@@ -149,8 +172,8 @@ namespace mimicpp::sequence::detail
             MIMICPP_ASSERT(m_Cursor <= index, "Invalid state.");
 
             auto& element = m_Entries[index];
-            MIMICPP_ASSERT(is_active(element), "Element is in unexpected state.");
-            element = State::saturated;
+            MIMICPP_ASSERT(element.is_active(), "Element is in unexpected state.");
+            element.state = State::saturated;
         }
 
         [[nodiscard]]
@@ -162,8 +185,8 @@ namespace mimicpp::sequence::detail
             auto const index = util::to_underlying(id) - m_Cursor;
 
             return 0 <= index
-                && std::ranges::all_of(pending.first(index), is_fulfilled)
-                && is_active(pending[index]);
+                && std::ranges::all_of(pending.first(index), &Entry::is_fulfilled)
+                && pending[index].is_active();
         }
 
         constexpr void consume(Id const id) noexcept
@@ -174,7 +197,7 @@ namespace mimicpp::sequence::detail
         }
 
         [[nodiscard]]
-        constexpr Id add()
+        constexpr Id add(util::SourceLocation info)
         {
             if (!std::in_range<std::underlying_type_t<Id>>(m_Entries.size()))
                 [[unlikely]]
@@ -182,7 +205,7 @@ namespace mimicpp::sequence::detail
                 throw std::runtime_error{"Sequence already holds maximum amount of elements."};
             }
 
-            m_Entries.emplace_back(State::unsatisfied);
+            m_Entries.emplace_back(State::unsatisfied, std::move(info));
 
             return static_cast<Id>(m_Entries.size() - 1);
         }
@@ -194,6 +217,8 @@ namespace mimicpp::sequence::detail
         }
 
     private:
+        util::SourceLocation m_Loc;
+
         enum class State
         {
             unsatisfied,
@@ -201,17 +226,33 @@ namespace mimicpp::sequence::detail
             saturated
         };
 
-        static constexpr auto is_fulfilled = [](State const state) noexcept {
-            return state == State::satisfied
-                || state == State::saturated;
+        struct Entry
+        {
+            State state{State::unsatisfied};
+            util::SourceLocation loc{};
+
+            [[nodiscard]]
+            constexpr bool is_fulfilled() const noexcept
+            {
+                return state == State::satisfied
+                    || state == State::saturated;
+            }
+
+            [[nodiscard]]
+            constexpr bool is_active() const noexcept
+            {
+                return state == State::unsatisfied
+                    || state == State::satisfied;
+            }
+
+            [[nodiscard]]
+            constexpr bool is_unsatisfied() const noexcept
+            {
+                return state == State::unsatisfied;
+            }
         };
 
-        static constexpr auto is_active = [](State const state) noexcept {
-            return state == State::unsatisfied
-                || state == State::satisfied;
-        };
-
-        std::vector<State> m_Entries{};
+        std::vector<Entry> m_Entries{};
         int m_Cursor{};
 
         [[nodiscard]]
@@ -266,7 +307,10 @@ namespace mimicpp::sequence::detail
         ~BasicSequenceInterface() = default;
 
         [[nodiscard]]
-        BasicSequenceInterface() = default;
+        explicit BasicSequenceInterface(util::SourceLocation loc = {})
+            : m_Sequence{std::make_shared<Sequence>(std::move(loc))}
+        {
+        }
 
         [[nodiscard]]
         BasicSequenceInterface(BasicSequenceInterface&&) = default;
@@ -278,6 +322,18 @@ namespace mimicpp::sequence::detail
             return m_Sequence->tag();
         }
 
+        [[nodiscard]]
+        util::SourceLocation const& from() const noexcept
+        {
+            return m_Sequence->from();
+        }
+
+        [[nodiscard]]
+        std::optional<util::SourceLocation> head_from() const
+        {
+            return m_Sequence->head_from();
+        }
+
         template <typename... Sequences>
             requires util::same_as_any<Sequence, Sequences...>
         constexpr std::shared_ptr<Sequence> sequence([[maybe_unused]] util::pass_key<Config<Sequences...>> key) const
@@ -286,7 +342,7 @@ namespace mimicpp::sequence::detail
         }
 
     private:
-        std::shared_ptr<Sequence> m_Sequence{std::make_shared<Sequence>()};
+        std::shared_ptr<Sequence> m_Sequence;
     };
 
     template <typename... Sequences>
@@ -371,6 +427,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
               sequence::Id,
               sequence::detail::LazyStrategy{}>
     {
+    public:
+        [[nodiscard]]
+        explicit LazySequence([[maybe_unused]] auto&&... canary, util::SourceLocation loc = {})
+            : BasicSequenceInterface{std::move(loc)}
+        {
+            static_assert(0u == sizeof...(canary), "LazySequence does not accept constructor arguments.");
+        }
     };
 
     /**
@@ -386,6 +449,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
               sequence::Id,
               sequence::detail::GreedyStrategy{}>
     {
+    public:
+        [[nodiscard]]
+        explicit GreedySequence([[maybe_unused]] auto&&... canary, util::SourceLocation loc = {})
+            : BasicSequenceInterface{std::move(loc)}
+        {
+            static_assert(0u == sizeof...(canary), "GreedySequence does not accept constructor arguments.");
+        }
     };
 
     /**

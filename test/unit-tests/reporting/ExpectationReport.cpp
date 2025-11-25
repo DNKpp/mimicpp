@@ -11,14 +11,14 @@ TEST_CASE(
     "reporting::state_inapplicable is equality comparable.",
     "[reporting]")
 {
-    const reporting::state_inapplicable first{
+    reporting::state_inapplicable const first{
         .min = 43,
         .max = 44,
         .count = 42,
-        .sequenceRatings = {
-                            sequence::rating{1337, sequence::Tag{1338}},
-                            sequence::rating{1339, sequence::Tag{1340}}                     },
-        .inapplicableSequences = {                        sequence::Tag{1341}, sequence::Tag{1342}}
+        .sequences = {
+                      sequence::rating{1337, sequence::Tag{1338}},
+                      sequence::rating{1339, sequence::Tag{1340}}                       },
+        .inapplicableSequences = {                      {sequence::Tag{1341}}, {sequence::Tag{1342}}}
     };
 
     reporting::state_inapplicable second{first};
@@ -63,7 +63,7 @@ TEST_CASE(
 
     SECTION("Compare not equal, when sequenceRatings differs.")
     {
-        second.sequenceRatings = GENERATE(
+        second.sequences = GENERATE(
             std::vector<sequence::rating>{
         },
             (std::vector{
@@ -82,13 +82,14 @@ TEST_CASE(
 
     SECTION("Compare not equal, when inapplicableSequences differs.")
     {
+        using SeqReport = reporting::SequenceReport;
         second.inapplicableSequences = GENERATE(
-            std::vector<sequence::Tag>{},
-            std::vector{sequence::Tag{1342}},
-            std::vector{sequence::Tag{1341}},
+            std::vector<SeqReport>{},
+            std::vector{SeqReport{sequence::Tag{1342}}},
+            std::vector{SeqReport{sequence::Tag{1341}}},
             (std::vector{
-                sequence::Tag{1342},
-                sequence::Tag{1341}}));
+                SeqReport{sequence::Tag{1342}},
+                SeqReport{sequence::Tag{1341}}}));
 
         CHECK_FALSE(first == second);
         CHECK_FALSE(second == first);
@@ -101,7 +102,7 @@ TEST_CASE(
     "reporting::state_applicable is equality comparable.",
     "[reporting]")
 {
-    const reporting::state_applicable first{
+    reporting::state_applicable const first{
         .min = 43,
         .max = 44,
         .count = 42,
@@ -174,13 +175,11 @@ TEST_CASE(
     "reporting::state_saturated is equality comparable.",
     "[reporting]")
 {
-    const reporting::state_saturated first{
+    reporting::state_saturated const first{
         .min = 43,
         .max = 44,
         .count = 42,
-        .sequences = {
-                      sequence::Tag{1337},
-                      sequence::Tag{1338}}
+        .sequences = {{sequence::Tag{1337}}, {sequence::Tag{1338}}}
     };
 
     reporting::state_saturated second{first};
@@ -225,13 +224,14 @@ TEST_CASE(
 
     SECTION("Compare not equal, when inapplicableSequences differs.")
     {
+        using SeqReport = reporting::SequenceReport;
         second.sequences = GENERATE(
-            std::vector<sequence::Tag>{},
-            std::vector{sequence::Tag{1337}},
-            std::vector{sequence::Tag{1338}},
+            std::vector<SeqReport>{},
+            std::vector{SeqReport{sequence::Tag{1337}}},
+            std::vector{SeqReport{sequence::Tag{1338}}},
             (std::vector{
-                sequence::Tag{1338},
-                sequence::Tag{1337}}));
+                SeqReport{sequence::Tag{1338}},
+                SeqReport{sequence::Tag{1337}}}));
 
         CHECK_FALSE(first == second);
         CHECK_FALSE(second == first);
@@ -244,7 +244,7 @@ TEST_CASE(
     "reporting::ExpectationReport is equality comparable.",
     "[reporting]")
 {
-    const reporting::ExpectationReport first{
+    reporting::ExpectationReport const first{
         .from = {},
         .target = {"Mock-Name", reporting::TypeReport::make<void()>()},
         .controlReport = reporting::state_applicable{0, 1, 0},
@@ -304,7 +304,7 @@ TEST_CASE(
         second.controlReport = GENERATE(
             as<reporting::control_state_t>{},
             reporting::state_applicable{0, 2, 0},
-            reporting::state_inapplicable{0, 2, 0, {}, std::vector<sequence::Tag>{1337}},
+            reporting::state_inapplicable{0, 2, 0, {}, {{sequence::Tag{1337}}}},
             reporting::state_saturated{1, 1, 2});
 
         CHECK_FALSE(first == second);
