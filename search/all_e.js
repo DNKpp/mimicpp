@@ -20,7 +20,7 @@ var searchData=
   ['match_5fsuffix_17',['match_suffix',['../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a561e709d444eaf8ab32ba08888b5a290',1,'mimicpp::printing::type::parsing']]],
   ['matcher_18',['Custom Matcher',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md3',1,'']]],
   ['matcher_19',['matcher',['../d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html#a1356befb766d36569dc0caeedc3c84e5',1,'mimicpp::expectation_policies::matcher_matches_fn']]],
-  ['matcher_20integration_20',['Experimental Matcher integration',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md26',1,'']]],
+  ['matcher_20integration_20',['Experimental Matcher integration',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#autotoc_md25',1,'']]],
   ['matcher_20integration_21',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md32',1,'']]],
   ['matcher_20unicode_20support_22',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md35',1,'']]],
   ['matcher_5ffor_23',['matcher_for',['../df/d23/conceptmimicpp_1_1matcher__for.html',1,'mimicpp']]],

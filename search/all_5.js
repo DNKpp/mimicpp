@@ -75,7 +75,7 @@ var searchData=
   ['custom_20char_20types_20and_20related_20strings_72',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['custom_20finalizers_73',['Custom Finalizers',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#autotoc_md15',1,'']]],
   ['custom_20matcher_74',['Custom Matcher',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md3',1,'']]],
-  ['custom_20stacktrace_20backends_75',['Custom Stacktrace Backends',['../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#autotoc_md25',1,'']]],
+  ['custom_20stacktrace_20backends_75',['Custom Stacktrace Backends',['../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#autotoc_md26',1,'']]],
   ['custom_20strings_20with_20common_20char_20type_76',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md21',1,'']]],
   ['custom_20types_77',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md16',1,'']]],
   ['customizability_78',['Features &amp; Customizability',['../index.html#autotoc_md58',1,'']]],
