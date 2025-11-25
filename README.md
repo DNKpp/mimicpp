@@ -142,12 +142,12 @@ mock();                       // Since no expectation was set up, this call is u
 The framework will generate the following output:
 
 ```
-Unmatched Call originated from `path/to/source.cpp`#L1337, `test_function()`
+Unmatched Call originated from `path/to/source.cpp:1337`, `test_function()`
   On Target `Mock<void()>` used Overload `void()`
 No Expectations available!
 
 Stacktrace:
-#0 `path/to/source.cpp`#L1337, `test_function()`
+#0 `path/to/source.cpp:1337`, `test_function()`
 // ...
 ```
 
@@ -165,20 +165,20 @@ mock(1337, std::nullopt);                            // Call the mock with an in
 This will produce the following detailed output:
 
 ```
-Unmatched Call originated from `path/to/source.cpp`#L42, `test_function2()`
+Unmatched Call originated from `path/to/source.cpp:42`, `test_function2()`
   On Target `Mock<void(int)>` used Overload `void(int)`
   Where:
       arg[0] => int: 1337
       arg[1] => std::optional<int>: nullopt
 1 non-matching Expectation(s):
-  #1 Expectation defined at `path/to/source.cpp`#L24, `test_function2()`
+  #1 Expectation defined at `path/to/source.cpp:24`, `test_function2()`
   Due to Violation(s):
     - expect: arg[0] == 42
   With Adherence(s):
     + expect: arg[1] == nullopt
 
 Stacktrace:
-#0 `path/to/source.cpp`#L42, `test_function2()`
+#0 `path/to/source.cpp:42`, `test_function2()`
 // ...
 ```
 
