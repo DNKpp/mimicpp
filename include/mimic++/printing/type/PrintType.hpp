@@ -96,6 +96,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
 
 namespace mimicpp::printing::type
 {
+    namespace detail
+    {
+        struct free_deleter
+        {
+            void operator()(char* const c) const noexcept
+            {
+                std::free(c);
+            }
+        };
+    }
+
     template <typename T>
     StringT type_name()
     {
@@ -103,8 +114,7 @@ namespace mimicpp::printing::type
 
         // see: https://gcc.gnu.org/onlinedocs/libstdc++/manual/ext_demangling.html
         int status{};
-        using free_deleter_t = decltype([](char* c) noexcept { std::free(c); });
-        std::unique_ptr<char, free_deleter_t> const demangledName{
+        std::unique_ptr<char, detail::free_deleter> const demangledName{
             abi::__cxa_demangle(rawName, nullptr, nullptr, &status)};
         if (0 == status)
         {
