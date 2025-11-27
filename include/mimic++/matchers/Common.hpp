@@ -102,16 +102,21 @@ namespace mimicpp::detail::describe_hook
 
     inline constexpr util::priority_tag<1> maxTag{};
 
-    template <typename Matcher>
-    [[nodiscard]]
-    constexpr auto describe(Matcher const& matcher)
-        -> decltype(describe_impl(maxTag, matcher))
-        requires requires {
-            { describe_impl(maxTag, matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>;
-        }
+    struct describe_fn
     {
-        return describe_impl(maxTag, matcher);
-    }
+        template <typename Matcher>
+        [[nodiscard]]
+        constexpr auto operator()(Matcher const& matcher) const
+            -> decltype(describe_impl(maxTag, matcher))
+            requires requires {
+                { describe_impl(maxTag, matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>;
+            }
+        {
+            return describe_impl(maxTag, matcher);
+        }
+    };
+
+    inline constexpr describe_fn describe{};
 }
 
 namespace mimicpp
