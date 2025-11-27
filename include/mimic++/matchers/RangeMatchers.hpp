@@ -179,21 +179,23 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches::range
     [[nodiscard]]
     constexpr auto each_element(Matcher&& matcher)
     {
-        using MatcherT = std::remove_cvref_t<Matcher>;
+        using MatcherType = std::remove_cvref_t<Matcher>;
+        using arg_storage = mimicpp::detail::arg_storage<
+            MatcherType,
+            std::identity,
+            mimicpp::detail::describe_hook::describe_fn>;
+
         return PredicateMatcher{
-            [](std::ranges::range auto&& target, const MatcherT& m) {
+            []<std::ranges::range Range>(Range&& target, MatcherType const& m) {
                 return std::ranges::all_of(
-                    target,
-                    [&](const auto& element) { return m.matches(element); });
+                    std::forward<Range>(target),
+                    [&](auto&& element) {
+                        return mimicpp::detail::matches_hook::matches(m, element);
+                    });
             },
             "each el in range: el {}",
             "not each el in range: el {}",
-            std::make_tuple(
-                mimicpp::detail::arg_storage<
-                    MatcherT,
-                    std::identity,
-                    decltype([](const auto& m) { return mimicpp::detail::describe_hook::describe(m); })>{
-                    std::forward<MatcherT>(matcher)})};
+            std::tuple<arg_storage>{std::forward<Matcher>(matcher)}};
     }
 
     /**
@@ -204,21 +206,23 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches::range
     [[nodiscard]]
     constexpr auto any_element(Matcher&& matcher)
     {
-        using MatcherT = std::remove_cvref_t<Matcher>;
+        using MatcherType = std::remove_cvref_t<Matcher>;
+        using arg_storage = mimicpp::detail::arg_storage<
+            MatcherType,
+            std::identity,
+            mimicpp::detail::describe_hook::describe_fn>;
+
         return PredicateMatcher{
-            [](std::ranges::range auto&& target, const MatcherT& m) {
+            []<std::ranges::range Range>(Range&& target, MatcherType const& m) {
                 return std::ranges::any_of(
-                    target,
-                    [&](const auto& element) { return m.matches(element); });
+                    std::forward<Range>(target),
+                    [&](auto&& element) {
+                        return mimicpp::detail::matches_hook::matches(m, element);
+                    });
             },
             "any el in range: el {}",
             "none el in range: el {}",
-            std::make_tuple(
-                mimicpp::detail::arg_storage<
-                    MatcherT,
-                    std::identity,
-                    decltype([](const auto& m) { return mimicpp::detail::describe_hook::describe(m); })>{
-                    std::forward<MatcherT>(matcher)})};
+            std::tuple<arg_storage>{std::forward<Matcher>(matcher)}};
     }
 
     /**
