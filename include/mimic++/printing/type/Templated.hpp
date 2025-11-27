@@ -199,35 +199,35 @@ namespace mimicpp::printing::type::detail
     {
     };
 
+    template <template <typename, auto...> typename Template, typename T, auto n>
+    struct array_like_name_generator
+    {
+        template <print_iterator OutIter>
+        constexpr OutIter operator()(OutIter out) const
+        {
+            out = pretty_template_name<Template<T, n>>(std::move(out));
+            out = format::format_to(std::move(out), "<");
+            out = mimicpp::print_type<T>(std::move(out));
+
+            if constexpr (constexpr bool isDefaultSize = requires { requires std::same_as<Template<T>, Template<T, n>>; };
+                          !isDefaultSize)
+            {
+                out = format::format_to(std::move(out), ", {}", n);
+            }
+
+            out = format::format_to(std::move(out), ">");
+
+            return out;
+        }
+    };
+
     // used for array, span and the like
     // should also handle c++26s inplace_vector
     // see: https://en.cppreference.com/w/cpp/container/inplace_vector
     template <template <typename, auto...> typename Template, typename T, auto n>
     struct template_type_printer<Template<T, n>>
         : public basic_template_type_printer<
-              decltype([]<print_iterator OutIter>(OutIter out) {
-                  out = pretty_template_name<Template<T, n>>(std::move(out));
-                  out = format::format_to(std::move(out), "<");
-                  out = mimicpp::print_type<T>(std::move(out));
-                  out = format::format_to(std::move(out), ", {}>", n);
-
-                  return out;
-              })>
-    {
-    };
-
-    template <template <typename, auto...> typename Template, typename T, auto n>
-        requires std::same_as<Template<T>, Template<T, n>>
-    struct template_type_printer<Template<T, n>>
-        : public basic_template_type_printer<
-              decltype([]<print_iterator OutIter>(OutIter out) {
-                  out = pretty_template_name<Template<T, n>>(std::move(out));
-                  out = format::format_to(std::move(out), "<");
-                  out = mimicpp::print_type<T>(std::move(out));
-                  out = format::format_to(std::move(out), ">");
-
-                  return out;
-              })>
+              array_like_name_generator<Template, T, n>>
     {
     };
 
