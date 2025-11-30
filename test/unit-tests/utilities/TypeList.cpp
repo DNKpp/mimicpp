@@ -66,6 +66,21 @@ TEMPLATE_TEST_CASE_SIG(
     STATIC_REQUIRE(std::same_as<Expected, util::detail::unique_list_t<Types...>>);
 }
 
+TEMPLATE_TEST_CASE_SIG(
+    "type_list_index_of searches for the specified type.",
+    "[utility]",
+    ((std::size_t expected, typename T, typename... Types), expected, T, Types...),
+    (0u, int, int),
+    (0u, int, int, int),
+    (1u, int&, int, int&),
+    (1u, double(int const&), void(), double(int const&), double(int const&&)),
+    (2u, double(int const&&), void(), double(int const&), double(int const&&)),
+    (0u, void (*)(int const&), void (*)(int const&), void (*)(int const&&)),
+    (1u, void (*)(int const&&), void (*)(int const&), void (*)(int const&&)))
+{
+    STATIC_CHECK(expected == util::type_list_index_of_v<util::type_list<Types...>, T>);
+}
+
 TEST_CASE(
     "detail::expand_tuple appends elements, until the desired size is reached.",
     "[detail][utility]")
