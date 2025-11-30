@@ -85,6 +85,24 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
     template <typename TypeList>
     using type_list_pop_back_t = typename type_list_pop_back<TypeList>::type;
 
+    template <typename TypeList, typename T>
+    struct type_list_index_of;
+
+    template <typename TypeList, typename T>
+    inline constexpr std::size_t type_list_index_of_v = type_list_index_of<TypeList, T>::value;
+
+    template <typename... Elements, typename T>
+    struct type_list_index_of<type_list<T, Elements...>, T>
+        : public std::integral_constant<std::size_t, 0u>
+    {
+    };
+
+    template <typename First, typename... Elements, typename T>
+    struct type_list_index_of<type_list<First, Elements...>, T>
+        : public std::integral_constant<std::size_t, 1u + type_list_index_of_v<type_list<Elements...>, T>>
+    {
+    };
+
     template <template <typename...> typename Template, typename TypeList>
     struct type_list_populate;
 
