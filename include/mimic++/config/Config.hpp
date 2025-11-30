@@ -32,7 +32,6 @@
         #define MIMICPP_DETAIL_IS_CLANG 1
     #else
         #define MIMICPP_DETAIL_IS_GCC 1
-        #define MIMICPP_DETAIL_GCC_VERSION (__GNUC__ * 1'000'000 + __GNUC_MINOR__ * 1000 + __GNUC_PATCHLEVEL__)
     #endif
 #endif
 
@@ -70,12 +69,10 @@
     #define MIMICPP_DETAIL_CONSTEXPR_VECTOR inline
 #endif
 
-// gcc 10.2 requires a workaround, due to some ambiguities.
+// gcc 10 requires a workaround, due to some ambiguities.
 // see: https://github.com/DNKpp/mimicpp/issues/151
-// clang-format off
 #if MIMICPP_DETAIL_IS_GCC \
-    && MIMICPP_DETAIL_GCC_VERSION < 10003000
-    // clang-format on
+    && __GNUC__ <= 10
     #define MIMICPP_DETAIL_STD_GET_WORKAROUND 1
 #endif
 
