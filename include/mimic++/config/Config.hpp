@@ -72,8 +72,10 @@
 
 // gcc 10.2 requires a workaround, due to some ambiguities.
 // see: https://github.com/DNKpp/mimicpp/issues/151
+// clang-format off
 #if MIMICPP_DETAIL_IS_GCC \
-    && MIMICPP_DETAIL_GCC_VERSION < 10'003'000
+    && MIMICPP_DETAIL_GCC_VERSION < 10003000
+    // clang-format on
     #define MIMICPP_DETAIL_STD_GET_WORKAROUND 1
 #endif
 
