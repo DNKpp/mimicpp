@@ -32,6 +32,7 @@
         #define MIMICPP_DETAIL_IS_CLANG 1
     #else
         #define MIMICPP_DETAIL_IS_GCC 1
+        #define MIMICPP_DETAIL_GCC_VERSION (__GNUC__ * 1'000'000 + __GNUC_MINOR__ * 1000 + __GNUC_PATCHLEVEL__)
     #endif
 #endif
 
