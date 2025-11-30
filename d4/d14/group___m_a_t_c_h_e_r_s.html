@@ -197,7 +197,7 @@ Variables</h2></td></tr>
 <p>Matchers check various argument properties. </p>
 <p>Matchers can be used to check various argument properties and are highly customizable. In general, they simply compare their arguments with a pre-defined predicate, but also provide a meaningful description.</p>
 <dl class="section attention"><dt>Attention</dt><dd>Matchers receive their arguments as possibly non-const, which is due to workaround some restrictions on const qualified views. Either way, matchers should never modify any of their arguments.</dd></dl>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md2"></a>
 Matching arguments</h3>
 <p>In general matchers can be applied via the <code><a class="el" href="../../d0/da2/group___e_x_p_e_c_t_a_t_i_o_n___r_e_q_u_i_r_e_m_e_n_t.html#ga0678d47507b2bf3f1446e9925a5d2761" title="Checks whether the selected argument satisfies the given matcher.">expect::arg</a>&lt;n&gt;</code> factory, but they can also be directly used at the expect statement. </p><div class="fragment"><div class="line">    <span class="keyword">using </span><a class="code hl_variable" href="#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a>;</div>
 <div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
@@ -228,7 +228,7 @@ Matching arguments</h3>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(_)            <span class="comment">// in fact, the _ is the only built-in matcher, which isn&#39;t invertible</span></div>
 <div class="line">        and expect::arg&lt;0&gt;(!matches::le(42)); <span class="comment">// note the !, as this makes it an actual &gt; test</span></div>
 <div class="line">    mock(1337);</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md8"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md3"></a>
 Custom Matcher</h3>
 <p>Matchers are highly customizable. In fact, any type which satisfies <code><a class="el" href="../../df/d23/conceptmimicpp_1_1matcher__for.html">matcher_for</a></code> concept can be used. There exists no base or interface type, but the <code><a class="el" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html" title="Generic matcher and the basic building block of most of the built-in matchers.">PredicateMatcher</a></code> servers as a convenient generic type, which simply contains a predicate, a format string and optional additional arguments.</p>
 <p>A very straight-forward custom matcher may look like this: </p><div class="fragment"><div class="line">    [[nodiscard]]</div>
@@ -985,7 +985,7 @@ template&lt;typename T&gt; </div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Nov 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sun Nov 30 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

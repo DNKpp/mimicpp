@@ -171,14 +171,21 @@ $(function(){initNavTree('d8/dd2/_config_8hpp_source.html','../../'); initResiza
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="../../d8/dd2/_config_8hpp.html#a76508669f47b73a0a062c6d4f21d32f2">   69</a></span><span class="preprocessor">    #define MIMICPP_DETAIL_CONSTEXPR_VECTOR inline</span></div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="comment">// gcc 10 requires a workaround, due to some ambiguities.</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="comment">// see: https://github.com/DNKpp/mimicpp/issues/151</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#if MIMICPP_DETAIL_IS_GCC \</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">    &amp;&amp; __GNUC__ &lt;= 10</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">    #define MIMICPP_DETAIL_STD_GET_WORKAROUND 1</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_08ebf9492445e058b0ba4156a3978cfb.html">config</a></li><li class="navelem"><a class="el" href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></li>
-    <li class="footer">Generated on Thu Nov 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sun Nov 30 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

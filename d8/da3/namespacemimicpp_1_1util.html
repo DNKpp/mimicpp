@@ -137,6 +137,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html">type_list</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A very basic type-list template.  <a href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d17/structmimicpp_1_1util_1_1type__list__index__of.html">type_list_index_of</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d23/structmimicpp_1_1util_1_1type__list__index__of_3_01type__list_3_01_first_00_01_elements_8_8_8_01_4_00_01_t_01_4.html">type_list_index_of&lt; type_list&lt; First, Elements... &gt;, T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d01/structmimicpp_1_1util_1_1type__list__index__of_3_01type__list_3_01_t_00_01_elements_8_8_8_01_4_00_01_t_01_4.html">type_list_index_of&lt; type_list&lt; T, Elements... &gt;, T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d8d/structmimicpp_1_1util_1_1type__list__pop__back.html">type_list_pop_back</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d99/structmimicpp_1_1util_1_1type__list__populate.html">type_list_populate</a></td></tr>
@@ -234,6 +240,9 @@ Variables</h2></td></tr>
 <tr class="memitem:a6ab229fce64e2c104a052a34d45e626c" id="r_a6ab229fce64e2c104a052a34d45e626c"><td class="memItemLeft" align="right" valign="top">constexpr detail::contains_fn&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ab229fce64e2c104a052a34d45e626c">contains</a> {}</td></tr>
 <tr class="memdesc:a6ab229fce64e2c104a052a34d45e626c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines, whether the specified value is contained in the given range.  <br /></td></tr>
 <tr class="separator:a6ab229fce64e2c104a052a34d45e626c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f1e21e537892fb2be0856402d8d217f" id="r_a2f1e21e537892fb2be0856402d8d217f"><td class="memTemplParams" colspan="2">template&lt;typename TypeList, typename T&gt; </td></tr>
+<tr class="memitem:a2f1e21e537892fb2be0856402d8d217f"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a2f1e21e537892fb2be0856402d8d217f">type_list_index_of_v</a> = <a class="el" href="../../dc/d17/structmimicpp_1_1util_1_1type__list__index__of.html">type_list_index_of</a>&lt;TypeList, T&gt;::value</td></tr>
+<tr class="separator:a2f1e21e537892fb2be0856402d8d217f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a1bf76cb81561bd1b640e8303d2f3e7b7" name="a1bf76cb81561bd1b640e8303d2f3e7b7"></a>
@@ -814,13 +823,37 @@ requires std::is_enum_v&lt;T&gt;</div>
 
 </div>
 </div>
+<a id="a2f1e21e537892fb2be0856402d8d217f" name="a2f1e21e537892fb2be0856402d8d217f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f1e21e537892fb2be0856402d8d217f">&#9670;&#160;</a></span>type_list_index_of_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename TypeList, typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::size_t mimicpp::util::type_list_index_of_v = <a class="el" href="../../dc/d17/structmimicpp_1_1util_1_1type__list__index__of.html">type_list_index_of</a>&lt;TypeList, T&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d8/da3/namespacemimicpp_1_1util.html">util</a></li>
-    <li class="footer">Generated on Thu Nov 27 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Sun Nov 30 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
