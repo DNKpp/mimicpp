@@ -165,6 +165,40 @@ namespace mimicpp::util::detail
                 [](auto&&... elements) { return std::make_tuple(std::move(elements)...); },
                 std::array<FillElement, n - sizeof...(Elements)>{}));
     }
+
+#if MIMICPP_DETAIL_STD_GET_WORKAROUND
+    template <typename T, typename... Types>
+    constexpr T& get(std::tuple<Types...>& tuple) noexcept
+    {
+        return std::get<type_list_index_of_v<type_list<Types...>, T>>(tuple);
+    }
+
+    template <typename T, typename... Types>
+    constexpr T const& get(std::tuple<Types...> const& tuple) noexcept
+    {
+        return std::get<type_list_index_of_v<type_list<Types...>, T>>(tuple);
+    }
+
+    template <typename T, typename... Types>
+    constexpr T&& get(std::tuple<Types...>&& tuple) noexcept
+    {
+        return std::get<type_list_index_of_v<type_list<Types...>, T>>(std::move(tuple));
+    }
+
+    template <typename T, typename... Types>
+    constexpr T const&& get(std::tuple<Types...> const&& tuple) noexcept
+    {
+        return std::get<type_list_index_of_v<type_list<Types...>, T>>(std::move(tuple));
+    }
+
+    template <typename T, typename Tuple>
+    constexpr decltype(auto) get(Tuple&& tuple) noexcept(std::get<T>(std::declval<Tuple&&>()))
+    {
+        return std::get<T>(std::forward<Tuple>(tuple));
+    }
+#else
+    using std::get;
+#endif
 }
 
 #endif

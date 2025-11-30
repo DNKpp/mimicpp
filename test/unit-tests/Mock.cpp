@@ -1118,23 +1118,37 @@ TEST_CASE(
 
     Mock<
         void(),
-        double(int) const>
+        double(int const&) const,
+        double(int const&&) const>
         mock{};
 
     ScopedExpectation const firstExpectation = mock.expect_call();
-    ScopedExpectation const secondExpectation = mock.expect_call(1337)
-                                             && finally::returns(4.2);
+    ScopedExpectation const secondExpectation = mock.expect_call(matches::type<int const&&>)
+                                             && expect::arg<0>(matches::eq(42))
+                                             && finally::returns(1337.);
+    ScopedExpectation const thirdExpectation = mock.expect_call(matches::type<int const&>)
+                                            && expect::arg<0>(matches::eq(1337))
+                                            && finally::returns(4.2);
 
     REQUIRE_FALSE(firstExpectation.is_satisfied());
     REQUIRE_FALSE(secondExpectation.is_satisfied());
+    REQUIRE_FALSE(thirdExpectation.is_satisfied());
 
     mock();
     CHECK(firstExpectation.is_satisfied());
     CHECK(!secondExpectation.is_satisfied());
+    CHECK(!thirdExpectation.is_satisfied());
 
-    CHECK(4.2 == mock(1337));
+    CHECK(1337. == mock(42));
     CHECK(firstExpectation.is_satisfied());
     CHECK(secondExpectation.is_satisfied());
+    CHECK(!thirdExpectation.is_satisfied());
+
+    constexpr int value{1337};
+    CHECK(4.2 == mock(value));
+    CHECK(firstExpectation.is_satisfied());
+    CHECK(secondExpectation.is_satisfied());
+    CHECK(thirdExpectation.is_satisfied());
 }
 
 TEST_CASE(

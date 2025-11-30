@@ -520,16 +520,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     private:
         template <typename... Collections>
         [[nodiscard]]
-        explicit Mock(
-            std::tuple<Collections...> collections,
-            MockSettings settings) noexcept
+        explicit Mock(std::tuple<Collections...> collections, MockSettings const& settings) noexcept
+            // clang-format off
             : detail::BasicMock<FirstSignature>{
-                  std::get<detail::expectation_collection_ptr_for<FirstSignature>>(collections),
-                  settings},
-              // clang-format off
-              detail::BasicMock<OtherSignatures>{
-                  std::get<detail::expectation_collection_ptr_for<OtherSignatures>>(collections),
-                  settings}...
+                util::detail::get<detail::expectation_collection_ptr_for<FirstSignature>>(collections),
+                settings},
+            detail::BasicMock<OtherSignatures>{
+                util::detail::get<detail::expectation_collection_ptr_for<OtherSignatures>>(collections),
+                settings}...
         // clang-format on
         {
         }

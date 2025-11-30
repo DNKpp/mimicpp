@@ -70,4 +70,11 @@
     #define MIMICPP_DETAIL_CONSTEXPR_VECTOR inline
 #endif
 
+// gcc 10.2 requires a workaround, due to some ambiguities.
+// see: https://github.com/DNKpp/mimicpp/issues/151
+#if MIMICPP_DETAIL_IS_GCC \
+    && MIMICPP_DETAIL_GCC_VERSION < 10'003'000
+    #define MIMICPP_DETAIL_STD_GET_WORKAROUND 1
+#endif
+
 #endif
