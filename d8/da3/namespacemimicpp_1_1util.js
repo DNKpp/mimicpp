@@ -2,6 +2,7 @@ var namespacemimicpp_1_1util =
 [
     [ "stacktrace", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace" ],
     [ "always_false", "d4/df2/structmimicpp_1_1util_1_1always__false.html", null ],
+    [ "pass_key", "db/dcd/structmimicpp_1_1util_1_1pass__key.html", null ],
     [ "priority_tag", "d0/db8/structmimicpp_1_1util_1_1priority__tag.html", null ],
     [ "priority_tag< 0u >", "dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html", null ],
     [ "SourceLocation", "db/df5/classmimicpp_1_1util_1_1_source_location.html", "db/df5/classmimicpp_1_1util_1_1_source_location" ],
@@ -9,6 +10,9 @@ var namespacemimicpp_1_1util =
     [ "StaticString", "de/daf/classmimicpp_1_1util_1_1_static_string.html", "de/daf/classmimicpp_1_1util_1_1_static_string" ],
     [ "StaticString< Char, 0u >", "d2/d50/classmimicpp_1_1util_1_1_static_string_3_01_char_00_010u_01_4.html", "d2/d50/classmimicpp_1_1util_1_1_static_string_3_01_char_00_010u_01_4" ],
     [ "type_list", "dc/d9e/structmimicpp_1_1util_1_1type__list.html", "dc/d9e/structmimicpp_1_1util_1_1type__list" ],
+    [ "type_list_index_of", "dc/d17/structmimicpp_1_1util_1_1type__list__index__of.html", null ],
+    [ "type_list_index_of< type_list< First, Elements... >, T >", "d3/d23/structmimicpp_1_1util_1_1type__list__index__of_3_01type__list_3_01_first_00_01_elements_8_8_8_01_4_00_01_t_01_4.html", null ],
+    [ "type_list_index_of< type_list< T, Elements... >, T >", "d0/d01/structmimicpp_1_1util_1_1type__list__index__of_3_01type__list_3_01_t_00_01_elements_8_8_8_01_4_00_01_t_01_4.html", null ],
     [ "type_list_pop_back", "dc/d8d/structmimicpp_1_1util_1_1type__list__pop__back.html", null ],
     [ "type_list_populate", "d5/d99/structmimicpp_1_1util_1_1type__list__populate.html", null ],
     [ "type_list_populate< Template, type_list< Args... > >", "db/d55/structmimicpp_1_1util_1_1type__list__populate_3_01_template_00_01type__list_3_01_args_8_8_8_01_4_01_4.html", "db/d55/structmimicpp_1_1util_1_1type__list__populate_3_01_template_00_01type__list_3_01_args_8_8_8_01_4_01_4" ],
@@ -34,5 +38,6 @@ var namespacemimicpp_1_1util =
     [ "to_underlying", "d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9", null ],
     [ "unreachable", "d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836", null ],
     [ "binary_find", "d8/da3/namespacemimicpp_1_1util.html#ae6cea4e9b0f4576bf518112f12bd8e5d", null ],
-    [ "contains", "d8/da3/namespacemimicpp_1_1util.html#a6ab229fce64e2c104a052a34d45e626c", null ]
+    [ "contains", "d8/da3/namespacemimicpp_1_1util.html#a6ab229fce64e2c104a052a34d45e626c", null ],
+    [ "type_list_index_of_v", "d8/da3/namespacemimicpp_1_1util.html#a2f1e21e537892fb2be0856402d8d217f", null ]
 ];

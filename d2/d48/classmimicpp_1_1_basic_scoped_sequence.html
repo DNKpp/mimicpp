@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.1.0</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.2.0</span>
    </div>
   </td>
  </tr>
@@ -130,9 +130,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9bde4d56b45b5ab9c6493ca51af61571" id="r_a9bde4d56b45b5ab9c6493ca51af61571"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9bde4d56b45b5ab9c6493ca51af61571">~BasicScopedSequence</a> () noexcept(false)</td></tr>
 <tr class="memdesc:a9bde4d56b45b5ab9c6493ca51af61571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Possibly throwing destructor, checking the owned expectations in order of construction.  <br /></td></tr>
 <tr class="separator:a9bde4d56b45b5ab9c6493ca51af61571"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8f104b96ea44b5195b294f9ee4969593" id="r_a8f104b96ea44b5195b294f9ee4969593"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f104b96ea44b5195b294f9ee4969593">BasicScopedSequence</a> ()=default</td></tr>
-<tr class="memdesc:a8f104b96ea44b5195b294f9ee4969593"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default default-constructor.  <br /></td></tr>
-<tr class="separator:a8f104b96ea44b5195b294f9ee4969593"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c4b10266892de7efc2f3bb6d44789a1" id="r_a2c4b10266892de7efc2f3bb6d44789a1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c4b10266892de7efc2f3bb6d44789a1">BasicScopedSequence</a> (auto &amp;&amp;... canary, <a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">util::SourceLocation</a> loc={})</td></tr>
+<tr class="memdesc:a2c4b10266892de7efc2f3bb6d44789a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default-constructor.  <br /></td></tr>
+<tr class="separator:a2c4b10266892de7efc2f3bb6d44789a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace91408d86a79d585d0271ccd10a95a3" id="r_ace91408d86a79d585d0271ccd10a95a3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace91408d86a79d585d0271ccd10a95a3">BasicScopedSequence</a> (<a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a> &amp;&amp;)=default</td></tr>
 <tr class="memdesc:ace91408d86a79d585d0271ccd10a95a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defaulted move-constructor.  <br /></td></tr>
 <tr class="separator:ace91408d86a79d585d0271ccd10a95a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -244,8 +244,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a8f104b96ea44b5195b294f9ee4969593" name="a8f104b96ea44b5195b294f9ee4969593"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f104b96ea44b5195b294f9ee4969593">&#9670;&#160;</a></span>BasicScopedSequence() <span class="overload">[2/3]</span></h2>
+<a id="a2c4b10266892de7efc2f3bb6d44789a1" name="a2c4b10266892de7efc2f3bb6d44789a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c4b10266892de7efc2f3bb6d44789a1">&#9670;&#160;</a></span>BasicScopedSequence() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -258,18 +258,22 @@ template&lt;auto Strategy&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">mimicpp::BasicScopedSequence</a>&lt; Strategy &gt;::BasicScopedSequence </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">auto &amp;&amp;...</td>          <td class="paramname"><span class="paramname"><em>canary</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">util::SourceLocation</a></td>          <td class="paramname"><span class="paramname"><em>loc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel default">default</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel explicit">explicit</span><span class="mlabel nodiscard">nodiscard</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Default default-constructor. </p>
+<p>Default-constructor. </p>
 
 </div>
 </div>
@@ -464,7 +468,7 @@ Here is the call graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">BasicScopedSequence</a></li>
-    <li class="footer">Generated on Mon Oct 20 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Dec 1 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

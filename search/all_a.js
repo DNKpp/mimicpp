@@ -8,5 +8,6 @@ var searchData=
   ['has_5fptr_5',['has_ptr',['../de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs.html#a1ebbdaf2be871c08ecefd8bf05eeb966',1,'mimicpp::printing::type::parsing::token::Specs']]],
   ['has_5fsize_6',['has_size',['../de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#gabe07e4394f348806148d665d73dc246f',1,'mimicpp::matches::range']]],
   ['header_7',['Single-Header',['../index.html#autotoc_md69',1,'']]],
-  ['hub_8',['🔗 Developer Hub',['../index.html#autotoc_md49',1,'']]]
+  ['headfrom_8',['headFrom',['../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html#a53c45d15d70ec3214fafb6cb976576cd',1,'mimicpp::reporting::SequenceReport']]],
+  ['hub_9',['🔗 Developer Hub',['../index.html#autotoc_md49',1,'']]]
 ];

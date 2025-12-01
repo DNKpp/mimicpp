@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.1.0</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.2.0</span>
    </div>
   </td>
  </tr>
@@ -130,8 +130,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html">RequirementOutcomes</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the boolean outcomes of a match-test.  <a href="../../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html">state_applicable</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Denotes a applicable expectation state.  <a href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Denotes an applicable expectation state.  <a href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html">state_inapplicable</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Denotes an inapplicable expectation state.  <a href="../../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#details">More...</a><br /></td></tr>
@@ -179,6 +181,12 @@ requires std::constructible_from&lt;T, Args...&gt;</td></tr>
 <tr class="memitem:gacc0d9f819eebe61a00d604e2457536a1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d4f/group___r_e_p_o_r_t_i_n_g.html#gacc0d9f819eebe61a00d604e2457536a1">install_reporter</a> (Args &amp;&amp;... args)</td></tr>
 <tr class="memdesc:gacc0d9f819eebe61a00d604e2457536a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the previous reporter with a newly constructed one.  <br /></td></tr>
 <tr class="separator:gacc0d9f819eebe61a00d604e2457536a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8741204d8bd4ff129677d5526885404a" id="r_ga8741204d8bd4ff129677d5526885404a"><td class="memTemplParams" colspan="2">template&lt;typename Id, auto priorityStrategy&gt; </td></tr>
+<tr class="memitem:ga8741204d8bd4ff129677d5526885404a"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga8741204d8bd4ff129677d5526885404a">make_sequence_report</a> (sequence::detail::BasicSequence&lt; Id, priorityStrategy &gt; const &amp;seq)</td></tr>
+<tr class="separator:ga8741204d8bd4ff129677d5526885404a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2269fb9a739c635f996eebc7f1c2f4d5" id="r_ga2269fb9a739c635f996eebc7f1c2f4d5"><td class="memTemplParams" colspan="2">template&lt;typename Id, auto priorityStrategy&gt; </td></tr>
+<tr class="memitem:ga2269fb9a739c635f996eebc7f1c2f4d5"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga2269fb9a739c635f996eebc7f1c2f4d5">make_sequence_report</a> (sequence::detail::BasicSequenceInterface&lt; Id, priorityStrategy &gt; const &amp;seq)</td></tr>
+<tr class="separator:ga2269fb9a739c635f996eebc7f1c2f4d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeca22e8d15625bfcd46825358c29d30d" id="r_aeca22e8d15625bfcd46825358c29d30d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeca22e8d15625bfcd46825358c29d30d">stringify_full_match</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, <a class="el" href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">ExpectationReport</a> expectation)</td></tr>
 <tr class="separator:aeca22e8d15625bfcd46825358c29d30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba19596f12a846065efee9cd261081bb" id="r_aba19596f12a846065efee9cd261081bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba19596f12a846065efee9cd261081bb">stringify_inapplicable_matches</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, std::span&lt; <a class="el" href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">ExpectationReport</a> &gt; expectations)</td></tr>
@@ -406,7 +414,7 @@ Here is the caller graph for this function:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></li><li class="navelem"><a class="el" href="../../d6/d48/namespacemimicpp_1_1reporting.html">reporting</a></li>
-    <li class="footer">Generated on Mon Oct 20 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Dec 1 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

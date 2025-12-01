@@ -61,7 +61,7 @@ var searchData=
   ['control_5fpolicy_58',['control_policy',['../d4/df8/conceptmimicpp_1_1control__policy.html',1,'mimicpp']]],
   ['control_5fstate_5ft_59',['control_state_t',['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b',1,'mimicpp::reporting']]],
   ['controlpolicies_2ehpp_60',['ControlPolicies.hpp',['../db/d70/_control_policies_8hpp.html',1,'']]],
-  ['controlpolicy_61',['ControlPolicy',['../dc/db2/classmimicpp_1_1_control_policy.html',1,'mimicpp::ControlPolicy&lt; Sequences &gt;'],['../dc/db2/classmimicpp_1_1_control_policy.html#aa68b1569c991800b8e00fc8a98266650',1,'mimicpp::ControlPolicy::ControlPolicy()']]],
+  ['controlpolicy_61',['ControlPolicy',['../dc/db2/classmimicpp_1_1_control_policy.html',1,'mimicpp::ControlPolicy&lt; Sequences &gt;'],['../dc/db2/classmimicpp_1_1_control_policy.html#a6f89418a4913d7e6a1418f659caa0b95',1,'mimicpp::ControlPolicy::ControlPolicy()']]],
   ['controlpolicyt_62',['ControlPolicyT',['../d3/d4a/classmimicpp_1_1_basic_expectation.html#a5b653058d636abf3ed161350102d9746',1,'mimicpp::BasicExpectation']]],
   ['controlreport_63',['controlReport',['../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#ad59f96434c23acb5d1e9e55b0e261c88',1,'mimicpp::reporting::ExpectationReport']]],
   ['conventions_64',['Call-Conventions',['../index.html#autotoc_md63',1,'']]],

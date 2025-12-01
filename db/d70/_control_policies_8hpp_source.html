@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.1.0</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.2.0</span>
    </div>
   </td>
  </tr>
@@ -114,36 +114,36 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/de4/_sequence_8hpp.html">mimic++/Sequence.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d76/_expectation_report_8hpp.html">mimic++/reporting/ExpectationReport.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#ifndef MIMICPP_DETAIL_IS_MODULE</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">    #include &lt;limits&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">    #include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    #include &lt;optional&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">    #include &lt;stdexcept&gt;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">    #include &lt;tuple&gt;</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">    #include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">    #include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">namespace </span>mimicpp::detail</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>{</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Sequences&gt;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">constexpr</span> std::tuple&lt;std::tuple&lt;std::shared_ptr&lt;Sequences&gt;, <a class="code hl_enumeration" href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">sequence::Id</a>&gt;...&gt; make_sequence_entries(</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        <span class="keyword">const</span> std::tuple&lt;std::shared_ptr&lt;Sequences&gt;...&gt;&amp; sequences) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="comment">// This is a workaround due to some issues with clang-17 with c++23 and libstdc++</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="comment">// That configuration prevents the direct initialization, thus we have to default construct first and</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">// setup afterwards. Compilers will probably detect that and optimize accordingly.</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        std::tuple&lt;std::tuple&lt;std::shared_ptr&lt;Sequences&gt;, <a class="code hl_enumeration" href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">sequence::Id</a>&gt;...&gt; result{};</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        std::invoke(</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>            [&amp;]&lt;std::size_t... indices&gt;([[maybe_unused]] <span class="keyword">const</span> std::index_sequence&lt;indices...&gt;) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>                ((std::get&lt;indices&gt;(result) =</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                      std::tuple{</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                          std::get&lt;indices&gt;(sequences),</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                          std::get&lt;indices&gt;(sequences)-&gt;add(),</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                      }),</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                 ...);</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../d5/dc7/_sequence_report_8hpp.html">mimic++/reporting/SequenceReport.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifndef MIMICPP_DETAIL_IS_MODULE</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">    #include &lt;limits&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    #include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">    #include &lt;optional&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">    #include &lt;stdexcept&gt;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">    #include &lt;tuple&gt;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">    #include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">    #include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">namespace </span>mimicpp::detail</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Sequences&gt;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    [[nodiscard]]</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="keyword">constexpr</span> std::tuple&lt;std::tuple&lt;std::shared_ptr&lt;Sequences&gt;, <a class="code hl_enumeration" href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">sequence::Id</a>&gt;...&gt; make_sequence_entries(</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        util::SourceLocation loc,</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        std::tuple&lt;std::shared_ptr&lt;Sequences&gt;...&gt; <span class="keyword">const</span>&amp; sequences) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    {</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        <span class="comment">// This is a workaround due to some issues with clang-17 with c++23 and libstdc++</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        <span class="comment">// That configuration prevents the direct initialization, thus we have to default construct first and</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        <span class="comment">// setup afterwards. Compilers will probably detect that and optimize accordingly.</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        std::tuple&lt;std::tuple&lt;std::shared_ptr&lt;Sequences&gt;, <a class="code hl_enumeration" href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">sequence::Id</a>&gt;...&gt; result{};</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        std::invoke(</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            [&amp;]&lt;std::size_t... indices&gt;([[maybe_unused]] std::index_sequence&lt;indices...&gt; <span class="keyword">const</span>) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                (..., (std::get&lt;indices&gt;(result) = std::tuple{</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                           std::get&lt;indices&gt;(sequences),</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                           std::get&lt;indices&gt;(sequences)-&gt;add(loc),</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                       }));</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            },</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            std::index_sequence_for&lt;Sequences...&gt;{});</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">return</span> result;</div>
@@ -156,7 +156,7 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        TimesConfig() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keyword">constexpr</span> TimesConfig(<span class="keyword">const</span> <span class="keywordtype">int</span> min, <span class="keyword">const</span> <span class="keywordtype">int</span> max)</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="keyword">constexpr</span> TimesConfig(<span class="keywordtype">int</span> <span class="keyword">const</span> min, <span class="keywordtype">int</span> <span class="keyword">const</span> max)</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        {</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>            <span class="keywordflow">if</span> (min &lt; 0</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>                || max &lt; 0</div>
@@ -193,278 +193,283 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">namespace </span>detail</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    {</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <a class="code hl_typedef" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b">reporting::control_state_t</a> make_control_state(</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>            <span class="keyword">const</span> <span class="keywordtype">int</span> min,</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            <span class="keyword">const</span> <span class="keywordtype">int</span> max,</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            <span class="keyword">const</span> <span class="keywordtype">int</span> count,</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; sequenceEntries)</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        {</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keywordflow">if</span> (count == max)</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            {</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                <span class="keywordflow">return</span> reporting::state_saturated{</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                    .min = min,</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                    .max = max,</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                    .count = count,</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                    .sequences = std::apply(</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                        [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp;... entries) {</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                            <span class="keywordflow">return</span> std::vector&lt;sequence::Tag&gt;{</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                                std::get&lt;0&gt;(entries)-&gt;tag()...};</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                        },</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                        sequenceEntries)};</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            }</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>            std::vector&lt;sequence::Tag&gt; inapplicable{};</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>            std::vector&lt;sequence::rating&gt; ratings{};</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            std::apply(</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>                [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span>&amp;... entries) {</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                    (...,</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                     std::invoke(</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>                         [&amp;](<span class="keyword">auto</span>&amp; seq, <span class="keyword">const</span> <a class="code hl_enumeration" href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">sequence::Id</a> <span class="keywordtype">id</span>) {</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>                             <span class="keywordflow">if</span> (<span class="keyword">const</span> std::optional priority = seq-&gt;priority_of(<span class="keywordtype">id</span>))</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>                             {</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>                                 ratings.emplace_back(</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>                                     *priority,</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>                                     seq-&gt;tag());</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                             }</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                             <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                             {</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                                 inapplicable.emplace_back(seq-&gt;tag());</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                             }</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                         },</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                         std::get&lt;0&gt;(entries),</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                         std::get&lt;1&gt;(entries)));</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                },</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                sequenceEntries);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            <span class="keywordflow">if</span> (!std::ranges::empty(inapplicable))</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            {</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                <span class="keywordflow">return</span> reporting::state_inapplicable{</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>                    .min = min,</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                    .max = max,</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                    .count = count,</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                    .sequenceRatings = std::move(ratings),</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                    .inapplicableSequences = std::move(inapplicable)};</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>            }</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            <span class="keywordflow">return</span> reporting::state_applicable{</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>                .min = min,</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                .max = max,</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                .count = count,</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                .sequenceRatings = std::move(ratings),</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            };</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        }</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    }</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Sequences&gt;</div>
-<div class="foldopen" id="foldopen00157" data-start="{" data-end="};">
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html">  157</a></span>    <span class="keyword">class </span><a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aa68b1569c991800b8e00fc8a98266650">ControlPolicy</a></div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    {</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aac53c9562c5f612042a72926f871aaef">  160</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t <a class="code hl_variable" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aac53c9562c5f612042a72926f871aaef">sequenceCount</a>{<span class="keyword">sizeof</span>...(Sequences)};</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00163" data-start="{" data-end="}">
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aa68b1569c991800b8e00fc8a98266650">  163</a></span>        <span class="keyword">explicit</span> <span class="keyword">constexpr</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aa68b1569c991800b8e00fc8a98266650">ControlPolicy</a>(</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            <span class="keyword">const</span> detail::TimesConfig&amp; timesConfig,</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            <span class="keyword">const</span> sequence::detail::Config&lt;Sequences...&gt;&amp; sequenceConfig) noexcept</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            : m_Min{timesConfig.min()},</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>              m_Max{timesConfig.max()},</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>              m_Sequences{</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                  detail::make_sequence_entries(sequenceConfig.sequences())}</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        {</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            update_sequence_states();</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        }</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keyword">constexpr</span> std::tuple&lt;std::vector&lt;sequence::rating&gt;, std::vector&lt;reporting::SequenceReport&gt;&gt; gather_sequence_reports(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; sequenceEntries)</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        {</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>            std::vector&lt;reporting::SequenceReport&gt; inapplicable{};</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            std::vector&lt;sequence::rating&gt; ratings{};</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="keyword">auto</span> <span class="keyword">const</span> handleSequence = [&amp;](<span class="keyword">auto</span>&amp; seq, <a class="code hl_enumeration" href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">sequence::Id</a> <span class="keyword">const</span> id) {</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                <span class="keywordflow">if</span> (std::optional <span class="keyword">const</span> priority = seq-&gt;priority_of(<span class="keywordtype">id</span>))</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                    ratings.emplace_back(*priority, seq-&gt;tag());</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                    inapplicable.emplace_back(<a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga8741204d8bd4ff129677d5526885404a">reporting::make_sequence_report</a>(*seq));</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                }</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            };</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>            std::apply(</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>                [&amp;](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;... entries) {</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>                    (..., handleSequence(std::get&lt;0&gt;(entries), std::get&lt;1&gt;(entries)));</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>                },</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>                sequenceEntries);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>            <span class="keywordflow">return</span> {std::move(ratings), std::move(inapplicable)};</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        }</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        [[nodiscard]]</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <a class="code hl_typedef" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b">reporting::control_state_t</a> make_control_state(</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> min,</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> max,</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            <span class="keywordtype">int</span> <span class="keyword">const</span> count,</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <span class="keyword">auto</span> <span class="keyword">const</span>&amp; sequenceEntries)</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        {</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            <span class="keywordflow">if</span> (count == max)</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            {</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                <span class="keywordflow">return</span> reporting::state_saturated{</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                    .min = min,</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                    .max = max,</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                    .count = count,</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                    .sequences = std::apply(</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                        [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;... entries) {</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                            <span class="keywordflow">return</span> std::vector&lt;reporting::SequenceReport&gt;{<a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga8741204d8bd4ff129677d5526885404a">reporting::make_sequence_report</a>(*std::get&lt;0&gt;(entries))...};</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                        },</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                        sequenceEntries)};</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            }</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            <span class="keyword">auto</span>&amp;&amp; [ratings, inapplicable] = gather_sequence_reports(sequenceEntries);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            <span class="keywordflow">if</span> (!std::ranges::empty(inapplicable))</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            {</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                <span class="keywordflow">return</span> reporting::state_inapplicable{</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                    .min = min,</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                    .max = max,</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                    .count = count,</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                    .sequences = std::move(ratings),</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                    .inapplicableSequences = std::move(inapplicable)};</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            }</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            <span class="keywordflow">return</span> reporting::state_applicable{</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>                .min = min,</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                .max = max,</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                .count = count,</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                .sequenceRatings = std::move(ratings),</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            };</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        }</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    }</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Sequences&gt;</div>
+<div class="foldopen" id="foldopen00160" data-start="{" data-end="};">
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html">  160</a></span>    <span class="keyword">class </span><a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a6f89418a4913d7e6a1418f659caa0b95">ControlPolicy</a></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    {</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aac53c9562c5f612042a72926f871aaef">  163</a></span>        <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t <a class="code hl_variable" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aac53c9562c5f612042a72926f871aaef">sequenceCount</a>{<span class="keyword">sizeof</span>...(Sequences)};</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00166" data-start="{" data-end="}">
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a6f89418a4913d7e6a1418f659caa0b95">  166</a></span>        <span class="keyword">explicit</span> <span class="keyword">constexpr</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a6f89418a4913d7e6a1418f659caa0b95">ControlPolicy</a>(</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            <a class="code hl_class" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">util::SourceLocation</a> loc,</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            detail::TimesConfig <span class="keyword">const</span>&amp; timesConfig,</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            sequence::detail::Config&lt;Sequences...&gt; <span class="keyword">const</span>&amp; sequenceConfig) noexcept</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            : m_Min{timesConfig.min()},</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>              m_Max{timesConfig.max()},</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>              m_Sequences{detail::make_sequence_entries(std::move(loc), sequenceConfig.sequences())}</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        {</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            update_sequence_states();</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        }</div>
 </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00175" data-start="{" data-end="}">
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a917e4f636523433cecdeae81675b1e1f">  175</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a917e4f636523433cecdeae81675b1e1f">is_satisfied</a>() const noexcept</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        {</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            <span class="keywordflow">return</span> m_Min &lt;= m_Count</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                &amp;&amp; m_Count &lt;= m_Max;</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        }</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00178" data-start="{" data-end="}">
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a917e4f636523433cecdeae81675b1e1f">  178</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a917e4f636523433cecdeae81675b1e1f">is_satisfied</a>() const noexcept</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        {</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            <span class="keywordflow">return</span> m_Min &lt;= m_Count</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                &amp;&amp; m_Count &lt;= m_Max;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        }</div>
 </div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00182" data-start="{" data-end="}">
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#ab1649a77ea47e1f4651c8c9eed3fecd0">  182</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#ab1649a77ea47e1f4651c8c9eed3fecd0">is_saturated</a>() const noexcept</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        {</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>            <span class="keywordflow">return</span> m_Count == m_Max;</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        }</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span> </div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00185" data-start="{" data-end="}">
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#ab1649a77ea47e1f4651c8c9eed3fecd0">  185</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#ab1649a77ea47e1f4651c8c9eed3fecd0">is_saturated</a>() const noexcept</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>        {</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>            <span class="keywordflow">return</span> m_Count == m_Max;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        }</div>
 </div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00188" data-start="{" data-end="}">
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">  188</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">is_applicable</a>() const noexcept</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        {</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            <span class="keywordflow">return</span> m_Count &lt; m_Max</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                &amp;&amp; std::apply(</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                       [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                           <span class="keywordflow">return</span> (... &amp;&amp; std::get&lt;0&gt;(entries)-&gt;is_consumable(std::get&lt;1&gt;(entries)));</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                       },</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                       m_Sequences);</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        }</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00191" data-start="{" data-end="}">
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">  191</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">is_applicable</a>() const noexcept</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        {</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            <span class="keywordflow">return</span> m_Count &lt; m_Max</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                &amp;&amp; std::apply(</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                       [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>                           <span class="keywordflow">return</span> (... &amp;&amp; std::get&lt;0&gt;(entries)-&gt;is_consumable(std::get&lt;1&gt;(entries)));</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                       },</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                       m_Sequences);</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        }</div>
 </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
-<div class="foldopen" id="foldopen00198" data-start="{" data-end="}">
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87">  198</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87">consume</a>() noexcept</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        {</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(<a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">is_applicable</a>(), <span class="stringliteral">&quot;Policy is inapplicable.&quot;</span>);</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span> </div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            std::apply(</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                    (..., std::get&lt;0&gt;(entries)-&gt;consume(std::get&lt;1&gt;(entries)));</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                },</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                m_Sequences);</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            ++m_Count;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            update_sequence_states();</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        }</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
+<div class="foldopen" id="foldopen00201" data-start="{" data-end="}">
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87">  201</a></span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87">consume</a>() noexcept</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        {</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(<a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">is_applicable</a>(), <span class="stringliteral">&quot;Policy is inapplicable.&quot;</span>);</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            std::apply(</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                    (..., std::get&lt;0&gt;(entries)-&gt;consume(std::get&lt;1&gt;(entries)));</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                },</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                m_Sequences);</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            ++m_Count;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            update_sequence_states();</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        }</div>
 </div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00214" data-start="{" data-end="}">
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a28405bd7c1a3d3f0a595300e53c0b414">  214</a></span>        <a class="code hl_typedef" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b">reporting::control_state_t</a> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a28405bd7c1a3d3f0a595300e53c0b414">state</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span><span class="keyword">        </span>{</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            <span class="keywordflow">return</span> detail::make_control_state(</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                m_Min,</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>                m_Max,</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                m_Count,</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                m_Sequences);</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        }</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span> </div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00216" data-start="{" data-end="}">
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a28405bd7c1a3d3f0a595300e53c0b414">  216</a></span>        <a class="code hl_typedef" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b">reporting::control_state_t</a> <a class="code hl_function" href="../../dc/db2/classmimicpp_1_1_control_policy.html#a28405bd7c1a3d3f0a595300e53c0b414">state</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span><span class="keyword">        </span>{</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            <span class="keywordflow">return</span> detail::make_control_state(</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                m_Min,</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                m_Max,</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                m_Count,</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                m_Sequences);</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        }</div>
 </div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <span class="keywordtype">int</span> m_Min;</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        <span class="keywordtype">int</span> m_Max;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <span class="keywordtype">int</span> m_Count{};</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        std::tuple&lt;</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            std::tuple&lt;std::shared_ptr&lt;Sequences&gt;, <a class="code hl_enumeration" href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">sequence::Id</a>&gt;...&gt;</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            m_Sequences{};</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> update_sequence_states() noexcept</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        {</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            <span class="keywordflow">if</span> (m_Count == m_Min)</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            {</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                std::apply(</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                    [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                        (..., std::get&lt;0&gt;(entries)-&gt;set_satisfied(std::get&lt;1&gt;(entries)));</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                    },</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                    m_Sequences);</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            }</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Count == m_Max)</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            {</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                std::apply(</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                    [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                        (..., std::get&lt;0&gt;(entries)-&gt;set_saturated(std::get&lt;1&gt;(entries)));</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    },</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                    m_Sequences);</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            }</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        }</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    };</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <span class="keywordtype">int</span> m_Min;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        <span class="keywordtype">int</span> m_Max;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>        <span class="keywordtype">int</span> m_Count{};</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        std::tuple&lt;</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            std::tuple&lt;std::shared_ptr&lt;Sequences&gt;, <a class="code hl_enumeration" href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">sequence::Id</a>&gt;...&gt;</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            m_Sequences{};</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> update_sequence_states() noexcept</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        {</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            <span class="keywordflow">if</span> (m_Count == m_Min)</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            {</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                std::apply(</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                    [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                        (..., std::get&lt;0&gt;(entries)-&gt;set_satisfied(std::get&lt;1&gt;(entries)));</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                    },</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                    m_Sequences);</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            }</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Count == m_Max)</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            {</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                std::apply(</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                        (..., std::get&lt;0&gt;(entries)-&gt;set_saturated(std::get&lt;1&gt;(entries)));</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                    },</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    m_Sequences);</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            }</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        }</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    };</div>
 </div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>}</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>{</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span></div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00280" data-start="{" data-end="}">
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515">  280</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515">times</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> min, <span class="keyword">const</span> <span class="keywordtype">int</span> max)</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    {</div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{min, max};</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    }</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>}</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>{</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span></div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00285" data-start="{" data-end="}">
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">  285</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">times</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> min, <span class="keywordtype">int</span> <span class="keyword">const</span> max)</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    {</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{min, max};</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    }</div>
 </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00295" data-start="{" data-end="}">
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga6eccb8b974b7fbfb7f4c4354f61097c5">  295</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515">times</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> exactly)</div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    {</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig(exactly, exactly);</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>    }</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00300" data-start="{" data-end="}">
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga6fe95d279190abe82bbe6aa2fb4c5541">  300</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">times</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> exactly)</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    {</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig(exactly, exactly);</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    }</div>
 </div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00310" data-start="{" data-end="}">
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gaa44f54d8e8a587300db34bd55efdace4">  310</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gaa44f54d8e8a587300db34bd55efdace4">at_least</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> min)</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    {</div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{</div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            min,</div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            std::numeric_limits&lt;int&gt;::max()};</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>    }</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00315" data-start="{" data-end="}">
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">  315</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">at_least</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> min)</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    {</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{min, std::numeric_limits&lt;int&gt;::max()};</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    }</div>
 </div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span></div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00327" data-start="{" data-end="}">
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga5c1b44164371e807365df6c11d5fb221">  327</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga5c1b44164371e807365df6c11d5fb221">at_most</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> max)</div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>    {</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{</div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            0,</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>            max};</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    }</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00330" data-start="{" data-end="}">
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">  330</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">at_most</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> max)</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    {</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{0, max};</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    }</div>
 </div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span></div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00341" data-start="{" data-end="}">
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">  341</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">never</a>() noexcept</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>    {</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>            0,</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>            0};</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>        <span class="keywordflow">return</span> config;</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    }</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span></div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00342" data-start="{" data-end="}">
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">  342</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">never</a>() noexcept</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    {</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{0, 0};</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="keywordflow">return</span> config;</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    }</div>
 </div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span></div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00358" data-start="{" data-end="}">
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">  358</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">once</a>() noexcept</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>    {</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>            1,</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>            1};</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span> </div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>        <span class="keywordflow">return</span> config;</div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    }</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span></div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00357" data-start="{" data-end="}">
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">  357</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">once</a>() noexcept</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    {</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{1, 1};</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>        <span class="keywordflow">return</span> config;</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    }</div>
 </div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span></div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00375" data-start="{" data-end="}">
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">  375</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">twice</a>() noexcept</div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    {</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{</div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>            2,</div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            2};</div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span> </div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>        <span class="keywordflow">return</span> config;</div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>    }</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span></div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00372" data-start="{" data-end="}">
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">  372</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">twice</a>() noexcept</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    {</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{2, 2};</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keywordflow">return</span> config;</div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    }</div>
 </div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span></div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span></div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00384" data-start="{" data-end="}">
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">  384</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">any_times</a>() noexcept</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    {</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{0, std::numeric_limits&lt;int&gt;::max()};</div>
 <div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>}</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span> </div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        <span class="keywordflow">return</span> config;</div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    }</div>
+</div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span></div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>}</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
 <div class="ttc" id="a_config_8hpp_html_a97ed0cb4a7de0573de2b684047cadc9f"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a></div><div class="ttdeci">#define MIMICPP_ASSERT(condition, msg)</div><div class="ttdef"><b>Definition</b> Config.hpp:51</div></div>
 <div class="ttc" id="a_config_8hpp_html_af5897385afd790dba0e4971e29c1e3e0"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MODULE_EXPORT</div><div class="ttdef"><b>Definition</b> Config.hpp:19</div></div>
 <div class="ttc" id="a_expectation_report_8hpp_html"><div class="ttname"><a href="../../dd/d76/_expectation_report_8hpp.html">ExpectationReport.hpp</a></div></div>
 <div class="ttc" id="a_fwd_8hpp_html"><div class="ttname"><a href="../../df/dde/_fwd_8hpp.html">Fwd.hpp</a></div></div>
 <div class="ttc" id="a_sequence_8hpp_html"><div class="ttname"><a href="../../d8/de4/_sequence_8hpp.html">Sequence.hpp</a></div></div>
-<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_a28405bd7c1a3d3f0a595300e53c0b414"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#a28405bd7c1a3d3f0a595300e53c0b414">mimicpp::ControlPolicy::state</a></div><div class="ttdeci">reporting::control_state_t state() const</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:214</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_a584bf6dca5c7d8a6a63d3d291c727a87"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87">mimicpp::ControlPolicy::consume</a></div><div class="ttdeci">constexpr void consume() noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:198</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_a917e4f636523433cecdeae81675b1e1f"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#a917e4f636523433cecdeae81675b1e1f">mimicpp::ControlPolicy::is_satisfied</a></div><div class="ttdeci">constexpr bool is_satisfied() const noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:175</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_aa68b1569c991800b8e00fc8a98266650"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#aa68b1569c991800b8e00fc8a98266650">mimicpp::ControlPolicy::ControlPolicy</a></div><div class="ttdeci">constexpr ControlPolicy(const detail::TimesConfig &amp;timesConfig, const sequence::detail::Config&lt; Sequences... &gt; &amp;sequenceConfig) noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:163</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_aac53c9562c5f612042a72926f871aaef"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#aac53c9562c5f612042a72926f871aaef">mimicpp::ControlPolicy::sequenceCount</a></div><div class="ttdeci">static constexpr std::size_t sequenceCount</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:160</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_ab1649a77ea47e1f4651c8c9eed3fecd0"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#ab1649a77ea47e1f4651c8c9eed3fecd0">mimicpp::ControlPolicy::is_saturated</a></div><div class="ttdeci">constexpr bool is_saturated() const noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:182</div></div>
-<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_aca4ec931aecbf4258b98f16b9e7f8867"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">mimicpp::ControlPolicy::is_applicable</a></div><div class="ttdeci">constexpr bool is_applicable() const noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:188</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga01f941f8012e59b683fb3388f0a3570a"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">mimicpp::expect::never</a></div><div class="ttdeci">consteval auto never() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 0.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:341</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga5c1b44164371e807365df6c11d5fb221"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga5c1b44164371e807365df6c11d5fb221">mimicpp::expect::at_most</a></div><div class="ttdeci">constexpr auto at_most(const int max)</div><div class="ttdoc">Specifies a times policy with just an upper limit.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:327</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga842250d61be8ef526973a0ca246bf515"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga842250d61be8ef526973a0ca246bf515">mimicpp::expect::times</a></div><div class="ttdeci">constexpr auto times(const int min, const int max)</div><div class="ttdoc">Specifies a times policy with a limit range.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:280</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga90e8c3c02fe9ec7f14a24a7c9c7e1695"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">mimicpp::expect::twice</a></div><div class="ttdeci">consteval auto twice() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 2.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:375</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga967e8516732b1a6630b2042e64d14cbf"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">mimicpp::expect::once</a></div><div class="ttdeci">consteval auto once() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 1.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:358</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_gaa44f54d8e8a587300db34bd55efdace4"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#gaa44f54d8e8a587300db34bd55efdace4">mimicpp::expect::at_least</a></div><div class="ttdeci">constexpr auto at_least(const int min)</div><div class="ttdoc">Specifies a times policy with just a lower limit.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:310</div></div>
-<div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s_html_gabdbff85366c0c689bdceba665c10619b"><div class="ttname"><a href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b">mimicpp::reporting::control_state_t</a></div><div class="ttdeci">std::variant&lt; state_inapplicable, state_applicable, state_saturated &gt; control_state_t</div><div class="ttdoc">Denotes an expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:74</div></div>
+<div class="ttc" id="a_sequence_report_8hpp_html"><div class="ttname"><a href="../../d5/dc7/_sequence_report_8hpp.html">SequenceReport.hpp</a></div></div>
+<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_a28405bd7c1a3d3f0a595300e53c0b414"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#a28405bd7c1a3d3f0a595300e53c0b414">mimicpp::ControlPolicy::state</a></div><div class="ttdeci">reporting::control_state_t state() const</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:216</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_a584bf6dca5c7d8a6a63d3d291c727a87"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#a584bf6dca5c7d8a6a63d3d291c727a87">mimicpp::ControlPolicy::consume</a></div><div class="ttdeci">constexpr void consume() noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:201</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_a6f89418a4913d7e6a1418f659caa0b95"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#a6f89418a4913d7e6a1418f659caa0b95">mimicpp::ControlPolicy::ControlPolicy</a></div><div class="ttdeci">constexpr ControlPolicy(util::SourceLocation loc, detail::TimesConfig const &amp;timesConfig, sequence::detail::Config&lt; Sequences... &gt; const &amp;sequenceConfig) noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:166</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_a917e4f636523433cecdeae81675b1e1f"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#a917e4f636523433cecdeae81675b1e1f">mimicpp::ControlPolicy::is_satisfied</a></div><div class="ttdeci">constexpr bool is_satisfied() const noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:178</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_aac53c9562c5f612042a72926f871aaef"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#aac53c9562c5f612042a72926f871aaef">mimicpp::ControlPolicy::sequenceCount</a></div><div class="ttdeci">static constexpr std::size_t sequenceCount</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:163</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_ab1649a77ea47e1f4651c8c9eed3fecd0"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#ab1649a77ea47e1f4651c8c9eed3fecd0">mimicpp::ControlPolicy::is_saturated</a></div><div class="ttdeci">constexpr bool is_saturated() const noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:185</div></div>
+<div class="ttc" id="aclassmimicpp_1_1_control_policy_html_aca4ec931aecbf4258b98f16b9e7f8867"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">mimicpp::ControlPolicy::is_applicable</a></div><div class="ttdeci">constexpr bool is_applicable() const noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:191</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">mimicpp::util::SourceLocation</a></div><div class="ttdoc">A thin wrapper around general source-location info.</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:38</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga01f941f8012e59b683fb3388f0a3570a"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">mimicpp::expect::never</a></div><div class="ttdeci">consteval auto never() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 0.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:342</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga1d519bd590c8ad5f586f65193fac17e6"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">mimicpp::expect::times</a></div><div class="ttdeci">constexpr auto times(int const min, int const max)</div><div class="ttdoc">Specifies a times policy with a limit range.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:285</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga3cd3b29e89cf30b0ec52f34703252252"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">mimicpp::expect::any_times</a></div><div class="ttdeci">consteval auto any_times() noexcept</div><div class="ttdoc">Specifies a times-policy with no constraints on how many times an expectation may match.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:384</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga859cd6bd34a5d6c96b5bc72b5c2c9e36"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">mimicpp::expect::at_least</a></div><div class="ttdeci">constexpr auto at_least(int const min)</div><div class="ttdoc">Specifies a times policy with just a lower limit.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:315</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga90e8c3c02fe9ec7f14a24a7c9c7e1695"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">mimicpp::expect::twice</a></div><div class="ttdeci">consteval auto twice() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 2.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:372</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga967e8516732b1a6630b2042e64d14cbf"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">mimicpp::expect::once</a></div><div class="ttdeci">consteval auto once() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 1.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:357</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga968317fb9976ad8d293b041183ffb465"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">mimicpp::expect::at_most</a></div><div class="ttdeci">constexpr auto at_most(int const max)</div><div class="ttdoc">Specifies a times policy with just an upper limit.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:330</div></div>
+<div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s_html_ga8741204d8bd4ff129677d5526885404a"><div class="ttname"><a href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga8741204d8bd4ff129677d5526885404a">mimicpp::reporting::make_sequence_report</a></div><div class="ttdeci">constexpr SequenceReport make_sequence_report(sequence::detail::BasicSequence&lt; Id, priorityStrategy &gt; const &amp;seq)</div><div class="ttdef"><b>Definition</b> SequenceReport.hpp:36</div></div>
+<div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s_html_gabdbff85366c0c689bdceba665c10619b"><div class="ttname"><a href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b">mimicpp::reporting::control_state_t</a></div><div class="ttdeci">std::variant&lt; state_inapplicable, state_applicable, state_saturated &gt; control_state_t</div><div class="ttdoc">Denotes an expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:75</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1expect_html"><div class="ttname"><a href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div><div class="ttdef"><b>Definition</b> ArgRequirementPolicies.hpp:125</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1sequence_html_af14fc84b2c1867c6c400de62d1a8f673"><div class="ttname"><a href="../../d8/dce/namespacemimicpp_1_1sequence.html#af14fc84b2c1867c6c400de62d1a8f673">mimicpp::sequence::Id</a></div><div class="ttdeci">Id</div><div class="ttdef"><b>Definition</b> Fwd.hpp:406</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> Call.hpp:24</div></div>
@@ -474,7 +479,7 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_6ddbcebc0798903b88ee4423bc0f1618.html">policies</a></li><li class="navelem"><a class="el" href="../../db/d70/_control_policies_8hpp.html">ControlPolicies.hpp</a></li>
-    <li class="footer">Generated on Mon Oct 20 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Dec 1 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

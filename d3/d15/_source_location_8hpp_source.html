@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.1.0</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.2.0</span>
    </div>
   </td>
  </tr>
@@ -113,153 +113,145 @@ $(function(){initNavTree('d3/d15/_source_location_8hpp_source.html','../../'); i
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d52/printing_2_fwd_8hpp.html">mimic++/printing/Fwd.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d4b/_path_printer_8hpp.html">mimic++/printing/PathPrinter.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../da/db0/_print_type_8hpp.html">mimic++/printing/type/PrintType.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#ifndef MIMICPP_DETAIL_IS_MODULE</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">    #include &lt;cstddef&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">    #include &lt;string_view&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    #include &lt;utility&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">    #ifdef __cpp_lib_source_location</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">        #include &lt;source_location&gt;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">        #define MIMICPP_DETAIL_HAS_SOURCE_LOCATION 1</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">    #endif</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>{</div>
-<div class="foldopen" id="foldopen00036" data-start="{" data-end="};">
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">   36</a></span>    <span class="keyword">class </span><a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412">   39</a></span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412">~SourceLocation</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#ifdef MIMICPP_DETAIL_HAS_SOURCE_LOCATION</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        [[nodiscard]] <span class="comment">//</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        <span class="keyword">explicit</span>(<span class="keyword">false</span>) <span class="keyword">constexpr</span> <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            [[maybe_unused]] <span class="keyword">auto</span>&amp;&amp;... canary,</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            std::source_location <span class="keyword">const</span>&amp; loc = std::source_location::current()) noexcept</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            : m_FileName{loc.file_name()},</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>              m_FunctionName{loc.function_name()},</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>              m_Line{loc.line()}</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>            <span class="keyword">static_assert</span>(0 == <span class="keyword">sizeof</span>...(canary), <span class="stringliteral">&quot;Do not supply custom arguments to util::SourceLocation.&quot;</span>);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        }</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span><span class="preprocessor">#else</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>        [[nodiscard]] <span class="comment">//</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ad331e69afebaab0ae5838c0a70f60743">   66</a></span>        <span class="keyword">explicit</span>(<span class="keyword">false</span>) <span class="keyword">constexpr</span> <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>            [[maybe_unused]] <span class="keyword">auto</span>&amp;&amp;... canary,</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a8c0b5c8afcb2968364bc24eb6a00599d">   68</a></span>            std::string_view <span class="keyword">const</span> <a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a8c0b5c8afcb2968364bc24eb6a00599d">fileName</a> = __builtin_FILE(),</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c">   69</a></span>            std::string_view <span class="keyword">const</span> <a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c">functionName</a> = __builtin_FUNCTION(),</div>
-<div class="foldopen" id="foldopen00070" data-start="{" data-end="};">
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#abad289d66d0078662d45f4c4411b8b67">   70</a></span>            std::size_t <span class="keyword">const</span> <a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#abad289d66d0078662d45f4c4411b8b67">line</a> = __builtin_LINE()) noexcept</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>            : m_FileName{<a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a8c0b5c8afcb2968364bc24eb6a00599d">fileName</a>},</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>              m_FunctionName{<a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c">functionName</a>},</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>              m_Line{<a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#abad289d66d0078662d45f4c4411b8b67">line</a>}</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>        {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>            <span class="keyword">static_assert</span>(0 == <span class="keyword">sizeof</span>...(canary), <span class="stringliteral">&quot;Do not supply custom arguments to util::SourceLocation.&quot;</span>);</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        }</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../df/d0b/state_2_common_types_8hpp.html">mimic++/printing/state/CommonTypes.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../da/db0/_print_type_8hpp.html">mimic++/printing/type/PrintType.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#ifndef MIMICPP_DETAIL_IS_MODULE</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">    #include &lt;cstddef&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">    #include &lt;string_view&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">    #include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">    #ifdef __cpp_lib_source_location</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">        #include &lt;source_location&gt;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">        #define MIMICPP_DETAIL_HAS_SOURCE_LOCATION 1</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">    #endif</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
+<div class="foldopen" id="foldopen00037" data-start="{" data-end="};">
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">   37</a></span>    <span class="keyword">class </span><a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412">   40</a></span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412">~SourceLocation</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#ifdef MIMICPP_DETAIL_HAS_SOURCE_LOCATION</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        [[nodiscard]] <span class="comment">//</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">explicit</span>(<span class="keyword">false</span>) <span class="keyword">constexpr</span> <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            [[maybe_unused]] <span class="keyword">auto</span>&amp;&amp;... canary,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            std::source_location <span class="keyword">const</span>&amp; loc = std::source_location::current()) noexcept</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            : m_FileName{loc.file_name()},</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>              m_FunctionName{loc.function_name()},</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>              m_Line{loc.line()}</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        {</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>            <span class="keyword">static_assert</span>(0 == <span class="keyword">sizeof</span>...(canary), <span class="stringliteral">&quot;Do not supply custom arguments to util::SourceLocation.&quot;</span>);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span><span class="preprocessor">#else</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        [[nodiscard]] <span class="comment">//</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ad331e69afebaab0ae5838c0a70f60743">   67</a></span>        <span class="keyword">explicit</span>(<span class="keyword">false</span>) <span class="keyword">constexpr</span> <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>            [[maybe_unused]] <span class="keyword">auto</span>&amp;&amp;... canary,</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a8c0b5c8afcb2968364bc24eb6a00599d">   69</a></span>            std::string_view <span class="keyword">const</span> <a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a8c0b5c8afcb2968364bc24eb6a00599d">fileName</a> = __builtin_FILE(),</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c">   70</a></span>            std::string_view <span class="keyword">const</span> <a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c">functionName</a> = __builtin_FUNCTION(),</div>
+<div class="foldopen" id="foldopen00071" data-start="{" data-end="};">
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#abad289d66d0078662d45f4c4411b8b67">   71</a></span>            std::size_t <span class="keyword">const</span> <a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#abad289d66d0078662d45f4c4411b8b67">line</a> = __builtin_LINE()) noexcept</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>            : m_FileName{<a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a8c0b5c8afcb2968364bc24eb6a00599d">fileName</a>},</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>              m_FunctionName{<a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c">functionName</a>},</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>              m_Line{<a class="code hl_variable" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#abad289d66d0078662d45f4c4411b8b67">line</a>}</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        {</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>            <span class="keyword">static_assert</span>(0 == <span class="keyword">sizeof</span>...(canary), <span class="stringliteral">&quot;Do not supply custom arguments to util::SourceLocation.&quot;</span>);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>        }</div>
 </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a9cac61b376f0491759210eb3a467cce3">   80</a></span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>&amp; <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a9cac61b376f0491759210eb3a467cce3">operator=</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">   81</a></span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a752412b1901e309a3ff0cf1ed31d1d65">   82</a></span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>&amp; <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a752412b1901e309a3ff0cf1ed31d1d65">operator=</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00085" data-start="{" data-end="}">
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae13f46cce0cd7d2567cb901f875815c6">   85</a></span>        <span class="keyword">constexpr</span> std::string_view <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae13f46cce0cd7d2567cb901f875815c6">file_name</a>() const noexcept</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>        {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>            <span class="keywordflow">return</span> m_FileName;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        }</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a9cac61b376f0491759210eb3a467cce3">   81</a></span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>&amp; <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a9cac61b376f0491759210eb3a467cce3">operator=</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">   82</a></span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a752412b1901e309a3ff0cf1ed31d1d65">   83</a></span>        <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>&amp; <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a752412b1901e309a3ff0cf1ed31d1d65">operator=</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00086" data-start="{" data-end="}">
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae13f46cce0cd7d2567cb901f875815c6">   86</a></span>        <span class="keyword">constexpr</span> std::string_view <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae13f46cce0cd7d2567cb901f875815c6">file_name</a>() const noexcept</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>            <span class="keywordflow">return</span> m_FileName;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>        }</div>
 </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00091" data-start="{" data-end="}">
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a58af2e7f13a902da05a6f97809c5789b">   91</a></span>        <span class="keyword">constexpr</span> std::string_view <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a58af2e7f13a902da05a6f97809c5789b">function_name</a>() const noexcept</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">return</span> m_FunctionName;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00092" data-start="{" data-end="}">
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a58af2e7f13a902da05a6f97809c5789b">   92</a></span>        <span class="keyword">constexpr</span> std::string_view <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a58af2e7f13a902da05a6f97809c5789b">function_name</a>() const noexcept</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>            <span class="keywordflow">return</span> m_FunctionName;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        }</div>
 </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00097" data-start="{" data-end="}">
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae4062820dddfb4008ff5dfc2c5047d2d">   97</a></span>        <span class="keyword">constexpr</span> std::size_t <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae4062820dddfb4008ff5dfc2c5047d2d">line</a>() const noexcept</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        {</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>            <span class="keywordflow">return</span> m_Line;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00098" data-start="{" data-end="}">
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae4062820dddfb4008ff5dfc2c5047d2d">   98</a></span>        <span class="keyword">constexpr</span> std::size_t <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae4062820dddfb4008ff5dfc2c5047d2d">line</a>() const noexcept</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        {</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>            <span class="keywordflow">return</span> m_Line;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        }</div>
 </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00103" data-start="{" data-end="}">
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#aca199207b74aeeb4fbee5791ad387aa0">  103</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_friend" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#aca199207b74aeeb4fbee5791ad387aa0">operator==</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp; lhs, <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp; rhs) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        {</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>            <span class="keywordflow">return</span> lhs.line() == rhs.line()</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                &amp;&amp; lhs.file_name() == rhs.file_name()</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                &amp;&amp; lhs.function_name() == rhs.function_name();</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00104" data-start="{" data-end="}">
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#aca199207b74aeeb4fbee5791ad387aa0">  104</a></span>        <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> <a class="code hl_friend" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#aca199207b74aeeb4fbee5791ad387aa0">operator==</a>(<a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp; lhs, <a class="code hl_function" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">SourceLocation</a> <span class="keyword">const</span>&amp; rhs) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        {</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>            <span class="keywordflow">return</span> lhs.line() == rhs.line()</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                &amp;&amp; lhs.file_name() == rhs.file_name()</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                &amp;&amp; lhs.function_name() == rhs.function_name();</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        }</div>
 </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        std::string_view m_FileName;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        std::string_view m_FunctionName;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        std::size_t m_Line;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    };</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        std::string_view m_FileName;</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        std::string_view m_FunctionName;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        std::size_t m_Line;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    };</div>
 </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>}</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keyword">struct </span>mimicpp::printing::detail::state::common_type_printer&lt;<a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a>::util::SourceLocation&gt;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>{</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">template</span> &lt;pr<span class="keywordtype">int</span>_iterator OutIter&gt;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> OutIter <a class="code hl_variable" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(OutIter out, util::SourceLocation <span class="keyword">const</span>&amp; loc)</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    {</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        out = format::format_to(std::move(out), <span class="stringliteral">&quot;`&quot;</span>);</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        out = <a class="code hl_variable" href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">print_path</a>(std::move(out), loc.file_name());</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        out = format::format_to(std::move(out), <span class="stringliteral">&quot;`&quot;</span>);</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        out = format::format_to(</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            std::move(out),</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="stringliteral">&quot;#L{}, `&quot;</span>,</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            loc.line());</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        out = <a class="code hl_function" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga79dfa19e05686e7ac09ed3861dec2feb">type::prettify_function</a>(std::move(out), <a class="code hl_typedef" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>{loc.function_name()});</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        out = format::format_to(std::move(out), <span class="stringliteral">&quot;`&quot;</span>);</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="keywordflow">return</span> out;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    }</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>};</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>}</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="keyword">struct </span>mimicpp::printing::detail::state::common_type_printer&lt;<a class="code hl_namespace" href="../../d1/d11/namespacemimicpp.html">mimicpp</a>::util::SourceLocation&gt;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>{</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keyword">template</span> &lt;pr<span class="keywordtype">int</span>_iterator OutIter&gt;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">static</span> <span class="keyword">constexpr</span> OutIter <a class="code hl_variable" href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">print</a>(OutIter out, util::SourceLocation <span class="keyword">const</span>&amp; loc)</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordflow">return</span> detail::print_source_location(</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            std::move(out),</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            loc.file_name(),</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            loc.line(),</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>            loc.function_name());</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    }</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>};</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
 <div class="ttc" id="a_config_8hpp_html_af5897385afd790dba0e4971e29c1e3e0"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MODULE_EXPORT</div><div class="ttdef"><b>Definition</b> Config.hpp:19</div></div>
 <div class="ttc" id="a_path_printer_8hpp_html"><div class="ttname"><a href="../../de/d4b/_path_printer_8hpp.html">PathPrinter.hpp</a></div></div>
 <div class="ttc" id="a_print_type_8hpp_html"><div class="ttname"><a href="../../da/db0/_print_type_8hpp.html">PrintType.hpp</a></div></div>
-<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a1fcc2b804e5e579c1c39cb2349ecd05c"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c">mimicpp::util::SourceLocation::functionName</a></div><div class="ttdeci">std::string_view const std::string_view const functionName</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:69</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a1fcc2b804e5e579c1c39cb2349ecd05c"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c">mimicpp::util::SourceLocation::functionName</a></div><div class="ttdeci">std::string_view const std::string_view const functionName</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:70</div></div>
 <div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a2d8740d0689905bbcb72e6a6fea63412"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412">mimicpp::util::SourceLocation::~SourceLocation</a></div><div class="ttdeci">~SourceLocation()=default</div></div>
-<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a58af2e7f13a902da05a6f97809c5789b"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a58af2e7f13a902da05a6f97809c5789b">mimicpp::util::SourceLocation::function_name</a></div><div class="ttdeci">constexpr std::string_view function_name() const noexcept</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:91</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a58af2e7f13a902da05a6f97809c5789b"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a58af2e7f13a902da05a6f97809c5789b">mimicpp::util::SourceLocation::function_name</a></div><div class="ttdeci">constexpr std::string_view function_name() const noexcept</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:92</div></div>
 <div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a752412b1901e309a3ff0cf1ed31d1d65"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a752412b1901e309a3ff0cf1ed31d1d65">mimicpp::util::SourceLocation::operator=</a></div><div class="ttdeci">SourceLocation &amp; operator=(SourceLocation &amp;&amp;)=default</div></div>
-<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a8c0b5c8afcb2968364bc24eb6a00599d"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a8c0b5c8afcb2968364bc24eb6a00599d">mimicpp::util::SourceLocation::fileName</a></div><div class="ttdeci">std::string_view const fileName</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:68</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a8c0b5c8afcb2968364bc24eb6a00599d"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a8c0b5c8afcb2968364bc24eb6a00599d">mimicpp::util::SourceLocation::fileName</a></div><div class="ttdeci">std::string_view const fileName</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:69</div></div>
 <div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_a9cac61b376f0491759210eb3a467cce3"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#a9cac61b376f0491759210eb3a467cce3">mimicpp::util::SourceLocation::operator=</a></div><div class="ttdeci">SourceLocation &amp; operator=(SourceLocation const &amp;)=default</div></div>
 <div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_ab62062ed14cd1ddf120f3ffdf67c81a5"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ab62062ed14cd1ddf120f3ffdf67c81a5">mimicpp::util::SourceLocation::SourceLocation</a></div><div class="ttdeci">SourceLocation(SourceLocation &amp;&amp;)=default</div></div>
-<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_abad289d66d0078662d45f4c4411b8b67"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#abad289d66d0078662d45f4c4411b8b67">mimicpp::util::SourceLocation::line</a></div><div class="ttdeci">std::string_view const std::string_view const std::size_t const line</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:70</div></div>
-<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_aca199207b74aeeb4fbee5791ad387aa0"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#aca199207b74aeeb4fbee5791ad387aa0">mimicpp::util::SourceLocation::operator==</a></div><div class="ttdeci">friend constexpr bool operator==(SourceLocation const &amp;lhs, SourceLocation const &amp;rhs) noexcept</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:103</div></div>
-<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_ae13f46cce0cd7d2567cb901f875815c6"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae13f46cce0cd7d2567cb901f875815c6">mimicpp::util::SourceLocation::file_name</a></div><div class="ttdeci">constexpr std::string_view file_name() const noexcept</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:85</div></div>
-<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_ae4062820dddfb4008ff5dfc2c5047d2d"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae4062820dddfb4008ff5dfc2c5047d2d">mimicpp::util::SourceLocation::line</a></div><div class="ttdeci">constexpr std::size_t line() const noexcept</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:97</div></div>
-<div class="ttc" id="agroup___p_r_i_n_t_i_n_g___p_a_t_h_html_ga6b4dfc9e96c68455630c1e15ef5df67f"><div class="ttname"><a href="../../d7/d48/group___p_r_i_n_t_i_n_g___p_a_t_h.html#ga6b4dfc9e96c68455630c1e15ef5df67f">mimicpp::print_path</a></div><div class="ttdeci">constexpr printing::detail::PathPrinterFn print_path</div><div class="ttdoc">Functional object that outputs paths in a specific format.</div><div class="ttdef"><b>Definition</b> PathPrinter.hpp:76</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_abad289d66d0078662d45f4c4411b8b67"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#abad289d66d0078662d45f4c4411b8b67">mimicpp::util::SourceLocation::line</a></div><div class="ttdeci">std::string_view const std::string_view const std::size_t const line</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:71</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_aca199207b74aeeb4fbee5791ad387aa0"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#aca199207b74aeeb4fbee5791ad387aa0">mimicpp::util::SourceLocation::operator==</a></div><div class="ttdeci">friend constexpr bool operator==(SourceLocation const &amp;lhs, SourceLocation const &amp;rhs) noexcept</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:104</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_ae13f46cce0cd7d2567cb901f875815c6"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae13f46cce0cd7d2567cb901f875815c6">mimicpp::util::SourceLocation::file_name</a></div><div class="ttdeci">constexpr std::string_view file_name() const noexcept</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:86</div></div>
+<div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html_ae4062820dddfb4008ff5dfc2c5047d2d"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html#ae4062820dddfb4008ff5dfc2c5047d2d">mimicpp::util::SourceLocation::line</a></div><div class="ttdeci">constexpr std::size_t line() const noexcept</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:98</div></div>
 <div class="ttc" id="agroup___p_r_i_n_t_i_n_g___s_t_a_t_e_html_ga4dbd7a323f25eecf13e0b10059f52ea9"><div class="ttname"><a href="../../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#ga4dbd7a323f25eecf13e0b10059f52ea9">mimicpp::print</a></div><div class="ttdeci">constexpr printing::PrintFn print</div><div class="ttdoc">Functional object, converting the given object to its textual representation.</div><div class="ttdef"><b>Definition</b> Print.hpp:183</div></div>
-<div class="ttc" id="agroup___p_r_i_n_t_i_n_g___t_y_p_e_html_ga79dfa19e05686e7ac09ed3861dec2feb"><div class="ttname"><a href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga79dfa19e05686e7ac09ed3861dec2feb">mimicpp::printing::type::prettify_function</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_function(OutIter out, StringT name)</div><div class="ttdoc">Prettifies a function name produces by e.g. std::source_location::function_name().</div><div class="ttdef"><b>Definition</b> PrintType.hpp:203</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Fwd.hpp:431</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Fwd.hpp:445</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> Call.hpp:24</div></div>
-<div class="ttc" id="anamespacemimicpp_html_afd8074742a9c25b893fcdfe534b912e1"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">mimicpp::StringT</a></div><div class="ttdeci">std::basic_string&lt; CharT, CharTraitsT &gt; StringT</div><div class="ttdef"><b>Definition</b> Fwd.hpp:391</div></div>
 <div class="ttc" id="aprinting_2_fwd_8hpp_html"><div class="ttname"><a href="../../de/d52/printing_2_fwd_8hpp.html">Fwd.hpp</a></div></div>
+<div class="ttc" id="astate_2_common_types_8hpp_html"><div class="ttname"><a href="../../df/d0b/state_2_common_types_8hpp.html">CommonTypes.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a class="el" href="../../dir_2f75f8b84a1b0b31df547365a4a1eaf8.html">utilities</a></li><li class="navelem"><a class="el" href="../../d3/d15/_source_location_8hpp.html">SourceLocation.hpp</a></li>
-    <li class="footer">Generated on Mon Oct 20 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Dec 1 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>

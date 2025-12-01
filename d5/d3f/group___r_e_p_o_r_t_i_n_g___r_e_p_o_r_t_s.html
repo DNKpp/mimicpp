@@ -28,7 +28,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.1.0</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.2.0</span>
    </div>
   </td>
  </tr>
@@ -122,7 +122,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Denotes an inapplicable expectation state.  <a href="../../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html">mimicpp::reporting::state_applicable</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Denotes a applicable expectation state.  <a href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Denotes an applicable expectation state.  <a href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html">mimicpp::reporting::state_saturated</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Denotes a saturated expectation state.  <a href="../../d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html#details">More...</a><br /></td></tr>
@@ -135,6 +135,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html">mimicpp::reporting::NoMatchReport</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the requirement-outcomes (where at least one is negative) and the related expectation-report.  <a href="../../df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">mimicpp::reporting::SequenceReport</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html">mimicpp::reporting::TargetReport</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the extracted mock info.  <a href="../../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#details">More...</a><br /></td></tr>
@@ -152,6 +154,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ga3106fae8499d5613d76fc8bd4cd09166"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga3106fae8499d5613d76fc8bd4cd09166">mimicpp::reporting::make_call_report</a> (<a class="el" href="../../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html">TargetReport</a> target, <a class="el" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info</a>&lt; Return, Params... &gt; callInfo, <a class="el" href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html">util::Stacktrace</a> stacktrace)</td></tr>
 <tr class="memdesc:ga3106fae8499d5613d76fc8bd4cd09166"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the call report for a given call info.  <br /></td></tr>
 <tr class="separator:ga3106fae8499d5613d76fc8bd4cd09166"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8741204d8bd4ff129677d5526885404a" id="r_ga8741204d8bd4ff129677d5526885404a"><td class="memTemplParams" colspan="2">template&lt;typename Id, auto priorityStrategy&gt; </td></tr>
+<tr class="memitem:ga8741204d8bd4ff129677d5526885404a"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga8741204d8bd4ff129677d5526885404a">mimicpp::reporting::make_sequence_report</a> (sequence::detail::BasicSequence&lt; Id, priorityStrategy &gt; const &amp;seq)</td></tr>
+<tr class="separator:ga8741204d8bd4ff129677d5526885404a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2269fb9a739c635f996eebc7f1c2f4d5" id="r_ga2269fb9a739c635f996eebc7f1c2f4d5"><td class="memTemplParams" colspan="2">template&lt;typename Id, auto priorityStrategy&gt; </td></tr>
+<tr class="memitem:ga2269fb9a739c635f996eebc7f1c2f4d5"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga2269fb9a739c635f996eebc7f1c2f4d5">mimicpp::reporting::make_sequence_report</a> (sequence::detail::BasicSequenceInterface&lt; Id, priorityStrategy &gt; const &amp;seq)</td></tr>
+<tr class="separator:ga2269fb9a739c635f996eebc7f1c2f4d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga3106fae8499d5613d76fc8bd4cd09166" id="r_ga3106fae8499d5613d76fc8bd4cd09166"><td class="memTemplParams" colspan="2">template&lt;typename Return, typename... Params&gt; </td></tr>
 <tr class="memitem:ga3106fae8499d5613d76fc8bd4cd09166"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ga3106fae8499d5613d76fc8bd4cd09166">make_call_report</a> (<a class="el" href="../../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html">TargetReport</a> <a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a051be767e80c03e94fd818c571250e3b">target</a>, <a class="el" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info</a>&lt; Return, Params... &gt; callInfo, <a class="el" href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html">util::Stacktrace</a> <a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a43e04f707d8ce22c541bceba76204445">stacktrace</a>)</td></tr>
 <tr class="memdesc:ga3106fae8499d5613d76fc8bd4cd09166"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates the call report for a given call info.  <br /></td></tr>
@@ -159,7 +167,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Contains reports of <code>mimic++</code> types. </p>
-<p>Reports are simplified object representations of <code>mimic++</code> types. In fact, reports are used to communicate with independent domains (e.g. unit-test frameworks) over the <code><a class="el" href="../../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html" title="The reporter interface.">IReporter</a></code> interface and are thus designed to provide as much transparent information as possible, without requiring them to be a generic type. </p>
+<p>Reports are simplified object representations of <code>mimic++</code> types. In fact, reports are used to communicate with independent domains (e.g. unit-test frameworks) over the <code><a class="el" href="../../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html" title="The reporter interface.">IReporter</a></code> interface and are thus designed to provide as much transparent information as possible, without requiring them to be a generic type.</p>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="gabdbff85366c0c689bdceba665c10619b" name="gabdbff85366c0c689bdceba665c10619b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gabdbff85366c0c689bdceba665c10619b">&#9670;&#160;</a></span>control_state_t</h2>
@@ -176,9 +184,9 @@ Functions</h2></td></tr>
 <div class="line">        <a class="code hl_struct" href="../../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html">state_inapplicable</a>,</div>
 <div class="line">        <a class="code hl_struct" href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html">state_applicable</a>,</div>
 <div class="line">        <a class="code hl_struct" href="../../d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html">state_saturated</a>&gt;</div>
-<div class="ttc" id="astructmimicpp_1_1reporting_1_1state__applicable_html"><div class="ttname"><a href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html">mimicpp::reporting::state_applicable</a></div><div class="ttdoc">Denotes a applicable expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:45</div></div>
-<div class="ttc" id="astructmimicpp_1_1reporting_1_1state__inapplicable_html"><div class="ttname"><a href="../../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html">mimicpp::reporting::state_inapplicable</a></div><div class="ttdoc">Denotes an inapplicable expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:29</div></div>
-<div class="ttc" id="astructmimicpp_1_1reporting_1_1state__saturated_html"><div class="ttname"><a href="../../d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html">mimicpp::reporting::state_saturated</a></div><div class="ttdoc">Denotes a saturated expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:60</div></div>
+<div class="ttc" id="astructmimicpp_1_1reporting_1_1state__applicable_html"><div class="ttname"><a href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html">mimicpp::reporting::state_applicable</a></div><div class="ttdoc">Denotes an applicable expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:46</div></div>
+<div class="ttc" id="astructmimicpp_1_1reporting_1_1state__inapplicable_html"><div class="ttname"><a href="../../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html">mimicpp::reporting::state_inapplicable</a></div><div class="ttdoc">Denotes an inapplicable expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:30</div></div>
+<div class="ttc" id="astructmimicpp_1_1reporting_1_1state__saturated_html"><div class="ttname"><a href="../../d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html">mimicpp::reporting::state_saturated</a></div><div class="ttdoc">Denotes a saturated expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:61</div></div>
 </div><!-- fragment -->
 <p>Denotes an expectation state. </p>
 
@@ -303,12 +311,66 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="ga8741204d8bd4ff129677d5526885404a" name="ga8741204d8bd4ff129677d5526885404a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8741204d8bd4ff129677d5526885404a">&#9670;&#160;</a></span>make_sequence_report() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Id, auto priorityStrategy&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a> mimicpp::reporting::make_sequence_report </td>
+          <td>(</td>
+          <td class="paramtype">sequence::detail::BasicSequence&lt; Id, priorityStrategy &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>seq</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ga2269fb9a739c635f996eebc7f1c2f4d5" name="ga2269fb9a739c635f996eebc7f1c2f4d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2269fb9a739c635f996eebc7f1c2f4d5">&#9670;&#160;</a></span>make_sequence_report() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Id, auto priorityStrategy&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a> mimicpp::reporting::make_sequence_report </td>
+          <td>(</td>
+          <td class="paramtype">sequence::detail::BasicSequenceInterface&lt; Id, priorityStrategy &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>seq</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Oct 20 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+    <li class="footer">Generated on Mon Dec 1 2025 for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
 </body>
