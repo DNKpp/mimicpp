@@ -309,12 +309,6 @@ jobs:
           # Honestly, we do not get much insight from testing Release modes of different c++-versions.
           - build_mode: "Release"
             cxx_standard: 23
-          # This combination results in a compile error in ranges header.
-          - cxx_standard: 23
-            config:
-              compiler_name: "clang"
-              compiler_version: "16"
-              libcxx: false
           # gcc-10 doesn't know C++-23
           - cxx_standard: 23
             config:
