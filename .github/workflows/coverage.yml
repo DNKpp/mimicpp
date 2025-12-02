@@ -8,7 +8,6 @@ name: coverage
 env:
   COBERTURA_REPORT: cobertura.xml
   COVERALLS_REPORT: coveralls.json
-  JSON_REPORT: report.json
   JSON_SUMMARY: summary.json
   HTML_REPORT_DIR: html/
   COVERAGE_ARTIFACT_NAME: coverage-report
@@ -36,7 +35,7 @@ jobs:
 
       - name: Install gcovr
         run: |
-          python -m pip install gcovr==8.3
+          python -m pip install git+https://github.com/gcovr/gcovr.git@a08e28b779c438f88bbc007f0bf528591408a1b9
 
       - name: Print versions
         run: |
@@ -87,51 +86,63 @@ jobs:
           git config --global --add safe.directory ${GITHUB_WORKSPACE}
           cd build
           gcovr --root .. \
-              --verbose \
-              --include "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
-              --filter "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
-              --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
-              --exclude-unreachable-branches \
-              --exclude-function-lines \
-              --exclude-noncode-lines \
-              --exclude-throw-branches \
-              --decisions \
-              --calls \
-              --keep \
-              --txt \
-              --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
-              --html-nested ${{env.HTML_REPORT_DIR}} --html-title "mimic++ Coverage Report" \
-              --json-summary ${{env.JSON_SUMMARY}} --json-summary-pretty \
-              --json ${{env.JSON_REPORT}} --json-pretty
-          
-          mv ${{env.COBERTURA_REPORT}} ..
-          mv ${{env.HTML_REPORT_DIR}} ..
-          mv ${{env.JSON_SUMMARY}} ..
-          mv ${{env.JSON_REPORT}} ..
-
-      # Gathering the coveralls.json in one go with all the other reports results in inconsistent reports.
-      # see: https://github.com/gcovr/gcovr/issues/1074
-      - name: Create coveralls report
-        run: |
-          cd build
+                --keep \
+                --verbose \
+                --trace-include='.*Templated.*' \
+                --include "${GITHUB_WORKSPACE}/include" \
+                --filter "${GITHUB_WORKSPACE}/include" \
+                --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
+                --exclude-unreachable-branches \
+                --exclude-function-lines \
+                --exclude-noncode-lines \
+                --exclude-throw-branches \
+                --decisions \
+                --calls \
+                --merge-lines \
+                --json-trace-data-source \
+                --txt \
+                --json report.1.json --json-pretty \
+                --cobertura cobertura.1.xml --cobertura-pretty \
+                --coveralls coveralls.1.json --coveralls-pretty \
+                --html-nested html/ --html-title "mimic++ Coverage Report" \
+                --json-summary summary.1.json --json-summary-pretty
           gcovr --root .. \
-              --verbose \
-              --include "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
-              --filter "${GITHUB_WORKSPACE}/include/mimic++(_ext)?" \
-              --add-tracefile ../${{env.JSON_REPORT}} \
-              --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
+                --verbose \
+                --trace-include='.*Templated.*' \
+                --include "${GITHUB_WORKSPACE}/include" \
+                --filter "${GITHUB_WORKSPACE}/include" \
+                --exclude-lines-by-pattern "\s*(MIMICPP_ASSERT|assert|util::unreachable)\(" \
+                --exclude-unreachable-branches \
+                --exclude-function-lines \
+                --exclude-noncode-lines \
+                --exclude-throw-branches \
+                --decisions \
+                --calls \
+                --merge-lines \
+                --json-trace-data-source \
+                --add-tracefile report.1.json \
+                --txt \
+                --json report.2.json --json-pretty \
+                --cobertura cobertura.2.xml --cobertura-pretty \
+                --coveralls coveralls.2.json --coveralls-pretty \
+                --json-summary summary.2.json --json-summary-pretty
           
-          mv ${{env.COVERALLS_REPORT}} ..
+          mv report.1.json ..
+          mv cobertura.1.xml ..
+          mv coveralls.1.json ..
+          mv summary.1.json ..
+          mv ${{env.HTML_REPORT_DIR}} ..
+          mv report.2.json ..
+          mv cobertura.2.xml ..
+          mv coveralls.2.json ..
+          mv summary.2.json ..
 
-      - name: Find gcov-files
-        shell: bash
-        run: find . -type f -name "*.gcov"
-
+      # As of gcovr 8.4, these are *json.gz instead of *.gcov
       - name: Upload gcov coverage report artifacts
         uses: actions/upload-artifact@v4
         with:
           name: gcov-files
-          path: "**/*.gcov"
+          path: "**/*.json.gz"
           if-no-files-found: error
 
       - name: Upload generated report artifacts
@@ -139,11 +150,15 @@ jobs:
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
           path: |
-            ${{env.COBERTURA_REPORT}}
-            ${{env.COVERALLS_REPORT}}
-            ${{env.JSON_REPORT}}
-            ${{env.JSON_SUMMARY}}
+            report.1.json
+            cobertura.1.xml
+            coveralls.1.json
+            summary.1.json
             ${{env.HTML_REPORT_DIR}}
+            report.2.json
+            cobertura.2.xml
+            coveralls.2.json
+            summary.2.json
           if-no-files-found: error
 
   codacy-report:
@@ -160,7 +175,7 @@ jobs:
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{secrets.CODACY_PROJECT_TOKEN}}
-          coverage-reports: ${{env.COBERTURA_REPORT}}
+          coverage-reports: cobertura.2.xml
 
   codecov-report:
     needs: create-coverage-report
@@ -177,7 +192,7 @@ jobs:
         with:
           name: $GITHUB_REPOSITORY
           token: ${{secrets.CODECOV_TOKEN}}
-          files: ${{env.COBERTURA_REPORT}}
+          files: cobertura.2.xml
           fail_ci_if_error: true
           verbose: true
 
@@ -195,7 +210,7 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          file: ${{env.COVERALLS_REPORT}}
+          file: coveralls.2.json
           # can not use ${{ github.workspace }} here
           # see: https://github.com/actions/checkout/issues/785
           base-path: "/__w/mimicpp/mimicpp/include"
