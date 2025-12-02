@@ -28,10 +28,10 @@ TEST_CASE(
     "The limits of TimesConfig can be modified.",
     "[detail][expectation][expectation::control]")
 {
-    const int min = GENERATE(range(0, 5));
-    const int max = min + GENERATE(range(0, 5));
+    int const min = GENERATE(range(0, 5));
+    int const max = min + GENERATE(range(0, 5));
 
-    const detail::TimesConfig config{min, max};
+    detail::TimesConfig const config{min, max};
 
     REQUIRE(min == std::as_const(config).min());
     REQUIRE(max == std::as_const(config).max());
@@ -43,8 +43,9 @@ TEST_CASE(
 {
     SECTION("When max < min.")
     {
-        const int max = GENERATE(range(0, 5));
-        const int min = max + GENERATE(range(1, 5));
+        int const max = GENERATE(range(0, 5));
+        int const min = max + GENERATE(range(1, 5));
+        CAPTURE(min, max);
 
         REQUIRE_THROWS_AS(
             (detail::TimesConfig{min, max}),
@@ -53,8 +54,9 @@ TEST_CASE(
 
     SECTION("When min and/or max < 0.")
     {
-        const int min = GENERATE(std::numeric_limits<int>::min(), -42, -1);
-        const int max = min + GENERATE(range(0, 5));
+        int const min = GENERATE(std::numeric_limits<int>::min(), -42, -1);
+        int const max = min + GENERATE(range(0, 5));
+        CAPTURE(min, max);
 
         REQUIRE_THROWS_AS(
             (detail::TimesConfig{min, max}),
@@ -66,8 +68,9 @@ TEST_CASE(
     "ControlPolicy can be constructed from TimesConfig and default SequenceConfig.",
     "[expectation][expectation::control]")
 {
-    const int min = GENERATE(range(0, 5));
-    const int max = min + GENERATE(range(0, 5));
+    int const min = GENERATE(range(0, 5));
+    int const max = min + GENERATE(range(0, 5));
+    CAPTURE(min, max);
 
     ControlPolicy<> policy{
         {},
@@ -77,7 +80,7 @@ TEST_CASE(
 
     REQUIRE(0u == policy.sequenceCount);
 
-    for ([[maybe_unused]] auto i : std::views::iota(0, min))
+    for (auto const i : std::views::iota(0, min))
     {
         REQUIRE(!std::as_const(policy).is_satisfied());
         REQUIRE_THAT(
@@ -94,7 +97,7 @@ TEST_CASE(
 
     REQUIRE(std::as_const(policy).is_satisfied());
 
-    for ([[maybe_unused]] auto i : std::views::iota(min, max))
+    for (auto const i : std::views::iota(min, max))
     {
         REQUIRE(std::as_const(policy).is_satisfied());
         REQUIRE_THAT(
@@ -122,7 +125,7 @@ TEST_CASE(
 
 namespace
 {
-    using TestSequenceT = sequence::detail::BasicSequenceInterface<
+    using TestSequence = sequence::detail::BasicSequenceInterface<
         sequence::Id,
         FakeSequenceStrategy{}>;
 }
@@ -138,7 +141,7 @@ TEST_CASE(
 
     SECTION("When single sequence is provided.")
     {
-        std::optional<TestSequenceT> sequence{std::in_place};
+        std::optional<TestSequence> sequence{std::in_place};
         REQUIRE(sequence);
         std::optional policy{
             ControlPolicy{
@@ -189,8 +192,8 @@ TEST_CASE(
 
     SECTION("When multiples sequences are provided.")
     {
-        std::optional<TestSequenceT> firstSequence{std::in_place};
-        std::optional<TestSequenceT> secondSequence{std::in_place};
+        std::optional<TestSequence> firstSequence{std::in_place};
+        std::optional<TestSequence> secondSequence{std::in_place};
         std::optional policy{
             ControlPolicy{
                           from,
@@ -270,10 +273,11 @@ TEST_CASE(
     ScopedReporter reporter{};
 
     {
-        const int min = GENERATE(range(0, 5));
-        const int max = min + GENERATE(range(0, 5));
+        int const min = GENERATE(range(0, 5));
+        int const max = min + GENERATE(range(0, 5));
+        CAPTURE(min, max);
 
-        TestSequenceT sequence{};
+        TestSequence sequence{};
         constexpr util::SourceLocation from{};
         ControlPolicy policy{
             from,
@@ -282,7 +286,7 @@ TEST_CASE(
 
         REQUIRE(1u == policy.sequenceCount);
 
-        for ([[maybe_unused]] auto i : std::views::iota(0, min))
+        for (auto const i : std::views::iota(0, min))
         {
             REQUIRE(from == sequence.head_from());
             REQUIRE(!std::as_const(policy).is_satisfied());
@@ -307,7 +311,7 @@ TEST_CASE(
 
         SECTION("Can be consumed until saturated.")
         {
-            for ([[maybe_unused]] auto i : std::views::iota(min, max))
+            for (auto const i : std::views::iota(min, max))
             {
                 REQUIRE(from == sequence.head_from());
                 REQUIRE(std::as_const(policy).is_satisfied());
@@ -348,11 +352,11 @@ TEST_CASE(
 {
     namespace Matches = Catch::Matchers;
 
-    TestSequenceT sequence{};
+    TestSequence sequence{};
 
     SECTION("When sequence contains just a single expectation.")
     {
-        const auto count = GENERATE(range(1, 5));
+        auto const count = GENERATE(range(1, 5));
         ControlPolicy policy{
             {},
             expect::times(count),
@@ -360,7 +364,7 @@ TEST_CASE(
 
         REQUIRE(1u == policy.sequenceCount);
 
-        for ([[maybe_unused]] const int i : std::views::iota(0, count))
+        for (int const i : std::views::iota(0, count))
         {
             REQUIRE(!std::as_const(policy).is_satisfied());
             REQUIRE_THAT(
@@ -396,7 +400,7 @@ TEST_CASE(
 
         REQUIRE(1u == policy1.sequenceCount);
 
-        const auto count2 = GENERATE(range(1, 5));
+        auto const count2 = GENERATE(range(1, 5));
         ControlPolicy policy2{
             {},
             expect::times(count2),
@@ -429,7 +433,7 @@ TEST_CASE(
 
             REQUIRE_NOTHROW(policy1.consume());
 
-            for ([[maybe_unused]] const int i : std::views::iota(0, count2))
+            for (int const i : std::views::iota(0, count2))
             {
                 REQUIRE(policy1.is_satisfied());
                 REQUIRE_THAT(
@@ -486,8 +490,8 @@ TEST_CASE(
 
     SECTION("When multiple sequences are given.")
     {
-        TestSequenceT sequence1{};
-        TestSequenceT sequence2{};
+        TestSequence sequence1{};
+        TestSequence sequence2{};
 
         SECTION("When the first expectation is the prefix of multiple sequences.")
         {
@@ -982,10 +986,11 @@ TEST_CASE(
 {
     SECTION("times with binary limits.")
     {
-        const int min = GENERATE(range(0, 5));
-        const int max = min + GENERATE(range(0, 5));
+        int const min = GENERATE(range(0, 5));
+        int const max = min + GENERATE(range(0, 5));
+        CAPTURE(min, max);
 
-        const detail::TimesConfig config = expect::times(min, max);
+        detail::TimesConfig const config = expect::times(min, max);
 
         REQUIRE(min == config.min());
         REQUIRE(max == config.max());
@@ -993,9 +998,10 @@ TEST_CASE(
 
     SECTION("times with binary limits.")
     {
-        const int exactly = GENERATE(range(0, 5));
+        int const exactly = GENERATE(range(0, 5));
+        CAPTURE(exactly);
 
-        const detail::TimesConfig config = expect::times(exactly);
+        detail::TimesConfig const config = expect::times(exactly);
 
         REQUIRE(exactly == config.min());
         REQUIRE(exactly == config.max());
@@ -1003,9 +1009,10 @@ TEST_CASE(
 
     SECTION("at_most")
     {
-        const int limit = GENERATE(range(0, 5));
+        int const limit = GENERATE(range(0, 5));
+        CAPTURE(limit);
 
-        const detail::TimesConfig config = expect::at_most(limit);
+        detail::TimesConfig const config = expect::at_most(limit);
 
         REQUIRE(0 == config.min());
         REQUIRE(limit == config.max());
@@ -1013,9 +1020,10 @@ TEST_CASE(
 
     SECTION("at_least")
     {
-        const int limit = GENERATE(range(0, 5));
+        int const limit = GENERATE(range(0, 5));
+        CAPTURE(limit);
 
-        const detail::TimesConfig config = expect::at_least(limit);
+        detail::TimesConfig const config = expect::at_least(limit);
 
         REQUIRE(limit == config.min());
         REQUIRE(std::numeric_limits<int>::max() == config.max());
@@ -1062,7 +1070,8 @@ TEST_CASE(
     {
         SECTION("Min < 0")
         {
-            const int min = GENERATE(std::numeric_limits<int>::min(), -1);
+            int const min = GENERATE(std::numeric_limits<int>::min(), -1);
+            CAPTURE(min);
             REQUIRE_THROWS_AS(
                 expect::times(min, 42),
                 std::invalid_argument);
@@ -1070,7 +1079,8 @@ TEST_CASE(
 
         SECTION("Max < 0")
         {
-            const int max = GENERATE(std::numeric_limits<int>::min(), -1);
+            int const max = GENERATE(std::numeric_limits<int>::min(), -1);
+            CAPTURE(max);
             REQUIRE_THROWS_AS(
                 expect::times(42, max),
                 std::invalid_argument);
@@ -1078,8 +1088,9 @@ TEST_CASE(
 
         SECTION("Max < Min")
         {
-            const int max = GENERATE(range(0, 5));
-            const int min = max + GENERATE(range(1, 5));
+            int const max = GENERATE(range(0, 5));
+            int const min = max + GENERATE(range(1, 5));
+            CAPTURE(min, max);
             REQUIRE_THROWS_AS(
                 expect::times(min, max),
                 std::invalid_argument);
@@ -1088,7 +1099,8 @@ TEST_CASE(
 
     SECTION("For unary overload.")
     {
-        const int exactly = GENERATE(std::numeric_limits<int>::min(), -1);
+        int const exactly = GENERATE(std::numeric_limits<int>::min(), -1);
+        CAPTURE(exactly);
         REQUIRE_THROWS_AS(
             expect::times(exactly),
             std::invalid_argument);
@@ -1099,7 +1111,8 @@ TEST_CASE(
     "expect::at_least throws, when invalid limit is given.",
     "[expectation][expectation::factories]")
 {
-    const int limit = GENERATE(std::numeric_limits<int>::min(), -1);
+    int const limit = GENERATE(std::numeric_limits<int>::min(), -1);
+    CAPTURE(limit);
     REQUIRE_THROWS_AS(
         expect::times(limit),
         std::invalid_argument);
@@ -1109,7 +1122,8 @@ TEST_CASE(
     "expect::at_most throws, when invalid limit is given.",
     "[expectation][expectation::factories]")
 {
-    const int limit = GENERATE(std::numeric_limits<int>::min(), -1);
+    int const limit = GENERATE(std::numeric_limits<int>::min(), -1);
+    CAPTURE(limit);
     REQUIRE_THROWS_AS(
         expect::times(limit),
         std::invalid_argument);
