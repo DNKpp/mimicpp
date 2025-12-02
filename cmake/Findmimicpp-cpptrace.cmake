@@ -25,5 +25,5 @@ if (NOT cpptrace_FOUND)
     message(DEBUG "${MESSAGE_PREFIX} No installed `cpptrace`-package found. Fetching via cpm.")
 
     include(get_cpm)
-    CPMAddPackage("gh:jeremy-rifkin/cpptrace@1.0.2")
+    CPMAddPackage("gh:jeremy-rifkin/cpptrace@1.0.4")
 endif ()
