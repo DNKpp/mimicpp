@@ -232,20 +232,18 @@ namespace mimicpp
 
         constexpr void update_sequence_states() noexcept
         {
-            if (m_Count == m_Min)
+            if (m_Count == m_Max)
             {
+                constexpr auto set_saturated = [](auto& sequence, auto const& id) { sequence->set_saturated(id); };
                 std::apply(
-                    [](auto&... entries) noexcept {
-                        (..., std::get<0>(entries)->set_satisfied(std::get<1>(entries)));
-                    },
+                    [&](auto&... entries) noexcept { (..., std::apply(set_saturated, entries)); },
                     m_Sequences);
             }
-            else if (m_Count == m_Max)
+            else if (m_Count == m_Min)
             {
+                constexpr auto set_satisfied = [](auto& sequence, auto const& id) { sequence->set_satisfied(id); };
                 std::apply(
-                    [](auto&... entries) noexcept {
-                        (..., std::get<0>(entries)->set_saturated(std::get<1>(entries)));
-                    },
+                    [&](auto&... entries) noexcept { (..., std::apply(set_satisfied, entries)); },
                     m_Sequences);
             }
         }

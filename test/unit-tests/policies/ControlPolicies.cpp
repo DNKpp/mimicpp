@@ -134,20 +134,22 @@ TEST_CASE(
     namespace Matches = Catch::Matchers;
 
     ScopedReporter reporter{};
+    constexpr util::SourceLocation from{};
 
     SECTION("When single sequence is provided.")
     {
         std::optional<TestSequenceT> sequence{std::in_place};
-        CHECK(sequence);
+        REQUIRE(sequence);
         std::optional policy{
             ControlPolicy{
-                          {},
+                          from,
                           detail::TimesConfig{},
                           expect::in_sequence(*sequence)}
         };
 
         REQUIRE(1u == policy->sequenceCount);
 
+        REQUIRE(from == sequence->head_from());
         REQUIRE(!std::as_const(*policy).is_satisfied());
         REQUIRE_THAT(
             std::as_const(*policy).state(),
@@ -172,6 +174,7 @@ TEST_CASE(
                         .max = 1,
                         .count = 1,
                         .sequences = {reporting::make_sequence_report(*sequence)}}));
+            REQUIRE_FALSE(sequence->head_from());
         }
 
         SECTION("Reports error, when unconsumed.")
@@ -190,12 +193,14 @@ TEST_CASE(
         std::optional<TestSequenceT> secondSequence{std::in_place};
         std::optional policy{
             ControlPolicy{
-                          {},
+                          from,
                           detail::TimesConfig{},
                           expect::in_sequences(*firstSequence, *secondSequence)}
         };
 
         REQUIRE(2u == policy->sequenceCount);
+        REQUIRE(from == firstSequence->head_from());
+        REQUIRE(from == secondSequence->head_from());
 
         REQUIRE(!std::as_const(*policy).is_satisfied());
         REQUIRE_THAT(
@@ -224,6 +229,8 @@ TEST_CASE(
                         .count = 1,
                         .sequences = {reporting::make_sequence_report(*firstSequence), reporting::make_sequence_report(*secondSequence)}
             }));
+            REQUIRE_FALSE(firstSequence->head_from());
+            REQUIRE_FALSE(secondSequence->head_from());
         }
 
         SECTION("Reports error, when unconsumed.")
@@ -267,8 +274,9 @@ TEST_CASE(
         const int max = min + GENERATE(range(0, 5));
 
         TestSequenceT sequence{};
+        constexpr util::SourceLocation from{};
         ControlPolicy policy{
-            {},
+            from,
             expect::times(min, max),
             expect::in_sequence(sequence)};
 
@@ -276,6 +284,7 @@ TEST_CASE(
 
         for ([[maybe_unused]] auto i : std::views::iota(0, min))
         {
+            REQUIRE(from == sequence.head_from());
             REQUIRE(!std::as_const(policy).is_satisfied());
             REQUIRE_THAT(
                 std::as_const(policy).state(),
@@ -300,6 +309,7 @@ TEST_CASE(
         {
             for ([[maybe_unused]] auto i : std::views::iota(min, max))
             {
+                REQUIRE(from == sequence.head_from());
                 REQUIRE(std::as_const(policy).is_satisfied());
                 REQUIRE_THAT(
                     std::as_const(policy).state(),
@@ -323,6 +333,7 @@ TEST_CASE(
                         .max = max,
                         .count = max,
                         .sequences = {reporting::make_sequence_report(sequence)}}));
+            REQUIRE_FALSE(sequence.head_from());
         }
     }
 
