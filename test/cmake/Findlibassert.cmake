@@ -13,4 +13,4 @@ endif ()
 
 find_package(mimicpp-cpptrace MODULE REQUIRED)
 set(LIBASSERT_USE_EXTERNAL_CPPTRACE ON CACHE BOOL "")
-CPMAddPackage("gh:jeremy-rifkin/libassert@2.1.5")
+CPMAddPackage("gh:jeremy-rifkin/libassert@2.2.1")
