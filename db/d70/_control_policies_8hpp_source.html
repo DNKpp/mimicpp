@@ -347,105 +347,103 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        <span class="keyword">constexpr</span> <span class="keywordtype">void</span> update_sequence_states() noexcept</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        {</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            <span class="keywordflow">if</span> (m_Count == m_Min)</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            <span class="keywordflow">if</span> (m_Count == m_Max)</div>
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            {</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                std::apply(</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                    [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                        (..., std::get&lt;0&gt;(entries)-&gt;set_satisfied(std::get&lt;1&gt;(entries)));</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                    },</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                    m_Sequences);</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            }</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Count == m_Max)</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            {</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                <span class="keyword">constexpr</span> <span class="keyword">auto</span> set_saturated = [](<span class="keyword">auto</span>&amp; sequence, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; id) { sequence-&gt;set_saturated(<span class="keywordtype">id</span>); };</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                std::apply(</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                    [&amp;](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> { (..., std::apply(set_saturated, entries)); },</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                    m_Sequences);</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            }</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (m_Count == m_Min)</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            {</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                <span class="keyword">constexpr</span> <span class="keyword">auto</span> set_satisfied = [](<span class="keyword">auto</span>&amp; sequence, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; id) { sequence-&gt;set_satisfied(<span class="keywordtype">id</span>); };</div>
 <div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                std::apply(</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    [](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                        (..., std::get&lt;0&gt;(entries)-&gt;set_saturated(std::get&lt;1&gt;(entries)));</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                    },</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                    m_Sequences);</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            }</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>        }</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>    };</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    [&amp;](<span class="keyword">auto</span>&amp;... entries) <span class="keyword">noexcept</span> { (..., std::apply(set_satisfied, entries)); },</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                    m_Sequences);</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            }</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        }</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>    };</div>
 </div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>}</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span> </div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>{</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span></div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00285" data-start="{" data-end="}">
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">  285</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">times</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> min, <span class="keywordtype">int</span> <span class="keyword">const</span> max)</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    {</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{min, max};</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    }</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>}</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span> </div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a> <span class="keyword">namespace </span><a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>{</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00283" data-start="{" data-end="}">
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">  283</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">times</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> min, <span class="keywordtype">int</span> <span class="keyword">const</span> max)</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    {</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{min, max};</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    }</div>
 </div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span></div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00300" data-start="{" data-end="}">
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga6fe95d279190abe82bbe6aa2fb4c5541">  300</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">times</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> exactly)</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    {</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig(exactly, exactly);</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    }</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00298" data-start="{" data-end="}">
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga6fe95d279190abe82bbe6aa2fb4c5541">  298</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">times</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> exactly)</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    {</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig(exactly, exactly);</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    }</div>
 </div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span></div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00315" data-start="{" data-end="}">
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">  315</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">at_least</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> min)</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    {</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{min, std::numeric_limits&lt;int&gt;::max()};</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>    }</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span></div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00313" data-start="{" data-end="}">
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">  313</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">at_least</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> min)</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>    {</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{min, std::numeric_limits&lt;int&gt;::max()};</div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>    }</div>
 </div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span></div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00330" data-start="{" data-end="}">
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">  330</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">at_most</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> max)</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    {</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{0, max};</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>    }</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span></div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00328" data-start="{" data-end="}">
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">  328</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">at_most</a>(<span class="keywordtype">int</span> <span class="keyword">const</span> max)</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    {</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        <span class="keywordflow">return</span> mimicpp::detail::TimesConfig{0, max};</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>    }</div>
 </div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span></div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00342" data-start="{" data-end="}">
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">  342</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">never</a>() noexcept</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>    {</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{0, 0};</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span> </div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>        <span class="keywordflow">return</span> config;</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>    }</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00340" data-start="{" data-end="}">
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">  340</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">never</a>() noexcept</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    {</div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{0, 0};</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>        <span class="keywordflow">return</span> config;</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>    }</div>
 </div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span></div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00357" data-start="{" data-end="}">
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">  357</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">once</a>() noexcept</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>    {</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{1, 1};</div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>        <span class="keywordflow">return</span> config;</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>    }</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span></div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00355" data-start="{" data-end="}">
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">  355</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">once</a>() noexcept</div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>    {</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{1, 1};</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>        <span class="keywordflow">return</span> config;</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>    }</div>
 </div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00372" data-start="{" data-end="}">
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">  372</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">twice</a>() noexcept</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>    {</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{2, 2};</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="keywordflow">return</span> config;</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    }</div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span></div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00370" data-start="{" data-end="}">
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">  370</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">twice</a>() noexcept</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>    {</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{2, 2};</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span> </div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        <span class="keywordflow">return</span> config;</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    }</div>
 </div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span></div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen00384" data-start="{" data-end="}">
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">  384</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">any_times</a>() noexcept</div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>    {</div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{0, std::numeric_limits&lt;int&gt;::max()};</div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span> </div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span>        <span class="keywordflow">return</span> config;</div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span>    }</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span></div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00382" data-start="{" data-end="}">
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno"><a class="line" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">  382</a></span>    <span class="keyword">consteval</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">any_times</a>() noexcept</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span>    {</div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>        <span class="keyword">constexpr</span> mimicpp::detail::TimesConfig config{0, std::numeric_limits&lt;int&gt;::max()};</div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span> </div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        <span class="keywordflow">return</span> config;</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    }</div>
 </div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span></div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>}</div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span></div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>}</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span> </div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
 <div class="ttc" id="a_config_8hpp_html_a97ed0cb4a7de0573de2b684047cadc9f"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a></div><div class="ttdeci">#define MIMICPP_ASSERT(condition, msg)</div><div class="ttdef"><b>Definition</b> Config.hpp:51</div></div>
 <div class="ttc" id="a_config_8hpp_html_af5897385afd790dba0e4971e29c1e3e0"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MODULE_EXPORT</div><div class="ttdef"><b>Definition</b> Config.hpp:19</div></div>
@@ -461,13 +459,13 @@ $(function(){initNavTree('db/d70/_control_policies_8hpp_source.html','../../'); 
 <div class="ttc" id="aclassmimicpp_1_1_control_policy_html_ab1649a77ea47e1f4651c8c9eed3fecd0"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#ab1649a77ea47e1f4651c8c9eed3fecd0">mimicpp::ControlPolicy::is_saturated</a></div><div class="ttdeci">constexpr bool is_saturated() const noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:185</div></div>
 <div class="ttc" id="aclassmimicpp_1_1_control_policy_html_aca4ec931aecbf4258b98f16b9e7f8867"><div class="ttname"><a href="../../dc/db2/classmimicpp_1_1_control_policy.html#aca4ec931aecbf4258b98f16b9e7f8867">mimicpp::ControlPolicy::is_applicable</a></div><div class="ttdeci">constexpr bool is_applicable() const noexcept</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:191</div></div>
 <div class="ttc" id="aclassmimicpp_1_1util_1_1_source_location_html"><div class="ttname"><a href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">mimicpp::util::SourceLocation</a></div><div class="ttdoc">A thin wrapper around general source-location info.</div><div class="ttdef"><b>Definition</b> SourceLocation.hpp:38</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga01f941f8012e59b683fb3388f0a3570a"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">mimicpp::expect::never</a></div><div class="ttdeci">consteval auto never() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 0.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:342</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga1d519bd590c8ad5f586f65193fac17e6"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">mimicpp::expect::times</a></div><div class="ttdeci">constexpr auto times(int const min, int const max)</div><div class="ttdoc">Specifies a times policy with a limit range.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:285</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga3cd3b29e89cf30b0ec52f34703252252"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">mimicpp::expect::any_times</a></div><div class="ttdeci">consteval auto any_times() noexcept</div><div class="ttdoc">Specifies a times-policy with no constraints on how many times an expectation may match.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:384</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga859cd6bd34a5d6c96b5bc72b5c2c9e36"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">mimicpp::expect::at_least</a></div><div class="ttdeci">constexpr auto at_least(int const min)</div><div class="ttdoc">Specifies a times policy with just a lower limit.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:315</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga90e8c3c02fe9ec7f14a24a7c9c7e1695"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">mimicpp::expect::twice</a></div><div class="ttdeci">consteval auto twice() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 2.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:372</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga967e8516732b1a6630b2042e64d14cbf"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">mimicpp::expect::once</a></div><div class="ttdeci">consteval auto once() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 1.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:357</div></div>
-<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga968317fb9976ad8d293b041183ffb465"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">mimicpp::expect::at_most</a></div><div class="ttdeci">constexpr auto at_most(int const max)</div><div class="ttdoc">Specifies a times policy with just an upper limit.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:330</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga01f941f8012e59b683fb3388f0a3570a"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga01f941f8012e59b683fb3388f0a3570a">mimicpp::expect::never</a></div><div class="ttdeci">consteval auto never() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 0.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:340</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga1d519bd590c8ad5f586f65193fac17e6"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6">mimicpp::expect::times</a></div><div class="ttdeci">constexpr auto times(int const min, int const max)</div><div class="ttdoc">Specifies a times policy with a limit range.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:283</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga3cd3b29e89cf30b0ec52f34703252252"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252">mimicpp::expect::any_times</a></div><div class="ttdeci">consteval auto any_times() noexcept</div><div class="ttdoc">Specifies a times-policy with no constraints on how many times an expectation may match.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:382</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga859cd6bd34a5d6c96b5bc72b5c2c9e36"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36">mimicpp::expect::at_least</a></div><div class="ttdeci">constexpr auto at_least(int const min)</div><div class="ttdoc">Specifies a times policy with just a lower limit.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:313</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga90e8c3c02fe9ec7f14a24a7c9c7e1695"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga90e8c3c02fe9ec7f14a24a7c9c7e1695">mimicpp::expect::twice</a></div><div class="ttdeci">consteval auto twice() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 2.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:370</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga967e8516732b1a6630b2042e64d14cbf"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga967e8516732b1a6630b2042e64d14cbf">mimicpp::expect::once</a></div><div class="ttdeci">consteval auto once() noexcept</div><div class="ttdoc">Specifies a times policy with both limits set to 1.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:355</div></div>
+<div class="ttc" id="agroup___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s_html_ga968317fb9976ad8d293b041183ffb465"><div class="ttname"><a href="../../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465">mimicpp::expect::at_most</a></div><div class="ttdeci">constexpr auto at_most(int const max)</div><div class="ttdoc">Specifies a times policy with just an upper limit.</div><div class="ttdef"><b>Definition</b> ControlPolicies.hpp:328</div></div>
 <div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s_html_ga8741204d8bd4ff129677d5526885404a"><div class="ttname"><a href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga8741204d8bd4ff129677d5526885404a">mimicpp::reporting::make_sequence_report</a></div><div class="ttdeci">constexpr SequenceReport make_sequence_report(sequence::detail::BasicSequence&lt; Id, priorityStrategy &gt; const &amp;seq)</div><div class="ttdef"><b>Definition</b> SequenceReport.hpp:36</div></div>
 <div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s_html_gabdbff85366c0c689bdceba665c10619b"><div class="ttname"><a href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b">mimicpp::reporting::control_state_t</a></div><div class="ttdeci">std::variant&lt; state_inapplicable, state_applicable, state_saturated &gt; control_state_t</div><div class="ttdoc">Denotes an expectation state.</div><div class="ttdef"><b>Definition</b> ExpectationReport.hpp:75</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1expect_html"><div class="ttname"><a href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a></div><div class="ttdef"><b>Definition</b> ArgRequirementPolicies.hpp:125</div></div>
