@@ -23,6 +23,12 @@ target_compile_definitions(${TARGET_NAME} INTERFACE
     "LIBASSERT_BREAK_ON_FAIL"
 )
 
+# This is used by cpptrace for macOS
+# https://github.com/jeremy-rifkin/cpptrace#macos
+set_target_properties(${TARGET_NAME} PROPERTIES
+    XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT "dwarf-with-dsym"
+)
+
 include(Mimic++-EnableAdditionalTestFlags)
 include(Mimic++-EnableWarnings)
 include(Mimic++-LinkStdStacktrace)

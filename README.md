@@ -645,11 +645,10 @@ Note:
 
 **macOS**
 
-| Compiler          | x86_64 | libstdc++ | libc++ | c++-20 | c++-23 | formatting |     stacktrace      |
-|-------------------|:------:|:---------:|:------:|:------:|:------:|:----------:|:-------------------:|
-| AppleClang-16.0.6 |   x    |     ?     |   x    |   x    |   x    |    fmt     |   cpptrace/boost    |
-| AppleClang-17.0.6 |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
-| AppleClang-18.1.6 |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| Compiler      | x86_64 | libstdc++ | libc++ | c++-20 | c++-23 | formatting |     stacktrace      |
+|---------------|:------:|:---------:|:------:|:------:|:------:|:----------:|:-------------------:|
+| AppleClang-16 |   x    |     ?     |   x    |   x    |   x    |    fmt     |   cpptrace/boost    |
+| AppleClang-17 |   x    |     ?     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 
 Note: macOS officially doesn't support 32bit builds, so they are not tested.
 

@@ -305,33 +305,21 @@ jobs:
               version: "ClangCl"
             cmake_generator: "Visual Studio 17 2022"
 
-          # macOS
+          # AppleClang
+          # The specified AppleClang version is just an assumption, which will be verified during the setup step.
           - prefix: "macOS"
-            os: "macos-latest"
-            compiler:
-              name: "AppleClang"
-              version: "18"
-            ldflags_workaround: "-L/opt/homebrew/opt/llvm/lib/c++ -L/opt/homebrew/opt/llvm/lib/unwind -lunwind"
-            only_cpptrace: true
-            cxx20_modules: false
-
-          - prefix: "macOS"
-            os: "macos-latest"
-            compiler:
-              name: "AppleClang"
-              version: "17"
-            ldflags_workaround: "-L/opt/homebrew/opt/llvm@17/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@17/lib/c++"
-            only_cpptrace: true
-            cxx20_modules: true
-
-          - prefix: "macOS"
-            os: "macos-latest"
+            os: "macos-15"
+            xcode: "16.2"
             compiler:
               name: "AppleClang"
               version: "16"
-            ldflags_workaround: "-L/opt/homebrew/opt/llvm@16/lib/c++ -Wl,-rpath,/opt/homebrew/opt/llvm@16/lib/c++"
-            only_fmt: true
-            only_cpptrace: true
+
+          - prefix: "macOS"
+            os: "macos-15"
+            xcode: "16.4"
+            compiler:
+              name: "AppleClang"
+              version: "17"
 
         exclude:
           # Honestly, we do not get much insight from testing Release modes of different c++-versions.
@@ -400,17 +388,13 @@ jobs:
         if: startsWith(matrix.config.os, 'macOS')
         shell: bash
         run: |
-          env brew install ninja llvm
-          LLVM_NAME=llvm@${{ matrix.config.compiler.version }}
-          env brew install $LLVM_NAME
-          LLVM_PATH="$(brew --prefix $LLVM_NAME)"
-          echo "CC=$(echo $LLVM_PATH/bin/clang)" >> $GITHUB_ENV
-          echo "CXX=$(echo $LLVM_PATH/bin/clang++)" >> $GITHUB_ENV
-
-          # solves this issue: https://github.com/Homebrew/homebrew-core/issues/178435
-          echo "LDFLAGS=$(echo $LDFLAGS ${{ matrix.config.ldflags_workaround }})" >> $GITHUB_ENV
-
-          echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
+          ls /Applications | grep Xcode
+          sudo xcode-select -s "/Applications/Xcode_${{ matrix.config.xcode }}.app/Contents/Developer"
+          clang --version
+          clang --version | grep -q "Apple clang version ${{ matrix.config.compiler.version }}." || {
+          echo "ERROR: Expected AppleClang ${{ matrix.config.compiler.version }}.x, but got something else."
+            exit 1
+          }
 
       - name: Setup linux
         if: startsWith(matrix.config.os, 'ubuntu-')
