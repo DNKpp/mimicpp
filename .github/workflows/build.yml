@@ -313,6 +313,7 @@ jobs:
             compiler:
               name: "AppleClang"
               version: "16"
+            only_cpptrace: true
 
           - prefix: "macOS"
             os: "macos-15"
@@ -320,6 +321,7 @@ jobs:
             compiler:
               name: "AppleClang"
               version: "17"
+            only_cpptrace: true
 
         exclude:
           # Honestly, we do not get much insight from testing Release modes of different c++-versions.
