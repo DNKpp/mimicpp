@@ -285,6 +285,18 @@ jobs:
             compiler:
               name: "msvc"
               version: "v143"
+              toolset: "14.38"
+              toolset_component: "Microsoft.VisualStudio.Component.VC.14.38.17.8.x86.x64"
+            cmake_generator: "Visual Studio 17 2022"
+            cxx20_modules: false
+
+          - prefix: "Windows 2022"
+            os: "windows-2022"
+            compiler:
+              name: "msvc"
+              version: "v143"
+              toolset: "14.40"
+              toolset_component: "Microsoft.VisualStudio.Component.VC.14.40.17.10.x86.x64"
             cmake_generator: "Visual Studio 17 2022"
             cxx20_modules: false
 
@@ -297,13 +309,6 @@ jobs:
             cmake_generator: "Visual Studio 17 2022"
             default_call_convention: "vectorcall"
             cxx20_modules: false
-
-          - prefix: "Windows 2022"
-            os: "windows-2022"
-            compiler:
-              name: "msvc"
-              version: "ClangCl"
-            cmake_generator: "Visual Studio 17 2022"
 
           # AppleClang
           # The specified AppleClang version is just an assumption, which will be verified during the setup step.
@@ -406,7 +411,7 @@ jobs:
         run: |
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }})" >> $GITHUB_ENV
 
-      - name: Setup msvc
+      - name: Gather msvc settings
         if: ${{ matrix.config.compiler.name  == 'msvc' }}
         shell: bash
         run: |
@@ -414,15 +419,37 @@ jobs:
           if [[ "${{ matrix.architecture }}" == "64bit" ]]; then
             PLATFORM="x64"
           elif [[ "${{ matrix.architecture }}" == "32bit" ]]; then
-            PLATFORM="Win32"
+            PLATFORM="x86"
           fi
+
+          #echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
+          #                                  -G\"${{ matrix.config.cmake_generator }}\" \
+          #                                  -T\"${{ matrix.config.compiler.version }}\" \
+          #                                  -A\"${PLATFORM}\" \
+          #                            )" >> $GITHUB_ENV
           
           echo "CMAKE_BASE_OPTIONS=$(echo ${CMAKE_BASE_OPTIONS} \
                                             -G\"${{ matrix.config.cmake_generator }}\" \
-                                            -T\"${{ matrix.config.compiler.version }}\" \
-                                            -A\"${PLATFORM}\" \
+                                            -T\"version=${{ matrix.config.compiler.toolset }}\" \
                                       )" >> $GITHUB_ENV
           echo "CMAKE_BUILD_EXTRA=$(echo ${CMAKE_BUILD_EXTRA} --config ${{ matrix.build_mode }})" >> $GITHUB_ENV
+
+      - name: Setup msvc
+        id: setup-msvc
+        if: ${{ matrix.config.compiler.name  == 'msvc' && matrix.config.compiler.toolset_component != '' }}
+        shell: powershell
+        run: |
+          Invoke-WebRequest `
+              -Uri https://aka.ms/vs/17/release/vs_BuildTools.exe `
+              -OutFile vs_BuildTools.exe
+          Start-Process vs_BuildTools.exe `
+              -ArgumentList '--quiet --wait --norestart --add ${{ matrix.config.compiler.toolset_component }}' `
+              -NoNewWindow -Wait
+
+          $vs_install = & vswhere.exe -products * -latest -property installationPath
+          echo "VS install path: $vs_install"
+          Get-ChildItem -Path "$vs_install\VC\Tools\MSVC" -Directory
+      
 
       - name: Setup alternative default call-convention for msvc
         if: ${{ matrix.config.compiler.name  == 'msvc' && matrix.config.default_call_convention != '' }}
@@ -492,8 +519,9 @@ jobs:
       - name: Configure Basic Framework
         id: config-basic
         if: ${{ matrix.config.only_fmt != true }}
-        shell: bash
+        shell: cmd
         run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" x64 -vcvars_ver=14.40
           cmake \
               -S . \
               -B build \
