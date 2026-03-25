@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -14,8 +14,8 @@ using namespace mimicpp;
 
 namespace
 {
-    using StringPrintIteratorT = std::string::iterator;
-    using WStringPrintIteratorT = std::wstring::iterator;
+    using StringPrintIterator = std::string::iterator;
+    using WStringPrintIterator = std::wstring::iterator;
 
     class NonPrinter
     {
@@ -46,22 +46,22 @@ TEMPLATE_TEST_CASE_SIG(
     "printer_for determines whether the given type satisfies the requirements.",
     "[print]",
     ((bool expected, typename Printer, typename OutIter, typename T), expected, Printer, OutIter, T),
-    (false, NonPrinter, StringPrintIteratorT, int),
-    (false, NonPrinter, WStringPrintIteratorT, int),
+    (false, NonPrinter, StringPrintIterator, int),
+    (false, NonPrinter, WStringPrintIterator, int),
 
-    (false, CustomIntPrinter, StringPrintIteratorT, const float),
-    (false, CustomIntPrinter, WStringPrintIteratorT, const float),
-    (true, CustomIntPrinter, StringPrintIteratorT, int),
-    (true, CustomIntPrinter, WStringPrintIteratorT, int),
-    (false, CustomIntPrinter, StringPrintIteratorT, const int),
-    (false, CustomIntPrinter, WStringPrintIteratorT, const int),
+    (false, CustomIntPrinter, StringPrintIterator, const float),
+    (false, CustomIntPrinter, WStringPrintIterator, const float),
+    (true, CustomIntPrinter, StringPrintIterator, int),
+    (true, CustomIntPrinter, WStringPrintIterator, int),
+    (false, CustomIntPrinter, StringPrintIterator, const int),
+    (false, CustomIntPrinter, WStringPrintIterator, const int),
 
-    (false, CustomConstIntPrinter, StringPrintIteratorT, const std::string),
-    (false, CustomConstIntPrinter, WStringPrintIteratorT, const std::wstring),
-    (true, CustomConstIntPrinter, StringPrintIteratorT, int),
-    (true, CustomConstIntPrinter, WStringPrintIteratorT, int),
-    (true, CustomConstIntPrinter, StringPrintIteratorT, const int),
-    (true, CustomConstIntPrinter, WStringPrintIteratorT, const int))
+    (false, CustomConstIntPrinter, StringPrintIterator, const std::string),
+    (false, CustomConstIntPrinter, WStringPrintIterator, const std::wstring),
+    (true, CustomConstIntPrinter, StringPrintIterator, int),
+    (true, CustomConstIntPrinter, WStringPrintIterator, int),
+    (true, CustomConstIntPrinter, StringPrintIterator, const int),
+    (true, CustomConstIntPrinter, WStringPrintIterator, const int))
 {
     STATIC_REQUIRE(expected == printer_for<Printer, OutIter, T>);
 }
@@ -99,7 +99,7 @@ class custom::Printer<CustomPrintable>
 public:
     inline static int printCallCounter{0};
 
-    static auto print(print_iterator auto out, const CustomPrintable&)
+    static auto print(print_iterator auto out, CustomPrintable const&)
     {
         ++printCallCounter;
         return format::format_to(out, "CustomPrintable");
@@ -111,7 +111,7 @@ struct printing::detail::state::common_type_printer<InternalPrintable>
 {
     inline static int printCallCounter{0};
 
-    static auto print(print_iterator auto out, const InternalPrintable&)
+    static auto print(print_iterator auto out, InternalPrintable const&)
     {
         ++printCallCounter;
         return format::format_to(out, "InternalPrintable");
@@ -124,7 +124,7 @@ class custom::Printer<CustomAndInternalPrintable>
 public:
     inline static int printCallCounter{0};
 
-    static auto print(print_iterator auto out, const CustomAndInternalPrintable&)
+    static auto print(print_iterator auto out, CustomAndInternalPrintable const&)
     {
         ++printCallCounter;
         return format::format_to(out, "CustomAndInternalPrintable - custom::Printer");
@@ -136,7 +136,7 @@ struct printing::detail::state::common_type_printer<CustomAndInternalPrintable>
 {
     inline static int printCallCounter{0};
 
-    static auto print(print_iterator auto out, const CustomAndInternalPrintable&)
+    static auto print(print_iterator auto out, CustomAndInternalPrintable const&)
     {
         ++printCallCounter;
         return format::format_to(out, "CustomAndInternalPrintable - detail::Printer");
@@ -153,7 +153,7 @@ struct format::formatter<FormatPrintable, Char>
         return ctx.begin();
     }
 
-    static auto format(const FormatPrintable&, auto& ctx)
+    static auto format(FormatPrintable const&, auto& ctx)
     {
         ++printCallCounter;
         return format::format_to(ctx.out(), "FormatPrintable");
@@ -166,7 +166,7 @@ class custom::Printer<FormatAndCustomPrintable>
 public:
     inline static int printCallCounter{0};
 
-    static auto print(print_iterator auto out, const FormatAndCustomPrintable&)
+    static auto print(print_iterator auto out, FormatAndCustomPrintable const&)
     {
         ++printCallCounter;
         return format::format_to(out, "FormatAndCustomPrintable");
@@ -183,7 +183,7 @@ struct format::formatter<FormatAndCustomPrintable, Char>
         return ctx.begin();
     }
 
-    static auto format(const FormatAndCustomPrintable&, auto& ctx)
+    static auto format(FormatAndCustomPrintable const&, auto& ctx)
     {
         ++printCallCounter;
         return format::format_to(ctx.out(), "FormatAndCustomPrintable");
@@ -198,76 +198,76 @@ TEST_CASE(
 
     SECTION("custom::Printer specialization is supported.")
     {
-        using PrinterT = custom::Printer<CustomPrintable>;
-        PrinterT::printCallCounter = 0;
+        using Printer = custom::Printer<CustomPrintable>;
+        Printer::printCallCounter = 0;
 
         constexpr CustomPrintable value{};
 
         print(std::ostreambuf_iterator{stream}, value);
-        REQUIRE(PrinterT::printCallCounter == 1);
+        REQUIRE(Printer::printCallCounter == 1);
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("CustomPrintable"));
     }
 
     SECTION("internal Printer specializations are supported.")
     {
-        using PrinterT = printing::detail::state::common_type_printer<InternalPrintable>;
-        PrinterT::printCallCounter = 0;
+        using Printer = printing::detail::state::common_type_printer<InternalPrintable>;
+        Printer::printCallCounter = 0;
 
         constexpr InternalPrintable value{};
 
         print(std::ostreambuf_iterator{stream}, value);
-        REQUIRE(PrinterT::printCallCounter == 1);
+        REQUIRE(Printer::printCallCounter == 1);
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("InternalPrintable"));
     }
 
     SECTION("custom::Printer is preferred, if both printers have valid specializations.")
     {
-        using CustomPrinterT = custom::Printer<CustomAndInternalPrintable>;
-        using DetailPrinterT = printing::detail::state::common_type_printer<CustomAndInternalPrintable>;
-        CustomPrinterT::printCallCounter = 0;
-        DetailPrinterT::printCallCounter = 0;
+        using CustomPrinter = custom::Printer<CustomAndInternalPrintable>;
+        using DetailPrinter = printing::detail::state::common_type_printer<CustomAndInternalPrintable>;
+        CustomPrinter::printCallCounter = 0;
+        DetailPrinter::printCallCounter = 0;
 
         constexpr CustomAndInternalPrintable value{};
 
         print(std::ostreambuf_iterator{stream}, value);
-        REQUIRE(CustomPrinterT::printCallCounter == 1);
-        REQUIRE(DetailPrinterT::printCallCounter == 0);
+        REQUIRE(CustomPrinter::printCallCounter == 1);
+        REQUIRE(DetailPrinter::printCallCounter == 0);
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             stream.str(),
             Catch::Matchers::Equals("CustomAndInternalPrintable - custom::Printer"));
     }
 
     SECTION("format::formatter specialization is supported.")
     {
-        using PrinterT = format::formatter<FormatPrintable, CharT>;
-        PrinterT::printCallCounter = 0;
+        using Printer = format::formatter<FormatPrintable, CharT>;
+        Printer::printCallCounter = 0;
 
         constexpr FormatPrintable value{};
 
         print(std::ostreambuf_iterator{stream}, value);
-        REQUIRE(PrinterT::printCallCounter == 1);
-        REQUIRE_THAT(
+        REQUIRE(Printer::printCallCounter == 1);
+        CHECK_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("FormatPrintable"));
     }
 
     SECTION("custom::Printer specialization is preferred.")
     {
-        using PrinterT = custom::Printer<FormatAndCustomPrintable>;
-        PrinterT::printCallCounter = 0;
+        using Printer = custom::Printer<FormatAndCustomPrintable>;
+        Printer::printCallCounter = 0;
 
         constexpr FormatAndCustomPrintable value{};
 
         print(std::ostreambuf_iterator{stream}, value);
-        REQUIRE(PrinterT::printCallCounter == 1);
-        REQUIRE_THAT(
+        REQUIRE(Printer::printCallCounter == 1);
+        CHECK_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("FormatAndCustomPrintable"));
     }
@@ -276,20 +276,20 @@ TEST_CASE(
     {
         SECTION("Empty strings are supported.")
         {
-            const std::string str{};
+            std::string const str{};
 
             print(std::ostreambuf_iterator{stream}, str);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals("\"\""));
         }
 
         SECTION("Strings with arbitrary size are supported.")
         {
-            const std::string str{"Hello, World!"};
+            std::string const str{"Hello, World!"};
 
             print(std::ostreambuf_iterator{stream}, str);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals("\"Hello, World!\""));
         }
@@ -297,7 +297,7 @@ TEST_CASE(
         SECTION("Raw string literals are supported.")
         {
             print(std::ostreambuf_iterator{stream}, "Hello, World!");
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals("\"Hello, World!\""));
         }
@@ -305,7 +305,7 @@ TEST_CASE(
         SECTION("std::string_views are supported.")
         {
             print(std::ostreambuf_iterator{stream}, StringViewT{"Hello, World!"});
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals("\"Hello, World!\""));
         }
@@ -314,9 +314,9 @@ TEST_CASE(
 #ifdef __cpp_lib_source_location
     SECTION("std::source_location has specialized printer.")
     {
-        std::source_location constexpr loc = std::source_location::current();
+        constexpr std::source_location loc = std::source_location::current();
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(loc),
             Catch::Matchers::Matches(
                 // should be close enough to what is allowed on all systems
@@ -328,19 +328,19 @@ TEST_CASE(
 
     SECTION("std::optional and std::nullopt_t have special treatment")
     {
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::nullopt),
             Catch::Matchers::Equals("nullopt"));
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::optional<int>{}),
             Catch::Matchers::Equals("nullopt"));
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::optional<NonPrintable>{}),
             Catch::Matchers::Equals("nullopt"));
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::optional{1337}),
             Catch::Matchers::Equals("1337"));
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::optional{NonPrintable{}}),
             Catch::Matchers::Equals("{?}"));
     }
@@ -392,7 +392,7 @@ TEST_CASE(
     {
         constexpr NonPrintable value{};
         print(std::ostreambuf_iterator{stream}, value);
-        REQUIRE_THAT(
+        CHECK_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("{?}"));
     }
@@ -406,21 +406,21 @@ TEST_CASE(
 
     SECTION("Empty ranges are supported.")
     {
-        const std::vector<int> vec{};
+        std::vector<int> const vec{};
 
         StringT const expected{"[]"};
 
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, vec);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 print(vec),
                 Catch::Matchers::Equals(expected));
         }
@@ -428,21 +428,21 @@ TEST_CASE(
 
     SECTION("Ranges with single element are supported.")
     {
-        const std::vector vec{42};
+        std::vector const vec{42};
 
         StringT const expected{"[42]"};
 
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, vec);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 print(vec),
                 Catch::Matchers::Equals(expected));
         }
@@ -450,21 +450,21 @@ TEST_CASE(
 
     SECTION("Ranges with multiple elements are supported.")
     {
-        const std::vector vec{42, 1337};
+        std::vector const vec{42, 1337};
 
         StringT const expected{"[42, 1337]"};
 
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, vec);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 print(vec),
                 Catch::Matchers::Equals(expected));
         }
@@ -479,14 +479,14 @@ TEST_CASE(
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, vec);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 print(vec),
                 Catch::Matchers::Equals(expected));
         }
@@ -506,14 +506,14 @@ TEST_CASE(
             print(
                 std::ostreambuf_iterator{stream},
                 vec | std::views::transform(func));
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 print(vec | std::views::transform(func)),
                 Catch::Matchers::Equals(expected));
         }
@@ -533,14 +533,14 @@ TEST_CASE(
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, std::tuple{});
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 mimicpp::print(std::tuple{}),
                 Catch::Matchers::Equals(expected));
         }
@@ -555,14 +555,14 @@ TEST_CASE(
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, tuple);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 mimicpp::print(tuple),
                 Catch::Matchers::Equals(expected));
         }
@@ -577,14 +577,14 @@ TEST_CASE(
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, tuple);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 mimicpp::print(tuple),
                 Catch::Matchers::Equals(expected));
         }
@@ -595,21 +595,21 @@ TEST_CASE(
         StringT const expected{"([42, 1337])"};
 
         // mutable func removes const begin/end overloads from transform_view
-        auto func = [](const auto v) mutable { return v; };
+        auto func = [](auto const v) mutable { return v; };
         std::vector const vec{42, 1337};
         std::tuple tuple{vec | std::views::transform(func)};
 
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, tuple);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 mimicpp::print(tuple),
                 Catch::Matchers::Equals(expected));
         }
@@ -624,14 +624,14 @@ TEST_CASE(
         SECTION("Printing to specific out-iter.")
         {
             print(std::ostreambuf_iterator{stream}, pair);
-            REQUIRE_THAT(
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals(expected));
         }
 
         SECTION("Printing to string")
         {
-            REQUIRE_THAT(
+            CHECK_THAT(
                 mimicpp::print(pair),
                 Catch::Matchers::Equals(expected));
         }
@@ -644,27 +644,27 @@ TEST_CASE(
 {
     SECTION("Explicit nullptr.")
     {
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(nullptr),
             Catch::Matchers::Matches("nullptr"));
     }
 
     SECTION("Raw pointers.")
     {
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{})),
+        CHECK_THAT(
+            mimicpp::print(reinterpret_cast<void const*>(std::uintptr_t{})),
             Catch::Matchers::Matches("nullptr"));
 
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const char*>(std::uintptr_t{0x1234u})),
+        CHECK_THAT(
+            mimicpp::print(reinterpret_cast<char const*>(std::uintptr_t{0x1234u})),
             Catch::Matchers::Matches("0x0{1,12}1234"));
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const std::string*>(std::uintptr_t{0x1234u})),
+        CHECK_THAT(
+            mimicpp::print(reinterpret_cast<std::string const*>(std::uintptr_t{0x1234u})),
             Catch::Matchers::Matches("0x0{1,12}1234"));
 
 #if not MIMICPP_DETAIL_IS_32BIT
-        REQUIRE_THAT(
-            mimicpp::print(reinterpret_cast<const void*>(std::uintptr_t{0x1234'5678'90AB'CDEFu})),
+        CHECK_THAT(
+            mimicpp::print(reinterpret_cast<void const*>(std::uintptr_t{0x1234'5678'90AB'CDEFu})),
             Catch::Matchers::Matches("0x1234567890[Aa][Bb][Cc][Dd][Ee][Ff]"));
 #else
         REQUIRE_THAT(
@@ -675,31 +675,31 @@ TEST_CASE(
 
     SECTION("Std smart-pointers are unwrapped.")
     {
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::unique_ptr<int>{}),
             Catch::Matchers::Matches("nullptr"));
 
         auto const uniqueInt = std::make_unique<int>(42);
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(uniqueInt),
             Catch::Matchers::Matches(print(uniqueInt.get())));
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::shared_ptr<int>{}),
             Catch::Matchers::Matches("nullptr"));
         auto sharedInt = std::make_shared<int>(42);
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(sharedInt),
             Catch::Matchers::Matches(print(sharedInt.get())));
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::weak_ptr<int>{}),
             Catch::Matchers::Matches("nullptr"));
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::weak_ptr{sharedInt}),
             Catch::Matchers::Matches(print(sharedInt.get())));
         sharedInt.reset();
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(std::weak_ptr{sharedInt}),
             Catch::Matchers::Matches("nullptr"));
     }
@@ -711,7 +711,7 @@ namespace
     {
         char c{};
 
-        bool operator==(const my_char&) const = default;
+        bool operator==(my_char const&) const = default;
     };
 
     class MyString
@@ -737,7 +737,7 @@ template <>
 class custom::Printer<my_char>
 {
 public:
-    static auto print(auto outIter, const my_char myChar)
+    static auto print(auto outIter, my_char const myChar)
     {
         return mimicpp::print(std::move(outIter), myChar.c);
     }
@@ -748,10 +748,10 @@ struct mimicpp::string_traits<MyString>
 {
     using char_t = my_char;
     // explicitly use view-type which isn't printable as string
-    using view_t = std::span<const char_t>;
+    using view_t = std::span<char_t const>;
 
     [[nodiscard]]
-    static constexpr view_t view(const MyString& str) noexcept
+    static constexpr view_t view(MyString const& str) noexcept
     {
         return std::span{str.inner};
     }
@@ -762,10 +762,10 @@ struct mimicpp::string_traits<MyNonPrintableString>
 {
     using char_t = char;
     // explicitly use view-type which isn't printable as string
-    using view_t = std::span<const char>;
+    using view_t = std::span<char const>;
 
     [[nodiscard]]
-    static constexpr view_t view(const MyNonPrintableString& str) noexcept
+    static constexpr view_t view(MyNonPrintableString const& str) noexcept
     {
         return std::span{str.inner};
     }
@@ -779,7 +779,7 @@ TEST_CASE(
     {
         StringStreamT stream{};
         print(std::ostreambuf_iterator{stream}, my_char{'A'});
-        REQUIRE_THAT(
+        CHECK_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("A"));
 
@@ -788,12 +788,12 @@ TEST_CASE(
             stream = StringStreamT{}; // clang-16 with libc++ doesn't clear by str()&&
             STATIC_REQUIRE(string<MyString>);
 
+            // clang-format off
             print(
-                std::ostreambuf_iterator{
-                    stream
-            },
+                std::ostreambuf_iterator{stream},
                 MyString{{{'A'}, {'b'}, {'C'}}});
-            REQUIRE_THAT(
+            // clang-format on
+            CHECK_THAT(
                 std::move(stream).str(),
                 Catch::Matchers::Equals("\"AbC\""));
         }
@@ -810,7 +810,7 @@ TEST_CASE(
     print(
         std::ostreambuf_iterator{stream},
         MyNonPrintableString{"AbC"});
-    REQUIRE_THAT(
+    CHECK_THAT(
         std::move(stream).str(),
         Catch::Matchers::Equals("\"AbC\""));
 }
@@ -823,7 +823,7 @@ TEST_CASE(
     {
         StringStreamT stream{};
         print(std::ostreambuf_iterator{stream}, 42);
-        REQUIRE_THAT(
+        CHECK_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("42"));
     }
@@ -832,7 +832,7 @@ TEST_CASE(
     {
         StringStreamT stream{};
         print(std::ostreambuf_iterator{stream}, NonPrintable{});
-        REQUIRE_THAT(
+        CHECK_THAT(
             std::move(stream).str(),
             Catch::Matchers::Equals("{?}"));
     }
@@ -846,14 +846,13 @@ TEST_CASE(
 
     SECTION("When valid ValueCategory is given.")
     {
-        const auto [expected, category] = GENERATE(
-            (table<StringT, ValueCategory>)({
-                {   "any",    ValueCategory::any},
-                {"rvalue", ValueCategory::rvalue},
-                {"lvalue", ValueCategory::lvalue},
+        auto const [expected, category] = GENERATE((table<StringT, ValueCategory>)({
+            {   "any",    ValueCategory::any},
+            {"rvalue", ValueCategory::rvalue},
+            {"lvalue", ValueCategory::lvalue},
         }));
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(category),
             Matches::Equals(expected));
     }
@@ -867,14 +866,13 @@ TEST_CASE(
 
     SECTION("When valid Constness is given.")
     {
-        const auto [expected, category] = GENERATE(
-            (table<StringT, Constness>)({
-                {    "any",       Constness::any},
-                {  "const",  Constness::as_const},
-                {"mutable", Constness::non_const},
+        auto const [expected, category] = GENERATE((table<StringT, Constness>)({
+            {    "any",       Constness::any},
+            {  "const",  Constness::as_const},
+            {"mutable", Constness::non_const},
         }));
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             mimicpp::print(category),
             Matches::Equals(expected));
     }
@@ -884,20 +882,19 @@ TEMPLATE_TEST_CASE(
     "wchar_t strings will be formatted as value range.",
     "[print]",
     std::wstring,
-    const std::wstring,
+    std::wstring const,
     std::wstring_view,
-    const std::wstring_view)
+    std::wstring_view const)
 {
-    const auto [expected, source] = GENERATE(
-        (table<std::string, const wchar_t*>)({
-            {                                                    "L\"\"",          L""},
-            {            "L\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   L"He, llo"},
-            {"L\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", L" He, llo "}
+    auto const [expected, source] = GENERATE((table<std::string, wchar_t const*>)({
+        {                                                    "L\"\"",          L""},
+        {            "L\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   L"He, llo"},
+        {"L\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", L" He, llo "}
     }));
 
     StringStreamT out{};
     print(std::ostreambuf_iterator{out}, static_cast<TestType>(source));
-    REQUIRE_THAT(
+    CHECK_THAT(
         std::move(out).str(),
         Catch::Matchers::Equals(expected));
 }
@@ -906,20 +903,19 @@ TEMPLATE_TEST_CASE(
     "char8_t strings will be formatted as value range.",
     "[print]",
     std::u8string,
-    const std::u8string,
+    std::u8string const,
     std::u8string_view,
-    const std::u8string_view)
+    std::u8string_view const)
 {
-    const auto [expected, source] = GENERATE(
-        (table<std::string, const char8_t*>)({
-            {                                                    "u8\"\"",          u8""},
-            {            "u8\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   u8"He, llo"},
-            {"u8\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u8" He, llo "}
+    auto const [expected, source] = GENERATE((table<std::string, char8_t const*>)({
+        {                                                    "u8\"\"",          u8""},
+        {            "u8\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   u8"He, llo"},
+        {"u8\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u8" He, llo "}
     }));
 
     StringStreamT out{};
     print(std::ostreambuf_iterator{out}, static_cast<TestType>(source));
-    REQUIRE_THAT(
+    CHECK_THAT(
         std::move(out).str(),
         Catch::Matchers::Equals(expected));
 }
@@ -928,20 +924,19 @@ TEMPLATE_TEST_CASE(
     "char16_t strings will be formatted as value range.",
     "[print]",
     std::u16string,
-    const std::u16string,
+    std::u16string const,
     std::u16string_view,
-    const std::u16string_view)
+    std::u16string_view const)
 {
-    const auto [expected, source] = GENERATE(
-        (table<std::string, const char16_t*>)({
-            {                                                    "u\"\"",          u""},
-            {            "u\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   u"He, llo"},
-            {"u\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u" He, llo "}
+    auto const [expected, source] = GENERATE((table<std::string, char16_t const*>)({
+        {                                                    "u\"\"",          u""},
+        {            "u\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   u"He, llo"},
+        {"u\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u" He, llo "}
     }));
 
     StringStreamT out{};
     print(std::ostreambuf_iterator{out}, static_cast<TestType>(source));
-    REQUIRE_THAT(
+    CHECK_THAT(
         std::move(out).str(),
         Catch::Matchers::Equals(expected));
 }
@@ -950,20 +945,19 @@ TEMPLATE_TEST_CASE(
     "char32_t strings will be formatted as value range.",
     "[print]",
     std::u32string,
-    const std::u32string,
+    std::u32string const,
     std::u32string_view,
-    const std::u32string_view)
+    std::u32string_view const)
 {
-    const auto [expected, source] = GENERATE(
-        (table<std::string, const char32_t*>)({
-            {                                                    "U\"\"",          U""},
-            {            "U\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   U"He, llo"},
-            {"U\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", U" He, llo "}
+    auto const [expected, source] = GENERATE((table<std::string, char32_t const*>)({
+        {                                                    "U\"\"",          U""},
+        {            "U\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   U"He, llo"},
+        {"U\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", U" He, llo "}
     }));
 
     StringStreamT out{};
     print(std::ostreambuf_iterator{out}, static_cast<TestType>(source));
-    REQUIRE_THAT(
+    CHECK_THAT(
         std::move(out).str(),
         Catch::Matchers::Equals(expected));
 }
