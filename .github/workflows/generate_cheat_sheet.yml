@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+#          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: rlespinasse/drawio-export-action@v2
         with:
@@ -31,7 +31,7 @@ jobs:
           remove-page-suffix: true
 
       - name: Upload Cheat-Sheet
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mimic++_cheat-sheet
           path: docs/mimic++_cheat-sheet.pdf
@@ -47,7 +47,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: mimic++_cheat-sheet
           path: .
