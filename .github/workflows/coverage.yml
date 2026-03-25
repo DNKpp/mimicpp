@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+#          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -32,7 +32,7 @@ jobs:
       image: "ghcr.io/dnkpp/gcc:15"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install gcovr
         run: |
@@ -128,14 +128,14 @@ jobs:
         run: find . -type f -name "*.gcov"
 
       - name: Upload gcov coverage report artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: gcov-files
           path: "**/*.gcov"
           if-no-files-found: error
 
       - name: Upload generated report artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
           path: |
@@ -150,9 +150,7 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
@@ -166,9 +164,9 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
@@ -185,9 +183,7 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
