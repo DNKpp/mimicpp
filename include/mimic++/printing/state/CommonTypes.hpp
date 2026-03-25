@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -30,6 +30,7 @@
     #include <optional>
     #include <type_traits>
     #include <utility>
+    #include <variant>
 #endif
 
 namespace mimicpp::printing::detail
@@ -91,6 +92,37 @@ namespace mimicpp::printing::detail::state
             }
 
             return mimicpp::print(std::move(out), std::nullopt);
+        }
+    };
+
+    template <>
+    struct common_type_printer<std::monostate>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, [[maybe_unused]] std::monostate const)
+        {
+            return format::format_to(std::move(out), "monostate");
+        }
+    };
+
+    template <typename... Ts>
+    struct common_type_printer<std::variant<Ts...>>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, auto& variant)
+        {
+            out = format::format_to(std::move(out), "(");
+
+            if (!variant.valueless_by_exception())
+            {
+                out = std::visit(
+                    [&](auto& inner) { return mimicpp::print(std::move(out), inner); },
+                    variant);
+            }
+
+            out = format::format_to(std::move(out), ")");
+
+            return out;
         }
     };
 

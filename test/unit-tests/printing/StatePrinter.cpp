@@ -345,6 +345,49 @@ TEST_CASE(
             Catch::Matchers::Equals("{?}"));
     }
 
+    SECTION("std::variant has special treatment.")
+    {
+        CHECK_THAT(
+            mimicpp::print(std::variant<std::monostate, int>{}),
+            Catch::Matchers::Equals("(monostate)"));
+        CHECK_THAT(
+            mimicpp::print(std::variant<std::monostate, int>{42}),
+            Catch::Matchers::Equals("(42)"));
+        CHECK_THAT(
+            mimicpp::print(std::variant<NonPrintable>{}),
+            Catch::Matchers::Equals("({?})"));
+
+        SECTION("valueless_by_exception is gracefully handled.")
+        {
+            struct Test
+            {
+                Test() = default;
+
+                Test(const Test&)
+                {
+                    throw std::runtime_error("copy ctor");
+                }
+
+                Test& operator=(const Test&) = default;
+            };
+
+            std::variant<std::monostate, Test> variant{};
+
+            try
+            {
+                variant = Test{};
+            }
+            catch ([[maybe_unused]] std::runtime_error const& ex)
+            {
+            }
+            REQUIRE(variant.valueless_by_exception());
+
+            CHECK_THAT(
+                mimicpp::print(variant),
+                Catch::Matchers::Equals("()"));
+        }
+    }
+
     SECTION("When nothing matches, a default token is inserted.")
     {
         constexpr NonPrintable value{};
