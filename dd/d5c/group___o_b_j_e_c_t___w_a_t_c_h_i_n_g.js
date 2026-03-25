@@ -1,7 +1,7 @@
 var group___o_b_j_e_c_t___w_a_t_c_h_i_n_g =
 [
     [ "mimicpp::object_watcher_for", "db/db6/conceptmimicpp_1_1object__watcher__for.html", null ],
-    [ "mimicpp::for_base_tag< Base >", "d6/da7/structmimicpp_1_1for__base__tag.html", [
+    [ "mimicpp::for_base_tag&lt; Base &gt;", "d6/da7/structmimicpp_1_1for__base__tag.html", [
       [ "type", "dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#gac68f800dd598b71d0883b8b12ce9cbd2", null ]
     ] ],
     [ "mimicpp::LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", [
@@ -24,7 +24,7 @@ var group___o_b_j_e_c_t___w_a_t_c_h_i_n_g =
       [ "operator=", "dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#ga74dd370e9ae4ce4b2b6a8b43f56858ac", null ],
       [ "operator=", "dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#ga8812d8f603b7a4dfd567b0642394d365", null ]
     ] ],
-    [ "mimicpp::Watched< Base, Watchers >", "d3/d5d/classmimicpp_1_1_watched.html", [
+    [ "mimicpp::Watched&lt; Base, Watchers &gt;", "d3/d5d/classmimicpp_1_1_watched.html", [
       [ "~Watched", "d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5", null ],
       [ "Watched", "d3/d5d/classmimicpp_1_1_watched.html#a8647ca5a5168969e3cd5cf18fb7f284b", null ],
       [ "Watched", "d3/d5d/classmimicpp_1_1_watched.html#afa77d7e7eef110ca0d8be6e0a11ce60d", null ],

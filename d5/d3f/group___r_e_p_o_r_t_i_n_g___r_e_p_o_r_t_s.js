@@ -66,7 +66,7 @@ var group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s =
       [ "name", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8871d590ea99c01ea76a5bf208b3d3a9", null ],
       [ "overloadReport", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html#a8192c831aed792ce4b8b6af8b01d17a3", null ]
     ] ],
-    [ "mimicpp::reporting::control_state_t", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#gabdbff85366c0c689bdceba665c10619b", null ],
+    [ "mimicpp::reporting::control_state_t", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga93f64fbd97d1117f31dbf2125d5fdc2f", null ],
     [ "mimicpp::reporting::CallReport::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166", null ],
     [ "mimicpp::reporting::make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166", null ],
     [ "mimicpp::reporting::make_sequence_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga8741204d8bd4ff129677d5526885404a", null ],

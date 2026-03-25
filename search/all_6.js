@@ -15,6 +15,6 @@ var searchData=
   ['digraphs_12',['digraphs',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a705a12c5b6004845a6cfa5738f7bee0d',1,'mimicpp::printing::type::lexing::texts']]],
   ['disable_20unprefixed_20macros_13',['Disable unprefixed macros',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md28',1,'']]],
   ['doctest_2ehpp_14',['Doctest.hpp',['../dc/d42/_doctest_8hpp.html',1,'']]],
-  ['doctestreportert_15',['DoctestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga8ef20c643725738016314f855cc453fa',1,'mimicpp::reporting']]],
+  ['doctestreportert_15',['DoctestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#gac799338bcceee5e2f0f5e5a8e8430902',1,'mimicpp::reporting']]],
   ['documentation_16',['Documentation',['../index.html#autotoc_md71',1,'']]]
 ];

@@ -7,7 +7,7 @@ var _name_lexer_8hpp =
     [ "mimicpp::printing::type::lexing::end", "d8/d12/structmimicpp_1_1printing_1_1type_1_1lexing_1_1end.html", "d8/d12/structmimicpp_1_1printing_1_1type_1_1lexing_1_1end" ],
     [ "mimicpp::printing::type::lexing::token", "dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token.html", "dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token" ],
     [ "mimicpp::printing::type::lexing::NameLexer", "de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html", "de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer" ],
-    [ "mimicpp::printing::type::lexing::token_class", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a2f8729144d5fac5579969deaa79e8921", null ],
+    [ "mimicpp::printing::type::lexing::token_class", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#acf76070ab3218a44bb64884502d8dc2c", null ],
     [ "mimicpp::printing::type::lexing::make_keyword_collection", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#af60816d29f6dbcdb4a49fb1e483b16ab", null ],
     [ "mimicpp::printing::type::lexing::make_operator_or_punctuator_collection", "d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a1c2d902db3259d99e885c7d667be0b6a", null ],
     [ "mimicpp::printing::type::lexing::texts::access", "d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#adab672e3469b40473720dc427ef0b064", null ],
