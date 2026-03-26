@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/policies/FinalizerPolicies.hpp"
-#include "mimic++/Expectation.hpp"
+#include "mimic++/expectation/Common.hpp"
 
 #include "TestTypes.hpp"
 
@@ -27,7 +27,7 @@ TEST_CASE(
     int value{42};
     InvocableMock<int&, const CallInfoT&> action{};
     expectation_policies::ReturnsResultOf policy{std::ref(action)};
-    STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+    STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
     REQUIRE_CALL(action, Invoke(_))
         .LR_WITH(&call == &_1)
@@ -49,7 +49,7 @@ TEST_CASE(
         using SignatureT = void();
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         using PolicyT = expectation_policies::Throws<test_exception>;
-        STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<PolicyT, SignatureT>);
 
         const CallInfoT call{
             .args = {},
@@ -68,7 +68,7 @@ TEST_CASE(
         using SignatureT = int && ();
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         using PolicyT = expectation_policies::Throws<test_exception>;
-        STATIC_REQUIRE(finalize_policy_for<PolicyT, SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<PolicyT, SignatureT>);
 
         const CallInfoT call{
             .args = {},
@@ -99,7 +99,7 @@ TEST_CASE(
 
     InvocableMock<int&> action{};
     expectation_policies::ReturnsResultOf policy = finally::returns_result_of(std::ref(action));
-    STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+    STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
     int value{42};
     REQUIRE_CALL(action, Invoke())
@@ -125,7 +125,7 @@ TEST_CASE(
         SECTION("And when value is stored.")
         {
             expectation_policies::ReturnsResultOf policy = finally::returns(value);
-            STATIC_REQUIRE(finalize_policy_for<decltype(policy), int()>);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int()>);
 
             REQUIRE(value == policy.finalize_call(call));
             REQUIRE(value == policy.finalize_call(call));
@@ -134,7 +134,7 @@ TEST_CASE(
         SECTION("And when std::reference_wrapper is stored.")
         {
             expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
-            STATIC_REQUIRE(finalize_policy_for<decltype(policy), int()>);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int()>);
 
             REQUIRE(value == policy.finalize_call(call));
             REQUIRE(value == policy.finalize_call(call));
@@ -152,7 +152,7 @@ TEST_CASE(
         SECTION("And when value is stored.")
         {
             expectation_policies::ReturnsResultOf policy = finally::returns(42);
-            STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&()>);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&()>);
 
             int& result = policy.finalize_call(call);
             REQUIRE(42 == result);
@@ -163,7 +163,7 @@ TEST_CASE(
         {
             int value{42};
             expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
-            STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&()>);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&()>);
 
             REQUIRE(&value == &policy.finalize_call(call));
             REQUIRE(&value == &policy.finalize_call(call));
@@ -181,7 +181,7 @@ TEST_CASE(
         SECTION("And when value is stored.")
         {
             expectation_policies::ReturnsResultOf policy = finally::returns(42);
-            STATIC_REQUIRE(finalize_policy_for<decltype(policy), const int&()>);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), const int&()>);
 
             const int& result = policy.finalize_call(call);
             REQUIRE(42 == result);
@@ -192,7 +192,7 @@ TEST_CASE(
         {
             constexpr int value{42};
             expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
-            STATIC_REQUIRE(finalize_policy_for<decltype(policy), const int&()>);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), const int&()>);
 
             REQUIRE(&value == &policy.finalize_call(call));
             REQUIRE(&value == &policy.finalize_call(call));
@@ -210,7 +210,7 @@ TEST_CASE(
         SECTION("And when value is stored.")
         {
             expectation_policies::ReturnsResultOf policy = finally::returns(42);
-            STATIC_REQUIRE(finalize_policy_for < decltype(policy), int && () >);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&&()>);
 
             int&& result = policy.finalize_call(call);
             REQUIRE(42 == result);
@@ -221,7 +221,7 @@ TEST_CASE(
         {
             int value{42};
             expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
-            STATIC_REQUIRE(finalize_policy_for < decltype(policy), int && () >);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&&()>);
 
             int&& result = policy.finalize_call(call);
             REQUIRE(&value == std::addressof(result));
@@ -241,7 +241,7 @@ TEST_CASE(
         SECTION("And when value is stored.")
         {
             expectation_policies::ReturnsResultOf policy = finally::returns(42);
-            STATIC_REQUIRE(finalize_policy_for < decltype(policy), const int && () >);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), const int&&()>);
 
             const int&& result = policy.finalize_call(call);
             REQUIRE(42 == result);
@@ -252,7 +252,7 @@ TEST_CASE(
         {
             int value{42};
             expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
-            STATIC_REQUIRE(finalize_policy_for < decltype(policy), const int && () >);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), const int&&()>);
 
             const int&& result = policy.finalize_call(call);
             REQUIRE(&value == std::addressof(result));
@@ -284,7 +284,7 @@ TEST_CASE(
 
         expectation_policies::ReturnsResultOf policy = finally::returns_apply_result_of<2>(
             [](std::string& str) noexcept -> std::string&& { return std::move(str); });
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         std::string&& result = policy.finalize_call(info);
         REQUIRE(&param2 == std::addressof(result));
@@ -312,7 +312,7 @@ TEST_CASE(
                     p2,
                     p3};
             });
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         auto&& [r0, r1, r2, r3] = policy.finalize_call(info);
         REQUIRE(r0 == param1);
@@ -337,7 +337,7 @@ TEST_CASE(
 
         InvocableMock<int&> action{};
         expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&()>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&()>);
 
         int value{42};
         REQUIRE_CALL(action, Invoke())
@@ -355,7 +355,7 @@ TEST_CASE(
 
         InvocableMock<int&, int&> action{};
         expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&(int&)>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&(int&)>);
 
         int value{42};
         REQUIRE_CALL(action, Invoke(_))
@@ -376,7 +376,7 @@ TEST_CASE(
 
         InvocableMock<int&, int&, double&> action{};
         expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), int&(int&, double&)>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&(int&, double&)>);
 
         int value{42};
         REQUIRE_CALL(action, Invoke(_, _))
@@ -407,7 +407,7 @@ TEST_CASE(
 
         const int* ptr = param2.get();
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         REQUIRE(ptr == policy.finalize_call(info).get());
     }
@@ -423,7 +423,7 @@ TEST_CASE(
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<1>();
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         REQUIRE(&param1 == &policy.finalize_call(info));
     }
@@ -439,7 +439,7 @@ TEST_CASE(
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<1>();
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         REQUIRE(&param1 == &policy.finalize_call(info));
     }
@@ -455,7 +455,7 @@ TEST_CASE(
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         std::unique_ptr<int>&& result = policy.finalize_call(info);
         REQUIRE(&param2 == std::addressof(result));
@@ -472,7 +472,7 @@ TEST_CASE(
         };
 
         expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
-        STATIC_REQUIRE(finalize_policy_for<decltype(policy), SignatureT>);
+        STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         const std::unique_ptr<int>&& result = policy.finalize_call(info);
         REQUIRE(&param2 == std::addressof(result));

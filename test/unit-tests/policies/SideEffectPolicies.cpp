@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/policies/SideEffectPolicies.hpp"
-#include "mimic++/Expectation.hpp"
+#include "mimic++/expectation/Common.hpp"
 
 #include "TestTypes.hpp"
 
@@ -19,7 +19,7 @@ TEST_CASE(
     SECTION("When action is not applicable.")
     {
         STATIC_REQUIRE(
-            !expectation_policy_for<
+            !expectation::expectation_policy_for<
                 expectation_policies::SideEffectAction<ActionT>,
                 void(int)>);
     }
@@ -38,7 +38,7 @@ TEST_CASE(
 
     InvocableMock<void, const call::Info<void>&> action{};
     expectation_policies::SideEffectAction policy{std::ref(action)};
-    STATIC_REQUIRE(expectation_policy_for<decltype(policy), void()>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), void()>);
     REQUIRE(std::as_const(policy).is_satisfied());
     REQUIRE(std::as_const(policy).matches(info));
     REQUIRE(std::optional<StringT>{} == std::as_const(policy).describe());

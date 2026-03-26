@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/policies/GeneralPolicies.hpp"
-#include "mimic++/Expectation.hpp"
+#include "mimic++/expectation/Common.hpp"
 
 #include "TestTypes.hpp"
 
@@ -17,7 +17,7 @@ TEMPLATE_TEST_CASE_SIG(
     (true, expectation_policies::InitFinalize, void()),
     (true, expectation_policies::InitFinalize, void(int)))
 {
-    STATIC_REQUIRE(finalize_policy_for<Policy, Sig>);
+    STATIC_REQUIRE(expectation::finalize_policy_for<Policy, Sig>);
 }
 
 TEMPLATE_TEST_CASE(
@@ -30,7 +30,7 @@ TEMPLATE_TEST_CASE(
     expectation_policies::Constness<Constness::non_const>,
     expectation_policies::Constness<Constness::any>)
 {
-    STATIC_REQUIRE(expectation_policy_for<TestType, void()>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<TestType, void()>);
 }
 
 TEST_CASE(
@@ -58,7 +58,7 @@ TEMPLATE_TEST_CASE_SIG(
     using SignatureT = void();
     using CallInfoT = call::info_for_signature_t<SignatureT>;
     using PolicyT = expectation_policies::Category<category>;
-    STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<PolicyT, SignatureT>);
 
     constexpr PolicyT policy{};
     SECTION("Policy is always satisfied.")
@@ -119,7 +119,7 @@ TEMPLATE_TEST_CASE_SIG(
     using SignatureT = void();
     using CallInfoT = call::info_for_signature_t<SignatureT>;
     using PolicyT = expectation_policies::Constness<constness>;
-    STATIC_REQUIRE(expectation_policy_for<PolicyT, SignatureT>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<PolicyT, SignatureT>);
 
     constexpr PolicyT policy{};
     SECTION("Policy is always satisfied.")

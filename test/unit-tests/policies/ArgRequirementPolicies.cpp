@@ -1,10 +1,9 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/policies/ArgRequirementPolicies.hpp"
-#include "mimic++/Expectation.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
@@ -94,7 +93,7 @@ TEST_CASE(
         std::ref(describeStrategy)
     };
 
-    STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), SignatureT>);
 
     REQUIRE(std::as_const(policy).is_satisfied());
     REQUIRE_NOTHROW(policy.consume(info));
@@ -210,7 +209,7 @@ TEST_CASE(
         expect::detail::arg_requirement_describer<0u, 1u, 2u>{}
     };
 
-    STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), SignatureT>);
 
     SECTION("Testing matches.")
     {
@@ -246,7 +245,7 @@ TEST_CASE(
         MatcherFacade{
             std::ref(matcher),
             UnwrapReferenceWrapper{}});
-    STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), SignatureT>);
 
     REQUIRE(std::as_const(policy).is_satisfied());
     REQUIRE_NOTHROW(policy.consume(info));
@@ -301,7 +300,7 @@ TEST_CASE(
             std::ref(matcher),
             UnwrapReferenceWrapper{}},
         std::ref(projection));
-    STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), SignatureT>);
 
     REQUIRE_CALL(projection, Invoke(_))
         .LR_WITH(&_1 == &arg0)
@@ -340,7 +339,7 @@ TEST_CASE(
         MatcherFacade{
             std::ref(matcher),
             UnwrapReferenceWrapper{}});
-    STATIC_REQUIRE(expectation_policy_for<decltype(policy), SignatureT>);
+    STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), SignatureT>);
 
     REQUIRE(std::as_const(policy).is_satisfied());
     REQUIRE_NOTHROW(policy.consume(info));
