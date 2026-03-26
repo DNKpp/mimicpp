@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -26,7 +26,7 @@ namespace mimicpp::printing::detail::state
     struct cxx23_backport_printer<Range>
     {
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, auto& range)
+        static constexpr OutIter print(OutIter out, auto& range)
         {
             out = format::format_to(std::move(out), "[");
             auto iter = std::ranges::begin(range);
@@ -47,7 +47,7 @@ namespace mimicpp::printing::detail::state
     };
 
     template <std::size_t index, print_iterator OutIter>
-    OutIter print_tuple_element(OutIter out, auto& tuple)
+    constexpr OutIter print_tuple_element(OutIter out, auto& tuple)
     {
         if constexpr (0u != index)
         {
@@ -58,22 +58,42 @@ namespace mimicpp::printing::detail::state
         return mimicpp::print(std::move(out), get<index>(tuple));
     }
 
+    template <typename Tuple, typename IndexSequence>
+    struct has_tuple_element;
+
+    // clang-format off
+    template <typename Tuple, std::size_t index>
+    struct has_tuple_element<Tuple, std::index_sequence<index>>
+        : std::bool_constant<requires {typename std::tuple_element_t<index, Tuple>; }>
+    {
+    };
+
+    // clang-format on
+
+    template <typename Tuple, std::size_t... indices>
+    struct has_tuple_element<Tuple, std::index_sequence<indices...>>
+        : std::conjunction<
+              has_tuple_element<Tuple, std::index_sequence<indices>>...>
+    {
+    };
+
     template <typename T>
     concept tuple_like = requires {
         typename std::tuple_size<T>::type;
         { std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
         requires 0u <= std::tuple_size_v<T>;
+        requires has_tuple_element<T, std::make_index_sequence<std::tuple_size_v<T>>>::value;
     };
 
     template <tuple_like T>
     struct cxx23_backport_printer<T>
     {
         template <print_iterator OutIter>
-        static OutIter print(OutIter out, auto& tuple)
+        static constexpr OutIter print(OutIter out, auto& tuple)
         {
             out = format::format_to(std::move(out), "(");
             std::invoke(
-                [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
+                [&]<std::size_t... indices>(std::index_sequence<indices...> const /*sequence*/) {
                     (...,
                      (out = state::print_tuple_element<indices>(std::move(out), tuple)));
                 },
