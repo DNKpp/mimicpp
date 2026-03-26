@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "mimic++/Expectation.hpp"
-#include "mimic++/ExpectationBuilder.hpp"
+#include "mimic++/Fwd.hpp"
 #include "mimic++/Sequence.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/expectation/Builder.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
@@ -36,13 +36,13 @@ namespace mimicpp::sequence::detail
         template <bool timesConfigured, typename... Args>
         [[nodiscard]]
         explicit(false) constexpr ExpectationBuilderFinalizer(
-            BasicExpectationBuilder<timesConfigured, Args...>&& builder,
+            expectation::BasicBuilder<timesConfigured, Args...>&& builder,
             util::SourceLocation loc = {})
             : m_Builder{&builder},
               m_SourceLocation{std::move(loc)},
               m_FinalizeFn{
                   +[](void* storage, util::SourceLocation finalLoc, Sequence& sequence) {
-                      auto* builderPtr = static_cast<BasicExpectationBuilder<timesConfigured, Args...>*>(storage);
+                      auto* builderPtr = static_cast<expectation::BasicBuilder<timesConfigured, Args...>*>(storage);
                       return ScopedExpectation{
                           std::move(*builderPtr) and expect::in_sequence(sequence),
                           std::move(finalLoc)};

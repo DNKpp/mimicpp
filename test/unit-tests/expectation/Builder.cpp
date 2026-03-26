@@ -1,9 +1,9 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/ExpectationBuilder.hpp"
+#include "mimic++/expectation/Builder.hpp"
 
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
@@ -13,7 +13,7 @@ using namespace mimicpp;
 namespace
 {
     template <typename Signature>
-    using BaseBuilderT = BasicExpectationBuilder<
+    using BaseBuilder = expectation::BasicBuilder<
         false,
         sequence::detail::Config<>,
         Signature,
@@ -21,16 +21,16 @@ namespace
 
     template <typename Signature>
     [[nodiscard]]
-    constexpr auto make_builder(
-        std::shared_ptr<ExpectationCollection<Signature>> collection)
+    auto make_builder(expectation::Registry::Ptr registry)
     {
-        return BaseBuilderT<Signature>{
-            std::move(collection),
+        return BaseBuilder<Signature>{
+            std::move(registry),
             reporting::TargetReport{"Test-Mock", reporting::TypeReport::make<Signature>()},
             detail::TimesConfig{},
             sequence::detail::Config<>{},
             expectation_policies::InitFinalize{},
-            std::tuple{}};
+            std::tuple{}
+        };
     }
 
     template <typename Signature>
@@ -44,32 +44,32 @@ namespace
 }
 
 TEST_CASE(
-    "BasicExpectationBuilder times-limits can be configured.",
+    "expectation::BasicBuilder times-limits can be configured.",
     "[expectation][expectation::builder]")
 {
-    using SignatureT = void();
-    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    using Signature = void();
+    using CallInfo = call::info_for_signature_t<Signature>;
 
     ScopedReporter reporter{};
 
-    auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
-    const CallInfoT call{
+    auto const registry = std::make_shared<expectation::Registry>();
+    CallInfo const call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
     SECTION("It is allowed to omit the times policy.")
     {
-        const ScopedExpectation expectation = make_builder(collection);
+        ScopedExpectation const expectation = make_builder<Signature>(registry);
 
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
+        REQUIRE_NOTHROW(registry->handle_call<Signature>(make_common_target_report<Signature>(), call));
         REQUIRE(expectation.is_satisfied());
     }
 
     SECTION("Or exchange it once.")
     {
-        const ScopedExpectation expectation = make_builder(collection)
+        ScopedExpectation const expectation = make_builder<Signature>(registry)
                                            && detail::TimesConfig{0, 0};
 
         REQUIRE(expectation.is_satisfied());
@@ -77,16 +77,16 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "BasicExpectationBuilder sequences can be configured.",
+    "expectation::BasicBuilder sequences can be configured.",
     "[expectation][expectation::builder]")
 {
-    using SignatureT = void();
-    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    using Signature = void();
+    using CallInfo = call::info_for_signature_t<Signature>;
 
     ScopedReporter reporter{};
 
-    auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
-    const CallInfoT call{
+    auto const registry = std::make_shared<expectation::Registry>();
+    CallInfo const call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
@@ -95,135 +95,135 @@ TEST_CASE(
 
     SECTION("Can be specified once.")
     {
-        const ScopedExpectation expectation = make_builder(collection)
+        ScopedExpectation const expectation = make_builder<Signature>(registry)
                                            && expect::in_sequence(sequence);
 
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
+        REQUIRE_NOTHROW(registry->handle_call<Signature>(make_common_target_report<Signature>(), call));
         REQUIRE(expectation.is_satisfied());
     }
 
     SECTION("Can be specified with times.")
     {
-        const ScopedExpectation expectation = make_builder(collection)
+        ScopedExpectation const expectation = make_builder<Signature>(registry)
                                            && expect::twice()
                                            && expect::in_sequence(sequence);
 
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
+        REQUIRE_NOTHROW(registry->handle_call<Signature>(make_common_target_report<Signature>(), call));
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
+        REQUIRE_NOTHROW(registry->handle_call<Signature>(make_common_target_report<Signature>(), call));
         REQUIRE(expectation.is_satisfied());
     }
 
     SECTION("Can be specified multiple times.")
     {
         Sequence secondSequence{};
-        const ScopedExpectation expectation = make_builder(collection)
+        ScopedExpectation const expectation = make_builder<Signature>(registry)
                                            && expect::in_sequence(sequence)
                                            && expect::in_sequence(secondSequence);
 
         REQUIRE(!expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
+        REQUIRE_NOTHROW(registry->handle_call<Signature>(make_common_target_report<Signature>(), call));
         REQUIRE(expectation.is_satisfied());
     }
 }
 
 TEST_CASE(
-    "Finalize policy of mimicpp::BasicExpectationBuilder for void return may be exchanged.",
+    "Finalize policy of expectation::BasicBuilder for void return may be exchanged.",
     "[expectation][expectation::builder]")
 {
     using trompeloeil::_;
 
-    using SignatureT = void();
-    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    using Signature = void();
+    using CallInfo = call::info_for_signature_t<Signature>;
 
-    auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
-    const CallInfoT call{
+    auto const registry = std::make_shared<expectation::Registry>();
+    CallInfo const call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
     SECTION("It is allowed to omit the finalize policy.")
     {
-        ScopedExpectation expectation = make_builder(collection);
+        ScopedExpectation expectation = make_builder<Signature>(registry);
 
         REQUIRE_NOTHROW(expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
+        REQUIRE_NOTHROW(registry->handle_call<Signature>(make_common_target_report<Signature>(), call));
     }
 
     SECTION("Or exchange it once.")
     {
-        using FinalizerT = FinalizerMock<SignatureT>;
+        using FinalizerT = FinalizerMock<Signature>;
         using FinalizerPolicyT = FinalizerFacade<
-            SignatureT,
-            std::reference_wrapper<FinalizerMock<SignatureT>>,
+            Signature,
+            std::reference_wrapper<FinalizerMock<Signature>>,
             UnwrapReferenceWrapper>;
         FinalizerT finalizer{};
-        const ScopedExpectation expectation = make_builder(collection)
+        ScopedExpectation const expectation = make_builder<Signature>(registry)
                                            && FinalizerPolicyT{std::ref(finalizer)};
 
         REQUIRE_CALL(finalizer, finalize_call(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation);
 
         REQUIRE_NOTHROW(expectation.is_satisfied());
-        REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
+        REQUIRE_NOTHROW(registry->handle_call<Signature>(make_common_target_report<Signature>(), call));
     }
 }
 
 TEST_CASE(
-    "Finalize policy of mimicpp::BasicExpectationBuilder for non-void return must be exchanged.",
+    "Finalize policy of expectation::BasicBuilder for non-void return must be exchanged.",
     "[expectation][expectation::builder]")
 {
     using trompeloeil::_;
 
-    using SignatureT = int();
-    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    using Signature = int();
+    using CallInfo = call::info_for_signature_t<Signature>;
 
-    auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
-    const CallInfoT call{
+    auto const registry = std::make_shared<expectation::Registry>();
+    CallInfo const call{
         .args = {},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any};
 
-    using FinalizerT = FinalizerMock<SignatureT>;
-    using FinalizerPolicyT = FinalizerFacade<
-        SignatureT,
-        std::reference_wrapper<FinalizerMock<SignatureT>>,
+    using Finalizer = FinalizerMock<Signature>;
+    using FinalizePolicy = FinalizerFacade<
+        Signature,
+        std::reference_wrapper<FinalizerMock<Signature>>,
         UnwrapReferenceWrapper>;
-    FinalizerT finalizer{};
-    const ScopedExpectation expectation = make_builder(collection)
-                                       && FinalizerPolicyT{std::ref(finalizer)};
+    Finalizer finalizer{};
+    ScopedExpectation const expectation = make_builder<Signature>(registry)
+                                       && FinalizePolicy{std::ref(finalizer)};
 
     REQUIRE_CALL(finalizer, finalize_call(_))
         .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
         .RETURN(0);
 
     REQUIRE_NOTHROW(expectation.is_satisfied());
-    REQUIRE_NOTHROW(collection->handle_call(make_common_target_report<SignatureT>(), call));
+    REQUIRE_NOTHROW(registry->handle_call<Signature>(make_common_target_report<Signature>(), call));
 }
 
 TEST_CASE(
-    "mimicpp::BasicExpectationBuilder allows expectation extension via suitable polices.",
+    "expectation::BasicBuilder allows expectation extension via suitable polices.",
     "[expectation][expectation::builder]")
 {
-    using SignatureT = void();
-    using ExpectationPolicyT = PolicyMock<SignatureT>;
-    using PolicyT = PolicyFacade<SignatureT, std::reference_wrapper<ExpectationPolicyT>, UnwrapReferenceWrapper>;
+    using Signature = void();
+    using ExpectationPolicy = PolicyMock<Signature>;
+    using Policy = PolicyFacade<Signature, std::reference_wrapper<ExpectationPolicy>, UnwrapReferenceWrapper>;
 
-    auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
+    auto const registry = std::make_shared<expectation::Registry>();
 
     SECTION("Just once.")
     {
-        ExpectationPolicyT policy{};
+        ExpectationPolicy policy{};
 
         // in ExpectationCollection::remove
         REQUIRE_CALL(policy, is_satisfied())
             .RETURN(true);
 
-        const ScopedExpectation expectation = make_builder(collection)
+        ScopedExpectation const expectation = make_builder<Signature>(registry)
                                            && detail::TimesConfig{0, 0}
-                                           && PolicyT{std::ref(policy)};
+                                           && Policy{std::ref(policy)};
 
         REQUIRE_CALL(policy, is_satisfied())
             .RETURN(true);
@@ -232,8 +232,8 @@ TEST_CASE(
 
     SECTION("Just twice.")
     {
-        ExpectationPolicyT policy1{};
-        ExpectationPolicyT policy2{};
+        ExpectationPolicy policy1{};
+        ExpectationPolicy policy2{};
 
         // in ExpectationCollection::remove
         REQUIRE_CALL(policy1, is_satisfied())
@@ -241,10 +241,10 @@ TEST_CASE(
         REQUIRE_CALL(policy2, is_satisfied())
             .RETURN(true);
 
-        const ScopedExpectation expectation = make_builder(collection)
+        const ScopedExpectation expectation = make_builder<Signature>(registry)
                                            && detail::TimesConfig{0, 0}
-                                           && PolicyT{std::ref(policy1)}
-                                           && PolicyT{std::ref(policy2)};
+                                           && Policy{std::ref(policy1)}
+                                           && Policy{std::ref(policy2)};
 
         REQUIRE_CALL(policy1, is_satisfied())
             .RETURN(true);
@@ -260,14 +260,14 @@ TEST_CASE(
 {
     namespace Matches = Catch::Matchers;
 
-    using SignatureT = void();
+    using Signature = void();
 
-    const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
+    auto const registry = std::make_shared<expectation::Registry>();
 
-    util::SourceLocation constexpr beforeLoc{};
-    const ScopedExpectation expectation = make_builder(collection)
+    constexpr util::SourceLocation beforeLoc{};
+    ScopedExpectation const expectation = make_builder<Signature>(registry)
                                        && detail::TimesConfig{0, 0};
-    util::SourceLocation constexpr afterLoc{};
+    constexpr util::SourceLocation afterLoc{};
 
     REQUIRE_THAT(
         std::string{expectation.from().file_name()},
@@ -283,17 +283,17 @@ TEST_CASE(
     "MIMICPP_SCOPED_EXPECTATION ScopedExpectation with unique name from a builder.",
     "[expectation][expectation::builder]")
 {
-    using SignatureT = void();
+    using Signature = void();
 
     ScopedReporter reporter{};
 
     {
-        const auto collection = std::make_shared<ExpectationCollection<SignatureT>>();
+        auto const registry = std::make_shared<expectation::Registry>();
 
-        MIMICPP_SCOPED_EXPECTATION make_builder(collection)
+        MIMICPP_SCOPED_EXPECTATION make_builder<Signature>(registry)
             && detail::TimesConfig{0, 0};
 
-        MIMICPP_SCOPED_EXPECTATION make_builder(collection)
+        MIMICPP_SCOPED_EXPECTATION make_builder<Signature>(registry)
             && detail::TimesConfig{0, 0};
     }
 
