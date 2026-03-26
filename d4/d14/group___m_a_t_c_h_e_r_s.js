@@ -2,10 +2,10 @@ var group___m_a_t_c_h_e_r_s =
 [
     [ "range matchers", "de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html", "de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e" ],
     [ "string matchers", "d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html", "d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g" ],
-    [ "mimicpp::PredicateMatcher< Predicate, AdditionalArgs >", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", [
+    [ "mimicpp::PredicateMatcher&lt; Predicate, AdditionalArgs &gt;", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", [
       [ "PredicateMatcher", "dc/d5e/classmimicpp_1_1_predicate_matcher.html#acc8b06d41f4cceb5eb2e33eca039fe16", null ],
       [ "describe", "dc/d5e/classmimicpp_1_1_predicate_matcher.html#aa7ebcc6b34cf12c55177b6e5f4f9766d", null ],
-      [ "matches", "dc/d5e/classmimicpp_1_1_predicate_matcher.html#a401b3f81cf64c82778a00c689ff34223", null ],
+      [ "matches", "dc/d5e/classmimicpp_1_1_predicate_matcher.html#a96b2306c02bb5bdf8cc6ce86f1207040", null ],
       [ "operator!", "dc/d5e/classmimicpp_1_1_predicate_matcher.html#a7593a5bff76d08d5c35e14e629ca22a6", null ],
       [ "operator!", "dc/d5e/classmimicpp_1_1_predicate_matcher.html#a5ffccf95fc8bf19699ba9a5419699ef0", null ]
     ] ],
@@ -13,7 +13,7 @@ var group___m_a_t_c_h_e_r_s =
       [ "describe", "db/de6/classmimicpp_1_1_wildcard_matcher.html#a650fb20b5ba02c58f8e54b3f6b1e0b77", null ],
       [ "matches", "db/de6/classmimicpp_1_1_wildcard_matcher.html#a571616d6f4b1cba443c870143b7f6bcc", null ]
     ] ],
-    [ "mimicpp::TypeMatcher< T >", "d6/db3/classmimicpp_1_1_type_matcher.html", [
+    [ "mimicpp::TypeMatcher&lt; T &gt;", "d6/db3/classmimicpp_1_1_type_matcher.html", [
       [ "is_accepting", "d6/db3/classmimicpp_1_1_type_matcher.html#ad038609fce3bf59eaee411e9d101ee78", null ],
       [ "describe", "d6/db3/classmimicpp_1_1_type_matcher.html#ad891a2a7cb82ab6d16b4d97cf4624394", null ],
       [ "matches", "d6/db3/classmimicpp_1_1_type_matcher.html#aedf616914d85441281a97e230645d5d5", null ]

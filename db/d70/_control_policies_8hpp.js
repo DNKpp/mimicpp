@@ -1,6 +1,6 @@
 var _control_policies_8hpp =
 [
-    [ "mimicpp::ControlPolicy< Sequences >", "dc/db2/classmimicpp_1_1_control_policy.html", "dc/db2/classmimicpp_1_1_control_policy" ],
+    [ "mimicpp::ControlPolicy&lt; Sequences &gt;", "dc/db2/classmimicpp_1_1_control_policy.html", "dc/db2/classmimicpp_1_1_control_policy" ],
     [ "mimicpp::expect::any_times", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga3cd3b29e89cf30b0ec52f34703252252", null ],
     [ "mimicpp::expect::at_least", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36", null ],
     [ "mimicpp::expect::at_most", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465", null ],

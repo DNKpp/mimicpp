@@ -15,7 +15,7 @@ var searchData=
   ['unrecognized_12',['unrecognized',['../df/d03/classmimicpp_1_1printing_1_1type_1_1_print_visitor.html#a2de3e3e93e1d501856720115dff61a92',1,'mimicpp::printing::type::PrintVisitor']]],
   ['unwrap_5fvisitor_13',['unwrap_visitor',['../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ae2aa4863b0e850841605b1c6f42c4a2f',1,'mimicpp::printing::type::parsing']]],
   ['usage_14',['Non-cmake usage',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'']]],
-  ['use_20tt_20fmt_20tt_20as_20formatting_20backend_15',['Use &lt;tt&gt;fmt&lt;/tt&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'']]],
+  ['use_20fmt_20as_20formatting_20backend_15',['Use &lt;span class=&quot;tt&quot;&gt;fmt&lt;/span&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'']]],
   ['utilities_16',['utilities',['../df/d94/group___u_t_i_l_i_t_i_e_s.html',1,'']]],
   ['utilities_2ehpp_17',['Utilities.hpp',['../dc/d54/_utilities_8hpp.html',1,'']]]
 ];

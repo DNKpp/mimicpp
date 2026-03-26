@@ -1,12 +1,12 @@
 var group___u_t_i_l___s_t_a_c_k_t_r_a_c_e =
 [
     [ "mimicpp::util::stacktrace::backend", "d6/ded/conceptmimicpp_1_1util_1_1stacktrace_1_1backend.html", null ],
-    [ "mimicpp::util::stacktrace::backend_traits< Backend >", "d3/d47/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits.html", null ],
+    [ "mimicpp::util::stacktrace::backend_traits&lt; Backend &gt;", "d3/d47/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits.html", null ],
     [ "mimicpp::util::stacktrace::NullBackend", "d8/df5/classmimicpp_1_1util_1_1stacktrace_1_1_null_backend.html", null ],
     [ "mimicpp::util::Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html", [
       [ "~Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#a06866e7c78fecd0887eca851a60309df", null ],
       [ "Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#a456b4a7ae7558148b6866bf9e72b4b32", null ],
-      [ "Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#ab5455ca2af6be2031c0d61b598543b68", null ],
+      [ "Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#aa981d5fb69b2d8a2ccede543e4b42612", null ],
       [ "Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#a91613d177fc43771d1909af5731c9fce", null ],
       [ "Stacktrace", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#a4467ab3cce7d7717a8f48646403932ca", null ],
       [ "description", "d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#a776287c187a84e23d4d1ce3aba8e6c6d", null ],

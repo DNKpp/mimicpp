@@ -30,7 +30,7 @@ var _name_parser_tokens_8hpp =
     [ "mimicpp::printing::type::parsing::token::Function", "d6/d14/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function.html", "d6/d14/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function" ],
     [ "mimicpp::printing::type::parsing::parser_visitor", "d6/def/conceptmimicpp_1_1printing_1_1type_1_1parsing_1_1parser__visitor.html", null ],
     [ "mimicpp::printing::type::parsing::token_type", "d4/d1b/conceptmimicpp_1_1printing_1_1type_1_1parsing_1_1token__type.html", null ],
-    [ "mimicpp::printing::type::parsing::Token", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a135833540a3e49314476965793cc47f4", null ],
+    [ "mimicpp::printing::type::parsing::Token", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a7a7984baf44f117abfa92282bf8fd07a", null ],
     [ "mimicpp::printing::type::parsing::TokenStack", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ae6624baa1fe5c6ca77d8154318f0a3a8", null ],
     [ "mimicpp::printing::type::parsing::unwrap_visitor", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ae2aa4863b0e850841605b1c6f42c4a2f", null ]
 ];

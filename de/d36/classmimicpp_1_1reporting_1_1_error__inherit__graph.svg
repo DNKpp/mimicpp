@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 601;
+var viewWidth = 604;
 var viewHeight = 88;
 var sectionId = 'dynsection-0';
 </script>
@@ -69,9 +69,9 @@ var sectionId = 'dynsection-0';
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="../../dd/d2e/classmimicpp_1_1reporting_1_1_error.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="575.62,-79.5 473.38,-79.5 473.38,-49 575.62,-49 575.62,-79.5"/>
-<text text-anchor="start" x="481.38" y="-66" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::reporting</text>
-<text text-anchor="middle" x="524.5" y="-54.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Error&lt; CallReport &gt;</text>
+<polygon fill="white" stroke="#666666" points="579.38,-79.5 477.12,-79.5 477.12,-49 579.38,-49 579.38,-79.5"/>
+<text text-anchor="start" x="485.12" y="-66" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::reporting</text>
+<text text-anchor="middle" x="528.25" y="-54.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Error&lt; CallReport &gt;</text>
 </a>
 </g>
 </g>
@@ -79,19 +79,19 @@ var sectionId = 'dynsection-0';
 <g id="edge3_Node000001_Node000004" class="edge">
 <title>Node1&#45;&gt;Node4</title>
 <g id="a_edge3_Node000001_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M334.8,-45.14C376.84,-49.4 433.03,-55.09 473.14,-59.15"/>
-<polygon fill="orange" stroke="orange" points="335.16,-41.66 324.86,-44.13 334.45,-48.62 335.16,-41.66"/>
+<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M334.89,-45.06C377.86,-49.35 435.75,-55.12 476.76,-59.21"/>
+<polygon fill="orange" stroke="orange" points="335.28,-41.58 324.98,-44.07 334.58,-48.55 335.28,-41.58"/>
 </a>
 </g>
-<text text-anchor="middle" x="389.75" y="-57.2" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; CallReport &gt;</text>
+<text text-anchor="start" x="360.88" y="-60.2" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">&lt; CallReport &gt;</text>
 </g>
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
 <g id="a_Node000005"><a xlink:href="../../dd/d2e/classmimicpp_1_1reporting_1_1_error.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="592.5,-30.5 456.5,-30.5 456.5,0 592.5,0 592.5,-30.5"/>
-<text text-anchor="start" x="464.5" y="-17" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::reporting</text>
-<text text-anchor="middle" x="524.5" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Error&lt; ExpectationReport &gt;</text>
+<polygon fill="white" stroke="#666666" points="596.25,-30.5 460.25,-30.5 460.25,0 596.25,0 596.25,-30.5"/>
+<text text-anchor="start" x="468.25" y="-17" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::reporting</text>
+<text text-anchor="middle" x="528.25" y="-5.75" font-family="Helvetica,sans-Serif" font-size="10.00">::Error&lt; ExpectationReport &gt;</text>
 </a>
 </g>
 </g>
@@ -99,11 +99,11 @@ var sectionId = 'dynsection-0';
 <g id="edge4_Node000001_Node000005" class="edge">
 <title>Node1&#45;&gt;Node5</title>
 <g id="a_edge4_Node000001_Node000005"><a xlink:title=" ">
-<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M334.75,-31.69C336.86,-31.45 338.95,-31.22 341,-31 379.1,-26.92 421.77,-23.19 456.26,-20.38"/>
-<polygon fill="orange" stroke="orange" points="334.39,-28.21 324.86,-32.85 335.21,-35.16 334.39,-28.21"/>
+<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M334.4,-25.98C336.63,-25.63 338.83,-25.29 341,-25 380.14,-19.68 424.28,-17.22 459.76,-16.1"/>
+<polygon fill="orange" stroke="orange" points="333.94,-22.51 324.71,-27.72 335.17,-29.4 333.94,-22.51"/>
 </a>
 </g>
-<text text-anchor="middle" x="389.75" y="-32.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; ExpectationReport &gt;</text>
+<text text-anchor="start" x="344" y="-29.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">&lt; ExpectationReport &gt;</text>
 </g>
 <!-- Node2 -->
 <g id="Node000002" class="node">

@@ -1,6 +1,6 @@
 var group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e =
 [
-    [ "mimicpp::BasicScopedSequence< Strategy >", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html", [
+    [ "mimicpp::BasicScopedSequence&lt; Strategy &gt;", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html", [
       [ "BasicScopedSequence", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#aa788c4cd3ca99a370f3864495f87fee4", null ],
       [ "~BasicScopedSequence", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#a9bde4d56b45b5ab9c6493ca51af61571", null ],
       [ "BasicScopedSequence", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#a2c4b10266892de7efc2f3bb6d44789a1", null ],

@@ -2,7 +2,7 @@ var group___m_o_c_k =
 [
     [ "call-conventions", "d2/dc9/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s.html", "d2/dc9/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s" ],
     [ "interfaces", "de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html", "de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s" ],
-    [ "mimicpp::Mock< FirstSignature, OtherSignatures >", "d2/d48/classmimicpp_1_1_mock.html", [
+    [ "mimicpp::Mock&lt; FirstSignature, OtherSignatures &gt;", "d2/d48/classmimicpp_1_1_mock.html", [
       [ "~Mock", "d2/d48/classmimicpp_1_1_mock.html#a0b117b01ac737368ac453714adbfda44", null ],
       [ "Mock", "d2/d48/classmimicpp_1_1_mock.html#add7f12739612be8a767264bf6ba6b603", null ],
       [ "Mock", "d2/d48/classmimicpp_1_1_mock.html#a8175f138f142a0a23aa41fafcf121346", null ],

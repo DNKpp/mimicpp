@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 838;
+var viewWidth = 850;
 var viewHeight = 171;
 var sectionId = 'dynsection-1';
 </script>
@@ -59,10 +59,10 @@ var sectionId = 'dynsection-1';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="Primary template, purposely undefined.">
-<polygon fill="#999999" stroke="#666666" points="829.5,-99.62 707,-99.62 707,-57.88 829.5,-57.88 829.5,-99.62"/>
-<text text-anchor="start" x="715" y="-86.12" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::signature</text>
-<text text-anchor="start" x="715" y="-74.88" font-family="Helvetica,sans-Serif" font-size="10.00">_add_lvalue_ref_qualifier</text>
-<text text-anchor="middle" x="768.25" y="-63.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Signature &gt;</text>
+<polygon fill="#999999" stroke="#666666" points="841.5,-99.62 719,-99.62 719,-57.88 841.5,-57.88 841.5,-99.62"/>
+<text text-anchor="start" x="727" y="-86.12" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::signature</text>
+<text text-anchor="start" x="727" y="-74.88" font-family="Helvetica,sans-Serif" font-size="10.00">_add_lvalue_ref_qualifier</text>
+<text text-anchor="middle" x="780.25" y="-63.62" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; Signature &gt;</text>
 </a>
 </g>
 </g>
@@ -70,11 +70,11 @@ var sectionId = 'dynsection-1';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="670,-105.25 532.5,-105.25 532.5,-52.25 670,-52.25 670,-105.25"/>
-<text text-anchor="start" x="540.5" y="-91.75" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::detail::signature</text>
-<text text-anchor="start" x="540.5" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00">_apply_trait&lt; Signature,</text>
-<text text-anchor="start" x="540.5" y="-69.25" font-family="Helvetica,sans-Serif" font-size="10.00"> detail::signature_add_lvalue</text>
-<text text-anchor="middle" x="601.25" y="-58" font-family="Helvetica,sans-Serif" font-size="10.00">_ref_qualifier &gt;</text>
+<polygon fill="white" stroke="#666666" points="682,-105.25 544.5,-105.25 544.5,-52.25 682,-52.25 682,-105.25"/>
+<text text-anchor="start" x="552.5" y="-91.75" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::detail::signature</text>
+<text text-anchor="start" x="552.5" y="-80.5" font-family="Helvetica,sans-Serif" font-size="10.00">_apply_trait&lt; Signature,</text>
+<text text-anchor="start" x="552.5" y="-69.25" font-family="Helvetica,sans-Serif" font-size="10.00"> detail::signature_add_lvalue</text>
+<text text-anchor="middle" x="613.25" y="-58" font-family="Helvetica,sans-Serif" font-size="10.00">_ref_qualifier &gt;</text>
 </a>
 </g>
 </g>
@@ -82,8 +82,8 @@ var sectionId = 'dynsection-1';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M681.72,-78.75C690.14,-78.75 698.59,-78.75 706.73,-78.75"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="681.83,-75.25 671.83,-78.75 681.83,-82.25 681.83,-75.25"/>
+<path fill="none" stroke="#63b8ff" d="M693.72,-78.75C702.14,-78.75 710.59,-78.75 718.73,-78.75"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="693.83,-75.25 683.83,-78.75 693.83,-82.25 693.83,-75.25"/>
 </a>
 </g>
 </g>
@@ -106,8 +106,8 @@ var sectionId = 'dynsection-1';
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node3&#45;&gt;Node2</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M412,-106.68C444.9,-102.46 481.22,-97.61 514.5,-92.75 520.32,-91.9 526.36,-90.98 532.41,-90.04"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="411.96,-103.16 402.49,-107.9 412.85,-110.1 411.96,-103.16"/>
+<path fill="none" stroke="#63b8ff" d="M411.91,-113.36C448.4,-110.32 489.37,-105.94 526.5,-99.75 532.25,-98.79 538.17,-97.66 544.11,-96.42"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="411.93,-109.85 402.25,-114.15 412.5,-116.83 411.93,-109.85"/>
 </a>
 </g>
 </g>
@@ -126,13 +126,13 @@ var sectionId = 'dynsection-1';
 <g id="edge3_Node000002_Node000004" class="edge">
 <title>Node4&#45;&gt;Node2</title>
 <g id="a_edge3_Node000002_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M389.52,-41.08C427.86,-43.52 473.7,-47.73 514.5,-55 520.28,-56.03 526.23,-57.28 532.18,-58.65"/>
-<polygon fill="orange" stroke="orange" points="390.1,-37.61 379.91,-40.5 389.68,-44.59 390.1,-37.61"/>
+<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M389.94,-35.8C431.44,-36.33 481.96,-39.19 526.5,-48 532.4,-49.17 538.43,-50.66 544.43,-52.37"/>
+<polygon fill="orange" stroke="orange" points="390.02,-32.3 380,-35.72 389.97,-39.3 390.02,-32.3"/>
 </a>
 </g>
-<text text-anchor="start" x="418.5" y="-79.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Signature, detail</text>
-<text text-anchor="start" x="418.5" y="-68" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">::signature_add_lvalue</text>
-<text text-anchor="middle" x="466.5" y="-56.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">_ref_qualifier &gt;</text>
+<text text-anchor="start" x="421.5" y="-83.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">&lt; Signature, detail</text>
+<text text-anchor="start" x="421.5" y="-68" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">  ::signature_add_lvalue</text>
+<text text-anchor="start" x="421.5" y="-52.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">  _ref_qualifier &gt;</text>
 </g>
 <!-- Node5 -->
 <g id="Node000005" class="node">

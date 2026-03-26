@@ -16,5 +16,5 @@ var group___r_e_p_o_r_t_i_n_g =
       [ "report_unfulfilled_expectation", "d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#a71f7a5afd0fc6f1673f72f8661051e50", null ],
       [ "report_unhandled_exception", "d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#a8929dc63147df31427139572bd9c61b8", null ]
     ] ],
-    [ "mimicpp::reporting::install_reporter", "dd/d4f/group___r_e_p_o_r_t_i_n_g.html#gacc0d9f819eebe61a00d604e2457536a1", null ]
+    [ "mimicpp::reporting::install_reporter", "dd/d4f/group___r_e_p_o_r_t_i_n_g.html#gaa2eabfcdaf8ef28de18892ca244c0491", null ]
 ];

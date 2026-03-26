@@ -47,7 +47,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 844;
+var viewWidth = 856;
 var viewHeight = 194;
 var sectionId = 'dynsection-1';
 </script>
@@ -59,9 +59,9 @@ var sectionId = 'dynsection-1';
 <g id="Node000001" class="node">
 <title>Node1</title>
 <g id="a_Node000001"><a xlink:title="Primary template.">
-<polygon fill="#999999" stroke="#666666" points="836.25,-100 679.25,-100 679.25,-69.5 836.25,-69.5 836.25,-100"/>
-<text text-anchor="start" x="687.25" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::signature</text>
-<text text-anchor="middle" x="757.75" y="-75.25" font-family="Helvetica,sans-Serif" font-size="10.00">_prepend_param&lt; Signature, T &gt;</text>
+<polygon fill="#999999" stroke="#666666" points="848.25,-100 691.25,-100 691.25,-69.5 848.25,-69.5 848.25,-100"/>
+<text text-anchor="start" x="699.25" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::signature</text>
+<text text-anchor="middle" x="769.75" y="-75.25" font-family="Helvetica,sans-Serif" font-size="10.00">_prepend_param&lt; Signature, T &gt;</text>
 </a>
 </g>
 </g>
@@ -69,11 +69,11 @@ var sectionId = 'dynsection-1';
 <g id="Node000002" class="node">
 <title>Node2</title>
 <g id="a_Node000002"><a xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="642.25,-111.25 501,-111.25 501,-58.25 642.25,-58.25 642.25,-111.25"/>
-<text text-anchor="start" x="509" y="-97.75" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::detail::signature</text>
-<text text-anchor="start" x="509" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">_apply_trait&lt; Signature,</text>
-<text text-anchor="start" x="509" y="-75.25" font-family="Helvetica,sans-Serif" font-size="10.00"> detail::signature_prepend</text>
-<text text-anchor="middle" x="571.62" y="-64" font-family="Helvetica,sans-Serif" font-size="10.00">_param&lt; T &gt;::template type &gt;</text>
+<polygon fill="white" stroke="#666666" points="654.25,-111.25 513,-111.25 513,-58.25 654.25,-58.25 654.25,-111.25"/>
+<text text-anchor="start" x="521" y="-97.75" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::detail::signature</text>
+<text text-anchor="start" x="521" y="-86.5" font-family="Helvetica,sans-Serif" font-size="10.00">_apply_trait&lt; Signature,</text>
+<text text-anchor="start" x="521" y="-75.25" font-family="Helvetica,sans-Serif" font-size="10.00"> detail::signature_prepend</text>
+<text text-anchor="middle" x="583.62" y="-64" font-family="Helvetica,sans-Serif" font-size="10.00">_param&lt; T &gt;::template type &gt;</text>
 </a>
 </g>
 </g>
@@ -81,8 +81,8 @@ var sectionId = 'dynsection-1';
 <g id="edge1_Node000001_Node000002" class="edge">
 <title>Node2&#45;&gt;Node1</title>
 <g id="a_edge1_Node000001_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M653.78,-84.75C662.14,-84.75 670.61,-84.75 678.92,-84.75"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="654.01,-81.25 644.01,-84.75 654.01,-88.25 654.01,-81.25"/>
+<path fill="none" stroke="#63b8ff" d="M665.78,-84.75C674.14,-84.75 682.61,-84.75 690.92,-84.75"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="666.01,-81.25 656.01,-84.75 666.01,-88.25 666.01,-81.25"/>
 </a>
 </g>
 </g>
@@ -107,8 +107,8 @@ var sectionId = 'dynsection-1';
 <g id="edge2_Node000002_Node000003" class="edge">
 <title>Node3&#45;&gt;Node2</title>
 <g id="a_edge2_Node000002_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M379.96,-119.98C412.53,-115.4 449.49,-109.8 483,-103.75 488.82,-102.7 494.84,-101.54 500.88,-100.33"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="379.56,-116.5 370.14,-121.35 380.52,-123.43 379.56,-116.5"/>
+<path fill="none" stroke="#63b8ff" d="M379.51,-127.67C415.68,-124.93 457.57,-120.36 495,-112.75 500.79,-111.57 506.74,-110.15 512.68,-108.58"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="379.72,-124.15 370,-128.35 380.22,-131.13 379.72,-124.15"/>
 </a>
 </g>
 </g>
@@ -127,14 +127,14 @@ var sectionId = 'dynsection-1';
 <g id="edge3_Node000002_Node000004" class="edge">
 <title>Node4&#45;&gt;Node2</title>
 <g id="a_edge3_Node000002_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M373.48,-40.69C407.74,-43.04 447.53,-47.24 483,-54.75 488.82,-55.98 494.79,-57.49 500.74,-59.16"/>
-<polygon fill="orange" stroke="orange" points="373.8,-37.21 363.6,-40.06 373.36,-44.19 373.8,-37.21"/>
+<path fill="none" stroke="orange" stroke-dasharray="5,2" d="M373.47,-33.87C411.1,-33.96 455.72,-36.6 495,-45.75 507,-48.54 519.39,-52.98 530.93,-57.88"/>
+<polygon fill="orange" stroke="orange" points="373.53,-30.37 363.55,-33.92 373.56,-37.37 373.53,-30.37"/>
 </a>
 </g>
-<text text-anchor="start" x="386.25" y="-90.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> &lt; Signature, detail</text>
-<text text-anchor="start" x="386.25" y="-79" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">::signature_prepend</text>
-<text text-anchor="start" x="386.25" y="-67.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">_param&lt; T &gt;::template</text>
-<text text-anchor="middle" x="434.62" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey"> type &gt;</text>
+<text text-anchor="start" x="389.25" y="-96.25" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">&lt; Signature, detail</text>
+<text text-anchor="start" x="389.25" y="-81" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">  ::signature_prepend</text>
+<text text-anchor="start" x="389.25" y="-65.75" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">  _param&lt; T &gt;::template</text>
+<text text-anchor="start" x="389.25" y="-50.5" font-family="Helvetica,sans-Serif" font-size="10.00" fill="grey">   type &gt;</text>
 </g>
 <!-- Node5 -->
 <g id="Node000005" class="node">
