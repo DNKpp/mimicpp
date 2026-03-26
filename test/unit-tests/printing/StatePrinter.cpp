@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -520,6 +520,34 @@ TEST_CASE(
     }
 }
 
+namespace test
+{
+    template <typename... Ts>
+    struct CustomTuple
+    {
+        std::tuple<Ts...> inner{};
+    };
+
+    template <std::size_t index, typename... Ts>
+    [[nodiscard]]
+    constexpr decltype(auto) get(CustomTuple<Ts...> const& tuple)
+    {
+        return std::get<index>(tuple.inner);
+    }
+}
+
+template <typename... Ts>
+struct std::tuple_size<test::CustomTuple<Ts...>>
+    : public std::integral_constant<std::size_t, sizeof...(Ts)>
+{
+};
+
+template <std::size_t index, typename... Ts>
+struct std::tuple_element<index, test::CustomTuple<Ts...>>
+    : public std::tuple_element<index, std::tuple<Ts...>>
+{
+};
+
 TEST_CASE(
     "All tuple-like types are printable.",
     "[print]")
@@ -633,6 +661,30 @@ TEST_CASE(
         {
             CHECK_THAT(
                 mimicpp::print(pair),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("Custom tuple-likes are supported.")
+    {
+        StringT const expected{"(1337, 42)"};
+
+        constexpr test::CustomTuple<int, float> tuple{
+            .inner{1337, 42.f}
+        };
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, tuple);
+            CHECK_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            CHECK_THAT(
+                mimicpp::print(tuple),
                 Catch::Matchers::Equals(expected));
         }
     }
