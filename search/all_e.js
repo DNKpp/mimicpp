@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]],
+  ['macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
   ['macros_1',['macros',['../d3/d2f/group___m_a_c_r_o___d_e_t_a_i_l.html',1,'detail macros'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md28',1,'Disable unprefixed macros']]],
   ['make_2',['make',['../de/d89/classmimicpp_1_1reporting_1_1_type_report.html#a62c1008b5079336358a44bb83f35b7af',1,'mimicpp::reporting::TypeReport']]],
   ['make_5fcall_5freport_3',['make_call_report',['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166',1,'mimicpp::reporting::CallReport::make_call_report()'],['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166',1,'mimicpp::reporting::make_call_report(TargetReport target, call::Info&lt; Return, Params... &gt; callInfo, util::Stacktrace stacktrace)'],['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166',1,'mimicpp::reporting::make_call_report(TargetReport target, call::Info&lt; Return, Params... &gt; callInfo, util::Stacktrace stacktrace)']]],
@@ -33,7 +33,7 @@ var searchData=
   ['matching_20arguments_30',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md2',1,'']]],
   ['max_31',['max',['../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a62a6d46cc47595f324d6f644bc171c6c',1,'mimicpp::reporting::state_inapplicable::max'],['../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#a2280abe8d0f40418a958cdc35b4c30b2',1,'mimicpp::reporting::state_applicable::max'],['../d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html#a0c36f6e8c559d3f2338eb7bd04eddd1c',1,'mimicpp::reporting::state_saturated::max']]],
   ['mimic_32',['mimic++',['../index.html',1,'']]],
-  ['mimic_20a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_33',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]],
+  ['mimic_20a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_33',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
   ['mimic_2b_2b_2ehpp_34',['mimic++.hpp',['../d0/db9/mimic_09_09_8hpp.html',1,'']]],
   ['mimicpp_35',['mimicpp',['../d1/d11/namespacemimicpp.html',1,'']]],
   ['mimicpp_3a_3acall_36',['call',['../dc/d2e/namespacemimicpp_1_1call.html',1,'mimicpp']]],
@@ -127,12 +127,12 @@ var searchData=
   ['mock_5fmethod_124',['MOCK_METHOD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#ga6d5cb660367ff702eb85c0257b8d474b',1,'InterfaceMocking.hpp']]],
   ['mock_5fname_125',['mock_name',['../d3/d1c/classmimicpp_1_1_expectation.html#a16157e8133dc1f4abeca53700e9d2374',1,'mimicpp::Expectation::mock_name()'],['../d3/d4a/classmimicpp_1_1_basic_expectation.html#ab292704f8e5a4e2a551f7e08d49d667c',1,'mimicpp::BasicExpectation::mock_name()'],['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#a0fd6057e65032c658985731c233ef224',1,'mimicpp::ScopedExpectation::mock_name()']]],
   ['mock_5foverloaded_5fmethod_126',['MOCK_OVERLOADED_METHOD',['../de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html#gafd903cfdd4f9496f29642c9b9e3859c0',1,'InterfaceMocking.hpp']]],
-  ['mocking_20framework_127',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]],
+  ['mocking_20framework_127',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
   ['mocks_20and_20variadic_20templates_128',['Mocks and variadic templates',['../dc/da4/group___f_a_c_a_d_e.html#autotoc_md1',1,'']]],
   ['mocksettings_129',['MockSettings',['../d4/d24/classmimicpp_1_1_mock_settings.html',1,'mimicpp']]],
-  ['modern_20and_20mostly_20macro_20free_20mocking_20framework_130',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]],
+  ['modern_20and_20mostly_20macro_20free_20mocking_20framework_130',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
   ['modules_131',['Enable experimental C++20 modules.',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md45',1,'']]],
-  ['mostly_20macro_20free_20mocking_20framework_132',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]],
+  ['mostly_20macro_20free_20mocking_20framework_132',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
   ['move_20constructor_20and_20assignment_20operator_133',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md13',1,'']]],
   ['moving_134',['Moving',['../db/d98/classmimicpp_1_1_lifetime_watcher.html#autotoc_md9',1,'Moving'],['../da/d45/classmimicpp_1_1_relocation_watcher.html#autotoc_md11',1,'Moving']]],
   ['multiple_20inheritance_135',['Multiple inheritance',['../dc/da4/group___f_a_c_a_d_e.html#autotoc_md0',1,'']]]

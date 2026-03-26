@@ -9,6 +9,6 @@ var searchData=
   ['for_20printing_6',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md21',1,'']]],
   ['formatting_20backend_7',['Use &lt;span class=&quot;tt&quot;&gt;fmt&lt;/span&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'']]],
   ['framework_8',['Test Framework',['../index.html#autotoc_md70',1,'']]],
-  ['framework_9',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]],
-  ['free_20mocking_20framework_10',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]]
+  ['framework_9',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
+  ['free_20mocking_20framework_10',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]]
 ];

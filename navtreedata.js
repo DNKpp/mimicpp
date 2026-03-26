@@ -25,10 +25,10 @@
 var NAVTREE =
 [
   [ "mimic++", "index.html", [
-    [ "mimic++, a modern and (mostly) macro free mocking framework", "index.html#autotoc_md46", [
+    [ "mimic++, a modern and (mostly) macro free mocking framework", "index.html#autotoc_md47", [
       [ "Table of Contents", "index.html#autotoc_md51", null ],
       [ "Introduction", "index.html#autotoc_md53", [
-        [ "✅ Quality", "index.html#autotoc_md47", null ],
+        [ "✅ Quality", "index.html#autotoc_md48", null ],
         [ "🔗 Developer Hub", "index.html#autotoc_md49", null ],
         [ "Core Design", "index.html#autotoc_md54", null ],
         [ "Quick Demo", "index.html#autotoc_md55", null ],
