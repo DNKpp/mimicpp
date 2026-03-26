@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -16,8 +16,6 @@
 
 #include "mimic++/Call.hpp"
 #include "mimic++/CallConvention.hpp"
-#include "mimic++/Expectation.hpp"
-#include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Facade.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/ObjectWatcher.hpp"
@@ -28,6 +26,10 @@
 #include "mimic++/String.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utilities.hpp"
+
+#include "mimic++/expectation/Common.hpp"
+#include "mimic++/expectation/Expectation.hpp"
+#include "mimic++/expectation/Registry.hpp"
 
 #include "mimic++/macros/Common.hpp"
 #include "mimic++/macros/Facade.hpp"

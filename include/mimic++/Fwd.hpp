@@ -376,10 +376,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     template <typename T>
     struct string_traits;
 
-    template <typename Signature>
-        requires std::same_as<Signature, signature_decay_t<Signature>>
-    class ExpectationCollection;
-
     class ScopedExpectation;
 
     using CharT = char;
@@ -456,6 +452,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 {
     class Expectation;
+    class Registry;
 }
 
 #endif

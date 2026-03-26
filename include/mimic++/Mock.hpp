@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -9,11 +9,11 @@
 #pragma once
 
 #include "mimic++/Call.hpp"
-#include "mimic++/Expectation.hpp"
-#include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Fwd.hpp"
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/expectation/Builder.hpp"
+#include "mimic++/expectation/Registry.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
@@ -293,9 +293,6 @@ namespace mimicpp::detail
         }
     };
 
-    template <typename Signature>
-    using expectation_collection_ptr_for = std::shared_ptr<ExpectationCollection<signature_decay_t<Signature>>>;
-
     template <typename Signature, typename ParamList = signature_param_list_t<Signature>>
     class BasicMock;
 
@@ -310,6 +307,9 @@ namespace mimicpp::detail
               Signature>
     {
         using SignatureT = signature_remove_call_convention_t<Signature>;
+        using CallInfo = call::info_for_signature_t<SignatureT>;
+        using ArgRefList = typename CallInfo::ArgListT;
+        using ReturnType = signature_return_type_t<SignatureT>;
 
         friend class MockFrontend<BasicMock, SignatureT>;
         friend call_interface_t<BasicMock, Signature>;
@@ -318,35 +318,28 @@ namespace mimicpp::detail
         static constexpr ValueCategory refQualification = signature_ref_qualification_v<SignatureT>;
 
     protected:
-        using ExpectationCollectionPtrT = expectation_collection_ptr_for<SignatureT>;
-
         [[nodiscard]]
-        explicit BasicMock(
-            ExpectationCollectionPtrT collection,
-            MockSettings settings) noexcept
-            : m_Expectations{std::move(collection)},
+        explicit BasicMock(expectation::Registry::Ptr registry, MockSettings settings) noexcept
+            : m_Registry{std::move(registry)},
               m_Settings{std::move(settings)}
         {
+            MIMICPP_ASSERT(m_Registry, "Null registry is not allowed.");
             MIMICPP_ASSERT(m_Settings.name, "Empty mock-name.");
-
             m_Settings.stacktraceSkip += 2u; // skips the operator() and the handle_call from the stacktrace
         }
 
     private:
-        ExpectationCollectionPtrT m_Expectations;
+        expectation::Registry::Ptr m_Registry;
         MockSettings m_Settings;
 
         [[nodiscard]]
-        constexpr signature_return_type_t<SignatureT> handle_call(
-            reporting::TypeReport overloadReport,
-            std::tuple<std::reference_wrapper<std::remove_reference_t<Params>>...>&& params,
-            util::SourceLocation from) const
+        constexpr ReturnType handle_call(reporting::TypeReport overloadReport, ArgRefList&& params, util::SourceLocation from) const
         {
-            return m_Expectations->handle_call(
+            return m_Registry->handle_call<SignatureT>(
                 reporting::TargetReport{
                     .name{*m_Settings.name},
                     .overloadReport{std::move(overloadReport)}},
-                call::info_for_signature_t<SignatureT>{
+                CallInfo{
                     .args{std::move(params)},
                     .fromCategory{refQualification},
                     .fromConstness{constQualification},
@@ -358,26 +351,12 @@ namespace mimicpp::detail
         [[nodiscard]]
         constexpr auto make_expectation_builder(reporting::TypeReport overloadReport, Args&&... args) const
         {
-            return detail::make_expectation_builder(
-                       m_Expectations,
+            return expectation::detail::make_builder<Signature>(
+                       m_Registry,
                        reporting::TargetReport{.name = *m_Settings.name, .overloadReport = std::move(overloadReport)},
                        std::forward<Args>(args)...)
                 && expectation_policies::Category<refQualification>{}
                 && expectation_policies::Constness<constQualification>{};
-        }
-    };
-
-    template <typename List>
-    struct expectation_collection_factory;
-
-    template <typename... UniqueSignatures>
-    struct expectation_collection_factory<util::type_list<UniqueSignatures...>>
-    {
-        [[nodiscard]]
-        static auto make()
-        {
-            return std::tuple{
-                std::make_shared<ExpectationCollection<UniqueSignatures>>()...};
         }
     };
 
@@ -487,12 +466,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
          */
         [[nodiscard]]
         explicit Mock(MockSettings settings)
-            : Mock{
-                  detail::expectation_collection_factory<
-                      util::detail::unique_list_t<
-                          signature_decay_t<FirstSignature>,
-                          signature_decay_t<OtherSignatures>...>>::make(),
-                  complete_settings(std::move(settings))}
+            : Mock{std::make_shared<expectation::Registry>(), complete_settings(std::move(settings))}
         {
         }
 
@@ -518,17 +492,10 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         Mock& operator=(Mock&&) = default;
 
     private:
-        template <typename... Collections>
         [[nodiscard]]
-        explicit Mock(std::tuple<Collections...> collections, MockSettings const& settings) noexcept
-            // clang-format off
-            : detail::BasicMock<FirstSignature>{
-                util::detail::get<detail::expectation_collection_ptr_for<FirstSignature>>(collections),
-                settings},
-            detail::BasicMock<OtherSignatures>{
-                util::detail::get<detail::expectation_collection_ptr_for<OtherSignatures>>(collections),
-                settings}...
-        // clang-format on
+        explicit Mock(expectation::Registry::Ptr const& registry, MockSettings const& settings) noexcept
+            : detail::BasicMock<FirstSignature>{registry, settings},
+              detail::BasicMock<OtherSignatures>{registry, settings}...
         {
         }
 
