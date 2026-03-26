@@ -27,7 +27,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.2.1</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.3.0</span>
    </div>
   </td>
  </tr>
@@ -122,7 +122,7 @@ Concepts</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains symbols for generic string processing. </p>
 <p>There are plenty of different character-types and even more string-types out there. They mostly differ in their details, but in general some common operations shall be applied (like equality- or prefix-tests). Therefore, <span class="tt">mimic++</span> offers various abstractions, which users can utilize to make their char- and string-types compatible with the framework, and thus with all string-matchers.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 Custom Strings with common char-type</h2>
 <p>Custom strings, which do use any of the common char-types (<span class="tt">char</span>, <span class="tt">wchar_t</span>, <span class="tt">char16_t</span>, etc.), can be made compatible in no time. Users do just have to provide a specialization for the <span class="tt"><a class="el" href="../../d1/dee/structmimicpp_1_1string__traits.html">string_traits</a></span> template: Given the following string-type, which in fact is just an abstraction around a <span class="tt">std::string</span>: </p><div class="fragment"><div class="line">    <span class="keyword">class </span>MyString</div>
 <div class="line">    {</div>
@@ -171,7 +171,7 @@ Custom Strings with common char-type</h2>
 <div class="line"> </div>
 <div class="line">    mock(MyString{<span class="stringliteral">&quot;Hello, World!&quot;</span>}); <span class="comment">// matches the first expectation</span></div>
 <div class="line">    mock(MyString{<span class="stringliteral">&quot;hI, mimic++&quot;</span>});   <span class="comment">// matches the second expectation (case-insensitive).</span></div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 Custom char-types and related strings</h2>
 <p>It is possible to make custom char-types (and strings which use those) compatible with <span class="tt">mimic++</span>, but this requires quite some effort, depending on the features you are planning to use.</p>
 <p>Given the following (<span class="tt">regular</span>) char-type </p><div class="fragment"><div class="line"><span class="keyword">struct </span>my_char</div>
@@ -239,12 +239,12 @@ Custom char-types and related strings</h2>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(s);</div>
 <div class="line"> </div>
 <div class="line">    mock(s);</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 Support for printing</h3>
 <p>The current setup is already enough, that these strings can be printed. Unfortunately this will print the whole string just as comma separated hex-values, because <span class="tt">mimic++</span> doesn't know yet, how to print the underlying char-type. This can easily be fixed by proving a <span class="tt"><a class="el" href="../../da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">custom::Printer</a></span> specialization for that particular char-type. </p><dl class="section note"><dt>Note</dt><dd>Proving a custom printer for the char-type is enough, to make any related string type printable, too. </dd>
 <dd>
 <span class="tt">mimic++</span> prints all strings with a literal prefix. This depends on the underlying char-type and can be customized by adding a specialization to <a class="el" href="../../dc/d55/group___t_y_p_e___t_r_a_i_t_s___s_t_r_i_n_g___l_i_t_e_r_a_l___p_r_e_f_i_x.html#gafee032e0ba91429f52ac96404738b146" title="string_literal_prefix">string_literal_prefix</a> for any user char-type.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 Support for case-insensitive matching</h3>
 <p>As stated in the string-matcher section, case-insensitive-matching requires some sort of case-folding. For <span class="tt">ascii</span>-like strings a common strategy is to simply convert all characters to upper-case before the actual comparison. For wide-chars and Unicode this is definitely more complex, if it shall be done correctly. Nevertheless, users can provide their own strategy how to perform the case-folding by simply specializing the <span class="tt"><a class="el" href="../../d4/d2d/structmimicpp_1_1string__case__fold__converter.html" title="Primary template, purposely undefined.">string_case_fold_converter</a></span> trait. For the <span class="tt">my_char</span> from above, this may look like follows: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
 <div class="line"><span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d2d/structmimicpp_1_1string__case__fold__converter.html">mimicpp::string_case_fold_converter</a>&lt;my_char&gt;</div>
