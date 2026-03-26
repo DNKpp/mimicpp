@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -378,10 +378,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     template <typename Signature>
         requires std::same_as<Signature, signature_decay_t<Signature>>
-    class Expectation;
-
-    template <typename Signature>
-        requires std::same_as<Signature, signature_decay_t<Signature>>
     class ExpectationCollection;
 
     class ScopedExpectation;
@@ -455,6 +451,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 
     class Stacktrace;
     class SourceLocation;
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
+{
+    class Expectation;
 }
 
 #endif

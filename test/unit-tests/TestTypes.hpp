@@ -98,7 +98,7 @@ public:
     }
 
     [[nodiscard]]
-    constexpr bool matches(const CallT& call) const noexcept
+    constexpr bool matches(const CallT& call) const
     {
         return std::invoke(projection, policy)
             .matches(call);
@@ -111,7 +111,7 @@ public:
             .describe();
     }
 
-    constexpr void consume(const CallT& call) noexcept
+    constexpr void consume(const CallT& call)
     {
         std::invoke(projection, policy)
             .consume(call);
@@ -170,9 +170,9 @@ public:
     static constexpr bool trompeloeil_movable_mock = true;
 
     MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
-    MAKE_CONST_MOCK1(matches, bool(const CallInfoT&), noexcept);
+    MAKE_CONST_MOCK1(matches, bool(const CallInfoT&));
     MAKE_CONST_MOCK0(describe, mimicpp::StringT());
-    MAKE_MOCK1(consume, void(const CallInfoT&), noexcept);
+    MAKE_MOCK1(consume, void(const CallInfoT&));
 };
 
 template <typename Signature, typename Policy, typename Projection>
