@@ -171,7 +171,7 @@ jobs:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           name: $GITHUB_REPOSITORY
           token: ${{secrets.CODECOV_TOKEN}}
