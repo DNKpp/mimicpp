@@ -376,8 +376,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     template <typename T>
     struct string_traits;
 
-    class ScopedExpectation;
-
     using CharT = char;
     using CharTraitsT = std::char_traits<CharT>;
     using StringT = std::basic_string<CharT, CharTraitsT>;
@@ -453,6 +451,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 {
     class Expectation;
     class Registry;
+    class Owner;
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
+{
+    using ScopedExpectation = expectation::Owner;
 }
 
 #endif

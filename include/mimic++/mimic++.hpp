@@ -29,6 +29,7 @@
 
 #include "mimic++/expectation/Common.hpp"
 #include "mimic++/expectation/Expectation.hpp"
+#include "mimic++/expectation/Owner.hpp"
 #include "mimic++/expectation/Registry.hpp"
 
 #include "mimic++/macros/Common.hpp"
