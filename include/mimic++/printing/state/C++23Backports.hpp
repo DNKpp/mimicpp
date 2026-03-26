@@ -54,7 +54,8 @@ namespace mimicpp::printing::detail::state
             out = format::format_to(std::move(out), ", ");
         }
 
-        return mimicpp::print(std::move(out), std::get<index>(tuple));
+        using std::get;
+        return mimicpp::print(std::move(out), get<index>(tuple));
     }
 
     template <typename T>
