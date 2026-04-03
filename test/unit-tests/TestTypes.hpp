@@ -122,16 +122,42 @@ template <typename Signature>
 class FinalizerFake
 {
 public:
-    using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
-    using ReturnT = mimicpp::signature_return_type_t<Signature>;
+    using CallInfo = mimicpp::call::info_for_signature_t<Signature>;
+    using Return = mimicpp::signature_return_type_t<Signature>;
+    using Result = std::conditional_t<
+        std::is_void_v<Return>,
+        std::monostate,
+        std::remove_cvref_t<Return>>;
 
     class Exception
+        : public std::runtime_error
     {
+    public:
+        [[nodiscard]]
+        Exception()
+            : std::runtime_error{"FinalizerFake exception."}
+        {
+        }
     };
 
-    static ReturnT finalize_call([[maybe_unused]] const CallInfoT& call)
+    std::variant<Result, Exception> result{};
+
+    [[nodiscard]]
+    Return finalize_call([[maybe_unused]] CallInfo const& call)
     {
-        throw Exception{};
+        if (auto const* const exception = std::get_if<Exception>(&result))
+        {
+            throw *exception;
+        }
+
+        if constexpr (!std::is_void_v<Return>)
+        {
+            return std::forward<Return>(std::get<0>(result));
+        }
+        else
+        {
+            return;
+        }
     }
 };
 
