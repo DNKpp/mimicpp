@@ -189,7 +189,7 @@ namespace mimicpp::detail
     {
     public:
         template <typename... Args>
-            requires(... && expectation::detail::requirement_for<Args, Params>)
+            requires(... && expectation::requirement_for<Args, Params>)
         [[nodiscard]]
         constexpr auto expect_call(Args&&... args)
         {
@@ -208,7 +208,7 @@ namespace mimicpp::detail
     {
     public:
         template <typename... Args>
-            requires(... && expectation::detail::requirement_for<Args, Params>)
+            requires(... && expectation::requirement_for<Args, Params>)
         [[nodiscard]]
         constexpr auto expect_call(Args&&... args) const
         {
@@ -227,7 +227,7 @@ namespace mimicpp::detail
     {
     public:
         template <typename... Args>
-            requires(... && expectation::detail::requirement_for<Args, Params>)
+            requires(... && expectation::requirement_for<Args, Params>)
         [[nodiscard]]
         constexpr auto expect_call(Args&&... args) &
         {
@@ -246,7 +246,7 @@ namespace mimicpp::detail
     {
     public:
         template <typename... Args>
-            requires(... && expectation::detail::requirement_for<Args, Params>)
+            requires(... && expectation::requirement_for<Args, Params>)
         [[nodiscard]]
         constexpr auto expect_call(Args&&... args) const&
         {
@@ -265,7 +265,7 @@ namespace mimicpp::detail
     {
     public:
         template <typename... Args>
-            requires(... && expectation::detail::requirement_for<Args, Params>)
+            requires(... && expectation::requirement_for<Args, Params>)
         [[nodiscard]]
         constexpr auto expect_call(Args&&... args) &&
         {
@@ -284,7 +284,7 @@ namespace mimicpp::detail
     {
     public:
         template <typename... Args>
-            requires(... && expectation::detail::requirement_for<Args, Params>)
+            requires(... && expectation::requirement_for<Args, Params>)
         [[nodiscard]]
         constexpr auto expect_call(Args&&... args) const&&
         {

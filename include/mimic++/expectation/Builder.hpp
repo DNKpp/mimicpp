@@ -232,14 +232,27 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         }
 
         inline constexpr util::priority_tag<2> maxMakeArgMatcherTag{};
+    }
 
-        template <typename Arg, typename Target>
-        concept requirement_for = requires {
-            {
-                detail::make_arg_matcher<Target>(maxMakeArgMatcherTag, std::declval<Arg>())
-            } -> matcher_for<Target>;
-        };
+    /**
+     * \brief Determines whether `Arg` can be used as a requirement for `Param`.
+     * \ingroup EXPECTATION
+     * \details
+     * This concept verifies that the given `Arg` specifies actual requirements for `Param`.
+     * In fact, it does check whether:
+     * - `Arg` already is an actual matcher for `Param` (via `matcher_for concept),
+     * - `Arg` and `Params` are compatible strings (which then utilizes `matches::str::eq`),
+     * - or `Arg` and `Params` are already equality-comparable (which then uses `matches::eq`).
+     */
+    template <typename Arg, typename Param>
+    concept requirement_for = requires {
+        {
+            detail::make_arg_matcher<Param>(detail::maxMakeArgMatcherTag, std::declval<Arg>())
+        } -> matcher_for<Param>;
+    };
 
+    namespace detail
+    {
         template <
             typename Signature,
             std::size_t index,
