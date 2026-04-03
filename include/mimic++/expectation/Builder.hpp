@@ -21,6 +21,13 @@
 #include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <tuple>
+    #include <type_traits>
+    #include <utility>
+#endif
+
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 {
     template <
