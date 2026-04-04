@@ -449,6 +449,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 {
+    class Collector;
     class Expectation;
     class Registry;
     class Owner;
@@ -456,7 +457,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
+    /**
+     * \copydoc expectation::Owner
+     * \ingroup EXPECTATION
+     */
     using ScopedExpectation = expectation::Owner;
+
+    /**
+     * \copydoc expectation::Collector
+     * \ingroup EXPECTATION
+     */
+    using ScopedExpectations = expectation::Collector;
 }
 
 #endif
