@@ -29,14 +29,21 @@ namespace mimicpp::expectation
 {
     /**
      * \defgroup EXPECTATION expectation
-     * \brief Contains everything related to managing expectations.
-     * \details Expectations are one of the two core aspects of *mimic++*.
+     * \brief Facilities for creating, owning, and verifying expectations.
+     * \details
+     * Expectations are one of the two core aspects of *mimic++*.
      * They define how a `Mock` is expected to be called.
      * Users should always store expectations in the `ScopedExpectation` RAII-object,
      * which checks whether the expectation is satisfied during destruction.
      * If not, an error is forwarded to the installed reporter.
-     * To simplify that process, the macro \ref MIMICPP_SCOPED_EXPECTATION (and the shorthand \ref SCOPED_EXP) is provided.
+     * To simplify that process, the macro \ref MIMICPP_SCOPED_EXPECTATION (and the shorthand \ref SCOPED_EXP) is provided,
+     * which just creates a `ScopedExpectation` with a unique name in the current scope.
      *
+     * \note
+     * Besides individually managed expectations, there is also the `ScopedExpectations` type (note the plural),
+     * which is as a convenient scope-bound alternative for collecting and verifying multiple expectations automatically.
+     *
+     * \details
      * Once an expectation is fully exhausted, it becomes inactive and can't be matched any further.
      * If at any time multiple active expectations are valid matches for an incoming call, *mimic++* has to make a choice.
      * In such cases, when no `Sequence` has been applied, the latest created expectation will be selected.
@@ -50,6 +57,7 @@ namespace mimicpp::expectation
      * \ref EXPECTATION_SEQUENCE "Sequences".
      *
      * Expectations can be created anywhere in the program, you just need an appropriate `Mock`.
+     *
      * \{
      */
 
