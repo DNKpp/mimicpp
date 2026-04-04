@@ -5,6 +5,7 @@
 
 target_sources(${TARGET_NAME} PRIVATE
     "Builder.cpp"
+    "Collector.cpp"
     "Common.cpp"
     "Expectation.cpp"
     "Registry.cpp"
