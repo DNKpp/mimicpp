@@ -1,6 +1,11 @@
 var concepts =
 [
     [ "mimicpp", "d1/d11/namespacemimicpp.html", [
+      [ "expectation", "d9/db6/namespacemimicpp_1_1expectation.html", [
+        [ "expectation_policy_for", "df/d74/conceptmimicpp_1_1expectation_1_1expectation__policy__for.html", null ],
+        [ "finalize_policy_for", "d0/d7b/conceptmimicpp_1_1expectation_1_1finalize__policy__for.html", null ],
+        [ "control_policy", "d3/dbb/conceptmimicpp_1_1expectation_1_1control__policy.html", null ]
+      ] ],
       [ "util", "d8/da3/namespacemimicpp_1_1util.html", [
         [ "stacktrace", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html", [
           [ "backend", "d6/ded/conceptmimicpp_1_1util_1_1stacktrace_1_1backend.html", null ]
@@ -20,9 +25,6 @@ var concepts =
           ] ]
         ] ]
       ] ],
-      [ "expectation_policy_for", "dd/d1d/conceptmimicpp_1_1expectation__policy__for.html", null ],
-      [ "finalize_policy_for", "d9/d64/conceptmimicpp_1_1finalize__policy__for.html", null ],
-      [ "control_policy", "d4/df8/conceptmimicpp_1_1control__policy.html", null ],
       [ "matcher_for", "df/d23/conceptmimicpp_1_1matcher__for.html", null ],
       [ "object_watcher_for", "db/db6/conceptmimicpp_1_1object__watcher__for.html", null ],
       [ "print_iterator", "d3/d26/conceptmimicpp_1_1print__iterator.html", null ],

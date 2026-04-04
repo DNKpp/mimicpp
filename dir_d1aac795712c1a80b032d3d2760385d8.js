@@ -1,6 +1,7 @@
 var dir_d1aac795712c1a80b032d3d2760385d8 =
 [
     [ "config", "dir_08ebf9492445e058b0ba4156a3978cfb.html", "dir_08ebf9492445e058b0ba4156a3978cfb" ],
+    [ "expectation", "dir_4078c24316faf652a8ef297242a09f7d.html", "dir_4078c24316faf652a8ef297242a09f7d" ],
     [ "macros", "dir_b5aab1b1df1bd11607029459b7fa8a2f.html", "dir_b5aab1b1df1bd11607029459b7fa8a2f" ],
     [ "matchers", "dir_c8613b7c6812845d24ae03bf6f0c949e.html", "dir_c8613b7c6812845d24ae03bf6f0c949e" ],
     [ "policies", "dir_6ddbcebc0798903b88ee4423bc0f1618.html", "dir_6ddbcebc0798903b88ee4423bc0f1618" ],
@@ -9,8 +10,6 @@ var dir_d1aac795712c1a80b032d3d2760385d8 =
     [ "utilities", "dir_2f75f8b84a1b0b31df547365a4a1eaf8.html", "dir_2f75f8b84a1b0b31df547365a4a1eaf8" ],
     [ "Call.hpp", "dc/d44/_call_8hpp.html", "dc/d44/_call_8hpp" ],
     [ "CallConvention.hpp", "d7/ded/_call_convention_8hpp.html", "d7/ded/_call_convention_8hpp" ],
-    [ "Expectation.hpp", "d5/d8a/_expectation_8hpp.html", null ],
-    [ "ExpectationBuilder.hpp", "d2/d4f/_expectation_builder_8hpp.html", "d2/d4f/_expectation_builder_8hpp" ],
     [ "Facade.hpp", "d6/dc3/_facade_8hpp.html", "d6/dc3/_facade_8hpp" ],
     [ "Fwd.hpp", "df/dde/_fwd_8hpp.html", "df/dde/_fwd_8hpp" ],
     [ "mimic++.hpp", "d0/db9/mimic_09_09_8hpp.html", null ],

@@ -11,7 +11,7 @@ var searchData=
   ['pathprinter_2ehpp_8',['PathPrinter.hpp',['../de/d4b/_path_printer_8hpp.html',1,'']]],
   ['peek_9',['peek',['../de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html#ac452e18da0cb5023a7020ad06f200392',1,'mimicpp::printing::type::lexing::NameLexer']]],
   ['policies_10',['Policies',['../index.html#autotoc_md60',1,'']]],
-  ['policylistt_11',['PolicyListT',['../d3/d4a/classmimicpp_1_1_basic_expectation.html#af12ea9bb928ea78efeec1075533854a1',1,'mimicpp::BasicExpectation::PolicyListT'],['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#a61ddae5a025434b5abbafa19252920f9',1,'mimicpp::BasicExpectationBuilder::PolicyListT']]],
+  ['policylist_11',['PolicyList',['../d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html#a7f2f6c3dc4d9b4df115dbf705a23212c',1,'mimicpp::expectation::BasicBuilder']]],
   ['portability_12',['Portability',['../index.html#autotoc_md66',1,'']]],
   ['predicate_13',['predicate',['../d4/d14/group___m_a_t_c_h_e_r_s.html#gaba69db0df12ff432cee8242275310a9c',1,'mimicpp::matches']]],
   ['predicatematcher_14',['PredicateMatcher',['../dc/d5e/classmimicpp_1_1_predicate_matcher.html',1,'mimicpp::PredicateMatcher&lt; Predicate, AdditionalArgs &gt;'],['../dc/d5e/classmimicpp_1_1_predicate_matcher.html#acc8b06d41f4cceb5eb2e33eca039fe16',1,'mimicpp::PredicateMatcher::PredicateMatcher()']]],
@@ -29,7 +29,7 @@ var searchData=
   ['printer_26',['Printer',['../da/d68/classmimicpp_1_1custom_1_1_printer.html',1,'mimicpp::custom']]],
   ['printer_5ffor_27',['printer_for',['../de/dfc/conceptmimicpp_1_1printer__for.html',1,'mimicpp']]],
   ['printfn_28',['PrintFn',['../d1/db9/classmimicpp_1_1printing_1_1_print_fn.html',1,'mimicpp::printing']]],
-  ['printing_29',['printing',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md42',1,'Enable experimental pretty type-printing'],['../d7/d26/group___p_r_i_n_t_i_n_g.html',1,'printing'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'String printing'],['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'Support for printing']]],
+  ['printing_29',['printing',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md42',1,'Enable experimental pretty type-printing'],['../d7/d26/group___p_r_i_n_t_i_n_g.html',1,'printing'],['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'String printing'],['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md21',1,'Support for printing']]],
   ['printing_2ehpp_30',['Printing.hpp',['../db/d15/_printing_8hpp.html',1,'']]],
   ['printings_20or_20print_20custom_20types_31',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md16',1,'']]],
   ['printtype_2ehpp_32',['PrintType.hpp',['../da/db0/_print_type_8hpp.html',1,'']]],
@@ -40,6 +40,6 @@ var searchData=
   ['priority_5ftag_3c_200u_20_3e_37',['priority_tag&lt; 0u &gt;',['../dd/dee/structmimicpp_1_1util_1_1priority__tag_3_010u_01_4.html',1,'mimicpp::util']]],
   ['prioritytag_2ehpp_38',['PriorityTag.hpp',['../d8/d65/_priority_tag_8hpp.html',1,'']]],
   ['projected_5fvalue_5ft_39',['projected_value_t',['../d8/da3/namespacemimicpp_1_1util.html#a12291b493e006530a4a4c77ec7e37741',1,'mimicpp::util']]],
-  ['ptr_40',['ptr',['../d8/dad/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_1_1_nested_info.html#ab06863c4f3f7ecd313909c2be69ec41c',1,'mimicpp::printing::type::parsing::token::FunctionPtr::NestedInfo']]],
-  ['push_41',['push',['../d5/d86/classmimicpp_1_1_expectation_collection.html#a78ffe18283eb86c491ff77fbbd787969',1,'mimicpp::ExpectationCollection']]]
+  ['ptr_40',['Ptr',['../df/df9/classmimicpp_1_1expectation_1_1_registry.html#aadc1c6fc1b636a9b5d3148b132470ea1',1,'mimicpp::expectation::Registry']]],
+  ['ptr_41',['ptr',['../d8/dad/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_1_1_nested_info.html#ab06863c4f3f7ecd313909c2be69ec41c',1,'mimicpp::printing::type::parsing::token::FunctionPtr::NestedInfo']]]
 ];

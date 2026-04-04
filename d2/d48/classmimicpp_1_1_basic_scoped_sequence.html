@@ -124,7 +124,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac4eb869f51039eeaf74ff97e2b55ec5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defaulted move-assignment operator.  <br /></td></tr>
 <tr class="memitem:ae1ff354dc83d222a7774c9944f174555" id="r_ae1ff354dc83d222a7774c9944f174555"><td class="memItemLeft"><a class="el" href="#aa788c4cd3ca99a370f3864495f87fee4">BasicScopedSequence</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ae1ff354dc83d222a7774c9944f174555">operator+=</a> (sequence::detail::ExpectationBuilderFinalizer&lt; <a class="el" href="#aa788c4cd3ca99a370f3864495f87fee4">BasicScopedSequence</a> &gt; &amp;&amp;builder)</td></tr>
 <tr class="memdesc:ae1ff354dc83d222a7774c9944f174555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches a newly constructed expectation.  <br /></td></tr>
-<tr class="memitem:aba2c55740d0f900900681b94f42cd26d" id="r_aba2c55740d0f900900681b94f42cd26d"><td class="memItemLeft">std::deque&lt; <a class="el" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html">ScopedExpectation</a> &gt; const &amp;&#160;</td><td class="memItemRight"><a class="el" href="#aba2c55740d0f900900681b94f42cd26d">expectations</a> () const noexcept</td></tr>
+<tr class="memitem:aba2c55740d0f900900681b94f42cd26d" id="r_aba2c55740d0f900900681b94f42cd26d"><td class="memItemLeft">std::deque&lt; <a class="el" href="../../d1/d11/namespacemimicpp.html#ad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a> &gt; const &amp;&#160;</td><td class="memItemRight"><a class="el" href="#aba2c55740d0f900900681b94f42cd26d">expectations</a> () const noexcept</td></tr>
 <tr class="memdesc:aba2c55740d0f900900681b94f42cd26d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the collection of explicitly owned expectations.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -137,7 +137,7 @@ class mimicpp::BasicScopedSequence&lt; Strategy &gt;</div><p>A sequence type tha
   </dd>
 </dl>
 <p>This type offers a convenient mechanism for chaining multiple expectations into a sequence, and it monitors whether they are fulfilled upon destruction.</p>
-<p>In essence, it behaves similarly to manually attaching expectations via <span class="tt"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gafaccdca014c38611a9b8e3eef4d43a97" title="Attaches the expectation onto a sequence.">expect::in_sequence</a></span> to a sequence. The primary distinction is that if an expectation is not satisfied, this type will report the first unfulfilled expectation. In contrast, when expectations are manually constructed as <span class="tt"><a class="el" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html" title="Takes the ownership of an expectation and check whether it&#39;s satisfied during destruction.">ScopedExpectation</a></span>, the last created expectation (due to the stack’s order) would typically be reported.</p>
+<p>In essence, it behaves similarly to manually attaching expectations via <span class="tt"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gafaccdca014c38611a9b8e3eef4d43a97" title="Attaches the expectation onto a sequence.">expect::in_sequence</a></span> to a sequence. The primary distinction is that if an expectation is not satisfied, this type will report the first unfulfilled expectation. In contrast, when expectations are manually constructed as <span class="tt"><a class="el" href="../../d1/d11/namespacemimicpp.html#ad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a></span>, the last created expectation (due to the stack’s order) would typically be reported.</p>
 <p>Nevertheless, all standard sequence rules also apply.</p>
 <div class="fragment"><div class="line">    <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a>;</div>
 <div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
@@ -305,7 +305,7 @@ template&lt;auto Strategy&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::deque&lt; <a class="el" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html">ScopedExpectation</a> &gt; const  &amp; <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">mimicpp::BasicScopedSequence</a>&lt; Strategy &gt;::expectations </td>
+          <td class="memname">std::deque&lt; <a class="el" href="../../d1/d11/namespacemimicpp.html#ad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a> &gt; const  &amp; <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">mimicpp::BasicScopedSequence</a>&lt; Strategy &gt;::expectations </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -362,7 +362,7 @@ template&lt;auto Strategy&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A mutable reference to the current instance.</dd></dl>
-<p>This function augments the provided expectation-builder with an additional sequence-policy for this sequence and finalizes its construction. Additionally, the sequence takes over the ownership of the constructed <span class="tt"><a class="el" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html" title="Takes the ownership of an expectation and check whether it&#39;s satisfied during destruction.">ScopedExpectation</a></span>. </p>
+<p>This function augments the provided expectation-builder with an additional sequence-policy for this sequence and finalizes its construction. Additionally, the sequence takes over the ownership of the constructed <span class="tt"><a class="el" href="../../d1/d11/namespacemimicpp.html#ad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a></span>. </p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

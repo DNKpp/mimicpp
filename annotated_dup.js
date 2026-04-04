@@ -4,7 +4,16 @@ var annotated_dup =
       [ "call", "dc/d2e/namespacemimicpp_1_1call.html", [
         [ "Info", "d4/d44/classmimicpp_1_1call_1_1_info.html", "d4/d44/classmimicpp_1_1call_1_1_info" ],
         [ "info_for_signature", "d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html", null ],
-        [ "info_for_signature&lt; Return(Args...)&gt;", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4" ]
+        [ "info_for_signature&lt; Return(Args...)&gt;", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4" ],
+        [ "ResultStorage", "de/d02/classmimicpp_1_1call_1_1_result_storage.html", "de/d02/classmimicpp_1_1call_1_1_result_storage" ],
+        [ "ResultStorage&lt; void &gt;", "dc/d91/classmimicpp_1_1call_1_1_result_storage_3_01void_01_4.html", "dc/d91/classmimicpp_1_1call_1_1_result_storage_3_01void_01_4" ],
+        [ "ResultStorage&lt; Result &gt;", "d8/d19/classmimicpp_1_1call_1_1_result_storage_3_01_result_01_4.html", "d8/d19/classmimicpp_1_1call_1_1_result_storage_3_01_result_01_4" ]
+      ] ],
+      [ "expectation", "d9/db6/namespacemimicpp_1_1expectation.html", [
+        [ "BasicBuilder", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder" ],
+        [ "Expectation", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html", "dd/df1/classmimicpp_1_1expectation_1_1_expectation" ],
+        [ "Owner", "da/d33/classmimicpp_1_1expectation_1_1_owner.html", "da/d33/classmimicpp_1_1expectation_1_1_owner" ],
+        [ "Registry", "df/df9/classmimicpp_1_1expectation_1_1_registry.html", "df/df9/classmimicpp_1_1expectation_1_1_registry" ]
       ] ],
       [ "facade", "d8/da4/namespacemimicpp_1_1facade.html", [
         [ "basic_as_member", "dc/d2a/structmimicpp_1_1facade_1_1basic__as__member.html", "dc/d2a/structmimicpp_1_1facade_1_1basic__as__member" ],
@@ -117,11 +126,6 @@ var annotated_dup =
         [ "TargetReport", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html", "d2/d84/classmimicpp_1_1reporting_1_1_target_report" ],
         [ "TypeReport", "de/d89/classmimicpp_1_1reporting_1_1_type_report.html", "de/d89/classmimicpp_1_1reporting_1_1_type_report" ]
       ] ],
-      [ "Expectation", "d3/d1c/classmimicpp_1_1_expectation.html", "d3/d1c/classmimicpp_1_1_expectation" ],
-      [ "ExpectationCollection", "d5/d86/classmimicpp_1_1_expectation_collection.html", "d5/d86/classmimicpp_1_1_expectation_collection" ],
-      [ "BasicExpectation", "d3/d4a/classmimicpp_1_1_basic_expectation.html", "d3/d4a/classmimicpp_1_1_basic_expectation" ],
-      [ "ScopedExpectation", "d6/dc0/classmimicpp_1_1_scoped_expectation.html", "d6/dc0/classmimicpp_1_1_scoped_expectation" ],
-      [ "BasicExpectationBuilder", "d5/de1/classmimicpp_1_1_basic_expectation_builder.html", "d5/de1/classmimicpp_1_1_basic_expectation_builder" ],
       [ "signature_add_noexcept", "dd/db4/structmimicpp_1_1signature__add__noexcept.html", null ],
       [ "signature_remove_noexcept", "d4/db7/structmimicpp_1_1signature__remove__noexcept.html", null ],
       [ "signature_is_noexcept", "d9/d28/structmimicpp_1_1signature__is__noexcept.html", null ],

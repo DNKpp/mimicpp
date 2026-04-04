@@ -128,7 +128,7 @@ Functions</h2></td></tr>
 <p>An expectation must have exactly one finalizer applied. For mocks returning void, an appropriate finalizer is attached by default. This default finalizer can be exchanged once. If an expectation setup contains multiple finalize statements, a compile error is triggered.</p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 Custom Finalizers</h1>
-<p>There are several provided finalizers, but user may create their own as desired. A valid finalizer has to satisfy the <span class="tt"><a class="el" href="../../d9/d64/conceptmimicpp_1_1finalize__policy__for.html" title="Determines, whether the given type satisfies the requirements of a finalize-policy for the given sign...">finalize_policy_for</a></span> concept, which in fact requires the existence of a <span class="tt">finalize_call</span> member function. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>MyFinalizer</div>
+<p>There are several provided finalizers, but user may create their own as desired. A valid finalizer has to satisfy the <span class="tt">finalize_policy_for</span> concept, which in fact requires the existence of a <span class="tt">finalize_call</span> member function. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>MyFinalizer</div>
 <div class="line">    {</div>
 <div class="line">    <span class="keyword">public</span>:</div>
 <div class="line">        <span class="keywordtype">int</span> finalize_call([[maybe_unused]] <span class="keyword">const</span> mimicpp::call::Info&lt;int&gt;&amp; callInfo)</div>

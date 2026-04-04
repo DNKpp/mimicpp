@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>mimic++: mimic++/Expectation.hpp File Reference</title>
+<title>mimic++: mimic++/expectation/Expectation.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -94,24 +94,15 @@ $(function(){initNavTree('d5/d8a/_expectation_8hpp.html','../../',''); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="../../dc/d44/_call_8hpp_source.html">mimic++/Call.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../df/dde/_fwd_8hpp_source.html">mimic++/Fwd.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/de4/_sequence_8hpp_source.html">mimic++/Sequence.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d32/_type_traits_8hpp_source.html">mimic++/TypeTraits.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/dd2/_config_8hpp_source.html">mimic++/config/Config.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../dd/d90/_settings_8hpp_source.html">mimic++/config/Settings.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d9/d6c/_call_report_8hpp_source.html">mimic++/reporting/CallReport.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../db/d33/expectation_2_common_8hpp_source.html">mimic++/expectation/Common.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dd/d76/_expectation_report_8hpp_source.html">mimic++/reporting/ExpectationReport.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../de/dd1/_global_reporter_8hpp_source.html">mimic++/reporting/GlobalReporter.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d8/d4c/_target_report_8hpp_source.html">mimic++/reporting/TargetReport.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d9/db9/_concepts_8hpp_source.html">mimic++/utilities/Concepts.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d3/d15/_source_location_8hpp_source.html">mimic++/utilities/SourceLocation.hpp</a>&quot;</code><br />
-<code>#include &lt;algorithm&gt;</code><br />
-<code>#include &lt;concepts&gt;</code><br />
-<code>#include &lt;functional&gt;</code><br />
+<code>#include &lt;any&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
-<code>#include &lt;mutex&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
-<code>#include &lt;ranges&gt;</code><br />
 <code>#include &lt;tuple&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -122,34 +113,20 @@ Include dependency graph for Expectation.hpp:</div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d4/d6e/_expectation_8hpp__dep__incl.svg" width="100%" height="548"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d4/d6e/_expectation_8hpp__dep__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div>
 <p><a href="../../d5/d8a/_expectation_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:mimicpp_3A_3AExpectation_3C_20Signature_20_3E" id="r_mimicpp_3A_3AExpectation_3C_20Signature_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d3/d1c/classmimicpp_1_1_expectation.html">mimicpp::Expectation&lt; Signature &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The base interface for expectations.  <a href="../../d3/d1c/classmimicpp_1_1_expectation.html#details">More...</a><br /></td></tr>
-<tr class="memitem:mimicpp_3A_3AExpectationCollection_3C_20Signature_20_3E" id="r_mimicpp_3A_3AExpectationCollection_3C_20Signature_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d5/d86/classmimicpp_1_1_expectation_collection.html">mimicpp::ExpectationCollection&lt; Signature &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects all expectations for a specific (decayed) signature.  <a href="../../d5/d86/classmimicpp_1_1_expectation_collection.html#details">More...</a><br /></td></tr>
-<tr class="memitem:mimicpp_3A_3ABasicExpectation_3C_20Signature_2C_20ControlPolicy_2C_20FinalizePolicy_2C_20Policies_20_3E" id="r_mimicpp_3A_3ABasicExpectation_3C_20Signature_2C_20ControlPolicy_2C_20FinalizePolicy_2C_20Policies_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d3/d4a/classmimicpp_1_1_basic_expectation.html">mimicpp::BasicExpectation&lt; Signature, ControlPolicy, FinalizePolicy, Policies &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The actual expectation template.  <a href="../../d3/d4a/classmimicpp_1_1_basic_expectation.html#details">More...</a><br /></td></tr>
-<tr class="memitem:mimicpp_3A_3AScopedExpectation" id="r_mimicpp_3A_3AScopedExpectation"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html">mimicpp::ScopedExpectation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Takes the ownership of an expectation and check whether it's satisfied during destruction.  <a href="../../d6/dc0/classmimicpp_1_1_scoped_expectation.html#details">More...</a><br /></td></tr>
+<tr class="memitem:mimicpp_3A_3Aexpectation_3A_3AExpectation" id="r_mimicpp_3A_3Aexpectation_3A_3AExpectation"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../dd/df1/classmimicpp_1_1expectation_1_1_expectation.html">mimicpp::expectation::Expectation</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type-erased expectation type with shared ownership.  <a href="../../dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:mimicpp" id="r_mimicpp"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="../../d1/d11/namespacemimicpp.html">mimicpp</a></td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-concepts" class="groupheader"><a id="concepts" name="concepts"></a>
-Concepts</h2></td></tr>
-<tr class="memitem:mimicpp_3A_3Aexpectation_5Fpolicy_5Ffor" id="r_mimicpp_3A_3Aexpectation_5Fpolicy_5Ffor"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="../../dd/d1d/conceptmimicpp_1_1expectation__policy__for.html">mimicpp::expectation_policy_for</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines, whether the given type satisfies the requirements of an expectation-policy for the given signature. <br /></td></tr>
-<tr class="memitem:mimicpp_3A_3Afinalize_5Fpolicy_5Ffor" id="r_mimicpp_3A_3Afinalize_5Fpolicy_5Ffor"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="../../d9/d64/conceptmimicpp_1_1finalize__policy__for.html">mimicpp::finalize_policy_for</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines, whether the given type satisfies the requirements of a finalize-policy for the given signature. <br /></td></tr>
-<tr class="memitem:mimicpp_3A_3Acontrol_5Fpolicy" id="r_mimicpp_3A_3Acontrol_5Fpolicy"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="../../d4/df8/conceptmimicpp_1_1control__policy.html">mimicpp::control_policy</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines, whether the given type satisfies the requirements of a control-policy. <br /></td></tr>
+<tr class="memitem:mimicpp_3A_3Aexpectation" id="r_mimicpp_3A_3Aexpectation"><td class="memItemLeft">namespace &#160;</td><td class="memItemRight"><a class="el" href="../../d9/db6/namespacemimicpp_1_1expectation.html">mimicpp::expectation</a></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -164,7 +141,7 @@ Concepts</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a href="../../d5/d8a/_expectation_8hpp.html">Expectation.hpp</a></li>
+    <li class="navelem"><a href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a href="../../dir_4078c24316faf652a8ef297242a09f7d.html">expectation</a></li><li class="navelem"><a href="../../d5/d8a/_expectation_8hpp.html">Expectation.hpp</a></li>
     <li class="footer">Generated on <span class="timestamp"></span> for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>
