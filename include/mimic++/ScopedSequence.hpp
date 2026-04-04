@@ -12,6 +12,7 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/expectation/Builder.hpp"
+#include "mimic++/expectation/Collector.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
@@ -111,16 +112,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         /**
          * \brief Possibly throwing destructor, checking the owned expectations in order of construction.
          */
-        ~BasicScopedSequence() noexcept(false)
-        {
-            auto expectations = std::exchange(m_Expectations, {});
-            while (!expectations.empty())
-            {
-                // Prevent the `pop_front() noexcept` from raising an exception and thus terminating.
-                auto const expectation = std::move(expectations.front());
-                expectations.pop_front();
-            }
-        }
+        ~BasicScopedSequence() noexcept(false) = default;
 
         /**
          * \brief Default-constructor.
@@ -148,13 +140,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
          * \brief Attaches a newly constructed expectation.
          * \param builder The expectation-builder that will be finalized.
          * \return A mutable reference to the current instance.
-         * \details This function augments the provided expectation-builder with an additional sequence-policy for this
-         * sequence and finalizes its construction.
+         * \details
+         * This function augments the provided expectation-builder with an additional sequence-policy for this  sequence
+         * and finalizes its construction.
          * Additionally, the sequence takes over the ownership of the constructed `ScopedExpectation`.
          */
         BasicScopedSequence& operator+=(sequence::detail::ExpectationBuilderFinalizer<BasicScopedSequence>&& builder)
         {
-            m_Expectations.emplace_back(builder.finalize(*this));
+            m_Expectations.attach(builder.finalize(*this));
 
             return *this;
         }
@@ -168,11 +161,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         [[nodiscard]]
         std::deque<ScopedExpectation> const& expectations() const noexcept
         {
-            return m_Expectations;
+            return m_Expectations.expectations();
         }
 
     private:
-        std::deque<ScopedExpectation> m_Expectations{};
+        expectation::Collector m_Expectations{};
     };
 
     /**
