@@ -12,10 +12,10 @@
 #include "mimic++/Sequence.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/expectation/Builder.hpp"
+#include "mimic++/expectation/Collector.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
-    #include <deque>
     #include <functional>
     #include <utility>
 #endif
@@ -35,17 +35,14 @@ namespace mimicpp::sequence::detail
 
         template <bool timesConfigured, typename... Args>
         [[nodiscard]]
-        explicit(false) constexpr ExpectationBuilderFinalizer(
+        explicit(false) ExpectationBuilderFinalizer(
             expectation::BasicBuilder<timesConfigured, Args...>&& builder,
             util::SourceLocation loc = {})
-            : m_Builder{&builder},
-              m_SourceLocation{std::move(loc)},
-              m_FinalizeFn{
-                  +[](void* storage, util::SourceLocation finalLoc, Sequence& sequence) {
-                      auto* builderPtr = static_cast<expectation::BasicBuilder<timesConfigured, Args...>*>(storage);
+            : m_FinalizeFn{
+                  [&builder, loc = std::move(loc)](Sequence& sequence) mutable {
                       return ScopedExpectation{
-                          std::move(*builderPtr) and expect::in_sequence(sequence),
-                          std::move(finalLoc)};
+                          std::move(builder) and expect::in_sequence(sequence),
+                          std::move(loc)};
                   }}
         {
         }
@@ -53,22 +50,15 @@ namespace mimicpp::sequence::detail
         [[nodiscard]]
         ScopedExpectation finalize(Sequence& sequence)
         {
-            MIMICPP_ASSERT(m_Builder, "Builder is nullptr.");
-            MIMICPP_ASSERT(m_FinalizeFn, "FinalizeFn is nullptr.");
+            MIMICPP_ASSERT(m_FinalizeFn, "Finalize-Function was already consumed.");
 
             return std::invoke(
                 std::exchange(m_FinalizeFn, nullptr),
-                std::exchange(m_Builder, nullptr),
-                std::move(m_SourceLocation),
                 sequence);
         }
 
     private:
-        void* m_Builder;
-        util::SourceLocation m_SourceLocation;
-
-        using FinalizeFn = ScopedExpectation (*)(void*, util::SourceLocation, Sequence&);
-        FinalizeFn m_FinalizeFn;
+        std::function<ScopedExpectation(Sequence&)> m_FinalizeFn;
     };
 }
 
@@ -111,16 +101,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         /**
          * \brief Possibly throwing destructor, checking the owned expectations in order of construction.
          */
-        ~BasicScopedSequence() noexcept(false)
-        {
-            auto expectations = std::exchange(m_Expectations, {});
-            while (!expectations.empty())
-            {
-                // Prevent the `pop_front() noexcept` from raising an exception and thus terminating.
-                auto const expectation = std::move(expectations.front());
-                expectations.pop_front();
-            }
-        }
+        ~BasicScopedSequence() noexcept(false) = default;
 
         /**
          * \brief Default-constructor.
@@ -148,13 +129,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
          * \brief Attaches a newly constructed expectation.
          * \param builder The expectation-builder that will be finalized.
          * \return A mutable reference to the current instance.
-         * \details This function augments the provided expectation-builder with an additional sequence-policy for this
-         * sequence and finalizes its construction.
+         * \details
+         * This function augments the provided expectation-builder with an additional sequence-policy for this sequence
+         * and finalizes its construction.
          * Additionally, the sequence takes over the ownership of the constructed `ScopedExpectation`.
          */
         BasicScopedSequence& operator+=(sequence::detail::ExpectationBuilderFinalizer<BasicScopedSequence>&& builder)
         {
-            m_Expectations.emplace_back(builder.finalize(*this));
+            m_Expectations.attach(builder.finalize(*this));
 
             return *this;
         }
@@ -162,17 +144,18 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         /**
          * \brief Retrieves the collection of explicitly owned expectations.
          * \return A constant reference to the collection of attached expectations.
-         * \note This function returns only those expectations that were explicitly attached using the `operator +=`,
-         * and not every expectation that is currently queued in the sequence (i.e. by manually using `expect::in_sequence`).
+         * \note
+         * This function returns only those expectations that were explicitly attached using the `operator +=`,
+         * and not every expectation currently queued in the sequence (i.e., by manually using `expect::in_sequence`).
          */
         [[nodiscard]]
         std::deque<ScopedExpectation> const& expectations() const noexcept
         {
-            return m_Expectations;
+            return m_Expectations.expectations();
         }
 
     private:
-        std::deque<ScopedExpectation> m_Expectations{};
+        expectation::Collector m_Expectations{};
     };
 
     /**

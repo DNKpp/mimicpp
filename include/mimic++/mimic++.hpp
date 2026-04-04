@@ -28,6 +28,7 @@
 #include "mimic++/Utilities.hpp"
 
 #include "mimic++/expectation/Builder.hpp"
+#include "mimic++/expectation/Collector.hpp"
 #include "mimic++/expectation/Common.hpp"
 #include "mimic++/expectation/Expectation.hpp"
 #include "mimic++/expectation/Owner.hpp"

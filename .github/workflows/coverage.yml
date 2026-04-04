@@ -183,6 +183,7 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v6
       - uses: actions/download-artifact@v8
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
@@ -192,9 +193,6 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           file: ${{env.COVERALLS_REPORT}}
-          # can not use ${{ github.workspace }} here
-          # see: https://github.com/actions/checkout/issues/785
-          base-path: "/__w/mimicpp/mimicpp/include"
           format: coveralls
           debug: true
           fail-on-error: true
