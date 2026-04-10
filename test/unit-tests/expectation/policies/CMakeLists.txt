@@ -9,4 +9,5 @@ target_sources(${TARGET_NAME} PRIVATE
     "ControlPolicies.cpp"
     "FinalizerPolicies.cpp"
     "GeneralPolicies.cpp"
+    "SideEffectPolicies.cpp"
 )

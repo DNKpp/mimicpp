@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_POLICIES_SIDE_EFFECT_POLICIES_HPP
-#define MIMICPP_POLICIES_SIDE_EFFECT_POLICIES_HPP
+#ifndef MIMICPP_EXPECTATION_POLICIES_SIDE_EFFECT_POLICIES_HPP
+#define MIMICPP_EXPECTATION_POLICIES_SIDE_EFFECT_POLICIES_HPP
 
 #pragma once
 
@@ -21,7 +21,7 @@
     #include <utility>
 #endif
 
-namespace mimicpp::expectation_policies
+namespace mimicpp::expectation::policies
 {
     template <typename Action>
     class SideEffectAction
@@ -36,8 +36,8 @@ namespace mimicpp::expectation_policies
         {
         }
 
-        SideEffectAction(const SideEffectAction&) = delete;
-        SideEffectAction& operator=(const SideEffectAction&) = delete;
+        SideEffectAction(SideEffectAction const&) = delete;
+        SideEffectAction& operator=(SideEffectAction const&) = delete;
 
         [[nodiscard]]
         SideEffectAction(SideEffectAction&&) = default;
@@ -50,7 +50,7 @@ namespace mimicpp::expectation_policies
 
         template <typename Return, typename... Args>
         [[nodiscard]]
-        static constexpr bool matches(const call::Info<Return, Args...>&) noexcept
+        static constexpr bool matches(call::Info<Return, Args...> const&) noexcept
         {
             return true;
         }
@@ -62,9 +62,9 @@ namespace mimicpp::expectation_policies
         }
 
         template <typename Return, typename... Args>
-            requires std::invocable<Action&, const call::Info<Return, Args...>&>
-        constexpr void consume(const call::Info<Return, Args...>& info)
-            noexcept(std::is_nothrow_invocable_v<Action&, const call::Info<Return, Args...>&>)
+            requires std::invocable<Action&, call::Info<Return, Args...> const&>
+        constexpr void consume(call::Info<Return, Args...> const& info)
+            noexcept(std::is_nothrow_invocable_v<Action&, call::Info<Return, Args...> const&>)
         {
             std::invoke(m_Action, info);
         }
@@ -114,7 +114,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::then
             std::index_sequence<index>>;
         using apply_strategy_t = expectation::policies::detail::arg_list_forward_apply_fn;
 
-        return expectation_policies::SideEffectAction{
+        return expectation::policies::SideEffectAction{
             std::bind_front(
                 expectation::policies::detail::apply_args_fn{arg_selector_t{}, apply_strategy_t{}},
                 std::forward<Action>(action))};
@@ -140,7 +140,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::then
             std::index_sequence<index, additionalIndices...>>;
         using apply_strategy_t = expectation::policies::detail::arg_list_forward_apply_fn;
 
-        return expectation_policies::SideEffectAction{
+        return expectation::policies::SideEffectAction{
             std::bind_front(
                 expectation::policies::detail::apply_args_fn{arg_selector_t{}, apply_strategy_t{}},
                 std::forward<Action>(action))};
@@ -160,7 +160,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::then
         using arg_selector_t = expectation::policies::detail::all_args_selector_fn<std::add_lvalue_reference_t>;
         using apply_strategy_t = expectation::policies::detail::arg_list_forward_apply_fn;
 
-        return expectation_policies::SideEffectAction{
+        return expectation::policies::SideEffectAction{
             std::bind_front(
                 expectation::policies::detail::apply_args_fn{arg_selector_t{}, apply_strategy_t{}},
                 std::forward<Action>(action))};
@@ -177,7 +177,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::then
     constexpr auto invoke(Action&& action)
         noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Action>, Action>)
     {
-        return expectation_policies::SideEffectAction{
+        return expectation::policies::SideEffectAction{
             [fn = std::forward<Action>(action)]([[maybe_unused]] auto const& call) mutable noexcept(
                 std::is_nothrow_invocable_v<Action&>) {
                 std::invoke(fn);
