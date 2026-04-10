@@ -275,7 +275,6 @@ namespace mimicpp::expectation
          * \tparam ControlPolicy The control-policy type.
          * \tparam FinalizePolicy The finalize-policy type.
          * \tparam Policies The expectation-policies types.
-         * \param signatureTag Tag object carrying the signature information.
          * \param from The source-location, where this expectation was created.
          * \param target Information about the target-mock.
          * \param controlPolicy The control-policy.

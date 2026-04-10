@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -73,7 +73,7 @@ namespace mimicpp
  * \details
  * This macro defines a single mock object that supports an arbitrary number of overloads.
  * Each overload is implemented as an override method, forwarding calls to the mock object.
- * \snippet InterfaceMock.cpp interface mock overloaded
+ * \snippet Deprecated_InterfaceMock.cpp interface mock overloaded
  */
 #define MIMICPP_MOCK_OVERLOADED_METHOD(fn_name, ...) \
     MIMICPP_DETAIL_GENERATE_FACADE(                  \
@@ -95,7 +95,7 @@ namespace mimicpp
  * \details
  * This macro defines a single mock object for one method signature and generates a corresponding
  * override method. The override method forwards calls to the mock object.
- * \snippet InterfaceMock.cpp interface mock simple
+ * \snippet Deprecated_InterfaceMock.cpp interface mock simple
  */
 #define MIMICPP_MOCK_METHOD(fn_name, ret, param_type_list, ...) \
     MIMICPP_MOCK_OVERLOADED_METHOD(                             \

@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -112,11 +112,11 @@ namespace mimicpp::format::detail
     };
 
     /**
-     * \brief Determines, whether a complete specialization of ``std::formatter`` for the given (possibly cv-ref qualified) type exists.
+     * \brief Determines whether a complete specialization of `std::formatter` for the given (possibly cv-ref qualified) type exists.
      * \tparam T Type to check.
-     * \tparam Char Used character type.
-     * \details This is an adapted implementation of the ``std::formattable`` concept, which is added c++23.
-     * \note This implementation takes a simple but reasonable shortcut in assuming, that ```Char`` is either ``char`` or ``wchar_t``,
+     * \tparam Char Used character-type.
+     * \details This is an adapted implementation of the `std::formattable` concept, which is added c++23.
+     * \note This implementation takes a simple but reasonable shortcut in assuming that `Char` is either `char` or `wchar_t`,
      * which must not necessarily true.
      * \see Adapted from here: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2286r8.html#concept-formattable
      * \see https://en.cppreference.com/w/cpp/utility/format/formattable

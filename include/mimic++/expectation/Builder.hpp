@@ -240,7 +240,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
      * \details
      * This concept verifies that the given `Arg` specifies actual requirements for `Param`.
      * In fact, it does check whether:
-     * - `Arg` already is an actual matcher for `Param` (via `matcher_for concept),
+     * - `Arg` already is an actual matcher for `Param` (via `matcher_for` concept),
      * - `Arg` and `Params` are compatible strings (which then utilizes `matches::str::eq`),
      * - or `Arg` and `Params` are already equality-comparable (which then uses `matches::eq`).
      */
