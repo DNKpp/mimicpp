@@ -1,13 +1,14 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/policies/ArgumentList.hpp"
+#include "mimic++/expectation/policies/ArgumentList.hpp"
 
 #include "TestTypes.hpp"
 
 using namespace mimicpp;
+namespace policies = expectation::policies;
 
 namespace
 {
@@ -22,92 +23,92 @@ namespace
 }
 
 TEMPLATE_TEST_CASE_SIG(
-    "expectation_policies::all_args_selector_fn returns all arg-references as tuple.",
+    "all_args_selector_fn returns all arg-references as tuple.",
     "[detail][expectation][expectation::policy]",
     ((bool dummy, typename Expected, template <typename> typename Projection, typename... Args), dummy, Expected, Projection, Args...),
     (true, std::tuple<int&>, std::add_lvalue_reference_t, int),
     (true, std::tuple<int&>, std::add_lvalue_reference_t, int&),
-    (true, std::tuple<const int&>, std::add_lvalue_reference_t, const int&),
+    (true, std::tuple<int const&>, std::add_lvalue_reference_t, int const&),
     (true, std::tuple<int&>, std::add_lvalue_reference_t, int&&),
-    (true, std::tuple<const int&>, std::add_lvalue_reference_t, const int&&),
+    (true, std::tuple<int const&>, std::add_lvalue_reference_t, int const&&),
 
     (true, std::tuple<int&&>, std::add_rvalue_reference_t, int),
     (true, std::tuple<int&>, std::add_rvalue_reference_t, int&),
-    (true, std::tuple<const int&>, std::add_rvalue_reference_t, const int&),
+    (true, std::tuple<int const&>, std::add_rvalue_reference_t, int const&),
     (true, std::tuple<int&&>, std::add_rvalue_reference_t, int&&),
-    (true, std::tuple<const int&&>, std::add_rvalue_reference_t, const int&&),
+    (true, std::tuple<int const&&>, std::add_rvalue_reference_t, int const&&),
 
     (true, std::tuple<float&, int&, double&>, std::add_lvalue_reference_t, float, int, double),
     (true, std::tuple<float&, int&, double&>, std::add_lvalue_reference_t, float&, int&, double&),
-    (true, std::tuple<const float&, const int&, const double&>, std::add_lvalue_reference_t, const float&, const int&, const double&),
+    (true, std::tuple<float const&, int const&, double const&>, std::add_lvalue_reference_t, float const&, int const&, double const&),
     (true, std::tuple<float&, int&, double&>, std::add_lvalue_reference_t, float&&, int&&, double&&),
-    (true, std::tuple<const float&, const int&, const double&>, std::add_lvalue_reference_t, const float&&, const int&&, const double&&),
+    (true, std::tuple<float const&, int const&, double const&>, std::add_lvalue_reference_t, float const&&, int const&&, double const&&),
 
     (true, std::tuple<float&&, int&&, double&&>, std::add_rvalue_reference_t, float, int, double),
     (true, std::tuple<float&, int&, double&>, std::add_rvalue_reference_t, float&, int&, double&),
-    (true, std::tuple<const float&, const int&, const double&>, std::add_rvalue_reference_t, const float&, const int&, const double&),
+    (true, std::tuple<float const&, int const&, double const&>, std::add_rvalue_reference_t, float const&, int const&, double const&),
     (true, std::tuple<float&&, int&&, double&&>, std::add_rvalue_reference_t, float&&, int&&, double&&),
-    (true, std::tuple<const float&&, const int&&, const double&&>, std::add_rvalue_reference_t, const float&&, const int&&, const double&&))
+    (true, std::tuple<float const&&, int const&&, double const&&>, std::add_rvalue_reference_t, float const&&, int const&&, double const&&))
 {
     std::tuple<std::remove_cvref_t<Args>...> values{};
     using CallInfoT = call::Info<void, Args...>;
-    const CallInfoT callInfo{
+    CallInfoT const callInfo{
         .args = make_ref_tuple(values),
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    const detail::all_args_selector_fn<Projection> selector{};
-    const std::tuple result = selector(callInfo);
-    STATIC_REQUIRE(std::same_as<const Expected, decltype(result)>);
-    const auto same_addresses = [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
+    policies::detail::all_args_selector_fn<Projection> const selector{};
+    std::tuple const result = selector(callInfo);
+    STATIC_REQUIRE(std::same_as<Expected const, decltype(result)>);
+    auto const same_addresses = [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) {
         return (... && (&std::get<indices>(values) == &std::get<indices>(result)));
     };
     REQUIRE(same_addresses(std::index_sequence_for<Args...>{}));
 }
 
 TEMPLATE_TEST_CASE_SIG(
-    "expectation_policies::args_selector_fn returns selected arg-references as tuple.",
+    "args_selector_fn returns selected arg-references as tuple.",
     "[detail][expectation][expectation::policy]",
     ((typename Expected, template <typename> typename Projection, std::size_t index, typename... Args), Expected, Projection, index, Args...),
     (std::tuple<int&>, std::add_lvalue_reference_t, 0u, int),
     (std::tuple<int&>, std::add_lvalue_reference_t, 0u, int&),
-    (std::tuple<const int&>, std::add_lvalue_reference_t, 0u, const int&),
+    (std::tuple<int const&>, std::add_lvalue_reference_t, 0u, int const&),
     (std::tuple<int&>, std::add_lvalue_reference_t, 0u, int&&),
-    (std::tuple<const int&>, std::add_lvalue_reference_t, 0u, const int&&),
+    (std::tuple<int const&>, std::add_lvalue_reference_t, 0u, int const&&),
 
     (std::tuple<int&&>, std::add_rvalue_reference_t, 0u, int),
     (std::tuple<int&>, std::add_rvalue_reference_t, 0u, int&),
-    (std::tuple<const int&>, std::add_rvalue_reference_t, 0u, const int&),
+    (std::tuple<int const&>, std::add_rvalue_reference_t, 0u, int const&),
     (std::tuple<int&&>, std::add_rvalue_reference_t, 0u, int&&),
-    (std::tuple<const int&&>, std::add_rvalue_reference_t, 0u, const int&&),
+    (std::tuple<int const&&>, std::add_rvalue_reference_t, 0u, int const&&),
 
     (std::tuple<int&>, std::add_lvalue_reference_t, 1u, float, int, double),
     (std::tuple<int&>, std::add_lvalue_reference_t, 1u, float&, int&, double&),
-    (std::tuple<const int&>, std::add_lvalue_reference_t, 1u, const float&, const int&, const double&),
+    (std::tuple<int const&>, std::add_lvalue_reference_t, 1u, float const&, int const&, double const&),
     (std::tuple<int&>, std::add_lvalue_reference_t, 1u, float&&, int&&, double&&),
-    (std::tuple<const int&>, std::add_lvalue_reference_t, 1u, const float&&, const int&&, const double&&),
+    (std::tuple<int const&>, std::add_lvalue_reference_t, 1u, float const&&, int const&&, double const&&),
 
     (std::tuple<int&&>, std::add_rvalue_reference_t, 1u, float, int, double),
     (std::tuple<int&>, std::add_rvalue_reference_t, 1u, float&, int&, double&),
-    (std::tuple<const int&>, std::add_rvalue_reference_t, 1u, const float&, const int&, const double&),
+    (std::tuple<int const&>, std::add_rvalue_reference_t, 1u, float const&, int const&, double const&),
     (std::tuple<int&&>, std::add_rvalue_reference_t, 1u, float&&, int&&, double&&),
-    (std::tuple<const int&&>, std::add_rvalue_reference_t, 1u, const float&&, const int&&, const double&&))
+    (std::tuple<int const&&>, std::add_rvalue_reference_t, 1u, float const&&, int const&&, double const&&))
 {
     std::tuple<std::remove_cvref_t<Args>...> values{};
     using CallInfoT = call::Info<void, Args...>;
-    const CallInfoT callInfo{
+    CallInfoT const callInfo{
         .args = make_ref_tuple(values),
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    const detail::args_selector_fn<Projection, std::index_sequence<index>> selector{};
-    const std::tuple result = selector(callInfo);
-    STATIC_REQUIRE(std::same_as<const Expected, decltype(result)>);
+    policies::detail::args_selector_fn<Projection, std::index_sequence<index>> const selector{};
+    std::tuple const result = selector(callInfo);
+    STATIC_REQUIRE(std::same_as<Expected const, decltype(result)>);
     REQUIRE(&std::get<0>(result) == &std::get<index>(values));
 }
 
 TEMPLATE_TEST_CASE_SIG(
-    "expectation_policies::args_selector_fn supports arbitrary selection-sequence.",
+    "args_selector_fn supports arbitrary selection-sequence.",
     "[detail][expectation][expectation::policy]",
     ((typename Expected, std::size_t... indices), Expected, indices...),
     (std::tuple<float&>, 0u),
@@ -117,14 +118,14 @@ TEMPLATE_TEST_CASE_SIG(
 {
     std::tuple<float, int, double> values{};
     using CallInfoT = call::Info<void, float&, int&, double&>;
-    const CallInfoT callInfo{
+    CallInfoT const callInfo{
         .args = make_ref_tuple(values),
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    const detail::args_selector_fn<std::add_lvalue_reference_t, std::index_sequence<indices...>> selector{};
-    const std::tuple result = selector(callInfo);
-    STATIC_REQUIRE(std::same_as<const Expected, decltype(result)>);
+    policies::detail::args_selector_fn<std::add_lvalue_reference_t, std::index_sequence<indices...>> const selector{};
+    std::tuple const result = selector(callInfo);
+    STATIC_REQUIRE(std::same_as<Expected const, decltype(result)>);
     REQUIRE(
         std::apply(
             [&](auto&... elements) { return (... && (&elements == &std::get<indices>(values))); },
@@ -132,30 +133,30 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-    "expectation_policies::arg_list_forward_apply_fn forwards all elements to the given function.",
+    "arg_list_forward_apply_fn forwards all elements to the given function.",
     "[detail][expectation][expectation::policy]",
     ((bool dummy, typename... Args), dummy, Args...),
     (true, int&),
-    (true, const int&),
+    (true, int const&),
     (true, int&&),
-    (true, const int&&),
+    (true, int const&&),
 
     (true, float&, int&, double&),
-    (true, const float&, const int&, const double&),
+    (true, float const&, int const&, double const&),
     (true, float&&, int&&, double&&),
-    (true, const float&&, const int&&, const double&&))
+    (true, float const&&, int const&&, double const&&))
 {
     std::tuple<std::remove_cvref_t<Args>...> values{};
-    const auto action = [&]<typename... Ts>(Ts&&... elements) {
+    auto const action = [&]<typename... Ts>(Ts&&... elements) {
         STATIC_REQUIRE((... && std::same_as<Ts&&, Args>));
 
-        const auto same_addresses = [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
+        auto const same_addresses = [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) {
             return (... && (&elements == &std::get<indices>(values)));
         };
         REQUIRE(same_addresses(std::index_sequence_for<Args...>{}));
     };
 
-    constexpr detail::arg_list_forward_apply_fn forwarder{};
+    constexpr policies::detail::arg_list_forward_apply_fn forwarder{};
     std::tuple refs = std::apply(
         [](auto&... elements) { return std::tuple<Args...>{static_cast<Args>(elements)...}; },
         values);
@@ -166,23 +167,23 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE(
-    "expectation_policies::arg_list_forward_apply_fn forwards the returned value.",
+    "arg_list_forward_apply_fn forwards the returned value.",
     "[detail][expectation][expectation::policy]",
     int,
-    // const int, never return a const value
+    // int const, never return an int const value
     int&,
-    const int&,
+    int const&,
     int&&,
-    const int&&)
+    int const&&)
 {
     int value{1337};
-    constexpr detail::arg_list_forward_apply_fn forwarder{};
+    constexpr policies::detail::arg_list_forward_apply_fn forwarder{};
 
-    const auto action = [](int& v) -> TestType {
+    auto const action = [](int& v) -> TestType {
         return static_cast<TestType>(v);
     };
 
-    const auto make_refs = [&] { return std::make_tuple(std::ref(value)); };
+    auto const make_refs = [&] { return std::make_tuple(std::ref(value)); };
 
     STATIC_REQUIRE(std::same_as<TestType, decltype(forwarder(action, make_refs()))>);
     REQUIRE(1337 == forwarder(action, make_refs()));
@@ -194,37 +195,37 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-    "expectation_policies::arg_list_indirect_apply_fn forwards all projected elements to the given function.",
+    "arg_list_indirect_apply_fn forwards all projected elements to the given function.",
     "[detail][expectation][expectation::policy]",
     ((bool dummy, typename... Args), dummy, Args...),
     (true, int&),
-    (true, const int&),
+    (true, int const&),
     (true, int&&),
-    (true, const int&&),
+    (true, int const&&),
 
     (true, float&, int&, double&),
-    (true, const float&, const int&, const double&),
+    (true, float const&, int const&, double const&),
     (true, float&&, int&&, double&&),
-    (true, const float&&, const int&&, const double&&))
+    (true, float const&&, int const&&, double const&&))
 {
     std::tuple<std::remove_cvref_t<Args>...> values{};
     int invokeCount{};
-    const auto projection = [&](auto&& value) {
+    auto const projection = [&](auto&& value) {
         ++invokeCount;
         return std::ref(value);
     };
-    const auto action = [&]<typename... Ts>(Ts... elements) {
+    auto const action = [&]<typename... Ts>(Ts... elements) {
         STATIC_REQUIRE((... && std::same_as<Ts, std::reference_wrapper<std::remove_reference_t<Args>>>));
 
-        const auto same_addresses = [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
+        auto const same_addresses = [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) {
             return (... && (&elements.get() == &std::get<indices>(values)));
         };
         REQUIRE(same_addresses(std::index_sequence_for<Args...>{}));
     };
 
-    const auto apply = std::invoke(
-        [&]<std::size_t... indices>([[maybe_unused]] const std::index_sequence<indices...>) {
-            return detail::arg_list_indirect_apply_fn{
+    auto const apply = std::invoke(
+        [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...> const) {
+            return policies::detail::arg_list_indirect_apply_fn{
                 std::tuple{[&](auto) { return std::ref(projection); }(indices)...}};
         },
         std::index_sequence_for<Args...>{});
@@ -240,23 +241,23 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE(
-    "expectation_policies::arg_list_indirect_apply_fn forwards the returned value.",
+    "arg_list_indirect_apply_fn forwards the returned value.",
     "[detail][expectation][expectation::policy]",
     int,
-    // const int, never return a const value
+    // int const, never return an int const value
     int&,
-    const int&,
+    int const&,
     int&&,
-    const int&&)
+    int const&&)
 {
     int value{1337};
-    constexpr detail::arg_list_indirect_apply_fn<std::identity> forwarder{};
+    constexpr policies::detail::arg_list_indirect_apply_fn<std::identity> forwarder{};
 
-    const auto action = [](int& v) -> TestType {
+    auto const action = [](int& v) -> TestType {
         return static_cast<TestType>(v);
     };
 
-    const auto make_refs = [&] { return std::make_tuple(std::ref(value)); };
+    auto const make_refs = [&] { return std::make_tuple(std::ref(value)); };
 
     STATIC_REQUIRE(std::same_as<TestType, decltype(forwarder(action, make_refs()))>);
     REQUIRE(1337 == forwarder(action, make_refs()));
@@ -277,26 +278,26 @@ TEST_CASE(
     {
         int arg0{1337};
         using CallInfoT = call::Info<void, int&>;
-        const CallInfoT callInfo{
+        CallInfoT const callInfo{
             .args = {arg0},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("When single param is selected.")
         {
-            using ArgSelectorT = InvocableMock<std::tuple<int&>, const CallInfoT&>;
+            using ArgSelectorT = InvocableMock<std::tuple<int&>, CallInfoT const&>;
             using ActionT = InvocableMock<void, int&>;
 
             ArgSelectorT argSelector{};
             ActionT action{};
-            const detail::apply_args_fn fun{
+            policies::detail::apply_args_fn const fun{
                 std::ref(argSelector),
-                detail::arg_list_forward_apply_fn{}};
+                policies::detail::arg_list_forward_apply_fn{}};
             STATIC_REQUIRE(
                 std::same_as<
-                    const detail::apply_args_fn<
+                    policies::detail::apply_args_fn<
                         std::reference_wrapper<ArgSelectorT>,
-                        detail::arg_list_forward_apply_fn>,
+                        policies::detail::arg_list_forward_apply_fn> const,
                     decltype(fun)>);
             STATIC_REQUIRE(std::is_void_v<decltype(fun(action, callInfo))>);
 
@@ -314,19 +315,19 @@ TEST_CASE(
 
         SECTION("When param is selected multiple times.")
         {
-            using ArgSelectorT = InvocableMock<std::tuple<int&, int&, int&>, const CallInfoT&>;
+            using ArgSelectorT = InvocableMock<std::tuple<int&, int&, int&>, CallInfoT const&>;
             using ActionT = InvocableMock<void, int&, int&, int&>;
 
             ArgSelectorT argSelector{};
             ActionT action{};
-            const detail::apply_args_fn fun{
+            policies::detail::apply_args_fn const fun{
                 std::ref(argSelector),
-                detail::arg_list_forward_apply_fn{}};
+                policies::detail::arg_list_forward_apply_fn{}};
             STATIC_REQUIRE(
                 std::same_as<
-                    const detail::apply_args_fn<
+                    policies::detail::apply_args_fn<
                         std::reference_wrapper<ArgSelectorT>,
-                        detail::arg_list_forward_apply_fn>,
+                        policies::detail::arg_list_forward_apply_fn> const,
                     decltype(fun)>);
             STATIC_REQUIRE(std::is_void_v<decltype(fun(action, callInfo))>);
 
@@ -351,7 +352,7 @@ TEST_CASE(
         std::string arg1{"Test"};
         double arg2{42.};
         using CallInfoT = call::Info<void, int&, std::string&, double&>;
-        const CallInfoT callInfo{
+        CallInfoT const callInfo{
             .args = {arg0, arg1, arg2},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))
@@ -359,19 +360,19 @@ TEST_CASE(
 
         SECTION("When single param is selected.")
         {
-            using ArgSelectorT = InvocableMock<std::tuple<std::string&>, const CallInfoT&>;
+            using ArgSelectorT = InvocableMock<std::tuple<std::string&>, CallInfoT const&>;
             using ActionT = InvocableMock<void, std::string&>;
 
             ArgSelectorT argSelector{};
             ActionT action{};
-            const detail::apply_args_fn fun{
+            policies::detail::apply_args_fn const fun{
                 std::ref(argSelector),
-                detail::arg_list_forward_apply_fn{}};
+                policies::detail::arg_list_forward_apply_fn{}};
             STATIC_REQUIRE(
                 std::same_as<
-                    const detail::apply_args_fn<
+                    policies::detail::apply_args_fn<
                         std::reference_wrapper<ArgSelectorT>,
-                        detail::arg_list_forward_apply_fn>,
+                        policies::detail::arg_list_forward_apply_fn> const,
                     decltype(fun)>);
             STATIC_REQUIRE(std::is_void_v<decltype(fun(action, callInfo))>);
 
@@ -389,19 +390,19 @@ TEST_CASE(
 
         SECTION("When multiple params are selected.")
         {
-            using ArgSelectorT = InvocableMock<std::tuple<double&, std::string&, double&, int&>, const CallInfoT&>;
+            using ArgSelectorT = InvocableMock<std::tuple<double&, std::string&, double&, int&>, CallInfoT const&>;
             using ActionT = InvocableMock<void, double&, std::string&, double&, int&>;
 
             ArgSelectorT argSelector{};
             ActionT action{};
-            const detail::apply_args_fn fun{
+            policies::detail::apply_args_fn const fun{
                 std::ref(argSelector),
-                detail::arg_list_forward_apply_fn{}};
+                policies::detail::arg_list_forward_apply_fn{}};
             STATIC_REQUIRE(
                 std::same_as<
-                    const detail::apply_args_fn<
+                    policies::detail::apply_args_fn<
                         std::reference_wrapper<ArgSelectorT>,
-                        detail::arg_list_forward_apply_fn>,
+                        policies::detail::arg_list_forward_apply_fn> const,
                     decltype(fun)>);
             STATIC_REQUIRE(std::is_void_v<decltype(fun(action, callInfo))>);
 
@@ -428,30 +429,30 @@ TEMPLATE_TEST_CASE_SIG(
     ((bool expectSameAddress, typename ActionParam, typename SigParam), expectSameAddress, ActionParam, SigParam),
     (false, int, int),
     (false, int, int&),
-    (false, int, const int&),
+    (false, int, int const&),
     (false, int, int&&),
-    (false, int, const int&&),
+    (false, int, int const&&),
 
     (true, int&, int&),
 
-    (false, const int&, int),
-    (true, const int&, int&),
-    (true, const int&, const int&),
-    (true, const int&, int&&),
-    (true, const int&, const int&&))
+    (false, int const&, int),
+    (true, int const&, int&),
+    (true, int const&, int const&),
+    (true, int const&, int&&),
+    (true, int const&, int const&&))
 {
     using trompeloeil::_;
 
     int param0{1337};
-    const call::Info<void, SigParam> info{
+    call::Info<void, SigParam> const info{
         .args = {param0},
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
     InvocableMock<void, ActionParam> action{};
-    constexpr detail::apply_args_fn fun{
-        detail::all_args_selector_fn<std::add_rvalue_reference_t>{},
-        detail::arg_list_forward_apply_fn{}};
+    constexpr policies::detail::apply_args_fn fun{
+        policies::detail::all_args_selector_fn<std::add_rvalue_reference_t>{},
+        policies::detail::arg_list_forward_apply_fn{}};
 
     REQUIRE_CALL(action, Invoke(param0))
         .LR_WITH(!expectSameAddress || (&_1 == &param0));
@@ -462,26 +463,26 @@ TEMPLATE_TEST_CASE(
     "expectation_policies::apply_args_fn forwards the returned value.",
     "[detail][expectation][expectation::policy]",
     int,
-    // const int, never return a const value
+    // int const, never return an int const value
     int&,
-    const int&,
+    int const&,
     int&&,
-    const int&&)
+    int const&&)
 {
     using trompeloeil::_;
 
     int param0{1337};
-    const call::Info<void, int> info{
+    call::Info<void, int> const info{
         .args = {param0},
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    constexpr detail::apply_args_fn fun{
-        detail::all_args_selector_fn<std::add_rvalue_reference_t>{},
-        detail::arg_list_forward_apply_fn{}};
+    constexpr policies::detail::apply_args_fn fun{
+        policies::detail::all_args_selector_fn<std::add_rvalue_reference_t>{},
+        policies::detail::arg_list_forward_apply_fn{}};
 
     int value{42};
-    const auto action = [&]([[maybe_unused]] int p) -> TestType {
+    auto const action = [&]([[maybe_unused]] int p) -> TestType {
         return static_cast<TestType>(value);
     };
 

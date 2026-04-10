@@ -15,6 +15,8 @@ TEST_CASE(
     "expect::detail::arg_requirement_describer generates a description.",
     "[detail][expectation][expectation::policy]")
 {
+    using expectation::policies::detail::arg_requirement_describer;
+
     const auto matcherDescription = GENERATE(
         as<StringT>{},
         "",
@@ -22,7 +24,7 @@ TEST_CASE(
 
     SECTION("When single index is given.")
     {
-        constexpr expect::detail::arg_requirement_describer<42> describer{};
+        constexpr arg_requirement_describer<42> describer{};
         auto const description = describer(matcherDescription);
         REQUIRE_THAT(
             description,
@@ -31,7 +33,7 @@ TEST_CASE(
 
     SECTION("When two indices are given.")
     {
-        constexpr expect::detail::arg_requirement_describer<42, 1337> describer{};
+        constexpr arg_requirement_describer<42, 1337> describer{};
         REQUIRE_THAT(
             describer(matcherDescription),
             Catch::Matchers::Equals("expect: arg[42, 1337] " + matcherDescription));
@@ -39,7 +41,7 @@ TEST_CASE(
 
     SECTION("When three indices are given.")
     {
-        constexpr expect::detail::arg_requirement_describer<42, 1337, 0> describer{};
+        constexpr arg_requirement_describer<42, 1337, 0> describer{};
         REQUIRE_THAT(
             describer(matcherDescription),
             Catch::Matchers::Equals("expect: arg[42, 1337, 0] " + matcherDescription));
@@ -55,7 +57,7 @@ TEST_CASE(
         "",
         "Hello, World!");
 
-    constexpr expect::detail::all_args_requirement_describer describer{};
+    constexpr expectation::policies::detail::all_args_requirement_describer describer{};
     REQUIRE_THAT(
         describer(matcherDescription),
         Catch::Matchers::Equals("expect: arg[all] " + matcherDescription));
@@ -203,10 +205,10 @@ TEST_CASE(
 
     expectation::policies::ArgsRequirement policy{
         MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
-        detail::apply_args_fn{
-                      detail::all_args_selector_fn<std::add_lvalue_reference_t>{},
-                      detail::arg_list_forward_apply_fn{}},
-        expect::detail::arg_requirement_describer<0u, 1u, 2u>{}
+        expectation::policies::detail::apply_args_fn{
+                      expectation::policies::detail::all_args_selector_fn<std::add_lvalue_reference_t>{},
+                      expectation::policies::detail::arg_list_forward_apply_fn{}},
+        expectation::policies::detail::arg_requirement_describer<0u, 1u, 2u>{}
     };
 
     STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), SignatureT>);

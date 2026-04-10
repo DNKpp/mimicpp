@@ -9,8 +9,8 @@
 #pragma once
 
 #include "mimic++/config/Config.hpp"
+#include "mimic++/expectation/policies/ArgumentList.hpp"
 #include "mimic++/matchers/Common.hpp"
-#include "mimic++/policies/ArgumentList.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/TypeList.hpp"
 
@@ -119,7 +119,7 @@ namespace mimicpp::expectation::policies
     };
 }
 
-namespace mimicpp::expect::detail
+namespace mimicpp::expectation::policies::detail
 {
     template <std::size_t index, std::size_t... others>
     struct arg_requirement_describer
@@ -159,15 +159,15 @@ namespace mimicpp::expect::detail
             sizeof...(indices) == sizeof...(Projections),
             "Indices and projections size mismatch.");
 
-        using arg_selector_t = mimicpp::detail::args_selector_fn<
+        using arg_selector_t = args_selector_fn<
             std::add_lvalue_reference_t,
             std::index_sequence<indices...>>;
-        using apply_strategy_t = mimicpp::detail::arg_list_indirect_apply_fn<std::remove_cvref_t<Projections>...>;
+        using apply_strategy_t = arg_list_indirect_apply_fn<std::remove_cvref_t<Projections>...>;
         using describe_strategy_t = arg_requirement_describer<indices...>;
 
-        return expectation::policies::ArgsRequirement{
+        return ArgsRequirement{
             std::forward<Matcher>(matcher),
-            mimicpp::detail::apply_args_fn(
+            apply_args_fn(
                 arg_selector_t{},
                 apply_strategy_t{std::move(projections)}),
             describe_strategy_t{}};
@@ -209,7 +209,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
             std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>
             && std::is_nothrow_constructible_v<std::remove_cvref_t<Projection>, Projection>)
     {
-        return detail::make_args_policy<index>(
+        return expectation::policies::detail::make_args_policy<index>(
             std::forward<Matcher>(matcher),
             std::forward_as_tuple(std::forward<Projection>(projection)));
     }
@@ -250,7 +250,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
             sizeof...(projections) <= 1u + sizeof...(others),
             "The projection count exceeds the amount of indices.");
 
-        return detail::make_args_policy<first, others...>(
+        return expectation::policies::detail::make_args_policy<first, others...>(
             std::forward<Matcher>(matcher),
             util::detail::expand_tuple<std::identity, 1u + sizeof...(others)>(
                 std::forward_as_tuple(std::forward<Projections>(projections)...)));
@@ -273,15 +273,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     constexpr auto all_args(Matcher&& matcher)
         noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>)
     {
-        using arg_selector_t = mimicpp::detail::all_args_selector_fn<std::add_lvalue_reference_t>;
-        using apply_strategy_t = mimicpp::detail::arg_list_forward_apply_fn;
-        using describe_strategy_t = detail::all_args_requirement_describer;
+        using arg_selector_t = expectation::policies::detail::all_args_selector_fn<std::add_lvalue_reference_t>;
+        using apply_strategy_t = expectation::policies::detail::arg_list_forward_apply_fn;
+        using describe_strategy_t = expectation::policies::detail::all_args_requirement_describer;
 
         return expectation::policies::ArgsRequirement{
             std::forward<Matcher>(matcher),
-            mimicpp::detail::apply_args_fn(
-                arg_selector_t{},
-                apply_strategy_t{}),
+            expectation::policies::detail::apply_args_fn(arg_selector_t{}, apply_strategy_t{}),
             describe_strategy_t{}};
     }
 

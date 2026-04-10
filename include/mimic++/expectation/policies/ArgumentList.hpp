@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_POLICIES_ARGUMENT_LIST_HPP
-#define MIMICPP_POLICIES_ARGUMENT_LIST_HPP
+#ifndef MIMICPP_EXPECTATION_POLICIES_ARGUMENT_LIST_HPP
+#define MIMICPP_EXPECTATION_POLICIES_ARGUMENT_LIST_HPP
 
 #pragma once
 
@@ -20,7 +20,7 @@
     #include <utility>
 #endif
 
-namespace mimicpp::detail
+namespace mimicpp::expectation::policies::detail
 {
     template <typename ArgSelector, typename ApplyStrategy>
     struct apply_args_fn
@@ -37,18 +37,18 @@ namespace mimicpp::detail
         }
 
         template <typename Action, typename Return, typename... Args>
-            requires std::invocable<const ArgSelector&, const call::Info<Return, Args...>&>
+            requires std::invocable<ArgSelector const&, call::Info<Return, Args...> const&>
                   && std::invocable<
-                         const ApplyStrategy&,
+                         ApplyStrategy const&,
                          Action,
-                         std::invoke_result_t<const ArgSelector&, const call::Info<Return, Args...>&>>
-        constexpr decltype(auto) operator()(Action&& action, const call::Info<Return, Args...>& info) const
+                         std::invoke_result_t<ArgSelector const&, call::Info<Return, Args...> const&>>
+        constexpr decltype(auto) operator()(Action&& action, call::Info<Return, Args...> const& info) const
             noexcept(
-                std::is_nothrow_invocable_v<const ArgSelector&, const call::Info<Return, Args...>&>
+                std::is_nothrow_invocable_v<ArgSelector const&, call::Info<Return, Args...> const&>
                 && std::is_nothrow_invocable_v<
-                    const ApplyStrategy&,
+                    ApplyStrategy const&,
                     Action,
-                    std::invoke_result_t<const ArgSelector&, const call::Info<Return, Args...>&>>)
+                    std::invoke_result_t<ArgSelector const&, call::Info<Return, Args...> const&>>)
         {
             return std::invoke(
                 m_ApplyStrategy,
@@ -76,7 +76,7 @@ namespace mimicpp::detail
         using projected_t = TypeProjection<signature_param_type_t<index, Signature>>;
 
         template <typename Return, typename... Args>
-        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
+        constexpr auto operator()(call::Info<Return, Args...> const& callInfo) const noexcept
         {
             using signature_t = Return(Args...);
 
@@ -92,7 +92,7 @@ namespace mimicpp::detail
     {
     public:
         template <typename Return, typename... Args>
-        constexpr auto operator()(const call::Info<Return, Args...>& callInfo) const noexcept
+        constexpr auto operator()(call::Info<Return, Args...> const& callInfo) const noexcept
         {
             return std::invoke(
                 args_selector_fn<TypeProjection, std::index_sequence_for<Args...>>{},
@@ -126,12 +126,12 @@ namespace mimicpp::detail
         }
 
         template <typename Fun, typename... Args>
-            requires(... && std::invocable<const Projections&, Args>)
-                 && std::invocable<Fun, std::invoke_result_t<const Projections&, Args>...>
+            requires(... && std::invocable<Projections const&, Args>)
+                 && std::invocable<Fun, std::invoke_result_t<Projections const&, Args>...>
         constexpr decltype(auto) operator()(Fun&& fun, std::tuple<Args...>&& argList) const
             noexcept(
-                (... && std::is_nothrow_invocable_v<const Projections&, Args>)
-                && std::is_nothrow_invocable_v<Fun, std::invoke_result_t<const Projections&, Args>...>)
+                (... && std::is_nothrow_invocable_v<Projections const&, Args>)
+                && std::is_nothrow_invocable_v<Fun, std::invoke_result_t<Projections const&, Args>...>)
         {
             return invoke_impl(
                 std::forward<Fun>(fun),
@@ -146,7 +146,7 @@ namespace mimicpp::detail
         constexpr decltype(auto) invoke_impl(
             Fun&& fun,
             std::tuple<Args...>&& argList,
-            [[maybe_unused]] const std::index_sequence<indices...>) const
+            std::index_sequence<indices...> const /*sequence*/) const
         {
             return std::invoke(
                 std::forward<Fun>(fun),
