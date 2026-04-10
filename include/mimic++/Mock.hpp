@@ -14,7 +14,7 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/expectation/Builder.hpp"
 #include "mimic++/expectation/Registry.hpp"
-#include "mimic++/policies/GeneralPolicies.hpp"
+#include "mimic++/expectation/policies/GeneralPolicies.hpp"
 #include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/reporting/TargetReport.hpp"
 #include "mimic++/utilities/Stacktrace.hpp"
@@ -355,8 +355,8 @@ namespace mimicpp::detail
                        m_Registry,
                        reporting::TargetReport{.name = *m_Settings.name, .overloadReport = std::move(overloadReport)},
                        std::forward<Args>(args)...)
-                && expectation_policies::Category<refQualification>{}
-                && expectation_policies::Constness<constQualification>{};
+                && expectation::policies::Category<refQualification>{}
+                && expectation::policies::Constness<constQualification>{};
         }
     };
 

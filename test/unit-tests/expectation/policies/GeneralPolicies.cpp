@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/policies/GeneralPolicies.hpp"
+#include "mimic++/expectation/policies/GeneralPolicies.hpp"
 #include "mimic++/expectation/Common.hpp"
 
 #include "TestTypes.hpp"
@@ -11,11 +11,11 @@
 using namespace mimicpp;
 
 TEMPLATE_TEST_CASE_SIG(
-    "expectation_policies::InitFinalize satisfies finalize_policy_for concept.",
+    "expectation::policies::InitFinalize satisfies finalize_policy_for concept.",
     "[expectation][expectation::builder]",
     ((bool dummy, typename Policy, typename Sig), dummy, Policy, Sig),
-    (true, expectation_policies::InitFinalize, void()),
-    (true, expectation_policies::InitFinalize, void(int)))
+    (true, expectation::policies::InitFinalize, void()),
+    (true, expectation::policies::InitFinalize, void(int)))
 {
     STATIC_REQUIRE(expectation::finalize_policy_for<Policy, Sig>);
 }
@@ -23,32 +23,32 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE(
     "Given types satisfy expectation_policy_for concept.",
     "[expectation][expectation::builder]",
-    expectation_policies::Category<ValueCategory::lvalue>,
-    expectation_policies::Category<ValueCategory::rvalue>,
-    expectation_policies::Category<ValueCategory::any>,
-    expectation_policies::Constness<Constness::as_const>,
-    expectation_policies::Constness<Constness::non_const>,
-    expectation_policies::Constness<Constness::any>)
+    expectation::policies::Category<ValueCategory::lvalue>,
+    expectation::policies::Category<ValueCategory::rvalue>,
+    expectation::policies::Category<ValueCategory::any>,
+    expectation::policies::Constness<Constness::as_const>,
+    expectation::policies::Constness<Constness::non_const>,
+    expectation::policies::Constness<Constness::any>)
 {
     STATIC_REQUIRE(expectation::expectation_policy_for<TestType, void()>);
 }
 
 TEST_CASE(
-    "expectation_policies::InitFinalize does nothing.",
+    "expectation::policies::InitFinalize does nothing.",
     "[expectation][expectation::builder]")
 {
-    const call::Info<void> call{
+    call::Info<void> const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    constexpr expectation_policies::InitFinalize policy{};
+    constexpr expectation::policies::InitFinalize policy{};
 
     REQUIRE_NOTHROW(policy.finalize_call(call));
 }
 
 TEMPLATE_TEST_CASE_SIG(
-    "expectation_policies::Category checks whether the given call::Info matches.",
+    "expectation::policies::Category checks whether the given call::Info matches.",
     "[expectation][expectation::policy]",
     ((ValueCategory category), category),
     (ValueCategory::lvalue),
@@ -57,7 +57,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
     using SignatureT = void();
     using CallInfoT = call::info_for_signature_t<SignatureT>;
-    using PolicyT = expectation_policies::Category<category>;
+    using PolicyT = expectation::policies::Category<category>;
     STATIC_REQUIRE(expectation::expectation_policy_for<PolicyT, SignatureT>);
 
     constexpr PolicyT policy{};
@@ -82,7 +82,7 @@ TEMPLATE_TEST_CASE_SIG(
         }
     }
 
-    const CallInfoT call{
+    CallInfoT const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
@@ -109,7 +109,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-    "expectation_policies::Constness checks whether the given call::Info matches.",
+    "expectation::policies::Constness checks whether the given call::Info matches.",
     "[expectation][expectation::policy]",
     ((Constness constness), constness),
     (Constness::as_const),
@@ -118,7 +118,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
     using SignatureT = void();
     using CallInfoT = call::info_for_signature_t<SignatureT>;
-    using PolicyT = expectation_policies::Constness<constness>;
+    using PolicyT = expectation::policies::Constness<constness>;
     STATIC_REQUIRE(expectation::expectation_policy_for<PolicyT, SignatureT>);
 
     constexpr PolicyT policy{};
@@ -143,7 +143,7 @@ TEMPLATE_TEST_CASE_SIG(
         }
     }
 
-    const CallInfoT call{
+    CallInfoT const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};

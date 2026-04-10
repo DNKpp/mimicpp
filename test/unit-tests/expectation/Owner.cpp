@@ -4,7 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/expectation/Owner.hpp"
-#include "mimic++/policies/GeneralPolicies.hpp"
+#include "mimic++/expectation/policies/GeneralPolicies.hpp"
 
 #include "SuppressionMacros.hpp"
 #include "TestTypes.hpp"
@@ -42,7 +42,7 @@ TEST_CASE(
         loc,
         reporting::TargetReport{.name = "MyMock", .overloadReport = reporting::TypeReport::make<Signature>()},
         ControlPolicyFacade{std::ref(controlPolicy), UnwrapReferenceWrapper{}},
-        expectation_policies::InitFinalize{});
+        expectation::policies::InitFinalize{});
 
     std::optional<expectation::Owner> expectation{std::in_place, registry, innerExpectation};
 

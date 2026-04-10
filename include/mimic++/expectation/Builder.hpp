@@ -15,11 +15,11 @@
 #include "mimic++/expectation/Registry.hpp"
 #include "mimic++/expectation/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/expectation/policies/ControlPolicies.hpp"
+#include "mimic++/expectation/policies/GeneralPolicies.hpp"
 #include "mimic++/macros/ScopedExpectation.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 #include "mimic++/matchers/StringMatchers.hpp"
-#include "mimic++/policies/GeneralPolicies.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
@@ -78,11 +78,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         friend constexpr auto operator&&(BasicBuilder&& builder, Policy&& policy)
         {
             static_assert(
-                !std::same_as<expectation_policies::InitFinalize, std::remove_cvref_t<Policy>>,
-                "Explicitly specifying the `expectation_policies::InitFinalize` is disallowed.");
+                !std::same_as<policies::InitFinalize, std::remove_cvref_t<Policy>>,
+                "Explicitly specifying the `policies::InitFinalize` is disallowed.");
 
             static_assert(
-                std::same_as<expectation_policies::InitFinalize, FinalizePolicy>,
+                std::same_as<policies::InitFinalize, FinalizePolicy>,
                 "Only one finalize-policy may be specified per expectation. "
                 "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
 
@@ -287,7 +287,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                 false,
                 sequence::detail::Config<>,
                 Signature,
-                expectation_policies::InitFinalize>;
+                policies::InitFinalize>;
 
             return detail::extend_builder_with_arg_policies<Signature>(
                 Builder{
@@ -295,7 +295,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                     std::move(target),
                     policies::detail::TimesConfig{},
                     sequence::detail::Config<>{},
-                    expectation_policies::InitFinalize{},
+                    policies::InitFinalize{},
                     std::tuple{}},
                 std::index_sequence_for<Args...>{},
                 std::forward<Args>(args)...);

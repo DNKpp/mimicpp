@@ -18,7 +18,7 @@ namespace
         false,
         sequence::detail::Config<>,
         Signature,
-        expectation_policies::InitFinalize>;
+        expectation::policies::InitFinalize>;
 
     template <typename Signature>
     [[nodiscard]]
@@ -29,7 +29,7 @@ namespace
             reporting::TargetReport{"Test-Mock", reporting::TypeReport::make<Signature>()},
             TimesConfig{},
             sequence::detail::Config<>{},
-            expectation_policies::InitFinalize{},
+            expectation::policies::InitFinalize{},
             std::tuple{}
         };
     }

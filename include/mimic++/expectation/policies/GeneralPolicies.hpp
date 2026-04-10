@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_POLICIES_GENERAL_POLICIES_HPP
-#define MIMICPP_POLICIES_GENERAL_POLICIES_HPP
+#ifndef MIMICPP_EXPECTATION_POLICIES_GENERAL_POLICIES_HPP
+#define MIMICPP_EXPECTATION_POLICIES_GENERAL_POLICIES_HPP
 
 #pragma once
 
@@ -21,25 +21,25 @@
 namespace mimicpp::detail
 {
     [[nodiscard]]
-    constexpr bool is_matching(const Constness lhs, const Constness rhs) noexcept
+    constexpr bool is_matching(Constness const lhs, Constness const rhs) noexcept
     {
         return std::cmp_not_equal(0, util::to_underlying(lhs) & util::to_underlying(rhs));
     }
 
     [[nodiscard]]
-    constexpr bool is_matching(const ValueCategory lhs, const ValueCategory rhs) noexcept
+    constexpr bool is_matching(ValueCategory const lhs, ValueCategory const rhs) noexcept
     {
         return std::cmp_not_equal(0, util::to_underlying(lhs) & util::to_underlying(rhs));
     }
 }
 
-namespace mimicpp::expectation_policies
+namespace mimicpp::expectation::policies
 {
     class InitFinalize
     {
     public:
         template <typename Return, typename... Args>
-        static constexpr void finalize_call(const call::Info<Return, Args...>&) noexcept
+        static constexpr void finalize_call(call::Info<Return, Args...> const&) noexcept
         {
         }
     };
@@ -56,13 +56,13 @@ namespace mimicpp::expectation_policies
 
         template <typename Return, typename... Args>
         [[nodiscard]]
-        static constexpr bool matches(const call::Info<Return, Args...>& info) noexcept
+        static constexpr bool matches(call::Info<Return, Args...> const& info) noexcept
         {
             return mimicpp::detail::is_matching(info.fromCategory, expected);
         }
 
         template <typename Return, typename... Args>
-        static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
+        static constexpr void consume([[maybe_unused]] call::Info<Return, Args...> const& info) noexcept
         {
             MIMICPP_ASSERT(mimicpp::detail::is_matching(info.fromCategory, expected), "Call does not match.");
         }
@@ -98,13 +98,13 @@ namespace mimicpp::expectation_policies
 
         template <typename Return, typename... Args>
         [[nodiscard]]
-        static constexpr bool matches(const call::Info<Return, Args...>& info) noexcept
+        static constexpr bool matches(call::Info<Return, Args...> const& info) noexcept
         {
             return mimicpp::detail::is_matching(info.fromConstness, constness);
         }
 
         template <typename Return, typename... Args>
-        static constexpr void consume([[maybe_unused]] const call::Info<Return, Args...>& info) noexcept
+        static constexpr void consume([[maybe_unused]] call::Info<Return, Args...> const& info) noexcept
         {
             MIMICPP_ASSERT(mimicpp::detail::is_matching(info.fromConstness, constness), "Call does not match.");
         }
