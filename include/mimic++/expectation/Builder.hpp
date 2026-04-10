@@ -39,6 +39,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
     class BasicBuilder
     {
     public:
+        using TimesConfig = mimicpp::detail::TimesConfig;
         using PolicyList = std::tuple<Policies...>;
 
         BasicBuilder(BasicBuilder const&) = delete;
@@ -53,7 +54,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         explicit BasicBuilder(
             Registry::Ptr registry,
             reporting::TargetReport target,
-            detail::TimesConfig timesConfig,
+            TimesConfig timesConfig,
             SequenceConfig sequenceConfig,
             FinalizePolicyArg&& finalizePolicyArg,
             PolicyListArg&& policyListArg)
@@ -126,7 +127,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         }
 
         [[nodiscard]]
-        friend constexpr auto operator&&(BasicBuilder&& builder, detail::TimesConfig&& config)
+        friend constexpr auto operator&&(BasicBuilder&& builder, TimesConfig&& config)
         {
             static_assert(
                 !timesConfigured,
@@ -197,7 +198,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
     private:
         Registry::Ptr m_Registry;
         reporting::TargetReport m_TargetReport;
-        detail::TimesConfig m_TimesConfig{};
+        TimesConfig m_TimesConfig{};
         SequenceConfig m_SequenceConfig{};
         FinalizePolicy m_FinalizePolicy{};
         PolicyList m_ExpectationPolicies{};
