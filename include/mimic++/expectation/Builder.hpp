@@ -14,11 +14,11 @@
 #include "mimic++/expectation/Owner.hpp"
 #include "mimic++/expectation/Registry.hpp"
 #include "mimic++/expectation/policies/ArgRequirementPolicies.hpp"
+#include "mimic++/expectation/policies/ControlPolicies.hpp"
 #include "mimic++/macros/ScopedExpectation.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 #include "mimic++/matchers/StringMatchers.hpp"
-#include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
@@ -39,7 +39,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
     class BasicBuilder
     {
     public:
-        using TimesConfig = mimicpp::detail::TimesConfig;
+        using TimesConfig = policies::detail::TimesConfig;
         using PolicyList = std::tuple<Policies...>;
 
         BasicBuilder(BasicBuilder const&) = delete;
@@ -186,7 +186,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                         std::in_place_type<Signature>,
                         std::move(sourceLocation),
                         std::move(m_TargetReport),
-                        ControlPolicy{sourceLocation, std::move(m_TimesConfig), std::move(m_SequenceConfig)},
+                        policies::ControlPolicy{sourceLocation, std::move(m_TimesConfig), std::move(m_SequenceConfig)},
                         std::move(m_FinalizePolicy),
                         std::move(policies)...);
                 },
@@ -293,7 +293,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                 Builder{
                     std::move(registry),
                     std::move(target),
-                    mimicpp::detail::TimesConfig{},
+                    policies::detail::TimesConfig{},
                     sequence::detail::Config<>{},
                     expectation_policies::InitFinalize{},
                     std::tuple{}},

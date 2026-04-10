@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_POLICIES_CONTROL_POLICY_HPP
-#define MIMICPP_POLICIES_CONTROL_POLICY_HPP
+#ifndef MIMICPP_EXPECTATION_POLICIES_CONTROL_POLICY_HPP
+#define MIMICPP_EXPECTATION_POLICIES_CONTROL_POLICY_HPP
 
 #pragma once
 
@@ -24,7 +24,7 @@
     #include <vector>
 #endif
 
-namespace mimicpp::detail
+namespace mimicpp::expectation::policies::detail
 {
     template <typename... Sequences>
     [[nodiscard]]
@@ -86,7 +86,7 @@ namespace mimicpp::detail
     };
 }
 
-namespace mimicpp
+namespace mimicpp::expectation::policies
 {
     namespace detail
     {
@@ -282,7 +282,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto times(int const min, int const max)
     {
-        return mimicpp::detail::TimesConfig{min, max};
+        return expectation::policies::detail::TimesConfig{min, max};
     }
 
     /**
@@ -297,7 +297,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto times(int const exactly)
     {
-        return mimicpp::detail::TimesConfig(exactly, exactly);
+        return expectation::policies::detail::TimesConfig(exactly, exactly);
     }
 
     /**
@@ -312,7 +312,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto at_least(int const min)
     {
-        return mimicpp::detail::TimesConfig{min, std::numeric_limits<int>::max()};
+        return expectation::policies::detail::TimesConfig{min, std::numeric_limits<int>::max()};
     }
 
     /**
@@ -327,7 +327,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     constexpr auto at_most(int const max)
     {
-        return mimicpp::detail::TimesConfig{0, max};
+        return expectation::policies::detail::TimesConfig{0, max};
     }
 
     /**
@@ -339,7 +339,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto never() noexcept
     {
-        constexpr mimicpp::detail::TimesConfig config{0, 0};
+        constexpr expectation::policies::detail::TimesConfig config{0, 0};
 
         return config;
     }
@@ -354,7 +354,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto once() noexcept
     {
-        constexpr mimicpp::detail::TimesConfig config{1, 1};
+        constexpr expectation::policies::detail::TimesConfig config{1, 1};
 
         return config;
     }
@@ -369,7 +369,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto twice() noexcept
     {
-        constexpr mimicpp::detail::TimesConfig config{2, 2};
+        constexpr expectation::policies::detail::TimesConfig config{2, 2};
 
         return config;
     }
@@ -381,7 +381,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
     [[nodiscard]]
     consteval auto any_times() noexcept
     {
-        constexpr mimicpp::detail::TimesConfig config{0, std::numeric_limits<int>::max()};
+        constexpr expectation::policies::detail::TimesConfig config{0, std::numeric_limits<int>::max()};
 
         return config;
     }

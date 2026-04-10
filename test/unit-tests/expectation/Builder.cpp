@@ -9,6 +9,7 @@
 #include "TestTypes.hpp"
 
 using namespace mimicpp;
+using expectation::policies::detail::TimesConfig;
 
 namespace
 {
@@ -26,7 +27,7 @@ namespace
         return BaseBuilder<Signature>{
             std::move(registry),
             reporting::TargetReport{"Test-Mock", reporting::TypeReport::make<Signature>()},
-            detail::TimesConfig{},
+            TimesConfig{},
             sequence::detail::Config<>{},
             expectation_policies::InitFinalize{},
             std::tuple{}
@@ -70,7 +71,7 @@ TEST_CASE(
     SECTION("Or exchange it once.")
     {
         ScopedExpectation const expectation = make_builder<Signature>(registry)
-                                           && detail::TimesConfig{0, 0};
+                                           && TimesConfig{0, 0};
 
         REQUIRE(expectation.is_satisfied());
     }
@@ -222,7 +223,7 @@ TEST_CASE(
             .RETURN(true);
 
         ScopedExpectation const expectation = make_builder<Signature>(registry)
-                                           && detail::TimesConfig{0, 0}
+                                           && TimesConfig{0, 0}
                                            && Policy{std::ref(policy)};
 
         REQUIRE_CALL(policy, is_satisfied())
@@ -242,7 +243,7 @@ TEST_CASE(
             .RETURN(true);
 
         const ScopedExpectation expectation = make_builder<Signature>(registry)
-                                           && detail::TimesConfig{0, 0}
+                                           && TimesConfig{0, 0}
                                            && Policy{std::ref(policy1)}
                                            && Policy{std::ref(policy2)};
 
@@ -266,7 +267,7 @@ TEST_CASE(
 
     constexpr util::SourceLocation beforeLoc{};
     ScopedExpectation const expectation = make_builder<Signature>(registry)
-                                       && detail::TimesConfig{0, 0};
+                                       && TimesConfig{0, 0};
     constexpr util::SourceLocation afterLoc{};
 
     REQUIRE_THAT(
@@ -291,10 +292,10 @@ TEST_CASE(
         auto const registry = std::make_shared<expectation::Registry>();
 
         MIMICPP_SCOPED_EXPECTATION make_builder<Signature>(registry)
-            && detail::TimesConfig{0, 0};
+            && TimesConfig{0, 0};
 
         MIMICPP_SCOPED_EXPECTATION make_builder<Signature>(registry)
-            && detail::TimesConfig{0, 0};
+            && TimesConfig{0, 0};
     }
 
     REQUIRE_THAT(

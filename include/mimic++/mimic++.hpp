@@ -35,6 +35,7 @@
 #include "mimic++/expectation/Registry.hpp"
 #include "mimic++/expectation/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/expectation/policies/ArgumentList.hpp"
+#include "mimic++/expectation/policies/ControlPolicies.hpp"
 
 #include "mimic++/macros/Common.hpp"
 #include "mimic++/macros/Facade.hpp"
@@ -47,7 +48,6 @@
 #include "mimic++/matchers/RangeMatchers.hpp"
 #include "mimic++/matchers/StringMatchers.hpp"
 
-#include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 #include "mimic++/policies/SideEffectPolicies.hpp"

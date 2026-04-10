@@ -6,4 +6,5 @@
 target_sources(${TARGET_NAME} PRIVATE
     "ArgRequirementPolicies.cpp"
     "ArgumentList.cpp"
+    "ControlPolicies.cpp"
 )

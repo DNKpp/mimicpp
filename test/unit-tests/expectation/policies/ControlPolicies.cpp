@@ -1,9 +1,9 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/policies/ControlPolicies.hpp"
+#include "mimic++/expectation/policies/ControlPolicies.hpp"
 
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
@@ -13,12 +13,13 @@ using reporting::control_state_t;
 using reporting::state_applicable;
 using reporting::state_inapplicable;
 using reporting::state_saturated;
+using expectation::policies::detail::TimesConfig;
 
 TEST_CASE(
     "TimesConfig has exactly 1 as limit by default.",
     "[detail][expectation][expectation::control]")
 {
-    constexpr detail::TimesConfig config{};
+    constexpr TimesConfig config{};
 
     REQUIRE(1 == config.min());
     REQUIRE(1 == config.max());
@@ -31,7 +32,7 @@ TEST_CASE(
     int const min = GENERATE(range(0, 5));
     int const max = min + GENERATE(range(0, 5));
 
-    detail::TimesConfig const config{min, max};
+    TimesConfig const config{min, max};
 
     REQUIRE(min == std::as_const(config).min());
     REQUIRE(max == std::as_const(config).max());
@@ -48,7 +49,7 @@ TEST_CASE(
         CAPTURE(min, max);
 
         REQUIRE_THROWS_AS(
-            (detail::TimesConfig{min, max}),
+            (TimesConfig{min, max}),
             std::invalid_argument);
     }
 
@@ -59,7 +60,7 @@ TEST_CASE(
         CAPTURE(min, max);
 
         REQUIRE_THROWS_AS(
-            (detail::TimesConfig{min, max}),
+            (TimesConfig{min, max}),
             std::invalid_argument);
     }
 }
@@ -72,9 +73,9 @@ TEST_CASE(
     int const max = min + GENERATE(range(0, 5));
     CAPTURE(min, max);
 
-    ControlPolicy<> policy{
+    expectation::policies::ControlPolicy<> policy{
         {},
-        detail::TimesConfig{min, max},
+        TimesConfig{min, max},
         sequence::detail::Config<>{}
     };
 
@@ -144,10 +145,10 @@ TEST_CASE(
         std::optional<TestSequence> sequence{std::in_place};
         REQUIRE(sequence);
         std::optional policy{
-            ControlPolicy{
-                          from,
-                          detail::TimesConfig{},
-                          expect::in_sequence(*sequence)}
+            expectation::policies::ControlPolicy{
+                                                 from,
+                                                 TimesConfig{},
+                                                 expect::in_sequence(*sequence)}
         };
 
         REQUIRE(1u == policy->sequenceCount);
@@ -195,10 +196,10 @@ TEST_CASE(
         std::optional<TestSequence> firstSequence{std::in_place};
         std::optional<TestSequence> secondSequence{std::in_place};
         std::optional policy{
-            ControlPolicy{
-                          from,
-                          detail::TimesConfig{},
-                          expect::in_sequences(*firstSequence, *secondSequence)}
+            expectation::policies::ControlPolicy{
+                                                 from,
+                                                 TimesConfig{},
+                                                 expect::in_sequences(*firstSequence, *secondSequence)}
         };
 
         REQUIRE(2u == policy->sequenceCount);
@@ -279,7 +280,7 @@ TEST_CASE(
 
         TestSequence sequence{};
         constexpr util::SourceLocation from{};
-        ControlPolicy policy{
+        expectation::policies::ControlPolicy policy{
             from,
             expect::times(min, max),
             expect::in_sequence(sequence)};
@@ -357,7 +358,7 @@ TEST_CASE(
     SECTION("When sequence contains just a single expectation.")
     {
         auto const count = GENERATE(range(1, 5));
-        ControlPolicy policy{
+        expectation::policies::ControlPolicy policy{
             {},
             expect::times(count),
             expect::in_sequence(sequence)};
@@ -393,7 +394,7 @@ TEST_CASE(
 
     SECTION("When sequence has multiple expectations, the order matters.")
     {
-        ControlPolicy policy1{
+        expectation::policies::ControlPolicy policy1{
             {},
             expect::once(),
             expect::in_sequence(sequence)};
@@ -401,7 +402,7 @@ TEST_CASE(
         REQUIRE(1u == policy1.sequenceCount);
 
         auto const count2 = GENERATE(range(1, 5));
-        ControlPolicy policy2{
+        expectation::policies::ControlPolicy policy2{
             {},
             expect::times(count2),
             expect::in_sequence(sequence)};
@@ -495,13 +496,13 @@ TEST_CASE(
 
         SECTION("When the first expectation is the prefix of multiple sequences.")
         {
-            ControlPolicy policy1{
+            expectation::policies::ControlPolicy policy1{
                 {},
                 expect::once(),
                 expect::in_sequences(sequence1, sequence2)};
             REQUIRE(2u == policy1.sequenceCount);
 
-            ControlPolicy policy2{
+            expectation::policies::ControlPolicy policy2{
                 {},
                 expect::once(),
                 expect::in_sequence(sequence2)};
@@ -581,19 +582,19 @@ TEST_CASE(
 
         SECTION("When an expectation waits for multiple sequences.")
         {
-            ControlPolicy policy1{
+            expectation::policies::ControlPolicy policy1{
                 {},
                 expect::once(),
                 expect::in_sequence(sequence1)};
             REQUIRE(1u == policy1.sequenceCount);
 
-            ControlPolicy policy2{
+            expectation::policies::ControlPolicy policy2{
                 {},
                 expect::once(),
                 expect::in_sequence(sequence2)};
             REQUIRE(1u == policy2.sequenceCount);
 
-            ControlPolicy policy3{
+            expectation::policies::ControlPolicy policy3{
                 {},
                 expect::once(),
                 expect::in_sequences(sequence1, sequence2)};
@@ -745,7 +746,7 @@ TEST_CASE(
     SECTION("LazySequence supports skippable expectations.")
     {
         LazySequence sequence{};
-        ControlPolicy policy1{
+        expectation::policies::ControlPolicy policy1{
             {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
@@ -761,7 +762,7 @@ TEST_CASE(
                     .sequenceRatings = {
                         sequence::rating{std::numeric_limits<int>::max(), sequence.tag()}}}));
 
-        ControlPolicy policy2{
+        expectation::policies::ControlPolicy policy2{
             {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
@@ -864,7 +865,7 @@ TEST_CASE(
     SECTION("GreedySequence supports skippable expectations.")
     {
         GreedySequence sequence{};
-        ControlPolicy policy1{
+        expectation::policies::ControlPolicy policy1{
             {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
@@ -880,7 +881,7 @@ TEST_CASE(
                     .sequenceRatings = {
                         sequence::rating{0, sequence.tag()}}}));
 
-        ControlPolicy policy2{
+        expectation::policies::ControlPolicy policy2{
             {},
             expect::at_most(1),
             expect::in_sequence(sequence)};
@@ -990,7 +991,7 @@ TEST_CASE(
         int const max = min + GENERATE(range(0, 5));
         CAPTURE(min, max);
 
-        detail::TimesConfig const config = expect::times(min, max);
+        TimesConfig const config = expect::times(min, max);
 
         REQUIRE(min == config.min());
         REQUIRE(max == config.max());
@@ -1001,7 +1002,7 @@ TEST_CASE(
         int const exactly = GENERATE(range(0, 5));
         CAPTURE(exactly);
 
-        detail::TimesConfig const config = expect::times(exactly);
+        TimesConfig const config = expect::times(exactly);
 
         REQUIRE(exactly == config.min());
         REQUIRE(exactly == config.max());
@@ -1012,7 +1013,7 @@ TEST_CASE(
         int const limit = GENERATE(range(0, 5));
         CAPTURE(limit);
 
-        detail::TimesConfig const config = expect::at_most(limit);
+        TimesConfig const config = expect::at_most(limit);
 
         REQUIRE(0 == config.min());
         REQUIRE(limit == config.max());
@@ -1023,7 +1024,7 @@ TEST_CASE(
         int const limit = GENERATE(range(0, 5));
         CAPTURE(limit);
 
-        detail::TimesConfig const config = expect::at_least(limit);
+        TimesConfig const config = expect::at_least(limit);
 
         REQUIRE(limit == config.min());
         REQUIRE(std::numeric_limits<int>::max() == config.max());
@@ -1031,7 +1032,7 @@ TEST_CASE(
 
     SECTION("never")
     {
-        constexpr detail::TimesConfig config = expect::never();
+        constexpr TimesConfig config = expect::never();
 
         REQUIRE(0 == config.min());
         REQUIRE(0 == config.max());
@@ -1039,7 +1040,7 @@ TEST_CASE(
 
     SECTION("once")
     {
-        constexpr detail::TimesConfig config = expect::once();
+        constexpr TimesConfig config = expect::once();
 
         REQUIRE(1 == config.min());
         REQUIRE(1 == config.max());
@@ -1047,7 +1048,7 @@ TEST_CASE(
 
     SECTION("twice")
     {
-        constexpr detail::TimesConfig config = expect::twice();
+        constexpr TimesConfig config = expect::twice();
 
         REQUIRE(2 == config.min());
         REQUIRE(2 == config.max());
@@ -1055,7 +1056,7 @@ TEST_CASE(
 
     SECTION("any_times")
     {
-        constexpr detail::TimesConfig config = expect::any_times();
+        constexpr TimesConfig config = expect::any_times();
 
         REQUIRE(0 == config.min());
         REQUIRE(std::numeric_limits<int>::max() == config.max());
