@@ -20,6 +20,14 @@
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 {
+    namespace detail
+    {
+        template <typename T>
+        concept finalizable = requires(util::SourceLocation loc) {
+            { std::declval<T&&>().finalize(loc) } -> std::convertible_to<Owner>;
+        };
+    }
+
     /**
      * \brief Takes the ownership of an expectation and checks whether it's satisfied during destruction.
      * \ingroup EXPECTATION
@@ -73,10 +81,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
          * \param object The object to be finalized.
          * \param loc The source-location.
          */
-        template <typename T>
-            requires requires(util::SourceLocation loc) {
-                { std::declval<T&&>().finalize(loc) } -> std::convertible_to<Owner>;
-            }
+        template <detail::finalizable T>
         [[nodiscard]]
         explicit(false) constexpr Owner(T&& object, util::SourceLocation loc = {})
             : Owner{std::forward<T>(object).finalize(std::move(loc))}
