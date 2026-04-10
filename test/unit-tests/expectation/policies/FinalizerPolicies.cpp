@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/policies/FinalizerPolicies.hpp"
+#include "mimic++/expectation/policies/FinalizerPolicies.hpp"
 #include "mimic++/expectation/Common.hpp"
 
 #include "TestTypes.hpp"
@@ -11,7 +11,7 @@
 using namespace mimicpp;
 
 TEST_CASE(
-    "expectation_policies::ReturnsResultOf forwards the invocation result during finalize_call().",
+    "expectation::policies::ReturnsResultOf forwards the invocation result during finalize_call().",
     "[expectation][expectation::policy]")
 {
     using trompeloeil::_;
@@ -19,14 +19,14 @@ TEST_CASE(
     using SignatureT = int&();
     using CallInfoT = call::info_for_signature_t<SignatureT>;
 
-    const CallInfoT call{
+    CallInfoT const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
     int value{42};
-    InvocableMock<int&, const CallInfoT&> action{};
-    expectation_policies::ReturnsResultOf policy{std::ref(action)};
+    InvocableMock<int&, CallInfoT const&> action{};
+    expectation::policies::ReturnsResultOf policy{std::ref(action)};
     STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
     REQUIRE_CALL(action, Invoke(_))
@@ -37,7 +37,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "expectation_policies::Throws always throws an exception during finalize_call().",
+    "expectation::policies::Throws always throws an exception during finalize_call().",
     "[expectation][expectation::policy]")
 {
     struct test_exception
@@ -48,10 +48,10 @@ TEST_CASE(
     {
         using SignatureT = void();
         using CallInfoT = call::info_for_signature_t<SignatureT>;
-        using PolicyT = expectation_policies::Throws<test_exception>;
+        using PolicyT = expectation::policies::Throws<test_exception>;
         STATIC_REQUIRE(expectation::finalize_policy_for<PolicyT, SignatureT>);
 
-        const CallInfoT call{
+        CallInfoT const call{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
@@ -67,10 +67,10 @@ TEST_CASE(
     {
         using SignatureT = int && ();
         using CallInfoT = call::info_for_signature_t<SignatureT>;
-        using PolicyT = expectation_policies::Throws<test_exception>;
+        using PolicyT = expectation::policies::Throws<test_exception>;
         STATIC_REQUIRE(expectation::finalize_policy_for<PolicyT, SignatureT>);
 
-        const CallInfoT call{
+        CallInfoT const call{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
@@ -84,7 +84,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "finally::returns_result_of creates expectation_policies::ReturnsResultOf.",
+    "finally::returns_result_of creates expectation::policies::ReturnsResultOf.",
     "[expectation][expectation::factories]")
 {
     using trompeloeil::_;
@@ -92,13 +92,13 @@ TEST_CASE(
     using SignatureT = int&();
     using CallInfoT = call::info_for_signature_t<SignatureT>;
 
-    const CallInfoT call{
+    CallInfoT const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
     InvocableMock<int&> action{};
-    expectation_policies::ReturnsResultOf policy = finally::returns_result_of(std::ref(action));
+    expectation::policies::ReturnsResultOf policy = finally::returns_result_of(std::ref(action));
     STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
     int value{42};
@@ -109,22 +109,22 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "finally::returns creates expectation_policies::ReturnsResultOf.",
+    "finally::returns creates expectation::policies::ReturnsResultOf.",
     "[expectation][expectation::factories]")
 {
     SECTION("When a value is returned.")
     {
         using CallInfoT = call::Info<int>;
-        const CallInfoT call{
+        CallInfoT const call{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
 
-        const int value = GENERATE(range(0, 5));
+        int const value = GENERATE(range(0, 5));
 
         SECTION("And when value is stored.")
         {
-            expectation_policies::ReturnsResultOf policy = finally::returns(value);
+            expectation::policies::ReturnsResultOf policy = finally::returns(value);
             STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int()>);
 
             REQUIRE(value == policy.finalize_call(call));
@@ -133,7 +133,7 @@ TEST_CASE(
 
         SECTION("And when std::reference_wrapper is stored.")
         {
-            expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+            expectation::policies::ReturnsResultOf policy = finally::returns(std::ref(value));
             STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int()>);
 
             REQUIRE(value == policy.finalize_call(call));
@@ -144,14 +144,14 @@ TEST_CASE(
     SECTION("When a lvalue ref is returned.")
     {
         using CallInfoT = call::Info<int&>;
-        const CallInfoT call{
+        CallInfoT const call{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("And when value is stored.")
         {
-            expectation_policies::ReturnsResultOf policy = finally::returns(42);
+            expectation::policies::ReturnsResultOf policy = finally::returns(42);
             STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&()>);
 
             int& result = policy.finalize_call(call);
@@ -162,7 +162,7 @@ TEST_CASE(
         SECTION("And when std::reference_wrapper is stored.")
         {
             int value{42};
-            expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+            expectation::policies::ReturnsResultOf policy = finally::returns(std::ref(value));
             STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&()>);
 
             REQUIRE(&value == &policy.finalize_call(call));
@@ -172,18 +172,18 @@ TEST_CASE(
 
     SECTION("When a const lvalue ref is returned.")
     {
-        using CallInfoT = call::Info<const int&>;
-        const CallInfoT call{
+        using CallInfoT = call::Info<int const&>;
+        CallInfoT const call{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("And when value is stored.")
         {
-            expectation_policies::ReturnsResultOf policy = finally::returns(42);
-            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), const int&()>);
+            expectation::policies::ReturnsResultOf policy = finally::returns(42);
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int const&()>);
 
-            const int& result = policy.finalize_call(call);
+            int const& result = policy.finalize_call(call);
             REQUIRE(42 == result);
             REQUIRE(&result == &policy.finalize_call(call));
         }
@@ -191,8 +191,8 @@ TEST_CASE(
         SECTION("And when std::reference_wrapper is stored.")
         {
             constexpr int value{42};
-            expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
-            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), const int&()>);
+            expectation::policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int const&()>);
 
             REQUIRE(&value == &policy.finalize_call(call));
             REQUIRE(&value == &policy.finalize_call(call));
@@ -202,14 +202,14 @@ TEST_CASE(
     SECTION("When a rvalue ref is returned.")
     {
         using CallInfoT = call::Info<int&&>;
-        const CallInfoT call{
+        CallInfoT const call{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("And when value is stored.")
         {
-            expectation_policies::ReturnsResultOf policy = finally::returns(42);
+            expectation::policies::ReturnsResultOf policy = finally::returns(42);
             STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&&()>);
 
             int&& result = policy.finalize_call(call);
@@ -220,7 +220,7 @@ TEST_CASE(
         SECTION("And when std::reference_wrapper is stored.")
         {
             int value{42};
-            expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+            expectation::policies::ReturnsResultOf policy = finally::returns(std::ref(value));
             STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&&()>);
 
             int&& result = policy.finalize_call(call);
@@ -232,18 +232,18 @@ TEST_CASE(
 
     SECTION("When a const rvalue ref is returned.")
     {
-        using CallInfoT = call::Info<const int&&>;
-        const CallInfoT call{
+        using CallInfoT = call::Info<int const&&>;
+        CallInfoT const call{
             .args = {},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))};
 
         SECTION("And when value is stored.")
         {
-            expectation_policies::ReturnsResultOf policy = finally::returns(42);
-            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), const int&&()>);
+            expectation::policies::ReturnsResultOf policy = finally::returns(42);
+            STATIC_REQUIRE(expectation::finalize_policy_for < decltype(policy), int const && () >);
 
-            const int&& result = policy.finalize_call(call);
+            int const&& result = policy.finalize_call(call);
             REQUIRE(42 == result);
             REQUIRE(42 == policy.finalize_call(call));
         }
@@ -251,19 +251,19 @@ TEST_CASE(
         SECTION("And when std::reference_wrapper is stored.")
         {
             int value{42};
-            expectation_policies::ReturnsResultOf policy = finally::returns(std::ref(value));
-            STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), const int&&()>);
+            expectation::policies::ReturnsResultOf policy = finally::returns(std::ref(value));
+            STATIC_REQUIRE(expectation::finalize_policy_for < decltype(policy), int const && () >);
 
-            const int&& result = policy.finalize_call(call);
+            int const&& result = policy.finalize_call(call);
             REQUIRE(&value == std::addressof(result));
-            const int&& secondResult = policy.finalize_call(call);
+            int const&& secondResult = policy.finalize_call(call);
             REQUIRE(&value == std::addressof(secondResult));
         }
     }
 }
 
 TEST_CASE(
-    "finally::returns_apply_result_of creates expectation_policies::ReturnsResultOf.",
+    "finally::returns_apply_result_of creates expectation::policies::ReturnsResultOf.",
     "[expectation][expectation::factories]")
 {
     using trompeloeil::_;
@@ -276,13 +276,13 @@ TEST_CASE(
         int param0{1337};
         double param1{4.2};
         std::string param2{"Hello, World!"};
-        const CallInfoT info{
+        CallInfoT const info{
             .args = {param0, param1, param2},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
-        expectation_policies::ReturnsResultOf policy = finally::returns_apply_result_of<2>(
+        expectation::policies::ReturnsResultOf policy = finally::returns_apply_result_of<2>(
             [](std::string& str) noexcept -> std::string&& { return std::move(str); });
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
@@ -298,13 +298,13 @@ TEST_CASE(
         int param0{1337};
         double param1{4.2};
         std::string param2{"Hello, World!"};
-        const CallInfoT info{
+        CallInfoT const info{
             .args = {param0, param1, param2},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
-        expectation_policies::ReturnsResultOf policy = finally::returns_apply_result_of<1, 2, 0, 1>(
+        expectation::policies::ReturnsResultOf policy = finally::returns_apply_result_of<1, 2, 0, 1>(
             [](double& p0, std::string& p1, int& p2, double& p3) {
                 return std::tuple<double, std::string&&, int, double&>{
                     p0,
@@ -323,20 +323,20 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "finally::returns_apply_all_result_of creates expectation_policies::ReturnsResultOf.",
+    "finally::returns_apply_all_result_of creates expectation::policies::ReturnsResultOf.",
     "[expectation][expectation::factories]")
 {
     using trompeloeil::_;
 
     SECTION("When signature has zero params.")
     {
-        const call::Info<int&> info{
+        call::Info<int&> const info{
             .args = {},
             .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
             .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
 
         InvocableMock<int&> action{};
-        expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
+        expectation::policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&()>);
 
         int value{42};
@@ -348,13 +348,13 @@ TEST_CASE(
     SECTION("When signature has one param.")
     {
         int param0{1337};
-        const call::Info<int&, int&> info{
+        call::Info<int&, int&> const info{
             .args = {std::ref(param0)},
             .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
             .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)};
 
         InvocableMock<int&, int&> action{};
-        expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
+        expectation::policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&(int&)>);
 
         int value{42};
@@ -368,14 +368,14 @@ TEST_CASE(
     {
         int param0{1337};
         double param1{4.2};
-        const call::Info<int&, int&, double&> info{
+        call::Info<int&, int&, double&> const info{
             .args = {param0, param1},
             .fromCategory = GENERATE(ValueCategory::lvalue, ValueCategory::rvalue, ValueCategory::any),
             .fromConstness = GENERATE(Constness::non_const, Constness::as_const, Constness::any)
         };
 
         InvocableMock<int&, int&, double&> action{};
-        expectation_policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
+        expectation::policies::ReturnsResultOf policy = finally::returns_apply_all_result_of(std::ref(action));
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), int&(int&, double&)>);
 
         int value{42};
@@ -388,7 +388,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "finally::returns_arg creates expectation_policies::ReturnsResultOf.",
+    "finally::returns_arg creates expectation::policies::ReturnsResultOf.",
     "[expectation][expectation::factories]")
 {
     int param0{1337};
@@ -399,14 +399,14 @@ TEST_CASE(
     {
         using SignatureT = std::unique_ptr<int>(int, double&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
-        const CallInfoT info{
+        CallInfoT const info{
             .args = {param0, param1, param2},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
-        const int* ptr = param2.get();
-        expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
+        int const* ptr = param2.get();
+        expectation::policies::ReturnsResultOf policy = finally::returns_arg<2>();
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         REQUIRE(ptr == policy.finalize_call(info).get());
@@ -416,13 +416,13 @@ TEST_CASE(
     {
         using SignatureT = double&(int, double&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
-        const CallInfoT info{
+        CallInfoT const info{
             .args = {param0, param1, param2},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
-        expectation_policies::ReturnsResultOf policy = finally::returns_arg<1>();
+        expectation::policies::ReturnsResultOf policy = finally::returns_arg<1>();
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         REQUIRE(&param1 == &policy.finalize_call(info));
@@ -430,15 +430,15 @@ TEST_CASE(
 
     SECTION("When const lvalue ref is selected.")
     {
-        using SignatureT = const double&(int, const double&, std::unique_ptr<int>&&);
+        using SignatureT = double const&(int, double const&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
-        const CallInfoT info{
+        CallInfoT const info{
             .args = {param0, param1, param2},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
-        expectation_policies::ReturnsResultOf policy = finally::returns_arg<1>();
+        expectation::policies::ReturnsResultOf policy = finally::returns_arg<1>();
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         REQUIRE(&param1 == &policy.finalize_call(info));
@@ -448,13 +448,13 @@ TEST_CASE(
     {
         using SignatureT = std::unique_ptr<int> && (int, double&, std::unique_ptr<int>&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
-        const CallInfoT info{
+        CallInfoT const info{
             .args = {param0, param1, param2},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
-        expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
+        expectation::policies::ReturnsResultOf policy = finally::returns_arg<2>();
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
         std::unique_ptr<int>&& result = policy.finalize_call(info);
@@ -463,32 +463,32 @@ TEST_CASE(
 
     SECTION("When const rvalue ref is selected.")
     {
-        using SignatureT = const std::unique_ptr<int> && (int, double&, const std::unique_ptr<int>&&);
+        using SignatureT = std::unique_ptr<int> const && (int, double&, std::unique_ptr<int> const&&);
         using CallInfoT = call::info_for_signature_t<SignatureT>;
-        const CallInfoT info{
+        CallInfoT const info{
             .args = {param0, param1, param2},
             .fromCategory = GENERATE(from_range(refQualifiers)),
             .fromConstness = GENERATE(from_range(constQualifiers))
         };
 
-        expectation_policies::ReturnsResultOf policy = finally::returns_arg<2>();
+        expectation::policies::ReturnsResultOf policy = finally::returns_arg<2>();
         STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
 
-        const std::unique_ptr<int>&& result = policy.finalize_call(info);
+        std::unique_ptr<int> const&& result = policy.finalize_call(info);
         REQUIRE(&param2 == std::addressof(result));
     }
 }
 
 TEST_CASE(
-    "finally::throws creates expectation_policies::Throws.",
+    "finally::throws creates expectation::policies::Throws.",
     "[expectation][expectation::factories]")
 {
     using CallInfoT = call::Info<int>;
 
-    const int value = GENERATE(range(0, 5));
-    expectation_policies::Throws policy = finally::throws(value);
+    int const value = GENERATE(range(0, 5));
+    expectation::policies::Throws policy = finally::throws(value);
 
-    const CallInfoT call{
+    CallInfoT const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};

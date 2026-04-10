@@ -5,7 +5,7 @@
 
 #include "mimic++/expectation/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/Mock.hpp"
-#include "mimic++/policies/FinalizerPolicies.hpp"
+#include "mimic++/expectation/policies/FinalizerPolicies.hpp"
 
 #include "TestTypes.hpp"
 

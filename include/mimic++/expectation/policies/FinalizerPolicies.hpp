@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_POLICIES_FINALIZER_POLICIES_HPP
-#define MIMICPP_POLICIES_FINALIZER_POLICIES_HPP
+#ifndef MIMICPP_EXPECTATION_POLICIES_FINALIZER_POLICIES_HPP
+#define MIMICPP_EXPECTATION_POLICIES_FINALIZER_POLICIES_HPP
 
 #pragma once
 
@@ -20,7 +20,7 @@
     #include <utility>
 #endif
 
-namespace mimicpp::expectation_policies
+namespace mimicpp::expectation::policies
 {
     template <typename Action>
         requires std::same_as<Action, std::remove_cvref_t<Action>>
@@ -36,15 +36,15 @@ namespace mimicpp::expectation_policies
         }
 
         template <typename Return, typename... Args>
-            requires std::invocable<Action&, const call::Info<Return, Args...>&>
+            requires std::invocable<Action&, call::Info<Return, Args...> const&>
                   && util::explicitly_convertible_to<
-                         std::invoke_result_t<Action&, const call::Info<Return, Args...>&>,
+                         std::invoke_result_t<Action&, call::Info<Return, Args...> const&>,
                          Return>
         [[nodiscard]]
-        constexpr Return finalize_call([[maybe_unused]] const call::Info<Return, Args...>& call)
+        constexpr Return finalize_call([[maybe_unused]] call::Info<Return, Args...> const& call)
             noexcept(
-                std::is_nothrow_invocable_v<Action&, const call::Info<Return, Args...>&>
-                && util::nothrow_explicitly_convertible_to<std::invoke_result_t<Action&, const call::Info<Return, Args...>&>, Return>)
+                std::is_nothrow_invocable_v<Action&, call::Info<Return, Args...> const&>
+                && util::nothrow_explicitly_convertible_to<std::invoke_result_t<Action&, call::Info<Return, Args...> const&>, Return>)
         {
             return static_cast<Return>(
                 std::invoke(m_Action, call));
@@ -68,7 +68,7 @@ namespace mimicpp::expectation_policies
 
         template <typename Return, typename... Args>
         constexpr Return finalize_call(
-            [[maybe_unused]] const call::Info<Return, Args...>& call)
+            [[maybe_unused]] call::Info<Return, Args...> const& call)
         {
             throw m_Exception; // NOLINT(hicpp-exception-baseclass)
         }
@@ -116,8 +116,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::finally
     constexpr auto returns_result_of(Fun&& fun)
         noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fun>, Fun>)
     {
-        return expectation_policies::ReturnsResultOf{
-            [fn = std::forward<Fun>(fun)]([[maybe_unused]] const auto& call) mutable noexcept(
+        return expectation::policies::ReturnsResultOf{
+            [fn = std::forward<Fun>(fun)]([[maybe_unused]] auto const& call) mutable noexcept(
                 std::is_nothrow_invocable_v<decltype(fun)>) -> decltype(auto) {
                 return std::invoke(fn);
             }};
@@ -146,8 +146,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::finally
     constexpr auto returns(T&& value)
         noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
     {
-        return expectation_policies::ReturnsResultOf{
-            [v = std::forward<T>(value)]([[maybe_unused]] const auto& call) mutable noexcept -> auto& {
+        return expectation::policies::ReturnsResultOf{
+            [v = std::forward<T>(value)]([[maybe_unused]] auto const& call) mutable noexcept -> auto& {
                 return static_cast<std::unwrap_reference_t<decltype(v)>&>(v);
             }};
     }
@@ -174,7 +174,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::finally
             std::index_sequence<index, otherIndices...>>;
         using apply_strategy_t = expectation::policies::detail::arg_list_forward_apply_fn;
 
-        return expectation_policies::ReturnsResultOf{
+        return expectation::policies::ReturnsResultOf{
             std::bind_front(
                 expectation::policies::detail::apply_args_fn{arg_selector_t{}, apply_strategy_t{}},
                 std::forward<Action>(action))};
@@ -198,7 +198,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::finally
         using arg_selector_t = expectation::policies::detail::all_args_selector_fn<std::add_lvalue_reference_t>;
         using apply_strategy_t = expectation::policies::detail::arg_list_forward_apply_fn;
 
-        return expectation_policies::ReturnsResultOf{
+        return expectation::policies::ReturnsResultOf{
             std::bind_front(
                 expectation::policies::detail::apply_args_fn{arg_selector_t{}, apply_strategy_t{}},
                 std::forward<Action>(action))};
@@ -220,7 +220,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::finally
             std::index_sequence<index>>;
         using apply_strategy_t = expectation::policies::detail::arg_list_forward_apply_fn;
 
-        return expectation_policies::ReturnsResultOf{
+        return expectation::policies::ReturnsResultOf{
             std::bind_front(
                 expectation::policies::detail::apply_args_fn{arg_selector_t{}, apply_strategy_t{}},
                 std::identity{})};
@@ -238,10 +238,10 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::finally
     template <typename T>
         requires std::copyable<std::remove_cvref_t<T>>
     [[nodiscard]]
-    constexpr expectation_policies::Throws<std::remove_cvref_t<T>> throws(T&& exception)
-        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
+    constexpr expectation::policies::Throws<std::remove_cvref_t<T>> throws(
+        T && exception) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<T>, T>)
     {
-        return expectation_policies::Throws<std::remove_cvref_t<T>>{
+        return expectation::policies::Throws<std::remove_cvref_t<T>>{
             std::forward<T>(exception)};
     }
 

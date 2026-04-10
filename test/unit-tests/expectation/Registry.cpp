@@ -5,7 +5,7 @@
 
 #include "mimic++/expectation/Registry.hpp"
 #include "mimic++/expectation/Builder.hpp"
-#include "mimic++/policies/FinalizerPolicies.hpp"
+#include "mimic++/expectation/policies/FinalizerPolicies.hpp"
 
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
