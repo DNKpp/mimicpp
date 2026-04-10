@@ -9,6 +9,7 @@ var searchData=
   ['closingcurly_6',['ClosingCurly',['../d6/d7f/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_curly.html',1,'mimicpp::printing::type::parsing::token']]],
   ['closingparens_7',['ClosingParens',['../d5/dd0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_parens.html',1,'mimicpp::printing::type::parsing::token']]],
   ['closingsinglequote_8',['ClosingSingleQuote',['../d0/dcd/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_single_quote.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['constness_9',['Constness',['../db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html',1,'mimicpp::expectation_policies']]],
-  ['controlpolicy_10',['ControlPolicy',['../dc/db2/classmimicpp_1_1_control_policy.html',1,'mimicpp']]]
+  ['collector_9',['Collector',['../d7/dc7/classmimicpp_1_1expectation_1_1_collector.html',1,'mimicpp::expectation']]],
+  ['constness_10',['Constness',['../db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html',1,'mimicpp::expectation_policies']]],
+  ['controlpolicy_11',['ControlPolicy',['../dc/db2/classmimicpp_1_1_control_policy.html',1,'mimicpp']]]
 ];

@@ -5,9 +5,21 @@ var group___e_x_p_e_c_t_a_t_i_o_n =
     [ "sequence", "d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html", "d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e" ],
     [ "side effects", "db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html", "db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s" ],
     [ "times", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html", "d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s" ],
+    [ "mimicpp::expectation::requirement_for", "d3/dc8/conceptmimicpp_1_1expectation_1_1requirement__for.html", null ],
     [ "mimicpp::expectation::expectation_policy_for", "df/d74/conceptmimicpp_1_1expectation_1_1expectation__policy__for.html", null ],
     [ "mimicpp::expectation::finalize_policy_for", "d0/d7b/conceptmimicpp_1_1expectation_1_1finalize__policy__for.html", null ],
     [ "mimicpp::expectation::control_policy", "d3/dbb/conceptmimicpp_1_1expectation_1_1control__policy.html", null ],
+    [ "mimicpp::expectation::Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html", [
+      [ "Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a5d43ef8d03791dbf1248603550149d6a", null ],
+      [ "~Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a1f40567d7a4e4277543f9238ba2de282", null ],
+      [ "Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#aabd76e7db44cbb8802c9dcb42bc51e1f", null ],
+      [ "Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a8a479737013c60794d00486979624b7b", null ],
+      [ "attach", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a2881c81e2aa756bd01c19fe8287f2775", null ],
+      [ "expectations", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a690a39d762e617264d2420ac591f33f8", null ],
+      [ "operator+=", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a0650d35d81bad10f814df6fc3fd7809e", null ],
+      [ "operator=", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a8269690584960ede72d8a759c5761672", null ],
+      [ "operator=", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#ab14fa43de6330b9824b76f22d6b1e2dd", null ]
+    ] ],
     [ "mimicpp::expectation::Expectation", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html", [
       [ "~Expectation", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#a9f598ced5a1a84ac9d5666349e595ea2", null ],
       [ "Expectation", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#af3a0ef7844f2f936b0508055f4e0f511", null ],
@@ -36,5 +48,7 @@ var group___e_x_p_e_c_t_a_t_i_o_n =
       [ "operator=", "da/d33/classmimicpp_1_1expectation_1_1_owner.html#a5892acb69c6de5a7bda1dcbbc7f73f31", null ],
       [ "operator=", "da/d33/classmimicpp_1_1expectation_1_1_owner.html#a9280d4e166656d4be5ddd00ffa86b624", null ],
       [ "loc", "da/d33/classmimicpp_1_1expectation_1_1_owner.html#afc7087d15e4cadcbabdb6a93d5d5b9be", null ]
-    ] ]
+    ] ],
+    [ "mimicpp::ScopedExpectation", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html#gad5c2fca81b635df29fe820e58e04d992", null ],
+    [ "mimicpp::ScopedExpectations", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html#ga5c5195245b3386e7f86e415b4433d5c5", null ]
 ];

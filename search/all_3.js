@@ -43,12 +43,13 @@ var searchData=
   ['argsequence_40',['ArgSequence',['../d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html',1,'mimicpp::printing::type::parsing::token::ArgSequence'],['../d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html#ac7a8905e8111056bdf47947c13dca02f',1,'mimicpp::printing::type::parsing::token::ArgSequence::ArgSequence()'],['../d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html#a35c7975eee4cb686882be2b147a328d4',1,'mimicpp::printing::type::parsing::token::ArgSequence::ArgSequence(ArgSequence const &amp;)'],['../d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html#a0d09ca1b829b5490c6b04fd30983432d',1,'mimicpp::printing::type::parsing::token::ArgSequence::ArgSequence(ArgSequence &amp;&amp;) noexcept']]],
   ['argsrequirement_41',['ArgsRequirement',['../d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html',1,'mimicpp::expectation_policies::ArgsRequirement&lt; Matcher, MatchesStrategy, DescribeStrategy &gt;'],['../d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html#a3068cd8cc16c7c1bb907424161c83ac1',1,'mimicpp::expectation_policies::ArgsRequirement::ArgsRequirement()']]],
   ['argumentlist_2ehpp_42',['ArgumentList.hpp',['../d2/dfd/_argument_list_8hpp.html',1,'']]],
-  ['arguments_43',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md7',1,'']]],
+  ['arguments_43',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md2',1,'']]],
   ['arithmetic_44',['arithmetic',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a97f5e37f808c4497329b669752f9acba',1,'mimicpp::printing::type::lexing::texts']]],
   ['as_20formatting_20backend_45',['Use &lt;span class=&quot;tt&quot;&gt;fmt&lt;/span&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'']]],
   ['as_5fconst_46',['as_const',['../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a7d8fbf6968b41f059fd98dfa87dc47c2',1,'mimicpp']]],
   ['assignment_47',['assignment',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a12607a75c546d41ac003da0a7f0af45e',1,'mimicpp::printing::type::lexing::texts']]],
   ['assignment_20operator_48',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md13',1,'']]],
   ['at_5fleast_49',['at_least',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga859cd6bd34a5d6c96b5bc72b5c2c9e36',1,'mimicpp::expect']]],
-  ['at_5fmost_50',['at_most',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465',1,'mimicpp::expect']]]
+  ['at_5fmost_50',['at_most',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga968317fb9976ad8d293b041183ffb465',1,'mimicpp::expect']]],
+  ['attach_51',['attach',['../d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a2881c81e2aa756bd01c19fe8287f2775',1,'mimicpp::expectation::Collector']]]
 ];

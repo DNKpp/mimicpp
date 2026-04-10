@@ -92,6 +92,7 @@ var hierarchy =
     [ "mimicpp::printing::type::parsing::token::ClosingCurly", "d6/d7f/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_curly.html", null ],
     [ "mimicpp::printing::type::parsing::token::ClosingParens", "d5/dd0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_parens.html", null ],
     [ "mimicpp::printing::type::parsing::token::ClosingSingleQuote", "d0/dcd/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_single_quote.html", null ],
+    [ "mimicpp::expectation::Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html", null ],
     [ "std::conditional_t", null, [
       [ "mimicpp::detail::is_overloadable_with< detail::normalize_overload_t< First >, detail::normalize_overload_t< Second > >", null, [
         [ "mimicpp::is_overloadable_with< First, Second >", "d4/dd6/structmimicpp_1_1is__overloadable__with.html", null ]

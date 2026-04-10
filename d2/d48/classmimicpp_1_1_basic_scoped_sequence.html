@@ -114,8 +114,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa788c4cd3ca99a370f3864495f87fee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deleted copy-constructor.  <br /></td></tr>
 <tr class="memitem:a3800112e57e86dacf7db48bf3c0ecccc" id="r_a3800112e57e86dacf7db48bf3c0ecccc"><td class="memItemLeft"><a class="el" href="#aa788c4cd3ca99a370f3864495f87fee4">BasicScopedSequence</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a3800112e57e86dacf7db48bf3c0ecccc">operator=</a> (<a class="el" href="#aa788c4cd3ca99a370f3864495f87fee4">BasicScopedSequence</a> const &amp;)=delete</td></tr>
 <tr class="memdesc:a3800112e57e86dacf7db48bf3c0ecccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deleted copy-assignment operator.  <br /></td></tr>
-<tr class="memitem:a9bde4d56b45b5ab9c6493ca51af61571" id="r_a9bde4d56b45b5ab9c6493ca51af61571"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a9bde4d56b45b5ab9c6493ca51af61571">~BasicScopedSequence</a> () noexcept(false)</td></tr>
-<tr class="memdesc:a9bde4d56b45b5ab9c6493ca51af61571"><td class="mdescLeft">&#160;</td><td class="mdescRight">Possibly throwing destructor, checking the owned expectations in order of construction.  <br /></td></tr>
+<tr class="memitem:a5961accd06874dd5e21194113e0a3b02" id="r_a5961accd06874dd5e21194113e0a3b02"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a5961accd06874dd5e21194113e0a3b02">~BasicScopedSequence</a> () noexcept(false)=default</td></tr>
+<tr class="memdesc:a5961accd06874dd5e21194113e0a3b02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Possibly throwing destructor, checking the owned expectations in order of construction.  <br /></td></tr>
 <tr class="memitem:a2c4b10266892de7efc2f3bb6d44789a1" id="r_a2c4b10266892de7efc2f3bb6d44789a1"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2c4b10266892de7efc2f3bb6d44789a1">BasicScopedSequence</a> (auto &amp;&amp;... canary, <a class="el" href="../../db/df5/classmimicpp_1_1util_1_1_source_location.html">util::SourceLocation</a> loc={})</td></tr>
 <tr class="memdesc:a2c4b10266892de7efc2f3bb6d44789a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default-constructor.  <br /></td></tr>
 <tr class="memitem:ace91408d86a79d585d0271ccd10a95a3" id="r_ace91408d86a79d585d0271ccd10a95a3"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ace91408d86a79d585d0271ccd10a95a3">BasicScopedSequence</a> (BasicScopedSequence &amp;&amp;)=default</td></tr>
@@ -124,7 +124,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ac4eb869f51039eeaf74ff97e2b55ec5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defaulted move-assignment operator.  <br /></td></tr>
 <tr class="memitem:ae1ff354dc83d222a7774c9944f174555" id="r_ae1ff354dc83d222a7774c9944f174555"><td class="memItemLeft"><a class="el" href="#aa788c4cd3ca99a370f3864495f87fee4">BasicScopedSequence</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#ae1ff354dc83d222a7774c9944f174555">operator+=</a> (sequence::detail::ExpectationBuilderFinalizer&lt; <a class="el" href="#aa788c4cd3ca99a370f3864495f87fee4">BasicScopedSequence</a> &gt; &amp;&amp;builder)</td></tr>
 <tr class="memdesc:ae1ff354dc83d222a7774c9944f174555"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attaches a newly constructed expectation.  <br /></td></tr>
-<tr class="memitem:aba2c55740d0f900900681b94f42cd26d" id="r_aba2c55740d0f900900681b94f42cd26d"><td class="memItemLeft">std::deque&lt; <a class="el" href="../../d1/d11/namespacemimicpp.html#ad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a> &gt; const &amp;&#160;</td><td class="memItemRight"><a class="el" href="#aba2c55740d0f900900681b94f42cd26d">expectations</a> () const noexcept</td></tr>
+<tr class="memitem:aba2c55740d0f900900681b94f42cd26d" id="r_aba2c55740d0f900900681b94f42cd26d"><td class="memItemLeft">std::deque&lt; <a class="el" href="../../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html#gad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a> &gt; const &amp;&#160;</td><td class="memItemRight"><a class="el" href="#aba2c55740d0f900900681b94f42cd26d">expectations</a> () const noexcept</td></tr>
 <tr class="memdesc:aba2c55740d0f900900681b94f42cd26d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the collection of explicitly owned expectations.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
@@ -137,7 +137,7 @@ class mimicpp::BasicScopedSequence&lt; Strategy &gt;</div><p>A sequence type tha
   </dd>
 </dl>
 <p>This type offers a convenient mechanism for chaining multiple expectations into a sequence, and it monitors whether they are fulfilled upon destruction.</p>
-<p>In essence, it behaves similarly to manually attaching expectations via <span class="tt"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gafaccdca014c38611a9b8e3eef4d43a97" title="Attaches the expectation onto a sequence.">expect::in_sequence</a></span> to a sequence. The primary distinction is that if an expectation is not satisfied, this type will report the first unfulfilled expectation. In contrast, when expectations are manually constructed as <span class="tt"><a class="el" href="../../d1/d11/namespacemimicpp.html#ad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a></span>, the last created expectation (due to the stack’s order) would typically be reported.</p>
+<p>In essence, it behaves similarly to manually attaching expectations via <span class="tt"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gafaccdca014c38611a9b8e3eef4d43a97" title="Attaches the expectation onto a sequence.">expect::in_sequence</a></span> to a sequence. The primary distinction is that if an expectation is not satisfied, this type will report the first unfulfilled expectation. In contrast, when expectations are manually constructed as <span class="tt"><a class="el" href="../../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html#gad5c2fca81b635df29fe820e58e04d992" title="Takes the ownership of an expectation and checks whether it&#39;s satisfied during destruction.">ScopedExpectation</a></span>, the last created expectation (due to the stack’s order) would typically be reported.</p>
 <p>Nevertheless, all standard sequence rules also apply.</p>
 <div class="fragment"><div class="line">    <span class="keyword">using </span><a class="code hl_variable" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaa74e274d126775d36dd9ebfd5879b61e">mimicpp::matches::_</a>;</div>
 <div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
@@ -186,13 +186,13 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence_aa788c4cd3ca99a370f3864495f87fee4_icgraph.svg" width="482" height="248"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence_aa788c4cd3ca99a370f3864495f87fee4_icgraph.svg" width="482" height="314"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
-<a id="a9bde4d56b45b5ab9c6493ca51af61571" name="a9bde4d56b45b5ab9c6493ca51af61571"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9bde4d56b45b5ab9c6493ca51af61571">&#9670;&#160;</a></span>~BasicScopedSequence()</h2>
+<a id="a5961accd06874dd5e21194113e0a3b02" name="a5961accd06874dd5e21194113e0a3b02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5961accd06874dd5e21194113e0a3b02">&#9670;&#160;</a></span>~BasicScopedSequence()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -211,17 +211,12 @@ template&lt;auto Strategy&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Possibly throwing destructor, checking the owned expectations in order of construction. </p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence_a9bde4d56b45b5ab9c6493ca51af61571_cgraph.svg" width="482" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
 
 </div>
 </div>
@@ -255,6 +250,11 @@ template&lt;auto Strategy&gt; </div>
 </div><div class="memdoc">
 
 <p>Default-constructor. </p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence_a2c4b10266892de7efc2f3bb6d44789a1_cgraph.svg" width="482" height="76"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
@@ -305,7 +305,7 @@ template&lt;auto Strategy&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::deque&lt; <a class="el" href="../../d1/d11/namespacemimicpp.html#ad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a> &gt; const  &amp; <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">mimicpp::BasicScopedSequence</a>&lt; Strategy &gt;::expectations </td>
+          <td class="memname">std::deque&lt; <a class="el" href="../../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html#gad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a> &gt; const  &amp; <a class="el" href="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html">mimicpp::BasicScopedSequence</a>&lt; Strategy &gt;::expectations </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -320,12 +320,7 @@ template&lt;auto Strategy&gt; </div>
 
 <p>Retrieves the collection of explicitly owned expectations. </p>
 <dl class="section return"><dt>Returns</dt><dd>A constant reference to the collection of attached expectations. </dd></dl>
-<dl class="section note"><dt>Note</dt><dd>This function returns only those expectations that were explicitly attached using the <span class="tt">operator +=</span>, and not every expectation that is currently queued in the sequence (i.e. by manually using <span class="tt"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gafaccdca014c38611a9b8e3eef4d43a97" title="Attaches the expectation onto a sequence.">expect::in_sequence</a></span>). </dd></dl>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d2/d48/classmimicpp_1_1_basic_scoped_sequence_aba2c55740d0f900900681b94f42cd26d_icgraph.svg" width="482" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
+<dl class="section note"><dt>Note</dt><dd>This function returns only those expectations that were explicitly attached using the <span class="tt">operator +=</span>, and not every expectation currently queued in the sequence (i.e., by manually using <span class="tt"><a class="el" href="../../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gafaccdca014c38611a9b8e3eef4d43a97" title="Attaches the expectation onto a sequence.">expect::in_sequence</a></span>). </dd></dl>
 
 </div>
 </div>
@@ -362,7 +357,7 @@ template&lt;auto Strategy&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A mutable reference to the current instance.</dd></dl>
-<p>This function augments the provided expectation-builder with an additional sequence-policy for this sequence and finalizes its construction. Additionally, the sequence takes over the ownership of the constructed <span class="tt"><a class="el" href="../../d1/d11/namespacemimicpp.html#ad5c2fca81b635df29fe820e58e04d992">ScopedExpectation</a></span>. </p>
+<p>This function augments the provided expectation-builder with an additional sequence-policy for this sequence and finalizes its construction. Additionally, the sequence takes over the ownership of the constructed <span class="tt"><a class="el" href="../../da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html#gad5c2fca81b635df29fe820e58e04d992" title="Takes the ownership of an expectation and checks whether it&#39;s satisfied during destruction.">ScopedExpectation</a></span>. </p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

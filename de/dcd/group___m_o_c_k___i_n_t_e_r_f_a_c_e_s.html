@@ -165,7 +165,33 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <dl class="deprecated"><dt><b><a class="el" href="../../da/d58/deprecated.html#_deprecated000002">Deprecated</a></b></dt><dd>Use <a class="el" href="../../dc/da4/group___f_a_c_a_d_e.html#ga51cf9b133132c26fd19771743c373045" title="MIMICPP_MAKE_MEMBER_MOCK">MIMICPP_MAKE_MEMBER_MOCK</a> or <a class="el" href="../../dc/da4/group___f_a_c_a_d_e.html#ga7df48c038b42f8cedb05a15cedd1dfba" title="MAKE_MEMBER_MOCK">MAKE_MEMBER_MOCK</a> instead. </dd></dl>
-<p>This macro defines a single mock object for one method signature and generates a corresponding override method. The override method forwards calls to the mock object. </p><div class="fragment"></div><!-- fragment --> 
+<p>This macro defines a single mock object for one method signature and generates a corresponding override method. The override method forwards calls to the mock object. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">virtual</span> ~Interface() = <span class="keywordflow">default</span>;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">class </span>Derived</div>
+<div class="line">        : <span class="keyword">public</span> Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// this generates the override method and a mock object named foo_</span></div>
+<div class="line">        <a class="code hl_define" href="#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a>(foo, <span class="keywordtype">void</span>, ());</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// this may be a function from somewhere else, working with an interface.</span></div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> my_function = [](Interface&amp; obj) {</div>
+<div class="line">        obj.foo();</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    Derived mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.foo_.expect_call(); <span class="comment">// note the _ suffix. That&#39;s the name of the mock object.</span></div>
+<div class="line"> </div>
+<div class="line">    my_function(mock);</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga00ebfcf9ed01548d2001f2fca9ea8616" name="ga00ebfcf9ed01548d2001f2fca9ea8616"></a>
@@ -206,7 +232,37 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <dl class="deprecated"><dt><b><a class="el" href="../../da/d58/deprecated.html#_deprecated000001">Deprecated</a></b></dt><dd>Use <a class="el" href="../../dc/da4/group___f_a_c_a_d_e.html#ga5d8c170d38d254e448ca40de97d01b0f" title="MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK">MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK</a> or <a class="el" href="../../dc/da4/group___f_a_c_a_d_e.html#ga752c0d1b1ae33a85e9fade3596a7e99a" title="MAKE_OVERLOADED_MEMBER_MOCK">MAKE_OVERLOADED_MEMBER_MOCK</a> instead. </dd></dl>
-<p>This macro defines a single mock object that supports an arbitrary number of overloads. Each overload is implemented as an override method, forwarding calls to the mock object. </p><div class="fragment"></div><!-- fragment --> 
+<p>This macro defines a single mock object that supports an arbitrary number of overloads. Each overload is implemented as an override method, forwarding calls to the mock object. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">virtual</span> ~Interface() = <span class="keywordflow">default</span>;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() const noexcept = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    class Derived</div>
+<div class="line">        : public Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// this generates both overrides and a mock object named foo_</span></div>
+<div class="line">        <a class="code hl_define" href="#gafd903cfdd4f9496f29642c9b9e3859c0">MOCK_OVERLOADED_METHOD</a>(</div>
+<div class="line">            foo,</div>
+<div class="line">            <a class="code hl_define" href="../../dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keywordtype">void</span>, ()),</div>
+<div class="line">            <a class="code hl_define" href="../../dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keywordtype">void</span>, (), <span class="keyword">const</span> <span class="keyword">noexcept</span>)); <span class="comment">// note the ``const noexcept`` specifications as third argument</span></div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// this may be a function from somewhere else, working with an immutable interface.</span></div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> my_function = [](<span class="keyword">const</span> Interface&amp; obj) {</div>
+<div class="line">        obj.foo();</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    Derived mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> std::as_const(mock).foo_.expect_call(); <span class="comment">// We explicitly require the const overload to be called.</span></div>
+<div class="line"> </div>
+<div class="line">    my_function(mock);</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="ga6d5cb660367ff702eb85c0257b8d474b" name="ga6d5cb660367ff702eb85c0257b8d474b"></a>
@@ -232,7 +288,33 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <dl class="deprecated"><dt><b><a class="el" href="../../da/d58/deprecated.html#_deprecated000002">Deprecated</a></b></dt><dd>Use <a class="el" href="../../dc/da4/group___f_a_c_a_d_e.html#ga51cf9b133132c26fd19771743c373045" title="MIMICPP_MAKE_MEMBER_MOCK">MIMICPP_MAKE_MEMBER_MOCK</a> or <a class="el" href="../../dc/da4/group___f_a_c_a_d_e.html#ga7df48c038b42f8cedb05a15cedd1dfba" title="MAKE_MEMBER_MOCK">MAKE_MEMBER_MOCK</a> instead. </dd></dl>
-<p>This macro defines a single mock object for one method signature and generates a corresponding override method. The override method forwards calls to the mock object. </p><div class="fragment"></div><!-- fragment -->   
+<p>This macro defines a single mock object for one method signature and generates a corresponding override method. The override method forwards calls to the mock object. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">virtual</span> ~Interface() = <span class="keywordflow">default</span>;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">class </span>Derived</div>
+<div class="line">        : <span class="keyword">public</span> Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// this generates the override method and a mock object named foo_</span></div>
+<div class="line">        <a class="code hl_define" href="#ga6d5cb660367ff702eb85c0257b8d474b">MOCK_METHOD</a>(foo, <span class="keywordtype">void</span>, ());</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// this may be a function from somewhere else, working with an interface.</span></div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> my_function = [](Interface&amp; obj) {</div>
+<div class="line">        obj.foo();</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    Derived mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.foo_.expect_call(); <span class="comment">// note the _ suffix. That&#39;s the name of the mock object.</span></div>
+<div class="line"> </div>
+<div class="line">    my_function(mock);</div>
+</div><!-- fragment -->   
 </div>
 </div>
 <a id="gafd903cfdd4f9496f29642c9b9e3859c0" name="gafd903cfdd4f9496f29642c9b9e3859c0"></a>
@@ -257,7 +339,37 @@ Macros</h2></td></tr>
   </dd>
 </dl>
 <dl class="deprecated"><dt><b><a class="el" href="../../da/d58/deprecated.html#_deprecated000001">Deprecated</a></b></dt><dd>Use <a class="el" href="../../dc/da4/group___f_a_c_a_d_e.html#ga5d8c170d38d254e448ca40de97d01b0f" title="MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK">MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK</a> or <a class="el" href="../../dc/da4/group___f_a_c_a_d_e.html#ga752c0d1b1ae33a85e9fade3596a7e99a" title="MAKE_OVERLOADED_MEMBER_MOCK">MAKE_OVERLOADED_MEMBER_MOCK</a> instead. </dd></dl>
-<p>This macro defines a single mock object that supports an arbitrary number of overloads. Each overload is implemented as an override method, forwarding calls to the mock object. </p><div class="fragment"></div><!-- fragment -->   
+<p>This macro defines a single mock object that supports an arbitrary number of overloads. Each overload is implemented as an override method, forwarding calls to the mock object. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">virtual</span> ~Interface() = <span class="keywordflow">default</span>;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() = 0;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() const noexcept = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    class Derived</div>
+<div class="line">        : public Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// this generates both overrides and a mock object named foo_</span></div>
+<div class="line">        <a class="code hl_define" href="#gafd903cfdd4f9496f29642c9b9e3859c0">MOCK_OVERLOADED_METHOD</a>(</div>
+<div class="line">            foo,</div>
+<div class="line">            <a class="code hl_define" href="../../dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keywordtype">void</span>, ()),</div>
+<div class="line">            <a class="code hl_define" href="../../dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">ADD_OVERLOAD</a>(<span class="keywordtype">void</span>, (), <span class="keyword">const</span> <span class="keyword">noexcept</span>)); <span class="comment">// note the ``const noexcept`` specifications as third argument</span></div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// this may be a function from somewhere else, working with an immutable interface.</span></div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> my_function = [](<span class="keyword">const</span> Interface&amp; obj) {</div>
+<div class="line">        obj.foo();</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    Derived mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> std::as_const(mock).foo_.expect_call(); <span class="comment">// We explicitly require the const overload to be called.</span></div>
+<div class="line"> </div>
+<div class="line">    my_function(mock);</div>
+</div><!-- fragment -->   
 </div>
 </div>
 </div><!-- contents -->

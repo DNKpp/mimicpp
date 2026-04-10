@@ -11,6 +11,7 @@ var annotated_dup =
       ] ],
       [ "expectation", "d9/db6/namespacemimicpp_1_1expectation.html", [
         [ "BasicBuilder", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder" ],
+        [ "Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html", "d7/dc7/classmimicpp_1_1expectation_1_1_collector" ],
         [ "Expectation", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html", "dd/df1/classmimicpp_1_1expectation_1_1_expectation" ],
         [ "Owner", "da/d33/classmimicpp_1_1expectation_1_1_owner.html", "da/d33/classmimicpp_1_1expectation_1_1_owner" ],
         [ "Registry", "df/df9/classmimicpp_1_1expectation_1_1_registry.html", "df/df9/classmimicpp_1_1expectation_1_1_registry" ]

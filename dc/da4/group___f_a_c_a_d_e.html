@@ -389,7 +389,33 @@ Mocks and variadic templates</h2>
 </dl>
 <p>This macro defines a single mock member-object for one method signature and generates a corresponding facade member function. The facade member function forwards its calls to the underlying mock object-member.</p>
 <p>The mock member-object name is the content of <span class="tt">fn_name</span> suffixed by an additional <span class="tt">_</span>.</p>
-<div class="fragment"></div><!-- fragment -->   
+<div class="fragment"><div class="line">    <span class="keyword">class </span>Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">virtual</span> ~Interface() = <span class="keywordflow">default</span>;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">class </span>Derived</div>
+<div class="line">        : <span class="keyword">public</span> Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// this generates the override method and a mock object named `foo_`</span></div>
+<div class="line">        <a class="code hl_define" href="#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a>(foo, <span class="keywordtype">void</span>, (), <span class="keyword">override</span>);</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// this may be a function from somewhere else, working with an interface.</span></div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> my_function = [](Interface&amp; obj) {</div>
+<div class="line">        obj.foo();</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    Derived mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.foo_.expect_call(); <span class="comment">// note the `_` suffix. That&#39;s the name of the mock object.</span></div>
+<div class="line"> </div>
+<div class="line">    my_function(mock);</div>
+</div><!-- fragment -->   
 </div>
 </div>
 <a id="ga3a2b66a5bd1c595cfdc548723a0b2204" name="ga3a2b66a5bd1c595cfdc548723a0b2204"></a>
@@ -773,7 +799,33 @@ Mocks and variadic templates</h2>
 </dl>
 <p>This macro defines a single mock member-object for one method signature and generates a corresponding facade member function. The facade member function forwards its calls to the underlying mock object-member.</p>
 <p>The mock member-object name is the content of <span class="tt">fn_name</span> suffixed by an additional <span class="tt">_</span>.</p>
-<div class="fragment"></div><!-- fragment --> 
+<div class="fragment"><div class="line">    <span class="keyword">class </span>Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        <span class="keyword">virtual</span> ~Interface() = <span class="keywordflow">default</span>;</div>
+<div class="line">        <span class="keyword">virtual</span> <span class="keywordtype">void</span> foo() = 0;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">class </span>Derived</div>
+<div class="line">        : <span class="keyword">public</span> Interface</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        ~Derived() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// this generates the override method and a mock object named `foo_`</span></div>
+<div class="line">        <a class="code hl_define" href="#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a>(foo, <span class="keywordtype">void</span>, (), <span class="keyword">override</span>);</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">// this may be a function from somewhere else, working with an interface.</span></div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> my_function = [](Interface&amp; obj) {</div>
+<div class="line">        obj.foo();</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line">    Derived mock{};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.foo_.expect_call(); <span class="comment">// note the `_` suffix. That&#39;s the name of the mock object.</span></div>
+<div class="line"> </div>
+<div class="line">    my_function(mock);</div>
+</div><!-- fragment --> 
 </div>
 </div>
 <a id="gad70428e4a6c959438da624cdcc230917" name="gad70428e4a6c959438da624cdcc230917"></a>

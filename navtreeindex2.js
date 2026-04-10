@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"d4/dc0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_name_parser.html#a5989c6d47e8eb8cea51c8de4adb30490":[3,0,0,13,0,1,1,2],
+"d4/dc0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_name_parser.html#a5989c6d47e8eb8cea51c8de4adb30490":[5,0,0,7,0,1,1,2],
 "d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution.html":[3,0,0,13,0,1,0,2],
 "d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution.html":[5,0,0,7,0,1,0,2],
 "d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution.html#a5cdc38cd23ac0225559a46cc820152b9":[3,0,0,13,0,1,0,2,0],
@@ -40,8 +42,8 @@ var NAVTREEINDEX2 =
 "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html":[5,0,0,5,0],
 "d5/d73/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_operator_keyword.html":[3,0,0,13,0,1,0,1],
 "d5/d73/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_operator_keyword.html":[5,0,0,7,0,1,0,1],
-"d5/d8a/_expectation_8hpp.html":[6,0,1,1,2],
-"d5/d8a/_expectation_8hpp_source.html":[6,0,1,1,2],
+"d5/d8a/_expectation_8hpp.html":[6,0,1,1,3],
+"d5/d8a/_expectation_8hpp_source.html":[6,0,1,1,3],
 "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html":[3,0,0,8,7],
 "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html":[5,0,0,6,7],
 "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#a0bfc03a555eed8ed0126f32a858ba3ef":[3,0,0,8,7,7],
@@ -247,7 +249,5 @@ var NAVTREEINDEX2 =
 "d7/d67/_version_8hpp_source.html":[6,0,1,0,2],
 "d7/d6d/_pass_key_8hpp.html":[6,0,1,7,6],
 "d7/d6d/_pass_key_8hpp_source.html":[6,0,1,7,6],
-"d7/d89/_static_string_8hpp.html":[6,0,1,7,10],
-"d7/d89/_static_string_8hpp_source.html":[6,0,1,7,10],
-"d7/d97/structmimicpp_1_1signature__ref__qualification.html":[2,11,15,0]
+"d7/d89/_static_string_8hpp.html":[6,0,1,7,10]
 };

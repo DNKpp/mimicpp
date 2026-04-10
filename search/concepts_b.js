@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weakly_5fequality_5fcomparable_5fwith_0',['weakly_equality_comparable_with',['../d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html',1,'mimicpp::util']]]
+  ['token_5ftype_0',['token_type',['../d4/d1b/conceptmimicpp_1_1printing_1_1type_1_1parsing_1_1token__type.html',1,'mimicpp::printing::type::parsing']]]
 ];
