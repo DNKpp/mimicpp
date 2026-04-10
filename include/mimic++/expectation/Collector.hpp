@@ -24,8 +24,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
      * \ingroup EXPECTATION
      *
      * \details
-     * A `Collector` owns explicitly attached expectations and keeps them alive until it is destroyed.
+     * A `Collector` owns the attached expectations and keeps them alive until it is destroyed.
      * When destruction happens, all owned expectations are checked in order of construction.
+     * \snippet ExpectationHandling.cpp expectation collector
      */
     class Collector
     {

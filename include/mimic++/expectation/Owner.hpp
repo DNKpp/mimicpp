@@ -23,6 +23,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
     /**
      * \brief Takes the ownership of an expectation and checks whether it's satisfied during destruction.
      * \ingroup EXPECTATION
+     * \details
+     * Instances of this type have exclusive ownership of their attached expectations, which will be checked during destruction.
+     * \snippet ExpectationHandling.cpp expectation basic
+     *
+     * They can be freely passed around and may even outlive their target-mock.
+     * \snippet ExpectationHandling.cpp expectation outlive
      */
     class Owner
     {
