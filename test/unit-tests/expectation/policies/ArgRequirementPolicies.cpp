@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/policies/ArgRequirementPolicies.hpp"
+#include "mimic++/expectation/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/policies/FinalizerPolicies.hpp"
 
@@ -62,7 +62,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "expectation_policies::ArgsRequirement checks whether the given call::Info matches.",
+    "expectation::policies::ArgsRequirement checks whether the given call::Info matches.",
     "[expectation][expectation::policy]")
 {
     using trompeloeil::_;
@@ -80,14 +80,14 @@ TEST_CASE(
     using MatcherT = MatcherMock<int&>;
     using MatchesStrategyT = InvocableMock<
         bool,
-        expectation_policies::matcher_matches_fn<MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>>,
+        expectation::policies::matcher_matches_fn<MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>>,
         const CallInfoT&>;
     STATIC_CHECK(matcher_for<MatcherT, int&>);
 
     MatcherT matcher{};
     MatchesStrategyT matchesStrategy{};
     DescriberStrategyT describeStrategy{};
-    expectation_policies::ArgsRequirement policy{
+    expectation::policies::ArgsRequirement policy{
         MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
         std::ref(matchesStrategy),
         std::ref(describeStrategy)
@@ -127,7 +127,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "expectation_policies::ArgsRequirement supports matchers without description.",
+    "expectation::policies::ArgsRequirement supports matchers without description.",
     "[expectation][expectation::policy]")
 {
     using SignatureT = void(int);
@@ -153,12 +153,12 @@ TEST_CASE(
 
     using MatchesStrategyT = InvocableMock<
         bool,
-        expectation_policies::matcher_matches_fn<Matcher>,
+        expectation::policies::matcher_matches_fn<Matcher>,
         const CallInfoT&>;
 
     MatchesStrategyT matchesStrategy{};
     DescriberStrategyT describeStrategy{};
-    expectation_policies::ArgsRequirement policy{
+    expectation::policies::ArgsRequirement policy{
         Matcher{},
         std::ref(matchesStrategy),
         std::ref(describeStrategy)};
@@ -180,7 +180,7 @@ namespace
 }
 
 TEST_CASE(
-    "expectation_policies::ArgsRequirement supports variadic arguments.",
+    "expectation::policies::ArgsRequirement supports variadic arguments.",
     "[expectation][expectation::policy]")
 {
     using trompeloeil::_;
@@ -201,7 +201,7 @@ TEST_CASE(
     STATIC_CHECK(matcher_for<MatcherT, int&, const std::string&, double&>);
     MatcherT matcher{};
 
-    expectation_policies::ArgsRequirement policy{
+    expectation::policies::ArgsRequirement policy{
         MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}},
         detail::apply_args_fn{
                       detail::all_args_selector_fn<std::add_lvalue_reference_t>{},
@@ -223,7 +223,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "expect::arg creates an expectation_policies::ArgRequirement policy.",
+    "expect::arg creates an expectation::policies::ArgRequirement policy.",
     "[expectation][expectation::factories]")
 {
     using trompeloeil::_;
@@ -241,7 +241,7 @@ TEST_CASE(
     STATIC_CHECK(matcher_for<MatcherT, int&>);
     MatcherT matcher{};
 
-    expectation_policies::ArgsRequirement policy = expect::arg<0>(
+    expectation::policies::ArgsRequirement policy = expect::arg<0>(
         MatcherFacade{
             std::ref(matcher),
             UnwrapReferenceWrapper{}});
@@ -295,7 +295,7 @@ TEST_CASE(
 
     ProjectionT projection{};
 
-    expectation_policies::ArgsRequirement policy = expect::arg<0>(
+    expectation::policies::ArgsRequirement policy = expect::arg<0>(
         MatcherFacade{
             std::ref(matcher),
             UnwrapReferenceWrapper{}},
@@ -315,7 +315,7 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "expect::all_args creates an expectation_policies::ArgRequirement policy.",
+    "expect::all_args creates an expectation::policies::ArgRequirement policy.",
     "[expectation][expectation::factories]")
 {
     using trompeloeil::_;
@@ -335,7 +335,7 @@ TEST_CASE(
     STATIC_CHECK(matcher_for<MatcherT, int&, std::string&>);
     MatcherT matcher{};
 
-    expectation_policies::ArgsRequirement policy = expect::all_args(
+    expectation::policies::ArgsRequirement policy = expect::all_args(
         MatcherFacade{
             std::ref(matcher),
             UnwrapReferenceWrapper{}});

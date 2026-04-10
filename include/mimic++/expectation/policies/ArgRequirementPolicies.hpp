@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_POLICIES_ARG_REQUIREMENT_POLICIES_HPP
-#define MIMICPP_POLICIES_ARG_REQUIREMENT_POLICIES_HPP
+#ifndef MIMICPP_EXPECTATION_POLICIES_ARG_REQUIREMENT_POLICIES_HPP
+#define MIMICPP_EXPECTATION_POLICIES_ARG_REQUIREMENT_POLICIES_HPP
 
 #pragma once
 
@@ -24,27 +24,25 @@
     #include <utility>
 #endif
 
-namespace mimicpp::expectation_policies
+namespace mimicpp::expectation::policies
 {
     template <typename Matcher>
     struct matcher_matches_fn
     {
+        using matches_fn = mimicpp::detail::matches_hook::matches_fn;
+
     public:
         Matcher const& matcher;
 
         template <typename... Args>
-            requires std::invocable<detail::matches_hook::matches_fn, Matcher const&, Args&...>
+            requires std::invocable<matches_fn, Matcher const&, Args&...>
         [[nodiscard]]
         // projected arguments may come as value, so Args& won't work in all cases
         // just forward them as lvalue-ref
         constexpr bool operator()(Args&&... args) const
-            noexcept(
-                std::is_nothrow_invocable_v<
-                    decltype(detail::matches_hook::matches),
-                    Matcher const&,
-                    Args&...>)
+            noexcept(std::is_nothrow_invocable_v<matches_fn, Matcher const&, Args&...>)
         {
-            return detail::matches_hook::matches(matcher, args...);
+            return mimicpp::detail::matches_hook::matches(matcher, args...);
         }
     };
 
@@ -76,7 +74,7 @@ namespace mimicpp::expectation_policies
         template <typename Return, typename... Args>
             requires std::is_invocable_r_v<bool, MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>
         [[nodiscard]]
-        constexpr bool matches(const call::Info<Return, Args...>& info) const
+        constexpr bool matches(call::Info<Return, Args...> const& info) const
             noexcept(std::is_nothrow_invocable_v<MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>)
         {
             return std::invoke(
@@ -93,7 +91,7 @@ namespace mimicpp::expectation_policies
         [[nodiscard]]
         std::optional<StringT> describe() const
         {
-            [[maybe_unused]] auto const description = detail::describe_hook::describe(m_Matcher);
+            [[maybe_unused]] auto const description = mimicpp::detail::describe_hook::describe(m_Matcher);
 
             if constexpr (util::boolean_testable<decltype(description)>)
             {
@@ -167,7 +165,7 @@ namespace mimicpp::expect::detail
         using apply_strategy_t = mimicpp::detail::arg_list_indirect_apply_fn<std::remove_cvref_t<Projections>...>;
         using describe_strategy_t = arg_requirement_describer<indices...>;
 
-        return expectation_policies::ArgsRequirement{
+        return expectation::policies::ArgsRequirement{
             std::forward<Matcher>(matcher),
             mimicpp::detail::apply_args_fn(
                 arg_selector_t{},
@@ -279,7 +277,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
         using apply_strategy_t = mimicpp::detail::arg_list_forward_apply_fn;
         using describe_strategy_t = detail::all_args_requirement_describer;
 
-        return expectation_policies::ArgsRequirement{
+        return expectation::policies::ArgsRequirement{
             std::forward<Matcher>(matcher),
             mimicpp::detail::apply_args_fn(
                 arg_selector_t{},

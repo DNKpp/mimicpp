@@ -13,11 +13,11 @@
 #include "mimic++/expectation/Common.hpp"
 #include "mimic++/expectation/Owner.hpp"
 #include "mimic++/expectation/Registry.hpp"
+#include "mimic++/expectation/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/macros/ScopedExpectation.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/matchers/GeneralMatchers.hpp"
 #include "mimic++/matchers/StringMatchers.hpp"
-#include "mimic++/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/policies/ControlPolicies.hpp"
 #include "mimic++/policies/GeneralPolicies.hpp"
 

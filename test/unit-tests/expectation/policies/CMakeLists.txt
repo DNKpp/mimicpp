@@ -4,12 +4,6 @@
 #          https://www.boost.org/LICENSE_1_0.txt)
 
 target_sources(${TARGET_NAME} PRIVATE
-    "Builder.cpp"
-    "Collector.cpp"
-    "Common.cpp"
-    "Expectation.cpp"
-    "Registry.cpp"
-    "Owner.cpp"
+    "ArgRequirementPolicies.cpp"
+    "ArgumentList.cpp"
 )
-
-add_subdirectory(policies)
