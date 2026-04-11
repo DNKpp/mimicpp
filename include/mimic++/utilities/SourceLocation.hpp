@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -10,9 +10,6 @@
 
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/Fwd.hpp"
-#include "mimic++/printing/PathPrinter.hpp"
-#include "mimic++/printing/state/CommonTypes.hpp"
-#include "mimic++/printing/type/PrintType.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <cstddef>
@@ -114,19 +111,5 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
         std::size_t m_Line;
     };
 }
-
-template <>
-struct mimicpp::printing::detail::state::common_type_printer<mimicpp::util::SourceLocation>
-{
-    template <print_iterator OutIter>
-    static constexpr OutIter print(OutIter out, util::SourceLocation const& loc)
-    {
-        return detail::print_source_location(
-            std::move(out),
-            loc.file_name(),
-            loc.line(),
-            loc.function_name());
-    }
-};
 
 #endif

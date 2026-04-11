@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -19,6 +19,7 @@
 #include "mimic++/printing/type/PrintType.hpp"
 #include "mimic++/utilities/C++20Compatibility.hpp"
 #include "mimic++/utilities/C++23Backports.hpp" // unreachable
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
@@ -70,6 +71,20 @@ struct mimicpp::printing::detail::state::common_type_printer<std::source_locatio
 
 namespace mimicpp::printing::detail::state
 {
+    template <>
+    struct common_type_printer<util::SourceLocation>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, util::SourceLocation const& loc)
+        {
+            return detail::print_source_location(
+                std::move(out),
+                loc.file_name(),
+                loc.line(),
+                loc.function_name());
+        }
+    };
+
     template <>
     struct common_type_printer<std::nullopt_t>
     {
