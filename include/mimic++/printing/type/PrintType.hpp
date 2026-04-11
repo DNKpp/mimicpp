@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -13,6 +13,7 @@
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
+#include "mimic++/utilities/SourceLocation.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
@@ -20,12 +21,39 @@
     #include <functional>
     #include <iterator>
     #include <type_traits>
-    #include <typeinfo>
     #include <utility>
 #endif
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
 {
+    namespace detail
+    {
+        template <typename T>
+        [[nodiscard]]
+        consteval std::string_view raw_type_name(std::type_identity<T> const) noexcept
+        {
+            return util::SourceLocation{}.function_name();
+        }
+
+        inline constexpr auto typeNameConfig = std::invoke(
+            [] {
+                auto const rawName = raw_type_name(std::type_identity<int>{});
+                std::string_view const intName{"int"};
+                std::size_t const prefix = rawName.rfind(intName);
+                MIMICPP_ASSERT(prefix != std::string_view::npos, "Did not find `int` in the type-name string.");
+
+                struct type_name_config
+                {
+                    std::size_t prefix{};
+                    std::size_t suffix{};
+                };
+
+                return type_name_config{
+                    .prefix = prefix,
+                    .suffix = rawName.size() - intName.size() - prefix};
+            });
+    }
+
     /**
      * \brief Returns the (potentially demangled) name.
      * \ingroup PRINTING_TYPE
@@ -38,7 +66,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
      */
     template <typename T>
     [[nodiscard]]
-    StringT type_name();
+    StringT type_name()
+    {
+        auto rawName = detail::raw_type_name(std::type_identity<T>{});
+        rawName.remove_prefix(detail::typeNameConfig.prefix);
+        rawName.remove_suffix(detail::typeNameConfig.suffix);
+
+        return StringT{rawName};
+    }
 
     /**
      * \brief Prettifies a demangled name.
@@ -85,58 +120,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
 }
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
-
-    #if MIMICPP_DETAIL_IS_GCC || MIMICPP_DETAIL_IS_CLANG
-
-        #ifndef MIMICPP_DETAIL_IS_MODULE
-            #include <cstdlib>
-            #include <cxxabi.h>
-            #include <memory>
-        #endif
-
-namespace mimicpp::printing::type
-{
-    namespace detail
-    {
-        struct free_deleter
-        {
-            void operator()(char* const c) const noexcept
-            {
-                std::free(c);
-            }
-        };
-    }
-
-    template <typename T>
-    StringT type_name()
-    {
-        auto* const rawName = typeid(T).name();
-
-        // see: https://gcc.gnu.org/onlinedocs/libstdc++/manual/ext_demangling.html
-        int status{};
-        std::unique_ptr<char, detail::free_deleter> const demangledName{
-            abi::__cxa_demangle(rawName, nullptr, nullptr, &status)};
-        if (0 == status)
-        {
-            return {demangledName.get()};
-        }
-
-        return {rawName};
-    }
-}
-
-    #else
-
-namespace mimicpp::printing::type
-{
-    template <typename T>
-    StringT type_name()
-    {
-        return typeid(T).name();
-    }
-}
-
-    #endif
 
     #include "mimic++/printing/type/NameParser.hpp"
     #include "mimic++/printing/type/NamePrintVisitor.hpp"
@@ -197,12 +180,6 @@ namespace mimicpp::printing::type
 
 namespace mimicpp::printing::type
 {
-    template <typename T>
-    StringT type_name()
-    {
-        return typeid(T).name();
-    }
-
     template <print_iterator OutIter>
     MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_type(OutIter out, StringT name)
     {
