@@ -66,13 +66,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
      */
     template <typename T>
     [[nodiscard]]
-    StringT type_name()
+    consteval std::string_view type_name() noexcept
     {
-        auto rawName = detail::raw_type_name(std::type_identity<T>{});
-        rawName.remove_prefix(detail::typeNameConfig.prefix);
-        rawName.remove_suffix(detail::typeNameConfig.suffix);
+        auto typeName = detail::raw_type_name(std::type_identity<T>{});
+        typeName.remove_prefix(detail::typeNameConfig.prefix);
+        typeName.remove_suffix(detail::typeNameConfig.suffix);
 
-        return StringT{rawName};
+        return typeName;
     }
 
     /**
@@ -95,7 +95,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
      * this function simply outputs the provided name without any modifications.
      */
     template <print_iterator OutIter>
-    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_type(OutIter out, StringT name);
+    constexpr OutIter prettify_type(OutIter out, std::string_view name);
 
     /**
      * \brief Prettifies a function name produces by e.g. `std::source_location::function_name()`.
@@ -116,7 +116,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
      * this function simply outputs the provided name without any modifications.
      */
     template <print_iterator OutIter>
-    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_function(OutIter out, StringT name);
+    constexpr OutIter prettify_function(OutIter out, std::string_view name);
 }
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
@@ -127,7 +127,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
 namespace mimicpp::printing::type
 {
     template <print_iterator OutIter>
-    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_type(OutIter out, StringT name)
+    constexpr OutIter prettify_type(OutIter out, std::string_view const name)
     {
         static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
 
@@ -141,7 +141,7 @@ namespace mimicpp::printing::type
     namespace detail
     {
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_STRING StringT remove_template_details(StringT name)
+        constexpr std::string_view remove_template_details(std::string_view const name)
         {
             if (name.ends_with(']'))
             {
@@ -153,7 +153,8 @@ namespace mimicpp::printing::type
                         closingIter + 1,
                         rest.end(),
                         lexing::is_space);
-                    name.erase(end.base(), name.end());
+
+                    return std::string_view{name.begin(), end.base()};
                 }
             }
 
@@ -162,7 +163,7 @@ namespace mimicpp::printing::type
     }
 
     template <print_iterator OutIter>
-    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_function(OutIter out, StringT name)
+    constexpr OutIter prettify_function(OutIter out, std::string_view name)
     {
         name = detail::remove_template_details(std::move(name));
 
@@ -181,13 +182,13 @@ namespace mimicpp::printing::type
 namespace mimicpp::printing::type
 {
     template <print_iterator OutIter>
-    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_type(OutIter out, StringT name)
+    constexpr OutIter prettify_type(OutIter out, std::string_view const name)
     {
         return std::ranges::copy(name, std::move(out)).out;
     }
 
     template <print_iterator OutIter>
-    MIMICPP_DETAIL_CONSTEXPR_STRING OutIter prettify_function(OutIter out, StringT name)
+    constexpr OutIter prettify_function(OutIter out, std::string_view const name)
     {
         return std::ranges::copy(name, std::move(out)).out;
     }

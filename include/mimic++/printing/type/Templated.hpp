@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -32,10 +32,10 @@ namespace mimicpp::printing::type::detail
     template <typename T, print_iterator OutIter>
     constexpr OutIter pretty_template_name(OutIter out)
     {
-        StringT name = type_name<T>();
-        auto const iter = std::ranges::find(name, '<');
-        MIMICPP_ASSERT(iter != name.cend(), "Given name is not a template.");
-        name.erase(iter, name.end());
+        std::string_view name = type_name<T>();
+        auto const templateArgListPos = name.find('<');
+        MIMICPP_ASSERT(templateArgListPos != std::string_view::npos, "Given name is not a template.");
+        name = name.substr(0u, templateArgListPos);
 
         return type::prettify_type(std::move(out), std::move(name));
     }

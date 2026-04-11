@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -208,7 +208,7 @@ TEMPLATE_TEST_CASE(
     long,
     long long)
 {
-    StringT const rawName = printing::type::type_name<TestType>();
+    StringT const rawName{printing::type::type_name<TestType>()};
     CAPTURE(rawName);
 
     StringStreamT ss{};
@@ -216,7 +216,7 @@ TEMPLATE_TEST_CASE(
     SECTION("When explicit signed name is given.")
     {
         using T = std::make_signed_t<TestType>;
-        StringT const name = printing::type::type_name<T>();
+        StringT const name{printing::type::type_name<T>()};
         CAPTURE(name);
 
         printing::type::prettify_type(
@@ -230,7 +230,7 @@ TEMPLATE_TEST_CASE(
     SECTION("When unsigned name is given.")
     {
         using T = std::make_unsigned_t<TestType>;
-        StringT const name = printing::type::type_name<T>();
+        StringT const name{printing::type::type_name<T>()};
         CAPTURE(name);
 
         printing::type::prettify_type(
@@ -250,7 +250,7 @@ TEST_CASE(
 
     SECTION("When type-name in anonymous-namespace is given.")
     {
-        StringT const rawName = printing::type::type_name<my_type>();
+        StringT const rawName{printing::type::type_name<my_type>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -267,7 +267,7 @@ TEST_CASE(
         {
         } constexpr anon_class [[maybe_unused]]{};
 
-        StringT const rawName = printing::type::type_name<decltype(anon_class)>();
+        StringT const rawName{printing::type::type_name<decltype(anon_class)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -284,7 +284,7 @@ TEST_CASE(
         {
         } constexpr anon_struct [[maybe_unused]]{};
 
-        StringT const rawName = printing::type::type_name<decltype(anon_struct)>();
+        StringT const rawName{printing::type::type_name<decltype(anon_struct)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -302,7 +302,7 @@ TEST_CASE(
             dummy
         } constexpr anon_enum [[maybe_unused]]{};
 
-        StringT const rawName = printing::type::type_name<decltype(anon_enum)>();
+        StringT const rawName{printing::type::type_name<decltype(anon_enum)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -315,7 +315,7 @@ TEST_CASE(
 
     SECTION("When nested type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<outer_type::my_type>();
+        StringT const rawName{printing::type::type_name<outer_type::my_type>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -328,7 +328,7 @@ TEST_CASE(
 
     SECTION("When lambda is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(my_typeLambda)>();
+        StringT const rawName{printing::type::type_name<decltype(my_typeLambda)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -346,7 +346,7 @@ TEST_CASE(
     SECTION("When lambda with params is given.")
     {
         [[maybe_unused]] constexpr auto lambda = [](std::string const&) {};
-        StringT const rawName = printing::type::type_name<decltype(lambda)>();
+        StringT const rawName{printing::type::type_name<decltype(lambda)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -359,7 +359,7 @@ TEST_CASE(
 
     SECTION("When lambda-local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(my_typeLambda())>();
+        StringT const rawName{printing::type::type_name<decltype(my_typeLambda())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -377,7 +377,7 @@ TEST_CASE(
 
     SECTION("When mutable lambda-local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(my_typeMutableLambda())>();
+        StringT const rawName{printing::type::type_name<decltype(my_typeMutableLambda())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -396,7 +396,7 @@ TEST_CASE(
     SECTION("When noexcept lambda-local type-name is given.")
     {
         // noexcept doesn't seem to be part of the spec list
-        StringT const rawName = printing::type::type_name<decltype(my_typeNoexceptLambda())>();
+        StringT const rawName{printing::type::type_name<decltype(my_typeNoexceptLambda())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -414,7 +414,7 @@ TEST_CASE(
 
     SECTION("When nested lambda-local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(my_typeNestedLambda())>();
+        StringT const rawName{printing::type::type_name<decltype(my_typeNestedLambda())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -434,7 +434,7 @@ TEST_CASE(
 
     SECTION("When nested lambda-local type-name is given (more inner lambdas).")
     {
-        StringT const rawName = printing::type::type_name<decltype(my_typeNestedLambda2())>();
+        StringT const rawName{printing::type::type_name<decltype(my_typeNestedLambda2())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -454,7 +454,7 @@ TEST_CASE(
 
     SECTION("When free-function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(my_typeFreeFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(my_typeFreeFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -470,7 +470,7 @@ TEST_CASE(
 
     SECTION("When public function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(outer_type{}.my_typeFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -488,7 +488,7 @@ TEST_CASE(
     SECTION("When public noexcept function local type-name is given.")
     {
         // noexcept has no effect
-        StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeNoexceptFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(outer_type{}.my_typeNoexceptFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -505,7 +505,7 @@ TEST_CASE(
 
     SECTION("When public const-function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeConstFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(outer_type{}.my_typeConstFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -522,7 +522,7 @@ TEST_CASE(
 
     SECTION("When public static-function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(outer_type::my_typeStaticFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(outer_type::my_typeStaticFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -539,7 +539,7 @@ TEST_CASE(
 
     SECTION("When public lvalue-function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(std::declval<outer_type&>().my_typeLvalueFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(std::declval<outer_type&>().my_typeLvalueFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -556,7 +556,7 @@ TEST_CASE(
 
     SECTION("When public const lvalue-function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(std::declval<outer_type const&>().my_typeConstLvalueFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(std::declval<outer_type const&>().my_typeConstLvalueFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -573,7 +573,7 @@ TEST_CASE(
 
     SECTION("When public rvalue-function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeRvalueFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(outer_type{}.my_typeRvalueFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -590,7 +590,7 @@ TEST_CASE(
 
     SECTION("When public const rvalue-function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(std::declval<outer_type const&&>().my_typeConstRvalueFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(std::declval<outer_type const&&>().my_typeConstRvalueFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -607,7 +607,7 @@ TEST_CASE(
 
     SECTION("When private function local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(outer_type{}.my_typeIndirectlyPrivateFunction())>();
+        StringT const rawName{printing::type::type_name<decltype(outer_type{}.my_typeIndirectlyPrivateFunction())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -624,7 +624,7 @@ TEST_CASE(
 
     SECTION("When public operator local type-name is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(outer_type{}.operator+(42))>();
+        StringT const rawName{printing::type::type_name<decltype(outer_type{}.operator+(42))>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -652,7 +652,7 @@ TEST_CASE(
         {
         };
 
-        StringT const rawName = printing::type::type_name<my_type>();
+        StringT const rawName{printing::type::type_name<my_type>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -671,7 +671,7 @@ TEST_CASE(
                 {
                 };
 
-                StringT const rawName = printing::type::type_name<my_type>();
+                StringT const rawName{printing::type::type_name<my_type>()};
                 CAPTURE(rawName);
 
                 printing::type::prettify_type(
@@ -697,7 +697,7 @@ TEST_CASE(
                 {
                 };
 
-                StringT const rawName = printing::type::type_name<my_type>();
+                StringT const rawName{printing::type::type_name<my_type>()};
                 CAPTURE(rawName);
 
                 printing::type::prettify_type(
@@ -733,7 +733,7 @@ TEST_CASE(
                 {
                 };
 
-                StringT const rawName = printing::type::type_name<my_type>();
+                StringT const rawName{printing::type::type_name<my_type>()};
                 CAPTURE(rawName);
 
                 printing::type::prettify_type(
@@ -767,7 +767,7 @@ TEST_CASE(
                         {
                         };
 
-                        StringT const rawName = printing::type::type_name<my_type>();
+                        StringT const rawName{printing::type::type_name<my_type>()};
                         CAPTURE(rawName);
 
                         printing::type::prettify_type(
@@ -798,7 +798,7 @@ TEST_CASE(
     SECTION("When function-local type is returned.")
     {
         using return_t = decltype(my_typeLambda());
-        StringT const rawName = printing::type::type_name<return_t()>();
+        StringT const rawName{printing::type::type_name<return_t()>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -819,7 +819,7 @@ TEST_CASE(
     SECTION("When function-local type is parameter.")
     {
         using param_t = decltype(my_typeLambda());
-        StringT const rawName = printing::type::type_name<void(param_t)>();
+        StringT const rawName{printing::type::type_name<void(param_t)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -848,7 +848,7 @@ TEST_CASE(
     SECTION("When function-local type is returned.")
     {
         using return_t = decltype(my_typeLambda());
-        StringT const rawName = printing::type::type_name<return_t (*)()>();
+        StringT const rawName{printing::type::type_name<return_t (*)()>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -869,7 +869,7 @@ TEST_CASE(
     SECTION("When function-local type is parameter.")
     {
         using param_t = decltype(my_typeLambda());
-        StringT const rawName = printing::type::type_name<void (*)(param_t)>();
+        StringT const rawName{printing::type::type_name<void (*)(param_t)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -891,7 +891,7 @@ TEST_CASE(
     SECTION("When function-ptr is returned.")
     {
         using ret_t = void (*)();
-        StringT const rawName = printing::type::type_name<ret_t()>();
+        StringT const rawName{printing::type::type_name<ret_t()>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -907,7 +907,7 @@ TEST_CASE(
     {
         using ret1_t = void (*)();
         using ret2_t = ret1_t (*)();
-        StringT const rawName = printing::type::type_name<ret2_t()>();
+        StringT const rawName{printing::type::type_name<ret2_t()>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -958,7 +958,7 @@ TEST_CASE(
 
     SECTION("When template name in anonymous-namespace is given.")
     {
-        StringT const rawName = printing::type::type_name<my_template<int>>();
+        StringT const rawName{printing::type::type_name<my_template<int>>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -971,7 +971,7 @@ TEST_CASE(
 
     SECTION("When template-dependant name is given.")
     {
-        StringT const rawName = printing::type::type_name<my_template<int, std::string const&&>::my_type>();
+        StringT const rawName{printing::type::type_name<my_template<int, std::string const&&>::my_type>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -984,7 +984,7 @@ TEST_CASE(
 
     SECTION("When template-dependant member-function-pointer is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(&my_template<my_template<>>::foo)>();
+        StringT const rawName{printing::type::type_name<decltype(&my_template<my_template<>>::foo)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -1013,7 +1013,7 @@ TEST_CASE(
 
     SECTION("When template-dependant member-function-pointer, returning local type, is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(&my_template<my_template<>>::bar)>();
+        StringT const rawName{printing::type::type_name<decltype(&my_template<my_template<>>::bar)>()};
         CAPTURE(rawName);
 
         StringT const returnPattern =
@@ -1052,7 +1052,7 @@ TEST_CASE(
     SECTION("When arbitrary template name is given.")
     {
         using type_t = decltype(my_typeLambda());
-        StringT const rawName = printing::type::type_name<my_template<type_t&, std::string const&&>>();
+        StringT const rawName{printing::type::type_name<my_template<type_t&, std::string const&&>>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -1226,7 +1226,7 @@ TEST_CASE(
     SECTION("When ordering operator is used.")
     {
         auto const [expectedFunctionName, rawName] = GENERATE(
-            (table<StringT, StringT>)({
+            (table<StringT, std::string_view>)({
                 { R"(operator\s?<)",  printing::type::type_name<decltype(special_operators{}.operator<(42))>()},
                 {R"(operator\s?<=)", printing::type::type_name<decltype(special_operators{}.operator<=(42))>()},
                 { R"(operator\s?>)",  printing::type::type_name<decltype(special_operators{}.operator>(42))>()},
@@ -1249,7 +1249,7 @@ TEST_CASE(
     SECTION("When nested ordering operator is used.")
     {
         auto const [expectedFunctionName, expectedNestedFunctionName, rawName] = GENERATE(
-            (table<StringT, StringT, StringT>)({
+            (table<StringT, StringT, std::string_view>)({
                 { R"(operator\s?<)", R"(operator\s?>=)",  printing::type::type_name<decltype(special_operators{}.operator<(""))>()},
                 {R"(operator\s?<=)",  R"(operator\s?>)", printing::type::type_name<decltype(special_operators{}.operator<=(""))>()},
                 { R"(operator\s?>)", R"(operator\s?<=)",  printing::type::type_name<decltype(special_operators{}.operator>(""))>()},
@@ -1273,7 +1273,7 @@ TEST_CASE(
 
     SECTION("When spaceship-operator is used.")
     {
-        StringT const rawName = printing::type::type_name<decltype(special_operators{}.operator<=>(42))>();
+        StringT const rawName{printing::type::type_name<decltype(special_operators{}.operator<=>(42))>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -1297,7 +1297,7 @@ TEST_CASE(
 
     SECTION("When identifier contains operator() scope.")
     {
-        StringT const rawName = printing::type::type_name<decltype(special_operators{}.operator()(42))>();
+        StringT const rawName{printing::type::type_name<decltype(special_operators{}.operator()(42))>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -1314,7 +1314,7 @@ TEST_CASE(
 
     SECTION("When member-function-pointer to operator() is given.")
     {
-        StringT const rawName = printing::type::type_name<decltype(&special_operators::operator())>();
+        StringT const rawName{printing::type::type_name<decltype(&special_operators::operator())>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -1375,7 +1375,7 @@ TEST_CASE(
     "printing::type::prettify_function omits function args with just `void` content.",
     "[print]")
 {
-    StringT const name = "ret my_function<void>(void)";
+    StringT const name{"ret my_function<void>(void)"};
 
     StringStreamT ss{};
     printing::type::prettify_function(
