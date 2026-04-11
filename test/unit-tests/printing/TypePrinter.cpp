@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -710,6 +710,24 @@ TEST_CASE(
     REQUIRE_THAT(
         print_type<MyEnumClass>(),
         Catch::Matchers::Equals("{anon-ns}::MyEnumClass"));
+}
+
+namespace
+{
+    class FwdClass;
+    struct FwdStruct;
+}
+
+TEST_CASE(
+    "Incomplete types are printed nicely.",
+    "[print]")
+{
+    CHECK_THAT(
+        print_type<FwdClass>(),
+        Catch::Matchers::Equals("{anon-ns}::FwdClass"));
+    CHECK_THAT(
+        print_type<FwdStruct>(),
+        Catch::Matchers::Equals("{anon-ns}::FwdStruct"));
 }
 
 #endif
