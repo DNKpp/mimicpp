@@ -8,5 +8,5 @@ var searchData=
   ['resultstorage_5',['ResultStorage',['../de/d02/classmimicpp_1_1call_1_1_result_storage.html',1,'mimicpp::call']]],
   ['resultstorage_3c_20result_20_3e_6',['ResultStorage&lt; Result &gt;',['../d8/d19/classmimicpp_1_1call_1_1_result_storage_3_01_result_01_4.html',1,'mimicpp::call']]],
   ['resultstorage_3c_20void_20_3e_7',['ResultStorage&lt; void &gt;',['../dc/d91/classmimicpp_1_1call_1_1_result_storage_3_01void_01_4.html',1,'mimicpp::call']]],
-  ['returnsresultof_8',['ReturnsResultOf',['../dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html',1,'mimicpp::expectation_policies']]]
+  ['returnsresultof_8',['ReturnsResultOf',['../d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of.html',1,'mimicpp::expectation::policies']]]
 ];

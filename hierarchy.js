@@ -3,7 +3,7 @@ var hierarchy =
     [ "mimicpp::reporting::CallReport::Arg", "dd/db3/classmimicpp_1_1reporting_1_1_call_report_1_1_arg.html", null ],
     [ "mimicpp::printing::type::parsing::token::ArgSeparator", "d0/d1e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_separator.html", null ],
     [ "mimicpp::printing::type::parsing::token::ArgSequence", "d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html", null ],
-    [ "mimicpp::expectation_policies::ArgsRequirement&lt; Matcher, MatchesStrategy, DescribeStrategy &gt;", "d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html", null ],
+    [ "mimicpp::expectation::policies::ArgsRequirement&lt; Matcher, MatchesStrategy, DescribeStrategy &gt;", "da/d3f/classmimicpp_1_1expectation_1_1policies_1_1_args_requirement.html", null ],
     [ "mimicpp::util::stacktrace::backend_traits&lt; Backend &gt;", "d3/d47/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits.html", null ],
     [ "mimicpp::util::stacktrace::backend_traits&lt; boost::stacktrace::stacktrace &gt;", "da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html", null ],
     [ "mimicpp::util::stacktrace::backend_traits&lt; cpptrace::stacktrace &gt;", "dd/de8/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01cpptrace_1_1stacktrace_01_4.html", null ],
@@ -87,7 +87,7 @@ var hierarchy =
     [ "mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;", "d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html", null ],
     [ "mimicpp::reporting::CallReport", "de/d56/classmimicpp_1_1reporting_1_1_call_report.html", null ],
     [ "mimicpp::case_insensitive_t", "d2/dd4/structmimicpp_1_1case__insensitive__t.html", null ],
-    [ "mimicpp::expectation_policies::Category&lt; expected &gt;", "d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html", null ],
+    [ "mimicpp::expectation::policies::Category&lt; expected &gt;", "da/d25/classmimicpp_1_1expectation_1_1policies_1_1_category.html", null ],
     [ "mimicpp::printing::type::parsing::token::ClosingAngle", "d1/d2c/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_angle.html", null ],
     [ "mimicpp::printing::type::parsing::token::ClosingCurly", "d6/d7f/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_curly.html", null ],
     [ "mimicpp::printing::type::parsing::token::ClosingParens", "d5/dd0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_closing_parens.html", null ],
@@ -98,8 +98,8 @@ var hierarchy =
         [ "mimicpp::is_overloadable_with< First, Second >", "d4/dd6/structmimicpp_1_1is__overloadable__with.html", null ]
       ] ]
     ] ],
-    [ "mimicpp::expectation_policies::Constness&lt; constness &gt;", "db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html", null ],
-    [ "mimicpp::ControlPolicy&lt; Sequences &gt;", "dc/db2/classmimicpp_1_1_control_policy.html", null ],
+    [ "mimicpp::expectation::policies::Constness&lt; constness &gt;", "d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html", null ],
+    [ "mimicpp::expectation::policies::ControlPolicy&lt; Sequences &gt;", "db/d08/classmimicpp_1_1expectation_1_1policies_1_1_control_policy.html", null ],
     [ "mimicpp::printing::type::lexing::end", "d8/d12/structmimicpp_1_1printing_1_1type_1_1lexing_1_1end.html", null ],
     [ "std::exception", null, [
       [ "std::logic_error", null, [
@@ -133,7 +133,7 @@ var hierarchy =
     [ "mimicpp::call::Info&lt; Return, Args &gt;", "d4/d44/classmimicpp_1_1call_1_1_info.html", null ],
     [ "mimicpp::call::info_for_signature&lt; Signature &gt;", "d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html", null ],
     [ "mimicpp::call::info_for_signature&lt; Return(Args...)&gt;", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html", null ],
-    [ "mimicpp::expectation_policies::InitFinalize", "d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html", null ],
+    [ "mimicpp::expectation::policies::InitFinalize", "d7/d35/classmimicpp_1_1expectation_1_1policies_1_1_init_finalize.html", null ],
     [ "std::integral_constant", null, [
       [ "mimicpp::signature_const_qualification< Signature >", "d2/de2/structmimicpp_1_1signature__const__qualification.html", null ],
       [ "mimicpp::signature_ref_qualification< Return(Params...) && >", "d1/d70/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html", null ],
@@ -157,7 +157,7 @@ var hierarchy =
     [ "mimicpp::printing::type::lexing::keyword", "d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html", null ],
     [ "mimicpp::printing::type::parsing::token::Specs::Layer", "d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html", null ],
     [ "mimicpp::LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", null ],
-    [ "mimicpp::expectation_policies::matcher_matches_fn&lt; Matcher &gt;", "d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html", null ],
+    [ "mimicpp::expectation::policies::matcher_matches_fn&lt; Matcher &gt;", "de/d4a/structmimicpp_1_1expectation_1_1policies_1_1matcher__matches__fn.html", null ],
     [ "mimicpp::custom::matcher_traits&lt; Matcher &gt;", "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html", null ],
     [ "mimicpp::MockSettings", "d4/d24/classmimicpp_1_1_mock_settings.html", null ],
     [ "mimicpp::printing::type::lexing::NameLexer", "de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html", null ],
@@ -189,11 +189,11 @@ var hierarchy =
     [ "mimicpp::call::ResultStorage&lt; Result &gt;", "de/d02/classmimicpp_1_1call_1_1_result_storage.html", null ],
     [ "mimicpp::call::ResultStorage&lt; Result &gt;", "d8/d19/classmimicpp_1_1call_1_1_result_storage_3_01_result_01_4.html", null ],
     [ "mimicpp::call::ResultStorage&lt; void &gt;", "dc/d91/classmimicpp_1_1call_1_1_result_storage_3_01void_01_4.html", null ],
-    [ "mimicpp::expectation_policies::ReturnsResultOf&lt; Action &gt;", "dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html", null ],
+    [ "mimicpp::expectation::policies::ReturnsResultOf&lt; Action &gt;", "d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of.html", null ],
     [ "mimicpp::printing::type::parsing::token::ScopeResolution", "d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution.html", null ],
     [ "mimicpp::printing::type::parsing::token::ScopeSequence", "df/d6e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_sequence.html", null ],
     [ "mimicpp::reporting::SequenceReport", "d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html", null ],
-    [ "mimicpp::expectation_policies::SideEffectAction&lt; Action &gt;", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html", null ],
+    [ "mimicpp::expectation::policies::SideEffectAction&lt; Action &gt;", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action.html", null ],
     [ "mimicpp::signature_call_convention&lt; Signature &gt;", "dc/d9a/structmimicpp_1_1signature__call__convention.html", null ],
     [ "mimicpp::signature_call_convention&lt; Signature &gt;", "da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html", null ],
     [ "mimicpp::signature_decay&lt; Signature &gt;", "db/df4/structmimicpp_1_1signature__decay.html", null ],
@@ -224,7 +224,7 @@ var hierarchy =
       [ "mimicpp::string_traits< T >", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html", null ]
     ] ],
     [ "mimicpp::reporting::TargetReport", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html", null ],
-    [ "mimicpp::expectation_policies::Throws&lt; Exception &gt;", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html", null ],
+    [ "mimicpp::expectation::policies::Throws&lt; Exception &gt;", "de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html", null ],
     [ "mimicpp::printing::type::lexing::token", "dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token.html", null ],
     [ "std::true_type", null, [
       [ "mimicpp::is_character< char >", "d2/dad/structmimicpp_1_1is__character_3_01char_01_4.html", null ],

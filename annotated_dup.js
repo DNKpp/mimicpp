@@ -10,6 +10,17 @@ var annotated_dup =
         [ "ResultStorage&lt; Result &gt;", "d8/d19/classmimicpp_1_1call_1_1_result_storage_3_01_result_01_4.html", "d8/d19/classmimicpp_1_1call_1_1_result_storage_3_01_result_01_4" ]
       ] ],
       [ "expectation", "d9/db6/namespacemimicpp_1_1expectation.html", [
+        [ "policies", "d8/dd7/namespacemimicpp_1_1expectation_1_1policies.html", [
+          [ "matcher_matches_fn", "de/d4a/structmimicpp_1_1expectation_1_1policies_1_1matcher__matches__fn.html", "de/d4a/structmimicpp_1_1expectation_1_1policies_1_1matcher__matches__fn" ],
+          [ "ArgsRequirement", "da/d3f/classmimicpp_1_1expectation_1_1policies_1_1_args_requirement.html", "da/d3f/classmimicpp_1_1expectation_1_1policies_1_1_args_requirement" ],
+          [ "ControlPolicy", "db/d08/classmimicpp_1_1expectation_1_1policies_1_1_control_policy.html", "db/d08/classmimicpp_1_1expectation_1_1policies_1_1_control_policy" ],
+          [ "ReturnsResultOf", "d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of.html", "d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of" ],
+          [ "Throws", "de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html", "de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws" ],
+          [ "InitFinalize", "d7/d35/classmimicpp_1_1expectation_1_1policies_1_1_init_finalize.html", "d7/d35/classmimicpp_1_1expectation_1_1policies_1_1_init_finalize" ],
+          [ "Category", "da/d25/classmimicpp_1_1expectation_1_1policies_1_1_category.html", "da/d25/classmimicpp_1_1expectation_1_1policies_1_1_category" ],
+          [ "Constness", "d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html", "d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness" ],
+          [ "SideEffectAction", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action.html", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action" ]
+        ] ],
         [ "BasicBuilder", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder" ],
         [ "Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html", "d7/dc7/classmimicpp_1_1expectation_1_1_collector" ],
         [ "Expectation", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html", "dd/df1/classmimicpp_1_1expectation_1_1_expectation" ],
@@ -54,16 +65,6 @@ var annotated_dup =
         [ "matcher_traits", "d5/d5a/structmimicpp_1_1custom_1_1matcher__traits.html", null ],
         [ "Printer", "da/d68/classmimicpp_1_1custom_1_1_printer.html", null ],
         [ "TypePrinter", "de/de7/classmimicpp_1_1custom_1_1_type_printer.html", null ]
-      ] ],
-      [ "expectation_policies", "d0/d91/namespacemimicpp_1_1expectation__policies.html", [
-        [ "matcher_matches_fn", "d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn.html", "d6/de9/structmimicpp_1_1expectation__policies_1_1matcher__matches__fn" ],
-        [ "ArgsRequirement", "d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement.html", "d8/dbc/classmimicpp_1_1expectation__policies_1_1_args_requirement" ],
-        [ "ReturnsResultOf", "dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html", "dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of" ],
-        [ "Throws", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html", "d8/d34/classmimicpp_1_1expectation__policies_1_1_throws" ],
-        [ "InitFinalize", "d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html", "d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize" ],
-        [ "Category", "d4/d44/classmimicpp_1_1expectation__policies_1_1_category.html", "d4/d44/classmimicpp_1_1expectation__policies_1_1_category" ],
-        [ "Constness", "db/dbc/classmimicpp_1_1expectation__policies_1_1_constness.html", "db/dbc/classmimicpp_1_1expectation__policies_1_1_constness" ],
-        [ "SideEffectAction", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action" ]
       ] ],
       [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", [
         [ "type", "d9/d41/namespacemimicpp_1_1printing_1_1type.html", [
@@ -160,7 +161,6 @@ var annotated_dup =
       [ "LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", "db/d98/classmimicpp_1_1_lifetime_watcher" ],
       [ "RelocationWatcher", "da/d45/classmimicpp_1_1_relocation_watcher.html", "da/d45/classmimicpp_1_1_relocation_watcher" ],
       [ "Watched", "d3/d5d/classmimicpp_1_1_watched.html", "d3/d5d/classmimicpp_1_1_watched" ],
-      [ "ControlPolicy", "dc/db2/classmimicpp_1_1_control_policy.html", "dc/db2/classmimicpp_1_1_control_policy" ],
       [ "BasicScopedSequence", "d2/d48/classmimicpp_1_1_basic_scoped_sequence.html", "d2/d48/classmimicpp_1_1_basic_scoped_sequence" ],
       [ "LazySequence", "db/d46/classmimicpp_1_1_lazy_sequence.html", "db/d46/classmimicpp_1_1_lazy_sequence" ],
       [ "GreedySequence", "db/d43/classmimicpp_1_1_greedy_sequence.html", "db/d43/classmimicpp_1_1_greedy_sequence" ],

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['targetreport_0',['TargetReport',['../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html',1,'mimicpp::reporting']]],
-  ['throws_1',['Throws',['../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html',1,'mimicpp::expectation_policies']]],
+  ['throws_1',['Throws',['../de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html',1,'mimicpp::expectation::policies']]],
   ['token_2',['token',['../dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token.html',1,'mimicpp::printing::type::lexing']]],
   ['tuple_5fsize_3c_20mimicpp_3a_3autil_3a_3atype_5flist_3c_20args_2e_2e_2e_20_3e_20_3e_3',['tuple_size&lt; mimicpp::util::type_list&lt; Args... &gt; &gt;',['../d1/d95/structstd_1_1tuple__size_3_01mimicpp_1_1util_1_1type__list_3_01_args_8_8_8_01_4_01_4.html',1,'std']]],
   ['type_4',['Type',['../d1/da5/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_type.html',1,'mimicpp::printing::type::parsing::token']]],

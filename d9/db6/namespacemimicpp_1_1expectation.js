@@ -1,5 +1,6 @@
 var namespacemimicpp_1_1expectation =
 [
+    [ "policies", "d8/dd7/namespacemimicpp_1_1expectation_1_1policies.html", "d8/dd7/namespacemimicpp_1_1expectation_1_1policies" ],
     [ "BasicBuilder", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder" ],
     [ "Collector", "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html", "d7/dc7/classmimicpp_1_1expectation_1_1_collector" ],
     [ "Expectation", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html", "dd/df1/classmimicpp_1_1expectation_1_1_expectation" ],

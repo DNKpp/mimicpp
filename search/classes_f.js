@@ -3,7 +3,7 @@ var searchData=
   ['scoperesolution_0',['ScopeResolution',['../d4/dc6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_resolution.html',1,'mimicpp::printing::type::parsing::token']]],
   ['scopesequence_1',['ScopeSequence',['../df/d6e/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_scope_sequence.html',1,'mimicpp::printing::type::parsing::token']]],
   ['sequencereport_2',['SequenceReport',['../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html',1,'mimicpp::reporting']]],
-  ['sideeffectaction_3',['SideEffectAction',['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html',1,'mimicpp::expectation_policies']]],
+  ['sideeffectaction_3',['SideEffectAction',['../d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action.html',1,'mimicpp::expectation::policies']]],
   ['signature_5fadd_5fconst_5fqualifier_4',['signature_add_const_qualifier',['../dc/dcc/structmimicpp_1_1signature__add__const__qualifier.html',1,'mimicpp']]],
   ['signature_5fadd_5flvalue_5fref_5fqualifier_5',['signature_add_lvalue_ref_qualifier',['../d8/dc1/structmimicpp_1_1signature__add__lvalue__ref__qualifier.html',1,'mimicpp']]],
   ['signature_5fadd_5fnoexcept_6',['signature_add_noexcept',['../dd/db4/structmimicpp_1_1signature__add__noexcept.html',1,'mimicpp']]],

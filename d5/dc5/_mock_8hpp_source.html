@@ -108,7 +108,7 @@ $(function(){initNavTree('d5/dc5/_mock_8hpp_source.html','../../',''); });
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/dd2/_config_8hpp.html">mimic++/config/Config.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/d15/_builder_8hpp.html">mimic++/expectation/Builder.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="../../db/d5d/_registry_8hpp.html">mimic++/expectation/Registry.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d10/_general_policies_8hpp.html">mimic++/policies/GeneralPolicies.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d10/_general_policies_8hpp.html">mimic++/expectation/policies/GeneralPolicies.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/d35/_type_printer_8hpp.html">mimic++/printing/TypePrinter.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d4c/_target_report_8hpp.html">mimic++/reporting/TargetReport.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/df5/_stacktrace_8hpp.html">mimic++/utilities/Stacktrace.hpp</a>&quot;</span></div>
@@ -451,8 +451,8 @@ $(function(){initNavTree('d5/dc5/_mock_8hpp_source.html','../../',''); });
 <div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>                       m_Registry,</div>
 <div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>                       reporting::TargetReport{.name = *m_Settings.name, .overloadReport = std::move(overloadReport)},</div>
 <div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>                       std::forward&lt;Args&gt;(args)...)</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>                &amp;&amp; expectation_policies::Category&lt;refQualification&gt;{}</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                &amp;&amp; expectation_policies::Constness&lt;constQualification&gt;{};</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>                &amp;&amp; expectation::policies::Category&lt;refQualification&gt;{}</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                &amp;&amp; expectation::policies::Constness&lt;constQualification&gt;{};</div>
 <div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>        }</div>
 <div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>    };</div>
 <div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span> </div>

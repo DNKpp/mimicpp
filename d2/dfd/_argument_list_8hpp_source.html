@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>mimic++: mimic++/policies/ArgumentList.hpp Source File</title>
+<title>mimic++: mimic++/expectation/policies/ArgumentList.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -92,13 +92,13 @@ $(function(){initNavTree('d2/dfd/_argument_list_8hpp_source.html','../../',''); 
   <div class="headertitle"><div class="title">ArgumentList.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d2/dfd/_argument_list_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.</span></div>
+<a href="../../d2/dfd/_argument_list_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024-2026.</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Distributed under the Boost Software License, Version 1.0.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//          https://www.boost.org/LICENSE_1_0.txt)</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifndef MIMICPP_POLICIES_ARGUMENT_LIST_HPP</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#define MIMICPP_POLICIES_ARGUMENT_LIST_HPP</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifndef MIMICPP_EXPECTATION_POLICIES_ARGUMENT_LIST_HPP</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#define MIMICPP_EXPECTATION_POLICIES_ARGUMENT_LIST_HPP</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
@@ -114,7 +114,7 @@ $(function(){initNavTree('d2/dfd/_argument_list_8hpp_source.html','../../',''); 
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">    #include &lt;utility&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">namespace </span>mimicpp::detail</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">namespace </span>mimicpp::expectation::policies::detail</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ArgSelector, <span class="keyword">typename</span> ApplyStrategy&gt;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">struct </span>apply_args_fn</div>
@@ -131,18 +131,18 @@ $(function(){initNavTree('d2/dfd/_argument_list_8hpp_source.html','../../',''); 
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        }</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Action, <span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keyword">requires</span> std::invocable&lt;<span class="keyword">const</span> ArgSelector&amp;, <span class="keyword">const</span> call::Info&lt;Return, Args...&gt;&amp;&gt;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            <span class="keyword">requires</span> std::invocable&lt;ArgSelector <span class="keyword">const</span>&amp;, call::Info&lt;Return, Args...&gt; <span class="keyword">const</span>&amp;&gt;</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>                  &amp;&amp; std::invocable&lt;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                         <span class="keyword">const</span> ApplyStrategy&amp;,</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>                         ApplyStrategy <span class="keyword">const</span>&amp;,</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                         Action,</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                         std::invoke_result_t&lt;<span class="keyword">const</span> ArgSelector&amp;, <span class="keyword">const</span> call::Info&lt;Return, Args...&gt;&amp;&gt;&gt;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">constexpr</span> <span class="keyword">decltype</span>(<span class="keyword">auto</span>) operator()(Action&amp;&amp; action, <span class="keyword">const</span> call::Info&lt;Return, Args...&gt;&amp; info) <span class="keyword">const</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                         std::invoke_result_t&lt;ArgSelector <span class="keyword">const</span>&amp;, call::Info&lt;Return, Args...&gt; <span class="keyword">const</span>&amp;&gt;&gt;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>        <span class="keyword">constexpr</span> <span class="keyword">decltype</span>(<span class="keyword">auto</span>) operator()(Action&amp;&amp; action, call::Info&lt;Return, Args...&gt; <span class="keyword">const</span>&amp; info) <span class="keyword">const</span></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <span class="keyword">noexcept</span>(</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                std::is_nothrow_invocable_v&lt;<span class="keyword">const</span> ArgSelector&amp;, <span class="keyword">const</span> call::Info&lt;Return, Args...&gt;&amp;&gt;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                std::is_nothrow_invocable_v&lt;ArgSelector <span class="keyword">const</span>&amp;, call::Info&lt;Return, Args...&gt; <span class="keyword">const</span>&amp;&gt;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                &amp;&amp; std::is_nothrow_invocable_v&lt;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                    <span class="keyword">const</span> ApplyStrategy&amp;,</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>                    ApplyStrategy <span class="keyword">const</span>&amp;,</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>                    Action,</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                    std::invoke_result_t&lt;<span class="keyword">const</span> ArgSelector&amp;, <span class="keyword">const</span> call::Info&lt;Return, Args...&gt;&amp;&gt;&gt;)</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>                    std::invoke_result_t&lt;ArgSelector <span class="keyword">const</span>&amp;, call::Info&lt;Return, Args...&gt; <span class="keyword">const</span>&amp;&gt;&gt;)</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        {</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            <span class="keywordflow">return</span> std::invoke(</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>                m_ApplyStrategy,</div>
@@ -170,7 +170,7 @@ $(function(){initNavTree('d2/dfd/_argument_list_8hpp_source.html','../../',''); 
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">using </span>projected_t = TypeProjection&lt;signature_param_type_t&lt;index, Signature&gt;&gt;;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator()(<span class="keyword">const</span> call::Info&lt;Return, Args...&gt;&amp; callInfo) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator()(call::Info&lt;Return, Args...&gt; <span class="keyword">const</span>&amp; callInfo) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        {</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>            <span class="keyword">using </span>signature_t = Return(Args...);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
@@ -186,7 +186,7 @@ $(function(){initNavTree('d2/dfd/_argument_list_8hpp_source.html','../../',''); 
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    {</div>
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Return, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator()(<span class="keyword">const</span> call::Info&lt;Return, Args...&gt;&amp; callInfo) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator()(call::Info&lt;Return, Args...&gt; <span class="keyword">const</span>&amp; callInfo) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        {</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>            <span class="keywordflow">return</span> std::invoke(</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                args_selector_fn&lt;TypeProjection, std::index_sequence_for&lt;Args...&gt;&gt;{},</div>
@@ -220,12 +220,12 @@ $(function(){initNavTree('d2/dfd/_argument_list_8hpp_source.html','../../',''); 
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        }</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Fun, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keyword">requires</span>(... &amp;&amp; std::invocable&lt;const Projections&amp;, Args&gt;)</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                 &amp;&amp; std::invocable&lt;Fun, std::invoke_result_t&lt;const Projections&amp;, Args&gt;...&gt;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keyword">requires</span>(... &amp;&amp; std::invocable&lt;Projections const&amp;, Args&gt;)</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                 &amp;&amp; std::invocable&lt;Fun, std::invoke_result_t&lt;Projections const&amp;, Args&gt;...&gt;</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keyword">constexpr</span> <span class="keyword">decltype</span>(<span class="keyword">auto</span>) operator()(Fun&amp;&amp; fun, std::tuple&lt;Args...&gt;&amp;&amp; argList) <span class="keyword">const</span></div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>            <span class="keyword">noexcept</span>(</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                (... &amp;&amp; std::is_nothrow_invocable_v&lt;const Projections&amp;, Args&gt;)</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                &amp;&amp; std::is_nothrow_invocable_v&lt;Fun, std::invoke_result_t&lt;const Projections&amp;, Args&gt;...&gt;)</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                (... &amp;&amp; std::is_nothrow_invocable_v&lt;Projections const&amp;, Args&gt;)</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                &amp;&amp; std::is_nothrow_invocable_v&lt;Fun, std::invoke_result_t&lt;Projections const&amp;, Args&gt;...&gt;)</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        {</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>            <span class="keywordflow">return</span> invoke_impl(</div>
 <div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                std::forward&lt;Fun&gt;(fun),</div>
@@ -240,7 +240,7 @@ $(function(){initNavTree('d2/dfd/_argument_list_8hpp_source.html','../../',''); 
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        <span class="keyword">constexpr</span> <span class="keyword">decltype</span>(<span class="keyword">auto</span>) invoke_impl(</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>            Fun&amp;&amp; fun,</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            std::tuple&lt;Args...&gt;&amp;&amp; argList,</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            [[maybe_unused]] <span class="keyword">const</span> std::index_sequence&lt;indices...&gt;)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            std::index_sequence&lt;indices...&gt; <span class="keyword">const</span> <span class="comment">/*sequence*/</span>)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="keywordflow">return</span> std::invoke(</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                std::forward&lt;Fun&gt;(fun),</div>
@@ -260,7 +260,7 @@ $(function(){initNavTree('d2/dfd/_argument_list_8hpp_source.html','../../',''); 
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a href="../../dir_6ddbcebc0798903b88ee4423bc0f1618.html">policies</a></li><li class="navelem"><a href="../../d2/dfd/_argument_list_8hpp.html">ArgumentList.hpp</a></li>
+    <li class="navelem"><a href="../../dir_d1aac795712c1a80b032d3d2760385d8.html">mimic++</a></li><li class="navelem"><a href="../../dir_4078c24316faf652a8ef297242a09f7d.html">expectation</a></li><li class="navelem"><a href="../../dir_ec4615467cb27e7007c391888b776fed.html">policies</a></li><li class="navelem"><a href="../../d2/dfd/_argument_list_8hpp.html">ArgumentList.hpp</a></li>
     <li class="footer">Generated on <span class="timestamp"></span> for mimic++ by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

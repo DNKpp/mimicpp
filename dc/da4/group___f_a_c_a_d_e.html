@@ -180,7 +180,7 @@ Macros</h2></td></tr>
 </div><!-- fragment --><p><em>mimic++</em> therefore introduces several macros, which helps to reduce the effort to a minimum. With them, the boilerplate can be reduced to this macro invocation, which effectively does the same as before: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a>(foo, <span class="keywordtype">void</span>, (), <span class="keyword">override</span>);</div>
 <div class="ttc" id="agroup___f_a_c_a_d_e_html_ga7df48c038b42f8cedb05a15cedd1dfba"><div class="ttname"><a href="#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a></div><div class="ttdeci">#define MAKE_MEMBER_MOCK</div><div class="ttdoc">Shorthand variant of MIMICPP_MAKE_MEMBER_MOCK.</div><div class="ttdef"><b>Definition</b> Facade.hpp:444</div></div>
 </div><!-- fragment --><p>The good news is that these macros are just a thin layer around the macro-free core and can thus be easily avoided. Nevertheless, <em>mimic++</em> still aims to become as macro-less as possible. As soon as reflection becomes available, an attempt will be made to solve this feature completely in the C++ language (hopefully with c++26, but only time will tell).</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md0"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
 Multiple inheritance</h2>
 <p>This use-case is fully supported, without any special tricks. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>expect = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
 <div class="line">    <span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
@@ -243,7 +243,7 @@ Multiple inheritance</h2>
 <div class="line">    use_interfaceA(mock); <span class="comment">// calls foo() and the non-const bar()</span></div>
 <div class="line">    use_interfaceB(mock); <span class="comment">// calls foo() and the const bar()</span></div>
 <div class="line"> </div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
 Mocks and variadic templates</h2>
 <p>Due to the nature of the <span class="tt"><a class="el" href="../../d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">mimicpp::Mock</a></span> design, it directly supports packs without any question. </p><div class="fragment"><div class="line">    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</div>
 <div class="line">    <span class="keyword">class </span>VariadicClass</div>

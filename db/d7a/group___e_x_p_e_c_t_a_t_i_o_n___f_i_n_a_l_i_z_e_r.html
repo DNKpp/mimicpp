@@ -118,15 +118,15 @@ Functions</h2></td></tr>
 <tr class="memitem:gaf1ce10575d208bda2ed786798243e214" id="r_gaf1ce10575d208bda2ed786798243e214"><td class="memTemplParams" colspan="2">template&lt;std::size_t index&gt; </td></tr>
 <tr class="memitem:gaf1ce10575d208bda2ed786798243e214 template"><td class="memItemLeft">consteval auto&#160;</td><td class="memItemRight"><a class="el" href="#gaf1ce10575d208bda2ed786798243e214">mimicpp::finally::returns_arg</a> () noexcept</td></tr>
 <tr class="memdesc:gaf1ce10575d208bda2ed786798243e214"><td class="mdescLeft">&#160;</td><td class="mdescRight">During the finalization step, the selected call argument is returned.  <br /></td></tr>
-<tr class="memitem:gab45b96a792c41c05636722b691b8bd5b" id="r_gab45b96a792c41c05636722b691b8bd5b"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:gab45b96a792c41c05636722b691b8bd5b template"><td class="memItemLeft">constexpr <a class="el" href="../../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html">expectation_policies::Throws</a>&lt; std::remove_cvref_t&lt; T &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#gab45b96a792c41c05636722b691b8bd5b">mimicpp::finally::throws</a> (T &amp;&amp;exception) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; T &gt;, T &gt;)</td></tr>
-<tr class="memdesc:gab45b96a792c41c05636722b691b8bd5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">During the finalization step, the given exception is thrown.  <br /></td></tr>
+<tr class="memitem:ga63bf86cff717f6a61615750a483fa5ff" id="r_ga63bf86cff717f6a61615750a483fa5ff"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ga63bf86cff717f6a61615750a483fa5ff template"><td class="memItemLeft">constexpr <a class="el" href="../../de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html">expectation::policies::Throws</a>&lt; std::remove_cvref_t&lt; T &gt; &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ga63bf86cff717f6a61615750a483fa5ff">mimicpp::finally::throws</a> (T &amp;&amp;exception) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; T &gt;, T &gt;)</td></tr>
+<tr class="memdesc:ga63bf86cff717f6a61615750a483fa5ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">During the finalization step, the given exception is thrown.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Finalizers are the last step of a matching expectation. </p>
 <p>Finalizers are executed for calls, which have a matching expectation. They are responsible for either returning an appropriate return value or leaving the call by throwing an exception.</p>
 <p>An expectation must have exactly one finalizer applied. For mocks returning void, an appropriate finalizer is attached by default. This default finalizer can be exchanged once. If an expectation setup contains multiple finalize statements, a compile error is triggered.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md0"></a>
 Custom Finalizers</h1>
 <p>There are several provided finalizers, but user may create their own as desired. A valid finalizer has to satisfy the <span class="tt">finalize_policy_for</span> concept, which in fact requires the existence of a <span class="tt">finalize_call</span> member function. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>MyFinalizer</div>
 <div class="line">    {</div>
@@ -408,8 +408,8 @@ template&lt;typename Fun&gt; </div>
 
 </div>
 </div>
-<a id="gab45b96a792c41c05636722b691b8bd5b" name="gab45b96a792c41c05636722b691b8bd5b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab45b96a792c41c05636722b691b8bd5b">&#9670;&#160;</a></span>throws()</h2>
+<a id="ga63bf86cff717f6a61615750a483fa5ff" name="ga63bf86cff717f6a61615750a483fa5ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga63bf86cff717f6a61615750a483fa5ff">&#9670;&#160;</a></span>throws()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,7 +420,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html">expectation_policies::Throws</a>&lt; std::remove_cvref_t&lt; T &gt; &gt; mimicpp::finally::throws </td>
+          <td class="memname"><a class="el" href="../../de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html">expectation::policies::Throws</a>&lt; std::remove_cvref_t&lt; T &gt; &gt; mimicpp::finally::throws </td>
           <td>(</td>
           <td class="paramtype">T &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>exception</em></span></td><td>)</td>
           <td></td>

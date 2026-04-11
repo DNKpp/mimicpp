@@ -1,8 +1,8 @@
 var searchData=
 [
   ['text_0',['text',['../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html#a36121bdfdea5a064d9ab5d8ba963a0c2',1,'mimicpp::printing::type::lexing::keyword::text()'],['../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html#a1fef4546838a9e7c819077fb249a9d83',1,'mimicpp::printing::type::lexing::operator_or_punctuator::text()']]],
-  ['throws_1',['Throws',['../d8/d34/classmimicpp_1_1expectation__policies_1_1_throws.html#a62d215740e01c6d31848df90575679d8',1,'mimicpp::expectation_policies::Throws']]],
-  ['throws_2',['throws',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gab45b96a792c41c05636722b691b8bd5b',1,'mimicpp::finally']]],
+  ['throws_1',['Throws',['../de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html#ad35c3011c2fc9ce41eb7942934b61a55',1,'mimicpp::expectation::policies::Throws']]],
+  ['throws_2',['throws',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#ga63bf86cff717f6a61615750a483fa5ff',1,'mimicpp::finally']]],
   ['times_3',['times',['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga1d519bd590c8ad5f586f65193fac17e6',1,'mimicpp::expect::times(int const min, int const max)'],['../d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#ga6fe95d279190abe82bbe6aa2fb4c5541',1,'mimicpp::expect::times(int const exactly)']]],
   ['to_5funderlying_4',['to_underlying',['../d8/da3/namespacemimicpp_1_1util.html#a9ff7bd584bd2fd60e21b88ec914e4051',1,'mimicpp::util']]],
   ['try_5freduce_5fas_5farg_5fsequence_5',['try_reduce_as_arg_sequence',['../d2/d01/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1token.html#a490b3be1687828e9a8c4acad127aeddd',1,'mimicpp::printing::type::parsing::token']]],

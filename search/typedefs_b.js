@@ -2,7 +2,7 @@ var searchData=
 [
   ['tag_5ft_0',['tag_t',['../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#addddf8af9c1dca219b021607824b0775',1,'mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;']]],
   ['target_5ftype_1',['target_type',['../dc/d2a/structmimicpp_1_1facade_1_1basic__as__member.html#a93045f560f60dfff8a963ce9169fa8f9',1,'mimicpp::facade::basic_as_member::target_type'],['../d8/db0/structmimicpp_1_1facade_1_1basic__as__member__with__this.html#a4a3abd461f136442eacc42f4d42878cf',1,'mimicpp::facade::basic_as_member_with_this::target_type']]],
-  ['timesconfig_2',['TimesConfig',['../d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html#a859a0e4d3ed1d774684c5d7fae73f2e3',1,'mimicpp::expectation::BasicBuilder']]],
+  ['timesconfig_2',['TimesConfig',['../d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html#ac28c08ebe015b0f049cb43b52a1483d5',1,'mimicpp::expectation::BasicBuilder']]],
   ['token_3',['Token',['../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a7a7984baf44f117abfa92282bf8fd07a',1,'mimicpp::printing::type::parsing']]],
   ['token_5fclass_4',['token_class',['../d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#acf76070ab3218a44bb64884502d8dc2c',1,'mimicpp::printing::type::lexing']]],
   ['tokenstack_5',['TokenStack',['../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ae6624baa1fe5c6ca77d8154318f0a3a8',1,'mimicpp::printing::type::parsing']]],

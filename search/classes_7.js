@@ -6,7 +6,7 @@ var searchData=
   ['info_3c_20return_2c_20args_2e_2e_2e_20_3e_3',['Info&lt; Return, Args... &gt;',['../d4/d44/classmimicpp_1_1call_1_1_info.html',1,'mimicpp::call']]],
   ['info_5ffor_5fsignature_4',['info_for_signature',['../d8/d5b/structmimicpp_1_1call_1_1info__for__signature.html',1,'mimicpp::call']]],
   ['info_5ffor_5fsignature_3c_20return_28args_2e_2e_2e_29_3e_5',['info_for_signature&lt; Return(Args...)&gt;',['../d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html',1,'mimicpp::call']]],
-  ['initfinalize_6',['InitFinalize',['../d2/d77/classmimicpp_1_1expectation__policies_1_1_init_finalize.html',1,'mimicpp::expectation_policies']]],
+  ['initfinalize_6',['InitFinalize',['../d7/d35/classmimicpp_1_1expectation_1_1policies_1_1_init_finalize.html',1,'mimicpp::expectation::policies']]],
   ['ireporter_7',['IReporter',['../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html',1,'mimicpp::reporting']]],
   ['is_5fcharacter_8',['is_character',['../d2/d73/structmimicpp_1_1is__character.html',1,'mimicpp']]],
   ['is_5fcharacter_3c_20char_20_3e_9',['is_character&lt; char &gt;',['../d2/dad/structmimicpp_1_1is__character_3_01char_01_4.html',1,'mimicpp']]],

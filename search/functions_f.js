@@ -19,5 +19,5 @@ var searchData=
   ['returns_5fapply_5fresult_5fof_16',['returns_apply_result_of',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gaa520783da83f713847e7bd3f85ca4334',1,'mimicpp::finally']]],
   ['returns_5farg_17',['returns_arg',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gaf1ce10575d208bda2ed786798243e214',1,'mimicpp::finally']]],
   ['returns_5fresult_5fof_18',['returns_result_of',['../db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#gaf08934ba18cca1303cb5ebc7bf6e1ad9',1,'mimicpp::finally']]],
-  ['returnsresultof_19',['ReturnsResultOf',['../dd/d59/classmimicpp_1_1expectation__policies_1_1_returns_result_of.html#aef553f43715974331094bd1bd0f0e478',1,'mimicpp::expectation_policies::ReturnsResultOf']]]
+  ['returnsresultof_19',['ReturnsResultOf',['../d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of.html#a449b0c9adf52bdb194812d1aa084cc0d',1,'mimicpp::expectation::policies::ReturnsResultOf']]]
 ];

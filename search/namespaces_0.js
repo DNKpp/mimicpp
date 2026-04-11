@@ -5,7 +5,7 @@ var searchData=
   ['mimicpp_3a_3acustom_2',['custom',['../d4/d84/namespacemimicpp_1_1custom.html',1,'mimicpp']]],
   ['mimicpp_3a_3aexpect_3',['expect',['../d3/d18/namespacemimicpp_1_1expect.html',1,'mimicpp']]],
   ['mimicpp_3a_3aexpectation_4',['expectation',['../d9/db6/namespacemimicpp_1_1expectation.html',1,'mimicpp']]],
-  ['mimicpp_3a_3aexpectation_5fpolicies_5',['expectation_policies',['../d0/d91/namespacemimicpp_1_1expectation__policies.html',1,'mimicpp']]],
+  ['mimicpp_3a_3aexpectation_3a_3apolicies_5',['policies',['../d8/dd7/namespacemimicpp_1_1expectation_1_1policies.html',1,'mimicpp::expectation']]],
   ['mimicpp_3a_3afacade_6',['facade',['../d8/da4/namespacemimicpp_1_1facade.html',1,'mimicpp']]],
   ['mimicpp_3a_3afinally_7',['finally',['../d2/d8d/namespacemimicpp_1_1finally.html',1,'mimicpp']]],
   ['mimicpp_3a_3aformat_8',['format',['../d3/d54/namespacemimicpp_1_1format.html',1,'mimicpp']]],
