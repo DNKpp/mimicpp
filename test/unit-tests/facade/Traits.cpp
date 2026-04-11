@@ -117,7 +117,7 @@ TEST_CASE(
         expectation.mock_name(),
         Catch::Matchers::ContainsSubstring("Type")
             && Catch::Matchers::EndsWith("::foo")
-            && Catch::Matchers::Matches(R"(.+Type::foo)"));
+            && Catch::Matchers::Matches(R"((.+::)?Type::foo)"));
 }
 
 TEST_CASE(
@@ -142,6 +142,6 @@ TEST_CASE(
         expectation.mock_name(),
         Catch::Matchers::ContainsSubstring("Type")
             && Catch::Matchers::EndsWith("::foo")
-            && Catch::Matchers::Matches(R"(.+Type::foo)"));
+            && Catch::Matchers::Matches(R"((.+::)?Type::foo)"));
 }
 

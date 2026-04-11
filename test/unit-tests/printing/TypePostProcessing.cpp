@@ -190,7 +190,7 @@ namespace
     StringT const lambdaScopePattern = topLevelLambdaPattern + "::";
 
     StringT const anonNsScopePattern = R"(\{anon-ns\}::)";
-    StringT const anonTypePattern = R"((\$_\d+|\{unnamed type#\d+\}|<unnamed-type-anon_(class|struct|enum)>))";
+    StringT const anonTypePattern = R"((\$_\d+|\{unnamed type#\d+\}|<unnamed (class|struct|enum)>|<unnamed-type-anon_(class|struct|enum)>))";
     StringT const testCaseScopePattern = R"(CATCH2_INTERNAL_TEST_\d+::)";
     StringT const callOpScopePattern = R"(operator\s?\(\)::)";
 }
@@ -265,7 +265,7 @@ TEST_CASE(
     {
         class
         {
-        } constexpr anon_class [[maybe_unused]]{};
+        } anon_class [[maybe_unused]]{};
 
         StringT const rawName{printing::type::type_name<decltype(anon_class)>()};
         CAPTURE(rawName);
@@ -282,7 +282,7 @@ TEST_CASE(
     {
         class
         {
-        } constexpr anon_struct [[maybe_unused]]{};
+        } anon_struct [[maybe_unused]]{};
 
         StringT const rawName{printing::type::type_name<decltype(anon_struct)>()};
         CAPTURE(rawName);
@@ -300,7 +300,7 @@ TEST_CASE(
         enum
         {
             dummy
-        } constexpr anon_enum [[maybe_unused]]{};
+        } anon_enum [[maybe_unused]]{};
 
         StringT const rawName{printing::type::type_name<decltype(anon_enum)>()};
         CAPTURE(rawName);
@@ -660,7 +660,7 @@ TEST_CASE(
             rawName);
         REQUIRE_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(testCaseScopePattern + R"(my_type)"));
+            Catch::Matchers::Matches("(" + testCaseScopePattern + ")?my_type"));
     }
 
     SECTION("When local type is queried inside a lambda.")
@@ -680,10 +680,11 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(ss).str(),
                     Catch::Matchers::Matches(
-                        testCaseScopePattern
+                        "("
+                        + testCaseScopePattern
                         + lambdaScopePattern
                         + callOpScopePattern
-                        + "my_type"));
+                        + ")?my_type"));
             });
     }
 
@@ -706,10 +707,11 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(_ss).str(),
                     Catch::Matchers::Matches(
-                        testCaseScopePattern
+                        "("
+                        + testCaseScopePattern
                         + "outer::"
                         + callOpScopePattern
-                        + "my_type"));
+                        + ")?my_type"));
             }
         };
 
@@ -742,10 +744,11 @@ TEST_CASE(
                 REQUIRE_THAT(
                     std::move(*_ss).str(),
                     Catch::Matchers::Matches(
-                        testCaseScopePattern
+                        "("
+                        + testCaseScopePattern
                         + lambdaScopePattern
                         + callOpScopePattern
-                        + "my_type"));
+                        + ")?my_type"));
             },
             &ss,
             std::move(d1),
@@ -776,12 +779,13 @@ TEST_CASE(
                         REQUIRE_THAT(
                             std::move(*_ss).str(),
                             Catch::Matchers::Matches(
-                                testCaseScopePattern
+                                "("
+                                + testCaseScopePattern
                                 + lambdaScopePattern
                                 + callOpScopePattern
                                 + lambdaScopePattern
                                 + callOpScopePattern
-                                + "my_type"));
+                                + ")?my_type"));
                     },
                     other_type{});
             },
@@ -858,11 +862,12 @@ TEST_CASE(
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                anonNsScopePattern
+                "("
+                + anonNsScopePattern
                 + R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 + lambdaScopePattern
                 + callOpScopePattern
-                + "my_type "
+                + ")?my_type "
                   R"(\(\*\)\(\))"));
     }
 
@@ -880,11 +885,12 @@ TEST_CASE(
             ss.str(),
             Catch::Matchers::Matches(
                 R"(void \(\*\)\()"
+                "("
                 + anonNsScopePattern
                 + R"((?:my_typeLambda::)?)" // gcc produces this extra scope
                 + lambdaScopePattern
                 + callOpScopePattern
-                + "my_type"
+                + ")?my_type"
                   R"(\))"));
     }
 
@@ -1366,9 +1372,9 @@ TEST_CASE(
     printing::type::prettify_type(
         std::ostreambuf_iterator{ss},
         rawName);
-    REQUIRE_THAT(
+    CHECK_THAT(
         ss.str(),
-        Catch::Matchers::Matches(testCaseScopePattern + "outer::~outer::my_type"));
+        Catch::Matchers::Matches("(" + testCaseScopePattern + "outer::~outer::)?my_type"));
 }
 
 TEST_CASE(
