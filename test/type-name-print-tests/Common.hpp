@@ -13,10 +13,18 @@
 
 namespace mimicpp::testing
 {
+    inline std::string const anonNsScopePattern = R"(\{anon-ns\}::)";
+
     [[nodiscard, maybe_unused]]
     inline std::string maybe_pattern(std::string const& pattern)
     {
         return "(:?" + pattern + ")?";
+    }
+
+    [[nodiscard, maybe_unused]]
+    inline std::string lambda_pattern(std::string const& argList = {})
+    {
+        return "<lambda\\(" + argList + "\\)>";
     }
 
     template <typename T, util::StaticString suffixText>

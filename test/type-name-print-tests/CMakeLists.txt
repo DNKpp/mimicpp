@@ -7,6 +7,11 @@ set(TARGET_NAME mimicpp-type-name-print-tests)
 
 add_executable(${TARGET_NAME}
     "BuiltinTypes.cpp"
+    "FunctionLocalTypes.cpp"
+    "FunctionPtrTypes.cpp"
+    "OperatorLocalTypes.cpp"
+    "SpecialTypes.cpp"
+    "TemplateTypes.cpp"
 )
 
 include(Mimic++-EnableSanitizers)
