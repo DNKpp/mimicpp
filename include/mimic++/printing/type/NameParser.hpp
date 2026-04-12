@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -98,6 +98,7 @@ namespace mimicpp::printing::type::parsing
         static constexpr lexing::operator_or_punctuator tilde{"~"};
         static constexpr lexing::keyword operatorKeyword{"operator"};
         static constexpr lexing::keyword constKeyword{"const"};
+        static constexpr lexing::keyword mutableKeyword{"mutable"};
         static constexpr lexing::keyword volatileKeyword{"volatile"};
         static constexpr lexing::keyword noexceptKeyword{"noexcept"};
         static constexpr lexing::keyword coAwaitKeyword{"co_await"};

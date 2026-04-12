@@ -96,8 +96,7 @@ TEMPLATE_LIST_TEST_CASE(
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
     }
 
-    // Todo: This crashes the parser, due to the `mutable` keyword.
-    /*SECTION("When a mutable lambda without arguments is given.")
+    SECTION("When a mutable lambda without arguments is given.")
     {
         using T = testing::mod_type_t<TestType, decltype(my_typeMutableLambda())>;
         std::string const rawName{printing::type::type_name<T>()};
@@ -107,11 +106,11 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(anonNsScopePattern + testing::lambda_pattern() + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern() + " mutable::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
-    }*/
+    }
 
     SECTION("When a noexcept lambda without arguments is given.")
     {

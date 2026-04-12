@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -40,7 +40,7 @@ namespace mimicpp::printing::type::lexing
     {
         // just list the noteworthy ones here
         inline std::array constexpr visibilityKeywords = std::to_array<StringViewT>({"public", "protected", "private"});
-        inline std::array constexpr specKeywords = std::to_array<StringViewT>({"const", "constexpr", "volatile", "noexcept", "static"});
+        inline std::array constexpr specKeywords = std::to_array<StringViewT>({"const", "constexpr", "volatile", "noexcept", "static", "mutable"});
         inline std::array constexpr contextKeywords = std::to_array<StringViewT>({"operator", "struct", "class", "enum"});
         inline std::array constexpr typeKeywords = std::to_array<StringViewT>(
             // The `__int64` keyword is used by msvc as an alias for `long long`.
