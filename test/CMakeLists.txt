@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+#          Copyright Dominic (DNKpp) Koepke 2024-2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -11,6 +11,7 @@ add_subdirectory(compile-errors)
 option(MIMICPP_ENABLE_UNIT_TESTS "Determines, whether the unit-tests shall be built." ON)
 if (MIMICPP_ENABLE_UNIT_TESTS)
     add_subdirectory(unit-tests)
+    add_subdirectory(type-name-print-tests)
 endif ()
 
 if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)
