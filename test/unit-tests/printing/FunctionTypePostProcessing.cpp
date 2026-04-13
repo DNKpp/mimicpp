@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -96,6 +96,22 @@ namespace
     #else
         #define MAYFAIL_WITH_COMPAT_LOC
     #endif
+
+TEST_CASE(
+    "printing::type::prettify_function omits function args with just `void` content.",
+    "[print]")
+{
+    StringT const name{"ret my_function<void>(void)"};
+
+    StringStreamT ss{};
+    printing::type::prettify_function(
+        std::ostreambuf_iterator{ss},
+        name);
+
+    REQUIRE_THAT(
+        ss.str(),
+        Catch::Matchers::Equals(+"ret my_function<void>()"));
+}
 
 TEST_CASE(
     "printing::type::prettify_function enhances std::source_location::function_name appearance.",

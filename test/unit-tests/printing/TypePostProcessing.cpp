@@ -174,21 +174,4 @@ TEST_CASE(
     }
 }
 
-
-TEST_CASE(
-    "printing::type::prettify_function omits function args with just `void` content.",
-    "[print]")
-{
-    StringT const name{"ret my_function<void>(void)"};
-
-    StringStreamT ss{};
-    printing::type::prettify_function(
-        std::ostreambuf_iterator{ss},
-        name);
-
-    REQUIRE_THAT(
-        ss.str(),
-        Catch::Matchers::Equals(+"ret my_function<void>()"));
-}
-
 #endif
