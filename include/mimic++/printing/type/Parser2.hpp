@@ -8,10 +8,9 @@
 
 #pragma once
 
-#include "NameLexer.hpp"
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/type/NameLexer.hpp"
-#include "mimic++/printing/type/NameParserTokens.hpp"
+#include "mimic++/printing/type/Parser2State.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 #include "mimic++/utilities/PassKey.hpp"
@@ -123,15 +122,52 @@ namespace mimicpp::printing::type::parsing::v2
         std::size_t m_Checkpoint;
     };
 
-    namespace state
+    template <typename State>
+    class StateGuard
     {
-        enum ClassKey
+    public:
+        StateGuard(StateGuard const&) = delete;
+        StateGuard& operator=(StateGuard const&) = delete;
+        StateGuard(StateGuard&&) = delete;
+        StateGuard& operator=(StateGuard&&) = delete;
+
+        ~StateGuard() = default;
+
+        template <typename... Args>
+            requires std::constructible_from<State, Args...>
+        [[nodiscard]]
+        explicit constexpr StateGuard(TokenStream& stream, Args&&... args)
+            : m_Transaction{stream},
+              m_State{std::in_place, std::forward<Args>(args)...}
         {
-            id_class = 0,
-            id_struct,
-            id_union
-        };
-    }
+        }
+
+        [[nodiscard]]
+        constexpr State& operator*() noexcept
+        {
+            MIMICPP_ASSERT(m_State, "State was already consumed.");
+            return *m_State;
+        }
+
+        [[nodiscard]]
+        constexpr State* operator->() noexcept
+        {
+            MIMICPP_ASSERT(m_State, "State was already consumed.");
+            return &*m_State;
+        }
+
+        [[nodiscard]]
+        constexpr std::optional<State> take() &&
+        {
+            MIMICPP_ASSERT(m_State, "State was already consumed.");
+            m_Transaction.commit();
+            return std::exchange(m_State, std::nullopt);
+        }
+
+    private:
+        Transaction m_Transaction;
+        std::optional<State> m_State;
+    };
 
     template <std::equality_comparable Key, typename Value, std::size_t length>
     [[nodiscard]]
@@ -194,34 +230,6 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
-    namespace state
-    {
-        struct TemplateName
-        {
-            lexing::identifier identifier;
-        };
-    }
-
-    // see: https://eel.is/c++draft/temp.names#nt:template-name
-    [[nodiscard]]
-    constexpr std::optional<state::TemplateName> parse_template_name(TokenStream& stream)
-    {
-        if (auto const* const identifier = peek_if<lexing::identifier>(stream))
-        {
-            stream.consume();
-            return state::TemplateName{*identifier};
-        }
-
-        return std::nullopt;
-    }
-
-    namespace state
-    {
-        struct TemplateArgument
-        {
-        };
-    }
-
     // see: https://eel.is/c++draft/temp.names#nt:template-argument
     [[nodiscard]]
     constexpr std::optional<state::TemplateArgument> parse_template_argument(TokenStream& /*stream*/)
@@ -234,11 +242,6 @@ namespace mimicpp::printing::type::parsing::v2
                 braced-init-list
         */
         return std::nullopt;
-    }
-
-    namespace state
-    {
-        using TemplateArgumentList = std::vector<TemplateArgument>;
     }
 
     // see: https://eel.is/c++draft/temp.names#nt:template-argument-list
@@ -272,69 +275,37 @@ namespace mimicpp::printing::type::parsing::v2
         return args;
     }
 
-    namespace state
-    {
-        struct SimpleTemplateId
-        {
-            TemplateName name{};
-            TemplateArgumentList args{};
-        };
-    }
-
+    // `unqualified-id ::= template-name < template-argument-list? >`, where `template-name==identifier`
     // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
+    //
     [[nodiscard]]
     constexpr std::optional<state::SimpleTemplateId> parse_simple_template_id(TokenStream& stream)
     {
-        Transaction transaction{stream};
-        if (std::optional name = parse_template_name(stream);
-            name
-            && expect(stream, lexing::operator_or_punctuator{"<"}))
+        if (auto const* const id = peek_if<lexing::identifier>(stream))
         {
-            std::optional argList = parse_template_argument_list(stream);
-            if (expect(stream, lexing::operator_or_punctuator{">"}))
+            StateGuard<state::SimpleTemplateId> templateId{stream};
+            templateId->name = *id;
+            stream.consume();
+
+            if (!expect(stream, lexing::operator_or_punctuator{"<"}))
             {
-                transaction.commit();
-                state::SimpleTemplateId id{.name = *std::move(name)};
-                if (argList)
-                {
-                    id.args = *std::move(argList);
-                }
-
-                return id;
+                return std::nullopt;
             }
+
+            if (std::optional argList = parse_template_argument_list(stream))
+            {
+                templateId->args = *std::move(argList);
+            }
+
+            if (!expect(stream, lexing::operator_or_punctuator{">"}))
+            {
+                return std::nullopt;
+            }
+
+            return std::move(templateId).take();
         }
 
         return std::nullopt;
-    }
-
-    namespace state
-    {
-        // Todo: handle
-        // operator-function-id < template-argument-list >
-        // literal-operator-id < template-argument-list >
-        using TemplateId = std::variant<
-            SimpleTemplateId>;
-    }
-
-    // see: https://eel.is/c++draft/temp.names#nt:template-id
-    [[nodiscard]]
-    constexpr std::optional<state::TemplateId> parse_template_id(TokenStream& stream)
-    {
-        if (std::optional simpleId = parse_simple_template_id(stream))
-        {
-            return {*std::move(simpleId)};
-        }
-
-        return std::nullopt;
-    }
-
-    namespace state
-    {
-        enum class CVQualifier
-        {
-            id_const = 0,
-            id_volatile
-        };
     }
 
     // see: https://eel.is/c++draft/dcl.decl.general#nt:cv-qualifier
@@ -356,34 +327,6 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         return std::nullopt;
-    }
-
-    namespace state
-    {
-        struct CVQualifierSeq
-        {
-            bool isConst{false};
-            bool isVolatile{false};
-
-            [[nodiscard]]
-            friend bool operator==(CVQualifierSeq const&, CVQualifierSeq const&) = default;
-
-            [[nodiscard]]
-            constexpr bool apply(CVQualifier const qualifier) noexcept
-            {
-                switch (qualifier)
-                {
-                case CVQualifier::id_const:
-                    return !std::exchange(isConst, true);
-
-                case CVQualifier::id_volatile:
-                    return !std::exchange(isVolatile, true);
-
-                default:
-                    util::unreachable();
-                }
-            }
-        };
     }
 
     // see: https://eel.is/c++draft/dcl.decl.general#nt:cv-qualifier-seq
@@ -421,34 +364,6 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
-    namespace state
-    {
-        enum RefQualifier
-        {
-            id_ref = 0,
-            id_refref
-        };
-    }
-
-    namespace state
-    {
-        struct PtrOperator
-        {
-            // Todo: nested-name-specifier
-            // ignore attribute-specifier-seq
-
-            enum class Type
-            {
-                ptr = 0,
-                ref,
-                refref
-            };
-
-            Type type{};
-            std::optional<CVQualifierSeq> qualifiers{};
-        };
-    }
-
     // see: https://eel.is/c++draft/dcl.decl.general#nt:ptr-operator
     [[nodiscard]]
     constexpr std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream)
@@ -474,65 +389,6 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         return std::nullopt;
-    }
-
-    /*
-    (* The entry point for a type-id *)
-    type-id
-        ::= type-specifier-seq abstract-declarator?
-
-    abstract-declarator
-        ::= ptr-abstract-declarator
-        |   noptr-abstract-declarator
-
-    ptr-abstract-declarator
-        ::= ptr-operator abstract-declarator  (* Pointers/Refs pile up on the left *)
-        |   noptr-abstract-declarator
-
-    noptr-abstract-declarator
-        ::= "(" abstract-declarator ")" suffix-list
-        |   suffix-list
-
-    suffix-list
-        ::= ( parameters-and-qualifiers | array-suffix )*
-    */
-
-    namespace state
-    {
-        struct ParametersAndQualifiers
-        {
-        };
-
-        struct ConstantExpression
-        {
-        };
-
-        struct ArrayDeclarator
-        {
-            std::optional<ConstantExpression> size{};
-        };
-
-        struct FunctionDeclarator
-        {
-            // params-and-qualifiers
-        };
-
-        struct AbstractDeclarator
-        {
-            struct Layer
-            {
-                std::vector<PtrOperator> decorations{};
-
-                using Core = std::variant<
-                    std::monostate,
-                    ArrayDeclarator,
-                    FunctionDeclarator,
-                    std::unique_ptr<Layer>>;
-                Core core{};
-            };
-
-            Layer root{};
-        };
     }
 
     [[nodiscard]]
@@ -579,35 +435,6 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         return {std::move(declarator)};
-    }
-
-    namespace state
-    {
-        struct OperatorFunctionId
-        {
-            lexing::operator_or_punctuator op;
-
-            [[nodiscard]]
-            friend bool operator==(OperatorFunctionId const&, OperatorFunctionId const&) = default;
-        };
-
-        using UnqualifiedId = std::variant<
-            lexing::identifier,
-            OperatorFunctionId>;
-
-        // This models more or less: https://eel.is/c++draft/expr.prim.id.qual#nt:nested-name-specifier
-        struct ScopeSequence
-        {
-            bool explicitRoot{};
-            std::vector<UnqualifiedId> scopes{};
-        };
-
-        // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
-        struct QualifiedId
-        {
-            ScopeSequence scopes{};
-            UnqualifiedId identifier{};
-        };
     }
 
     namespace detail
@@ -666,23 +493,31 @@ namespace mimicpp::printing::type::parsing::v2
     [[nodiscard]]
     constexpr std::optional<state::UnqualifiedId> parse_unqualified_id(TokenStream& stream)
     {
-        // `unqualified-id ::= identifier`
-        if (auto const* const id = peek_if<lexing::identifier>(stream))
-        {
-            stream.consume();
-            return {*id};
-        }
-
         // `unqualified-id ::= operator-function-id`
         if (std::optional const op = parse_operator_function_id(stream))
         {
             return op;
         }
 
+        StateGuard<state::UnqualifiedId> unqalified{stream};
+
+        // `unqualified-id ::= identifier`
+        // `unqualified-id ::= template-name < template-argument-list? >`, where `template-name==identifier`
+        // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
+        if (auto const* const id = peek_if<lexing::identifier>(stream))
+        {
+            if (std::optional templateId = parse_simple_template_id(stream))
+            {
+                return {*std::move(templateId)};
+            }
+
+            stream.consume();
+            return {*id};
+        }
+
         // Todo: add missing
         // `unqualified-id ::= conversion-function-id`
         // `unqualified-id ::= ~ type-name`
-        // `unqualified-id ::= template-id`
 
         // These rules are unnecessary:
         // `unqualified-id ::= literal-operator-id`
@@ -690,53 +525,6 @@ namespace mimicpp::printing::type::parsing::v2
 
         return std::nullopt;
     }
-
-    template <typename State>
-    class StateGuard
-    {
-    public:
-        StateGuard(StateGuard const&) = delete;
-        StateGuard& operator=(StateGuard const&) = delete;
-        StateGuard(StateGuard&&) = delete;
-        StateGuard& operator=(StateGuard&&) = delete;
-
-        ~StateGuard() = default;
-
-        template <typename... Args>
-            requires std::constructible_from<State, Args...>
-        [[nodiscard]]
-        constexpr explicit StateGuard(TokenStream& stream, Args&&... args)
-            : m_Transaction{stream},
-              m_State{std::in_place, std::forward<Args>(args)...}
-        {
-        }
-
-        [[nodiscard]]
-        constexpr State& operator*() noexcept
-        {
-            MIMICPP_ASSERT(m_State, "State was already consumed.");
-            return *m_State;
-        }
-
-        [[nodiscard]]
-        constexpr State* operator->() noexcept
-        {
-            MIMICPP_ASSERT(m_State, "State was already consumed.");
-            return &*m_State;
-        }
-
-        [[nodiscard]]
-        constexpr std::optional<State> take() &&
-        {
-            MIMICPP_ASSERT(m_State, "State was already consumed.");
-            m_Transaction.commit();
-            return std::exchange(m_State, std::nullopt);
-        }
-
-    private:
-        Transaction m_Transaction;
-        std::optional<State> m_State;
-    };
 
     // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
     // `qualified-id ::= nested-name-specifier unqualified-id` is rewritten to
@@ -769,130 +557,6 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         return std::move(id).take();
-    }
-
-    namespace state
-    {
-        struct BuiltinType
-        {
-            std::optional<lexing::keyword> base{};
-
-            enum class SizeSpec : std::int8_t
-            {
-                id_short = 0,
-                id_long,
-                id_longlong
-            };
-
-            std::optional<SizeSpec> sizeSpec{};
-
-            enum class SignedSpec : std::int8_t
-            {
-                id_signed = 0,
-                id_unsigned
-            };
-
-            std::optional<SignedSpec> signedSpec{};
-
-            [[nodiscard]]
-            constexpr bool try_apply(lexing::keyword const& keyword)
-            {
-                return try_apply_size_spec(keyword)
-                    || try_apply_signed_spec(keyword)
-                    || try_apply_base(keyword);
-            }
-
-            [[nodiscard]]
-            friend bool operator==(BuiltinType const&, BuiltinType const&) = default;
-
-        private:
-            [[nodiscard]]
-            constexpr bool try_apply_base(lexing::keyword const& keyword) noexcept
-            {
-                // Todo: verify correct type keywords
-                if (!base)
-                {
-                    base = keyword;
-                    return true;
-                }
-
-                return false;
-            }
-
-            [[nodiscard]]
-            constexpr bool try_apply_signed_spec(lexing::keyword const& keyword) noexcept
-            {
-                std::optional const spec = std::invoke([&]() -> std::optional<SignedSpec> {
-                    if (lexing::keyword{"unsigned"} == keyword)
-                    {
-                        return SignedSpec::id_unsigned;
-                    }
-
-                    if (lexing::keyword{"signed"} == keyword)
-                    {
-                        return SignedSpec::id_signed;
-                    }
-
-                    return std::nullopt;
-                });
-
-                if (spec
-                    && !signedSpec)
-                {
-                    signedSpec = spec;
-                    return true;
-                }
-
-                return false;
-            }
-
-            [[nodiscard]]
-            constexpr bool try_apply_size_spec(lexing::keyword const& keyword) noexcept
-            {
-                std::optional const spec = std::invoke([&]() -> std::optional<SizeSpec> {
-                    if (lexing::keyword{"long"} == keyword)
-                    {
-                        return SizeSpec::id_long;
-                    }
-
-                    if (lexing::keyword{"short"} == keyword)
-                    {
-                        return SizeSpec::id_short;
-                    }
-
-                    return std::nullopt;
-                });
-
-                if (spec)
-                {
-                    if (!sizeSpec)
-                    {
-                        sizeSpec = spec;
-                        return true;
-                    }
-
-                    if (*sizeSpec == SizeSpec::id_long
-                        && *spec == SizeSpec::id_long)
-                    {
-                        sizeSpec = SizeSpec::id_longlong;
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        };
-
-        using BaseType = std::variant<
-            QualifiedId,
-            BuiltinType>;
-
-        struct TypeId
-        {
-            CVQualifierSeq leadingQualifications{};
-            BaseType base;
-            AbstractDeclarator declarator{};
-        };
     }
 
     namespace detail
