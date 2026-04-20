@@ -133,6 +133,12 @@ namespace mimicpp::printing::type::lexing
         }
 
         [[nodiscard]]
+        constexpr std::ptrdiff_t index() const noexcept
+        {
+            return m_KeywordIndex;
+        }
+
+        [[nodiscard]]
         bool operator==(keyword const&) const = default;
 
     private:
@@ -164,6 +170,12 @@ namespace mimicpp::printing::type::lexing
         constexpr StringViewT text() const noexcept
         {
             return textCollection[m_TextIndex];
+        }
+
+        [[nodiscard]]
+        constexpr std::ptrdiff_t index() const noexcept
+        {
+            return m_TextIndex;
         }
 
         [[nodiscard]]
