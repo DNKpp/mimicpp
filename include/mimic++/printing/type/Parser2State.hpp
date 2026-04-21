@@ -124,25 +124,6 @@ namespace mimicpp::printing::type::parsing::v2::state
         friend bool operator==(SimpleTemplateId const&, SimpleTemplateId const&) = default;
     };
 
-    struct PtrOperator
-    {
-        // Todo: nested-name-specifier
-        // ignore attribute-specifier-seq
-
-        enum class Type
-        {
-            ptr = 0,
-            ref,
-            refref
-        };
-
-        Type type{};
-        std::optional<CVQualifierSeq> qualifiers{};
-
-        [[nodiscard]]
-        friend bool operator==(PtrOperator const&, PtrOperator const&) = default;
-    };
-
     struct ParametersAndQualifiers
     {
         [[nodiscard]]
@@ -197,6 +178,27 @@ namespace mimicpp::printing::type::parsing::v2::state
         [[nodiscard]]
         friend bool operator==(FunctionDeclarator const&, FunctionDeclarator const&) = default;
     };
+
+    struct PointerDeclarator
+    {
+        std::optional<CVQualifierSeq> qualifiers{};
+        std::optional<ScopeSequence> scopes{};
+
+        [[nodiscard]]
+        friend bool operator==(PointerDeclarator const&, PointerDeclarator const&) = default;
+    };
+
+    struct ReferenceDeclarator
+    {
+        RefQualifier qualifier{};
+
+        [[nodiscard]]
+        friend bool operator==(ReferenceDeclarator const&, ReferenceDeclarator const&) = default;
+    };
+
+    using PtrOperator = std::variant<
+        ReferenceDeclarator,
+        PointerDeclarator>;
 
     struct AbstractDeclarator
     {

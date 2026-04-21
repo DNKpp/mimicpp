@@ -372,41 +372,46 @@ namespace mimicpp::printing::type::parsing::v2
     }
 
     // see: https://eel.is/c++draft/dcl.decl.general#nt:ptr-operator
+    // note: fully ignores `attribute-specifier-seq`
     [[nodiscard]]
     constexpr std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream)
     {
-        // Todo: handle
-        // nested-name-specifier * attribute-specifier-seq? cv-qualifier-seq?
-        using Type = state::PtrOperator::Type;
-        if (expect(stream, lexing::operator_or_punctuator{"*"}))
-        {
-            return state::PtrOperator{
-                .type = Type::ptr,
-                .qualifiers = parse_cv_qualifier_seq(stream)};
-        }
-
+        // `ptr-operator ::= &&`
         if (expect(stream, lexing::operator_or_punctuator{"&&"}))
         {
-            return {state::PtrOperator{.type = Type::refref}};
+            return {state::ReferenceDeclarator{.qualifier = state::id_refref}};
         }
 
+        // `ptr-operator ::= &`
         if (expect(stream, lexing::operator_or_punctuator{"&"}))
         {
-            return {state::PtrOperator{.type = Type::ref}};
+            return {state::ReferenceDeclarator{.qualifier = state::id_ref}};
         }
 
-        return std::nullopt;
+        // `ptr-operator ::= nested-name-specifier? * cv-qualifier-seq?`
+        StateGuard<state::PointerDeclarator> ptr{stream};
+
+        // Todo:
+        // ptr->scopes = parse_nested_name_specifier(stream);
+        if (!expect(stream, lexing::operator_or_punctuator{"*"}))
+        {
+            return std::nullopt;
+        }
+
+        ptr->qualifiers = parse_cv_qualifier_seq(stream);
+
+        return {std::move(ptr).take()};
     }
 
     [[nodiscard]]
     constexpr std::optional<state::AbstractDeclarator> parse_abstract_declarator(TokenStream& stream)
     {
-        Transaction transaction{stream};
-        state::AbstractDeclarator declarator{};
+        StateGuard<state::AbstractDeclarator> declarator{stream};
+        auto& [decorations, core] = declarator->root;
 
         while (std::optional op = parse_ptr_operator(stream))
         {
-            declarator.root.decorations.emplace_back(*std::move(op));
+            decorations.emplace_back(*std::move(op));
         }
 
         if (expect(stream, lexing::operator_or_punctuator{"("}))
@@ -418,7 +423,7 @@ namespace mimicpp::printing::type::parsing::v2
                 return std::nullopt;
             }
 
-            declarator.root.core = std::make_unique<state::AbstractDeclarator::Layer>(std::move(layer->root));
+            core = std::make_unique<state::AbstractDeclarator::Layer>(std::move(layer->root));
         }
         else if (expect(stream, lexing::operator_or_punctuator{"["}))
         {
@@ -428,20 +433,20 @@ namespace mimicpp::printing::type::parsing::v2
                 return std::nullopt;
             }
 
-            declarator.root.core.emplace<state::ArrayDeclarator>();
+            core.emplace<state::ArrayDeclarator>();
         }
         /*else if (std::optional params = parse_params_and_qualifiers(stream))
         {
 
         }*/
 
-        if (declarator.root.decorations.empty()
-            && std::holds_alternative<std::monostate>(declarator.root.core))
+        if (decorations.empty()
+            && std::holds_alternative<std::monostate>(declarator->root.core))
         {
             return std::nullopt;
         }
 
-        return {std::move(declarator)};
+        return {std::move(declarator).take()};
     }
 
     namespace detail
