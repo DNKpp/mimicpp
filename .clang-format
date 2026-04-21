@@ -48,7 +48,7 @@ KeepEmptyLines:
 # Alignment
 
 AlignAfterOpenBracket: AlwaysBreak
-AlignArrayOfStructures: Right
+AlignArrayOfStructures: Left
 AlignConsecutiveBitFields: None
 AlignConsecutiveDeclarations: None
 AlignConsecutiveAssignments: None
