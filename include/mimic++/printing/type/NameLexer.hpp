@@ -193,6 +193,14 @@ namespace mimicpp::printing::type::lexing
         bool operator==(identifier const&) const = default;
     };
 
+    struct literal
+    {
+        StringViewT content;
+
+        [[nodiscard]]
+        bool operator==(literal const&) const = default;
+    };
+
     struct end
     {
         [[nodiscard]]
@@ -204,7 +212,8 @@ namespace mimicpp::printing::type::lexing
         space,
         keyword,
         operator_or_punctuator,
-        identifier>;
+        identifier,
+        literal>;
 
     struct token
     {
@@ -271,6 +280,13 @@ namespace mimicpp::printing::type::lexing
                     m_Text.substr(0u, 1u)))
             {
                 return next_as_op_or_punctuator(options);
+            }
+
+            if (std::optional literal = try_next_as_literal())
+            {
+                return token{
+                    .content = literal->content,
+                    .classification = *std::move(literal)};
             }
 
             StringViewT const content = next_as_identifier();
@@ -370,6 +386,35 @@ namespace mimicpp::printing::type::lexing
             m_Text = {last, m_Text.cend()};
 
             return content;
+        }
+
+        // This function currently implements just a very basic integer-literal detection.
+        // see: https://eel.is/c++draft/lex.literal.kinds#nt:literal
+        [[nodiscard]]
+        constexpr std::optional<literal> try_next_as_literal() noexcept
+        {
+            MIMICPP_ASSERT(!m_Text.empty(), "Empty text.");
+
+            if (is_digit(m_Text.front()))
+            {
+                if ('0' == m_Text.front()
+                    && 2u <= m_Text.size())
+                {
+                    // Todo: one of
+                    // https://eel.is/c++draft/lex.icon#nt:binary-literal
+                    // https://eel.is/c++draft/lex.icon#nt:octal-literal
+                    // https://eel.is/c++draft/lex.icon#nt:hexadecimal-prefix
+                }
+
+                // Todo: this is just a very naive approach.
+                auto const last = std::ranges::find_if_not(m_Text.cbegin() + 1, m_Text.cend(), is_digit);
+                StringViewT const content{m_Text.cbegin(), last};
+                m_Text = {last, m_Text.cend()};
+
+                return literal{.content = content};
+            }
+
+            return std::nullopt;
         }
     };
 }

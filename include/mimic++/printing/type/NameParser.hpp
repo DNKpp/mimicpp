@@ -177,9 +177,13 @@ namespace mimicpp::printing::type::parsing
             unwrapped.unrecognized(m_Content);
         }
 
-        static constexpr void handle_lexer_token([[maybe_unused]] StringViewT const content, [[maybe_unused]] lexing::end const& end)
+        static constexpr void handle_lexer_token(StringViewT const /*content*/, lexing::end const& /*end*/)
         {
             util::unreachable();
+        }
+
+        static constexpr void handle_lexer_token(StringViewT const /*content*/, lexing::literal const& /*literal*/)
+        {
         }
 
         [[nodiscard]]
