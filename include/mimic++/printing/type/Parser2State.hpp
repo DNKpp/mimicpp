@@ -339,7 +339,7 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     struct TypeId
     {
-        CVQualifierSeq leadingQualifications{};
+        CVQualifierSeq qualifications{};
         BaseType base;
         AbstractDeclarator declarator{};
 

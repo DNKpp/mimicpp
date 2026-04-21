@@ -13,11 +13,19 @@ namespace state = mimicpp::printing::type::parsing::v2::state;
 
 namespace
 {
-    std::array const cvTable = std::to_array<std::tuple<state::CVQualifierSeq, std::string>>({
-        {                    state::CVQualifierSeq{.isConst = true},          "const"},
-        {                 state::CVQualifierSeq{.isVolatile = true},       "volatile"},
-        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile"},
-        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const"},
+    std::array const cvTable = std::to_array<std::tuple<state::CVQualifierSeq, std::string, std::string>>({
+        {state::CVQualifierSeq{.isConst = true},                     "const",          ""              },
+        {state::CVQualifierSeq{.isConst = true},                     "",               "const"         },
+        {state::CVQualifierSeq{.isVolatile = true},                  "volatile",       ""              },
+        {state::CVQualifierSeq{.isVolatile = true},                  "",               "volatile"      },
+
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile", ""              },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "",               "const volatile"},
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const", ""              },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "",               "volatile const"},
+
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const",          "volatile"      },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile",       "const"         },
     });
 }
 
@@ -28,29 +36,28 @@ TEST_CASE(
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
     CAPTURE(type);
 
+    state::QualifiedId const expected{.identifier = lexing::identifier{type}};
+
     SECTION("When it's provided as plain type.")
     {
         auto const id = parse_type(type);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
-
-        state::QualifiedId const expected{.identifier = lexing::identifier{type}};
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
         CHECK_THAT(id->base, variant_equals(expected));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE(from_range(cvTable));
-        std::string const input = qualifierPrefix + " " + type;
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " " + type + " " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
-        state::QualifiedId const expected{.identifier = lexing::identifier{type}};
+        CHECK(expectedCV == id->qualifications);
         CHECK_THAT(id->base, variant_equals(expected));
     }
 }
@@ -62,11 +69,15 @@ TEST_CASE(
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
     using Id = lexing::identifier;
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
-        {                                               {.explicitRoot = true},                  "::"},
-        {                      {.scopes = {Id{"tmp"}, Id{"foo"}, Id{"_5432"}}},   "tmp::foo::_5432::"},
+        {{.explicitRoot = true},                                                "::"                 },
+        {{.scopes = {Id{"tmp"}, Id{"foo"}, Id{"_5432"}}},                       "tmp::foo::_5432::"  },
         {{.explicitRoot = true, .scopes = {Id{"tmp"}, Id{"foo"}, Id{"_5432"}}}, "::tmp::foo::_5432::"},
     }));
     CAPTURE(type, scopeText);
+
+    state::QualifiedId const expected{
+        .scopes = expectedScopes,
+        .identifier = lexing::identifier{type}};
 
     SECTION("When it's provided as plain type.")
     {
@@ -75,28 +86,21 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
-
-        state::QualifiedId const expected{
-            .scopes = expectedScopes,
-            .identifier = lexing::identifier{type}};
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
         CHECK_THAT(id->base, variant_equals(expected));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE(from_range(cvTable));
-        std::string const input = qualifierPrefix + " " + scopeText + type;
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " " + scopeText + type + " " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
-        state::QualifiedId const expected{
-            .scopes = expectedScopes,
-            .identifier = lexing::identifier{type}};
+        CHECK(expectedCV == id->qualifications);
         CHECK_THAT(id->base, variant_equals(expected));
     }
 }
@@ -120,14 +124,15 @@ TEST_CASE(
 
     std::string const templateId = GENERATE("foo", "_123", "foo456", "const_", "_const");
     auto const [expectedArgs, argListText] = GENERATE((table<state::TemplateArgumentList, std::string>)({
-        {                    state::TemplateArgumentList{},            "<>"},
-        {                        {make_builtin(KW{"int"})},         "<int>"},
+        {state::TemplateArgumentList{},                     "<>"           },
+        {{make_builtin(KW{"int"})},                         "<int>"        },
         {{make_type(ID{"_foo_"}), make_builtin(KW{"int"})}, "< _foo_,int >"},
     }));
 
     state::SimpleTemplateId const expectedTemplateId{
         .name = lexing::identifier{templateId},
         .args = expectedArgs};
+    state::QualifiedId const expected{.identifier = expectedTemplateId};
 
     SECTION("When they are provided as plain type.")
     {
@@ -137,24 +142,21 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
-
-        state::QualifiedId const expected{.identifier = expectedTemplateId};
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
         CHECK_THAT(id->base, variant_equals(expected));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE(from_range(cvTable));
-        std::string const input = qualifierPrefix + " " + templateId + argListText;
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " " + templateId + argListText + " " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
-        state::QualifiedId const expected{.identifier = expectedTemplateId};
+        CHECK(expectedCV == id->qualifications);
         CHECK_THAT(id->base, variant_equals(expected));
     }
 }
@@ -166,9 +168,9 @@ TEST_CASE(
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
     using Id = lexing::identifier;
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
-        {                      {.scopes = {Id{"tmp"}}},              "tmp<int>"},
-        {{.explicitRoot = true, .scopes = {Id{"tmp"}}},            "::tmp<int>"},
-        {          {.scopes = {Id{"tmp"}, Id{"tmp2"}}}, "tmp<int>::tmp2<fl, t>"}
+        {{.scopes = {Id{"tmp"}}},                       "tmp<int>"             },
+        {{.explicitRoot = true, .scopes = {Id{"tmp"}}}, "::tmp<int>"           },
+        {{.scopes = {Id{"tmp"}, Id{"tmp2"}}},           "tmp<int>::tmp2<fl, t>"}
     }));
     CAPTURE(type, scopeText);
 
@@ -179,8 +181,8 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::QualifiedId const expected{
             .scopes = expectedScopes,
@@ -188,16 +190,16 @@ TEST_CASE(
         CHECK_THAT(id->base, variant_equals(expected));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE(from_range(cvTable));
-        std::string const input = qualifierPrefix + " " + scopeText + type;
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " " + scopeText + type + " " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
+        CHECK(expectedCV == id->qualifications);
         state::QualifiedId const expected{
             .scopes = expectedScopes,
             .identifier = lexing::identifier{type}};

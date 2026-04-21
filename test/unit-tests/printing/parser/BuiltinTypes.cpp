@@ -11,13 +11,31 @@ using mimicpp::printing::type::parse_type;
 namespace lexing = mimicpp::printing::type::lexing;
 namespace state = mimicpp::printing::type::parsing::v2::state;
 
+namespace
+{
+    std::array const cvTable = std::to_array<std::tuple<state::CVQualifierSeq, std::string, std::string>>({
+        {state::CVQualifierSeq{.isConst = true},                     "const",          ""              },
+        {state::CVQualifierSeq{.isConst = true},                     "",               "const"         },
+        {state::CVQualifierSeq{.isVolatile = true},                  "volatile",       ""              },
+        {state::CVQualifierSeq{.isVolatile = true},                  "",               "volatile"      },
+
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile", ""              },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "",               "const volatile"},
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const", ""              },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "",               "volatile const"},
+
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const",          "volatile"      },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile",       "const"         },
+    });
+}
+
 TEST_CASE(
     "parsing::parse_type supports unsigned and signed builtin-types.",
     "[print][print::type]")
 {
     using SignedSpec = state::BuiltinType::SignedSpec;
     auto const [expectedSpec, type] = GENERATE((table<SignedSpec, std::string>)({
-        {  SignedSpec::id_signed,   "signed"},
+        {SignedSpec::id_signed,   "signed"  },
         {SignedSpec::id_unsigned, "unsigned"},
     }));
     CAPTURE(type);
@@ -27,8 +45,8 @@ TEST_CASE(
         auto const id = parse_type(type);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{.signedSpec = expectedSpec};
         CHECK_THAT(id->base, variant_equals(expected));
@@ -38,8 +56,8 @@ TEST_CASE(
     {
         using SizeSpec = state::BuiltinType::SizeSpec;
         auto const [expectedSizeSpec, specText] = GENERATE((table<SizeSpec, std::string>)({
-            {   SizeSpec::id_short,     "short"},
-            {    SizeSpec::id_long,      "long"},
+            {SizeSpec::id_short,    "short"    },
+            {SizeSpec::id_long,     "long"     },
             {SizeSpec::id_longlong, "long long"},
         }));
         std::string const input = specText + " " + type;
@@ -48,28 +66,23 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{.sizeSpec = expectedSizeSpec, .signedSpec = expectedSpec};
         CHECK_THAT(id->base, variant_equals(expected));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE((table<state::CVQualifierSeq, std::string>)({
-            {                    state::CVQualifierSeq{.isConst = true},          "const"},
-            {                 state::CVQualifierSeq{.isVolatile = true},       "volatile"},
-            {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile"},
-            {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const"},
-        }));
-        std::string const input = qualifierPrefix + " " + type;
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " " + type + " " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
+        CHECK(expectedCV == id->qualifications);
         state::BuiltinType const expected{.signedSpec = expectedSpec};
         CHECK_THAT(id->base, variant_equals(expected));
     }
@@ -81,8 +94,8 @@ TEST_CASE(
 {
     using SizeSpec = state::BuiltinType::SizeSpec;
     auto const [expectedSpec, type] = GENERATE((table<SizeSpec, std::string>)({
-        {   SizeSpec::id_short,     "short"},
-        {    SizeSpec::id_long,      "long"},
+        {SizeSpec::id_short,    "short"    },
+        {SizeSpec::id_long,     "long"     },
         {SizeSpec::id_longlong, "long long"},
     }));
     CAPTURE(type);
@@ -92,8 +105,8 @@ TEST_CASE(
         auto const id = parse_type(type);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{.sizeSpec = expectedSpec};
         CHECK_THAT(id->base, variant_equals(expected));
@@ -103,7 +116,7 @@ TEST_CASE(
     {
         using SignedSpec = state::BuiltinType::SignedSpec;
         auto const [expectedSignedSpec, specText] = GENERATE((table<SignedSpec, std::string>)({
-            {  SignedSpec::id_signed,   "signed"},
+            {SignedSpec::id_signed,   "signed"  },
             {SignedSpec::id_unsigned, "unsigned"},
         }));
         std::string const input = specText + " " + type;
@@ -112,28 +125,23 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{.sizeSpec = expectedSpec, .signedSpec = expectedSignedSpec};
         CHECK_THAT(id->base, variant_equals(expected));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE((table<state::CVQualifierSeq, std::string>)({
-            {                    state::CVQualifierSeq{.isConst = true},          "const"},
-            {                 state::CVQualifierSeq{.isVolatile = true},       "volatile"},
-            {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile"},
-            {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const"},
-        }));
-        std::string const input = qualifierPrefix + " " + type;
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " " + type + " " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
+        CHECK(expectedCV == id->qualifications);
         state::BuiltinType const expected{.sizeSpec = expectedSpec};
         CHECK_THAT(id->base, variant_equals(expected));
     }
@@ -148,8 +156,8 @@ TEST_CASE(
         auto const id = parse_type("int");
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{.base = lexing::keyword{"int"}};
         CHECK_THAT(id->base, variant_equals(expected));
@@ -161,25 +169,25 @@ TEST_CASE(
         using SizeSpec = state::BuiltinType::SizeSpec;
         auto const [expectedSignedSpec, expectedSizeSpec, input] = GENERATE(
             (table<std::optional<SignedSpec>, std::optional<SizeSpec>, std::string>)({
-                {  SignedSpec::id_signed,          std::nullopt,             "signed int"},
-                {  SignedSpec::id_signed,          std::nullopt,             "int signed"},
-                {SignedSpec::id_unsigned,          std::nullopt,           "unsigned int"},
-                {SignedSpec::id_unsigned,          std::nullopt,           "int unsigned"},
+                {SignedSpec::id_signed,   std::nullopt,          "signed int"            },
+                {SignedSpec::id_signed,   std::nullopt,          "int signed"            },
+                {SignedSpec::id_unsigned, std::nullopt,          "unsigned int"          },
+                {SignedSpec::id_unsigned, std::nullopt,          "int unsigned"          },
 
-                {           std::nullopt,     SizeSpec::id_long,               "long int"},
-                {           std::nullopt,     SizeSpec::id_long,               "int long"},
-                {           std::nullopt,    SizeSpec::id_short,              "short int"},
-                {           std::nullopt,    SizeSpec::id_short,              "int short"},
+                {std::nullopt,            SizeSpec::id_long,     "long int"              },
+                {std::nullopt,            SizeSpec::id_long,     "int long"              },
+                {std::nullopt,            SizeSpec::id_short,    "short int"             },
+                {std::nullopt,            SizeSpec::id_short,    "int short"             },
 
-                {           std::nullopt, SizeSpec::id_longlong,          "long long int"},
-                {           std::nullopt, SizeSpec::id_longlong,          "int long long"},
-                {           std::nullopt, SizeSpec::id_longlong,          "long int long"},
+                {std::nullopt,            SizeSpec::id_longlong, "long long int"         },
+                {std::nullopt,            SizeSpec::id_longlong, "int long long"         },
+                {std::nullopt,            SizeSpec::id_longlong, "long int long"         },
 
-                {  SignedSpec::id_signed,     SizeSpec::id_long,        "signed long int"},
-                {  SignedSpec::id_signed,     SizeSpec::id_long,        "signed int long"},
-                {  SignedSpec::id_signed,     SizeSpec::id_long,        "long int signed"},
-                {  SignedSpec::id_signed,     SizeSpec::id_long,        "int long signed"},
-                {  SignedSpec::id_signed, SizeSpec::id_longlong,   "long int long signed"},
+                {SignedSpec::id_signed,   SizeSpec::id_long,     "signed long int"       },
+                {SignedSpec::id_signed,   SizeSpec::id_long,     "signed int long"       },
+                {SignedSpec::id_signed,   SizeSpec::id_long,     "long int signed"       },
+                {SignedSpec::id_signed,   SizeSpec::id_long,     "int long signed"       },
+                {SignedSpec::id_signed,   SizeSpec::id_longlong, "long int long signed"  },
                 {SignedSpec::id_unsigned, SizeSpec::id_longlong, "unsigned long int long"},
         }));
         CAPTURE(input);
@@ -187,8 +195,8 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{
             .base = lexing::keyword{"int"},
@@ -209,8 +217,8 @@ TEST_CASE(
         auto const id = parse_type("long");
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{.sizeSpec = SizeSpec::id_long};
         CHECK_THAT(id->base, variant_equals(expected));
@@ -221,22 +229,22 @@ TEST_CASE(
         using SignedSpec = state::BuiltinType::SignedSpec;
         auto const [expectedSignedSpec, expectedSizeSpec, input] = GENERATE(
             (table<std::optional<SignedSpec>, std::optional<SizeSpec>, std::string>)({
-                {  SignedSpec::id_signed,     SizeSpec::id_long,        "signed long"},
-                {  SignedSpec::id_signed,     SizeSpec::id_long,        "long signed"},
-                {SignedSpec::id_unsigned,     SizeSpec::id_long,      "unsigned long"},
-                {SignedSpec::id_unsigned,     SizeSpec::id_long,      "long unsigned"},
+                {SignedSpec::id_signed,   SizeSpec::id_long,     "signed long"       },
+                {SignedSpec::id_signed,   SizeSpec::id_long,     "long signed"       },
+                {SignedSpec::id_unsigned, SizeSpec::id_long,     "unsigned long"     },
+                {SignedSpec::id_unsigned, SizeSpec::id_long,     "long unsigned"     },
 
-                {  SignedSpec::id_signed, SizeSpec::id_longlong,   "signed long long"},
+                {SignedSpec::id_signed,   SizeSpec::id_longlong, "signed long long"  },
                 {SignedSpec::id_unsigned, SizeSpec::id_longlong, "long long unsigned"},
-                {  SignedSpec::id_signed, SizeSpec::id_longlong,   "long signed long"},
+                {SignedSpec::id_signed,   SizeSpec::id_longlong, "long signed long"  },
         }));
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{
             .sizeSpec = expectedSizeSpec,
@@ -244,21 +252,16 @@ TEST_CASE(
         CHECK_THAT(id->base, variant_equals(expected));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE((table<state::CVQualifierSeq, std::string>)({
-            {                    state::CVQualifierSeq{.isConst = true},          "const"},
-            {                 state::CVQualifierSeq{.isVolatile = true},       "volatile"},
-            {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile"},
-            {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const"},
-        }));
-        std::string const input = qualifierPrefix + " long";
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " long " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
+        CHECK(expectedCV == id->qualifications);
         state::BuiltinType const expected{.sizeSpec = SizeSpec::id_long};
         CHECK_THAT(id->base, variant_equals(expected));
     }
@@ -273,8 +276,8 @@ TEST_CASE(
         auto const id = parse_type("double");
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{.base = lexing::keyword{"double"}};
         CHECK_THAT(id->base, variant_equals(expected));
@@ -289,8 +292,8 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{
             .base = lexing::keyword{"double"},
@@ -308,8 +311,8 @@ TEST_CASE(
         auto const id = parse_type("char");
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{.base = lexing::keyword{"char"}};
         CHECK_THAT(id->base, variant_equals(expected));
@@ -319,8 +322,8 @@ TEST_CASE(
     {
         using SignedSpec = state::BuiltinType::SignedSpec;
         auto const [expectedSignedSpec, input] = GENERATE((table<std::optional<SignedSpec>, std::string>)({
-            {  SignedSpec::id_signed,   "signed char"},
-            {  SignedSpec::id_signed,   "char signed"},
+            {SignedSpec::id_signed,   "signed char"  },
+            {SignedSpec::id_signed,   "char signed"  },
             {SignedSpec::id_unsigned, "unsigned char"},
             {SignedSpec::id_unsigned, "char unsigned"},
         }));
@@ -329,8 +332,8 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
 
         state::BuiltinType const expected{
             .base = lexing::keyword{"char"},
@@ -346,8 +349,8 @@ TEST_CASE(
     auto const id = parse_type("void");
     REQUIRE(id);
 
-    CHECK(!id->leadingQualifications.isConst);
-    CHECK(!id->leadingQualifications.isVolatile);
+    CHECK(!id->qualifications.isConst);
+    CHECK(!id->qualifications.isVolatile);
 
     state::BuiltinType const expected{.base = lexing::keyword{"void"}};
     CHECK_THAT(id->base, variant_equals(expected));
@@ -380,26 +383,21 @@ TEST_CASE(
         auto const id = parse_type(type);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
         CHECK_THAT(id->base, variant_equals(state::BuiltinType{.base{type}}));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE((table<state::CVQualifierSeq, std::string>)({
-            {                    state::CVQualifierSeq{.isConst = true},          "const"},
-            {                 state::CVQualifierSeq{.isVolatile = true},       "volatile"},
-            {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile"},
-            {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const"},
-        }));
-        std::string const input = qualifierPrefix + " " + type;
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " " + type + " " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
+        CHECK(expectedCV == id->qualifications);
         CHECK_THAT(id->base, variant_equals(state::BuiltinType{.base{type}}));
     }
 }

@@ -13,11 +13,19 @@ namespace state = mimicpp::printing::type::parsing::v2::state;
 
 namespace
 {
-    std::array const cvTable = std::to_array<std::tuple<state::CVQualifierSeq, std::string>>({
-        {state::CVQualifierSeq{.isConst = true},                     "const"         },
-        {state::CVQualifierSeq{.isVolatile = true},                  "volatile"      },
-        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile"},
-        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const"},
+    std::array const cvTable = std::to_array<std::tuple<state::CVQualifierSeq, std::string, std::string>>({
+        {state::CVQualifierSeq{.isConst = true},                     "const",          ""              },
+        {state::CVQualifierSeq{.isConst = true},                     "",               "const"         },
+        {state::CVQualifierSeq{.isVolatile = true},                  "volatile",       ""              },
+        {state::CVQualifierSeq{.isVolatile = true},                  "",               "volatile"      },
+
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const volatile", ""              },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "",               "const volatile"},
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile const", ""              },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "",               "volatile const"},
+
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "const",          "volatile"      },
+        {state::CVQualifierSeq{.isConst = true, .isVolatile = true}, "volatile",       "const"         },
     });
 }
 
@@ -50,8 +58,8 @@ TEST_CASE(
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(!id->leadingQualifications.isConst);
-        CHECK(!id->leadingQualifications.isVolatile);
+        CHECK(!id->qualifications.isConst);
+        CHECK(!id->qualifications.isVolatile);
         CHECK(expectedType == id->base);
 
         CHECK_THAT(id->declarator.root.core, variant_equals(std::monostate{}));
@@ -60,16 +68,16 @@ TEST_CASE(
             Catch::Matchers::RangeEquals(std::array{expectedDeclarator}));
     }
 
-    SECTION("When they are provided with arbitrary cv prefix qualification.")
+    SECTION("When they are provided with arbitrary cv qualification.")
     {
-        auto const [expectedCV, qualifierPrefix] = GENERATE(from_range(cvTable));
-        std::string const input = qualifierPrefix + " " + typeText + declaratorText;
+        auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
+        std::string const input = qualifierPrefix + " " + typeText + " " + qualifierSuffix + declaratorText;
         CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
 
-        CHECK(expectedCV == id->leadingQualifications);
+        CHECK(expectedCV == id->qualifications);
         CHECK(expectedType == id->base);
 
         CHECK_THAT(id->declarator.root.core, variant_equals(std::monostate{}));

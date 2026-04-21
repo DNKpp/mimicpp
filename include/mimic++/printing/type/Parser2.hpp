@@ -606,7 +606,7 @@ namespace mimicpp::printing::type::parsing::v2
             {
                 if (std::optional const cv = parse_cv_qualifier(stream);
                     cv
-                    && typeId->leadingQualifications.apply(*cv))
+                    && typeId->qualifications.apply(*cv))
                 {
                     continue;
                 }
