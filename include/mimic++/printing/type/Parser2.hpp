@@ -208,6 +208,9 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    [[nodiscard]]
+    constexpr std::optional<state::TypeId> parse_type_id(TokenStream& stream);
+
     // see: https://eel.is/c++draft/class.pre#nt:class-key
     [[nodiscard]]
     constexpr std::optional<state::ClassKey> parse_class_key(TokenStream& stream)
@@ -232,8 +235,12 @@ namespace mimicpp::printing::type::parsing::v2
 
     // see: https://eel.is/c++draft/temp.names#nt:template-argument
     [[nodiscard]]
-    constexpr std::optional<state::TemplateArgument> parse_template_argument(TokenStream& /*stream*/)
+    constexpr std::optional<state::TemplateArgument> parse_template_argument(TokenStream& stream)
     {
+        if (std::optional type = parse_type_id(stream))
+        {
+            return {state::RecursiveTypeId{*std::move(type)}};
+        }
         /*
          * template-argument:
                 template-argument-name
@@ -508,11 +515,15 @@ namespace mimicpp::printing::type::parsing::v2
         {
             if (std::optional templateId = parse_simple_template_id(stream))
             {
-                return {*std::move(templateId)};
+                *unqalified = *std::move(templateId);
+            }
+            else
+            {
+                *unqalified = *id;
+                stream.consume();
             }
 
-            stream.consume();
-            return {*id};
+            return std::move(unqalified).take();
         }
 
         // Todo: add missing
@@ -595,13 +606,11 @@ namespace mimicpp::printing::type::parsing::v2
                     continue;
                 }
 
-                if (std::ranges::binary_search(detail::builtinTypeCandidates, keyword->index(), {}, &lexing::keyword::index))
+                if (std::ranges::binary_search(detail::builtinTypeCandidates, keyword->index(), {}, &lexing::keyword::index)
+                    && (builtinType ? *builtinType : builtinType.emplace()).try_apply(*keyword))
                 {
-                    if ((builtinType ? *builtinType : builtinType.emplace()).try_apply(*keyword))
-                    {
-                        stream.consume();
-                        continue;
-                    }
+                    stream.consume();
+                    continue;
                 }
             }
             else if (std::optional qualifiedId = parse_qualified_id(stream);
@@ -612,7 +621,7 @@ namespace mimicpp::printing::type::parsing::v2
                 continue;
             }
 
-            return std::nullopt;
+            break;
         }
 
         if (qualifiedType

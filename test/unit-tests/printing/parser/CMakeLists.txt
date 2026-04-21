@@ -5,5 +5,6 @@
 
 target_sources(${TARGET_NAME} PRIVATE
     "BuiltinTypes.cpp"
+    "QualifiedTypes.cpp"
 )
 
