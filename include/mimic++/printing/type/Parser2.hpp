@@ -233,13 +233,31 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    // Constant-expressions are actually a very deeply nested set of rules,
+    // which more or less boils down to a `primary-expression` for this kind of task.
+    // see: https://eel.is/c++draft/expr.const.general#nt:constant-expression
+    // see: https://eel.is/c++draft/expr.prim.grammar#nt:primary-expression
+    // `constant-expression ::= primary-expression`
+    // `primary-expression ::= literal`
+    [[nodiscard]]
+    constexpr std::optional<state::ConstantExpression> parse_constant_expression(TokenStream& stream)
+    {
+        if (auto const* const literal = peek_if<lexing::literal>(stream))
+        {
+            stream.consume();
+            return {*literal};
+        }
+
+        return std::nullopt;
+    }
+
     // see: https://eel.is/c++draft/temp.names#nt:template-argument
     [[nodiscard]]
     constexpr std::optional<state::TemplateArgument> parse_template_argument(TokenStream& stream)
     {
         if (std::optional type = parse_type_id(stream))
         {
-            return {state::RecursiveTypeId{*std::move(type)}};
+            return {state::RecursiveState{*std::move(type)}};
         }
         /*
          * template-argument:
@@ -403,45 +421,64 @@ namespace mimicpp::printing::type::parsing::v2
         return {std::move(ptr).take()};
     }
 
+    // This rule is not directly reflected by the standard, but mirrors the reality more closely than the original
+    // `noptr-abstract-declarator` non-terminal, which allows that `params-and-qualifiers` non-terminals can appear between
+    // multiple `[ constant-expression ]` sequences.
+    // see: https://eel.is/c++draft/dcl.name#nt:noptr-abstract-declarator
+    [[nodiscard]]
+    constexpr std::optional<state::ArrayDeclarator> parse_array_declarator(TokenStream& stream)
+    {
+        StateGuard<state::ArrayDeclarator> declarator{stream};
+        if (expect(stream, lexing::operator_or_punctuator{"["}))
+        {
+            declarator->size = parse_constant_expression(stream);
+            if (expect(stream, lexing::operator_or_punctuator{"]"}))
+            {
+                return std::move(declarator).take();
+            }
+        }
+
+        return std::nullopt;
+    }
+
     [[nodiscard]]
     constexpr std::optional<state::AbstractDeclarator> parse_abstract_declarator(TokenStream& stream)
     {
         StateGuard<state::AbstractDeclarator> declarator{stream};
-        auto& [decorations, core] = declarator->root;
+        auto& root = declarator->root;
 
         while (std::optional op = parse_ptr_operator(stream))
         {
-            decorations.emplace_back(*std::move(op));
+            root.decorations.emplace_back(*std::move(op));
         }
 
-        if (expect(stream, lexing::operator_or_punctuator{"("}))
+        if (Transaction nestedTransaction{stream};
+            expect(stream, lexing::operator_or_punctuator{"("}))
         {
-            std::optional layer = parse_abstract_declarator(stream);
-            if (!layer
-                || expect(stream, lexing::operator_or_punctuator{")"}))
+            if (std::optional layer = parse_abstract_declarator(stream);
+                layer
+                && expect(stream, lexing::operator_or_punctuator{")"}))
             {
-                return std::nullopt;
+                root.nested.emplace(std::move(layer->root));
+                nestedTransaction.commit();
             }
-
-            core = std::make_unique<state::AbstractDeclarator::Layer>(std::move(layer->root));
         }
-        else if (expect(stream, lexing::operator_or_punctuator{"["}))
-        {
-            // Todo: parse optional constant-expression
-            if (!expect(stream, lexing::operator_or_punctuator{"]"}))
-            {
-                return std::nullopt;
-            }
 
-            core.emplace<state::ArrayDeclarator>();
-        }
-        /*else if (std::optional params = parse_params_and_qualifiers(stream))
+        // Todo:
+        /*if (std::optional params = parse_params_and_qualifiers(stream))
         {
 
         }*/
 
-        if (decorations.empty()
-            && std::holds_alternative<std::monostate>(declarator->root.core))
+        while (std::optional arrayDecl = parse_array_declarator(stream))
+        {
+            root.arrays.emplace_back(*std::move(arrayDecl));
+        }
+
+        if (root.decorations.empty()
+            && !root.nested
+            && !root.function
+            && root.arrays.empty())
         {
             return std::nullopt;
         }

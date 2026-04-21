@@ -110,12 +110,12 @@ TEST_CASE(
     "[print][print::type]")
 {
     static constexpr auto make_builtin = [](lexing::keyword const& keyword) -> state::TemplateArgument {
-        return state::RecursiveTypeId{
+        return state::RecursiveState{
             state::TypeId{.base = state::BuiltinType{keyword}}};
     };
 
     static constexpr auto make_type = [](lexing::identifier const& id) -> state::TemplateArgument {
-        return state::RecursiveTypeId{
+        return state::RecursiveState{
             state::TypeId{.base = state::QualifiedId{.identifier = id}}};
     };
 

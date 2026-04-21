@@ -25,38 +25,46 @@ namespace mimicpp::printing::type::parsing::v2::state
 {
     struct TypeId;
 
-    struct RecursiveTypeId
+    template <typename T>
+    struct RecursiveState
     {
     public:
-        ~RecursiveTypeId() noexcept;
+        ~RecursiveState() noexcept = default;
 
         [[nodiscard]]
-        RecursiveTypeId(RecursiveTypeId const&);
-        RecursiveTypeId& operator=(RecursiveTypeId const&);
+        RecursiveState(RecursiveState const&) = default;
+        RecursiveState& operator=(RecursiveState const&) = default;
 
         [[nodiscard]]
-        RecursiveTypeId(RecursiveTypeId&&) noexcept;
-        RecursiveTypeId& operator=(RecursiveTypeId&&) noexcept;
+        RecursiveState(RecursiveState&&) = default;
+        RecursiveState& operator=(RecursiveState&&) = default;
 
         [[nodiscard]]
-        explicit RecursiveTypeId(TypeId type);
-
-        [[nodiscard]]
-        TypeId& type() noexcept
+        explicit RecursiveState(T inner)
+            : m_inner{std::make_shared<T>(std::move(inner))}
         {
-            return *m_type;
         }
 
         [[nodiscard]]
-        TypeId const& type() const noexcept
+        T& get() noexcept
         {
-            return *m_type;
+            return *m_inner;
         }
 
-        friend bool operator==(RecursiveTypeId const& lhs, RecursiveTypeId const& rhs);
+        [[nodiscard]]
+        T const& get() const noexcept
+        {
+            return *m_inner;
+        }
+
+        [[nodiscard]]
+        friend bool operator==(RecursiveState const& lhs, RecursiveState const& rhs)
+        {
+            return lhs.get() == rhs.get();
+        }
 
     private:
-        std::shared_ptr<TypeId> m_type{};
+        std::shared_ptr<T> m_inner{};
     };
 
     enum ClassKey
@@ -103,15 +111,11 @@ namespace mimicpp::printing::type::parsing::v2::state
         id_refref
     };
 
-    struct ConstantExpression
-    {
-        [[nodiscard]]
-        friend bool operator==(ConstantExpression const&, ConstantExpression const&) = default;
-    };
+    using ConstantExpression = lexing::literal;
 
     using TemplateArgument = std::variant<
         ConstantExpression,
-        RecursiveTypeId>;
+        RecursiveState<TypeId>>;
 
     using TemplateArgumentList = std::vector<TemplateArgument>;
 
@@ -205,13 +209,9 @@ namespace mimicpp::printing::type::parsing::v2::state
         struct Layer
         {
             std::vector<PtrOperator> decorations{};
-
-            using Core = std::variant<
-                std::monostate,
-                ArrayDeclarator,
-                FunctionDeclarator,
-                std::unique_ptr<Layer>>;
-            Core core{};
+            std::optional<RecursiveState<Layer>> nested{};
+            std::optional<FunctionDeclarator> function{};
+            std::vector<ArrayDeclarator> arrays{};
 
             [[nodiscard]]
             friend bool operator==(Layer const&, Layer const&) = default;
@@ -346,23 +346,6 @@ namespace mimicpp::printing::type::parsing::v2::state
         [[nodiscard]]
         friend bool operator==(TypeId const&, TypeId const&) = default;
     };
-
-    inline RecursiveTypeId::~RecursiveTypeId() noexcept = default;
-    inline RecursiveTypeId::RecursiveTypeId(RecursiveTypeId const&) = default;
-    inline RecursiveTypeId& RecursiveTypeId::operator=(RecursiveTypeId const&) = default;
-    inline RecursiveTypeId::RecursiveTypeId(RecursiveTypeId&&) noexcept = default;
-    inline RecursiveTypeId& RecursiveTypeId::operator=(RecursiveTypeId&&) noexcept = default;
-
-    inline RecursiveTypeId::RecursiveTypeId(TypeId type)
-        : m_type{std::make_shared<TypeId>(std::move(type))}
-    {
-    }
-
-    [[nodiscard]]
-    inline bool operator==(RecursiveTypeId const& lhs, RecursiveTypeId const& rhs)
-    {
-        return lhs.type() == rhs.type();
-    }
 }
 
 #endif

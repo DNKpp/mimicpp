@@ -401,3 +401,66 @@ TEST_CASE(
         CHECK_THAT(id->base, variant_equals(state::BuiltinType{.base{type}}));
     }
 }
+
+TEST_CASE(
+    "parsing::parse_type supports arrays of builtin-types.",
+    "[print][print::type]")
+{
+    using CVEntry = std::ranges::range_value_t<decltype(cvTable)>;
+    auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(cat(
+        from_range(std::views::single(CVEntry{{}, "", ""})),
+        from_range(cvTable)));
+    state::BuiltinType const expectedType{.base = lexing::keyword{"int"}};
+
+    SECTION("When an unbounded array is given.")
+    {
+        std::string const input = qualifierPrefix + " int " + qualifierSuffix + "[]";
+        CAPTURE(input);
+
+        auto const id = parse_type(input);
+        REQUIRE(id);
+
+        CHECK(expectedCV == id->qualifications);
+        CHECK_THAT(id->base, variant_equals(expectedType));
+        state::AbstractDeclarator::Layer const expected{
+            .arrays = {state::ArrayDeclarator{}}};
+        CHECK(expected == id->declarator.root);
+    }
+
+    SECTION("When an bounded array is given.")
+    {
+        std::string const input = qualifierPrefix + " int " + qualifierSuffix + "[42]";
+        CAPTURE(input);
+
+        auto const id = parse_type(input);
+        REQUIRE(id);
+
+        CHECK(expectedCV == id->qualifications);
+        CHECK_THAT(id->base, variant_equals(expectedType));
+        state::AbstractDeclarator::Layer const expected{
+            .arrays = {state::ArrayDeclarator{.size = lexing::literal{"42"}}}};
+        CHECK(expected == id->declarator.root);
+    }
+
+    SECTION("When a multi-dimensional array is given.")
+    {
+        using ADecl = state::ArrayDeclarator;
+        using lit = lexing::literal;
+        auto const [arrayDeclarators, arrayText] = GENERATE((table<std::vector<ADecl>, std::string>)({
+            {{ADecl{}, ADecl{}},                              "[] []"       },
+            {{ADecl{lit{"1337"}}, ADecl{}},                   "[1337][]"    },
+            {{ADecl{lit{"42"}}, ADecl{}, ADecl{lit{"1337"}}}, "[42][][1337]"},
+        }));
+
+        std::string const input = qualifierPrefix + " int " + qualifierSuffix + arrayText;
+        CAPTURE(input);
+
+        auto const id = parse_type(input);
+        REQUIRE(id);
+
+        CHECK(expectedCV == id->qualifications);
+        CHECK_THAT(id->base, variant_equals(expectedType));
+        state::AbstractDeclarator::Layer const expected{.arrays = arrayDeclarators};
+        CHECK(expected == id->declarator.root);
+    }
+}
