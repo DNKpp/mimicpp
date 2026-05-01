@@ -260,3 +260,58 @@ TEST_CASE(
         .arrays = arrayDeclarators};
     CHECK(expected == id->declarator.root);
 }
+
+TEST_CASE(
+    "parsing::parse_type supports arbitrary function-params.",
+    "[print][print::type]")
+{
+    std::string const input = "void (int const long&, foo<short, unsigned> &&, char (* const)[][1337])";
+    CAPTURE(input);
+
+    auto const id = parse_type(input);
+    REQUIRE(id);
+
+    CHECK(!id->qualifications.isConst);
+    CHECK(!id->qualifications.isVolatile);
+    CHECK_THAT(
+        id->base,
+        variant_equals(state::BuiltinType{.base = lexing::keyword{"void"}}));
+
+    state::ParametersAndQualifiers const paramsAndQualifiers{
+        .params = {
+                   // `int const long&`
+            state::RecursiveState{
+                state::TypeId{
+                    .qualifications{.isConst = true},
+                    .base = state::BuiltinType{.base = lexing::keyword{"int"}, .sizeSpec = state::BuiltinType::SizeSpec::id_long},
+                    .declarator = {.root = {.decorations = {state::ReferenceDeclarator{state::RefQualifier::id_ref}}}}}},
+
+                   // `foo<short, unsigned> &&`
+            state::RecursiveState{
+                state::TypeId{
+                    .base = state::QualifiedId{
+                        .identifier = state::SimpleTemplateId{
+                            .name = lexing::identifier{"foo"},
+                            .args = {
+                                state::RecursiveState{
+                                    state::TypeId{.base = state::BuiltinType{.sizeSpec = state::BuiltinType::SizeSpec::id_short}}},
+                                state::RecursiveState{
+                                    state::TypeId{.base = state::BuiltinType{.signedSpec = state::BuiltinType::SignedSpec::id_unsigned}}}}}},
+                    .declarator = {.root = {.decorations = {state::ReferenceDeclarator{state::RefQualifier::id_refref}}}}}},
+
+                   // `char (* const)[][1337]`
+            state::RecursiveState{[] {
+                return state::TypeId{
+                    .base = state::BuiltinType{.base = lexing::keyword{"char"}},
+                    .declarator = {
+                        .root = {
+                            .nested = state::RecursiveState{
+                                state::AbstractDeclarator::Layer{
+                                    .decorations = {state::PointerDeclarator{.qualifiers = state::CVQualifierSeq{.isConst = true}}}}},
+                            .arrays = {state::ArrayDeclarator{}, state::ArrayDeclarator{.size = state::ConstantExpression{"1337"}}}}}};
+            }()}}
+    };
+    state::AbstractDeclarator::Layer const expected{
+        .function = state::FunctionDeclarator{.base = paramsAndQualifiers}};
+    CHECK(expected == id->declarator.root);
+}

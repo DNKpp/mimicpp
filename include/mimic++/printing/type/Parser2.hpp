@@ -461,6 +461,8 @@ namespace mimicpp::printing::type::parsing::v2
     // `attribute-specifier-seq`, `decl-specifier-seq` and `this` are ignored.
     constexpr std::optional<state::TypeId> parse_parameter_declaration(TokenStream& stream)
     {
+        // This is just a very naive approach; does this hold?
+        return parse_type_id(stream);
     }
 
     // see: https://eel.is/c++draft/dcl.fct#nt:parameter-declaration-clause
@@ -470,6 +472,26 @@ namespace mimicpp::printing::type::parsing::v2
     constexpr std::optional<std::vector<state::TypeId>> parse_parameter_declaration_clause(TokenStream& stream)
     {
         StateGuard<std::vector<state::TypeId>> params{stream};
+
+        do
+        {
+            std::optional param = parse_parameter_declaration(stream);
+            if (!param)
+            {
+                // zero params are valid!
+                if (params->empty())
+                {
+                    break;
+                }
+
+                return std::nullopt;
+            }
+
+            params->emplace_back(*std::move(param));
+        }
+        while (expect(stream, lexing::operator_or_punctuator{","}));
+
+        return std::move(params).take();
     }
 
     // see: https://eel.is/c++draft/dcl.decl.general#nt:parameters-and-qualifiers
@@ -484,7 +506,11 @@ namespace mimicpp::printing::type::parsing::v2
             return std::nullopt;
         }
 
-        // Todo: parameter-declaration-clause
+        std::optional clause = parse_parameter_declaration_clause(stream);
+        if (!clause)
+        {
+            return std::nullopt;
+        }
 
         if (!expect(stream, lexing::operator_or_punctuator{")"}))
         {
@@ -498,6 +524,10 @@ namespace mimicpp::printing::type::parsing::v2
 
         params->refQualifier = parse_ref_qualifier(stream);
         params->isNoexcept = expect(stream, lexing::keyword{"noexcept"}).has_value();
+
+        auto input = *std::move(clause)
+                   | std::views::transform([](state::TypeId& id) { return state::RecursiveState{std::move(id)}; });
+        params->params.insert(params->params.end(), input.begin(), input.end());
 
         return {std::move(params).take()};
     }
