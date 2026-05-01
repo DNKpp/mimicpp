@@ -233,6 +233,27 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    // see: https://eel.is/c++draft/dcl.decl.general#nt:ref-qualifier
+    [[nodiscard]]
+    constexpr std::optional<state::RefQualifier> parse_ref_qualifier(TokenStream& stream)
+    {
+        if (auto const* const op = peek_if<lexing::operator_or_punctuator>(stream))
+        {
+            constexpr auto map = make_map<lexing::operator_or_punctuator, state::RefQualifier>({
+                {lexing::operator_or_punctuator{"&"},  state::RefQualifier::id_ref   },
+                {lexing::operator_or_punctuator{"&&"}, state::RefQualifier::id_refref}
+            });
+
+            if (std::optional const qualifier = map(*op))
+            {
+                stream.consume();
+                return qualifier;
+            }
+        }
+
+        return std::nullopt;
+    }
+
     // Constant-expressions are actually a very deeply nested set of rules,
     // which more or less boils down to a `primary-expression` for this kind of task.
     // see: https://eel.is/c++draft/expr.const.general#nt:constant-expression
@@ -394,16 +415,11 @@ namespace mimicpp::printing::type::parsing::v2
     [[nodiscard]]
     constexpr std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream)
     {
-        // `ptr-operator ::= &&`
-        if (expect(stream, lexing::operator_or_punctuator{"&&"}))
-        {
-            return {state::ReferenceDeclarator{.qualifier = state::id_refref}};
-        }
-
         // `ptr-operator ::= &`
-        if (expect(stream, lexing::operator_or_punctuator{"&"}))
+        // `ptr-operator ::= &&`
+        if (std::optional const ref = parse_ref_qualifier(stream))
         {
-            return {state::ReferenceDeclarator{.qualifier = state::id_ref}};
+            return {state::ReferenceDeclarator{.qualifier = *ref}};
         }
 
         // `ptr-operator ::= nested-name-specifier? * cv-qualifier-seq?`
@@ -441,6 +457,51 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    // see: https://eel.is/c++draft/dcl.fct#nt:parameter-declaration
+    // `attribute-specifier-seq`, `decl-specifier-seq` and `this` are ignored.
+    constexpr std::optional<state::TypeId> parse_parameter_declaration(TokenStream& stream)
+    {
+    }
+
+    // see: https://eel.is/c++draft/dcl.fct#nt:parameter-declaration-clause
+    // and https://eel.is/c++draft/dcl.fct#nt:parameter-declaration-list
+    // The `...` is fully ignored.
+    [[nodiscard]]
+    constexpr std::optional<std::vector<state::TypeId>> parse_parameter_declaration_clause(TokenStream& stream)
+    {
+        StateGuard<std::vector<state::TypeId>> params{stream};
+    }
+
+    // see: https://eel.is/c++draft/dcl.decl.general#nt:parameters-and-qualifiers
+    // `attribute-specifier-seq` is ignored
+    [[nodiscard]]
+    constexpr std::optional<state::ParametersAndQualifiers> parse_parameters_and_qualifiers(TokenStream& stream)
+    {
+        StateGuard<state::ParametersAndQualifiers> params{stream};
+
+        if (!expect(stream, lexing::operator_or_punctuator{"("}))
+        {
+            return std::nullopt;
+        }
+
+        // Todo: parameter-declaration-clause
+
+        if (!expect(stream, lexing::operator_or_punctuator{")"}))
+        {
+            return std::nullopt;
+        }
+
+        if (std::optional cv = parse_cv_qualifier_seq(stream))
+        {
+            params->qualifiers = *std::move(cv);
+        }
+
+        params->refQualifier = parse_ref_qualifier(stream);
+        params->isNoexcept = expect(stream, lexing::keyword{"noexcept"}).has_value();
+
+        return {std::move(params).take()};
+    }
+
     [[nodiscard]]
     constexpr std::optional<state::AbstractDeclarator> parse_abstract_declarator(TokenStream& stream)
     {
@@ -464,11 +525,10 @@ namespace mimicpp::printing::type::parsing::v2
             }
         }
 
-        // Todo:
-        /*if (std::optional params = parse_params_and_qualifiers(stream))
+        if (std::optional params = parse_parameters_and_qualifiers(stream))
         {
-
-        }*/
+            root.function.emplace(*std::move(params));
+        }
 
         while (std::optional arrayDecl = parse_array_declarator(stream))
         {

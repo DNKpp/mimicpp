@@ -5,7 +5,7 @@
 
 target_sources(${TARGET_NAME} PRIVATE
     "BuiltinTypes.cpp"
+    "FunctionTypes.cpp"
     "QualifiedTypes.cpp"
     "PointerDeclarations.cpp"
 )
-

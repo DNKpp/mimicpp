@@ -130,6 +130,11 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     struct ParametersAndQualifiers
     {
+        std::vector<RecursiveState<TypeId>> params{};
+        CVQualifierSeq qualifiers{};
+        std::optional<RefQualifier> refQualifier{};
+        bool isNoexcept{false};
+
         [[nodiscard]]
         friend bool operator==(ParametersAndQualifiers const&, ParametersAndQualifiers const&) = default;
     };
@@ -177,7 +182,7 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     struct FunctionDeclarator
     {
-        // params-and-qualifiers
+        ParametersAndQualifiers base{};
 
         [[nodiscard]]
         friend bool operator==(FunctionDeclarator const&, FunctionDeclarator const&) = default;
