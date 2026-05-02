@@ -209,6 +209,9 @@ namespace mimicpp::printing::type::parsing::v2
     }
 
     [[nodiscard]]
+    constexpr std::optional<state::FunctionDeclarator> parse_parameters_and_qualifiers(TokenStream& stream);
+
+    [[nodiscard]]
     constexpr std::optional<state::TypeId> parse_type_id(TokenStream& stream);
 
     // see: https://eel.is/c++draft/class.pre#nt:class-key
@@ -218,7 +221,7 @@ namespace mimicpp::printing::type::parsing::v2
         if (auto const* const keyword = peek_if<lexing::keyword>(stream))
         {
             constexpr auto map = make_map<lexing::keyword, state::ClassKey>({
-                { lexing::keyword{"class"},  state::ClassKey::id_class},
+                {lexing::keyword{"class"},  state::ClassKey::id_class },
                 {lexing::keyword{"struct"}, state::ClassKey::id_struct}
                 // Todo: {lexing::keyword{"union"}, tokens::class_key::id_union}
             });
@@ -361,7 +364,7 @@ namespace mimicpp::printing::type::parsing::v2
         if (auto const* const keyword = peek_if<lexing::keyword>(stream))
         {
             constexpr auto map = make_map<lexing::keyword, state::CVQualifier>({
-                {   lexing::keyword{"const"},    state::CVQualifier::id_const},
+                {lexing::keyword{"const"},    state::CVQualifier::id_const   },
                 {lexing::keyword{"volatile"}, state::CVQualifier::id_volatile}
             });
 
@@ -503,19 +506,73 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    [[nodiscard]]
+    constexpr std::optional<state::NestedId> parse_nested_id(TokenStream& stream)
+    {
+        StateGuard<state::NestedId> nestedId{stream};
+
+        // > nested-id ::= operator-function-id
+        if (std::optional const op = parse_operator_function_id(stream))
+        {
+            *nestedId = *std::move(op);
+            return std::move(nestedId).take();
+        }
+
+        // > nested-id ::= identifier parameters-and-qualifiers?
+        // > nested-id ::= identifier `<` template-argument-list? `>` parameters-and-qualifiers?
+        // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
+        // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
+        // but rather an extension due to real-life requirements.
+        if (auto const* const id = peek_if<lexing::identifier>(stream))
+        {
+            if (std::optional templateId = parse_simple_template_id(stream))
+            {
+                if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
+                {
+                    *nestedId = state::FunctionId{
+                        .name = std::move(templateId->name),
+                        .templateArgs = std::move(templateId->args),
+                        .declarator = *std::move(functionDecl)};
+                }
+                else
+                {
+                    *nestedId = *std::move(templateId);
+                }
+            }
+            else
+            {
+                stream.consume();
+                if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
+                {
+                    *nestedId = state::FunctionId{
+                        .name = *id,
+                        .declarator = *std::move(functionDecl)};
+                }
+                else
+                {
+                    *nestedId = *id;
+                }
+            }
+
+            return std::move(nestedId).take();
+        }
+
+        return std::nullopt;
+    }
+
     // see: https://eel.is/c++draft/expr.prim.id.qual#nt:nested-name-specifier
     // > nested-name-specifier ::= `::`
     //
     // These rules are not distinguishable in this task.
     // > nested-name-specifier ::= type-name `::`
     // > nested-name-specifier ::= namespace-name `::`
-    // => nested-name-specifier ::= unqualified-id `::`
+    // => nested-name-specifier ::= nested-id `::`
     //
     // These rules form a left-recursion:
     // > nested-name-specifier ::= nested-name-specifier identifier `::`
     // > nested-name-specifier ::= nested-name-specifier `template`? simple-template-id `::`
-    // => nested-name-specifier ::= `::` (unqualified-id `::`)*
-    // => nested-name-specifier ::= (unqualified-id `::`)+
+    // => nested-name-specifier ::= `::` (nested-id `::`)*
+    // => nested-name-specifier ::= (nested-id `::`)+
     //
     // Note that these rules are fully ignored:
     // > computed-type-specifier `::`
@@ -530,7 +587,7 @@ namespace mimicpp::printing::type::parsing::v2
         {
             Transaction transaction{stream};
 
-            std::optional curId = parse_unqualified_id(stream);
+            std::optional curId = parse_nested_id(stream);
             if (!curId
                 || !expect(stream, lexing::operator_or_punctuator{"::"}))
             {
@@ -551,40 +608,24 @@ namespace mimicpp::printing::type::parsing::v2
     }
 
     // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
-    // The general rule:
-    // > qualified-id ::= nested-name-specifier unqualified-id
-    // is rewritten to:
-    // > qualified-id ::= `::`? (unqualified-id `::`)* unqualified-id
-    // This improves parsing efficiency, because `nested-name-specifier` does not need to backtrack from an already parsed `unqualified-id`,
-    // when no terminating `::` was found.
+    // > qualified-id ::= nested-name-specifier? unqualified-id
     [[nodiscard]]
     constexpr std::optional<state::QualifiedId> parse_qualified_id(TokenStream& stream)
     {
-        constexpr lexing::operator_or_punctuator separator{"::"};
-
         StateGuard<state::QualifiedId> id{stream};
-        id->scopes.explicitRoot = expect(stream, separator).has_value();
 
-        std::optional curId = parse_unqualified_id(stream);
-        if (!curId)
+        if (std::optional scopes = parse_nested_name_specifier(stream))
         {
-            return std::nullopt;
+            id->scopes = *std::move(scopes);
         }
 
-        id->identifier = *std::move(curId);
-        while (expect(stream, separator))
+        if (std::optional topLevelId = parse_unqualified_id(stream))
         {
-            curId = parse_unqualified_id(stream);
-            if (!curId)
-            {
-                return std::nullopt;
-            }
-
-            id->scopes.scopes.emplace_back(
-                std::exchange(id->identifier, *curId));
+            id->identifier = *std::move(topLevelId);
+            return std::move(id).take();
         }
 
-        return std::move(id).take();
+        return std::nullopt;
     }
 
     // see: https://eel.is/c++draft/dcl.decl.general#nt:ptr-operator

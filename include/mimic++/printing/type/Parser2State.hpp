@@ -113,6 +113,17 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     using ConstantExpression = lexing::literal;
 
+    struct FunctionDeclarator
+    {
+        std::vector<RecursiveState<TypeId>> params{};
+        CVQualifierSeq qualifiers{};
+        std::optional<RefQualifier> refQualifier{};
+        bool isNoexcept{false};
+
+        [[nodiscard]]
+        friend bool operator==(FunctionDeclarator const&, FunctionDeclarator const&) = default;
+    };
+
     using TemplateArgument = std::variant<
         ConstantExpression,
         RecursiveState<TypeId>>;
@@ -136,6 +147,22 @@ namespace mimicpp::printing::type::parsing::v2::state
         friend bool operator==(OperatorFunctionId const&, OperatorFunctionId const&) = default;
     };
 
+    struct FunctionId
+    {
+        lexing::identifier name{};
+        std::optional<TemplateArgumentList> templateArgs{};
+        FunctionDeclarator declarator{};
+
+        [[nodiscard]]
+        friend bool operator==(FunctionId const&, FunctionId const&) = default;
+    };
+
+    using NestedId = std::variant<
+        lexing::identifier,
+        SimpleTemplateId,
+        FunctionId,
+        OperatorFunctionId>;
+
     using UnqualifiedId = std::variant<
         lexing::identifier,
         SimpleTemplateId,
@@ -145,7 +172,7 @@ namespace mimicpp::printing::type::parsing::v2::state
     struct ScopeSequence
     {
         bool explicitRoot{};
-        std::vector<UnqualifiedId> scopes{};
+        std::vector<NestedId> scopes{};
 
         [[nodiscard]]
         friend bool operator==(ScopeSequence const&, ScopeSequence const&) = default;
@@ -167,17 +194,6 @@ namespace mimicpp::printing::type::parsing::v2::state
 
         [[nodiscard]]
         friend bool operator==(ArrayDeclarator const&, ArrayDeclarator const&) = default;
-    };
-
-    struct FunctionDeclarator
-    {
-        std::vector<RecursiveState<TypeId>> params{};
-        CVQualifierSeq qualifiers{};
-        std::optional<RefQualifier> refQualifier{};
-        bool isNoexcept{false};
-
-        [[nodiscard]]
-        friend bool operator==(FunctionDeclarator const&, FunctionDeclarator const&) = default;
     };
 
     struct PointerDeclarator

@@ -210,3 +210,35 @@ TEST_CASE(
         CHECK_THAT(id->base, variant_equals(expected));
     }
 }
+
+TEST_CASE(
+    "parsing::parse_type supports qualified types with function scopes.",
+    "[print][print::type]")
+{
+    using ID = lexing::identifier;
+    using KW = lexing::keyword;
+    using FId = state::FunctionId;
+    using Rec = state::RecursiveState<state::TypeId>;
+
+    std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
+    auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
+        {{.scopes = {FId{.name = ID{"tmp"}, .declarator = {.params = {Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}}, "tmp(int)"     },
+        {{.explicitRoot = true, .scopes = {FId{.name = ID{"tmp"}}}},                                                                          "::tmp()"      },
+        {{.scopes = {FId{.name = ID{"tmp"}}, FId{.name = ID{"tmp2"}}}},                                                                       "tmp()::tmp2()"},
+    }));
+    CAPTURE(type, scopeText);
+
+    std::string const input = scopeText + "::" + type;
+    CAPTURE(input);
+
+    auto const id = parse_type(input);
+    REQUIRE(id);
+
+    CHECK(!id->qualifications.isConst);
+    CHECK(!id->qualifications.isVolatile);
+
+    state::QualifiedId const expected{
+        .scopes = expectedScopes,
+        .identifier = lexing::identifier{type}};
+    CHECK_THAT(id->base, variant_equals(expected));
+}

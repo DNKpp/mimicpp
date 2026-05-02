@@ -129,14 +129,14 @@ TEST_CASE(
     using Id = lexing::identifier;
     using KW = lexing::keyword;
     using TId = state::SimpleTemplateId;
-    using UQId = state::UnqualifiedId;
+    using NID = state::NestedId;
     using QId = state::QualifiedId;
 
     auto const [expectedReturn, returnText] = GENERATE((table<state::BaseType, std::string>)({
         {state::BuiltinType{KW{"int"}},                                                                                                    "int"     },
         {QId{.identifier = Id{"foo"}},                                                                                                     "foo"     },
         {QId{.scopes = {.explicitRoot = true}, .identifier = Id{"foo"}},                                                                   "::foo"   },
-        {QId{.scopes = {.scopes = {UQId{Id{"bar"}}}}, .identifier = Id{"foo"}},                                                            "bar::foo"},
+        {QId{.scopes = {.scopes = {NID{Id{"bar"}}}}, .identifier = Id{"foo"}},                                                             "bar::foo"},
         {QId{.identifier = TId{.name = Id{"foo"}}},                                                                                        "foo<>"   },
         {QId{.identifier = TId{.name = Id{"foo"}, .args = {state::RecursiveState{state::TypeId{.base = state::BuiltinType{KW{"int"}}}}}}}, "foo<int>"},
     }));
