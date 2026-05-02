@@ -410,23 +410,198 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    namespace detail
+    {
+        [[nodiscard]]
+        consteval auto make_simple_operator_candidates() noexcept
+        {
+            std::array texts = util::concat_arrays(
+                lexing::texts::comparison,
+                lexing::texts::assignment,
+                lexing::texts::incOrDec,
+                lexing::texts::arithmetic,
+                lexing::texts::bitArithmetic,
+                lexing::texts::logical,
+                std::to_array<std::string_view>({"->", "->*", ","}));
+
+            std::array ops = std::apply(
+                [](auto&... opTexts) { return std::array{lexing::operator_or_punctuator{opTexts}...}; },
+                texts);
+            std::ranges::sort(ops, {}, &lexing::operator_or_punctuator::index);
+            MIMICPP_ASSERT(ops.cend() == std::ranges::unique(ops).begin(), "Fix your input!");
+
+            return ops;
+        }
+
+        inline constexpr std::array simpleOpCandidates = make_simple_operator_candidates();
+    }
+
+    // unqualified-id ::= `operator` op
+    // see:: https://eel.is/c++draft/over.oper.general#nt:operator
+    [[nodiscard]]
+    constexpr std::optional<state::OperatorFunctionId> parse_operator_function_id(TokenStream& stream)
+    {
+        Transaction transaction{stream};
+
+        if (expect(stream, lexing::keyword{"operator"}))
+        {
+            stream.consume();
+
+            // simple operators are the ones that consist of just a single operator-token.
+            if (auto const* const op = peek_if<lexing::operator_or_punctuator>(stream);
+                op
+                && std::ranges::binary_search(detail::simpleOpCandidates, op->index(), {}, &lexing::operator_or_punctuator::index))
+            {
+                transaction.commit();
+                return state::OperatorFunctionId{.op = *op};
+            }
+
+            // Todo: add rest
+        }
+
+        return std::nullopt;
+    }
+
+    // see: https://eel.is/c++draft/expr.prim.id.unqual#nt:unqualified-id
+    [[nodiscard]]
+    constexpr std::optional<state::UnqualifiedId> parse_unqualified_id(TokenStream& stream)
+    {
+        // `unqualified-id ::= operator-function-id`
+        if (std::optional const op = parse_operator_function_id(stream))
+        {
+            return op;
+        }
+
+        StateGuard<state::UnqualifiedId> unqalified{stream};
+
+        // `unqualified-id ::= identifier`
+        // `unqualified-id ::= template-name < template-argument-list? >`, where `template-name==identifier`
+        // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
+        if (auto const* const id = peek_if<lexing::identifier>(stream))
+        {
+            if (std::optional templateId = parse_simple_template_id(stream))
+            {
+                *unqalified = *std::move(templateId);
+            }
+            else
+            {
+                *unqalified = *id;
+                stream.consume();
+            }
+
+            return std::move(unqalified).take();
+        }
+
+        // Todo: add missing
+        // `unqualified-id ::= conversion-function-id`
+        // `unqualified-id ::= ~ type-name`
+
+        // These rules are unnecessary:
+        // `unqualified-id ::= literal-operator-id`
+        // `unqualified-id ::= ~ computed-type-specifier`
+
+        return std::nullopt;
+    }
+
+    // see: https://eel.is/c++draft/expr.prim.id.qual#nt:nested-name-specifier
+    // > nested-name-specifier ::= `::`
+    //
+    // These rules are not distinguishable in this task.
+    // > nested-name-specifier ::= type-name `::`
+    // > nested-name-specifier ::= namespace-name `::`
+    // => nested-name-specifier ::= unqualified-id `::`
+    //
+    // These rules form a left-recursion:
+    // > nested-name-specifier ::= nested-name-specifier identifier `::`
+    // > nested-name-specifier ::= nested-name-specifier `template`? simple-template-id `::`
+    // => nested-name-specifier ::= `::` (unqualified-id `::`)*
+    // => nested-name-specifier ::= (unqualified-id `::`)+
+    //
+    // Note that these rules are fully ignored:
+    // > computed-type-specifier `::`
+    // > splice-scope-specifier `::`
+    [[nodiscard]]
+    constexpr std::optional<state::ScopeSequence> parse_nested_name_specifier(TokenStream& stream)
+    {
+        StateGuard<state::ScopeSequence> scopes{stream};
+        scopes->explicitRoot = expect(stream, lexing::operator_or_punctuator{"::"}).has_value();
+
+        while (!stream.is_eof())
+        {
+            Transaction transaction{stream};
+
+            std::optional curId = parse_unqualified_id(stream);
+            if (!curId
+                || !expect(stream, lexing::operator_or_punctuator{"::"}))
+            {
+                break;
+            }
+
+            scopes->scopes.emplace_back(*std::move(curId));
+            transaction.commit();
+        }
+
+        if (!scopes->explicitRoot
+            && scopes->scopes.empty())
+        {
+            return std::nullopt;
+        }
+
+        return std::move(scopes).take();
+    }
+
+    // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
+    // The general rule:
+    // > qualified-id ::= nested-name-specifier unqualified-id
+    // is rewritten to:
+    // > qualified-id ::= `::`? (unqualified-id `::`)* unqualified-id
+    // This improves parsing efficiency, because `nested-name-specifier` does not need to backtrack from an already parsed `unqualified-id`,
+    // when no terminating `::` was found.
+    [[nodiscard]]
+    constexpr std::optional<state::QualifiedId> parse_qualified_id(TokenStream& stream)
+    {
+        constexpr lexing::operator_or_punctuator separator{"::"};
+
+        StateGuard<state::QualifiedId> id{stream};
+        id->scopes.explicitRoot = expect(stream, separator).has_value();
+
+        std::optional curId = parse_unqualified_id(stream);
+        if (!curId)
+        {
+            return std::nullopt;
+        }
+
+        id->identifier = *std::move(curId);
+        while (expect(stream, separator))
+        {
+            curId = parse_unqualified_id(stream);
+            if (!curId)
+            {
+                return std::nullopt;
+            }
+
+            id->scopes.scopes.emplace_back(
+                std::exchange(id->identifier, *curId));
+        }
+
+        return std::move(id).take();
+    }
+
     // see: https://eel.is/c++draft/dcl.decl.general#nt:ptr-operator
     // note: fully ignores `attribute-specifier-seq`
     [[nodiscard]]
     constexpr std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream)
     {
-        // `ptr-operator ::= &`
-        // `ptr-operator ::= &&`
+        // > ptr-operator ::= `&`
+        // > ptr-operator ::= `&&`
         if (std::optional const ref = parse_ref_qualifier(stream))
         {
             return {state::ReferenceDeclarator{.qualifier = *ref}};
         }
 
-        // `ptr-operator ::= nested-name-specifier? * cv-qualifier-seq?`
+        // > ptr-operator ::= nested-name-specifier? `*` cv-qualifier-seq?
         StateGuard<state::PointerDeclarator> ptr{stream};
-
-        // Todo:
-        // ptr->scopes = parse_nested_name_specifier(stream);
+        ptr->scopes = parse_nested_name_specifier(stream);
         if (!expect(stream, lexing::operator_or_punctuator{"*"}))
         {
             return std::nullopt;
@@ -574,132 +749,6 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         return {std::move(declarator).take()};
-    }
-
-    namespace detail
-    {
-        [[nodiscard]]
-        consteval auto make_simple_operator_candidates() noexcept
-        {
-            std::array texts = util::concat_arrays(
-                lexing::texts::comparison,
-                lexing::texts::assignment,
-                lexing::texts::incOrDec,
-                lexing::texts::arithmetic,
-                lexing::texts::bitArithmetic,
-                lexing::texts::logical,
-                std::to_array<std::string_view>({"->", "->*", ","}));
-
-            std::array ops = std::apply(
-                [](auto&... opTexts) { return std::array{lexing::operator_or_punctuator{opTexts}...}; },
-                texts);
-            std::ranges::sort(ops, {}, &lexing::operator_or_punctuator::index);
-            MIMICPP_ASSERT(ops.cend() == std::ranges::unique(ops).begin(), "Fix your input!");
-
-            return ops;
-        }
-
-        inline constexpr std::array simpleOpCandidates = make_simple_operator_candidates();
-    }
-
-    // unqualified-id ::= `operator` op
-    // see:: https://eel.is/c++draft/over.oper.general#nt:operator
-    [[nodiscard]]
-    constexpr std::optional<state::OperatorFunctionId> parse_operator_function_id(TokenStream& stream)
-    {
-        Transaction transaction{stream};
-
-        if (expect(stream, lexing::keyword{"operator"}))
-        {
-            stream.consume();
-
-            // simple operators are the ones that consist of just a single operator-token.
-            if (auto const* const op = peek_if<lexing::operator_or_punctuator>(stream);
-                op
-                && std::ranges::binary_search(detail::simpleOpCandidates, op->index(), {}, &lexing::operator_or_punctuator::index))
-            {
-                transaction.commit();
-                return state::OperatorFunctionId{.op = *op};
-            }
-
-            // Todo: add rest
-        }
-
-        return std::nullopt;
-    }
-
-    // see: https://eel.is/c++draft/expr.prim.id.unqual#nt:unqualified-id
-    [[nodiscard]]
-    constexpr std::optional<state::UnqualifiedId> parse_unqualified_id(TokenStream& stream)
-    {
-        // `unqualified-id ::= operator-function-id`
-        if (std::optional const op = parse_operator_function_id(stream))
-        {
-            return op;
-        }
-
-        StateGuard<state::UnqualifiedId> unqalified{stream};
-
-        // `unqualified-id ::= identifier`
-        // `unqualified-id ::= template-name < template-argument-list? >`, where `template-name==identifier`
-        // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
-        if (auto const* const id = peek_if<lexing::identifier>(stream))
-        {
-            if (std::optional templateId = parse_simple_template_id(stream))
-            {
-                *unqalified = *std::move(templateId);
-            }
-            else
-            {
-                *unqalified = *id;
-                stream.consume();
-            }
-
-            return std::move(unqalified).take();
-        }
-
-        // Todo: add missing
-        // `unqualified-id ::= conversion-function-id`
-        // `unqualified-id ::= ~ type-name`
-
-        // These rules are unnecessary:
-        // `unqualified-id ::= literal-operator-id`
-        // `unqualified-id ::= ~ computed-type-specifier`
-
-        return std::nullopt;
-    }
-
-    // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
-    // `qualified-id ::= nested-name-specifier unqualified-id` is rewritten to
-    // `qualified-id ::= ::? (unqualified-id ::)* unqualified-id`
-    [[nodiscard]]
-    constexpr std::optional<state::QualifiedId> parse_qualified_id(TokenStream& stream)
-    {
-        constexpr lexing::operator_or_punctuator separator{"::"};
-
-        StateGuard<state::QualifiedId> id{stream};
-        id->scopes.explicitRoot = expect(stream, separator).has_value();
-
-        std::optional curId = parse_unqualified_id(stream);
-        if (!curId)
-        {
-            return std::nullopt;
-        }
-
-        id->identifier = *std::move(curId);
-        while (expect(stream, separator))
-        {
-            curId = parse_unqualified_id(stream);
-            if (!curId)
-            {
-                return std::nullopt;
-            }
-
-            id->scopes.scopes.emplace_back(
-                std::exchange(id->identifier, *curId));
-        }
-
-        return std::move(id).take();
     }
 
     namespace detail

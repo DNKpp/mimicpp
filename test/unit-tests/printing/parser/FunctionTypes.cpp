@@ -333,7 +333,7 @@ TEST_CASE(
         {state::BuiltinType{.base = KW{"void"}},                                                                          "void"                  },
         {state::BuiltinType{.base = KW{"int"}, .sizeSpec = SizeSpec::id_longlong, .signedSpec = SignedSpec::id_unsigned}, "long unsigned int long"},
         {state::QualifiedId{.scopes = {.explicitRoot = true}, .identifier = ID{"foo"}},                                   "::foo"                 },
-        {state::QualifiedId{.scopes = {.scopes = {state::UnqualifiedId{ID{"bar"}}}}, .identifier = ID{"foo"}},            "bar::foo"              },
+        {state::QualifiedId{.scopes = {.scopes = {ID{"bar"}}}, .identifier = ID{"foo"}},                                  "bar::foo"              },
     }));
 
     std::string const input = returnText + " (*)()" + cvText + refText + " " + noexceptText;
@@ -351,6 +351,48 @@ TEST_CASE(
         .nested = state::RecursiveState{
             state::AbstractDeclarator::Layer{
                 .decorations = {state::PointerDeclarator{}}}},
+        .function = state::FunctionDeclarator{
+            .qualifiers = expectedCV,
+            .refQualifier = expectedRef,
+            .isNoexcept = expectedIsNoexcept
+        }};
+    // clang-format on
+    CHECK(expected == id->declarator.root);
+}
+
+TEST_CASE(
+    "parsing::parse_type supports member function-pointers.",
+    "[print][print::type]")
+{
+    using ID = lexing::identifier;
+    auto const [expectedCV, cvText] = GENERATE(from_range(cvTable));
+    auto const [expectedRef, refText] = GENERATE(from_range(refTable));
+    auto const [expectedIsNoexcept, noexceptText] = GENERATE((table<bool, std::string>)({
+        {false, ""        },
+        {true,  "noexcept"}
+    }));
+    auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
+        {{.explicitRoot = true, .scopes = {ID{"foo"}}},            "::foo"},
+        {{.scopes = {state::SimpleTemplateId{.name = ID{"foo"}}}}, "foo<>"},
+    }));
+
+    std::string const input = "void (" + scopeText + "::*)()" + cvText + refText + " " + noexceptText;
+    CAPTURE(input);
+
+    auto const id = parse_type(input);
+    REQUIRE(id);
+
+    CHECK(!id->qualifications.isConst);
+    CHECK(!id->qualifications.isVolatile);
+    CHECK_THAT(
+        id->base,
+        variant_equals(state::BuiltinType{.base = lexing::keyword{"void"}}));
+
+    // clang-format off
+    state::AbstractDeclarator::Layer const expected{
+        .nested = state::RecursiveState{
+            state::AbstractDeclarator::Layer{
+                .decorations = {state::PointerDeclarator{.scopes = expectedScopes}}}},
         .function = state::FunctionDeclarator{
             .qualifiers = expectedCV,
             .refQualifier = expectedRef,
