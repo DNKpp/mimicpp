@@ -155,28 +155,25 @@ namespace mimicpp::printing::type::parsing::v2::state
         friend bool operator==(OperatorFunctionId const&, OperatorFunctionId const&) = default;
     };
 
-    struct FunctionId
-    {
-        lexing::identifier name{};
-        std::optional<TemplateArgumentList> templateArgs{};
-        FunctionDeclarator declarator{};
-
-        [[nodiscard]]
-        friend bool operator==(FunctionId const&, FunctionId const&) = default;
-    };
-
-    using NestedId = std::variant<
-        lexing::identifier,
-        PlaceholderId,
-        SimpleTemplateId,
-        FunctionId,
-        OperatorFunctionId>;
-
     using UnqualifiedId = std::variant<
         lexing::identifier,
         PlaceholderId,
         SimpleTemplateId,
         OperatorFunctionId>;
+
+    struct NestedId
+    {
+        using Identifier = std::variant<
+            lexing::identifier,
+            PlaceholderId,
+            OperatorFunctionId>;
+        Identifier identifier{};
+        std::optional<TemplateArgumentList> templateArgs{};
+        std::optional<FunctionDeclarator> functionDeclarator{};
+
+        [[nodiscard]]
+        friend bool operator==(NestedId const&, NestedId const&) = default;
+    };
 
     // This models more or less: https://eel.is/c++draft/expr.prim.id.qual#nt:nested-name-specifier
     struct ScopeSequence

@@ -324,6 +324,32 @@ namespace mimicpp::printing::type::parsing::v2
         return args;
     }
 
+    // This is a custom rule, which parses enclosed template-args, but without a preceding identifier.
+    // > template-arg-list ::= `<` `>`
+    // > template-arg-list ::= `<` template-argument (`,` template-argument)* `>`
+    [[nodiscard]]
+    constexpr std::optional<state::TemplateArgumentList> parse_template_clause(TokenStream& stream)
+    {
+        StateGuard<state::TemplateArgumentList> args{stream};
+
+        if (!expect(stream, lexing::operator_or_punctuator{"<"}))
+        {
+            return std::nullopt;
+        }
+
+        if (std::optional argList = parse_template_argument_list(stream))
+        {
+            *args = *std::move(argList);
+        }
+
+        if (!expect(stream, lexing::operator_or_punctuator{">"}))
+        {
+            return std::nullopt;
+        }
+
+        return std::move(args).take();
+    }
+
     // `unqualified-id ::= template-name < template-argument-list? >`, where `template-name==identifier`
     // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
     //
@@ -336,22 +362,11 @@ namespace mimicpp::printing::type::parsing::v2
             templateId->name = *id;
             stream.consume();
 
-            if (!expect(stream, lexing::operator_or_punctuator{"<"}))
+            if (std::optional args = parse_template_clause(stream))
             {
-                return std::nullopt;
+                templateId->args = *std::move(args);
+                return std::move(templateId).take();
             }
-
-            if (std::optional argList = parse_template_argument_list(stream))
-            {
-                templateId->args = *std::move(argList);
-            }
-
-            if (!expect(stream, lexing::operator_or_punctuator{">"}))
-            {
-                return std::nullopt;
-            }
-
-            return std::move(templateId).take();
         }
 
         return std::nullopt;
@@ -448,15 +463,15 @@ namespace mimicpp::printing::type::parsing::v2
 
         if (expect(stream, lexing::keyword{"operator"}))
         {
-            stream.consume();
-
             // simple operators are the ones that consist of just a single operator-token.
             if (auto const* const op = peek_if<lexing::operator_or_punctuator>(stream);
                 op
                 && std::ranges::binary_search(detail::simpleOpCandidates, op->index(), {}, &lexing::operator_or_punctuator::index))
             {
+                state::OperatorFunctionId id{.op = *op};
+                stream.consume();
                 transaction.commit();
-                return state::OperatorFunctionId{.op = *op};
+                return id;
             }
 
             // Todo: add rest
@@ -583,60 +598,48 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    // This is more or less a custom rule, which handles all nested identifier scopes;
+    // i.e., all parts that are terminated by a `::` token.
+    // > nested-id ::= identifier (`<` template-argument-list? `>`)? template-clause? parameters-and-qualifiers? `::`
+    // > nested-id ::= placeholder-id (`<` template-argument-list? `>`)? template-clause? parameters-and-qualifiers? `::`
+    // > nested-id ::= operator-function-id (`<` template-argument-list? `>`)? parameters-and-qualifiers? `::`
+    // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
+    // but rather an extension due to real-life requirements.
     [[nodiscard]]
     constexpr std::optional<state::NestedId> parse_nested_id(TokenStream& stream)
     {
         StateGuard<state::NestedId> nestedId{stream};
 
-        // > nested-id ::= operator-function-id
-        if (std::optional const op = parse_operator_function_id(stream))
+        if (std::optional op = parse_operator_function_id(stream))
         {
-            *nestedId = *std::move(op);
-            return std::move(nestedId).take();
+            nestedId->identifier = *std::move(op);
+        }
+        else if (auto const* const id = peek_if<lexing::identifier>(stream))
+        {
+            nestedId->identifier = *id;
+            stream.consume();
+        }
+        else if (std::optional placeholder = parse_placeholder_id(stream))
+        {
+            nestedId->identifier = *std::move(placeholder);
+        }
+        else
+        {
+            return std::nullopt;
         }
 
-        // > nested-id ::= identifier parameters-and-qualifiers?
-        // > nested-id ::= identifier `<` template-argument-list? `>` parameters-and-qualifiers?
-        // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
-        // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
-        // but rather an extension due to real-life requirements.
-        if (auto const* const id = peek_if<lexing::identifier>(stream))
+        if (std::optional templateArgs = parse_template_clause(stream))
         {
-            if (std::optional templateId = parse_simple_template_id(stream))
-            {
-                if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
-                {
-                    *nestedId = state::FunctionId{
-                        .name = std::move(templateId->name),
-                        .templateArgs = std::move(templateId->args),
-                        .declarator = *std::move(functionDecl)};
-                }
-                else
-                {
-                    *nestedId = *std::move(templateId);
-                }
-            }
-            else
-            {
-                stream.consume();
-                if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
-                {
-                    *nestedId = state::FunctionId{
-                        .name = *id,
-                        .declarator = *std::move(functionDecl)};
-                }
-                else
-                {
-                    *nestedId = *id;
-                }
-            }
-
-            return std::move(nestedId).take();
+            nestedId->templateArgs = *std::move(templateArgs);
         }
 
-        if (std::optional placeholder = parse_placeholder_id(stream))
+        if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
         {
-            *nestedId = *std::move(placeholder);
+            nestedId->functionDeclarator = *std::move(functionDecl);
+        }
+
+        if (expect(stream, lexing::operator_or_punctuator{"::"}))
+        {
             return std::move(nestedId).take();
         }
 
@@ -649,13 +652,13 @@ namespace mimicpp::printing::type::parsing::v2
     // These rules are not distinguishable in this task.
     // > nested-name-specifier ::= type-name `::`
     // > nested-name-specifier ::= namespace-name `::`
-    // => nested-name-specifier ::= nested-id `::`
+    // => nested-name-specifier ::= nested-id
     //
     // These rules form a left-recursion:
     // > nested-name-specifier ::= nested-name-specifier identifier `::`
     // > nested-name-specifier ::= nested-name-specifier `template`? simple-template-id `::`
-    // => nested-name-specifier ::= `::` (nested-id `::`)*
-    // => nested-name-specifier ::= (nested-id `::`)+
+    // => nested-name-specifier ::= `::` nested-id *
+    // => nested-name-specifier ::= nested-id+
     //
     // Note that these rules are fully ignored:
     // > computed-type-specifier `::`
@@ -671,8 +674,7 @@ namespace mimicpp::printing::type::parsing::v2
             Transaction transaction{stream};
 
             std::optional curId = parse_nested_id(stream);
-            if (!curId
-                || !expect(stream, lexing::operator_or_punctuator{"::"}))
+            if (!curId)
             {
                 break;
             }
