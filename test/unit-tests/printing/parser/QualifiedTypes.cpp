@@ -166,17 +166,21 @@ TEST_CASE(
     "[print][print::type]")
 {
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
-    using Id = lexing::identifier;
+    using ID = lexing::identifier;
+    using KW = lexing::keyword;
+    using TId = state::SimpleTemplateId;
+    using Rec = state::RecursiveState<state::TypeId>;
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
-        {{.scopes = {Id{"tmp"}}},                       "tmp<int>"             },
-        {{.explicitRoot = true, .scopes = {Id{"tmp"}}}, "::tmp<int>"           },
-        {{.scopes = {Id{"tmp"}, Id{"tmp2"}}},           "tmp<int>::tmp2<fl, t>"}
+        {{.scopes = {TId{.name = ID{"tmp"}, .args = {Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}, "tmp<int>"     },
+        {{.explicitRoot = true, .scopes = {TId{.name = ID{"tmp"}}}},                                                        "::tmp<>"      },
+        {{.scopes = {TId{.name = ID{"tmp"}}, TId{.name = ID{"tmp2"}}}},                                                     "tmp<>::tmp2<>"},
     }));
     CAPTURE(type, scopeText);
 
     SECTION("When it's provided as plain type.")
     {
-        std::string const input = scopeText + type;
+        std::string const input = scopeText + "::" + type;
+        CAPTURE(input);
 
         auto const id = parse_type(input);
         REQUIRE(id);
@@ -193,7 +197,7 @@ TEST_CASE(
     SECTION("When they are provided with arbitrary cv qualification.")
     {
         auto const [expectedCV, qualifierPrefix, qualifierSuffix] = GENERATE(from_range(cvTable));
-        std::string const input = qualifierPrefix + " " + scopeText + type + " " + qualifierSuffix;
+        std::string const input = qualifierPrefix + " " + scopeText + "::" + type + " " + qualifierSuffix;
         CAPTURE(input);
 
         auto const id = parse_type(input);

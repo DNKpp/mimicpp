@@ -778,19 +778,24 @@ namespace mimicpp::printing::type::parsing::v2
         StateGuard<state::TypeId> typeId{stream};
         while (!stream.is_eof())
         {
+            Transaction transaction{stream};
+
             if (auto const* const keyword = peek_if<lexing::keyword>(stream))
             {
                 if (std::optional const cv = parse_cv_qualifier(stream);
                     cv
                     && typeId->qualifications.apply(*cv))
                 {
+                    transaction.commit();
                     continue;
                 }
 
                 if (std::ranges::binary_search(detail::builtinTypeCandidates, keyword->index(), {}, &lexing::keyword::index)
+                    && !qualifiedType
                     && (builtinType ? *builtinType : builtinType.emplace()).try_apply(*keyword))
                 {
                     stream.consume();
+                    transaction.commit();
                     continue;
                 }
             }
@@ -799,6 +804,7 @@ namespace mimicpp::printing::type::parsing::v2
                      && !qualifiedType)
             {
                 qualifiedType = std::move(qualifiedId);
+                transaction.commit();
                 continue;
             }
 
