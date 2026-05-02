@@ -130,6 +130,14 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     using TemplateArgumentList = std::vector<TemplateArgument>;
 
+    struct PlaceholderId
+    {
+        std::string_view content{};
+
+        [[nodiscard]]
+        friend bool operator==(PlaceholderId const&, PlaceholderId const&) = default;
+    };
+
     struct SimpleTemplateId
     {
         lexing::identifier name{};
@@ -159,12 +167,14 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     using NestedId = std::variant<
         lexing::identifier,
+        PlaceholderId,
         SimpleTemplateId,
         FunctionId,
         OperatorFunctionId>;
 
     using UnqualifiedId = std::variant<
         lexing::identifier,
+        PlaceholderId,
         SimpleTemplateId,
         OperatorFunctionId>;
 
