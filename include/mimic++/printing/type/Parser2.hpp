@@ -497,9 +497,9 @@ namespace mimicpp::printing::type::parsing::v2
     // see: https://eel.is/c++draft/dcl.decl.general#nt:parameters-and-qualifiers
     // `attribute-specifier-seq` is ignored
     [[nodiscard]]
-    constexpr std::optional<state::ParametersAndQualifiers> parse_parameters_and_qualifiers(TokenStream& stream)
+    constexpr std::optional<state::FunctionDeclarator> parse_parameters_and_qualifiers(TokenStream& stream)
     {
-        StateGuard<state::ParametersAndQualifiers> params{stream};
+        StateGuard<state::FunctionDeclarator> declarator{stream};
 
         if (!expect(stream, lexing::operator_or_punctuator{"("}))
         {
@@ -519,17 +519,17 @@ namespace mimicpp::printing::type::parsing::v2
 
         if (std::optional cv = parse_cv_qualifier_seq(stream))
         {
-            params->qualifiers = *std::move(cv);
+            declarator->qualifiers = *std::move(cv);
         }
 
-        params->refQualifier = parse_ref_qualifier(stream);
-        params->isNoexcept = expect(stream, lexing::keyword{"noexcept"}).has_value();
+        declarator->refQualifier = parse_ref_qualifier(stream);
+        declarator->isNoexcept = expect(stream, lexing::keyword{"noexcept"}).has_value();
 
         auto input = *std::move(clause)
                    | std::views::transform([](state::TypeId& id) { return state::RecursiveState{std::move(id)}; });
-        params->params.insert(params->params.end(), input.begin(), input.end());
+        declarator->params.insert(declarator->params.end(), input.begin(), input.end());
 
-        return {std::move(params).take()};
+        return {std::move(declarator).take()};
     }
 
     [[nodiscard]]

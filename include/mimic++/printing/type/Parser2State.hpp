@@ -128,17 +128,6 @@ namespace mimicpp::printing::type::parsing::v2::state
         friend bool operator==(SimpleTemplateId const&, SimpleTemplateId const&) = default;
     };
 
-    struct ParametersAndQualifiers
-    {
-        std::vector<RecursiveState<TypeId>> params{};
-        CVQualifierSeq qualifiers{};
-        std::optional<RefQualifier> refQualifier{};
-        bool isNoexcept{false};
-
-        [[nodiscard]]
-        friend bool operator==(ParametersAndQualifiers const&, ParametersAndQualifiers const&) = default;
-    };
-
     struct OperatorFunctionId
     {
         lexing::operator_or_punctuator op;
@@ -182,7 +171,10 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     struct FunctionDeclarator
     {
-        ParametersAndQualifiers base{};
+        std::vector<RecursiveState<TypeId>> params{};
+        CVQualifierSeq qualifiers{};
+        std::optional<RefQualifier> refQualifier{};
+        bool isNoexcept{false};
 
         [[nodiscard]]
         friend bool operator==(FunctionDeclarator const&, FunctionDeclarator const&) = default;
