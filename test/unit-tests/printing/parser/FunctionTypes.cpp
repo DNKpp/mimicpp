@@ -72,7 +72,7 @@ TEST_CASE(
         variant_equals(state::BuiltinType{.base = lexing::keyword{"void"}}));
 
     state::AbstractDeclarator::Layer const expected{
-        .function = state::FunctionDeclarator{.base = {.isNoexcept = true}}};
+        .function = state::FunctionDeclarator{.isNoexcept = true}};
     CHECK(expected == id->declarator.root);
 }
 
@@ -95,7 +95,7 @@ TEST_CASE(
         variant_equals(state::BuiltinType{.base = lexing::keyword{"void"}}));
 
     state::AbstractDeclarator::Layer const expected{
-        .function = state::FunctionDeclarator{.base = {.qualifiers = expectedCV}}};
+        .function = state::FunctionDeclarator{.qualifiers = expectedCV}};
     CHECK(expected == id->declarator.root);
 }
 
@@ -118,7 +118,7 @@ TEST_CASE(
         variant_equals(state::BuiltinType{.base = lexing::keyword{"void"}}));
 
     state::AbstractDeclarator::Layer const expected{
-        .function = state::FunctionDeclarator{.base = {.refQualifier = expectedRef}}};
+        .function = state::FunctionDeclarator{.refQualifier = expectedRef}};
     CHECK(expected == id->declarator.root);
 }
 
@@ -277,7 +277,7 @@ TEST_CASE(
         id->base,
         variant_equals(state::BuiltinType{.base = lexing::keyword{"void"}}));
 
-    state::ParametersAndQualifiers const paramsAndQualifiers{
+    state::FunctionDeclarator const functionDeclarator{
         .params = {
                    // `int const long&`
             state::RecursiveState{
@@ -311,7 +311,51 @@ TEST_CASE(
                             .arrays = {state::ArrayDeclarator{}, state::ArrayDeclarator{.size = state::ConstantExpression{"1337"}}}}}};
             }()}}
     };
+    state::AbstractDeclarator::Layer const expected{.function = functionDeclarator};
+    CHECK(expected == id->declarator.root);
+}
+
+TEST_CASE(
+    "parsing::parse_type supports function-pointers.",
+    "[print][print::type]")
+{
+    using KW = lexing::keyword;
+    using ID = lexing::identifier;
+    using SignedSpec = state::BuiltinType::SignedSpec;
+    using SizeSpec = state::BuiltinType::SizeSpec;
+    auto const [expectedCV, cvText] = GENERATE(from_range(cvTable));
+    auto const [expectedRef, refText] = GENERATE(from_range(refTable));
+    auto const [expectedIsNoexcept, noexceptText] = GENERATE((table<bool, std::string>)({
+        {false, ""        },
+        {true,  "noexcept"}
+    }));
+    auto const [expectedReturn, returnText] = GENERATE((table<state::BaseType, std::string>)({
+        {state::BuiltinType{.base = KW{"void"}},                                                                          "void"                  },
+        {state::BuiltinType{.base = KW{"int"}, .sizeSpec = SizeSpec::id_longlong, .signedSpec = SignedSpec::id_unsigned}, "long unsigned int long"},
+        {state::QualifiedId{.scopes = {.explicitRoot = true}, .identifier = ID{"foo"}},                                   "::foo"                 },
+        {state::QualifiedId{.scopes = {.scopes = {state::UnqualifiedId{ID{"bar"}}}}, .identifier = ID{"foo"}},            "bar::foo"              },
+    }));
+
+    std::string const input = returnText + " (*)()" + cvText + refText + " " + noexceptText;
+    CAPTURE(input);
+
+    auto const id = parse_type(input);
+    REQUIRE(id);
+
+    CHECK(!id->qualifications.isConst);
+    CHECK(!id->qualifications.isVolatile);
+    CHECK(expectedReturn == id->base);
+
+    // clang-format off
     state::AbstractDeclarator::Layer const expected{
-        .function = state::FunctionDeclarator{.base = paramsAndQualifiers}};
+        .nested = state::RecursiveState{
+            state::AbstractDeclarator::Layer{
+                .decorations = {state::PointerDeclarator{}}}},
+        .function = state::FunctionDeclarator{
+            .qualifiers = expectedCV,
+            .refQualifier = expectedRef,
+            .isNoexcept = expectedIsNoexcept
+        }};
+    // clang-format on
     CHECK(expected == id->declarator.root);
 }
