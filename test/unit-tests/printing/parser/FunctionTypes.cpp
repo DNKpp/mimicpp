@@ -126,19 +126,18 @@ TEST_CASE(
     "parsing::parse_type supports function-types with arbitrary return-types.",
     "[print][print::type]")
 {
-    using Id = lexing::identifier;
+    using Id = state::Identifier;
     using KW = lexing::keyword;
-    using TId = state::SimpleTemplateId;
-    using NID = state::NestedId;
+    using UId = state::NestedId;
     using QId = state::QualifiedId;
 
     auto const [expectedReturn, returnText] = GENERATE((table<state::BaseType, std::string>)({
-        {state::BuiltinType{KW{"int"}},                                                                                                    "int"     },
-        {QId{.identifier = Id{"foo"}},                                                                                                     "foo"     },
-        {QId{.scopes = {.explicitRoot = true}, .identifier = Id{"foo"}},                                                                   "::foo"   },
-        {QId{.scopes = {.scopes = {NID{Id{"bar"}}}}, .identifier = Id{"foo"}},                                                             "bar::foo"},
-        {QId{.identifier = TId{.name = Id{"foo"}}},                                                                                        "foo<>"   },
-        {QId{.identifier = TId{.name = Id{"foo"}, .args = {state::RecursiveState{state::TypeId{.base = state::BuiltinType{KW{"int"}}}}}}}, "foo<int>"},
+        {state::BuiltinType{KW{"int"}},                                                                                                           "int"     },
+        {QId{.identifier = {.name = Id{"foo"}}},                                                                                                  "foo"     },
+        {QId{.scopes = {.explicitRoot = true}, .identifier = {.name = Id{"foo"}}},                                                                "::foo"   },
+        {QId{.scopes = {.scopes = {UId{Id{"bar"}}}}, .identifier = {.name = Id{"foo"}}},                                                          "bar::foo"},
+        {QId{.identifier = {.name = Id{"foo"}, .templateArgs{std::in_place, 0u}}},                                                                "foo<>"   },
+        {QId{.identifier = {.name = Id{"foo"}, .templateArgs = {{state::RecursiveState{state::TypeId{.base = state::BuiltinType{KW{"int"}}}}}}}}, "foo<int>"},
     }));
 
     SECTION("When a plain return-type is given.")
@@ -290,13 +289,11 @@ TEST_CASE(
             state::RecursiveState{
                 state::TypeId{
                     .base = state::QualifiedId{
-                        .identifier = state::SimpleTemplateId{
-                            .name = lexing::identifier{"foo"},
-                            .args = {
-                                state::RecursiveState{
-                                    state::TypeId{.base = state::BuiltinType{.sizeSpec = state::BuiltinType::SizeSpec::id_short}}},
-                                state::RecursiveState{
-                                    state::TypeId{.base = state::BuiltinType{.signedSpec = state::BuiltinType::SignedSpec::id_unsigned}}}}}},
+                        .identifier = {
+                            .name = {state::Identifier{"foo"}},
+                            .templateArgs = {
+                                {state::RecursiveState{state::TypeId{.base = state::BuiltinType{.sizeSpec = state::BuiltinType::SizeSpec::id_short}}},
+                                 state::RecursiveState{state::TypeId{.base = state::BuiltinType{.signedSpec = state::BuiltinType::SignedSpec::id_unsigned}}}}}}},
                     .declarator = {.root = {.decorations = {state::ReferenceDeclarator{state::RefQualifier::id_refref}}}}}},
 
                    // `char (* const)[][1337]`
@@ -320,7 +317,7 @@ TEST_CASE(
     "[print][print::type]")
 {
     using KW = lexing::keyword;
-    using ID = lexing::identifier;
+    using ID = state::Identifier;
     using SignedSpec = state::BuiltinType::SignedSpec;
     using SizeSpec = state::BuiltinType::SizeSpec;
     auto const [expectedCV, cvText] = GENERATE(from_range(cvTable));
@@ -330,10 +327,10 @@ TEST_CASE(
         {true,  "noexcept"}
     }));
     auto const [expectedReturn, returnText] = GENERATE((table<state::BaseType, std::string>)({
-        {state::BuiltinType{.base = KW{"void"}},                                                                          "void"                  },
-        {state::BuiltinType{.base = KW{"int"}, .sizeSpec = SizeSpec::id_longlong, .signedSpec = SignedSpec::id_unsigned}, "long unsigned int long"},
-        {state::QualifiedId{.scopes = {.explicitRoot = true}, .identifier = ID{"foo"}},                                   "::foo"                 },
-        {state::QualifiedId{.scopes = {.scopes = {ID{"bar"}}}, .identifier = ID{"foo"}},                                  "bar::foo"              },
+        {state::BuiltinType{.base = KW{"void"}},                                                                                 "void"                  },
+        {state::BuiltinType{.base = KW{"int"}, .sizeSpec = SizeSpec::id_longlong, .signedSpec = SignedSpec::id_unsigned},        "long unsigned int long"},
+        {state::QualifiedId{.scopes = {.explicitRoot = true}, .identifier = {.name = ID{"foo"}}},                                "::foo"                 },
+        {state::QualifiedId{.scopes = {.scopes = {state::UnqualifiedId{.name = ID{"bar"}}}}, .identifier = {.name = ID{"foo"}}}, "bar::foo"              },
     }));
 
     std::string const input = returnText + " (*)()" + cvText + refText + " " + noexceptText;
@@ -364,7 +361,7 @@ TEST_CASE(
     "parsing::parse_type supports member function-pointers.",
     "[print][print::type]")
 {
-    using ID = lexing::identifier;
+    using ID = state::Identifier;
     auto const [expectedCV, cvText] = GENERATE(from_range(cvTable));
     auto const [expectedRef, refText] = GENERATE(from_range(refTable));
     auto const [expectedIsNoexcept, noexceptText] = GENERATE((table<bool, std::string>)({
@@ -372,8 +369,8 @@ TEST_CASE(
         {true,  "noexcept"}
     }));
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
-        {{.explicitRoot = true, .scopes = {ID{"foo"}}},            "::foo"},
-        {{.scopes = {state::SimpleTemplateId{.name = ID{"foo"}}}}, "foo<>"},
+        {state::ScopeSequence{.explicitRoot = true, .scopes = {state::UnqualifiedId{.name = ID{"foo"}}}},             "::foo"},
+        {state::ScopeSequence{.scopes = {state::UnqualifiedId{.name = ID{"foo"}, .templateArgs{std::in_place, 0u}}}}, "foo<>"},
     }));
 
     std::string const input = "void (" + scopeText + "::*)()" + cvText + refText + " " + noexceptText;

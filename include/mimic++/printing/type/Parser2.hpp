@@ -261,8 +261,8 @@ namespace mimicpp::printing::type::parsing::v2
     // which more or less boils down to a `primary-expression` for this kind of task.
     // see: https://eel.is/c++draft/expr.const.general#nt:constant-expression
     // see: https://eel.is/c++draft/expr.prim.grammar#nt:primary-expression
-    // `constant-expression ::= primary-expression`
-    // `primary-expression ::= literal`
+    // > constant-expression ::= primary-expression
+    // > primary-expression ::= literal
     [[nodiscard]]
     constexpr std::optional<state::ConstantExpression> parse_constant_expression(TokenStream& stream)
     {
@@ -273,6 +273,95 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         return std::nullopt;
+    }
+
+    namespace detail
+    {
+        struct PlaceholderWrapCandidate
+        {
+            lexing::operator_or_punctuator open;
+            lexing::operator_or_punctuator close;
+        };
+
+        [[nodiscard]]
+        consteval auto make_placeholder_wrap_candidates() noexcept
+        {
+            using op = lexing::operator_or_punctuator;
+            std::array raw = {
+                PlaceholderWrapCandidate{.open = op{"{"}, .close = op{"}"}},
+                PlaceholderWrapCandidate{.open = op{"<"}, .close = op{">"}},
+            };
+
+            constexpr auto projection = [](auto const& e) { return e.open.index(); };
+            std::ranges::sort(raw, {}, projection);
+            MIMICPP_ASSERT(raw.cend() == std::ranges::unique(raw, {}, projection).begin(), "Fix your input!");
+
+            return raw;
+        }
+
+        inline constexpr std::array placeholderWrapCandidates = make_placeholder_wrap_candidates();
+    }
+
+    // This is not directly reflected in the standard, but each ecosystem has their own specific kind of representing
+    // e.g. anonymous types and namespaces, or lambdas.
+    [[nodiscard]]
+    constexpr std::optional<state::Identifier> parse_synthetic_id(TokenStream& stream)
+    {
+        StateGuard<state::Identifier> id{stream};
+        id->isSynthetic = true;
+
+        if (!std::holds_alternative<lexing::operator_or_punctuator>(stream.peek().classification))
+        {
+            return std::nullopt;
+        }
+
+        auto const begin = stream.peek();
+        auto const iter = util::binary_find(
+            detail::placeholderWrapCandidates,
+            std::get<lexing::operator_or_punctuator>(begin.classification).index(),
+            {},
+            [](auto const& e) { return e.open.index(); });
+        if (iter == detail::placeholderWrapCandidates.cend())
+        {
+            return std::nullopt;
+        }
+
+        stream.consume();
+
+        while (!stream.is_eof())
+        {
+            if (auto const* const cur = std::get_if<lexing::operator_or_punctuator>(&stream.peek().classification);
+                cur
+                && iter->close == *cur)
+            {
+                id->content = {
+                    begin.content.data(),
+                    stream.peek().content.data() + stream.peek().content.size()};
+                stream.consume();
+
+                return std::move(id).take();
+            }
+
+            // silently skip anything between open and close token.
+            stream.consume();
+        }
+
+        return std::nullopt;
+    }
+
+    // > identifier ::= lexing-id
+    // > identifier ::= synthetic-id
+    [[nodiscard]]
+    constexpr std::optional<state::Identifier> parse_identifier(TokenStream& stream)
+    {
+        if (auto const* const id = peek_if<lexing::identifier>(stream))
+        {
+            state::Identifier result{.content = id->content};
+            stream.consume();
+            return result;
+        }
+
+        return parse_synthetic_id(stream);
     }
 
     // see: https://eel.is/c++draft/temp.names#nt:template-argument
@@ -356,14 +445,13 @@ namespace mimicpp::printing::type::parsing::v2
     [[nodiscard]]
     constexpr std::optional<state::SimpleTemplateId> parse_simple_template_id(TokenStream& stream)
     {
-        if (auto const* const id = peek_if<lexing::identifier>(stream))
-        {
-            StateGuard<state::SimpleTemplateId> templateId{stream};
-            templateId->name = *id;
-            stream.consume();
+        StateGuard<state::SimpleTemplateId> templateId{stream};
 
+        if (std::optional name = parse_identifier(stream))
+        {
             if (std::optional args = parse_template_clause(stream))
             {
+                templateId->name = *std::move(name);
                 templateId->args = *std::move(args);
                 return std::move(templateId).take();
             }
@@ -480,77 +568,6 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
-    namespace detail
-    {
-        struct PlaceholderWrapCandidate
-        {
-            lexing::operator_or_punctuator open;
-            lexing::operator_or_punctuator close;
-        };
-
-        [[nodiscard]]
-        consteval auto make_placeholder_wrap_candidates() noexcept
-        {
-            using op = lexing::operator_or_punctuator;
-            std::array raw = {
-                PlaceholderWrapCandidate{.open = op{"{"}, .close = op{"}"}},
-                PlaceholderWrapCandidate{.open = op{"<"}, .close = op{">"}},
-            };
-
-            constexpr auto projection = [](auto const& e) { return e.open.index(); };
-            std::ranges::sort(raw, {}, projection);
-            MIMICPP_ASSERT(raw.cend() == std::ranges::unique(raw, {}, projection).begin(), "Fix your input!");
-
-            return raw;
-        }
-
-        inline constexpr std::array placeholderWrapCandidates = make_placeholder_wrap_candidates();
-    }
-
-    // This is not directly reflected in the standard, but each ecosystem has their own specific kind of representing
-    // e.g. anonymous types and namespaces, or lambdas.
-    [[nodiscard]]
-    constexpr std::optional<state::PlaceholderId> parse_placeholder_id(TokenStream& stream)
-    {
-        StateGuard<state::PlaceholderId> id{stream};
-        if (!std::holds_alternative<lexing::operator_or_punctuator>(stream.peek().classification))
-        {
-            return std::nullopt;
-        }
-
-        auto const begin = stream.peek();
-        auto const iter = util::binary_find(
-            detail::placeholderWrapCandidates,
-            std::get<lexing::operator_or_punctuator>(begin.classification).index(),
-            {},
-            [](auto const& e) { return e.open.index(); });
-        if (iter == detail::placeholderWrapCandidates.cend())
-        {
-            return std::nullopt;
-        }
-
-        stream.consume();
-
-        while (!stream.is_eof())
-        {
-            if (auto const* const cur = std::get_if<lexing::operator_or_punctuator>(&stream.peek().classification);
-                cur
-                && iter->close == *cur)
-            {
-                id->content = {
-                    begin.content.data(),
-                    stream.peek().content.data() + stream.peek().content.size()};
-                stream.consume();
-                return std::move(id).take();
-            }
-
-            // silently skip anything between open and close token.
-            stream.consume();
-        }
-
-        return std::nullopt;
-    }
-
     // see: https://eel.is/c++draft/expr.prim.id.unqual#nt:unqualified-id
     [[nodiscard]]
     constexpr std::optional<state::UnqualifiedId> parse_unqualified_id(TokenStream& stream)
@@ -561,30 +578,17 @@ namespace mimicpp::printing::type::parsing::v2
             return op;
         }
 
-        StateGuard<state::UnqualifiedId> unqualified{stream};
-
         // `unqualified-id ::= identifier`
         // `unqualified-id ::= template-name < template-argument-list? >`, where `template-name==identifier`
         // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
-        if (auto const* const id = peek_if<lexing::identifier>(stream))
+        if (std::optional templateId = parse_simple_template_id(stream))
         {
-            if (std::optional templateId = parse_simple_template_id(stream))
-            {
-                *unqualified = *std::move(templateId);
-            }
-            else
-            {
-                *unqualified = *id;
-                stream.consume();
-            }
-
-            return std::move(unqualified).take();
+            return *std::move(templateId);
         }
 
-        if (std::optional placeholder = parse_placeholder_id(stream))
+        if (std::optional id = parse_identifier(stream))
         {
-            *unqualified = *std::move(placeholder);
-            return std::move(unqualified).take();
+            return *std::move(id);
         }
 
         // Todo: add missing
@@ -612,16 +616,11 @@ namespace mimicpp::printing::type::parsing::v2
 
         if (std::optional op = parse_operator_function_id(stream))
         {
-            nestedId->identifier = *std::move(op);
+            nestedId->name = *std::move(op);
         }
-        else if (auto const* const id = peek_if<lexing::identifier>(stream))
+        else if (std::optional id = parse_identifier(stream))
         {
-            nestedId->identifier = *id;
-            stream.consume();
-        }
-        else if (std::optional placeholder = parse_placeholder_id(stream))
-        {
-            nestedId->identifier = *std::move(placeholder);
+            nestedId->name = *std::move(id);
         }
         else
         {

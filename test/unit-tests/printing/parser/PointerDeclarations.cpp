@@ -46,10 +46,10 @@ TEST_CASE(
     "[print][print::type]")
 {
     auto const [expectedType, typeText] = GENERATE((table<state::BaseType, std::string>)({
-        {state::BuiltinType{lexing::keyword{"int"}},                                                    "int"    },
-        {state::QualifiedId{.identifier = lexing::identifier{"_foo123"}},                               "_foo123"},
-        {state::QualifiedId{.scopes = {.explicitRoot = true}, .identifier = lexing::identifier{"foo"}}, "::foo"  },
-        {state::QualifiedId{.identifier = state::SimpleTemplateId{.name = lexing::identifier{"foo"}}},  "foo<>"  },
+        {state::BuiltinType{lexing::keyword{"int"}},                                                             "int"    },
+        {state::QualifiedId{.identifier = {state::Identifier{"_foo123"}}},                                       "_foo123"},
+        {state::QualifiedId{.scopes = {.explicitRoot = true}, .identifier = {state::Identifier{"foo"}}},         "::foo"  },
+        {state::QualifiedId{.identifier = {.name = state::Identifier{"foo"}, .templateArgs{std::in_place, 0u}}}, "foo<>"  },
     }));
 
     auto const [expectedDecoration, declaratorText] = GENERATE(cat(
@@ -94,10 +94,10 @@ TEST_CASE(
     "[print][print::type]")
 {
     auto const [expectedType, typeText] = GENERATE((table<state::BaseType, std::string>)({
-        {state::BuiltinType{lexing::keyword{"int"}},                                                    "int"    },
-        {state::QualifiedId{.identifier = lexing::identifier{"_foo123"}},                               "_foo123"},
-        {state::QualifiedId{.scopes = {.explicitRoot = true}, .identifier = lexing::identifier{"foo"}}, "::foo"  },
-        {state::QualifiedId{.identifier = state::SimpleTemplateId{.name = lexing::identifier{"foo"}}},  "foo<>"  },
+        {state::BuiltinType{lexing::keyword{"int"}},                                                             "int"    },
+        {state::QualifiedId{.identifier = {state::Identifier{"_foo123"}}},                                       "_foo123"},
+        {state::QualifiedId{.scopes = {.explicitRoot = true}, .identifier = {state::Identifier{"foo"}}},         "::foo"  },
+        {state::QualifiedId{.identifier = {.name = state::Identifier{"foo"}, .templateArgs{std::in_place, 0u}}}, "foo<>"  },
     }));
 
     auto const [expectedFirstLvlDecoration, firstLevelPtrOpText] = GENERATE(from_range(ptrTable));

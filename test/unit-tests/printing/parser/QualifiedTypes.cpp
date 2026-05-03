@@ -36,7 +36,7 @@ TEST_CASE(
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
     CAPTURE(type);
 
-    state::QualifiedId const expected{.identifier = lexing::identifier{type}};
+    state::QualifiedId const expected{.identifier = {state::Identifier{type}}};
 
     SECTION("When it's provided as plain type.")
     {
@@ -67,17 +67,17 @@ TEST_CASE(
     "[print][print::type]")
 {
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
-    using Id = lexing::identifier;
+    using Id = state::Identifier;
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
-        {{.explicitRoot = true},                                                "::"                 },
-        {{.scopes = {Id{"tmp"}, Id{"foo"}, Id{"_5432"}}},                       "tmp::foo::_5432::"  },
-        {{.explicitRoot = true, .scopes = {Id{"tmp"}, Id{"foo"}, Id{"_5432"}}}, "::tmp::foo::_5432::"},
+        {{.explicitRoot = true},                                                                                                                                          "::"                 },
+        {{.scopes = {state::UnqualifiedId{.name = Id{"tmp"}}, state::UnqualifiedId{.name = Id{"foo"}}, state::UnqualifiedId{.name = Id{"_5432"}}}},                       "tmp::foo::_5432::"  },
+        {{.explicitRoot = true, .scopes = {state::UnqualifiedId{.name = Id{"tmp"}}, state::UnqualifiedId{.name = Id{"foo"}}, state::UnqualifiedId{.name = Id{"_5432"}}}}, "::tmp::foo::_5432::"},
     }));
     CAPTURE(type, scopeText);
 
     state::QualifiedId const expected{
         .scopes = expectedScopes,
-        .identifier = lexing::identifier{type}};
+        .identifier = {state::Identifier{type}}};
 
     SECTION("When it's provided as plain type.")
     {
@@ -116,7 +116,7 @@ TEST_CASE(
 
     static constexpr auto make_type = [](lexing::identifier const& id) -> state::TemplateArgument {
         return state::RecursiveState{
-            state::TypeId{.base = state::QualifiedId{.identifier = id}}};
+            state::TypeId{.base = state::QualifiedId{.identifier = {.name = state::Identifier{id.content}}}}};
     };
 
     using KW = lexing::keyword;
@@ -129,10 +129,11 @@ TEST_CASE(
         {{make_type(ID{"_foo_"}), make_builtin(KW{"int"})}, "< _foo_,int >"},
     }));
 
-    state::SimpleTemplateId const expectedTemplateId{
-        .name = lexing::identifier{templateId},
-        .args = expectedArgs};
-    state::QualifiedId const expected{.identifier = expectedTemplateId};
+    state::QualifiedId const expected{
+        .identifier = {
+                       .name = state::Identifier{templateId},
+                       .templateArgs = expectedArgs}
+    };
 
     SECTION("When they are provided as plain type.")
     {
@@ -166,14 +167,14 @@ TEST_CASE(
     "[print][print::type]")
 {
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
-    using ID = lexing::identifier;
+    using ID = state::Identifier;
     using KW = lexing::keyword;
-    using TId = state::SimpleTemplateId;
+    using UId = state::UnqualifiedId;
     using Rec = state::RecursiveState<state::TypeId>;
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
-        {{.scopes = {TId{.name = ID{"tmp"}, .args = {Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}, "tmp<int>"     },
-        {{.explicitRoot = true, .scopes = {TId{.name = ID{"tmp"}}}},                                                        "::tmp<>"      },
-        {{.scopes = {TId{.name = ID{"tmp"}}, TId{.name = ID{"tmp2"}}}},                                                     "tmp<>::tmp2<>"},
+        {{.scopes = {UId{.name = ID{"tmp"}, .templateArgs = {{Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}}, "tmp<int>"     },
+        {{.explicitRoot = true, .scopes = {UId{.name = ID{"tmp"}, .templateArgs{std::in_place}}}},                                    "::tmp<>"      },
+        {{.scopes = {UId{.name = ID{"tmp"}, .templateArgs{std::in_place}}, UId{.name = ID{"tmp2"}, .templateArgs{std::in_place}}}},   "tmp<>::tmp2<>"},
     }));
     CAPTURE(type, scopeText);
 
@@ -190,7 +191,7 @@ TEST_CASE(
 
         state::QualifiedId const expected{
             .scopes = expectedScopes,
-            .identifier = lexing::identifier{type}};
+            .identifier = {.name = state::Identifier{type}}};
         CHECK_THAT(id->base, variant_equals(expected));
     }
 
@@ -206,7 +207,7 @@ TEST_CASE(
         CHECK(expectedCV == id->qualifications);
         state::QualifiedId const expected{
             .scopes = expectedScopes,
-            .identifier = lexing::identifier{type}};
+            .identifier = {.name = state::Identifier{type}}};
         CHECK_THAT(id->base, variant_equals(expected));
     }
 }
@@ -215,16 +216,16 @@ TEST_CASE(
     "parsing::parse_type supports qualified types with function scopes.",
     "[print][print::type]")
 {
-    using ID = lexing::identifier;
+    using ID = state::Identifier;
     using KW = lexing::keyword;
-    using FId = state::FunctionId;
+    using UId = state::UnqualifiedId;
     using Rec = state::RecursiveState<state::TypeId>;
 
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
-        {{.scopes = {FId{.name = ID{"tmp"}, .declarator = {.params = {Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}}, "tmp(int)"     },
-        {{.explicitRoot = true, .scopes = {FId{.name = ID{"tmp"}}}},                                                                          "::tmp()"      },
-        {{.scopes = {FId{.name = ID{"tmp"}}, FId{.name = ID{"tmp2"}}}},                                                                       "tmp()::tmp2()"},
+        {{.scopes = {UId{.name = ID{"tmp"}, .functionDeclarator = state::FunctionDeclarator{.params = {Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}}, "tmp(int)"     },
+        {{.explicitRoot = true, .scopes = {UId{.name = ID{"tmp"}, .functionDeclarator{std::in_place}}}},                                                                       "::tmp()"      },
+        {{.scopes = {UId{.name = ID{"tmp"}, .functionDeclarator{std::in_place}}, UId{.name = ID{"tmp2"}, .functionDeclarator{std::in_place}}}},                                "tmp()::tmp2()"},
     }));
     CAPTURE(type, scopeText);
 
@@ -239,6 +240,6 @@ TEST_CASE(
 
     state::QualifiedId const expected{
         .scopes = expectedScopes,
-        .identifier = lexing::identifier{type}};
+        .identifier = {.name = state::Identifier{type}}};
     CHECK_THAT(id->base, variant_equals(expected));
 }

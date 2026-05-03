@@ -113,6 +113,15 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     using ConstantExpression = lexing::literal;
 
+    struct Identifier
+    {
+        std::string_view content{};
+        bool isSynthetic{false};
+
+        [[nodiscard]]
+        friend bool operator==(Identifier const&, Identifier const&) = default;
+    };
+
     struct FunctionDeclarator
     {
         std::vector<RecursiveState<TypeId>> params{};
@@ -130,17 +139,9 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     using TemplateArgumentList = std::vector<TemplateArgument>;
 
-    struct PlaceholderId
-    {
-        std::string_view content{};
-
-        [[nodiscard]]
-        friend bool operator==(PlaceholderId const&, PlaceholderId const&) = default;
-    };
-
     struct SimpleTemplateId
     {
-        lexing::identifier name{};
+        Identifier name{};
         TemplateArgumentList args{};
 
         [[nodiscard]]
@@ -156,18 +157,16 @@ namespace mimicpp::printing::type::parsing::v2::state
     };
 
     using UnqualifiedId = std::variant<
-        lexing::identifier,
-        PlaceholderId,
+        Identifier,
         SimpleTemplateId,
         OperatorFunctionId>;
 
     struct NestedId
     {
-        using Identifier = std::variant<
-            lexing::identifier,
-            PlaceholderId,
+        using Name = std::variant<
+            Identifier,
             OperatorFunctionId>;
-        Identifier identifier{};
+        Name name{};
         std::optional<TemplateArgumentList> templateArgs{};
         std::optional<FunctionDeclarator> functionDeclarator{};
 
