@@ -3,14 +3,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef MIMICPP_PARSER2_HPP
-#define MIMICPP_PARSER2_HPP
+#ifndef MIMICPP_PRINTING_TYPE_PARSER_HPP
+#define MIMICPP_PRINTING_TYPE_PARSER_HPP
 
 #pragma once
 
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/type/NameLexer.hpp"
-#include "mimic++/printing/type/Parser2State.hpp"
+#include "mimic++/printing/type/ParserState.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 #include "mimic++/utilities/PassKey.hpp"

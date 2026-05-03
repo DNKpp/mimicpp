@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -8,9 +8,10 @@
 
 #include "mimic++/printing/type/CommonTypes.hpp"
 #include "mimic++/printing/type/NameLexer.hpp"
-#include "mimic++/printing/type/NameParser.hpp"
-#include "mimic++/printing/type/NamePrintVisitor.hpp"
+#include "mimic++/printing/type/Parser.hpp"
+#include "mimic++/printing/type/ParserState.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
+#include "mimic++/printing/type/PrintVisitor.hpp"
 #include "mimic++/printing/type/Signature.hpp"
 #include "mimic++/printing/type/Templated.hpp"
 

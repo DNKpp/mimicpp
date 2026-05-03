@@ -121,21 +121,23 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
 
 #ifdef MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES
 
-    #include "mimic++/printing/type/NameParser.hpp"
-    #include "mimic++/printing/type/NamePrintVisitor.hpp"
+    #include "mimic++/printing/type/Parser.hpp"
+    #include "mimic++/printing/type/PrintVisitor.hpp"
 
 namespace mimicpp::printing::type
 {
     template <print_iterator OutIter>
     constexpr OutIter prettify_type(OutIter out, std::string_view const name)
     {
-        static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
+        if (std::optional const typeId = parse_type(name))
+        {
+            parsing::v2::PrintVisitor<OutIter> visitor{std::move(out)};
+            visitor.visit(*typeId);
 
-        PrintVisitor visitor{std::move(out)};
-        parsing::NameParser parser{std::ref(visitor), name};
-        parser.parse_type();
+            return visitor.out();
+        }
 
-        return visitor.out();
+        return format::format_to(std::move(out), "{}", name);
     }
 
     namespace detail
@@ -163,9 +165,9 @@ namespace mimicpp::printing::type
     }
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify_function(OutIter out, std::string_view name)
+    constexpr OutIter prettify_function(OutIter out, std::string_view /*name*/)
     {
-        name = detail::remove_template_details(std::move(name));
+        /*name = detail::remove_template_details(std::move(name));
 
         static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
 
@@ -173,7 +175,9 @@ namespace mimicpp::printing::type
         parsing::NameParser parser{std::ref(visitor), name};
         parser.parse_function();
 
-        return visitor.out();
+        return visitor.out();*/
+
+        return out;
     }
 }
 
