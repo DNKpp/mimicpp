@@ -128,7 +128,7 @@ TEST_CASE(
 {
     using Id = state::Identifier;
     using KW = lexing::keyword;
-    using UId = state::NestedId;
+    using UId = state::UnqualifiedId;
     using QId = state::QualifiedId;
 
     auto const [expectedReturn, returnText] = GENERATE((table<state::BaseType, std::string>)({

@@ -568,51 +568,47 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    // This rule is part of the more general unqualified-id rule.
     // see: https://eel.is/c++draft/expr.prim.id.unqual#nt:unqualified-id
     [[nodiscard]]
-    constexpr std::optional<state::UnqualifiedId> parse_unqualified_id(TokenStream& stream)
+    constexpr std::optional<state::DestructorFunctionId> parse_destructor_function_id(TokenStream& stream)
     {
-        // `unqualified-id ::= operator-function-id`
-        if (std::optional const op = parse_operator_function_id(stream))
+        StateGuard<state::DestructorFunctionId> identifier{stream};
+
+        if (expect(stream, lexing::operator_or_punctuator{"~"}))
         {
-            return op;
+            if (std::optional id = parse_identifier(stream))
+            {
+                identifier->name = *std::move(id);
+                return std::move(identifier).take();
+            }
         }
-
-        // `unqualified-id ::= identifier`
-        // `unqualified-id ::= template-name < template-argument-list? >`, where `template-name==identifier`
-        // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
-        if (std::optional templateId = parse_simple_template_id(stream))
-        {
-            return *std::move(templateId);
-        }
-
-        if (std::optional id = parse_identifier(stream))
-        {
-            return *std::move(id);
-        }
-
-        // Todo: add missing
-        // `unqualified-id ::= conversion-function-id`
-        // `unqualified-id ::= ~ type-name`
-
-        // These rules are unnecessary:
-        // `unqualified-id ::= literal-operator-id`
-        // `unqualified-id ::= ~ computed-type-specifier`
 
         return std::nullopt;
     }
 
-    // This is more or less a custom rule, which handles all nested identifier scopes;
-    // i.e., all parts that are terminated by a `::` token.
-    // > nested-id ::= identifier (`<` template-argument-list? `>`)? template-clause? parameters-and-qualifiers? `::`
-    // > nested-id ::= placeholder-id (`<` template-argument-list? `>`)? template-clause? parameters-and-qualifiers? `::`
-    // > nested-id ::= operator-function-id (`<` template-argument-list? `>`)? parameters-and-qualifiers? `::`
-    // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
-    // but rather an extension due to real-life requirements.
+    // see: https://eel.is/c++draft/expr.prim.id.unqual#nt:unqualified-id
+    // handles
+    // > unqualified-id ::= identifier
+    // > unqualified-id ::= template-id
+    // > unqualified-id ::= operator-function-id
+    // > unqualified-id ::= `~`type-name
+    // but slightly rewritten
+    //
+    // These rules are unnecessary:
+    // > unqualified-id ::= literal-operator-id
+    // > unqualified-id ::= `~`computed-type-specifier
     [[nodiscard]]
-    constexpr std::optional<state::NestedId> parse_nested_id(TokenStream& stream)
+    constexpr std::optional<state::UnqualifiedId> parse_unqualified_id(TokenStream& stream)
     {
-        StateGuard<state::NestedId> nestedId{stream};
+        StateGuard<state::UnqualifiedId> nestedId{stream};
+
+        // A destructor cannot be templated
+        if (std::optional dtor = parse_destructor_function_id(stream))
+        {
+            nestedId->name = *std::move(dtor);
+            return std::move(nestedId).take();
+        }
 
         if (std::optional op = parse_operator_function_id(stream))
         {
@@ -632,9 +628,58 @@ namespace mimicpp::printing::type::parsing::v2
             nestedId->templateArgs = *std::move(templateArgs);
         }
 
+        return std::move(nestedId).take();
+    }
+
+    // This is more or less a custom rule, which handles all nested identifier scopes;
+    // i.e., all parts that are terminated by a `::` token.
+    // > unqualified-id ::= identifier template-clause? parameters-and-qualifiers? `::`
+    // > unqualified-id ::= operator-function-id template-clause? parameters-and-qualifiers `::`
+    // > unqualified-id ::= destructor-function-id parameters-and-qualifiers `::`
+    //
+    // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
+    // but rather an extension due to real-life requirements.
+    [[nodiscard]]
+    constexpr std::optional<state::UnqualifiedId> parse_nested_id(TokenStream& stream)
+    {
+        StateGuard<state::UnqualifiedId> nestedId{stream};
+        bool requiresFunction{false};
+
+        // A destructor cannot be templated
+        if (std::optional dtor = parse_destructor_function_id(stream))
+        {
+            requiresFunction = true;
+            nestedId->name = *std::move(dtor);
+        }
+        else
+        {
+            if (std::optional op = parse_operator_function_id(stream))
+            {
+                requiresFunction = true;
+                nestedId->name = *std::move(op);
+            }
+            else if (std::optional id = parse_identifier(stream))
+            {
+                nestedId->name = *std::move(id);
+            }
+            else
+            {
+                return std::nullopt;
+            }
+
+            if (std::optional templateArgs = parse_template_clause(stream))
+            {
+                nestedId->templateArgs = *std::move(templateArgs);
+            }
+        }
+
         if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
         {
             nestedId->functionDeclarator = *std::move(functionDecl);
+        }
+        else if (requiresFunction)
+        {
+            return std::nullopt;
         }
 
         if (expect(stream, lexing::operator_or_punctuator{"::"}))
@@ -656,7 +701,7 @@ namespace mimicpp::printing::type::parsing::v2
     // These rules form a left-recursion:
     // > nested-name-specifier ::= nested-name-specifier identifier `::`
     // > nested-name-specifier ::= nested-name-specifier `template`? simple-template-id `::`
-    // => nested-name-specifier ::= `::` nested-id *
+    // => nested-name-specifier ::= `::` nested-id*
     // => nested-name-specifier ::= nested-id+
     //
     // Note that these rules are fully ignored:
