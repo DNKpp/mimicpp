@@ -12,7 +12,6 @@ target_sources(${TARGET_NAME} PRIVATE
     "TypePostProcessing.cpp"
     "TypePrinter.cpp"
     "TypeNameLexer.cpp"
-    "TypeNameParser.cpp"
 )
 
 add_subdirectory(parser)
