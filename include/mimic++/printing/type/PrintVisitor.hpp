@@ -114,7 +114,9 @@ namespace mimicpp::printing::type::parsing::v2
                 visit(*type.sizeSpec);
             }
 
-            if (type.base)
+            if (type.base
+                // Do not print redundant `int` when a size-spec is applied.
+                && (!type.sizeSpec || lexing::keyword{"int"} != *type.base))
             {
                 if (!std::exchange(first, false))
                 {
