@@ -439,27 +439,6 @@ namespace mimicpp::printing::type::parsing::v2
         return std::move(args).take();
     }
 
-    // `unqualified-id ::= template-name < template-argument-list? >`, where `template-name==identifier`
-    // see: https://eel.is/c++draft/temp.names#nt:simple-template-id
-    //
-    [[nodiscard]]
-    constexpr std::optional<state::SimpleTemplateId> parse_simple_template_id(TokenStream& stream)
-    {
-        StateGuard<state::SimpleTemplateId> templateId{stream};
-
-        if (std::optional name = parse_identifier(stream))
-        {
-            if (std::optional args = parse_template_clause(stream))
-            {
-                templateId->name = *std::move(name);
-                templateId->args = *std::move(args);
-                return std::move(templateId).take();
-            }
-        }
-
-        return std::nullopt;
-    }
-
     // see: https://eel.is/c++draft/dcl.decl.general#nt:cv-qualifier
     [[nodiscard]]
     constexpr std::optional<state::CVQualifier> parse_cv_qualifier(TokenStream& stream)

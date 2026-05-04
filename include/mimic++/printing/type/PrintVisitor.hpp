@@ -278,12 +278,6 @@ namespace mimicpp::printing::type::parsing::v2
             m_OutIter = format::format_to(std::move(m_OutIter), ">");
         }
 
-        constexpr void visit(state::SimpleTemplateId const& id)
-        {
-            visit(id.name);
-            visit(id.args);
-        }
-
         constexpr void visit(state::DestructorFunctionId const& id)
         {
             m_OutIter = format::format_to(std::move(m_OutIter), "~{}", id.name.content);

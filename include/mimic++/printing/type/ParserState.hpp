@@ -140,15 +140,6 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     using TemplateArgumentList = std::vector<TemplateArgument>;
 
-    struct SimpleTemplateId
-    {
-        Identifier name{};
-        TemplateArgumentList args{};
-
-        [[nodiscard]]
-        friend bool operator==(SimpleTemplateId const&, SimpleTemplateId const&) = default;
-    };
-
     struct OperatorFunctionId
     {
         using Symbol = std::variant<
