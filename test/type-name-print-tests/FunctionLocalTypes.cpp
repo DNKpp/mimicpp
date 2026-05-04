@@ -138,7 +138,7 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern("int, std::string const&") + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern(R"(\.{3})") + "::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
@@ -658,7 +658,7 @@ TEMPLATE_LIST_TEST_CASE(
     {
         using Return = decltype(my_typeFreeFunction());
         using T = testing::mod_type_t<TestType, Return>;
-        std::string const rawName{printing::type::type_name<T()>()}; // This is a function-type which returns T!
+        std::string const rawName{printing::type::type_name<void(T)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(
@@ -676,7 +676,7 @@ TEMPLATE_LIST_TEST_CASE(
     {
         using Return = decltype(fun_outer{}.my_typeFunction());
         using T = testing::mod_type_t<TestType, Return>;
-        std::string const rawName{printing::type::type_name<T()>()}; // This is a function-type which returns T!
+        std::string const rawName{printing::type::type_name<void(T)>()};
         CAPTURE(rawName);
 
         printing::type::prettify_type(

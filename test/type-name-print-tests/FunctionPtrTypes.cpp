@@ -15,7 +15,7 @@ TEMPLATE_LIST_TEST_CASE(
     testing::common_mod_list)
 {
     std::string const suffixPattern{TestType::suffix};
-    std::string const prefixPattern{R"(void \(\*)"};
+    std::string const prefixPattern{R"(void\(\*)"};
     CAPTURE(suffixPattern);
 
     std::ostringstream ss{};
@@ -33,7 +33,7 @@ TEMPLATE_LIST_TEST_CASE(
 
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(prefixPattern + suffixPattern + R"(\)\(\) \(\))"));
+            Catch::Matchers::Matches(prefixPattern + suffixPattern + R"(\(\)\)\(\))"));
     }
 
     SECTION("When a function-ptr-type returns a function-ptr.")
@@ -49,7 +49,7 @@ TEMPLATE_LIST_TEST_CASE(
 
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(prefixPattern + suffixPattern + R"(\)\(\) \(\*\)\(\))"));
+            Catch::Matchers::Matches(prefixPattern + suffixPattern + R"(\(\*\)\(\)\)\(\))"));
     }
 
     SECTION("When a function-type returns a function-ptr, which returns a function-ptr.")
@@ -66,7 +66,7 @@ TEMPLATE_LIST_TEST_CASE(
 
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(prefixPattern + R"(\)\(\) \(\*)" + suffixPattern + R"(\)\(\) \(\))"));
+            Catch::Matchers::Matches(prefixPattern + R"(\(\*)" + suffixPattern + R"(\(\)\)\(\)\)\(\))"));
     }
 
     SECTION("When a function-ptr-type returns a function-ptr, which returns a function-ptr.")
@@ -83,6 +83,6 @@ TEMPLATE_LIST_TEST_CASE(
 
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(prefixPattern + R"(\)\(\) \(\*)" + suffixPattern + R"(\)\(\) \(\*\)\(\))"));
+            Catch::Matchers::Matches(prefixPattern + R"(\(\*)" + suffixPattern + R"(\(\*\)\(\)\)\(\)\)\(\))"));
     }
 }

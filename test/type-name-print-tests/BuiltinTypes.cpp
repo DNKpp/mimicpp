@@ -9,57 +9,82 @@
 
 using namespace mimicpp;
 
-TEMPLATE_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
     "printing::type::prettify_type handles built-in integral types correctly.",
     "[print][print::type]",
-    char,
-    short,
-    int,
-    long,
-    long long)
+    ((auto expected, typename T), expected, T),
+    (util::StaticString{"char"}, char),
+    (util::StaticString{"short"}, short),
+    (util::StaticString{"short"}, short int),
+    (util::StaticString{"int"}, int),
+    (util::StaticString{"long"}, long),
+    (util::StaticString{"long"}, long int),
+    (util::StaticString{"long long"}, long long),
+    (util::StaticString{"long long"}, long long int))
 {
     std::ostringstream ss{};
 
-    SECTION("When is given as-is.")
-    {
-        std::string const name{printing::type::type_name<TestType>()};
-        CAPTURE(name);
+    std::string const name{printing::type::type_name<T>()};
+    CAPTURE(name);
 
-        printing::type::prettify_type(
-            std::ostreambuf_iterator{ss},
-            name);
-        CHECK_THAT(
-            std::move(ss).str(),
-            Catch::Matchers::Matches(name));
-    }
+    printing::type::prettify_type(
+        std::ostreambuf_iterator{ss},
+        name);
+    CHECK_THAT(
+        std::move(ss).str(),
+        Catch::Matchers::Matches(expected.str()));
+}
 
-    SECTION("When explicit signed name is given.")
-    {
-        using T = std::make_signed_t<TestType>;
-        std::string const name{printing::type::type_name<T>()};
-        CAPTURE(name);
+TEMPLATE_TEST_CASE_SIG(
+    "printing::type::prettify_type handles built-in signed integral types correctly.",
+    "[print][print::type]",
+    ((auto expected, typename T), expected, T),
+    (util::StaticString{"signed char"}, char),
+    (util::StaticString{"short"}, short),
+    (util::StaticString{"short"}, short int),
+    (util::StaticString{"int"}, int),
+    (util::StaticString{"long"}, long),
+    (util::StaticString{"long"}, long int),
+    (util::StaticString{"long long"}, long long),
+    (util::StaticString{"long long"}, long long int))
+{
+    std::ostringstream ss{};
 
-        printing::type::prettify_type(
-            std::ostreambuf_iterator{ss},
-            name);
-        CHECK_THAT(
-            std::move(ss).str(),
-            Catch::Matchers::Matches(name));
-    }
+    std::string const name{printing::type::type_name<std::make_signed_t<T>>()};
+    CAPTURE(name);
 
-    SECTION("When unsigned name is given.")
-    {
-        using T = std::make_unsigned_t<TestType>;
-        std::string const name{printing::type::type_name<T>()};
-        CAPTURE(name);
+    printing::type::prettify_type(
+        std::ostreambuf_iterator{ss},
+        name);
+    CHECK_THAT(
+        std::move(ss).str(),
+        Catch::Matchers::Matches(expected.str()));
+}
 
-        printing::type::prettify_type(
-            std::ostreambuf_iterator{ss},
-            name);
-        CHECK_THAT(
-            std::move(ss).str(),
-            Catch::Matchers::Matches(name));
-    }
+TEMPLATE_TEST_CASE_SIG(
+    "printing::type::prettify_type handles built-in unsigned integral types correctly.",
+    "[print][print::type]",
+    ((auto expected, typename T), expected, T),
+    (util::StaticString{"unsigned char"}, char),
+    (util::StaticString{"unsigned short"}, short),
+    (util::StaticString{"unsigned short"}, short int),
+    (util::StaticString{"unsigned int"}, int),
+    (util::StaticString{"unsigned long"}, long),
+    (util::StaticString{"unsigned long"}, long int),
+    (util::StaticString{"unsigned long long"}, long long),
+    (util::StaticString{"unsigned long long"}, long long int))
+{
+    std::ostringstream ss{};
+
+    std::string const name{printing::type::type_name<std::make_unsigned_t<T>>()};
+    CAPTURE(name);
+
+    printing::type::prettify_type(
+        std::ostreambuf_iterator{ss},
+        name);
+    CHECK_THAT(
+        std::move(ss).str(),
+        Catch::Matchers::Matches(expected.str()));
 }
 
 TEMPLATE_LIST_TEST_CASE(

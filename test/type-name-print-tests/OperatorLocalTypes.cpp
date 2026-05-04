@@ -149,6 +149,16 @@ namespace
 
             return my_type{};
         }
+
+        [[nodiscard]]
+        auto operator[](int) const
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
     };
 }
 
@@ -160,12 +170,11 @@ TEST_CASE(
 
     SECTION("When ordering operator is used.")
     {
-        auto const [expectedFunctionName, rawName] = GENERATE(
-            (table<std::string, std::string_view>)({
-                { R"(operator\s?<)",  printing::type::type_name<decltype(special_operators{}.operator<(42))>()},
-                {R"(operator\s?<=)", printing::type::type_name<decltype(special_operators{}.operator<=(42))>()},
-                { R"(operator\s?>)",  printing::type::type_name<decltype(special_operators{}.operator>(42))>()},
-                {R"(operator\s?>=)", printing::type::type_name<decltype(special_operators{}.operator>=(42))>()}
+        auto const [expectedFunctionName, rawName] = GENERATE((table<std::string, std::string_view>)({
+            {R"(operator\s?<)",  printing::type::type_name<decltype(special_operators{}.operator<(42))>() },
+            {R"(operator\s?<=)", printing::type::type_name<decltype(special_operators{}.operator<=(42))>()},
+            {R"(operator\s?>)",  printing::type::type_name<decltype(special_operators{}.operator>(42))>() },
+            {R"(operator\s?>=)", printing::type::type_name<decltype(special_operators{}.operator>=(42))>()}
         }));
         CAPTURE(rawName);
 
@@ -185,10 +194,10 @@ TEST_CASE(
     {
         auto const [expectedFunctionName, expectedNestedFunctionName, rawName] = GENERATE(
             (table<std::string, std::string, std::string_view>)({
-                { R"(operator\s?<)", R"(operator\s?>=)",  printing::type::type_name<decltype(special_operators{}.operator<(""))>()},
-                {R"(operator\s?<=)",  R"(operator\s?>)", printing::type::type_name<decltype(special_operators{}.operator<=(""))>()},
-                { R"(operator\s?>)", R"(operator\s?<=)",  printing::type::type_name<decltype(special_operators{}.operator>(""))>()},
-                {R"(operator\s?>=)",  R"(operator\s?<)", printing::type::type_name<decltype(special_operators{}.operator>=(""))>()}
+                {R"(operator\s?<)",  R"(operator\s?>=)", printing::type::type_name<decltype(special_operators{}.operator<(""))>() },
+                {R"(operator\s?<=)", R"(operator\s?>)",  printing::type::type_name<decltype(special_operators{}.operator<=(""))>()},
+                {R"(operator\s?>)",  R"(operator\s?<=)", printing::type::type_name<decltype(special_operators{}.operator>(""))>() },
+                {R"(operator\s?>=)", R"(operator\s?<)",  printing::type::type_name<decltype(special_operators{}.operator>=(""))>()}
         }));
         CAPTURE(rawName);
 
@@ -254,7 +263,52 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const returnPattern = testing::anonNsScopePattern + R"(special_operators::operator\s?\(\)::my_type )";
+        std::string const returnPattern = testing::anonNsScopePattern + R"(special_operators::operator\s?\(\)::my_type)";
+        std::string const scopePattern = testing::anonNsScopePattern + "special_operators::";
+        std::string const argListPattern = R"(\(int\))";
+        std::string const funSuffixPattern = R"(\s?const)";
+
+        CHECK_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(
+                returnPattern
+                + R"(\()" + scopePattern + R"(\*\))"
+                + argListPattern
+                + funSuffixPattern));
+    }
+}
+
+TEST_CASE(
+    "printing::type::prettify_type supports operator[].",
+    "[print][print::type]")
+{
+    std::ostringstream ss{};
+
+    SECTION("When identifier contains operator[] scope.")
+    {
+        std::string const rawName{printing::type::type_name<decltype(special_operators{}.operator[](42))>()};
+        CAPTURE(rawName);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        std::string const scopePattern = testing::anonNsScopePattern + "special_operators::" + R"(operator\s?\[\]::)";
+        REQUIRE_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(scopePattern + "my_type"));
+    }
+
+    SECTION("When member-function-pointer to operator[] is given.")
+    {
+        std::string const rawName{printing::type::type_name<decltype(&special_operators::operator[])>()};
+        CAPTURE(rawName);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        std::string const returnPattern = testing::anonNsScopePattern + R"(special_operators::operator\s?\[\]::my_type)";
         std::string const scopePattern = testing::anonNsScopePattern + "special_operators::";
         std::string const argListPattern = R"(\(int\))";
         std::string const funSuffixPattern = R"(\s?const)";

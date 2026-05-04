@@ -194,7 +194,7 @@ TEMPLATE_LIST_TEST_CASE(
     std::string const suffixPattern{TestType::suffix};
     CAPTURE(suffixPattern);
 
-    std::string const returnTypePattern = "mimicpp::util::SourceLocation ";
+    std::string const returnTypePattern = "mimicpp::util::SourceLocation";
     std::string const scopePattern = testing::anonNsScopePattern;
 
     std::ostringstream ss{};
@@ -282,7 +282,7 @@ TEMPLATE_LIST_TEST_CASE(
         std::string const returnTypePattern = testing::anonNsScopePattern + "my_template::bar::bar_type";
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(returnTypePattern + " " + ptrPattern + argListPattern));
+            Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
     }
 
     SECTION("When a variadic template-type without params is given.")
@@ -300,7 +300,7 @@ TEMPLATE_LIST_TEST_CASE(
         std::string const returnTypePattern = testing::anonNsScopePattern + "my_variadic_template::bar::bar_type";
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(returnTypePattern + " " + ptrPattern + argListPattern));
+            Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
     }
 
     SECTION("When a variadic template-type with multiple params is given.")
@@ -318,6 +318,6 @@ TEMPLATE_LIST_TEST_CASE(
         std::string const returnTypePattern = testing::anonNsScopePattern + "my_variadic_template::bar::bar_type";
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(returnTypePattern + " " + ptrPattern + argListPattern));
+            Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
     }
 }

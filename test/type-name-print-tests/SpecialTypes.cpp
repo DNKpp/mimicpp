@@ -141,8 +141,8 @@ TEMPLATE_LIST_TEST_CASE(
 
 namespace
 {
-    auto nullaryLambda = [] {};
-    auto unaryLambda = [](int volatile* const&) {};
+    [[maybe_unused]] auto nullaryLambda = [] {};
+    [[maybe_unused]] auto unaryLambda = [](int volatile* const&) {};
 }
 
 TEMPLATE_LIST_TEST_CASE(
@@ -182,6 +182,6 @@ TEMPLATE_LIST_TEST_CASE(
 
         CHECK_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(testing::anonNsScopePattern + testing::lambda_pattern("int volatile* const&") + suffixPattern));
+            Catch::Matchers::Matches(testing::anonNsScopePattern + testing::lambda_pattern(R"(\.{3})") + suffixPattern));
     }
 }
