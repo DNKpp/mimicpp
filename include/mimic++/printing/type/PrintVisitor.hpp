@@ -12,6 +12,7 @@
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/type/ParserState.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
+#include "mimic++/utilities/Overloaded.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
@@ -287,7 +288,27 @@ namespace mimicpp::printing::type::parsing::v2
 
         constexpr void visit(state::OperatorFunctionId const& id)
         {
-            m_OutIter = format::format_to(std::move(m_OutIter), "operator{}", id.op.text());
+            m_OutIter = format::format_to(std::move(m_OutIter), "operator");
+            std::visit(
+                util::Overloaded{
+                    [this](lexing::operator_or_punctuator const& op) {
+                        m_OutIter = format::format_to(std::move(m_OutIter), "{}", op.text());
+                    },
+                    [this](std::pair<lexing::keyword const, bool> const& op) {
+                        m_OutIter = format::format_to(std::move(m_OutIter), " {}", op.first.text());
+                        if (op.second)
+                        {
+                            m_OutIter = format::format_to(std::move(m_OutIter), "[]");
+                        }
+                    },
+                    [this](std::span<lexing::operator_or_punctuator const, 2u> const op) {
+                        m_OutIter = format::format_to(
+                            std::move(m_OutIter),
+                            "{}{}",
+                            op.front().text(),
+                            op.back().text());
+                    }},
+                id.symbol);
         }
 
         constexpr void visit(state::UnqualifiedId const& nested)

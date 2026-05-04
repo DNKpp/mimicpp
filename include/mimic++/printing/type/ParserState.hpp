@@ -13,6 +13,7 @@
 #include "mimic++/utilities/C++23Backports.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <array>
     #include <functional>
     #include <memory>
     #include <optional>
@@ -150,7 +151,11 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     struct OperatorFunctionId
     {
-        lexing::operator_or_punctuator op;
+        using Symbol = std::variant<
+            lexing::operator_or_punctuator,
+            std::pair<lexing::keyword, bool /*isArray*/>,
+            std::array<lexing::operator_or_punctuator, 2u>>;
+        Symbol symbol;
 
         [[nodiscard]]
         friend bool operator==(OperatorFunctionId const&, OperatorFunctionId const&) = default;

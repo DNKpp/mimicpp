@@ -540,6 +540,11 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         inline constexpr std::array simpleOpCandidates = make_simple_operator_candidates();
+
+        inline constexpr std::array doubleOpCandidates = {
+            std::tuple{lexing::operator_or_punctuator{"("}, lexing::operator_or_punctuator{")"}},
+            std::tuple{lexing::operator_or_punctuator{"["}, lexing::operator_or_punctuator{"]"}}
+        };
     }
 
     // unqualified-id ::= `operator` op
@@ -549,20 +554,68 @@ namespace mimicpp::printing::type::parsing::v2
     {
         Transaction transaction{stream};
 
-        if (expect(stream, lexing::keyword{"operator"}))
+        if (!expect(stream, lexing::keyword{"operator"}))
         {
-            // simple operators are the ones that consist of just a single operator-token.
-            if (auto const* const op = peek_if<lexing::operator_or_punctuator>(stream);
-                op
-                && std::ranges::binary_search(detail::simpleOpCandidates, op->index(), {}, &lexing::operator_or_punctuator::index))
+            return std::nullopt;
+        }
+
+        if (auto const* const op = peek_if<lexing::operator_or_punctuator>(stream))
+        {
+            if (std::ranges::binary_search(detail::simpleOpCandidates, op->index(), {}, &lexing::operator_or_punctuator::index))
             {
-                state::OperatorFunctionId id{.op = *op};
+                state::OperatorFunctionId id{.symbol = *op};
                 stream.consume();
                 transaction.commit();
                 return id;
             }
 
-            // Todo: add rest
+            for (auto&& [first, second] : detail::doubleOpCandidates)
+            {
+                if (expect(stream, first)
+                    && expect(stream, second))
+                {
+                    state::OperatorFunctionId id{
+                        .symbol = std::array{first, second}
+                    };
+                    transaction.commit();
+                    return id;
+                }
+            }
+
+            return std::nullopt;
+        }
+
+        if (auto const* const op = peek_if<lexing::keyword>(stream))
+        {
+            if (lexing::keyword{"new"} == *op
+                || lexing::keyword{"delete"} == *op)
+            {
+                std::pair symbol{*op, false};
+                stream.consume();
+                transaction.commit();
+
+                if (Transaction inner{stream};
+                    expect(stream, lexing::operator_or_punctuator{"["})
+                    && expect(stream, lexing::operator_or_punctuator{"]"}))
+                {
+                    inner.commit();
+                    symbol.second = true;
+                }
+
+                return state::OperatorFunctionId{.symbol = symbol};
+            }
+
+            if (lexing::keyword{"co_await"} == *op)
+            {
+                state::OperatorFunctionId id{
+                    .symbol = std::pair{*op, false}
+                };
+                stream.consume();
+                transaction.commit();
+                return id;
+            }
+
+            return std::nullopt;
         }
 
         return std::nullopt;
