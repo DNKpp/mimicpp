@@ -157,8 +157,9 @@ namespace mimicpp::printing::type::parsing::v2
             }
         }
 
-        constexpr void visit(state::ConstantExpression const& /*expression*/)
+        constexpr void visit(state::ConstantExpression const& expression)
         {
+            m_OutIter = format::format_to(m_OutIter, "{}", expression.content);
         }
 
         constexpr void visit(state::Identifier const& id)
