@@ -9,7 +9,7 @@
 #pragma once
 
 #include "mimic++/config/Config.hpp"
-#include "mimic++/printing/type/NameLexer.hpp"
+#include "mimic++/printing/type/Lexer.hpp"
 #include "mimic++/printing/type/ParserState.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"

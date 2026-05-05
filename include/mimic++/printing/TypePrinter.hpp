@@ -7,7 +7,7 @@
 #define MIMICPP_PRINTING_TYPE_PRINTER_HPP
 
 #include "mimic++/printing/type/CommonTypes.hpp"
-#include "mimic++/printing/type/NameLexer.hpp"
+#include "mimic++/printing/type/Lexer.hpp"
 #include "mimic++/printing/type/Parser.hpp"
 #include "mimic++/printing/type/ParserState.hpp"
 #include "mimic++/printing/type/PrintType.hpp"
