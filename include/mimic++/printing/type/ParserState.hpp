@@ -152,6 +152,14 @@ namespace mimicpp::printing::type::parsing::v2::state
         friend bool operator==(OperatorFunctionId const&, OperatorFunctionId const&) = default;
     };
 
+    struct ConversionFunctionId
+    {
+        RecursiveState<TypeId> target;
+
+        [[nodiscard]]
+        friend bool operator==(ConversionFunctionId const&, ConversionFunctionId const&) = default;
+    };
+
     struct DestructorFunctionId
     {
         Identifier name;
@@ -165,6 +173,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         using Name = std::variant<
             Identifier,
             OperatorFunctionId,
+            ConversionFunctionId,
             DestructorFunctionId>;
         Name name{};
         std::optional<TemplateArgumentList> templateArgs{};

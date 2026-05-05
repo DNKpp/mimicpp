@@ -212,6 +212,12 @@ namespace mimicpp::printing::type::parsing::v2
     constexpr std::optional<state::FunctionDeclarator> parse_parameters_and_qualifiers(TokenStream& stream);
 
     [[nodiscard]]
+    constexpr std::optional<state::TypeId> parse_type_specifier_seq(TokenStream& stream);
+
+    [[nodiscard]]
+    constexpr std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream);
+
+    [[nodiscard]]
     constexpr std::optional<state::TypeId> parse_type_id(TokenStream& stream);
 
     // see: https://eel.is/c++draft/class.pre#nt:class-key
@@ -600,6 +606,35 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    // > conversion-function-id ::= `operator` conversion-type-id
+    // > conversion-type-id ::= type-specifier-seq ptr-operator*
+    // see: https://eel.is/c++draft/class.conv.fct#nt:conversion-function-id
+    [[nodiscard]]
+    constexpr std::optional<state::ConversionFunctionId> parse_conversion_function_id(TokenStream& stream)
+    {
+        StateGuard<state::TypeId> target{stream};
+
+        if (!expect(stream, lexing::keyword{"operator"}))
+        {
+            return std::nullopt;
+        }
+
+        std::optional base = parse_type_specifier_seq(stream);
+        if (!base)
+        {
+            return std::nullopt;
+        }
+
+        *target = *std::move(base);
+        while (std::optional op = parse_ptr_operator(stream))
+        {
+            target->declarator.root.decorations.emplace_back(*std::move(op));
+        }
+
+        return state::ConversionFunctionId{
+            .target = state::RecursiveState{*std::move(target).take()}};
+    }
+
     // This rule is part of the more general unqualified-id rule.
     // see: https://eel.is/c++draft/expr.prim.id.unqual#nt:unqualified-id
     [[nodiscard]]
@@ -624,6 +659,7 @@ namespace mimicpp::printing::type::parsing::v2
     // > unqualified-id ::= identifier
     // > unqualified-id ::= template-id
     // > unqualified-id ::= operator-function-id
+    // > unqualified-id ::= conversion-function-id
     // > unqualified-id ::= `~`type-name
     // but slightly rewritten
     //
@@ -639,6 +675,13 @@ namespace mimicpp::printing::type::parsing::v2
         if (std::optional dtor = parse_destructor_function_id(stream))
         {
             nestedId->name = *std::move(dtor);
+            return std::move(nestedId).take();
+        }
+
+        // A conversion-function cannot be templated
+        if (std::optional conv = parse_conversion_function_id(stream))
+        {
+            nestedId->name = *std::move(conv);
             return std::move(nestedId).take();
         }
 
@@ -667,6 +710,7 @@ namespace mimicpp::printing::type::parsing::v2
     // i.e., all parts that are terminated by a `::` token.
     // > unqualified-id ::= identifier template-clause? parameters-and-qualifiers? `::`
     // > unqualified-id ::= operator-function-id template-clause? parameters-and-qualifiers `::`
+    // > unqualified-id ::= conversion-function-id parameters-and-qualifiers `::`
     // > unqualified-id ::= destructor-function-id parameters-and-qualifiers `::`
     //
     // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
@@ -682,6 +726,12 @@ namespace mimicpp::printing::type::parsing::v2
         {
             requiresFunction = true;
             nestedId->name = *std::move(dtor);
+        }
+        // A conversion-function cannot be templated
+        else if (std::optional conv = parse_conversion_function_id(stream))
+        {
+            requiresFunction = true;
+            nestedId->name = *std::move(conv);
         }
         else
         {

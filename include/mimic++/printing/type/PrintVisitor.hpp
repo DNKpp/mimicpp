@@ -278,11 +278,6 @@ namespace mimicpp::printing::type::parsing::v2
             m_OutIter = format::format_to(std::move(m_OutIter), ">");
         }
 
-        constexpr void visit(state::DestructorFunctionId const& id)
-        {
-            m_OutIter = format::format_to(std::move(m_OutIter), "~{}", id.name.content);
-        }
-
         constexpr void visit(state::OperatorFunctionId const& id)
         {
             m_OutIter = format::format_to(std::move(m_OutIter), "operator");
@@ -306,6 +301,17 @@ namespace mimicpp::printing::type::parsing::v2
                             op.back().text());
                     }},
                 id.symbol);
+        }
+
+        constexpr void visit(state::ConversionFunctionId const& id)
+        {
+            m_OutIter = format::format_to(std::move(m_OutIter), "operator ");
+            visit(id.target);
+        }
+
+        constexpr void visit(state::DestructorFunctionId const& id)
+        {
+            m_OutIter = format::format_to(std::move(m_OutIter), "~{}", id.name.content);
         }
 
         constexpr void visit(state::UnqualifiedId const& nested)
