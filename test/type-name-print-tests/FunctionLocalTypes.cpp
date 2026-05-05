@@ -794,3 +794,159 @@ TEST_CASE(
         ss.str(),
         Catch::Matchers::Matches(scopePattern + "my_type"));
 }
+
+TEST_CASE(
+    "printing::type::prettify_type enhances type-names from the local scope.",
+    "[print][print::type]")
+{
+    static std::string const nullaryLambdaScopePattern = R"(<lambda\(\)>::)";
+    static std::string const lambdaScopePattern = R"(<lambda\(\.{3}\)>::)";
+    static std::string const testCaseScopePattern = R"(CATCH2_INTERNAL_TEST_\d+::)";
+    static std::string const callOpScopePattern = R"(operator\(\)::)";
+
+    std::ostringstream ss{};
+
+    SECTION("When local type is queried inside the current scope.")
+    {
+        struct my_type
+        {
+        };
+
+        std::string const rawName{printing::type::type_name<my_type>()};
+        CAPTURE(rawName);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            rawName);
+        CHECK_THAT(
+            std::move(ss).str(),
+            Catch::Matchers::Matches("(" + testCaseScopePattern + ")?my_type"));
+    }
+
+    SECTION("When local type is queried inside a lambda.")
+    {
+        std::invoke(
+            [&] {
+                struct my_type
+                {
+                };
+
+                std::string const rawName{printing::type::type_name<my_type>()};
+                CAPTURE(rawName);
+
+                printing::type::prettify_type(
+                    std::ostreambuf_iterator{ss},
+                    rawName);
+                CHECK_THAT(
+                    std::move(ss).str(),
+                    Catch::Matchers::Matches(
+                        "("
+                        + testCaseScopePattern
+                        + nullaryLambdaScopePattern
+                        //+ callOpScopePattern
+                        + ")?my_type"));
+            });
+    }
+
+    SECTION("When local type is queried inside a member-function.")
+    {
+        struct outer
+        {
+            void operator()(std::ostringstream& _ss) const
+            {
+                struct my_type
+                {
+                };
+
+                std::string const rawName{printing::type::type_name<my_type>()};
+                CAPTURE(rawName);
+
+                printing::type::prettify_type(
+                    std::ostreambuf_iterator{_ss},
+                    rawName);
+                CHECK_THAT(
+                    std::move(_ss).str(),
+                    Catch::Matchers::Matches(
+                        "("
+                        + testCaseScopePattern
+                        + "outer::"
+                        + callOpScopePattern
+                        + ")?my_type"));
+            }
+        };
+
+        outer{}(ss);
+    }
+
+    SECTION("When local type is queried inside a lambda with higher arity.")
+    {
+        int d1{};
+        int d2[1]{};
+        int* ptr = &d1;
+        std::invoke(
+            [](
+                std::ostringstream* _ss,
+                [[maybe_unused]] int&& ref,
+                [[maybe_unused]] int (&arrRef)[1],
+                [[maybe_unused]] int*& ptrRef) {
+                struct my_type
+                {
+                };
+
+                std::string const rawName{printing::type::type_name<my_type>()};
+                CAPTURE(rawName);
+
+                printing::type::prettify_type(
+                    std::ostreambuf_iterator{*_ss},
+                    rawName);
+                CHECK_THAT(
+                    std::move(*_ss).str(),
+                    Catch::Matchers::Matches(
+                        "("
+                        + testCaseScopePattern
+                        + lambdaScopePattern
+                        //+ callOpScopePattern
+                        + ")?my_type"));
+            },
+            &ss,
+            std::move(d1),
+            d2,
+            ptr);
+    }
+
+    SECTION("When local type is queried inside a nested-lambda with higher arity.")
+    {
+        std::invoke(
+            [](std::ostringstream* _ss) {
+                struct other_type
+                {
+                };
+
+                std::invoke(
+                    [&]([[maybe_unused]] other_type const& dummy) {
+                        struct my_type
+                        {
+                        };
+
+                        std::string const rawName{printing::type::type_name<my_type>()};
+                        CAPTURE(rawName);
+
+                        printing::type::prettify_type(
+                            std::ostreambuf_iterator{*_ss},
+                            rawName);
+                        CHECK_THAT(
+                            std::move(*_ss).str(),
+                            Catch::Matchers::Matches(
+                                "("
+                                + testCaseScopePattern
+                                + lambdaScopePattern
+                                //+ callOpScopePattern
+                                + lambdaScopePattern
+                                //+ callOpScopePattern
+                                + ")?my_type"));
+                    },
+                    other_type{});
+            },
+            &ss);
+    }
+}
