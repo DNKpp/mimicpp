@@ -239,7 +239,7 @@ namespace mimicpp::printing::type::parsing::v2
             join(
                 declarator.params,
                 ", ",
-                [this](auto const& arg) { visit(arg); });
+                [&](auto const& arg) { visit(arg); });
             --m_NestedDepth;
             m_OutIter = format::format_to(std::move(m_OutIter), ")");
 
@@ -270,7 +270,7 @@ namespace mimicpp::printing::type::parsing::v2
                 ", ",
                 [this](auto const& arg) {
                     std::visit(
-                        [this](auto const& inner) { visit(inner); },
+                        [&](auto const& inner) { visit(inner); },
                         arg);
                 });
             --m_NestedDepth;
@@ -317,7 +317,7 @@ namespace mimicpp::printing::type::parsing::v2
         constexpr void visit(state::UnqualifiedId const& nested)
         {
             std::visit(
-                [this](auto const& inner) { visit(inner); },
+                [&](auto const& inner) { visit(inner); },
                 nested.name);
 
             if (nested.templateArgs)
@@ -376,7 +376,7 @@ namespace mimicpp::printing::type::parsing::v2
             for (auto const& decoration : declarator.decorations)
             {
                 std::visit(
-                    [this](auto const& inner) { visit(inner); },
+                    [&](auto const& inner) { visit(inner); },
                     decoration);
             }
 
@@ -394,7 +394,7 @@ namespace mimicpp::printing::type::parsing::v2
 
             std::ranges::for_each(
                 declarator.arrays,
-                [this](auto const& arr) { visit(arr); });
+                [&](auto const& arr) { visit(arr); });
         }
 
         template <std::ranges::forward_range Range>
