@@ -399,21 +399,20 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
      * \brief State stringification occurs when an object's type is transformed into a textual representation.
      * \details Type stringification requires special care in C++,
      * as there is no portable way to print types exactly as users would write them in code.
-     * To address this, ``mimic++`` introduces the ``print_type<T>`` function,
+     * To address this, *mimic++* introduces the `print_type<T>` function,
      * which internally removes much of the extraneous noise that arises from various standard implementations.
      *
-     * Furthermore, ``mimic++`` aims to present the majority of types in a manner that closely resembles how users would write them.
+     * Furthermore, *mimic++* aims to present the majority of types in a manner that closely resembles how users would write them.
      * For class types, this is achievable with some additional text manipulation;
      * however, there is no way to determine whether users used the actual class name or an alias.
-     * For example, ``std::string`` is actually the type ``std::basic_string<char, std::char_traits<char>, std::allocator<char>>``,
+     * For example, `std::string` is actually the type `std::basic_string<char, std::char_traits<char>, std::allocator<char>>`,
      * which introduces a significant amount of noise.
      *
-     * Since it is common for users to write ``std::string`` rather than using the ``std::basic_string`` template form,
-     * ``mimic++`` specifically handles these common types and will always print ``std::string`` when the exact long form is detected.
+     * Since it is common for users to write `std::string` rather than using the `std::basic_string` template form,
+     * *mimic++* specifically handles these common types and will always print `std::string` when the exact long form is detected.
      *
      * However, there are dozens of template types in the STL and even more in user code; and mimic++ strives to handle them correctly.
-     * When the name of a template type is requested, ``mimic++`` examines each of its arguments recursively and
-     * even folds all default arguments.
+     * When the name of a template type is requested, *mimic++* examines each of its arguments recursively and even folds all default arguments.
      *
      * For example, the type
      * ```cpp
@@ -423,21 +422,19 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
      *     std::less<int>,
      *     std::allocator<std::pair<int const, std::vector<float, std::allocator<float>>>>>
      * ```
-     * will be printed as ``std::map<int, std::vector<float>>`` which is likely how users have written it.
+     * will be printed as `std::map<int, std::vector<float>>` which is likely how users have written it.
      *
      * ### Customize type-stringification
      *
-     * ``mimic++`` automatically converts every type into a meaningful textual representation,
-     * but users may sometimes want to customize this process.
-     * Users can create a specialization of  ``mimicpp::custom::TypePrinter`` for their any type, which will then be
-     * prioritized over the internal conversions.
+     * *mimic++* automatically converts every type into a meaningful textual representation, but users may sometimes want to customize this process.
+     * Users can create a specialization of  `mimicpp::custom::TypePrinter` for their any type, which will then be prioritized over the internal conversions.
      *
      * Consider the following type.
      * \snippet CustomPrinter.cpp my_type
      * Users can then create a specialization as follows:
      * \snippet CustomPrinter.cpp my_type type-printer
      *
-     * When the name of the (potentially cv-ref qualified) ``my_type`` is requested via ``print_type``, that specification will be used:
+     * When the name of the (potentially cv-ref qualified) `my_type` is requested via `print_type`, that specification will be used:
      * \snippet CustomPrinter.cpp my_type type-print
      *
      *\{
