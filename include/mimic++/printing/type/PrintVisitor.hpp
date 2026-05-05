@@ -196,6 +196,15 @@ namespace mimicpp::printing::type::parsing::v2
                     m_OutIter = format::format_to(std::move(m_OutIter), "{}{}{}", prefix, args, suffix);
                     return;
                 }
+
+                // These synthetic lambda-ids will be generated on clang:
+                if (constexpr std::string_view prefix{"(lambda at "}, suffix{")"};
+                    id.content.starts_with(prefix)
+                    && id.content.ends_with(suffix))
+                {
+                    m_OutIter = format::format_to(std::move(m_OutIter), "<lambda()>");
+                    return;
+                }
             }
 
             m_OutIter = format::format_to(std::move(m_OutIter), "{}", id.content);
