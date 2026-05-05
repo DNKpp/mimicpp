@@ -165,19 +165,9 @@ namespace mimicpp::printing::type
     }
 
     template <print_iterator OutIter>
-    constexpr OutIter prettify_function(OutIter out, std::string_view /*name*/)
+    constexpr OutIter prettify_function(OutIter out, std::string_view const name)
     {
-        /*name = detail::remove_template_details(std::move(name));
-
-        static_assert(parsing::parser_visitor<PrintVisitor<OutIter>>);
-
-        PrintVisitor visitor{std::move(out)};
-        parsing::NameParser parser{std::ref(visitor), name};
-        parser.parse_function();
-
-        return visitor.out();*/
-
-        return out;
+        return format::format_to(std::move(out), "{}", name);
     }
 }
 
