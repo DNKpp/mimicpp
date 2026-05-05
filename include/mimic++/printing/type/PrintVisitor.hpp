@@ -245,6 +245,7 @@ namespace mimicpp::printing::type::parsing::v2
             join(
                 declarator.params,
                 ", ",
+                "",
                 [&](auto const& arg) { visit(arg); });
             --m_NestedDepth;
             m_OutIter = format::format_to(std::move(m_OutIter), ")");
@@ -274,6 +275,7 @@ namespace mimicpp::printing::type::parsing::v2
             join(
                 args,
                 ", ",
+                "",
                 [this](auto const& arg) {
                     std::visit(
                         [&](auto const& inner) { visit(inner); },
@@ -366,8 +368,8 @@ namespace mimicpp::printing::type::parsing::v2
             join(
                 printableScopes,
                 "::",
+                "::",
                 [&](auto const& scope) { visit(scope); });
-            m_OutIter = format::format_to(std::move(m_OutIter), "::");
             --m_NestedDepth;
         }
 
@@ -407,6 +409,7 @@ namespace mimicpp::printing::type::parsing::v2
         constexpr void join(
             Range&& range,
             std::string_view const separator,
+            std::string_view const terminator,
             std::invocable<std::ranges::range_reference_t<Range>> auto action)
         {
             if (std::ranges::subrange elements{range})
@@ -417,6 +420,8 @@ namespace mimicpp::printing::type::parsing::v2
                     m_OutIter = format::format_to(std::move(m_OutIter), "{}", separator);
                     std::invoke(action, element);
                 }
+
+                m_OutIter = format::format_to(std::move(m_OutIter), "{}", terminator);
             }
         }
     };
