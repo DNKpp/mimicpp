@@ -696,16 +696,15 @@ namespace mimicpp::printing::type::parsing::v2
             return std::move(nestedId).take();
         }
 
-        // A conversion-function cannot be templated
-        if (std::optional conv = parse_conversion_function_id(stream))
-        {
-            nestedId->name = *std::move(conv);
-            return std::move(nestedId).take();
-        }
-
         if (std::optional op = parse_operator_function_id(stream))
         {
             nestedId->name = *std::move(op);
+        }
+        // A conversion-function cannot be templated
+        else if (std::optional conv = parse_conversion_function_id(stream))
+        {
+            nestedId->name = *std::move(conv);
+            return std::move(nestedId).take();
         }
         else if (std::optional id = parse_identifier(stream))
         {
@@ -739,11 +738,24 @@ namespace mimicpp::printing::type::parsing::v2
         StateGuard<state::UnqualifiedId> nestedId{stream};
         bool requiresFunction{false};
 
+        auto const parseTemplate = [&] {
+            if (std::optional templateArgs = parse_template_clause(stream))
+            {
+                nestedId->templateArgs = *std::move(templateArgs);
+            }
+        };
+
         // A destructor cannot be templated
         if (std::optional dtor = parse_destructor_function_id(stream))
         {
             requiresFunction = true;
             nestedId->name = *std::move(dtor);
+        }
+        else if (std::optional op = parse_operator_function_id(stream))
+        {
+            requiresFunction = true;
+            nestedId->name = *std::move(op);
+            parseTemplate();
         }
         // A conversion-function cannot be templated
         else if (std::optional conv = parse_conversion_function_id(stream))
@@ -751,26 +763,14 @@ namespace mimicpp::printing::type::parsing::v2
             requiresFunction = true;
             nestedId->name = *std::move(conv);
         }
+        else if (std::optional id = parse_identifier(stream))
+        {
+            nestedId->name = *std::move(id);
+            parseTemplate();
+        }
         else
         {
-            if (std::optional op = parse_operator_function_id(stream))
-            {
-                requiresFunction = true;
-                nestedId->name = *std::move(op);
-            }
-            else if (std::optional id = parse_identifier(stream))
-            {
-                nestedId->name = *std::move(id);
-            }
-            else
-            {
-                return std::nullopt;
-            }
-
-            if (std::optional templateArgs = parse_template_clause(stream))
-            {
-                nestedId->templateArgs = *std::move(templateArgs);
-            }
+            return std::nullopt;
         }
 
         if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
