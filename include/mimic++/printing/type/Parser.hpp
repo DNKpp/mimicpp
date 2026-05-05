@@ -306,6 +306,35 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         inline constexpr std::array placeholderWrapCandidates = make_placeholder_wrap_candidates();
+
+        [[nodiscard]]
+        constexpr char const* find_end_token(TokenStream& stream, lexing::operator_or_punctuator const open, lexing::operator_or_punctuator const close)
+        {
+            while (!stream.is_eof())
+            {
+                if (auto const* const cur = std::get_if<lexing::operator_or_punctuator>(&stream.peek().classification))
+                {
+                    if (open == *cur)
+                    {
+                        stream.consume();
+                        std::ignore = find_end_token(stream, open, close);
+                        continue;
+                    }
+                    else if (close == *cur)
+                    {
+                        auto const* const end = stream.peek().content.data() + stream.peek().content.size();
+                        stream.consume();
+
+                        return end;
+                    }
+                }
+
+                // silently skip anything between open and close token.
+                stream.consume();
+            }
+
+            return nullptr;
+        }
     }
 
     // This is not directly reflected in the standard, but each ecosystem has their own specific kind of representing
@@ -334,22 +363,11 @@ namespace mimicpp::printing::type::parsing::v2
 
         stream.consume();
 
-        while (!stream.is_eof())
+        // This recursively searches for a matching `close` token, while handling nested `open close` token-ranges.
+        if (auto const* const end = detail::find_end_token(stream, iter->open, iter->close))
         {
-            if (auto const* const cur = std::get_if<lexing::operator_or_punctuator>(&stream.peek().classification);
-                cur
-                && iter->close == *cur)
-            {
-                id->content = {
-                    begin.content.data(),
-                    stream.peek().content.data() + stream.peek().content.size()};
-                stream.consume();
-
-                return std::move(id).take();
-            }
-
-            // silently skip anything between open and close token.
-            stream.consume();
+            id->content = {begin.content.data(), end};
+            return std::move(id).take();
         }
 
         return std::nullopt;
