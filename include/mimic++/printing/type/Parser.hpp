@@ -1052,30 +1052,38 @@ namespace mimicpp::printing::type::parsing::v2
 
             if (auto const* const keyword = peek_if<lexing::keyword>(stream))
             {
-                if (std::optional const cv = parse_cv_qualifier(stream);
-                    cv
-                    && typeId->qualifications.apply(*cv))
+                if (std::optional const cv = parse_cv_qualifier(stream))
                 {
+                    if (!typeId->qualifications.apply(*cv))
+                    {
+                        break;
+                    }
+
                     transaction.commit();
                     continue;
                 }
 
-                if (std::ranges::binary_search(detail::builtinTypeCandidates, keyword->index(), {}, &lexing::keyword::index)
-                    && !qualifiedType
-                    && (builtinType ? *builtinType : builtinType.emplace()).try_apply(*keyword))
+                if (!qualifiedType
+                    && std::ranges::binary_search(detail::builtinTypeCandidates, keyword->index(), {}, &lexing::keyword::index))
                 {
+                    if (!(builtinType ? *builtinType : builtinType.emplace()).try_apply(*keyword))
+                    {
+                        break;
+                    }
+
                     stream.consume();
                     transaction.commit();
                     continue;
                 }
             }
-            else if (std::optional qualifiedId = parse_qualified_id(stream);
-                     qualifiedId
-                     && !qualifiedType)
+            else if (!qualifiedType && !builtinType)
             {
-                qualifiedType = std::move(qualifiedId);
-                transaction.commit();
-                continue;
+                if (std::optional qualifiedId = parse_qualified_id(stream))
+                {
+                    qualifiedType = std::move(qualifiedId);
+                    transaction.commit();
+                    continue;
+                }
             }
 
             break;
