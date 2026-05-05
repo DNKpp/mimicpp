@@ -162,13 +162,19 @@ namespace mimicpp::printing::type::parsing::v2
             m_OutIter = format::format_to(m_OutIter, "{}", expression.content);
         }
 
+        static constexpr std::array syntheticAliases = std::to_array<std::pair<std::string_view, std::string_view>>({
+            {"{anonymous}",           "{anon-ns}"},
+            {"(anonymous namespace)", "{anon-ns}"},
+        });
+
         constexpr void visit(state::Identifier const& id)
         {
             if (id.isSynthetic)
             {
-                if ("{anonymous}" == id.content)
+                if (auto const iter = std::ranges::find(syntheticAliases, id.content, [](auto const& e) { return e.first; });
+                    iter != syntheticAliases.cend())
                 {
-                    m_OutIter = format::format_to(std::move(m_OutIter), "{{anon-ns}}");
+                    m_OutIter = format::format_to(std::move(m_OutIter), "{}", iter->second);
                     return;
                 }
 

@@ -296,6 +296,7 @@ namespace mimicpp::printing::type::parsing::v2
             std::array raw = {
                 PlaceholderWrapCandidate{.open = op{"{"}, .close = op{"}"}},
                 PlaceholderWrapCandidate{.open = op{"<"}, .close = op{">"}},
+                PlaceholderWrapCandidate{.open = op{"("}, .close = op{")"}},
             };
 
             constexpr auto projection = [](auto const& e) { return e.open.index(); };
