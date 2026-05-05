@@ -184,10 +184,11 @@ TEST_CASE(
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                testing::anonNsScopePattern
-                + R"(special_operators::)"
+                "("
+                + testing::anonNsScopePattern
+                + "special_operators::"
                 + expectedFunctionName
-                + "::my_type"));
+                + "::)?my_type"));
     }
 
     SECTION("When nested ordering operator is used.")
@@ -207,12 +208,13 @@ TEST_CASE(
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                testing::anonNsScopePattern
-                + R"(special_operators::)"
+                "("
+                + testing::anonNsScopePattern
+                + "special_operators::"
                 + expectedFunctionName
                 + "::my_type::"
                 + expectedNestedFunctionName
-                + "::my_type"));
+                + "::)?my_type"));
     }
 
     SECTION("When spaceship-operator is used.")
@@ -226,9 +228,10 @@ TEST_CASE(
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(
-                testing::anonNsScopePattern
+                "("
+                + testing::anonNsScopePattern
                 + "special_operators::"
-                + R"(operator\s?<=>::)"
+                + R"(operator\s?<=>::)?)"
                 + "my_type"));
     }
 }
@@ -248,7 +251,7 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const scopePattern = testing::anonNsScopePattern + "special_operators::" + R"(operator\s?\(\)::)";
+        std::string const scopePattern = "(" + testing::anonNsScopePattern + "special_operators::" + R"(operator\(\)::)?)";
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(scopePattern + "my_type"));
@@ -263,10 +266,10 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const returnPattern = testing::anonNsScopePattern + R"(special_operators::operator\s?\(\)::my_type)";
+        std::string const returnPattern = "(" + testing::anonNsScopePattern + R"(special_operators::operator\(\)::)?my_type)";
         std::string const scopePattern = testing::anonNsScopePattern + "special_operators::";
         std::string const argListPattern = R"(\(int\))";
-        std::string const funSuffixPattern = R"(\s?const)";
+        std::string const funSuffixPattern = R"( const)";
 
         CHECK_THAT(
             ss.str(),
@@ -293,7 +296,7 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const scopePattern = testing::anonNsScopePattern + "special_operators::" + R"(operator\s?\[\]::)";
+        std::string const scopePattern = "(" + testing::anonNsScopePattern + "special_operators::" + R"(operator\[\]::)?)";
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(scopePattern + "my_type"));
@@ -308,10 +311,10 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const returnPattern = testing::anonNsScopePattern + R"(special_operators::operator\s?\[\]::my_type)";
+        std::string const returnPattern = "(" + testing::anonNsScopePattern + R"(special_operators::operator\[\]::)?my_type)";
         std::string const scopePattern = testing::anonNsScopePattern + "special_operators::";
         std::string const argListPattern = R"(\(int\))";
-        std::string const funSuffixPattern = R"(\s?const)";
+        std::string const funSuffixPattern = R"( const)";
 
         CHECK_THAT(
             ss.str(),

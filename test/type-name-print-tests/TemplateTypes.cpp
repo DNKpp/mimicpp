@@ -279,7 +279,7 @@ TEMPLATE_LIST_TEST_CASE(
 
         std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_template::my_type const\s?&, mimicpp::util::SourceLocation\s?\*\))";
         std::string const ptrPattern = "\\(" + testing::anonNsScopePattern + "my_template::\\*" + suffixPattern + "\\)";
-        std::string const returnTypePattern = testing::anonNsScopePattern + "my_template::bar::bar_type";
+        std::string const returnTypePattern = "(" + testing::anonNsScopePattern + "my_template::bar::)?bar_type";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
@@ -297,7 +297,7 @@ TEMPLATE_LIST_TEST_CASE(
 
         std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_variadic_template::my_type const\s?&, mimicpp::util::SourceLocation\s?\*\))";
         std::string const ptrPattern = "\\(" + testing::anonNsScopePattern + "my_variadic_template::\\*" + suffixPattern + "\\)";
-        std::string const returnTypePattern = testing::anonNsScopePattern + "my_variadic_template::bar::bar_type";
+        std::string const returnTypePattern = "(" + testing::anonNsScopePattern + "my_variadic_template::bar::)?bar_type";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
@@ -315,7 +315,7 @@ TEMPLATE_LIST_TEST_CASE(
 
         std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_variadic_template::my_type const\s?&, mimicpp::util::SourceLocation\s?\*\))";
         std::string const ptrPattern = "\\(" + testing::anonNsScopePattern + "my_variadic_template::\\*" + suffixPattern + "\\)";
-        std::string const returnTypePattern = testing::anonNsScopePattern + "my_variadic_template::bar::bar_type";
+        std::string const returnTypePattern = "(" + testing::anonNsScopePattern + "my_variadic_template::bar::)?bar_type";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
