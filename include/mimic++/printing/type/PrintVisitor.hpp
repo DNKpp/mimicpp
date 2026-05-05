@@ -338,9 +338,27 @@ namespace mimicpp::printing::type::parsing::v2
                 m_OutIter = format::format_to(std::move(m_OutIter), "::");
             }
 
+            // Do not print that additional noise like e.g. `__cxx11` from gcc and clang.
+            auto printableScopes =
+                sequence.scopes
+                | std::views::filter([](state::UnqualifiedId const& scope) {
+                      if (scope.templateArgs
+                          || scope.functionDeclarator)
+                      {
+                          return true;
+                      }
+
+                      if (auto const* const id = std::get_if<state::Identifier>(&scope.name))
+                      {
+                          return id->content != "__cxx11";
+                      }
+
+                      return true;
+                  });
+
             ++m_NestedDepth;
             join(
-                sequence.scopes,
+                printableScopes,
                 "::",
                 [&](auto const& scope) { visit(scope); });
             m_OutIter = format::format_to(std::move(m_OutIter), "::");
