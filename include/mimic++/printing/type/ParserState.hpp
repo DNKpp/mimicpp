@@ -11,11 +11,11 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/printing/type/Lexer.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
+#include "mimic++/utilities/CopyableBox.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <array>
     #include <functional>
-    #include <memory>
     #include <optional>
     #include <utility>
     #include <variant>
@@ -27,46 +27,20 @@ namespace mimicpp::printing::type::parsing::v2::state
     struct TypeId;
 
     template <typename T>
-    struct RecursiveState
+    class RecursiveState
+        : public util::CopyableBox<T>
     {
     public:
-        ~RecursiveState() noexcept = default;
+        using util::CopyableBox<T>::CopyableBox;
 
-        [[nodiscard]]
-        RecursiveState(RecursiveState const&) = default;
-        RecursiveState& operator=(RecursiveState const&) = default;
-
-        [[nodiscard]]
-        RecursiveState(RecursiveState&&) = default;
-        RecursiveState& operator=(RecursiveState&&) = default;
-
-        [[nodiscard]]
-        explicit RecursiveState(T inner)
-            : m_inner{std::make_shared<T>(std::move(inner))}
-        {
-        }
-
-        [[nodiscard]]
-        T& get() noexcept
-        {
-            return *m_inner;
-        }
-
-        [[nodiscard]]
-        T const& get() const noexcept
-        {
-            return *m_inner;
-        }
-
-        [[nodiscard]]
-        friend bool operator==(RecursiveState const& lhs, RecursiveState const& rhs)
-        {
-            return lhs.get() == rhs.get();
-        }
-
-    private:
-        std::shared_ptr<T> m_inner{};
+        constexpr ~RecursiveState();
     };
+
+    template <typename T>
+    RecursiveState(T) -> RecursiveState<T>;
+
+    template <typename T>
+    RecursiveState(RecursiveState<T>) -> RecursiveState<T>;
 
     enum ClassKey
     {
@@ -87,7 +61,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isVolatile{false};
 
         [[nodiscard]]
-        friend bool operator==(CVQualifierSeq const&, CVQualifierSeq const&) = default;
+        constexpr bool operator==(CVQualifierSeq const&) const;
 
         [[nodiscard]]
         constexpr bool apply(CVQualifier const qualifier) noexcept
@@ -120,7 +94,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isSynthetic{false};
 
         [[nodiscard]]
-        friend bool operator==(Identifier const&, Identifier const&) = default;
+        constexpr bool operator==(Identifier const&) const;
     };
 
     struct FunctionDeclarator
@@ -131,7 +105,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isNoexcept{false};
 
         [[nodiscard]]
-        friend bool operator==(FunctionDeclarator const&, FunctionDeclarator const&) = default;
+        constexpr bool operator==(FunctionDeclarator const&) const;
     };
 
     using TemplateArgument = std::variant<
@@ -149,7 +123,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Symbol symbol;
 
         [[nodiscard]]
-        friend bool operator==(OperatorFunctionId const&, OperatorFunctionId const&) = default;
+        constexpr bool operator==(OperatorFunctionId const&) const;
     };
 
     struct ConversionFunctionId
@@ -157,7 +131,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         RecursiveState<TypeId> target;
 
         [[nodiscard]]
-        friend bool operator==(ConversionFunctionId const&, ConversionFunctionId const&) = default;
+        constexpr bool operator==(ConversionFunctionId const&) const;
     };
 
     struct DestructorFunctionId
@@ -165,7 +139,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Identifier name;
 
         [[nodiscard]]
-        friend bool operator==(DestructorFunctionId const&, DestructorFunctionId const&) = default;
+        constexpr bool operator==(DestructorFunctionId const&) const;
     };
 
     struct UnqualifiedId
@@ -180,7 +154,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<FunctionDeclarator> functionDeclarator{};
 
         [[nodiscard]]
-        friend bool operator==(UnqualifiedId const&, UnqualifiedId const&) = default;
+        constexpr bool operator==(UnqualifiedId const&) const;
     };
 
     // This models more or less: https://eel.is/c++draft/expr.prim.id.qual#nt:nested-name-specifier
@@ -190,7 +164,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::vector<UnqualifiedId> scopes{};
 
         [[nodiscard]]
-        friend bool operator==(ScopeSequence const&, ScopeSequence const&) = default;
+        constexpr bool operator==(ScopeSequence const&) const;
     };
 
     // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
@@ -200,7 +174,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         UnqualifiedId identifier{};
 
         [[nodiscard]]
-        friend bool operator==(QualifiedId const&, QualifiedId const&) = default;
+        constexpr bool operator==(QualifiedId const&) const;
     };
 
     struct ArrayDeclarator
@@ -208,7 +182,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<ConstantExpression> size{};
 
         [[nodiscard]]
-        friend bool operator==(ArrayDeclarator const&, ArrayDeclarator const&) = default;
+        constexpr bool operator==(ArrayDeclarator const&) const;
     };
 
     struct PointerDeclarator
@@ -217,7 +191,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<ScopeSequence> scopes{};
 
         [[nodiscard]]
-        friend bool operator==(PointerDeclarator const&, PointerDeclarator const&) = default;
+        constexpr bool operator==(PointerDeclarator const&) const;
     };
 
     struct ReferenceDeclarator
@@ -225,7 +199,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         RefQualifier qualifier{};
 
         [[nodiscard]]
-        friend bool operator==(ReferenceDeclarator const&, ReferenceDeclarator const&) = default;
+        constexpr bool operator==(ReferenceDeclarator const&) const;
     };
 
     using PtrOperator = std::variant<
@@ -242,13 +216,13 @@ namespace mimicpp::printing::type::parsing::v2::state
             std::vector<ArrayDeclarator> arrays{};
 
             [[nodiscard]]
-            friend bool operator==(Layer const&, Layer const&) = default;
+            constexpr bool operator==(Layer const&) const;
         };
 
         Layer root{};
 
         [[nodiscard]]
-        friend bool operator==(AbstractDeclarator const&, AbstractDeclarator const&) = default;
+        constexpr bool operator==(AbstractDeclarator const&) const;
     };
 
     struct BuiltinType
@@ -281,7 +255,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         }
 
         [[nodiscard]]
-        friend bool operator==(BuiltinType const&, BuiltinType const&) = default;
+        constexpr bool operator==(BuiltinType const&) const;
 
     private:
         [[nodiscard]]
@@ -372,8 +346,27 @@ namespace mimicpp::printing::type::parsing::v2::state
         AbstractDeclarator declarator{};
 
         [[nodiscard]]
-        friend bool operator==(TypeId const&, TypeId const&) = default;
+        constexpr bool operator==(TypeId const&) const = default;
     };
+
+    template <typename T>
+    constexpr RecursiveState<T>::~RecursiveState() = default;
+
+    constexpr bool CVQualifierSeq::operator==(CVQualifierSeq const&) const = default;
+    constexpr bool Identifier::operator==(Identifier const&) const = default;
+    constexpr bool FunctionDeclarator::operator==(FunctionDeclarator const&) const = default;
+    constexpr bool OperatorFunctionId::operator==(OperatorFunctionId const&) const = default;
+    constexpr bool ConversionFunctionId::operator==(ConversionFunctionId const&) const = default;
+    constexpr bool DestructorFunctionId::operator==(DestructorFunctionId const&) const = default;
+    constexpr bool UnqualifiedId::operator==(UnqualifiedId const&) const = default;
+    constexpr bool ScopeSequence::operator==(ScopeSequence const&) const = default;
+    constexpr bool QualifiedId::operator==(QualifiedId const&) const = default;
+    constexpr bool ArrayDeclarator::operator==(ArrayDeclarator const&) const = default;
+    constexpr bool PointerDeclarator::operator==(PointerDeclarator const&) const = default;
+    constexpr bool ReferenceDeclarator::operator==(ReferenceDeclarator const&) const = default;
+    constexpr bool AbstractDeclarator::Layer::operator==(Layer const&) const = default;
+    constexpr bool AbstractDeclarator::operator==(AbstractDeclarator const&) const = default;
+    constexpr bool BuiltinType::operator==(BuiltinType const&) const = default;
 }
 
 #endif

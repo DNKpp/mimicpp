@@ -54,7 +54,7 @@ namespace mimicpp::printing::type::parsing::v2
         template <typename State>
         constexpr void visit(state::RecursiveState<State> const& state)
         {
-            visit(state.get());
+            visit(*state);
         }
 
         constexpr void visit(state::BuiltinType::SignedSpec const spec)
@@ -414,7 +414,7 @@ namespace mimicpp::printing::type::parsing::v2
             if (declarator.nested)
             {
                 m_OutIter = format::format_to(std::move(m_OutIter), "(");
-                visit(declarator.nested->get());
+                visit(*declarator.nested);
                 m_OutIter = format::format_to(std::move(m_OutIter), ")");
             }
 
