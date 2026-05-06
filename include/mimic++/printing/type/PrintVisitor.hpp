@@ -52,7 +52,7 @@ namespace mimicpp::printing::type::parsing::v2
         int m_NestedDepth{0};
 
         template <typename State>
-        constexpr void visit(state::RecursiveState<State> const& state)
+        constexpr void visit(state::Recursive<State> const& state)
         {
             visit(*state);
         }

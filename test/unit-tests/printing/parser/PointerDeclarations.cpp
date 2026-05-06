@@ -244,7 +244,7 @@ TEST_CASE(
     CHECK(expectedCV == id->qualifications);
     CHECK_THAT(id->base, variant_equals(expectedType));
     state::AbstractDeclarator::Layer const expected{
-        .nested = state::RecursiveState{state::AbstractDeclarator::Layer{.decorations = {expectedPtrDecoration}}},
+        .nested = state::Recursive{state::AbstractDeclarator::Layer{.decorations = {expectedPtrDecoration}}},
         .arrays = arrayDeclarators};
     CHECK(expected == id->declarator.root);
 }
@@ -281,7 +281,7 @@ TEST_CASE(
     CHECK(expectedCV == id->qualifications);
     CHECK_THAT(id->base, variant_equals(expectedType));
     state::AbstractDeclarator::Layer const expected{
-        .nested = state::RecursiveState{state::AbstractDeclarator::Layer{.decorations = {expectedFirstPtrDecoration, expectedSecondPtrDecoration}}},
+        .nested = state::Recursive{state::AbstractDeclarator::Layer{.decorations = {expectedFirstPtrDecoration, expectedSecondPtrDecoration}}},
         .arrays = arrayDeclarators};
     CHECK(expected == id->declarator.root);
 }

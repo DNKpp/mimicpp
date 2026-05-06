@@ -61,7 +61,7 @@ TEST_CASE(
                 state::UnqualifiedId{.name = state::Identifier{.content = "foo"}},
                 state::UnqualifiedId{
                     .name = state::ConversionFunctionId{
-                        .target = state::RecursiveState{state::TypeId{.base = state::BuiltinType{lexing::keyword{"int"}}}}},
+                        .target = state::Recursive{state::TypeId{.base = state::BuiltinType{lexing::keyword{"int"}}}}},
                     .functionDeclarator{std::in_place}}}},
         .identifier = state::UnqualifiedId{.name = state::Identifier{.content = "bar"}}};
     CHECK_THAT(id->base, variant_equals(expected));
@@ -94,7 +94,7 @@ TEST_CASE(
                 state::UnqualifiedId{.name = state::Identifier{.content = "foo"}},
                 state::UnqualifiedId{
                     .name = state::ConversionFunctionId{
-                        .target = state::RecursiveState{state::TypeId{
+                        .target = state::Recursive{state::TypeId{
                             .qualifications = expectedCV,
                             .base = state::BuiltinType{lexing::keyword{"int"}},
                             .declarator = {.root = {.decorations = {expectedFirstLvlDecoration, expectedSecondLvlDecoration}}}}}},
@@ -126,7 +126,7 @@ TEST_CASE(
                 state::UnqualifiedId{.name = state::Identifier{.content = "foo"}},
                 state::UnqualifiedId{
                     .name = state::ConversionFunctionId{
-                        .target = state::RecursiveState{state::TypeId{
+                        .target = state::Recursive{state::TypeId{
                             .base = state::QualifiedId{
                                 .scopes = {.explicitRoot = true, .scopes = {{.name = state::Identifier{"_test_"}}}},
                                 .identifier = state::UnqualifiedId{.name = state::Identifier{"foo123"}}}}}},

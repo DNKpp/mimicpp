@@ -137,7 +137,7 @@ TEST_CASE(
         {QId{.scopes = {.explicitRoot = true}, .identifier = {.name = Id{"foo"}}},                                                                "::foo"   },
         {QId{.scopes = {.scopes = {UId{Id{"bar"}}}}, .identifier = {.name = Id{"foo"}}},                                                          "bar::foo"},
         {QId{.identifier = {.name = Id{"foo"}, .templateArgs{std::in_place, 0u}}},                                                                "foo<>"   },
-        {QId{.identifier = {.name = Id{"foo"}, .templateArgs = {{state::RecursiveState{state::TypeId{.base = state::BuiltinType{KW{"int"}}}}}}}}, "foo<int>"},
+        {QId{.identifier = {.name = Id{"foo"}, .templateArgs = {{state::Recursive{state::TypeId{.base = state::BuiltinType{KW{"int"}}}}}}}}, "foo<int>"},
     }));
 
     SECTION("When a plain return-type is given.")
@@ -253,7 +253,7 @@ TEST_CASE(
     CHECK(expectedCV == id->qualifications);
     CHECK_THAT(id->base, variant_equals(expectedType));
     state::AbstractDeclarator::Layer const expected{
-        .nested = state::RecursiveState{state::AbstractDeclarator::Layer{
+        .nested = state::Recursive{state::AbstractDeclarator::Layer{
             .decorations = {expectedPtrDecoration},
             .function = state::FunctionDeclarator{}}},
         .arrays = arrayDeclarators};
@@ -279,30 +279,30 @@ TEST_CASE(
     state::FunctionDeclarator const functionDeclarator{
         .params = {
                    // `int const long&`
-            state::RecursiveState{
+            state::Recursive{
                 state::TypeId{
                     .qualifications{.isConst = true},
                     .base = state::BuiltinType{.base = lexing::keyword{"int"}, .sizeSpec = state::BuiltinType::SizeSpec::id_long},
                     .declarator = {.root = {.decorations = {state::ReferenceDeclarator{state::RefQualifier::id_ref}}}}}},
 
                    // `foo<short, unsigned> &&`
-            state::RecursiveState{
+            state::Recursive{
                 state::TypeId{
                     .base = state::QualifiedId{
                         .identifier = {
                             .name = {state::Identifier{"foo"}},
                             .templateArgs = {
-                                {state::RecursiveState{state::TypeId{.base = state::BuiltinType{.sizeSpec = state::BuiltinType::SizeSpec::id_short}}},
-                                 state::RecursiveState{state::TypeId{.base = state::BuiltinType{.signedSpec = state::BuiltinType::SignedSpec::id_unsigned}}}}}}},
+                                {state::Recursive{state::TypeId{.base = state::BuiltinType{.sizeSpec = state::BuiltinType::SizeSpec::id_short}}},
+                                 state::Recursive{state::TypeId{.base = state::BuiltinType{.signedSpec = state::BuiltinType::SignedSpec::id_unsigned}}}}}}},
                     .declarator = {.root = {.decorations = {state::ReferenceDeclarator{state::RefQualifier::id_refref}}}}}},
 
                    // `char (* const)[][1337]`
-            state::RecursiveState{[] {
+            state::Recursive{[] {
                 return state::TypeId{
                     .base = state::BuiltinType{.base = lexing::keyword{"char"}},
                     .declarator = {
                         .root = {
-                            .nested = state::RecursiveState{
+                            .nested = state::Recursive{
                                 state::AbstractDeclarator::Layer{
                                     .decorations = {state::PointerDeclarator{.qualifiers = state::CVQualifierSeq{.isConst = true}}}}},
                             .arrays = {state::ArrayDeclarator{}, state::ArrayDeclarator{.size = state::ConstantExpression{"1337"}}}}}};
@@ -345,7 +345,7 @@ TEST_CASE(
 
     // clang-format off
     state::AbstractDeclarator::Layer const expected{
-        .nested = state::RecursiveState{
+        .nested = state::Recursive{
             state::AbstractDeclarator::Layer{
                 .decorations = {state::PointerDeclarator{}}}},
         .function = state::FunctionDeclarator{
@@ -387,7 +387,7 @@ TEST_CASE(
 
     // clang-format off
     state::AbstractDeclarator::Layer const expected{
-        .nested = state::RecursiveState{
+        .nested = state::Recursive{
             state::AbstractDeclarator::Layer{
                 .decorations = {state::PointerDeclarator{.scopes = expectedScopes}}}},
         .function = state::FunctionDeclarator{

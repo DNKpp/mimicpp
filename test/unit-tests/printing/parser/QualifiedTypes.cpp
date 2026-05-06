@@ -110,12 +110,12 @@ TEST_CASE(
     "[print][print::type]")
 {
     static constexpr auto make_builtin = [](lexing::keyword const& keyword) -> state::TemplateArgument {
-        return state::RecursiveState{
+        return state::Recursive{
             state::TypeId{.base = state::BuiltinType{keyword}}};
     };
 
     static constexpr auto make_type = [](lexing::identifier const& id) -> state::TemplateArgument {
-        return state::RecursiveState{
+        return state::Recursive{
             state::TypeId{.base = state::QualifiedId{.identifier = {.name = state::Identifier{id.content}}}}};
     };
 
@@ -170,7 +170,7 @@ TEST_CASE(
     using ID = state::Identifier;
     using KW = lexing::keyword;
     using UId = state::UnqualifiedId;
-    using Rec = state::RecursiveState<state::TypeId>;
+    using Rec = state::Recursive<state::TypeId>;
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
         {{.scopes = {UId{.name = ID{"tmp"}, .templateArgs = {{Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}}, "tmp<int>"     },
         {{.explicitRoot = true, .scopes = {UId{.name = ID{"tmp"}, .templateArgs{std::in_place}}}},                                    "::tmp<>"      },
@@ -219,7 +219,7 @@ TEST_CASE(
     using ID = state::Identifier;
     using KW = lexing::keyword;
     using UId = state::UnqualifiedId;
-    using Rec = state::RecursiveState<state::TypeId>;
+    using Rec = state::Recursive<state::TypeId>;
 
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({

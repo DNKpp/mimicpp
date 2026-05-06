@@ -395,7 +395,7 @@ namespace mimicpp::printing::type::parsing::v2
     {
         if (std::optional type = parse_type_id(stream))
         {
-            return {state::RecursiveState{*std::move(type)}};
+            return {state::Recursive{*std::move(type)}};
         }
         /*
          * template-argument:
@@ -651,7 +651,7 @@ namespace mimicpp::printing::type::parsing::v2
         }
 
         return state::ConversionFunctionId{
-            .target = state::RecursiveState{*std::move(target).take()}};
+            .target = state::Recursive{*std::move(target).take()}};
     }
 
     // This rule is part of the more general unqualified-id rule.
@@ -972,7 +972,7 @@ namespace mimicpp::printing::type::parsing::v2
         declarator->isNoexcept = expect(stream, lexing::keyword{"noexcept"}).has_value();
 
         auto input = *std::move(clause)
-                   | std::views::transform([](state::TypeId& id) { return state::RecursiveState{std::move(id)}; });
+                   | std::views::transform([](state::TypeId& id) { return state::Recursive{std::move(id)}; });
         declarator->params.insert(declarator->params.end(), input.begin(), input.end());
 
         return {std::move(declarator).take()};

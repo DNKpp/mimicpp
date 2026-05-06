@@ -27,20 +27,20 @@ namespace mimicpp::printing::type::parsing::v2::state
     struct TypeId;
 
     template <typename T>
-    class RecursiveState
+    class Recursive
         : public util::CopyableBox<T>
     {
     public:
         using util::CopyableBox<T>::CopyableBox;
 
-        constexpr ~RecursiveState();
+        constexpr ~Recursive();
     };
 
     template <typename T>
-    RecursiveState(T) -> RecursiveState<T>;
+    Recursive(T) -> Recursive<T>;
 
     template <typename T>
-    RecursiveState(RecursiveState<T>) -> RecursiveState<T>;
+    Recursive(Recursive<T>) -> Recursive<T>;
 
     enum ClassKey
     {
@@ -99,7 +99,7 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     struct FunctionDeclarator
     {
-        std::vector<RecursiveState<TypeId>> params{};
+        std::vector<Recursive<TypeId>> params{};
         CVQualifierSeq qualifiers{};
         std::optional<RefQualifier> refQualifier{};
         bool isNoexcept{false};
@@ -110,7 +110,7 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     using TemplateArgument = std::variant<
         ConstantExpression,
-        RecursiveState<TypeId>>;
+        Recursive<TypeId>>;
 
     using TemplateArgumentList = std::vector<TemplateArgument>;
 
@@ -128,7 +128,7 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     struct ConversionFunctionId
     {
-        RecursiveState<TypeId> target;
+        Recursive<TypeId> target;
 
         [[nodiscard]]
         constexpr bool operator==(ConversionFunctionId const&) const;
@@ -211,7 +211,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         struct Layer
         {
             std::vector<PtrOperator> decorations{};
-            std::optional<RecursiveState<Layer>> nested{};
+            std::optional<Recursive<Layer>> nested{};
             std::optional<FunctionDeclarator> function{};
             std::vector<ArrayDeclarator> arrays{};
 
@@ -350,7 +350,7 @@ namespace mimicpp::printing::type::parsing::v2::state
     };
 
     template <typename T>
-    constexpr RecursiveState<T>::~RecursiveState() = default;
+    constexpr Recursive<T>::~Recursive() = default;
 
     constexpr bool CVQualifierSeq::operator==(CVQualifierSeq const&) const = default;
     constexpr bool Identifier::operator==(Identifier const&) const = default;
