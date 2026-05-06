@@ -11,7 +11,10 @@ add_subdirectory(compile-errors)
 option(MIMICPP_ENABLE_UNIT_TESTS "Determines, whether the unit-tests shall be built." ON)
 if (MIMICPP_ENABLE_UNIT_TESTS)
     add_subdirectory(unit-tests)
-    add_subdirectory(type-name-print-tests)
+
+    if (MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES)
+        add_subdirectory(type-name-print-tests)
+    endif ()
 endif ()
 
 if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)
