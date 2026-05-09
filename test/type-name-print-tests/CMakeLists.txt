@@ -7,6 +7,7 @@ set(TARGET_NAME mimicpp-type-name-print-tests)
 
 add_executable(${TARGET_NAME}
     "BuiltinTypes.cpp"
+    "FunctionIdentifiers.cpp"
     "FunctionLocalTypes.cpp"
     "FunctionPtrTypes.cpp"
     "OperatorLocalTypes.cpp"

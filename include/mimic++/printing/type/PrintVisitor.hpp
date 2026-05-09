@@ -47,6 +47,17 @@ namespace mimicpp::printing::type::parsing::v2
             visit(typeId.declarator.root);
         }
 
+        constexpr void visit(state::FunctionId const& functionId)
+        {
+            if (functionId.returnType)
+            {
+                visit(*functionId.returnType);
+                m_OutIter = format::format_to(std::move(m_OutIter), " ");
+            }
+
+            visit(functionId.identifier);
+        }
+
     private:
         OutIter m_OutIter;
         int m_NestedDepth{0};
@@ -219,6 +230,20 @@ namespace mimicpp::printing::type::parsing::v2
                     m_OutIter = format::format_to(std::move(m_OutIter), "<unnamed {}>", classType);
                     return;
                 }
+
+                // These synthetic ids will be generated on clang as well.
+                if (constexpr std::string_view prefix{"(anonymous "}, suffix{")"};
+                    id.content.starts_with(prefix)
+                    && id.content.ends_with(suffix))
+                {
+                    std::string_view classType = id.content;
+                    classType.remove_prefix(prefix.size());
+                    classType.remove_suffix(suffix.size());
+                    classType = classType.substr(0, classType.find(" at "));
+
+                    m_OutIter = format::format_to(std::move(m_OutIter), "<unnamed {}>", classType);
+                    return;
+                }
             }
 
             m_OutIter = format::format_to(std::move(m_OutIter), "{}", id.content);
@@ -264,13 +289,21 @@ namespace mimicpp::printing::type::parsing::v2
             }
 
             m_OutIter = format::format_to(std::move(m_OutIter), "(");
-            ++m_NestedDepth;
-            join(
-                declarator.params,
-                ", ",
-                "",
-                [&](auto const& arg) { visit(arg); });
-            --m_NestedDepth;
+
+            // Sometimes params just contain a single (`ret (void)`), which will be suppressed.
+            constexpr state::TypeId voidTypeId{.base = state::BuiltinType{.base = lexing::keyword{"void"}}};
+            if (1u != declarator.params.size()
+                || voidTypeId != declarator.params.front())
+            {
+                ++m_NestedDepth;
+                join(
+                    declarator.params,
+                    ", ",
+                    "",
+                    [&](auto const& arg) { visit(arg); });
+                --m_NestedDepth;
+            }
+
             m_OutIter = format::format_to(std::move(m_OutIter), ")");
 
             visit(declarator.qualifiers);

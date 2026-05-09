@@ -8,7 +8,6 @@ target_sources(${TARGET_NAME} PRIVATE
     "Format.cpp"
     "PathPrinter.cpp"
     "StatePrinter.cpp"
-    "FunctionTypePostProcessing.cpp"
     "TypePrinter.cpp"
     "TypeNameLexer.cpp"
 )

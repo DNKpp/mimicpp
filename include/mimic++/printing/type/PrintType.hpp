@@ -140,33 +140,17 @@ namespace mimicpp::printing::type
         return format::format_to(std::move(out), "{}", name);
     }
 
-    namespace detail
-    {
-        [[nodiscard]]
-        constexpr std::string_view remove_template_details(std::string_view const name)
-        {
-            if (name.ends_with(']'))
-            {
-                auto rest = name | std::views::reverse | std::views::drop(1);
-                if (auto const closingIter = util::find_closing_token(rest, ']', '[');
-                    closingIter != rest.end())
-                {
-                    auto const end = std::ranges::find_if_not(
-                        closingIter + 1,
-                        rest.end(),
-                        lexing::is_space);
-
-                    return std::string_view{name.begin(), end.base()};
-                }
-            }
-
-            return name;
-        }
-    }
-
     template <print_iterator OutIter>
     constexpr OutIter prettify_function(OutIter out, std::string_view const name)
     {
+        if (std::optional const functionId = parse_function(name))
+        {
+            parsing::v2::PrintVisitor<OutIter> visitor{std::move(out)};
+            visitor.visit(*functionId);
+
+            return visitor.out();
+        }
+
         return format::format_to(std::move(out), "{}", name);
     }
 }

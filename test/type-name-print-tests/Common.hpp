@@ -14,11 +14,18 @@
 namespace mimicpp::testing
 {
     inline std::string const anonNsScopePattern = R"(\{anon-ns\}::)";
+    inline std::string const anonTypePattern = "<unnamed (class|struct|enum)>";
 
     [[nodiscard, maybe_unused]]
     inline std::string maybe_pattern(std::string const& pattern)
     {
         return "(:?" + pattern + ")?";
+    }
+
+    [[nodiscard, maybe_unused]]
+    std::string alternative_pattern(std::string const& first, auto const&... alts)
+    {
+        return "(:?" + first + (("|" + alts) + ...) + ")";
     }
 
     [[nodiscard, maybe_unused]]

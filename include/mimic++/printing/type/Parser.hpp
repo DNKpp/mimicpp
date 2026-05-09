@@ -1053,6 +1053,15 @@ namespace mimicpp::printing::type::parsing::v2
 
             if (auto const* const keyword = peek_if<lexing::keyword>(stream))
             {
+                // just silently ignore any linkage keyword.
+                if (lexing::keyword{"static"} == *keyword
+                    || lexing::keyword{"constexpr"} == *keyword)
+                {
+                    stream.consume();
+                    transaction.commit();
+                    continue;
+                }
+
                 if (std::optional const cv = parse_cv_qualifier(stream))
                 {
                     if (!typeId->qualifications.apply(*cv))
@@ -1127,6 +1136,37 @@ namespace mimicpp::printing::type::parsing::v2
 
         return std::move(id).take();
     }
+
+    [[nodiscard]]
+    constexpr std::optional<state::FunctionId> parse_function(TokenStream& stream)
+    {
+        StateGuard<state::FunctionId> id{stream};
+        if (std::optional returnType = parse_type_id(stream))
+        {
+            if (std::optional identifier = parse_qualified_id(stream))
+            {
+                if (std::optional declarator = parse_parameters_and_qualifiers(stream))
+                {
+                    id->returnType = std::move(returnType);
+                    id->identifier = *std::move(identifier);
+                    id->identifier.identifier.functionDeclarator = *std::move(declarator);
+
+                    return std::move(id).take();
+                }
+            }
+            // Well, sometimes there is no return-type given, but the parsed identifier actually is the function-id.
+            // E.g., `<lambda()>`
+            // This is a workaround!
+            else if (auto* const qualifiedId = std::get_if<state::QualifiedId>(&returnType->base))
+            {
+                id->identifier = std::move(*qualifiedId);
+
+                return std::move(id).take();
+            }
+        }
+
+        return std::nullopt;
+    }
 }
 
 namespace mimicpp::printing::type
@@ -1140,6 +1180,24 @@ namespace mimicpp::printing::type
             && stream.is_eof())
         {
             return typeId;
+        }
+
+        return std::nullopt;
+    }
+
+    constexpr std::optional<parsing::v2::state::FunctionId> parse_function(std::string_view const text)
+    {
+        lexing::NameLexer lexer{text};
+        parsing::v2::TokenStream stream{lexer};
+        if (std::optional functionId = parsing::v2::parse_function(stream))
+        {
+            if (stream.is_eof()
+                // Sometimes certain template details are added in separate square-brackets
+                || (text.ends_with(']')
+                    && parsing::v2::expect(stream, lexing::operator_or_punctuator{"["})))
+            {
+                return functionId;
+            }
         }
 
         return std::nullopt;

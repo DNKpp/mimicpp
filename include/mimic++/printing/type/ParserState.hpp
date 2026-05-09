@@ -349,6 +349,15 @@ namespace mimicpp::printing::type::parsing::v2::state
         constexpr bool operator==(TypeId const&) const = default;
     };
 
+    struct FunctionId
+    {
+        std::optional<TypeId> returnType{};
+        QualifiedId identifier{};
+
+        [[nodiscard]]
+        constexpr bool operator==(FunctionId const&) const = default;
+    };
+
     template <typename T>
     constexpr Recursive<T>::~Recursive() = default;
 
