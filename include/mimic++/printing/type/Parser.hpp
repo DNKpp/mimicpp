@@ -16,6 +16,7 @@
 #include "mimic++/utilities/PassKey.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <algorithm>
     #include <optional>
     #include <span>
     #include <utility>
@@ -967,9 +968,11 @@ namespace mimicpp::printing::type::parsing::v2
         declarator->refQualifier = parse_ref_qualifier(stream);
         declarator->isNoexcept = expect(stream, lexing::keyword{"noexcept"}).has_value();
 
-        auto input = *std::move(clause)
-                   | std::views::transform([](state::TypeId& id) { return state::Recursive{std::move(id)}; });
-        declarator->params.insert(declarator->params.end(), input.begin(), input.end());
+        declarator->params.reserve(clause->size());
+        std::ranges::transform(
+            *clause,
+            std::back_inserter(declarator->params),
+            [](state::TypeId& id) { return state::Recursive{std::move(id)}; });
 
         return {std::move(declarator).take()};
     }

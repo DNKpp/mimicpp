@@ -136,7 +136,7 @@ TEST_CASE(
         {QId{.identifier = {.name = Id{"foo"}}},                                                                                                  "foo"     },
         {QId{.scopes = {.explicitRoot = true}, .identifier = {.name = Id{"foo"}}},                                                                "::foo"   },
         {QId{.scopes = {.scopes = {UId{Id{"bar"}}}}, .identifier = {.name = Id{"foo"}}},                                                          "bar::foo"},
-        {QId{.identifier = {.name = Id{"foo"}, .templateArgs{std::in_place, 0u}}},                                                                "foo<>"   },
+        {QId{.identifier = {.name = Id{"foo"}, .templateArgs = state::TemplateArgumentList{}}},                                              "foo<>"   },
         {QId{.identifier = {.name = Id{"foo"}, .templateArgs = {{state::Recursive{state::TypeId{.base = state::BuiltinType{KW{"int"}}}}}}}}, "foo<int>"},
     }));
 
@@ -370,7 +370,7 @@ TEST_CASE(
     }));
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
         {state::ScopeSequence{.explicitRoot = true, .scopes = {state::UnqualifiedId{.name = ID{"foo"}}}},             "::foo"},
-        {state::ScopeSequence{.scopes = {state::UnqualifiedId{.name = ID{"foo"}, .templateArgs{std::in_place, 0u}}}}, "foo<>"},
+        {state::ScopeSequence{.scopes = {state::UnqualifiedId{.name = ID{"foo"}, .templateArgs = state::TemplateArgumentList{}}}}, "foo<>"},
     }));
 
     std::string const input = "void (" + scopeText + "::*)()" + cvText + refText + " " + noexceptText;

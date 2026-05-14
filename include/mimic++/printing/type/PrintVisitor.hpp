@@ -281,7 +281,7 @@ namespace mimicpp::printing::type::parsing::v2
             m_OutIter = format::format_to(std::move(m_OutIter), "]");
         }
 
-        constexpr void visit(state::FunctionDeclarator const& declarator)
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES void visit(state::FunctionDeclarator const& declarator)
         {
             if (0 < m_NestedDepth)
             {
@@ -291,7 +291,7 @@ namespace mimicpp::printing::type::parsing::v2
             m_OutIter = format::format_to(std::move(m_OutIter), "(");
 
             // Sometimes params just contain a single (`ret (void)`), which will be suppressed.
-            constexpr state::TypeId voidTypeId{.base = state::BuiltinType{.base = lexing::keyword{"void"}}};
+            state::TypeId const voidTypeId{.base = state::BuiltinType{.base = lexing::keyword{"void"}}};
             if (1u != declarator.params.size()
                 || voidTypeId != declarator.params.front())
             {

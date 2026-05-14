@@ -73,7 +73,7 @@ TEST_CASE(
                     state::UnqualifiedId{.name = state::Identifier{.content = "foo"}},
                     state::UnqualifiedId{
                         .name = state::OperatorFunctionId{.symbol = lexing::operator_or_punctuator{symbol}},
-                        .functionDeclarator{std::in_place}}}},
+                        .functionDeclarator = state::FunctionDeclarator{}}}},
             .identifier = state::UnqualifiedId{.name = state::Identifier{.content = "bar"}}};
         CHECK_THAT(id->base, variant_equals(expected));
     }
@@ -102,7 +102,7 @@ TEST_CASE(
                     state::UnqualifiedId{.name = state::Identifier{.content = "foo"}},
                     state::UnqualifiedId{
                         .name = state::OperatorFunctionId{.symbol = expectedOps},
-                        .functionDeclarator{std::in_place}}}},
+                        .functionDeclarator = state::FunctionDeclarator{}}}},
             .identifier = state::UnqualifiedId{.name = state::Identifier{.content = "bar"}}};
         CHECK_THAT(id->base, variant_equals(expected));
     }
@@ -130,7 +130,7 @@ TEST_CASE(
                     state::UnqualifiedId{.name = state::Identifier{.content = "foo"}},
                     state::UnqualifiedId{
                         .name = state::OperatorFunctionId{.symbol = std::pair{lexing::keyword{symbol}, false}},
-                        .functionDeclarator{std::in_place}}}},
+                        .functionDeclarator = state::FunctionDeclarator{}}}},
             .identifier = state::UnqualifiedId{.name = state::Identifier{.content = "bar"}}};
         CHECK_THAT(id->base, variant_equals(expected));
     }
@@ -157,7 +157,7 @@ TEST_CASE(
                     state::UnqualifiedId{.name = state::Identifier{.content = "foo"}},
                     state::UnqualifiedId{
                         .name = state::OperatorFunctionId{.symbol = std::pair{lexing::keyword{symbol}, true}},
-                        .functionDeclarator{std::in_place}}}},
+                        .functionDeclarator = state::FunctionDeclarator{}}}},
             .identifier = state::UnqualifiedId{.name = state::Identifier{.content = "bar"}}};
         CHECK_THAT(id->base, variant_equals(expected));
     }

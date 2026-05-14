@@ -100,9 +100,16 @@ namespace
     };
 }
 
+// The `__builtin_FUNCTION` function generates more unreliable names.
+#ifdef MIMICPP_DETAIL_HAS_SOURCE_LOCATION
+    #define PRETTIFY_FUNCTION_SOURCE_LOCATION_FUNCTION_SHOULDFAIL
+#else
+    #define PRETTIFY_FUNCTION_SOURCE_LOCATION_FUNCTION_SHOULDFAIL "[!shouldfail]"
+#endif
+
 TEST_CASE(
     "printing::type::prettify_function enhances std::source_location::function_name appearance.",
-    "[print][print::type]")
+    PRETTIFY_FUNCTION_SOURCE_LOCATION_FUNCTION_SHOULDFAIL "[print][print::type]")
 {
     std::ostringstream ss{};
 
@@ -115,7 +122,7 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
-        REQUIRE_THAT(
+        CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches("void " + testCasePattern + R"(\(\))"));
     }

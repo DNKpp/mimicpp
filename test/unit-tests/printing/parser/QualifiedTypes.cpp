@@ -173,8 +173,8 @@ TEST_CASE(
     using Rec = state::Recursive<state::TypeId>;
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
         {{.scopes = {UId{.name = ID{"tmp"}, .templateArgs = {{Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}}, "tmp<int>"     },
-        {{.explicitRoot = true, .scopes = {UId{.name = ID{"tmp"}, .templateArgs{std::in_place}}}},                                    "::tmp<>"      },
-        {{.scopes = {UId{.name = ID{"tmp"}, .templateArgs{std::in_place}}, UId{.name = ID{"tmp2"}, .templateArgs{std::in_place}}}},   "tmp<>::tmp2<>"},
+        {{.explicitRoot = true, .scopes = {UId{.name = ID{"tmp"}, .templateArgs = state::TemplateArgumentList{}}}},                                                   "::tmp<>"      },
+        {{.scopes = {UId{.name = ID{"tmp"}, .templateArgs = state::TemplateArgumentList{}}, UId{.name = ID{"tmp2"}, .templateArgs = state::TemplateArgumentList{}}}}, "tmp<>::tmp2<>"},
     }));
     CAPTURE(type, scopeText);
 
@@ -224,8 +224,8 @@ TEST_CASE(
     std::string const type = GENERATE("foo", "_123", "foo456", "const_", "_const");
     auto const [expectedScopes, scopeText] = GENERATE((table<state::ScopeSequence, std::string>)({
         {{.scopes = {UId{.name = ID{"tmp"}, .functionDeclarator = state::FunctionDeclarator{.params = {Rec{state::TypeId{.base = state::BuiltinType{.base = KW{"int"}}}}}}}}}, "tmp(int)"     },
-        {{.explicitRoot = true, .scopes = {UId{.name = ID{"tmp"}, .functionDeclarator{std::in_place}}}},                                                                       "::tmp()"      },
-        {{.scopes = {UId{.name = ID{"tmp"}, .functionDeclarator{std::in_place}}, UId{.name = ID{"tmp2"}, .functionDeclarator{std::in_place}}}},                                "tmp()::tmp2()"},
+        {{.explicitRoot = true, .scopes = {UId{.name = ID{"tmp"}, .functionDeclarator = state::FunctionDeclarator{}}}},                                                        "::tmp()"      },
+        {{.scopes = {UId{.name = ID{"tmp"}, .functionDeclarator = state::FunctionDeclarator{}}, UId{.name = ID{"tmp2"}, .functionDeclarator = state::FunctionDeclarator{}}}},  "tmp()::tmp2()"},
     }));
     CAPTURE(type, scopeText);
 

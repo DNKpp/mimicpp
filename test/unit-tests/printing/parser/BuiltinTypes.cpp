@@ -385,7 +385,9 @@ TEST_CASE(
 
         CHECK(!id->qualifications.isConst);
         CHECK(!id->qualifications.isVolatile);
-        CHECK_THAT(id->base, variant_equals(state::BuiltinType{.base{type}}));
+        CHECK_THAT(
+            id->base,
+            variant_equals(state::BuiltinType{.base = lexing::keyword{type}}));
     }
 
     SECTION("When they are provided with arbitrary cv qualification.")
@@ -398,7 +400,9 @@ TEST_CASE(
         REQUIRE(id);
 
         CHECK(expectedCV == id->qualifications);
-        CHECK_THAT(id->base, variant_equals(state::BuiltinType{.base{type}}));
+        CHECK_THAT(
+            id->base,
+            variant_equals(state::BuiltinType{.base = lexing::keyword{type}}));
     }
 }
 
