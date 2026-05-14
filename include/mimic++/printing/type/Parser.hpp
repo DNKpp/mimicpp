@@ -1159,6 +1159,7 @@ namespace mimicpp::printing::type::parsing::v2
             else if (auto* const qualifiedId = std::get_if<state::QualifiedId>(&returnType->base))
             {
                 id->identifier = std::move(*qualifiedId);
+                id->identifier.identifier.functionDeclarator = std::move(returnType->declarator.root.function);
 
                 return std::move(id).take();
             }
