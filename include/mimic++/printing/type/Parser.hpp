@@ -30,7 +30,7 @@ namespace mimicpp::printing::type::parsing::v2
     {
     public:
         [[nodiscard]]
-        explicit constexpr TokenStream(lexing::NameLexer& lexer) noexcept
+        explicit MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES TokenStream(lexing::NameLexer& lexer) noexcept
         {
             while (!std::holds_alternative<lexing::end>(lexer.peek().classification))
             {
@@ -47,14 +47,14 @@ namespace mimicpp::printing::type::parsing::v2
         [[nodiscard]]
         constexpr bool is_eof() const noexcept
         {
-            return m_Index == m_Tokens.size() - 1;
+            return m_Index == std::ranges::size(m_Tokens) - 1u;
         }
 
         [[nodiscard]]
         constexpr lexing::token const& peek() const
         {
-            MIMICPP_ASSERT(m_Index < m_Tokens.size(), "Stream is at end.");
-            return m_Tokens[m_Index];
+            MIMICPP_ASSERT(m_Index < std::ranges::size(m_Tokens), "Stream is at end.");
+            return std::span{m_Tokens}[m_Index];
         }
 
         constexpr void consume()
@@ -77,10 +77,6 @@ namespace mimicpp::printing::type::parsing::v2
     private:
         std::vector<lexing::token> m_Tokens;
         std::size_t m_Index{};
-    };
-
-    class Context
-    {
     };
 
     class Transaction
@@ -209,16 +205,16 @@ namespace mimicpp::printing::type::parsing::v2
     }
 
     [[nodiscard]]
-    constexpr std::optional<state::FunctionDeclarator> parse_parameters_and_qualifiers(TokenStream& stream);
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::FunctionDeclarator> parse_parameters_and_qualifiers(TokenStream& stream);
 
     [[nodiscard]]
-    constexpr std::optional<state::TypeId> parse_type_specifier_seq(TokenStream& stream);
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TypeId> parse_type_specifier_seq(TokenStream& stream);
 
     [[nodiscard]]
-    constexpr std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream);
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream);
 
     [[nodiscard]]
-    constexpr std::optional<state::TypeId> parse_type_id(TokenStream& stream);
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TypeId> parse_type_id(TokenStream& stream);
 
     // see: https://eel.is/c++draft/class.pre#nt:class-key
     [[nodiscard]]
@@ -391,7 +387,7 @@ namespace mimicpp::printing::type::parsing::v2
 
     // see: https://eel.is/c++draft/temp.names#nt:template-argument
     [[nodiscard]]
-    constexpr std::optional<state::TemplateArgument> parse_template_argument(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TemplateArgument> parse_template_argument(TokenStream& stream)
     {
         if (std::optional type = parse_type_id(stream))
         {
@@ -409,7 +405,7 @@ namespace mimicpp::printing::type::parsing::v2
 
     // see: https://eel.is/c++draft/temp.names#nt:template-argument-list
     [[nodiscard]]
-    constexpr std::optional<state::TemplateArgumentList> parse_template_argument_list(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TemplateArgumentList> parse_template_argument_list(TokenStream& stream)
     {
         std::optional first = parse_template_argument(stream);
         if (!first)
@@ -442,7 +438,7 @@ namespace mimicpp::printing::type::parsing::v2
     // > template-arg-list ::= `<` `>`
     // > template-arg-list ::= `<` template-argument (`,` template-argument)* `>`
     [[nodiscard]]
-    constexpr std::optional<state::TemplateArgumentList> parse_template_clause(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TemplateArgumentList> parse_template_clause(TokenStream& stream)
     {
         StateGuard<state::TemplateArgumentList> args{stream};
 
@@ -488,7 +484,7 @@ namespace mimicpp::printing::type::parsing::v2
     // see: https://eel.is/c++draft/dcl.decl.general#nt:cv-qualifier-seq
     // This is a simplified version of the general grammar because there are in fact just two possible qualifications.
     [[nodiscard]]
-    constexpr std::optional<state::CVQualifierSeq> parse_cv_qualifier_seq(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::CVQualifierSeq> parse_cv_qualifier_seq(TokenStream& stream)
     {
         bool isSet{false};
         state::CVQualifierSeq qualifiers{};
@@ -554,7 +550,7 @@ namespace mimicpp::printing::type::parsing::v2
     // unqualified-id ::= `operator` op
     // see:: https://eel.is/c++draft/over.oper.general#nt:operator
     [[nodiscard]]
-    constexpr std::optional<state::OperatorFunctionId> parse_operator_function_id(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::OperatorFunctionId> parse_operator_function_id(TokenStream& stream)
     {
         Transaction transaction{stream};
 
@@ -629,7 +625,7 @@ namespace mimicpp::printing::type::parsing::v2
     // > conversion-type-id ::= type-specifier-seq ptr-operator*
     // see: https://eel.is/c++draft/class.conv.fct#nt:conversion-function-id
     [[nodiscard]]
-    constexpr std::optional<state::ConversionFunctionId> parse_conversion_function_id(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::ConversionFunctionId> parse_conversion_function_id(TokenStream& stream)
     {
         StateGuard<state::TypeId> target{stream};
 
@@ -657,7 +653,7 @@ namespace mimicpp::printing::type::parsing::v2
     // This rule is part of the more general unqualified-id rule.
     // see: https://eel.is/c++draft/expr.prim.id.unqual#nt:unqualified-id
     [[nodiscard]]
-    constexpr std::optional<state::DestructorFunctionId> parse_destructor_function_id(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::DestructorFunctionId> parse_destructor_function_id(TokenStream& stream)
     {
         StateGuard<state::DestructorFunctionId> identifier{stream};
 
@@ -686,7 +682,7 @@ namespace mimicpp::printing::type::parsing::v2
     // > unqualified-id ::= literal-operator-id
     // > unqualified-id ::= `~`computed-type-specifier
     [[nodiscard]]
-    constexpr std::optional<state::UnqualifiedId> parse_unqualified_id(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::UnqualifiedId> parse_unqualified_id(TokenStream& stream)
     {
         StateGuard<state::UnqualifiedId> nestedId{stream};
 
@@ -734,7 +730,7 @@ namespace mimicpp::printing::type::parsing::v2
     // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
     // but rather an extension due to real-life requirements.
     [[nodiscard]]
-    constexpr std::optional<state::UnqualifiedId> parse_nested_id(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::UnqualifiedId> parse_nested_id(TokenStream& stream)
     {
         StateGuard<state::UnqualifiedId> nestedId{stream};
         bool requiresFunction{false};
@@ -809,7 +805,7 @@ namespace mimicpp::printing::type::parsing::v2
     // > computed-type-specifier `::`
     // > splice-scope-specifier `::`
     [[nodiscard]]
-    constexpr std::optional<state::ScopeSequence> parse_nested_name_specifier(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::ScopeSequence> parse_nested_name_specifier(TokenStream& stream)
     {
         StateGuard<state::ScopeSequence> scopes{stream};
         scopes->explicitRoot = expect(stream, lexing::operator_or_punctuator{"::"}).has_value();
@@ -840,7 +836,7 @@ namespace mimicpp::printing::type::parsing::v2
     // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
     // > qualified-id ::= nested-name-specifier? unqualified-id
     [[nodiscard]]
-    constexpr std::optional<state::QualifiedId> parse_qualified_id(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::QualifiedId> parse_qualified_id(TokenStream& stream)
     {
         StateGuard<state::QualifiedId> id{stream};
 
@@ -861,7 +857,7 @@ namespace mimicpp::printing::type::parsing::v2
     // see: https://eel.is/c++draft/dcl.decl.general#nt:ptr-operator
     // note: fully ignores `attribute-specifier-seq`
     [[nodiscard]]
-    constexpr std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::PtrOperator> parse_ptr_operator(TokenStream& stream)
     {
         // > ptr-operator ::= `&`
         // > ptr-operator ::= `&&`
@@ -905,7 +901,7 @@ namespace mimicpp::printing::type::parsing::v2
 
     // see: https://eel.is/c++draft/dcl.fct#nt:parameter-declaration
     // `attribute-specifier-seq`, `decl-specifier-seq` and `this` are ignored.
-    constexpr std::optional<state::TypeId> parse_parameter_declaration(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TypeId> parse_parameter_declaration(TokenStream& stream)
     {
         // This is just a very naive approach; does this hold?
         return parse_type_id(stream);
@@ -915,7 +911,7 @@ namespace mimicpp::printing::type::parsing::v2
     // and https://eel.is/c++draft/dcl.fct#nt:parameter-declaration-list
     // The `...` is fully ignored.
     [[nodiscard]]
-    constexpr std::optional<std::vector<state::TypeId>> parse_parameter_declaration_clause(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<std::vector<state::TypeId>> parse_parameter_declaration_clause(TokenStream& stream)
     {
         StateGuard<std::vector<state::TypeId>> params{stream};
 
@@ -943,7 +939,7 @@ namespace mimicpp::printing::type::parsing::v2
     // see: https://eel.is/c++draft/dcl.decl.general#nt:parameters-and-qualifiers
     // `attribute-specifier-seq` is ignored
     [[nodiscard]]
-    constexpr std::optional<state::FunctionDeclarator> parse_parameters_and_qualifiers(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::FunctionDeclarator> parse_parameters_and_qualifiers(TokenStream& stream)
     {
         StateGuard<state::FunctionDeclarator> declarator{stream};
 
@@ -979,7 +975,7 @@ namespace mimicpp::printing::type::parsing::v2
     }
 
     [[nodiscard]]
-    constexpr std::optional<state::AbstractDeclarator> parse_abstract_declarator(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::AbstractDeclarator> parse_abstract_declarator(TokenStream& stream)
     {
         StateGuard<state::AbstractDeclarator> declarator{stream};
         auto& root = declarator->root;
@@ -1041,7 +1037,7 @@ namespace mimicpp::printing::type::parsing::v2
 
     // see: https://eel.is/c++draft/dcl.type.general#nt:type-specifier-seq
     [[nodiscard]]
-    constexpr std::optional<state::TypeId> parse_type_specifier_seq(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TypeId> parse_type_specifier_seq(TokenStream& stream)
     {
         std::optional<state::QualifiedId> qualifiedType{};
         std::optional<state::BuiltinType> builtinType{};
@@ -1118,7 +1114,7 @@ namespace mimicpp::printing::type::parsing::v2
 
     // see: https://eel.is/c++draft/dcl.name#nt:type-id
     [[nodiscard]]
-    constexpr std::optional<state::TypeId> parse_type_id(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TypeId> parse_type_id(TokenStream& stream)
     {
         StateGuard<state::TypeId> id{stream};
         std::optional base = parse_type_specifier_seq(stream);
@@ -1138,7 +1134,7 @@ namespace mimicpp::printing::type::parsing::v2
     }
 
     [[nodiscard]]
-    constexpr std::optional<state::FunctionId> parse_function(TokenStream& stream)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::FunctionId> parse_function(TokenStream& stream)
     {
         StateGuard<state::FunctionId> id{stream};
         if (std::optional returnType = parse_type_id(stream))
@@ -1171,7 +1167,7 @@ namespace mimicpp::printing::type::parsing::v2
 
 namespace mimicpp::printing::type
 {
-    constexpr std::optional<parsing::v2::state::TypeId> parse_type(std::string_view const text)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<parsing::v2::state::TypeId> parse_type(std::string_view const text)
     {
         lexing::NameLexer lexer{text};
         parsing::v2::TokenStream stream{lexer};
@@ -1185,7 +1181,7 @@ namespace mimicpp::printing::type
         return std::nullopt;
     }
 
-    constexpr std::optional<parsing::v2::state::FunctionId> parse_function(std::string_view const text)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<parsing::v2::state::FunctionId> parse_function(std::string_view const text)
     {
         lexing::NameLexer lexer{text};
         parsing::v2::TokenStream stream{lexer};

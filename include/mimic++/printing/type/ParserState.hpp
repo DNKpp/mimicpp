@@ -33,7 +33,7 @@ namespace mimicpp::printing::type::parsing::v2::state
     public:
         using util::CopyableBox<T>::CopyableBox;
 
-        constexpr ~Recursive();
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES ~Recursive();
     };
 
     template <typename T>
@@ -61,10 +61,10 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isVolatile{false};
 
         [[nodiscard]]
-        constexpr bool operator==(CVQualifierSeq const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(CVQualifierSeq const&) const;
 
         [[nodiscard]]
-        constexpr bool apply(CVQualifier const qualifier) noexcept
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool apply(CVQualifier const qualifier) noexcept
         {
             switch (qualifier)
             {
@@ -94,7 +94,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isSynthetic{false};
 
         [[nodiscard]]
-        constexpr bool operator==(Identifier const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(Identifier const&) const;
     };
 
     struct FunctionDeclarator
@@ -105,7 +105,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isNoexcept{false};
 
         [[nodiscard]]
-        constexpr bool operator==(FunctionDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(FunctionDeclarator const&) const;
     };
 
     using TemplateArgument = std::variant<
@@ -123,7 +123,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Symbol symbol;
 
         [[nodiscard]]
-        constexpr bool operator==(OperatorFunctionId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(OperatorFunctionId const&) const;
     };
 
     struct ConversionFunctionId
@@ -131,7 +131,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Recursive<TypeId> target;
 
         [[nodiscard]]
-        constexpr bool operator==(ConversionFunctionId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ConversionFunctionId const&) const;
     };
 
     struct DestructorFunctionId
@@ -139,7 +139,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Identifier name;
 
         [[nodiscard]]
-        constexpr bool operator==(DestructorFunctionId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(DestructorFunctionId const&) const;
     };
 
     struct UnqualifiedId
@@ -154,7 +154,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<FunctionDeclarator> functionDeclarator{};
 
         [[nodiscard]]
-        constexpr bool operator==(UnqualifiedId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(UnqualifiedId const&) const;
     };
 
     // This models more or less: https://eel.is/c++draft/expr.prim.id.qual#nt:nested-name-specifier
@@ -164,7 +164,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::vector<UnqualifiedId> scopes{};
 
         [[nodiscard]]
-        constexpr bool operator==(ScopeSequence const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ScopeSequence const&) const;
     };
 
     // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
@@ -174,7 +174,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         UnqualifiedId identifier{};
 
         [[nodiscard]]
-        constexpr bool operator==(QualifiedId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(QualifiedId const&) const;
     };
 
     struct ArrayDeclarator
@@ -182,7 +182,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<ConstantExpression> size{};
 
         [[nodiscard]]
-        constexpr bool operator==(ArrayDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ArrayDeclarator const&) const;
     };
 
     struct PointerDeclarator
@@ -191,7 +191,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<ScopeSequence> scopes{};
 
         [[nodiscard]]
-        constexpr bool operator==(PointerDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(PointerDeclarator const&) const;
     };
 
     struct ReferenceDeclarator
@@ -199,7 +199,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         RefQualifier qualifier{};
 
         [[nodiscard]]
-        constexpr bool operator==(ReferenceDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ReferenceDeclarator const&) const;
     };
 
     using PtrOperator = std::variant<
@@ -216,13 +216,13 @@ namespace mimicpp::printing::type::parsing::v2::state
             std::vector<ArrayDeclarator> arrays{};
 
             [[nodiscard]]
-            constexpr bool operator==(Layer const&) const;
+            MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(Layer const&) const;
         };
 
         Layer root{};
 
         [[nodiscard]]
-        constexpr bool operator==(AbstractDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(AbstractDeclarator const&) const;
     };
 
     struct BuiltinType
@@ -247,7 +247,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<SignedSpec> signedSpec{};
 
         [[nodiscard]]
-        constexpr bool try_apply(lexing::keyword const& keyword)
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool try_apply(lexing::keyword const& keyword)
         {
             return try_apply_size_spec(keyword)
                 || try_apply_signed_spec(keyword)
@@ -255,11 +255,11 @@ namespace mimicpp::printing::type::parsing::v2::state
         }
 
         [[nodiscard]]
-        constexpr bool operator==(BuiltinType const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(BuiltinType const&) const;
 
     private:
         [[nodiscard]]
-        constexpr bool try_apply_base(lexing::keyword const& keyword) noexcept
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool try_apply_base(lexing::keyword const& keyword) noexcept
         {
             // Todo: verify correct type keywords
             if (!base)
@@ -272,7 +272,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         }
 
         [[nodiscard]]
-        constexpr bool try_apply_signed_spec(lexing::keyword const& keyword) noexcept
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool try_apply_signed_spec(lexing::keyword const& keyword) noexcept
         {
             std::optional const spec = std::invoke([&]() -> std::optional<SignedSpec> {
                 if (lexing::keyword{"unsigned"} == keyword)
@@ -299,7 +299,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         }
 
         [[nodiscard]]
-        constexpr bool try_apply_size_spec(lexing::keyword const& keyword) noexcept
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool try_apply_size_spec(lexing::keyword const& keyword) noexcept
         {
             std::optional const spec = std::invoke([&]() -> std::optional<SizeSpec> {
                 if (lexing::keyword{"long"} == keyword)
@@ -346,7 +346,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         AbstractDeclarator declarator{};
 
         [[nodiscard]]
-        constexpr bool operator==(TypeId const&) const = default;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(TypeId const&) const = default;
     };
 
     struct FunctionId
@@ -355,27 +355,27 @@ namespace mimicpp::printing::type::parsing::v2::state
         QualifiedId identifier{};
 
         [[nodiscard]]
-        constexpr bool operator==(FunctionId const&) const = default;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(FunctionId const&) const = default;
     };
 
     template <typename T>
-    constexpr Recursive<T>::~Recursive() = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES Recursive<T>::~Recursive() = default;
 
-    constexpr bool CVQualifierSeq::operator==(CVQualifierSeq const&) const = default;
-    constexpr bool Identifier::operator==(Identifier const&) const = default;
-    constexpr bool FunctionDeclarator::operator==(FunctionDeclarator const&) const = default;
-    constexpr bool OperatorFunctionId::operator==(OperatorFunctionId const&) const = default;
-    constexpr bool ConversionFunctionId::operator==(ConversionFunctionId const&) const = default;
-    constexpr bool DestructorFunctionId::operator==(DestructorFunctionId const&) const = default;
-    constexpr bool UnqualifiedId::operator==(UnqualifiedId const&) const = default;
-    constexpr bool ScopeSequence::operator==(ScopeSequence const&) const = default;
-    constexpr bool QualifiedId::operator==(QualifiedId const&) const = default;
-    constexpr bool ArrayDeclarator::operator==(ArrayDeclarator const&) const = default;
-    constexpr bool PointerDeclarator::operator==(PointerDeclarator const&) const = default;
-    constexpr bool ReferenceDeclarator::operator==(ReferenceDeclarator const&) const = default;
-    constexpr bool AbstractDeclarator::Layer::operator==(Layer const&) const = default;
-    constexpr bool AbstractDeclarator::operator==(AbstractDeclarator const&) const = default;
-    constexpr bool BuiltinType::operator==(BuiltinType const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool CVQualifierSeq::operator==(CVQualifierSeq const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool Identifier::operator==(Identifier const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool FunctionDeclarator::operator==(FunctionDeclarator const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool OperatorFunctionId::operator==(OperatorFunctionId const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool ConversionFunctionId::operator==(ConversionFunctionId const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool DestructorFunctionId::operator==(DestructorFunctionId const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool UnqualifiedId::operator==(UnqualifiedId const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool ScopeSequence::operator==(ScopeSequence const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool QualifiedId::operator==(QualifiedId const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool ArrayDeclarator::operator==(ArrayDeclarator const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool PointerDeclarator::operator==(PointerDeclarator const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool ReferenceDeclarator::operator==(ReferenceDeclarator const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool AbstractDeclarator::Layer::operator==(Layer const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool AbstractDeclarator::operator==(AbstractDeclarator const&) const = default;
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool BuiltinType::operator==(BuiltinType const&) const = default;
 }
 
 #endif

@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -68,6 +68,8 @@
 #else
     #define MIMICPP_DETAIL_CONSTEXPR_VECTOR inline
 #endif
+
+#define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES MIMICPP_DETAIL_CONSTEXPR_VECTOR
 
 // gcc 10 requires a workaround, due to some ambiguities.
 // see: https://github.com/DNKpp/mimicpp/issues/151
