@@ -28,12 +28,37 @@ namespace mimicpp::printing::type::parsing::v2::state
 
     template <typename T>
     class Recursive
-        : public util::CopyableBox<T>
     {
     public:
-        using util::CopyableBox<T>::CopyableBox;
+        constexpr ~Recursive();
+        constexpr Recursive(Recursive const&);
+        constexpr Recursive& operator=(Recursive const&);
+        constexpr Recursive(Recursive&&) noexcept;
+        constexpr Recursive& operator=(Recursive&&) noexcept;
 
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES ~Recursive();
+        [[nodiscard]]
+        explicit(false) constexpr Recursive(T value)
+            : m_inner{std::move(value)}
+        {
+        }
+
+        [[nodiscard]]
+        constexpr T& operator*() noexcept
+        {
+            return *m_inner;
+        }
+
+        [[nodiscard]]
+        constexpr T const& operator*() const noexcept
+        {
+            return *m_inner;
+        }
+
+        [[nodiscard]]
+        constexpr bool operator==(Recursive const&) const;
+
+    private:
+        util::CopyableBox<T> m_inner;
     };
 
     template <typename T>
@@ -61,7 +86,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isVolatile{false};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(CVQualifierSeq const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(CVQualifierSeq const&) const = default;
 
         [[nodiscard]]
         MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool apply(CVQualifier const qualifier) noexcept
@@ -94,7 +119,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isSynthetic{false};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(Identifier const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(Identifier const&) const = default;
     };
 
     struct FunctionDeclarator
@@ -105,7 +130,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isNoexcept{false};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(FunctionDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(FunctionDeclarator const&) const = default;
     };
 
     using TemplateArgument = std::variant<
@@ -123,7 +148,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Symbol symbol;
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(OperatorFunctionId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(OperatorFunctionId const&) const = default;
     };
 
     struct ConversionFunctionId
@@ -131,7 +156,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Recursive<TypeId> target;
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ConversionFunctionId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ConversionFunctionId const&) const = default;
     };
 
     struct DestructorFunctionId
@@ -139,7 +164,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Identifier name;
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(DestructorFunctionId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(DestructorFunctionId const&) const = default;
     };
 
     struct UnqualifiedId
@@ -154,7 +179,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<FunctionDeclarator> functionDeclarator{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(UnqualifiedId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(UnqualifiedId const&) const = default;
     };
 
     // This models more or less: https://eel.is/c++draft/expr.prim.id.qual#nt:nested-name-specifier
@@ -164,7 +189,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::vector<UnqualifiedId> scopes{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ScopeSequence const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ScopeSequence const&) const = default;
     };
 
     // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
@@ -174,7 +199,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         UnqualifiedId identifier{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(QualifiedId const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(QualifiedId const&) const = default;
     };
 
     struct ArrayDeclarator
@@ -182,7 +207,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<ConstantExpression> size{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ArrayDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ArrayDeclarator const&) const = default;
     };
 
     struct PointerDeclarator
@@ -191,7 +216,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<ScopeSequence> scopes{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(PointerDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(PointerDeclarator const&) const = default;
     };
 
     struct ReferenceDeclarator
@@ -199,7 +224,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         RefQualifier qualifier{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ReferenceDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ReferenceDeclarator const&) const = default;
     };
 
     using PtrOperator = std::variant<
@@ -216,13 +241,13 @@ namespace mimicpp::printing::type::parsing::v2::state
             std::vector<ArrayDeclarator> arrays{};
 
             [[nodiscard]]
-            MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(Layer const&) const;
+            MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(Layer const&) const = default;
         };
 
         Layer root{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(AbstractDeclarator const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(AbstractDeclarator const&) const = default;
     };
 
     struct BuiltinType
@@ -255,7 +280,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         }
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(BuiltinType const&) const;
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(BuiltinType const&) const = default;
 
     private:
         [[nodiscard]]
@@ -359,23 +384,17 @@ namespace mimicpp::printing::type::parsing::v2::state
     };
 
     template <typename T>
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES Recursive<T>::~Recursive() = default;
-
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool CVQualifierSeq::operator==(CVQualifierSeq const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool Identifier::operator==(Identifier const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool FunctionDeclarator::operator==(FunctionDeclarator const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool OperatorFunctionId::operator==(OperatorFunctionId const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool ConversionFunctionId::operator==(ConversionFunctionId const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool DestructorFunctionId::operator==(DestructorFunctionId const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool UnqualifiedId::operator==(UnqualifiedId const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool ScopeSequence::operator==(ScopeSequence const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool QualifiedId::operator==(QualifiedId const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool ArrayDeclarator::operator==(ArrayDeclarator const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool PointerDeclarator::operator==(PointerDeclarator const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool ReferenceDeclarator::operator==(ReferenceDeclarator const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool AbstractDeclarator::Layer::operator==(Layer const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool AbstractDeclarator::operator==(AbstractDeclarator const&) const = default;
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool BuiltinType::operator==(BuiltinType const&) const = default;
+    constexpr Recursive<T>::~Recursive() = default;
+    template <typename T>
+    constexpr Recursive<T>::Recursive(Recursive const&) = default;
+    template <typename T>
+    constexpr Recursive<T>& Recursive<T>::operator=(Recursive const&) = default;
+    template <typename T>
+    constexpr Recursive<T>::Recursive(Recursive&&) noexcept = default;
+    template <typename T>
+    constexpr Recursive<T>& Recursive<T>::operator=(Recursive&&) noexcept = default;
+    template <typename T>
+    constexpr bool Recursive<T>::operator==(Recursive const&) const = default;
 }
 
 #endif

@@ -105,7 +105,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 
         [[nodiscard]]
         friend constexpr bool operator==(CopyableBox const& lhs, CopyableBox const& rhs)
-            requires std::equality_comparable<T>
         {
             return *lhs == *rhs;
         }
