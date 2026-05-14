@@ -21,6 +21,9 @@ namespace mimicpp::util
     {
         using Ts::operator()...;
     };
+
+    template <typename... Ts>
+    Overloaded(Ts...) -> Overloaded<Ts...>;
 }
 
 #endif
