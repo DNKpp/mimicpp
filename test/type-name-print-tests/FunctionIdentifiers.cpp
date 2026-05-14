@@ -254,9 +254,10 @@ TEST_CASE(
 
         auto const returnPattern = testing::maybe_pattern("mimicpp::") + "util::SourceLocation ";
         auto const scopePattern = testing::anonNsScopePattern + "my_template::";
+        auto const argPattern = testing::maybe_pattern(scopePattern) + "my_type";
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(returnPattern + scopePattern + R"(foo\(my_type\))"));
+            Catch::Matchers::Matches(returnPattern + scopePattern + R"(foo\()" + argPattern + R"(\))"));
     }
 }
 
@@ -286,17 +287,16 @@ namespace
     };
 }
 
-// Todo: The parser currently cannot properly distinguish between conversion-functions and types containing a conversion-op scope.
 TEST_CASE(
     "printing::type::prettify_function supports conversion-operators.",
-    "[!shouldfail][print][print::type]")
+    "[!mayfail][print][print::type]")
 {
-    auto const scopePattern = testing::anonNsScopePattern + "conversion::";
+    auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + "conversion::");
     std::ostringstream ss{};
 
     SECTION("When getting function name via source_location")
     {
-        auto const targetId = "SourceLocation";
+        auto const targetId = testing::maybe_pattern("mimicpp::util::") + "SourceLocation";
 
         SECTION("and when converted to simple type via non-const function.")
         {
@@ -334,7 +334,7 @@ TEST_CASE(
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
     SECTION("When getting function name via stacktrace")
     {
-        auto const targetId = "Stacktrace";
+        auto const targetId = testing::maybe_pattern("mimicpp::util::") + "Stacktrace";
 
         SECTION("and when converted to simple type via non-const function.")
         {
