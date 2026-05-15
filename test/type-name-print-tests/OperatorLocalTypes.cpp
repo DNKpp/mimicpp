@@ -181,14 +181,11 @@ TEST_CASE(
         printing::type::prettify_type(
             std::ostreambuf_iterator{ss},
             rawName);
+
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + "special_operators::" + expectedFunctionName + "::");
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(
-                "("
-                + testing::anonNsScopePattern
-                + "special_operators::"
-                + expectedFunctionName
-                + "::)?my_type"));
+            Catch::Matchers::Matches(scopePattern + "my_type"));
     }
 
     SECTION("When nested ordering operator is used.")
@@ -205,16 +202,17 @@ TEST_CASE(
         printing::type::prettify_type(
             std::ostreambuf_iterator{ss},
             rawName);
+
+        auto const scopePattern = testing::maybe_pattern(
+            testing::anonNsScopePattern
+            + "special_operators::"
+            + expectedFunctionName
+            + "::my_type::"
+            + expectedNestedFunctionName
+            + "::");
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(
-                "("
-                + testing::anonNsScopePattern
-                + "special_operators::"
-                + expectedFunctionName
-                + "::my_type::"
-                + expectedNestedFunctionName
-                + "::)?my_type"));
+            Catch::Matchers::Matches(scopePattern + "my_type"));
     }
 
     SECTION("When spaceship-operator is used.")
@@ -225,14 +223,115 @@ TEST_CASE(
         printing::type::prettify_type(
             std::ostreambuf_iterator{ss},
             rawName);
+
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + "special_operators::" + R"(operator<=>::)");
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(
-                "("
-                + testing::anonNsScopePattern
-                + "special_operators::"
-                + R"(operator\s?<=>::)?)"
-                + "my_type"));
+            Catch::Matchers::Matches(scopePattern + "my_type"));
+    }
+}
+
+namespace
+{
+    class special_templated_operators
+    {
+    public:
+        template <typename T>
+        [[nodiscard]]
+        auto operator<(T) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        template <typename T>
+        [[nodiscard]]
+        auto operator<=(T) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        template <typename T>
+        [[nodiscard]]
+        auto operator>(T) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        template <typename T>
+        [[nodiscard]]
+        auto operator>=(T) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+
+        template <typename T>
+        [[nodiscard]]
+        auto operator<=>(T) const noexcept
+        {
+            struct my_type
+            {
+            };
+
+            return my_type{};
+        }
+    };
+}
+
+TEST_CASE(
+    "printing::type::prettify_type supports templated operator<, <=, >, >= and <=>.",
+    "[print][print::type]")
+{
+    std::ostringstream ss{};
+
+    SECTION("When ordering operator is used.")
+    {
+        auto const [expectedFunctionName, rawName] = GENERATE((table<std::string, std::string_view>)({
+            {R"(operator<)",  printing::type::type_name<decltype(special_templated_operators{}.operator<(42))>() },
+            {R"(operator<=)", printing::type::type_name<decltype(special_templated_operators{}.operator<=(42))>()},
+            {R"(operator>)",  printing::type::type_name<decltype(special_templated_operators{}.operator>(42))>() },
+            {R"(operator>=)", printing::type::type_name<decltype(special_templated_operators{}.operator>=(42))>()}
+        }));
+        CAPTURE(rawName);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + "special_templated_operators::" + expectedFunctionName + "::");
+        CHECK_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(scopePattern + "my_type"));
+    }
+
+    SECTION("When spaceship-operator is used.")
+    {
+        std::string const rawName{printing::type::type_name<decltype(special_templated_operators{}.operator<=>(42))>()};
+        CAPTURE(rawName);
+
+        printing::type::prettify_type(
+            std::ostreambuf_iterator{ss},
+            rawName);
+
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + "special_templated_operators::" + R"(operator<=>::)");
+        CHECK_THAT(
+            ss.str(),
+            Catch::Matchers::Matches(scopePattern + "my_type"));
     }
 }
 
@@ -252,7 +351,7 @@ TEST_CASE(
             rawName);
 
         std::string const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + "special_operators::" + R"(operator\(\)::)");
-        REQUIRE_THAT(
+        CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(scopePattern + "my_type"));
     }
@@ -297,7 +396,7 @@ TEST_CASE(
             rawName);
 
         std::string const scopePattern = "(" + testing::anonNsScopePattern + "special_operators::" + R"(operator\[\]::)?)";
-        REQUIRE_THAT(
+        CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(scopePattern + "my_type"));
     }
