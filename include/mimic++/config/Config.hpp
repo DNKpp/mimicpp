@@ -87,4 +87,8 @@
     #define MIMICPP_DETAIL_STD_GET_WORKAROUND 1
 #endif
 
+#ifdef __cpp_lib_source_location
+    #define MIMICPP_DETAIL_HAS_SOURCE_LOCATION 1
+#endif
+
 #endif

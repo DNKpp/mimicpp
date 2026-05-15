@@ -14,11 +14,9 @@
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <cstddef>
     #include <string_view>
-    #include <utility>
 
-    #ifdef __cpp_lib_source_location
+    #ifdef MIMICPP_DETAIL_HAS_SOURCE_LOCATION
         #include <source_location>
-        #define MIMICPP_DETAIL_HAS_SOURCE_LOCATION 1
     #endif
 #endif
 
