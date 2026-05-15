@@ -202,7 +202,7 @@ TEST_CASE(
             loc.function_name());
 
         auto const returnPattern = testing::maybe_pattern("mimicpp::") + "util::SourceLocation ";
-        auto const scopePattern = testCasePattern + "::<unnamed struct>::";
+        auto const scopePattern = testCasePattern + "::" + testing::anonTypePattern + "::";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(returnPattern + scopePattern + R"(operator\(\)\(\) const)"));
@@ -227,7 +227,7 @@ TEST_CASE(
             loc.function_name());
 
         auto const returnPattern = testing::maybe_pattern("mimicpp::") + "util::SourceLocation ";
-        auto const scopePattern = testCasePattern + "::<unnamed class>::";
+        auto const scopePattern = testCasePattern + "::" + testing::anonTypePattern + "::";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(returnPattern + scopePattern + R"(operator\(\)\(\) const)"));

@@ -14,7 +14,7 @@
 namespace mimicpp::testing
 {
     inline std::string const anonNsScopePattern = R"(\{anon-ns\}::)";
-    inline std::string const anonTypePattern = "<unnamed (class|struct|enum)>";
+    inline std::string const anonTypePattern = "<unnamed (class|struct|enum|tag)>";
     inline std::string const lambdaPattern = "<lambda>";
 
     [[nodiscard, maybe_unused]]
