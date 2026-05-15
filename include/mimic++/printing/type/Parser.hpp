@@ -751,6 +751,8 @@ namespace mimicpp::printing::type::parsing::v2
                     *closeOp))
             {
                 identifier->content = {openToken.content.data(), end};
+                identifier->isMutable = expect(stream, lexing::keyword{"mutable"}).has_value();
+
                 return std::move(identifier).take();
             }
         }

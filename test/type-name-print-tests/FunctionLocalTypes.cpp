@@ -96,9 +96,7 @@ TEMPLATE_LIST_TEST_CASE(
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
     }
 
-    // This case is broken, because the `mutable` keyword cannot be handled with the current implementation.
-    // We'll likely have to create a custom parsing rule for cases like `<lambda()> mutable`.
-    /*SECTION("When a mutable lambda without arguments is given.")
+    SECTION("When a mutable lambda without arguments is given.")
     {
         using T = testing::mod_type_t<TestType, decltype(my_typeMutableLambda())>;
         std::string const rawName{printing::type::type_name<T>()};
@@ -108,11 +106,11 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern() + " mutable::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + " mutable::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
-    }*/
+    }
 
     SECTION("When a noexcept lambda without arguments is given.")
     {

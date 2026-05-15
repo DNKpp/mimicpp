@@ -183,6 +183,7 @@ namespace mimicpp::printing::type::parsing::v2::state
     struct LambdaFunctionId
     {
         std::string_view content;
+        bool isMutable{false};
 
         [[nodiscard]]
         bool operator==(LambdaFunctionId const&) const = default;

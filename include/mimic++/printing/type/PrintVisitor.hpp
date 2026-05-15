@@ -367,9 +367,14 @@ namespace mimicpp::printing::type::parsing::v2
             m_OutIter = format::format_to(std::move(m_OutIter), "~{}", id.name.content);
         }
 
-        constexpr void visit(state::LambdaFunctionId const& /*id*/)
+        constexpr void visit(state::LambdaFunctionId const& id)
         {
             m_OutIter = format::format_to(std::move(m_OutIter), "<lambda>");
+
+            if (id.isMutable)
+            {
+                m_OutIter = format::format_to(std::move(m_OutIter), " mutable");
+            }
         }
 
         constexpr void visit(state::UnqualifiedId const& nested)
