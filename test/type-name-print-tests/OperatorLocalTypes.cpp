@@ -251,7 +251,7 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const scopePattern = "(" + testing::anonNsScopePattern + "special_operators::" + R"(operator\(\)::)?)";
+        std::string const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + "special_operators::" + R"(operator\(\)::)");
         REQUIRE_THAT(
             ss.str(),
             Catch::Matchers::Matches(scopePattern + "my_type"));
@@ -266,8 +266,8 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const returnPattern = "(" + testing::anonNsScopePattern + R"(special_operators::operator\(\)::)?my_type)";
-        std::string const scopePattern = testing::anonNsScopePattern + "special_operators::";
+        std::string const returnPattern = testing::maybe_pattern(testing::anonNsScopePattern + R"(special_operators::operator\(\)::)") + "my_type";
+        std::string const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern) + "special_operators::";
         std::string const argListPattern = R"(\(int\))";
         std::string const funSuffixPattern = R"( const)";
 
@@ -311,8 +311,8 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const returnPattern = "(" + testing::anonNsScopePattern + R"(special_operators::operator\[\]::)?my_type)";
-        std::string const scopePattern = testing::anonNsScopePattern + "special_operators::";
+        std::string const returnPattern = testing::maybe_pattern(testing::anonNsScopePattern + R"(special_operators::operator\[\]::)") + "my_type";
+        std::string const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern) + "special_operators::";
         std::string const argListPattern = R"(\(int\))";
         std::string const funSuffixPattern = R"( const)";
 

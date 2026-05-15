@@ -303,6 +303,8 @@ TEST_CASE(
     "printing::type::prettify_function supports conversion-operators.",
     "[!mayfail][print][print::type]")
 {
+    // In general, conversion-functions won't have an explicit return type, but some clang version generate them.
+    auto const returnPattern = testing::maybe_pattern("util::SourceLocation ");
     auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + "conversion::");
     std::ostringstream ss{};
 
@@ -323,7 +325,7 @@ TEST_CASE(
 
             CHECK_THAT(
                 ss.str(),
-                Catch::Matchers::Matches(scopePattern + "operator " + targetId + R"(\(\))"));
+                Catch::Matchers::Matches(returnPattern + scopePattern + "operator " + targetId + R"(\(\))"));
         }
 
         SECTION("and when converted to simple type via const function.")
@@ -339,7 +341,7 @@ TEST_CASE(
 
             CHECK_THAT(
                 ss.str(),
-                Catch::Matchers::Matches(scopePattern + "operator " + targetId + R"(\(\) const)"));
+                Catch::Matchers::Matches(returnPattern + scopePattern + "operator " + targetId + R"(\(\) const)"));
         }
     }
 

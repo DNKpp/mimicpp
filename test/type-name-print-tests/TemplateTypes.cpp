@@ -195,7 +195,7 @@ TEMPLATE_LIST_TEST_CASE(
     CAPTURE(suffixPattern);
 
     std::string const returnTypePattern = "mimicpp::util::SourceLocation";
-    std::string const scopePattern = testing::anonNsScopePattern;
+    std::string const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern);
 
     std::ostringstream ss{};
 
@@ -277,9 +277,9 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_template::my_type const\s?&, mimicpp::util::SourceLocation\s?\*\))";
-        std::string const ptrPattern = "\\(" + testing::anonNsScopePattern + "my_template::\\*" + suffixPattern + "\\)";
-        std::string const returnTypePattern = "(" + testing::anonNsScopePattern + "my_template::bar::)?bar_type";
+        std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_template::my_type const&, mimicpp::util::SourceLocation\*\))";
+        std::string const ptrPattern = "\\(" + testing::maybe_pattern(testing::anonNsScopePattern) + "my_template::\\*" + suffixPattern + "\\)";
+        std::string const returnTypePattern = testing::maybe_pattern(testing::anonNsScopePattern + "my_template::bar::") + "bar_type";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
@@ -295,9 +295,9 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_variadic_template::my_type const\s?&, mimicpp::util::SourceLocation\s?\*\))";
-        std::string const ptrPattern = "\\(" + testing::anonNsScopePattern + "my_variadic_template::\\*" + suffixPattern + "\\)";
-        std::string const returnTypePattern = "(" + testing::anonNsScopePattern + "my_variadic_template::bar::)?bar_type";
+        std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_variadic_template::my_type const&, mimicpp::util::SourceLocation\*\))";
+        std::string const ptrPattern = "\\(" + testing::maybe_pattern(testing::anonNsScopePattern) + "my_variadic_template::\\*" + suffixPattern + "\\)";
+        std::string const returnTypePattern = testing::maybe_pattern(testing::anonNsScopePattern + "my_variadic_template::bar::") + "bar_type";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
@@ -313,9 +313,9 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_variadic_template::my_type const\s?&, mimicpp::util::SourceLocation\s?\*\))";
-        std::string const ptrPattern = "\\(" + testing::anonNsScopePattern + "my_variadic_template::\\*" + suffixPattern + "\\)";
-        std::string const returnTypePattern = "(" + testing::anonNsScopePattern + "my_variadic_template::bar::)?bar_type";
+        std::string const argListPattern = "\\(" + testing::anonNsScopePattern + R"(my_variadic_template::my_type const&, mimicpp::util::SourceLocation\*\))";
+        std::string const ptrPattern = "\\(" + testing::maybe_pattern(testing::anonNsScopePattern) + "my_variadic_template::\\*" + suffixPattern + "\\)";
+        std::string const returnTypePattern = testing::maybe_pattern(testing::anonNsScopePattern + "my_variadic_template::bar::") + "bar_type";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(returnTypePattern + ptrPattern + argListPattern));
