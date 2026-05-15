@@ -379,6 +379,12 @@ namespace mimicpp::printing::type::parsing::v2::state
                     return SizeSpec::id_short;
                 }
 
+                // This is a msvc symbol
+                if (lexing::keyword{"__int64"} == keyword)
+                {
+                    return SizeSpec::id_longlong;
+                }
+
                 return std::nullopt;
             });
 
