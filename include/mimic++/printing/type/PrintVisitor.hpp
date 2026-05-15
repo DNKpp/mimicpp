@@ -418,6 +418,21 @@ namespace mimicpp::printing::type::parsing::v2
                         scopes = scopes.subspan(1u);
                     }
                 }
+                // msvc does not emit `~id` for destructors, but a synthetic `{dtor}` identifier instead.
+                // So, let's rebuild the actual destructor identifier with the help of the previous identifier..
+                else if (auto const* const currentId = std::get_if<state::Identifier>(&current.name);
+                    currentId
+                    && !scopes.empty())
+                {
+                    if (auto const* const next = std::get_if<state::Identifier>(&scopes.front().name);
+                        next
+                        && "{dtor}" == next->content)
+                    {
+                        visit(state::DestructorFunctionId{.name = *currentId});
+                        m_OutIter = format::format_to(std::move(m_OutIter), "::");
+                        scopes = scopes.subspan(1u);
+                    }
+                }
             }
         }
 
