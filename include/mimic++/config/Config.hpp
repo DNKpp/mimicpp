@@ -69,7 +69,16 @@
     #define MIMICPP_DETAIL_CONSTEXPR_VECTOR inline
 #endif
 
-#define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES MIMICPP_DETAIL_CONSTEXPR_VECTOR
+// Requires constexpr vector and constexpr optional
+// clang-format off
+// Prevent number from getting decorated with '.
+#if 201907L <= __cpp_lib_constexpr_vector \
+    && 202106L <= __cpp_lib_optional
+    // clang-format on
+    #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES constexpr
+#else
+    #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES inline
+#endif
 
 // gcc 10 requires a workaround, due to some ambiguities.
 // see: https://github.com/DNKpp/mimicpp/issues/151

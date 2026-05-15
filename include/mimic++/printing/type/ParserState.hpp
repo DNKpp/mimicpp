@@ -95,10 +95,10 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isVolatile{false};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(CVQualifierSeq const&) const = default;
+        bool operator==(CVQualifierSeq const&) const = default;
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool apply(CVQualifier const qualifier) noexcept
+        constexpr bool apply(CVQualifier const qualifier) noexcept
         {
             switch (qualifier)
             {
@@ -128,7 +128,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isSynthetic{false};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(Identifier const&) const = default;
+        bool operator==(Identifier const&) const = default;
     };
 
     struct FunctionDeclarator
@@ -139,7 +139,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         bool isNoexcept{false};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(FunctionDeclarator const&) const = default;
+        bool operator==(FunctionDeclarator const&) const = default;
     };
 
     using TemplateArgument = std::variant<
@@ -169,7 +169,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         }
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(OperatorFunctionId const&) const = default;
+        bool operator==(OperatorFunctionId const&) const = default;
     };
 
     struct ConversionFunctionId
@@ -177,7 +177,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Recursive<TypeId> target;
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ConversionFunctionId const&) const = default;
+        bool operator==(ConversionFunctionId const&) const = default;
     };
 
     struct LambdaFunctionId
@@ -185,7 +185,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::string_view content;
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(LambdaFunctionId const&) const = default;
+        bool operator==(LambdaFunctionId const&) const = default;
     };
 
     struct DestructorFunctionId
@@ -193,7 +193,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         Identifier name;
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(DestructorFunctionId const&) const = default;
+        bool operator==(DestructorFunctionId const&) const = default;
     };
 
     struct UnqualifiedId
@@ -209,7 +209,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<FunctionDeclarator> functionDeclarator{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(UnqualifiedId const&) const = default;
+        bool operator==(UnqualifiedId const&) const = default;
     };
 
     // This models more or less: https://eel.is/c++draft/expr.prim.id.qual#nt:nested-name-specifier
@@ -219,7 +219,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::vector<UnqualifiedId> scopes{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ScopeSequence const&) const = default;
+        bool operator==(ScopeSequence const&) const = default;
     };
 
     using TypeKey = std::variant<ClassKey, EnumKey>;
@@ -232,7 +232,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<TypeKey> typeKey{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(QualifiedId const&) const = default;
+        bool operator==(QualifiedId const&) const = default;
     };
 
     struct ArrayDeclarator
@@ -240,7 +240,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<ConstantExpression> size{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ArrayDeclarator const&) const = default;
+        bool operator==(ArrayDeclarator const&) const = default;
     };
 
     struct CallConvention
@@ -248,7 +248,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         lexing::identifier name{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(CallConvention const&) const = default;
+        bool operator==(CallConvention const&) const = default;
     };
 
     struct PointerDeclarator
@@ -258,7 +258,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         std::optional<CallConvention> callConvention{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(PointerDeclarator const&) const = default;
+        bool operator==(PointerDeclarator const&) const = default;
     };
 
     struct ReferenceDeclarator
@@ -266,7 +266,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         RefQualifier qualifier{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ReferenceDeclarator const&) const = default;
+        bool operator==(ReferenceDeclarator const&) const = default;
     };
 
     using PtrOperator = std::variant<
@@ -283,13 +283,13 @@ namespace mimicpp::printing::type::parsing::v2::state
             std::vector<ArrayDeclarator> arrays{};
 
             [[nodiscard]]
-            MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(Layer const&) const = default;
+            bool operator==(Layer const&) const = default;
         };
 
         Layer root{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(AbstractDeclarator const&) const = default;
+        bool operator==(AbstractDeclarator const&) const = default;
     };
 
     struct BuiltinType
@@ -322,11 +322,11 @@ namespace mimicpp::printing::type::parsing::v2::state
         }
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(BuiltinType const&) const = default;
+        bool operator==(BuiltinType const&) const = default;
 
     private:
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool try_apply_base(lexing::keyword const& keyword) noexcept
+        constexpr bool try_apply_base(lexing::keyword const& keyword) noexcept
         {
             // Todo: verify correct type keywords
             if (!base)
@@ -419,7 +419,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         AbstractDeclarator declarator{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(TypeId const&) const = default;
+        bool operator==(TypeId const&) const = default;
     };
 
     struct FunctionId
@@ -429,7 +429,7 @@ namespace mimicpp::printing::type::parsing::v2::state
         QualifiedId identifier{};
 
         [[nodiscard]]
-        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(FunctionId const&) const = default;
+        bool operator==(FunctionId const&) const = default;
     };
 
     template <typename T>
