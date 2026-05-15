@@ -366,30 +366,6 @@ TEST_CASE(
             matches_end_token());
     }
 
-    SECTION("Common special angles are detected.")
-    {
-        StringViewT const input = GENERATE(from_range(texts::specialAngles));
-        CAPTURE(input);
-
-        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
-
-        NameLexer lexer{input};
-        CHECK_THAT(
-            std::as_const(lexer).peek(),
-            expectedToken);
-
-        CHECK_THAT(
-            lexer.next(),
-            expectedToken);
-        CHECK_THAT(
-            std::as_const(lexer).peek(),
-            matches_end_token());
-
-        CHECK_THAT(
-            lexer.next(),
-            matches_end_token());
-    }
-
     SECTION("All other operators or punctuators are detected.")
     {
         StringViewT const input = GENERATE(from_range(texts::rest));

@@ -840,6 +840,7 @@ namespace mimicpp::printing::type::parsing::v2
     //
     // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
     // but rather an extension due to real-life requirements.
+    template <bool isFirst>
     [[nodiscard]]
     MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::UnqualifiedId> parse_nested_id(TokenStream& stream)
     {
@@ -871,17 +872,20 @@ namespace mimicpp::printing::type::parsing::v2
                              return op;
                          }
 
-                         // In general, the `operator` keyword is mandatory, but sometimes it is omitted (e.g., on msvc).
-                         // In this case, the whole scope is just the plain operator symbol; so no template- and function-details.
-                         if (std::optional op = parse_operator_function_id<false>(stream);
-                             op
-                             // Peek here (and thus ensure that it is immediately followed by a `::` token),
-                             // because we need to prevent false-positives. For example `<tag>::` must not be treated as `operator<`.
-                             && peek_if<lexing::operator_or_punctuator>(stream)
-                             && lexing::operator_or_punctuator{"::"} == *peek_if<lexing::operator_or_punctuator>(stream))
+                         if constexpr (!isFirst)
                          {
-                             innerTransaction.commit();
-                             return op;
+                             // In general, the `operator` keyword is mandatory, but sometimes it is omitted (e.g., on msvc).
+                             // In this case, the whole scope is just the plain operator symbol; so no template- and function-details.
+                             if (std::optional op = parse_operator_function_id<false>(stream);
+                                 op
+                                 // Peek here (and thus ensure that it is immediately followed by a `::` token),
+                                 // because we need to prevent false-positives. For example `<tag>::` must not be treated as `operator<`.
+                                 && peek_if<lexing::operator_or_punctuator>(stream)
+                                 && lexing::operator_or_punctuator{"::"} == *peek_if<lexing::operator_or_punctuator>(stream))
+                             {
+                                 innerTransaction.commit();
+                                 return op;
+                             }
                          }
 
                          return std::nullopt;
@@ -951,11 +955,24 @@ namespace mimicpp::printing::type::parsing::v2
         StateGuard<state::ScopeSequence> scopes{stream};
         scopes->explicitRoot = expect(stream, lexing::operator_or_punctuator{"::"}).has_value();
 
+        std::optional initId = parse_nested_id<true>(stream);
+        if (!initId)
+        {
+            if (scopes->explicitRoot)
+            {
+                return std::move(scopes).take();
+            }
+
+            return std::nullopt;
+        }
+
+        scopes->scopes.emplace_back(*std::move(initId));
+
         while (!stream.is_eof())
         {
             Transaction transaction{stream};
 
-            std::optional curId = parse_nested_id(stream);
+            std::optional curId = parse_nested_id<false>(stream);
             if (!curId)
             {
                 break;
@@ -963,12 +980,6 @@ namespace mimicpp::printing::type::parsing::v2
 
             scopes->scopes.emplace_back(*std::move(curId));
             transaction.commit();
-        }
-
-        if (!scopes->explicitRoot
-            && scopes->scopes.empty())
-        {
-            return std::nullopt;
         }
 
         return std::move(scopes).take();

@@ -67,8 +67,10 @@ namespace mimicpp::printing::type::lexing
         inline std::array constexpr bitArithmetic = std::to_array<StringViewT>({"~", "&", "|", "^", "<<", ">>"});
         inline std::array constexpr logical = std::to_array<StringViewT>({"!", "&&", "||"});
         inline std::array constexpr access = std::to_array<StringViewT>({".", ".*", "->", "->*"});
-        inline std::array constexpr specialAngles = std::to_array<StringViewT>({"<:", ":>", "<%", "%>"});
         inline std::array constexpr rest = std::to_array<StringViewT>({"::", ";", ",", ":", "...", "?"});
+
+        // These operators exist, but are in fact alternative versions and will probably never encountered.
+        // inline std::array constexpr specialAngles = std::to_array<StringViewT>({"<:", ":>", "<%", "%>"});
     }
 
     [[nodiscard]]
@@ -101,7 +103,6 @@ namespace mimicpp::printing::type::lexing
             texts::bitArithmetic,
             texts::logical,
             texts::access,
-            texts::specialAngles,
             texts::rest);
         std::ranges::sort(collection);
         MIMICPP_ASSERT(collection.cend() == std::ranges::unique(collection).begin(), "Fix your input!");
