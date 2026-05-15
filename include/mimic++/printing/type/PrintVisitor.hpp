@@ -247,6 +247,19 @@ namespace mimicpp::printing::type::parsing::v2
                     m_OutIter = format::format_to(std::move(m_OutIter), "<unnamed {}>", classType);
                     return;
                 }
+
+                // These synthetic ids will be generated on msvc.
+                if (constexpr std::string_view prefix{"<unnamed-type-anon_"}, suffix{">"};
+                    id.content.starts_with(prefix)
+                    && id.content.ends_with(suffix))
+                {
+                    std::string_view classType = id.content;
+                    classType.remove_prefix(prefix.size());
+                    classType.remove_suffix(suffix.size());
+
+                    m_OutIter = format::format_to(std::move(m_OutIter), "<unnamed {}>", classType);
+                    return;
+                }
             }
 
             m_OutIter = format::format_to(std::move(m_OutIter), "{}", id.content);
