@@ -256,6 +256,44 @@ namespace mimicpp::printing::type::parsing::v2
         return std::nullopt;
     }
 
+    // see: https://eel.is/c++draft/dcl.enum#nt:enum-key
+    [[nodiscard]]
+    constexpr std::optional<state::EnumKey> parse_enum_key(TokenStream& stream)
+    {
+        if (expect(stream, lexing::keyword{"enum"}))
+        {
+            if (expect(stream, lexing::keyword{"class"}))
+            {
+                return state::EnumKey::id_enum_class;
+            }
+
+            if (expect(stream, lexing::keyword{"struct"}))
+            {
+                return state::EnumKey::id_enum_struct;
+            }
+
+            return state::EnumKey::id_enum;
+        }
+
+        return std::nullopt;
+    }
+
+    [[nodiscard]]
+    constexpr std::optional<state::TypeKey> parse_type_key(TokenStream& stream)
+    {
+        if (auto const key = parse_class_key(stream))
+        {
+            return {*key};
+        }
+
+        if (auto const key = parse_enum_key(stream))
+        {
+            return {*key};
+        }
+
+        return std::nullopt;
+    }
+
     // see: https://eel.is/c++draft/dcl.decl.general#nt:ref-qualifier
     [[nodiscard]]
     constexpr std::optional<state::RefQualifier> parse_ref_qualifier(TokenStream& stream)
@@ -1061,6 +1099,7 @@ namespace mimicpp::printing::type::parsing::v2
     {
         std::optional<state::QualifiedId> qualifiedType{};
         std::optional<state::BuiltinType> builtinType{};
+        std::optional<state::TypeKey> typeKey{};
 
         StateGuard<state::TypeId> typeId{stream};
         while (!stream.is_eof())
@@ -1101,6 +1140,15 @@ namespace mimicpp::printing::type::parsing::v2
                     transaction.commit();
                     continue;
                 }
+
+                if (std::optional key = parse_type_key(stream);
+                    key
+                    && !typeKey)
+                {
+                    typeKey = std::move(key);
+                    transaction.commit();
+                    continue;
+                }
             }
             else if (!qualifiedType && !builtinType)
             {
@@ -1118,12 +1166,14 @@ namespace mimicpp::printing::type::parsing::v2
         if (qualifiedType
             && !builtinType)
         {
+            qualifiedType->typeKey = std::move(typeKey);
             typeId->base = *std::move(qualifiedType);
             return std::move(typeId).take();
         }
 
         if (builtinType
-            && !qualifiedType)
+            && !qualifiedType
+            && !typeKey)
         {
             typeId->base = *std::move(builtinType);
             return std::move(typeId).take();

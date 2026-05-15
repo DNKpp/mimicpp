@@ -67,11 +67,20 @@ namespace mimicpp::printing::type::parsing::v2::state
     template <typename T>
     Recursive(Recursive<T>) -> Recursive<T>;
 
+    // see: https://eel.is/c++draft/class.pre#nt:class-key
     enum ClassKey
     {
         id_class = 0,
         id_struct,
         id_union
+    };
+
+    // see: https://eel.is/c++draft/dcl.enum#nt:enum-key
+    enum EnumKey
+    {
+        id_enum = 0,
+        id_enum_class,
+        id_enum_struct
     };
 
     enum class CVQualifier
@@ -192,11 +201,14 @@ namespace mimicpp::printing::type::parsing::v2::state
         MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ScopeSequence const&) const = default;
     };
 
+    using TypeKey = std::variant<ClassKey, EnumKey>;
+
     // see: https://eel.is/c++draft/expr.prim.id.qual#nt:qualified-id
     struct QualifiedId
     {
         ScopeSequence scopes{};
         UnqualifiedId identifier{};
+        std::optional<TypeKey> typeKey{};
 
         [[nodiscard]]
         MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(QualifiedId const&) const = default;
