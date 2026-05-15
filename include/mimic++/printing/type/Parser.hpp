@@ -725,6 +725,11 @@ namespace mimicpp::printing::type::parsing::v2
                 return lexing::operator_or_punctuator{">"};
             }
 
+            if (lexing::operator_or_punctuator{"("} == std::get<lexing::operator_or_punctuator>(stream.peek().classification))
+            {
+                return lexing::operator_or_punctuator{")"};
+            }
+
             return std::nullopt;
         });
         if (!closeOp)
