@@ -183,7 +183,7 @@ namespace mimicpp::printing::type::parsing::v2
             constexpr std::optional<Value> operator()(Key const& key) const
             {
                 if (auto const iter = std::ranges::find(m_Candidates, key, &std::pair<Key, Value>::first);
-                iter != std::ranges::end(m_Candidates))
+                    iter != std::ranges::end(m_Candidates))
                 {
                     return iter->second;
                 }
@@ -746,8 +746,9 @@ namespace mimicpp::printing::type::parsing::v2
         {
             // This recursively searches for a matching `close` token, while handling nested `open close` token-ranges.
             if (auto const* const end = detail::find_end_token(
-                stream, std::get<lexing::operator_or_punctuator>(openToken.classification),
-                *closeOp))
+                    stream,
+                    std::get<lexing::operator_or_punctuator>(openToken.classification),
+                    *closeOp))
             {
                 identifier->content = {openToken.content.data(), end};
                 return std::move(identifier).take();
@@ -1216,11 +1217,12 @@ namespace mimicpp::printing::type::parsing::v2
     [[nodiscard]]
     MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::TypeId> parse_type_specifier_seq(TokenStream& stream)
     {
+        StateGuard<state::TypeId> typeId{stream};
+
         std::optional<state::QualifiedId> qualifiedType{};
         std::optional<state::BuiltinType> builtinType{};
         std::optional<state::TypeKey> typeKey{};
 
-        StateGuard<state::TypeId> typeId{stream};
         while (!stream.is_eof())
         {
             Transaction transaction{stream};
@@ -1259,18 +1261,12 @@ namespace mimicpp::printing::type::parsing::v2
                     transaction.commit();
                     continue;
                 }
-
-                if (std::optional key = parse_type_key(stream);
-                    key
-                    && !typeKey)
-                {
-                    typeKey = std::move(key);
-                    transaction.commit();
-                    continue;
-                }
             }
-            else if (!qualifiedType && !builtinType)
+
+            if (!qualifiedType && !builtinType)
             {
+                // msvc often prefixes types with e.g. `class`.
+                typeKey = parse_type_key(stream);
                 if (std::optional qualifiedId = parse_qualified_id(stream))
                 {
                     qualifiedType = std::move(qualifiedId);
