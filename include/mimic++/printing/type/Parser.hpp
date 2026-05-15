@@ -606,12 +606,14 @@ namespace mimicpp::printing::type::parsing::v2
 
     // unqualified-id ::= `operator` op
     // see:: https://eel.is/c++draft/over.oper.general#nt:operator
+    template <bool requireOperatorKeyword = true>
     [[nodiscard]]
     MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::OperatorFunctionId> parse_operator_function_id(TokenStream& stream)
     {
         Transaction transaction{stream};
 
-        if (!expect(stream, lexing::keyword{"operator"}))
+        if (!expect(stream, lexing::keyword{"operator"})
+            && requireOperatorKeyword)
         {
             return std::nullopt;
         }
@@ -707,6 +709,49 @@ namespace mimicpp::printing::type::parsing::v2
             .target = state::Recursive{*std::move(target).take()}};
     }
 
+    [[nodiscard]]
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::LambdaFunctionId> parse_lambda_function_id(TokenStream& stream)
+    {
+        StateGuard<state::LambdaFunctionId> identifier{stream};
+
+        if (!std::holds_alternative<lexing::operator_or_punctuator>(stream.peek().classification))
+        {
+            return std::nullopt;
+        }
+
+        auto const closeOp = std::invoke([&]() -> std::optional<lexing::operator_or_punctuator> {
+            if (lexing::operator_or_punctuator{"<"} == std::get<lexing::operator_or_punctuator>(stream.peek().classification))
+            {
+                return lexing::operator_or_punctuator{">"};
+            }
+
+            return std::nullopt;
+        });
+        if (!closeOp)
+        {
+            return std::nullopt;
+        }
+
+        auto const openToken = stream.peek();
+        stream.consume();
+
+        if (auto const* const id = peek_if<lexing::identifier>(stream);
+            id
+            && id->content.starts_with("lambda"))
+        {
+            // This recursively searches for a matching `close` token, while handling nested `open close` token-ranges.
+            if (auto const* const end = detail::find_end_token(
+                stream, std::get<lexing::operator_or_punctuator>(openToken.classification),
+                *closeOp))
+            {
+                identifier->content = {openToken.content.data(), end};
+                return std::move(identifier).take();
+            }
+        }
+
+        return std::nullopt;
+    }
+
     // This rule is part of the more general unqualified-id rule.
     // see: https://eel.is/c++draft/expr.prim.id.unqual#nt:unqualified-id
     [[nodiscard]]
@@ -732,6 +777,7 @@ namespace mimicpp::printing::type::parsing::v2
     // > unqualified-id ::= template-id
     // > unqualified-id ::= operator-function-id
     // > unqualified-id ::= conversion-function-id
+    // > unqualified-id ::= lambda-function-id
     // > unqualified-id ::= `~`type-name
     // but slightly rewritten
     //
@@ -747,6 +793,13 @@ namespace mimicpp::printing::type::parsing::v2
         if (std::optional dtor = parse_destructor_function_id(stream))
         {
             nestedId->name = *std::move(dtor);
+            return std::move(nestedId).take();
+        }
+
+        // A synthetic lambda-id cannot be templated
+        if (std::optional lambda = parse_lambda_function_id(stream))
+        {
+            nestedId->name = *std::move(lambda);
             return std::move(nestedId).take();
         }
 
@@ -783,6 +836,7 @@ namespace mimicpp::printing::type::parsing::v2
     // > unqualified-id ::= operator-function-id template-clause? parameters-and-qualifiers `::`
     // > unqualified-id ::= conversion-function-id parameters-and-qualifiers `::`
     // > unqualified-id ::= destructor-function-id parameters-and-qualifiers `::`
+    // > unqualified-id ::= lambda-id `::`
     //
     // Note that the additional optional `parameters-and-qualifiers` token is not reflected in the standard,
     // but rather an extension due to real-life requirements.
@@ -790,50 +844,80 @@ namespace mimicpp::printing::type::parsing::v2
     MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<state::UnqualifiedId> parse_nested_id(TokenStream& stream)
     {
         StateGuard<state::UnqualifiedId> nestedId{stream};
-        bool requiresFunction{false};
 
-        auto const parseTemplate = [&] {
-            if (std::optional templateArgs = parse_template_clause(stream))
-            {
-                nestedId->templateArgs = *std::move(templateArgs);
-            }
-        };
-
-        // A destructor cannot be templated
-        if (std::optional dtor = parse_destructor_function_id(stream))
+        // A synthetic lambda-id can neither be templated nor be suffixed by an argument list
+        if (std::optional lambda = parse_lambda_function_id(stream))
         {
-            requiresFunction = true;
-            nestedId->name = *std::move(dtor);
-        }
-        else if (std::optional op = parse_operator_function_id(stream))
-        {
-            requiresFunction = true;
-            nestedId->name = *std::move(op);
-            parseTemplate();
-        }
-        // A conversion-function cannot be templated
-        else if (std::optional conv = parse_conversion_function_id(stream))
-        {
-            requiresFunction = true;
-            nestedId->name = *std::move(conv);
-        }
-        else if (std::optional id = parse_identifier(stream))
-        {
-            nestedId->name = *std::move(id);
-            parseTemplate();
+            nestedId->name = *std::move(lambda);
         }
         else
         {
-            return std::nullopt;
-        }
+            bool requiresFunction{false};
+            bool acceptTemplate{false};
 
-        if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
-        {
-            nestedId->functionDeclarator = *std::move(functionDecl);
-        }
-        else if (requiresFunction)
-        {
-            return std::nullopt;
+            // A destructor cannot be templated
+            if (std::optional dtor = parse_destructor_function_id(stream))
+            {
+                requiresFunction = true;
+                nestedId->name = *std::move(dtor);
+            }
+            else if (std::optional opId = std::invoke([&]() -> std::optional<state::OperatorFunctionId> {
+                         Transaction innerTransaction{stream};
+                         if (std::optional op = parse_operator_function_id<true>(stream))
+                         {
+                             requiresFunction = true;
+                             acceptTemplate = true;
+                             innerTransaction.commit();
+                             return op;
+                         }
+
+                         // In general, the `operator` keyword is mandatory, but sometimes it is omitted (e.g., on msvc).
+                         // In this case, the whole scope is just the plain operator symbol; so no template- and function-details.
+                         if (std::optional op = parse_operator_function_id<false>(stream);
+                             op
+                             // Peek here (and thus ensure that it is immediately followed by a `::` token),
+                             // because we need to prevent false-positives. For example `<tag>::` must not be treated as `operator<`.
+                             && peek_if<lexing::operator_or_punctuator>(stream)
+                             && lexing::operator_or_punctuator{"::"} == *peek_if<lexing::operator_or_punctuator>(stream))
+                         {
+                             innerTransaction.commit();
+                             return op;
+                         }
+
+                         return std::nullopt;
+                     }))
+            {
+                nestedId->name = *std::move(opId);
+            }
+            // A conversion-function cannot be templated
+            else if (std::optional conv = parse_conversion_function_id(stream))
+            {
+                requiresFunction = true;
+                nestedId->name = *std::move(conv);
+            }
+            else if (std::optional id = parse_identifier(stream))
+            {
+                acceptTemplate = true;
+                nestedId->name = *std::move(id);
+            }
+            else
+            {
+                return std::nullopt;
+            }
+
+            if (acceptTemplate)
+            {
+                nestedId->templateArgs = parse_template_clause(stream);
+            }
+
+            if (std::optional functionDecl = parse_parameters_and_qualifiers(stream))
+            {
+                nestedId->functionDeclarator = *std::move(functionDecl);
+            }
+            else if (requiresFunction)
+            {
+                return std::nullopt;
+            }
         }
 
         if (expect(stream, lexing::operator_or_punctuator{"::"}))

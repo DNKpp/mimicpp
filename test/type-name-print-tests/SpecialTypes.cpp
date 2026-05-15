@@ -167,7 +167,7 @@ TEMPLATE_LIST_TEST_CASE(
 
         CHECK_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(testing::anonNsScopePattern + testing::lambda_pattern() + suffixPattern));
+            Catch::Matchers::Matches(testing::anonNsScopePattern + testing::lambdaPattern + suffixPattern));
     }
 
     SECTION("When lambda with params is given.")
@@ -182,6 +182,6 @@ TEMPLATE_LIST_TEST_CASE(
 
         CHECK_THAT(
             std::move(ss).str(),
-            Catch::Matchers::Matches(testing::anonNsScopePattern + testing::lambda_pattern(R"((\.{3})?)") + suffixPattern));
+            Catch::Matchers::Matches(testing::anonNsScopePattern + testing::lambdaPattern + suffixPattern));
     }
 }

@@ -15,6 +15,7 @@ namespace mimicpp::testing
 {
     inline std::string const anonNsScopePattern = R"(\{anon-ns\}::)";
     inline std::string const anonTypePattern = "<unnamed (class|struct|enum)>";
+    inline std::string const lambdaPattern = "<lambda>";
 
     [[nodiscard, maybe_unused]]
     inline std::string maybe_pattern(std::string const& pattern)
@@ -25,13 +26,7 @@ namespace mimicpp::testing
     [[nodiscard, maybe_unused]]
     std::string alternative_pattern(std::string const& first, auto const&... alts)
     {
-        return "(:?" + first + (("|" + alts) + ...) + ")";
-    }
-
-    [[nodiscard, maybe_unused]]
-    inline std::string lambda_pattern(std::string const& argList = {})
-    {
-        return "<lambda\\(" + argList + "\\)>";
+        return "(:?" + first + ((std::string{"|"} + alts) + ...) + ")";
     }
 
     template <typename T, util::StaticString suffixText>

@@ -136,8 +136,11 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
-        auto const alt1 = testing::lambda_pattern();
-        auto const alt2 = "auto " + testing::anonTypePattern + R"(::operator\(\)\(\) const)";
+        auto const alt1 = testing::lambdaPattern; // primarily gcc
+        auto const alt2 = testing::alternative_pattern("auto", "mimicpp::util::SourceLocation")
+                        + " "
+                        + testing::alternative_pattern(testing::anonTypePattern, testing::lambdaPattern)
+                        + R"(::operator\(\)\(\) const)";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(testing::alternative_pattern(alt1, alt2)));
@@ -152,11 +155,12 @@ TEST_CASE(
             std::ostreambuf_iterator{ss},
             loc.function_name());
 
-        auto const alt1 = testing::lambda_pattern() + "::" + testing::lambda_pattern();
+        auto const alt1 = testing::lambdaPattern + "::" + testing::lambdaPattern; // primarily gcc
         auto const alt2 = "auto " + testing::anonTypePattern + R"(::operator\(\)::)" + testing::anonTypePattern + R"(::operator\(\)\(\) const)";
+        auto const alt3 = "mimicpp::util::SourceLocation " + testing::lambdaPattern + "::" + testing::lambdaPattern + R"(::operator\(\)\(\) const)"; // msvc
         CHECK_THAT(
             ss.str(),
-            Catch::Matchers::Matches(testing::alternative_pattern(alt1, alt2)));
+            Catch::Matchers::Matches(testing::alternative_pattern(alt1, alt2, alt3)));
     }
 
     SECTION("When a function-local lambda is given.")
@@ -169,8 +173,12 @@ TEST_CASE(
             loc.function_name());
 
         auto const scopePattern = testing::anonNsScopePattern + "loc_fun::";
-        auto const alt1 = scopePattern + testing::lambda_pattern();
-        auto const alt2 = "auto " + scopePattern + testing::anonTypePattern + R"(::operator\(\)\(\) const)";
+        auto const alt1 = scopePattern + testing::lambdaPattern; // primarily gcc
+        auto const alt2 = testing::alternative_pattern("auto", "mimicpp::util::SourceLocation")
+                        + " "
+                        + scopePattern
+                        + testing::alternative_pattern(testing::anonTypePattern, testing::lambdaPattern)
+                        + R"(::operator\(\)\(\) const)";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(testing::alternative_pattern(alt1, alt2)));
@@ -235,8 +243,12 @@ TEST_CASE(
             loc.function_name());
 
         auto const scopePattern = testing::anonNsScopePattern + "loc_anon_lambda_fun::";
-        auto const alt1 = scopePattern + testing::lambda_pattern();
-        auto const alt2 = "auto " + scopePattern + testing::anonTypePattern + R"(::operator\(\)\(\) const)";
+        auto const alt1 = scopePattern + testing::lambdaPattern; // primarily gcc
+        auto const alt2 = testing::alternative_pattern("auto", "mimicpp::util::SourceLocation")
+                        + " "
+                        + scopePattern
+                        + testing::alternative_pattern(testing::anonTypePattern, testing::lambdaPattern)
+                        + R"(::operator\(\)\(\) const)";
         CHECK_THAT(
             ss.str(),
             Catch::Matchers::Matches(testing::alternative_pattern(alt1, alt2)));

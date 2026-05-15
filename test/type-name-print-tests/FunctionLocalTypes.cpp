@@ -90,7 +90,7 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern() + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + "::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
@@ -124,7 +124,7 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern() + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + "::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
@@ -140,7 +140,7 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern(R"(\.{3})") + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + "::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
@@ -158,8 +158,8 @@ TEMPLATE_LIST_TEST_CASE(
 
         auto const scopePattern = testing::maybe_pattern(
             testing::anonNsScopePattern
-            + testing::lambda_pattern() + "::"
-            + testing::lambda_pattern() + "::");
+            + testing::lambdaPattern + "::"
+            + testing::lambdaPattern + "::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
@@ -177,8 +177,8 @@ TEMPLATE_LIST_TEST_CASE(
 
         auto const scopePattern = testing::maybe_pattern(
             testing::anonNsScopePattern
-            + testing::lambda_pattern() + "::"
-            + testing::lambda_pattern() + "::");
+            + testing::lambdaPattern + "::"
+            + testing::lambdaPattern + "::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
@@ -517,7 +517,7 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern() + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + "::");
         auto const returnTypePattern = scopePattern + "my_type" + suffixPattern;
         CHECK_THAT(
             std::move(ss).str(),
@@ -584,7 +584,7 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern() + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + "::");
         auto const returnTypePattern = scopePattern + "my_type" + suffixPattern;
         CHECK_THAT(
             std::move(ss).str(),
@@ -649,7 +649,7 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern() + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + "::");
         auto const paramTypePattern = scopePattern + "my_type" + suffixPattern;
         CHECK_THAT(
             std::move(ss).str(),
@@ -715,7 +715,7 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambda_pattern() + "::");
+        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + "::");
         auto const paramTypePattern = scopePattern + "my_type" + suffixPattern;
         CHECK_THAT(
             std::move(ss).str(),
@@ -799,8 +799,6 @@ TEST_CASE(
     "printing::type::prettify_type enhances type-names from the local scope.",
     "[print][print::type]")
 {
-    static std::string const nullaryLambdaScopePattern = R"(<lambda\(\)>::)";
-    static std::string const lambdaScopePattern = R"(<lambda\(\.{3}\)>::)";
     static std::string const testCaseScopePattern = R"(CATCH2_INTERNAL_TEST_\d+::)";
     static std::string const callOpScopePattern = R"(operator\(\)::)";
 
@@ -838,7 +836,7 @@ TEST_CASE(
                     std::ostreambuf_iterator{ss},
                     rawName);
 
-                auto const scopePattern = testing::maybe_pattern(testCaseScopePattern + nullaryLambdaScopePattern);
+                auto const scopePattern = testing::maybe_pattern(testCaseScopePattern + testing::lambdaPattern + "::");
                 CHECK_THAT(
                     std::move(ss).str(),
                     Catch::Matchers::Matches(scopePattern + "my_type"));
@@ -894,7 +892,7 @@ TEST_CASE(
                     std::ostreambuf_iterator{*_ss},
                     rawName);
 
-                auto const scopePattern = testing::maybe_pattern(testCaseScopePattern + lambdaScopePattern);
+                auto const scopePattern = testing::maybe_pattern(testCaseScopePattern + testing::lambdaPattern + "::");
                 CHECK_THAT(
                     std::move(*_ss).str(),
                     Catch::Matchers::Matches(scopePattern + "my_type"));
@@ -927,8 +925,10 @@ TEST_CASE(
                             rawName);
                         auto const scopePattern = testing::maybe_pattern(
                             testCaseScopePattern
-                            + lambdaScopePattern
-                            + lambdaScopePattern);
+                            + testing::lambdaPattern
+                            + "::"
+                             + testing::lambdaPattern
+                             + "::");
                         CHECK_THAT(
                             std::move(*_ss).str(),
                             Catch::Matchers::Matches(scopePattern + "my_type"));

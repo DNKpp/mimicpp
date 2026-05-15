@@ -192,34 +192,6 @@ namespace mimicpp::printing::type::parsing::v2
                     return;
                 }
 
-                // These synthetic lambda-ids will be generated on gcc:
-                // `<lambda(<args>)`, where `<args>` will be replaced by `...` if not empty.
-                if (constexpr std::string_view prefix{"<lambda("}, suffix{")>"};
-                    id.content.starts_with(prefix)
-                    && id.content.ends_with(suffix))
-                {
-                    std::string_view args = id.content;
-                    args.remove_prefix(prefix.size());
-                    args.remove_suffix(suffix.size());
-
-                    if (!args.empty())
-                    {
-                        args = "...";
-                    }
-
-                    m_OutIter = format::format_to(std::move(m_OutIter), "{}{}{}", prefix, args, suffix);
-                    return;
-                }
-
-                // These synthetic lambda-ids will be generated on clang:
-                if (constexpr std::string_view prefix{"(lambda at "}, suffix{")"};
-                    id.content.starts_with(prefix)
-                    && id.content.ends_with(suffix))
-                {
-                    m_OutIter = format::format_to(std::move(m_OutIter), "<lambda()>");
-                    return;
-                }
-
                 // These synthetic ids will be generated on clang:
                 if (constexpr std::string_view prefix{"(unnamed "}, suffix{")"};
                     id.content.starts_with(prefix)
@@ -394,6 +366,11 @@ namespace mimicpp::printing::type::parsing::v2
             m_OutIter = format::format_to(std::move(m_OutIter), "~{}", id.name.content);
         }
 
+        constexpr void visit(state::LambdaFunctionId const& /*id*/)
+        {
+            m_OutIter = format::format_to(std::move(m_OutIter), "<lambda>");
+        }
+
         constexpr void visit(state::UnqualifiedId const& nested)
         {
             std::visit(
@@ -411,6 +388,38 @@ namespace mimicpp::printing::type::parsing::v2
             }
         }
 
+        constexpr void visit(std::span<state::UnqualifiedId const> scopes)
+        {
+            while (!scopes.empty())
+            {
+                auto const& current = scopes.front();
+                scopes = scopes.subspan(1u);
+
+                if (auto const* const identifier = std::get_if<state::Identifier>(&current.name);
+                    identifier
+                    && "__cxx11" == identifier->content)
+                {
+                    continue;
+                }
+
+                visit(current);
+                m_OutIter = format::format_to(std::move(m_OutIter), "::");
+
+                // msvc appends an additional `()::` scope to lambdas, which the parser correctly identifies as `operator()::`.
+                // However, this is unnecessary noise, which I'd like to omit.
+                if (std::get_if<state::LambdaFunctionId>(&current.name)
+                    && !scopes.empty())
+                {
+                    if (auto const* const next = std::get_if<state::OperatorFunctionId>(&scopes.front().name);
+                        next
+                        && next->is_call())
+                    {
+                        scopes = scopes.subspan(1u);
+                    }
+                }
+            }
+        }
+
         constexpr void visit(state::ScopeSequence const& sequence)
         {
             if (sequence.explicitRoot)
@@ -418,30 +427,8 @@ namespace mimicpp::printing::type::parsing::v2
                 m_OutIter = format::format_to(std::move(m_OutIter), "::");
             }
 
-            // Do not print that additional noise like e.g. `__cxx11` from gcc and clang.
-            auto printableScopes =
-                sequence.scopes
-                | std::views::filter([](state::UnqualifiedId const& scope) {
-                      if (scope.templateArgs
-                          || scope.functionDeclarator)
-                      {
-                          return true;
-                      }
-
-                      if (auto const* const id = std::get_if<state::Identifier>(&scope.name))
-                      {
-                          return id->content != "__cxx11";
-                      }
-
-                      return true;
-                  });
-
             ++m_NestedDepth;
-            join(
-                printableScopes,
-                "::",
-                "::",
-                [&](auto const& scope) { visit(scope); });
+            visit(sequence.scopes);
             --m_NestedDepth;
         }
 

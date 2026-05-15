@@ -157,6 +157,18 @@ namespace mimicpp::printing::type::parsing::v2::state
         Symbol symbol;
 
         [[nodiscard]]
+        constexpr bool is_call() const noexcept
+        {
+            if (auto const* const doubleOp = std::get_if<std::array<lexing::operator_or_punctuator, 2u>>(&symbol))
+            {
+                return lexing::operator_or_punctuator{"("} == doubleOp->front()
+                    && lexing::operator_or_punctuator{")"} == doubleOp->back();
+            }
+
+            return false;
+        }
+
+        [[nodiscard]]
         MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(OperatorFunctionId const&) const = default;
     };
 
@@ -166,6 +178,14 @@ namespace mimicpp::printing::type::parsing::v2::state
 
         [[nodiscard]]
         MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ConversionFunctionId const&) const = default;
+    };
+
+    struct LambdaFunctionId
+    {
+        std::string_view content;
+
+        [[nodiscard]]
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(LambdaFunctionId const&) const = default;
     };
 
     struct DestructorFunctionId
@@ -182,6 +202,7 @@ namespace mimicpp::printing::type::parsing::v2::state
             Identifier,
             OperatorFunctionId,
             ConversionFunctionId,
+            LambdaFunctionId,
             DestructorFunctionId>;
         Name name{};
         std::optional<TemplateArgumentList> templateArgs{};
