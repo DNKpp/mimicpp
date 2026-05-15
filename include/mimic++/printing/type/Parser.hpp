@@ -170,15 +170,32 @@ namespace mimicpp::printing::type::parsing::v2
     [[nodiscard]]
     constexpr auto make_map(std::pair<Key, Value> const (&mappings)[length])
     {
-        return [mappings](Key const& key) -> std::optional<Value> {
-            if (auto const iter = std::ranges::find(mappings, key, &std::pair<Key, Value>::first);
-                iter != std::ranges::end(mappings))
+        class Map
+        {
+        public:
+            [[nodiscard]]
+            explicit constexpr Map(std::pair<Key, Value> const (&candidates)[length])
+                : m_Candidates{std::to_array(candidates)}
             {
-                return iter->second;
             }
 
-            return std::nullopt;
+            [[nodiscard]]
+            constexpr std::optional<Value> operator()(Key const& key) const
+            {
+                if (auto const iter = std::ranges::find(m_Candidates, key, &std::pair<Key, Value>::first);
+                iter != std::ranges::end(m_Candidates))
+                {
+                    return iter->second;
+                }
+
+                return std::nullopt;
+            }
+
+        private:
+            std::array<std::pair<Key, Value>, length> m_Candidates;
         };
+
+        return Map{mappings};
     }
 
     template <typename LexerTokenClass>

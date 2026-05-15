@@ -24,16 +24,26 @@
 
 namespace mimicpp::printing::type::lexing
 {
+    // This is a constexpr friendly version of `std::isspace`.
     // see: https://en.cppreference.com/w/cpp/string/byte/isspace
     inline auto constexpr is_space = [](char const c) noexcept {
-        return static_cast<bool>(
-            std::isspace(static_cast<unsigned char>(c)));
+        switch (c)
+        {
+        case ' ':  [[fallthrough]];
+        case '\f': [[fallthrough]];
+        case '\n': [[fallthrough]];
+        case '\r': [[fallthrough]];
+        case '\t': [[fallthrough]];
+        case '\v': return true;
+
+        default: return false;
+        }
     };
 
+    // This is a constexpr friendly version of `std::isdigit`.
     // see: https://en.cppreference.com/w/cpp/string/byte/isdigit
     inline auto constexpr is_digit = [](char const c) noexcept {
-        return static_cast<bool>(
-            std::isdigit(static_cast<unsigned char>(c)));
+        return '0' <= c && c <= '9';
     };
 
     namespace texts
