@@ -106,7 +106,12 @@ TEMPLATE_LIST_TEST_CASE(
             std::ostreambuf_iterator{ss},
             rawName);
 
-        auto const scopePattern = testing::maybe_pattern(testing::anonNsScopePattern + testing::lambdaPattern + " mutable::");
+        auto const scopePattern = testing::maybe_pattern(
+            testing::anonNsScopePattern
+            + testing::lambdaPattern
+            // msvc does not emit `mutable`
+            + testing::maybe_pattern(" mutable")
+            + "::");
         CHECK_THAT(
             std::move(ss).str(),
             Catch::Matchers::Matches(scopePattern + "my_type" + suffixPattern));
