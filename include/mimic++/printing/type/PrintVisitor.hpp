@@ -176,6 +176,9 @@ namespace mimicpp::printing::type::parsing::v2
         static constexpr std::array syntheticAliases = std::to_array<std::pair<std::string_view, std::string_view>>({
             {"{anonymous}",           "{anon-ns}"},
             {"(anonymous namespace)", "{anon-ns}"},
+
+            {"`anonymous-namespace'", "{anon-ns}"}, // msvc
+            {"`anonymous namespace'", "{anon-ns}"}, // msvc
         });
 
         constexpr void visit(state::Identifier const& id)
