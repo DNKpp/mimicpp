@@ -222,10 +222,19 @@ namespace mimicpp::printing::type::parsing::v2::state
         MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(ArrayDeclarator const&) const = default;
     };
 
+    struct CallConvention
+    {
+        lexing::identifier name{};
+
+        [[nodiscard]]
+        MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(CallConvention const&) const = default;
+    };
+
     struct PointerDeclarator
     {
         std::optional<CVQualifierSeq> qualifiers{};
         std::optional<ScopeSequence> scopes{};
+        std::optional<CallConvention> callConvention{};
 
         [[nodiscard]]
         MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES bool operator==(PointerDeclarator const&) const = default;
@@ -389,6 +398,7 @@ namespace mimicpp::printing::type::parsing::v2::state
     struct FunctionId
     {
         std::optional<TypeId> returnType{};
+        std::optional<CallConvention> callConvention{};
         QualifiedId identifier{};
 
         [[nodiscard]]
