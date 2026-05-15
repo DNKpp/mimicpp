@@ -30,14 +30,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
     {
         template <typename T>
         [[nodiscard]]
-        consteval std::string_view raw_type_name(std::type_identity<T> const) noexcept
+        consteval std::string_view raw_type_name() noexcept
         {
             return util::SourceLocation{}.function_name();
         }
 
         inline constexpr auto typeNameConfig = std::invoke(
             [] {
-                auto const rawName = raw_type_name(std::type_identity<int>{});
+                auto const rawName = raw_type_name<int>();
                 std::string_view const intName{"int"};
                 std::size_t const prefix = rawName.rfind(intName);
                 MIMICPP_ASSERT(prefix != std::string_view::npos, "Did not find `int` in the type-name string.");
@@ -68,7 +68,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
     [[nodiscard]]
     consteval std::string_view type_name() noexcept
     {
-        auto typeName = detail::raw_type_name(std::type_identity<T>{});
+        auto typeName = detail::raw_type_name<T>();
         typeName.remove_prefix(detail::typeNameConfig.prefix);
         typeName.remove_suffix(detail::typeNameConfig.suffix);
 

@@ -4,11 +4,22 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/printing/TypePrinter.hpp"
+#include "mimic++/utilities/StaticString.hpp"
 
 #include <optional>
 #include <tuple>
 
 using namespace mimicpp;
+
+TEMPLATE_TEST_CASE_SIG(
+    "printing::type::type_name returns the raw type-name.",
+    "[print][detail]",
+    ((auto expected, typename T), expected, T),
+    (util::StaticString{"int"}, int),
+    (util::StaticString{"void"}, void))
+{
+    CHECK(expected == printing::type::type_name<T>());
+}
 
 namespace
 {
