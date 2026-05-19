@@ -874,7 +874,6 @@ namespace mimicpp::printing::type::parsing::v2
                          Transaction innerTransaction{stream};
                          if (std::optional op = parse_operator_function_id<true>(stream))
                          {
-                             requiresFunction = true;
                              acceptTemplate = true;
                              innerTransaction.commit();
                              return op;
