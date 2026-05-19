@@ -35,23 +35,24 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::printing::type
             return util::SourceLocation{}.function_name();
         }
 
-        inline constexpr auto typeNameConfig = std::invoke(
-            [] {
-                auto const rawName = raw_type_name<int>();
-                std::string_view const intName{"int"};
-                std::size_t const prefix = rawName.rfind(intName);
-                MIMICPP_ASSERT(prefix != std::string_view::npos, "Did not find `int` in the type-name string.");
+        // GCOVR_EXCL_START
+        inline constexpr auto typeNameConfig = std::invoke([] {
+            auto const rawName = raw_type_name<int>();
+            std::string_view const intName{"int"};
+            std::size_t const prefix = rawName.rfind(intName);
+            MIMICPP_ASSERT(prefix != std::string_view::npos, "Did not find `int` in the type-name string.");
 
-                struct type_name_config
-                {
-                    std::size_t prefix{};
-                    std::size_t suffix{};
-                };
+            struct type_name_config
+            {
+                std::size_t prefix{};
+                std::size_t suffix{};
+            };
 
-                return type_name_config{
-                    .prefix = prefix,
-                    .suffix = rawName.size() - intName.size() - prefix};
-            });
+            return type_name_config{
+                .prefix = prefix,
+                .suffix = rawName.size() - intName.size() - prefix};
+        });
+        // GCOVR_EXCL_STOP
     }
 
     /**
