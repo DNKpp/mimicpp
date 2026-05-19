@@ -47,7 +47,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
         {
         }
 
-        constexpr CopyableBox& operator=(CopyableBox other)
+        constexpr CopyableBox& operator=(CopyableBox other) noexcept
         {
             std::ranges::swap(m_Data, other.m_Data);
             return *this;
