@@ -21,7 +21,6 @@
 
 namespace mimicpp::printing::type::parsing::v2
 {
-
     template <print_iterator OutIter>
     class PrintVisitor
     {
@@ -80,8 +79,10 @@ namespace mimicpp::printing::type::parsing::v2
                 m_OutIter = format::format_to(std::move(m_OutIter), "unsigned");
                 break;
 
+                // GCOVR_EXCL_START
             default:
                 util::unreachable();
+                // GCOVR_EXCL_STOP
             }
         }
 
@@ -100,8 +101,10 @@ namespace mimicpp::printing::type::parsing::v2
                 m_OutIter = format::format_to(std::move(m_OutIter), "long long");
                 break;
 
+                // GCOVR_EXCL_START
             default:
                 util::unreachable();
+                // GCOVR_EXCL_STOP
             }
         }
 
@@ -150,8 +153,10 @@ namespace mimicpp::printing::type::parsing::v2
                 m_OutIter = format::format_to(std::move(m_OutIter), "&&");
                 break;
 
+                // GCOVR_EXCL_START
             default:
                 util::unreachable();
+                // GCOVR_EXCL_STOP
             }
         }
 
