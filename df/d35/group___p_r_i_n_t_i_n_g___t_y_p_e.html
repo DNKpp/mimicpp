@@ -93,7 +93,7 @@ $(function(){initNavTree('df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html','../../
 </div><!--header-->
 <div class="contents">
 
-<p>State stringification occurs when an object's type is transformed into a textual representation.  
+<p>Type stringification occurs when an object's type is transformed into a textual representation.  
 <a href="#details">More...</a></p>
 <div class="dynheader">
 Collaboration diagram for object-type stringification:</div>
@@ -108,15 +108,15 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450" id="r_ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450 template"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga18ad74efa55d75d3db296d3ec7d7d450">mimicpp::printing::type::type_name</a> ()</td></tr>
-<tr class="memdesc:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the (potentially demangled) name.  <br /></td></tr>
-<tr class="memitem:ga2cc0c1474116143316d553c4fe01b367" id="r_ga2cc0c1474116143316d553c4fe01b367"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
-<tr class="memitem:ga2cc0c1474116143316d553c4fe01b367 template"><td class="memItemLeft"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> OutIter&#160;</td><td class="memItemRight"><a class="el" href="#ga2cc0c1474116143316d553c4fe01b367">mimicpp::printing::type::prettify_type</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
-<tr class="memdesc:ga2cc0c1474116143316d553c4fe01b367"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a demangled name.  <br /></td></tr>
-<tr class="memitem:ga79dfa19e05686e7ac09ed3861dec2feb" id="r_ga79dfa19e05686e7ac09ed3861dec2feb"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
-<tr class="memitem:ga79dfa19e05686e7ac09ed3861dec2feb template"><td class="memItemLeft"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> OutIter&#160;</td><td class="memItemRight"><a class="el" href="#ga79dfa19e05686e7ac09ed3861dec2feb">mimicpp::printing::type::prettify_function</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
-<tr class="memdesc:ga79dfa19e05686e7ac09ed3861dec2feb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a function name produces by e.g. <span class="tt">std::source_location::function_name()</span>.  <br /></td></tr>
+<tr class="memitem:gaca881944e4efd565dc2f5dc4d2e919c3" id="r_gaca881944e4efd565dc2f5dc4d2e919c3"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:gaca881944e4efd565dc2f5dc4d2e919c3 template"><td class="memItemLeft">consteval std::string_view&#160;</td><td class="memItemRight"><a class="el" href="#gaca881944e4efd565dc2f5dc4d2e919c3">mimicpp::printing::type::type_name</a> () noexcept</td></tr>
+<tr class="memdesc:gaca881944e4efd565dc2f5dc4d2e919c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the raw type-name.  <br /></td></tr>
+<tr class="memitem:gafd3930271fbd20b83bb20e4c70ae57c3" id="r_gafd3930271fbd20b83bb20e4c70ae57c3"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:gafd3930271fbd20b83bb20e4c70ae57c3 template"><td class="memItemLeft">constexpr OutIter&#160;</td><td class="memItemRight"><a class="el" href="#gafd3930271fbd20b83bb20e4c70ae57c3">mimicpp::printing::type::prettify_type</a> (OutIter out, std::string_view name)</td></tr>
+<tr class="memdesc:gafd3930271fbd20b83bb20e4c70ae57c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a typen-name.  <br /></td></tr>
+<tr class="memitem:ga27ed2447cac999ce8f69ab5637ee4def" id="r_ga27ed2447cac999ce8f69ab5637ee4def"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:ga27ed2447cac999ce8f69ab5637ee4def template"><td class="memItemLeft">constexpr OutIter&#160;</td><td class="memItemRight"><a class="el" href="#ga27ed2447cac999ce8f69ab5637ee4def">mimicpp::printing::type::prettify_function</a> (OutIter out, std::string_view name)</td></tr>
+<tr class="memdesc:ga27ed2447cac999ce8f69ab5637ee4def"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a function name, generated by e.g. <span class="tt">std::source_location::function_name()</span>.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -125,11 +125,11 @@ Variables</h2></td></tr>
 <tr class="memdesc:gade385e24aa5d66a888de57611065a490"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, converting the given type to its textual representation.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>State stringification occurs when an object's type is transformed into a textual representation. </p>
-<p>Type stringification requires special care in C++, as there is no portable way to print types exactly as users would write them in code. To address this, <span class="tt">mimic++</span> introduces the <span class="tt"><a class="el" href="#gade385e24aa5d66a888de57611065a490" title="Functional object, converting the given type to its textual representation.">print_type</a>&lt;T&gt;</span> function, which internally removes much of the extraneous noise that arises from various standard implementations.</p>
-<p>Furthermore, <span class="tt">mimic++</span> aims to present the majority of types in a manner that closely resembles how users would write them. For class types, this is achievable with some additional text manipulation; however, there is no way to determine whether users used the actual class name or an alias. For example, <span class="tt">std::string</span> is actually the type <span class="tt">std::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt;&gt;</span>, which introduces a significant amount of noise.</p>
-<p>Since it is common for users to write <span class="tt">std::string</span> rather than using the <span class="tt">std::basic_string</span> template form, <span class="tt">mimic++</span> specifically handles these common types and will always print <span class="tt">std::string</span> when the exact long form is detected.</p>
-<p>However, there are dozens of template types in the STL and even more in user code; and mimic++ strives to handle them correctly. When the name of a template type is requested, <span class="tt">mimic++</span> examines each of its arguments recursively and even folds all default arguments.</p>
+<div class="textblock"><p>Type stringification occurs when an object's type is transformed into a textual representation. </p>
+<p>Type stringification requires special care in C++, as there is no portable way to print types exactly as users would write them in code. To address this, <em>mimic++</em> introduces the <span class="tt"><a class="el" href="#gade385e24aa5d66a888de57611065a490" title="Functional object, converting the given type to its textual representation.">print_type</a>&lt;T&gt;</span> function, which internally removes much of the extraneous noise that arises from various standard implementations.</p>
+<p>Furthermore, <em>mimic++</em> aims to present the majority of types in a manner that closely resembles how users would write them. For class types, this is achievable with some additional text manipulation; however, there is no way to determine whether users used the actual class name or an alias. For example, <span class="tt">std::string</span> is actually the type <span class="tt">std::basic_string&lt;char, std::char_traits&lt;char&gt;, std::allocator&lt;char&gt;&gt;</span>, which introduces a significant amount of noise.</p>
+<p>Since it is common for users to write <span class="tt">std::string</span> rather than using the <span class="tt">std::basic_string</span> template form, <em>mimic++</em> specifically handles these common types and will always print <span class="tt">std::string</span> when the exact long form is detected.</p>
+<p>However, there are dozens of template types in the STL and even more in user code; and <em>mimic++</em> strives to handle them correctly. When the name of a template type is requested, <em>mimic++</em> examines each of its arguments recursively and even folds all default arguments.</p>
 <p>For example, the type </p><div class="fragment"><div class="line">std::map&lt;</div>
 <div class="line">    int,</div>
 <div class="line">    std::vector&lt;float, std::allocator&lt;float&gt;&gt;,</div>
@@ -138,7 +138,7 @@ Variables</h2></td></tr>
 </div><!-- fragment --><p> will be printed as <span class="tt">std::map&lt;int, std::vector&lt;float&gt;&gt;</span> which is likely how users have written it.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 Customize type-stringification</h3>
-<p><span class="tt">mimic++</span> automatically converts every type into a meaningful textual representation, but users may sometimes want to customize this process. Users can create a specialization of <span class="tt"><a class="el" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html" title="User may add specializations that will be utilized during type_print calls.">mimicpp::custom::TypePrinter</a></span> for their any type, which will then be prioritized over the internal conversions.</p>
+<p><em>mimic++</em> automatically converts every type into a meaningful textual representation, but users may sometimes want to customize this process. Users can create a specialization of <span class="tt"><a class="el" href="../../de/de7/classmimicpp_1_1custom_1_1_type_printer.html" title="User may add specializations that will be utilized during type_print calls.">mimicpp::custom::TypePrinter</a></span> for their type, which will then be prioritized over the internal conversions.</p>
 <p>Consider the following type. </p><div class="fragment"><div class="line">    <span class="keyword">struct </span>my_type</div>
 <div class="line">    {</div>
 <div class="line">        <span class="keywordtype">int</span> data{};</div>
@@ -165,28 +165,36 @@ Customize type-stringification</h3>
 <div class="line">        qualifiedName,</div>
 <div class="line">        Catch::Matchers::Equals(<span class="stringliteral">&quot;This-Is-My-Mighty-Type* const&amp;&amp;&quot;</span>));</div>
 </div><!-- fragment --> </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="ga79dfa19e05686e7ac09ed3861dec2feb" name="ga79dfa19e05686e7ac09ed3861dec2feb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga79dfa19e05686e7ac09ed3861dec2feb">&#9670;&#160;</a></span>prettify_function()</h2>
+<a id="ga27ed2447cac999ce8f69ab5637ee4def" name="ga27ed2447cac999ce8f69ab5637ee4def"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga27ed2447cac999ce8f69ab5637ee4def">&#9670;&#160;</a></span>prettify_function()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;print_iterator OutIter&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> OutIter mimicpp::printing::type::prettify_function </td>
+          <td class="memname">OutIter mimicpp::printing::type::prettify_function </td>
           <td>(</td>
           <td class="paramtype">OutIter</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Prettifies a function name produces by e.g. <span class="tt">std::source_location::function_name()</span>. </p>
+<p>Prettifies a function name, generated by e.g. <span class="tt">std::source_location::function_name()</span>. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">OutIter</td><td>The print-iterator type. </td></tr>
@@ -207,28 +215,36 @@ template&lt;print_iterator OutIter&gt; </div>
 
 </div>
 </div>
-<a id="ga2cc0c1474116143316d553c4fe01b367" name="ga2cc0c1474116143316d553c4fe01b367"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2cc0c1474116143316d553c4fe01b367">&#9670;&#160;</a></span>prettify_type()</h2>
+<a id="gafd3930271fbd20b83bb20e4c70ae57c3" name="gafd3930271fbd20b83bb20e4c70ae57c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gafd3930271fbd20b83bb20e4c70ae57c3">&#9670;&#160;</a></span>prettify_type()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;print_iterator OutIter&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> OutIter mimicpp::printing::type::prettify_type </td>
+          <td class="memname">OutIter mimicpp::printing::type::prettify_type </td>
           <td>(</td>
           <td class="paramtype">OutIter</td>          <td class="paramname"><span class="paramname"><em>out</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a></td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+          <td class="paramtype">std::string_view</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Prettifies a demangled name. </p>
+<p>Prettifies a typen-name. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">OutIter</td><td>The print-iterator type. </td></tr>
@@ -238,7 +254,7 @@ template&lt;print_iterator OutIter&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">out</td><td>The print iterator. </td></tr>
-    <tr><td class="paramname">name</td><td>The demangled name to be prettified. </td></tr>
+    <tr><td class="paramname">name</td><td>The name to be prettified. </td></tr>
   </table>
   </dd>
 </dl>
@@ -250,8 +266,8 @@ template&lt;print_iterator OutIter&gt; </div>
 
 </div>
 </div>
-<a id="ga18ad74efa55d75d3db296d3ec7d7d450" name="ga18ad74efa55d75d3db296d3ec7d7d450"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga18ad74efa55d75d3db296d3ec7d7d450">&#9670;&#160;</a></span>type_name()</h2>
+<a id="gaca881944e4efd565dc2f5dc4d2e919c3" name="gaca881944e4efd565dc2f5dc4d2e919c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaca881944e4efd565dc2f5dc4d2e919c3">&#9670;&#160;</a></span>type_name()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,7 +278,7 @@ template&lt;typename T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> mimicpp::printing::type::type_name </td>
+          <td class="memname">std::string_view mimicpp::printing::type::type_name </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -270,23 +286,20 @@ template&lt;typename T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span></span>  </td>
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel consteval">consteval</span><span class="mlabel noexcept">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the (potentially demangled) name. </p>
+<p>Returns the raw type-name. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The desired type. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The (potentially demangled) name.</dd></dl>
-<p>This function serves as a wrapper for typeid(T).name().</p><ul>
-<li>On MSVC, this function returns the demangled name directly.</li>
-<li>However, on GCC and Clang, the behavior differs. When <span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES</span> is enabled, it further demangles the name using <span class="tt">abi::__cxa_demangle</span>. </li>
-</ul>
+<dl class="section return"><dt>Returns</dt><dd>The raw name.</dd></dl>
+<p>This function internally relies on <span class="tt">std::source_location::function_name</span> and tries to extract the desired type-name from that function-name. </p>
 
 </div>
 </div>

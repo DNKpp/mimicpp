@@ -18,7 +18,7 @@ var searchData=
   ['find_5fnext_5funwrapped_5ftoken_15',['find_next_unwrapped_token',['../d8/da3/namespacemimicpp_1_1util.html#ad9543460b0c98427b3cf3b46f5b5aaad',1,'mimicpp::util']]],
   ['floatingpointmatchers_2ehpp_16',['FloatingPointMatchers.hpp',['../d1/de0/_floating_point_matchers_8hpp.html',1,'']]],
   ['fmt_20as_20formatting_20backend_17',['Use &lt;span class=&quot;tt&quot;&gt;fmt&lt;/span&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md30',1,'']]],
-  ['folding_18',['Case-Folding',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md5',1,'']]],
+  ['folding_18',['Case-Folding',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
   ['for_20case_20insensitive_20matching_19',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
   ['for_20printing_20',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['for_5fbase_5ftag_21',['for_base_tag',['../d6/da7/structmimicpp_1_1for__base__tag.html',1,'mimicpp']]],
@@ -39,13 +39,11 @@ var searchData=
   ['fromconstness_36',['fromConstness',['../d4/d44/classmimicpp_1_1call_1_1_info.html#af90735d4d5fa4d29dae955b1660defb3',1,'mimicpp::call::Info::fromConstness'],['../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#a6824a122077ea2308b1840fe7e69cd85',1,'mimicpp::reporting::CallReport::fromConstness']]],
   ['fromloc_37',['fromLoc',['../de/d56/classmimicpp_1_1reporting_1_1_call_report.html#aed352ed918c40d74c26659c1e221f402',1,'mimicpp::reporting::CallReport']]],
   ['fromsourcelocation_38',['fromSourceLocation',['../d4/d44/classmimicpp_1_1call_1_1_info.html#aa8a744a37e78959a2fa61b24af052bfd',1,'mimicpp::call::Info']]],
-  ['function_39',['Function',['../d6/d14/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function.html',1,'mimicpp::printing::type::parsing::token']]],
+  ['function_39',['function',['../d5/d44/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_abstract_declarator_1_1_layer.html#ab08c06ab3b2c6feaa4b51925677a834f',1,'mimicpp::printing::type::parsing::v2::state::AbstractDeclarator::Layer']]],
   ['function_5fname_40',['function_name',['../db/df5/classmimicpp_1_1util_1_1_source_location.html#a58af2e7f13a902da05a6f97809c5789b',1,'mimicpp::util::SourceLocation']]],
-  ['functioncontext_41',['FunctionContext',['../d8/dd3/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_context.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['functionidentifier_42',['FunctionIdentifier',['../d4/d09/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_identifier.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['functionname_43',['functionName',['../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c',1,'mimicpp::util::SourceLocation']]],
-  ['functionptr_44',['FunctionPtr',['../d8/d0d/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['functionptrtype_45',['FunctionPtrType',['../dd/df1/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_ptr_type.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['functiontype_46',['FunctionType',['../d7/d12/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_type.html',1,'mimicpp::printing::type::parsing::token']]],
-  ['fwd_2ehpp_47',['Fwd.hpp',['../df/dde/_fwd_8hpp.html',1,'(Global Namespace)'],['../de/d52/printing_2_fwd_8hpp.html',1,'(Global Namespace)'],['../dd/d66/reporting_2_fwd_8hpp.html',1,'(Global Namespace)']]]
+  ['functiondeclarator_41',['FunctionDeclarator',['../dc/df2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_function_declarator.html',1,'mimicpp::printing::type::parsing::v2::state']]],
+  ['functiondeclarator_42',['functionDeclarator',['../d2/d53/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_unqualified_id.html#a49c68c521391e8061db0a7c2896d5370',1,'mimicpp::printing::type::parsing::v2::state::UnqualifiedId']]],
+  ['functionid_43',['FunctionId',['../d9/d8f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_function_id.html',1,'mimicpp::printing::type::parsing::v2::state']]],
+  ['functionname_44',['functionName',['../db/df5/classmimicpp_1_1util_1_1_source_location.html#a1fcc2b804e5e579c1c39cb2349ecd05c',1,'mimicpp::util::SourceLocation']]],
+  ['fwd_2ehpp_45',['Fwd.hpp',['../df/dde/_fwd_8hpp.html',1,'(Global Namespace)'],['../de/d52/printing_2_fwd_8hpp.html',1,'(Global Namespace)'],['../dd/d66/reporting_2_fwd_8hpp.html',1,'(Global Namespace)']]]
 ];

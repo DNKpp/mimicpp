@@ -17,11 +17,12 @@ var searchData=
   ['mimicpp_3a_3aprinting_3a_3atype_3a_3alexing_14',['lexing',['../d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html',1,'mimicpp::printing::type']]],
   ['mimicpp_3a_3aprinting_3a_3atype_3a_3alexing_3a_3atexts_15',['texts',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html',1,'mimicpp::printing::type::lexing']]],
   ['mimicpp_3a_3aprinting_3a_3atype_3a_3aparsing_16',['parsing',['../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html',1,'mimicpp::printing::type']]],
-  ['mimicpp_3a_3aprinting_3a_3atype_3a_3aparsing_3a_3atoken_17',['token',['../d2/d01/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1token.html',1,'mimicpp::printing::type::parsing']]],
-  ['mimicpp_3a_3areporting_18',['reporting',['../d6/d48/namespacemimicpp_1_1reporting.html',1,'mimicpp']]],
-  ['mimicpp_3a_3asequence_19',['sequence',['../d8/dce/namespacemimicpp_1_1sequence.html',1,'mimicpp']]],
-  ['mimicpp_3a_3asettings_20',['settings',['../d3/dce/namespacemimicpp_1_1settings.html',1,'mimicpp']]],
-  ['mimicpp_3a_3athen_21',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]],
-  ['mimicpp_3a_3autil_22',['util',['../d8/da3/namespacemimicpp_1_1util.html',1,'mimicpp']]],
-  ['mimicpp_3a_3autil_3a_3astacktrace_23',['stacktrace',['../d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html',1,'mimicpp::util']]]
+  ['mimicpp_3a_3aprinting_3a_3atype_3a_3aparsing_3a_3av2_17',['v2',['../d8/d80/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1v2.html',1,'mimicpp::printing::type::parsing']]],
+  ['mimicpp_3a_3aprinting_3a_3atype_3a_3aparsing_3a_3av2_3a_3astate_18',['state',['../df/dac/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state.html',1,'mimicpp::printing::type::parsing::v2']]],
+  ['mimicpp_3a_3areporting_19',['reporting',['../d6/d48/namespacemimicpp_1_1reporting.html',1,'mimicpp']]],
+  ['mimicpp_3a_3asequence_20',['sequence',['../d8/dce/namespacemimicpp_1_1sequence.html',1,'mimicpp']]],
+  ['mimicpp_3a_3asettings_21',['settings',['../d3/dce/namespacemimicpp_1_1settings.html',1,'mimicpp']]],
+  ['mimicpp_3a_3athen_22',['then',['../d9/d4c/namespacemimicpp_1_1then.html',1,'mimicpp']]],
+  ['mimicpp_3a_3autil_23',['util',['../d8/da3/namespacemimicpp_1_1util.html',1,'mimicpp']]],
+  ['mimicpp_3a_3autil_3a_3astacktrace_24',['stacktrace',['../d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html',1,'mimicpp::util']]]
 ];

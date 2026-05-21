@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['identifier_0',['identifier',['../d4/d09/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function_identifier.html#a60537b08d9d34e51d1e80338f3327a7e',1,'mimicpp::printing::type::parsing::token::FunctionIdentifier::identifier'],['../d1/d3a/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_regular_type.html#ad3fcbc9cff8c08e131025ee348891180',1,'mimicpp::printing::type::parsing::token::RegularType::identifier'],['../d6/d14/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_function.html#a1a8fd4a02d1ec4ebacedaf71f26bc0d6',1,'mimicpp::printing::type::parsing::token::Function::identifier']]],
+  ['identifier_0',['identifier',['../d6/d0c/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_qualified_id.html#a8de69404823408036ec5221443a64ba8',1,'mimicpp::printing::type::parsing::v2::state::QualifiedId::identifier'],['../d9/d8f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_function_id.html#a8b992cd8388213ea472ef07af1d883f2',1,'mimicpp::printing::type::parsing::v2::state::FunctionId::identifier']]],
   ['inapplicablesequences_1',['inapplicableSequences',['../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#af9ba72fbd98a5ba53ecfe84d8c48284e',1,'mimicpp::reporting::state_inapplicable']]],
   ['incordec_2',['incOrDec',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a0447e2b60861d1055397b655c91d54de',1,'mimicpp::printing::type::lexing::texts']]],
   ['is_5fcharacter_5fv_3',['is_character_v',['../dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html#ga88d25d2fd5d4f51c8a9d81bdfb57bcb2',1,'mimicpp']]],
@@ -10,8 +10,9 @@ var searchData=
   ['is_5foverload_5fset_5fv_7',['is_overload_set_v',['../df/dc6/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d___s_e_t.html#ga39bc4106334393c907fb7c716490135c',1,'mimicpp']]],
   ['is_5foverloadable_5fwith_5fv_8',['is_overloadable_with_v',['../d1/d9e/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d_a_b_l_e___w_i_t_h.html#ga444a530890b564007a9d8f9b5d035785',1,'mimicpp']]],
   ['is_5fspace_9',['is_space',['../d4/dcf/namespacemimicpp_1_1printing_1_1type_1_1lexing.html#a8cf34592bdd77c55aba786690912681e',1,'mimicpp::printing::type::lexing']]],
-  ['isbuiltintype_10',['isBuiltinType',['../d3/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_identifier.html#a5ef222509cd8a1dbd8faa222b191465d',1,'mimicpp::printing::type::parsing::token::Identifier']]],
-  ['isconst_11',['isConst',['../d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a64ca9757dadaa7d54a3734a8477e78b3',1,'mimicpp::printing::type::parsing::token::Specs::Layer']]],
-  ['isnoexcept_12',['isNoexcept',['../de/db7/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs.html#a2cf7b6dd95212fb2b1da2275540d2bf1',1,'mimicpp::printing::type::parsing::token::Specs']]],
-  ['isvolatile_13',['isVolatile',['../d4/dcb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_specs_1_1_layer.html#a24685a3e4202c3ceed5ee4f54c569ad0',1,'mimicpp::printing::type::parsing::token::Specs::Layer']]]
+  ['isconst_10',['isConst',['../d6/d1f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_c_v_qualifier_seq.html#ac00ad81ae2ea9740f14b6a15bfc7cdc6',1,'mimicpp::printing::type::parsing::v2::state::CVQualifierSeq']]],
+  ['ismutable_11',['isMutable',['../d9/d44/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_lambda_function_id.html#a3ef5d5ba9785e191d460a52d0cd95378',1,'mimicpp::printing::type::parsing::v2::state::LambdaFunctionId']]],
+  ['isnoexcept_12',['isNoexcept',['../dc/df2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_function_declarator.html#a73e8aa4bbdea95589ce1ec2a2bc0bad4',1,'mimicpp::printing::type::parsing::v2::state::FunctionDeclarator']]],
+  ['issynthetic_13',['isSynthetic',['../d0/d6d/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_identifier.html#a59e3b69247e6568321bedd482638ae5b',1,'mimicpp::printing::type::parsing::v2::state::Identifier']]],
+  ['isvolatile_14',['isVolatile',['../d6/d1f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_c_v_qualifier_seq.html#a0118f6f68d5a91c3e7ee9fb1d8b411ca',1,'mimicpp::printing::type::parsing::v2::state::CVQualifierSeq']]]
 ];

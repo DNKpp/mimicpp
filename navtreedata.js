@@ -60,11 +60,12 @@ var NAVTREE =
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
+        [ "All", "namespacemembers.html", "namespacemembers_dup" ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
+        [ "Enumerations", "namespacemembers_enum.html", null ],
+        [ "Enumerator", "namespacemembers_eval.html", null ]
       ] ]
     ] ],
     [ "Concepts", "concepts.html", "concepts" ],
@@ -78,7 +79,6 @@ var NAVTREE =
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
-        [ "Enumerator", "functions_eval.html", null ],
         [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
@@ -96,12 +96,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a6331ef90418cbf95c86c609fbd181a90",
-"d4/db7/structmimicpp_1_1signature__remove__noexcept.html",
-"d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html#a9a73d19f3814268b4fbbb5a2a344c855",
-"da/d39/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01boost_1_1stacktrace_1_1stacktrace_01_4.html#abe8b30a98df82b80daba80f5aa14aaea",
-"dd/d2e/classmimicpp_1_1reporting_1_1_error.html#aee2132f4440c16e4a285185cc0f34504",
-"de/dd8/group___m_a_t_c_h_e_r_s___r_a_n_g_e.html#gabe07e4394f348806148d665d73dc246f"
+"d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a6d32697cd0c5d9c6556483e787d95410",
+"d5/d44/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_abstract_declarator_1_1_layer.html#afefc82fbe53b0259f7e853265bb6f335",
+"d8/d48/_i_reporter_8hpp.html",
+"da/db6/_framework_config_8hpp_source.html",
+"dc/dec/_always_false_8hpp.html",
+"de/daf/classmimicpp_1_1util_1_1_static_string.html#acb5c8e0666b768b650646d72179eeee1",
+"index.html#autotoc_md65"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

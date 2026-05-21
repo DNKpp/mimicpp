@@ -14,5 +14,6 @@ var searchData=
   ['concepts_2ehpp_11',['Concepts.hpp',['../d9/db9/_concepts_8hpp.html',1,'']]],
   ['config_2ehpp_12',['Config.hpp',['../d8/dd2/_config_8hpp.html',1,'']]],
   ['controlpolicies_2ehpp_13',['ControlPolicies.hpp',['../db/d70/_control_policies_8hpp.html',1,'']]],
-  ['cpptrace_2ehpp_14',['cpptrace.hpp',['../d2/dd7/cpptrace_8hpp.html',1,'']]]
+  ['copyablebox_2ehpp_14',['CopyableBox.hpp',['../da/de3/_copyable_box_8hpp.html',1,'']]],
+  ['cpptrace_2ehpp_15',['cpptrace.hpp',['../d2/dd7/cpptrace_8hpp.html',1,'']]]
 ];

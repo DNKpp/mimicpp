@@ -95,16 +95,20 @@ $(function(){initNavTree('de/daf/classmimicpp_1_1util_1_1_static_string.html','.
 
 <p><code>#include &lt;<a class="el" href="../../d7/d89/_static_string_8hpp_source.html">StaticString.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for mimicpp::util::StaticString&lt; Char, length &gt;:</div>
+Collaboration diagram for mimicpp::util::StaticString&lt; Char, length &gt;:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d7/dcc/classmimicpp_1_1util_1_1_static_string__inherit__graph.svg" width="179" height="163"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d7/dfc/classmimicpp_1_1util_1_1_static_string__coll__graph.svg" width="226" height="342"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a target="top" href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab65d4a2b74f10ef712023a9fb9f980b4" id="r_ab65d4a2b74f10ef712023a9fb9f980b4"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ab65d4a2b74f10ef712023a9fb9f980b4">explicit</a> (false) const eval <a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">StaticString</a>(Char const (&amp;arr)[length+1]) noexcept</td></tr>
+<tr class="memitem:a13c0babaecc93a8d19284a2cdd75dcb0" id="r_a13c0babaecc93a8d19284a2cdd75dcb0"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a13c0babaecc93a8d19284a2cdd75dcb0">explicit</a> (false) const eval <a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">StaticString</a>(Char const (&amp;arr)[length+1u]) noexcept</td></tr>
 <tr class="memitem:ab117a2f87fc5500e305656df3bd78693" id="r_ab117a2f87fc5500e305656df3bd78693"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#ab117a2f87fc5500e305656df3bd78693">begin</a> () const noexcept</td></tr>
 <tr class="memitem:a93ed932d02c615057140bb157d8c5c22" id="r_a93ed932d02c615057140bb157d8c5c22"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#a93ed932d02c615057140bb157d8c5c22">end</a> () const noexcept</td></tr>
+<tr class="memitem:aedf61489a44f11a96dcdbf46ee224cd5" id="r_aedf61489a44f11a96dcdbf46ee224cd5"><td class="memItemLeft">constexpr std::basic_string_view&lt; Char &gt;&#160;</td><td class="memItemRight"><a class="el" href="#aedf61489a44f11a96dcdbf46ee224cd5">view</a> () const noexcept</td></tr>
+<tr class="memitem:a3aae8fea55d78b1ad19269a415a367c7" id="r_a3aae8fea55d78b1ad19269a415a367c7"><td class="memItemLeft">constexpr std::basic_string&lt; Char &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a3aae8fea55d78b1ad19269a415a367c7">str</a> () const noexcept</td></tr>
+<tr class="memitem:acb5c8e0666b768b650646d72179eeee1" id="r_acb5c8e0666b768b650646d72179eeee1"><td class="memTemplParams" colspan="2">template&lt;std::convertible_to&lt; std::basic_string_view&lt; Char &gt; &gt; String&gt; </td></tr>
+<tr class="memitem:acb5c8e0666b768b650646d72179eeee1 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#acb5c8e0666b768b650646d72179eeee1">operator==</a> (String const &amp;other) const noexcept</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -113,7 +117,11 @@ Static Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:adf8411ce3d861d3859db34b2a535481e" id="r_adf8411ce3d861d3859db34b2a535481e"><td class="memItemLeft">Char&#160;</td><td class="memItemRight"><a class="el" href="#adf8411ce3d861d3859db34b2a535481e">data</a> [length]</td></tr>
+<tr class="memitem:ae0bb90bedbc903cc3b8f1d3a83155dc0" id="r_ae0bb90bedbc903cc3b8f1d3a83155dc0"><td class="memItemLeft">std::array&lt; Char, length+1u &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ae0bb90bedbc903cc3b8f1d3a83155dc0">data</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a68525035391d577aaa91395f70889b6b" id="r_a68525035391d577aaa91395f70889b6b"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a68525035391d577aaa91395f70889b6b">operator==</a> (<a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">StaticString</a> const &amp;, <a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">StaticString</a> const &amp;)=default</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="ab117a2f87fc5500e305656df3bd78693" name="ab117a2f87fc5500e305656df3bd78693"></a>
@@ -140,6 +148,11 @@ template&lt;typename Char, std::size_t length&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../de/daf/classmimicpp_1_1util_1_1_static_string_ab117a2f87fc5500e305656df3bd78693_icgraph.svg" width="100%" height="384"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
 
 </div>
 </div>
@@ -194,11 +207,21 @@ template&lt;typename Char, std::size_t length&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../de/daf/classmimicpp_1_1util_1_1_static_string_a93ed932d02c615057140bb157d8c5c22_cgraph.svg" width="420" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../de/daf/classmimicpp_1_1util_1_1_static_string_a93ed932d02c615057140bb157d8c5c22_icgraph.svg" width="658" height="102"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>
-<a id="ab65d4a2b74f10ef712023a9fb9f980b4" name="ab65d4a2b74f10ef712023a9fb9f980b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab65d4a2b74f10ef712023a9fb9f980b4">&#9670;&#160;</a></span>explicit()</h2>
+<a id="a13c0babaecc93a8d19284a2cdd75dcb0" name="a13c0babaecc93a8d19284a2cdd75dcb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a13c0babaecc93a8d19284a2cdd75dcb0">&#9670;&#160;</a></span>explicit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -212,7 +235,7 @@ template&lt;typename Char, std::size_t length&gt; </div>
           <td class="memname"><a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">mimicpp::util::StaticString</a>&lt; Char, length &gt;::explicit </td>
           <td>(</td>
           <td class="paramtype">false</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td>)[length+1] const &amp;</td>
+          <td>)[length+1u] const &amp;</td>
         </tr>
       </table>
   </td>
@@ -221,6 +244,40 @@ template&lt;typename Char, std::size_t length&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="acb5c8e0666b768b650646d72179eeee1" name="acb5c8e0666b768b650646d72179eeee1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb5c8e0666b768b650646d72179eeee1">&#9670;&#160;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Char, std::size_t length&gt; </div>
+<div class="memtemplate">
+template&lt;std::convertible_to&lt; std::basic_string_view&lt; Char &gt; &gt; String&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool <a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">mimicpp::util::StaticString</a>&lt; Char, length &gt;::operator== </td>
+          <td>(</td>
+          <td class="paramtype">String const &amp;</td>          <td class="paramname"><span class="paramname"><em>other</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../de/daf/classmimicpp_1_1util_1_1_static_string_acb5c8e0666b768b650646d72179eeee1_cgraph.svg" width="100%" height="388"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
 
 </div>
 </div>
@@ -248,12 +305,118 @@ template&lt;typename Char, std::size_t length&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../de/daf/classmimicpp_1_1util_1_1_static_string_ae9115aceec7f39c076ad5dd8af28613a_icgraph.svg" width="100%" height="376"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+
+</div>
+</div>
+<a id="a3aae8fea55d78b1ad19269a415a367c7" name="a3aae8fea55d78b1ad19269a415a367c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3aae8fea55d78b1ad19269a415a367c7">&#9670;&#160;</a></span>str()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Char, std::size_t length&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::basic_string&lt; Char &gt; <a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">mimicpp::util::StaticString</a>&lt; Char, length &gt;::str </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../de/daf/classmimicpp_1_1util_1_1_static_string_a3aae8fea55d78b1ad19269a415a367c7_cgraph.svg" width="658" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="aedf61489a44f11a96dcdbf46ee224cd5" name="aedf61489a44f11a96dcdbf46ee224cd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedf61489a44f11a96dcdbf46ee224cd5">&#9670;&#160;</a></span>view()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Char, std::size_t length&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::basic_string_view&lt; Char &gt; <a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">mimicpp::util::StaticString</a>&lt; Char, length &gt;::view </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../de/daf/classmimicpp_1_1util_1_1_static_string_aedf61489a44f11a96dcdbf46ee224cd5_cgraph.svg" width="636" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../de/daf/classmimicpp_1_1util_1_1_static_string_aedf61489a44f11a96dcdbf46ee224cd5_icgraph.svg" width="394" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a name="doc-related-members" id="doc-related-members"></a><h2 id="header-doc-related-members" class="groupheader">Friends And Related Symbol Documentation</h2>
+<a id="a68525035391d577aaa91395f70889b6b" name="a68525035391d577aaa91395f70889b6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68525035391d577aaa91395f70889b6b">&#9670;&#160;</a></span>operator==</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Char, std::size_t length&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool operator== </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">StaticString</a>&lt; Char, length &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">StaticString</a>&lt; Char, length &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel friend">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="adf8411ce3d861d3859db34b2a535481e" name="adf8411ce3d861d3859db34b2a535481e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf8411ce3d861d3859db34b2a535481e">&#9670;&#160;</a></span>data</h2>
+<a id="ae0bb90bedbc903cc3b8f1d3a83155dc0" name="ae0bb90bedbc903cc3b8f1d3a83155dc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0bb90bedbc903cc3b8f1d3a83155dc0">&#9670;&#160;</a></span>data</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -261,7 +424,7 @@ template&lt;typename Char, std::size_t length&gt; </div>
 template&lt;typename Char, std::size_t length&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">Char <a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">mimicpp::util::StaticString</a>&lt; Char, length &gt;::data[length]</td>
+          <td class="memname">std::array&lt;Char, length + 1u&gt; <a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">mimicpp::util::StaticString</a>&lt; Char, length &gt;::data</td>
         </tr>
       </table>
 </div><div class="memdoc">

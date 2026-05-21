@@ -97,12 +97,12 @@ $(function(){initNavTree('da/db0/_print_type_8hpp.html','../../',''); });
 <code>#include &quot;<a class="el" href="../../d5/dec/_format_8hpp_source.html">mimic++/printing/Format.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d52/printing_2_fwd_8hpp_source.html">mimic++/printing/Fwd.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d8/d65/_priority_tag_8hpp_source.html">mimic++/utilities/PriorityTag.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/d15/_source_location_8hpp_source.html">mimic++/utilities/SourceLocation.hpp</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;concepts&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;iterator&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
-<code>#include &lt;typeinfo&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for PrintType.hpp:</div>
@@ -129,15 +129,15 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450" id="r_ga18ad74efa55d75d3db296d3ec7d7d450"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:ga18ad74efa55d75d3db296d3ec7d7d450 template"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga18ad74efa55d75d3db296d3ec7d7d450">mimicpp::printing::type::type_name</a> ()</td></tr>
-<tr class="memdesc:ga18ad74efa55d75d3db296d3ec7d7d450"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the (potentially demangled) name.  <br /></td></tr>
-<tr class="memitem:ga2cc0c1474116143316d553c4fe01b367" id="r_ga2cc0c1474116143316d553c4fe01b367"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
-<tr class="memitem:ga2cc0c1474116143316d553c4fe01b367 template"><td class="memItemLeft"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> OutIter&#160;</td><td class="memItemRight"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga2cc0c1474116143316d553c4fe01b367">mimicpp::printing::type::prettify_type</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
-<tr class="memdesc:ga2cc0c1474116143316d553c4fe01b367"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a demangled name.  <br /></td></tr>
-<tr class="memitem:ga79dfa19e05686e7ac09ed3861dec2feb" id="r_ga79dfa19e05686e7ac09ed3861dec2feb"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
-<tr class="memitem:ga79dfa19e05686e7ac09ed3861dec2feb template"><td class="memItemLeft"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> OutIter&#160;</td><td class="memItemRight"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga79dfa19e05686e7ac09ed3861dec2feb">mimicpp::printing::type::prettify_function</a> (OutIter out, <a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a> name)</td></tr>
-<tr class="memdesc:ga79dfa19e05686e7ac09ed3861dec2feb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a function name produces by e.g. <span class="tt">std::source_location::function_name()</span>.  <br /></td></tr>
+<tr class="memitem:gaca881944e4efd565dc2f5dc4d2e919c3" id="r_gaca881944e4efd565dc2f5dc4d2e919c3"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:gaca881944e4efd565dc2f5dc4d2e919c3 template"><td class="memItemLeft">consteval std::string_view&#160;</td><td class="memItemRight"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#gaca881944e4efd565dc2f5dc4d2e919c3">mimicpp::printing::type::type_name</a> () noexcept</td></tr>
+<tr class="memdesc:gaca881944e4efd565dc2f5dc4d2e919c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the raw type-name.  <br /></td></tr>
+<tr class="memitem:gafd3930271fbd20b83bb20e4c70ae57c3" id="r_gafd3930271fbd20b83bb20e4c70ae57c3"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:gafd3930271fbd20b83bb20e4c70ae57c3 template"><td class="memItemLeft">constexpr OutIter&#160;</td><td class="memItemRight"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#gafd3930271fbd20b83bb20e4c70ae57c3">mimicpp::printing::type::prettify_type</a> (OutIter out, std::string_view name)</td></tr>
+<tr class="memdesc:gafd3930271fbd20b83bb20e4c70ae57c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a typen-name.  <br /></td></tr>
+<tr class="memitem:ga27ed2447cac999ce8f69ab5637ee4def" id="r_ga27ed2447cac999ce8f69ab5637ee4def"><td class="memTemplParams" colspan="2">template&lt;print_iterator OutIter&gt; </td></tr>
+<tr class="memitem:ga27ed2447cac999ce8f69ab5637ee4def template"><td class="memItemLeft">constexpr OutIter&#160;</td><td class="memItemRight"><a class="el" href="../../df/d35/group___p_r_i_n_t_i_n_g___t_y_p_e.html#ga27ed2447cac999ce8f69ab5637ee4def">mimicpp::printing::type::prettify_function</a> (OutIter out, std::string_view name)</td></tr>
+<tr class="memdesc:ga27ed2447cac999ce8f69ab5637ee4def"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prettifies a function name, generated by e.g. <span class="tt">std::source_location::function_name()</span>.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

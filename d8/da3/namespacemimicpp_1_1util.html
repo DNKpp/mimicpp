@@ -100,6 +100,10 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:always_5Ffalse" id="r_always_5Ffalse"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../d4/df2/structmimicpp_1_1util_1_1always__false.html">always_false</a></td></tr>
+<tr class="memitem:CopyableBox" id="r_CopyableBox"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d3/d77/classmimicpp_1_1util_1_1_copyable_box.html">CopyableBox</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple copyable value type, which owns a heap-allocated value.  <a href="../../d3/d77/classmimicpp_1_1util_1_1_copyable_box.html#details">More...</a><br /></td></tr>
+<tr class="memitem:Overloaded" id="r_Overloaded"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../d7/d96/structmimicpp_1_1util_1_1_overloaded.html">Overloaded</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Famous overloaded helper type used for convenient variant visiting.  <a href="../../d7/d96/structmimicpp_1_1util_1_1_overloaded.html#details">More...</a><br /></td></tr>
 <tr class="memitem:pass_5Fkey" id="r_pass_5Fkey"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../db/dcd/structmimicpp_1_1util_1_1pass__key.html">pass_key</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A helper type that enables fine-grained access control to specific functions without using friend declarations.  <a href="../../db/dcd/structmimicpp_1_1util_1_1pass__key.html#details">More...</a><br /></td></tr>
 <tr class="memitem:priority_5Ftag" id="r_priority_5Ftag"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../d0/db8/structmimicpp_1_1util_1_1priority__tag.html">priority_tag</a></td></tr>
@@ -109,7 +113,6 @@ Classes</h2></td></tr>
 <tr class="memitem:Stacktrace" id="r_Stacktrace"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html">Stacktrace</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple type-erased stacktrace abstraction.  <a href="../../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#details">More...</a><br /></td></tr>
 <tr class="memitem:StaticString" id="r_StaticString"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../de/daf/classmimicpp_1_1util_1_1_static_string.html">StaticString</a></td></tr>
-<tr class="memitem:StaticString_3C_20Char_2C_200u_20_3E" id="r_StaticString_3C_20Char_2C_200u_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d2/d50/classmimicpp_1_1util_1_1_static_string_3_01_char_00_010u_01_4.html">StaticString&lt; Char, 0u &gt;</a></td></tr>
 <tr class="memitem:type_5Flist" id="r_type_5Flist"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html">type_list</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A very basic type-list template.  <a href="../../dc/d9e/structmimicpp_1_1util_1_1type__list.html#details">More...</a><br /></td></tr>
 <tr class="memitem:type_5Flist_5Freverse" id="r_type_5Flist_5Freverse"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../d7/de5/structmimicpp_1_1util_1_1type__list__reverse.html">type_list_reverse</a></td></tr>
@@ -173,6 +176,8 @@ Functions</h2></td></tr>
 <tr class="memdesc:ac58fced4701bdff093838ed1807e8836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invokes undefined behavior.  <br /></td></tr>
 <tr class="memitem:a9ff7bd584bd2fd60e21b88ec914e4051" id="r_a9ff7bd584bd2fd60e21b88ec914e4051"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a9ff7bd584bd2fd60e21b88ec914e4051 template"><td class="memItemLeft">constexpr std::underlying_type_t&lt; T &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a9ff7bd584bd2fd60e21b88ec914e4051">to_underlying</a> (T const value) noexcept</td></tr>
+<tr class="memitem:a15603f28dd19d50c8d917beb0e31c7ac" id="r_a15603f28dd19d50c8d917beb0e31c7ac"><td class="memTemplParams" colspan="2">template&lt;typename... Ts&gt; </td></tr>
+<tr class="memitem:a15603f28dd19d50c8d917beb0e31c7ac template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a15603f28dd19d50c8d917beb0e31c7ac">Overloaded</a> (Ts...) -&gt; Overloaded&lt; Ts... &gt;</td></tr>
 <tr class="memitem:ac4fcfcaa329db378296093c1deff115e" id="r_ac4fcfcaa329db378296093c1deff115e"><td class="memTemplParams" colspan="2">template&lt;typename Char, std::size_t length&gt; </td></tr>
 <tr class="memitem:ac4fcfcaa329db378296093c1deff115e template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ac4fcfcaa329db378296093c1deff115e">StaticString</a> (Char const(&amp;)[length]) -&gt; StaticString&lt; Char, length - 1u &gt;</td></tr>
 </table><table class="memberdecls">
@@ -513,6 +518,25 @@ template&lt;std::ranges::borrowed_range Range&gt; </div>
 
 </div>
 </div>
+<a id="a15603f28dd19d50c8d917beb0e31c7ac" name="a15603f28dd19d50c8d917beb0e31c7ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15603f28dd19d50c8d917beb0e31c7ac">&#9670;&#160;</a></span>Overloaded()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename... Ts&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">mimicpp::util::Overloaded </td>
+          <td>(</td>
+          <td class="paramtype">Ts...</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> -&gt;  Overloaded&lt; Ts... &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a4b28e610d0e74e04665b9e7b94b76752" name="a4b28e610d0e74e04665b9e7b94b76752"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4b28e610d0e74e04665b9e7b94b76752">&#9670;&#160;</a></span>partition_by()</h2>
 
@@ -704,6 +728,11 @@ template&lt;typename T&gt; </div>
 <p>Invokes undefined behavior. </p>
 <dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/utility/unreachable">https://en.cppreference.com/w/cpp/utility/unreachable</a> </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Implementation directly taken from <a href="https://en.cppreference.com/w/cpp/utility/unreachable">https://en.cppreference.com/w/cpp/utility/unreachable</a> </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d8/da3/namespacemimicpp_1_1util_ac58fced4701bdff093838ed1807e8836_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
 
 </div>
 </div>

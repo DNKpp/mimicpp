@@ -18,14 +18,6 @@ var concepts =
         [ "boolean_testable", "d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html", null ],
         [ "weakly_equality_comparable_with", "d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html", null ]
       ] ],
-      [ "printing", "d8/ddf/namespacemimicpp_1_1printing.html", [
-        [ "type", "d9/d41/namespacemimicpp_1_1printing_1_1type.html", [
-          [ "parsing", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html", [
-            [ "parser_visitor", "d6/def/conceptmimicpp_1_1printing_1_1type_1_1parsing_1_1parser__visitor.html", null ],
-            [ "token_type", "d4/d1b/conceptmimicpp_1_1printing_1_1type_1_1parsing_1_1token__type.html", null ]
-          ] ]
-        ] ]
-      ] ],
       [ "matcher_for", "df/d23/conceptmimicpp_1_1matcher__for.html", null ],
       [ "object_watcher_for", "db/db6/conceptmimicpp_1_1object__watcher__for.html", null ],
       [ "print_iterator", "d3/d26/conceptmimicpp_1_1print__iterator.html", null ],
