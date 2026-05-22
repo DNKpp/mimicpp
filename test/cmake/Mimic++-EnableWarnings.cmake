@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+#          Copyright Dominic (DNKpp) Koepke 2024-2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -13,21 +13,20 @@ if (NOT TARGET enable-warnings)
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"
         AND CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
 
-        set(WARNING_FLAGS /W4 -Wextra -Wpedantic -Werror -Wno-unknown-attributes)
+        set(WARNING_FLAGS /W4 -Wextra -Werror -Wpedantic -Wno-unknown-attributes)
     else ()
         # @formatter:off
 		string(CONCAT WARNING_FLAGS
 			"$<IF:"
 				"$<CXX_COMPILER_ID:MSVC>,"
 					"/W4;/WX;/permissive-,"
-					"-Wall;-Wextra;-Wpedantic;-Werror"
+					"-Wall;-Wextra;-Werror;-pedantic;-pedantic-errors"
 			">"
 		)
 		# @formatter:on
     endif ()
 
     target_compile_options(enable-warnings INTERFACE
-
         ${WARNING_FLAGS}
     )
 

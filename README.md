@@ -576,7 +576,8 @@ The results of these test cases are consistently tracked by an extensive CI syst
 test case outcomes,
 and coverage across dozens of different operating systems, compilers, and build configurations.
 
-For the test builds, the flags `-Wall -Wextra -Wpedantic -Werror` (or `/W4 /WX /permissive-` on MSVC) are set.
+For the test builds, the flags `-Wall -Wextra -Werror -pedantic -pedantic-errors`
+(or `/W4 /WX /permissive-` on MSVC) are set.
 This ensures that `mimic++` won't flood your build output with endless warnings - or, even worse, break your builds —
 if you enable these flags in your own projects.
 
