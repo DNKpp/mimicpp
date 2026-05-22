@@ -549,7 +549,7 @@ The following official adapters exist and can be included from the `mimic++_ext/
 
 * [Boost.Test](https://github.com/boostorg/test) (tested with v1.89.0)
 * [Catch2](https://github.com/catchorg) (tested with v3.10.0)
-* [Doctest](https://github.com/doctest/doctest) (tested with v2.4.12)
+* [Doctest](https://github.com/doctest/doctest) (tested with v2.5.2)
 * [GTest](https://github.com/google/googletest) (tested with v1.15.2)
 
 <a name="documentation"></a>
