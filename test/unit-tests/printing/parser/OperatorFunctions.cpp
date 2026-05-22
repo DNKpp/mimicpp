@@ -9,7 +9,7 @@
 
 using mimicpp::printing::type::parse_type;
 namespace lexing = mimicpp::printing::type::lexing;
-namespace state = mimicpp::printing::type::parsing::v2::state;
+namespace state = mimicpp::printing::type::parsing::state;
 
 TEST_CASE(
     "parsing::parse_type supports types with a nested operator scope.",

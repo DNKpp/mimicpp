@@ -22,7 +22,7 @@
     #include <vector>
 #endif
 
-namespace mimicpp::printing::type::parsing::v2::state
+namespace mimicpp::printing::type::parsing::state
 {
     struct TypeId;
 

@@ -18,6 +18,7 @@ TEST_CASE(
         "int* int",
         "int<int>",
         "int[int]");
+    CAPTURE(input);
 
     CHECK_FALSE(printing::type::parse_type(input));
 }

@@ -23,7 +23,7 @@
     #include <variant>
 #endif
 
-namespace mimicpp::printing::type::parsing::v2
+namespace mimicpp::printing::type::parsing
 {
     class Transaction;
 
@@ -1356,11 +1356,11 @@ namespace mimicpp::printing::type::parsing::v2
 
 namespace mimicpp::printing::type
 {
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<parsing::v2::state::TypeId> parse_type(std::string_view const text)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<parsing::state::TypeId> parse_type(std::string_view const text)
     {
         lexing::NameLexer lexer{text};
-        parsing::v2::TokenStream stream{lexer};
-        if (std::optional typeId = parsing::v2::parse_type_id(stream);
+        parsing::TokenStream stream{lexer};
+        if (std::optional typeId = parsing::parse_type_id(stream);
             typeId
             && stream.is_eof())
         {
@@ -1370,16 +1370,16 @@ namespace mimicpp::printing::type
         return std::nullopt;
     }
 
-    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<parsing::v2::state::FunctionId> parse_function(std::string_view const text)
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional<parsing::state::FunctionId> parse_function(std::string_view const text)
     {
         lexing::NameLexer lexer{text};
-        parsing::v2::TokenStream stream{lexer};
-        if (std::optional functionId = parsing::v2::parse_function(stream))
+        parsing::TokenStream stream{lexer};
+        if (std::optional functionId = parsing::parse_function(stream))
         {
             if (stream.is_eof()
                 // Sometimes certain template details are added in separate square-brackets
                 || (text.ends_with(']')
-                    && parsing::v2::expect(stream, lexing::operator_or_punctuator{"["})))
+                    && parsing::expect(stream, lexing::operator_or_punctuator{"["})))
             {
                 return functionId;
             }

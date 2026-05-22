@@ -131,7 +131,7 @@ namespace mimicpp::printing::type
     {
         if (std::optional const typeId = parse_type(name))
         {
-            parsing::v2::PrintVisitor<OutIter> visitor{std::move(out)};
+            parsing::PrintVisitor<OutIter> visitor{std::move(out)};
             visitor.visit(*typeId);
 
             return visitor.out();
@@ -145,7 +145,7 @@ namespace mimicpp::printing::type
     {
         if (std::optional const functionId = parse_function(name))
         {
-            parsing::v2::PrintVisitor<OutIter> visitor{std::move(out)};
+            parsing::PrintVisitor<OutIter> visitor{std::move(out)};
             visitor.visit(*functionId);
 
             return visitor.out();

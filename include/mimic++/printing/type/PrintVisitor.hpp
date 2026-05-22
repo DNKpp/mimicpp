@@ -19,7 +19,7 @@
     #include <variant>
 #endif
 
-namespace mimicpp::printing::type::parsing::v2
+namespace mimicpp::printing::type::parsing
 {
     template <print_iterator OutIter>
     class PrintVisitor
