@@ -100,11 +100,16 @@ namespace
     };
 }
 
+#if !MIMICPP_DETAIL_HAS_SOURCE_LOCATION
 // The `__builtin_FUNCTION` function generates more unreliable names.
-#ifdef MIMICPP_DETAIL_HAS_SOURCE_LOCATION
-    #define PRETTIFY_FUNCTION_SOURCE_LOCATION_FUNCTION_SHOULDFAIL
-#else
     #define PRETTIFY_FUNCTION_SOURCE_LOCATION_FUNCTION_SHOULDFAIL "[!shouldfail]"
+#elif MIMICPP_DETAIL_IS_CLANG \
+    && __clang_major__ == 22
+    // clang-22 changed the lambda synthetic-identifiers
+    // see https://github.com/llvm/llvm-project/issues/199259
+    #define PRETTIFY_FUNCTION_SOURCE_LOCATION_FUNCTION_SHOULDFAIL "[!shouldfail]"
+#else
+    #define PRETTIFY_FUNCTION_SOURCE_LOCATION_FUNCTION_SHOULDFAIL
 #endif
 
 TEST_CASE(
