@@ -83,11 +83,32 @@ jobs:
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
+              image: "ghcr.io/dnkpp/clang:22"
+            compiler:
+              name: "clang"
+              version: "22"
+            asan: true
+            cxx20_modules: true
+
+          - prefix: "Ubuntu"
+            suffix: "/libc++"
+            os: "ubuntu-latest"
+            container:
+              image: "ghcr.io/dnkpp/clang:22"
+            compiler:
+              name: "clang"
+              version: "22"
+            only_cpptrace: true
+            libcxx: true
+            cxx20_modules: false
+
+          - prefix: "Ubuntu"
+            os: "ubuntu-latest"
+            container:
               image: "ghcr.io/dnkpp/clang:21"
             compiler:
               name: "clang"
               version: "21"
-            asan: true
             cxx20_modules: true
 
           - prefix: "Ubuntu"
@@ -212,11 +233,20 @@ jobs:
           - prefix: "Ubuntu"
             os: "ubuntu-latest"
             container:
+              image: "ghcr.io/dnkpp/gcc:16"
+            compiler:
+              name: "gcc"
+              version: "16"
+            asan: true
+            cxx20_modules: true
+
+          - prefix: "Ubuntu"
+            os: "ubuntu-latest"
+            container:
               image: "ghcr.io/dnkpp/gcc:15"
             compiler:
               name: "gcc"
               version: "15"
-            asan: true
             cxx20_modules: false # in theory, it should work but in practice it does not.
 
           - prefix: "Ubuntu"
