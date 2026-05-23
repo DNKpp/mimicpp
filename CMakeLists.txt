@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+#          Copyright Dominic (DNKpp) Koepke 2024-2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -32,7 +32,7 @@ message(DEBUG "${MESSAGE_PREFIX} CXXFLAGS: $ENV{CXXFLAGS}")
 message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 message(DEBUG "${MESSAGE_PREFIX} CMAKE_CXX_FLAGS_INIT: ${CMAKE_CXX_FLAGS_INIT}")
 
-string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${mimicpp_SOURCE_DIR}" IS_TOP_LEVEL_PROJECT)
+string(COMPARE EQUAL "${CMAKE_SOURCE_DIR}" "${mimicpp_SOURCE_DIR}" MIMICPP_TOP_LEVEL_PROJECT)
 
 set(CMAKE_CXX_STANDARD 20)
 if (MIMICPP_FORCED_CXX_STANDARD)
@@ -70,12 +70,13 @@ if (MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__)
 endif ()
 
 option(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${IS_TOP_LEVEL_PROJECT})
+option(MIMICPP_BUILD_TESTS "Determines, whether the tests shall be built." ${MIMICPP_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_TESTS)
 	include(CTest)
 	add_subdirectory("test")
 endif()
 
-option(MIMICPP_BUILD_EXAMPLES "Determines, whether the examples shall be built." ${IS_TOP_LEVEL_PROJECT})
+option(MIMICPP_BUILD_EXAMPLES "Determines, whether the examples shall be built." ${MIMICPP_TOP_LEVEL_PROJECT})
 if (MIMICPP_BUILD_EXAMPLES)
 	include(CTest)
 	add_subdirectory("examples")
