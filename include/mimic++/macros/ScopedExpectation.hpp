@@ -1,10 +1,12 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef MIMICPP_MACROS_SCOPED_EXPECTATION_HPP
 #define MIMICPP_MACROS_SCOPED_EXPECTATION_HPP
+
+#include "mimic++/macros/Common.hpp"
 
 #define MIMICPP_DETAIL_UNIQUE_NAME(prefix, counter) prefix##counter
 #define MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(counter) \
@@ -15,16 +17,14 @@
  * \brief Convenience macro, which creates a ScopedExpectation with a unique name.
  * \ingroup MOCK
  */
-#define MIMICPP_SCOPED_EXPECTATION MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(__COUNTER__)
+#define MIMICPP_SCOPED_EXPECTATION MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(MIMICPP_DETAIL_COUNTER)
 
 #ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS
-
     /**
      * \brief Shorthand variant of \ref MIMICPP_SCOPED_EXPECTATION.
      * \ingroup MOCK
      */
     #define SCOPED_EXP MIMICPP_SCOPED_EXPECTATION
-
 #endif
 
 #endif
