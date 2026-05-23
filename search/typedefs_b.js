@@ -24,5 +24,5 @@ var searchData=
   ['stringstreamt_21',['StringStreamT',['../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8',1,'mimicpp']]],
   ['stringt_22',['StringT',['../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1',1,'mimicpp']]],
   ['stringviewt_23',['StringViewT',['../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6',1,'mimicpp']]],
-  ['symbol_24',['Symbol',['../dc/d34/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_operator_function_id.html#aed6d542ce4a80a8559cf8afe12590f34',1,'mimicpp::printing::type::parsing::v2::state::OperatorFunctionId']]]
+  ['symbol_24',['Symbol',['../dd/d50/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_operator_function_id.html#aa3ca84dca9a3c4445880127a4f660256',1,'mimicpp::printing::type::parsing::state::OperatorFunctionId']]]
 ];

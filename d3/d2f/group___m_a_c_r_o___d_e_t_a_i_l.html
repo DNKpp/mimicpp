@@ -109,11 +109,39 @@ Topics</h2></td></tr>
 <tr class="memdesc:d7/d30/group___m_a_c_r_o___d_e_t_a_i_l___s_t_r_i_n_g_i_f_y"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stringifies the provided arguments. <br /></td></tr>
 <tr class="memitem:MACRO_5FDETAIL_5FSTRIP_5FPARENS" id="r_MACRO_5FDETAIL_5FSTRIP_5FPARENS"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="../../d7/d0f/group___m_a_c_r_o___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html">strip_parens</a></td></tr>
 <tr class="memdesc:d7/d0f/group___m_a_c_r_o___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes an enclosing pair of (), if present. <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga4876f6e961e8741c9605a28509fa2808" id="r_ga4876f6e961e8741c9605a28509fa2808"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga4876f6e961e8741c9605a28509fa2808">MIMICPP_DETAIL_COUNTER</a>&#160;&#160;&#160;__LINE__</td></tr>
+<tr class="memdesc:ga4876f6e961e8741c9605a28509fa2808"><td class="mdescLeft">&#160;</td><td class="mdescRight">General-purpose counter.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains several internally used macros. </p>
 <dl class="section attention"><dt>Attention</dt><dd>Users should never use these macros directly. </dd></dl>
-</div></div><!-- contents -->
+</div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="ga4876f6e961e8741c9605a28509fa2808" name="ga4876f6e961e8741c9605a28509fa2808"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4876f6e961e8741c9605a28509fa2808">&#9670;&#160;</a></span>MIMICPP_DETAIL_COUNTER</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MIMICPP_DETAIL_COUNTER&#160;&#160;&#160;__LINE__</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>General-purpose counter. </p>
+<p>This macro generates unique integer values within the current translation unit. Although this mechanism is widely supported, it is not yet part of the official standard. However, a proposal to standardize it has already been accepted, so it is expected to become part of future C and C++ standards. </p><dl class="section see"><dt>See also</dt><dd><a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3457.htm">https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3457.htm</a></dd></dl>
+<p>Recent versions of Clang (e.g., Clang 22) may emit the following warning: </p><blockquote class="doxtable">
+<p>error: '<b>COUNTER</b>' is a C2y extension [-Werror,-Wc2y-extensions] </p>
+</blockquote>
+<p>Since this macro is currently only used to generate unique names for scoped-expectations, falling back to <span class="tt">__LINE__</span> should generally be safe in such cases.</p>
+<dl class="section note"><dt>Note</dt><dd>As a last-resort mechanism, users can override this macro by defining it themselves before including this header. </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

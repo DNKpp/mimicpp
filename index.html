@@ -171,7 +171,7 @@ Quick Demo</h3>
 <div class="line"><span class="comment">// Set up an expectation:</span></div>
 <div class="line"><a class="code hl_define" href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(42, std::nullopt);       <span class="comment">// The mock should be called with `42` and `nullopt`.</span></div>
 <div class="line">mock(1337, std::nullopt);                            <span class="comment">// Call the mock with an incorrect argument (`1337` instead of `42`).</span></div>
-<div class="ttc" id="agroup___m_o_c_k_html_ga7e7d68eefb8f3cba28422f62bcf2f90a"><div class="ttname"><a href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a></div><div class="ttdeci">#define SCOPED_EXP</div><div class="ttdoc">Shorthand variant of MIMICPP_SCOPED_EXPECTATION.</div><div class="ttdef"><b>Definition</b> ScopedExpectation.hpp:26</div></div>
+<div class="ttc" id="agroup___m_o_c_k_html_ga7e7d68eefb8f3cba28422f62bcf2f90a"><div class="ttname"><a href="d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a></div><div class="ttdeci">#define SCOPED_EXP</div><div class="ttdoc">Shorthand variant of MIMICPP_SCOPED_EXPECTATION.</div><div class="ttdef"><b>Definition</b> ScopedExpectation.hpp:27</div></div>
 </div><!-- fragment --><p>This will produce the following detailed output:</p>
 <div class="fragment"><div class="line">Unmatched Call originated from `path/to/source.cpp:42`, `test_function2()`</div>
 <div class="line">  On Target `Mock&lt;void(int)&gt;` used Overload `void(int)`</div>
@@ -468,8 +468,8 @@ Test Framework</h3>
 <p>The following official adapters exist and can be included from the <span class="tt">mimic++_ext/adapters</span> include directory:</p>
 <ul>
 <li><a href="https://github.com/boostorg/test">Boost.Test</a> (tested with v1.89.0)</li>
-<li><a href="https://github.com/catchorg">Catch2</a> (tested with v3.10.0)</li>
-<li><a href="https://github.com/doctest/doctest">Doctest</a> (tested with v2.4.12)</li>
+<li><a href="https://github.com/catchorg">Catch2</a> (tested with v3.15.0)</li>
+<li><a href="https://github.com/doctest/doctest">Doctest</a> (tested with v2.5.2)</li>
 <li><a href="https://github.com/google/googletest">GTest</a> (tested with v1.15.2)</li>
 </ul>
 <p><a class="anchor" id="documentation"></a> </p>
@@ -483,7 +483,7 @@ Documentation</h3>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md73"></a>
 Testing</h2>
 <p><span class="tt">mimic++</span> employs a strict testing policy, ensuring that each official feature is thoroughly tested. The results of these test cases are consistently tracked by an extensive CI system, which checks compilation success, test case outcomes, and coverage across dozens of different operating systems, compilers, and build configurations.</p>
-<p>For the test builds, the flags <span class="tt">-Wall -Wextra -Wpedantic -Werror</span> (or <span class="tt">/W4 /WX /permissive-</span> on MSVC) are set. This ensures that <span class="tt">mimic++</span> won't flood your build output with endless warnings - or, even worse, break your builds — if you enable these flags in your own projects.</p>
+<p>For the test builds, the flags <span class="tt">-Wall -Wextra -Werror -pedantic -pedantic-errors</span> (or <span class="tt">/W4 /WX /permissive-</span> on MSVC) are set. This ensures that <span class="tt">mimic++</span> won't flood your build output with endless warnings - or, even worse, break your builds — if you enable these flags in your own projects.</p>
 <p>The coverage is generated via <span class="tt">gcov</span> and evaluated by <a href="https://app.codacy.com/gh/DNKpp/mimicpp">codacy</a>, <a href="https://codecov.io/gh/DNKpp/mimicpp">codecov</a> and <a href="https://coveralls.io/github/DNKpp/mimicpp">coveralls</a>.</p>
 <p>Nevertheless, even with significant effort, achieving 100% code coverage remains out of reach. I strive to cover each branch, but the coverage percentage can vary between different tools. The goal is to get as close to 100% as possible.</p>
 <p>On the other hand, there is a significant amount of code that isn't even analyzed by these tools, such as templates and macros. <span class="tt">mimic++</span> contains a lot of templated code at its core, which requires at least an equal amount of effort to get right and thoroughly tested. Therefore, it's important to take the coverage percentage with a grain of salt.</p>
@@ -531,19 +531,23 @@ CI Tests</summary>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">clang-21  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">std/fmt  </td><td class="markdownTableBodyCenter">std*/cpptrace/boost  </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">clang-22  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">std/fmt  </td><td class="markdownTableBodyCenter">std*/cpptrace/boost  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">gcc-10  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">fmt  </td><td class="markdownTableBodyCenter">cpptrace/boost  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">gcc-10.2  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">*  </td><td class="markdownTableBodyCenter">fmt  </td><td class="markdownTableBodyCenter">cpptrace/boost  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">gcc-11  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">fmt  </td><td class="markdownTableBodyCenter">cpptrace/boost  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">gcc-12  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">fmt  </td><td class="markdownTableBodyCenter">cpptrace/boost  </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">gcc-13  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">std/fmt  </td><td class="markdownTableBodyCenter">std*/cpptrace/boost  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">gcc-14  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">std/fmt  </td><td class="markdownTableBodyCenter">std*/cpptrace/boost  </td></tr>
+<td class="markdownTableBodyNone">gcc-13  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">std/fmt  </td><td class="markdownTableBodyCenter">std*/cpptrace/boost  </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">gcc-14  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">std/fmt  </td><td class="markdownTableBodyCenter">std*/cpptrace/boost  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">gcc-15  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">std/fmt  </td><td class="markdownTableBodyCenter">std*/cpptrace/boost  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">gcc-16  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">?  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">x  </td><td class="markdownTableBodyCenter">std/fmt  </td><td class="markdownTableBodyCenter">std*/cpptrace/boost  </td></tr>
 </table>
 <p>Note:</p>
 <ul>

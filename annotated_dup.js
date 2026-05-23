@@ -80,33 +80,31 @@ var annotated_dup =
             [ "NameLexer", "de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html", "de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer" ]
           ] ],
           [ "parsing", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html", [
-            [ "v2", "d8/d80/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1v2.html", [
-              [ "state", "df/dac/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state.html", [
-                [ "Recursive", "dc/d28/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_recursive.html", "dc/d28/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_recursive" ],
-                [ "CVQualifierSeq", "d6/d1f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_c_v_qualifier_seq.html", "d6/d1f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_c_v_qualifier_seq" ],
-                [ "Identifier", "d0/d6d/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_identifier.html", "d0/d6d/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_identifier" ],
-                [ "FunctionDeclarator", "dc/df2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_function_declarator.html", "dc/df2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_function_declarator" ],
-                [ "OperatorFunctionId", "dc/d34/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_operator_function_id.html", "dc/d34/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_operator_function_id" ],
-                [ "ConversionFunctionId", "d0/d80/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_conversion_function_id.html", "d0/d80/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_conversion_function_id" ],
-                [ "LambdaFunctionId", "d9/d44/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_lambda_function_id.html", "d9/d44/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_lambda_function_id" ],
-                [ "DestructorFunctionId", "d6/dd9/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_destructor_function_id.html", "d6/dd9/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_destructor_function_id" ],
-                [ "UnqualifiedId", "d2/d53/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_unqualified_id.html", "d2/d53/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_unqualified_id" ],
-                [ "ScopeSequence", "de/d76/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_scope_sequence.html", "de/d76/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_scope_sequence" ],
-                [ "QualifiedId", "d6/d0c/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_qualified_id.html", "d6/d0c/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_qualified_id" ],
-                [ "ArrayDeclarator", "df/d8f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_array_declarator.html", "df/d8f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_array_declarator" ],
-                [ "CallConvention", "d1/d87/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_call_convention.html", "d1/d87/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_call_convention" ],
-                [ "PointerDeclarator", "d3/d1d/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_pointer_declarator.html", "d3/d1d/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_pointer_declarator" ],
-                [ "ReferenceDeclarator", "dd/dbf/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_reference_declarator.html", "dd/dbf/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_reference_declarator" ],
-                [ "AbstractDeclarator", "d7/dfa/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_abstract_declarator.html", "d7/dfa/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_abstract_declarator" ],
-                [ "BuiltinType", "dd/d9b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_builtin_type.html", "dd/d9b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_builtin_type" ],
-                [ "TypeId", "dc/de9/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_type_id.html", "dc/de9/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_type_id" ],
-                [ "FunctionId", "d9/d8f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_function_id.html", "d9/d8f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1state_1_1_function_id" ]
-              ] ],
-              [ "TokenStream", "dc/db6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1_token_stream.html", "dc/db6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1_token_stream" ],
-              [ "Transaction", "df/dee/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1_transaction.html", "df/dee/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1_transaction" ],
-              [ "StateGuard", "df/dbe/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1_state_guard.html", "df/dbe/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1_state_guard" ],
-              [ "PrintVisitor", "d5/ded/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1_print_visitor.html", "d5/ded/classmimicpp_1_1printing_1_1type_1_1parsing_1_1v2_1_1_print_visitor" ]
-            ] ]
+            [ "state", "d4/dac/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1state.html", [
+              [ "Recursive", "de/d33/classmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_recursive.html", "de/d33/classmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_recursive" ],
+              [ "CVQualifierSeq", "d8/d9f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_c_v_qualifier_seq.html", "d8/d9f/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_c_v_qualifier_seq" ],
+              [ "Identifier", "de/d7b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_identifier.html", "de/d7b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_identifier" ],
+              [ "FunctionDeclarator", "db/d91/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_function_declarator.html", "db/d91/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_function_declarator" ],
+              [ "OperatorFunctionId", "dd/d50/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_operator_function_id.html", "dd/d50/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_operator_function_id" ],
+              [ "ConversionFunctionId", "d4/dfc/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_conversion_function_id.html", "d4/dfc/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_conversion_function_id" ],
+              [ "LambdaFunctionId", "de/ddb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_lambda_function_id.html", "de/ddb/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_lambda_function_id" ],
+              [ "DestructorFunctionId", "df/d6e/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_destructor_function_id.html", "df/d6e/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_destructor_function_id" ],
+              [ "UnqualifiedId", "d3/d33/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_unqualified_id.html", "d3/d33/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_unqualified_id" ],
+              [ "ScopeSequence", "d4/db2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_scope_sequence.html", "d4/db2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_scope_sequence" ],
+              [ "QualifiedId", "d9/d8d/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_qualified_id.html", "d9/d8d/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_qualified_id" ],
+              [ "ArrayDeclarator", "d2/d66/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_array_declarator.html", "d2/d66/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_array_declarator" ],
+              [ "CallConvention", "d4/dbe/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_call_convention.html", "d4/dbe/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_call_convention" ],
+              [ "PointerDeclarator", "d2/dc2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_pointer_declarator.html", "d2/dc2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_pointer_declarator" ],
+              [ "ReferenceDeclarator", "d3/daa/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_reference_declarator.html", "d3/daa/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_reference_declarator" ],
+              [ "AbstractDeclarator", "df/d96/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_abstract_declarator.html", "df/d96/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_abstract_declarator" ],
+              [ "BuiltinType", "df/d42/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_builtin_type.html", "df/d42/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_builtin_type" ],
+              [ "TypeId", "dd/dc5/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_type_id.html", "dd/dc5/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_type_id" ],
+              [ "FunctionId", "d2/db6/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_function_id.html", "d2/db6/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_function_id" ]
+            ] ],
+            [ "TokenStream", "d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html", "d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream" ],
+            [ "Transaction", "d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html", "d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction" ],
+            [ "StateGuard", "de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html", "de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard" ],
+            [ "PrintVisitor", "de/dd6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_print_visitor.html", "de/dd6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_print_visitor" ]
           ] ]
         ] ],
         [ "PrintTypeFn", "d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html", "d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn" ],

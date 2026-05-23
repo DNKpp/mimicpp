@@ -92,7 +92,7 @@ $(function(){initNavTree('d2/d1d/_scoped_expectation_8hpp_source.html','../../',
   <div class="headertitle"><div class="title">ScopedExpectation.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d2/d1d/_scoped_expectation_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.</span></div>
+<a href="../../d2/d1d/_scoped_expectation_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024-2026.</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Distributed under the Boost Software License, Version 1.0.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//          https://www.boost.org/LICENSE_1_0.txt)</span></div>
@@ -100,22 +100,23 @@ $(function(){initNavTree('d2/d1d/_scoped_expectation_8hpp_source.html','../../',
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#ifndef MIMICPP_MACROS_SCOPED_EXPECTATION_HPP</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#define MIMICPP_MACROS_SCOPED_EXPECTATION_HPP</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="../../d2/d1d/_scoped_expectation_8hpp.html#aa8576de5d8f4370f91955b5308c114ec">    9</a></span><span class="preprocessor">#define MIMICPP_DETAIL_UNIQUE_NAME(prefix, counter) prefix##counter</span></div>
-<div class="foldopen" id="foldopen00010" data-start="" data-end="">
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="../../d2/d1d/_scoped_expectation_8hpp.html#ad5c9d26583b2372dce138e717f5ec7b3">   10</a></span><span class="preprocessor">#define MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(counter) \</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">    [[maybe_unused]]                                    \</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">    ::mimicpp::ScopedExpectation const MIMICPP_DETAIL_UNIQUE_NAME(_mimicpp_expectation_, counter) =</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/dfa/macros_2_common_8hpp.html">mimic++/macros/Common.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="../../d2/d1d/_scoped_expectation_8hpp.html#aa8576de5d8f4370f91955b5308c114ec">   11</a></span><span class="preprocessor">#define MIMICPP_DETAIL_UNIQUE_NAME(prefix, counter) prefix##counter</span></div>
+<div class="foldopen" id="foldopen00012" data-start="" data-end="">
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="../../d2/d1d/_scoped_expectation_8hpp.html#ad5c9d26583b2372dce138e717f5ec7b3">   12</a></span><span class="preprocessor">#define MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(counter) \</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">    [[maybe_unused]]                                    \</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">    ::mimicpp::ScopedExpectation const MIMICPP_DETAIL_UNIQUE_NAME(_mimicpp_expectation_, counter) =</span></div>
 </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="../../d8/d12/group___m_o_c_k.html#ga77b154196ed19c6ad4649b0a604f7601">   18</a></span><span class="preprocessor">#define MIMICPP_SCOPED_EXPECTATION MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(__COUNTER__)</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">   26</a></span><span class="preprocessor">    #define SCOPED_EXP MIMICPP_SCOPED_EXPECTATION</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="../../d8/d12/group___m_o_c_k.html#ga77b154196ed19c6ad4649b0a604f7601">   20</a></span><span class="preprocessor">#define MIMICPP_SCOPED_EXPECTATION MIMICPP_DETAIL_SCOPED_EXPECTATION_IMPL(MIMICPP_DETAIL_COUNTER)</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">   27</a></span><span class="preprocessor">    #define SCOPED_EXP MIMICPP_SCOPED_EXPECTATION</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="amacros_2_common_8hpp_html"><div class="ttname"><a href="../../dd/dfa/macros_2_common_8hpp.html">Common.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
