@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024-2026.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -42,7 +42,7 @@ namespace mimicpp::expectation::policies
         constexpr bool operator()(Args&&... args) const
             noexcept(std::is_nothrow_invocable_v<matches_fn, Matcher const&, Args&...>)
         {
-            return mimicpp::detail::matches_hook::matches(matcher, args...);
+            return std::holds_alternative<matcher::MatchSuccess>(mimicpp::detail::matches_hook::matches(matcher, args...));
         }
     };
 

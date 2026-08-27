@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -15,6 +15,7 @@
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
+    #include <functional>
     #include <optional>
     #include <type_traits>
 #endif
@@ -25,52 +26,18 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
     struct matcher_traits;
 }
 
-namespace mimicpp::detail::matches_hook
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matcher
 {
-    template <typename Matcher, typename T, typename... Others>
-    [[nodiscard]]
-    constexpr bool matches_impl(
-        [[maybe_unused]] util::priority_tag<1> const,
-        Matcher const& matcher,
-        T& target,
-        Others&... others)
-        requires requires {
-            { custom::matcher_traits<Matcher>{}.matches(matcher, target, others...) } -> util::boolean_testable;
-        }
+    struct MatchSuccess
     {
-        return custom::matcher_traits<Matcher>{}.matches(matcher, target, others...);
-    }
-
-    template <typename Matcher, typename T, typename... Others>
-    [[nodiscard]]
-    constexpr bool matches_impl(
-        [[maybe_unused]] util::priority_tag<0> const,
-        Matcher const& matcher,
-        T& target,
-        Others&... others)
-        requires requires {
-            { matcher.matches(target, others...) } -> util::boolean_testable;
-        }
-    {
-        return matcher.matches(target, others...);
-    }
-
-    inline constexpr util::priority_tag<1> maxTag{};
-
-    struct matches_fn
-    {
-        template <typename Matcher, typename T, typename... Others>
-        [[nodiscard]]
-        constexpr bool operator()(Matcher const& matcher, T& target, Others&... others) const
-            requires requires {
-                { matches_impl(maxTag, matcher, target, others...) } -> util::boolean_testable;
-            }
-        {
-            return matches_impl(maxTag, matcher, target, others...);
-        }
     };
 
-    inline constexpr matches_fn matches{};
+    struct MatchFailure
+    {
+        std::function<std::optional<StringT>()> description{};
+    };
+
+    using MatchResult = std::variant<MatchSuccess, MatchFailure>;
 }
 
 namespace mimicpp::detail::describe_hook
@@ -117,6 +84,97 @@ namespace mimicpp::detail::describe_hook
     };
 
     inline constexpr describe_fn describe{};
+}
+
+namespace mimicpp::detail::matches_hook
+{
+    template <typename Matcher, typename T, typename... Others>
+    [[nodiscard]]
+    constexpr matcher::MatchResult matches_impl(
+        [[maybe_unused]] util::priority_tag<3> const,
+        Matcher const& matcher,
+        T& target,
+        Others&... others)
+        requires requires {
+            { custom::matcher_traits<Matcher>{}.matches(matcher, target, others...) } -> std::convertible_to<matcher::MatchResult>;
+        }
+    {
+        return custom::matcher_traits<Matcher>{}.matches(matcher, target, others...);
+    }
+
+    template <typename Matcher, typename T, typename... Others>
+    [[nodiscard]]
+    constexpr matcher::MatchResult matches_impl(
+        [[maybe_unused]] util::priority_tag<2> const,
+        Matcher const& matcher,
+        T& target,
+        Others&... others)
+        requires requires {
+            { matcher.matches(target, others...) } -> std::convertible_to<matcher::MatchResult>;
+        }
+    {
+        return matcher.matches(target, others...);
+    }
+
+    // deprecated matches overloads
+    template <typename Matcher, typename T, typename... Others>
+    [[nodiscard]]
+    constexpr matcher::MatchResult matches_impl(
+        [[maybe_unused]] util::priority_tag<1> const,
+        Matcher const& matcher,
+        T& target,
+        Others&... others)
+        requires requires {
+            { custom::matcher_traits<Matcher>{}.matches(matcher, target, others...) } -> util::boolean_testable;
+        }
+    {
+        if (custom::matcher_traits<Matcher>{}.matches(matcher, target, others...))
+        {
+            return matcher::MatchSuccess{};
+        }
+
+        return matcher::MatchFailure{
+            .description = [&matcher]{ return std::optional<StringT>{describe_hook::describe(matcher)}; },
+        };
+    }
+
+    template <typename Matcher, typename T, typename... Others>
+    [[nodiscard]]
+    constexpr matcher::MatchResult matches_impl(
+        [[maybe_unused]] util::priority_tag<0> const,
+        Matcher const& matcher,
+        T& target,
+        Others&... others)
+        requires requires {
+            { matcher.matches(target, others...) } -> util::boolean_testable;
+        }
+    {
+        if (matcher.matches(target, others...))
+        {
+            return matcher::MatchSuccess{};
+        }
+
+        return matcher::MatchFailure{
+            .description = [&matcher]{ return std::optional<StringT>{describe_hook::describe(matcher)}; },
+        };
+    }
+
+    inline constexpr util::priority_tag<3> maxTag{};
+
+    struct matches_fn
+    {
+        template <typename Matcher, typename T, typename... Others>
+        [[nodiscard]]
+        constexpr matcher::MatchResult operator()(Matcher const& matcher, T& target, Others&... others) const
+            requires requires {
+                { matches_impl(maxTag, matcher, target, others...) } -> std::convertible_to<matcher::MatchResult>;
+            }
+        {
+            return matches_impl(maxTag, matcher, target, others...);
+        }
+    };
+
+    inline constexpr matches_fn matches{};
 }
 
 namespace mimicpp
@@ -175,8 +233,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
                        && std::destructible<T>
                        && is_matcher_accepting_v<T, First, Others...>
                        && requires(T const& matcher, First& first, Others&... others) {
-                              { detail::matches_hook::matches(matcher, first, others...) } -> util::boolean_testable;
-                              { detail::describe_hook::describe(matcher) } -> util::explicitly_convertible_to<std::optional<StringT>>;
+                              { detail::matches_hook::matches(matcher, first, others...) } -> std::convertible_to<matcher::MatchResult>;
                           };
 }
 
