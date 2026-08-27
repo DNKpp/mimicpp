@@ -12,47 +12,47 @@ namespace
 {
     class LegacyCommonMatcher
     {
-        MAKE_CONST_MOCK1(matches, bool(const int&));
+        MAKE_CONST_MOCK1(matches, bool(int const&));
         MAKE_CONST_MOCK0(describe, StringViewT());
     };
 
     class LegacyCustomMatcher
     {
-        MAKE_CONST_MOCK1(my_matches, bool(const int&));
+        MAKE_CONST_MOCK1(my_matches, bool(int const&));
         MAKE_CONST_MOCK0(my_describe, StringViewT());
     };
 
     class LegacyMixed1Matcher
     {
-        MAKE_CONST_MOCK1(matches, bool(const int&));
+        MAKE_CONST_MOCK1(matches, bool(int const&));
         MAKE_CONST_MOCK0(my_describe, StringViewT());
     };
 
     class LegacyMixed2Matcher
     {
-        MAKE_CONST_MOCK1(my_matches, bool(const int&));
+        MAKE_CONST_MOCK1(my_matches, bool(int const&));
         MAKE_CONST_MOCK0(describe, StringViewT());
     };
 
     class LegacyCommonVariadicMatcher
     {
-        MAKE_CONST_MOCK(matches, auto(const int&, const double&)->bool);
-        MAKE_CONST_MOCK(matches, auto(const int&, const double&, const std::string&)->bool);
+        MAKE_CONST_MOCK(matches, auto(int const&, double const&)->bool);
+        MAKE_CONST_MOCK(matches, auto(int const&, double const&, std::string const&)->bool);
 
         MAKE_CONST_MOCK0(describe, StringViewT());
     };
 
     class LegacyCustomVariadicMatcher
     {
-        MAKE_CONST_MOCK(my_matches2, auto(const int&, const double&)->bool);
-        MAKE_CONST_MOCK(my_matches3, auto(const int&, const double&, const std::string&)->bool);
+        MAKE_CONST_MOCK(my_matches2, auto(int const&, double const&)->bool);
+        MAKE_CONST_MOCK(my_matches3, auto(int const&, double const&, std::string const&)->bool);
 
         MAKE_CONST_MOCK0(my_describe, StringViewT());
     };
 
     class CommonNullDescribeMatcher
     {
-        MAKE_CONST_MOCK1(matches, bool(const int&));
+        MAKE_CONST_MOCK1(matches, bool(int const&));
         MAKE_CONST_MOCK0(describe, std::nullopt_t());
     };
 }
@@ -61,13 +61,13 @@ template <>
 struct custom::matcher_traits<LegacyCustomMatcher>
 {
     [[nodiscard]]
-    static bool matches(const LegacyCustomMatcher& matcher, const int& value)
+    static bool matches(LegacyCustomMatcher const& matcher, int const& value)
     {
         return matcher.my_matches(value);
     }
 
     [[nodiscard]]
-    static StringViewT describe(const LegacyCustomMatcher& matcher)
+    static StringViewT describe(LegacyCustomMatcher const& matcher)
     {
         return matcher.my_describe();
     }
@@ -77,7 +77,7 @@ template <>
 struct custom::matcher_traits<LegacyMixed1Matcher>
 {
     [[nodiscard]]
-    static StringViewT describe(const LegacyMixed1Matcher& matcher)
+    static StringViewT describe(LegacyMixed1Matcher const& matcher)
     {
         return matcher.my_describe();
     }
@@ -87,7 +87,7 @@ template <>
 struct custom::matcher_traits<LegacyMixed2Matcher>
 {
     [[nodiscard]]
-    static bool matches(const LegacyMixed2Matcher& matcher, const int& value)
+    static bool matches(LegacyMixed2Matcher const& matcher, int const& value)
     {
         return matcher.my_matches(value);
     }
@@ -97,19 +97,19 @@ template <>
 struct custom::matcher_traits<LegacyCustomVariadicMatcher>
 {
     [[nodiscard]]
-    static bool matches(const LegacyCustomVariadicMatcher& matcher, const int& first, const double& second)
+    static bool matches(LegacyCustomVariadicMatcher const& matcher, int const& first, double const& second)
     {
         return matcher.my_matches2(first, second);
     }
 
     [[nodiscard]]
-    static bool matches(const LegacyCustomVariadicMatcher& matcher, const int& first, const double& second, const std::string& third)
+    static bool matches(LegacyCustomVariadicMatcher const& matcher, int const& first, double const& second, std::string const& third)
     {
         return matcher.my_matches3(first, second, third);
     }
 
     [[nodiscard]]
-    static StringViewT describe(const LegacyCustomVariadicMatcher& matcher)
+    static StringViewT describe(LegacyCustomVariadicMatcher const& matcher)
     {
         return matcher.my_describe();
     }
@@ -165,7 +165,7 @@ TEST_CASE(
         SECTION("For common variadic matchers.")
         {
             constexpr double second{1337.};
-            const std::string third{"Test"};
+            std::string const third{"Test"};
 
             LegacyCommonVariadicMatcher matcher{};
 
@@ -225,7 +225,7 @@ TEST_CASE(
         SECTION("For custom variadic matchers.")
         {
             constexpr double second{1337.};
-            const std::string third{"Test"};
+            std::string const third{"Test"};
 
             LegacyCustomVariadicMatcher matcher{};
 
@@ -261,24 +261,24 @@ namespace
 {
     class CommonMatcher
     {
-        MAKE_CONST_MOCK1(matches, matcher::MatchResult(const int&));
+        MAKE_CONST_MOCK1(matches, matcher::MatchResult(int const&));
     };
 
     class CustomMatcher
     {
-        MAKE_CONST_MOCK1(my_matches, matcher::MatchResult(const int&));
+        MAKE_CONST_MOCK1(my_matches, matcher::MatchResult(int const&));
     };
 
     class CommonVariadicMatcher
     {
-        MAKE_CONST_MOCK(matches, auto(const int&, const double&)->matcher::MatchResult);
-        MAKE_CONST_MOCK(matches, auto(const int&, const double&, const std::string&)->matcher::MatchResult);
+        MAKE_CONST_MOCK(matches, auto(int const&, double const&)->matcher::MatchResult);
+        MAKE_CONST_MOCK(matches, auto(int const&, double const&, std::string const&)->matcher::MatchResult);
     };
 
     class CustomVariadicMatcher
     {
-        MAKE_CONST_MOCK(my_matches2, auto(const int&, const double&)->matcher::MatchResult);
-        MAKE_CONST_MOCK(my_matches3, auto(const int&, const double&, const std::string&)->matcher::MatchResult);
+        MAKE_CONST_MOCK(my_matches2, auto(int const&, double const&)->matcher::MatchResult);
+        MAKE_CONST_MOCK(my_matches3, auto(int const&, double const&, std::string const&)->matcher::MatchResult);
     };
 }
 
@@ -286,7 +286,7 @@ template <>
 struct custom::matcher_traits<CustomMatcher>
 {
     [[nodiscard]]
-    static matcher::MatchResult matches(const CustomMatcher& matcher, const int& value)
+    static matcher::MatchResult matches(CustomMatcher const& matcher, int const& value)
     {
         return matcher.my_matches(value);
     }
@@ -296,13 +296,13 @@ template <>
 struct custom::matcher_traits<CustomVariadicMatcher>
 {
     [[nodiscard]]
-    static matcher::MatchResult matches(const CustomVariadicMatcher& matcher, const int& first, const double& second)
+    static matcher::MatchResult matches(CustomVariadicMatcher const& matcher, int const& first, double const& second)
     {
         return matcher.my_matches2(first, second);
     }
 
     [[nodiscard]]
-    static matcher::MatchResult matches(const CustomVariadicMatcher& matcher, const int& first, const double& second, const std::string& third)
+    static matcher::MatchResult matches(CustomVariadicMatcher const& matcher, int const& first, double const& second, std::string const& third)
     {
         return matcher.my_matches3(first, second, third);
     }
@@ -317,7 +317,7 @@ TEST_CASE(
     auto const result = GENERATE(
         as<matcher::MatchResult>{},
         matcher::MatchSuccess{},
-        matcher::MatchFailure{.description = []{ return StringT{"Hello, World"}; }});
+        matcher::MatchFailure{.description = [] { return StringT{"Hello, World"}; }});
     CAPTURE(result);
     int value = 42;
 
@@ -326,8 +326,7 @@ TEST_CASE(
             []<typename Lhs, typename Rhs>(Lhs const& lhs, Rhs const& rhs) {
                 CHECK(std::same_as<Lhs, Rhs>);
 
-                if constexpr (std::same_as<Lhs, matcher::MatchFailure>
-                    && std::same_as<Rhs, matcher::MatchFailure>)
+                if constexpr (std::same_as<Lhs, matcher::MatchFailure> && std::same_as<Rhs, matcher::MatchFailure>)
                 {
                     CHECK(lhs.description() == rhs.description());
                 }
@@ -351,7 +350,7 @@ TEST_CASE(
         SECTION("For variadic common matchers.")
         {
             constexpr double second{1337.};
-            const std::string third{"Test"};
+            std::string const third{"Test"};
 
             CommonVariadicMatcher matcher{};
 
@@ -393,7 +392,7 @@ TEST_CASE(
         SECTION("For variadic custom matchers.")
         {
             constexpr double second{1337.};
-            const std::string third{"Test"};
+            std::string const third{"Test"};
 
             CustomVariadicMatcher matcher{};
 
@@ -427,7 +426,7 @@ TEST_CASE(
 {
     namespace Matches = Catch::Matchers;
 
-    const StringViewT result = GENERATE("Hello, World!", " Hello, 2, World! ");
+    StringViewT const result = GENERATE("Hello, World!", " Hello, 2, World! ");
 
     SECTION("For member describe.")
     {
