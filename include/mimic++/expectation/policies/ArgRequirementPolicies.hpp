@@ -9,6 +9,7 @@
 #pragma once
 
 #include "mimic++/config/Config.hpp"
+#include "mimic++/expectation/Common.hpp"
 #include "mimic++/expectation/policies/ArgumentList.hpp"
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/utilities/Concepts.hpp"
@@ -42,7 +43,7 @@ namespace mimicpp::expectation::policies
         constexpr bool operator()(Args&&... args) const
             noexcept(std::is_nothrow_invocable_v<matches_fn, Matcher const&, Args&...>)
         {
-            return std::holds_alternative<matcher::MatchSuccess>(mimicpp::detail::matches_hook::matches(matcher, args...));
+            return std::holds_alternative<MatchSuccess>(mimicpp::detail::matches_hook::matches(matcher, args...));
         }
     };
 

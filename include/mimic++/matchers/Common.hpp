@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/expectation/Common.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/PriorityTag.hpp"
 
@@ -25,21 +26,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
     template <typename Matcher>
     struct matcher_traits;
 }
-
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matcher
-{
-    struct MatchSuccess
-    {
-    };
-
-    struct MatchFailure
-    {
-        std::function<std::optional<StringT>()> description{};
-    };
-
-    using MatchResult = std::variant<MatchSuccess, MatchFailure>;
-}
-
 namespace mimicpp::detail::describe_hook
 {
     // This section uses trailing return-types because this seems to help clangd in some cases.
@@ -90,9 +76,9 @@ namespace mimicpp::detail::matches_hook
 {
     template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr matcher::MatchResult matches_impl(util::priority_tag<3> const /*tag*/, Matcher const& matcher, Ts&... targets)
+    constexpr expectation::MatchResult matches_impl(util::priority_tag<3> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
-            { custom::matcher_traits<Matcher>{}.matches(matcher, targets...) } -> std::convertible_to<matcher::MatchResult>;
+            { custom::matcher_traits<Matcher>{}.matches(matcher, targets...) } -> std::convertible_to<expectation::MatchResult>;
         }
     {
         return custom::matcher_traits<Matcher>{}.matches(matcher, targets...);
@@ -100,9 +86,9 @@ namespace mimicpp::detail::matches_hook
 
     template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr matcher::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
+    constexpr expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
-            { matcher.matches(targets...) } -> std::convertible_to<matcher::MatchResult>;
+            { matcher.matches(targets...) } -> std::convertible_to<expectation::MatchResult>;
         }
     {
         return matcher.matches(targets...);
@@ -111,34 +97,34 @@ namespace mimicpp::detail::matches_hook
     // deprecated matches overloads
     template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr matcher::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
+    constexpr expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
             { custom::matcher_traits<Matcher>{}.matches(matcher, targets...) } -> util::boolean_testable;
         }
     {
         if (custom::matcher_traits<Matcher>{}.matches(matcher, targets...))
         {
-            return matcher::MatchSuccess{};
+            return expectation::MatchSuccess{};
         }
 
-        return matcher::MatchFailure{
+        return expectation::MatchFailure{
             .description = [&matcher] { return std::optional<StringT>{describe_hook::describe(matcher)}; },
         };
     }
 
     template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr matcher::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
+    constexpr expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
             { matcher.matches(targets...) } -> util::boolean_testable;
         }
     {
         if (matcher.matches(targets...))
         {
-            return matcher::MatchSuccess{};
+            return expectation::MatchSuccess{};
         }
 
-        return matcher::MatchFailure{
+        return expectation::MatchFailure{
             .description = [&matcher] { return std::optional<StringT>{describe_hook::describe(matcher)}; },
         };
     }
@@ -149,9 +135,9 @@ namespace mimicpp::detail::matches_hook
     {
         template <typename Matcher, typename T, typename... Others>
         [[nodiscard]]
-        constexpr matcher::MatchResult operator()(Matcher const& matcher, T& target, Others&... others) const
+        constexpr expectation::MatchResult operator()(Matcher const& matcher, T& target, Others&... others) const
             requires requires {
-                { matches_impl(maxTag, matcher, target, others...) } -> std::convertible_to<matcher::MatchResult>;
+                { matches_impl(maxTag, matcher, target, others...) } -> std::convertible_to<expectation::MatchResult>;
             }
         {
             return matches_impl(maxTag, matcher, target, others...);
@@ -217,7 +203,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
                        && std::destructible<T>
                        && is_matcher_accepting_v<T, First, Others...>
                        && requires(T const& matcher, First& first, Others&... others) {
-                              { detail::matches_hook::matches(matcher, first, others...) } -> std::convertible_to<matcher::MatchResult>;
+                              { detail::matches_hook::matches(matcher, first, others...) } -> std::convertible_to<expectation::MatchResult>;
                           };
 }
 

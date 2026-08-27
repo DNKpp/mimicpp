@@ -19,10 +19,22 @@
     #include <optional>
     #include <type_traits>
     #include <utility>
+    #include <variant>
 #endif
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 {
+    struct MatchSuccess
+    {
+    };
+
+    struct MatchFailure
+    {
+        std::function<std::optional<StringT>()> description{};
+    };
+
+    using MatchResult = std::variant<MatchSuccess, MatchFailure>;
+
     /**
      * \brief Determines whether the given type satisfies the requirements of an expectation-policy for the given signature.
      * \ingroup EXPECTATION

@@ -125,14 +125,14 @@ TEST_CASE(
     CAPTURE(result);
     int value = 42;
 
-    auto const CheckOutcome = [=](matcher::MatchResult const& outcome) {
+    auto const CheckOutcome = [=](expectation::MatchResult const& outcome) {
         CHECKED_IF(result)
         {
-            CHECK(std::holds_alternative<matcher::MatchSuccess>(outcome));
+            CHECK(std::holds_alternative<expectation::MatchSuccess>(outcome));
         }
         CHECKED_ELSE(result)
         {
-            CHECK(std::holds_alternative<matcher::MatchFailure>(outcome));
+            CHECK(std::holds_alternative<expectation::MatchFailure>(outcome));
         }
     };
 
@@ -261,24 +261,24 @@ namespace
 {
     class CommonMatcher
     {
-        MAKE_CONST_MOCK1(matches, matcher::MatchResult(int const&));
+        MAKE_CONST_MOCK1(matches, expectation::MatchResult(int const&));
     };
 
     class CustomMatcher
     {
-        MAKE_CONST_MOCK1(my_matches, matcher::MatchResult(int const&));
+        MAKE_CONST_MOCK1(my_matches, expectation::MatchResult(int const&));
     };
 
     class CommonVariadicMatcher
     {
-        MAKE_CONST_MOCK(matches, auto(int const&, double const&)->matcher::MatchResult);
-        MAKE_CONST_MOCK(matches, auto(int const&, double const&, std::string const&)->matcher::MatchResult);
+        MAKE_CONST_MOCK(matches, auto(int const&, double const&)->expectation::MatchResult);
+        MAKE_CONST_MOCK(matches, auto(int const&, double const&, std::string const&)->expectation::MatchResult);
     };
 
     class CustomVariadicMatcher
     {
-        MAKE_CONST_MOCK(my_matches2, auto(int const&, double const&)->matcher::MatchResult);
-        MAKE_CONST_MOCK(my_matches3, auto(int const&, double const&, std::string const&)->matcher::MatchResult);
+        MAKE_CONST_MOCK(my_matches2, auto(int const&, double const&)->expectation::MatchResult);
+        MAKE_CONST_MOCK(my_matches3, auto(int const&, double const&, std::string const&)->expectation::MatchResult);
     };
 }
 
@@ -286,7 +286,7 @@ template <>
 struct custom::matcher_traits<CustomMatcher>
 {
     [[nodiscard]]
-    static matcher::MatchResult matches(CustomMatcher const& matcher, int const& value)
+    static expectation::MatchResult matches(CustomMatcher const& matcher, int const& value)
     {
         return matcher.my_matches(value);
     }
@@ -296,13 +296,13 @@ template <>
 struct custom::matcher_traits<CustomVariadicMatcher>
 {
     [[nodiscard]]
-    static matcher::MatchResult matches(CustomVariadicMatcher const& matcher, int const& first, double const& second)
+    static expectation::MatchResult matches(CustomVariadicMatcher const& matcher, int const& first, double const& second)
     {
         return matcher.my_matches2(first, second);
     }
 
     [[nodiscard]]
-    static matcher::MatchResult matches(CustomVariadicMatcher const& matcher, int const& first, double const& second, std::string const& third)
+    static expectation::MatchResult matches(CustomVariadicMatcher const& matcher, int const& first, double const& second, std::string const& third)
     {
         return matcher.my_matches3(first, second, third);
     }
@@ -315,18 +315,18 @@ TEST_CASE(
     using trompeloeil::_;
 
     auto const result = GENERATE(
-        as<matcher::MatchResult>{},
-        matcher::MatchSuccess{},
-        matcher::MatchFailure{.description = [] { return StringT{"Hello, World"}; }});
+        as<expectation::MatchResult>{},
+        expectation::MatchSuccess{},
+        expectation::MatchFailure{.description = [] { return StringT{"Hello, World"}; }});
     CAPTURE(result);
     int value = 42;
 
-    auto const CheckOutcome = [=](matcher::MatchResult const& outcome) {
+    auto const CheckOutcome = [=](expectation::MatchResult const& outcome) {
         std::visit(
             []<typename Lhs, typename Rhs>(Lhs const& lhs, Rhs const& rhs) {
                 CHECK(std::same_as<Lhs, Rhs>);
 
-                if constexpr (std::same_as<Lhs, matcher::MatchFailure> && std::same_as<Rhs, matcher::MatchFailure>)
+                if constexpr (std::same_as<Lhs, expectation::MatchFailure> && std::same_as<Rhs, expectation::MatchFailure>)
                 {
                     CHECK(lhs.description() == rhs.description());
                 }
