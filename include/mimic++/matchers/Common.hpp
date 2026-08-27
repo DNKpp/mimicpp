@@ -45,7 +45,7 @@ namespace mimicpp::detail::describe_hook
     // This section uses trailing return-types because this seems to help clangd in some cases.
     template <typename Matcher>
     [[nodiscard]]
-    constexpr auto describe_impl([[maybe_unused]] util::priority_tag<1> const, Matcher const& matcher)
+    constexpr auto describe_impl(util::priority_tag<1> const /*tag*/, Matcher const& matcher)
         -> decltype(custom::matcher_traits<Matcher>{}.describe(matcher))
         requires requires {
             {
@@ -58,7 +58,7 @@ namespace mimicpp::detail::describe_hook
 
     template <typename Matcher>
     [[nodiscard]]
-    constexpr auto describe_impl([[maybe_unused]] util::priority_tag<0> const, Matcher const& matcher)
+    constexpr auto describe_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher)
         -> decltype(matcher.describe())
         requires requires {
             { matcher.describe() } -> util::explicitly_convertible_to<std::optional<StringT>>;
@@ -88,74 +88,58 @@ namespace mimicpp::detail::describe_hook
 
 namespace mimicpp::detail::matches_hook
 {
-    template <typename Matcher, typename T, typename... Others>
+    template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr matcher::MatchResult matches_impl(
-        [[maybe_unused]] util::priority_tag<3> const,
-        Matcher const& matcher,
-        T& target,
-        Others&... others)
+    constexpr matcher::MatchResult matches_impl(util::priority_tag<3> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
-            { custom::matcher_traits<Matcher>{}.matches(matcher, target, others...) } -> std::convertible_to<matcher::MatchResult>;
+            { custom::matcher_traits<Matcher>{}.matches(matcher, targets...) } -> std::convertible_to<matcher::MatchResult>;
         }
     {
-        return custom::matcher_traits<Matcher>{}.matches(matcher, target, others...);
+        return custom::matcher_traits<Matcher>{}.matches(matcher, targets...);
     }
 
-    template <typename Matcher, typename T, typename... Others>
+    template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr matcher::MatchResult matches_impl(
-        [[maybe_unused]] util::priority_tag<2> const,
-        Matcher const& matcher,
-        T& target,
-        Others&... others)
+    constexpr matcher::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
-            { matcher.matches(target, others...) } -> std::convertible_to<matcher::MatchResult>;
+            { matcher.matches(targets...) } -> std::convertible_to<matcher::MatchResult>;
         }
     {
-        return matcher.matches(target, others...);
+        return matcher.matches(targets...);
     }
 
     // deprecated matches overloads
-    template <typename Matcher, typename T, typename... Others>
+    template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr matcher::MatchResult matches_impl(
-        [[maybe_unused]] util::priority_tag<1> const,
-        Matcher const& matcher,
-        T& target,
-        Others&... others)
+    constexpr matcher::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
-            { custom::matcher_traits<Matcher>{}.matches(matcher, target, others...) } -> util::boolean_testable;
+            { custom::matcher_traits<Matcher>{}.matches(matcher, targets...) } -> util::boolean_testable;
         }
     {
-        if (custom::matcher_traits<Matcher>{}.matches(matcher, target, others...))
+        if (custom::matcher_traits<Matcher>{}.matches(matcher, targets...))
         {
             return matcher::MatchSuccess{};
         }
 
         return matcher::MatchFailure{
-            .description = [&matcher]{ return std::optional<StringT>{describe_hook::describe(matcher)}; },
+            .description = [&matcher] { return std::optional<StringT>{describe_hook::describe(matcher)}; },
         };
     }
 
-    template <typename Matcher, typename T, typename... Others>
+    template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr matcher::MatchResult matches_impl(
-        [[maybe_unused]] util::priority_tag<0> const,
-        Matcher const& matcher,
-        T& target,
-        Others&... others)
+    constexpr matcher::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
-            { matcher.matches(target, others...) } -> util::boolean_testable;
+            { matcher.matches(targets...) } -> util::boolean_testable;
         }
     {
-        if (matcher.matches(target, others...))
+        if (matcher.matches(targets...))
         {
             return matcher::MatchSuccess{};
         }
 
         return matcher::MatchFailure{
-            .description = [&matcher]{ return std::optional<StringT>{describe_hook::describe(matcher)}; },
+            .description = [&matcher] { return std::optional<StringT>{describe_hook::describe(matcher)}; },
         };
     }
 
