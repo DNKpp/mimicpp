@@ -105,12 +105,10 @@ namespace mimicpp::detail::matches_hook
     {
         if (custom::matcher_traits<Matcher>{}.matches(matcher, targets...))
         {
-            return expectation::MatchSuccess{};
+            return expectation::MatchSuccess{.description{describe_hook::describe(matcher)}};
         }
 
-        return expectation::MatchFailure{
-            .description = [&matcher] { return std::optional<StringT>{describe_hook::describe(matcher)}; },
-        };
+        return expectation::MatchFailure{.description{describe_hook::describe(matcher)}};
     }
 
     template <typename Matcher, typename... Ts>
@@ -122,12 +120,10 @@ namespace mimicpp::detail::matches_hook
     {
         if (matcher.matches(targets...))
         {
-            return expectation::MatchSuccess{};
+            return expectation::MatchSuccess{.description{describe_hook::describe(matcher)}};
         }
 
-        return expectation::MatchFailure{
-            .description = [&matcher] { return std::optional<StringT>{describe_hook::describe(matcher)}; },
-        };
+        return expectation::MatchFailure{.description{describe_hook::describe(matcher)}};
     }
 
     inline constexpr util::priority_tag<3> maxTag{};

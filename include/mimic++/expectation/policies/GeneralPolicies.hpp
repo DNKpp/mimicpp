@@ -61,10 +61,10 @@ namespace mimicpp::expectation::policies
         {
             if (mimicpp::detail::is_matching(info.fromCategory, expected))
             {
-                return MatchSuccess{};
+                return MatchSuccess{.description = describe()};
             }
 
-            return MatchFailure{.description = std::bind_front(std::identity{}, describe())};
+            return MatchFailure{.description = describe()};
         }
 
         template <typename Return, typename... Args>
@@ -108,10 +108,10 @@ namespace mimicpp::expectation::policies
         {
             if (mimicpp::detail::is_matching(info.fromConstness, constness))
             {
-                return MatchSuccess{};
+                return MatchSuccess{.description = describe()};
             }
 
-            return MatchFailure{.description = std::bind_front(std::identity{}, describe())};
+            return MatchFailure{.description = describe()};
         }
 
         template <typename Return, typename... Args>

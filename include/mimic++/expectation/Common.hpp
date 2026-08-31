@@ -25,11 +25,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 {
     struct MatchSuccess
     {
+        std::optional<StringT> description{};
+
+        [[nodiscard]]
+        friend bool operator==(MatchSuccess const&, MatchSuccess const&) = default;
     };
 
     struct MatchFailure
     {
-        std::function<std::optional<StringT>()> description{};
+        std::optional<StringT> description{};
+
+        friend bool operator==(MatchFailure const&, MatchFailure const&) = default;
     };
 
     using MatchResult = std::variant<MatchSuccess, MatchFailure>;

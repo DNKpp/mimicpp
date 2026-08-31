@@ -316,24 +316,10 @@ TEST_CASE(
 
     auto const result = GENERATE(
         as<expectation::MatchResult>{},
-        expectation::MatchSuccess{},
-        expectation::MatchFailure{.description = [] { return StringT{"Hello, World"}; }});
+        expectation::MatchSuccess{.description = "Hello, Success!"},
+        expectation::MatchFailure{.description = "Hello, Failure!"});
     CAPTURE(result);
     int value = 42;
-
-    auto const CheckOutcome = [=](expectation::MatchResult const& outcome) {
-        std::visit(
-            []<typename Lhs, typename Rhs>(Lhs const& lhs, Rhs const& rhs) {
-                CHECK(std::same_as<Lhs, Rhs>);
-
-                if constexpr (std::same_as<Lhs, expectation::MatchFailure> && std::same_as<Rhs, expectation::MatchFailure>)
-                {
-                    CHECK(lhs.description() == rhs.description());
-                }
-            },
-            result,
-            outcome);
-    };
 
     SECTION("For member matches.")
     {
@@ -344,7 +330,7 @@ TEST_CASE(
                 .LR_WITH(&_1 == &value)
                 .RETURN(result);
 
-            CheckOutcome(detail::matches_hook::matches(matcher, value));
+            CHECK(result == detail::matches_hook::matches(matcher, value));
         }
 
         SECTION("For variadic common matchers.")
@@ -361,7 +347,7 @@ TEST_CASE(
                     .LR_WITH(&_2 == &second)
                     .RETURN(result);
 
-                CheckOutcome(detail::matches_hook::matches(matcher, value, second));
+                CHECK(result == detail::matches_hook::matches(matcher, value, second));
             }
 
             SECTION("For three arguments.")
@@ -372,7 +358,7 @@ TEST_CASE(
                     .LR_WITH(&_3 == &third)
                     .RETURN(result);
 
-                CheckOutcome(detail::matches_hook::matches(matcher, value, second, third));
+                CHECK(result == detail::matches_hook::matches(matcher, value, second, third));
             }
         }
     }
@@ -386,7 +372,7 @@ TEST_CASE(
                 .LR_WITH(&_1 == &value)
                 .RETURN(result);
 
-            CheckOutcome(detail::matches_hook::matches(matcher, value));
+            CHECK(result == detail::matches_hook::matches(matcher, value));
         }
 
         SECTION("For variadic custom matchers.")
@@ -403,7 +389,7 @@ TEST_CASE(
                     .LR_WITH(&_2 == &second)
                     .RETURN(result);
 
-                CheckOutcome(detail::matches_hook::matches(matcher, value, second));
+                CHECK(result == detail::matches_hook::matches(matcher, value, second));
             }
 
             SECTION("For three arguments.")
@@ -414,7 +400,7 @@ TEST_CASE(
                     .LR_WITH(&_3 == &third)
                     .RETURN(result);
 
-                CheckOutcome(detail::matches_hook::matches(matcher, value, second, third));
+                CHECK(result == detail::matches_hook::matches(matcher, value, second, third));
             }
         }
     }

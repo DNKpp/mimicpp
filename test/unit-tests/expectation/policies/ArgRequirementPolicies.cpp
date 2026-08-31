@@ -127,7 +127,7 @@ TEST_CASE(
             .LR_WITH(&_1 == &arg0)
             .RETURN(expected);
 
-        REQUIRE(expected.index() == std::as_const(policy).matches(info).index());
+        REQUIRE(expected == std::as_const(policy).matches(info));
     }
 }
 
@@ -226,7 +226,7 @@ TEST_CASE(
         SCOPED_EXP matcher.matches.expect_call(instance(arg0), instance(arg1), instance(arg2))
             and finally::returns(expected);
 
-        REQUIRE(expected.index() == std::as_const(policy).matches(info).index());
+        REQUIRE(expected == std::as_const(policy).matches(info));
     }
 }
 
@@ -280,7 +280,7 @@ TEST_CASE(
             .LR_WITH(&_1 == &arg0)
             .RETURN(match);
 
-        REQUIRE(match.index() == std::as_const(policy).matches(info).index());
+        REQUIRE(match == std::as_const(policy).matches(info));
     }
 }
 
@@ -325,7 +325,7 @@ TEST_CASE(
         .LR_WITH(_1 == "42")
         .RETURN(match);
 
-    REQUIRE(match.index() == std::as_const(policy).matches(info).index());
+    REQUIRE(match == std::as_const(policy).matches(info));
 }
 
 TEST_CASE(
@@ -379,6 +379,6 @@ TEST_CASE(
         SCOPED_EXP std::as_const(matcher).matches.expect_call(matches::instance(arg0), matches::instance(arg1))
             and finally::returns(match);
 
-        REQUIRE(match.index() == std::as_const(policy).matches(info).index());
+        REQUIRE(match == std::as_const(policy).matches(info));
     }
 }
