@@ -26,6 +26,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::custom
     template <typename Matcher>
     struct matcher_traits;
 }
+
 namespace mimicpp::detail::describe_hook
 {
     // This section uses trailing return-types because this seems to help clangd in some cases.

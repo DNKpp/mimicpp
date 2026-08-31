@@ -6,6 +6,7 @@
 #pragma once
 
 #include "mimic++/Call.hpp"
+#include "mimic++/expectation/Common.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 
 #include "TrompeloeilExt.hpp"
@@ -46,10 +47,10 @@ public:
         return isSatisfied;
     }
 
-    bool matchResult{};
+    mimicpp::expectation::MatchResult matchResult{};
 
     [[nodiscard]]
-    constexpr bool matches([[maybe_unused]] const CallInfoT& call) const noexcept
+    constexpr mimicpp::expectation::MatchResult matches(CallInfoT const& /*call*/) const noexcept
     {
         return matchResult;
     }
@@ -62,7 +63,7 @@ public:
         return description;
     }
 
-    static constexpr void consume([[maybe_unused]] const CallInfoT& call) noexcept
+    static constexpr void consume(CallInfoT const& call) noexcept
     {
     }
 };
@@ -98,7 +99,7 @@ public:
     }
 
     [[nodiscard]]
-    constexpr bool matches(const CallT& call) const
+    constexpr mimicpp::expectation::MatchResult matches(CallT const& call) const
     {
         return std::invoke(projection, policy)
             .matches(call);
@@ -165,14 +166,14 @@ template <typename Signature>
 class PolicyMock
 {
 public:
-    using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
+    using CallInfo = mimicpp::call::info_for_signature_t<Signature>;
 
     static constexpr bool trompeloeil_movable_mock = true;
 
     MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
-    MAKE_CONST_MOCK1(matches, bool(const CallInfoT&));
+    MAKE_CONST_MOCK1(matches, mimicpp::expectation::MatchResult(CallInfo const&));
     MAKE_CONST_MOCK0(describe, mimicpp::StringT());
-    MAKE_MOCK1(consume, void(const CallInfoT&));
+    MAKE_MOCK1(consume, void(CallInfo const&));
 };
 
 template <typename Signature, typename Policy, typename Projection>
@@ -268,7 +269,7 @@ template <typename T>
 class MatcherMock
 {
 public:
-    MAKE_CONST_MOCK1(matches, bool(T));
+    MAKE_CONST_MOCK1(matches, mimicpp::expectation::MatchResult(T));
     MAKE_CONST_MOCK0(describe, mimicpp::StringT());
 };
 
@@ -285,7 +286,7 @@ public:
 
     template <typename... Args>
     [[nodiscard]]
-    constexpr bool matches(Args&&... args) const
+    constexpr mimicpp::expectation::MatchResult matches(Args&&... args) const
     {
         return std::invoke(m_Projection, m_Matcher)
             .matches(std::forward<Args>(args)...);

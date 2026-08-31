@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024-2026.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -81,7 +81,7 @@ TEST_CASE(
     using DescriberStrategyT = InvocableMock<StringT, StringViewT>;
     using MatcherT = MatcherMock<int&>;
     using MatchesStrategyT = InvocableMock<
-        bool,
+        expectation::MatchResult,
         expectation::policies::matcher_matches_fn<MatcherFacade<std::reference_wrapper<MatcherT>, UnwrapReferenceWrapper>>,
         const CallInfoT&>;
     STATIC_CHECK(matcher_for<MatcherT, int&>);
@@ -119,12 +119,15 @@ TEST_CASE(
         REQUIRE_CALL(matchesStrategy, Invoke(_, _))
             .LR_WITH(&_2 == &info)
             .LR_RETURN(_1.matcher.matches(arg0));
-        const bool expected = GENERATE(true, false);
+        auto const expected = GENERATE(
+            as<expectation::MatchResult>{},
+            expectation::MatchSuccess{},
+            expectation::MatchFailure{});
         REQUIRE_CALL(matcher, matches(_))
             .LR_WITH(&_1 == &arg0)
             .RETURN(expected);
 
-        REQUIRE(expected == std::as_const(policy).matches(info));
+        REQUIRE(expected.index() == std::as_const(policy).matches(info).index());
     }
 }
 
@@ -176,7 +179,7 @@ namespace
     class VariadicMatcherMock
     {
     public:
-        Mock<bool(Args...) const> matches{};
+        Mock<expectation::MatchResult(Args...) const> matches{};
         Mock<StringT() const> describe{};
     };
 }
@@ -215,12 +218,15 @@ TEST_CASE(
 
     SECTION("Testing matches.")
     {
-        const bool expected = GENERATE(true, false);
+        auto const expected = GENERATE(
+            as<expectation::MatchResult>{},
+            expectation::MatchSuccess{},
+            expectation::MatchFailure{});
         using matches::instance;
         SCOPED_EXP matcher.matches.expect_call(instance(arg0), instance(arg1), instance(arg2))
             and finally::returns(expected);
 
-        REQUIRE(expected == std::as_const(policy).matches(info));
+        REQUIRE(expected.index() == std::as_const(policy).matches(info).index());
     }
 }
 
@@ -266,12 +272,15 @@ TEST_CASE(
 
     SECTION("Policy matches().")
     {
-        const bool match = GENERATE(true, false);
+        auto const match = GENERATE(
+            as<expectation::MatchResult>{},
+            expectation::MatchSuccess{},
+            expectation::MatchFailure{});
         REQUIRE_CALL(matcher, matches(_))
             .LR_WITH(&_1 == &arg0)
             .RETURN(match);
 
-        REQUIRE(match == std::as_const(policy).matches(info));
+        REQUIRE(match.index() == std::as_const(policy).matches(info).index());
     }
 }
 
@@ -308,12 +317,15 @@ TEST_CASE(
         .LR_WITH(&_1 == &arg0)
         .RETURN("42");
 
-    const bool match = GENERATE(true, false);
+    auto const match = GENERATE(
+        as<expectation::MatchResult>{},
+        expectation::MatchSuccess{},
+        expectation::MatchFailure{});
     REQUIRE_CALL(matcher, matches(_))
         .LR_WITH(_1 == "42")
         .RETURN(match);
 
-    REQUIRE(match == std::as_const(policy).matches(info));
+    REQUIRE(match.index() == std::as_const(policy).matches(info).index());
 }
 
 TEST_CASE(
@@ -360,10 +372,13 @@ TEST_CASE(
 
     SECTION("Policy matches().")
     {
-        const bool match = GENERATE(true, false);
+        auto const match = GENERATE(
+            as<expectation::MatchResult>{},
+            expectation::MatchSuccess{},
+            expectation::MatchFailure{});
         SCOPED_EXP std::as_const(matcher).matches.expect_call(matches::instance(arg0), matches::instance(arg1))
             and finally::returns(match);
 
-        REQUIRE(match == std::as_const(policy).matches(info));
+        REQUIRE(match.index() == std::as_const(policy).matches(info).index());
     }
 }

@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024-2026.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +10,7 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/expectation/Common.hpp"
 #include "mimic++/expectation/policies/ArgumentList.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
@@ -50,9 +51,9 @@ namespace mimicpp::expectation::policies
 
         template <typename Return, typename... Args>
         [[nodiscard]]
-        static constexpr bool matches(call::Info<Return, Args...> const&) noexcept
+        static constexpr MatchResult matches(call::Info<Return, Args...> const& /*call*/) noexcept
         {
-            return true;
+            return MatchSuccess{};
         }
 
         [[nodiscard]]

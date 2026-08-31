@@ -115,19 +115,19 @@ TEST_CASE(
         REQUIRE_CALL(policies[3], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
         REQUIRE_CALL(policies[2], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
         REQUIRE_CALL(policies[1], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(true);
+            .RETURN(expectation::MatchSuccess{});
         REQUIRE_CALL(policies[0], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
         REQUIRE_CALL(policies[1], consume(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence);
@@ -154,19 +154,19 @@ TEST_CASE(
         REQUIRE_CALL(policies[3], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
         REQUIRE_CALL(policies[2], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(true);
+            .RETURN(expectation::MatchSuccess{});
         REQUIRE_CALL(policies[1], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
         REQUIRE_CALL(policies[0], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
 
         controlPolicies[2u].stateData = commonInapplicableState;
         REQUIRE_CALL(policies[2u], describe())
@@ -192,19 +192,19 @@ TEST_CASE(
         REQUIRE_CALL(policies[3], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
         REQUIRE_CALL(policies[2], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
         REQUIRE_CALL(policies[1], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
         REQUIRE_CALL(policies[0], matches(_))
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
-            .RETURN(false);
+            .RETURN(expectation::MatchFailure{});
 
         REQUIRE_CALL(policies[3u], describe())
             .RETURN("Policy3");
@@ -384,12 +384,8 @@ TEST_CASE(
     {
         REQUIRE_CALL(throwingPolicy, matches(_))
             .THROW(Exception{});
-        REQUIRE_CALL(throwingPolicy, describe())
-            .RETURN("Throwing");
         REQUIRE_CALL(otherPolicy, matches(_))
-            .RETURN(true);
-        REQUIRE_CALL(otherPolicy, describe())
-            .RETURN("Other");
+            .RETURN(expectation::MatchSuccess{});
         REQUIRE_CALL(otherPolicy, consume(_));
         REQUIRE_CALL(otherFinalizePolicy, finalize_call(_));
         REQUIRE_NOTHROW(registry.handle_call<Signature>(make_common_target_report<Signature>(), call));

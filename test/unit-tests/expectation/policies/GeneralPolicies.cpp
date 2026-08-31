@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024-2026.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -87,23 +87,23 @@ TEMPLATE_TEST_CASE_SIG(
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    if (mimicpp::detail::is_matching(call.fromCategory, category))
+    CHECKED_IF(mimicpp::detail::is_matching(call.fromCategory, category))
     {
         SECTION("When call and policy category matches, success is returned.")
         {
-            REQUIRE(policy.matches(call));
+            CHECK(std::holds_alternative<expectation::MatchSuccess>(policy.matches(call)));
         }
 
         SECTION("Policy doesn't consume, but asserts on wrong category.")
         {
-            REQUIRE_NOTHROW(policy.consume(call));
+            CHECK_NOTHROW(policy.consume(call));
         }
     }
-    else
+    CHECKED_ELSE(mimicpp::detail::is_matching(call.fromCategory, category))
     {
         SECTION("When call and policy category mismatch, failure is returned.")
         {
-            REQUIRE(!policy.matches(call));
+            CHECK(std::holds_alternative<expectation::MatchFailure>(policy.matches(call)));
         }
     }
 }
@@ -148,23 +148,23 @@ TEMPLATE_TEST_CASE_SIG(
         .fromCategory = GENERATE(from_range(refQualifiers)),
         .fromConstness = GENERATE(from_range(constQualifiers))};
 
-    if (mimicpp::detail::is_matching(call.fromConstness, constness))
+    CHECKED_IF(mimicpp::detail::is_matching(call.fromConstness, constness))
     {
         SECTION("When call and policy constness matches, success is returned.")
         {
-            REQUIRE(policy.matches(call));
+            CHECK(std::holds_alternative<expectation::MatchSuccess>(policy.matches(call)));
         }
 
         SECTION("Policy doesn't consume, but asserts on wrong constness.")
         {
-            REQUIRE_NOTHROW(policy.consume(call));
+            CHECK_NOTHROW(policy.consume(call));
         }
     }
-    else
+    CHECKED_ELSE(mimicpp::detail::is_matching(call.fromConstness, constness))
     {
         SECTION("When call and policy constness mismatch, failure is returned.")
         {
-            REQUIRE(!policy.matches(call));
+            CHECK(std::holds_alternative<expectation::MatchFailure>(policy.matches(call)));
         }
     }
 }

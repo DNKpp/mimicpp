@@ -16,7 +16,6 @@
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
-    #include <optional>
     #include <type_traits>
     #include <utility>
     #include <variant>
@@ -45,8 +44,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                                   && std::same_as<T, std::remove_cvref_t<T>>
                                   && requires(T& policy, call::info_for_signature_t<Signature> const& info) {
                                          { std::as_const(policy).is_satisfied() } noexcept -> util::boolean_testable;
-                                         { std::as_const(policy).matches(info) } -> util::boolean_testable;
-                                         { std::as_const(policy).describe() } -> util::explicitly_convertible_to<std::optional<StringT>>;
+                                         { std::as_const(policy).matches(info) } -> std::convertible_to<MatchResult>;
                                          { policy.consume(info) };
                                      };
 

@@ -40,10 +40,10 @@ namespace mimicpp::expectation::policies
         [[nodiscard]]
         // projected arguments may come as value, so Args& won't work in all cases
         // just forward them as lvalue-ref
-        constexpr bool operator()(Args&&... args) const
+        constexpr MatchResult operator()(Args&&... args) const
             noexcept(std::is_nothrow_invocable_v<matches_fn, Matcher const&, Args&...>)
         {
-            return std::holds_alternative<MatchSuccess>(mimicpp::detail::matches_hook::matches(matcher, args...));
+            return mimicpp::detail::matches_hook::matches(matcher, args...);
         }
     };
 
@@ -52,10 +52,7 @@ namespace mimicpp::expectation::policies
     {
     public:
         [[nodiscard]]
-        explicit constexpr ArgsRequirement(
-            Matcher matcher,
-            MatchesStrategy matchesStrategy,
-            DescribeStrategy describeStrategy)
+        explicit constexpr ArgsRequirement(Matcher matcher, MatchesStrategy matchesStrategy, DescribeStrategy describeStrategy)
             noexcept(
                 std::is_nothrow_move_constructible_v<Matcher>
                 && std::is_nothrow_move_constructible_v<MatchesStrategy>
@@ -73,9 +70,9 @@ namespace mimicpp::expectation::policies
         }
 
         template <typename Return, typename... Args>
-            requires std::is_invocable_r_v<bool, MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>
+            requires std::is_invocable_r_v<MatchResult, MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>
         [[nodiscard]]
-        constexpr bool matches(call::Info<Return, Args...> const& info) const
+        constexpr MatchResult matches(call::Info<Return, Args...> const& info) const
             noexcept(std::is_nothrow_invocable_v<MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>)
         {
             return std::invoke(

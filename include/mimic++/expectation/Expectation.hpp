@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024-2026.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -212,7 +212,7 @@ namespace mimicpp::expectation
                 return std::apply(
                     [&](auto const&... policies) {
                         return reporting::RequirementOutcomes{
-                            .outcomes{policies.matches(call)...}};
+                            .outcomes{std::holds_alternative<MatchSuccess>(policies.matches(call))...}};
                     },
                     m_Policies);
             }
@@ -221,9 +221,8 @@ namespace mimicpp::expectation
             std::vector<std::optional<StringT>> gather_requirement_descriptions() const
             {
                 return std::apply(
-                    [&](auto const&... policies) {
-                        return std::vector<std::optional<StringT>>{
-                            std::optional<StringT>{policies.describe()}...};
+                    [&]([[maybe_unused]] auto const&... policies) {
+                        return std::vector<std::optional<StringT>>{sizeof...(policies)};
                     },
                     m_Policies);
             }

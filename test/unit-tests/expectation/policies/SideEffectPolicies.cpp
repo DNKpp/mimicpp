@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024-2026.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -40,7 +40,7 @@ TEST_CASE(
     expectation::policies::SideEffectAction policy{std::ref(action)};
     STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), void()>);
     REQUIRE(std::as_const(policy).is_satisfied());
-    REQUIRE(std::as_const(policy).matches(info));
+    REQUIRE(std::holds_alternative<expectation::MatchSuccess>(std::as_const(policy).matches(info)));
     REQUIRE(std::optional<StringT>{} == std::as_const(policy).describe());
 
     REQUIRE_CALL(action, Invoke(_))
