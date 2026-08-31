@@ -97,7 +97,7 @@ namespace mimicpp::expectation
             virtual bool is_applicable() const noexcept = 0;
 
             [[nodiscard]]
-            virtual std::optional<reporting::RequirementOutcomes> matches(std::any&& opaqueCallInfo) const = 0;
+            virtual std::optional<MatchResults> matches(std::any&& opaqueCallInfo) const = 0;
 
             [[nodiscard]]
             virtual std::any consume(std::any&& opaqueCallInfo) = 0;
@@ -174,7 +174,7 @@ namespace mimicpp::expectation
             }
 
             [[nodiscard]]
-            std::optional<reporting::RequirementOutcomes> matches(std::any&& opaqueCallInfo) const override
+            std::optional<MatchResults> matches(std::any&& opaqueCallInfo) const override
             {
                 MIMICPP_ASSERT(opaqueCallInfo.has_value(), "Empty call is not allowed.");
                 if (auto const* const info = std::any_cast<CallInfoRef>(&opaqueCallInfo))
@@ -207,13 +207,10 @@ namespace mimicpp::expectation
             [[no_unique_address]] FinalizePolicy m_Finalizer{};
 
             [[nodiscard]]
-            reporting::RequirementOutcomes gather_requirement_outcomes(call::info_for_signature_t<Signature> const& call) const
+            MatchResults gather_requirement_outcomes(call::info_for_signature_t<Signature> const& call) const
             {
                 return std::apply(
-                    [&](auto const&... policies) {
-                        return reporting::RequirementOutcomes{
-                            .outcomes{std::holds_alternative<MatchSuccess>(policies.matches(call))...}};
-                    },
+                    [&](auto const&... policies) { return MatchResults{policies.matches(call)...}; },
                     m_Policies);
             }
 
@@ -361,7 +358,7 @@ namespace mimicpp::expectation
          */
         template <typename Return, typename... Args>
         [[nodiscard]]
-        std::optional<reporting::RequirementOutcomes> matches(call::Info<Return, Args...> const& callInfo) const
+        std::optional<MatchResults> matches(call::Info<Return, Args...> const& callInfo) const
         {
             return m_Inner->matches(std::any{std::ref(callInfo)});
         }

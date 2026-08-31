@@ -39,6 +39,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
     };
 
     using MatchResult = std::variant<MatchSuccess, MatchFailure>;
+    using MatchResults = std::vector<MatchResult>;
 
     /**
      * \brief Determines whether the given type satisfies the requirements of an expectation-policy for the given signature.

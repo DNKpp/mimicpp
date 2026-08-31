@@ -117,10 +117,8 @@ TEST_CASE(
         {
             REQUIRE_CALL(times, state())
                 .RETURN(commonApplicableState);
-            reporting::RequirementOutcomes const outcomes = std::as_const(exp).matches(call).value();
-            CHECK_THAT(
-                outcomes.outcomes,
-                Catch::Matchers::IsEmpty());
+            auto const outcomes = std::as_const(exp).matches(call).value();
+            CHECK_THAT(outcomes, Catch::Matchers::IsEmpty());
             reporting::ExpectationReport const expectationReport = std::as_const(exp).report();
             CHECK(commonApplicableState == expectationReport.controlReport);
         }
@@ -130,10 +128,8 @@ TEST_CASE(
             auto const controlState = GENERATE(commonSaturatedState, commonInapplicableState);
             REQUIRE_CALL(times, state())
                 .LR_RETURN(controlState);
-            reporting::RequirementOutcomes const outcomes = std::as_const(exp).matches(call).value();
-            CHECK_THAT(
-                outcomes.outcomes,
-                Catch::Matchers::IsEmpty());
+            auto const outcomes = std::as_const(exp).matches(call).value();
+            CHECK_THAT(outcomes, Catch::Matchers::IsEmpty());
             reporting::ExpectationReport const expectationReport = std::as_const(exp).report();
             CHECK(controlState == expectationReport.controlReport);
         }
@@ -198,10 +194,10 @@ TEST_CASE(
             REQUIRE_CALL(policy, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(matches);
-            reporting::RequirementOutcomes const outcomes = std::as_const(exp).matches(call).value();
+            auto const outcomes = std::as_const(exp).matches(call).value();
             CHECK_THAT(
-                outcomes.outcomes,
-                Catch::Matchers::RangeEquals(std::array{std::holds_alternative<expectation::MatchSuccess>(matches)}));
+                outcomes,
+                Catch::Matchers::RangeEquals(std::array{matches}));
         }
 
         SECTION("Consume calls times.consume().")
@@ -420,10 +416,8 @@ TEMPLATE_TEST_CASE(
             FinalizePolicy{}};
 
         CHECK(std::as_const(expectation).is_satisfied());
-        reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call).value();
-        CHECK_THAT(
-            outcomes.outcomes,
-            Catch::Matchers::IsEmpty());
+        auto const outcomes = std::as_const(expectation).matches(call).value();
+        CHECK_THAT(outcomes, Catch::Matchers::IsEmpty());
         CHECK_NOTHROW(expectation.consume(call));
     }
 
@@ -448,10 +442,10 @@ TEMPLATE_TEST_CASE(
             REQUIRE_CALL(policy, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(expectation::MatchSuccess{});
-            reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call).value();
+            auto const outcomes = std::as_const(expectation).matches(call).value();
             REQUIRE_THAT(
-                outcomes.outcomes,
-                Catch::Matchers::RangeEquals(std::array{true}));
+                outcomes,
+                Catch::Matchers::RangeEquals(std::to_array<expectation::MatchResult>({expectation::MatchSuccess{}})));
         }
 
         SECTION("When not matched => no match")
@@ -459,10 +453,10 @@ TEMPLATE_TEST_CASE(
             REQUIRE_CALL(policy, matches(_))
                 .LR_WITH(&_1 == &call)
                 .RETURN(expectation::MatchFailure{});
-            reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call).value();
+            auto const outcomes = std::as_const(expectation).matches(call).value();
             REQUIRE_THAT(
-                outcomes.outcomes,
-                Catch::Matchers::RangeEquals(std::array{false}));
+                outcomes,
+                Catch::Matchers::RangeEquals(std::to_array<expectation::MatchResult>({expectation::MatchFailure{}})));
         }
 
         REQUIRE_CALL(policy, consume(_))
@@ -512,10 +506,13 @@ TEMPLATE_TEST_CASE(
                 .LR_WITH(&_1 == &call)
                 .RETURN(expectation::MatchSuccess{});
 
-            reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call).value();
+            auto const outcomes = std::as_const(expectation).matches(call).value();
             REQUIRE_THAT(
-                outcomes.outcomes,
-                Catch::Matchers::RangeEquals(std::array{true, true}));
+                outcomes,
+                Catch::Matchers::RangeEquals(std::to_array<expectation::MatchResult>({
+                    expectation::MatchSuccess{},
+                    expectation::MatchSuccess{},
+                })));
         }
 
         SECTION("When at least one not matches => no match")
@@ -533,14 +530,10 @@ TEMPLATE_TEST_CASE(
                 .LR_WITH(&_1 == &call)
                 .RETURN(isMatching2);
 
-            reporting::RequirementOutcomes const outcomes = std::as_const(expectation).matches(call).value();
+            auto const outcomes = std::as_const(expectation).matches(call).value();
             REQUIRE_THAT(
-                outcomes.outcomes,
-                Catch::Matchers::RangeEquals(
-                    std::array{
-                        std::holds_alternative<expectation::MatchSuccess>(isMatching1),
-                        std::holds_alternative<expectation::MatchSuccess>(isMatching2),
-                    }));
+                outcomes,
+                Catch::Matchers::RangeEquals(std::array{isMatching1, isMatching2}));
         }
 
         SECTION("When calling consume()")
