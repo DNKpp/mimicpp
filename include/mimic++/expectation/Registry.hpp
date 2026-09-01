@@ -123,20 +123,23 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
             std::size_t const stacktraceSkip{1u + call.baseStacktraceSkip};
             if (!std::ranges::empty(matches))
             {
-                return handle_matched_call<Signature>(std::move(target), std::move(call), std::move(matches), stacktraceSkip + 1u);
+                return handle_matched_call<Signature>(
+                    std::move(target),
+                    std::move(call),
+                    std::move(matches),
+                    stacktraceSkip + 1u);
             }
 
             if (!std::ranges::empty(inapplicableMatches))
             {
-                auto reports = inapplicableMatches | std::views::transform([](auto const& exp) { return exp.expectation.get().report(); });
                 reporting::detail::report_inapplicable_matches(
                     reporting::make_call_report(std::move(target), std::move(call), util::stacktrace::current(stacktraceSkip)),
-                    std::vector(reports.begin(), reports.end()));
+                    make_match_reports(std::move(inapplicableMatches)));
             }
 
             reporting::detail::report_no_matches(
                 reporting::make_call_report(std::move(target), std::move(call), util::stacktrace::current(stacktraceSkip)),
-                make_no_match_reports(std::move(noMatches)));
+                make_match_reports(std::move(noMatches)));
         }
 
     private:
@@ -173,6 +176,15 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
             {
                 std::reference_wrapper<Expectation> expectation;
                 MatchResults results;
+
+                [[nodiscard]]
+                reporting::MatchReport to_match_report() &&
+                {
+                    return reporting::MatchReport{
+                        .expectationReport = expectation.get().report(),
+                        .matchResults = std::move(results),
+                    };
+                }
             };
 
             std::vector<entry> matches{};
@@ -222,13 +234,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                 return std::vector(view.begin(), view.end());
             });
             MIMICPP_ASSERT(matches.size() == reports.size(), "Size mismatch.");
-            auto const bestMatchIter = std::ranges::max_element(
+            auto const bestIter = std::ranges::max_element(
                 reports,
                 std::not_fn(&sequence::detail::has_better_rating),
-                [](auto const& el) noexcept -> const auto& {
+                [](reporting::ExpectationReport const& el) noexcept -> const auto& {
                     return std::get<reporting::state_applicable>(el.controlReport).sequenceRatings;
                 });
-            auto& expectation = matches[std::ranges::distance(reports.cbegin(), bestMatchIter)].expectation.get();
+            auto& bestMatch = matches[std::ranges::distance(reports.cbegin(), bestIter)];
 
             if (settings::report_success())
             {
@@ -238,26 +250,21 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                 // At least there are some tests, which will fail if done incorrectly.
                 reporting::detail::report_full_match(
                     reporting::make_call_report(std::move(target), callInfo, util::stacktrace::current(stacktraceSkip)),
-                    std::move(*bestMatchIter));
+                    {.expectationReport = std::move(*bestIter), .matchResults = std::move(bestMatch.results)});
             }
 
-            return expectation.consume(callInfo);
+            return bestMatch.expectation.get().consume(callInfo);
         }
 
         [[nodiscard]]
-        static std::vector<reporting::NoMatchReport> make_no_match_reports(std::vector<evaluation_results::entry>&& outcomes)
+        static std::vector<reporting::MatchReport> make_match_reports(std::vector<evaluation_results::entry>&& outcomes)
         {
-            std::vector<reporting::NoMatchReport> reports{};
+            std::vector<reporting::MatchReport> reports{};
             reports.reserve(outcomes.size());
-            for (auto&& [expectationPtr, outcome] : std::move(outcomes))
-            {
-                auto& report = reports.emplace_back(expectationPtr.get().report());
-                report.requirementOutcomes.outcomes.reserve(outcome.size());
-                std::ranges::transform(
-                    outcome,
-                    std::back_inserter(report.requirementOutcomes.outcomes),
-                    [](MatchResult const& m) { return std::holds_alternative<MatchSuccess>(m); });
-            }
+            std::ranges::transform(
+                outcomes,
+                std::back_inserter(reports),
+                [](evaluation_results::entry& el) { return std::move(el).to_match_report(); });
 
             return reports;
         }

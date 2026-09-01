@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -11,7 +11,7 @@
 using namespace mimicpp;
 using reporting::CallReport;
 using reporting::ExpectationReport;
-using reporting::NoMatchReport;
+using reporting::MatchReport;
 using reporting::TypeReport;
 
 namespace
@@ -20,9 +20,9 @@ namespace
         : public reporting::IReporter
     {
     public:
-        MAKE_MOCK2(report_no_matches, void(CallReport, std::vector<NoMatchReport>), override);
-        MAKE_MOCK2(report_inapplicable_matches, void(CallReport, std::vector<ExpectationReport>), override);
-        MAKE_MOCK2(report_full_match, void(CallReport, ExpectationReport), noexcept override);
+        MAKE_MOCK2(report_no_matches, void(CallReport, std::vector<MatchReport>), override);
+        MAKE_MOCK2(report_inapplicable_matches, void(CallReport, std::vector<MatchReport>), override);
+        MAKE_MOCK2(report_full_match, void(CallReport, MatchReport), noexcept override);
         MAKE_MOCK1(report_unfulfilled_expectation, void(ExpectationReport), override);
         MAKE_MOCK1(report_error, void(StringT), override);
         MAKE_MOCK3(report_unhandled_exception, void(CallReport, ExpectationReport, std::exception_ptr), override);
@@ -62,47 +62,45 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     CallReport const callReport{
         .target = {"Mock-Name", TypeReport::make<void()>()},
-        .returnTypeInfo = TypeReport::make<void>()
+        .returnTypeInfo = TypeReport::make<void>(),
     };
 
-    ExpectationReport const expectationReport{
-        .target = callReport.target};
+    ExpectationReport const expectationReport{.target = callReport.target};
 
     SECTION("When report_no_matches() is called.")
     {
-        NoMatchReport const noMatchReport{
+        MatchReport const report{
             .expectationReport = expectationReport,
-            .requirementOutcomes = {{false}}};
+            .matchResults = {expectation::MatchFailure{}},
+        };
 
-        REQUIRE_CALL(reporter, report_no_matches(callReport, std::vector{noMatchReport}))
+        REQUIRE_CALL(reporter, report_no_matches(callReport, std::vector{report}))
             .THROW(TestException{});
 
         REQUIRE_THROWS_AS(
-            reporting::detail::report_no_matches(
-                callReport,
-                std::vector{noMatchReport}),
+            reporting::detail::report_no_matches(callReport, std::vector{report}),
             TestException);
     }
 
     SECTION("When report_inapplicable_matches() is called.")
     {
-        REQUIRE_CALL(reporter, report_inapplicable_matches(callReport, std::vector{expectationReport}))
+        MatchReport const report{.expectationReport = expectationReport};
+
+        REQUIRE_CALL(reporter, report_inapplicable_matches(callReport, std::vector{report}))
             .THROW(TestException{});
 
         REQUIRE_THROWS_AS(
-            reporting::detail::report_inapplicable_matches(
-                callReport,
-                std::vector{expectationReport}),
+            reporting::detail::report_inapplicable_matches(callReport, std::vector{report}),
             TestException);
     }
 
     SECTION("When report_full_match() is called.")
     {
-        REQUIRE_CALL(reporter, report_full_match(callReport, expectationReport));
+        MatchReport const report{.expectationReport = expectationReport};
 
-        reporting::detail::report_full_match(
-            callReport,
-            expectationReport);
+        REQUIRE_CALL(reporter, report_full_match(callReport, report));
+
+        reporting::detail::report_full_match(callReport, report);
     }
 
     SECTION("When report_unfulfilled_expectation() is called.")
@@ -134,5 +132,4 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 }
 
 STOP_WARNING_SUPPRESSION
-
 

@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -71,16 +71,10 @@ namespace mimicpp::reporting::detail
 #endif
 
     [[noreturn]]
-    inline void report_no_matches(
-        CallReport callReport,
-        std::vector<NoMatchReport> noMatchReports)
+    inline void report_no_matches(CallReport callReport, std::vector<MatchReport> noMatchReports)
     {
         get_reporter()
-            // GCOVR_EXCL_START
-            ->report_no_matches(
-                // GCOVR_EXCL_STOP
-                std::move(callReport),
-                std::move(noMatchReports));
+            ->report_no_matches(std::move(callReport), std::move(noMatchReports));
 
         // GCOVR_EXCL_START
         // ReSharper disable once CppDFAUnreachableCode
@@ -89,16 +83,10 @@ namespace mimicpp::reporting::detail
     }
 
     [[noreturn]]
-    inline void report_inapplicable_matches(
-        CallReport callReport,
-        std::vector<ExpectationReport> expectationReports)
+    inline void report_inapplicable_matches(CallReport callReport, std::vector<MatchReport> reports)
     {
         get_reporter()
-            // GCOVR_EXCL_START
-            ->report_inapplicable_matches(
-                // GCOVR_EXCL_STOP
-                std::move(callReport),
-                std::move(expectationReports));
+            ->report_inapplicable_matches(std::move(callReport), std::move(reports));
 
         // GCOVR_EXCL_START
         // ReSharper disable once CppDFAUnreachableCode
@@ -106,18 +94,13 @@ namespace mimicpp::reporting::detail
         // GCOVR_EXCL_STOP
     }
 
-    inline void report_full_match(
-        CallReport callReport,
-        ExpectationReport expectationReport) noexcept
+    inline void report_full_match(CallReport callReport, MatchReport report) noexcept
     {
         get_reporter()
-            ->report_full_match(
-                std::move(callReport),
-                std::move(expectationReport));
+            ->report_full_match(std::move(callReport), std::move(report));
     }
 
-    inline void report_unfulfilled_expectation(
-        ExpectationReport expectationReport)
+    inline void report_unfulfilled_expectation(ExpectationReport expectationReport)
     {
         get_reporter()
             ->report_unfulfilled_expectation(std::move(expectationReport));
@@ -129,16 +112,10 @@ namespace mimicpp::reporting::detail
             ->report_error(std::move(message));
     }
 
-    inline void report_unhandled_exception(
-        CallReport callReport,
-        ExpectationReport expectationReport,
-        std::exception_ptr const& exception)
+    inline void report_unhandled_exception(CallReport callReport, ExpectationReport expectationReport, std::exception_ptr const& exception)
     {
         get_reporter()
-            ->report_unhandled_exception(
-                std::move(callReport),
-                std::move(expectationReport),
-                exception);
+            ->report_unhandled_exception(std::move(callReport), std::move(expectationReport), exception);
     }
 }
 

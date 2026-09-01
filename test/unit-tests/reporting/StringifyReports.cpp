@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -38,21 +38,28 @@ TEST_CASE(
         .target = make_common_target_report<void(int, std::string)>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
-            {{reporting::TypeReport::make<int>(), "1337"},
-             {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
+            {
+                {.typeInfo = reporting::TypeReport::make<int>(), .stateString = "1337"},
+                {.typeInfo = reporting::TypeReport::make<std::string>(), .stateString = "\"Hello, World!\""},
+            }},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void(int, std::string)>(),
-        .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {
-            {"expect: arg[1] not empty",
-             std::nullopt,
-             "expect: arg[0] > 0"}}};
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void(int, std::string)>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {
+                              expectation::MatchSuccess{.description = "expect: arg[1] not empty"},
+                              expectation::MatchSuccess{.description = std::nullopt},
+                              expectation::MatchSuccess{.description = "expect: arg[0] > 0"},
+                              },
+    };
 
-    auto const text = reporting::stringify_full_match(callReport, expectationReport);
+    auto const text = reporting::stringify_full_match(callReport, matchReport);
 
     // note the Adherence reordering
     std::string const regex =
@@ -66,9 +73,7 @@ TEST_CASE(
 	  \+ expect: arg\[0\] > 0
 	  \+ expect: arg\[1\] not empty
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 TEST_CASE(
@@ -80,15 +85,19 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {{"expect: some requirement"}}};
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {expectation::MatchSuccess{.description = "expect: some requirement"}},
+    };
 
-    auto const text = reporting::stringify_full_match(callReport, expectationReport);
+    auto const text = reporting::stringify_full_match(callReport, matchReport);
 
     std::string const regex =
         R"(Matched Call originated from `.+:\d+`, `.+`
@@ -97,9 +106,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: some requirement
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 TEST_CASE(
@@ -111,14 +118,19 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt};
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {},
+    };
 
-    auto const text = reporting::stringify_full_match(callReport, expectationReport);
+    auto const text = reporting::stringify_full_match(callReport, matchReport);
 
     std::string const regex =
         R"(Matched Call originated from `.+:\d+`, `.+`
@@ -126,9 +138,7 @@ TEST_CASE(
 	Chose Expectation defined at `.+:\d+`, `.+`
 	Without any Requirements.
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
@@ -143,14 +153,19 @@ TEST_CASE(
         .argDetails = {},
         .stacktrace = util::stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt};
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {},
+    };
 
-    auto const text = reporting::stringify_full_match(callReport, expectationReport);
+    auto const text = reporting::stringify_full_match(callReport, matchReport);
     CAPTURE(text);
     auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
     REQUIRE(stacktraceBegin != text.cend());
@@ -180,27 +195,37 @@ TEST_CASE(
         .target = make_common_target_report<void(int, std::string)>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
-            {{reporting::TypeReport::make<int>(), "1337"},
-             {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
+            {
+                {.typeInfo = reporting::TypeReport::make<int>(), .stateString = "1337"},
+                {.typeInfo = reporting::TypeReport::make<std::string>(), .stateString = "\"Hello, World!\""},
+            }},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    reporting::ExpectationReport const expectationReport1{
-        .target = make_common_target_report<void(int, std::string)>(),
-        .controlReport = commonInapplicableState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {
-            {"expect: arg[1] not empty",
-             std::nullopt,
-             "expect: arg[0] > 0"}}};
+    reporting::MatchReport const matchReport1{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonInapplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {
+                              expectation::MatchSuccess{.description = "expect: arg[1] not empty"},
+                              expectation::MatchSuccess{.description = std::nullopt},
+                              expectation::MatchSuccess{.description = "expect: arg[0] > 0"},
+                              },
+    };
 
-    reporting::ExpectationReport const expectationReport2{
-        .target = make_common_target_report<void(int, std::string)>("Mock-Name2"),
-        .controlReport = commonSaturatedState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {{"expect: test"}}};
+    reporting::MatchReport const matchReport2{
+        .expectationReport = {
+                              .target = make_common_target_report<void(int, std::string)>("Mock-Name2"),
+                              .controlReport = commonSaturatedState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {expectation::MatchSuccess{.description = "expect: test"}},
+    };
 
-    std::vector expectationReports{expectationReport1, expectationReport2};
+    std::vector expectationReports{matchReport1, matchReport2};
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
 
     // note the Adherence reordering
@@ -223,9 +248,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: test
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 TEST_CASE(
@@ -237,15 +260,21 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonSaturatedState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {{"expect: some requirement"}}};
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonSaturatedState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {
+                              expectation::MatchSuccess{.description = "expect: some requirement"},
+                              },
+    };
 
-    std::vector expectationReports{expectationReport};
+    std::vector expectationReports{matchReport};
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
 
     std::string const regex =
@@ -257,9 +286,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: some requirement
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 TEST_CASE(
@@ -271,14 +298,19 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonSaturatedState,
-        .finalizerDescription = std::nullopt};
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonSaturatedState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {},
+    };
 
-    std::vector expectationReports{expectationReport};
+    std::vector expectationReports{matchReport};
     auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
 
     std::string const regex =
@@ -305,15 +337,19 @@ TEST_CASE(
         .argDetails = {},
         .stacktrace = util::stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonInapplicableState,
-        .finalizerDescription = std::nullopt};
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonInapplicableState,
+                              },
+        .matchResults = {                                            },
+    };
 
-    std::vector expectationReports{expectationReport};
-    auto const text = reporting::stringify_inapplicable_matches(callReport, expectationReports);
+    std::vector reports{matchReport};
+    auto const text = reporting::stringify_inapplicable_matches(callReport, reports);
     CAPTURE(text);
     auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
     REQUIRE(stacktraceBegin != text.cend());
@@ -340,39 +376,42 @@ TEST_CASE(
         .target = make_common_target_report<void(int, std::string)>(),
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
-            {{reporting::TypeReport::make<int>(), "1337"},
-             {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""}}},
+            {
+                {reporting::TypeReport::make<int>(), "1337"},
+                {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""},
+            }},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
-
-    reporting::ExpectationReport const expectationReport1{
-        .target = make_common_target_report<void(int, std::string)>(),
-        .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {
-            {std::nullopt,
-             "expect: arg[1] not empty",
-             std::nullopt,
-             "expect: arg[0] > 0",
-             std::nullopt}}};
-    reporting::RequirementOutcomes const outcomes1{
-        .outcomes = {{false, true, false, false, true}}};
-
-    reporting::ExpectationReport const expectationReport2{
-        .target = make_common_target_report<void()>("Mock-Name2"),
-        .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {
-            {"expect: violated",
-             "expect: adhered"}}};
-    reporting::RequirementOutcomes const outcomes2{
-        .outcomes = {false, true}
+        .fromConstness = Constness::any,
     };
 
-    std::vector noMatchReports{
-        reporting::NoMatchReport{expectationReport1, outcomes1},
-        reporting::NoMatchReport{expectationReport2, outcomes2}
+    reporting::MatchReport const matchReport1{
+        .expectationReport = {
+                              .target = make_common_target_report<void(int, std::string)>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {
+                              expectation::MatchFailure{.description = std::nullopt},
+                              expectation::MatchSuccess{.description = "expect: arg[1] not empty"},
+                              expectation::MatchFailure{.description = std::nullopt},
+                              expectation::MatchFailure{.description = "expect: arg[0] > 0"},
+                              expectation::MatchSuccess{.description = std::nullopt},
+                              },
     };
+
+    reporting::MatchReport const matchReport2{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>("Mock-Name2"),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {
+                              expectation::MatchFailure{.description = "expect: violated"},
+                              expectation::MatchSuccess{.description = "expect: adhered"},
+                              },
+    };
+
+    std::vector noMatchReports{matchReport1, matchReport2};
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
@@ -395,9 +434,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: adhered
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 TEST_CASE(
@@ -409,28 +446,28 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
-
-    reporting::ExpectationReport const expectationReport1{
-        .target = make_common_target_report<void()>(),
-        .controlReport = GENERATE(commonInapplicableState, commonSaturatedState),
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {{"expect: violation1"}}};
-    reporting::RequirementOutcomes const outcomes1{
-        .outcomes = {false}};
-
-    reporting::ExpectationReport const expectationReport2{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {{"expect: violation2"}}};
-    reporting::RequirementOutcomes const outcomes2{
-        .outcomes = {false}};
-
-    std::vector noMatchReports{
-        reporting::NoMatchReport{expectationReport1, outcomes1},
-        reporting::NoMatchReport{expectationReport2, outcomes2}
+        .fromConstness = Constness::any,
     };
+
+    reporting::MatchReport const matchReport1{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = GENERATE(commonInapplicableState, commonSaturatedState),
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {expectation::MatchFailure{.description = "expect: violation1"}},
+    };
+
+    reporting::MatchReport const matchReport2{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {expectation::MatchFailure{.description = "expect: violation2"}},
+    };
+
+    std::vector noMatchReports{matchReport1, matchReport2};
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
@@ -441,9 +478,7 @@ TEST_CASE(
 	Due to Violation\(s\):
 	  \- expect: violation2
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 TEST_CASE(
@@ -455,24 +490,22 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
-
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonApplicableState,
-        .finalizerDescription = std::nullopt,
-        .requirementDescriptions = {
-            {
-                "expect: adherence",
-                "expect: violation",
-            }}};
-    reporting::RequirementOutcomes const outcomes{
-        .outcomes = {true, false}
+        .fromConstness = Constness::any,
     };
 
-    std::vector noMatchReports{
-        reporting::NoMatchReport{expectationReport, outcomes},
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {
+                              expectation::MatchSuccess{.description = "expect: adherence"},
+                              expectation::MatchFailure{.description = "expect: violation"},
+                              },
     };
+
+    std::vector noMatchReports{matchReport};
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
@@ -485,9 +518,7 @@ TEST_CASE(
 	With Adherence\(s\):
 	  \+ expect: adherence
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 TEST_CASE(
@@ -499,19 +530,19 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
-
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonApplicableState,
-        .requirementDescriptions = {{"expect: violation"}}};
-
-    reporting::RequirementOutcomes const outcomes{
-        .outcomes = {false}};
-
-    std::vector noMatchReports{
-        reporting::NoMatchReport{expectationReport, outcomes}
+        .fromConstness = Constness::any,
     };
+
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {expectation::MatchFailure{.description = "expect: violation"}},
+    };
+
+    std::vector noMatchReports{matchReport};
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
 
     std::string const regex =
@@ -536,9 +567,10 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {},
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
-    std::vector<reporting::NoMatchReport> noMatchReports{};
+    std::vector<reporting::MatchReport> noMatchReports{};
 
     SECTION("When no reports are contained.")
     {
@@ -546,28 +578,28 @@ TEST_CASE(
 
     SECTION("When inapplicable match reports are contained.")
     {
-        reporting::ExpectationReport const expectationReport{
-            .target = make_common_target_report<void()>(),
-            .controlReport = commonInapplicableState,
-            .requirementDescriptions = {{"expect: violation"}}};
-
-        reporting::RequirementOutcomes const outcomes{
-            .outcomes = {false}};
-
-        noMatchReports.emplace_back(expectationReport, outcomes);
+        noMatchReports.emplace_back(
+            reporting::MatchReport{
+                .expectationReport = {
+                                      .target = make_common_target_report<void()>(),
+                                      .controlReport = commonInapplicableState,
+                                      .finalizerDescription = std::nullopt,
+                                      },
+                .matchResults = {expectation::MatchFailure{.description = "expect: violation"}},
+        });
     }
 
     SECTION("When saturated match reports are contained.")
     {
-        reporting::ExpectationReport const expectationReport{
-            .target = make_common_target_report<void()>(),
-            .controlReport = commonSaturatedState,
-            .requirementDescriptions = {{"expect: violation"}}};
-
-        reporting::RequirementOutcomes const outcomes{
-            .outcomes = {false}};
-
-        noMatchReports.emplace_back(expectationReport, outcomes);
+        noMatchReports.emplace_back(
+            reporting::MatchReport{
+                .expectationReport = {
+                                      .target = make_common_target_report<void()>(),
+                                      .controlReport = commonSaturatedState,
+                                      .finalizerDescription = std::nullopt,
+                                      },
+                .matchResults = {expectation::MatchFailure{.description = "expect: violation"}},
+        });
     }
 
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
@@ -577,9 +609,7 @@ TEST_CASE(
 	On Target `Mock-Name` used Overload `void\(\)`
 No applicable Expectations available!
 )";
-    CHECK_THAT(
-        text,
-        Catch::Matchers::Matches(regex));
+    CHECK_THAT(text, Catch::Matchers::Matches(regex));
 }
 
 #if MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND
@@ -594,19 +624,19 @@ TEST_CASE(
         .argDetails = {},
         .stacktrace = util::stacktrace::current(0u, 5u),
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
-
-    reporting::ExpectationReport const expectationReport{
-        .target = make_common_target_report<void()>(),
-        .controlReport = commonApplicableState,
-        .requirementDescriptions = {{"expect: violation"}}};
-
-    reporting::RequirementOutcomes const outcomes{
-        .outcomes = {false}};
-
-    std::vector noMatchReports{
-        reporting::NoMatchReport{expectationReport, outcomes}
+        .fromConstness = Constness::any,
     };
+
+    reporting::MatchReport const matchReport{
+        .expectationReport = {
+                              .target = make_common_target_report<void()>(),
+                              .controlReport = commonApplicableState,
+                              .finalizerDescription = std::nullopt,
+                              },
+        .matchResults = {expectation::MatchFailure{.description = "expect: violation"}},
+    };
+
+    std::vector noMatchReports{matchReport};
     auto const text = reporting::stringify_no_matches(callReport, noMatchReports);
     CAPTURE(text);
     auto const stacktraceBegin = std::ranges::search(text, stacktraceToken).begin();
@@ -633,27 +663,27 @@ TEST_CASE(
     static constexpr auto maxSize = std::numeric_limits<int>::max();
     auto [expectedTimesText, expectedDiff, state] = GENERATE(
         (table<std::string, int, reporting::control_state_t>)({
-            {           "exactly once", 1,                                                           reporting::state_applicable{.min = 1, .max = 1, .count = 0}},
-            {          "exactly twice", 2,                                                           reporting::state_applicable{.min = 2, .max = 2, .count = 0}},
-            {       "exactly 42 times", 5,                                                        reporting::state_applicable{.min = 42, .max = 42, .count = 37}},
+            {"exactly once",            1, reporting::state_applicable{.min = 1, .max = 1, .count = 0}                                                            },
+            {"exactly twice",           2, reporting::state_applicable{.min = 2, .max = 2, .count = 0}                                                            },
+            {"exactly 42 times",        5, reporting::state_applicable{.min = 42, .max = 42, .count = 37}                                                         },
 
-            {  "between 1 and 2 times", 1,                                                           reporting::state_applicable{.min = 1, .max = 2, .count = 0}},
-            {"between 42 and 47 times", 5,                                                        reporting::state_applicable{.min = 42, .max = 47, .count = 37}},
+            {"between 1 and 2 times",   1, reporting::state_applicable{.min = 1, .max = 2, .count = 0}                                                            },
+            {"between 42 and 47 times", 5, reporting::state_applicable{.min = 42, .max = 47, .count = 37}                                                         },
 
-            {          "at least once", 1,                                                     reporting::state_applicable{.min = 1, .max = maxSize, .count = 0}},
-            {         "at least twice", 2,                                                     reporting::state_applicable{.min = 2, .max = maxSize, .count = 0}},
-            {      "at least 42 times", 5,                                                   reporting::state_applicable{.min = 42, .max = maxSize, .count = 37}},
+            {"at least once",           1, reporting::state_applicable{.min = 1, .max = maxSize, .count = 0}                                                      },
+            {"at least twice",          2, reporting::state_applicable{.min = 2, .max = maxSize, .count = 0}                                                      },
+            {"at least 42 times",       5, reporting::state_applicable{.min = 42, .max = maxSize, .count = 37}                                                    },
 
-            {           "exactly once", 1,         reporting::state_inapplicable{.min = 1, .max = 1, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
-            {          "exactly twice", 2,         reporting::state_inapplicable{.min = 2, .max = 2, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
-            {       "exactly 42 times", 5,      reporting::state_inapplicable{.min = 42, .max = 42, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}},
+            {"exactly once",            1, reporting::state_inapplicable{.min = 1, .max = 1, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}        },
+            {"exactly twice",           2, reporting::state_inapplicable{.min = 2, .max = 2, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}        },
+            {"exactly 42 times",        5, reporting::state_inapplicable{.min = 42, .max = 42, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}     },
 
-            {  "between 1 and 2 times", 1,         reporting::state_inapplicable{.min = 1, .max = 2, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
-            {"between 42 and 47 times", 5,      reporting::state_inapplicable{.min = 42, .max = 47, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}},
+            {"between 1 and 2 times",   1, reporting::state_inapplicable{.min = 1, .max = 2, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}        },
+            {"between 42 and 47 times", 5, reporting::state_inapplicable{.min = 42, .max = 47, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}     },
 
-            {          "at least once", 1,   reporting::state_inapplicable{.min = 1, .max = maxSize, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
-            {         "at least twice", 2,   reporting::state_inapplicable{.min = 2, .max = maxSize, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}},
-            {      "at least 42 times", 5, reporting::state_inapplicable{.min = 42, .max = maxSize, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}}
+            {"at least once",           1, reporting::state_inapplicable{.min = 1, .max = maxSize, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}  },
+            {"at least twice",          2, reporting::state_inapplicable{.min = 2, .max = maxSize, .count = 0, .inapplicableSequences = {{sequence::Tag{1337}}}}  },
+            {"at least 42 times",       5, reporting::state_inapplicable{.min = 42, .max = maxSize, .count = 37, .inapplicableSequences = {{sequence::Tag{1337}}}}}
     }));
 
     reporting::ExpectationReport const expectationReport{
