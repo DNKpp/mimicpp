@@ -66,32 +66,24 @@ TEMPLATE_TEST_CASE_SIG(
         REQUIRE(policy.is_satisfied());
     }
 
-    SECTION("Policy description.")
-    {
-        std::optional<StringT> const description = policy.describe();
-        if constexpr (ValueCategory::any == category)
-        {
-            REQUIRE_FALSE(description);
-        }
-        else
-        {
-            REQUIRE(description);
-            REQUIRE_THAT(
-                *description,
-                Catch::Matchers::Equals(StringT{"expect: from "} + print(category) + " category overload"));
-        }
-    }
-
     CallInfoT const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
-        .fromConstness = GENERATE(from_range(constQualifiers))};
+        .fromConstness = GENERATE(from_range(constQualifiers)),
+    };
 
-    CHECKED_IF(mimicpp::detail::is_matching(call.fromCategory, category))
+    bool const expectedMatchResult = mimicpp::detail::is_matching(call.fromCategory, category);
+    auto const expectedDescription = ValueCategory::any != category
+                                       ? StringT{"expect: from "} + print(category) + " category overload"
+                                       : std::optional<StringT>{};
+
+    CHECKED_IF(expectedMatchResult)
     {
         SECTION("When call and policy category matches, success is returned.")
         {
-            CHECK(std::holds_alternative<expectation::MatchSuccess>(policy.matches(call)));
+            CHECK_THAT(
+                policy.matches(call),
+                variant_equals(expectation::MatchSuccess{.description = expectedDescription}));
         }
 
         SECTION("Policy doesn't consume, but asserts on wrong category.")
@@ -99,11 +91,13 @@ TEMPLATE_TEST_CASE_SIG(
             CHECK_NOTHROW(policy.consume(call));
         }
     }
-    CHECKED_ELSE(mimicpp::detail::is_matching(call.fromCategory, category))
+    CHECKED_ELSE(expectedMatchResult)
     {
         SECTION("When call and policy category mismatch, failure is returned.")
         {
-            CHECK(std::holds_alternative<expectation::MatchFailure>(policy.matches(call)));
+            CHECK_THAT(
+                policy.matches(call),
+                variant_equals(expectation::MatchFailure{.description = expectedDescription}));
         }
     }
 }
@@ -127,32 +121,24 @@ TEMPLATE_TEST_CASE_SIG(
         REQUIRE(policy.is_satisfied());
     }
 
-    SECTION("Policy description.")
-    {
-        std::optional<StringT> const description = policy.describe();
-        if constexpr (Constness::any == constness)
-        {
-            REQUIRE_FALSE(description);
-        }
-        else
-        {
-            REQUIRE(description);
-            REQUIRE_THAT(
-                *description,
-                Catch::Matchers::Equals(StringT{"expect: from "} + print(constness) + " qualified overload"));
-        }
-    }
-
     CallInfoT const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
-        .fromConstness = GENERATE(from_range(constQualifiers))};
+        .fromConstness = GENERATE(from_range(constQualifiers)),
+    };
 
-    CHECKED_IF(mimicpp::detail::is_matching(call.fromConstness, constness))
+    bool const expectedMatchResult = mimicpp::detail::is_matching(call.fromConstness, constness);
+    auto const expectedDescription = Constness::any != constness
+                                       ? StringT{"expect: from "} + print(constness) + " qualified overload"
+                                       : std::optional<StringT>{};
+
+    CHECKED_IF(expectedMatchResult)
     {
         SECTION("When call and policy constness matches, success is returned.")
         {
-            CHECK(std::holds_alternative<expectation::MatchSuccess>(policy.matches(call)));
+            CHECK_THAT(
+                policy.matches(call),
+                variant_equals(expectation::MatchSuccess{.description = expectedDescription}));
         }
 
         SECTION("Policy doesn't consume, but asserts on wrong constness.")
@@ -160,11 +146,13 @@ TEMPLATE_TEST_CASE_SIG(
             CHECK_NOTHROW(policy.consume(call));
         }
     }
-    CHECKED_ELSE(mimicpp::detail::is_matching(call.fromConstness, constness))
+    CHECKED_ELSE(expectedMatchResult)
     {
         SECTION("When call and policy constness mismatch, failure is returned.")
         {
-            CHECK(std::holds_alternative<expectation::MatchFailure>(policy.matches(call)));
+            CHECK_THAT(
+                policy.matches(call),
+                variant_equals(expectation::MatchFailure{.description = expectedDescription}));
         }
     }
 }

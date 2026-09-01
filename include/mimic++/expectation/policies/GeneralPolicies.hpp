@@ -16,6 +16,7 @@
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <iterator>
+    #include <optional>
     #include <utility>
 #endif
 
@@ -73,6 +74,7 @@ namespace mimicpp::expectation::policies
             MIMICPP_ASSERT(mimicpp::detail::is_matching(info.fromCategory, expected), "Call does not match.");
         }
 
+    private:
         [[nodiscard]]
         static auto describe()
         {
@@ -120,6 +122,7 @@ namespace mimicpp::expectation::policies
             MIMICPP_ASSERT(mimicpp::detail::is_matching(info.fromConstness, constness), "Call does not match.");
         }
 
+    private:
         [[nodiscard]]
         static auto describe()
         {
