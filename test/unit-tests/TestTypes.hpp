@@ -254,7 +254,6 @@ class MatcherMock
 {
 public:
     MAKE_CONST_MOCK1(matches, mimicpp::expectation::MatchResult(T));
-    MAKE_CONST_MOCK0(describe, mimicpp::StringT());
 };
 
 template <typename Matcher, typename Projection>
@@ -274,13 +273,6 @@ public:
     {
         return std::invoke(m_Projection, m_Matcher)
             .matches(std::forward<Args>(args)...);
-    }
-
-    [[nodiscard]]
-    constexpr mimicpp::StringT describe() const
-    {
-        return std::invoke(m_Projection, m_Matcher)
-            .describe();
     }
 
 private:
