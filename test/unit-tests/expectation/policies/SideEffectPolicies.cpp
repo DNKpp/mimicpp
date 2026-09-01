@@ -41,7 +41,6 @@ TEST_CASE(
     STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), void()>);
     REQUIRE(std::as_const(policy).is_satisfied());
     REQUIRE(std::holds_alternative<expectation::MatchSuccess>(std::as_const(policy).matches(info)));
-    REQUIRE(std::optional<StringT>{} == std::as_const(policy).describe());
 
     REQUIRE_CALL(action, Invoke(_))
         .LR_WITH(&info == &_1);

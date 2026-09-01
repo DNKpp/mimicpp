@@ -55,14 +55,6 @@ public:
         return matchResult;
     }
 
-    mimicpp::StringT description{};
-
-    [[nodiscard]]
-    mimicpp::StringT describe() const
-    {
-        return description;
-    }
-
     static constexpr void consume(CallInfoT const& call) noexcept
     {
     }
@@ -103,13 +95,6 @@ public:
     {
         return std::invoke(projection, policy)
             .matches(call);
-    }
-
-    [[nodiscard]]
-    mimicpp::StringT describe() const
-    {
-        return std::invoke(projection, policy)
-            .describe();
     }
 
     constexpr void consume(const CallT& call)
@@ -172,7 +157,6 @@ public:
 
     MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
     MAKE_CONST_MOCK1(matches, mimicpp::expectation::MatchResult(CallInfo const&));
-    MAKE_CONST_MOCK0(describe, mimicpp::StringT());
     MAKE_MOCK1(consume, void(CallInfo const&));
 };
 

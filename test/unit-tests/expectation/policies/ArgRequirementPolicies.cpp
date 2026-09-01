@@ -100,76 +100,24 @@ TEST_CASE(
     REQUIRE(std::as_const(policy).is_satisfied());
     REQUIRE_NOTHROW(policy.consume(info));
 
-    SECTION("Policy description.")
-    {
-        REQUIRE_CALL(matcher, describe())
-            .RETURN("matcher description");
-        REQUIRE_CALL(describeStrategy, Invoke("matcher description"))
-            .RETURN("expect that: matcher description");
-
-        auto const description = policy.describe();
-        REQUIRE(description);
-        REQUIRE_THAT(
-            *description,
-            Catch::Matchers::Equals("expect that: matcher description"));
-    }
-
     SECTION("Testing matches.")
     {
+        static StringT const matcherDescription{"expect that: matcher description"};
+        REQUIRE_CALL(describeStrategy, Invoke(matcherDescription))
+            .RETURN(matcherDescription);
         REQUIRE_CALL(matchesStrategy, Invoke(_, _))
             .LR_WITH(&_2 == &info)
             .LR_RETURN(_1.matcher.matches(arg0));
         auto const expected = GENERATE(
             as<expectation::MatchResult>{},
-            expectation::MatchSuccess{},
-            expectation::MatchFailure{});
+            expectation::MatchSuccess{.description = matcherDescription},
+            expectation::MatchFailure{.description = matcherDescription});
         REQUIRE_CALL(matcher, matches(_))
             .LR_WITH(&_1 == &arg0)
             .RETURN(expected);
 
         REQUIRE(expected == std::as_const(policy).matches(info));
     }
-}
-
-TEST_CASE(
-    "expectation::policies::ArgsRequirement supports matchers without description.",
-    "[expectation][expectation::policy]")
-{
-    using SignatureT = void(int);
-    using CallInfoT = call::info_for_signature_t<SignatureT>;
-    using DescriberStrategyT = InvocableMock<StringT, StringViewT>;
-
-    struct Matcher
-    {
-        [[nodiscard]]
-        static constexpr bool matches([[maybe_unused]] int& arg) noexcept
-        {
-            return true;
-        }
-
-        [[nodiscard]]
-        static constexpr std::nullopt_t describe() noexcept
-        {
-            return std::nullopt;
-        }
-    };
-
-    STATIC_CHECK(matcher_for<Matcher, int&>);
-
-    using MatchesStrategyT = InvocableMock<
-        bool,
-        expectation::policies::matcher_matches_fn<Matcher>,
-        const CallInfoT&>;
-
-    MatchesStrategyT matchesStrategy{};
-    DescriberStrategyT describeStrategy{};
-    expectation::policies::ArgsRequirement policy{
-        Matcher{},
-        std::ref(matchesStrategy),
-        std::ref(describeStrategy)};
-
-    auto const description = policy.describe();
-    REQUIRE_FALSE(description);
 }
 
 namespace
@@ -258,30 +206,15 @@ TEST_CASE(
     REQUIRE(std::as_const(policy).is_satisfied());
     REQUIRE_NOTHROW(policy.consume(info));
 
-    SECTION("Policy description.")
-    {
-        REQUIRE_CALL(matcher, describe())
-            .RETURN("matcher description");
+    auto const match = GENERATE(
+        as<expectation::MatchResult>{},
+        expectation::MatchSuccess{},
+        expectation::MatchFailure{});
+    REQUIRE_CALL(matcher, matches(_))
+        .LR_WITH(&_1 == &arg0)
+        .RETURN(match);
 
-        auto const description = policy.describe();
-        REQUIRE(description);
-        REQUIRE_THAT(
-            *description,
-            Catch::Matchers::Equals("expect: arg[0] matcher description"));
-    }
-
-    SECTION("Policy matches().")
-    {
-        auto const match = GENERATE(
-            as<expectation::MatchResult>{},
-            expectation::MatchSuccess{},
-            expectation::MatchFailure{});
-        REQUIRE_CALL(matcher, matches(_))
-            .LR_WITH(&_1 == &arg0)
-            .RETURN(match);
-
-        REQUIRE(match == std::as_const(policy).matches(info));
-    }
+    REQUIRE(match == std::as_const(policy).matches(info));
 }
 
 TEST_CASE(
@@ -358,27 +291,12 @@ TEST_CASE(
     REQUIRE(std::as_const(policy).is_satisfied());
     REQUIRE_NOTHROW(policy.consume(info));
 
-    SECTION("Policy description.")
-    {
-        SCOPED_EXP std::as_const(matcher).describe.expect_call()
-            and finally::returns<std::string>("matcher description");
+    auto const match = GENERATE(
+        as<expectation::MatchResult>{},
+        expectation::MatchSuccess{},
+        expectation::MatchFailure{});
+    SCOPED_EXP std::as_const(matcher).matches.expect_call(matches::instance(arg0), matches::instance(arg1))
+        and finally::returns(match);
 
-        auto const description = policy.describe();
-        REQUIRE(description);
-        REQUIRE_THAT(
-            *description,
-            Catch::Matchers::Equals("expect: arg[all] matcher description"));
-    }
-
-    SECTION("Policy matches().")
-    {
-        auto const match = GENERATE(
-            as<expectation::MatchResult>{},
-            expectation::MatchSuccess{},
-            expectation::MatchFailure{});
-        SCOPED_EXP std::as_const(matcher).matches.expect_call(matches::instance(arg0), matches::instance(arg1))
-            and finally::returns(match);
-
-        REQUIRE(match == std::as_const(policy).matches(info));
-    }
+    REQUIRE(match == std::as_const(policy).matches(info));
 }

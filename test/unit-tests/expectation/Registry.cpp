@@ -133,8 +133,6 @@ TEST_CASE(
             .IN_SEQUENCE(sequence);
 
         controlPolicies[1u].stateData = commonApplicableState;
-        REQUIRE_CALL(policies[1], describe())
-            .RETURN("Policy1");
 
         CHECK_NOTHROW(registry.handle_call<Signature>(make_common_target_report<Signature>(), call));
         CHECK_THAT(
@@ -169,8 +167,6 @@ TEST_CASE(
             .RETURN(expectation::MatchFailure{});
 
         controlPolicies[2u].stateData = commonInapplicableState;
-        REQUIRE_CALL(policies[2u], describe())
-            .RETURN("Policy2");
 
         CHECK_THROWS_AS(
             registry.handle_call<Signature>(make_common_target_report<Signature>(), call),
@@ -205,15 +201,6 @@ TEST_CASE(
             .LR_WITH(_1.fromSourceLocation == call.fromSourceLocation)
             .IN_SEQUENCE(sequence)
             .RETURN(expectation::MatchFailure{});
-
-        REQUIRE_CALL(policies[3u], describe())
-            .RETURN("Policy3");
-        REQUIRE_CALL(policies[2u], describe())
-            .RETURN("Policy2");
-        REQUIRE_CALL(policies[1u], describe())
-            .RETURN("Policy1");
-        REQUIRE_CALL(policies[0u], describe())
-            .RETURN("Policy0");
 
         CHECK_THROWS_AS(
             registry.handle_call<Signature>(make_common_target_report<Signature>(), call),

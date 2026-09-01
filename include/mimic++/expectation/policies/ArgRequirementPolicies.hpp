@@ -75,39 +75,24 @@ namespace mimicpp::expectation::policies
         constexpr MatchResult matches(call::Info<Return, Args...> const& info) const
             noexcept(std::is_nothrow_invocable_v<MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>)
         {
-            return std::invoke(
+            auto result = std::invoke(
                 m_MatchesStrategy,
                 matcher_matches_fn<Matcher>{m_Matcher},
                 info);
+            std::visit([&](auto& inner) {
+                if (auto& description = inner.description)
+                {
+                   description = std::invoke(m_DescribeStrategy, *description);
+                }
+            },
+            result);
+
+            return result;
         }
 
         template <typename Return, typename... Args>
         static constexpr void consume([[maybe_unused]] call::Info<Return, Args...> const& info) noexcept
         {
-        }
-
-        [[nodiscard]]
-        std::optional<StringT> describe() const
-        {
-            [[maybe_unused]] auto const description = mimicpp::detail::describe_hook::describe(m_Matcher);
-
-            if constexpr (util::boolean_testable<decltype(description)>)
-            {
-                if (description)
-                {
-                    return std::invoke(m_DescribeStrategy, *description);
-                }
-
-                return std::nullopt;
-            }
-            else if constexpr (std::convertible_to<decltype(description), StringViewT>)
-            {
-                return std::invoke(m_DescribeStrategy, description);
-            }
-            else
-            {
-                return std::nullopt;
-            }
         }
 
     private:
