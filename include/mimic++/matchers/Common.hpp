@@ -103,6 +103,10 @@ namespace mimicpp::detail::matches_hook
             { custom::matcher_traits<Matcher>{}.matches(matcher, targets...) } -> util::boolean_testable;
         }
     {
+        static_assert(
+            requires{{describe_hook::describe(matcher)}-> util::explicitly_convertible_to<std::optional<StringT>>; },
+            "A legacy matcher requires an appropriate describe-hook.");
+
         if (custom::matcher_traits<Matcher>{}.matches(matcher, targets...))
         {
             return expectation::MatchSuccess{.description{describe_hook::describe(matcher)}};
@@ -118,6 +122,10 @@ namespace mimicpp::detail::matches_hook
             { matcher.matches(targets...) } -> util::boolean_testable;
         }
     {
+        static_assert(
+            requires {{describe_hook::describe(matcher)}-> util::explicitly_convertible_to<std::optional<StringT>>; },
+            "A legacy matcher requires an appropriate describe-hook.");
+
         if (matcher.matches(targets...))
         {
             return expectation::MatchSuccess{.description{describe_hook::describe(matcher)}};
