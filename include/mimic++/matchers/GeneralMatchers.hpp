@@ -194,15 +194,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     {
     public:
         [[nodiscard]]
-        static constexpr bool matches([[maybe_unused]] auto&& target) noexcept
+        static constexpr expectation::MatchResult matches(auto&& /*target*/) noexcept
         {
-            return true;
-        }
-
-        [[nodiscard]]
-        static constexpr std::nullopt_t describe() noexcept
-        {
-            return std::nullopt;
+            return expectation::MatchSuccess{};
         }
     };
 
@@ -219,15 +213,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         using is_accepting = std::is_same<T, U>;
 
         [[nodiscard]]
-        static constexpr bool matches([[maybe_unused]] auto&& target) noexcept
+        static constexpr expectation::MatchResult matches(auto&& /*target*/) noexcept
         {
-            return true;
-        }
-
-        [[nodiscard]]
-        static constexpr std::nullopt_t describe() noexcept
-        {
-            return std::nullopt;
+            return expectation::MatchSuccess{};
         }
     };
 }

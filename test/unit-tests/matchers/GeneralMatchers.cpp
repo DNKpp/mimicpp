@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -195,10 +195,7 @@ TEST_CASE(
     STATIC_REQUIRE(matcher_for<AnyT, std::string const&>);
 
     constexpr int value{42};
-    REQUIRE(matches::_.matches(value));
-
-    std::optional<StringT> const description = matches::_.describe();
-    REQUIRE_FALSE(description);
+    CHECK_THAT(matches::_.matches(value), variant_equals(expectation::MatchSuccess{}));
 }
 
 TEST_CASE(
@@ -685,8 +682,7 @@ TEST_CASE(
         STATIC_CHECK(matcher_for<Matcher, int&>);
 
         int i{42};
-        CHECK(matcher.matches(i));
-        CHECK_FALSE(std::optional<StringT>{matcher.describe()});
+        CHECK_THAT(matches::_.matches(i), variant_equals(expectation::MatchSuccess{}));
     }
 
     SECTION("When argument is not an exact match.")
