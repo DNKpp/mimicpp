@@ -249,7 +249,6 @@ TEST_CASE(
         .target = {"Mock-Name", reporting::TypeReport::make<void()>()},
         .controlReport = reporting::state_applicable{0, 1, 0},
         .finalizerDescription = "finalizer description",
-        .requirementDescriptions = {"first expectation description"}
     };
 
     SECTION("When all members are equal, reports compare equal.")
@@ -306,20 +305,6 @@ TEST_CASE(
             reporting::state_applicable{0, 2, 0},
             reporting::state_inapplicable{0, 2, 0, {}, {{sequence::Tag{1337}}}},
             reporting::state_saturated{1, 1, 2});
-
-        CHECK_FALSE(first == second);
-        CHECK_FALSE(second == first);
-        CHECK(first != second);
-        CHECK(second != first);
-    }
-
-    SECTION("When expectation descriptions differ, reports do not compare equal.")
-    {
-        reporting::ExpectationReport second{first};
-        second.requirementDescriptions = GENERATE(
-            (std::vector<std::optional<StringT>>{}),
-            (std::vector<std::optional<StringT>>{"other expectation description"}),
-            (std::vector<std::optional<StringT>>{"expectation description", "other expectation description"}));
 
         CHECK_FALSE(first == second);
         CHECK_FALSE(second == first);

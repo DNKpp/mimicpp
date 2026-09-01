@@ -357,7 +357,7 @@ TEST_CASE(
         .from = throwingLoc,
         .target = make_common_target_report<void()>(),
         .controlReport = commonApplicableState,
-        .requirementDescriptions{"Throwing"}};
+    };
 
     auto const matches = [&](auto const& info) {
         try

@@ -88,7 +88,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         TargetReport target;
         control_state_t controlReport{};
         std::optional<StringT> finalizerDescription{};
-        std::vector<std::optional<StringT>> requirementDescriptions{};
 
         [[nodiscard]]
         friend bool operator==(ExpectationReport const&, ExpectationReport const&) = default;

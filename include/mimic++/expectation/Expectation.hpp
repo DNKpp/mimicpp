@@ -155,7 +155,7 @@ namespace mimicpp::expectation
                     .target = m_Target,
                     .controlReport = m_ControlPolicy.state(),
                     .finalizerDescription = std::nullopt,
-                    .requirementDescriptions = gather_requirement_descriptions()};
+                };
             }
 
             [[nodiscard]]
@@ -211,16 +211,6 @@ namespace mimicpp::expectation
             {
                 return std::apply(
                     [&](auto const&... policies) { return MatchResults{policies.matches(call)...}; },
-                    m_Policies);
-            }
-
-            [[nodiscard]]
-            std::vector<std::optional<StringT>> gather_requirement_descriptions() const
-            {
-                return std::apply(
-                    [&]([[maybe_unused]] auto const&... policies) {
-                        return std::vector<std::optional<StringT>>{sizeof...(policies)};
-                    },
                     m_Policies);
             }
 
