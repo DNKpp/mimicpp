@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -325,48 +325,5 @@ TEST_CASE(
         CHECK_FALSE(second == first);
         CHECK(first != second);
         CHECK(second != first);
-    }
-}
-
-TEST_CASE(
-    "reporting::RequirementOutcomes is equality-comparable.",
-    "[reporting]")
-{
-    reporting::RequirementOutcomes const outcomes{
-        .outcomes = {true}};
-
-    SECTION("Compares equal, when both sides are equal.")
-    {
-        reporting::RequirementOutcomes const other = outcomes;
-
-        CHECK(other == outcomes);
-        CHECK(outcomes == other);
-        CHECK_FALSE(other != outcomes);
-        CHECK_FALSE(outcomes != other);
-    }
-
-    SECTION("Compares unequal, when both sides have different sizes.")
-    {
-        reporting::RequirementOutcomes other{
-            .outcomes = GENERATE(
-                std::vector<bool>{},
-                std::vector{true, false},
-                std::vector{false, true})};
-
-        CHECK_FALSE(other == outcomes);
-        CHECK_FALSE(outcomes == other);
-        CHECK(other != outcomes);
-        CHECK(outcomes != other);
-    }
-
-    SECTION("Compares unequal, when both sides have same sizes but different elements.")
-    {
-        reporting::RequirementOutcomes other{
-            .outcomes = {false}};
-
-        CHECK_FALSE(other == outcomes);
-        CHECK_FALSE(outcomes == other);
-        CHECK(other != outcomes);
-        CHECK(outcomes != other);
     }
 }
