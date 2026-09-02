@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -14,10 +14,12 @@
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <array>
+    #include <any>
     #include <functional>
     #include <tuple>
     #include <type_traits>
@@ -184,6 +186,164 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
                 std::move(tuple)};
         }
     };
+
+    namespace detail
+    {
+        struct CapturedValue
+        {
+            std::any value;
+
+            using OutIter = std::ostreambuf_iterator<char>;
+            using PrintToFun = OutIter(*)(OutIter, std::any const&);
+            PrintToFun printTo;
+        };
+    }
+
+    template <util::unqualified... Args>
+    class MatchEvaluationContext
+    {
+        using CapturedValue = detail::CapturedValue;
+        using CaptureSink = std::back_insert_iterator<std::vector<CapturedValue>>;
+
+    public:
+        using expectation_refs = std::tuple<std::unwrap_reference_t<Args> const&...>;
+
+        [[nodiscard]]
+        explicit constexpr MatchEvaluationContext(expectation_refs expectations, CaptureSink captureSink)
+            : m_Expectations{std::move(expectations)},
+              m_captureSink{std::move(captureSink)}
+        {
+        }
+
+        [[nodiscard]]
+        constexpr expectation_refs expectations() const noexcept
+        {
+            return m_Expectations;
+        }
+
+        template <typename T>
+        void capture(T&& value)
+        {
+            *m_captureSink++ = CapturedValue{
+                .value = std::forward<T>(value),
+                .printTo = [](CapturedValue::OutIter out, std::any const& captured) {
+                    return mimicpp::print(std::move(out), std::any_cast<std::remove_cvref_t<T>>(captured));
+                },
+            };
+        }
+
+    private:
+        expectation_refs m_Expectations;
+        CaptureSink m_captureSink;
+    };
+
+    template <bool isInverted, util::unqualified Predicate, util::unqualified... Args>
+        requires std::is_move_constructible_v<Predicate>
+              && (... && std::is_move_constructible_v<Args>)
+    class GenericMatcher
+    {
+    public:
+        using Context = MatchEvaluationContext<Args...>;
+        using ArgsStorage = std::tuple<Args...>;
+
+        [[nodiscard]]
+        explicit constexpr GenericMatcher(Predicate predicate, StringViewT fmt, ArgsStorage args)
+            noexcept(
+                std::is_nothrow_move_constructible_v<Predicate>
+                && std::is_nothrow_move_constructible_v<ArgsStorage>)
+            : m_Predicate{std::move(predicate)},
+              m_FormatString{std::move(fmt)},
+              m_Args{std::move(args)}
+        {
+        }
+
+        template <typename First, typename... Others>
+            requires std::predicate<Predicate const&, Context&, First&, Others&...>
+        [[nodiscard]]
+        expectation::MatchResult matches(First& first, Others&... others) const
+        {
+            std::vector<detail::CapturedValue> captures{};
+
+            StringStreamT ss{};
+            describe_to(std::ostreambuf_iterator{ss});
+
+            if (Context ctx{m_Args, std::back_inserter(captures)};
+                !isInverted == std::invoke(m_Predicate, ctx, first, others...))
+            {
+                return expectation::MatchSuccess{.description = std::move(ss).str()};
+            }
+
+            if (!std::ranges::empty(captures))
+            {
+                ss << ", but actually ";
+                auto iter = captures.cbegin();
+                iter->printTo(std::ostreambuf_iterator{ss}, iter->value);
+
+                for (++iter; iter != captures.cend(); ++iter)
+                {
+                    ss << ", ";
+                    iter->printTo(std::ostreambuf_iterator{ss}, iter->value);
+                }
+            }
+
+            return expectation::MatchFailure{.description = std::move(ss).str()};
+        }
+
+        [[nodiscard]]
+        constexpr auto operator!() const&
+            requires std::is_copy_constructible_v<Predicate>
+                  && std::is_copy_constructible_v<ArgsStorage>
+        {
+            return GenericMatcher<!isInverted, Predicate, Args...>{m_Predicate, m_FormatString, m_Args};
+        }
+
+        [[nodiscard]]
+        constexpr auto operator!() &&
+        {
+            return GenericMatcher<!isInverted, Predicate, Args...>{std::move(m_Predicate), std::move(m_FormatString), std::move(m_Args)};
+        }
+
+    private:
+        Predicate m_Predicate;
+        StringViewT m_FormatString;
+        ArgsStorage m_Args;
+
+        template <print_iterator OutIter>
+        OutIter describe_to(OutIter out) const
+        {
+            if constexpr (isInverted)
+            {
+                out = format::format_to(std::move(out), "not (");
+            }
+
+            out = std::apply(
+                [&](auto&&... args) {
+                    return format::vformat_to(std::move(out), m_FormatString, format::make_format_args(args...));
+                },
+                std::tuple<format::fallback_formattable_t<Args const&>...>{m_Args});
+
+            if constexpr (isInverted)
+            {
+                out = format::format_to(std::move(out), ")");
+            }
+
+            return out;
+        }
+    };
+
+    template <typename Predicate, typename... Args>
+    [[nodiscard]]
+    constexpr auto make_generic_matcher(
+        Predicate && predicate,
+        format::format_string<format::fallback_formattable_t<Args>...> const formatString,
+        Args && ... args)
+    {
+        using Matcher = GenericMatcher<false, std::remove_cvref_t<Predicate>, std::remove_cvref_t<Args>...>;
+        return Matcher{
+            std::forward<Predicate>(predicate),
+            formatString.get(),
+            std::forward_as_tuple(std::forward<Args>(args)...)};
+    }
 
     /**
      * \brief Matcher, which never fails.
