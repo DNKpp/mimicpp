@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024-2026.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -53,6 +53,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
     // use std format
     #if !MIMICPP_DETAIL_USES_LIBCXX
 
+    template <typename... Args>
+    using format_string = std::basic_format_string<CharT, Args...>;
     using std::format;
     using std::format_to;
     using std::formatter;
@@ -65,6 +67,8 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
     // libc++ has some serious trouble when using its std::format implementation.
     // Let's simply redirect any calls to std::vformat instead.
 
+    template <typename... Args>
+    using format_string = std::basic_format_string<CharT, Args...>;
     using std::formatter;
     using std::make_format_args;
     using std::vformat;
@@ -141,6 +145,8 @@ namespace mimicpp::format::detail
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
 {
+    template <typename... Args>
+    using format_string = fmt::basic_format_string<CharT, Args...>;
     using fmt::format;
     using fmt::format_to;
     using fmt::formatter;
