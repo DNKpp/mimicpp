@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -17,6 +17,7 @@
 #include "mimic++/utilities/Concepts.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <array>
     #include <functional>
     #include <tuple>
     #include <type_traits>
@@ -127,14 +128,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         constexpr StringT describe() const
         {
             return std::apply(
-                [&, this](auto&... additionalArgs) {
-                    return format::vformat(
-                        m_FormatString,
-                        format::make_format_args(
-                            std::invoke(
-                                // std::make_format_args requires lvalue-refs, so let's transform rvalue-refs to const lvalue-refs
-                                [](auto&& val) noexcept -> const auto& { return val; },
-                                additionalArgs.as_describe_arg())...));
+                [&](auto&... additionalArgs) {
+                    std::array<StringT, sizeof...(additionalArgs)> const descriptions{additionalArgs.as_describe_arg()...};
+
+                    return std::invoke(
+                        [&]<std::size_t... indices>(std::index_sequence<indices...> const /*seq*/) {
+                            return format::vformat(m_FormatString, format::make_format_args(descriptions[indices]...));
+                        },
+                        std::index_sequence_for<AdditionalArgs...>{});
                 },
                 m_AdditionalArgs);
         }
