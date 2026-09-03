@@ -48,54 +48,18 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
 #ifndef MIMICPP_CONFIG_USE_FMT
 
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format::detail::fmt
 {
-    // use std format
-    #if !MIMICPP_DETAIL_USES_LIBCXX
-
     template <typename... Args>
-    using format_string = std::basic_format_string<CharT, Args...>;
-    using std::format;
-    using std::format_to;
+    using format_string = std::basic_format_string<CharT, std::type_identity_t<Args>...>;
+    using std::format_args;
     using std::formatter;
     using std::make_format_args;
     using std::vformat;
     using std::vformat_to;
-
-    #else
-
-    // libc++ has some serious trouble when using its std::format implementation.
-    // Let's simply redirect any calls to std::vformat instead.
-
-    template <typename... Args>
-    using format_string = std::basic_format_string<CharT, Args...>;
-    using std::formatter;
-    using std::make_format_args;
-    using std::vformat;
-    using std::vformat_to;
-
-    template <typename... Args>
-    [[nodiscard]]
-    StringT format(const StringViewT fmt, Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
-    {
-        return format::vformat(
-            fmt,
-            std::make_format_args(args...));
-    }
-
-    template <class OutputIt, typename... Args>
-    OutputIt format_to(const OutputIt out, const StringViewT fmt, Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
-    {
-        return format::vformat_to(
-            std::move(out),
-            fmt,
-            std::make_format_args(args...));
-    }
-
-    #endif
 }
 
-namespace mimicpp::format::detail
+namespace mimicpp::format::detail::fmt
 {
     template <typename Char>
     struct format_context;
@@ -143,24 +107,52 @@ namespace mimicpp::format::detail
     // use fmt format
 #else
 
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format::detail::fmt
 {
     template <typename... Args>
-    using format_string = fmt::basic_format_string<CharT, Args...>;
-    using fmt::format;
-    using fmt::format_to;
-    using fmt::formatter;
-    using fmt::make_format_args;
-    using fmt::vformat;
-    using fmt::vformat_to;
-}
+    using format_string = ::fmt::format_string<Args...>;
+    using ::fmt::format_args;
+    using ::fmt::formatter;
+    using ::fmt::make_format_args;
+    using ::fmt::vformat;
+    using ::fmt::vformat_to;
 
-namespace mimicpp::format::detail
-{
     template <class T, class Char>
-    concept formattable = fmt::is_formattable<std::remove_reference_t<T>, Char>::value;
+    concept formattable = requires {
+        requires ::fmt::is_formattable<std::remove_reference_t<T>, Char>::value;
+    };
 }
 
 #endif
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
+{
+    template <class T, typename Char = CharT>
+    concept formattable = detail::fmt::formattable<T, Char>;
+
+    using detail::fmt::format_args;
+    using detail::fmt::format_string;
+    using detail::fmt::formatter;
+    using detail::fmt::make_format_args;
+    using detail::fmt::vformat_to;
+    using detail::fmt::vformat;
+
+    template <print_iterator OutIter, typename... Args>
+    OutIter format_to(OutIter out, format_string<Args...> const fmt, Args&&... args)
+    {
+        return detail::fmt::vformat_to(
+            std::move(out),
+            fmt.get(),
+            format::make_format_args(args...));
+    }
+
+    template <typename... Args>
+    StringT format(format_string<Args...> const fmt, Args && ... args)
+    {
+        return detail::fmt::vformat(
+            fmt.get(),
+            format::make_format_args(args...));
+    }
+}
 
 #endif
