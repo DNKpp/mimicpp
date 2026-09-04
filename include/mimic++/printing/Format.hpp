@@ -10,9 +10,11 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/printing/Fwd.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
+    #include <functional>
     #include <sstream>
     #include <type_traits>
     #include <utility>
@@ -154,5 +156,68 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
             format::make_format_args(args...));
     }
 }
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
+{
+    namespace detail
+    {
+        template <typename T>
+        struct fallback_formattable
+        {
+            using printer_type = printing::PrintFn;
+            std::remove_reference_t<T> value;
+
+            [[nodiscard]]
+            constexpr auto& get() const noexcept
+            {
+                return value;
+            }
+        };
+
+        template <typename T>
+            requires std::is_lvalue_reference_v<T>
+        struct fallback_formattable<T>
+        {
+            using printer_type = printing::PrintFn;
+            std::reference_wrapper<std::remove_reference_t<T>> ref;
+
+            [[nodiscard]]
+            constexpr auto& get() const noexcept
+            {
+                return ref.get();
+            }
+        };
+    }
+
+    template <typename T>
+    constexpr decltype(auto) fallback_formattable(T&& target)
+    {
+        if constexpr (formattable<T&>)
+        {
+            return std::forward<T>(target);
+        }
+        else
+        {
+            return detail::fallback_formattable<T>{std::forward<T>(target)};
+        }
+    }
+}
+
+template <typename T>
+struct mimicpp::format::formatter<mimicpp::format::detail::fallback_formattable<T>, mimicpp::CharT>
+{
+    using Target = mimicpp::format::detail::fallback_formattable<T>;
+    using Printer = typename Target::printer_type;
+
+    static constexpr auto parse(auto& ctx)
+    {
+        return ctx.begin();
+    }
+
+    static constexpr auto format(Target const& target, auto& ctx)
+    {
+        return std::invoke(Printer{}, ctx.out(), target.get());
+    }
+};
 
 #endif
