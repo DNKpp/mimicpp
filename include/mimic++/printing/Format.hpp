@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -15,6 +15,7 @@
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
     #include <functional>
+    #include <iterator>
     #include <sstream>
     #include <type_traits>
     #include <utility>
@@ -36,8 +37,39 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     using StringStreamT = std::basic_ostringstream<CharT, CharTraitsT>;
 
+#if MIMICPP_DETAIL_IS_GCC \
+    && __GNUC__ <= 10
+    namespace detail
+    {
+        /**
+         * \brief Equivalent of `std::output_iterator`, as relaxed by P2325R3.
+         * \tparam Iter The iterator type.
+         * \tparam T The type to be written.
+         * \details P2325R3 removed the `std::default_initializable` requirement from `std::weakly_incrementable`
+         * and thus from `std::input_or_output_iterator` and `std::output_iterator`.
+         * As libstdc++ prior to gcc-11 still implements the previous wording,
+         * iterators like `fmt::basic_appender` (which are not default-initializable) are rejected there.
+         * Spelling out the current requirements explicitly makes all supported toolchains agree on the outcome.
+         * \see https://wg21.link/P2325R3
+         */
+        template <typename Iter, typename T>
+        concept output_iterator = std::movable<Iter>
+                               && std::indirectly_writable<Iter, T>
+                               && requires(Iter iter) {
+                                      typename std::iter_difference_t<Iter>;
+                                      { ++iter } -> std::same_as<Iter&>;
+                                      iter++;
+                                  } && requires(Iter iter, T&& value) {
+                                      *iter++ = std::forward<T>(value);
+                                  };
+    }
+
     template <typename T>
-    concept print_iterator = std::output_iterator<T, const CharT&>;
+    concept print_iterator = detail::output_iterator<T, CharT const&>;
+#else
+    template <typename T>
+    concept print_iterator = std::output_iterator<T, CharT const&>;
+#endif
 
     template <typename Printer, typename OutIter, typename T>
     concept printer_for = print_iterator<OutIter>

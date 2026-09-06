@@ -1,9 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/printing/Format.hpp"
+#include "mimic++/printing/state/Print.hpp"
 
 using namespace mimicpp;
 
@@ -51,7 +52,7 @@ namespace
 }
 
 template <>
-class mimicpp::custom::Printer<Printable>
+class mimicpp::custom::Printer<::Printable>
 {
 public:
     static auto print(auto outIter, Printable const& object)
