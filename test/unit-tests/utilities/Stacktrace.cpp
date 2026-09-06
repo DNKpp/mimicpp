@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -19,8 +19,9 @@ TEST_CASE(
     "std::stacktrace is the installed stacktrace-backend.",
     "[stacktrace]")
 {
-    STATIC_REQUIRE(std::same_as<std::stacktrace, stacktrace::InstalledBackend>);
-    STATIC_REQUIRE(stacktrace::backend<stacktrace::InstalledBackend>);
+    using Backend = decltype(util::stacktrace::detail::find_traits<util::stacktrace::backend_traits>())::Backend;
+    STATIC_REQUIRE(std::same_as<td::stacktrace, Backend>);
+    STATIC_REQUIRE(util::stacktrace::backend<Backend>);
 }
 
 #endif
@@ -31,8 +32,9 @@ TEST_CASE(
     "cpptrace::stacktrace is the installed stacktrace-backend.",
     "[stacktrace]")
 {
-    STATIC_REQUIRE(std::same_as<cpptrace::stacktrace, stacktrace::InstalledBackend>);
-    STATIC_REQUIRE(stacktrace::backend<stacktrace::InstalledBackend>);
+    using Backend = decltype(util::stacktrace::detail::find_traits<util::stacktrace::backend_traits>())::Backend;
+    STATIC_REQUIRE(std::same_as<cpptrace::stacktrace, Backend>);
+    STATIC_REQUIRE(util::stacktrace::backend<Backend>);
 }
 
 #endif
