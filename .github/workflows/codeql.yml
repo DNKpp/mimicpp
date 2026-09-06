@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+#          Copyright Dominic (DNKpp) Koepke 2024-2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -71,8 +71,8 @@ jobs:
               -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=YES \
               -D MIMICPP_ENABLE_UNICODE_STR_MATCHER_TESTS=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=YES \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=cpptrace \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=OFF
+              -D MIMICPP_CONFIG_STACKTRACE=cpptrace \
+              -D MIMICPP_CONFIG_IMPORT_CPPTRACE=OFF
 
       - name: Build
         run: cmake --build build -j4
