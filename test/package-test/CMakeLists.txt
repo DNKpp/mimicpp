@@ -10,7 +10,7 @@ function(collect_cmake_env outConfigArgs outBuildArgs)
     list(APPEND configArgs "-D CMAKE_BUILD_TYPE=$<CONFIG>")
     list(APPEND configArgs "-D MIMICPP_WITH_FMT=${MIMICPP_CONFIG_USE_FMT}")
     list(APPEND configArgs "-D MIMICPP_WITH_UNICODE_STR_MATCHER=${MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER}")
-    list(APPEND configArgs "-D MIMICPP_WITH_STACKTRACE=${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
+    list(APPEND configArgs "-D MIMICPP_WITH_STACKTRACE=${MIMICPP_CONFIG_STACKTRACE}")
 
     if(MSVC)
         list(APPEND buildArgs "--config $<CONFIG>")

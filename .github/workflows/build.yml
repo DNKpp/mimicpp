@@ -389,12 +389,11 @@ jobs:
                                           -D MIMICPP_ENABLE_UNIT_TESTS=ON \
                                           -D MIMICPP_ENABLE_PACKAGE_TEST=ON \
                                           -D MIMICPP_ENABLE_ADAPTER_TESTS=OFF \
-                                          -D MIMICPP_ENABLE_STACKTRACE_TESTS=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION=OFF \
                                           -D MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER=OFF \
                                           -D MIMICPP_ENABLE_UNICODE_STR_MATCHER_TESTS=OFF \
-                                          -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=OFF \
+                                          -D MIMICPP_CONFIG_STACKTRACE=OFF \
                                           -D MIMICPP_ENABLE_STACKTRACE_TESTS=OFF \
                                       )" >> $GITHUB_ENV
 
@@ -603,7 +602,7 @@ jobs:
       #################################
 
       #################################
-      # Feature: experimental stacktrace
+      # Feature: stacktrace
       - name: Select stacktrace backend
         id: config-stacktrace-backend-test
         if: ${{ matrix.build_mode == 'Debug' }}
@@ -616,7 +615,7 @@ jobs:
 
           echo "SELECTED_STACKTRACE_BACKEND=$(echo ${BACKEND})" >> $GITHUB_ENV
 
-      - name: Configure with experimental stacktrace
+      - name: Configure with stacktrace
         if: ${{ steps.config-stacktrace-backend-test.outcome == 'success' }}
         shell: bash
         run: |
@@ -626,9 +625,9 @@ jobs:
               ${{ env.CMAKE_BASE_OPTIONS }} \
               -D MIMICPP_CONFIG_USE_FMT=YES \
               -D MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES=YES \
-              -D MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=${SELECTED_STACKTRACE_BACKEND}
+              -D MIMICPP_CONFIG_STACKTRACE=${SELECTED_STACKTRACE_BACKEND}
 
-      - name: Build with experimental stacktrace
+      - name: Build with stacktrace
         if: ${{ steps.config-stacktrace-backend-test.outcome == 'success' }}
         shell: bash
         run: |
@@ -636,7 +635,7 @@ jobs:
               -j5 \
               ${{ env.CMAKE_BUILD_EXTRA }}
 
-      - name: Run tests with experimental stacktrace
+      - name: Run tests with stacktrace
         if: ${{ steps.config-stacktrace-backend-test.outcome == 'success' }}
         shell: bash
         run: |
