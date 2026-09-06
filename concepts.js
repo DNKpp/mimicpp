@@ -2,10 +2,13 @@ var concepts =
 [
     [ "mimicpp", "d1/d11/namespacemimicpp.html", [
       [ "expectation", "d9/db6/namespacemimicpp_1_1expectation.html", [
-        [ "requirement_for", "d3/dc8/conceptmimicpp_1_1expectation_1_1requirement__for.html", null ],
+        [ "control_policy", "d3/dbb/conceptmimicpp_1_1expectation_1_1control__policy.html", null ],
         [ "expectation_policy_for", "df/d74/conceptmimicpp_1_1expectation_1_1expectation__policy__for.html", null ],
         [ "finalize_policy_for", "d0/d7b/conceptmimicpp_1_1expectation_1_1finalize__policy__for.html", null ],
-        [ "control_policy", "d3/dbb/conceptmimicpp_1_1expectation_1_1control__policy.html", null ]
+        [ "requirement_for", "d3/dc8/conceptmimicpp_1_1expectation_1_1requirement__for.html", null ]
+      ] ],
+      [ "format", "d3/d54/namespacemimicpp_1_1format.html", [
+        [ "formattable", "df/df5/conceptmimicpp_1_1format_1_1formattable.html", null ]
       ] ],
       [ "util", "d8/da3/namespacemimicpp_1_1util.html", [
         [ "stacktrace", "d1/d48/namespacemimicpp_1_1util_1_1stacktrace.html", [
@@ -18,12 +21,12 @@ var concepts =
         [ "boolean_testable", "d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html", null ],
         [ "weakly_equality_comparable_with", "d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html", null ]
       ] ],
+      [ "case_foldable_string", "d0/d48/conceptmimicpp_1_1case__foldable__string.html", null ],
+      [ "has_default_call_convention", "da/d58/conceptmimicpp_1_1has__default__call__convention.html", null ],
       [ "matcher_for", "df/d23/conceptmimicpp_1_1matcher__for.html", null ],
       [ "object_watcher_for", "db/db6/conceptmimicpp_1_1object__watcher__for.html", null ],
       [ "print_iterator", "d3/d26/conceptmimicpp_1_1print__iterator.html", null ],
       [ "printer_for", "de/dfc/conceptmimicpp_1_1printer__for.html", null ],
-      [ "string", "d1/d44/conceptmimicpp_1_1string.html", null ],
-      [ "case_foldable_string", "d0/d48/conceptmimicpp_1_1case__foldable__string.html", null ],
-      [ "has_default_call_convention", "da/d58/conceptmimicpp_1_1has__default__call__convention.html", null ]
+      [ "string", "d1/d44/conceptmimicpp_1_1string.html", null ]
     ] ]
 ];

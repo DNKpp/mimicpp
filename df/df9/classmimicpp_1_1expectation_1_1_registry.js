@@ -5,7 +5,7 @@ var classmimicpp_1_1expectation_1_1_registry =
     [ "Registry", "df/df9/classmimicpp_1_1expectation_1_1_registry.html#a92e9645c34ca7f11eb88f65728d99f18", null ],
     [ "~Registry", "df/df9/classmimicpp_1_1expectation_1_1_registry.html#a97b1ed890ec9f9d0376f7057398eb39b", null ],
     [ "Registry", "df/df9/classmimicpp_1_1expectation_1_1_registry.html#a16bdecfd182ba07a685bca7c8da9ca7c", null ],
-    [ "create", "df/df9/classmimicpp_1_1expectation_1_1_registry.html#a954eddf4e9f7cf9c22fa89faec9a0708", null ],
+    [ "create", "df/df9/classmimicpp_1_1expectation_1_1_registry.html#a1864edc34adf6a042715f27f5604eac2", null ],
     [ "handle_call", "df/df9/classmimicpp_1_1expectation_1_1_registry.html#ae82bb31d8bfdc950674322435e07ea13", null ],
     [ "operator=", "df/df9/classmimicpp_1_1expectation_1_1_registry.html#a2f6a0fe9a564183c79f662086fc85548", null ],
     [ "operator=", "df/df9/classmimicpp_1_1expectation_1_1_registry.html#ae255f0a9b40d09da766f2b5b62d40a3c", null ],

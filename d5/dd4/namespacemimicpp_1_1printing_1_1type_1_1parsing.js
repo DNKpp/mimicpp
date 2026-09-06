@@ -1,10 +1,10 @@
 var namespacemimicpp_1_1printing_1_1type_1_1parsing =
 [
     [ "state", "d4/dac/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1state.html", "d4/dac/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1state" ],
+    [ "PrintVisitor", "de/dd6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_print_visitor.html", "de/dd6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_print_visitor" ],
+    [ "StateGuard", "de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html", "de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard" ],
     [ "TokenStream", "d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html", "d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream" ],
     [ "Transaction", "d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html", "d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction" ],
-    [ "StateGuard", "de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html", "de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard" ],
-    [ "PrintVisitor", "de/dd6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_print_visitor.html", "de/dd6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_print_visitor" ],
     [ "expect", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439", null ],
     [ "make_map", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a0f9cdb8ddc2ab362d3ddcd36274a38ef", null ],
     [ "parse_abstract_declarator", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999", null ],

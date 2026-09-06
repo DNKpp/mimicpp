@@ -97,14 +97,14 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "d2/dc9/group___c_a_l_l___c_o_n_v_e_n_t_i_o_n_s.html#ga315e4091d5031b265134be67d396356c",
-"d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html#aa112dbd869801d85ce7a0f44881fef56",
-"d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#aabd76e7db44cbb8802c9dcb42bc51e1f",
-"da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html",
-"dd/d2e/classmimicpp_1_1reporting_1_1_error.html",
-"de/dcd/group___m_o_c_k___i_n_t_e_r_f_a_c_e_s.html",
-"index.html#autotoc_md65"
+"d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html#a18afb7e9b6b3dbd566b0dde52623147c",
+"d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a2881c81e2aa756bd01c19fe8287f2775",
+"da/d3f/classmimicpp_1_1expectation_1_1policies_1_1_args_requirement.html#a80e775b358ae2de96387059ad6c161fb",
+"dc/dec/_always_false_8hpp.html",
+"de/daf/classmimicpp_1_1util_1_1_static_string.html#ae9115aceec7f39c076ad5dd8af28613a",
+"index.html#autotoc_md56"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronization';
-var SYNCOFFMSG = 'click to enable panel synchronization';
-var LISTOFALLMEMBERS = 'List of all members';
+const SYNCONMSG = 'click to disable panel synchronization';
+const SYNCOFFMSG = 'click to enable panel synchronization';
+const LISTOFALLMEMBERS = 'List of all members';

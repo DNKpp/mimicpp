@@ -16,7 +16,7 @@ var searchData=
   ['error_13',['Error',['../dd/d2e/classmimicpp_1_1reporting_1_1_error.html',1,'mimicpp::reporting::Error&lt; Data &gt;'],['../dd/d2e/classmimicpp_1_1reporting_1_1_error.html#a7a7c73ecd37c759c942c8acfac8b12bc',1,'mimicpp::reporting::Error::Error()']]],
   ['error_3c_20callreport_20_3e_14',['Error&lt; CallReport &gt;',['../dd/d2e/classmimicpp_1_1reporting_1_1_error.html',1,'mimicpp::reporting']]],
   ['error_3c_20expectationreport_20_3e_15',['Error&lt; ExpectationReport &gt;',['../dd/d2e/classmimicpp_1_1reporting_1_1_error.html',1,'mimicpp::reporting']]],
-  ['example_16',['Example',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md4',1,'']]],
+  ['example_16',['Example',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md5',1,'']]],
   ['examples_17',['Examples',['../index.html#autotoc_md56',1,'']]],
   ['existing_20printings_20or_20print_20custom_20types_18',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md16',1,'']]],
   ['expect_19',['expect',['../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439',1,'mimicpp::printing::type::parsing']]],
