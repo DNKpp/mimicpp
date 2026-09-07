@@ -23,6 +23,7 @@
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
+    #include <functional>
     #include <tuple>
     #include <type_traits>
     #include <utility>
@@ -30,10 +31,29 @@
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
 {
+    namespace detail
+    {
+        struct BuilderState
+        {
+            bool timesConfigured = false;
+            bool finalizeConfigured = false;
+
+            [[nodiscard]]
+            consteval BuilderState with(bool(BuilderState::* option)) const noexcept
+            {
+                MIMICPP_ASSERT(option, "Option must be non-null");
+                BuilderState copy{*this};
+                std::invoke(option, copy) = true;
+
+                return copy;
+            }
+        };
+    }
+
     template <
-        bool timesConfigured,
-        typename SequenceConfig,
         typename Signature,
+        detail::BuilderState state,
+        typename SequenceConfig,
         typename FinalizePolicy,
         expectation_policy_for<Signature>... Policies>
     class BasicBuilder
@@ -82,14 +102,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                 "Explicitly specifying the `policies::InitFinalize` is disallowed.");
 
             static_assert(
-                std::same_as<policies::InitFinalize, FinalizePolicy>,
+                !state.finalizeConfigured,
                 "Only one finalize-policy may be specified per expectation. "
                 "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
 
             using Builder = BasicBuilder<
-                timesConfigured,
-                SequenceConfig,
                 Signature,
+                state.with(&detail::BuilderState::finalizeConfigured),
+                SequenceConfig,
                 std::remove_cvref_t<Policy>,
                 Policies...>;
 
@@ -108,9 +128,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         friend constexpr auto operator&&(BasicBuilder&& builder, Policy&& policy)
         {
             using ExtendedBuilder = BasicBuilder<
-                timesConfigured,
-                SequenceConfig,
                 Signature,
+                state,
+                SequenceConfig,
                 FinalizePolicy,
                 Policies...,
                 std::remove_cvref_t<Policy>>;
@@ -130,14 +150,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         friend constexpr auto operator&&(BasicBuilder&& builder, TimesConfig&& config)
         {
             static_assert(
-                !timesConfigured,
+                !state.timesConfigured,
                 "Only one times-policy may be specified per expectation. "
                 "See: https://dnkpp.github.io/mimicpp/d7/d32/group___e_x_p_e_c_t_a_t_i_o_n___t_i_m_e_s.html#details");
 
             using Builder = BasicBuilder<
-                true,
-                SequenceConfig,
                 Signature,
+                state.with(&detail::BuilderState::timesConfigured),
+                SequenceConfig,
                 FinalizePolicy,
                 Policies...>;
 
@@ -157,9 +177,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
             sequence::detail::Config newConfig = builder.m_SequenceConfig.concat(std::move(config));
 
             using ExtendedBuilder = BasicBuilder<
-                timesConfigured,
-                decltype(newConfig),
                 Signature,
+                state,
+                decltype(newConfig),
                 FinalizePolicy,
                 Policies...>;
 
@@ -284,9 +304,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         auto make_builder(Registry::Ptr registry, reporting::TargetReport target, Args&&... args)
         {
             using Builder = BasicBuilder<
-                false,
-                sequence::detail::Config<>,
                 Signature,
+                BuilderState{},
+                sequence::detail::Config<>,
                 policies::InitFinalize>;
 
             return detail::extend_builder_with_arg_policies<Signature>(

@@ -33,10 +33,10 @@ namespace mimicpp::sequence::detail
 
         ~ExpectationBuilderFinalizer() = default;
 
-        template <bool timesConfigured, typename... Args>
+        template <typename Signature, auto state, typename... Args>
         [[nodiscard]]
         explicit(false) ExpectationBuilderFinalizer(
-            expectation::BasicBuilder<timesConfigured, Args...>&& builder,
+            expectation::BasicBuilder<Signature, state, Args...>&& builder,
             util::SourceLocation loc = {})
             : m_FinalizeFn{
                   [&builder, loc = std::move(loc)](Sequence& sequence) mutable {

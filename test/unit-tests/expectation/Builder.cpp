@@ -15,9 +15,9 @@ namespace
 {
     template <typename Signature>
     using BaseBuilder = expectation::BasicBuilder<
-        false,
-        sequence::detail::Config<>,
         Signature,
+        expectation::detail::BuilderState{},
+        sequence::detail::Config<>,
         expectation::policies::InitFinalize>;
 
     template <typename Signature>
